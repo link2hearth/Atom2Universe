@@ -16,7 +16,12 @@ import android.os.Build
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
+import android.graphics.Typeface
+import com.Atom2Universe.app.pixelart.core.ShapeFill
+import com.Atom2Universe.app.pixelart.core.ShapeKind
+import com.Atom2Universe.app.zoomcanvas.core.BoxItem
 import com.Atom2Universe.app.zoomcanvas.core.RenderList
+import com.Atom2Universe.app.zoomcanvas.core.TextItem
 import com.Atom2Universe.app.zoomcanvas.core.Stroke
 import com.Atom2Universe.app.zoomcanvas.core.ZoomRenderer
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
@@ -26,8 +31,8 @@ import kotlin.math.min
 import kotlin.math.pow
 
 /**
- * La toile du canvas infini. Un doigt dessine, gomme, manipule une image ou réaligne la couche du
- * dessous selon l'outil ; deux doigts déplacent et zooment (déplacent seulement quand le zoom est
+ * La toile du canvas infini. Un doigt dessine, gomme, trace une forme, pose un texte, manipule un
+ * objet (image, forme, texte) ou réaligne la couche du dessous selon l'outil ; deux doigts déplacent et zooment (déplacent seulement quand le zoom est
  * bloqué, [zoomLocked]). Tout le calcul est fait par [ZoomScene]
  * et [ZoomRenderer] : la vue ne reçoit que de petites coordonnées d'écran, déjà découpées.
  *
@@ -41,23 +46,32 @@ import kotlin.math.pow
  */
 class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
-    enum class Tool { PEN, BRUSH, MARKER, ERASER, SELECT, HAND, MOVE_LAYER }
+    /**
+     * [ERASER_EDIT] : le mode d'édition des gommes (appui long sur la gomme). Tout est estompé, les
+     * coups de gomme ressortent en couleur, et on les sélectionne, déplace, redimensionne,
+     * monte / descend dans la pile ou supprime comme n'importe quel élément.
+     */
+    enum class Tool { PEN, BRUSH, MARKER, ERASER, SHAPE, TEXT, SELECT, HAND, MOVE_LAYER, ERASER_EDIT }
 
     /** Noms volontairement distincts de ceux d'Activity (onContentChanged y est déjà pris). */
     interface Listener {
         fun onDrawingChanged()
         fun onViewMoved()
         fun onNothingToMove()
-        fun onImageSelectionChanged()
+        fun onSelectionChanged()
+        /** Un appui avec l'outil texte : sur le texte [id] pour le modifier, ou dans le vide (null) pour en poser un à cet écart d'écran. */
+        fun onTextRequested(id: Long?, sx: Double, sy: Double)
     }
 
     var scene: ZoomScene? = null
-        set(value) { field = value; selectedImage = null; invalidate() }
+        set(value) { field = value; selectedItem = null; invalidate() }
     var listener: Listener? = null
     var tool = Tool.PEN
         set(value) {
+            val changed = field != value
             field = value
-            if (value != Tool.SELECT) selectImage(null)
+            // La sélection d'un outil ne vaut pas pour l'autre (la sélection ne voit pas les gommes, ni l'inverse).
+            if (changed) selectItem(null)
             invalidate()
         }
     var color = Color.BLACK
@@ -66,6 +80,14 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
      * au moment du trait (le trait grossit ensuite avec le zoom).
      */
     var strokeSize = 6f
+    /** Couleur de remplissage des formes à tracer, et leurs réglages (forme, contour / remplissage, forme régulière). */
+    var fillColor = Color.WHITE
+    var shapeKind = ShapeKind.RECT
+    var shapeFill = ShapeFill.OUTLINE
+    var shapeSquare = false
+    /** Taille de la police du prochain texte (pixels d'écran), son style ([TextItem.BOLD], [TextItem.ITALIC]) et sa police. */
+    var textStyle = 0
+    var textFont = ""
     /** Zoom bloqué : deux doigts ne font plus que déplacer la vue, la molette ne fait rien. */
     var zoomLocked = false
     var paperColor = 0xFFFAF8F3.toInt()
@@ -73,13 +95,17 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     /** Fournit le bitmap d'une image du projet (null tant qu'il se charge : un cadre gris en attendant). */
     var imageProvider: ((String) -> Bitmap?)? = null
 
-    /** L'image sélectionnée avec l'outil de sélection (dans la couche de travail), ou null. */
-    var selectedImage: Long? = null
+    /** Donne la police d'un texte (nom d'affichage, style) : la vue ne connaît pas les ressources. */
+    var typefaceProvider: ((String, Int) -> Typeface)? = null
+
+    /** L'objet (image, forme, texte) sélectionné avec l'outil de sélection, dans la couche de travail, ou null. */
+    var selectedItem: Long? = null
         private set
 
     private val density = resources.displayMetrics.density
     private val handleRadius = 9f * density
     private val handleReach = 28f * density
+    private val tapSlop = 12f * density
 
     private val list = RenderList()
     private val path = Path()
@@ -110,6 +136,8 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         style = Paint.Style.FILL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) blendMode = BlendMode.MULTIPLY
     }
+    private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG).apply { isLinearText = true }
     private val imagePaint = Paint(Paint.FILTER_BITMAP_FLAG)
     private val placeholderPaint = Paint().apply { color = 0x22000000 }
     private val cursorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -126,23 +154,23 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     private val srcRect = Rect()
     private val dstRect = RectF()
 
-    fun selectImage(id: Long?) {
-        if (selectedImage == id) return
-        selectedImage = id
+    fun selectItem(id: Long?) {
+        if (selectedItem == id) return
+        selectedItem = id
         invalidate()
-        listener?.onImageSelectionChanged()
+        listener?.onSelectionChanged()
     }
 
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(paperColor)
         val s = scene ?: return
-        draw(s, canvas, width.toDouble(), height.toDouble())
+        draw(s, canvas, width.toDouble(), height.toDouble(), tool == Tool.ERASER_EDIT)
         if (mode == Mode.ERASE) canvas.drawCircle(lastX, lastY, strokeSize / 2, cursorPaint)
         drawSelection(s, canvas)
     }
 
-    private fun draw(s: ZoomScene, canvas: Canvas, w: Double, h: Double) {
-        ZoomRenderer.build(s, w, h, list)
+    private fun draw(s: ZoomScene, canvas: Canvas, w: Double, h: Double, ghost: Boolean = false) {
+        ZoomRenderer.build(s, w, h, list, ghost)
         for (g in 0 until list.groupCount) {
             val from = list.groupStart[g]
             val to = list.groupEnd[g]
@@ -167,6 +195,11 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                 drawImage(canvas, img, list.runAlpha[r])
                 continue
             }
+            val text = list.runText[r]
+            if (text != null) {
+                drawText(canvas, r, text)
+                continue
+            }
             val erase = list.runErase[r]
             val kind = list.runKind[r].toInt()
             val base = if (erase) Color.BLACK else list.runColor[r]
@@ -176,6 +209,15 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
             val start = list.runStart[r]
             val n = list.runPoints[r]
             val width = list.runWidth[r]
+            if (kind == RenderList.KIND_FILL) {
+                path.rewind()
+                path.moveTo(c[start], c[start + 1])
+                for (k in 1 until n) path.lineTo(c[start + 2 * k], c[start + 2 * k + 1])
+                path.close()
+                fillPaint.color = argb
+                canvas.drawPath(path, fillPaint)
+                continue
+            }
             if (n == 1) {
                 val dot = when {
                     erase -> eraseDotPaint
@@ -243,6 +285,22 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         canvas.drawPath(path, brushPaint)
     }
 
+    /** Un texte, ligne par ligne : le coin haut-gauche et la taille viennent du rendu, déjà à l'écran. */
+    private fun drawText(canvas: Canvas, r: Int, t: TextItem) {
+        val a = ((t.color ushr 24) * list.runAlpha[r]).toInt().coerceIn(0, 255)
+        if (a == 0) return
+        val size = list.runTextSize[r]
+        textPaint.color = (a shl 24) or (t.color and 0xFFFFFF)
+        textPaint.textSize = size
+        textPaint.typeface = typefaceProvider?.invoke(t.font, t.style) ?: Typeface.DEFAULT
+        val x = list.runTextX[r]
+        var y = list.runTextY[r] + (TextItem.BASELINE * size).toFloat()
+        for (line in t.lines) {
+            canvas.drawText(line, x, y, textPaint)
+            y += (TextItem.LINE_HEIGHT * size).toFloat()
+        }
+    }
+
     private fun drawImage(canvas: Canvas, i: Int, alpha: Float) {
         val d = list.imageDst
         dstRect.set(d[4 * i], d[4 * i + 1], d[4 * i + 2], d[4 * i + 3])
@@ -265,11 +323,11 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         canvas.drawBitmap(bmp, srcRect, dstRect, imagePaint)
     }
 
-    /** Cadre et poignées de l'image sélectionnée, ramenés au bord de l'écran s'ils en sortent. */
+    /** Cadre et poignées de l'objet sélectionné, ramenés au bord de l'écran s'ils en sortent. */
     private fun drawSelection(s: ZoomScene, canvas: Canvas) {
-        val id = selectedImage ?: return
-        val item = s.image(id)
-        if (item == null) { selectImage(null); return }
+        val id = selectedItem ?: return
+        val item = s.box(id)
+        if (item == null) { selectItem(null); return }
         val r = screenRect(s, id) ?: return
         val m = 4.0 * handleReach
         val x0 = r[0].coerceIn(-m, width + m).toFloat()
@@ -283,11 +341,13 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         }
     }
 
-    /** Rectangle de l'image [id] en pixels de la vue (Double, pas encore borné). */
+    /** Rectangle de l'objet [id] en pixels de la vue (Double, pas encore borné). */
     private fun screenRect(s: ZoomScene, id: Long): DoubleArray? {
-        val item = s.image(id) ?: return null
-        val r = s.imageScreenRect(item)
-        return doubleArrayOf(r[0] + width / 2.0, r[1] + height / 2.0, r[2] + width / 2.0, r[3] + height / 2.0)
+        val item = s.box(id) ?: return null
+        val r = s.boxScreenRect(item)
+        // Un peu de marge : le cadre d'un trait droit ou d'un point n'est pas réduit à une ligne.
+        val pad = 4.0 * density
+        return doubleArrayOf(r[0] + width / 2.0 - pad, r[1] + height / 2.0 - pad, r[2] + width / 2.0 + pad, r[3] + height / 2.0 + pad)
     }
 
     /** Une vignette carrée de ce qu'on voit (pour la galerie). */
@@ -307,12 +367,18 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
 
     // ---- Gestes --------------------------------------------------------------------------
 
-    private enum class Mode { NONE, DRAW, ERASE, PAN, MOVE_LAYER, IMAGE_MOVE, IMAGE_RESIZE, GESTURE, IGNORE }
+    private enum class Mode { NONE, DRAW, ERASE, SHAPE, TEXT_TAP, PAN, MOVE_LAYER, ITEM_MOVE, ITEM_RESIZE, GESTURE, IGNORE }
 
     private var mode = Mode.NONE
     private var lastX = 0f
     private var lastY = 0f
     private var downTime = 0L
+    private var downX = 0f
+    private var downY = 0f
+    /** Le glissé d'un élément a commencé (le doigt a quitté la zone d'appui). */
+    private var dragging = false
+    /** L'élément sélectionné qu'un simple appui remplacera par celui d'en dessous, ou null. */
+    private var cycleFrom: Long? = null
     private var resizeCorner = 0
     private var pinchCx = 0f
     private var pinchCy = 0f
@@ -334,9 +400,14 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                     Tool.BRUSH -> { s.beginStroke(ox(e.x), oy(e.y), color, strokeSize.toDouble(), Stroke.BRUSH); Mode.DRAW }
                     Tool.MARKER -> { s.beginStroke(ox(e.x), oy(e.y), color, strokeSize.toDouble(), Stroke.MARKER); Mode.DRAW }
                     Tool.ERASER -> { s.beginStroke(ox(e.x), oy(e.y), ZoomScene.ERASER, strokeSize.toDouble()); Mode.ERASE }
+                    Tool.SHAPE -> {
+                        s.beginShape(shapeKind, shapeFill, color, fillColor, strokeSize.toDouble(), ox(e.x), oy(e.y), shapeSquare)
+                        Mode.SHAPE
+                    }
+                    Tool.TEXT -> Mode.TEXT_TAP
                     Tool.HAND -> Mode.PAN
                     Tool.MOVE_LAYER -> if (s.beginMoveLayer()) Mode.MOVE_LAYER else { listener?.onNothingToMove(); Mode.IGNORE }
-                    Tool.SELECT -> startImageGesture(s, e.x, e.y)
+                    Tool.SELECT, Tool.ERASER_EDIT -> startItemGesture(s, e.x, e.y)
                 }
                 invalidate()
             }
@@ -344,8 +415,9 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                 when (mode) {
                     // Un deuxième doigt tout de suite : c'était un pincement, pas un trait.
                     Mode.DRAW, Mode.ERASE -> if (e.eventTime - downTime < 350) s.cancelStroke() else finishStroke(s)
+                    Mode.SHAPE -> if (e.eventTime - downTime < 350) s.cancelShape() else finishShape(s)
                     Mode.MOVE_LAYER -> finishMove(s)
-                    Mode.IMAGE_MOVE, Mode.IMAGE_RESIZE -> finishImage(s)
+                    Mode.ITEM_MOVE, Mode.ITEM_RESIZE -> finishItem(s)
                     else -> Unit
                 }
                 mode = Mode.GESTURE
@@ -359,6 +431,14 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                     lastX = e.x; lastY = e.y
                     invalidate()
                 }
+                Mode.SHAPE -> {
+                    for (h in 0 until e.historySize) s.updateShape(ox(e.getHistoricalX(h)), oy(e.getHistoricalY(h)))
+                    s.updateShape(ox(e.x), oy(e.y))
+                    lastX = e.x; lastY = e.y
+                    invalidate()
+                }
+                // Un appui qui glisse n'est plus un appui : le texte ne se pose pas.
+                Mode.TEXT_TAP -> if (hypot(e.x - lastX, e.y - lastY) > tapSlop) mode = Mode.IGNORE
                 Mode.PAN -> {
                     s.pan((e.x - lastX).toDouble(), (e.y - lastY).toDouble())
                     lastX = e.x; lastY = e.y
@@ -369,13 +449,17 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
                     lastX = e.x; lastY = e.y
                     invalidate()
                 }
-                Mode.IMAGE_MOVE -> {
-                    s.moveImageBy((e.x - lastX).toDouble(), (e.y - lastY).toDouble())
-                    lastX = e.x; lastY = e.y
-                    invalidate()
+                Mode.ITEM_MOVE -> {
+                    // Un doigt qui bouge à peine ne déplace rien : c'est un appui (qui peut changer d'élément).
+                    if (dragging || hypot(e.x - downX, e.y - downY) > tapSlop) {
+                        dragging = true
+                        s.moveBoxBy((e.x - lastX).toDouble(), (e.y - lastY).toDouble())
+                        lastX = e.x; lastY = e.y
+                        invalidate()
+                    }
                 }
-                Mode.IMAGE_RESIZE -> {
-                    s.resizeImageTo(resizeCorner, ox(e.x), oy(e.y))
+                Mode.ITEM_RESIZE -> {
+                    s.resizeBoxTo(resizeCorner, ox(e.x), oy(e.y))
                     invalidate()
                 }
                 Mode.GESTURE -> movePinch(s, e)
@@ -389,8 +473,21 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
             MotionEvent.ACTION_UP -> {
                 when (mode) {
                     Mode.DRAW, Mode.ERASE -> finishStroke(s)
+                    Mode.SHAPE -> finishShape(s)
+                    Mode.TEXT_TAP -> if (e.eventTime - downTime < TAP_MS) {
+                        val hit = s.boxAt(ox(e.x), oy(e.y), textOnly = true)
+                        listener?.onTextRequested((hit as? TextItem)?.id, ox(e.x), oy(e.y))
+                    }
                     Mode.MOVE_LAYER -> finishMove(s)
-                    Mode.IMAGE_MOVE, Mode.IMAGE_RESIZE -> finishImage(s)
+                    Mode.ITEM_MOVE -> {
+                        val from = cycleFrom
+                        if (!dragging && from != null && e.eventTime - downTime < TAP_MS) {
+                            // Un appui sur l'élément déjà sélectionné : on descend à celui qui est dessous, au même endroit.
+                            s.endBoxEdit()
+                            s.boxAt(ox(e.x), oy(e.y), below = from, erasers = tool == Tool.ERASER_EDIT)?.let { selectItem(it.id) }
+                        } else finishItem(s)
+                    }
+                    Mode.ITEM_RESIZE -> finishItem(s)
                     else -> Unit
                 }
                 mode = Mode.NONE
@@ -399,8 +496,9 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
             MotionEvent.ACTION_CANCEL -> {
                 when (mode) {
                     Mode.DRAW, Mode.ERASE -> s.cancelStroke()
+                    Mode.SHAPE -> s.cancelShape()
                     Mode.MOVE_LAYER -> finishMove(s)
-                    Mode.IMAGE_MOVE, Mode.IMAGE_RESIZE -> finishImage(s)
+                    Mode.ITEM_MOVE, Mode.ITEM_RESIZE -> finishItem(s)
                     else -> Unit
                 }
                 mode = Mode.NONE
@@ -411,25 +509,29 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     }
 
     /**
-     * Outil de sélection : une poignée de l'image sélectionnée la redimensionne, l'intérieur d'une
-     * image la sélectionne et la déplace, le vide désélectionne.
+     * Outil de sélection : une poignée de l'objet sélectionné le redimensionne, l'intérieur d'un
+     * objet (image, forme, texte) le sélectionne et le déplace, le vide désélectionne.
      */
-    private fun startImageGesture(s: ZoomScene, x: Float, y: Float): Mode {
-        val sel = selectedImage
+    private fun startItemGesture(s: ZoomScene, x: Float, y: Float): Mode {
+        val sel = selectedItem
         if (sel != null) {
             val r = screenRect(s, sel)
             if (r != null) {
                 val corners = listOf(r[0] to r[1], r[2] to r[1], r[2] to r[3], r[0] to r[3])
                 val i = corners.indices.minByOrNull { hypot(corners[it].first - x, corners[it].second - y) }!!
-                if (hypot(corners[i].first - x, corners[i].second - y) <= handleReach && s.beginImageEdit(sel)) {
+                if (hypot(corners[i].first - x, corners[i].second - y) <= handleReach && s.beginBoxEdit(sel)) {
                     resizeCorner = i
-                    return Mode.IMAGE_RESIZE
+                    return Mode.ITEM_RESIZE
                 }
             }
         }
-        val hit = s.imageAt(ox(x), oy(y))
-        selectImage(hit?.id)
-        if (hit != null && s.beginImageEdit(hit.id)) return Mode.IMAGE_MOVE
+        val hit: BoxItem? = s.boxAt(ox(x), oy(y), erasers = tool == Tool.ERASER_EDIT)
+        // Toucher l'élément déjà sélectionné : un simple appui descendra dans la pile, un glissé le déplace.
+        cycleFrom = if (hit != null && hit.id == sel) hit.id else null
+        dragging = false
+        downX = x; downY = y
+        selectItem(hit?.id)
+        if (hit != null && s.beginBoxEdit(hit.id)) return Mode.ITEM_MOVE
         return Mode.IGNORE
     }
 
@@ -457,19 +559,28 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         listener?.onDrawingChanged()
     }
 
-    private fun finishImage(s: ZoomScene) {
-        s.endImageEdit()
+    private fun finishItem(s: ZoomScene) {
+        s.endBoxEdit()
         listener?.onDrawingChanged()
+    }
+
+    private fun finishShape(s: ZoomScene) {
+        if (s.endShape() != null) listener?.onDrawingChanged()
     }
 
     private var shownDepth = Long.MIN_VALUE
 
+    private companion object {
+        /** Un appui plus long que ça n'est plus un appui. */
+        const val TAP_MS = 500L
+    }
+
     private fun cameraMoved() {
-        // L'image sélectionnée appartient à une couche : si on change de couche de travail, on la lâche.
+        // L'objet sélectionné appartient à une couche : si on change de couche de travail, on le lâche.
         val s = scene
         if (s != null && s.depth != shownDepth) {
             shownDepth = s.depth
-            if (selectedImage != null && s.image(selectedImage!!) == null) selectImage(null)
+            if (selectedItem != null && s.box(selectedItem!!) == null) selectItem(null)
         }
         invalidate()
         listener?.onViewMoved()

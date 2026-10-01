@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.zoomcanvas
 
+import com.Atom2Universe.app.zoomcanvas.core.ImageItem
 import com.Atom2Universe.app.zoomcanvas.core.Stroke
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import com.Atom2Universe.app.zoomcanvas.core.ZoomSnapshot
@@ -99,7 +100,7 @@ class ZoomStoreTest {
         store.save(ZoomSnapshot.of(p.meta, p.scene))
 
         val loaded = store.load(p.meta.id)!!
-        val back = loaded.scene.image(img.id)!!
+        val back = loaded.scene.box(img.id) as ImageItem
         assertEquals("a.png", back.key)
         assertEquals(640, back.pxW)
         assertEquals(img.x, back.x, 0.0)

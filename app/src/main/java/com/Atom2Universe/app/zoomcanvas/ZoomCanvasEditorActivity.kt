@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.util.LruCache
@@ -26,6 +28,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.AppThemeManager
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.pixelart.canvas.FontManager
+import com.Atom2Universe.app.pixelart.core.ShapeFill
+import com.Atom2Universe.app.pixelart.core.ShapeKind
 import com.Atom2Universe.app.pixelart.io.NamedPalette
 import com.Atom2Universe.app.pixelart.io.PaletteFormats
 import com.Atom2Universe.app.pixelart.io.PaletteStore
@@ -42,8 +47,15 @@ import com.Atom2Universe.app.pixelart.ui.divider
 import com.Atom2Universe.app.pixelart.ui.dp
 import com.Atom2Universe.app.pixelart.ui.label
 import com.Atom2Universe.app.pixelart.ui.promptText
+import com.Atom2Universe.app.pixelart.ui.shapeIcon
+import com.Atom2Universe.app.pixelart.ui.shapeLabel
+import com.Atom2Universe.app.pixelart.ui.showShapeSheet
 import com.Atom2Universe.app.pixelart.ui.showPaletteSheet
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.zoomcanvas.core.OrderMove
+import com.Atom2Universe.app.zoomcanvas.core.ShapeItem
+import com.Atom2Universe.app.zoomcanvas.core.StrokeBox
+import com.Atom2Universe.app.zoomcanvas.core.TextItem
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,8 +68,10 @@ import java.util.UUID
  * bas (palettes partagées avec le pixel art), réglages de l'outil choisi juste à côté de son bouton,
  * pastille de niveau en bas à gauche, cadenas du zoom en haut.
  *
- * Crayon, pinceau, feutre et gomme ont chacun leur épaisseur (et leur opacité, sauf la gomme),
- * gardées d'une séance à l'autre.
+ * Crayon, pinceau, feutre, gomme, formes et texte ont chacun leur taille (et leur opacité, sauf la
+ * gomme), gardées d'une séance à l'autre. La sélection prend n'importe quel élément (trait, image,
+ * forme, texte) : elle le déplace, le redimensionne, le duplique, le supprime, et un petit widget le
+ * monte ou le descend dans la pile des éléments de la couche.
  */
 class ZoomCanvasEditorActivity : AppCompatActivity() {
 
@@ -87,6 +101,10 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     private lateinit var message: TextView
     private lateinit var toolsScroll: HorizontalScrollView
     private lateinit var lockBtn: ImageButton
+    /** Le widget de pile : visible quand un élément est sélectionné. */
+    private lateinit var orderPill: View
+    private lateinit var orderText: TextView
+    private val orderButtons = HashMap<OrderMove, View>()
     /** Les réglages de l'outil choisi, placés dans la barre d'outils juste après son bouton. */
     private lateinit var options: LinearLayout
     private lateinit var swatchPrimary: SwatchView
@@ -100,6 +118,13 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     /** Épaisseur (pixels d'écran) et opacité (%) de chaque outil de dessin. */
     private val sizes = HashMap<ZoomCanvasView.Tool, Int>()
     private val opacities = HashMap<ZoomCanvasView.Tool, Int>()
+    private var shapeKind = ShapeKind.RECT
+    private var shapeFill = ShapeFill.OUTLINE
+    private var shapeSquare = false
+    private var textStyle = 0
+    private var textFont = ""
+    private val typefaces = HashMap<String, Typeface>()
+    private val measurePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.SUBPIXEL_TEXT_FLAG).apply { isLinearText = true }
     private var linkedIndex = -1
     private var lastPaletteId = ""
     private var shownLevel = Long.MIN_VALUE
@@ -134,6 +159,13 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         message = findViewById(R.id.zc_message)
         toolsScroll = findViewById(R.id.zc_tools_scroll)
         lockBtn = findViewById(R.id.zc_btn_lock)
+        orderPill = findViewById(R.id.zc_order_pill)
+        orderText = findViewById(R.id.zc_order_text)
+        orderButtons[OrderMove.TO_BACK] = findViewById(R.id.zc_order_back)
+        orderButtons[OrderMove.BACKWARD] = findViewById(R.id.zc_order_down)
+        orderButtons[OrderMove.FORWARD] = findViewById(R.id.zc_order_up)
+        orderButtons[OrderMove.TO_FRONT] = findViewById(R.id.zc_order_front)
+        for ((move, button) in orderButtons) button.setOnClickListener { reorder(move) }
         options = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -144,15 +176,16 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.zc_btn_back).setOnClickListener { finish() }
         findViewById<View>(R.id.zc_title_block).setOnClickListener { askRename() }
-        findViewById<View>(R.id.zc_btn_more).setOnClickListener { showMenu() }
         findViewById<View>(R.id.zc_level_pill).setOnClickListener { showLayers() }
         undoBtn.setOnClickListener { if (vm.project?.scene?.undo() == true) drawingChanged() }
         redoBtn.setOnClickListener { if (vm.project?.scene?.redo() == true) drawingChanged() }
         lockBtn.setOnClickListener { setZoomLocked(!canvasView.zoomLocked) }
 
+        FontManager.init(this)
         loadPrefs()
         canvasView.listener = canvasListener
         canvasView.imageProvider = ::bitmapFor
+        canvasView.typefaceProvider = ::typefaceFor
         setupTools()
         setupColors()
 
@@ -206,6 +239,9 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         ZoomCanvasView.Tool.BRUSH to DrawDef(16, 2, 200),
         ZoomCanvasView.Tool.MARKER to DrawDef(12, 2, 160),
         ZoomCanvasView.Tool.ERASER to DrawDef(24, 2, 240, hasOpacity = false),
+        // Pour une forme : l'épaisseur du contour. Pour un texte : la taille de la police.
+        ZoomCanvasView.Tool.SHAPE to DrawDef(4, 1, 60),
+        ZoomCanvasView.Tool.TEXT to DrawDef(32, 8, 300),
     )
 
     private fun loadPrefs() {
@@ -215,6 +251,11 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             sizes[t] = prefs.getInt("size_${t.name}", d.size).coerceIn(d.min, d.max)
             opacities[t] = prefs.getInt("opacity_${t.name}", 100).coerceIn(1, 100)
         }
+        shapeKind = runCatching { ShapeKind.valueOf(prefs.getString("shape", "RECT")!!) }.getOrDefault(ShapeKind.RECT)
+        shapeFill = runCatching { ShapeFill.valueOf(prefs.getString("shape_fill", "OUTLINE")!!) }.getOrDefault(ShapeFill.OUTLINE)
+        shapeSquare = prefs.getBoolean("shape_square", false)
+        textStyle = prefs.getInt("text_style", 0)
+        textFont = prefs.getString("text_font", "") ?: ""
         setZoomLocked(prefs.getBoolean("zoom_locked", false))
     }
 
@@ -224,6 +265,11 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             .putInt("secondary", secondary)
             .putString("tool", canvasView.tool.name)
             .putBoolean("zoom_locked", canvasView.zoomLocked)
+            .putString("shape", shapeKind.name)
+            .putString("shape_fill", shapeFill.name)
+            .putBoolean("shape_square", shapeSquare)
+            .putInt("text_style", textStyle)
+            .putString("text_font", textFont)
         for (t in drawDefs.keys) {
             e.putInt("size_${t.name}", sizes[t]!!)
             e.putInt("opacity_${t.name}", opacities[t]!!)
@@ -231,12 +277,27 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         e.apply()
     }
 
-    /** L'outil de dessin choisi trace la couleur principale, avec son épaisseur et son opacité. */
+    /** Une couleur avec son opacité réglée à [percent] % de celle qu'elle avait. */
+    private fun withOpacity(color: Int, percent: Int): Int {
+        val a = ((color ushr 24) * percent / 100).coerceIn(0, 255)
+        return (a shl 24) or (color and 0xFFFFFF)
+    }
+
+    /**
+     * L'outil choisi trace la couleur principale, avec sa taille et son opacité. Une forme remplie
+     * prend la couleur principale, une forme « les deux » remplit avec la couleur secondaire.
+     */
     private fun applyPenColor() {
         val t = canvasView.tool
         sizes[t]?.let { canvasView.strokeSize = it.toFloat() }
-        val a = ((primary ushr 24) * (opacities[t] ?: 100) / 100).coerceIn(0, 255)
-        canvasView.color = (a shl 24) or (primary and 0xFFFFFF)
+        val pct = opacities[t] ?: 100
+        canvasView.color = withOpacity(primary, pct)
+        canvasView.fillColor = if (shapeFill == ShapeFill.FILL) canvasView.color else withOpacity(secondary, pct)
+        canvasView.shapeKind = shapeKind
+        canvasView.shapeFill = shapeFill
+        canvasView.shapeSquare = shapeSquare
+        canvasView.textStyle = textStyle
+        canvasView.textFont = textFont
     }
 
     /** Le cadenas fermé : le zoom reste où il est, deux doigts ne font plus que déplacer la vue. */
@@ -255,13 +316,14 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         override fun onDrawingChanged() = drawingChanged()
         override fun onViewMoved() = viewMoved()
         override fun onNothingToMove() = showMessage(getString(R.string.zc_no_layer_below))
-        override fun onImageSelectionChanged() = rebuildOptions()
+        override fun onSelectionChanged() = rebuildOptions()
+        override fun onTextRequested(id: Long?, sx: Double, sy: Double) = askText(id, sx, sy)
     }
 
     private fun drawingChanged() {
         canvasView.invalidate()
         refreshChrome()
-        if (canvasView.tool == ZoomCanvasView.Tool.SELECT) rebuildOptions()
+        if (canvasView.tool == ZoomCanvasView.Tool.SELECT || canvasView.tool == ZoomCanvasView.Tool.ERASER_EDIT) rebuildOptions()
         vm.scheduleSave(contentChanged = true)
     }
 
@@ -305,6 +367,8 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         ToolDef(ZoomCanvasView.Tool.BRUSH, R.drawable.ic_px_brush, R.string.zc_tool_brush),
         ToolDef(ZoomCanvasView.Tool.MARKER, R.drawable.ic_zc_marker, R.string.zc_tool_marker),
         ToolDef(ZoomCanvasView.Tool.ERASER, R.drawable.ic_px_eraser, R.string.zc_tool_eraser),
+        ToolDef(ZoomCanvasView.Tool.SHAPE, R.drawable.ic_px_shape, R.string.px_tool_shape),
+        ToolDef(ZoomCanvasView.Tool.TEXT, R.drawable.ic_zc_text, R.string.zc_tool_text),
         ToolDef(ZoomCanvasView.Tool.SELECT, R.drawable.ic_px_move, R.string.zc_tool_select),
         ToolDef(ZoomCanvasView.Tool.HAND, R.drawable.ic_px_hand, R.string.zc_tool_hand),
         ToolDef(ZoomCanvasView.Tool.MOVE_LAYER, R.drawable.ic_px_layers, R.string.zc_tool_move_layer),
@@ -317,27 +381,66 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
                 setImageResource(d.icon)
                 contentDescription = getString(d.label)
                 setOnClickListener { selectTool(d.tool) }
+                // Appui long sur les formes : la feuille des dix formes, comme dans le pixel art.
+                if (d.tool == ZoomCanvasView.Tool.SHAPE) setOnLongClickListener { showShapeSheet(shapeKind) { pickShape(it) }; true }
+                // Appui long sur la gomme : le mode d'édition des gommes (un second appui long en sort).
+                if (d.tool == ZoomCanvasView.Tool.ERASER) setOnLongClickListener {
+                    selectTool(if (canvasView.tool == ZoomCanvasView.Tool.ERASER_EDIT) ZoomCanvasView.Tool.ERASER else ZoomCanvasView.Tool.ERASER_EDIT)
+                    true
+                }
             }
             TooltipCompat.setTooltipText(b, getString(d.label))
             toolButtons[d.tool] = b
             bar.addView(b)
         }
+        updateShapeToolIcon()
         val saved = prefs.getString("tool", null)?.let { n -> ZoomCanvasView.Tool.values().firstOrNull { it.name == n } }
-        selectTool(if (saved == ZoomCanvasView.Tool.MOVE_LAYER || saved == null) ZoomCanvasView.Tool.PEN else saved, quiet = true)
+        selectTool(when (saved) {
+            null, ZoomCanvasView.Tool.MOVE_LAYER -> ZoomCanvasView.Tool.PEN
+            // On ne rouvre pas le canvas estompé : le mode d'édition des gommes se choisit à chaque fois.
+            ZoomCanvasView.Tool.ERASER_EDIT -> ZoomCanvasView.Tool.ERASER
+            else -> saved
+        }, quiet = true)
     }
 
     private fun selectTool(t: ZoomCanvasView.Tool, quiet: Boolean = false) {
         canvasView.tool = t
-        for ((k, b) in toolButtons) b.isSelected = k == t
+        // Le mode d'édition des gommes n'a pas de bouton à lui : c'est celui de la gomme qui reste allumé.
+        for ((k, b) in toolButtons) b.isSelected = k == t || (k == ZoomCanvasView.Tool.ERASER && t == ZoomCanvasView.Tool.ERASER_EDIT)
         applyPenColor()
         rebuildOptions()
-        if (!quiet) {
-            when (t) {
-                ZoomCanvasView.Tool.MOVE_LAYER -> showMessage(getString(R.string.zc_move_layer_hint))
-                ZoomCanvasView.Tool.SELECT -> if (canvasView.selectedImage == null) showMessage(getString(R.string.zc_select_hint))
-                else -> Unit
-            }
+        if (!quiet && t == ZoomCanvasView.Tool.MOVE_LAYER) showMessage(getString(R.string.zc_move_layer_hint))
+    }
+
+    /** Monte ou descend l'élément sélectionné dans la pile de la couche. */
+    private fun reorder(move: OrderMove) {
+        val sel = canvasView.selectedItem ?: return
+        if (vm.project?.scene?.reorder(sel, move) == true) drawingChanged()
+    }
+
+    /** Le widget de pile : rang de l'élément sélectionné parmi ceux de la couche, et ce qu'on peut encore faire. */
+    private fun refreshOrder() {
+        val info = canvasView.selectedItem?.let { vm.project?.scene?.orderInfo(it) }
+        orderPill.visibility = if (info == null) View.GONE else View.VISIBLE
+        if (info == null) return
+        orderText.text = getString(R.string.zc_order_position, info.rank, info.count)
+        for ((move, on) in listOf(
+            OrderMove.TO_BACK to info.canToBack, OrderMove.BACKWARD to info.canBackward,
+            OrderMove.FORWARD to info.canForward, OrderMove.TO_FRONT to info.canToFront,
+        )) {
+            orderButtons[move]?.apply { isEnabled = on; alpha = if (on) 1f else 0.35f }
         }
+    }
+
+    /** Le bouton des formes montre la forme choisie. */
+    private fun updateShapeToolIcon() {
+        toolButtons[ZoomCanvasView.Tool.SHAPE]?.setImageResource(shapeIcon(shapeKind))
+    }
+
+    private fun pickShape(kind: ShapeKind) {
+        shapeKind = kind
+        updateShapeToolIcon()
+        if (canvasView.tool != ZoomCanvasView.Tool.SHAPE) selectTool(ZoomCanvasView.Tool.SHAPE) else { applyPenColor(); rebuildOptions() }
     }
 
     /**
@@ -346,8 +449,35 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
      */
     private fun rebuildOptions() {
         options.removeAllViews()
+        refreshOrder()
         val t = canvasView.tool
         val draw = drawDefs[t]
+        // Les choix propres à l'outil d'abord (forme, remplissage, police…), puis ses curseurs.
+        when (t) {
+            ZoomCanvasView.Tool.SHAPE -> {
+                options.addView(chip(getString(shapeLabel(shapeKind)), shapeIcon(shapeKind)) { showShapeSheet(shapeKind) { pickShape(it) } })
+                if (shapeKind != ShapeKind.LINE) options.addView(fillChip(shapeFill) { shapeFill = it; applyPenColor() })
+                if (shapeKind != ShapeKind.LINE && shapeKind != ShapeKind.ARROW) {
+                    options.addView(chip(getString(R.string.px_opt_square), R.drawable.ic_px_square_lock) {
+                        shapeSquare = !shapeSquare
+                        it.isSelected = shapeSquare
+                        applyPenColor()
+                    }.apply { isSelected = shapeSquare; contentDescription = getString(R.string.px_opt_square) })
+                }
+            }
+            ZoomCanvasView.Tool.TEXT -> {
+                options.addView(fontChip(textFont) { textFont = it; applyPenColor(); rebuildOptions() })
+                options.addView(styleChip(R.drawable.ic_zc_bold, R.string.zc_bold, textStyle and TextItem.BOLD != 0) {
+                    textStyle = textStyle xor TextItem.BOLD
+                    applyPenColor()
+                })
+                options.addView(styleChip(R.drawable.ic_zc_italic, R.string.zc_italic, textStyle and TextItem.ITALIC != 0) {
+                    textStyle = textStyle xor TextItem.ITALIC
+                    applyPenColor()
+                })
+            }
+            else -> Unit
+        }
         if (draw != null) {
             options.addView(StepSlider(this, getString(R.string.px_opt_size), draw.min, draw.max, sizes[t]!!, { getString(R.string.px_opt_size_value, it) }) {
                 sizes[t] = it
@@ -358,24 +488,40 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
                 applyPenColor()
             })
         }
-        when (t) {
-            ZoomCanvasView.Tool.SELECT -> {
-                options.addView(chip(getString(R.string.zc_import_image), R.drawable.ic_px_image) { importImage.launch("image/*") })
-                val sel = canvasView.selectedImage
-                if (sel != null) {
-                    options.addView(divider())
-                    options.addView(chip(getString(R.string.zc_deselect), R.drawable.ic_px_close) { canvasView.selectImage(null) })
-                    options.addView(chip(getString(R.string.zc_image_delete), R.drawable.ic_px_delete) {
-                        vm.project?.scene?.deleteImage(sel)
-                        canvasView.selectImage(null)
+        if (t == ZoomCanvasView.Tool.ERASER_EDIT) {
+            options.addView(chip(getString(R.string.zc_eraser_edit_done), R.drawable.ic_px_check) { selectTool(ZoomCanvasView.Tool.ERASER) })
+        }
+        if (t == ZoomCanvasView.Tool.SELECT || t == ZoomCanvasView.Tool.ERASER_EDIT) {
+            if (t == ZoomCanvasView.Tool.SELECT) options.addView(chip(getString(R.string.zc_import_image), R.drawable.ic_px_image) { importImage.launch("image/*") })
+            val sel = canvasView.selectedItem
+            val item = sel?.let { vm.project?.scene?.box(it) }
+            if (sel != null && item != null) {
+                options.addView(divider())
+                when (item) {
+                    is TextItem -> selectedTextOptions(item)
+                    is ShapeItem -> selectedShapeOptions(item)
+                    // Un coup de gomme n'a pas de couleur : on le déplace, le redimensionne, le monte ou le supprime.
+                    is StrokeBox -> if (!item.stroke.isEraser) options.addView(chip(getString(R.string.zc_recolor), R.drawable.ic_px_palette) {
+                        vm.project?.scene?.changeBox(item.recolored(primary))
                         drawingChanged()
                     })
+                    else -> Unit
                 }
+                options.addView(chip(getString(R.string.zc_duplicate), R.drawable.ic_px_copy) {
+                    val copy = vm.project?.scene?.duplicateBox(sel, dp(16).toDouble())
+                    if (copy != null) canvasView.selectItem(copy.id)
+                    drawingChanged()
+                })
+                options.addView(chip(getString(R.string.zc_deselect), R.drawable.ic_px_close) { canvasView.selectItem(null) })
+                options.addView(chip(getString(R.string.px_delete), R.drawable.ic_px_delete) {
+                    vm.project?.scene?.deleteBox(sel)
+                    canvasView.selectItem(null)
+                    drawingChanged()
+                })
             }
-            else -> Unit
         }
         (options.parent as? ViewGroup)?.removeView(options)
-        val button = toolButtons[t] ?: return
+        val button = toolButtons[if (t == ZoomCanvasView.Tool.ERASER_EDIT) ZoomCanvasView.Tool.ERASER else t] ?: return
         if (options.childCount == 0) return
         val bar = button.parent as ViewGroup
         bar.addView(options, bar.indexOfChild(button) + 1, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -392,6 +538,120 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             }
             if (to != x) toolsScroll.smoothScrollTo(to, 0)
         }
+    }
+
+    // ---- Texte -------------------------------------------------------------------------------
+
+    private fun typefaceFor(font: String, style: Int): Typeface = typefaces.getOrPut("$font|$style") {
+        val base = if (font.isEmpty()) Typeface.DEFAULT else FontManager.getTypeface(this, font)
+        val bold = style and TextItem.BOLD != 0
+        val italic = style and TextItem.ITALIC != 0
+        Typeface.create(base, when { bold && italic -> Typeface.BOLD_ITALIC; bold -> Typeface.BOLD; italic -> Typeface.ITALIC; else -> Typeface.NORMAL })
+    }
+
+    /** Largeur de la ligne la plus longue de [text] pour une police de taille 1 (la scène en déduit la boîte). */
+    private fun unitWidth(text: String, font: String, style: Int): Double {
+        measurePaint.typeface = typefaceFor(font, style)
+        measurePaint.textSize = 100f
+        return text.split('\n').maxOf { measurePaint.measureText(it) } / 100.0
+    }
+
+    /** Un appui avec l'outil texte : écrire un nouveau texte à cet endroit, ou modifier celui qu'on a touché. */
+    private fun askText(id: Long?, sx: Double, sy: Double) {
+        val scene = vm.project?.scene ?: return
+        val existing = id?.let { scene.box(it) as? TextItem }
+        promptMultiline(R.string.zc_text_title, existing?.text.orEmpty()) { text -> applyText(existing, text, sx, sy) }
+    }
+
+    private fun applyText(existing: TextItem?, text: String, sx: Double, sy: Double) {
+        val scene = vm.project?.scene ?: return
+        if (existing != null) {
+            // Vider un texte le supprime.
+            if (text.isBlank()) scene.deleteBox(existing.id)
+            else scene.changeBox(existing.restyled(text = text, unitWidth = unitWidth(text, existing.font, existing.style)))
+        } else {
+            scene.addText(text, sx, sy, (sizes[ZoomCanvasView.Tool.TEXT] ?: 32).toDouble(), canvasView.color, textStyle, textFont, unitWidth(text, textFont, textStyle))
+        }
+        drawingChanged()
+    }
+
+    private fun fillIcon(f: ShapeFill) = when (f) {
+        ShapeFill.OUTLINE -> R.drawable.ic_px_fill_outline
+        ShapeFill.FILL -> R.drawable.ic_px_fill_solid
+        ShapeFill.BOTH -> R.drawable.ic_px_fill_both
+    }
+
+    private fun fillLabel(f: ShapeFill) = getString(when (f) {
+        ShapeFill.OUTLINE -> R.string.px_fill_outline
+        ShapeFill.FILL -> R.string.px_fill_solid
+        ShapeFill.BOTH -> R.string.px_fill_both
+    })
+
+    /** Contour, remplissage ou les deux : un appui passe au suivant. */
+    private fun fillChip(initial: ShapeFill, onPick: (ShapeFill) -> Unit): TextView {
+        var current = initial
+        return chip(fillLabel(current), fillIcon(current)) { v ->
+            current = ShapeFill.values()[(current.ordinal + 1) % ShapeFill.values().size]
+            v.text = fillLabel(current)
+            v.setCompoundDrawablesRelativeWithIntrinsicBounds(fillIcon(current), 0, 0, 0)
+            v.compoundDrawablesRelative[0]?.setBounds(0, 0, dp(18), dp(18))
+            onPick(current)
+        }.apply { contentDescription = getString(R.string.px_opt_fill_mode) }
+    }
+
+    private fun fontChip(font: String, onPick: (String) -> Unit): TextView =
+        chip(font.ifEmpty { getString(R.string.zc_font_default) }, R.drawable.ic_zc_text) { showFontSheet(font, onPick) }
+            .apply { contentDescription = getString(R.string.zc_font) }
+
+    /** Gras ou italique : une puce à bascule, allumée quand le style est actif. */
+    private fun styleChip(@androidx.annotation.DrawableRes icon: Int, @androidx.annotation.StringRes description: Int, on: Boolean, onToggle: () -> Unit): TextView =
+        chip(null, icon) { v ->
+            onToggle()
+            v.isSelected = !v.isSelected
+        }.apply { isSelected = on; contentDescription = getString(description) }
+
+    /** Les réglages d'un texte sélectionné : modifier, police, gras, italique, couleur. */
+    private fun selectedTextOptions(item: TextItem) {
+        val scene = vm.project?.scene ?: return
+        /** Même texte, autre style : la largeur change, le coin haut-gauche reste. */
+        fun restyle(style: Int = item.style, font: String = item.font) {
+            scene.changeBox(item.restyled(style = style, font = font, unitWidth = unitWidth(item.text, font, style)))
+            drawingChanged()
+        }
+        options.addView(chip(getString(R.string.zc_text_edit), R.drawable.ic_px_rename) { askText(item.id, 0.0, 0.0) })
+        options.addView(fontChip(item.font) { restyle(font = it) })
+        options.addView(styleChip(R.drawable.ic_zc_bold, R.string.zc_bold, item.bold) { restyle(style = item.style xor TextItem.BOLD) })
+        options.addView(styleChip(R.drawable.ic_zc_italic, R.string.zc_italic, item.italic) { restyle(style = item.style xor TextItem.ITALIC) })
+        options.addView(chip(getString(R.string.zc_recolor), R.drawable.ic_px_palette) {
+            scene.changeBox(item.copy(color = primary))
+            drawingChanged()
+        })
+    }
+
+    /** Les réglages d'une forme sélectionnée : contour / remplissage, couleurs. */
+    private fun selectedShapeOptions(item: ShapeItem) {
+        val scene = vm.project?.scene ?: return
+        if (item.kind != ShapeKind.LINE) {
+            options.addView(fillChip(item.fill) { f ->
+                // Plein : la couleur du trait ; les deux : la couleur secondaire ; contour seul : rien ne change.
+                val fillColor = when (f) { ShapeFill.FILL -> item.strokeColor; ShapeFill.BOTH -> secondary; ShapeFill.OUTLINE -> item.fillColor }
+                scene.changeBox(item.copy(fill = f, fillColor = fillColor))
+                drawingChanged()
+            })
+        }
+        options.addView(chip(getString(R.string.zc_recolor), R.drawable.ic_px_palette) {
+            scene.changeBox(item.copy(strokeColor = primary, fillColor = if (item.fill == ShapeFill.FILL) primary else secondary))
+            drawingChanged()
+        })
+    }
+
+    private fun showFontSheet(current: String, onPick: (String) -> Unit) {
+        val items = ArrayList<SheetItem>()
+        items.add(SheetItem(R.drawable.ic_zc_text, getString(R.string.zc_font_default), checked = current.isEmpty()) { onPick("") })
+        for (name in FontManager.getAvailableFontNames()) {
+            items.add(SheetItem(R.drawable.ic_zc_text, name, checked = name == current) { onPick(name) })
+        }
+        actionSheet(getString(R.string.zc_font), items).show()
     }
 
     // ---- Images ------------------------------------------------------------------------------
@@ -434,7 +694,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             bitmaps.put(key, bmp)
             val item = p.scene.addImage(key, bmp.width, bmp.height, canvasView.width * 0.6, canvasView.height * 0.6)
             selectTool(ZoomCanvasView.Tool.SELECT, quiet = true)
-            canvasView.selectImage(item.id)
+            canvasView.selectItem(item.id)
             drawingChanged()
         }
     }
@@ -624,13 +884,6 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     // ---- Menus -------------------------------------------------------------------------------
 
-    private fun showMenu() {
-        actionSheet(vm.project?.meta?.name, listOf(
-            SheetItem(R.drawable.ic_px_layers, getString(R.string.zc_layers_title)) { showLayers() },
-            SheetItem(R.drawable.ic_px_rename, getString(R.string.px_rename)) { askRename() },
-        )).show()
-    }
-
     private fun askRename() {
         val p = vm.project ?: return
         promptText(R.string.px_rename, p.meta.name, R.string.px_ok) { name ->
@@ -652,7 +905,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             }
             for (d in depths) {
                 val l = s.layer(d) ?: continue
-                val count = l.strokes.count { !it.isEraser } + l.images.size
+                val count = l.itemCount
                 val row = LinearLayout(this).apply {
                     orientation = LinearLayout.HORIZONTAL
                     gravity = Gravity.CENTER_VERTICAL
@@ -668,7 +921,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
                 row.setOnClickListener {
                     dialog.dismiss()
                     s.jumpTo(d, canvasView.width.toDouble(), canvasView.height.toDouble())
-                    canvasView.selectImage(null)
+                    canvasView.selectItem(null)
                     canvasView.invalidate()
                     viewMoved()
                 }

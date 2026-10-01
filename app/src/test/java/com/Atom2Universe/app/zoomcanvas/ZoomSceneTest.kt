@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.zoomcanvas
 
+import com.Atom2Universe.app.pixelart.core.ShapeFill
+import com.Atom2Universe.app.pixelart.core.ShapeKind
 import com.Atom2Universe.app.zoomcanvas.core.RenderList
 import com.Atom2Universe.app.zoomcanvas.core.Stroke
 import com.Atom2Universe.app.zoomcanvas.core.ZoomRenderer
@@ -789,32 +791,32 @@ class ZoomSceneTest {
         val scene = scene(10.0)
         scene.zoomAt(2.0, 100.0, 50.0)
         val img = scene.addImage("a.png", 400, 200, 600.0, 600.0)
-        val r = scene.imageScreenRect(img)
+        val r = scene.boxScreenRect(img)
         // 400×200 px réduits pour tenir dans 600×600 : 600×300 à l'écran, centré.
         assertEquals(-300.0, r[0], 1e-9)
         assertEquals(-150.0, r[1], 1e-9)
         assertEquals(300.0, r[2], 1e-9)
         assertEquals(150.0, r[3], 1e-9)
-        assertEquals(img.id, scene.imageAt(10.0, 10.0)?.id)
-        assertNull(scene.imageAt(400.0, 0.0))
+        assertEquals(img.id, scene.boxAt(10.0, 10.0)?.id)
+        assertNull(scene.boxAt(400.0, 0.0))
     }
 
     @Test
     fun anImageCanBeMovedResizedAndUndone() {
         val scene = scene(10.0)
         val img = scene.addImage("a.png", 100, 50, 200.0, 200.0) // 200×100 à l'écran
-        assertTrue(scene.beginImageEdit(img.id))
-        scene.moveImageBy(30.0, -10.0)
-        scene.endImageEdit()
-        val moved = scene.imageScreenRect(scene.image(img.id)!!)
+        assertTrue(scene.beginBoxEdit(img.id))
+        scene.moveBoxBy(30.0, -10.0)
+        scene.endBoxEdit()
+        val moved = scene.boxScreenRect(scene.box(img.id)!!)
         assertEquals(-70.0, moved[0], 1e-9)
         assertEquals(-60.0, moved[1], 1e-9)
 
         // On tire le coin bas-droit : le coin haut-gauche ne bouge pas, les proportions restent.
-        assertTrue(scene.beginImageEdit(img.id))
-        scene.resizeImageTo(2, 330.0, 140.0)
-        scene.endImageEdit()
-        val resized = scene.imageScreenRect(scene.image(img.id)!!)
+        assertTrue(scene.beginBoxEdit(img.id))
+        scene.resizeBoxTo(2, 330.0, 140.0)
+        scene.endBoxEdit()
+        val resized = scene.boxScreenRect(scene.box(img.id)!!)
         assertEquals(-70.0, resized[0], 1e-9)
         assertEquals(-60.0, resized[1], 1e-9)
         val w = resized[2] - resized[0]
@@ -823,18 +825,18 @@ class ZoomSceneTest {
         assertEquals(400.0, w, 1e-6)
 
         assertTrue(scene.undo())
-        assertEquals(moved[2], scene.imageScreenRect(scene.image(img.id)!!)[2], 1e-9)
+        assertEquals(moved[2], scene.boxScreenRect(scene.box(img.id)!!)[2], 1e-9)
         assertTrue(scene.undo())
-        assertEquals(100.0, scene.imageScreenRect(scene.image(img.id)!!)[2], 1e-9)
+        assertEquals(100.0, scene.boxScreenRect(scene.box(img.id)!!)[2], 1e-9)
         assertTrue(scene.undo())
-        assertNull(scene.image(img.id))
+        assertNull(scene.box(img.id))
         assertTrue(scene.redo())
-        assertNotNull(scene.image(img.id))
+        assertNotNull(scene.box(img.id))
 
-        scene.deleteImage(img.id)
-        assertNull(scene.image(img.id))
+        scene.deleteBox(img.id)
+        assertNull(scene.box(img.id))
         assertTrue(scene.undo())
-        assertNotNull(scene.image(img.id))
+        assertNotNull(scene.box(img.id))
     }
 
     @Test
@@ -843,7 +845,7 @@ class ZoomSceneTest {
         scene.draw(gesture)
         scene.zoomInto(200)
         val img = scene.addImage("a.png", 300, 300, 300.0, 300.0)
-        val r = scene.imageScreenRect(img)
+        val r = scene.boxScreenRect(img)
         assertEquals(-150.0, r[0], 1e-9)
         assertEquals(150.0, r[3], 1e-9)
         assertTrue(abs(img.x) < 1e4 && abs(img.w) < 1e4)
@@ -893,9 +895,21 @@ class ZoomSceneTest {
                     repeat(rnd.nextInt(1, 30)) { scene.extendStroke(x0 + rnd.nextDouble(-size, size), y0 + rnd.nextDouble(-size, size)) }
                     scene.endStroke()
                 }
-                8 -> when (rnd.nextInt(3)) {
+                8 -> when (rnd.nextInt(5)) {
                     0 -> scene.undo()
                     1 -> scene.redo()
+                    3 -> {
+                        // Des formes de toutes sortes et de toutes tailles, plus grandes que l'écran comprises.
+                        val kind = ShapeKind.values()[rnd.nextInt(ShapeKind.values().size)]
+                        val fill = ShapeFill.values()[rnd.nextInt(3)]
+                        val size = rnd.nextDouble(8.0, 9000.0)
+                        val x0 = rnd.nextDouble(-w, w)
+                        val y0 = rnd.nextDouble(-h, h)
+                        scene.beginShape(kind, fill, black, 0xFF44AA88.toInt(), rnd.nextDouble(1.0, 40.0), x0, y0, rnd.nextBoolean())
+                        scene.updateShape(x0 + rnd.nextDouble(-size, size), y0 + rnd.nextDouble(-size, size))
+                        scene.endShape()
+                    }
+                    4 -> scene.addText("Un texte\nsur deux lignes",rnd.nextDouble(-w, w), rnd.nextDouble(-h, h), rnd.nextDouble(8.0, 300.0), black, 0, "", 9.5)
                     else -> scene.addImage("k", rnd.nextInt(10, 3000), rnd.nextInt(10, 3000), rnd.nextDouble(10.0, 5000.0), rnd.nextDouble(10.0, 5000.0))
                 }
                 else -> {
@@ -915,6 +929,10 @@ class ZoomSceneTest {
                 assertTrue("valeur $v à l'étape $step (niveau ${scene.depth})", v.isFinite() && abs(v) <= limit)
             }
             for (r in 0 until out.runCount) assertTrue(out.runWidth[r] <= 4 * h)
+            for (r in 0 until out.runCount) if (out.runText[r] != null) {
+                val x = out.runTextX[r]; val y = out.runTextY[r]; val sz = out.runTextSize[r]
+                assertTrue("texte ($x, $y, $sz) à l'étape $step", x.isFinite() && y.isFinite() && sz.isFinite() && abs(x) <= 1e5f && abs(y) <= 1e5f && sz <= ZoomRenderer.MAX_TEXT_PX)
+            }
             for (i in 0 until 4 * out.imageCount) {
                 val v = out.imageDst[i]
                 assertTrue("image $v à l'étape $step", v.isFinite() && v >= -1f && v <= h.toFloat() + 1f)

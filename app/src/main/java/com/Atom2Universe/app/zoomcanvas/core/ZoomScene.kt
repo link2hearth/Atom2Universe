@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.zoomcanvas.core
 
+import com.Atom2Universe.app.pixelart.core.ShapeFill
+import com.Atom2Universe.app.pixelart.core.ShapeKind
 import kotlin.math.abs
 import kotlin.math.ln
 import kotlin.math.max
@@ -390,13 +392,12 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
             val s = l.strokes[i]
             l.strokes[i] = Stroke(s.id, s.x - dx, s.y - dy, s.pts, s.color, s.width, s.kind)
         }
-        for (i in l.images.indices) l.images[i] = l.images[i].moved(-dx, -dy)
-        l.invalidate()
+        l.mapBoxes { it.moved(-dx, -dy) }
         layer(l.depth + 1)?.let { it.ax -= dx; it.ay -= dy }
         if (l.depth == depth) { cx -= dx; cy -= dy }
     }
 
-    // ---- Images ---------------------------------------------------------------------------
+    // ---- Objets à boîte : images, formes, textes --------------------------------------------
 
     /**
      * Pose une image de [pxW]×[pxH] pixels au centre de l'écran, dans la couche de travail, à une
@@ -407,84 +408,255 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         anchorIfFresh(l)
         val k = min(fitW / pxW, fitH / pxH) / zoom
         val item = ImageItem(nextStrokeId++, key, pxW, pxH, cx, cy, pxW * k, pxH * k)
-        l.addImage(item)
-        record(Edit.AddImage(depth, item))
+        l.addBox(item)
+        record(Edit.AddBox(depth, item))
         return item
     }
 
-    /** L'image de la couche de travail sous l'écart d'écran [sx], [sy] (la dernière posée), ou null. */
-    fun imageAt(sx: Double, sy: Double): ImageItem? {
-        val l = layer(depth) ?: return null
+    /**
+     * Pose un texte de police [fontPx] pixels d'écran (rangée en unités de la couche, ÷ zoom, comme
+     * l'épaisseur d'un trait) dont le centre est à l'écart d'écran [sx], [sy]. [unitWidth] est la
+     * largeur de sa ligne la plus longue pour une police de taille 1 : l'écran la mesure.
+     */
+    fun addText(text: String, sx: Double, sy: Double, fontPx: Double, color: Int, style: Int, font: String, unitWidth: Double): TextItem? {
+        val t = text.take(TextItem.MAX_LENGTH)
+        if (t.isBlank()) return null
+        val l = layer(depth)!!
+        anchorIfFresh(l)
         val p = screenToLocal(sx, sy)
-        return l.images.filter { it.contains(p[0], p[1]) }.maxByOrNull { it.id }
+        val size = fontPx / zoom
+        val item = TextItem(nextStrokeId++, t, p[0], p[1], unitWidth * size, TextItem.heightOf(t, size), size, color, style, font)
+        l.addBox(item)
+        record(Edit.AddBox(depth, item))
+        return item
     }
 
-    fun image(id: Long): ImageItem? = layer(depth)?.images?.firstOrNull { it.id == id }
+    /**
+     * L'élément de la couche de travail sous l'écart d'écran [sx], [sy] (le plus en avant), ou null.
+     * Avec [below], celui qui est juste sous cet élément à cet endroit. [textOnly] ne cherche que les
+     * textes, [erasers] que les coups de gomme (le mode d'édition des gommes).
+     */
+    fun boxAt(sx: Double, sy: Double, below: Long? = null, textOnly: Boolean = false, erasers: Boolean = false): BoxItem? {
+        val l = layer(depth) ?: return null
+        val p = screenToLocal(sx, sy)
+        return l.boxAt(p[0], p[1], HIT_SLACK_PX / zoom, below, textOnly, erasers)
+    }
 
-    /** Coins d'une image à l'écran (écarts depuis le centre) : x0, y0, x1, y1. */
-    fun imageScreenRect(item: ImageItem): DoubleArray = doubleArrayOf(
+    fun box(id: Long): BoxItem? = layer(depth)?.box(id)
+
+    /** Coins d'un objet à l'écran (écarts depuis le centre) : x0, y0, x1, y1. */
+    fun boxScreenRect(item: BoxItem): DoubleArray = doubleArrayOf(
         (item.x - item.w / 2 - cx) * zoom, (item.y - item.h / 2 - cy) * zoom,
         (item.x + item.w / 2 - cx) * zoom, (item.y + item.h / 2 - cy) * zoom,
     )
 
-    private var imageBefore: ImageItem? = null
+    private var boxBefore: BoxItem? = null
 
-    /** Début d'un déplacement ou d'un redimensionnement de l'image [id] (un seul pas d'historique). */
-    fun beginImageEdit(id: Long): Boolean {
-        imageBefore = image(id)
-        return imageBefore != null
+    /** Début d'un déplacement ou d'un redimensionnement de l'objet [id] (un seul pas d'historique). */
+    fun beginBoxEdit(id: Long): Boolean {
+        boxBefore = box(id)
+        return boxBefore != null
     }
 
-    /** Déplace l'image en cours d'édition de [dx], [dy] pixels d'écran. */
-    fun moveImageBy(dx: Double, dy: Double) {
-        val cur = imageBefore?.let { image(it.id) } ?: return
-        replaceImage(cur.moved(dx / zoom, dy / zoom))
+    /** Déplace l'objet en cours d'édition de [dx], [dy] pixels d'écran. */
+    fun moveBoxBy(dx: Double, dy: Double) {
+        val cur = boxBefore?.let { box(it.id) } ?: return
+        replaceBox(cur.moved(dx / zoom, dy / zoom))
     }
 
     /**
-     * Redimensionne l'image en cours d'édition par son coin [corner] (0 haut-gauche, 1 haut-droit,
+     * Redimensionne l'objet en cours d'édition par son coin [corner] (0 haut-gauche, 1 haut-droit,
      * 2 bas-droit, 3 bas-gauche), tiré jusqu'à l'écart d'écran [sx], [sy]. Le coin opposé ne bouge
-     * pas et les proportions sont gardées.
+     * pas. Une image et un texte gardent leurs proportions ; une forme se déforme librement, et sa
+     * boîte se retourne si on tire le coin de l'autre côté du coin fixe.
      */
-    fun resizeImageTo(corner: Int, sx: Double, sy: Double) {
-        val start = imageBefore ?: return
+    fun resizeBoxTo(corner: Int, sx: Double, sy: Double) {
+        val start = boxBefore ?: return
         val signX = if (corner == 1 || corner == 2) 1.0 else -1.0
         val signY = if (corner >= 2) 1.0 else -1.0
         val ox = start.x - signX * start.w / 2
         val oy = start.y - signY * start.h / 2
         val p = screenToLocal(sx, sy)
-        // On suit le doigt sur la diagonale : l'échelle est la projection du doigt sur celle-ci.
-        val dx = signX * start.w
-        val dy = signY * start.h
-        val k = (((p[0] - ox) * dx + (p[1] - oy) * dy) / (dx * dx + dy * dy)).coerceAtLeast(MIN_IMAGE_PX / (zoom * max(start.w, start.h)))
-        val w = start.w * k
-        val h = start.h * k
-        val cur = image(start.id) ?: return
-        replaceImage(ImageItem(cur.id, cur.key, cur.pxW, cur.pxH, ox + signX * w / 2, oy + signY * h / 2, w, h))
-    }
-
-    fun endImageEdit() {
-        val before = imageBefore ?: return
-        imageBefore = null
-        val after = image(before.id) ?: return
-        if (after.x != before.x || after.y != before.y || after.w != before.w || after.h != before.h) {
-            record(Edit.ChangeImage(depth, before, after))
+        if (start.keepsRatio) {
+            if (start.w <= 0.0 && start.h <= 0.0) return
+            // On suit le doigt sur la diagonale : l'échelle est la projection du doigt sur celle-ci.
+            val dx = signX * start.w
+            val dy = signY * start.h
+            val k = (((p[0] - ox) * dx + (p[1] - oy) * dy) / (dx * dx + dy * dy)).coerceAtLeast(MIN_IMAGE_PX / (zoom * max(start.w, start.h)))
+            val w = start.w * k
+            val h = start.h * k
+            replaceBox(start.boxed(ox + signX * w / 2, oy + signY * h / 2, w, h))
+            return
         }
+        // Forme libre : la boîte va du coin fixe au doigt, retournée si le doigt passe de l'autre côté.
+        var w = abs(p[0] - ox)
+        var h = abs(p[1] - oy)
+        val floor = MIN_IMAGE_PX / zoom
+        if (w < floor && h < floor) {
+            // Jamais réduite à un point : une forme qu'on ne voit plus ne se rattrape pas.
+            if (w >= h) w = floor else h = floor
+        }
+        val crossX = (p[0] - ox) * signX < 0
+        val crossY = (p[1] - oy) * signY < 0
+        val x = ox + (if (crossX) -signX else signX) * w / 2
+        val y = oy + (if (crossY) -signY else signY) * h / 2
+        replaceBox(start.boxed(x, y, w, h, crossX, crossY))
     }
 
-    fun deleteImage(id: Long) {
+    fun endBoxEdit() {
+        val before = boxBefore ?: return
+        boxBefore = null
+        val after = box(before.id) ?: return
+        if (!sameBox(after, before)) record(Edit.ChangeBox(depth, before, after))
+    }
+
+    /** Deux objets identiques ? (Une image n'a pas d'égalité de valeur : on compare sa boîte.) */
+    private fun sameBox(a: BoxItem, b: BoxItem): Boolean = when {
+        a is ImageItem && b is ImageItem -> a.x == b.x && a.y == b.y && a.w == b.w && a.h == b.h
+        a is StrokeBox && b is StrokeBox ->
+            a.x == b.x && a.y == b.y && a.w == b.w && a.h == b.h && a.stroke.color == b.stroke.color && a.stroke.width == b.stroke.width
+        else -> a == b
+    }
+
+    /**
+     * Remplace l'objet de la couche de travail qui a l'identifiant de [item] (couleur, style,
+     * texte, remplissage…) en un seul pas d'historique.
+     */
+    fun changeBox(item: BoxItem) {
+        val before = box(item.id) ?: return
+        if (sameBox(before, item)) return
+        replaceBox(item)
+        record(Edit.ChangeBox(depth, before, item))
+    }
+
+    /** Pose une copie de l'objet [id], décalée de [offsetPx] pixels d'écran, devant tout le reste. Rend la copie. */
+    fun duplicateBox(id: Long, offsetPx: Double): BoxItem? {
+        val src = box(id) ?: return null
+        val d = offsetPx / zoom
+        val copy = when (val m = src.moved(d, d)) {
+            is ImageItem -> ImageItem(nextStrokeId, m.key, m.pxW, m.pxH, m.x, m.y, m.w, m.h)
+            is ShapeItem -> m.copy(id = nextStrokeId)
+            is TextItem -> m.copy(id = nextStrokeId)
+            is StrokeBox -> StrokeBox(Stroke(nextStrokeId, m.stroke.x, m.stroke.y, m.stroke.pts, m.stroke.color, m.stroke.width, m.stroke.kind))
+        }
+        nextStrokeId++
+        val l = layer(depth)!!
+        val at = l.orderIndex(id) + 1
+        l.addBox(copy, at)
+        record(Edit.AddBox(depth, copy, at))
+        return copy
+    }
+
+    fun deleteBox(id: Long) {
         val l = layer(depth) ?: return
-        val item = l.images.firstOrNull { it.id == id } ?: return
-        l.removeImage(id)
-        record(Edit.RemoveImage(depth, item))
+        val item = l.box(id) ?: return
+        val at = l.removeBox(id)
+        record(Edit.RemoveBox(depth, item, at))
     }
 
     /** Les images utilisées par le projet (clés de fichier), pour ranger les fichiers orphelins. */
     fun imageKeys(): Set<String> = layers.flatMap { l -> l.images.map { it.key } }.toSet()
 
-    private fun replaceImage(item: ImageItem) {
-        layer(depth)?.replaceImage(item)
+    private fun replaceBox(item: BoxItem) {
+        layer(depth)?.replaceBox(item)
         contentVersion++
+    }
+
+    // ---- Pile des éléments de la couche de travail -----------------------------------------
+
+    /** Où en est [id] dans la pile, et ce qu'on peut encore faire : rang visible, nombre, et les quatre déplacements. */
+    class OrderInfo(val rank: Int, val count: Int, val canBackward: Boolean, val canForward: Boolean, val canToBack: Boolean, val canToFront: Boolean)
+
+    fun orderInfo(id: Long): OrderInfo? {
+        val l = layer(depth) ?: return null
+        val r = l.visibleRank(id) ?: return null
+        return OrderInfo(
+            r[0], r[1],
+            l.moveTarget(id, OrderMove.BACKWARD) != null, l.moveTarget(id, OrderMove.FORWARD) != null,
+            l.moveTarget(id, OrderMove.TO_BACK) != null, l.moveTarget(id, OrderMove.TO_FRONT) != null,
+        )
+    }
+
+    /** Monte ou descend l'élément [id] dans la pile de la couche de travail (un pas d'historique). Faux s'il n'y a rien à faire. */
+    fun reorder(id: Long, move: OrderMove): Boolean {
+        val l = layer(depth) ?: return false
+        val to = l.moveTarget(id, move) ?: return false
+        val from = l.orderIndex(id)
+        l.moveInOrder(id, to)
+        record(Edit.Reorder(depth, id, from, to))
+        return true
+    }
+
+    // ---- Formes (tracées au doigt, d'un coin à l'autre) ------------------------------------
+
+    private var shapeAx = 0.0
+    private var shapeAy = 0.0
+    private var shapeBx = 0.0
+    private var shapeBy = 0.0
+    private var shapeActive = false
+    private var shapeKind = ShapeKind.RECT
+    private var shapeFill = ShapeFill.OUTLINE
+    private var shapeStroke = 0
+    private var shapeFillColor = 0
+    private var shapeWidth = 1.0
+    private var shapeSquare = false
+
+    val isDrawingShape: Boolean get() = shapeActive
+
+    /**
+     * Commence une forme dont un coin est à l'écart d'écran [sx], [sy]. [widthPx] est l'épaisseur du
+     * contour à l'écran au moment du tracé : rangée en unités de la couche (÷ zoom), comme un crayon.
+     * [square] force une forme carrée / ronde / équilatérale (sans effet sur la ligne et la flèche).
+     */
+    fun beginShape(kind: ShapeKind, fill: ShapeFill, strokeColor: Int, fillColor: Int, widthPx: Double, sx: Double, sy: Double, square: Boolean) {
+        anchorIfFresh(layer(depth)!!)
+        val p = screenToLocal(sx, sy)
+        shapeAx = p[0]; shapeAy = p[1]; shapeBx = p[0]; shapeBy = p[1]
+        shapeKind = kind; shapeFill = fill; shapeStroke = strokeColor; shapeFillColor = fillColor
+        shapeWidth = widthPx / zoom
+        shapeSquare = square
+        shapeActive = true
+    }
+
+    /** Tire le coin opposé jusqu'à l'écart d'écran [sx], [sy]. */
+    fun updateShape(sx: Double, sy: Double) {
+        if (!shapeActive) return
+        val p = screenToLocal(sx, sy)
+        shapeBx = p[0]; shapeBy = p[1]
+    }
+
+    /** La forme en cours (id 0), tracée par-dessus tout le reste, ou null. */
+    fun liveShape(): ShapeItem? = if (shapeActive) buildShape(0L) else null
+
+    private fun buildShape(id: Long): ShapeItem {
+        var dx = shapeBx - shapeAx
+        var dy = shapeBy - shapeAy
+        val directed = shapeKind == ShapeKind.LINE || shapeKind == ShapeKind.ARROW
+        if (shapeSquare && !directed) {
+            val m = max(abs(dx), abs(dy))
+            dx = if (dx < 0) -m else m
+            dy = if (dy < 0) -m else m
+        }
+        return ShapeItem(
+            id, shapeKind, shapeAx + dx / 2, shapeAy + dy / 2, abs(dx), abs(dy),
+            directed && dx < 0, directed && dy < 0, shapeStroke, shapeFillColor, shapeFill, shapeWidth,
+        )
+    }
+
+    fun cancelShape() {
+        shapeActive = false
+    }
+
+    /** Termine la forme et la pose dans la couche de travail. Un simple appui, trop petit, ne laisse rien. */
+    fun endShape(): ShapeItem? {
+        if (!shapeActive) return null
+        shapeActive = false
+        val probe = buildShape(0L)
+        if (max(probe.w, probe.h) * zoom < MIN_SHAPE_PX) return null
+        val item = probe.copy(id = nextStrokeId++)
+        layer(depth)!!.addBox(item)
+        record(Edit.AddBox(depth, item))
+        return item
     }
 
     // ---- Réalignement ---------------------------------------------------------------------
@@ -535,9 +707,12 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
     sealed class Edit {
         class Add(val depth: Long, val stroke: Stroke) : Edit()
         class Move(val depth: Long, val dx: Double, val dy: Double) : Edit()
-        class AddImage(val depth: Long, val item: ImageItem) : Edit()
-        class RemoveImage(val depth: Long, val item: ImageItem) : Edit()
-        class ChangeImage(val depth: Long, val before: ImageItem, val after: ImageItem) : Edit()
+        /** [index] : rang de dessin de l'objet (-1 : tout devant). */
+        class AddBox(val depth: Long, val item: BoxItem, val index: Int = -1) : Edit()
+        class RemoveBox(val depth: Long, val item: BoxItem, val index: Int) : Edit()
+        /** L'élément [id] passe du rang [from] au rang [to] de la pile de sa couche. */
+        class Reorder(val depth: Long, val id: Long, val from: Int, val to: Int) : Edit()
+        class ChangeBox(val depth: Long, val before: BoxItem, val after: BoxItem) : Edit()
     }
 
     private val undoStack = ArrayDeque<Edit>()
@@ -585,15 +760,16 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
                 l.ax += sign * e.dx
                 l.ay += sign * e.dy
             }
-            is Edit.AddImage -> {
+            is Edit.AddBox -> {
                 val l = layer(e.depth) ?: return
-                if (reverse) l.removeImage(e.item.id) else l.addImage(e.item)
+                if (reverse) l.removeBox(e.item.id) else l.addBox(e.item, e.index)
             }
-            is Edit.RemoveImage -> {
+            is Edit.RemoveBox -> {
                 val l = layer(e.depth) ?: return
-                if (reverse) l.addImage(e.item) else l.removeImage(e.item.id)
+                if (reverse) l.addBox(e.item, e.index) else l.removeBox(e.item.id)
             }
-            is Edit.ChangeImage -> layer(e.depth)?.replaceImage(if (reverse) e.before else e.after)
+            is Edit.Reorder -> layer(e.depth)?.moveInOrder(e.id, if (reverse) e.from else e.to)
+            is Edit.ChangeBox -> layer(e.depth)?.replaceBox(if (reverse) e.before else e.after)
         }
     }
 
@@ -617,6 +793,8 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         for (l in layers) {
             for (s in l.strokes) maxId = max(maxId, s.id)
             for (i in l.images) maxId = max(maxId, i.id)
+            for (i in l.shapes) maxId = max(maxId, i.id)
+            for (i in l.texts) maxId = max(maxId, i.id)
         }
         nextStrokeId = max(nextId, maxId + 1)
         undoStack.clear(); redoStack.clear()
@@ -642,13 +820,17 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
          * doublé (un petit bout de pincement).
          */
         const val FADE_ZOOM = 2.0
-        /** Une image ne se réduit pas en dessous de cette taille à l'écran (pixels). */
+        /** Un objet ne se réduit pas en dessous de cette taille à l'écran (pixels). */
         const val MIN_IMAGE_PX = 12.0
+        /** Une forme tracée plus petite que ça (un simple appui) n'est pas gardée. */
+        const val MIN_SHAPE_PX = 6.0
+        /** De combien un doigt déborde d'un objet pour le toucher (pixels d'écran). */
+        const val HIT_SLACK_PX = 8.0
         const val MAX_HISTORY = 300
     }
 }
 
-/** Ce qu'une couche contient : un trait (gomme comprise) ou une image, chacun avec son identifiant. */
+/** Ce qu'une couche contient : un trait (gomme comprise), une image, une forme ou un texte, chacun avec son identifiant. */
 sealed interface LayerItem {
     val id: Long
 }
@@ -661,8 +843,13 @@ sealed interface LayerItem {
 class Layer(val depth: Long, var ax: Double, var ay: Double) {
     val strokes = ArrayList<Stroke>()
     val images = ArrayList<ImageItem>()
+    val shapes = ArrayList<ShapeItem>()
+    val texts = ArrayList<TextItem>()
 
-    val isEmpty: Boolean get() = strokes.isEmpty() && images.isEmpty()
+    val isEmpty: Boolean get() = strokes.isEmpty() && images.isEmpty() && shapes.isEmpty() && texts.isEmpty()
+
+    /** Ce qu'on voit dans la couche (les coups de gomme ne comptent pas, ils ne font que creuser). */
+    val itemCount: Int get() = strokes.count { !it.isEraser } + images.size + shapes.size + texts.size
     /** A déjà porté quelque chose : on ne l'oublie plus (l'historique compte sur son repère). */
     var used = false
 
@@ -671,31 +858,97 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
     private var order: List<LayerItem>? = null
     private var eraser = false
 
+    /**
+     * Les identifiants dans l'ordre de dessin : du fond (premier) à l'avant (dernier). Par défaut,
+     * l'ordre où les éléments ont été posés ; la sélection peut les monter ou les descendre.
+     */
+    private val zOrder = ArrayList<Long>()
+
     fun add(s: Stroke) {
         strokes.add(s)
+        zOrder.add(s.id)
         used = true
         invalidate()
     }
 
     fun remove(id: Long) {
         strokes.removeAll { it.id == id }
+        zOrder.remove(id)
         invalidate()
     }
 
-    fun addImage(i: ImageItem) {
-        images.add(i)
+    fun addImage(i: ImageItem) = addBox(i)
+
+    /** Pose une image, une forme, un texte ou un trait, à la fin (devant tout) ou au rang [index] de l'ordre de dessin. */
+    fun addBox(b: BoxItem, index: Int = -1) {
+        when (b) {
+            is ImageItem -> images.add(b)
+            is ShapeItem -> shapes.add(b)
+            is TextItem -> texts.add(b)
+            is StrokeBox -> strokes.add(b.stroke)
+        }
+        if (index in 0..zOrder.size) zOrder.add(index, b.id) else zOrder.add(b.id)
         used = true
         invalidate()
     }
 
-    fun removeImage(id: Long) {
+    /** Retire l'élément [id] et rend le rang qu'il avait dans l'ordre de dessin (-1 s'il n'y était pas). */
+    fun removeBox(id: Long): Int {
+        val at = zOrder.indexOf(id)
         images.removeAll { it.id == id }
+        shapes.removeAll { it.id == id }
+        texts.removeAll { it.id == id }
+        strokes.removeAll { it.id == id }
+        if (at >= 0) zOrder.removeAt(at)
+        invalidate()
+        return at
+    }
+
+    /** Remplace l'élément de même identifiant : son rang de dessin ne change pas. */
+    fun replaceBox(b: BoxItem) {
+        when (b) {
+            is ImageItem -> { val k = images.indexOfFirst { it.id == b.id }; if (k >= 0) images[k] = b }
+            is ShapeItem -> { val k = shapes.indexOfFirst { it.id == b.id }; if (k >= 0) shapes[k] = b }
+            is TextItem -> { val k = texts.indexOfFirst { it.id == b.id }; if (k >= 0) texts[k] = b }
+            is StrokeBox -> { val k = strokes.indexOfFirst { it.id == b.id }; if (k >= 0) strokes[k] = b.stroke }
+        }
         invalidate()
     }
 
-    fun replaceImage(i: ImageItem) {
-        val k = images.indexOfFirst { it.id == i.id }
-        if (k >= 0) images[k] = i
+    /** L'élément [id] (un coup de gomme compris : on l'édite dans le mode d'édition des gommes), ou null. */
+    fun box(id: Long): BoxItem? =
+        images.firstOrNull { it.id == id } ?: shapes.firstOrNull { it.id == id } ?: texts.firstOrNull { it.id == id }
+            ?: strokes.firstOrNull { it.id == id }?.let { StrokeBox(it) }
+
+    /**
+     * L'élément que touche le point, le plus en avant d'abord. Avec [below], celui qui est juste
+     * sous cet élément à cet endroit (et, s'il n'y en a plus, on repart du dessus) : un appui répété
+     * descend ainsi dans la pile. [textOnly] ne regarde que les textes ; [erasers] ne regarde que les
+     * coups de gomme (et eux seuls : sinon ils sont invisibles pour la sélection).
+     */
+    fun boxAt(px: Double, py: Double, slack: Double, below: Long? = null, textOnly: Boolean = false, erasers: Boolean = false): BoxItem? {
+        val hits = ArrayList<BoxItem>(2)
+        val items = drawOrder()
+        for (k in items.indices.reversed()) {
+            val item = items[k]
+            val box: BoxItem = when (item) {
+                is BoxItem -> if (erasers) continue else item
+                is Stroke -> if (item.isEraser != erasers) continue else StrokeBox(item)
+            }
+            if (textOnly && box !is TextItem) continue
+            if (box.hit(px, py, slack)) hits.add(box)
+        }
+        if (hits.isEmpty()) return null
+        if (below == null) return hits[0]
+        val at = hits.indexOfFirst { it.id == below }
+        return hits[if (at < 0) 0 else (at + 1) % hits.size]
+    }
+
+    /** Remplace tous les objets à boîte (hors traits) par [f] appliquée à chacun (recentrage de la couche). */
+    fun mapBoxes(f: (BoxItem) -> BoxItem) {
+        for (i in images.indices) images[i] = f(images[i]) as ImageItem
+        for (i in shapes.indices) shapes[i] = f(shapes[i]) as ShapeItem
+        for (i in texts.indices) texts[i] = f(texts[i]) as TextItem
         invalidate()
     }
 
@@ -704,13 +957,83 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
         order = null
     }
 
-    /** Traits, coups de gomme et images, dans l'ordre où ils ont été posés : l'ordre de dessin. */
+    /** Traits, coups de gomme, images, formes et textes dans l'ordre de dessin : du fond vers l'avant. */
     fun drawOrder(): List<LayerItem> =
-        order ?: ArrayList<LayerItem>(strokes.size + images.size).apply {
-            addAll(strokes)
-            addAll(images)
-            sortBy { it.id }
+        order ?: run {
+            val byId = HashMap<Long, LayerItem>(zOrder.size * 2 + 1)
+            for (s in strokes) byId[s.id] = s
+            for (i in images) byId[i.id] = i
+            for (i in shapes) byId[i.id] = i
+            for (i in texts) byId[i.id] = i
+            zOrder.mapNotNull { byId[it] }
         }.also { order = it }
+
+    // ---- Ordre de dessin ------------------------------------------------------------------
+
+    /** Remet l'ordre par défaut : celui des identifiants, donc de la pose. */
+    fun resetOrderById() {
+        zOrder.clear()
+        zOrder.addAll((strokes.map { it.id } + images.map { it.id } + shapes.map { it.id } + texts.map { it.id }).sorted())
+        invalidate()
+    }
+
+    /** Impose l'ordre [ids] (du fond vers l'avant) ; ce qui n'y figure pas est posé devant, dans l'ordre des identifiants. */
+    fun setOrder(ids: List<Long>) {
+        val known = HashSet<Long>(zOrder)
+        val wanted = ids.filter { it in known }.distinct()
+        val wantedSet = wanted.toSet()
+        val missing = zOrder.filter { it !in wantedSet }.sorted()
+        zOrder.clear()
+        zOrder.addAll(wanted)
+        zOrder.addAll(missing)
+        invalidate()
+    }
+
+    /** L'ordre n'est plus celui de la pose : il faut le ranger dans le fichier. */
+    val hasCustomOrder: Boolean get() = zOrder != zOrder.sorted()
+    val orderIds: List<Long> get() = zOrder
+
+    fun orderIndex(id: Long): Int = zOrder.indexOf(id)
+
+    private fun visibleAt(items: List<LayerItem>, k: Int): Boolean = !(items[k] is Stroke && (items[k] as Stroke).isEraser)
+
+    /**
+     * Le rang où irait [id] pour un déplacement [move], ou null s'il n'y a rien à faire. Les coups
+     * de gomme se traversent : « d'un cran » veut dire juste après le prochain élément visible.
+     * Passer devant un coup de gomme, c'est ne plus être creusé par lui ; passer derrière, l'être.
+     */
+    fun moveTarget(id: Long, move: OrderMove): Int? {
+        val items = drawOrder()
+        val i = items.indexOfFirst { it.id == id }
+        if (i < 0) return null
+        return when (move) {
+            OrderMove.FORWARD -> (i + 1 until items.size).firstOrNull { visibleAt(items, it) }
+            OrderMove.BACKWARD -> (i - 1 downTo 0).firstOrNull { visibleAt(items, it) }
+            OrderMove.TO_FRONT -> if (i < items.size - 1) items.size - 1 else null
+            OrderMove.TO_BACK -> if ((0 until i).any { visibleAt(items, it) }) 0 else null
+        }
+    }
+
+    /** Range [id] au rang [to] (compté dans l'ordre d'avant le déplacement). */
+    fun moveInOrder(id: Long, to: Int) {
+        val from = zOrder.indexOf(id)
+        if (from < 0) return
+        zOrder.removeAt(from)
+        zOrder.add(to.coerceIn(0, zOrder.size), id)
+        invalidate()
+    }
+
+    /** Rang de [id] parmi les éléments visibles (1 = le plus au fond) et leur nombre, ou null. */
+    fun visibleRank(id: Long): IntArray? {
+        val items = drawOrder()
+        val i = items.indexOfFirst { it.id == id }
+        if (i < 0) return null
+        // Pour un coup de gomme : le nombre d'éléments visibles qu'il y a sous lui, donc ceux qu'il creuse.
+        var rank = 0
+        var count = 0
+        for (k in items.indices) if (visibleAt(items, k)) { count++; if (k <= i) rank++ }
+        return intArrayOf(rank, count)
+    }
 
     /** Contient au moins un coup de gomme : il faut alors la composer à part pour qu'il ne creuse qu'elle. */
     val hasEraser: Boolean get() { bounds(); return eraser }
@@ -731,6 +1054,14 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
                 x1 = max(x1, s.x + s.maxX + h); y1 = max(y1, s.y + s.maxY + h)
             }
             for (i in images) {
+                x0 = min(x0, i.x - i.w / 2); y0 = min(y0, i.y - i.h / 2)
+                x1 = max(x1, i.x + i.w / 2); y1 = max(y1, i.y + i.h / 2)
+            }
+            for (i in shapes) {
+                val b = ShapeGeometry.bounds(i)
+                x0 = min(x0, b[0]); y0 = min(y0, b[1]); x1 = max(x1, b[2]); y1 = max(y1, b[3])
+            }
+            for (i in texts) {
                 x0 = min(x0, i.x - i.w / 2); y0 = min(y0, i.y - i.h / 2)
                 x1 = max(x1, i.x + i.w / 2); y1 = max(y1, i.y + i.h / 2)
             }
@@ -827,7 +1158,9 @@ class Stroke(
  * Une image posée sur une couche : son centre ([x], [y]) et sa taille ([w], [h]) en unités de la
  * couche. Les pixels vivent dans un fichier du projet ([key]) de [pxW]×[pxH] pixels.
  */
-class ImageItem(override val id: Long, val key: String, val pxW: Int, val pxH: Int, val x: Double, val y: Double, val w: Double, val h: Double) : LayerItem {
-    fun contains(px: Double, py: Double) = px >= x - w / 2 && px <= x + w / 2 && py >= y - h / 2 && py <= y + h / 2
-    fun moved(dx: Double, dy: Double) = ImageItem(id, key, pxW, pxH, x + dx, y + dy, w, h)
+class ImageItem(override val id: Long, val key: String, val pxW: Int, val pxH: Int, override val x: Double, override val y: Double, override val w: Double, override val h: Double) : BoxItem {
+    override val keepsRatio: Boolean get() = true
+    fun contains(px: Double, py: Double) = hit(px, py, 0.0)
+    override fun moved(dx: Double, dy: Double) = ImageItem(id, key, pxW, pxH, x + dx, y + dy, w, h)
+    override fun boxed(x: Double, y: Double, w: Double, h: Double, crossX: Boolean, crossY: Boolean) = ImageItem(id, key, pxW, pxH, x, y, w, h)
 }

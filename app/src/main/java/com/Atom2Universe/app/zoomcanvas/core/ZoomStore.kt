@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.zoomcanvas.core
 
+import com.Atom2Universe.app.pixelart.core.ShapeFill
+import com.Atom2Universe.app.pixelart.core.ShapeKind
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.DataInputStream
@@ -45,7 +47,16 @@ class ZoomSnapshot(
     val layers: List<LayerData>,
     val contentVersion: Long,
 ) {
-    class LayerData(val ax: Double, val ay: Double, val strokes: List<Stroke>, val images: List<ImageItem> = emptyList())
+    class LayerData(
+        val ax: Double,
+        val ay: Double,
+        val strokes: List<Stroke>,
+        val images: List<ImageItem> = emptyList(),
+        val shapes: List<ShapeItem> = emptyList(),
+        val texts: List<TextItem> = emptyList(),
+        /** L'ordre de dessin s'il n'est plus celui de la pose (sinon null : l'ordre des identifiants). */
+        val order: List<Long>? = null,
+    )
 
     companion object {
         fun of(meta: ZoomProjectMeta, scene: ZoomScene): ZoomSnapshot {
@@ -56,7 +67,7 @@ class ZoomSnapshot(
             val kept = ArrayList<LayerData>()
             for (d in lo..hi) {
                 val l = scene.layer(d)!!
-                kept.add(LayerData(l.ax, l.ay, ArrayList(l.strokes), ArrayList(l.images)))
+                kept.add(LayerData(l.ax, l.ay, ArrayList(l.strokes), ArrayList(l.images), ArrayList(l.shapes), ArrayList(l.texts), if (l.hasCustomOrder) ArrayList(l.orderIds) else null))
             }
             return ZoomSnapshot(meta, scene.ratio, scene.depth, scene.cx, scene.cy, scene.zoom, scene.nextStrokeId, lo, kept, scene.contentVersion)
         }
@@ -179,8 +190,8 @@ class ZoomStore(val root: File) {
         out.writeLong(s.meta.created)
         out.writeLong(s.meta.modified)
         out.writeDouble(s.ratio)
-        out.writeInt(s.layers.count { it.strokes.isNotEmpty() || it.images.isNotEmpty() })
-        out.writeInt(s.layers.sumOf { it.strokes.size + it.images.size })
+        out.writeInt(s.layers.count { it.strokes.isNotEmpty() || it.images.isNotEmpty() || it.shapes.isNotEmpty() || it.texts.isNotEmpty() })
+        out.writeInt(s.layers.sumOf { it.strokes.size + it.images.size + it.shapes.size + it.texts.size })
         out.writeLong(s.camDepth)
         out.writeDouble(s.cx)
         out.writeDouble(s.cy)
@@ -212,6 +223,39 @@ class ZoomStore(val root: File) {
                 out.writeDouble(im.y)
                 out.writeDouble(im.w)
                 out.writeDouble(im.h)
+            }
+            out.writeInt(l.shapes.size)
+            for (sh in l.shapes) {
+                out.writeLong(sh.id)
+                out.writeByte(sh.kind.ordinal)
+                out.writeDouble(sh.x)
+                out.writeDouble(sh.y)
+                out.writeDouble(sh.w)
+                out.writeDouble(sh.h)
+                out.writeByte((if (sh.flipX) 1 else 0) or (if (sh.flipY) 2 else 0))
+                out.writeInt(sh.strokeColor)
+                out.writeInt(sh.fillColor)
+                out.writeByte(sh.fill.ordinal)
+                out.writeDouble(sh.width)
+            }
+            out.writeInt(l.texts.size)
+            for (t in l.texts) {
+                out.writeLong(t.id)
+                out.writeUTF(t.text)
+                out.writeDouble(t.x)
+                out.writeDouble(t.y)
+                out.writeDouble(t.w)
+                out.writeDouble(t.h)
+                out.writeDouble(t.fontSize)
+                out.writeInt(t.color)
+                out.writeByte(t.style)
+                out.writeUTF(t.font)
+            }
+            val order = l.order
+            out.writeByte(if (order != null) 1 else 0)
+            if (order != null) {
+                out.writeInt(order.size)
+                for (id in order) out.writeLong(id)
             }
         }
         out.writeInt(END_MAGIC)
@@ -286,6 +330,48 @@ class ZoomStore(val root: File) {
                             l.addImage(item)
                         }
                     }
+                    if (version >= 6) {
+                        val kinds = ShapeKind.values()
+                        val fills = ShapeFill.values()
+                        val shc = inp.readInt()
+                        if (shc < 0) return null
+                        for (k in 0 until shc) {
+                            val shId = inp.readLong()
+                            val kind = kinds.getOrNull(inp.readByte().toInt()) ?: return null
+                            val x = inp.readDouble()
+                            val y = inp.readDouble()
+                            val w = inp.readDouble()
+                            val h = inp.readDouble()
+                            val flips = inp.readByte().toInt()
+                            val stroke = inp.readInt()
+                            val fillColor = inp.readInt()
+                            val fill = fills.getOrNull(inp.readByte().toInt()) ?: return null
+                            val width = inp.readDouble()
+                            l.addBox(ShapeItem(shId, kind, x, y, w, h, flips and 1 != 0, flips and 2 != 0, stroke, fillColor, fill, width))
+                        }
+                        val tc = inp.readInt()
+                        if (tc < 0) return null
+                        for (k in 0 until tc) {
+                            val tid = inp.readLong()
+                            val text = inp.readUTF()
+                            val x = inp.readDouble()
+                            val y = inp.readDouble()
+                            val w = inp.readDouble()
+                            val h = inp.readDouble()
+                            val size = inp.readDouble()
+                            val color = inp.readInt()
+                            val style = inp.readByte().toInt()
+                            val font = inp.readUTF()
+                            l.addBox(TextItem(tid, text, x, y, w, h, size, color, style, font))
+                        }
+                    }
+                    // Les éléments ont été lus par sorte : l'ordre par défaut est celui des identifiants.
+                    l.resetOrderById()
+                    if (version >= 7 && inp.readByte().toInt() == 1) {
+                        val oc = inp.readInt()
+                        if (oc < 0) return null
+                        l.setOrder(List(oc) { inp.readLong() })
+                    }
                     layers.add(l)
                 }
                 if (inp.readInt() != END_MAGIC) return null
@@ -305,10 +391,11 @@ class ZoomStore(val root: File) {
         private const val END_MAGIC = 0x454E4421 // « END! » : un fichier tronqué est rejeté
         /**
          * 1 : traits seuls ; 2 : plus les images de chaque couche ; 4 : même contenu que 2, épaisseurs
-         * choisies à l'écran ; 5 : plus l'outil de chaque trait (crayon, pinceau, feutre). Le 3 (couches en pixels, essai du 30/09 abandonné) reste listé dans la
+         * choisies à l'écran ; 5 : plus l'outil de chaque trait (crayon, pinceau, feutre) ; 6 : plus les
+         * formes et les textes de chaque couche ; 7 : plus l'ordre de dessin de chaque couche, quand il n'est plus celui de la pose. Le 3 (couches en pixels, essai du 30/09 abandonné) reste listé dans la
          * galerie pour pouvoir le supprimer, mais ne s'ouvre plus.
          */
-        private const val VERSION = 5
+        private const val VERSION = 7
         private const val PIXEL_VERSION = 3
     }
 }

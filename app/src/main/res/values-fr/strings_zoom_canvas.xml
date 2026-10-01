@@ -29,15 +29,28 @@
         <item quantity="many">%1$d couches</item>
         <item quantity="other">%1$d couches</item>
     </plurals>
-    <string name="zc_tool_select">Sélectionner une image</string>
-    <string name="zc_select_hint">Touchez une image pour la sélectionner : glissez-la pour la déplacer, tirez un coin pour la redimensionner.</string>
+    <string name="zc_tool_select">Sélectionner et modifier</string>
     <string name="zc_import_image">Importer une image</string>
     <string name="zc_import_failed">Impossible d\'ouvrir cette image</string>
-    <string name="zc_image_delete">Supprimer l\'image</string>
     <string name="zc_deselect">Désélectionner</string>
     <plurals name="zc_items_count">
         <item quantity="one">%1$d élément</item>
         <item quantity="many">%1$d éléments</item>
         <item quantity="other">%1$d éléments</item>
     </plurals>
+    <string name="zc_tool_text">Texte</string>
+    <string name="zc_text_title">Texte</string>
+    <string name="zc_text_edit">Modifier le texte</string>
+    <string name="zc_font">Police</string>
+    <string name="zc_font_default">Par défaut</string>
+    <string name="zc_bold">Gras</string>
+    <string name="zc_italic">Italique</string>
+    <string name="zc_duplicate">Dupliquer</string>
+    <string name="zc_recolor">Appliquer les couleurs</string>
+    <string name="zc_order_front">Tout devant</string>
+    <string name="zc_order_forward">Monter d\'un cran</string>
+    <string name="zc_order_backward">Descendre d\'un cran</string>
+    <string name="zc_order_back">Tout derrière</string>
+    <string name="zc_order_position">%1$d / %2$d</string>
+    <string name="zc_eraser_edit_done">Terminé</string>
 </resources>

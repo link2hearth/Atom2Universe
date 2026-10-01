@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.zoomcanvas.core
 
+import com.Atom2Universe.app.pixelart.core.ShapeKind
 import kotlin.math.max
 import kotlin.math.min
 
@@ -39,8 +40,20 @@ class RenderList {
     /** Un coup de gomme : il efface, dans son groupe, ce qui a été tracé avant lui. */
     var runErase = BooleanArray(256)
         private set
-    /** L'outil du trait ([Stroke.PEN], [Stroke.BRUSH], [Stroke.MARKER]). */
+    /** L'outil du trait ([Stroke.PEN], [Stroke.BRUSH], [Stroke.MARKER]), ou [KIND_FILL] pour un remplissage. */
     var runKind = ByteArray(256)
+        private set
+    /**
+     * Pour une passe de texte : le texte, et à l'écran le coin haut-gauche et la taille de la police
+     * (pixels), dans [runTextX], [runTextY], [runTextSize] ; null pour toute autre passe.
+     */
+    var runText = arrayOfNulls<TextItem>(256)
+        private set
+    var runTextX = FloatArray(256)
+        private set
+    var runTextY = FloatArray(256)
+        private set
+    var runTextSize = FloatArray(256)
         private set
     /**
      * L'épaisseur à l'écran en chaque point (un nombre par point, dans l'ordre de [coords]) : la
@@ -129,6 +142,7 @@ class RenderList {
             runStart = runStart.copyOf(n); runPoints = runPoints.copyOf(n)
             runColor = runColor.copyOf(n); runWidth = runWidth.copyOf(n); runAlpha = runAlpha.copyOf(n)
             runImage = runImage.copyOf(n); runErase = runErase.copyOf(n); runKind = runKind.copyOf(n)
+            runText = runText.copyOf(n); runTextX = runTextX.copyOf(n); runTextY = runTextY.copyOf(n); runTextSize = runTextSize.copyOf(n)
         }
         runStart[runCount] = coordCount
         runPoints[runCount] = 0
@@ -138,7 +152,17 @@ class RenderList {
         runImage[runCount] = -1
         runErase[runCount] = erase
         runKind[runCount] = kind.toByte()
+        runText[runCount] = null
         runCount++
+    }
+
+    internal fun addText(item: TextItem, x: Double, y: Double, size: Double, alpha: Float) {
+        beginRun(item.color, 0f, alpha)
+        val r = runCount - 1
+        runText[r] = item
+        runTextX[r] = x.toFloat()
+        runTextY[r] = y.toFloat()
+        runTextSize[r] = size.toFloat()
     }
 
     internal fun addImage(item: ImageItem, src: DoubleArray, dst: DoubleArray, alpha: Float) {
@@ -157,6 +181,11 @@ class RenderList {
         }
         beginRun(0, 0f, alpha)
         runImage[runCount - 1] = i
+    }
+
+    companion object {
+        /** Le « outil » d'une passe qui remplit un polygone au lieu de tracer un trait. */
+        const val KIND_FILL = 3
     }
 
     internal fun addPoint(x: Double, y: Double, width: Double = runWidth[runCount - 1].toDouble()) {
@@ -188,10 +217,27 @@ object ZoomRenderer {
     const val MIN_WIDTH_PX = 0.8
     /** Les couches vues depuis la couche de travail vers le bas : elle et celle d'en dessous. */
     const val MAX_LAYERS = 2
+    /** Une police plus grande que ça à l'écran n'est pas dessinée (le moteur graphique ne suivrait pas). */
+    const val MAX_TEXT_PX = 40000.0
 
     private class Visible(val layer: Layer, val x: Double, val y: Double, val zoom: Double)
 
-    fun build(scene: ZoomScene, viewW: Double, viewH: Double, out: RenderList) {
+    /** Ce que garde [drawLayer] : tout, tout sauf les coups de gomme, ou eux seuls (peints en couleur vive). */
+    private const val ALL = 0
+    private const val ITEMS_ONLY = 1
+    private const val ERASERS_ONLY = 2
+
+    /** Mode d'édition des gommes : tout est estompé à cette opacité, les coups de gomme ressortent. */
+    const val GHOST_ALPHA = 0.3f
+    /** La couleur à laquelle un coup de gomme se montre dans le mode d'édition des gommes. */
+    const val ERASER_VIEW_COLOR = 0xD0FF1F8E.toInt()
+
+    /**
+     * Calcule l'image. Avec [ghost] (mode d'édition des gommes), les couches s'estompent à
+     * [GHOST_ALPHA], les coups de gomme de la couche de travail ne creusent plus rien : ils se
+     * tracent par-dessus en [ERASER_VIEW_COLOR], pour qu'on les voie et les saisisse.
+     */
+    fun build(scene: ZoomScene, viewW: Double, viewH: Double, out: RenderList, ghost: Boolean = false) {
         out.clear()
         val hw = viewW / 2
         val hh = viewH / 2
@@ -227,17 +273,28 @@ object ZoomRenderer {
         for (k in visible.indices.reversed()) {
             val v = visible[k]
             if (v.layer.depth == scene.depth) continue
-            out.beginGroup(v.layer.hasEraser, 1f)
+            out.beginGroup(ghost || v.layer.hasEraser, if (ghost) GHOST_ALPHA else 1f)
             drawLayer(v, scene.layerAlpha(v.layer.depth), hw, hh, viewW, viewH, out)
             out.endGroup()
         }
         // … puis la couche de travail, avec le trait en cours (qui peut être un coup de gomme).
         val live = scene.liveStroke()
         val working = visible.firstOrNull { it.layer.depth == scene.depth }
-        out.beginGroup(working?.layer?.hasEraser == true || live?.isEraser == true, 1f)
-        if (working != null) drawLayer(working, 1.0, hw, hh, viewW, viewH, out)
-        live?.let { emit(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }
-        out.endGroup()
+        if (ghost) {
+            // Les éléments d'un bloc, estompés (sans gomme : on voit tout ce qu'elle cache) ; les gommes au-dessus, en couleur.
+            out.beginGroup(true, GHOST_ALPHA)
+            if (working != null) drawLayer(working, 1.0, hw, hh, viewW, viewH, out, ITEMS_ONLY)
+            out.endGroup()
+            out.beginGroup(false, 1f)
+            if (working != null) drawLayer(working, 1.0, hw, hh, viewW, viewH, out, ERASERS_ONLY)
+            out.endGroup()
+        } else {
+            out.beginGroup(working?.layer?.hasEraser == true || live?.isEraser == true, 1f)
+            if (working != null) drawLayer(working, 1.0, hw, hh, viewW, viewH, out)
+            live?.let { emit(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }
+            scene.liveShape()?.let { emitShape(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }
+            out.endGroup()
+        }
 
         // Juste après le seuil, la couche du dessus reste par-dessus tout le reste et s'efface.
         out.fadeStart = out.runCount
@@ -246,21 +303,32 @@ object ZoomRenderer {
         if (up != null && !up.isEmpty && upAlpha > 0.0) {
             val v = scene.viewOf(up.depth)
             if (v.x.isFinite() && v.y.isFinite() && v.zoom > 0.0) {
-                out.beginGroup(true, upAlpha.toFloat())
+                val shown = if (ghost) upAlpha.toFloat() * GHOST_ALPHA else upAlpha.toFloat()
+                out.beginGroup(true, shown)
                 drawLayer(Visible(up, v.x, v.y, v.zoom), 1.0, hw, hh, viewW, viewH, out)
                 out.endGroup()
-                out.fadeAlpha = upAlpha.toFloat()
+                out.fadeAlpha = shown
             }
         }
     }
 
-    private fun drawLayer(v: Visible, alpha: Double, hw: Double, hh: Double, w: Double, h: Double, out: RenderList) {
+    private fun drawLayer(v: Visible, alpha: Double, hw: Double, hh: Double, w: Double, h: Double, out: RenderList, keep: Int = ALL) {
         if (alpha <= 0.0) return
-        if (!layerOnScreen(v, hw, hh, w, h)) return
+        // L'encombrement d'une couche ignore les coups de gomme : on ne s'y fie pas pour les montrer.
+        if (keep == ERASERS_ONLY) { if (v.layer.strokes.none { it.isEraser }) return }
+        else if (!layerOnScreen(v, hw, hh, w, h)) return
         out.layersDrawn++
         for (item in v.layer.drawOrder()) when (item) {
-            is ImageItem -> emitImage(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
-            is Stroke -> emit(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+            is ImageItem -> if (keep != ERASERS_ONLY) emitImage(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+            is Stroke -> when (keep) {
+                ALL -> emit(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+                ITEMS_ONLY -> if (!item.isEraser) emit(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+                // Un coup de gomme montré tel quel : un trait de couleur vive qui ne creuse rien.
+                else -> if (item.isEraser) emit(Stroke(item.id, item.x, item.y, item.pts, ERASER_VIEW_COLOR, item.width), v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+            }
+            is ShapeItem -> if (keep != ERASERS_ONLY) emitShape(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+            is TextItem -> if (keep != ERASERS_ONLY) emitText(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+            is StrokeBox -> Unit
         }
     }
 
@@ -288,6 +356,95 @@ object ZoomRenderer {
         src[2] = (cx1 - x0) / sw * item.pxW
         src[3] = (cy1 - y0) / sh * item.pxH
         out.addImage(item, src, dst, alpha.toFloat())
+    }
+
+    /**
+     * Une forme : son remplissage (polygone découpé au bord de l'écran) puis son contour (une
+     * polyligne, comme un trait de crayon, donc découpée de la même façon).
+     */
+    private fun emitShape(s: ShapeItem, vx: Double, vy: Double, z: Double, alpha: Double, hw: Double, hh: Double, w: Double, h: Double, out: RenderList) {
+        val ox = (s.x - vx) * z + hw
+        val oy = (s.y - vy) * z + hh
+        val widthPx = if (s.hasStroke) s.width * z else 0.0
+        val reach = max(widthPx, MIN_WIDTH_PX) / 2 + 2.0 + if (s.kind == ShapeKind.ARROW) Math.hypot(s.w, s.h) * z * ShapeItem.ARROW_HEAD_HALF else 0.0
+        if (ox + s.w * z / 2 + reach < 0 || ox - s.w * z / 2 - reach > w || oy + s.h * z / 2 + reach < 0 || oy - s.h * z / 2 - reach > h) return
+        if (s.w * z < MIN_PX && s.h * z < MIN_PX && widthPx < MIN_PX) return
+        val pts = ShapeGeometry.outline(s, z)
+        if (s.hasFill) emitFill(pts, ox, oy, z, s.fillColor, alpha, w, h, out)
+        if (s.hasStroke) {
+            val closed = s.kind != ShapeKind.LINE
+            val ring = if (closed) pts.copyOf(pts.size + 2).also { it[pts.size] = pts[0]; it[pts.size + 1] = pts[1] } else pts
+            emit(Stroke(s.id, s.x, s.y, ring, s.strokeColor, s.width), vx, vy, z, alpha, hw, hh, w, h, out)
+        }
+    }
+
+    /** Un texte : on ne garde que ce qui touche l'écran, et on dit à la vue où en poser le coin haut-gauche. */
+    private fun emitText(t: TextItem, vx: Double, vy: Double, z: Double, alpha: Double, hw: Double, hh: Double, w: Double, h: Double, out: RenderList) {
+        val sizePx = t.fontSize * z
+        val x0 = (t.x - t.w / 2 - vx) * z + hw
+        val y0 = (t.y - t.h / 2 - vy) * z + hh
+        if (x0 + t.w * z < 0 || y0 + t.h * z < 0 || x0 > w || y0 > h) return
+        if (t.w * z < MIN_PX && t.h * z < MIN_PX) return
+        if (sizePx > MAX_TEXT_PX) return
+        out.addText(t, x0, y0, sizePx, alpha.toFloat())
+    }
+
+    private var fillBuf = DoubleArray(256)
+    private var fillTmp = DoubleArray(256)
+
+    /**
+     * Remplit le polygone [pts] (relatif à son centre, en unités de la couche) dont le centre est à
+     * ([ox], [oy]) à l'écran. Découpé au bord de l'écran par Sutherland-Hodgman, en `Double` : ce qui
+     * part vers le moteur graphique reste de la taille de l'écran, même pour une forme géante.
+     */
+    private fun emitFill(pts: DoubleArray, ox: Double, oy: Double, z: Double, color: Int, alpha: Double, w: Double, h: Double, out: RenderList) {
+        val n = pts.size / 2
+        if (n < 3) return
+        var count = n
+        if (fillBuf.size < 2 * n) fillBuf = DoubleArray(2 * n)
+        for (i in 0 until n) { fillBuf[2 * i] = ox + pts[2 * i] * z; fillBuf[2 * i + 1] = oy + pts[2 * i + 1] * z }
+        val m = 2.0
+        // Quatre bords : gauche, droit, haut, bas.
+        for (edge in 0 until 4) {
+            if (count == 0) return
+            if (fillTmp.size < 2 * (2 * count + 2)) fillTmp = DoubleArray(2 * (2 * count + 2))
+            var k = 0
+            var px = fillBuf[2 * (count - 1)]
+            var py = fillBuf[2 * (count - 1) + 1]
+            var pin = inside(edge, px, py, w, h, m)
+            for (i in 0 until count) {
+                val cx = fillBuf[2 * i]
+                val cy = fillBuf[2 * i + 1]
+                val cin = inside(edge, cx, cy, w, h, m)
+                if (cin != pin) {
+                    // Le segment coupe le bord : on garde le point d'intersection.
+                    val t = when (edge) {
+                        0 -> (-m - px) / (cx - px)
+                        1 -> (w + m - px) / (cx - px)
+                        2 -> (-m - py) / (cy - py)
+                        else -> (h + m - py) / (cy - py)
+                    }
+                    var ix = px + t * (cx - px)
+                    var iy = py + t * (cy - py)
+                    when (edge) { 0 -> ix = -m; 1 -> ix = w + m; 2 -> iy = -m; else -> iy = h + m }
+                    fillTmp[k++] = ix; fillTmp[k++] = iy
+                }
+                if (cin) { fillTmp[k++] = cx; fillTmp[k++] = cy }
+                px = cx; py = cy; pin = cin
+            }
+            count = k / 2
+            val swap = fillBuf; fillBuf = fillTmp; fillTmp = swap
+        }
+        if (count < 3) return
+        out.beginRun(color, 0f, alpha.toFloat(), false, RenderList.KIND_FILL)
+        for (i in 0 until count) out.addPoint(fillBuf[2 * i], fillBuf[2 * i + 1])
+    }
+
+    private fun inside(edge: Int, x: Double, y: Double, w: Double, h: Double, m: Double): Boolean = when (edge) {
+        0 -> x >= -m
+        1 -> x <= w + m
+        2 -> y >= -m
+        else -> y <= h + m
     }
 
     private fun layerOnScreen(v: Visible, hw: Double, hh: Double, w: Double, h: Double): Boolean {
