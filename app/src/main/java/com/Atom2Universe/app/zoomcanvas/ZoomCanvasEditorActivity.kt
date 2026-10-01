@@ -80,7 +80,6 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     private lateinit var canvasView: ZoomCanvasView
     private lateinit var title: TextView
-    private lateinit var subtitle: TextView
     private lateinit var undoBtn: View
     private lateinit var redoBtn: View
     private lateinit var levelText: TextView
@@ -128,7 +127,6 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
         canvasView = findViewById(R.id.zc_canvas)
         title = findViewById(R.id.zc_title)
-        subtitle = findViewById(R.id.zc_subtitle)
         undoBtn = findViewById(R.id.zc_btn_undo)
         redoBtn = findViewById(R.id.zc_btn_redo)
         levelText = findViewById(R.id.zc_level_text)
@@ -180,7 +178,6 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         val p = vm.project ?: return
         canvasView.scene = p.scene
         title.text = p.meta.name
-        subtitle.text = getString(R.string.zc_ratio_value, p.scene.ratio.toInt())
         refreshChrome()
     }
 

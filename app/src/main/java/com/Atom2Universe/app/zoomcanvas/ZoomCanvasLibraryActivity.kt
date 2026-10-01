@@ -176,7 +176,6 @@ private class ZoomProjectsAdapter(
         h.name.text = p.name
         h.info.text = context.getString(
             R.string.zc_project_info,
-            context.getString(R.string.zc_ratio_value, p.ratio.toInt()),
             context.resources.getQuantityString(R.plurals.zc_layers_count, p.layerCount, p.layerCount),
             DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
         )
