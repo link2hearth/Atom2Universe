@@ -40,8 +40,9 @@ class AlbumAdapter(
             albumName.text = album.album
 
             // Nombre de titres
-            val trackText = if (album.trackCount == 1) "titre" else "titres"
-            albumTrackCount.text = "${album.trackCount} $trackText"
+            albumTrackCount.text = itemView.resources.getQuantityString(
+                R.plurals.midi_track_count, album.trackCount, album.trackCount
+            )
 
             // Click listener
             itemView.setOnClickListener {

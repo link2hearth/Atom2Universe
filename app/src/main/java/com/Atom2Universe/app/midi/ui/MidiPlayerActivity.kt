@@ -1475,21 +1475,21 @@ class MidiPlayerActivity : AudioThemedActivity() {
      */
     private fun showSf2WarningDialog(fileName: String, warning: String) {
         AlertDialog.Builder(this)
-            .setTitle("⚠️ Avertissement SoundFont")
-            .setMessage("$fileName\n\n$warning\n\nLe fichier a été importé mais certains instruments pourraient ne pas fonctionner correctement.")
-            .setPositiveButton("Compris") { dialog, _ ->
+            .setTitle(R.string.midi_sf2_warning_title)
+            .setMessage(getString(R.string.midi_sf2_warning_message, fileName, warning))
+            .setPositiveButton(R.string.midi_sf2_warning_ok) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setNeutralButton("Voir détails") { _, _ ->
+            .setNeutralButton(R.string.midi_sf2_warning_details) { _, _ ->
                 // Affiche le rapport détaillé
                 lifecycleScope.launch {
                     val path = soundFontManager.getCurrentSoundFontPath()
                     if (path != null) {
                         val report = com.Atom2Universe.app.midi.sf2.Sf2FileCache.getValidationReport(path)
                         AlertDialog.Builder(this@MidiPlayerActivity)
-                            .setTitle("Rapport de validation SF2")
+                            .setTitle(R.string.midi_sf2_report_title)
                             .setMessage(report)
-                            .setPositiveButton("Fermer", null)
+                            .setPositiveButton(R.string.midi_sf2_report_close, null)
                             .show()
                     }
                 }

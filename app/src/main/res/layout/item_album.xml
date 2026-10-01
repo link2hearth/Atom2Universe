@@ -32,7 +32,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_my_calendar"
+                android:src="@drawable/ic_folder_open"
                 android:importantForAccessibility="no"
                 app:tint="?attr/a2uMidiAccent" />
         </com.google.android.material.card.MaterialCardView>
@@ -69,9 +69,8 @@
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@android:drawable/ic_menu_more"
+            android:src="@drawable/ic_chevron_right"
             android:importantForAccessibility="no"
-            android:rotation="270"
             app:tint="?android:attr/textColorSecondary" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

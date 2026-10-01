@@ -245,12 +245,12 @@ class MidiTrackAdapter(
 
         fun expand() {
             infoSection.visibility = View.VISIBLE
-            menuButton.setImageResource(android.R.drawable.arrow_up_float)
+            menuButton.setImageResource(R.drawable.ic_chevron_up)
         }
 
         fun collapse() {
             infoSection.visibility = View.GONE
-            menuButton.setImageResource(android.R.drawable.ic_menu_info_details)
+            menuButton.setImageResource(R.drawable.ic_info)
         }
 
         private fun loadInfoIfNeeded(track: MidiTrack) {

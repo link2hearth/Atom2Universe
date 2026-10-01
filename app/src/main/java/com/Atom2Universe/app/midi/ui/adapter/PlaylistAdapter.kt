@@ -82,7 +82,7 @@ class PlaylistAdapter(
             if (item.isFavorites) {
                 iconView.setImageResource(R.drawable.ic_star_filled)
             } else {
-                iconView.setImageResource(android.R.drawable.ic_menu_agenda)
+                iconView.setImageResource(R.drawable.ic_playlist)
             }
         }
     }

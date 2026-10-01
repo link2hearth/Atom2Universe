@@ -269,7 +269,7 @@ class ThemeSelectionDialog(
         // Thème de base info
         val baseTheme = theme.getBaseTheme()
         val baseInfo = TextView(context).apply {
-            text = "Base: ${baseTheme.displayName}"
+            text = context.getString(R.string.midi_theme_base, baseTheme.displayName)
             setTextColor(AudioStyle.accent(context))
             textSize = 11f
             setPadding(0, dp(2), 0, 0)

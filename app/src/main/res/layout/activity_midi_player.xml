@@ -39,16 +39,15 @@
         app:layout_constraintEnd_toEndOf="parent">
         <!-- Container pour les onglets (entre titre et menu) -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginEnd="8dp">
+            android:gravity="center_vertical">
 
             <!-- Tab Bibliothèque -->
             <TextView
                 android:id="@+id/tab_library"
+                android:layout_weight="1"
                 android:minHeight="48dp"
                 android:gravity="center"
                 android:focusable="true"
@@ -67,6 +66,7 @@
             <!-- Tab Playlists -->
             <TextView
                 android:id="@+id/tab_playlists"
+                android:layout_weight="1"
                 android:minHeight="48dp"
                 android:gravity="center"
                 android:focusable="true"
@@ -84,6 +84,7 @@
             <!-- Tab Lecture -->
             <TextView
                 android:id="@+id/tab_now_playing"
+                android:layout_weight="1"
                 android:minHeight="48dp"
                 android:gravity="center"
                 android:focusable="true"
@@ -101,6 +102,7 @@
             <!-- Tab Practice -->
             <TextView
                 android:id="@+id/tab_practice"
+                android:layout_weight="1"
                 android:minHeight="48dp"
                 android:gravity="center"
                 android:focusable="true"

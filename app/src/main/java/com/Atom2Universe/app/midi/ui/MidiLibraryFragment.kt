@@ -541,7 +541,7 @@ class MidiLibraryFragment : Fragment() {
                     setOnClickListener { segment.onClick.invoke() }
                     isClickable = true
                     isFocusable = true
-                    background = ContextCompat.getDrawable(context, android.R.drawable.list_selector_background)
+                    background = ContextCompat.getDrawable(context, R.drawable.audio_tab_background)
                     setPadding((4 * density).toInt(), (4 * density).toInt(), (4 * density).toInt(), (4 * density).toInt())
                 } else {
                     // Segment actuel (non cliquable)

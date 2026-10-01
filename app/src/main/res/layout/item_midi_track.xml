@@ -32,7 +32,7 @@
                 android:id="@+id/track_icon"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@android:drawable/ic_media_play"
+                android:src="@drawable/ic_music_note"
                 app:tint="@color/midi_track_icon_idle"
                 android:importantForAccessibility="no" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/audio_text_secondary"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:maxLines="1"
                     android:ellipsize="end"
                     tools:text="Album Name" />
@@ -80,31 +80,34 @@
             <!-- Favorite button (star) -->
             <ImageButton
                 android:id="@+id/btn_favorite"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:src="@drawable/ic_star_outline"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
+                android:padding="6dp"
                 android:contentDescription="@string/midi_favorite" />
 
             <!-- Add to playlist button -->
             <ImageButton
                 android:id="@+id/btn_add_to_playlist"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:src="@drawable/ic_playlist_add"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
+                android:padding="6dp"
                 android:contentDescription="@string/midi_add_to_playlist" />
 
             <!-- Info/expand button -->
             <ImageButton
                 android:id="@+id/btn_menu"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@android:drawable/ic_menu_info_details"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_info"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
+                android:padding="6dp"
                 app:tint="@color/audio_text_secondary"
                 android:contentDescription="@string/midi_track_info" />
 

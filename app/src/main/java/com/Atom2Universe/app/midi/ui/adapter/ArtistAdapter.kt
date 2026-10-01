@@ -44,9 +44,12 @@ class ArtistAdapter(
             artistName.text = artist.name
 
             // Statistiques
-            val albumText = if (artist.albumCount == 1) "album" else "albums"
-            val trackText = if (artist.trackCount == 1) "titre" else "titres"
-            artistStats.text = "${artist.albumCount} $albumText · ${artist.trackCount} $trackText"
+            val res = itemView.resources
+            artistStats.text = res.getString(
+                R.string.midi_artist_stats,
+                res.getQuantityString(R.plurals.midi_album_count, artist.albumCount, artist.albumCount),
+                res.getQuantityString(R.plurals.midi_track_count, artist.trackCount, artist.trackCount)
+            )
 
             // Click listener
             itemView.setOnClickListener {

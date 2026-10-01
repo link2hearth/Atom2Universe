@@ -28,11 +28,10 @@
             android:id="@+id/btn_back"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@android:drawable/ic_menu_revert"
+            android:src="@drawable/ic_arrow_back"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:tint="@color/audio_text_primary"
-            android:contentDescription="@string/canvas_back"
-            android:rotation="180" />
+            android:contentDescription="@string/canvas_back" />
 
         <!-- Nom de la playlist -->
         <TextView
@@ -53,7 +52,7 @@
             android:id="@+id/btn_shuffle_play"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@android:drawable/stat_notify_sync"
+            android:src="@drawable/ic_shuffle"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:tint="?attr/a2uMidiAccent"
             android:contentDescription="@string/midi_action_shuffle" />
@@ -106,7 +105,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@drawable/ic_add"
         app:tint="@color/audio_text_primary"
         app:backgroundTint="?attr/a2uMidiAccent"
         app:layout_constraintBottom_toBottomOf="parent"

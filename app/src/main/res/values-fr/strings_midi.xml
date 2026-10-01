@@ -58,6 +58,23 @@
         <item quantity="many">%d morceaux</item>
         <item quantity="other">%d morceaux</item>
     </plurals>
+    <plurals name="midi_album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="many">%d albums</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <string name="midi_artist_stats">%1$s · %2$s</string>
+    <string name="midi_theme_base">Base : %1$s</string>
+    <string name="midi_sf2_warning_title">⚠️ Avertissement SoundFont</string>
+    <string name="midi_sf2_warning_message">%1$s
+
+%2$s
+
+Le fichier a été importé mais certains instruments pourraient ne pas fonctionner correctement.</string>
+    <string name="midi_sf2_warning_ok">Compris</string>
+    <string name="midi_sf2_warning_details">Voir détails</string>
+    <string name="midi_sf2_report_title">Rapport de validation SF2</string>
+    <string name="midi_sf2_report_close">Fermer</string>
     <string name="midi_playlists_empty">Aucune playlist.\nCréez-en une!</string>
     <string name="midi_playlist_empty">Cette liste de lecture est vide.</string>
     <string name="midi_shuffle_play">Lecture aléatoire</string>
