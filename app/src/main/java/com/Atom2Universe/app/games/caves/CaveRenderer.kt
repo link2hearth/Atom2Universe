@@ -8,6 +8,7 @@ import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import com.Atom2Universe.app.games.caves.entity.EnemyManager
 import com.Atom2Universe.app.games.caves.entity.ImpactParticle
+import com.Atom2Universe.app.games.caves.render.BlockCracks
 import com.Atom2Universe.app.games.caves.render.CombatEffectsRenderer
 import com.Atom2Universe.app.games.caves.node.BlockRegistry
 import com.Atom2Universe.app.games.caves.node.ORIENT_AXIS
@@ -2913,24 +2914,30 @@ internal class CaveRenderer(
     private fun renderLaserAndHighlight() {
         val target = lookTarget ?: return
         val mining=player.input.mining && mineTarget?.let { it.bx==target.bx && it.by==target.by && it.bz==target.bz }==true
-        val verts = buildHighlightVerts(target,if(mining) mineDamage else 0.02f) +
-            if(mining) buildCrackVerts(target,mineDamage) else FloatArray(0)
-        if (verts.isEmpty()) return
-
-        val buf = ByteBuffer.allocateDirect(verts.size * 4)
-            .order(ByteOrder.nativeOrder()).asFloatBuffer()
-        buf.put(verts); buf.position(0)
-
-        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, transientVbo)
-        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, verts.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
+        val outline = buildHighlightVerts(target,if(mining) mineDamage else 0.02f,mining)
+        val cracks = if(mining) buildCrackVerts(target,mineDamage) else FloatArray(0)
+        if (outline.isEmpty() && cracks.isEmpty()) return
 
         laserShader?.use()
         GLES30.glUniformMatrix4fv(lUMvp, 1, false, camera.vpMatrix, 0)
-
         GLES30.glEnable(GLES30.GL_BLEND)
-        GLES30.glBlendFunc(GLES30.GL_ONE, GLES30.GL_ONE)
         GLES30.glDepthMask(false)
+        // Le contour s'ajoute à l'image ; les fissures, elles, assombrissent le bloc.
+        GLES30.glBlendFunc(GLES30.GL_ONE, GLES30.GL_ONE)
+        drawTransientTriangles(outline)
+        GLES30.glBlendFunc(GLES30.GL_ZERO, GLES30.GL_ONE_MINUS_SRC_COLOR)
+        drawTransientTriangles(cracks)
+        GLES30.glDepthMask(true)
+        GLES30.glDisable(GLES30.GL_BLEND)
+    }
 
+    private fun drawTransientTriangles(verts: FloatArray) {
+        if (verts.isEmpty()) return
+        val buf = ByteBuffer.allocateDirect(verts.size * 4)
+            .order(ByteOrder.nativeOrder()).asFloatBuffer()
+        buf.put(verts); buf.position(0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, transientVbo)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, verts.size * 4, buf, GLES30.GL_DYNAMIC_DRAW)
         val stride = 6 * 4
         GLES30.glEnableVertexAttribArray(lAPos)
         GLES30.glVertexAttribPointer(lAPos,   3, GLES30.GL_FLOAT, false, stride, 0)
@@ -2940,9 +2947,6 @@ internal class CaveRenderer(
         GLES30.glDisableVertexAttribArray(lAPos)
         GLES30.glDisableVertexAttribArray(lAColor)
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
-
-        GLES30.glDepthMask(true)
-        GLES30.glDisable(GLES30.GL_BLEND)
     }
 
     private fun buildLaserVerts(target: RayHit): FloatArray {
@@ -3045,7 +3049,7 @@ internal class CaveRenderer(
         return out.toFloatArray()
     }
 
-    private fun buildHighlightVerts(target: RayHit, progress: Float): FloatArray {
+    private fun buildHighlightVerts(target: RayHit, progress: Float, mining: Boolean = false): FloatArray {
         val x = (target.bx.toDouble() - camera.x).toFloat()
         val y = (target.by.toDouble() - camera.y).toFloat()
         val z = (target.bz.toDouble() - camera.z).toFloat()
@@ -3054,7 +3058,7 @@ internal class CaveRenderer(
         val x1=x+1+ep; val y1=y+1+ep; val z1=z+1+ep
 
         val t = progress.coerceIn(0f, 1f)
-        val cr = 0.018f+t*0.045f; val cg = 0.026f+t*0.035f; val cb = 0.035f+t*0.025f
+        var cr = 0.018f+t*0.045f; var cg = 0.026f+t*0.035f; var cb = 0.035f+t*0.025f
 
         val block = worldBlockAt(target.bx, target.by, target.bz)
         val outlineDef = BlockRegistry.get(block)?.takeIf { it.partial }
@@ -3070,6 +3074,10 @@ internal class CaveRenderer(
                 }
             }
             return vertices.toFloatArray()
+        }
+        // Plantes, cailloux, torches : pas de fissures, le contour vire du clair au rouge vif en cassant.
+        if (mining && (block == TORCH || isDecoration(block))) {
+            cr = 0.2f + t * 0.8f; cg = 0.2f + 0.2f * (1f - t); cb = 0.2f * (1f - t)
         }
         if (block == TORCH) return TorchModel.highlight(world.metaAt(target.bx, target.by, target.bz),
             x, y, z, cr, cg, cb)
@@ -3093,39 +3101,46 @@ internal class CaveRenderer(
         return out
     }
 
-    /** Pixel-like branching fracture lines, revealed in five discrete mining stages. */
+    /**
+     * Fissures du bloc qu'on casse, sur chaque face visible (celles qui regardent la caméra et
+     * ne touchent pas un bloc plein). Dalles, escaliers et autres blocs partiels : sur leurs faces
+     * réelles, pas sur le cube entier. Plantes et torches n'ont pas de fissures (voir le surlignage).
+     */
     private fun buildCrackVerts(target: RayHit,progress: Float): FloatArray {
-        val stage=when { progress>=.88f->5;progress>=.68f->4;progress>=.48f->3;progress>=.29f->2;progress>=.12f->1;else->0 }
-        if(stage==0) return FloatArray(0)
-        val paths=listOf(
-            listOf(0.48f to 0.54f,0.39f to 0.62f,0.42f to 0.70f,0.32f to 0.79f),
-            listOf(0.40f to 0.63f,0.27f to 0.58f,0.20f to 0.49f),
-            listOf(0.41f to 0.69f,0.55f to 0.73f,0.62f to 0.84f),
-            listOf(0.27f to 0.58f,0.23f to 0.43f,0.13f to 0.36f),
-            listOf(0.55f to 0.73f,0.70f to 0.68f,0.79f to 0.59f)
-        )
-        val nx=target.fnx;val ny=target.fny;val nz=target.fnz
-        val baseX=target.bx.toFloat()-camera.x.toFloat()+nx*.012f
-        val baseY=target.by.toFloat()-camera.y.toFloat()+ny*.012f
-        val baseZ=target.bz.toFloat()-camera.z.toFloat()+nz*.012f
-        fun point(p: Pair<Float,Float>): FloatArray = when {
-            nx!=0 -> floatArrayOf(baseX,baseY+p.second,baseZ+p.first)
-            ny!=0 -> floatArrayOf(baseX+p.first,baseY,baseZ+p.second)
-            else -> floatArrayOf(baseX+p.first,baseY+p.second,baseZ)
+        val bx=target.bx;val by=target.by;val bz=target.bz
+        val block=worldBlockAt(bx,by,bz)
+        if(block==TORCH || isDecoration(block)) return FloatArray(0)
+        val partialDef=BlockRegistry.get(block)?.takeIf { it.partial }
+        val patches=ArrayList<BlockCracks.Patch>(6)
+        if(partialDef==null) {
+            for(f in 0..5) patches.add(BlockCracks.Patch(f,if(BlockCracks.NORMALS[f].sum()>0) 1f else 0f,0f,1f,0f,1f))
+        } else {
+            // Faces du modèle partiel : 0 +y, 1 -y, 2 +x, 3 -x, 4 +z, 5 -z → ordre de BlockCracks.
+            val toCrack=intArrayOf(2,3,0,1,4,5)
+            for(face in PartialBlockModel.faces(partialDef,world.metaAt(bx,by,bz),stairMaskAt(bx,by,bz))) {
+                val f=toCrack[face.direction]
+                val (uAxis,vAxis)=when(f) { 0,1->2 to 1; 2,3->0 to 2; else->0 to 1 }
+                val axis=when(f) { 0,1->0; 2,3->1; else->2 }
+                var u0=Float.MAX_VALUE;var u1=-Float.MAX_VALUE;var v0=Float.MAX_VALUE;var v1=-Float.MAX_VALUE
+                for(vertex in face.vertices) {
+                    u0=minOf(u0,vertex[uAxis]);u1=maxOf(u1,vertex[uAxis]);v0=minOf(v0,vertex[vAxis]);v1=maxOf(v1,vertex[vAxis])
+                }
+                patches.add(BlockCracks.Patch(f,face.vertices[0][axis],u0,u1,v0,v1))
+            }
         }
-        val out=ArrayList<Float>(stage*120)
-        fun addSegment(a: Pair<Float,Float>,b: Pair<Float,Float>) {
-            val p=point(a);val q=point(b)
-            var ux=q[0]-p[0];var uy=q[1]-p[1];var uz=q[2]-p[2]
-            val len=kotlin.math.sqrt(ux*ux+uy*uy+uz*uz).coerceAtLeast(.0001f);ux/=len;uy/=len;uz/=len
-            var wx=uy*nz-uz*ny;var wy=uz*nx-ux*nz;var wz=ux*ny-uy*nx
-            val wl=kotlin.math.sqrt(wx*wx+wy*wy+wz*wz).coerceAtLeast(.0001f);wx=wx/wl*.009f;wy=wy/wl*.009f;wz=wz/wl*.009f
-            fun v(x:Float,y:Float,z:Float){out.add(x);out.add(y);out.add(z);out.add(.72f);out.add(.75f);out.add(.78f)}
-            v(p[0]-wx,p[1]-wy,p[2]-wz);v(q[0]-wx,q[1]-wy,q[2]-wz);v(q[0]+wx,q[1]+wy,q[2]+wz)
-            v(p[0]-wx,p[1]-wy,p[2]-wz);v(q[0]+wx,q[1]+wy,q[2]+wz);v(p[0]+wx,p[1]+wy,p[2]+wz)
+        val visible=patches.filter { patch ->
+            val n=BlockCracks.NORMALS[patch.face]
+            val axis=if(n[0]!=0) 0 else if(n[1]!=0) 1 else 2
+            val sign=n[axis]
+            val cam=when(axis) { 0->camera.x-bx; 1->camera.y-by; else->camera.z-bz }
+            if((cam-patch.plane)*sign<=0.0) return@filter false
+            // Une face posée contre un bloc plein ne se voit pas.
+            val onBoundary=patch.plane==(if(sign>0) 1f else 0f)
+            if(!onBoundary) return@filter true
+            val next=worldBlockAt(bx+n[0],by+n[1],bz+n[2])
+            next==AIR||isTransparent(next)||isDecoration(next)||BlockRegistry.get(next)?.partial==true
         }
-        for(path in paths.take(stage)) path.zipWithNext(::addSegment)
-        return out.toFloatArray()
+        return BlockCracks.build((bx-camera.x).toFloat(),(by-camera.y).toFloat(),(bz-camera.z).toFloat(),visible,progress)
     }
 
     // ── Collision caméra TPS ─────────────────────────────────────────────────
