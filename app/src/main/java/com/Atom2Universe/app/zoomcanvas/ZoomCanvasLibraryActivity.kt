@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -23,14 +24,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.AppThemeManager
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.cloud.projects.CloudProjectSync
+import com.Atom2Universe.app.cloud.projects.CloudProjectsUi
 import com.Atom2Universe.app.pixelart.ui.SheetItem
 import com.Atom2Universe.app.pixelart.ui.actionSheet
 import com.Atom2Universe.app.pixelart.ui.bottomSheet
+import com.Atom2Universe.app.cloud.projects.CloudModule
 import com.Atom2Universe.app.pixelart.ui.confirm
+import com.Atom2Universe.app.pixelart.ui.dp
 import com.Atom2Universe.app.pixelart.ui.primaryButton
 import com.Atom2Universe.app.pixelart.ui.promptText
+import com.Atom2Universe.app.pixelart.ui.secondaryButton
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
+import com.Atom2Universe.app.zoomcanvas.data.ZoomCloudAdapter
 import com.Atom2Universe.app.zoomcanvas.data.ZoomProjectSummary
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import kotlinx.coroutines.Dispatchers
@@ -53,6 +60,7 @@ open class ZoomCanvasLibraryActivity : AppCompatActivity() {
     }
 
     private val store by lazy { ZoomCanvasStorage.store(this) }
+    private val cloud by lazy { ZoomCloudAdapter(store, single) }
     private lateinit var list: RecyclerView
     private lateinit var empty: View
     private lateinit var adapter: ZoomProjectsAdapter
@@ -69,7 +77,7 @@ open class ZoomCanvasLibraryActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.zc_lib_empty_text).setText(if (single) R.string.cv_library_empty else R.string.zc_library_empty)
         val widthDp = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         list.layoutManager = GridLayoutManager(this, (widthDp / 170f).toInt().coerceAtLeast(2))
-        adapter = ZoomProjectsAdapter(this, single, ::openProject, ::showProjectMenu)
+        adapter = ZoomProjectsAdapter(this, single, cloud.module, ::openProject, ::showProjectMenu)
         list.adapter = adapter
 
         findViewById<View>(R.id.zc_lib_btn_back).setOnClickListener { finish() }
@@ -121,6 +129,12 @@ open class ZoomCanvasLibraryActivity : AppCompatActivity() {
                     openProject(p.meta.id)
                 }
             })
+            val cloudRow = LinearLayout(this)
+            cloudRow.addView(secondaryButton(getString(R.string.cloud_proj_import), R.drawable.ic_cloud) {
+                dialog.dismiss()
+                CloudProjectsUi.showImportSheet(this, cloud, ::reload)
+            })
+            root.addView(cloudRow, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
         }.show()
     }
 
@@ -141,6 +155,12 @@ open class ZoomCanvasLibraryActivity : AppCompatActivity() {
                     reload()
                 }
             },
+            SheetItem(R.drawable.ic_cloud, getString(R.string.cloud_proj_sync)) {
+                CloudProjectsUi.syncProject(this, cloud, item.id, item.name, ::reload)
+            },
+            SheetItem(R.drawable.ic_cloud_off, getString(R.string.cloud_proj_remove)) {
+                CloudProjectsUi.removeFromCloud(this, cloud.module, item.id, item.name, ::reload)
+            },
             SheetItem(R.drawable.ic_px_delete, getString(R.string.px_delete), destructive = true) {
                 confirm(R.string.px_delete_project_title, getString(R.string.px_delete_project_message, item.name), R.string.px_delete, true) {
                     lifecycleScope.launch {
@@ -156,6 +176,7 @@ open class ZoomCanvasLibraryActivity : AppCompatActivity() {
 private class ZoomProjectsAdapter(
     private val context: Context,
     private val single: Boolean,
+    private val module: CloudModule,
     private val onOpen: (String) -> Unit,
     private val onMenu: (ZoomProjectSummary) -> Unit,
 ) : RecyclerView.Adapter<ZoomProjectsAdapter.Holder>() {
@@ -163,6 +184,7 @@ private class ZoomProjectsAdapter(
     class Holder(v: View) : RecyclerView.ViewHolder(v) {
         val thumb: ImageView = v.findViewById(R.id.project_thumb)
         val badge: ImageView = v.findViewById(R.id.project_link_badge)
+        val cloudBadge: ImageView = v.findViewById(R.id.project_cloud_badge)
         val menu: View = v.findViewById(R.id.project_menu)
         val name: TextView = v.findViewById(R.id.project_name)
         val info: TextView = v.findViewById(R.id.project_info)
@@ -191,6 +213,11 @@ private class ZoomProjectsAdapter(
         h.info.text = if (single) context.getString(R.string.cv_project_info, size, when_)
         else context.getString(R.string.zc_project_info, context.resources.getQuantityString(R.plurals.zc_layers_count, p.layerCount, p.layerCount), size, when_)
         h.badge.visibility = View.GONE
+        when (CloudProjectSync.badge(context, module, p.id, p.modified)) {
+            CloudProjectSync.Badge.NONE -> h.cloudBadge.visibility = View.GONE
+            CloudProjectSync.Badge.SYNCED -> { h.cloudBadge.setImageResource(R.drawable.ic_cloud_done); h.cloudBadge.visibility = View.VISIBLE }
+            CloudProjectSync.Badge.PENDING -> { h.cloudBadge.setImageResource(R.drawable.ic_cloud_upload); h.cloudBadge.visibility = View.VISIBLE }
+        }
         h.thumb.setBackgroundColor(0xFFFAF8F3.toInt())
         val key = p.id + p.modified
         val cached = thumbs.get(key)

@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -296,9 +297,30 @@ class NotesLibraryFragment : Fragment(R.layout.fragment_notes_library) {
             SheetItem(R.drawable.ic_nt_sort, getString(R.string.notes_sort_by, getString(prefs.sort.label))) { showSortMenu() },
             SheetItem(R.drawable.ic_nt_tag, getString(R.string.notes_tags)) { notesActivity.openTags() },
             SheetItem(R.drawable.ic_px_delete, getString(R.string.notes_trash)) { notesActivity.openTrash() },
+            SheetItem(R.drawable.ic_cloud, getString(R.string.cloud_proj_sync)) { syncWithGoogle() },
             SheetItem(R.drawable.ic_px_export, getString(R.string.notes_export_backup)) { launchExport() },
             SheetItem(R.drawable.ic_px_import, getString(R.string.notes_import_backup)) { launchImport() },
         )).show()
+    }
+
+    /** Le bouton « Sync Google » : marche dès qu'on est connecté, interrupteur de l'écran Cloud ou non. */
+    private fun syncWithGoogle() {
+        val app = requireContext().applicationContext
+        if (!com.Atom2Universe.app.music.sync.GoogleSignInManager(app).isSignedIn()) {
+            startActivity(com.Atom2Universe.app.cloud.CloudActivity.intent(requireContext()))
+            return
+        }
+        Toast.makeText(app, R.string.cloud_proj_syncing, Toast.LENGTH_SHORT).show()
+        // Dans le scope de l'application : quitter l'écran en plein envoi ne doit pas le couper.
+        com.Atom2Universe.app.notes.sync.NotesSyncManager.launchSync(app) { report ->
+            val message = when (report.outcome) {
+                com.Atom2Universe.app.notes.sync.NotesSyncManager.Outcome.SYNCED ->
+                    if (report.changedLocal) R.string.cloud_notes_synced_new else R.string.cloud_notes_synced
+                com.Atom2Universe.app.notes.sync.NotesSyncManager.Outcome.TOO_NEW -> R.string.cloud_notes_too_new
+                else -> R.string.cloud_proj_failed
+            }
+            Toast.makeText(app, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showSortMenu() {

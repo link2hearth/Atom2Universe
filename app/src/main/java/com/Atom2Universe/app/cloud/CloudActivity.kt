@@ -23,7 +23,9 @@ import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.crypto.sync.GamesSyncFile
 import com.Atom2Universe.app.crypto.sync.GamesSyncManager
 import com.Atom2Universe.app.crypto.sync.LayeredNumberData
+import com.Atom2Universe.app.cloud.projects.CloudProject
 import com.Atom2Universe.app.music.sync.CloudSyncManager
+import com.Atom2Universe.app.music.sync.DriveFileInfo
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.music.sync.SyncResult
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -75,6 +77,8 @@ class CloudActivity : ThemedActivity() {
     private lateinit var categoryContainer: LinearLayout
     private lateinit var journalsSection: View
     private lateinit var journalContainer: LinearLayout
+    private lateinit var projectsSection: View
+    private lateinit var projectContainer: LinearLayout
     private lateinit var btnDeleteAll: MaterialButton
 
     /** Empêche deux opérations Drive de se chevaucher sur un double appui. */
@@ -144,6 +148,8 @@ class CloudActivity : ThemedActivity() {
         categoryContainer = findViewById(R.id.cloud_category_container)
         journalsSection = findViewById(R.id.cloud_journals_section)
         journalContainer = findViewById(R.id.cloud_journal_container)
+        projectsSection = findViewById(R.id.cloud_projects_section)
+        projectContainer = findViewById(R.id.cloud_project_container)
         btnDeleteAll = findViewById(R.id.cloud_btn_delete_all)
     }
 
@@ -268,6 +274,7 @@ class CloudActivity : ThemedActivity() {
         CloudSyncManager.SyncStep.STATS -> R.string.cloud_step_stats
         CloudSyncManager.SyncStep.READING -> R.string.cloud_step_reading
         CloudSyncManager.SyncStep.GAMES -> R.string.cloud_step_games
+        CloudSyncManager.SyncStep.NOTES -> R.string.cloud_step_notes
     }
 
     // ==================== Jeux ====================
@@ -412,6 +419,7 @@ class CloudActivity : ThemedActivity() {
         renderUsageBar(report)
         renderCategories(report)
         renderJournals(report)
+        renderProjects(report)
 
         val empty = report.fileCount == 0
         emptyText.visibility = if (empty) View.VISIBLE else View.GONE
@@ -507,7 +515,45 @@ class CloudActivity : ThemedActivity() {
         }
     }
 
+    /** Un projet créatif par ligne, avec sa poubelle : supprimer une copie cloud sans toucher au reste. */
+    private fun renderProjects(report: CloudInventory.Report) {
+        projectContainer.removeAllViews()
+        projectsSection.visibility = if (report.projects.isEmpty()) View.GONE else View.VISIBLE
+        val inflater = LayoutInflater.from(this)
+
+        for (project in report.projects) {
+            val row = inflater.inflate(R.layout.item_cloud_journal, projectContainer, false)
+
+            row.findViewById<TextView>(R.id.cloud_journal_name).text = project.name
+            row.findViewById<TextView>(R.id.cloud_journal_meta).text = getString(
+                R.string.cloud_project_meta,
+                getString(project.module.labelRes),
+                CloudInventory.formatSize(this, project.size),
+                formatDate(project.driveModified)
+            )
+            row.findViewById<ImageButton>(R.id.cloud_journal_delete).apply {
+                contentDescription = getString(R.string.cloud_project_delete)
+                setOnClickListener { confirmDeleteProject(project, report) }
+            }
+
+            projectContainer.addView(row)
+        }
+    }
+
     // ==================== Suppressions ====================
+
+    /** Un seul projet : ce qu'on perd tient en une phrase, pas besoin du mot à recopier. */
+    private fun confirmDeleteProject(project: CloudProject, report: CloudInventory.Report) {
+        val file = report.categories
+            .flatMap { it.files }
+            .firstOrNull { it.id == project.fileId } ?: return
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.cloud_delete_title, project.name))
+            .setMessage(getString(R.string.cloud_project_delete_message))
+            .setNegativeButton(R.string.cloud_cancel, null)
+            .setPositiveButton(R.string.cloud_delete) { _, _ -> deleteFiles(listOf(file), touchesListens = false) }
+            .show()
+    }
 
     private fun confirmDeleteCategory(usage: CloudInventory.CategoryUsage) {
         val category = usage.category
@@ -525,7 +571,7 @@ class CloudActivity : ThemedActivity() {
             .setMessage(body)
             .setNegativeButton(R.string.cloud_cancel, null)
             .setPositiveButton(R.string.cloud_delete_continue) { _, _ ->
-                val run = { deleteFiles(usage.ids, touchesListens(category)) }
+                val run = { deleteFiles(usage.files, touchesListens(category)) }
                 if (category.requiresTypedConfirm) askTypedConfirmation(run) else run()
             }
             .show()
@@ -552,7 +598,7 @@ class CloudActivity : ThemedActivity() {
             .setMessage(message)
             .setNegativeButton(R.string.cloud_cancel, null)
             .setPositiveButton(R.string.cloud_delete) { _, _ ->
-                deleteFiles(listOf(journal.file.id), touchesListens = true)
+                deleteFiles(listOf(journal.file), touchesListens = true)
             }
             .show()
     }
@@ -622,11 +668,11 @@ class CloudActivity : ThemedActivity() {
      *   sinon son raccourci d'envoi le tiendrait pour à jour et ne republierait
      *   rien avant la prochaine écoute.
      */
-    private fun deleteFiles(ids: List<String>, touchesListens: Boolean) {
-        if (isBusy || ids.isEmpty()) return
+    private fun deleteFiles(files: List<DriveFileInfo>, touchesListens: Boolean) {
+        if (isBusy || files.isEmpty()) return
         scope.launch {
             setBusy(true, R.string.cloud_loading)
-            val deleted = CloudInventory.delete(this@CloudActivity, ids)
+            val deleted = CloudInventory.delete(this@CloudActivity, files)
             if (touchesListens) CloudSyncManager.forgetUploadedEventsState()
             setBusy(false, null)
 

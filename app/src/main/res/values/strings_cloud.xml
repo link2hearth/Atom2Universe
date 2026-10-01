@@ -114,4 +114,51 @@
     <string name="games_sync_upload_failed">the save could not be sent to Google Drive. Try again.</string>
     <string name="games_sync_unexpected">unexpected problem (%1$s).</string>
 
+    <!-- Creative projects (pixel art, canvas) in the cloud -->
+    <string name="cloud_cat_pixelart">Pixel art</string>
+    <string name="cloud_cat_pixelart_desc">Your pixel art projects, one file each</string>
+    <string name="cloud_cat_pixelart_warning">Projects that exist only in the cloud are lost. The ones on your devices are untouched and can be sent again.</string>
+    <string name="cloud_cat_zoom">Infinite canvas</string>
+    <string name="cloud_cat_zoom_desc">Your infinite canvas projects, one file each</string>
+    <string name="cloud_cat_zoom_warning">Projects that exist only in the cloud are lost. The ones on your devices are untouched and can be sent again.</string>
+    <string name="cloud_cat_canvas">Canvas</string>
+    <string name="cloud_cat_canvas_desc">Your canvas projects, one file each</string>
+    <string name="cloud_cat_canvas_warning">Projects that exist only in the cloud are lost. The ones on your devices are untouched and can be sent again.</string>
+    <string name="cloud_section_projects">Projects in the cloud</string>
+    <string name="cloud_project_meta">%1$s · %2$s · %3$s</string>
+    <string name="cloud_project_delete">Delete this project from the cloud</string>
+    <string name="cloud_project_delete_message">The project on your devices is not touched.</string>
+
+    <string name="cloud_proj_sync">Google sync</string>
+    <string name="cloud_proj_import">Import from cloud</string>
+    <string name="cloud_proj_import_title">Import from cloud</string>
+    <string name="cloud_proj_import_empty">Nothing in the cloud yet</string>
+    <string name="cloud_proj_import_meta">%1$s · %2$s</string>
+    <string name="cloud_proj_loading">Loading…</string>
+    <string name="cloud_proj_remove">Remove from cloud</string>
+    <string name="cloud_proj_remove_title">Remove from cloud?</string>
+    <string name="cloud_proj_remove_message">“%1$s” will be deleted from the cloud. The project on this device is not touched.</string>
+    <string name="cloud_proj_removed">Removed from the cloud</string>
+    <string name="cloud_proj_syncing">Syncing…</string>
+    <string name="cloud_proj_uploaded">Project sent to the cloud</string>
+    <string name="cloud_proj_downloaded">Project updated from the cloud</string>
+    <string name="cloud_proj_uptodate">Already up to date</string>
+    <string name="cloud_proj_failed">Sync failed</string>
+    <string name="cloud_proj_unreadable">The cloud file can\'t be read</string>
+    <string name="cloud_proj_kept_both">Cloud version kept as a copy</string>
+    <string name="cloud_proj_copy_suffix">(cloud)</string>
+    <string name="cloud_proj_conflict_title">Two different versions</string>
+    <string name="cloud_proj_conflict_message">“%1$s” changed here (%2$s) and in the cloud (%3$s, from %4$s).</string>
+    <string name="cloud_proj_keep_local">Keep this one</string>
+    <string name="cloud_proj_keep_cloud">Keep the cloud one</string>
+    <string name="cloud_proj_keep_both">Keep both</string>
+
+    <!-- Notes in the cloud -->
+    <string name="cloud_cat_notes">Notes</string>
+    <string name="cloud_cat_notes_desc">All your notes, groups and tags in one file</string>
+    <string name="cloud_cat_notes_warning">Notes that exist only in the cloud are lost. The ones on your devices are untouched and will be sent again at the next sync.</string>
+    <string name="cloud_step_notes">Syncing: notes…</string>
+    <string name="cloud_notes_synced">Notes synced</string>
+    <string name="cloud_notes_synced_new">Notes synced, new ones arrived</string>
+    <string name="cloud_notes_too_new">A newer version of the app is needed to sync notes</string>
 </resources>

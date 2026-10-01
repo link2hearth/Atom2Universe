@@ -114,4 +114,51 @@
     <string name="games_sync_upload_failed">la sauvegarde n\'a pas pu être envoyée sur Google Drive. Réessayez.</string>
     <string name="games_sync_unexpected">problème inattendu (%1$s).</string>
 
+    <!-- Projets créatifs (pixel art, canvas) sur le cloud -->
+    <string name="cloud_cat_pixelart">Pixel art</string>
+    <string name="cloud_cat_pixelart_desc">Vos projets de pixel art, un fichier chacun</string>
+    <string name="cloud_cat_pixelart_warning">Les projets qui n\'existent que sur le cloud sont perdus. Ceux de vos appareils ne sont pas touchés et pourront être renvoyés.</string>
+    <string name="cloud_cat_zoom">Canvas infini</string>
+    <string name="cloud_cat_zoom_desc">Vos projets de canvas infini, un fichier chacun</string>
+    <string name="cloud_cat_zoom_warning">Les projets qui n\'existent que sur le cloud sont perdus. Ceux de vos appareils ne sont pas touchés et pourront être renvoyés.</string>
+    <string name="cloud_cat_canvas">Canvas</string>
+    <string name="cloud_cat_canvas_desc">Vos projets de canvas, un fichier chacun</string>
+    <string name="cloud_cat_canvas_warning">Les projets qui n\'existent que sur le cloud sont perdus. Ceux de vos appareils ne sont pas touchés et pourront être renvoyés.</string>
+    <string name="cloud_section_projects">Projets sur le cloud</string>
+    <string name="cloud_project_meta">%1$s · %2$s · %3$s</string>
+    <string name="cloud_project_delete">Supprimer ce projet du cloud</string>
+    <string name="cloud_project_delete_message">Le projet de vos appareils n\'est pas touché.</string>
+
+    <string name="cloud_proj_sync">Sync Google</string>
+    <string name="cloud_proj_import">Importer depuis le cloud</string>
+    <string name="cloud_proj_import_title">Importer depuis le cloud</string>
+    <string name="cloud_proj_import_empty">Rien sur le cloud pour l\'instant</string>
+    <string name="cloud_proj_import_meta">%1$s · %2$s</string>
+    <string name="cloud_proj_loading">Chargement…</string>
+    <string name="cloud_proj_remove">Retirer du cloud</string>
+    <string name="cloud_proj_remove_title">Retirer du cloud ?</string>
+    <string name="cloud_proj_remove_message">« %1$s » sera supprimé du cloud. Le projet de cet appareil n\'est pas touché.</string>
+    <string name="cloud_proj_removed">Retiré du cloud</string>
+    <string name="cloud_proj_syncing">Synchronisation…</string>
+    <string name="cloud_proj_uploaded">Projet envoyé sur le cloud</string>
+    <string name="cloud_proj_downloaded">Projet mis à jour depuis le cloud</string>
+    <string name="cloud_proj_uptodate">Déjà à jour</string>
+    <string name="cloud_proj_failed">Synchronisation impossible</string>
+    <string name="cloud_proj_unreadable">Le fichier du cloud est illisible</string>
+    <string name="cloud_proj_kept_both">Version du cloud gardée en copie</string>
+    <string name="cloud_proj_copy_suffix">(cloud)</string>
+    <string name="cloud_proj_conflict_title">Deux versions différentes</string>
+    <string name="cloud_proj_conflict_message">« %1$s » a changé ici (%2$s) et sur le cloud (%3$s, depuis %4$s).</string>
+    <string name="cloud_proj_keep_local">Garder celui-ci</string>
+    <string name="cloud_proj_keep_cloud">Garder celui du cloud</string>
+    <string name="cloud_proj_keep_both">Garder les deux</string>
+
+    <!-- Notes sur le cloud -->
+    <string name="cloud_cat_notes">Notes</string>
+    <string name="cloud_cat_notes_desc">Toutes vos notes, groupes et tags dans un seul fichier</string>
+    <string name="cloud_cat_notes_warning">Les notes qui n\'existent que sur le cloud sont perdues. Celles de vos appareils ne sont pas touchées et repartiront à la prochaine sync.</string>
+    <string name="cloud_step_notes">Synchronisation : notes…</string>
+    <string name="cloud_notes_synced">Notes synchronisées</string>
+    <string name="cloud_notes_synced_new">Notes synchronisées, des nouvelles sont arrivées</string>
+    <string name="cloud_notes_too_new">Il faut une version plus récente de l\'application pour synchroniser les notes</string>
 </resources>

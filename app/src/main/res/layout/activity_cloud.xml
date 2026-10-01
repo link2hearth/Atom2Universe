@@ -375,6 +375,33 @@
 
                 </LinearLayout>
 
+                <!-- ==================== PROJETS CRÉATIFS ==================== -->
+                <LinearLayout
+                    android:id="@+id/cloud_projects_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/CloudSectionHeader"
+                        android:text="@string/cloud_section_projects" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/CloudCard">
+
+                        <LinearLayout
+                            android:id="@+id/cloud_project_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
                 <!-- ==================== DERNIER RECOURS ==================== -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/cloud_btn_delete_all"

@@ -10,17 +10,21 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.AppThemeManager
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.notes.data.NotesDatabase
 import com.Atom2Universe.app.notes.repository.NotesRepository
+import com.Atom2Universe.app.notes.sync.NotesSyncManager
 import com.Atom2Universe.app.notes.viewmodel.NotesViewModel
 import com.Atom2Universe.app.notes.viewmodel.NotesViewModelFactory
 import com.Atom2Universe.app.util.SystemBarsManager
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Les Notes : une seule activité. La bibliothèque est la racine ; l'éditeur, les tags et la
@@ -44,7 +48,10 @@ class NotesActivity : AppCompatActivity() {
         val repository = NotesRepository(NotesDatabase.getInstance(this))
         viewModel = ViewModelProvider(this, NotesViewModelFactory(repository))[NotesViewModel::class.java]
 
+        // Toute écriture dans les notes programme une sync (si elle est permise) ; et on en fait une à l'ouverture.
+        NotesSyncManager.watch(this)
         if (savedInstanceState == null) {
+            lifecycleScope.launch(Dispatchers.IO) { NotesSyncManager.syncOnOpen(applicationContext) }
             viewModel.purgeOldTrash()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.notes_fragment_container, NotesLibraryFragment(), TAG_LIBRARY)

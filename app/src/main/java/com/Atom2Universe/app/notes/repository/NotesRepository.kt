@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.notes.repository
 
 import androidx.room.withTransaction
+import java.util.UUID
 import com.Atom2Universe.app.notes.data.*
 import com.Atom2Universe.app.notes.export.NoteExportManager
 import com.Atom2Universe.app.notes.editor.MarkdownSyntax
@@ -49,7 +50,7 @@ class NotesRepository(private val db: NotesDatabase) {
     suspend fun duplicateNote(noteId: Long, title: String): Long? = db.withTransaction {
         val src = noteDao.getNoteWithTagsById(noteId) ?: return@withTransaction null
         val now = System.currentTimeMillis()
-        val id = noteDao.insertNote(src.note.copy(id = 0, title = title, isPinned = false, dateCreated = now, dateModified = now))
+        val id = noteDao.insertNote(src.note.copy(id = 0, uuid = UUID.randomUUID().toString(), title = title, isPinned = false, dateCreated = now, dateModified = now))
         src.tags.forEach { noteDao.insertNoteTag(NoteTag(id, it.id)) }
         id
     }

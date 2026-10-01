@@ -55,7 +55,8 @@ class ProjectStore(val root: File) {
     fun list(): List<ProjectSummary> {
         val out = ArrayList<ProjectSummary>()
         for (d in root.listFiles().orEmpty()) {
-            if (!d.isDirectory) continue
+            // Les dossiers « .incoming_… » sont des téléchargements du cloud pas finis : pas des projets.
+            if (!d.isDirectory || d.name.startsWith(".")) continue
             val mf = File(d, "manifest.json")
             if (!mf.isFile) continue
             try {
@@ -136,7 +137,10 @@ class ProjectStore(val root: File) {
         val thumbStale = dirty.meta || dirty.removed.isNotEmpty() ||
             dirty.written.keys.any { Document.unpackFrame(it) == firstFrame } || !thumbFile(p.meta.id).isFile
         val thumb = if (thumbStale) makeThumbnail(doc) else null
-        p.meta.modified = System.currentTimeMillis()
+        // Ouvrir puis refermer un projet réécrit son manifeste (couleurs, calque actif), mais ne le « modifie »
+        // pas : la sync du cloud compare cette date, et deux appareils qui n'ont fait que regarder le même
+        // projet ne doivent pas se déclarer en conflit.
+        if (!dirty.isEmpty) p.meta.modified = System.currentTimeMillis()
         val manifest = ManifestCodec.encode(doc, p.meta).toString()
         return SavePlan(p.meta.id, dirty, cels, thumb, manifest, doc.width, doc.height)
     }
@@ -268,6 +272,8 @@ class ProjectStore(val root: File) {
         if (!mf.isFile) return
         val j = JSONObject(mf.readText())
         j.put("name", name)
+        // Renommer est un changement comme un autre : la sync du cloud le voit à cette date.
+        j.put("modified", System.currentTimeMillis())
         atomicWrite(mf) { it.write(j.toString().toByteArray(Charsets.UTF_8)) }
     }
 
@@ -320,6 +326,47 @@ class ProjectStore(val root: File) {
     fun importZip(input: InputStream, fallbackName: String): String? {
         val id = newId()
         val target = dir(id)
+        return if (extractProject(input, target, fallbackName)) id else null
+    }
+
+    /**
+     * Pose un projet venu du cloud sous l'identifiant [id], en remplaçant celui qui s'y trouve.
+     *
+     * Le zip est d'abord déballé à côté, vérifié, puis échangé contre l'ancien dossier : un
+     * téléchargement tronqué ou un fichier abîmé laisse le projet local intact. Le lien vers le
+     * fichier image d'origine est propre à cet appareil : il est conservé tel quel, et seule la
+     * date de modification du cloud est gardée (c'est elle que la sync compare ensuite).
+     *
+     * @return faux si le fichier est illisible ; rien n'a alors changé
+     */
+    fun importFromCloud(id: String, input: InputStream): Boolean {
+        val incoming = File(root, ".incoming_$id")
+        incoming.deleteRecursively()
+        if (!extractProject(input, incoming, fallbackName = "", keepModified = true)) return false
+        val old = dir(id)
+        if (old.isDirectory) {
+            // Le lien vers l'image d'origine n'existe que sur cet appareil.
+            val link = try { JSONObject(File(old, "manifest.json").readText()).optJSONObject("link") } catch (e: Exception) { null }
+            if (link != null) {
+                val mf = File(incoming, "manifest.json")
+                atomicWrite(mf) { it.write(JSONObject(mf.readText()).put("link", link).toString().toByteArray(Charsets.UTF_8)) }
+            }
+        }
+        val backup = File(root, ".replaced_$id")
+        backup.deleteRecursively()
+        if (old.isDirectory && !old.renameTo(backup)) { incoming.deleteRecursively(); return false }
+        if (!incoming.renameTo(old)) {
+            // Impossible de mettre le nouveau en place : on rend l'ancien.
+            if (backup.isDirectory) backup.renameTo(old)
+            incoming.deleteRecursively()
+            return false
+        }
+        backup.deleteRecursively()
+        return true
+    }
+
+    /** Déballe un fichier de projet dans [target], le vérifie, et efface [target] s'il est illisible. */
+    private fun extractProject(input: InputStream, target: File, fallbackName: String, keepModified: Boolean = false): Boolean {
         try {
             ZipInputStream(BufferedInputStream(input)).use { z ->
                 while (true) {
@@ -333,19 +380,37 @@ class ProjectStore(val root: File) {
                     FileOutputStream(f).use { z.copyTo(it) }
                 }
             }
-            val mf = manifestFile(id)
-            if (!mf.isFile) { target.deleteRecursively(); return null }
+            val mf = File(target, "manifest.json")
+            if (!mf.isFile) { target.deleteRecursively(); return false }
             val j = JSONObject(mf.readText())
             if (j.optString("name").isBlank()) j.put("name", fallbackName)
             j.remove("link")
-            j.put("modified", System.currentTimeMillis())
+            if (!keepModified) j.put("modified", System.currentTimeMillis())
             atomicWrite(mf) { it.write(j.toString().toByteArray(Charsets.UTF_8)) }
-            if (load(id) == null) { target.deleteRecursively(); return null }
-            return id
+            // Le manifeste et les cels doivent être lisibles : on ne garde pas un projet qui ne s'ouvrira pas.
+            val (doc, _) = ManifestCodec.decode(target.name, j)
+            for (l in doc.layers) for (f in doc.frames) {
+                val cel = File(File(target, "cels"), "${l.id}_${f.id}.cel")
+                if (cel.isFile && readCel(cel, doc.width, doc.height) == null) { target.deleteRecursively(); return false }
+            }
+            return true
         } catch (e: Exception) {
             target.deleteRecursively()
-            return null
+            return false
         }
+    }
+
+    /** La date de dernière modification d'un projet, lue dans son manifeste ; null s'il n'existe pas. */
+    fun modifiedOf(id: String): Long? {
+        val mf = manifestFile(id)
+        if (!mf.isFile) return null
+        return try { JSONObject(mf.readText()).optLong("modified") } catch (e: Exception) { null }
+    }
+
+    fun nameOf(id: String): String? {
+        val mf = manifestFile(id)
+        if (!mf.isFile) return null
+        return try { JSONObject(mf.readText()).optString("name", "") } catch (e: Exception) { null }
     }
 
     private companion object {

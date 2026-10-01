@@ -3,11 +3,15 @@ package com.Atom2Universe.app.cloud
 import android.content.Context
 import android.util.Log
 import com.Atom2Universe.app.R
+import com.Atom2Universe.app.cloud.projects.CloudModule
+import com.Atom2Universe.app.cloud.projects.CloudProject
+import com.Atom2Universe.app.cloud.projects.CloudProjectSync
 import com.Atom2Universe.app.games.farm.FarmSyncManager
 import com.Atom2Universe.app.music.sync.DeviceIdentity
 import com.Atom2Universe.app.music.sync.DriveFileInfo
 import com.Atom2Universe.app.music.sync.GoogleDriveAppDataClient
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
+import com.Atom2Universe.app.notes.sync.NotesSyncManager
 import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -108,6 +112,30 @@ object CloudInventory {
             R.string.cloud_cat_reading_warning,
             colorRes = R.color.cloud_cat_reading_color
         ),
+        PIXELART(
+            R.string.cloud_cat_pixelart,
+            R.string.cloud_cat_pixelart_desc,
+            R.string.cloud_cat_pixelart_warning,
+            colorRes = R.color.cloud_cat_pixelart_color
+        ),
+        ZOOM(
+            R.string.cloud_cat_zoom,
+            R.string.cloud_cat_zoom_desc,
+            R.string.cloud_cat_zoom_warning,
+            colorRes = R.color.cloud_cat_zoom_color
+        ),
+        CANVAS(
+            R.string.cloud_cat_canvas,
+            R.string.cloud_cat_canvas_desc,
+            R.string.cloud_cat_canvas_warning,
+            colorRes = R.color.cloud_cat_canvas_color
+        ),
+        NOTES(
+            R.string.cloud_cat_notes,
+            R.string.cloud_cat_notes_desc,
+            R.string.cloud_cat_notes_warning,
+            colorRes = R.color.cloud_cat_notes_color
+        ),
         STATS(
             R.string.cloud_cat_stats,
             R.string.cloud_cat_stats_desc,
@@ -156,7 +184,9 @@ object CloudInventory {
     /** L'inventaire complet, prêt à afficher. */
     data class Report(
         val categories: List<CategoryUsage>,
-        val journals: List<DeviceJournal>
+        val journals: List<DeviceJournal>,
+        /** Les projets créatifs, un par fichier, le plus récent d'abord. */
+        val projects: List<CloudProject>
     ) {
         val totalBytes: Long get() = categories.sumOf { it.bytes }
         val fileCount: Int get() = categories.sumOf { it.fileCount }
@@ -200,17 +230,32 @@ object CloudInventory {
             }
             .sortedByDescending { it.file.modifiedTime }
 
+        val projects = files
+            .mapNotNull { CloudProjectSync.projectOf(it) }
+            .sortedByDescending { it.driveModified }
+
         Log.d(TAG, "Inventory: ${files.size} file(s) in ${categories.size} category(ies)")
-        Report(categories, journals)
+        Report(categories, journals, projects)
     }
 
     /**
      * Supprime les fichiers passés et renvoie combien l'ont réellement été.
      */
-    suspend fun delete(context: Context, ids: List<String>): Int = withContext(Dispatchers.IO) {
+    private suspend fun deleteByIds(context: Context, ids: List<String>): Int = withContext(Dispatchers.IO) {
         if (ids.isEmpty()) return@withContext 0
         val account = GoogleSignInManager(context).getSignedInAccount() ?: return@withContext 0
         GoogleDriveAppDataClient(context, account).deleteByIds(ids)
+    }
+
+    /**
+     * Supprime des fichiers connus par leur descripteur. Pour les projets créatifs, ceux de cet
+     * appareil oublient en plus qu'ils étaient sur le cloud : sans cela leur pastille mentirait,
+     * et ils ne sauraient pas qu'il faut les republier.
+     */
+    suspend fun delete(context: Context, files: List<DriveFileInfo>): Int {
+        val deleted = deleteByIds(context, files.map { it.id })
+        if (deleted > 0) CloudProjectSync.forgetFiles(context, files)
+        return deleted
     }
 
     /**
@@ -226,10 +271,19 @@ object CloudInventory {
         name == "games_state.json" -> CloudCategory.GAMES
         name == FarmSyncManager.SYNC_FILE -> CloudCategory.GAMES
         name == "reading_progress.json" -> CloudCategory.READING
+        name == NotesSyncManager.SYNC_FILE -> CloudCategory.NOTES
         name == "usage_sessions.json" -> CloudCategory.STATS
         name in LEGACY_BACKUP_FILES -> CloudCategory.OBSOLETE
         name in MUSIC_SYNC_FILES -> CloudCategory.MUSIC
-        else -> CloudCategory.UNKNOWN
+        else -> categorizeProject(name)
+    }
+
+    /** Un projet créatif se reconnaît à son préfixe de module ; tout autre nom reste non reconnu. */
+    private fun categorizeProject(name: String): CloudCategory = when (CloudModule.ofFile(name)) {
+        CloudModule.PIXEL_ART -> CloudCategory.PIXELART
+        CloudModule.ZOOM -> CloudCategory.ZOOM
+        CloudModule.CANVAS -> CloudCategory.CANVAS
+        null -> CloudCategory.UNKNOWN
     }
 
     /**

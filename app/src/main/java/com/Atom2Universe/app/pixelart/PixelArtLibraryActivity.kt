@@ -36,6 +36,10 @@ import com.Atom2Universe.app.pixelart.ui.dp
 import com.Atom2Universe.app.pixelart.ui.pixelDrawable
 import com.Atom2Universe.app.pixelart.ui.promptText
 import com.Atom2Universe.app.pixelart.ui.showNewProjectSheet
+import com.Atom2Universe.app.cloud.projects.CloudModule
+import com.Atom2Universe.app.cloud.projects.CloudProjectSync
+import com.Atom2Universe.app.cloud.projects.CloudProjectsUi
+import com.Atom2Universe.app.pixelart.io.PixelArtCloudAdapter
 import com.Atom2Universe.app.pixelart.ui.showSheetImportSheet
 import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +59,7 @@ class PixelArtLibraryActivity : AppCompatActivity() {
     }
 
     private val store by lazy { PixelArtStorage.store(this) }
+    private val cloud by lazy { PixelArtCloudAdapter(store) }
     private lateinit var list: RecyclerView
     private lateinit var empty: View
     private lateinit var adapter: ProjectsAdapter
@@ -110,7 +115,7 @@ class PixelArtLibraryActivity : AppCompatActivity() {
 
     private fun newProject() {
         val default = getString(R.string.px_untitled_n, adapter.itemCount + 1)
-        showNewProjectSheet(default) { name, w, h ->
+        showNewProjectSheet(default, onImportCloud = { CloudProjectsUi.showImportSheet(this, cloud, ::reload) }) { name, w, h ->
             lifecycleScope.launch {
                 val p = withContext(Dispatchers.IO) { store.create(name, w, h, getString(R.string.px_layer_name, 1)) }
                 openProject(p.meta.id)
@@ -150,9 +155,15 @@ class PixelArtLibraryActivity : AppCompatActivity() {
                     reload()
                 }
             },
+            SheetItem(R.drawable.ic_cloud, getString(R.string.cloud_proj_sync)) {
+                CloudProjectsUi.syncProject(this, cloud, item.id, item.name, ::reload)
+            },
             SheetItem(R.drawable.ic_px_export, getString(R.string.px_export_project)) {
                 pendingExportId = item.id
                 exportProject.launch("${item.name.replace(Regex("[\\\\/:*?\"<>|]"), "_")}.a2upix.zip")
+            },
+            SheetItem(R.drawable.ic_cloud_off, getString(R.string.cloud_proj_remove)) {
+                CloudProjectsUi.removeFromCloud(this, CloudModule.PIXEL_ART, item.id, item.name, ::reload)
             },
             SheetItem(R.drawable.ic_px_delete, getString(R.string.px_delete), destructive = true) {
                 confirm(R.string.px_delete_project_title, getString(R.string.px_delete_project_message, item.name), R.string.px_delete, true) {
@@ -234,6 +245,7 @@ private class ProjectsAdapter(
     class Holder(v: View) : RecyclerView.ViewHolder(v) {
         val thumb: ImageView = v.findViewById(R.id.project_thumb)
         val badge: ImageView = v.findViewById(R.id.project_link_badge)
+        val cloudBadge: ImageView = v.findViewById(R.id.project_cloud_badge)
         val menu: View = v.findViewById(R.id.project_menu)
         val name: TextView = v.findViewById(R.id.project_name)
         val info: TextView = v.findViewById(R.id.project_info)
@@ -261,6 +273,11 @@ private class ProjectsAdapter(
         sb.append(" · ").append(DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS))
         h.info.text = sb.toString()
         h.badge.visibility = if (p.linkName != null) View.VISIBLE else View.GONE
+        when (CloudProjectSync.badge(context, CloudModule.PIXEL_ART, p.id, p.modified)) {
+            CloudProjectSync.Badge.NONE -> h.cloudBadge.visibility = View.GONE
+            CloudProjectSync.Badge.SYNCED -> { h.cloudBadge.setImageResource(R.drawable.ic_cloud_done); h.cloudBadge.visibility = View.VISIBLE }
+            CloudProjectSync.Badge.PENDING -> { h.cloudBadge.setImageResource(R.drawable.ic_cloud_upload); h.cloudBadge.visibility = View.VISIBLE }
+        }
         h.thumb.background = context.checkerDrawable(context.dp(6))
         val key = p.id + p.modified
         val cached = thumbs.get(key)

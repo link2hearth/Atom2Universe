@@ -14,6 +14,10 @@
     <color name="cloud_cat_stats_color">#56C8C8</color>
     <color name="cloud_cat_obsolete_color">#6E7681</color>
     <color name="cloud_cat_unknown_color">#D96C8F</color>
+    <color name="cloud_cat_pixelart_color">#F2C94C</color>
+    <color name="cloud_cat_zoom_color">#6C9EF2</color>
+    <color name="cloud_cat_canvas_color">#F29AC4</color>
+    <color name="cloud_cat_notes_color">#B5E86B</color>
 
     <!-- Piste vide derrière la barre de proportion. -->
     <color name="cloud_bar_track">#2A2A3A</color>

@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity(
     tableName = "notes",
@@ -19,6 +20,11 @@ import androidx.room.PrimaryKey
 )
 data class Note(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    /**
+     * L'identité de la note d'un appareil à l'autre : [id] est un compteur local, différent partout.
+     * Une copie ([copy]) doit recevoir son propre uuid, sinon la sync la prendrait pour la même note.
+     */
+    val uuid: String = UUID.randomUUID().toString(),
     val groupId: Long? = null,
     val title: String = "",
     val content: String = "",

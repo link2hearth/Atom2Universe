@@ -358,7 +358,7 @@ object CloudSyncManager {
     // ==================== End Instant Sync Methods ====================
 
     /** Les grandes étapes d'une sync, pour dire à l'écran où on en est. */
-    enum class SyncStep { MUSIC_DOWNLOAD, LISTENS, MUSIC_UPLOAD, STATS, READING, GAMES }
+    enum class SyncStep { MUSIC_DOWNLOAD, LISTENS, MUSIC_UPLOAD, STATS, READING, GAMES, NOTES }
 
     /** Étiquette des mesures de durée : `adb logcat -s SyncTiming` suffit à les lire. */
     private const val TIMING_TAG = "SyncTiming"
@@ -473,6 +473,17 @@ object CloudSyncManager {
                 Log.d(TAG, "Games shared stats sync: $gamesResult")
             } catch (e: Exception) {
                 Log.e(TAG, "Games shared stats sync failed (non-critical)", e)
+            }
+
+            // Phase 3.8 : les notes (un fichier, fusionné note par note).
+            onStep(SyncStep.NOTES)
+            try {
+                val notesResult = timed("notes") { com.Atom2Universe.app.notes.sync.NotesSyncManager.sync(appContext) }
+                Log.d(TAG, "Notes sync: ${notesResult.outcome}")
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(TAG, "Notes sync failed (non-critical)", e)
             }
 
             // Update sync timestamp

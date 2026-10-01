@@ -79,6 +79,16 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE deletedAt IS NULL")
     suspend fun getAllNotesForBackup(): List<Note>
 
+    // Sync : toutes les notes, la corbeille comprise (elle voyage aussi)
+    @Query("SELECT * FROM notes")
+    suspend fun getAllNotesForSync(): List<Note>
+
+    @Query("SELECT * FROM notes WHERE uuid = :uuid LIMIT 1")
+    suspend fun getNoteByUuid(uuid: String): Note?
+
+    @Query("DELETE FROM notes WHERE uuid = :uuid")
+    suspend fun deleteNoteByUuid(uuid: String)
+
     @Query("SELECT * FROM note_tags")
     suspend fun getAllNoteTagsForBackup(): List<NoteTag>
 

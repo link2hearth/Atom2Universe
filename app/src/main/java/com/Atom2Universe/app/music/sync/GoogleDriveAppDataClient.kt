@@ -7,6 +7,7 @@ import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.ByteArrayContent
+import com.google.api.client.http.FileContent
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
@@ -16,6 +17,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 import java.util.Calendar
 import java.util.Date
 
@@ -26,7 +28,7 @@ import java.util.Date
  * - Is invisible to the user in Google Drive
  * - Can only be accessed by this app
  * - Is automatically deleted when the app is uninstalled
- * - Has no storage quota impact on user's Drive
+ * - Counts toward the user's Drive storage quota, like any other file of theirs
  */
 class GoogleDriveAppDataClient(
     private val context: Context,
@@ -404,14 +406,25 @@ class GoogleDriveAppDataClient(
      *
      * @return La liste des fichiers, ou une liste vide en cas d'erreur.
      */
-    suspend fun listFileDetails(): List<DriveFileInfo> = withContext(Dispatchers.IO) {
+    suspend fun listFileDetails(): List<DriveFileInfo> = listFileDetailsChecked() ?: emptyList()
+
+    /**
+     * Comme [listFileDetails], mais une erreur de Drive donne null au lieu d'une liste vide.
+     *
+     * Une liste vide veut dire « rien là-haut » ; la confondre avec « Drive n'a pas répondu »
+     * ferait republier par-dessus un fichier que personne n'a regardé.
+     *
+     * @param query filtre Drive (`name = 'px_ab12.zip'`), ou null pour tout lister.
+     */
+    suspend fun listFileDetailsChecked(query: String? = null): List<DriveFileInfo>? = withContext(Dispatchers.IO) {
         try {
             val result = mutableListOf<DriveFileInfo>()
             var pageToken: String? = null
             do {
                 val page = driveService.files().list()
                     .setSpaces(APP_DATA_FOLDER)
-                    .setFields("nextPageToken, files(id, name, size, modifiedTime)")
+                    .setQ(query)
+                    .setFields("nextPageToken, files(id, name, size, modifiedTime, description)")
                     .setPageSize(1000)
                     .setPageToken(pageToken)
                     .execute()
@@ -421,7 +434,8 @@ class GoogleDriveAppDataClient(
                         id = file.id,
                         name = file.name ?: "",
                         size = file.getSize() ?: 0L,
-                        modifiedTime = file.modifiedTime?.value ?: 0L
+                        modifiedTime = file.modifiedTime?.value ?: 0L,
+                        description = file.description
                     )
                 }
                 pageToken = page.nextPageToken
@@ -429,9 +443,71 @@ class GoogleDriveAppDataClient(
 
             Log.d(TAG, "Inventory: ${result.size} file(s), ${result.sumOf { it.size }} bytes")
             result
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "Error listing file details", e)
-            emptyList()
+            null
+        }
+    }
+
+    // ==================== Fichiers volumineux (projets créatifs) ====================
+
+    /**
+     * Envoie un fichier du disque, sans le charger en mémoire.
+     *
+     * Un projet de dessin peut peser des dizaines de Mo : [ByteArrayContent] le tiendrait
+     * entier dans le tas, deux fois. Ici Drive lit le fichier par morceaux, en envoi reprenable.
+     *
+     * @param existingId l'identifiant Drive du fichier à remplacer, ou null pour en créer un
+     * @param description texte libre rangé avec le fichier : c'est ce qui permet de lister des
+     *   projets (nom, version) sans rien télécharger
+     * @return l'identifiant Drive du fichier, ou null si l'envoi a échoué
+     */
+    suspend fun uploadFile(
+        name: String,
+        file: java.io.File,
+        mimeType: String,
+        description: String?,
+        existingId: String?
+    ): String? = withContext(Dispatchers.IO) {
+        try {
+            val media = FileContent(mimeType, file)
+            val metadata = File().apply {
+                this.description = description
+                if (existingId == null) {
+                    this.name = name
+                    parents = listOf(APP_DATA_FOLDER)
+                }
+            }
+            val sent = if (existingId != null) {
+                driveService.files().update(existingId, metadata, media).setFields("id").execute()
+            } else {
+                driveService.files().create(metadata, media).setFields("id").execute()
+            }
+            Log.d(TAG, "Uploaded file: $name (${file.length()} bytes)")
+            sent.id
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error uploading $name", e)
+            null
+        }
+    }
+
+    /** Télécharge un fichier vers le disque, sans passer par la mémoire. */
+    suspend fun downloadToFile(fileId: String, target: java.io.File): Boolean = withContext(Dispatchers.IO) {
+        try {
+            FileOutputStream(target).use { out ->
+                driveService.files().get(fileId).executeMediaAndDownloadTo(out)
+            }
+            true
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error downloading file id=$fileId", e)
+            target.delete()
+            false
         }
     }
 
@@ -535,10 +611,12 @@ class GoogleDriveAppDataClient(
  * @property name nom du fichier, c'est lui qui porte le domaine (musique, jeux…)
  * @property size taille en octets ; Drive renvoie null pour un fichier vide, on lit 0
  * @property modifiedTime date de dernière écriture, en millisecondes epoch
+ * @property description texte libre rangé avec le fichier, null s'il n'en a pas
  */
 data class DriveFileInfo(
     val id: String,
     val name: String,
     val size: Long,
-    val modifiedTime: Long
+    val modifiedTime: Long,
+    val description: String? = null
 )

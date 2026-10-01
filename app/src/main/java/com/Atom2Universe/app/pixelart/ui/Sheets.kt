@@ -76,7 +76,12 @@ private class ChoiceRow<T>(context: Context, val options: List<Pair<T, CharSeque
 
 // ---- Nouveau projet ----------------------------------------------------------------------------
 
-fun Context.showNewProjectSheet(defaultName: String, onCreate: (name: String, w: Int, h: Int) -> Unit) {
+/** [onImportCloud] : si donné, la feuille propose aussi « Importer depuis le cloud » sous le bouton de création. */
+fun Context.showNewProjectSheet(
+    defaultName: String,
+    onImportCloud: (() -> Unit)? = null,
+    onCreate: (name: String, w: Int, h: Int) -> Unit,
+) {
     val presets = listOf(16, 32, 48, 64, 128, 256)
     var w = 32
     var h = 32
@@ -126,6 +131,11 @@ fun Context.showNewProjectSheet(defaultName: String, onCreate: (name: String, w:
             dlg.dismiss()
             onCreate(nameField.text.toString().trim().ifEmpty { defaultName }, cw.coerceIn(1, Document.MAX_SIDE), ch.coerceIn(1, Document.MAX_SIDE))
         })
+        if (onImportCloud != null) {
+            val cloudRow = LinearLayout(this)
+            cloudRow.addView(secondaryButton(getString(R.string.cloud_proj_import), R.drawable.ic_cloud) { dlg.dismiss(); onImportCloud() })
+            root.addView(cloudRow, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
+        }
     }
     dialog.show()
 }
