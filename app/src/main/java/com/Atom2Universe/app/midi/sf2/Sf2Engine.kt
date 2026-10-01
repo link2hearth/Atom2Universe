@@ -99,6 +99,12 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
     // Temp file for content URI
     private var currentTempFile: File? = null
 
+    /**
+     * Applique le gain des réglages audio (MidiAudioMixer) au signal. Désactivé par le mode
+     * hybride, qui l'applique déjà aux vélocités qu'il envoie.
+     */
+    @Volatile var applyMixerGain: Boolean = true
+
     // ==================== MidiEngine Interface ====================
 
     override fun initialize(soundFontPath: String): Boolean {
@@ -301,6 +307,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
     private fun configureRenderCallback() {
         audioRenderer?.setRenderCallback { left, right, samples ->
+            // Gain des réglages audio : appliqué au signal (la vélocité reste celle du fichier)
+            synthesizer?.outputGain = if (applyMixerGain) MidiAudioMixer.getMasterGain() else 1f
             processMidiEventsForBuffer(samples)
             synthesizer?.render(left, right, samples)
         }
@@ -603,7 +611,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
      * Sets the global gain (engine output level) for the SF2 synthesizer.
      * Useful for adjusting volume per-SF2: quiet SF2s benefit from higher gain,
      * loud SF2s may need lower gain.
-     * @param gain Gain value (0.05 to 1.0, default 0.25)
+     * @param gain Gain value (0.05 to 1.0, default Sf2Synthesizer.DEFAULT_GLOBAL_GAIN)
      */
     @Suppress("unused")
     fun setGlobalGain(gain: Float) {
@@ -614,7 +622,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
      * Gets the current global gain.
      */
     @Suppress("unused")
-    fun getGlobalGain(): Float = synthesizer?.globalGain ?: 0.25f
+    fun getGlobalGain(): Float = synthesizer?.globalGain ?: Sf2Synthesizer.DEFAULT_GLOBAL_GAIN
 
     override fun getCurrentPosition(): Long = currentPositionMs.get()
 
@@ -1155,12 +1163,11 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         when (event.type) {
             MidiEventType.NOTE_ON -> {
                 if (!isMuted) {
-                    val normalizedVelocity = MidiAudioMixer.calculateAdjustedVelocity(
-                        event.channel,
-                        event.data2,
-                        applyChannelVolume = false
-                    )
-                    synth.noteOn(event.channel, event.data1, normalizedVelocity, frameOffset)
+                    // Vélocité du fichier telle quelle, comme FluidSynth : la courbe de la norme
+                    // SF2 (vélocité -> volume et filtre) s'applique dans la voix. Le plafond et la
+                    // compression de vélocité du mixeur ne concernent plus ce moteur ; son gain
+                    // est appliqué au signal (voir configureRenderCallback).
+                    synth.noteOn(event.channel, event.data1, event.data2, frameOffset)
                 }
                 dispatchMidiToVisualizer(event)
             }
@@ -1172,7 +1179,6 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             }
             MidiEventType.PROGRAM_CHANGE -> {
                 synth.programChange(event.channel, event.data1)
-                MidiAudioMixer.applyInstrumentBoost(event.channel, event.data1)
                 dispatchMidiToVisualizer(event)
             }
             MidiEventType.CONTROL_CHANGE -> {

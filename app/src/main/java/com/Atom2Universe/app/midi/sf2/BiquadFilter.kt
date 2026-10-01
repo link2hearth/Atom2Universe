@@ -8,16 +8,18 @@ import kotlin.math.*
  * This implements a 2-pole IIR (Infinite Impulse Response) low-pass filter
  * with resonance control, as specified in the SoundFont 2.01 standard.
  *
- * The filter is used per-voice to shape the timbre of each note.
+ * The filter is used per-voice to shape the timbre of each note. Like in the standard
+ * (and FluidSynth), every voice goes through it: with the default cutoff (13500 cents,
+ * ~20 kHz) and no resonance it is nearly transparent.
  *
  * SF2 Parameters:
  * - initialFilterFc (generator 8): Initial cutoff frequency in absolute cents
  *   Formula: fc_hz = 8.176 * 2^(cents/1200)
- *   Range: ~8 Hz to ~20 kHz (1500 to 13500 cents typical)
+ *   Range: 1500 to 13500 cents (20 Hz to 20 kHz)
  *
- * - initialFilterQ (generator 9): Resonance in centibels
- *   Formula: Q = 10^(cB/200)
- *   Range: 0 to 960 cB (Q from 1.0 to ~31.6)
+ * - initialFilterQ (generator 9): height of the resonance peak above the DC gain,
+ *   in centibels (0 to 960). The standard also lowers the DC gain by half that height:
+ *   for 100 cB, DC is at -5 dB and the peak at +5 dB.
  *
  * Filter topology: Direct Form II Transposed (better numerical stability)
  */
@@ -25,18 +27,14 @@ class BiquadFilter(
     private val sampleRate: Int = 44100
 ) {
     companion object {
-        private const val TAG = "BiquadFilter"
-
-        // SF2 default values
-        const val DEFAULT_FC_CENTS = 13500  // ~20 kHz (essentially bypassed)
-        const val DEFAULT_Q_CB = 0          // Q = 1.0 (no resonance)
+        // SF2 default value: ~20 kHz
+        const val DEFAULT_FC_CENTS = 13500
 
         // Limits
-        const val MIN_FC_HZ = 20f           // Minimum cutoff frequency
-        const val MAX_Q = 8f                // Maximum Q to prevent instability (reduced from 12)
+        const val MIN_FC_HZ = 20f           // Minimum cutoff frequency (1500 cents)
+        const val MAX_Q = 60f               // Numerical safety for extreme resonances
 
         // Soft clipping threshold - prevents filter instability from causing extreme values
-        // Reduced from 4.0 to 1.5 to prevent downstream hard clipping
         const val SOFT_CLIP_MAX = 1.5f
 
         // Reference frequency for absolute cents conversion
@@ -47,16 +45,8 @@ class BiquadFilter(
          * Converts SF2 absolute cents to Hz.
          * Formula: freq = 8.176 * 2^(cents/1200)
          */
-        fun centsToHz(cents: Int): Float {
+        fun centsToHz(cents: Float): Float {
             return FREQ_REFERENCE * 2f.pow(cents / 1200f)
-        }
-
-        /**
-         * Converts SF2 centibels to Q factor.
-         * Formula: Q = 10^(cB/200)
-         */
-        fun centibelsToQ(centibels: Int): Float {
-            return 10f.pow(centibels / 200f)
         }
     }
 
@@ -71,103 +61,63 @@ class BiquadFilter(
     private var z1: Float = 0f
     private var z2: Float = 0f
 
-    // Current parameters
+    // Base (configured) cutoff - the unmodulated cutoff, reference for modulateCutoff()
+    private var baseFcHz: Float = 20000f
     private var currentFcHz: Float = 20000f
-    private var currentQ: Float = 1f
+
+    // Biquad Q and DC gain derived from the SF2 resonance
+    private var q: Float = 0.7071f
+    private var dcGain: Float = 1f
+
     private var isEnabled: Boolean = false
 
-    // Base (configured) cutoff - the unmodulated cutoff set by configure/setParameters.
-    // Used by modulateCutoff() as the reference point for applying modulation factors.
-    // This is SEPARATE from targetFcHz to prevent process() smoothing from fighting
-    // against block-based modulation (which caused a 750 Hz sawtooth artifact).
-    private var baseFcHz: Float = 20000f
-
-    // Smoothing for parameter changes (to avoid clicks)
-    private var targetFcHz: Float = 20000f
-    private var targetQ: Float = 1f
-    private val smoothingCoeff: Float = 0.001f  // ~10ms at 44100Hz
+    // Highest usable cutoff (FluidSynth uses the same 0.45 × sample rate limit)
+    private val maxFcHz: Float = sampleRate * 0.45f
 
     /**
      * Configures the filter with SF2 parameters.
      *
-     * @param fcCents Cutoff frequency in absolute cents (SF2 generator 8)
-     * @param qCentibels Q/resonance in centibels (SF2 generator 9)
+     * @param fcCents Cutoff frequency in absolute cents (generator 8 plus modulators)
+     * @param qCentibels Resonance in centibels (generator 9)
      */
-    fun configure(fcCents: Int?, qCentibels: Int?) {
-        // If no filter parameters specified, filter is bypassed
-        if (fcCents == null && qCentibels == null) {
-            isEnabled = false
-            return
-        }
+    fun configure(fcCents: Float, qCentibels: Int) {
+        val resonanceDb = qCentibels.coerceIn(0, 960) / 10f
+        // 0 dB of resonance = flat Butterworth response (Q = 1/√2)
+        q = 10f.pow((resonanceDb - 3.01f) / 20f).coerceIn(0.7071f, MAX_Q)
+        dcGain = 10f.pow(-resonanceDb / 40f)
 
-        val fc = fcCents ?: DEFAULT_FC_CENTS
-        val q = qCentibels ?: DEFAULT_Q_CB
-
-        targetFcHz = centsToHz(fc).coerceIn(MIN_FC_HZ, sampleRate / 2f - 100f)
-        targetQ = centibelsToQ(q).coerceIn(0.5f, MAX_Q)
-
-        // Store the base (unmodulated) cutoff for modulateCutoff() reference
-        baseFcHz = targetFcHz
-
-        // Initialize current values to target (no smoothing on first configure)
-        currentFcHz = targetFcHz
-        currentQ = targetQ
-
+        baseFcHz = centsToHz(fcCents).coerceIn(MIN_FC_HZ, maxFcHz)
+        currentFcHz = baseFcHz
         calculateCoefficients()
-
-        // Enable filter only if cutoff is significantly below Nyquist
-        // Removed the 5000 Hz lower bound - let SF2 filters work as designed, even for low cutoffs
-        isEnabled = targetFcHz < (sampleRate / 2f - 1000f)
+        isEnabled = true
     }
 
-    /**
-     * Configures the filter with Hz and Q directly.
-     * Useful for real-time modulation (uses smoothing).
-     */
-    fun setParameters(fcHz: Float, q: Float) {
-        targetFcHz = fcHz.coerceIn(MIN_FC_HZ, sampleRate / 2f - 100f)
-        targetQ = q.coerceIn(0.5f, MAX_Q)
-        baseFcHz = targetFcHz
-        isEnabled = targetFcHz < (sampleRate / 2f - 1000f)
-    }
-
-    /**
-     * Configures the filter with Hz and Q directly, with immediate effect (no smoothing).
-     * Use this when configuring a new note to avoid transient artifacts.
-     */
-    fun setParametersImmediate(fcHz: Float, q: Float) {
-        targetFcHz = fcHz.coerceIn(MIN_FC_HZ, sampleRate / 2f - 100f)
-        targetQ = q.coerceIn(0.5f, MAX_Q)
-        baseFcHz = targetFcHz
-        currentFcHz = targetFcHz
-        currentQ = targetQ
-        calculateCoefficients()
-        isEnabled = targetFcHz < (sampleRate / 2f - 1000f)
+    /** Bypasses the filter until the next [configure]. */
+    fun disable() {
+        isEnabled = false
     }
 
     /**
      * Calculates the biquad coefficients for a low-pass filter.
-     * Uses the "cookbook" formulas by Robert Bristow-Johnson.
+     * Uses the "cookbook" formulas by Robert Bristow-Johnson, with the SF2 DC gain.
      */
     private fun calculateCoefficients() {
         // Normalized frequency (0 to 0.5)
         val omega = 2f * PI.toFloat() * currentFcHz / sampleRate
 
-        // Clamp omega to avoid numerical issues near Nyquist
-        val clampedOmega = omega.coerceIn(0.0001f, PI.toFloat() * 0.99f)
-
-        val sinOmega = sin(clampedOmega)
-        val cosOmega = cos(clampedOmega)
+        val sinOmega = sin(omega)
+        val cosOmega = cos(omega)
 
         // Alpha controls bandwidth/resonance
-        val alpha = sinOmega / (2f * currentQ)
+        val alpha = sinOmega / (2f * q)
 
         // Low-pass filter coefficients
         val a0 = 1f + alpha
+        val gain = dcGain / a0
 
-        b0 = ((1f - cosOmega) / 2f) / a0
-        b1 = (1f - cosOmega) / a0
-        b2 = ((1f - cosOmega) / 2f) / a0
+        b0 = ((1f - cosOmega) / 2f) * gain
+        b1 = (1f - cosOmega) * gain
+        b2 = b0
         a1 = (-2f * cosOmega) / a0
         a2 = (1f - alpha) / a0
     }
@@ -178,13 +128,6 @@ class BiquadFilter(
      */
     fun process(input: Float): Float {
         if (!isEnabled) return input
-
-        // Smooth parameter changes
-        if (abs(currentFcHz - targetFcHz) > 1f || abs(currentQ - targetQ) > 0.01f) {
-            currentFcHz += (targetFcHz - currentFcHz) * smoothingCoeff
-            currentQ += (targetQ - currentQ) * smoothingCoeff
-            calculateCoefficients()
-        }
 
         // Direct Form II Transposed
         val output = b0 * input + z1
@@ -198,7 +141,6 @@ class BiquadFilter(
         if (z2 > -1e-20f && z2 < 1e-20f) z2 = 0f
 
         // Soft clip to prevent filter instability from causing extreme values
-        // Use tanh-based soft saturation for musical clipping instead of hard clip
         val absOutput = if (output >= 0f) output else -output
         return if (absOutput <= SOFT_CLIP_MAX) {
             output
@@ -212,33 +154,14 @@ class BiquadFilter(
     }
 
     /**
-     * Processes a buffer of samples in-place.
-     */
-    fun processBuffer(buffer: FloatArray, offset: Int = 0, length: Int = buffer.size - offset) {
-        if (!isEnabled) return
-
-        val end = minOf(offset + length, buffer.size)
-        for (i in offset until end) {
-            buffer[i] = process(buffer[i])
-        }
-    }
-
-    /**
      * Modulates the cutoff frequency by a factor relative to the base (configured) cutoff.
-     * Useful for envelope or LFO modulation in block-based rendering.
-     *
-     * Sets BOTH targetFcHz and currentFcHz to the modulated value so that the
-     * per-sample smoothing in process() doesn't fight back toward the unmodulated base.
-     * (Previously only currentFcHz was set, causing the smoothing to create a sawtooth
-     * artifact at the block rate — the root cause of crackling on filtered instruments.)
+     * Used for envelope or LFO modulation in block-based rendering.
      *
      * @param factor Multiplier for cutoff (1.0 = no change, 2.0 = one octave up)
      */
     fun modulateCutoff(factor: Float) {
         if (!isEnabled) return
-        val modulatedFc = (baseFcHz * factor).coerceIn(MIN_FC_HZ, sampleRate / 2f - 100f)
-        targetFcHz = modulatedFc
-        currentFcHz = modulatedFc
+        currentFcHz = (baseFcHz * factor).coerceIn(MIN_FC_HZ, maxFcHz)
         calculateCoefficients()
     }
 
@@ -262,36 +185,11 @@ class BiquadFilter(
     fun getCutoffHz(): Float = currentFcHz
 
     /**
-     * Returns the current Q factor.
-     */
-    fun getQ(): Float = currentQ
-
-    /**
-     * Creates a copy of this filter with the same configuration.
-     */
-    fun copy(): BiquadFilter {
-        val copy = BiquadFilter(sampleRate)
-        copy.b0 = this.b0
-        copy.b1 = this.b1
-        copy.b2 = this.b2
-        copy.a1 = this.a1
-        copy.a2 = this.a2
-        copy.currentFcHz = this.currentFcHz
-        copy.currentQ = this.currentQ
-        copy.targetFcHz = this.targetFcHz
-        copy.targetQ = this.targetQ
-        copy.baseFcHz = this.baseFcHz
-        copy.isEnabled = this.isEnabled
-        // Don't copy state (z1, z2) - new note should start fresh
-        return copy
-    }
-
-    /**
      * Returns debug info about the filter state.
      */
     fun getDebugInfo(): String {
         return if (isEnabled) {
-            "Filter: ${currentFcHz.toInt()}Hz Q=${String.format("%.1f", currentQ)}"
+            "Filter: ${currentFcHz.toInt()}Hz Q=${String.format("%.1f", q)}"
         } else {
             "Filter: bypassed"
         }

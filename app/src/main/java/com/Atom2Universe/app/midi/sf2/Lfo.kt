@@ -41,8 +41,9 @@ class Lfo(
 
         // Two PI for oscillator
         private const val TWO_PI = 2.0 * PI
-        // Half PI for triangle wave phase offset (quarter period shift)
-        private const val HALF_PI = PI * 0.5
+        // Phase offset so the triangle starts at 0 and rises first, as in the standard
+        // (three quarters of a period: normalized phase 0.75 gives 0, then +1 at 1.0)
+        private const val PHASE_OFFSET = PI * 1.5
 
         /**
          * Converts SF2 absolute cents to Hz for LFO frequency.
@@ -135,8 +136,8 @@ class Lfo(
 
         // Generate triangle wave from phase (0 to 2π)
         // Triangle: rises from -1 to +1 in first half, falls from +1 to -1 in second half
-        // Formula: 2 * |2 * (phase/2π) - 1| - 1, shifted by quarter period for sine-like start
-        val normalized = ((phase + HALF_PI) % TWO_PI) / TWO_PI  // 0.0 to 1.0, shifted for cosine-like phase
+        // Formula: 4 * |phase/2π - 0.5| - 1, shifted to start at 0 and rise
+        val normalized = ((phase + PHASE_OFFSET) % TWO_PI) / TWO_PI  // 0.0 to 1.0, shifted for cosine-like phase
         val value = (4.0 * abs(normalized - 0.5) - 1.0).toFloat()
 
         // Advance phase
@@ -175,7 +176,7 @@ class Lfo(
         }
 
         // Return current triangle value
-        val normalized = ((phase + HALF_PI) % TWO_PI) / TWO_PI
+        val normalized = ((phase + PHASE_OFFSET) % TWO_PI) / TWO_PI
         return (4.0 * abs(normalized - 0.5) - 1.0).toFloat()
     }
 
@@ -184,7 +185,7 @@ class Lfo(
      */
     fun getCurrentValue(): Float {
         if (!isEnabled || isDelaying) return 0f
-        val normalized = ((phase + HALF_PI) % TWO_PI) / TWO_PI
+        val normalized = ((phase + PHASE_OFFSET) % TWO_PI) / TWO_PI
         return (4.0 * abs(normalized - 0.5) - 1.0).toFloat()
     }
 

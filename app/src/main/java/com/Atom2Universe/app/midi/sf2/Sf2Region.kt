@@ -42,7 +42,10 @@ data class Sf2Region(
     val modEnvToFilterFc: Int?,         // Mod envelope to filter cutoff in cents
     // Force key/velocity generators (SF2 generators 46, 47)
     val forcedKeyNum: Int?,             // Forces MIDI note for pitch calculation (for sound effects)
-    val forcedVelocity: Int?            // Forces velocity value (for fixed-velocity samples)
+    val forcedVelocity: Int?,           // Forces velocity value (for fixed-velocity samples)
+    // sampleModes 3 : la boucle ne tourne que tant que la touche est enfoncée, puis la lecture
+    // continue jusqu'à la fin de l'échantillon
+    val loopUntilRelease: Boolean = false
 ) {
     /**
      * Checks if this region matches the given key and velocity
@@ -80,17 +83,12 @@ data class Sf2Region(
 
     /**
      * Calculates the gain from attenuation.
-     * Attenuation is in centibels (1/10th of a decibel).
+     * Attenuation is in centibels (1/10th of a decibel), 0 to 1440 (144 dB) per the standard.
      * gain = 10^(-attenuation/200)
-     *
-     * BUG FIX: Limite l'atténuation à 120 cB max pour éviter les presets muets
      */
     fun calculateGain(): Float {
         if (attenuation <= 0) return 1.0f
-        // Limite à 120 cB (12 dB) pour préserver le caractère des SF2
-        // Maintenant que le limiter est corrigé, on peut permettre plus d'atténuation
-        val limitedAttenuation = attenuation.coerceAtMost(120)
-        return 10.0.pow(-limitedAttenuation / 200.0).toFloat()
+        return 10.0.pow(-attenuation.coerceAtMost(1440) / 200.0).toFloat()
     }
 
     /**
@@ -210,6 +208,7 @@ data class Sf2Region(
 
             // Check if loop is valid and enabled
             val hasLoop = SampleModes.hasLoop(zone.sampleModes) && loopEnd > loopStart + 7
+            val loopUntilRelease = hasLoop && zone.sampleModes == SampleModes.LOOP_UNTIL_RELEASE
 
             return Sf2Region(
                 keyRange = zone.keyRange,
@@ -241,7 +240,8 @@ data class Sf2Region(
                 modEnvToPitch = zone.modEnvToPitch,
                 modEnvToFilterFc = zone.modEnvToFilterFc,
                 forcedKeyNum = zone.forcedKeyNum,
-                forcedVelocity = zone.forcedVelocity
+                forcedVelocity = zone.forcedVelocity,
+                loopUntilRelease = loopUntilRelease
             )
         }
 
@@ -251,11 +251,11 @@ data class Sf2Region(
 
         /**
          * Creates Vibrato LFO parameters from zone data.
-         * Returns null if no vibrato effect is defined.
+         * Returns null if the zone defines nothing for the vibrato LFO. Its frequency and delay
+         * are kept even without depth: the modulation wheel uses this LFO.
          */
         private fun createVibLfoParams(zone: Sf2ZoneData): LfoParameters? {
-            // Only create if there's a pitch modulation depth
-            if (zone.vibLfoToPitch == null || zone.vibLfoToPitch == 0) {
+            if (zone.vibLfoToPitch == null && zone.vibLfoFreq == null && zone.vibLfoDelay == null) {
                 return null
             }
             return LfoParameters(
@@ -290,65 +290,38 @@ data class Sf2Region(
         }
 
         /**
-         * Converts SF2 envelope data (in timecents) to seconds
+         * Converts SF2 envelope data (timecents) to seconds, following the standard's ranges.
+         * The sustain becomes a normalized level (1 = full, 0 = none), interpreted by
+         * [EnvelopeGenerator]: for the volume envelope, sustainVolEnv is an attenuation in
+         * centibels (1000 cB = 100 dB = silence); for the modulation envelope, sustainModEnv is
+         * a decrease in 0.1 % units (1000 = zero). Both give 1 - value / 1000.
+         * Returns null when no generator of this envelope is set (the standard's defaults apply).
          */
         private fun convertEnvelope(data: Sf2EnvelopeData): VolumeEnvelope? {
-            var hasData = false
+            val hasData = data.delay != null || data.attack != null || data.hold != null ||
+                data.decay != null || data.sustain != null || data.release != null ||
+                (data.keynumToHold ?: 0) != 0 || (data.keynumToDecay ?: 0) != 0
+            if (!hasData) return null
 
-            val attack = data.attack?.let {
-                hasData = true
-                max(0.001f, timecentsToSeconds(it))
-            }
+            fun seconds(timecents: Int?, maxTimecents: Int): Float =
+                timecentsToSeconds((timecents ?: DEFAULT_TIMECENTS).coerceIn(DEFAULT_TIMECENTS, maxTimecents))
 
-            val decay = data.decay?.let {
-                hasData = true
-                max(0.01f, timecentsToSeconds(it))
-            }
+            val sustain = data.sustain?.let { (1f - it / 1000f).coerceIn(0f, 1f) } ?: 1f
 
-            val release = data.release?.let {
-                hasData = true
-                max(0.02f, timecentsToSeconds(it))
-            }
-
-            // Sustain is in centibels attenuation, convert to linear level
-            val sustain = data.sustain?.let {
-                hasData = true
-                val level = 10.0.pow(-it / 200.0).toFloat()
-                // Plafonnement sustain : min 1% (au lieu de 10%) pour respecter les SF2 avec sustain faible
-                val clampedLevel = max(0.01f, min(1f, level))
-                clampedLevel
-            }
-
-            val delay = data.delay?.let {
-                hasData = true
-                max(0f, timecentsToSeconds(it))
-            }
-
-            val hold = data.hold?.let {
-                hasData = true
-                max(0f, timecentsToSeconds(it))
-            }
-
-            // Key tracking values (keep in timecents, applied at runtime based on MIDI note)
-            val keynumToHold = data.keynumToHold ?: 0
-            val keynumToDecay = data.keynumToDecay ?: 0
-            if (keynumToHold != 0 || keynumToDecay != 0) {
-                hasData = true
-            }
-
-            return if (hasData) {
-                VolumeEnvelope(
-                    delay = delay ?: 0f,
-                    attack = attack ?: 0.001f,
-                    hold = hold ?: 0f,
-                    decay = decay ?: 0.01f,
-                    sustain = sustain ?: 1f,
-                    release = release ?: 0.02f,
-                    keynumToHold = keynumToHold,
-                    keynumToDecay = keynumToDecay
-                )
-            } else null
+            return VolumeEnvelope(
+                delay = data.delay?.let { seconds(it, 5000) } ?: 0f,
+                attack = seconds(data.attack, 8000),
+                hold = data.hold?.let { seconds(it, 5000) } ?: 0f,
+                decay = seconds(data.decay, 8000),
+                sustain = sustain,
+                release = seconds(data.release, 8000),
+                keynumToHold = (data.keynumToHold ?: 0).coerceIn(-1200, 1200),
+                keynumToDecay = (data.keynumToDecay ?: 0).coerceIn(-1200, 1200)
+            )
         }
+
+        // Valeur par défaut de la norme pour les durées d'enveloppe (2^-10 s ≈ 1 ms)
+        private const val DEFAULT_TIMECENTS = -12000
 
         /**
          * Converts timecents to seconds: seconds = 2^(timecents/1200)
@@ -360,17 +333,23 @@ data class Sf2Region(
 }
 
 /**
- * Volume envelope parameters in seconds/linear units (converted from SF2 timecents)
+ * Envelope parameters (volume or modulation envelope) converted from SF2 timecents.
+ * Defaults are the standard's: -12000 timecents (≈ 1 ms) for the times, full sustain.
  */
 data class VolumeEnvelope(
-    val delay: Float = 0f,      // Delay time in seconds before attack starts
-    val attack: Float = 0.001f, // Attack time in seconds
-    val hold: Float = 0f,       // Hold time at peak before decay
-    val decay: Float = 0.01f,   // Decay time in seconds
-    val sustain: Float = 1f,    // Sustain level (0.0 - 1.0)
-    val release: Float = 0.02f, // Release time in seconds
-    // Key tracking: timecents per key from middle C (key 60)
+    val delay: Float = 0f,           // Delay time in seconds before attack starts
+    val attack: Float = DEFAULT_TIME, // Attack time in seconds
+    val hold: Float = 0f,            // Hold time at peak before decay
+    val decay: Float = DEFAULT_TIME,  // Time of a full decay (100 dB or 1 -> 0) in seconds
+    val sustain: Float = 1f,         // Normalized sustain level (1 = full, 0 = none)
+    val release: Float = DEFAULT_TIME, // Time of a full release in seconds
+    // Key tracking: timecents per key, applied as (60 - key) * value
     // Positive values = higher notes have shorter times
     val keynumToHold: Int = 0,  // timecents per key for hold adjustment
     val keynumToDecay: Int = 0  // timecents per key for decay adjustment
-)
+) {
+    companion object {
+        /** 2^(-12000/1200) s, the standard's default envelope time. */
+        const val DEFAULT_TIME = 0.0009765625f
+    }
+}

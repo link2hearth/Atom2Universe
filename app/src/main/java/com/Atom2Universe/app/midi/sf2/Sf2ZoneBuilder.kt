@@ -25,8 +25,8 @@ internal object Sf2ZoneBuilder {
     private const val DEFAULT_FILTER_FC = 13500
     private const val DEFAULT_SCALE_TUNING = 100
 
-    // Limite historique du moteur sur l'atténuation totale (12 dB) : conservée telle quelle.
-    private const val MAX_ATTENUATION_CB = 120
+    // Plage de l'atténuation selon la norme : 0 à 1440 cB (144 dB)
+    private const val MAX_ATTENUATION_CB = 1440
 
     private val GEN_START_OFFSET = Sf2Generator.START_ADDRS_OFFSET.id
     private val GEN_END_OFFSET = Sf2Generator.END_ADDRS_OFFSET.id
@@ -182,7 +182,7 @@ internal object Sf2ZoneBuilder {
             coarseTune = sum(Sf2Generator.COARSE_TUNE.id),
             fineTune = sum(Sf2Generator.FINE_TUNE.id),
             scaleTuning = sum(Sf2Generator.SCALE_TUNING.id, DEFAULT_SCALE_TUNING),
-            attenuation = sum(Sf2Generator.INITIAL_ATTENUATION.id).coerceAtMost(MAX_ATTENUATION_CB),
+            attenuation = sum(Sf2Generator.INITIAL_ATTENUATION.id).coerceIn(0, MAX_ATTENUATION_CB),
             pan = summed(Sf2Generator.PAN.id, 0)?.let { it / 500f },
             sampleModes = inst(Sf2Generator.SAMPLE_MODES.id),
             rootKey = rootKey,

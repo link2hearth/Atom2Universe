@@ -19,30 +19,6 @@ class Sf2VoicePool(
         private const val DEFAULT_CHANNEL_VOICE_LIMIT = 16
         private const val PERCUSSION_CHANNEL_VOICE_LIMIT = 24
 
-        // Voice count above which we start reducing per-voice gain
-        // Raised from 48 to 64: with global gain (0.25) providing 12dB headroom,
-        // per-voice gain reduction only needs to kick in for extreme polyphony
-        private const val GAIN_REDUCTION_THRESHOLD = 64
-
-        // Minimum gain multiplier (never reduce below this)
-        // Raised from 0.55 to 0.7: global gain already prevents saturation,
-        // so we preserve more dynamics at extreme voice counts
-        private const val MIN_VOICE_GAIN = 0.7f
-
-        // Voice count below which we boost per-voice gain to compensate
-        // for the conservative master gain (0.25) during solo passages
-        private const val GAIN_BOOST_THRESHOLD = 16
-
-        // Maximum boost multiplier for solo passages (+6dB)
-        // Worst case: 2 voices × 2.0 boost × 0.25 master = 1.0 (soft clip threshold)
-        private const val MAX_VOICE_BOOST = 2.0f
-
-        // Smoothing coefficient for voice gain changes
-        // ATTACK: Fast response when voice count increases (prevents clipping burst)
-        // RELEASE: Slow response when voice count decreases (prevents volume pumping)
-        private const val GAIN_ATTACK_COEFF = 0.4f   // Was 0.15 - now responds in ~2 buffers
-        private const val GAIN_RELEASE_COEFF = 0.03f // Was 0.05 - even slower release for smoother recovery
-
         // Voice count threshold above which we force faster release times
         // This prevents sustain/release buildup from overwhelming the engine
         private const val RELEASE_CAP_THRESHOLD = 72  // Balanced: not too early, not too late
@@ -77,8 +53,6 @@ class Sf2VoicePool(
     // Allocation tracking
     private var voiceAllocationOrder = 0L
 
-    // Smoothed voice gain multiplier (prevents volume jumps when voice count changes)
-    private var smoothedVoiceGain = 1f
 
     // Hysteresis flag for parallel/sequential rendering mode switching
     // Prevents oscillation when voice count hovers around PARALLEL_THRESHOLD
@@ -483,41 +457,9 @@ class Sf2VoicePool(
         }
         Sf2Voice.cappedReleaseSamples = CAPPED_RELEASE_SAMPLES
 
-        // Calculate voice count-based gain reduction to prevent clipping
-        // When many voices play together, reduce each voice's contribution
-        // Using cube root (pow 1/3) for a gentler reduction curve than sqrt
-        // This preserves more dynamic range while still preventing clipping
-        // BUG FIX 1.7: Vérifier count > 0 avant division pour éviter division par zéro
-        val targetVoiceGain = when {
-            count <= 0 -> 1f  // Pas de voix actives, gain par défaut
-            count > GAIN_REDUCTION_THRESHOLD -> {
-                // cbrt(threshold / count) gives a gentler reduction than sqrt:
-                // e.g., 64 voices: cbrt(48/64) = 0.909 (-0.8dB)  vs sqrt: 0.866 (-1.3dB)
-                // e.g., 96 voices: cbrt(48/96) = 0.794 (-2.0dB)  vs sqrt: 0.707 (-3.0dB)
-                // e.g., 128 voices: cbrt(48/128) = 0.721 (-2.8dB) vs sqrt: 0.612 (-4.3dB)
-                val ratio = GAIN_REDUCTION_THRESHOLD.toFloat() / count
-                maxOf(MIN_VOICE_GAIN, Math.cbrt(ratio.toDouble()).toFloat())
-            }
-            count in 1 until GAIN_BOOST_THRESHOLD -> {
-                // Boost solo/sparse passages to compensate for conservative master gain.
-                // Symmetric to the reduction curve: cbrt(threshold / count) but capped.
-                // e.g., 1 voice: capped at 2.0 (+6dB), 4 voices: 1.59 (+4dB),
-                //        8 voices: 1.26 (+2dB), 12 voices: 1.10 (+0.8dB)
-                val ratio = GAIN_BOOST_THRESHOLD.toFloat() / count
-                minOf(MAX_VOICE_BOOST, Math.cbrt(ratio.toDouble()).toFloat())
-            }
-            else -> 1f
-        }
-
-        // Smooth the voice gain to prevent volume jumps when voice count changes
-        // Fast attack (gain going DOWN) to prevent clipping
-        // Slow release (gain going UP) to prevent volume jumps when notes release
-        val coeff = if (targetVoiceGain < smoothedVoiceGain) GAIN_ATTACK_COEFF else GAIN_RELEASE_COEFF
-        smoothedVoiceGain += (targetVoiceGain - smoothedVoiceGain) * coeff
-
-        // Render all active voices with the smoothed gain multiplier
-        // Pre-compute combined gain for thread-safe access by worker threads
-        val combinedGain = smoothedVoiceGain * masterGain
+        // Same gain for every voice whatever the polyphony (no automatic boost or reduction):
+        // dynamics follow the MIDI file, the limiter only catches overloads
+        val combinedGain = masterGain
 
         // Hysteresis for parallel/sequential mode switching to prevent oscillation
         // when voice count hovers around the threshold (causes audible mode-switch artifacts)
@@ -588,7 +530,7 @@ class Sf2VoicePool(
                 val pitchBend = channelPitchBends?.getOrElse(voice.channel) { 0f } ?: 0f
                 val channelPan = channelPans?.getOrElse(voice.channel) { 0f } ?: 0f
                 val modulation = channelModulations?.getOrElse(voice.channel) { 0f } ?: 0f
-                val reverbSend = channelReverbSends?.getOrElse(voice.channel) { 0.4f } ?: 0f
+                val reverbSend = channelReverbSends?.getOrElse(voice.channel) { 0f } ?: 0f
                 val chorusSend = channelChorusSends?.getOrElse(voice.channel) { 0f } ?: 0f
 
                 voice.render(sf2File, outputLeft, outputRight, numSamples, channelVolume, pitchBend, channelPan, modulation, reverbSendLeft, reverbSendRight, reverbSend, chorusSendLeft, chorusSendRight, chorusSend)
@@ -819,7 +761,6 @@ class Sf2VoicePool(
         }
         activeVoiceCount = 0
         voiceAllocationOrder = 0
-        smoothedVoiceGain = 1f
         useParallelRendering = false
     }
 

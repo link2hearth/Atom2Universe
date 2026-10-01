@@ -27,7 +27,6 @@ class Sf2Synthesizer(
         // MIDI Control Change numbers
         const val CC_BANK_SELECT_MSB = 0
         const val CC_MODULATION = 1
-        const val CC_BREATH = 2
         const val CC_VOLUME = 7
         const val CC_PAN = 10
         const val CC_EXPRESSION = 11
@@ -63,6 +62,25 @@ class Sf2Synthesizer(
 
         // Soft pedal attenuates velocity of new noteOn events (GM spec ≈ 2/3)
         private const val SOFT_PEDAL_ATTENUATION = 0.67f
+
+        // Gain de sortie par défaut, identique à celui de FluidSynth dans l'application
+        const val DEFAULT_GLOBAL_GAIN = 0.5f
+
+        // Valeurs initiales des contrôleurs (GM) : volume 100, réverbération 40
+        private const val DEFAULT_CC_VOLUME = 100
+        private const val DEFAULT_CC_REVERB = 40
+
+        /**
+         * CC7 (volume) et CC11 (expression) -> gain, selon les modulateurs SF2 par défaut
+         * (960 cB, concave) : amplitude (valeur / 127)², soit 40·log10(valeur / 127) dB.
+         */
+        fun controllerToGain(value: Int): Float {
+            val normalized = value.coerceIn(0, 127) / 127f
+            return normalized * normalized
+        }
+
+        private val DEFAULT_VOLUME_GAIN = controllerToGain(DEFAULT_CC_VOLUME)
+        private const val DEFAULT_REVERB_SEND = DEFAULT_CC_REVERB / 127f
     }
 
     // Voice pool (thread-safe access via voiceLock)
@@ -107,17 +125,18 @@ class Sf2Synthesizer(
     // Per-channel state (accessed under voiceLock)
     private val channelProgram = IntArray(NUM_CHANNELS) { 0 }
     private val channelBank = IntArray(NUM_CHANNELS) { 0 }
-    private val channelVolume = FloatArray(NUM_CHANNELS) { 1f }
+    private val channelVolume = FloatArray(NUM_CHANNELS) { DEFAULT_VOLUME_GAIN }
     private val channelPan = FloatArray(NUM_CHANNELS) { 0f }
     private val channelExpression = FloatArray(NUM_CHANNELS) { 1f }
     private val channelSustain = BooleanArray(NUM_CHANNELS) { false }
     private val channelPitchBend = FloatArray(NUM_CHANNELS) { 0f }
     private val channelModulation = FloatArray(NUM_CHANNELS) { 0f }
-    private val channelReverbSend = FloatArray(NUM_CHANNELS) { if (it == PERCUSSION_CHANNEL) 0.15f else 0.4f }
+    // Valeur du CC91 par canal (0-1) ; la voix en tire son envoi selon le modulateur SF2
+    private val channelReverbSend = FloatArray(NUM_CHANNELS) { DEFAULT_REVERB_SEND }
     private val channelChorusSend = FloatArray(NUM_CHANNELS) { 0f }
 
     // Smoothed controller values (anti-zipper for volume/pan/expression)
-    private val smoothedChannelVolume = FloatArray(NUM_CHANNELS) { 1f }
+    private val smoothedChannelVolume = FloatArray(NUM_CHANNELS) { DEFAULT_VOLUME_GAIN }
     private val smoothedChannelPan = FloatArray(NUM_CHANNELS) { 0f }
     private val smoothedChannelExpression = FloatArray(NUM_CHANNELS) { 1f }
 
@@ -127,8 +146,8 @@ class Sf2Synthesizer(
     // Le thread audio utilise AtomicReference.get() pour lire la derniere version
     // avec une barriere memoire appropriee.
     // Cela garantit que le thread audio ne lira jamais un buffer partiellement copie.
-    private val channelVolumeSnapA = FloatArray(NUM_CHANNELS) { 1f }
-    private val channelVolumeSnapB = FloatArray(NUM_CHANNELS) { 1f }
+    private val channelVolumeSnapA = FloatArray(NUM_CHANNELS) { DEFAULT_VOLUME_GAIN }
+    private val channelVolumeSnapB = FloatArray(NUM_CHANNELS) { DEFAULT_VOLUME_GAIN }
     private val channelVolumeSnapshotRef = AtomicReference(channelVolumeSnapA)
 
     private val channelPitchBendSnapA = FloatArray(NUM_CHANNELS) { 0f }
@@ -147,8 +166,8 @@ class Sf2Synthesizer(
     private val channelModulationSnapB = FloatArray(NUM_CHANNELS) { 0f }
     private val channelModulationSnapshotRef = AtomicReference(channelModulationSnapA)
 
-    private val channelReverbSendSnapA = FloatArray(NUM_CHANNELS) { if (it == PERCUSSION_CHANNEL) 0.15f else 0.4f }
-    private val channelReverbSendSnapB = FloatArray(NUM_CHANNELS) { if (it == PERCUSSION_CHANNEL) 0.15f else 0.4f }
+    private val channelReverbSendSnapA = FloatArray(NUM_CHANNELS) { DEFAULT_REVERB_SEND }
+    private val channelReverbSendSnapB = FloatArray(NUM_CHANNELS) { DEFAULT_REVERB_SEND }
     private val channelReverbSendSnapshotRef = AtomicReference(channelReverbSendSnapA)
 
     private val channelChorusSendSnapA = FloatArray(NUM_CHANNELS) { 0f }
@@ -185,14 +204,15 @@ class Sf2Synthesizer(
     // Master volume (0.0 - 1.0) - volatile for thread-safe access
     @Volatile var masterVolume: Float = 1f
 
-    // Global gain applied to all voices before mixing (inspired by FluidSynth's default of 0.2)
-    // This provides ~12dB of headroom for polyphonic mixing, so the AudioLimiter
-    // acts as a safety net rather than being constantly engaged.
-    // Default 0.35 : compromis entre les SF2 silencieux et les SF2 forts
-    // Can be adjusted per-SF2: quiet SF2s benefit from higher gain (0.35-0.50),
-    // loud SF2s may need lower gain (0.15-0.20).
+    // Gain réglé par l'utilisateur (réglages audio), appliqué au signal de toutes les voix
+    @Volatile var outputGain: Float = 1f
+
+    // Global gain applied to all voices before mixing, like FluidSynth's synth.gain.
+    // 0.5 = the gain the app gives FluidSynth, so both engines play at comparable levels;
+    // the AudioLimiter acts as a safety net rather than being constantly engaged.
+    // Can be adjusted per-SF2: quiet SF2s benefit from higher gain, loud SF2s from lower gain.
     @Volatile
-    var globalGain: Float = 0.35f
+    var globalGain: Float = DEFAULT_GLOBAL_GAIN
         set(value) { field = value.coerceIn(0.05f, 1.0f) }
 
     // Sustained notes (notes held by sustain pedal)
@@ -567,13 +587,6 @@ class Sf2Synthesizer(
                     channelModulation[channel] = channelRawModulation[channel] * channelModDepthSemitones[channel]
                     swapSnapshot(channelModulation, channelModulationSnapshotRef, channelModulationSnapA, channelModulationSnapB)
                 }
-                CC_BREATH -> {
-                    // Breath controller: used by wind instruments as a dynamic controller.
-                    // Treated identically to CC#11 (Expression) — multiplicative volume factor.
-                    // Note: does NOT affect channelRawModulation, only volume envelope.
-                    channelExpression[channel] = safeValue / 127f
-                    swapSnapshot(channelExpression, channelExpressionSnapshotRef, channelExpressionSnapA, channelExpressionSnapB)
-                }
                 CC_DATA_ENTRY_MSB -> {
                     // Data Entry MSB: sets the value for the currently selected RPN/NRPN
                     handleDataEntry(channel, safeValue, isLsb = false)
@@ -589,7 +602,7 @@ class Sf2Synthesizer(
                     handleDataEntry(channel, safeValue, isLsb = true)
                 }
                 CC_VOLUME -> {
-                    channelVolume[channel] = safeValue / 127f
+                    channelVolume[channel] = controllerToGain(safeValue)
                     swapSnapshot(channelVolume, channelVolumeSnapshotRef, channelVolumeSnapA, channelVolumeSnapB)
                 }
                 CC_PAN -> {
@@ -598,7 +611,7 @@ class Sf2Synthesizer(
                     swapSnapshot(channelPan, channelPanSnapshotRef, channelPanSnapA, channelPanSnapB)
                 }
                 CC_EXPRESSION -> {
-                    channelExpression[channel] = safeValue / 127f
+                    channelExpression[channel] = controllerToGain(safeValue)
                     swapSnapshot(channelExpression, channelExpressionSnapshotRef, channelExpressionSnapA, channelExpressionSnapB)
                 }
                 CC_SUSTAIN_PEDAL -> {
@@ -792,7 +805,7 @@ class Sf2Synthesizer(
         // masterGain is now applied INSIDE each voice (via voicePool per-voice channelVolume)
         // This means BiquadFilter sees signals ~4x quieter, reducing resonance/instability.
         // Send buffers also come out at the correct level automatically.
-        val effectiveGain = masterVolume * globalGain
+        val effectiveGain = masterVolume * globalGain * outputGain
         voicePool.render(
             sf2File,
             outputLeft,
@@ -1004,13 +1017,13 @@ class Sf2Synthesizer(
 
     // Note: resetChannelControllers is called from within synchronized blocks, no extra sync needed
     private fun resetChannelControllers(channel: Int) {
-        channelVolume[channel] = 1f
+        channelVolume[channel] = DEFAULT_VOLUME_GAIN
         channelPan[channel] = 0f
         channelExpression[channel] = 1f
         channelSustain[channel] = false
         channelPitchBend[channel] = 0f
         channelModulation[channel] = 0f
-        channelReverbSend[channel] = if (channel == PERCUSSION_CHANNEL) 0.15f else 0.4f
+        channelReverbSend[channel] = DEFAULT_REVERB_SEND
         channelChorusSend[channel] = 0f    // Default 0% chorus send
         channelPitchBendRange[channel] = DEFAULT_PITCH_BEND_RANGE
         channelRawPitchBend[channel] = 8192

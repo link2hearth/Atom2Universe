@@ -176,8 +176,9 @@ object Sf2DiagnosticTool {
                         Log.w(TAG, "     ⚠️ Gain très faible (< 1%) - région presque inaudible!")
                     }
                     region.volumeEnvelope?.let { env ->
-                        if (env.sustain < 0.2f) {
-                            Log.w(TAG, "     ⚠️ Sustain très faible (< 20%)")
+                        // Sustain normalisé sur 100 dB : 0,6 = -40 dB
+                        if (env.sustain < 0.6f) {
+                            Log.w(TAG, "     ⚠️ Sustain très faible (< -40 dB)")
                         }
                     }
                 }
@@ -186,18 +187,18 @@ object Sf2DiagnosticTool {
                 val sampleRegion = regions.firstOrNull()
                 if (sampleRegion != null) {
                     val baseGain = sampleRegion.calculateGain()
-                    val globalGain = 0.25f  // valeur par défaut du SF2Engine
+                    val globalGain = Sf2Synthesizer.DEFAULT_GLOBAL_GAIN
                     val effectiveGain = baseGain * globalGain
                     val effectiveGainDb = if (effectiveGain > 0) 20 * kotlin.math.log10(effectiveGain.toDouble()) else -96.0
 
-                    Log.d(TAG, "\n   📊 GAIN EFFECTIF (avec globalGain=0.25):")
+                    Log.d(TAG, "\n   📊 GAIN EFFECTIF (avec globalGain=$globalGain):")
                     Log.d(TAG, "      ${String.format("%.4f", effectiveGain)} (${String.format("%.2f", effectiveGainDb)} dB)")
 
                     if (effectiveGain < 0.01f) {
                         Log.e(TAG, "\n   ❌ PROBLÈME DÉTECTÉ: Le gain effectif est < 1%!")
                         Log.e(TAG, "      La note sera pratiquement inaudible.")
                         Log.e(TAG, "      Solutions possibles:")
-                        Log.e(TAG, "      1. Augmenter le globalGain (actuellement 0.25)")
+                        Log.e(TAG, "      1. Augmenter le globalGain (actuellement $globalGain)")
                         Log.e(TAG, "      2. L'atténuation dans le SF2 est trop élevée")
                     }
                 }

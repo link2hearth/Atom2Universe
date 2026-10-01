@@ -40,7 +40,7 @@ class Chorus(private val sampleRate: Int = 44100) {
     var speed: Float = 0.3f           // LFO rate in Hz (0.1 - 5.0)
         set(value) { field = value.coerceIn(0.1f, 5f) }
 
-    var depth: Float = 8f             // Modulation depth in ms (0.5 - 20.0)
+    var depth: Float = 8f             // Peak-to-peak modulation depth in ms (0.5 - 20.0)
         set(value) { field = value.coerceIn(0.5f, 20f) }
 
     var level: Float = 0.4f           // Output level for mixing back into main output
@@ -72,11 +72,13 @@ class Chorus(private val sampleRate: Int = 44100) {
         if (!enabled) return
 
         val phaseInc = TWO_PI * speed / sampleRate
-        val depthSamp = depth * sampleRate / 1000f
+        // La profondeur est la variation crête à crête du retard (convention FluidSynth) :
+        // le retard oscille de ± depth / 2 autour du centre. Avant, ± depth : un désaccord
+        // deux fois plus fort (~43 cents pour le preset par défaut au lieu de ~22).
+        val depthSamp = depth * 0.5f * sampleRate / 1000f
         // Le retard ne doit jamais devenir négatif (lecture « dans le futur » = lecture de la
-        // partie la plus ancienne du tampon circulaire, d'où des craquements avec le preset Rich
-        // dont la profondeur de 12 ms dépasse le retard central de 10 ms).
-        val centerDelay = maxOf(CENTER_DELAY_MS, depth + 1f) * sampleRate / 1000f
+        // partie la plus ancienne du tampon circulaire, d'où des craquements).
+        val centerDelay = maxOf(CENTER_DELAY_MS, depth * 0.5f + 1f) * sampleRate / 1000f
 
         for (i in 0 until numSamples) {
             // Write current input to delay buffer

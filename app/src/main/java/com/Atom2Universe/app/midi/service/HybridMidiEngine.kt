@@ -48,6 +48,12 @@ class HybridMidiEngine(
     private var state: MidiEngine.State = MidiEngine.State.UNINITIALIZED
     private val stateLock = Any()
 
+    init {
+        // Le mode hybride applique déjà le gain du mixeur aux vélocités (comme pour Sonivox) :
+        // le moteur SF2 ne doit pas l'appliquer une seconde fois au signal
+        sf2Engine.applyMixerGain = false
+    }
+
     // Configuration
     private var sf2Programs: Set<Int> = emptySet()  // Programs (0-127) that use SF2
     private var useSf2ForDrums: Boolean = false     // Whether channel 9 uses SF2

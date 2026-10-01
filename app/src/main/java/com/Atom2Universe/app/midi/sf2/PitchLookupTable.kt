@@ -81,7 +81,9 @@ object PitchLookupTable {
         for (vel in 0 until 128) {
             val normalized = vel / 127f
             velocityTableLinear[vel] = normalized
-            velocityTableConcave[vel] = normalized.pow(1.7f)
+            // Courbe de la norme SF2 : modulateur par défaut vélocité -> atténuation, 960 cB,
+            // concave, soit une amplitude (v / 127)²
+            velocityTableConcave[vel] = normalized * normalized
             velocityTableSoft[vel] = normalized.pow(2.2f)
             velocityTableHard[vel] = normalized.pow(1.2f)
         }

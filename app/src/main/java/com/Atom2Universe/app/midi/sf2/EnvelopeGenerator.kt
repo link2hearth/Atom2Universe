@@ -1,59 +1,44 @@
 package com.Atom2Universe.app.midi.sf2
 
-import kotlin.math.exp
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.pow
 
 /**
- * Real-time ADSR envelope generator for SF2 synthesis.
- * Generates amplitude envelope values sample-by-sample.
+ * Real-time DAHDSR envelope generator for SF2 synthesis, following SoundFont 2.01 §8.1.2-8.1.3.
  *
  * Envelope stages:
- * - DELAY: Wait before attack starts (usually 0)
- * - ATTACK: Ramp from 0 to 1
+ * - DELAY: Wait before attack starts
+ * - ATTACK: Ramp from 0 to 1, linear in amplitude
  * - HOLD: Stay at 1
- * - DECAY: Ramp from 1 to sustain level
+ * - DECAY: Fall towards the sustain level
  * - SUSTAIN: Hold at sustain level (indefinitely until release)
- * - RELEASE: Ramp from current level to 0
+ * - RELEASE: Fall from the current level to silence
  * - FINISHED: Envelope complete, voice can be freed
+ *
+ * Volume envelope ([isVolume] = true): decay and release are linear in decibels. The decay
+ * and release times are the times of a full 100 dB fall, so a fall from a lower level is
+ * proportionally shorter. A volume envelope whose sustain is silent ends once it gets there.
+ *
+ * Modulation envelope ([isVolume] = false): every stage is linear in value, the release time
+ * being the time of a full 1 → 0 fall.
  */
 class EnvelopeGenerator(
-    private val sampleRate: Int = 44100
+    private val sampleRate: Int = 44100,
+    private val isVolume: Boolean = true
 ) {
     companion object {
-        // Minimum release time in seconds (ensures short notes still ring out)
-        const val MIN_RELEASE_TIME = 0.05f  // 50ms minimum release
-        // Quick fade time for voice stealing (prevents clicks)
+        // Minimum volume release (-7200 timecents = 15.6 ms), the same guard as FluidSynth:
+        // shorter releases allowed by the standard (down to 1 ms) only produce clicks
+        const val MIN_RELEASE_TIME = 0.015625f
+        // Quick fade time for voice stealing and exclusive classes (prevents clicks)
         const val QUICK_FADE_TIME = 0.015f  // 15ms quick fade
-        // Maximum release time in seconds (prevents resonant sounds from accumulating)
-        // Raised from 2.0 to 3.5 - balanced between natural decay and voice buildup prevention
-        // The voice pool's release cap and emergency fade handle buildup at high voice counts
-        const val MAX_RELEASE_TIME = 3.5f
 
-        // BUG FIX 1.14: Lookup table pour les coefficients exponentiels d'enveloppe.
-        // Remplace exp(-5f / samples) par une table pre-calculee pour economiser ~2-3% CPU.
-        // Table couvre des durees de 1 a EXP_TABLE_SIZE samples (suffisant pour la plupart des enveloppes).
-        // Pour des valeurs plus grandes, on retombe sur le calcul direct (rare).
-        private const val EXP_TABLE_SIZE = 8192  // Couvre ~170ms a 48kHz
-        private val expCoefficientTable = FloatArray(EXP_TABLE_SIZE + 1) { samples ->
-            if (samples <= 0) 1f else exp(-5f / samples)
-        }
+        // 100 dB below full scale: the volume envelope's silence
+        const val SILENCE_LEVEL = 0.00001f
 
-        /**
-         * Lookup rapide pour le coefficient exponentiel.
-         * Utilise la table pour les petites valeurs, calcul direct sinon.
-         */
-        fun lookupExpCoefficient(samples: Int): Float {
-            return if (samples in 1..EXP_TABLE_SIZE) {
-                expCoefficientTable[samples]
-            } else if (samples <= 0) {
-                1f
-            } else {
-                // Valeurs > EXP_TABLE_SIZE: calcul direct (rare, longues releases)
-                exp(-5f / samples)
-            }
-        }
+        /** Per-sample factor of a fall of 100 dB in [samples] samples. */
+        private fun dbFallCoefficient(samples: Int): Float =
+            if (samples <= 1) 0f else 10.0.pow(-5.0 / samples).toFloat()
     }
 
     enum class Stage {
@@ -69,10 +54,12 @@ class EnvelopeGenerator(
 
     // Envelope parameters (in samples)
     private var delaySamples: Int = 0
-    private var attackSamples: Int = 0
+    private var attackSamples: Int = 1
     private var holdSamples: Int = 0
-    private var decaySamples: Int = 0
-    private var releaseSamples: Int = 0
+    private var decaySamples: Int = 1
+    private var releaseSamples: Int = 1
+
+    // Sustain level as an amplitude (volume) or a value (modulation)
     private var sustainLevel: Float = 1f
 
     // State
@@ -82,85 +69,60 @@ class EnvelopeGenerator(
     private var sampleCounter: Int = 0
     private var currentLevel: Float = 0f
 
-    // Coefficients for exponential curves
-    private var attackCoeff: Float = 0f
-    private var decayCoeff: Float = 0f
-    private var releaseCoeff: Float = 0f
+    // Per-sample steps: multiplicative for the volume envelope (dB-linear), additive otherwise
+    private var attackStep: Float = 1f
+    private var decayStep: Float = 0f
+    private var releaseStep: Float = 0f
 
     /**
      * Configures the envelope with the given parameters.
-     * All times are in seconds.
+     * All times are in seconds; the sustain is a normalized level (1 = full, 0 = none).
      * @param envelope The envelope parameters
-     * @param midiNote Optional MIDI note for key tracking (60 = middle C)
+     * @param midiNote MIDI note for key tracking of hold and decay (60 = unchanged)
      */
-    fun configure(envelope: VolumeEnvelope?, midiNote: Int = 60) {
-        if (envelope == null) {
-            // SF2 default modulation envelope: quick attack/decay to 0, not sustained
-            // This prevents filter modulation from staying at max indefinitely
-            delaySamples = 0
-            attackSamples = (0.001f * sampleRate).toInt()
-            holdSamples = 0
-            decaySamples = (0.1f * sampleRate).toInt()  // 100ms decay to 0
-            sustainLevel = 0f  // Decay to 0, not stay at max!
-            releaseSamples = (MIN_RELEASE_TIME * sampleRate).toInt()
+    fun configure(envelope: VolumeEnvelope, midiNote: Int = 60) {
+        // Key tracking (keynumToHold / keynumToDecay): timecents per key, applied as
+        // (60 - key) * value. Positive values shorten hold / decay for higher keys.
+        val keyDelta = 60 - midiNote
+        val holdTime = applyKeyTracking(envelope.hold, keyDelta, envelope.keynumToHold)
+        val decayTime = applyKeyTracking(envelope.decay, keyDelta, envelope.keynumToDecay)
+        val releaseTime = if (isVolume) max(envelope.release, MIN_RELEASE_TIME) else envelope.release
+
+        delaySamples = (envelope.delay * sampleRate).toInt()
+        attackSamples = max(1, (envelope.attack * sampleRate).toInt())
+        holdSamples = (holdTime * sampleRate).toInt()
+        decaySamples = max(1, (decayTime * sampleRate).toInt())
+        releaseSamples = max(1, (releaseTime * sampleRate).toInt())
+
+        val sustain = envelope.sustain.coerceIn(0f, 1f)
+        sustainLevel = if (isVolume) {
+            // Normalized level -> amplitude over a 100 dB range; 0 = silence
+            if (sustain <= 0f) 0f else 10.0.pow(-5.0 * (1.0 - sustain)).toFloat()
         } else {
-            // Apply key tracking to hold and decay times
-            // Formula: newTime = baseTime * 2^((midiNote - 60) * timecentsPerKey / 1200)
-            // Positive timecentsPerKey = higher notes have shorter times (realistic for acoustic instruments)
-            val keyDelta = midiNote - 60 // Semitones from middle C
-
-            val holdTime = applyKeyTracking(envelope.hold, keyDelta, envelope.keynumToHold)
-            val decayTime = applyKeyTracking(envelope.decay, keyDelta, envelope.keynumToDecay)
-
-            // Apply minimum and MAXIMUM release time
-            // Maximum prevents resonant sounds (bells, pads) from accumulating too many voices
-            val releaseTime = envelope.release.coerceIn(MIN_RELEASE_TIME, MAX_RELEASE_TIME)
-
-            delaySamples = (envelope.delay * sampleRate).toInt()
-            attackSamples = max(1, (envelope.attack * sampleRate).toInt())
-            holdSamples = (holdTime * sampleRate).toInt()
-            decaySamples = max(1, (decayTime * sampleRate).toInt())
-            sustainLevel = envelope.sustain.coerceIn(0f, 1f)
-            releaseSamples = max(1, (releaseTime * sampleRate).toInt())
+            sustain
         }
 
-        // Calculate exponential coefficients
-        // Using exponential curves: y = 1 - e^(-t/tau) for attack, y = e^(-t/tau) for decay/release
-        attackCoeff = calculateCoefficient(attackSamples)
-        decayCoeff = calculateCoefficient(decaySamples)
-        releaseCoeff = calculateCoefficient(releaseSamples)
+        attackStep = 1f / attackSamples
+        if (isVolume) {
+            decayStep = dbFallCoefficient(decaySamples)
+            releaseStep = dbFallCoefficient(releaseSamples)
+        } else {
+            decayStep = 1f / decaySamples
+            releaseStep = 1f / releaseSamples
+        }
     }
 
     /**
      * Applies key tracking to a time value.
      * @param baseTime Base time in seconds
-     * @param keyDelta Semitones from middle C (positive = higher note)
-     * @param timecentsPerKey Key tracking amount in timecents per semitone
+     * @param keyDelta 60 - MIDI key
+     * @param timecentsPerKey Key tracking amount in timecents per key
      * @return Adjusted time in seconds
      */
     private fun applyKeyTracking(baseTime: Float, keyDelta: Int, timecentsPerKey: Int): Float {
         if (timecentsPerKey == 0 || keyDelta == 0) return baseTime
-
-        // Calculate timecents adjustment
-        val timecentsAdjust = keyDelta * timecentsPerKey
-
-        // Convert to multiplier: 2^(timecents/1200)
-        val multiplier = 2.0.pow(timecentsAdjust / 1200.0).toFloat()
-
-        // Apply to base time, with sensible limits
-        val adjustedTime = baseTime * multiplier
-
-        // Clamp to reasonable range (0.001s to 100s)
-        return adjustedTime.coerceIn(0.001f, 100f)
-    }
-
-    /**
-     * Calculates the exponential coefficient for a given number of samples.
-     * The coefficient produces ~99.3% of the target after 'samples' iterations.
-     * BUG FIX 1.14: Utilise une lookup table pour eviter exp() couteux.
-     */
-    private fun calculateCoefficient(samples: Int): Float {
-        return lookupExpCoefficient(samples)
+        val multiplier = 2.0.pow(keyDelta * timecentsPerKey / 1200.0).toFloat()
+        return (baseTime * multiplier).coerceIn(0.001f, 100f)
     }
 
     /**
@@ -177,9 +139,7 @@ class EnvelopeGenerator(
      */
     fun release() {
         if (stage == Stage.FINISHED || stage == Stage.RELEASE) return
-
-        stage = Stage.RELEASE
-        sampleCounter = 0
+        startRelease()
     }
 
     /**
@@ -189,15 +149,8 @@ class EnvelopeGenerator(
      */
     fun releaseWithCap(maxReleaseSamples: Int) {
         if (stage == Stage.FINISHED || stage == Stage.RELEASE) return
-
-        // Cap the release time if it exceeds the maximum
-        if (releaseSamples > maxReleaseSamples) {
-            releaseSamples = maxReleaseSamples
-            releaseCoeff = calculateCoefficient(releaseSamples)
-        }
-
-        stage = Stage.RELEASE
-        sampleCounter = 0
+        if (releaseSamples > maxReleaseSamples) setReleaseSamples(maxReleaseSamples)
+        startRelease()
     }
 
     /**
@@ -206,13 +159,8 @@ class EnvelopeGenerator(
      */
     fun quickFade() {
         if (stage == Stage.FINISHED) return
-
-        // Override release time to quick fade
-        releaseSamples = max(1, (QUICK_FADE_TIME * sampleRate).toInt())
-        releaseCoeff = calculateCoefficient(releaseSamples)
-
-        stage = Stage.RELEASE
-        sampleCounter = 0
+        setReleaseSamples(max(1, (QUICK_FADE_TIME * sampleRate).toInt()))
+        startRelease()
     }
 
     /**
@@ -223,21 +171,22 @@ class EnvelopeGenerator(
      */
     fun forceEmergencyRelease(targetSamples: Int) {
         if (stage != Stage.RELEASE) return
+        if (releaseSamples > targetSamples) setReleaseSamples(targetSamples)
+    }
 
-        // Calculate how many samples are left in the current release
-        val samplesRemaining = releaseSamples - sampleCounter
+    private fun setReleaseSamples(samples: Int) {
+        releaseSamples = max(1, samples)
+        releaseStep = if (isVolume) dbFallCoefficient(releaseSamples) else 1f / releaseSamples
+    }
 
-        // Only shorten if there's more time remaining than our target
-        if (samplesRemaining > targetSamples) {
-            // Reset to start a new, shorter release from current level
-            releaseSamples = targetSamples
-            releaseCoeff = calculateCoefficient(releaseSamples)
-            sampleCounter = 0
-        }
+    private fun startRelease() {
+        stage = Stage.RELEASE
+        sampleCounter = 0
     }
 
     /**
-     * Gets the current envelope level (0.0 to 1.0).
+     * Gets the current envelope level (0.0 to 1.0): an amplitude for the volume envelope,
+     * a modulation value otherwise.
      */
     fun getLevel(): Float = currentLevel
 
@@ -246,7 +195,7 @@ class EnvelopeGenerator(
      */
     fun process(): Float {
         when (stage) {
-            Stage.IDLE -> {
+            Stage.IDLE, Stage.FINISHED -> {
                 currentLevel = 0f
             }
 
@@ -260,10 +209,10 @@ class EnvelopeGenerator(
             }
 
             Stage.ATTACK -> {
-                // Exponential attack curve
-                currentLevel = 1f - (1f - currentLevel) * attackCoeff
+                // Linear rise in amplitude (SF2 §8.1.3, attackVolEnv)
+                currentLevel += attackStep
                 sampleCounter++
-                if (sampleCounter >= attackSamples || currentLevel >= 0.999f) {
+                if (sampleCounter >= attackSamples || currentLevel >= 1f) {
                     currentLevel = 1f
                     stage = if (holdSamples > 0) Stage.HOLD else Stage.DECAY
                     sampleCounter = 0
@@ -280,16 +229,15 @@ class EnvelopeGenerator(
             }
 
             Stage.DECAY -> {
-                // Exponential decay to sustain level
-                val target = sustainLevel
-                currentLevel = target + (currentLevel - target) * decayCoeff
-                // Anti-denormal: prevent tiny residual from exponential approach
-                val diff = currentLevel - target
-                if (diff > 0f && diff < 1e-20f) currentLevel = target
-                sampleCounter++
-                if (sampleCounter >= decaySamples || currentLevel <= sustainLevel + 0.001f) {
+                currentLevel = if (isVolume) currentLevel * decayStep else currentLevel - decayStep
+                if (currentLevel <= sustainLevel) {
                     currentLevel = sustainLevel
                     stage = Stage.SUSTAIN
+                }
+                if (isVolume && currentLevel <= SILENCE_LEVEL) {
+                    // Sustain at (or below) -100 dB: the note has died out
+                    currentLevel = 0f
+                    stage = Stage.FINISHED
                 }
             }
 
@@ -299,35 +247,17 @@ class EnvelopeGenerator(
             }
 
             Stage.RELEASE -> {
-                // Exponential release to 0
-                currentLevel = currentLevel * releaseCoeff
-                // Anti-denormal: zero out tiny values to prevent denormalized floats
-                // that cause CPU spikes. The exponential decay can produce very small
-                // numbers that stay above 0 but below normal float range.
-                if (currentLevel > 0f && currentLevel < 1e-20f) currentLevel = 0f
+                currentLevel = if (isVolume) currentLevel * releaseStep else currentLevel - releaseStep
                 sampleCounter++
-                if (sampleCounter >= releaseSamples || currentLevel < 0.0001f) {
+                val silent = if (isVolume) currentLevel <= SILENCE_LEVEL else currentLevel <= 0f
+                if (silent || sampleCounter >= releaseSamples) {
                     currentLevel = 0f
                     stage = Stage.FINISHED
                 }
             }
-
-            Stage.FINISHED -> {
-                currentLevel = 0f
-            }
         }
 
         return currentLevel
-    }
-
-    /**
-     * Processes multiple samples and fills the output array with envelope levels.
-     */
-    fun process(output: FloatArray, offset: Int = 0, length: Int = output.size - offset) {
-        val end = min(offset + length, output.size)
-        for (i in offset until end) {
-            output[i] = process()
-        }
     }
 
     /**
@@ -367,22 +297,5 @@ class EnvelopeGenerator(
         stage = Stage.IDLE
         sampleCounter = 0
         currentLevel = 0f
-    }
-
-    /**
-     * Creates a copy of this envelope generator with the same configuration.
-     */
-    fun copy(): EnvelopeGenerator {
-        val copy = EnvelopeGenerator(sampleRate)
-        copy.delaySamples = this.delaySamples
-        copy.attackSamples = this.attackSamples
-        copy.holdSamples = this.holdSamples
-        copy.decaySamples = this.decaySamples
-        copy.releaseSamples = this.releaseSamples
-        copy.sustainLevel = this.sustainLevel
-        copy.attackCoeff = this.attackCoeff
-        copy.decayCoeff = this.decayCoeff
-        copy.releaseCoeff = this.releaseCoeff
-        return copy
     }
 }
