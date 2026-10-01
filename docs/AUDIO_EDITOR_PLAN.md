@@ -14,7 +14,7 @@
 |---|---|---|
 | 1 | Cœur du modèle : clips, pistes, repères, opérations de ligne de temps, undo/redo | ✅ fait (`audioeditor/core/`, `TimelineTest`) |
 | 2 | Fichiers PCM/WAV, mixeur, pics de forme d'onde, rééchantillonnage | ✅ fait (`core/Mixer|Peaks|Resampler`, `io/WavFile|PeakFiles`) |
-| 3 | Effets DSP purs (gain, fondus, normaliser, EQ, compresseur, réverb, écho, bruit, vitesse/hauteur…) | ⬜ |
+| 3 | Effets DSP purs — 3a socle + volume + filtres + dynamique ✅ ; 3b espace / modulation / temps-hauteur / bruit / génération ⬜ | 🟡 en cours |
 | 4 | Stockage des projets, import (décodage), export (FFmpeg), zip de projet, migration de l'ancien projet | ⬜ |
 | 5 | Moteur de lecture temps réel (`AudioTrack`) + enregistrement par-dessus (overdub) | ⬜ |
 | 6 | Galerie de projets en tuiles (écran de démarrage) + branchement dans le hub audio | ⬜ |
@@ -208,8 +208,8 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
 * Tests de l'éditeur audio : `sh ./gradlew --no-daemon :app:testDebugUnitTest --tests "*audioeditor.*"`
   (≈ 45 s une fois le cache chaud). **Ne pas se fier au seul « BUILD SUCCESSFUL »** : compter les tests dans
   `app/build/test-results/testDebugUnitTest/TEST-*audioeditor*.xml` (`tests=… failures=0`).
-* Vérifié le 2026-10-01 : compilation complète OK, 77 tests de l'éditeur audio verts
-  (Timeline 35, Mixer 13, WavFile 11, Peaks 9, Resampler 9).
+* Vérifié le 2026-10-01 : compilation complète OK, 125 tests de l'éditeur audio verts
+  (Timeline 35, Mixer 13, WavFile 11, Peaks 9, Resampler 9, Effects 19, FiltersDynamics 18, RenderRange 11).
 * Sans `-PbancsMesure`, les bancs de mesure sont exclus (voir `app/build.gradle.kts`).
 
 ## 6. Étapes détaillées
@@ -255,16 +255,38 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
   44,1↔48 kHz à < 3e-3 d'un sinus idéal, ×2, repliement coupé (15 kHz → 22,05 kHz : RMS < 0,01),
   bande passante, continu, stéréo, blocs de 1 à 4096)
 
-### Étape 3 — Effets DSP purs
-- [ ] `dsp/Effect.kt` : `FrameReader`, `FrameWriter`, `RunContext` (progression, annulation),
-  `BlockEffect` (longueur conservée, avec queue facultative) et `TransformEffect` (longueur changée)
-- [ ] `dsp/RangeReader.kt` : lit une plage d'une piste (clips mélangés, sans volume/pan de piste)
-- [ ] Effets par familles (voir catalogue §2.4), chacun avec au moins un test de propriété
-  (normaliser atteint la cible ; passe-bas coupe > fc ; compresseur réduit les crêtes ; écho =
-  retard exact ; tempo change la durée sans changer la hauteur ; hauteur change la fréquence
-  mesurée par FFT ; réduction de bruit baisse l'énergie du bruit seul)
-- [ ] `dsp/RenderRange.kt` : rend une piste + un effet dans une nouvelle source (WAV flottant),
-  applique `replaceRange`, gère les queues et le ripple
+### Étape 3 — Effets DSP purs (🟡 3a faite, 3b en cours)
+
+**3a — socle + volume + filtres + dynamique ✅**
+- [x] `dsp/Effect.kt` : `FrameReader` / `FrameWriter` (planaire, par blocs), `RunContext` (progression +
+  annulation), `Effect` (`outputChannels`, `changesLength`), `BlockEffect` (durée conservée, travail sur
+  place, **`tailFrames`** = silence ajouté pour laisser mourir une queue, **`latencyFrames`** = retard
+  interne compensé automatiquement, `analyze()` pour les passes de mesure), `MemoryReader` /
+  `MemoryWriter` / `processInMemory` (aperçus, tests), `dbToLinear` / `linearToDb`
+- [x] `dsp/RenderRange.kt` : `TrackRangeReader` (une piste, clips mélangés **sans** volume / pan /
+  enveloppe / sourdine : un effet ne grave pas des réglages de mixage), `RenderRange.apply` (une
+  nouvelle source **flottante 32 bits** + `.peaks` par piste, `replaceRange`, progression répartie
+  sur les pistes, annulation = fichier effacé + projet intact, pistes verrouillées / vides ignorées)
+- [x] `dsp/Volume.kt` : `Amplify`, `Invert`, `Normalize` (crête ou RMS, retrait du continu, canaux liés
+  ou indépendants, garde-fou de crête), `RemoveDc`, `FadeEffect` (5 courbes), `StereoToMono`, `SwapChannels`
+- [x] `dsp/Filters.kt` : `Biquad` (RBJ : passe-bas / haut / bande, coupe-bande, cloche, étagères),
+  `FilterEffect` (Butterworth 12–48 dB/oct, passe-bande, coupe-bande), `GraphicEq` 10 bandes + 6
+  préréglages (`GraphicEq.PRESETS`), `BassTreble`
+- [x] `dsp/Dynamics.kt` : `Compressor` (détecteur lié, coude progressif, compensation), `Limiter` (mur de
+  briques à anticipation 5 ms, retard compensé, gain lissé par moyenne glissante du minimum glissant),
+  `NoiseGate` (attaque / maintien / relâchement)
+- [x] Tests : `EffectsTest` (19), `FiltersDynamicsTest` (18), `RenderRangeTest` (11), `DspTestUtil`
+  (mesure du gain en dB d'un effet à une fréquence donnée)
+
+**3b — reste à faire**
+- [ ] Espace / modulation : écho, réverbération (Freeverb), chorus, flanger, phaser, trémolo, vibrato,
+  distorsion, bit-crusher
+- [ ] Temps / hauteur : vitesse (rééchantillonnage, `changesLength`), tempo (WSOLA), hauteur
+  (WSOLA + rééchantillonnage), Paulstretch, tronquer les silences
+- [ ] Réparation : réduction de bruit (profil + soustraction spectrale, STFT avec `latencyFrames`)
+- [ ] Génération : tonalité (sinus / carré / scie / triangle), bruit (blanc / rose / brun), métronome
+- [ ] Tests de propriété pour chacun (écho = retard exact ; tempo change la durée mais pas la hauteur
+  mesurée ; hauteur change la fréquence mesurée ; bruit réduit > X dB sur du bruit seul ; etc.)
 
 ### Étape 4 — Stockage, import, export
 - [ ] `io/ManifestCodec.kt` : `Project` ⇄ JSON (versionné, tolérant aux champs inconnus)
