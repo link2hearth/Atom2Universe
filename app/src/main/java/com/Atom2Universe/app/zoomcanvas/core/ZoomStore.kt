@@ -196,6 +196,7 @@ class ZoomStore(val root: File) {
                 out.writeLong(st.id)
                 out.writeInt(st.color)
                 out.writeDouble(st.width)
+                out.writeByte(st.kind)
                 out.writeDouble(st.x)
                 out.writeDouble(st.y)
                 out.writeInt(st.pts.size)
@@ -241,7 +242,7 @@ class ZoomStore(val root: File) {
             DataInputStream(BufferedInputStream(FileInputStream(f), 1 shl 16)).use { inp ->
                 if (inp.readInt() != MAGIC) return null
                 val version = inp.readInt()
-                if (version > VERSION) return null
+                if (version > VERSION || version == PIXEL_VERSION) return null
                 val name = inp.readUTF()
                 val created = inp.readLong()
                 val modified = inp.readLong()
@@ -264,12 +265,13 @@ class ZoomStore(val root: File) {
                         val sid = inp.readLong()
                         val color = inp.readInt()
                         val width = inp.readDouble()
+                        val kind = if (version >= 5) inp.readByte().toInt() else Stroke.PEN
                         val x = inp.readDouble()
                         val y = inp.readDouble()
                         val np = inp.readInt()
                         if (np < 0 || np % 2 != 0) return null
                         val pts = DoubleArray(np) { inp.readDouble() }
-                        l.add(Stroke(sid, x, y, pts, color, width))
+                        l.add(Stroke(sid, x, y, pts, color, width, kind))
                     }
                     if (version >= 2) {
                         val ic = inp.readInt()
@@ -301,7 +303,12 @@ class ZoomStore(val root: File) {
     companion object {
         private const val MAGIC = 0x41325A43 // « A2ZC »
         private const val END_MAGIC = 0x454E4421 // « END! » : un fichier tronqué est rejeté
-        /** 1 : traits seuls ; 2 : plus les images de chaque couche. */
-        private const val VERSION = 2
+        /**
+         * 1 : traits seuls ; 2 : plus les images de chaque couche ; 4 : même contenu que 2, épaisseurs
+         * choisies à l'écran ; 5 : plus l'outil de chaque trait (crayon, pinceau, feutre). Le 3 (couches en pixels, essai du 30/09 abandonné) reste listé dans la
+         * galerie pour pouvoir le supprimer, mais ne s'ouvre plus.
+         */
+        private const val VERSION = 5
+        private const val PIXEL_VERSION = 3
     }
 }

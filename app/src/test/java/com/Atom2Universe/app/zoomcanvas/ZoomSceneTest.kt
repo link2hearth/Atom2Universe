@@ -26,16 +26,26 @@ class ZoomSceneTest {
     private val black = 0xFF000000.toInt()
 
     /**
-     * Une toile à la géométrie « de référence » des tests : seuil au milieu de l'échelle (√ratio), ouverte
-     * au zoom 1. La vraie (zoom maximal fixe, ouverte dézoomée) est testée à part plus bas.
+     * Une toile à la géométrie des tests : seuil au milieu de l'échelle (√ratio), ouverte au zoom 1 —
+     * celle de la vraie toile, mais avec un petit rapport pour que les tests changent souvent de couche.
      */
     private fun scene(ratio: Double = 10.0) = ZoomScene(ratio, Math.sqrt(ratio), 1.0)
+
+    /** Des rapports variés : un projet enregistré garde le sien, le moteur doit tous les tenir. */
+    private val ratios = doubleArrayOf(10.0, 25.0, 35.0, 625.0)
 
 
     /** Un geste de dessin, en pixels depuis le centre de l'écran (environ 300 px de large). */
     private val gesture = listOf(
         -120.0 to 35.5, -60.25 to 80.125, 13.0 to -44.0, 91.375 to -12.75, 150.75 to 10.5,
     )
+
+    /** Un coup de gomme passant par ces écarts d'écran (null s'il n'a rien touché). */
+    private fun ZoomScene.erase(points: List<Pair<Double, Double>>, widthPx: Double): Stroke? {
+        beginStroke(points[0].first, points[0].second, ZoomScene.ERASER, widthPx)
+        for (p in points.drop(1)) extendStroke(p.first, p.second)
+        return endStroke()
+    }
 
     private fun ZoomScene.draw(points: List<Pair<Double, Double>>, widthPx: Double = 4.0): Stroke {
         beginStroke(points[0].first, points[0].second, black, widthPx)
@@ -198,7 +208,7 @@ class ZoomSceneTest {
 
     @Test
     fun aStrokeDrawnOneLayerDownLooksRatioTimesSmallerFromAbove() {
-        for (ratio in ZoomScene.RATIOS) {
+        for (ratio in ratios) {
             val scene = scene(ratio)
             scene.zoomAt(2.0, 0.0, 0.0)
             scene.draw(gesture) // quelque chose au niveau 0
@@ -282,9 +292,13 @@ class ZoomSceneTest {
         scene.zoomAt(3.17 / 3.1, 0.0, 0.0)
         assertEquals(1L, scene.depth)
         assertEquals(3.17 / 10, scene.zoom, 1e-9)
-        assertEquals(0.0, scene.layerAlpha(0), 0.0)
+        // La couche 1 devient la couche de travail ; la 0 est encore presque opaque, par-dessus…
+        assertTrue(scene.layerAlpha(0) > 0.99)
         assertEquals(1.0, scene.layerAlpha(1), 0.0)
         assertEquals(1.0, scene.layerAlpha(2), 0.0)
+        // … et s'efface pendant un zoom ×2.
+        scene.zoomAt(ZoomScene.FADE_ZOOM, 0.0, 0.0)
+        assertEquals(0.0, scene.layerAlpha(0), 0.0)
     }
 
     @Test
@@ -294,9 +308,9 @@ class ZoomSceneTest {
         scene.zoomAt(scene.maxZoom * 0.9995, 0.0, 0.0)
         assertEquals(0L, scene.depth)
         repeat(20) {
-            scene.zoomAt(1.001, 0.0, 0.0) // juste au-dessus du seuil
+            scene.zoomAt(1.001, 0.0, 0.0) // juste au-dessus du seuil : on dessine dans la couche 1…
             assertEquals(1L, scene.depth)
-            assertEquals(0.0, scene.layerAlpha(0), 0.0)
+            assertTrue(scene.layerAlpha(0) > 0.99) // … et la 0, par-dessus, commence à peine à s'effacer
             scene.zoomAt(1 / 1.001, 0.0, 0.0) // juste en dessous : aucune zone morte
             assertEquals(0L, scene.depth)
             assertEquals(1.0, scene.layerAlpha(0), 0.0)
@@ -338,7 +352,7 @@ class ZoomSceneTest {
 
     @Test
     fun theThresholdIsInTheMiddleOfTheScaleForEveryRatio() {
-        for (r in ZoomScene.RATIOS) {
+        for (r in ratios) {
             val scene = scene(r)
             assertEquals(Math.sqrt(r), scene.maxZoom, 1e-12)
             assertEquals(1 / Math.sqrt(r), scene.minZoom, 1e-12)
@@ -352,18 +366,19 @@ class ZoomSceneTest {
     }
 
     @Test
-    fun strokeThicknessIsInLayerUnits() {
+    fun strokeThicknessIsChosenOnScreenThenGrowsWithTheDrawing() {
         val scene = scene(10.0)
-        val a = scene.draw(gesture, 14.0)
+        val a = scene.draw(gesture, 14.0) // à la taille normale : 14 unités de la couche
         scene.zoomAt(2.5, 0.0, 0.0)
-        val b = scene.draw(gesture, 14.0)
-        // Même épaisseur dans la couche, quel que soit le zoom au moment du trait…
-        assertEquals(14.0, a.width, 0.0)
-        assertEquals(14.0, b.width, 0.0)
-        // … donc à l'écran elle grossit avec le zoom : 14 × 2,5 = 35 px.
+        val b = scene.draw(gesture, 14.0) // zoomé ×2,5 : 14 px à l'écran, soit 5,6 unités
+        assertEquals(14.0, a.width, 1e-12)
+        assertEquals(14.0 / 2.5, b.width, 1e-12)
+        // À l'écran : le trait dessiné zoomé fait bien 14 px, le premier a grossi avec le dessin (35 px).
         val out = RenderList()
         ZoomRenderer.build(scene, 1000.0, 1000.0, out)
-        assertTrue((0 until out.runCount).all { abs(out.runWidth[it] - 35f) < 1e-3f })
+        val widths = (0 until out.runCount).map { out.runWidth[it] }.toSet()
+        assertTrue(widths.all { abs(it - 35f) < 1e-3f || abs(it - 14f) < 1e-3f })
+        assertTrue(widths.any { abs(it - 35f) < 1e-3f } && widths.any { abs(it - 14f) < 1e-3f })
     }
 
     @Test
@@ -402,14 +417,60 @@ class ZoomSceneTest {
         assertEquals(1L, scene.depth)
         val after = visibleRuns(scene)
         val p1 = scene.toScreen(1, s1, 0)
-        // La couche 1 ne bouge pas d'un pixel ; la couche 0 part, la couche 2 arrive : deux traits avant, deux après.
+        // La couche 1 ne bouge pas d'un pixel.
         assertEquals(p0[0], p1[0], 1e-3)
         assertEquals(p0[1], p1[1], 1e-3)
+        // Rien ne saute : tout ce qu'on voyait avant est toujours là, au même endroit (la couche 0
+        // passe par-dessus, encore opaque), et seule la minuscule couche 2 s'ajoute.
         assertEquals(2, before.size)
-        assertEquals(2, after.size)
-        val x = (500 + p1[0]).toFloat()
-        assertTrue(before.any { abs(it[0] - x) < 1e-2f })
-        assertTrue(after.any { abs(it[0] - x) < 1e-2f })
+        assertEquals(3, after.size)
+        for (b in before) assertTrue(after.any { a -> a.size == b.size && a.indices.all { abs(a[it] - b[it]) < 1e-2f } })
+    }
+
+    @Test
+    fun theLayerAboveFadesOutLightlyJustAfterTheThreshold() {
+        val scene = ZoomScene()
+        scene.draw(gesture, 4.0)
+        scene.zoomAt(scene.maxZoom * 1.0001, 0.0, 0.0) // juste après le seuil
+        assertEquals(1L, scene.depth)
+        assertTrue(scene.layerAlpha(0) > 0.999)
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        // La couche 0 est tracée en dernier, par-dessus, avec l'opacité du fondu.
+        assertTrue(out.fadeStart < out.runCount)
+        assertTrue(out.fadeAlpha > 0.999f)
+        // À mi-chemin du fondu (zoom ×√2), elle est à moitié effacée ; après ×2, elle a disparu.
+        scene.zoomAt(Math.sqrt(ZoomScene.FADE_ZOOM), 0.0, 0.0)
+        assertEquals(0.5, scene.layerAlpha(0), 1e-3)
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(0.5f, out.fadeAlpha, 1e-3f)
+        scene.zoomAt(Math.sqrt(ZoomScene.FADE_ZOOM) * 1.0001, 0.0, 0.0)
+        assertEquals(0.0, scene.layerAlpha(0), 0.0)
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(out.runCount, out.fadeStart)
+    }
+
+    @Test
+    fun duringTheFadeTheStrokeGoesToTheLayerBelow() {
+        val scene = ZoomScene()
+        scene.draw(gesture, 4.0)
+        scene.zoomAt(scene.maxZoom * Math.sqrt(ZoomScene.FADE_ZOOM), 0.0, 0.0) // au milieu du fondu
+        assertEquals(1L, scene.depth)
+        assertTrue(scene.layerAlpha(0) in 0.3..0.7)
+        val s = scene.draw(listOf(0.0 to 0.0, 40.0 to 20.0), 4.0)
+        assertTrue(scene.layer(1)!!.strokes.any { it.id == s.id })
+        assertTrue(scene.layer(0)!!.strokes.none { it.id == s.id })
+    }
+
+    @Test
+    fun theFadeDependsOnlyOnTheZoom() {
+        // Même zoom, même opacité, qu'on y arrive en zoomant ou en revenant en arrière.
+        val a = ZoomScene().apply { draw(gesture, 4.0); zoomAt(maxZoom * 1.3, 0.0, 0.0) }
+        val b = ZoomScene().apply { draw(gesture, 4.0); zoomAt(maxZoom * 1.9, 0.0, 0.0); zoomAt(1.3 / 1.9, 0.0, 0.0) }
+        assertEquals(1L, a.depth)
+        assertEquals(1L, b.depth)
+        assertEquals(a.layerAlpha(0), b.layerAlpha(0), 1e-9)
+        assertTrue(a.layerAlpha(0) in 0.01..0.99)
     }
 
     // ---- Ancrage, réalignement, couches virtuelles -----------------------------------------
@@ -512,33 +573,52 @@ class ZoomSceneTest {
         }
     }
 
-    // ---- La vraie toile : zoom jusqu'au pixel, grilles alignées ----------------------------
+    // ---- La vraie toile : ×625, ouverte au milieu, épaisseur à l'écran -----------------------------
 
     @Test
-    fun theRealSceneOpensZoomedOutAndGoesUpToAboutOneCentimetrePerPixel() {
-        val scene = ZoomScene(25.0)
-        assertEquals(100.0, scene.maxZoom, 0.0)
-        assertEquals(4.0, scene.minZoom, 1e-12)
-        assertEquals(scene.minZoom, scene.zoom, 0.0)
-        // Zoom jusqu'au pixel : 99 pixels d'écran par pixel de la couche, on est encore dans la couche 0.
-        scene.zoomAt(99.0 / scene.zoom, 0.0, 0.0)
-        assertEquals(0L, scene.depth)
-        assertEquals(99.0, scene.zoom, 1e-9)
-        // Un cran de plus : la couche du dessous prend la main, ses pixels font 99÷25 ≈ 4 px à l'écran.
-        scene.zoomAt(1.02, 0.0, 0.0)
-        assertEquals(1L, scene.depth)
-        assertEquals(99.0 * 1.02 / 25, scene.zoom, 1e-9)
+    fun theRealCanvasOpensAtNormalSizeWithAsMuchRoomToZoomOutAsIn() {
+        val scene = ZoomScene()
+        assertEquals(625.0, scene.ratio, 0.0)
+        assertEquals(25.0, scene.maxZoom, 1e-12)
+        assertEquals(1.0 / 25, scene.minZoom, 1e-12)
+        assertEquals(1.0, scene.zoom, 1e-12) // taille normale, au milieu de la plage
+        // ×25 de dézoom et ×25 de zoom avant de changer de couche (environ deux pincements chacun).
+        ZoomScene().apply { zoomAt(1 / 24.9, 0.0, 0.0); assertEquals(0L, depth) }
+        ZoomScene().apply { zoomAt(1 / 25.1, 0.0, 0.0); assertEquals(-1L, depth) }
+        ZoomScene().apply { zoomAt(24.9, 0.0, 0.0); assertEquals(0L, depth) }
+        ZoomScene().apply {
+            zoomAt(25.1, 0.0, 0.0)
+            assertEquals(1L, depth)
+            assertEquals(25.1 / 625, zoom, 1e-12) // la couche du dessous prend la main au bas de sa plage
+        }
     }
 
     @Test
-    fun aPenOfEightPixelsIsEightPixelsOfTheLayerGrid() {
-        val scene = ZoomScene(25.0)
-        scene.zoomAt(10.0 / scene.zoom, 0.0, 0.0) // 10 px d'écran par pixel de la couche
-        val st = scene.draw(gesture, 8.0)
-        assertEquals(8.0, st.width, 0.0)
+    fun aPenOfEightDrawsEightScreenPixelsWhateverTheZoom() {
+        for (z in doubleArrayOf(0.05, 1.0, 20.0)) {
+            val scene = ZoomScene()
+            scene.zoomAt(z, 0.0, 0.0)
+            assertEquals(0L, scene.depth)
+            val st = scene.draw(gesture, 8.0)
+            assertEquals(8.0 / z, st.width, 1e-9)
+            val out = RenderList()
+            ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+            assertTrue(out.runCount > 0)
+            assertTrue((0 until out.runCount).all { abs(out.runWidth[it] - 8f) < 1e-3f })
+        }
+    }
+
+    @Test
+    fun theEraserWidthIsChosenOnScreenToo() {
+        val scene = ZoomScene()
+        scene.zoomAt(20.0, 0.0, 0.0)
+        scene.draw(listOf(-100.0 to 0.0, 100.0 to 0.0), 2.0)
+        val e = scene.erase(listOf(0.0 to -40.0, 0.0 to 40.0), 10.0)!!
+        assertEquals(10.0 / 20, e.width, 1e-12)
         val out = RenderList()
         ZoomRenderer.build(scene, 1000.0, 1000.0, out)
-        assertTrue((0 until out.runCount).all { abs(out.runWidth[it] - 80f) < 1e-3f })
+        val r = (0 until out.runCount).single { out.runErase[it] }
+        assertEquals(10f, out.runWidth[r], 1e-3f)
     }
 
     @Test
@@ -579,27 +659,98 @@ class ZoomSceneTest {
     // ---- Dessin, gomme, historique --------------------------------------------------------
 
     @Test
-    fun eraserRemovesTouchedStrokesOfTheWorkingLayerOnly() {
+    fun theEraserDigsAHoleInItsLayerOnly() {
         val scene = scene(10.0)
-        val a = scene.draw(listOf(-100.0 to 0.0, 100.0 to 0.0))
+        val a = scene.draw(listOf(-100.0 to 0.0, 100.0 to 0.0), 30.0)
         scene.zoomAt(10.0, 0.0, 0.0)
         val b = scene.draw(listOf(-100.0 to 50.0, 100.0 to 50.0))
         scene.zoomAt(0.09, 0.0, 0.0)
         assertEquals(0L, scene.depth)
 
-        scene.beginErase()
-        assertFalse(scene.eraseAt(0.0, 30.0, 5.0))
-        assertTrue(scene.eraseAt(0.0, 3.0, 5.0))
-        scene.endErase()
-        assertTrue(scene.layer(0)!!.strokes.isEmpty())
+        // Un coup de gomme au milieu du trait a : un trait transparent posé dans la couche 0. Le trait
+        // a reste entier (seul le milieu est creusé), la couche 1 n'est pas touchée.
+        val e = scene.erase(listOf(0.0 to -30.0, 0.0 to 30.0), 20.0)!!
+        assertTrue(e.isEraser)
+        assertEquals(listOf(a.id, e.id), scene.layer(0)!!.drawOrder().map { it.id })
         assertEquals(listOf(b.id), scene.layer(1)!!.strokes.map { it.id })
+
+        // Au rendu : la couche 1 d'abord, telle quelle ; puis la couche 0 composée à part, le trait a
+        // puis la gomme, qui ne creuse donc que lui.
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(2, out.groupCount)
+        assertFalse(out.groupIsolated[0])
+        assertTrue((out.groupStart[0] until out.groupEnd[0]).none { out.runErase[it] })
+        assertTrue(out.groupIsolated[1])
+        val top = (out.groupStart[1] until out.groupEnd[1]).map { out.runErase[it] }
+        assertEquals(listOf(false, true), top)
+        // Le contenu visible de la couche ne compte pas la gomme.
+        assertEquals(a.let { it.x + it.minX - it.width / 2 }, scene.layer(0)!!.bounds()!![0], 1e-9)
 
         assertTrue(scene.undo())
         assertEquals(listOf(a.id), scene.layer(0)!!.strokes.map { it.id })
-        assertTrue(scene.undo()) // le trait b
-        assertTrue(scene.layer(1)!!.strokes.isEmpty())
         assertTrue(scene.redo())
-        assertEquals(listOf(b.id), scene.layer(1)!!.strokes.map { it.id })
+        assertEquals(listOf(a.id, e.id), scene.layer(0)!!.strokes.map { it.id })
+    }
+
+    @Test
+    fun whatIsPosedAfterTheEraserIsNotCut() {
+        val scene = scene(10.0)
+        val a = scene.draw(listOf(-100.0 to 0.0, 100.0 to 0.0), 30.0)
+        val e = scene.erase(listOf(0.0 to -30.0, 0.0 to 30.0), 20.0)!!
+        // On redessine dans le trou, puis on pose une image par-dessus : ni l'un ni l'autre n'est creusé.
+        val c = scene.draw(listOf(-10.0 to 0.0, 10.0 to 0.0), 6.0)
+        val img = scene.addImage("a.png", 100, 100, 50.0, 50.0)
+        assertEquals(listOf(a.id, e.id, c.id, img.id), scene.layer(0)!!.drawOrder().map { it.id })
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        val kinds = (0 until out.runCount).map { r ->
+            when {
+                out.runImage[r] >= 0 -> "image"
+                out.runErase[r] -> "gomme"
+                else -> "trait"
+            }
+        }
+        assertEquals(listOf("trait", "gomme", "trait", "image"), kinds)
+    }
+
+    @Test
+    fun anImageCanBeErasedToo() {
+        val scene = scene(10.0)
+        val img = scene.addImage("a.png", 200, 200, 300.0, 300.0)
+        val e = scene.erase(listOf(-20.0 to -20.0, 20.0 to 20.0), 40.0)!!
+        assertEquals(listOf(img.id, e.id), scene.layer(0)!!.drawOrder().map { it.id })
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(1, out.groupCount)
+        assertTrue(out.groupIsolated[0])
+        assertTrue(out.runImage[0] >= 0 && out.runErase[1])
+    }
+
+    @Test
+    fun anEraserOverNothingLeavesNoTrace() {
+        val scene = scene(10.0)
+        assertNull(scene.erase(listOf(0.0 to 0.0, 50.0 to 50.0), 20.0))
+        scene.draw(listOf(-100.0 to 0.0, 100.0 to 0.0), 4.0)
+        // Loin du trait : rien n'est gardé, l'historique n'a qu'un pas (le trait).
+        assertNull(scene.erase(listOf(0.0 to 300.0, 50.0 to 350.0), 20.0))
+        assertEquals(1, scene.layer(0)!!.strokes.size)
+        assertTrue(scene.undo())
+        assertFalse(scene.canUndo)
+    }
+
+    @Test
+    fun theEraserBeingDrawnDigsLiveInItsLayer() {
+        val scene = scene(10.0)
+        scene.draw(listOf(-100.0 to 0.0, 100.0 to 0.0), 30.0)
+        scene.beginStroke(0.0, -30.0, ZoomScene.ERASER, 20.0)
+        scene.extendStroke(0.0, 30.0)
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(1, out.groupCount)
+        assertTrue(out.groupIsolated[0])
+        assertTrue(out.runErase[out.runCount - 1])
+        scene.cancelStroke()
     }
 
     @Test
@@ -747,7 +898,12 @@ class ZoomSceneTest {
                     1 -> scene.redo()
                     else -> scene.addImage("k", rnd.nextInt(10, 3000), rnd.nextInt(10, 3000), rnd.nextDouble(10.0, 5000.0), rnd.nextDouble(10.0, 5000.0))
                 }
-                else -> { scene.beginErase(); scene.eraseAt(rnd.nextDouble(-w / 2, w / 2), 0.0, 30.0); scene.endErase() }
+                else -> {
+                    val x0 = rnd.nextDouble(-w / 2, w / 2)
+                    scene.beginStroke(x0, 0.0, ZoomScene.ERASER, rnd.nextDouble(4.0, 80.0))
+                    scene.extendStroke(x0 + rnd.nextDouble(-300.0, 300.0), rnd.nextDouble(-300.0, 300.0))
+                    scene.endStroke()
+                }
             }
             minDepth = minOf(minDepth, scene.depth)
             maxDepth = maxOf(maxDepth, scene.depth)
@@ -814,4 +970,59 @@ class ZoomSceneTest {
         }
         return sum
     }
+
+    @Test
+    fun theBrushThinsAtBothEndsAndIsFullInTheMiddle() {
+        val scene = ZoomScene()
+        scene.zoomAt(4.0, 0.0, 0.0)
+        scene.beginStroke(-300.0, 0.0, black, 20.0, Stroke.BRUSH)
+        for (k in 1..60) scene.extendStroke(-300.0 + k * 10.0, 0.0)
+        val s = scene.endStroke()!!
+        assertEquals(Stroke.BRUSH, s.kind)
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(1, out.runCount)
+        val first = out.runStart[0] / 2
+        val n = out.runPoints[0]
+        val w = (0 until n).map { out.pointWidth[first + it] }
+        // Pointe aux deux bouts, épaisseur pleine (20 px) au milieu, et jamais plus.
+        assertEquals(20f * Stroke.BRUSH_TIP.toFloat(), w.first(), 1e-3f)
+        assertEquals(20f * Stroke.BRUSH_TIP.toFloat(), w.last(), 1e-3f)
+        assertEquals(20f, w[n / 2], 1e-3f)
+        assertTrue(w.all { it <= 20f + 1e-3f })
+        // L'affinement se fait sur trois épaisseurs (60 px d'écran) : à 30 px du bout, on est entre les deux.
+        assertTrue(w[3] > w[0] && w[3] < 20f)
+        assertEquals(20f, w[6], 1e-3f)
+    }
+
+    @Test
+    fun theBrushTaperFollowsTheDrawingWhenZooming() {
+        // Le même trait vu deux fois plus gros : l'affinement couvre la même part du trait.
+        val scene = ZoomScene()
+        scene.beginStroke(-100.0, 0.0, black, 8.0, Stroke.BRUSH)
+        for (k in 1..20) scene.extendStroke(-100.0 + k * 10.0, 0.0)
+        scene.endStroke()
+        val a = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, a)
+        scene.zoomAt(2.0, 0.0, 0.0)
+        val b = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, b)
+        for (k in 0 until a.runPoints[0]) assertEquals(2 * a.pointWidth[k], b.pointWidth[k], 1e-3f)
+    }
+
+    @Test
+    fun penAndMarkerKeepTheirWidthAndTheEraserIsNeverABrush() {
+        val scene = ZoomScene()
+        scene.beginStroke(-100.0, 0.0, black, 10.0, Stroke.MARKER)
+        for (k in 1..20) scene.extendStroke(-100.0 + k * 10.0, 0.0)
+        assertEquals(Stroke.MARKER, scene.endStroke()!!.kind)
+        val out = RenderList()
+        ZoomRenderer.build(scene, 1000.0, 1000.0, out)
+        assertEquals(Stroke.MARKER, out.runKind[0].toInt())
+        for (k in 0 until out.runPoints[0]) assertEquals(10f, out.pointWidth[k], 1e-3f)
+        scene.beginStroke(-50.0, -20.0, ZoomScene.ERASER, 10.0, Stroke.BRUSH)
+        scene.extendStroke(50.0, 20.0)
+        assertEquals(Stroke.PEN, scene.endStroke()!!.kind)
+    }
+
 }

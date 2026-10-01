@@ -9,7 +9,9 @@ import kotlin.math.min
  * l'autre (aucune allocation une fois les tableaux à la bonne taille).
  *
  * Chaque élément est une « passe » : une polyligne ([runImage] = -1) ou une image ([runImage] =
- * indice dans [imageKeys], [imageSrc], [imageDst]).
+ * indice dans [imageKeys], [imageSrc], [imageDst]). Les passes d'une même couche se suivent et
+ * forment un groupe ([groupStart]..[groupEnd]) : une couche qui contient un coup de gomme, ou qui
+ * s'efface, doit être composée à part ([groupIsolated]) pour que la gomme ne creuse qu'elle.
  */
 class RenderList {
     /** Points (x, y) de toutes les polylignes, à la suite. */
@@ -34,6 +36,32 @@ class RenderList {
     /** -1 pour une polyligne, sinon l'indice de l'image. */
     var runImage = IntArray(256)
         private set
+    /** Un coup de gomme : il efface, dans son groupe, ce qui a été tracé avant lui. */
+    var runErase = BooleanArray(256)
+        private set
+    /** L'outil du trait ([Stroke.PEN], [Stroke.BRUSH], [Stroke.MARKER]). */
+    var runKind = ByteArray(256)
+        private set
+    /**
+     * L'épaisseur à l'écran en chaque point (un nombre par point, dans l'ordre de [coords]) : la
+     * même partout sauf pour le pinceau, qui s'affine aux bouts.
+     */
+    var pointWidth = FloatArray(2048)
+        private set
+
+    var groupCount = 0
+        private set
+    /** Pour chaque couche tracée : ses passes [groupStart, groupEnd[, à la suite. */
+    var groupStart = IntArray(4)
+        private set
+    var groupEnd = IntArray(4)
+        private set
+    /** Composer la couche à part (gomme ou fondu), puis la poser avec l'opacité [groupAlpha]. */
+    var groupIsolated = BooleanArray(4)
+        private set
+    var groupAlpha = FloatArray(4)
+        private set
+    private var openGroup = false
 
     var imageCount = 0
         private set
@@ -53,19 +81,54 @@ class RenderList {
     var layersDrawn = 0
         internal set
 
+    /**
+     * Première passe de la couche du dessus en train de s'effacer, tracée en dernier ([runCount]
+     * s'il n'y en a pas). Ses passes sont opaques : l'opacité [fadeAlpha] s'applique d'un bloc à
+     * toute la couche, pour que deux traits qui se croisent ne foncent pas.
+     */
+    var fadeStart = 0
+        internal set
+    var fadeAlpha = 1f
+        internal set
+
     fun clear() {
         coordCount = 0
         runCount = 0
         imageCount = 0
         layersDrawn = 0
+        fadeStart = 0
+        fadeAlpha = 1f
+        groupCount = 0
+        openGroup = false
     }
 
-    internal fun beginRun(color: Int, width: Float, alpha: Float) {
+    internal fun beginGroup(isolated: Boolean, alpha: Float) {
+        if (groupCount == groupStart.size) {
+            val n = groupCount * 2
+            groupStart = groupStart.copyOf(n); groupEnd = groupEnd.copyOf(n)
+            groupIsolated = groupIsolated.copyOf(n); groupAlpha = groupAlpha.copyOf(n)
+        }
+        groupStart[groupCount] = runCount
+        groupIsolated[groupCount] = isolated
+        groupAlpha[groupCount] = alpha
+        openGroup = true
+    }
+
+    /** Ferme le groupe ouvert ; un groupe sans passe n'est pas gardé. */
+    internal fun endGroup() {
+        if (!openGroup) return
+        openGroup = false
+        if (runCount == groupStart[groupCount]) return
+        groupEnd[groupCount] = runCount
+        groupCount++
+    }
+
+    internal fun beginRun(color: Int, width: Float, alpha: Float, erase: Boolean = false, kind: Int = Stroke.PEN) {
         if (runCount == runStart.size) {
             val n = runCount * 2
             runStart = runStart.copyOf(n); runPoints = runPoints.copyOf(n)
             runColor = runColor.copyOf(n); runWidth = runWidth.copyOf(n); runAlpha = runAlpha.copyOf(n)
-            runImage = runImage.copyOf(n)
+            runImage = runImage.copyOf(n); runErase = runErase.copyOf(n); runKind = runKind.copyOf(n)
         }
         runStart[runCount] = coordCount
         runPoints[runCount] = 0
@@ -73,6 +136,8 @@ class RenderList {
         runWidth[runCount] = width
         runAlpha[runCount] = alpha
         runImage[runCount] = -1
+        runErase[runCount] = erase
+        runKind[runCount] = kind.toByte()
         runCount++
     }
 
@@ -94,8 +159,10 @@ class RenderList {
         runImage[runCount - 1] = i
     }
 
-    internal fun addPoint(x: Double, y: Double) {
+    internal fun addPoint(x: Double, y: Double, width: Double = runWidth[runCount - 1].toDouble()) {
         if (coordCount + 2 > coords.size) coords = coords.copyOf(coords.size * 2)
+        if (coordCount / 2 >= pointWidth.size) pointWidth = pointWidth.copyOf(pointWidth.size * 2)
+        pointWidth[coordCount / 2] = width.toFloat()
         coords[coordCount++] = x.toFloat()
         coords[coordCount++] = y.toFloat()
         runPoints[runCount - 1]++
@@ -105,8 +172,9 @@ class RenderList {
 
 /**
  * Calcule l'image : de l'arrière vers l'avant, la couche d'en dessous la couche de travail (à sa
- * propre échelle), la couche de travail, puis le trait en cours. Rien d'autre, pas de fondu. Dans
- * chaque couche, les images passent sous les traits.
+ * propre échelle), la couche de travail et son trait en cours, et enfin, juste après le seuil, la
+ * couche du dessus qui s'efface (voir [RenderList.fadeStart]). Dans chaque couche, tout est tracé
+ * dans l'ordre où ça a été posé : un coup de gomme creuse ce qui est avant lui, pas ce qui suit.
  *
  * Tout se calcule en `Double` relativement à la caméra (position de l'objet − position de la
  * caméra, dans le repère de sa couche) ; seul le petit résultat, déjà découpé au bord de l'écran,
@@ -118,7 +186,7 @@ object ZoomRenderer {
     const val MIN_PX = 1.0
     /** Épaisseur minimale tracée : plus fin, le trait s'éclaircit au lieu de disparaître. */
     const val MIN_WIDTH_PX = 0.8
-    /** Les couches vues : la couche de travail et celle d'en dessous. */
+    /** Les couches vues depuis la couche de travail vers le bas : elle et celle d'en dessous. */
     const val MAX_LAYERS = 2
 
     private class Visible(val layer: Layer, val x: Double, val y: Double, val zoom: Double)
@@ -155,19 +223,45 @@ object ZoomRenderer {
             if (!l.isEmpty) visible.add(Visible(l, x, y, z))
         }
 
-        // Du fond vers l'avant : la couche d'en dessous, puis la couche de travail. Rien d'autre :
-        // les couches du dessus ne se voient jamais, celles d'encore en dessous apparaissent au seuil.
-        for (k in visible.indices.reversed()) drawLayer(visible[k], scene.layerAlpha(visible[k].layer.depth), hw, hh, viewW, viewH, out)
+        // Du fond vers l'avant : la couche d'en dessous…
+        for (k in visible.indices.reversed()) {
+            val v = visible[k]
+            if (v.layer.depth == scene.depth) continue
+            out.beginGroup(v.layer.hasEraser, 1f)
+            drawLayer(v, scene.layerAlpha(v.layer.depth), hw, hh, viewW, viewH, out)
+            out.endGroup()
+        }
+        // … puis la couche de travail, avec le trait en cours (qui peut être un coup de gomme).
+        val live = scene.liveStroke()
+        val working = visible.firstOrNull { it.layer.depth == scene.depth }
+        out.beginGroup(working?.layer?.hasEraser == true || live?.isEraser == true, 1f)
+        if (working != null) drawLayer(working, 1.0, hw, hh, viewW, viewH, out)
+        live?.let { emit(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }
+        out.endGroup()
 
-        scene.liveStroke()?.let { emit(it, scene.cx, scene.cy, scene.zoom, 1.0, hw, hh, viewW, viewH, out) }
+        // Juste après le seuil, la couche du dessus reste par-dessus tout le reste et s'efface.
+        out.fadeStart = out.runCount
+        val upAlpha = scene.upperAlpha()
+        val up = scene.layer(scene.depth - 1)
+        if (up != null && !up.isEmpty && upAlpha > 0.0) {
+            val v = scene.viewOf(up.depth)
+            if (v.x.isFinite() && v.y.isFinite() && v.zoom > 0.0) {
+                out.beginGroup(true, upAlpha.toFloat())
+                drawLayer(Visible(up, v.x, v.y, v.zoom), 1.0, hw, hh, viewW, viewH, out)
+                out.endGroup()
+                out.fadeAlpha = upAlpha.toFloat()
+            }
+        }
     }
 
     private fun drawLayer(v: Visible, alpha: Double, hw: Double, hh: Double, w: Double, h: Double, out: RenderList) {
         if (alpha <= 0.0) return
         if (!layerOnScreen(v, hw, hh, w, h)) return
         out.layersDrawn++
-        for (i in v.layer.images) emitImage(i, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
-        for (s in v.layer.strokes) emit(s, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+        for (item in v.layer.drawOrder()) when (item) {
+            is ImageItem -> emitImage(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+            is Stroke -> emit(item, v.x, v.y, v.zoom, alpha, hw, hh, w, h, out)
+        }
     }
 
     private val src = DoubleArray(4)
@@ -232,34 +326,45 @@ object ZoomRenderer {
 
         if (n == 1) {
             if (ox in cx0..cx1 && oy in cy0..cy1) {
-                out.beginRun(s.color, drawnWidth.toFloat(), a)
+                out.beginRun(s.color, drawnWidth.toFloat(), a, s.isEraser, s.kind)
                 out.addPoint(ox, oy)
             }
             return
         }
 
+        // Le pinceau : l'épaisseur de chaque point dépend de sa distance (le long du trait) au bout
+        // le plus proche. [along] est la distance parcourue jusqu'au point A, en unités de la couche.
+        val brush = s.kind == Stroke.BRUSH
+        val total = if (brush) s.length() else 0.0
+        var along = 0.0
         var open = false
         var ax = ox + p[0] * z
         var ay = oy + p[1] * z
         for (i in 1 until n) {
             val bx = ox + p[2 * i] * z
             val by = oy + p[2 * i + 1] * z
+            val seg = if (brush) Math.hypot(p[2 * i] - p[2 * i - 2], p[2 * i + 1] - p[2 * i - 1]) else 0.0
             if (!clip(ax, ay, bx, by, cx0, cy0, cx1, cy1)) {
                 open = false
             } else {
                 val dx = bx - ax
                 val dy = by - ay
                 if (!open) {
-                    out.beginRun(s.color, drawnWidth.toFloat(), a)
-                    out.addPoint(ax + t0 * dx, ay + t0 * dy)
+                    out.beginRun(s.color, drawnWidth.toFloat(), a, s.isEraser, s.kind)
+                    out.addPoint(ax + t0 * dx, ay + t0 * dy, if (brush) brushWidth(s, along + t0 * seg, total, drawnWidth) else drawnWidth)
                 }
-                out.addPoint(ax + t1 * dx, ay + t1 * dy)
+                out.addPoint(ax + t1 * dx, ay + t1 * dy, if (brush) brushWidth(s, along + t1 * seg, total, drawnWidth) else drawnWidth)
                 open = t1 >= 1.0
             }
+            along += seg
             ax = bx
             ay = by
         }
     }
+
+    /** Épaisseur à l'écran du pinceau à [d] du début d'un trait long de [total]. */
+    private fun brushWidth(s: Stroke, d: Double, total: Double, full: Double): Double =
+        full * Stroke.brushFactor(min(d, total - d), s.width)
 
     // Résultat de [clip] (le rendu se fait sur un seul fil).
     private var t0 = 0.0

@@ -53,6 +53,13 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <!-- Cadenas : bloque le zoom, deux doigts ne font plus que déplacer la vue -->
+        <ImageButton
+            android:id="@+id/zc_btn_lock"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/zc_zoom_lock"
+            android:src="@drawable/ic_px_unlock" />
+
         <ImageButton
             android:id="@+id/zc_btn_undo"
             style="@style/PxIconButton"
@@ -81,34 +88,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/zc_top_bar" />
-
-    <!-- Réglages de l'outil en cours, flottant sur le haut de la toile -->
-    <HorizontalScrollView
-        android:id="@+id/zc_options_scroll"
-        android:layout_width="wrap_content"
-        android:layout_height="46dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/bg_px_panel"
-        android:elevation="6dp"
-        android:overScrollMode="never"
-        android:scrollbars="none"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/zc_top_bar">
-
-        <LinearLayout
-            android:id="@+id/zc_options"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp" />
-    </HorizontalScrollView>
 
     <!-- Pastille de niveau : où je suis dans la pile des couches ; un appui liste les couches dessinées -->
     <LinearLayout
@@ -185,7 +164,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_max="340dp" />
 
-    <!-- Pied : outils, puis couleurs -->
+    <!-- Pied : outils (les réglages de l'outil choisi juste à côté de son bouton), puis couleurs -->
     <LinearLayout
         android:id="@+id/zc_bottom_stack"
         android:layout_width="0dp"
@@ -198,6 +177,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <HorizontalScrollView
+            android:id="@+id/zc_tools_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:overScrollMode="never"

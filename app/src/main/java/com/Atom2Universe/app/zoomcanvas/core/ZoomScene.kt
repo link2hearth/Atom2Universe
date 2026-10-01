@@ -20,25 +20,29 @@ import kotlin.math.sqrt
  * écran. Quand on zoome assez pour changer de couche, on la convertit dans la nouvelle couche et les
  * nombres redeviennent petits. La profondeur n'est qu'un entier.
  *
- * Chaque couche a sa grille de pixels virtuelle, infinie dans les quatre directions (on ne la dessine
- * pas) : une unité de la couche est un de ses pixels, et le zoom dit combien de pixels d'écran fait
- * un pixel de la couche. Les épaisseurs se choisissent en pixels de la couche : un trait de 8 fait 8
- * pixels de la grille de la couche où l'on dessine, et grossit avec le zoom comme tout le reste. Un
- * pixel de la couche du dessus vaut [ratio] × [ratio] pixels de celle du dessous.
+ * Le zoom dit combien de pixels d'écran fait une unité de la couche de travail : à 1, la couche est à
+ * sa taille normale. **L'épaisseur d'un trait se choisit à l'écran** : un crayon de 4 trace un trait
+ * de 4 px tel qu'on le voit au moment où on dessine, quel que soit le zoom, et le trait est rangé en
+ * unités de la couche (4 ÷ zoom). Il grossit ensuite avec le zoom, comme tout le reste du dessin :
+ * dessiner zoomé, c'est dessiner plus fin. Les ancres sont des nombres entiers d'unités de la couche
+ * du dessus.
  *
- * **Les grilles sont alignées** : l'ancre d'une couche est toujours un nombre entier de pixels de la
- * couche du dessus (un coin de pixel), et [ratio] est entier. Chaque coin de pixel d'une couche est
- * donc aussi un point de la grille de la couche du dessous : les grilles s'emboîtent exactement.
+ * **Un seul seuil, suivi d'un fondu léger.** On voit la couche de travail (la seule qu'on édite) et
+ * celle d'en dessous (derrière, [ratio] fois plus petite). Quand le zoom atteint [maxZoom], la
+ * couche du dessous devient aussitôt la couche de travail (à [minZoom]) et celle d'encore en
+ * dessous apparaît ; l'ancienne couche de travail reste tracée par-dessus et s'efface pendant un
+ * zoom ×[FADE_ZOOM]. Dès qu'elle devient transparente, c'est donc en dessous qu'on dessine. En
+ * dézoomant, c'est l'inverse exact : la couche du dessus réapparaît, et redevient la couche de
+ * travail au seuil, entièrement opaque. L'opacité ne dépend que du zoom, jamais du chemin suivi :
+ * aucune zone morte, zoomer et dézoomer autour du seuil fait basculer la couche de travail à chaque
+ * passage, sans rien faire sauter à l'écran.
  *
- * **Un seul seuil, pas de fondu.** On ne voit que deux couches : la couche de travail (devant, la
- * seule qu'on édite) et celle d'en dessous (derrière, plus petite). Quand le zoom atteint [maxZoom],
- * la couche de travail passe « derrière l'écran » et disparaît, celle du dessous devient la couche
- * de travail (à [minZoom]) et celle d'encore en dessous apparaît. En dézoomant, le même seuil joue
- * à l'envers, à l'instant où on le franchit : la couche du dessus revient devant et la plus basse
- * disparaît. Aucun fondu, aucune zone morte : zoomer et dézoomer autour du seuil fait basculer
- * la vue à chaque passage. On travaille sur une couche jusqu'à [maxZoom] (un pixel de la couche
- * fait alors environ un centimètre sur une tablette), et on la quitte vers le haut à
- * [minZoom] = [maxZoom] / [ratio].
+ * **La distance entre deux couches est le rapport.** Toutes les couches zoomant ensemble, passer
+ * d'une couche à la suivante demande exactement un zoom ×[ratio] : ×625, soit environ quatre
+ * pincements. La plage d'une couche est centrée sur sa taille normale, de 1/√ratio à √ratio (de
+ * ×1/25 à ×25), et un canvas s'ouvre au milieu : on peut dézoomer ×25 et zoomer ×25 avant de
+ * changer de couche. Plus de pincements par couche, c'est un rapport plus grand, donc une couche
+ * du dessous plus petite : il n'y a pas d'autre réglage.
  *
  * Les couches forment une suite contiguë [firstDepth .. lastDepth] qui couvre les couches dessinées
  * et celle de la caméra. Une couche vide n'y est gardée que pour son ancre, quand elle est coincée
@@ -47,7 +51,7 @@ import kotlin.math.sqrt
  * au-delà n'existent que virtuellement : on les crée quand la caméra y entre, on les oublie quand
  * elle en sort sans y avoir dessiné.
  */
-class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT_MAX_ZOOM, startZoom: Double = Double.NaN) {
+class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sqrt(ratio), startZoom: Double = Double.NaN) {
 
     init {
         require(ratio > 1.0 && ratio.isFinite()) { "ratio must be > 1" }
@@ -75,8 +79,15 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
     /** En deçà, la couche du dessus redevient la couche de travail (exactement maxZoom / ratio). */
     val minZoom = maxZoom / ratio
 
-    /** Pixels d'écran par pixel de la couche de travail, dans [minZoom, maxZoom[. On ouvre tout dézoomé. */
-    var zoom = if (startZoom.isNaN()) minZoom else startZoom
+    /**
+     * Le milieu de la plage d'une couche (1, sa taille normale) : autant de marge pour dézoomer que
+     * pour zoomer. C'est là qu'on ouvre un canvas ; tout en bas de la plage, le moindre dézoom
+     * ferait passer à la couche du dessus.
+     */
+    val homeZoom = Math.sqrt(minZoom * maxZoom)
+
+    /** Pixels d'écran par unité de la couche de travail, dans [minZoom, maxZoom[. On ouvre au milieu. */
+    var zoom = if (startZoom.isNaN()) homeZoom else startZoom
         private set
 
     /** Prochain identifiant d'objet, trait ou image (unique dans le projet). */
@@ -113,10 +124,25 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
     fun progress(): Double = (ln(zoom / minZoom) / ln(maxZoom / minZoom)).coerceIn(0.0, 1.0)
 
     /**
-     * Opacité de la couche [d] : 1 pour la couche de travail et celle d'en dessous, les seules qu'on
-     * voit, 0 pour toutes les autres. Pas de fondu : le changement se fait au seuil.
+     * Opacité de la couche [d] : 1 pour la couche de travail et celle d'en dessous ; pour la couche
+     * du dessus, le fondu de sortie ([upperAlpha]) ; 0 pour toutes les autres.
      */
-    fun layerAlpha(d: Long): Double = if (d == depth || d == depth + 1) 1.0 else 0.0
+    fun layerAlpha(d: Long): Double = when (d) {
+        depth, depth + 1 -> 1.0
+        depth - 1 -> upperAlpha()
+        else -> 0.0
+    }
+
+    /**
+     * Opacité de la couche du dessus, tracée par-dessus la couche de travail juste après le seuil :
+     * 1 au seuil, 0 une fois le zoom multiplié par [FADE_ZOOM], en courbe douce entre les deux.
+     */
+    fun upperAlpha(): Double {
+        val t = ln(zoom / minZoom) / ln(FADE_ZOOM)
+        if (t >= 1.0) return 0.0
+        val u = 1.0 - t.coerceIn(0.0, 1.0)
+        return u * u * (3 - 2 * u)
+    }
 
     // ---- Projection -----------------------------------------------------------------------
 
@@ -212,7 +238,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
         val l = layer(d) ?: return
         val b = l.bounds()
         if (b == null) {
-            setCamera(d, 0.0, 0.0, minZoom)
+            setCamera(d, 0.0, 0.0, homeZoom)
             return
         }
         val w = max(b[2] - b[0], 1e-9)
@@ -283,25 +309,30 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
     private var liveCount = 0
     private var liveColor = 0
     private var liveWidth = 1.0
+    private var liveKind = Stroke.PEN
 
     /** Le trait en cours (ou null) : dessiné par-dessus tout le reste. */
     fun liveStroke(): Stroke? =
-        if (liveCount == 0) null else Stroke(0L, liveOriginX, liveOriginY, livePts.copyOf(liveCount), liveColor, liveWidth)
+        if (liveCount == 0) null else Stroke(0L, liveOriginX, liveOriginY, livePts.copyOf(liveCount), liveColor, liveWidth, liveKind)
 
     val isDrawing: Boolean get() = liveCount > 0
 
     /**
-     * Commence un trait à l'écart d'écran [sx], [sy]. [width] est en unités de la couche, c'est-à-dire
-     * en pixels de sa grille.
+     * Commence un trait à l'écart d'écran [sx], [sy]. [widthPx] est l'épaisseur à l'écran au moment
+     * du trait ; elle est rangée en unités de la couche (÷ zoom), donc le trait grossit ensuite avec
+     * le zoom comme le reste du dessin. Un trait de couleur transparente ([ERASER]) est un coup de
+     * gomme : il dessine de la transparence, qui creuse ce que sa couche a reçu avant lui.
+     * [kind] : crayon, pinceau ou feutre ([Stroke.PEN], [Stroke.BRUSH], [Stroke.MARKER]).
      */
-    fun beginStroke(sx: Double, sy: Double, color: Int, width: Double) {
+    fun beginStroke(sx: Double, sy: Double, color: Int, widthPx: Double, kind: Int = Stroke.PEN) {
         anchorIfFresh(layer(depth)!!)
         val p = screenToLocal(sx, sy)
         liveOriginX = p[0]
         liveOriginY = p[1]
         liveCount = 0
         liveColor = color
-        liveWidth = width
+        liveWidth = widthPx / zoom
+        liveKind = if (color ushr 24 == 0) Stroke.PEN else kind
         appendLive(0.0, 0.0)
     }
 
@@ -328,12 +359,14 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
         liveCount = 0
     }
 
-    /** Termine le trait et l'ajoute à la couche de travail. */
+    /** Termine le trait et l'ajoute à la couche de travail. Un coup de gomme dans le vide ne laisse rien. */
     fun endStroke(): Stroke? {
         if (liveCount == 0) return null
         val l = layer(depth)!!
-        val s = Stroke(nextStrokeId++, liveOriginX, liveOriginY, livePts.copyOf(liveCount), liveColor, liveWidth)
+        val s = Stroke(nextStrokeId, liveOriginX, liveOriginY, livePts.copyOf(liveCount), liveColor, liveWidth, liveKind)
         liveCount = 0
+        if (s.isEraser && !l.touches(s)) return null
+        nextStrokeId++
         l.add(s)
         record(Edit.Add(depth, s))
         return s
@@ -355,39 +388,12 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
         l.ay += dy / ratio
         for (i in l.strokes.indices) {
             val s = l.strokes[i]
-            l.strokes[i] = Stroke(s.id, s.x - dx, s.y - dy, s.pts, s.color, s.width)
+            l.strokes[i] = Stroke(s.id, s.x - dx, s.y - dy, s.pts, s.color, s.width, s.kind)
         }
         for (i in l.images.indices) l.images[i] = l.images[i].moved(-dx, -dy)
         l.invalidate()
         layer(l.depth + 1)?.let { it.ax -= dx; it.ay -= dy }
         if (l.depth == depth) { cx -= dx; cy -= dy }
-    }
-
-    // ---- Gomme ----------------------------------------------------------------------------
-
-    private var eraseBatch: ArrayList<Stroke>? = null
-
-    fun beginErase() {
-        eraseBatch = ArrayList()
-    }
-
-    /** Efface les traits de la couche de travail touchés par un disque de rayon [radius] (unités de la couche). */
-    fun eraseAt(sx: Double, sy: Double, radius: Double): Boolean {
-        val l = layer(depth) ?: return false
-        val p = screenToLocal(sx, sy)
-        val r = radius
-        val hit = l.strokes.filter { it.hits(p[0], p[1], r) }
-        if (hit.isEmpty()) return false
-        for (s in hit) l.remove(s.id)
-        val batch = eraseBatch
-        if (batch != null) batch.addAll(hit) else record(Edit.Remove(depth, hit))
-        return true
-    }
-
-    fun endErase() {
-        val batch = eraseBatch ?: return
-        eraseBatch = null
-        if (batch.isNotEmpty()) record(Edit.Remove(depth, batch))
     }
 
     // ---- Images ---------------------------------------------------------------------------
@@ -406,11 +412,11 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
         return item
     }
 
-    /** L'image de la couche de travail sous l'écart d'écran [sx], [sy] (la plus haute), ou null. */
+    /** L'image de la couche de travail sous l'écart d'écran [sx], [sy] (la dernière posée), ou null. */
     fun imageAt(sx: Double, sy: Double): ImageItem? {
         val l = layer(depth) ?: return null
         val p = screenToLocal(sx, sy)
-        return l.images.lastOrNull { it.contains(p[0], p[1]) }
+        return l.images.filter { it.contains(p[0], p[1]) }.maxByOrNull { it.id }
     }
 
     fun image(id: Long): ImageItem? = layer(depth)?.images?.firstOrNull { it.id == id }
@@ -528,7 +534,6 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
 
     sealed class Edit {
         class Add(val depth: Long, val stroke: Stroke) : Edit()
-        class Remove(val depth: Long, val strokes: List<Stroke>) : Edit()
         class Move(val depth: Long, val dx: Double, val dy: Double) : Edit()
         class AddImage(val depth: Long, val item: ImageItem) : Edit()
         class RemoveImage(val depth: Long, val item: ImageItem) : Edit()
@@ -574,10 +579,6 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
                 val l = layer(e.depth) ?: return
                 if (reverse) l.remove(e.stroke.id) else l.add(e.stroke)
             }
-            is Edit.Remove -> {
-                val l = layer(e.depth) ?: return
-                if (reverse) e.strokes.forEach { l.add(it) } else e.strokes.forEach { l.remove(it.id) }
-            }
             is Edit.Move -> {
                 val l = layer(e.depth) ?: return
                 val sign = if (reverse) -1.0 else 1.0
@@ -619,7 +620,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
         }
         nextStrokeId = max(nextId, maxId + 1)
         undoStack.clear(); redoStack.clear()
-        val z = if (camZoom.isFinite() && camZoom > 0) camZoom else minZoom
+        val z = if (camZoom.isFinite() && camZoom > 0) camZoom else homeZoom
         val x = if (camX.isFinite()) camX else 0.0
         val y = if (camY.isFinite()) camY else 0.0
         setCamera(camDepth, x, y, z)
@@ -628,26 +629,37 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = DEFAULT
     class View(var x: Double = 0.0, var y: Double = 0.0, var zoom: Double = 1.0)
 
     companion object {
-        const val DEFAULT_RATIO = 25.0
         /**
-         * Zoom maximal de la couche de travail, en pixels d'écran par pixel de la couche : environ
-         * 1 cm de côté sur une tablette. Au-delà, la couche du dessous prend la main.
+         * Chaque couche est 625 fois plus petite que celle du dessus (25 × 25) : environ quatre
+         * pincements pour passer de l'une à l'autre, deux pour dézoomer et deux pour zoomer depuis
+         * l'ouverture. Le même pour tous les nouveaux projets.
          */
-        const val DEFAULT_MAX_ZOOM = 100.0
+        const val DEFAULT_RATIO = 625.0
+        /** La couleur de la gomme : transparente. Un trait de cette couleur creuse sa couche. */
+        const val ERASER = 0
+        /**
+         * Durée du fondu léger de la couche du dessus après le seuil : elle a disparu quand le zoom a
+         * doublé (un petit bout de pincement).
+         */
+        const val FADE_ZOOM = 2.0
         /** Une image ne se réduit pas en dessous de cette taille à l'écran (pixels). */
         const val MIN_IMAGE_PX = 12.0
         const val MAX_HISTORY = 300
-        val RATIOS = doubleArrayOf(10.0, 25.0, 35.0)
     }
 }
 
+/** Ce qu'une couche contient : un trait (gomme comprise) ou une image, chacun avec son identifiant. */
+sealed interface LayerItem {
+    val id: Long
+}
+
 /**
- * Une couche : son ancre dans la couche du dessus (en unités de celle-ci) et ses traits, en
- * coordonnées locales.
+ * Une couche : son ancre dans la couche du dessus (en unités de celle-ci), ses traits et ses images,
+ * en coordonnées locales. Tout se dessine dans l'ordre où ça a été posé ([drawOrder]) : un coup de
+ * gomme creuse ce qui a été posé avant lui, jamais ce qui vient après.
  */
 class Layer(val depth: Long, var ax: Double, var ay: Double) {
     val strokes = ArrayList<Stroke>()
-    /** Les images, dessinées sous les traits de la couche. */
     val images = ArrayList<ImageItem>()
 
     val isEmpty: Boolean get() = strokes.isEmpty() && images.isEmpty()
@@ -656,6 +668,8 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
 
     private var cached: DoubleArray? = null
     private var boundsValid = false
+    private var order: List<LayerItem>? = null
+    private var eraser = false
 
     fun add(s: Stroke) {
         strokes.add(s)
@@ -687,28 +701,50 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
 
     fun invalidate() {
         boundsValid = false
+        order = null
     }
 
-    /** Rectangle englobant (minX, minY, maxX, maxY) du contenu, épaisseur comprise, ou null si vide. */
+    /** Traits, coups de gomme et images, dans l'ordre où ils ont été posés : l'ordre de dessin. */
+    fun drawOrder(): List<LayerItem> =
+        order ?: ArrayList<LayerItem>(strokes.size + images.size).apply {
+            addAll(strokes)
+            addAll(images)
+            sortBy { it.id }
+        }.also { order = it }
+
+    /** Contient au moins un coup de gomme : il faut alors la composer à part pour qu'il ne creuse qu'elle. */
+    val hasEraser: Boolean get() { bounds(); return eraser }
+
+    /**
+     * Rectangle englobant (minX, minY, maxX, maxY) de ce qu'on voit, épaisseur comprise, ou null si
+     * rien. Les coups de gomme n'y comptent pas : ils ne font que creuser.
+     */
     fun bounds(): DoubleArray? {
         if (!boundsValid) {
-            cached = if (isEmpty) null else {
-                var x0 = Double.POSITIVE_INFINITY; var y0 = Double.POSITIVE_INFINITY
-                var x1 = Double.NEGATIVE_INFINITY; var y1 = Double.NEGATIVE_INFINITY
-                for (s in strokes) {
-                    val h = s.width / 2
-                    x0 = min(x0, s.x + s.minX - h); y0 = min(y0, s.y + s.minY - h)
-                    x1 = max(x1, s.x + s.maxX + h); y1 = max(y1, s.y + s.maxY + h)
-                }
-                for (i in images) {
-                    x0 = min(x0, i.x - i.w / 2); y0 = min(y0, i.y - i.h / 2)
-                    x1 = max(x1, i.x + i.w / 2); y1 = max(y1, i.y + i.h / 2)
-                }
-                doubleArrayOf(x0, y0, x1, y1)
+            var x0 = Double.POSITIVE_INFINITY; var y0 = Double.POSITIVE_INFINITY
+            var x1 = Double.NEGATIVE_INFINITY; var y1 = Double.NEGATIVE_INFINITY
+            eraser = false
+            for (s in strokes) {
+                if (s.isEraser) { eraser = true; continue }
+                val h = s.width / 2
+                x0 = min(x0, s.x + s.minX - h); y0 = min(y0, s.y + s.minY - h)
+                x1 = max(x1, s.x + s.maxX + h); y1 = max(y1, s.y + s.maxY + h)
             }
+            for (i in images) {
+                x0 = min(x0, i.x - i.w / 2); y0 = min(y0, i.y - i.h / 2)
+                x1 = max(x1, i.x + i.w / 2); y1 = max(y1, i.y + i.h / 2)
+            }
+            cached = if (x1 < x0) null else doubleArrayOf(x0, y0, x1, y1)
             boundsValid = true
         }
         return cached
+    }
+
+    /** Le trait [s] passe-t-il sur ce qu'on voit de la couche ? (Un coup de gomme dans le vide ne sert à rien.) */
+    fun touches(s: Stroke): Boolean {
+        val b = bounds() ?: return false
+        val h = s.width / 2
+        return s.x + s.maxX + h >= b[0] && s.x + s.minX - h <= b[2] && s.y + s.maxY + h >= b[1] && s.y + s.minY - h <= b[3]
     }
 
     /** Plus grande dimension du contenu, en unités locales (0 si vide). */
@@ -721,9 +757,37 @@ class Layer(val depth: Long, var ax: Double, var ay: Double) {
 /**
  * Un trait de dessin libre : sa position ([x], [y], en `Double`) et sa forme [pts] (paires x, y)
  * relative à cette position — le premier point vaut (0, 0). [width] est en unités de la couche.
+ * Un trait de couleur transparente ([isEraser]) est un coup de gomme : il dessine de la
+ * transparence, qui creuse ce que sa couche a reçu avant lui et laisse voir la couche du dessous.
+ *
+ * [kind] dit avec quoi il a été tracé : le crayon ([PEN]) garde la même épaisseur partout ; le
+ * pinceau ([BRUSH]) s'affine aux deux bouts ; le feutre ([MARKER]) se multiplie avec ce qu'il
+ * recouvre, comme une encre transparente (deux passages foncent).
  */
-class Stroke(val id: Long, val x: Double, val y: Double, val pts: DoubleArray, val color: Int, val width: Double) {
+class Stroke(
+    override val id: Long, val x: Double, val y: Double, val pts: DoubleArray, val color: Int, val width: Double,
+    val kind: Int = PEN,
+) : LayerItem {
+    companion object {
+        const val PEN = 0
+        const val BRUSH = 1
+        const val MARKER = 2
+
+        /** Le pinceau s'affine sur une longueur de [BRUSH_TAPER] fois son épaisseur, à chaque bout. */
+        const val BRUSH_TAPER = 3.0
+        /** Épaisseur du pinceau tout au bout, en part de son épaisseur. */
+        const val BRUSH_TIP = 0.15
+
+        /** Part de l'épaisseur du pinceau à [d] (unités de la couche) du bout le plus proche. */
+        fun brushFactor(d: Double, width: Double): Double {
+            val t = d / (BRUSH_TAPER * width)
+            return if (t >= 1.0) 1.0 else max(BRUSH_TIP, sqrt(max(t, 0.0)))
+        }
+    }
+
     val pointCount: Int get() = pts.size / 2
+
+    val isEraser: Boolean get() = color ushr 24 == 0
 
     val minX: Double
     val minY: Double
@@ -743,48 +807,27 @@ class Stroke(val id: Long, val x: Double, val y: Double, val pts: DoubleArray, v
         minX = a; minY = b; maxX = c; maxY = d
     }
 
-    /** Le disque ([px], [py], [r]) touche-t-il le trait (épaisseur comprise) ? */
-    fun hits(px: Double, py: Double, r: Double): Boolean {
-        val lx = px - x
-        val ly = py - y
-        val reach = r + width / 2
-        if (lx < minX - reach || lx > maxX + reach || ly < minY - reach || ly > maxY + reach) return false
-        if (pts.size == 2) return hypot2(lx - pts[0], ly - pts[1]) <= reach * reach
-        var i = 0
-        while (i + 3 < pts.size) {
-            if (segDist2(lx, ly, pts[i], pts[i + 1], pts[i + 2], pts[i + 3]) <= reach * reach) return true
-            i += 2
-        }
-        return false
-    }
-
-    private fun hypot2(dx: Double, dy: Double) = dx * dx + dy * dy
-
-    private fun segDist2(px: Double, py: Double, ax: Double, ay: Double, bx: Double, by: Double): Double {
-        val vx = bx - ax
-        val vy = by - ay
-        val len2 = vx * vx + vy * vy
-        val t = if (len2 == 0.0) 0.0 else (((px - ax) * vx + (py - ay) * vy) / len2).coerceIn(0.0, 1.0)
-        return hypot2(px - ax - t * vx, py - ay - t * vy)
-    }
-
-    /** Longueur du trait (unités locales), pour les tests et les statistiques. */
-    fun length(): Double {
+    private val totalLength: Double by lazy {
         var sum = 0.0
         var i = 0
         while (i + 3 < pts.size) {
-            sum += sqrt(hypot2(pts[i + 2] - pts[i], pts[i + 3] - pts[i + 1]))
+            val dx = pts[i + 2] - pts[i]
+            val dy = pts[i + 3] - pts[i + 1]
+            sum += sqrt(dx * dx + dy * dy)
             i += 2
         }
-        return sum
+        sum
     }
+
+    /** Longueur du trait (unités locales) : l'affinement du pinceau se règle dessus. */
+    fun length(): Double = totalLength
 }
 
 /**
  * Une image posée sur une couche : son centre ([x], [y]) et sa taille ([w], [h]) en unités de la
  * couche. Les pixels vivent dans un fichier du projet ([key]) de [pxW]×[pxH] pixels.
  */
-class ImageItem(val id: Long, val key: String, val pxW: Int, val pxH: Int, val x: Double, val y: Double, val w: Double, val h: Double) {
+class ImageItem(override val id: Long, val key: String, val pxW: Int, val pxH: Int, val x: Double, val y: Double, val w: Double, val h: Double) : LayerItem {
     fun contains(px: Double, py: Double) = px >= x - w / 2 && px <= x + w / 2 && py >= y - h / 2 && py <= y + h / 2
     fun moved(dx: Double, dy: Double) = ImageItem(id, key, pxW, pxH, x + dx, y + dy, w, h)
 }

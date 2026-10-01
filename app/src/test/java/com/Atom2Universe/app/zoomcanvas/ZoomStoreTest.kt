@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.zoomcanvas
 
+import com.Atom2Universe.app.zoomcanvas.core.Stroke
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import com.Atom2Universe.app.zoomcanvas.core.ZoomSnapshot
 import com.Atom2Universe.app.zoomcanvas.core.ZoomStore
@@ -12,7 +13,9 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.DataOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.RandomAccessFile
 
 class ZoomStoreTest {
@@ -31,8 +34,8 @@ class ZoomStoreTest {
         dir.deleteRecursively()
     }
 
-    private fun ZoomScene.scribble(n: Int, dx: Double = 0.0) {
-        beginStroke(-50.0 + dx, 10.0, 0xFF112233.toInt(), 5.0)
+    private fun ZoomScene.scribble(n: Int, dx: Double = 0.0, kind: Int = Stroke.PEN) {
+        beginStroke(-50.0 + dx, 10.0, 0xFF112233.toInt(), 5.0, kind)
         for (i in 1..n) extendStroke(-50.0 + dx + i * 7.0, 10.0 + (i % 3) * 9.0)
         endStroke()
     }
@@ -43,9 +46,9 @@ class ZoomStoreTest {
         val scene = p.scene
         scene.scribble(12)
         repeat(40) { scene.zoomAt(1.9, 21.0, -13.0) }
-        scene.scribble(5, 30.0)
+        scene.scribble(5, 30.0, Stroke.BRUSH)
         repeat(100) { scene.zoomAt(2.3, -4.0, 9.0) }
-        scene.scribble(8)
+        scene.scribble(8, kind = Stroke.MARKER)
         scene.zoomAt(0.3, 0.0, 0.0)
         store.save(ZoomSnapshot.of(p.meta, scene))
 
@@ -69,6 +72,8 @@ class ZoomStoreTest {
                 assertEquals(a.strokes[i].y, b.strokes[i].y, 0.0)
                 assertArrayEquals(a.strokes[i].pts, b.strokes[i].pts, 0.0)
                 assertEquals(a.strokes[i].color, b.strokes[i].color)
+                assertEquals(a.strokes[i].width, b.strokes[i].width, 0.0)
+                assertEquals(a.strokes[i].kind, b.strokes[i].kind)
             }
         }
         // Les couches vides intermédiaires gardent leur ancre : même rendu à l'écran.
@@ -159,5 +164,26 @@ class ZoomStoreTest {
         assertEquals(1, store.load(copy)!!.scene.layer(0)!!.strokes.size)
         store.delete(p.meta.id)
         assertEquals(listOf("C"), store.list().map { it.name })
+    }
+
+    @Test
+    fun aPixelCanvasFromTheAbandonedTrialIsListedButDoesNotOpen() {
+        // Format 3 : les couches en pixels (essai du 30/09), sans conversion.
+        val folder = File(dir, "pixels").also { it.mkdirs() }
+        DataOutputStream(FileOutputStream(File(folder, "scene.bin"))).use { out ->
+            out.writeInt(0x41325A43)
+            out.writeInt(3)
+            out.writeUTF("Pixels")
+            out.writeLong(1L)
+            out.writeLong(2L)
+            out.writeDouble(25.0)
+            out.writeInt(1)
+            out.writeInt(9)
+            out.writeLong(0L)
+        }
+        assertEquals(listOf("Pixels"), store.list().map { it.name })
+        assertNull(store.load("pixels"))
+        store.delete("pixels")
+        assertTrue(store.list().isEmpty())
     }
 }

@@ -10,6 +10,7 @@ import android.util.LruCache
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -29,7 +30,6 @@ import com.Atom2Universe.app.pixelart.io.NamedPalette
 import com.Atom2Universe.app.pixelart.io.PaletteFormats
 import com.Atom2Universe.app.pixelart.io.PaletteStore
 import com.Atom2Universe.app.pixelart.ui.ColorDock
-import com.Atom2Universe.app.pixelart.ui.LabeledSlider
 import com.Atom2Universe.app.pixelart.ui.PaletteActions
 import com.Atom2Universe.app.pixelart.ui.PaletteAdapter
 import com.Atom2Universe.app.pixelart.ui.SheetItem
@@ -53,8 +53,11 @@ import java.util.UUID
 
 /**
  * L'éditeur du canvas infini, sur le modèle du pixel art : barre d'outils et barre de couleurs en
- * bas (palettes partagées avec le pixel art), réglages de l'outil dans une barre flottante en haut,
- * pastille de niveau en bas à gauche.
+ * bas (palettes partagées avec le pixel art), réglages de l'outil choisi juste à côté de son bouton,
+ * pastille de niveau en bas à gauche, cadenas du zoom en haut.
+ *
+ * Crayon, pinceau, feutre et gomme ont chacun leur épaisseur (et leur opacité, sauf la gomme),
+ * gardées d'une séance à l'autre.
  */
 class ZoomCanvasEditorActivity : AppCompatActivity() {
 
@@ -83,7 +86,9 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     private lateinit var levelText: TextView
     private lateinit var levelBar: ProgressBar
     private lateinit var message: TextView
-    private lateinit var optionsScroll: View
+    private lateinit var toolsScroll: HorizontalScrollView
+    private lateinit var lockBtn: ImageButton
+    /** Les réglages de l'outil choisi, placés dans la barre d'outils juste après son bouton. */
     private lateinit var options: LinearLayout
     private lateinit var swatchPrimary: SwatchView
     private lateinit var swatchSecondary: SwatchView
@@ -93,8 +98,9 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     private var primary = 0xFF1E1E24.toInt()
     private var secondary = 0xFFFFFFFF.toInt()
-    /** Opacité du crayon, en pourcentage. */
-    private var penOpacity = 100
+    /** Épaisseur (pixels d'écran) et opacité (%) de chaque outil de dessin. */
+    private val sizes = HashMap<ZoomCanvasView.Tool, Int>()
+    private val opacities = HashMap<ZoomCanvasView.Tool, Int>()
     private var linkedIndex = -1
     private var lastPaletteId = ""
     private var shownLevel = Long.MIN_VALUE
@@ -128,8 +134,13 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         levelText = findViewById(R.id.zc_level_text)
         levelBar = findViewById(R.id.zc_level_bar)
         message = findViewById(R.id.zc_message)
-        optionsScroll = findViewById(R.id.zc_options_scroll)
-        options = findViewById(R.id.zc_options)
+        toolsScroll = findViewById(R.id.zc_tools_scroll)
+        lockBtn = findViewById(R.id.zc_btn_lock)
+        options = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(2), 0, dp(6), 0)
+        }
         swatchPrimary = findViewById(R.id.zc_swatch_primary)
         swatchSecondary = findViewById(R.id.zc_swatch_secondary)
 
@@ -139,6 +150,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         findViewById<View>(R.id.zc_level_pill).setOnClickListener { showLayers() }
         undoBtn.setOnClickListener { if (vm.project?.scene?.undo() == true) drawingChanged() }
         redoBtn.setOnClickListener { if (vm.project?.scene?.redo() == true) drawingChanged() }
+        lockBtn.setOnClickListener { setZoomLocked(!canvasView.zoomLocked) }
 
         loadPrefs()
         canvasView.listener = canvasListener
@@ -189,30 +201,55 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
+    /** Les réglages d'un outil de dessin : épaisseur par défaut, bornes, opacité réglable ou non. */
+    private class DrawDef(val size: Int, val min: Int, val max: Int, val hasOpacity: Boolean = true)
+
+    private val drawDefs = mapOf(
+        ZoomCanvasView.Tool.PEN to DrawDef(6, 1, 120),
+        ZoomCanvasView.Tool.BRUSH to DrawDef(16, 2, 200),
+        ZoomCanvasView.Tool.MARKER to DrawDef(12, 2, 160),
+        ZoomCanvasView.Tool.ERASER to DrawDef(24, 2, 240, hasOpacity = false),
+    )
+
     private fun loadPrefs() {
         primary = prefs.getInt("primary", primary)
         secondary = prefs.getInt("secondary", secondary)
-        penOpacity = prefs.getInt("pen_opacity", 100)
-        canvasView.penSize = prefs.getInt("pen_size", 6).toFloat()
-        canvasView.eraserSize = prefs.getInt("eraser_size", 24).toFloat()
-        applyPenColor()
+        for ((t, d) in drawDefs) {
+            sizes[t] = prefs.getInt("size_${t.name}", d.size).coerceIn(d.min, d.max)
+            opacities[t] = prefs.getInt("opacity_${t.name}", 100).coerceIn(1, 100)
+        }
+        setZoomLocked(prefs.getBoolean("zoom_locked", false))
     }
 
     private fun savePrefs() {
-        prefs.edit()
+        val e = prefs.edit()
             .putInt("primary", primary)
             .putInt("secondary", secondary)
-            .putInt("pen_opacity", penOpacity)
-            .putInt("pen_size", canvasView.penSize.toInt())
-            .putInt("eraser_size", canvasView.eraserSize.toInt())
             .putString("tool", canvasView.tool.name)
-            .apply()
+            .putBoolean("zoom_locked", canvasView.zoomLocked)
+        for (t in drawDefs.keys) {
+            e.putInt("size_${t.name}", sizes[t]!!)
+            e.putInt("opacity_${t.name}", opacities[t]!!)
+        }
+        e.apply()
     }
 
-    /** Le crayon trace la couleur principale, avec l'opacité réglée. */
+    /** L'outil de dessin choisi trace la couleur principale, avec son épaisseur et son opacité. */
     private fun applyPenColor() {
-        val a = ((primary ushr 24) * penOpacity / 100).coerceIn(0, 255)
+        val t = canvasView.tool
+        sizes[t]?.let { canvasView.strokeSize = it.toFloat() }
+        val a = ((primary ushr 24) * (opacities[t] ?: 100) / 100).coerceIn(0, 255)
         canvasView.color = (a shl 24) or (primary and 0xFFFFFF)
+    }
+
+    /** Le cadenas fermé : le zoom reste où il est, deux doigts ne font plus que déplacer la vue. */
+    private fun setZoomLocked(locked: Boolean) {
+        canvasView.zoomLocked = locked
+        lockBtn.isSelected = locked
+        lockBtn.setImageResource(if (locked) R.drawable.ic_px_lock else R.drawable.ic_px_unlock)
+        val desc = getString(if (locked) R.string.zc_zoom_unlock else R.string.zc_zoom_lock)
+        lockBtn.contentDescription = desc
+        TooltipCompat.setTooltipText(lockBtn, desc)
     }
 
     // ---- Retours de la toile ---------------------------------------------------------------
@@ -268,6 +305,8 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     private val toolDefs = listOf(
         ToolDef(ZoomCanvasView.Tool.PEN, R.drawable.ic_px_pencil, R.string.zc_tool_pen),
+        ToolDef(ZoomCanvasView.Tool.BRUSH, R.drawable.ic_px_brush, R.string.zc_tool_brush),
+        ToolDef(ZoomCanvasView.Tool.MARKER, R.drawable.ic_zc_marker, R.string.zc_tool_marker),
         ToolDef(ZoomCanvasView.Tool.ERASER, R.drawable.ic_px_eraser, R.string.zc_tool_eraser),
         ToolDef(ZoomCanvasView.Tool.SELECT, R.drawable.ic_px_move, R.string.zc_tool_select),
         ToolDef(ZoomCanvasView.Tool.HAND, R.drawable.ic_px_hand, R.string.zc_tool_hand),
@@ -286,14 +325,6 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             toolButtons[d.tool] = b
             bar.addView(b)
         }
-        bar.addView(divider())
-        val importBtn = ImageButton(this, null, 0, R.style.PxToolButton).apply {
-            setImageResource(R.drawable.ic_px_image)
-            contentDescription = getString(R.string.zc_import_image)
-            setOnClickListener { importImage.launch("image/*") }
-        }
-        TooltipCompat.setTooltipText(importBtn, getString(R.string.zc_import_image))
-        bar.addView(importBtn)
         val saved = prefs.getString("tool", null)?.let { n -> ZoomCanvasView.Tool.values().firstOrNull { it.name == n } }
         selectTool(if (saved == ZoomCanvasView.Tool.MOVE_LAYER || saved == null) ZoomCanvasView.Tool.PEN else saved, quiet = true)
     }
@@ -301,6 +332,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     private fun selectTool(t: ZoomCanvasView.Tool, quiet: Boolean = false) {
         canvasView.tool = t
         for ((k, b) in toolButtons) b.isSelected = k == t
+        applyPenColor()
         rebuildOptions()
         if (!quiet) {
             when (t) {
@@ -311,24 +343,25 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         }
     }
 
-    /** La barre flottante des réglages : seulement ce qui concerne l'outil courant. */
+    /**
+     * Les réglages de l'outil courant, glissés dans la barre d'outils juste après son bouton (la
+     * barre défile pour les montrer).
+     */
     private fun rebuildOptions() {
         options.removeAllViews()
-        when (canvasView.tool) {
-            ZoomCanvasView.Tool.PEN -> {
-                options.addView(LabeledSlider(this, getString(R.string.px_opt_size), 1, 120, canvasView.penSize.toInt(), { getString(R.string.px_opt_size_value, it) }) {
-                    canvasView.penSize = it.toFloat()
-                })
-                options.addView(LabeledSlider(this, getString(R.string.px_opt_opacity), 1, 100, penOpacity, { getString(R.string.px_opt_percent, it) }) {
-                    penOpacity = it
-                    applyPenColor()
-                })
-            }
-            ZoomCanvasView.Tool.ERASER -> {
-                options.addView(LabeledSlider(this, getString(R.string.px_opt_size), 2, 240, canvasView.eraserSize.toInt(), { getString(R.string.px_opt_size_value, it) }) {
-                    canvasView.eraserSize = it.toFloat()
-                })
-            }
+        val t = canvasView.tool
+        val draw = drawDefs[t]
+        if (draw != null) {
+            options.addView(StepSlider(this, getString(R.string.px_opt_size), draw.min, draw.max, sizes[t]!!, { getString(R.string.px_opt_size_value, it) }) {
+                sizes[t] = it
+                applyPenColor()
+            })
+            if (draw.hasOpacity) options.addView(StepSlider(this, getString(R.string.px_opt_opacity), 1, 100, opacities[t]!!, { getString(R.string.px_opt_percent, it) }) {
+                opacities[t] = it
+                applyPenColor()
+            })
+        }
+        when (t) {
             ZoomCanvasView.Tool.SELECT -> {
                 options.addView(chip(getString(R.string.zc_import_image), R.drawable.ic_px_image) { importImage.launch("image/*") })
                 val sel = canvasView.selectedImage
@@ -342,9 +375,26 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
                     })
                 }
             }
-            ZoomCanvasView.Tool.HAND, ZoomCanvasView.Tool.MOVE_LAYER -> Unit
+            else -> Unit
         }
-        optionsScroll.visibility = if (options.childCount > 0) View.VISIBLE else View.GONE
+        (options.parent as? ViewGroup)?.removeView(options)
+        val button = toolButtons[t] ?: return
+        if (options.childCount == 0) return
+        val bar = button.parent as ViewGroup
+        bar.addView(options, bar.indexOfChild(button) + 1, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        options.post {
+            // Montrer le bouton et ses réglages ensemble, sans faire défiler plus que nécessaire.
+            val left = button.left
+            val right = options.right
+            val x = toolsScroll.scrollX
+            val w = toolsScroll.width
+            val to = when {
+                right - x > w -> minOf(left, right - w)
+                left < x -> left
+                else -> x
+            }
+            if (to != x) toolsScroll.smoothScrollTo(to, 0)
+        }
     }
 
     // ---- Images ------------------------------------------------------------------------------
@@ -540,7 +590,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             },
             // Palette tirée du dessin : les couleurs des traits du projet.
             onFromImage = {
-                val colors = vm.project?.scene?.allLayers()?.flatMap { l -> l.strokes.map { it.color or (0xFF shl 24) } }?.distinct()?.take(256).orEmpty()
+                val colors = vm.project?.scene?.allLayers()?.flatMap { l -> l.strokes.filter { !it.isEraser }.map { it.color or (0xFF shl 24) } }?.distinct()?.take(256).orEmpty()
                 if (colors.isNotEmpty()) promptText(R.string.px_palette_from_image, getString(R.string.px_palette_mine), R.string.px_create) { name ->
                     if (name.isNotEmpty()) { palettes.currentId = palettes.create(name, colors).id; colorsChanged() }
                 }
@@ -579,7 +629,6 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     private fun showMenu() {
         actionSheet(vm.project?.meta?.name, listOf(
-            SheetItem(R.drawable.ic_px_image, getString(R.string.zc_import_image)) { importImage.launch("image/*") },
             SheetItem(R.drawable.ic_px_layers, getString(R.string.zc_layers_title)) { showLayers() },
             SheetItem(R.drawable.ic_px_rename, getString(R.string.px_rename)) { askRename() },
         )).show()
@@ -606,7 +655,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
             }
             for (d in depths) {
                 val l = s.layer(d) ?: continue
-                val count = l.strokes.size + l.images.size
+                val count = l.strokes.count { !it.isEraser } + l.images.size
                 val row = LinearLayout(this).apply {
                     orientation = LinearLayout.HORIZONTAL
                     gravity = Gravity.CENTER_VERTICAL

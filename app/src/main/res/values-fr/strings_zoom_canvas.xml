@@ -5,8 +5,6 @@
     <string name="zc_untitled_n">Canvas %1$d</string>
     <string name="zc_new_title">Nouveau canvas infini</string>
     <string name="zc_name">Nom</string>
-    <string name="zc_ratio">Rapport d\'échelle entre deux couches</string>
-    <string name="zc_ratio_hint">Chaque couche est autant de fois plus petite que celle du dessus. Impossible de le changer ensuite.</string>
     <string name="zc_ratio_value">×%1$d</string>
     <string name="zc_project_info">%1$s · %2$s · %3$s</string>
     <string name="zc_create">Créer</string>
@@ -15,6 +13,12 @@
     <string name="zc_layers_title">Couches dessinées</string>
     <string name="zc_layers_none">Rien n\'est encore dessiné.</string>
     <string name="zc_layers_hint">Zoomer suffit à passer d\'une couche à l\'autre : chacune est %1$d fois plus petite que celle du dessus.</string>
+    <string name="zc_tool_brush">Pinceau</string>
+    <string name="zc_tool_marker">Feutre</string>
+    <string name="zc_less">Moins</string>
+    <string name="zc_more">Plus</string>
+    <string name="zc_zoom_lock">Bloquer le zoom</string>
+    <string name="zc_zoom_unlock">Débloquer le zoom</string>
     <string name="zc_tool_pen">Crayon</string>
     <string name="zc_tool_eraser">Gomme</string>
     <string name="zc_tool_hand">Déplacer la vue</string>

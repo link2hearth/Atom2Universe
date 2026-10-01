@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -26,10 +25,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.pixelart.ui.SheetItem
 import com.Atom2Universe.app.pixelart.ui.actionSheet
 import com.Atom2Universe.app.pixelart.ui.bottomSheet
-import com.Atom2Universe.app.pixelart.ui.chip
 import com.Atom2Universe.app.pixelart.ui.confirm
-import com.Atom2Universe.app.pixelart.ui.dp
-import com.Atom2Universe.app.pixelart.ui.label
 import com.Atom2Universe.app.pixelart.ui.primaryButton
 import com.Atom2Universe.app.pixelart.ui.promptText
 import com.Atom2Universe.app.util.enableImmersiveMode
@@ -95,9 +91,8 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
         startActivity(ZoomCanvasEditorActivity.intent(this, id))
     }
 
-    /** Nom et rapport d'échelle (×10 par défaut), fixé à la création. */
+    /** Un nom suffit : tous les projets ont le même rapport d'échelle ([ZoomScene.DEFAULT_RATIO]). */
     private fun newProject() {
-        var ratio = ZoomScene.DEFAULT_RATIO
         bottomSheet(getString(R.string.zc_new_title)) { root, dialog ->
             val name = EditText(this).apply {
                 setText(getString(R.string.zc_untitled_n, adapter.itemCount + 1))
@@ -108,25 +103,11 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
                 hint = getString(R.string.zc_name)
             }
             root.addView(name)
-            root.addView(label(getString(R.string.zc_ratio), 13f, true).apply { setPadding(dp(4), dp(16), 0, dp(8)) })
-            val row = LinearLayout(this)
-            val chips = ArrayList<Pair<Double, TextView>>()
-            for (r in ZoomScene.RATIOS) {
-                val c = chip(getString(R.string.zc_ratio_value, r.toInt())) {
-                    ratio = r
-                    chips.forEach { (v, view) -> view.isSelected = v == r }
-                }
-                c.isSelected = r == ratio
-                chips.add(r to c)
-                row.addView(c)
-            }
-            root.addView(row)
-            root.addView(label(getString(R.string.zc_ratio_hint), 12f).apply { setPadding(dp(4), dp(8), 0, dp(16)) })
             root.addView(primaryButton(getString(R.string.zc_create)) {
                 dialog.dismiss()
                 val n = name.text.toString().trim().ifEmpty { getString(R.string.zc_untitled_n, adapter.itemCount + 1) }
                 lifecycleScope.launch {
-                    val p = withContext(Dispatchers.IO) { store.create(n, ratio) }
+                    val p = withContext(Dispatchers.IO) { store.create(n, ZoomScene.DEFAULT_RATIO) }
                     openProject(p.meta.id)
                 }
             })

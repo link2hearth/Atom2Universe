@@ -5,8 +5,6 @@
     <string name="zc_untitled_n">Canvas %1$d</string>
     <string name="zc_new_title">New infinite canvas</string>
     <string name="zc_name">Name</string>
-    <string name="zc_ratio">Scale between two layers</string>
-    <string name="zc_ratio_hint">Each layer is this many times smaller than the one above. It can\'t be changed afterwards.</string>
     <string name="zc_ratio_value">×%1$d</string>
     <string name="zc_project_info">%1$s · %2$s · %3$s</string>
     <string name="zc_create">Create</string>
@@ -16,6 +14,12 @@
     <string name="zc_layers_none">Nothing drawn yet.</string>
     <string name="zc_layers_hint">Zooming is enough to go from one layer to the next: each one is %1$d times smaller than the one above.</string>
     <string name="zc_tool_pen">Pencil</string>
+    <string name="zc_tool_brush">Brush</string>
+    <string name="zc_tool_marker">Marker</string>
+    <string name="zc_less">Less</string>
+    <string name="zc_more">More</string>
+    <string name="zc_zoom_lock">Lock the zoom</string>
+    <string name="zc_zoom_unlock">Unlock the zoom</string>
     <string name="zc_tool_eraser">Eraser</string>
     <string name="zc_tool_hand">Move the view</string>
     <string name="zc_tool_move_layer">Realign the layer below</string>
