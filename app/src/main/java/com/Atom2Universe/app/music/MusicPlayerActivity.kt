@@ -627,7 +627,20 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
     }
 
     private fun setupToolbar() {
-        toolbar.setNavigationOnClickListener { handleBackNavigation() }
+        // Clic : remonte d'un niveau. Appui long (1,5 s) : quitte le module même au fond d'un dossier.
+        var holdToExit: com.Atom2Universe.app.util.HoldToExit? = null
+        toolbar.setNavigationOnClickListener {
+            if (holdToExit?.fired != true) handleBackNavigation()
+        }
+        toolbar.post {
+            // Le bouton de navigation n'a pas d'identifiant : on le retrouve par sa description
+            val backButton = (0 until toolbar.childCount)
+                .map { toolbar.getChildAt(it) }
+                .firstOrNull { it is android.widget.ImageButton && it.contentDescription == toolbar.navigationContentDescription }
+            if (backButton != null) {
+                holdToExit = com.Atom2Universe.app.util.HoldToExit.attach(backButton) { navigateBackToHub() }
+            }
+        }
         toolbar.setOnMenuItemClickListener { menuItem ->
             handleMenuItemClick(menuItem)
         }

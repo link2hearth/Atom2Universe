@@ -59,7 +59,6 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
     private lateinit var btnTwoHandsPractice: View
     private lateinit var channelsList: RecyclerView
     private lateinit var channelsEmpty: TextView
-    private lateinit var channelsHeader: TextView
     private lateinit var seekBar: SeekBar
     private lateinit var timeCurrent: TextView
     private lateinit var timeTotal: TextView
@@ -185,7 +184,6 @@ class NowPlayingFragment : Fragment(), MidiEventDispatcher.MidiAnalysisListener 
         btnTwoHandsPractice = view.findViewById(R.id.btn_two_hands_practice)
         channelsList = view.findViewById(R.id.channels_list)
         channelsEmpty = view.findViewById(R.id.channels_empty)
-        channelsHeader = view.findViewById(R.id.channels_header)
         seekBar = view.findViewById(R.id.seek_bar)
         timeCurrent = view.findViewById(R.id.time_current)
         timeTotal = view.findViewById(R.id.time_total)

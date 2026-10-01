@@ -8,119 +8,114 @@
     android:background="@drawable/audio_screen_background"
     tools:context=".midi.ui.MidiPlayerActivity">
 
-    <!-- Toolbar avec tabs intégrés -->
+    <!-- Bannière : flèche retour + onglets (plus de titre) -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/audio_panel_background"
         android:elevation="2dp"
-        app:title="@string/audio_hub_midi_title"
-        app:titleTextColor="@color/audio_text_primary"
+        app:contentInsetStart="4dp"
         app:contentInsetEnd="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginHorizontal="12dp"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp">
 
-    <HorizontalScrollView
-        android:id="@+id/audio_midi_tabs"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:scrollbars="none"
-        android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <!-- Container pour les onglets (entre titre et menu) -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Retour : clic = remonter d'un niveau (ou quitter à la racine), appui long 1,5 s = quitter -->
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start|center_vertical"
+            android:src="@drawable/ic_arrow_back"
+            android:scaleType="centerInside"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/audio_text_primary"
+            android:contentDescription="@string/canvas_back" />
+
+        <HorizontalScrollView
+            android:id="@+id/audio_midi_tabs"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_gravity="start|center_vertical"
+            android:scrollbars="none">
 
-            <!-- Tab Bibliothèque -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
             <TextView
                 android:id="@+id/tab_library"
-                android:layout_weight="1"
-                android:minHeight="48dp"
+                android:minHeight="44dp"
                 android:gravity="center"
                 android:focusable="true"
+                android:clickable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/midi_nav_library"
                 android:textColor="?attr/a2uMidiAccent"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:maxLines="1"
+                android:paddingHorizontal="12dp"
                 android:background="@drawable/audio_tab_background" />
 
-            <!-- Tab Playlists -->
             <TextView
                 android:id="@+id/tab_playlists"
-                android:layout_weight="1"
-                android:minHeight="48dp"
+                android:minHeight="44dp"
                 android:gravity="center"
                 android:focusable="true"
+                android:clickable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/midi_nav_playlists"
                 android:textColor="@color/audio_text_secondary"
                 android:textSize="13sp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:maxLines="1"
+                android:paddingHorizontal="12dp"
                 android:background="@drawable/audio_tab_background" />
 
-            <!-- Tab Lecture -->
             <TextView
                 android:id="@+id/tab_now_playing"
-                android:layout_weight="1"
-                android:minHeight="48dp"
+                android:minHeight="44dp"
                 android:gravity="center"
                 android:focusable="true"
+                android:clickable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/midi_nav_now_playing"
                 android:textColor="@color/audio_text_secondary"
                 android:textSize="13sp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:maxLines="1"
+                android:paddingHorizontal="12dp"
                 android:background="@drawable/audio_tab_background" />
 
-            <!-- Tab Practice -->
             <TextView
                 android:id="@+id/tab_practice"
-                android:layout_weight="1"
-                android:minHeight="48dp"
+                android:minHeight="44dp"
                 android:gravity="center"
                 android:focusable="true"
+                android:clickable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/midi_nav_practice"
                 android:textColor="@color/audio_text_secondary"
                 android:textSize="13sp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:maxLines="1"
+                android:paddingHorizontal="12dp"
                 android:background="@drawable/audio_tab_background" />
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </HorizontalScrollView>
+        </HorizontalScrollView>
 
+    </androidx.appcompat.widget.Toolbar>
 
     <!-- ViewPager2 pour les fragments -->
     <androidx.viewpager2.widget.ViewPager2
@@ -128,7 +123,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/audio_screen_background"
-        app:layout_constraintTop_toBottomOf="@id/audio_midi_tabs"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/playback_bar_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

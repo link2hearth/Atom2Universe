@@ -253,11 +253,12 @@ class MidiPlayerActivity : AudioThemedActivity() {
     }
 
     private fun setupViews() {
-        // Setup toolbar avec flèche retour
+        // Bannière : menu à droite, flèche retour et onglets à gauche (pas de titre)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        setupBackNavigation()
 
         viewPager = findViewById(R.id.view_pager)
         tabLibrary = findViewById(R.id.tab_library)
@@ -1087,8 +1088,54 @@ class MidiPlayerActivity : AudioThemedActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        navigateBackToHub()
+        if (!goUpOneLevel()) navigateBackToHub()
         return true
+    }
+
+    // === Retour : remonter l'arborescence, ne quitter le module qu'à la racine ===
+
+    /**
+     * Fragment de l'onglet affiché (le ViewPager2 les étiquette « f » + position).
+     */
+    private fun currentTabFragment(): androidx.fragment.app.Fragment? =
+        supportFragmentManager.findFragmentByTag("f${viewPager.currentItem}")
+
+    /**
+     * Remonte d'un niveau dans l'onglet affiché (artiste → albums → morceaux, playlist → liste).
+     * @return false si l'onglet est déjà à sa racine : rien n'a bougé.
+     */
+    private fun goUpOneLevel(): Boolean = when (val fragment = currentTabFragment()) {
+        is MidiLibraryFragment -> fragment.onBackPressed()
+        is PlaylistsFragment -> fragment.onBackPressed()
+        else -> false
+    }
+
+    /**
+     * - Clic sur la flèche ou bouton retour système : remonte d'un niveau ; à la racine ou sur
+     *   les autres onglets, quitte le module.
+     * - Appui long (1,5 s) sur la flèche : quitte le module même au fond d'un dossier.
+     *   L'icône grossit pendant l'appui pour montrer que quelque chose se prépare.
+     */
+    private fun setupBackNavigation() {
+        val backButton = findViewById<ImageButton>(R.id.btn_back)
+        val hold = com.Atom2Universe.app.util.HoldToExit.attach(backButton) {
+            navigateBackToHub()
+        }
+        backButton.setOnClickListener {
+            if (hold.fired) return@setOnClickListener
+            if (!goUpOneLevel()) navigateBackToHub()
+        }
+
+        // Bouton retour du système : même logique, sans quitter pendant qu'on descend dans un dossier
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Le mode pratique (superposé) se referme via la pile de fragments, comme avant
+                if (supportFragmentManager.findFragmentByTag("practice") == null && goUpOneLevel()) return
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
+                isEnabled = true
+            }
+        })
     }
 
     /**
