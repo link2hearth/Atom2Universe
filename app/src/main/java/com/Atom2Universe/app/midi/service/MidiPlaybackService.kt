@@ -44,6 +44,12 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
     // État actuel
     private var currentPlaybackState = PlaybackStateCompat.STATE_NONE
 
+    // Position où reprendre un morceau après un changement de SoundFont ou de moteur
+    // (le nouveau moteur repart sans fichier MIDI chargé). Liée au fichier pour ne pas
+    // s'appliquer à un autre morceau.
+    private var pendingResumeFilePath: String? = null
+    private var pendingResumePositionMs: Long = 0L
+
     // BroadcastReceiver pour les commandes du widget
     private val widgetCommandReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -580,8 +586,12 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             return
         }
 
-        // Si on était en pause, reprendre
-        if (currentPlaybackState == PlaybackStateCompat.STATE_PAUSED) {
+        // Si on était en pause, reprendre — seulement si le moteur est réellement en pause.
+        // Après un changement de SoundFont ou de moteur, le nouveau moteur n'a pas de MIDI
+        // chargé : « reprendre » ne ferait rien, il faut recharger le fichier (plus bas).
+        if (currentPlaybackState == PlaybackStateCompat.STATE_PAUSED &&
+            synthesizerManager.getState() == MidiEngine.State.PAUSED
+        ) {
             try {
                 synthesizerManager.resume()
                 // Configure audio routing to speaker if USB MIDI is connected
@@ -621,6 +631,15 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
                 synthesizerManager.autoConfigureAudioOutput()
 
                 playbackStartTimeMs = System.currentTimeMillis()
+
+                // Reprise à la position d'avant un changement de SoundFont ou de moteur
+                val resumeAt = if (pendingResumeFilePath == currentTrack.filePath) pendingResumePositionMs else 0L
+                pendingResumeFilePath = null
+                pendingResumePositionMs = 0L
+                if (resumeAt > 0L) {
+                    synthesizerManager.seekTo(resumeAt)
+                    playbackStartTimeMs = System.currentTimeMillis() - resumeAt
+                }
                 // Met à jour les métadonnées avec la durée réelle du fichier MIDI chargé
                 updateMediaMetadata(currentTrack, forceRefreshDuration = true)
                 updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
@@ -756,6 +775,12 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
         android.util.Log.i("MidiPlaybackService", "handleReloadSoundFont: path=$soundFontPath, isFluidSynth=$isFluidSynthMode, isHybrid=$isHybridMode")
 
         serviceScope.launch {
+            // Mémoriser l'état de lecture : le nouveau moteur repartira sans fichier MIDI chargé
+            val wasPlaying = currentPlaybackState == PlaybackStateCompat.STATE_PLAYING
+            val wasPaused = currentPlaybackState == PlaybackStateCompat.STATE_PAUSED
+            val currentTrack = queueManager.getCurrentTrack()
+            val resumePositionMs = if (wasPlaying || wasPaused) synthesizerManager.getCurrentPosition() else 0L
+
             // Stop current playback
             synthesizerManager.stop()
 
@@ -779,6 +804,21 @@ class MidiPlaybackService : MediaBrowserServiceCompat() {
             // Reload with new configuration
             val success = reloadSoundFont(soundFontPath)
             android.util.Log.i("MidiPlaybackService", "handleReloadSoundFont: reload success=$success")
+
+            // L'ancien état (lecture / pause) ne vaut plus pour le nouveau moteur : sans ce
+            // retour à STOPPED, le bouton Lecture envoyait « pause » puis « reprendre » à un
+            // moteur sans fichier chargé, et rien ne se passait.
+            if (wasPlaying || wasPaused) {
+                pendingResumeFilePath = currentTrack?.filePath
+                pendingResumePositionMs = resumePositionMs
+                updatePlaybackState(PlaybackStateCompat.STATE_STOPPED, positionMs = resumePositionMs)
+                if (wasPlaying) {
+                    // La lecture continue avec le nouveau son, au même endroit
+                    handlePlay()
+                } else {
+                    releaseWakeLock()
+                }
+            }
 
             // Broadcast that SF2 loading is complete
             val broadcastIntent = Intent(ACTION_SF2_LOAD_COMPLETE).apply {

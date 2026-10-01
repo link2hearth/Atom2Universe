@@ -78,6 +78,11 @@ class ArraySampleProvider(
  * Sample data provider using memory-mapped file access.
  * Minimal heap usage, OS handles caching.
  * Ideal for very large SF2 files (500MB+).
+ *
+ * Le fichier est fermé dès que la projection est faite : une projection mémoire reste
+ * valide après la fermeture du fichier et n'est libérée qu'une fois plus référencée.
+ * [close] ne coupe donc rien : un même Sf2File est partagé par Sf2FileCache entre le
+ * lecteur, le mode pratique et l'export, et la fermeture par l'un rendait muets les autres.
  */
 class MemoryMappedSampleProvider(
     filePath: String,
@@ -85,24 +90,14 @@ class MemoryMappedSampleProvider(
     private val smplByteSize: Long
 ) : SampleDataProvider {
 
-    private var raf: RandomAccessFile? = null
-    private var mappedBuffer: MappedByteBuffer? = null
-
-    init {
-        try {
-            val file = RandomAccessFile(File(filePath), "r")
-            raf = file
-            val mapped = file.channel.map(
-                FileChannel.MapMode.READ_ONLY,
-                smplByteOffset,
-                smplByteSize
-            )
-            mapped.order(ByteOrder.LITTLE_ENDIAN)
-            mappedBuffer = mapped
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to memory-map SF2 file: $filePath", e)
-            close()
+    private val mappedBuffer: MappedByteBuffer? = try {
+        RandomAccessFile(File(filePath), "r").use { file ->
+            file.channel.map(FileChannel.MapMode.READ_ONLY, smplByteOffset, smplByteSize)
+                .also { it.order(ByteOrder.LITTLE_ENDIAN) }
         }
+    } catch (e: Exception) {
+        Log.e(TAG, "Failed to memory-map SF2 file: $filePath", e)
+        null
     }
 
     companion object {
@@ -146,13 +141,6 @@ class MemoryMappedSampleProvider(
     override val isMemoryMapped: Boolean get() = true
 
     override fun close() {
-        try {
-            // MappedByteBuffer doesn't have an explicit unmap, but closing RAF helps
-            mappedBuffer = null
-            raf?.close()
-            raf = null
-        } catch (e: Exception) {
-            Log.w(TAG, "Error closing memory-mapped file", e)
-        }
+        // Rien à fermer : voir la documentation de la classe
     }
 }

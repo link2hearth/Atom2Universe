@@ -44,7 +44,10 @@ object Sf2FileCache {
      */
     fun get(path: String): Sf2File? {
         synchronized(lock) {
-            if (cachedPath == path && cachedFile != null) {
+            // Ne pas rendre une version partielle (streaming : seuls les instruments d'un MIDI
+            // sont chargés) à qui demande le fichier complet
+            val isComplete = loadedPresetsKey == null || loadedPresetsKey == "mmap:$path"
+            if (cachedPath == path && cachedFile != null && isComplete) {
                 return cachedFile
             }
 
@@ -66,6 +69,7 @@ object Sf2FileCache {
 
                 cachedPath = path
                 cachedFile = sf2File
+                loadedPresetsKey = null
 
                 sf2File
             } catch (e: Exception) {
@@ -150,6 +154,13 @@ object Sf2FileCache {
                 return null
             }
 
+            // Même fichier déjà projeté : le partager (le lecteur et le mode pratique peuvent
+            // l'utiliser en même temps) au lieu d'en recréer un et de fermer l'ancien
+            val mmapKey = "mmap:$sf2Path"
+            if (cachedPath == sf2Path && loadedPresetsKey == mmapKey) {
+                cachedFile?.let { return it }
+            }
+
             try {
                 val parser = Sf2StreamingParser()
 
@@ -166,7 +177,7 @@ object Sf2FileCache {
 
                 cachedPath = sf2Path
                 cachedFile = sf2File
-                loadedPresetsKey = "mmap:$sf2Path"
+                loadedPresetsKey = mmapKey
 
                 return sf2File
 
