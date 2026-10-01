@@ -26,6 +26,7 @@
             android:src="@drawable/ic_px_back" />
 
         <TextView
+            android:id="@+id/zc_lib_title"
             style="@style/PxTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -71,6 +72,7 @@
             app:tint="@color/audio_text_tertiary" />
 
         <TextView
+            android:id="@+id/zc_lib_empty_text"
             style="@style/PxTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

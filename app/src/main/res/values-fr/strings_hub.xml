@@ -10,8 +10,6 @@
     <string name="hub_change_language">Changer la langue</string>
     <string name="hub_select_language">Choisir la langue</string>
 <string name="hub_settings">Paramètres</string>
-    <string name="confirm_return_menu_title">Confirmation</string>
-    <string name="confirm_return_menu_message">Voulez-vous vraiment retourner au menu principal ?</string>
     <string name="confirm_return_menu_yes">Oui</string>
     <string name="confirm_return_menu_no">Non</string>
     <string name="main_hub_clicker_stats_desc">Statistiques du clicker d\'atomes</string>

@@ -66,7 +66,7 @@
     <string name="creative_hub_pixel_art_title">Pixel Art</string>
     <string name="creative_hub_pixel_art_desc">Créez des sprites et des illustrations</string>
     <string name="creative_hub_canvas_title">Canvas</string>
-    <string name="creative_hub_canvas_desc">Dessinez et composez librement</string>
+    <string name="creative_hub_canvas_desc">Dessinez, écrivez et zoomez sur une toile sans bords</string>
     <string name="creative_hub_zoom_canvas_title">Canvas infini</string>
     <string name="creative_hub_zoom_canvas_desc">Zoomez dans votre dessin, à l\'infini</string>
     <string name="stat_total_clicks">Clics totaux</string>

@@ -656,14 +656,14 @@
             android:name=".zoomcanvas.ZoomCanvasLibraryActivity"
             android:exported="false"
             android:theme="@style/Theme.A2U" />
+        <!-- Canvas (une seule couche) : la même galerie et le même éditeur, un autre point d'entrée -->
         <activity
-            android:name=".zoomcanvas.ZoomCanvasEditorActivity"
+            android:name=".zoomcanvas.CanvasLibraryActivity"
             android:exported="false"
             android:theme="@style/Theme.A2U" />
         <activity
-            android:name=".pixelart.CanvasEditorActivity"
+            android:name=".zoomcanvas.ZoomCanvasEditorActivity"
             android:exported="false"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
 
         <!-- Services -->

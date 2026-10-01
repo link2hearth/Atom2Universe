@@ -52,8 +52,18 @@ import kotlin.math.sqrt
  * dix niveaux plus bas demande dix ancres, aucun `Double` seul n'y suffirait). Les couches vides
  * au-delà n'existent que virtuellement : on les crée quand la caméra y entre, on les oublie quand
  * elle en sort sans y avoir dessiné.
+ *
+ * **Une seule couche ([single]).** Le « Canvas » ordinaire est la même toile sans la pile : une seule
+ * couche, jamais de seuil. Le zoom y est simplement borné à [minZoom]..[maxZoom] (de ×1/100 à ×100, voir
+ * [SINGLE_RATIO]) et la caméra ne quitte jamais la couche 0. Tout le reste (traits, formes, textes,
+ * images, gomme, pile d'éléments, enregistrement) est le même code.
  */
-class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sqrt(ratio), startZoom: Double = Double.NaN) {
+class ZoomScene(
+    val ratio: Double = DEFAULT_RATIO,
+    val maxZoom: Double = Math.sqrt(ratio),
+    startZoom: Double = Double.NaN,
+    val single: Boolean = false,
+) {
 
     init {
         require(ratio > 1.0 && ratio.isFinite()) { "ratio must be > 1" }
@@ -216,8 +226,10 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
      * Zoome d'un facteur [factor] autour d'un point de l'écran ([fx], [fy] : écart en pixels depuis
      * le centre de la vue), qui reste immobile. Change de couche autant de fois que nécessaire.
      */
-    fun zoomAt(factor: Double, fx: Double, fy: Double) {
-        if (!(factor > 0.0) || !factor.isFinite()) return
+    fun zoomAt(factor0: Double, fx: Double, fy: Double) {
+        if (!(factor0 > 0.0) || !factor0.isFinite()) return
+        // Une seule couche : le zoom butte sur ses bornes (le point sous le doigt reste en place, comme ailleurs).
+        val factor = if (single) (zoom * factor0).coerceIn(minZoom, maxZoom) / zoom else factor0
         // Le point sous le doigt, dans la couche de travail : il doit rester sous le doigt.
         val px = cx + fx / zoom
         val py = cy + fy / zoom
@@ -243,7 +255,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
      * Saute vers la couche [d] et cadre tout son contenu dans une vue de [viewW]×[viewH] pixels,
      * en restant dans cette couche.
      */
-    fun jumpTo(d: Long, viewW: Double, viewH: Double) {
+    fun jumpTo(d: Long, viewW: Double, viewH: Double, maxFit: Double = maxZoom * 0.99) {
         val l = layer(d) ?: return
         val b = l.bounds()
         if (b == null) {
@@ -253,10 +265,11 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         val w = max(b[2] - b[0], 1e-9)
         val h = max(b[3] - b[1], 1e-9)
         val fit = min(viewW * 0.8 / w, viewH * 0.8 / h)
-        setCamera(d, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, fit.coerceIn(minZoom, maxZoom * 0.99))
+        setCamera(d, (b[0] + b[2]) / 2, (b[1] + b[3]) / 2, fit.coerceIn(minZoom, maxFit))
     }
 
     private fun normalize() {
+        if (single) { zoom = zoom.coerceIn(minZoom, maxZoom); return }
         while (zoom >= maxZoom) descend()
         while (zoom < minZoom) ascend()
     }
@@ -398,7 +411,8 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
      * origine passe sous le centre de l'écran). Invisible à l'écran : seul le repère change.
      */
     private fun anchorIfFresh(l: Layer) {
-        if (l.used || !l.isEmpty) return
+        // Une seule couche : pas d'ancre dans une couche du dessus, le repère ne bouge jamais.
+        if (single || l.used || !l.isEmpty) return
         // Un multiple du rapport : l'ancre de la couche reste un nombre entier de pixels du dessus.
         rebase(l, Math.rint(cx / ratio) * ratio, Math.rint(cy / ratio) * ratio)
     }
@@ -955,6 +969,19 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
          * l'ouverture. Le même pour tous les nouveaux projets.
          */
         const val DEFAULT_RATIO = 625.0
+        /**
+         * Une scène à une seule couche ([ZoomScene.single]) : sa plage de zoom va de 1/100 à 100
+         * (l'ancien canvas allait de 1/10 à 10). Le « rapport » n'y sert qu'à fixer cette étendue :
+         * [SINGLE_MAX_ZOOM] ÷ [SINGLE_RATIO] = 0,01.
+         */
+        const val SINGLE_RATIO = 10_000.0
+        const val SINGLE_MAX_ZOOM = 100.0
+        /** Ajuster au contenu ne zoome pas au-delà : un petit dessin ne remplit pas l'écran de ses pixels. */
+        const val SINGLE_FIT_MAX_ZOOM = 4.0
+
+        /** Une scène neuve : à couches (le [ratio] du projet) ou à une seule couche. */
+        fun create(single: Boolean, ratio: Double = DEFAULT_RATIO): ZoomScene =
+            if (single) ZoomScene(SINGLE_RATIO, SINGLE_MAX_ZOOM, single = true) else ZoomScene(ratio)
         /** La couleur de la gomme : transparente. Un trait de cette couleur creuse sa couche. */
         const val ERASER = 0
         /**

@@ -51,4 +51,12 @@
     <string name="zc_order_back">Send to back</string>
     <string name="zc_order_position">%1$d / %2$d</string>
     <string name="zc_eraser_edit_done">Done</string>
+    <!-- Le « Canvas » : la même toile, une seule couche -->
+    <string name="cv_library_empty">No canvas yet.\nCreate one, then draw, write and slide the view as far as you like: there are no edges.</string>
+    <string name="cv_view_title">View</string>
+    <string name="cv_zoom_reset">Reset the zoom</string>
+    <string name="cv_fit_content">Fit to the drawing</string>
+    <string name="cv_grid">Grid</string>
+    <string name="cv_export_view">Save the view as an image</string>
+    <string name="cv_new_title">New canvas</string>
 </resources>

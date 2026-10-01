@@ -10,8 +10,6 @@
     <string name="hub_change_language">Ganti bahasa</string>
     <string name="hub_select_language">Pilih bahasa</string>
     <string name="hub_settings">Pengaturan</string>
-    <string name="confirm_return_menu_title">Konfirmasi</string>
-    <string name="confirm_return_menu_message">Apakah Anda benar-benar ingin kembali ke menu utama?</string>
     <string name="confirm_return_menu_yes">Ya</string>
     <string name="confirm_return_menu_no">Tidak</string>
     <string name="main_hub_clicker_stats_desc">Statistik clicker atom</string>

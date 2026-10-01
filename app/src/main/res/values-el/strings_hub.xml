@@ -10,8 +10,6 @@
     <string name="hub_change_language">Αλλαγή γλώσσας</string>
     <string name="hub_select_language">Επιλογή γλώσσας</string>
     <string name="hub_settings">Ρυθμίσεις</string>
-    <string name="confirm_return_menu_title">Επιβεβαίωση</string>
-    <string name="confirm_return_menu_message">Θέλετε πραγματικά να επιστρέψετε στο κύριο μενού;</string>
     <string name="confirm_return_menu_yes">Ναι</string>
     <string name="confirm_return_menu_no">Όχι</string>
     <string name="main_hub_clicker_stats_desc">Στατιστικά clicker ατόμων</string>

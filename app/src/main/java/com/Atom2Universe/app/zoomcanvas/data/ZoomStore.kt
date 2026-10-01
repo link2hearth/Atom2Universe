@@ -17,6 +17,7 @@ class ZoomProjectSummary(
     val name: String,
     val modified: Long,
     val ratio: Double,
+    val single: Boolean,
     val layerCount: Int,
     val itemCount: Int,
     /** Ce que le projet pèse sur l'appareil : le dessin (dans la base), les images et la vignette. */
@@ -65,17 +66,22 @@ class ZoomStore(val root: File, private val db: ZoomDatabase) {
         File(dir(id), "images").listFiles()?.forEach { if (it.name !in used) it.delete() }
     }
 
-    fun list(): List<ZoomProjectSummary> =
-        dao.summaries().map { ZoomProjectSummary(it.uuid, it.name, it.modified, it.ratio, it.layerCount, it.itemCount, it.dataBytes + filesSize(dir(it.uuid))) }
+    /** Les projets d'une des deux galeries : les canvas infinis à couches, ou ceux d'une seule couche ([single]). */
+    fun list(single: Boolean = false): List<ZoomProjectSummary> =
+        dao.summaries(kindOf(single)).map {
+            ZoomProjectSummary(it.uuid, it.name, it.modified, it.ratio, it.kind == ZcProject.KIND_SINGLE, it.layerCount, it.itemCount, it.dataBytes + filesSize(dir(it.uuid)))
+        }
+
+    private fun kindOf(single: Boolean) = if (single) ZcProject.KIND_SINGLE else ZcProject.KIND_LAYERS
 
     /** Octets des fichiers d'un projet (images importées, vignette). */
     private fun filesSize(dir: File): Long = dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
 
-    fun create(name: String, ratio: Double, now: Long = System.currentTimeMillis()): LoadedZoomProject {
+    fun create(name: String, ratio: Double, now: Long = System.currentTimeMillis(), single: Boolean = false): LoadedZoomProject {
         val uuid = UUID.randomUUID().toString()
-        val scene = ZoomScene(ratio)
+        val scene = ZoomScene.create(single, ratio)
         val pid = db.runInTransaction<Long> {
-            val pid = dao.insertProject(ZcProject(uuid = uuid, name = name, created = now, modified = now, ratio = ratio, camDepth = 0, cx = 0.0, cy = 0.0, zoom = scene.zoom, nextId = 1))
+            val pid = dao.insertProject(ZcProject(uuid = uuid, name = name, created = now, modified = now, ratio = scene.ratio, camDepth = 0, cx = 0.0, cy = 0.0, zoom = scene.zoom, nextId = 1, kind = kindOf(single)))
             dao.putLayers(listOf(ZcLayer(pid, 0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0.0, 0.0)))
             pid
         }
@@ -133,7 +139,7 @@ class ZoomStore(val root: File, private val db: ZoomDatabase) {
             }
             layers.add(layer)
         }
-        val scene = ZoomScene(p.ratio)
+        val scene = ZoomScene.create(p.kind == ZcProject.KIND_SINGLE, p.ratio)
         scene.restore(first, layers, cam, p.cx, p.cy, p.zoom, p.nextId)
         return LoadedZoomProject(ZoomProjectMeta(p.uuid, p.name, p.created, p.modified, p.pid), scene)
     }
@@ -182,7 +188,7 @@ class ZoomStore(val root: File, private val db: ZoomDatabase) {
         val now = System.currentTimeMillis()
         val uuid = UUID.randomUUID().toString()
         db.runInTransaction {
-            val pid = dao.insertProject(ZcProject(uuid = uuid, name = name, created = now, modified = now, ratio = p.ratio, camDepth = p.camDepth, cx = p.cx, cy = p.cy, zoom = p.zoom, nextId = p.nextId))
+            val pid = dao.insertProject(ZcProject(uuid = uuid, name = name, created = now, modified = now, ratio = p.ratio, camDepth = p.camDepth, cx = p.cx, cy = p.cy, zoom = p.zoom, nextId = p.nextId, kind = p.kind))
             dao.copyLayers(p.pid, pid)
             dao.copyItems(p.pid, pid)
         }

@@ -6,5 +6,4 @@
     <string name="pixel_art_color_brightness">Brightness</string>
     <string name="pixel_art_color_alpha">Alpha</string>
     <string name="pixel_art_color_presets">Quick colors</string>
-    <string name="pixel_art_no_selection">No selection</string>
 </resources>

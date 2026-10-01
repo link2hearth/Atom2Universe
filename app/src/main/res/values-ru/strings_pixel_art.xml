@@ -6,5 +6,4 @@
     <string name="pixel_art_color_brightness">Яркость</string>
     <string name="pixel_art_color_alpha">Альфа</string>
     <string name="pixel_art_color_presets">Быстрые цвета</string>
-    <string name="pixel_art_no_selection">Нет выделения</string>
 </resources>

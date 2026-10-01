@@ -10,8 +10,6 @@
     <string name="hub_change_language">Schimbare limbă</string>
     <string name="hub_select_language">Selectare limbă</string>
     <string name="hub_settings">Setări</string>
-    <string name="confirm_return_menu_title">Confirmare</string>
-    <string name="confirm_return_menu_message">Doriți cu adevărat să reveniți la meniul principal?</string>
     <string name="confirm_return_menu_yes">Da</string>
     <string name="confirm_return_menu_no">Nu</string>
     <string name="main_hub_clicker_stats_desc">Statistici clicker atomi</string>

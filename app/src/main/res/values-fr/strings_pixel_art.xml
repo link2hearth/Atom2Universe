@@ -6,5 +6,4 @@
     <string name="pixel_art_color_brightness">Luminosité</string>
     <string name="pixel_art_color_alpha">Transparence</string>
     <string name="pixel_art_color_presets">Couleurs rapides</string>
-    <string name="pixel_art_no_selection">Aucune sélection</string>
 </resources>

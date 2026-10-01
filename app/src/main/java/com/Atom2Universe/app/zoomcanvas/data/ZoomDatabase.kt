@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.zoomcanvas.data
 
 import android.content.Context
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
@@ -12,6 +13,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
@@ -38,7 +40,14 @@ class ZcProject(
     val zoom: Double,
     /** Prochain identifiant d'élément (unique dans le projet). */
     val nextId: Long,
-)
+    /** [KIND_LAYERS] : le canvas infini à couches ; [KIND_SINGLE] : le « Canvas », une seule couche. */
+    @ColumnInfo(defaultValue = "0") val kind: Int = KIND_LAYERS,
+) {
+    companion object {
+        const val KIND_LAYERS = 0
+        const val KIND_SINGLE = 1
+    }
+}
 
 /**
  * Une couche : son ancre dans la couche du dessus et son résumé : nombre d'éléments ([count], dont
@@ -91,6 +100,7 @@ class ZcSummary(
     val name: String,
     val modified: Long,
     val ratio: Double,
+    val kind: Int,
     val layerCount: Int,
     val itemCount: Int,
     /** Octets des éléments du dessin dans la base (les fichiers du projet sont comptés à part). */
@@ -102,14 +112,14 @@ abstract class ZoomDao {
 
     @Query(
         """
-        SELECT p.uuid AS uuid, p.name AS name, p.modified AS modified, p.ratio AS ratio,
+        SELECT p.uuid AS uuid, p.name AS name, p.modified AS modified, p.ratio AS ratio, p.kind AS kind,
                (SELECT COUNT(*) FROM zc_layer l WHERE l.pid = p.pid AND l.count > l.erasers) AS layerCount,
                (SELECT COALESCE(SUM(l.count - l.erasers), 0) FROM zc_layer l WHERE l.pid = p.pid) AS itemCount,
                (SELECT COALESCE(SUM(LENGTH(i.data)), 0) FROM zc_item i WHERE i.pid = p.pid) AS dataBytes
-        FROM zc_project p ORDER BY p.modified DESC
+        FROM zc_project p WHERE p.kind = :kind ORDER BY p.modified DESC
         """
     )
-    abstract fun summaries(): List<ZcSummary>
+    abstract fun summaries(kind: Int): List<ZcSummary>
 
     @Insert
     abstract fun insertProject(p: ZcProject): Long
@@ -166,12 +176,19 @@ abstract class ZoomDao {
     abstract fun copyItems(from: Long, to: Long)
 }
 
-@Database(entities = [ZcProject::class, ZcLayer::class, ZcItem::class], version = 1, exportSchema = false)
+@Database(entities = [ZcProject::class, ZcLayer::class, ZcItem::class], version = 2, exportSchema = false)
 abstract class ZoomDatabase : RoomDatabase() {
     abstract fun dao(): ZoomDao
 
     companion object {
         private const val NAME = "zoomcanvas.db"
+
+        /** Version 2 : les projets du « Canvas » (une seule couche) partagent la base du canvas infini. */
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE zc_project ADD COLUMN kind INTEGER NOT NULL DEFAULT 0")
+            }
+        }
 
         @Volatile
         private var instance: ZoomDatabase? = null
@@ -179,6 +196,7 @@ abstract class ZoomDatabase : RoomDatabase() {
         fun get(context: Context): ZoomDatabase = instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(context.applicationContext, ZoomDatabase::class.java, NAME)
                 .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+                .addMigrations(MIGRATION_1_2)
                 .addCallback(object : Callback() {
                     override fun onOpen(db: SupportSQLiteDatabase) {
                         // Avec le journal WAL, « NORMAL » ne perd au pire que la toute dernière écriture à une coupure

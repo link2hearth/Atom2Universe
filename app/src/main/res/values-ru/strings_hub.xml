@@ -10,8 +10,6 @@
     <string name="hub_change_language">Изменить язык</string>
     <string name="hub_select_language">Выберите язык</string>
     <string name="hub_settings">Настройки</string>
-    <string name="confirm_return_menu_title">Подтверждение</string>
-    <string name="confirm_return_menu_message">Вы действительно хотите вернуться в главное меню?</string>
     <string name="confirm_return_menu_yes">Да</string>
     <string name="confirm_return_menu_no">Нет</string>
     <string name="main_hub_clicker_stats_desc">Статистика атомного кликера</string>

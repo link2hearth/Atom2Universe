@@ -10,8 +10,6 @@
     <string name="hub_change_language">Taal wijzigen</string>
     <string name="hub_select_language">Selecteer taal</string>
     <string name="hub_settings">Instellingen</string>
-    <string name="confirm_return_menu_title">Bevestiging</string>
-    <string name="confirm_return_menu_message">Wilt u echt terug naar het hoofdmenu?</string>
     <string name="confirm_return_menu_yes">Ja</string>
     <string name="confirm_return_menu_no">Nee</string>
     <string name="main_hub_clicker_stats_desc">Atoomclicker statistieken</string>

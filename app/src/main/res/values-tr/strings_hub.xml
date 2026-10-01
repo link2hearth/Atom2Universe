@@ -10,8 +10,6 @@
     <string name="hub_change_language">Dili değiştir</string>
     <string name="hub_select_language">Dil seçin</string>
     <string name="hub_settings">Ayarlar</string>
-    <string name="confirm_return_menu_title">Onay</string>
-    <string name="confirm_return_menu_message">Ana menüye dönmek istediğinizden emin misiniz?</string>
     <string name="confirm_return_menu_yes">Evet</string>
     <string name="confirm_return_menu_no">Hayır</string>
     <string name="main_hub_clicker_stats_desc">Atom clicker istatistikleri</string>

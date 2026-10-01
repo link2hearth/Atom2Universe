@@ -6,5 +6,4 @@
     <string name="pixel_art_color_brightness">Brillo</string>
     <string name="pixel_art_color_alpha">Transparencia</string>
     <string name="pixel_art_color_presets">Colores rápidos</string>
-    <string name="pixel_art_no_selection">Sin selección</string>
 </resources>

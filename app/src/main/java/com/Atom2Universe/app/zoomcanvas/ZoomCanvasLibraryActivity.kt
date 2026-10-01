@@ -38,8 +38,15 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/** La galerie des canvas infinis : chaque projet est une carte. */
-class ZoomCanvasLibraryActivity : AppCompatActivity() {
+/**
+ * La galerie des canvas infinis : chaque projet est une carte. [CanvasLibraryActivity] en est la
+ * même galerie pour le « Canvas » (une seule couche) : un autre point d'entrée, les mêmes projets
+ * dans la même base, séparés par leur type.
+ */
+open class ZoomCanvasLibraryActivity : AppCompatActivity() {
+
+    /** Les projets à une seule couche (le « Canvas ») plutôt que ceux à couches. */
+    protected open val single: Boolean = false
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -58,9 +65,11 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
 
         list = findViewById(R.id.zc_lib_list)
         empty = findViewById(R.id.zc_lib_empty)
+        findViewById<TextView>(R.id.zc_lib_title).setText(if (single) R.string.creative_hub_canvas_title else R.string.zc_title)
+        findViewById<TextView>(R.id.zc_lib_empty_text).setText(if (single) R.string.cv_library_empty else R.string.zc_library_empty)
         val widthDp = resources.displayMetrics.widthPixels / resources.displayMetrics.density
         list.layoutManager = GridLayoutManager(this, (widthDp / 170f).toInt().coerceAtLeast(2))
-        adapter = ZoomProjectsAdapter(this, ::openProject, ::showProjectMenu)
+        adapter = ZoomProjectsAdapter(this, single, ::openProject, ::showProjectMenu)
         list.adapter = adapter
 
         findViewById<View>(R.id.zc_lib_btn_back).setOnClickListener { finish() }
@@ -82,7 +91,7 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
         lifecycleScope.launch {
             // L'éditeur qu'on vient de quitter écrit peut-être encore : on attend qu'il ait fini.
             ZoomCanvasStorage.writesInFlight.first { it == 0 }
-            val items = withContext(Dispatchers.IO) { store.list() }
+            val items = withContext(Dispatchers.IO) { store.list(single) }
             adapter.submit(items)
             empty.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
         }
@@ -94,7 +103,7 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
 
     /** Un nom suffit : tous les projets ont le même rapport d'échelle ([ZoomScene.DEFAULT_RATIO]). */
     private fun newProject() {
-        bottomSheet(getString(R.string.zc_new_title)) { root, dialog ->
+        bottomSheet(getString(if (single) R.string.cv_new_title else R.string.zc_new_title)) { root, dialog ->
             val name = EditText(this).apply {
                 setText(getString(R.string.zc_untitled_n, adapter.itemCount + 1))
                 setSelectAllOnFocus(true)
@@ -108,7 +117,7 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
                 dialog.dismiss()
                 val n = name.text.toString().trim().ifEmpty { getString(R.string.zc_untitled_n, adapter.itemCount + 1) }
                 lifecycleScope.launch {
-                    val p = withContext(Dispatchers.IO) { store.create(n, ZoomScene.DEFAULT_RATIO) }
+                    val p = withContext(Dispatchers.IO) { store.create(n, ZoomScene.DEFAULT_RATIO, single = single) }
                     openProject(p.meta.id)
                 }
             })
@@ -146,6 +155,7 @@ class ZoomCanvasLibraryActivity : AppCompatActivity() {
 
 private class ZoomProjectsAdapter(
     private val context: Context,
+    private val single: Boolean,
     private val onOpen: (String) -> Unit,
     private val onMenu: (ZoomProjectSummary) -> Unit,
 ) : RecyclerView.Adapter<ZoomProjectsAdapter.Holder>() {
@@ -177,7 +187,8 @@ private class ZoomProjectsAdapter(
         h.name.text = p.name
         h.info.text = context.getString(
             R.string.zc_project_info,
-            context.resources.getQuantityString(R.plurals.zc_layers_count, p.layerCount, p.layerCount),
+            if (single) context.resources.getQuantityString(R.plurals.zc_items_count, p.itemCount, p.itemCount)
+            else context.resources.getQuantityString(R.plurals.zc_layers_count, p.layerCount, p.layerCount),
             Formatter.formatShortFileSize(context, p.sizeBytes),
             DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
         )
@@ -200,4 +211,9 @@ private class ZoomProjectsAdapter(
         h.itemView.setOnLongClickListener { onMenu(p); true }
         h.menu.setOnClickListener { onMenu(p) }
     }
+}
+
+/** Le point d'entrée du « Canvas » : la galerie des projets à une seule couche. */
+class CanvasLibraryActivity : ZoomCanvasLibraryActivity() {
+    override val single = true
 }

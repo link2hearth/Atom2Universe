@@ -31,6 +31,8 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.pixelart.canvas.FontManager
 import com.Atom2Universe.app.pixelart.core.ShapeFill
 import com.Atom2Universe.app.pixelart.core.ShapeKind
+import com.Atom2Universe.app.pixelart.io.DeviceImages
+import com.Atom2Universe.app.pixelart.io.ImageFormat
 import com.Atom2Universe.app.pixelart.io.NamedPalette
 import com.Atom2Universe.app.pixelart.io.PaletteFormats
 import com.Atom2Universe.app.pixelart.io.PaletteStore
@@ -56,11 +58,15 @@ import com.Atom2Universe.app.zoomcanvas.core.OrderMove
 import com.Atom2Universe.app.zoomcanvas.core.ShapeItem
 import com.Atom2Universe.app.zoomcanvas.core.StrokeBox
 import com.Atom2Universe.app.zoomcanvas.core.TextItem
+import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.UUID
 
 /**
@@ -72,6 +78,10 @@ import java.util.UUID
  * gomme), gardées d'une séance à l'autre. La sélection prend n'importe quel élément (trait, image,
  * forme, texte) : elle le déplace, le redimensionne, le duplique, le supprime, et un petit widget le
  * monte ou le descend dans la pile des éléments de la couche.
+ *
+ * Le même éditeur sert le « Canvas » (une seule couche, [ZoomScene.single]) : la pastille du haut y
+ * montre le zoom en pourcent plutôt que le niveau, et un appui dessus ouvre le menu de la vue
+ * (zoom à 100 %, ajuster au dessin, grille, exporter l'image) à la place de la liste des couches.
  */
 class ZoomCanvasEditorActivity : AppCompatActivity() {
 
@@ -128,6 +138,8 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     private var linkedIndex = -1
     private var lastPaletteId = ""
     private var shownLevel = Long.MIN_VALUE
+    /** Le projet ouvert est un « Canvas » (une seule couche) : pas de niveaux, pas de réalignement. */
+    private var single = false
     private val hideMessage = Runnable { message.visibility = View.GONE }
 
     /** Les images du projet déjà décodées (le reste se charge en arrière-plan). */
@@ -176,7 +188,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.zc_btn_back).setOnClickListener { finish() }
         findViewById<View>(R.id.zc_title_block).setOnClickListener { askRename() }
-        findViewById<View>(R.id.zc_level_pill).setOnClickListener { showLayers() }
+        findViewById<View>(R.id.zc_level_pill).setOnClickListener { if (single) showViewMenu() else showLayers() }
         undoBtn.setOnClickListener { if (vm.project?.scene?.undo() == true) drawingChanged() }
         redoBtn.setOnClickListener { if (vm.project?.scene?.redo() == true) drawingChanged() }
         lockBtn.setOnClickListener { setZoomLocked(!canvasView.zoomLocked) }
@@ -210,8 +222,13 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     private fun bind() {
         val p = vm.project ?: return
+        single = p.scene.single
         canvasView.scene = p.scene
+        canvasView.showGrid = single && prefs.getBoolean("grid", false)
+        // Une seule couche : rien à réaligner dessous.
+        toolButtons[ZoomCanvasView.Tool.MOVE_LAYER]?.visibility = if (single) View.GONE else View.VISIBLE
         title.text = p.meta.name
+        shownLevel = Long.MIN_VALUE
         refreshChrome()
     }
 
@@ -346,7 +363,9 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     /** La pastille : numéro de la couche de travail et avancée du zoom dans celle-ci. */
     private fun refreshLevel() {
         val s = vm.project?.scene ?: return
-        if (s.depth != shownLevel) {
+        if (single) {
+            levelText.text = getString(R.string.px_opt_percent, Math.round(s.zoom * 100).toInt())
+        } else if (s.depth != shownLevel) {
             shownLevel = s.depth
             levelText.text = getString(R.string.zc_level, s.depth.toString())
         }
@@ -899,6 +918,44 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
                 vm.rename(name)
                 title.text = name
             }
+        }
+    }
+
+    /** Le menu de la vue du « Canvas » : zoom, cadrage, grille, export. */
+    private fun showViewMenu() {
+        val s = vm.project?.scene ?: return
+        actionSheet(getString(R.string.cv_view_title), listOf(
+            SheetItem(R.drawable.ic_px_flip_h, getString(R.string.cv_zoom_reset)) {
+                s.zoomAt(1.0 / s.zoom, 0.0, 0.0)
+                canvasView.invalidate()
+                viewMoved()
+            },
+            SheetItem(R.drawable.ic_px_crop, getString(R.string.cv_fit_content)) {
+                s.jumpTo(s.depth, canvasView.width.toDouble(), canvasView.height.toDouble(), ZoomScene.SINGLE_FIT_MAX_ZOOM)
+                canvasView.invalidate()
+                viewMoved()
+            },
+            SheetItem(R.drawable.ic_px_grid, getString(R.string.cv_grid), checked = canvasView.showGrid) {
+                canvasView.showGrid = !canvasView.showGrid
+                prefs.edit().putBoolean("grid", canvasView.showGrid).apply()
+            },
+            SheetItem(R.drawable.ic_px_export, getString(R.string.cv_export_view)) { exportView() },
+        )).show()
+    }
+
+    /** Range ce qu'on voit à l'écran, en taille réelle, dans la galerie de l'appareil. */
+    private fun exportView() {
+        val bmp = canvasView.snapshot() ?: return
+        val base = (vm.project?.meta?.name ?: getString(R.string.creative_hub_canvas_title)).replace(Regex("[\\/:*?\"<>|]"), "_")
+        val fileName = base + " " + SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date()) + ".png"
+        val app = applicationContext
+        lifecycleScope.launch {
+            val saved = withContext(Dispatchers.IO) {
+                val bytes = ByteArrayOutputStream().also { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }.toByteArray()
+                bmp.recycle()
+                DeviceImages.saveToGallery(app, bytes, fileName, ImageFormat.PNG) != null
+            }
+            Toast.makeText(this@ZoomCanvasEditorActivity, if (saved) R.string.px_saved_gallery else R.string.px_export_failed, Toast.LENGTH_SHORT).show()
         }
     }
 

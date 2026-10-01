@@ -10,8 +10,6 @@
     <string name="hub_change_language">Change language</string>
     <string name="hub_select_language">Select language</string>
 <string name="hub_settings">Settings</string>
-    <string name="confirm_return_menu_title">Confirmation</string>
-    <string name="confirm_return_menu_message">Do you really want to return to the main menu?</string>
     <string name="confirm_return_menu_yes">Yes</string>
     <string name="confirm_return_menu_no">No</string>
     <string name="main_hub_clicker_stats_desc">Atom clicker statistics</string>

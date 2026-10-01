@@ -86,6 +86,9 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     /** Zoom bloqué : deux doigts ne font plus que déplacer la vue, la molette ne fait rien. */
     var zoomLocked = false
     var paperColor = 0xFFFAF8F3.toInt()
+    /** Une grille discrète sous le dessin, qui suit le zoom (le « Canvas » à une seule couche). */
+    var showGrid = false
+        set(value) { field = value; invalidate() }
 
     /** Fournit le bitmap d'une image du projet (null tant qu'il se charge : un cadre gris en attendant). */
     var imageProvider: ((String) -> Bitmap?)? = null
@@ -125,6 +128,11 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
         color = 0xFF4C8DFF.toInt()
     }
     private val handlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE }
+    private val gridPaint = Paint().apply {
+        strokeWidth = 1f
+        color = 0x22000000
+    }
+    private var gridLines = FloatArray(0)
 
     fun selectItem(id: Long?) {
         if (selectedItem == id) return
@@ -136,6 +144,7 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     override fun onDraw(canvas: Canvas) {
         canvas.drawColor(paperColor)
         val s = scene ?: return
+        if (showGrid) drawGrid(s, canvas)
         draw(s, canvas, width.toDouble(), height.toDouble(), tool == Tool.ERASER_EDIT)
         if (mode == Mode.ERASE) canvas.drawCircle(lastX, lastY, strokeSize / 2, cursorPaint)
         drawSelection(s, canvas)
@@ -167,6 +176,51 @@ class ZoomCanvasView @JvmOverloads constructor(context: Context, attrs: Attribut
     /** La couche du groupe [g] est trop dense pour être tracée trait par trait : on pose son cache raster. */
     private fun drawCached(canvas: Canvas, g: Int, layer: Layer, w: Double, h: Double, now: Long, alpha: Int) {
         caches.cacheFor(layer, now).draw(canvas, list.groupViewX[g], list.groupViewY[g], list.groupViewZoom[g], w, h, alpha)
+    }
+
+    /**
+     * Le quadrillage : un pas rond (1, 2 ou 5 × une puissance de dix, en unités de la couche) qui
+     * garde des cases de 48 à 120 pixels à l'écran, quel que soit le zoom. Les lignes sont placées
+     * depuis la caméra (jamais depuis l'origine) : exact même très loin du centre.
+     */
+    private fun drawGrid(s: ZoomScene, canvas: Canvas) {
+        val raw = 48.0 / s.zoom
+        val e = Math.floor(Math.log10(raw))
+        val base = Math.pow(10.0, e)
+        val m = raw / base
+        val step = base * (if (m <= 1.0) 1.0 else if (m <= 2.0) 2.0 else if (m <= 5.0) 5.0 else 10.0)
+        val w = width.toDouble()
+        val h = height.toDouble()
+        val left = s.cx - w / 2 / s.zoom
+        val top = s.cy - h / 2 / s.zoom
+        val first = Math.ceil(left / step)
+        val firstY = Math.ceil(top / step)
+        val cols = (w / (step * s.zoom)).toInt() + 2
+        val rows = (h / (step * s.zoom)).toInt() + 2
+        if (gridLines.size < (cols + rows) * 4) gridLines = FloatArray((cols + rows) * 4)
+        var n = 0
+        for (i in 0 until cols) {
+            val x = ((first + i) * step - s.cx) * s.zoom + w / 2
+            if (x < 0 || x > w) continue
+            gridLines[n++] = x.toFloat(); gridLines[n++] = 0f; gridLines[n++] = x.toFloat(); gridLines[n++] = h.toFloat()
+        }
+        for (j in 0 until rows) {
+            val y = ((firstY + j) * step - s.cy) * s.zoom + h / 2
+            if (y < 0 || y > h) continue
+            gridLines[n++] = 0f; gridLines[n++] = y.toFloat(); gridLines[n++] = w.toFloat(); gridLines[n++] = y.toFloat()
+        }
+        canvas.drawLines(gridLines, 0, n, gridPaint)
+    }
+
+    /** Ce qu'on voit, en taille réelle, sur le papier (l'export de la vue). La grille n'en fait pas partie. */
+    fun snapshot(): Bitmap? {
+        val s = scene ?: return null
+        if (width == 0 || height == 0) return null
+        val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bmp)
+        canvas.drawColor(paperColor)
+        draw(s, canvas, width.toDouble(), height.toDouble())
+        return bmp
     }
 
     /** Une image du projet vient de se charger, ou une police : les caches qui ont cuit un cadre gris sont à refaire. */
