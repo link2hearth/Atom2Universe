@@ -61,6 +61,9 @@ class AudioLimiter {
         // Peak limiter threshold (start limiting peaks above this)
         // Raised from 0.85 to 0.9 for more headroom
         private const val PEAK_LIMIT_THRESHOLD = 0.90f
+
+        // Durée de la rampe quand le gain baisse (voir process)
+        private const val GAIN_DOWN_RAMP_SAMPLES = 64
     }
 
     // Current compression gain (1.0 = no compression)
@@ -71,6 +74,10 @@ class AudioLimiter {
 
     // Smoothed RMS level
     private var rmsLevel = TARGET_RMS
+
+    // Gain appliqué à la fin du buffer précédent (le gain du buffer courant y est raccordé
+    // par une rampe, au lieu de sauter d'un coup au début du buffer)
+    private var lastTotalGain = 1.0f
 
     // Enable/disable auto-gain
     var autoGainEnabled = true
@@ -140,9 +147,19 @@ class AudioLimiter {
             1f
         }
 
+        // Raccord au gain du buffer précédent par une rampe : une baisse de gain appliquée
+        // d'un bloc au début du buffer produisait un clic sur les sons tenus. La baisse se
+        // fait sur les 64 premiers échantillons (1,3 ms) pour garder l'anticipation d'un
+        // buffer sur les crêtes ; la remontée, déjà lente, est étalée sur tout le buffer.
+        val startGain = lastTotalGain
+        val rampLength = if (totalGain < startGain) minOf(GAIN_DOWN_RAMP_SAMPLES, numSamples) else numSamples
+        val gainStep = if (rampLength > 0) (totalGain - startGain) / rampLength else 0f
+        lastTotalGain = totalGain
+
         for (i in 0 until numSamples) {
-            var left = leftBuffer[i] * totalGain
-            var right = rightBuffer[i] * totalGain
+            val gain = if (i < rampLength) startGain + gainStep * (i + 1) else totalGain
+            var left = leftBuffer[i] * gain
+            var right = rightBuffer[i] * gain
 
             // Per-sample peak protection for extreme transients that escape buffer-level limiting
             // This catches cases where individual samples spike far above the buffer average
@@ -232,6 +249,7 @@ class AudioLimiter {
         compGain = 1.0f
         peakGain = 1.0f
         rmsLevel = TARGET_RMS
+        lastTotalGain = 1.0f
     }
 
     /**

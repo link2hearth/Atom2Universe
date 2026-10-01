@@ -286,8 +286,11 @@ class Sf2Synthesizer(
 
     /**
      * Handles a Note On event. Thread-safe.
+     *
+     * @param frameOffset position de la note dans le prochain buffer rendu (timing à
+     *   l'échantillon près pour la lecture de fichiers MIDI ; 0 = début du buffer)
      */
-    fun noteOn(channel: Int, note: Int, velocity: Int) {
+    fun noteOn(channel: Int, note: Int, velocity: Int, frameOffset: Int = 0) {
         if (channel !in 0 until NUM_CHANNELS) return
         if (isResetting.get()) return  // Skip during reset
         // BUG FIX 3.7: Utiliser AtomicBoolean.get() pour lecture thread-safe
@@ -307,7 +310,7 @@ class Sf2Synthesizer(
 
         if (safeVelocity == 0) {
             // Velocity 0 = Note Off
-            noteOff(channel, safeNote)
+            noteOff(channel, safeNote, frameOffset)
             return
         }
 
@@ -328,14 +331,14 @@ class Sf2Synthesizer(
         val regions = sf2File.getRegions(bank, program, safeNote, effectiveVelocity)
 
         if (regions.isNotEmpty()) {
-            triggerRegions(channel, safeNote, effectiveVelocity, regions)
+            triggerRegions(channel, safeNote, effectiveVelocity, regions, frameOffset)
             return
         }
 
         // Fallback logic for when no regions found
         val fallbackRegions = findFallbackRegions(channel, bank, program, safeNote, effectiveVelocity)
         if (fallbackRegions.isNotEmpty()) {
-            triggerRegions(channel, safeNote, effectiveVelocity, fallbackRegions)
+            triggerRegions(channel, safeNote, effectiveVelocity, fallbackRegions, frameOffset)
         }
         // Note: We silently ignore notes with no regions to reduce log spam
     }
@@ -430,7 +433,7 @@ class Sf2Synthesizer(
     // Raised from 4 to 8: high-quality SF2 files use multiple velocity/key layers for realism
     private val maxLayersPerNote = 8
 
-    private fun triggerRegions(channel: Int, note: Int, velocity: Int, regions: List<Sf2Region>) {
+    private fun triggerRegions(channel: Int, note: Int, velocity: Int, regions: List<Sf2Region>, frameOffset: Int) {
         if (isResetting.get()) return
 
         // Limit regions to prevent CPU overload from heavily layered soundfonts
@@ -441,12 +444,17 @@ class Sf2Synthesizer(
         }
 
         synchronized(voiceLock) {
+            // Exclusive class (hi-hat ouvert / fermé...) : couper les voix déjà en cours AVANT
+            // de déclencher les nouvelles. Auparavant la coupure se faisait région par région,
+            // si bien qu'un échantillon stéréo (2 régions de même classe) coupait sa propre
+            // moitié gauche en déclenchant la droite.
             for (region in limitedRegions) {
-                // Handle exclusive class (kill other voices in same class)
                 if (region.exclusiveClass != 0) {
                     voicePool.killExclusiveClass(region.exclusiveClass, channel)
                 }
+            }
 
+            for (region in limitedRegions) {
                 // Allocate a voice
                 val voice = voicePool.allocateVoice(channel)
                 if (voice == null) {
@@ -454,15 +462,17 @@ class Sf2Synthesizer(
                 }
 
                 // Trigger the voice
-                voice.trigger(channel, note, velocity, region)
+                voice.trigger(channel, note, velocity, region, frameOffset)
             }
         }
     }
 
     /**
      * Handles a Note Off event. Thread-safe.
+     *
+     * @param frameOffset position du relâchement dans le prochain buffer rendu
      */
-    fun noteOff(channel: Int, note: Int) {
+    fun noteOff(channel: Int, note: Int, frameOffset: Int = 0) {
         if (channel !in 0 until NUM_CHANNELS) return
         if (isResetting.get()) return
         // BUG FIX 3.7: Utiliser AtomicBoolean.get() pour lecture thread-safe
@@ -490,7 +500,7 @@ class Sf2Synthesizer(
                 while (sustainedNotes[channel].size > MAX_SUSTAINED_NOTES_PER_CHANNEL) {
                     val oldest = sustainedNotes[channel].iterator().next()
                     sustainedNotes[channel].remove(oldest)
-                    voicePool.releaseVoices(channel, oldest)
+                    voicePool.releaseVoices(channel, oldest, frameOffset)
                 }
                 return
             }
@@ -501,7 +511,7 @@ class Sf2Synthesizer(
             }
 
             // Release all voices for this note
-            voicePool.releaseVoices(channel, safeNote)
+            voicePool.releaseVoices(channel, safeNote, frameOffset)
         }
     }
 
@@ -528,8 +538,11 @@ class Sf2Synthesizer(
 
     /**
      * Handles a Control Change event. Thread-safe.
+     *
+     * @param frameOffset position de l'événement dans le prochain buffer rendu ; utilisé pour
+     *   les relâchements qu'il provoque (pédales, All Notes Off)
      */
-    fun controlChange(channel: Int, controller: Int, value: Int) {
+    fun controlChange(channel: Int, controller: Int, value: Int, frameOffset: Int = 0) {
         if (channel !in 0 until NUM_CHANNELS) return
         if (isResetting.get()) return
         // BUG FIX 3.7: Utiliser AtomicBoolean.get() pour lecture thread-safe
@@ -592,7 +605,7 @@ class Sf2Synthesizer(
                     val sustained = safeValue >= 64
                     if (channelSustain[channel] && !sustained) {
                         // Sustain released - release all sustained notes
-                        releaseSustainedNotes(channel)
+                        releaseSustainedNotes(channel, frameOffset)
                     }
                     channelSustain[channel] = sustained
                 }
@@ -603,7 +616,7 @@ class Sf2Synthesizer(
                         sostenutoNotes[channel].clear()
                         sostenutoNotes[channel].addAll(heldKeys[channel])
                     } else if (!engaged && channelSostenuto[channel]) {
-                        releaseSostenutoNotes(channel)
+                        releaseSostenutoNotes(channel, frameOffset)
                     }
                     channelSostenuto[channel] = engaged
                 }
@@ -657,7 +670,7 @@ class Sf2Synthesizer(
                     resetChannelControllers(channel)
                 }
                 CC_ALL_NOTES_OFF -> {
-                    voicePool.releaseChannel(channel)
+                    voicePool.releaseChannel(channel, frameOffset)
                     sustainedNotes[channel].clear()
                     sostenutoNotes[channel].clear()
                 }
@@ -737,98 +750,105 @@ class Sf2Synthesizer(
         // BUG FIX 3.7: Utiliser AtomicBoolean.set() pour écriture thread-safe
         isRendering.set(true)
         try {
-            // BUG FIX 1.10: Render all voices with per-channel snapshots via AtomicReference.get()
-            // AtomicReference.get() fournit une barriere memoire, garantissant que nous
-            // lisons une copie complete du buffer (jamais partiellement copie).
-            // Note: Lock removed for better performance. Voice pool iteration is safe because:
-            // 1. Voice array is fixed size (no add/remove)
-            // 2. Voice.isActive is volatile for visibility
-            // 3. Individual voice rendering is independent
-            val volumeSnapshot = channelVolumeSnapshotRef.get()
-            val pitchBendSnapshot = channelPitchBendSnapshotRef.get()
-            val panSnapshot = channelPanSnapshotRef.get()
-            val expressionSnapshot = channelExpressionSnapshotRef.get()
-            val modulationSnapshot = channelModulationSnapshotRef.get()
-            val reverbSendSnapshot = channelReverbSendSnapshotRef.get()
-            val chorusSendSnapshot = channelChorusSendSnapshotRef.get()
-
-            smoothChannelControllers(volumeSnapshot, panSnapshot, expressionSnapshot, numSamples)
-
-            // Clear send buffers (reverb + chorus)
-            val sendSamples = numSamples.coerceAtMost(reverbSendLeft.size)
-            for (i in 0 until sendSamples) {
-                reverbSendLeft[i] = 0f
-                reverbSendRight[i] = 0f
-                chorusSendLeft[i] = 0f
-                chorusSendRight[i] = 0f
+            // Les voix ne doivent pas être modifiées pendant leur rendu. Un événement venant
+            // d'un autre thread (clavier, USB MIDI) qui a vu isRendering = false juste avant
+            // le passage à true attendra ici la fin du buffer au lieu de modifier une voix
+            // en cours de rendu.
+            synchronized(voiceLock) {
+                renderLocked(outputLeft, outputRight, numSamples)
             }
-
-            // masterGain is now applied INSIDE each voice (via voicePool per-voice channelVolume)
-            // This means BiquadFilter sees signals ~4x quieter, reducing resonance/instability.
-            // Send buffers also come out at the correct level automatically.
-            val effectiveGain = masterVolume * globalGain
-            voicePool.render(
-                sf2File,
-                outputLeft,
-                outputRight,
-                numSamples,
-                smoothedChannelVolume,
-                pitchBendSnapshot,
-                smoothedChannelPan,
-                smoothedChannelExpression,
-                modulationSnapshot,
-                reverbSendSnapshot,
-                reverbSendLeft,
-                reverbSendRight,
-                chorusSendSnapshot,
-                chorusSendLeft,
-                chorusSendRight,
-                effectiveGain
-            )
-
-            // Apply reverb effect on per-channel send buffers, then mix back
-            if (reverb.enabled) {
-                // Process reverb on the send buffers (fully wet, we already control the send level per-channel)
-                val savedWet = reverb.wetLevel
-                val savedDry = reverb.dryLevel
-                reverb.wetLevel = 1f
-                reverb.dryLevel = 0f
-                reverb.process(reverbSendLeft, reverbSendRight, sendSamples)
-                reverb.wetLevel = savedWet
-                reverb.dryLevel = savedDry
-
-                // Mix reverb output back into main output, scaled by the original wet level
-                for (i in 0 until sendSamples) {
-                    outputLeft[i] += reverbSendLeft[i] * savedWet
-                    outputRight[i] += reverbSendRight[i] * savedWet
-                }
-            }
-
-            // Apply chorus effect on per-channel send buffers, then mix back
-            if (chorus.enabled) {
-                chorus.process(chorusSendLeft, chorusSendRight, sendSamples)
-
-                // Mix chorus output back into main output at the chorus level
-                val chorusLevel = chorus.level
-                for (i in 0 until sendSamples) {
-                    outputLeft[i] += chorusSendLeft[i] * chorusLevel
-                    outputRight[i] += chorusSendRight[i] * chorusLevel
-                }
-            }
-
-            applyBusSaturation(outputLeft, outputRight, numSamples)
-
-            // Apply limiter to prevent clipping and balance levels
-            limiter.process(outputLeft, outputRight, numSamples)
-
-            // Apply EQ post-limiter
-            equalizer.process(outputLeft, outputRight, numSamples)
         } catch (_: Exception) {
             // Log but don't crash - audio rendering should be resilient
         } finally {
             // BUG FIX 3.7: Utiliser AtomicBoolean.set() pour écriture thread-safe
             isRendering.set(false)
         }
+    }
+
+    private fun renderLocked(outputLeft: FloatArray, outputRight: FloatArray, numSamples: Int) {
+        // BUG FIX 1.10: Render all voices with per-channel snapshots via AtomicReference.get()
+        // AtomicReference.get() fournit une barriere memoire, garantissant que nous
+        // lisons une copie complete du buffer (jamais partiellement copie).
+        // Called with voiceLock held: worker threads only render voices, never modify the pool.
+        val volumeSnapshot = channelVolumeSnapshotRef.get()
+        val pitchBendSnapshot = channelPitchBendSnapshotRef.get()
+        val panSnapshot = channelPanSnapshotRef.get()
+        val expressionSnapshot = channelExpressionSnapshotRef.get()
+        val modulationSnapshot = channelModulationSnapshotRef.get()
+        val reverbSendSnapshot = channelReverbSendSnapshotRef.get()
+        val chorusSendSnapshot = channelChorusSendSnapshotRef.get()
+
+        smoothChannelControllers(volumeSnapshot, panSnapshot, expressionSnapshot, numSamples)
+
+        // Clear send buffers (reverb + chorus)
+        val sendSamples = numSamples.coerceAtMost(reverbSendLeft.size)
+        for (i in 0 until sendSamples) {
+            reverbSendLeft[i] = 0f
+            reverbSendRight[i] = 0f
+            chorusSendLeft[i] = 0f
+            chorusSendRight[i] = 0f
+        }
+
+        // masterGain is now applied INSIDE each voice (via voicePool per-voice channelVolume)
+        // This means BiquadFilter sees signals ~4x quieter, reducing resonance/instability.
+        // Send buffers also come out at the correct level automatically.
+        val effectiveGain = masterVolume * globalGain
+        voicePool.render(
+            sf2File,
+            outputLeft,
+            outputRight,
+            numSamples,
+            smoothedChannelVolume,
+            pitchBendSnapshot,
+            smoothedChannelPan,
+            smoothedChannelExpression,
+            modulationSnapshot,
+            reverbSendSnapshot,
+            reverbSendLeft,
+            reverbSendRight,
+            chorusSendSnapshot,
+            chorusSendLeft,
+            chorusSendRight,
+            effectiveGain
+        )
+
+        // Apply reverb effect on per-channel send buffers, then mix back
+        if (reverb.enabled) {
+            // Process reverb on the send buffers (fully wet, we already control the send level per-channel)
+            val savedWet = reverb.wetLevel
+            val savedDry = reverb.dryLevel
+            reverb.wetLevel = 1f
+            reverb.dryLevel = 0f
+            reverb.process(reverbSendLeft, reverbSendRight, sendSamples)
+            reverb.wetLevel = savedWet
+            reverb.dryLevel = savedDry
+
+            // Mix reverb output back into main output, scaled by the original wet level
+            for (i in 0 until sendSamples) {
+                outputLeft[i] += reverbSendLeft[i] * savedWet
+                outputRight[i] += reverbSendRight[i] * savedWet
+            }
+        }
+
+        // Apply chorus effect on per-channel send buffers, then mix back
+        if (chorus.enabled) {
+            chorus.process(chorusSendLeft, chorusSendRight, sendSamples)
+
+            // Mix chorus output back into main output at the chorus level
+            val chorusLevel = chorus.level
+            for (i in 0 until sendSamples) {
+                outputLeft[i] += chorusSendLeft[i] * chorusLevel
+                outputRight[i] += chorusSendRight[i] * chorusLevel
+            }
+        }
+
+        applyBusSaturation(outputLeft, outputRight, numSamples)
+
+        // Apply limiter to prevent clipping and balance levels
+        limiter.process(outputLeft, outputRight, numSamples)
+
+        // Apply EQ post-limiter
+        equalizer.process(outputLeft, outputRight, numSamples)
     }
 
     private fun smoothChannelControllers(
@@ -964,19 +984,19 @@ class Sf2Synthesizer(
     }
 
     // Note: releaseSustainedNotes is called from within synchronized blocks, no extra sync needed
-    private fun releaseSustainedNotes(channel: Int) {
+    private fun releaseSustainedNotes(channel: Int, frameOffset: Int = 0) {
         for (note in sustainedNotes[channel]) {
-            voicePool.releaseVoices(channel, note)
+            voicePool.releaseVoices(channel, note, frameOffset)
         }
         sustainedNotes[channel].clear()
     }
 
     // Releases sostenuto-held notes that are no longer physically depressed.
     // Called from within synchronized blocks, no extra sync needed.
-    private fun releaseSostenutoNotes(channel: Int) {
+    private fun releaseSostenutoNotes(channel: Int, frameOffset: Int = 0) {
         for (note in sostenutoNotes[channel]) {
             if (note !in heldKeys[channel]) {
-                voicePool.releaseVoices(channel, note)
+                voicePool.releaseVoices(channel, note, frameOffset)
             }
         }
         sostenutoNotes[channel].clear()

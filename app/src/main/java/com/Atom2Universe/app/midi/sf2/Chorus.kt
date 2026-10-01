@@ -73,7 +73,10 @@ class Chorus(private val sampleRate: Int = 44100) {
 
         val phaseInc = TWO_PI * speed / sampleRate
         val depthSamp = depth * sampleRate / 1000f
-        val centerDelay = CENTER_DELAY_MS * sampleRate / 1000f
+        // Le retard ne doit jamais devenir négatif (lecture « dans le futur » = lecture de la
+        // partie la plus ancienne du tampon circulaire, d'où des craquements avec le preset Rich
+        // dont la profondeur de 12 ms dépasse le retard central de 10 ms).
+        val centerDelay = maxOf(CENTER_DELAY_MS, depth + 1f) * sampleRate / 1000f
 
         for (i in 0 until numSamples) {
             // Write current input to delay buffer

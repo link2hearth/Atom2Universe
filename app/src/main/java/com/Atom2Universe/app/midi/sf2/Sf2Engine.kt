@@ -1100,6 +1100,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         val localTimeline: List<ScheduledMidiEvent>
         val localPlaybackStartPositionMs: Long
         var localEventIndex: Int
+        val bufferStartFrame: Long
         val bufferEndMs: Long
 
         synchronized(playbackStateLock) {
@@ -1110,7 +1111,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             localPlaybackStartPositionMs = playbackStartPositionMs
             localEventIndex = currentEventIndex
 
-            val bufferStartFrame = playbackStartFrame
+            bufferStartFrame = playbackStartFrame
             val bufferEndFrame = bufferStartFrame + numSamples
             playbackStartFrame = bufferEndFrame
 
@@ -1123,7 +1124,13 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
             val event = localTimeline[localEventIndex]
             if (event.timeMs > bufferEndMs) break
 
-            dispatchMidiEvent(event)
+            // Position de l'événement dans ce buffer : les notes démarrent / s'arrêtent à
+            // l'échantillon près au lieu d'être toutes calées au début du buffer (jusqu'à
+            // 10,7 ms d'avance, ce qui rendait irréguliers les passages rapides).
+            val eventFrame = (event.timeMs - localPlaybackStartPositionMs) * SAMPLE_RATE / 1000L
+            val frameOffset = (eventFrame - bufferStartFrame).coerceIn(0L, (numSamples - 1).toLong()).toInt()
+
+            dispatchMidiEvent(event, frameOffset)
             localEventIndex++
         }
 
@@ -1140,7 +1147,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
         }
     }
 
-    private fun dispatchMidiEvent(event: ScheduledMidiEvent) {
+    private fun dispatchMidiEvent(event: ScheduledMidiEvent, frameOffset: Int) {
         val synth = synthesizer ?: return
 
         val isMuted = MidiEventDispatcher.isChannelMuted(event.channel)
@@ -1153,13 +1160,13 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                         event.data2,
                         applyChannelVolume = false
                     )
-                    synth.noteOn(event.channel, event.data1, normalizedVelocity)
+                    synth.noteOn(event.channel, event.data1, normalizedVelocity, frameOffset)
                 }
                 dispatchMidiToVisualizer(event)
             }
             MidiEventType.NOTE_OFF -> {
                 if (!isMuted) {
-                    synth.noteOff(event.channel, event.data1)
+                    synth.noteOff(event.channel, event.data1, frameOffset)
                 }
                 dispatchMidiToVisualizer(event)
             }
@@ -1169,7 +1176,7 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
                 dispatchMidiToVisualizer(event)
             }
             MidiEventType.CONTROL_CHANGE -> {
-                synth.controlChange(event.channel, event.data1, event.data2)
+                synth.controlChange(event.channel, event.data1, event.data2, frameOffset)
             }
             MidiEventType.PITCH_BEND -> {
                 val value = event.data1 or (event.data2 shl 7)

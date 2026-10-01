@@ -13,7 +13,6 @@ class Sf2VoicePool(
     private val sampleRate: Int = 44100
 ) {
     companion object {
-        private const val NUM_CHANNELS = 16
         private const val PERCUSSION_CHANNEL = 9
 
         // Per-channel polyphony limits to prevent single-channel overload
@@ -67,9 +66,13 @@ class Sf2VoicePool(
 
         // Maximum temp buffer size for worker threads (matches max expected numSamples)
         private const val MAX_BUFFER_SIZE = 1024
+
+        // Slots en plus de maxVoices : une voix volée y termine son fondu de 15 ms pendant
+        // que la nouvelle note démarre dans un autre slot (sinon l'ancienne était coupée net).
+        private const val FADE_SPARE_VOICES = 16
     }
-    // Pre-allocated voice pool
-    private val voices: Array<Sf2Voice> = Array(maxVoices) { Sf2Voice(sampleRate) }
+    // Pre-allocated voice pool (maxVoices playing + spare slots for voices fading out)
+    private val voices: Array<Sf2Voice> = Array(maxVoices + FADE_SPARE_VOICES) { Sf2Voice(sampleRate) }
 
     // Allocation tracking
     private var voiceAllocationOrder = 0L
@@ -80,17 +83,6 @@ class Sf2VoicePool(
     // Hysteresis flag for parallel/sequential rendering mode switching
     // Prevents oscillation when voice count hovers around PARALLEL_THRESHOLD
     private var useParallelRendering = false
-
-    // Double-buffered channel active counts for thread-safe read from allocateVoice()
-    // Without double-buffering, channelCountsBuffer (reused each render) would be
-    // aliased with channelActiveSnapshot, getting cleared at the start of the next render
-    private val channelActiveSnapA = IntArray(NUM_CHANNELS)
-    private val channelActiveSnapB = IntArray(NUM_CHANNELS)
-    @Volatile
-    private var channelActiveSnapshot = channelActiveSnapA
-
-    // Pre-allocated buffer for per-render channel counting (avoids IntArray allocation per render call)
-    private val channelCountsBuffer = IntArray(NUM_CHANNELS)
 
     // Parallel rendering workers (created lazily on first parallel render)
     // 0 on single-core devices (always sequential), 1-3 on multi-core
@@ -219,35 +211,43 @@ class Sf2VoicePool(
     /**
      * Allocates a voice for a new note.
      * Returns null if no voice is available (all active and can't be stolen).
+     *
+     * La polyphonie compte les voix qui jouent, pas celles en fondu rapide. Quand elle est
+     * pleine, la voix la moins audible est volée : elle part en fondu de 15 ms dans son slot
+     * et la nouvelle note prend un slot libre. Si aucun slot n'est libre (beaucoup de fondus
+     * simultanés), le slot le plus discret est réutilisé directement avec la rampe de declick.
      */
     fun allocateVoice(channel: Int): Sf2Voice? {
-        // First, try to find an inactive voice
+        var playing = 0
+        var channelPlaying = 0
+        var free: Sf2Voice? = null
         for (voice in voices) {
             if (!voice.isActive) {
-                voice.allocationOrder = voiceAllocationOrder++
-                return voice
+                if (free == null) free = voice
+            } else if (!voice.isQuickFading) {
+                playing++
+                if (voice.channel == channel) channelPlaying++
             }
         }
 
-        // Enforce per-channel polyphony limits to avoid overload on busy channels
-        val channelLimit = getChannelVoiceLimit(channel)
-        if (channelLimit > 0) {
-            val channelActiveCount = channelActiveSnapshot.getOrElse(channel) { 0 }
-            if (channelActiveCount >= channelLimit) {
-                val voice = stealVoice { it.channel == channel }
-                voice?.allocationOrder = voiceAllocationOrder++
-                return voice
+        var victim: Sf2Voice? = null
+        if (playing >= maxVoices) {
+            // Enforce per-channel polyphony limits to avoid overload on busy channels
+            victim = if (channelPlaying >= getChannelVoiceLimit(channel)) {
+                stealVoice { it.channel == channel }
+            } else {
+                stealVoice()
             }
+            if (victim == null) return null
         }
 
-        // All voices are active - try voice stealing
-        val voice = stealVoice()
-        voice?.allocationOrder = voiceAllocationOrder++
+        val voice = free ?: quietestFadingVoice() ?: victim ?: return null
+        voice.allocationOrder = voiceAllocationOrder++
         return voice
     }
 
     /**
-     * Steals the oldest/quietest voice for reuse.
+     * Chooses the voice to steal (oldest/quietest) and starts its quick fade.
      * Uses a combination of envelope stage, level, and velocity for stealing priority.
      * Heavily prefers voices that are already fading (in release stage).
      */
@@ -256,7 +256,7 @@ class Sf2VoicePool(
         var bestScore = Float.NEGATIVE_INFINITY
 
         for (voice in voices) {
-            if (!filter(voice)) continue
+            if (!voice.isActive || voice.isQuickFading || !filter(voice)) continue
             // Calculate steal priority score (higher = better candidate for stealing)
             val score = calculateStealScore(voice)
             if (score > bestScore) {
@@ -265,11 +265,19 @@ class Sf2VoicePool(
             }
         }
 
-        // Stop the stolen voice using soft stop to prevent clicks
-        // The voice's trigger() will apply a declick ramp to mask any remaining sound
-        // Always use softStop - even voices in release can be audible
+        // The stolen voice keeps playing a 15 ms fade in its own slot
         bestCandidate?.softStop()
         return bestCandidate
+    }
+
+    /** Slot en fondu le moins audible, réutilisé quand aucun slot n'est libre. */
+    private fun quietestFadingVoice(): Sf2Voice? {
+        var best: Sf2Voice? = null
+        for (voice in voices) {
+            if (!voice.isActive || !voice.isQuickFading) continue
+            if (best == null || voice.getEstimatedAmplitude() < best.getEstimatedAmplitude()) best = voice
+        }
+        return best
     }
 
     /**
@@ -284,8 +292,6 @@ class Sf2VoicePool(
      * 5. Channel type: melodic voices preferred over percussion (percussion is more noticeable)
      */
     private fun calculateStealScore(voice: Sf2Voice): Float {
-        if (!voice.isActive) return Float.POSITIVE_INFINITY
-
         var score = 0f
 
         // Prefer voices already decaying/releasing (less audible to steal)
@@ -336,10 +342,10 @@ class Sf2VoicePool(
     /**
      * Releases all voices matching the given channel and note.
      */
-    fun releaseVoices(channel: Int, note: Int) {
+    fun releaseVoices(channel: Int, note: Int, frameOffset: Int = 0) {
         for (voice in voices) {
             if (voice.matches(channel, note)) {
-                voice.release()
+                voice.release(frameOffset)
             }
         }
     }
@@ -362,10 +368,10 @@ class Sf2VoicePool(
     /**
      * Releases all voices on the given channel (All Notes Off).
      */
-    fun releaseChannel(channel: Int) {
+    fun releaseChannel(channel: Int, frameOffset: Int = 0) {
         for (voice in voices) {
             if (voice.isActive && voice.channel == channel) {
-                voice.release()
+                voice.release(frameOffset)
             }
         }
     }
@@ -439,19 +445,10 @@ class Sf2VoicePool(
         masterGain: Float = 1f
     ) {
         var count = 0
-        // Reuse pre-allocated buffer (zero it first)
-        val channelCounts = channelCountsBuffer
-        channelCounts.fill(0)
 
         // Count active voices to determine quality mode
         for (voice in voices) {
-            if (voice.isActive) {
-                count++
-                val channelIndex = voice.channel
-                if (channelIndex in 0 until NUM_CHANNELS) {
-                    channelCounts[channelIndex]++
-                }
-            }
+            if (voice.isActive) count++
         }
 
         // EMERGENCY MODE: When approaching max voices, force quickFade on voices ALREADY in release
@@ -473,16 +470,6 @@ class Sf2VoicePool(
             count > (Sf2Voice.LOW_QUALITY_THRESHOLD - 10)
         } else {
             count > Sf2Voice.LOW_QUALITY_THRESHOLD
-        }
-
-        // Enable ultra low quality mode when voice count is very high
-        // Hysteresis: enter at threshold, exit 15 voices below to prevent rapid toggling
-        // (toggling quality modes at block rate was a major cause of crackling on
-        // filtered instruments like pads, where voice count oscillates around threshold)
-        Sf2Voice.ultraLowQualityMode = if (Sf2Voice.ultraLowQualityMode) {
-            count > (Sf2Voice.ULTRA_LOW_QUALITY_THRESHOLD - 15)
-        } else {
-            count > Sf2Voice.ULTRA_LOW_QUALITY_THRESHOLD
         }
 
         // Enable release cap when voice count is very high
@@ -552,7 +539,7 @@ class Sf2VoicePool(
             )
         } else {
             renderVoiceRange(
-                0, maxVoices, sf2File, outputLeft, outputRight, numSamples,
+                0, voices.size, sf2File, outputLeft, outputRight, numSamples,
                 channelVolumes, channelPitchBends, channelPans, channelExpressions,
                 channelModulations, channelReverbSends, reverbSendLeft, reverbSendRight,
                 channelChorusSends, chorusSendLeft, chorusSendRight, combinedGain
@@ -563,11 +550,6 @@ class Sf2VoicePool(
         if (finalCount > peakVoiceCount) {
             peakVoiceCount = finalCount
         }
-        // Double-buffered snapshot update: copy counts into inactive buffer, then swap.
-        // This prevents allocateVoice() from reading a buffer that's being cleared/filled.
-        val snapTarget = if (channelActiveSnapshot === channelActiveSnapA) channelActiveSnapB else channelActiveSnapA
-        channelCounts.copyInto(snapTarget)
-        channelActiveSnapshot = snapTarget
     }
 
     // ==================== Parallel Rendering ====================
@@ -646,7 +628,7 @@ class Sf2VoicePool(
         val activeWorkers = ensureWorkers()
         val actualWorkerCount = activeWorkers.size
         val totalThreads = actualWorkerCount + 1 // workers + main thread
-        val chunkSize = maxVoices / totalThreads
+        val chunkSize = voices.size / totalThreads
 
         mainRenderThread = Thread.currentThread()
 
@@ -697,7 +679,7 @@ class Sf2VoicePool(
         // PLUS: render voice ranges from unhealthy workers (fallback to sequential)
         val mainStart = actualWorkerCount * chunkSize
         var mainActiveCount = renderVoiceRange(
-            mainStart, maxVoices, sf2File, outputLeft, outputRight, numSamples,
+            mainStart, voices.size, sf2File, outputLeft, outputRight, numSamples,
             channelVolumes, channelPitchBends, channelPans, channelExpressions,
             channelModulations, channelReverbSends, reverbSendLeft, reverbSendRight,
             channelChorusSends, chorusSendLeft, chorusSendRight, combinedGain

@@ -45,17 +45,9 @@ class Sf2Voice(
         // Automatically enabled when voice count exceeds threshold
         @Volatile var lowQualityMode: Boolean = false
 
-        // Ultra low quality mode: skip filters and use simplest rendering
-        // Used when CPU is severely overloaded
-        @Volatile var ultraLowQualityMode: Boolean = false
-
         // Voice count threshold for automatic low quality mode (linear interpolation)
         // Raised from 40 to 52: moderate improvement, safe for most devices
         const val LOW_QUALITY_THRESHOLD = 52
-
-        // Voice count threshold for ultra low quality mode (skip filters, simpler envelope)
-        // Raised from 64 to 80: filters/LFOs stay active longer without overloading most devices
-        const val ULTRA_LOW_QUALITY_THRESHOLD = 80
 
         // Block size for block-based DSP processing
         // Modulation (envelope, LFOs, pitch) computed once per block (~750/s at 48kHz)
@@ -67,9 +59,13 @@ class Sf2Voice(
         @Volatile var releaseCapped: Boolean = false
         @Volatile var cappedReleaseSamples: Int = 4800  // ~100ms at 48000Hz
 
-        // Loop handling constants (shared across all voice instances)
+        // Loops shorter than this are read with loop-aware linear interpolation
         const val SHORT_LOOP_THRESHOLD = 200
-        const val CROSSFADE_SAMPLES = 32
+
+        // Enveloppe de volume quand la zone n'en définit aucune : valeurs par défaut de la norme
+        // (attaque immédiate, sustain plein). Avant, la voix prenait l'enveloppe par défaut de
+        // modulation (retombée à zéro en 100 ms) et les notes tenues s'éteignaient aussitôt.
+        private val DEFAULT_VOLUME_ENVELOPE = VolumeEnvelope()
 
         // Soft saturation threshold (above this, we start compressing)
         private const val SATURATION_THRESHOLD = 0.75f
@@ -166,9 +162,26 @@ class Sf2Voice(
     private val pitchBendSmoothingCoeff: Float = 0.002f
 
     // Declick mechanism for voice stealing
-    // When a voice is stolen while audible, we add a quick attack ramp to mask the click
+    // Only used when a slot still audible has to be reused directly (no spare slot left):
+    // the new note gets a quick attack ramp to soften the cut
     private var declickSamplesRemaining: Int = 0
     private val declickDurationSamples: Int = (0.004f * sampleRate).toInt()  // 4ms declick ramp
+
+    // Voix en fondu rapide (volée ou coupée par une exclusive class) : elle libère sa place
+    // dans la polyphonie mais continue de jouer son fondu de 15 ms dans son propre slot.
+    var isQuickFading: Boolean = false
+        private set
+
+    // Timing à l'échantillon près : la note démarre / est relâchée à cette position
+    // dans le prochain buffer rendu (0 = tout de suite).
+    private var startDelayFrames: Int = 0
+    private var pendingReleaseFrame: Int = -1
+
+    // Derniers gains appliqués (fin du bloc précédent), pour rampes sans escalier.
+    // < 0 = pas encore de valeur (nouvelle note).
+    private var lastChannelGain: Float = -1f
+    private var lastLevelLeft: Float = -1f
+    private var lastLevelRight: Float = -1f
 
     /**
      * Returns an estimated loudness value for voice stealing decisions.
@@ -188,7 +201,8 @@ class Sf2Voice(
         channel: Int,
         note: Int,
         velocity: Int,
-        region: Sf2Region
+        region: Sf2Region,
+        startDelayFrames: Int = 0
     ) {
         // DECLICK: If voice was active with audible level, add a quick attack ramp
         // This masks the click from the old voice being cut off during voice stealing
@@ -209,6 +223,13 @@ class Sf2Voice(
 
         // Reset sample position
         samplePosition = 0.0
+
+        isQuickFading = false
+        this.startDelayFrames = startDelayFrames.coerceAtLeast(0)
+        pendingReleaseFrame = -1
+        lastChannelGain = -1f
+        lastLevelLeft = -1f
+        lastLevelRight = -1f
 
         // Calculate playback rate for pitch
         val calculatedRate = region.calculatePlaybackRate(note, sampleRate)
@@ -238,11 +259,13 @@ class Sf2Voice(
         // Store exclusive class
         exclusiveClass = region.exclusiveClass
 
-        // Reset smoothed pitch bend to current channel value (will be updated in render)
-        smoothedPitchBend = 0f
+        // Le lissage du pitch bend repartira de la valeur courante du canal au premier rendu.
+        // (Avant : départ à 0, donc chaque note glissait depuis la hauteur « sans bend » pendant
+        // ~20 ms, y compris sur un canal transposé par RPN coarse/fine tuning.)
+        smoothedPitchBend = Float.NaN
 
         // Configure and trigger envelope (with key tracking based on MIDI note)
-        envelope.configure(region.volumeEnvelope, note)
+        envelope.configure(region.volumeEnvelope ?: DEFAULT_VOLUME_ENVELOPE, note)
         envelope.trigger()
 
         // Configure low-pass filter (SF2 timbre filter)
@@ -322,8 +345,16 @@ class Sf2Voice(
     /**
      * Releases this voice (note off).
      * When release cap is active (high polyphony), forces a faster release.
+     *
+     * @param frameOffset position, dans le prochain buffer rendu, où le relâchement doit
+     *   avoir lieu (0 = immédiatement)
      */
-    fun release() {
+    fun release(frameOffset: Int = 0) {
+        if (frameOffset > 0) {
+            pendingReleaseFrame = if (pendingReleaseFrame < 0) frameOffset else min(pendingReleaseFrame, frameOffset)
+            return
+        }
+        pendingReleaseFrame = -1
         if (releaseCapped) {
             // Force faster release when voice count is very high
             envelope.releaseWithCap(cappedReleaseSamples)
@@ -348,6 +379,8 @@ class Sf2Voice(
      */
     fun softStop() {
         if (!isActive) return
+        isQuickFading = true
+        pendingReleaseFrame = -1
         envelope.quickFade()
         modEnvelope.quickFade()
         // Voice remains active until envelope finishes (handled in render)
@@ -382,7 +415,8 @@ class Sf2Voice(
      * @param outputLeft Left channel output buffer
      * @param outputRight Right channel output buffer
      * @param numSamples Number of samples to render
-     * @param channelVolume Volume multiplier for this voice's channel (0.0-1.0)
+     * @param channelVolume Volume multiplier for this voice's channel (0.0-1.0).
+     *   The voice ramps linearly from the previous buffer's value to this one.
      * @param pitchBendSemitones Pitch bend value in semitones (-2 to +2 typically)
      * @param channelPan Channel pan value (-1.0 left to +1.0 right, 0.0 center)
      * @param channelModulation Modulation wheel value (0.0-1.0), adds vibrato
@@ -407,12 +441,36 @@ class Sf2Voice(
 
         val reg = region ?: return
 
+        // Note programmée plus loin dans ce buffer (ou dans un suivant) : rien à rendre avant
+        var startFrame = 0
+        if (startDelayFrames > 0) {
+            if (startDelayFrames >= numSamples) {
+                startDelayFrames -= numSamples
+                // Un relâchement arrivé avant le début de la note s'applique dès son début
+                if (pendingReleaseFrame >= 0) pendingReleaseFrame = 0
+                return
+            }
+            startFrame = startDelayFrames
+            startDelayFrames = 0
+        }
+
+        // Relâchement programmé dans ce buffer (jamais avant le début de la note)
+        var releaseFrame = -1
+        if (pendingReleaseFrame >= 0) {
+            releaseFrame = pendingReleaseFrame.coerceAtLeast(startFrame)
+            pendingReleaseFrame = -1
+            if (releaseFrame >= numSamples) {
+                pendingReleaseFrame = releaseFrame - numSamples
+                releaseFrame = -1
+            }
+        }
+
         // Calculate effective pan by combining region pan with channel pan (MIDI CC10)
         // Channel pan is additive: region pan positions the voice, channel pan shifts the whole channel
         val effectivePanLeft: Float
         val effectivePanRight: Float
         if (channelPan != 0f) {
-            val combinedPan = (region!!.pan + channelPan).coerceIn(-1f, 1f)
+            val combinedPan = (reg.pan + channelPan).coerceIn(-1f, 1f)
             val angle = (combinedPan + 1f) * 0.25f * Math.PI.toFloat()
             effectivePanLeft = kotlin.math.cos(angle)
             effectivePanRight = kotlin.math.sin(angle)
@@ -424,12 +482,6 @@ class Sf2Voice(
         // Pre-compute send state (loop-invariant)
         val hasReverbSend = reverbSendLeft != null && reverbSendRight != null && reverbSendLevel > 0.01f
         val hasChorusSend = chorusSendLeft != null && chorusSendRight != null && chorusSendLevel > 0.01f
-
-        // Ultra low quality mode: use fast path with minimal processing
-        if (ultraLowQualityMode) {
-            renderFastPath(sf2File, reg, outputLeft, outputRight, numSamples, channelVolume, effectivePanLeft, effectivePanRight, reverbSendLeft, reverbSendRight, reverbSendLevel, chorusSendLeft, chorusSendRight, chorusSendLevel)
-            return
-        }
 
         // Pre-compute loop parameters (constant for entire render call)
         val hasValidLoop = reg.hasLoop && (reg.loopEnd > reg.loopStart)
@@ -444,35 +496,41 @@ class Sf2Voice(
         val hasModLfo = modLfoToPitchCents != 0 || modLfoToVolumeCentibels != 0 || modLfoToFilterCents != 0
         val hasModEnv = modEnvToPitchCents != 0 || modEnvToFilterCents != 0
 
+        // Gain de canal (volume, expression, gain global, gain selon le nombre de voix) :
+        // rampe linéaire depuis la valeur du buffer précédent, au lieu d'une marche à chaque buffer
+        val targetChannelGain = channelVolume
+        val startChannelGain = if (lastChannelGain < 0f) targetChannelGain else lastChannelGain
+        lastChannelGain = targetChannelGain
+        val renderSpan = (numSamples - startFrame).toFloat()
+        val staticGain = baseGain * velocityGain
+
         // === BLOCK-BASED RENDERING ===
         // Process numSamples in blocks of BLOCK_SIZE (64 samples).
         // Block header: compute envelope, LFOs, modulation, pitch at block rate (~750/s at 48kHz)
         // Inner loop: only sample interpolation, IIR filters, gain ramp, output
-        var offset = 0
+        var offset = startFrame
         while (offset < numSamples) {
-            val blockEnd = min(offset + BLOCK_SIZE, numSamples)
+            if (offset == releaseFrame) {
+                release()
+                releaseFrame = -1
+            }
+            var blockEnd = min(offset + BLOCK_SIZE, numSamples)
+            if (releaseFrame > offset) blockEnd = min(blockEnd, releaseFrame)
             val blockLen = blockEnd - offset
 
             // --- Block header: compute modulation values once per block ---
 
             // Envelope: capture start level, advance by blockLen, capture end level
             val envStart = envelope.getLevel()
-            val envEnd = envelope.processBlock(blockLen)
+            var envEnd = envelope.processBlock(blockLen)
 
-            // Check if envelope finished during this block
-            if (envelope.isFinished()) {
-                isActive = false
-                return
-            }
-
-            // Early cull at block rate (saves processing entire block)
-            val blockMaxEnv = max(envStart, envEnd)
-            if (blockMaxEnv * velocityGain < VOICE_CULL_THRESHOLD) {
-                if (envelope.stage == EnvelopeGenerator.Stage.RELEASE) {
-                    isActive = false
-                    return
-                }
-            }
+            // Dernier bloc de la voix (enveloppe terminée, ou relâchement devenu inaudible) :
+            // on le rend quand même avec une rampe jusqu'à zéro au lieu de couper net,
+            // sinon la fin de chaque release laisse une petite marche (clic).
+            val isLastBlock = envelope.isFinished() ||
+                (envelope.stage == EnvelopeGenerator.Stage.RELEASE &&
+                    max(envStart, envEnd) * velocityGain < VOICE_CULL_THRESHOLD)
+            if (isLastBlock) envEnd = 0f
 
             // LFOs: O(1) per block via processBlock (no per-sample loop)
             val vibLfoValue = if (hasVibLfo) vibratoLfo.processBlock(blockLen) else 0f
@@ -483,8 +541,12 @@ class Sf2Voice(
 
             // Pitch bend smoothing (approximate N exponential steps as single larger step)
             // coeff * blockLen ≈ 1 - (1-coeff)^blockLen for small coeff (0.002 * 64 = 0.128 ≈ exact 0.120)
-            val pbCoeff = (pitchBendSmoothingCoeff * blockLen).coerceAtMost(1f)
-            smoothedPitchBend += pbCoeff * (pitchBendSemitones - smoothedPitchBend)
+            if (smoothedPitchBend.isNaN()) {
+                smoothedPitchBend = pitchBendSemitones
+            } else {
+                val pbCoeff = (pitchBendSmoothingCoeff * blockLen).coerceAtMost(1f)
+                smoothedPitchBend += pbCoeff * (pitchBendSemitones - smoothedPitchBend)
+            }
 
             // Pitch modulation (combined: vibrato LFO + mod LFO + mod wheel + mod envelope + pitch bend)
             // channelModulation is pre-scaled to semitones (rawCC1 × depthRange), so multiply by 100 for cents.
@@ -520,13 +582,20 @@ class Sf2Voice(
                 filter.modulateCutoff(filterModFactor)
             }
 
-            // Block gain: everything except envelope (which is linearly interpolated per-sample)
-            // 1 multiply per sample instead of 5 (base * velocity * channel * volumeMod * env)
-            val blockGain = baseGain * velocityGain * channelVolume * volumeModFactor
-
-            // Envelope linear ramp: interpolate from envStart to envEnd across the block
-            val envIncrement = if (blockLen > 1) (envEnd - envStart) / blockLen.toFloat() else 0f
-            var envLevel = envStart
+            // Niveaux gauche/droite en fin de bloc (tout sauf l'échantillon), puis rampe
+            // linéaire par échantillon depuis la fin du bloc précédent : enveloppe, volume de
+            // canal, trémolo et panoramique évoluent sans escalier.
+            val channelGain = startChannelGain +
+                (targetChannelGain - startChannelGain) * ((blockEnd - startFrame) / renderSpan)
+            val blockGain = staticGain * channelGain * volumeModFactor
+            val levelLeftEnd = blockGain * envEnd * effectivePanLeft
+            val levelRightEnd = blockGain * envEnd * effectivePanRight
+            var levelLeft = if (lastLevelLeft < 0f) blockGain * envStart * effectivePanLeft else lastLevelLeft
+            var levelRight = if (lastLevelRight < 0f) blockGain * envStart * effectivePanRight else lastLevelRight
+            val incLeft = (levelLeftEnd - levelLeft) / blockLen
+            val incRight = (levelRightEnd - levelRight) / blockLen
+            lastLevelLeft = levelLeftEnd
+            lastLevelRight = levelRightEnd
 
             // --- Inner loop: per-sample processing (tight loop) ---
             for (i in offset until blockEnd) {
@@ -536,39 +605,35 @@ class Sf2Voice(
                 // SF2 low-pass timbre filter (per-sample, IIR state-dependent)
                 sample = filter.process(sample)
 
-                // Apply gains with linearly interpolated envelope
-                var finalGain = sample * blockGain * envLevel
-                envLevel += envIncrement
-
-                // Declick ramp for voice stealing
+                // Declick ramp when an audible slot had to be reused directly
                 if (declickSamplesRemaining > 0) {
                     val rampProgress = 1f - (declickSamplesRemaining.toFloat() / declickDurationSamples)
-                    val smoothRamp = rampProgress * rampProgress * (3f - 2f * rampProgress)
-                    finalGain *= smoothRamp
+                    sample *= rampProgress * rampProgress * (3f - 2f * rampProgress)
                     declickSamplesRemaining--
                 }
 
-                // NaN/Inf protection + lightweight clamp
-                val safeSample = if (finalGain.isNaN() || finalGain.isInfinite()) {
-                    0f
-                } else {
-                    finalGain.coerceIn(-2.0f, 2.0f)
-                }
+                // NaN/Inf protection
+                if (sample.isNaN() || sample.isInfinite()) sample = 0f
 
-                // Pan and mix into output
-                outputLeft[i] += safeSample * effectivePanLeft
-                outputRight[i] += safeSample * effectivePanRight
+                levelLeft += incLeft
+                levelRight += incRight
+                val outL = sample * levelLeft
+                val outR = sample * levelRight
+
+                // Mix into output
+                outputLeft[i] += outL
+                outputRight[i] += outR
 
                 // Direct reverb send
                 if (hasReverbSend) {
-                    reverbSendLeft[i] += safeSample * effectivePanLeft * reverbSendLevel
-                    reverbSendRight[i] += safeSample * effectivePanRight * reverbSendLevel
+                    reverbSendLeft[i] += outL * reverbSendLevel
+                    reverbSendRight[i] += outR * reverbSendLevel
                 }
 
                 // Direct chorus send
                 if (hasChorusSend) {
-                    chorusSendLeft[i] += safeSample * effectivePanLeft * chorusSendLevel
-                    chorusSendRight[i] += safeSample * effectivePanRight * chorusSendLevel
+                    chorusSendLeft[i] += outL * chorusSendLevel
+                    chorusSendRight[i] += outR * chorusSendLevel
                 }
 
                 // Advance sample position (constant rate within block)
@@ -587,6 +652,11 @@ class Sf2Voice(
                         return
                     }
                 }
+            }
+
+            if (isLastBlock) {
+                isActive = false
+                return
             }
 
             offset = blockEnd
@@ -622,7 +692,7 @@ class Sf2Voice(
             } else {
                 // Short loops: use crossfade for extra smoothing
                 if (loopLength in 1 until SHORT_LOOP_THRESHOLD) {
-                    return getSampleWithLoopCrossfade(sf2File, region, loopLength)
+                    return getSampleShortLoop(sf2File, region)
                 }
 
                 // Near loop boundary: cubic reads index+2, so trigger 2 samples before loopEnd
@@ -689,184 +759,32 @@ class Sf2Voice(
     }
 
     /**
-     * Gets a sample with crossfade for short loops.
-     * This blends the sample near the loop end with the wrapped-around position
-     * to eliminate clicking at the loop boundary.
+     * Gets a sample for short loops with loop-aware linear interpolation.
+     *
+     * Les boucles courtes restent en interpolation linéaire (comme avant), mais le fondu
+     * enchaîné qui existait ici a été retiré : il mélangeait la fin de boucle avec une position
+     * décalée de 32 échantillons dans la boucle, ce qui créait un saut de phase à chaque tour
+     * (bourdonnement sur les boucles de 64 à 199 échantillons, fréquentes dans les aigus).
      */
-    private fun getSampleWithLoopCrossfade(sf2File: Sf2File, region: Sf2Region, loopLength: Long): Float {
+    private fun getSampleShortLoop(sf2File: Sf2File, region: Sf2Region): Float {
         val loopRelativeStart = (region.loopStart - region.sampleStart).toDouble()
         val loopRelativeEnd = (region.loopEnd - region.sampleStart).toDouble()
 
         // Normalize position to be within the loop if we've entered it
         var pos = samplePosition
         if (pos >= loopRelativeEnd) {
-            pos = loopRelativeStart + ((pos - loopRelativeStart) % loopLength.toDouble())
+            pos = loopRelativeStart + ((pos - loopRelativeStart) % (loopRelativeEnd - loopRelativeStart))
             // Safety: floating-point modulo may land exactly at end
             if (pos >= loopRelativeEnd) pos = loopRelativeStart
         }
 
-        // For short loops (< 2x crossfade size), skip crossfade entirely.
-        // Crossfade would exceed loop bounds causing out-of-bounds reads.
-        // Use loop-aware linear interpolation instead.
-        if (loopLength < CROSSFADE_SAMPLES * 2) {
-            val absolutePos = region.sampleStart + pos.toLong()
-            val frac = (pos - pos.toLong()).toFloat()
-            val sa = sf2File.getSample(absolutePos)
-            // Wrap next sample within loop to avoid reading past loop end
-            val nextPos = pos + 1.0
-            val wrappedNextAbs = if (nextPos >= loopRelativeEnd) {
-                region.sampleStart + loopRelativeStart.toLong()
-            } else {
-                absolutePos + 1
-            }
-            val sb = sf2File.getSample(wrappedNextAbs)
-            return sa + (sb - sa) * frac
-        }
-
-        // Calculate distance from loop end
-        val distFromEnd = loopRelativeEnd - pos
-
-        // Crossfade length: never exceed half the loop to stay within bounds
-        val crossfadeLen = minOf(CROSSFADE_SAMPLES, (loopLength / 2).toInt())
-
-        if (distFromEnd < crossfadeLen && distFromEnd >= 0) {
-            // Get sample at current position
-            val absPos1 = region.sampleStart + pos.toLong()
-            val s1 = sf2File.getSample(absPos1)
-
-            // Get sample at wrapped-around position (start of loop + offset)
-            val wrapOffset = (crossfadeLen - distFromEnd).toLong()
-            // Belt-and-suspenders: ensure offset stays within loop bounds
-            val boundedOffset = if (wrapOffset >= loopLength) wrapOffset % loopLength else wrapOffset
-            val absPos2 = region.loopStart + boundedOffset
-            val s2 = sf2File.getSample(absPos2)
-
-            // Linear crossfade factor: 1.0 at loop end, 0.0 at start of crossfade zone
-            val fade = (1.0 - distFromEnd / crossfadeLen).toFloat().coerceIn(0f, 1f)
-
-            // Blend samples
-            return s1 * (1f - fade) + s2 * fade
-        }
-
-        // Not in crossfade zone - regular sample with linear interpolation
         val absolutePos = region.sampleStart + pos.toLong()
-        val index = absolutePos.toInt()
         val frac = (pos - pos.toLong()).toFloat()
-
-        val sa = sf2File.getSample(index.toLong())
-        val sb = sf2File.getSample((index + 1).toLong())
+        val sa = sf2File.getSample(absolutePos)
+        // The sample after the last loop point is the first loop point
+        val nextAbs = if (absolutePos + 1 >= region.loopEnd) region.loopStart else absolutePos + 1
+        val sb = sf2File.getSample(nextAbs)
         return sa + (sb - sa) * frac
-    }
-
-    /**
-     * Ultra-fast rendering path for CPU-constrained situations.
-     * Skips: LFOs, modulation envelope, anti-aliasing, pitch bend smoothing, block-based processing.
-     * Keeps: SF2 low-pass filter (critical for timbre — skipping it causes crackling on filtered instruments).
-     * Uses: Simple envelope, linear interpolation, basic panning, clamp.
-     */
-    private fun renderFastPath(
-        sf2File: Sf2File,
-        reg: Sf2Region,
-        outputLeft: FloatArray,
-        outputRight: FloatArray,
-        numSamples: Int,
-        channelVolume: Float,
-        effectivePanLeft: Float = panLeft,
-        effectivePanRight: Float = panRight,
-        reverbSendLeft: FloatArray? = null,
-        reverbSendRight: FloatArray? = null,
-        reverbSendLevel: Float = 0f,
-        chorusSendLeft: FloatArray? = null,
-        chorusSendRight: FloatArray? = null,
-        chorusSendLevel: Float = 0f
-    ) {
-        val hasReverbSend = reverbSendLeft != null && reverbSendRight != null && reverbSendLevel > 0.01f
-        val hasChorusSend = chorusSendLeft != null && chorusSendRight != null && chorusSendLevel > 0.01f
-        val gain = baseGain * velocityGain * channelVolume
-
-        // Pre-compute loop parameters (constant for entire render call)
-        val fpHasValidLoop = reg.hasLoop && (reg.loopEnd > reg.loopStart)
-        val fpLoopLength = if (fpHasValidLoop) (reg.loopEnd - reg.loopStart).toDouble() else 0.0
-        val fpLoopRelativeEnd = if (fpHasValidLoop) (reg.loopEnd - reg.sampleStart).toDouble() else 0.0
-        val fpLoopRelativeStart = if (fpHasValidLoop) (reg.loopStart - reg.sampleStart).toDouble() else 0.0
-        val fpSampleLength = if (!reg.hasLoop) (reg.sampleEnd - reg.sampleStart).toDouble() else 0.0
-
-        for (i in 0 until numSamples) {
-            val envLevel = envelope.process()
-
-            if (envelope.isFinished()) {
-                isActive = false
-                return
-            }
-
-            if (envLevel < 0.005f && envelope.stage == EnvelopeGenerator.Stage.RELEASE) {
-                isActive = false
-                return
-            }
-
-            // Linear interpolation
-            val absolutePos = reg.sampleStart + samplePosition.toLong()
-            val index = absolutePos.toInt()
-            val frac = (samplePosition - samplePosition.toLong()).toFloat()
-
-            val s1 = sf2File.getSample(index.toLong())
-            val s2 = sf2File.getSample((index + 1).toLong())
-            var sample = s1 + (s2 - s1) * frac
-
-            // Apply SF2 low-pass timbre filter even in fast path.
-            // Skipping the filter causes massive timbre changes when ultraLowQualityMode
-            // toggles (e.g., 587 Hz cutoff pad goes from muffled to bright = crackling).
-            // A biquad is only 5 multiply-adds per sample — negligible CPU cost.
-            sample = filter.process(sample)
-
-            var finalSample = sample * gain * envLevel
-
-            // DECLICK: Apply attack ramp in fast path too
-            if (declickSamplesRemaining > 0) {
-                val rampProgress = 1f - (declickSamplesRemaining.toFloat() / declickDurationSamples)
-                val smoothRamp = rampProgress * rampProgress * (3f - 2f * rampProgress)
-                finalSample *= smoothRamp
-                declickSamplesRemaining--
-            }
-
-            // NaN/Inf protection + lightweight clamp (critical for stability)
-            if (finalSample.isNaN() || finalSample.isInfinite()) {
-                finalSample = 0f
-            } else {
-                finalSample = finalSample.coerceIn(-2.0f, 2.0f)
-            }
-
-            outputLeft[i] += finalSample * effectivePanLeft
-            outputRight[i] += finalSample * effectivePanRight
-
-            // Direct reverb send (fast path)
-            if (hasReverbSend) {
-                reverbSendLeft[i] += finalSample * effectivePanLeft * reverbSendLevel
-                reverbSendRight[i] += finalSample * effectivePanRight * reverbSendLevel
-            }
-
-            // Direct chorus send (fast path)
-            if (hasChorusSend) {
-                chorusSendLeft[i] += finalSample * effectivePanLeft * chorusSendLevel
-                chorusSendRight[i] += finalSample * effectivePanRight * chorusSendLevel
-            }
-
-            samplePosition += playbackRate
-
-            // Loop/end handling (pre-computed parameters, O(1) modulo wrap)
-            if (fpHasValidLoop) {
-                if (samplePosition >= fpLoopRelativeEnd) {
-                    samplePosition = fpLoopRelativeStart + ((samplePosition - fpLoopRelativeStart) % fpLoopLength)
-                    // Safety: floating-point modulo may land exactly at end
-                    if (samplePosition >= fpLoopRelativeEnd) samplePosition = fpLoopRelativeStart
-                }
-            } else if (!reg.hasLoop) {
-                if (samplePosition >= fpSampleLength) {
-                    isActive = false
-                    return
-                }
-            }
-        }
     }
 
     /**
@@ -922,6 +840,12 @@ class Sf2Voice(
         modEnvToFilterCents = 0
         smoothedPitchBend = 0f
         declickSamplesRemaining = 0
+        isQuickFading = false
+        startDelayFrames = 0
+        pendingReleaseFrame = -1
+        lastChannelGain = -1f
+        lastLevelLeft = -1f
+        lastLevelRight = -1f
     }
 
     /**
