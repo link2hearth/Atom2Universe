@@ -13,7 +13,7 @@
 | Étape | Contenu | État |
 |---|---|---|
 | 1 | Cœur du modèle : clips, pistes, repères, opérations de ligne de temps, undo/redo | ✅ fait (`audioeditor/core/`, `TimelineTest`) |
-| 2 | Fichiers PCM/WAV, **mixeur** ✅ — pics de forme d'onde et rééchantillonnage ⬜ | 🟡 à moitié (voir §6) |
+| 2 | Fichiers PCM/WAV, mixeur, pics de forme d'onde, rééchantillonnage | ✅ fait (`core/Mixer|Peaks|Resampler`, `io/WavFile|PeakFiles`) |
 | 3 | Effets DSP purs (gain, fondus, normaliser, EQ, compresseur, réverb, écho, bruit, vitesse/hauteur…) | ⬜ |
 | 4 | Stockage des projets, import (décodage), export (FFmpeg), zip de projet, migration de l'ancien projet | ⬜ |
 | 5 | Moteur de lecture temps réel (`AudioTrack`) + enregistrement par-dessus (overdub) | ⬜ |
@@ -208,7 +208,8 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
 * Tests de l'éditeur audio : `sh ./gradlew --no-daemon :app:testDebugUnitTest --tests "*audioeditor.*"`
   (≈ 45 s une fois le cache chaud). **Ne pas se fier au seul « BUILD SUCCESSFUL »** : compter les tests dans
   `app/build/test-results/testDebugUnitTest/TEST-*audioeditor*.xml` (`tests=… failures=0`).
-* Vérifié le 2026-10-01 : compilation complète OK, 59 tests de l'éditeur audio verts (35 + 13 + 11).
+* Vérifié le 2026-10-01 : compilation complète OK, 77 tests de l'éditeur audio verts
+  (Timeline 35, Mixer 13, WavFile 11, Peaks 9, Resampler 9).
 * Sans `-PbancsMesure`, les bancs de mesure sont exclus (voir `app/build.gradle.kts`).
 
 ## 6. Étapes détaillées
@@ -223,7 +224,7 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
   gestes continus (un curseur tiré = un seul pas d'annulation), presse-papiers, `sourcesInHistory`
 - [x] `TimelineTest` (35 cas : coupes, ripple, fondus continus, retourné, bornes de rognage, historique)
 
-### Étape 2 — Fichiers PCM, pics, rééchantillonnage, mixeur (🟡 mixeur + WAV faits)
+### Étape 2 — Fichiers PCM, pics, rééchantillonnage, mixeur ✅
 - [x] `io/WavFile.kt` : `WavFile.readInfo` (formats PCM 8/16/24/32 bits et flottant 32 bits,
   `WAVE_FORMAT_EXTENSIBLE`, chunks inconnus et octet de bourrage ignorés, taille de données absente
   = fichier non fermé relu quand même), `WavWriter` en flux (en-tête patché à la fermeture,
@@ -236,12 +237,23 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
 - [x] Tests : `MixerTest` (13 cas, dont « petits blocs = un seul bloc » avec fondus + coupe + retourné)
   et `WavFileTest` (11 cas : 16 bits / flottant, écrêtage, blocs, bornes, décalage, chunk LIST impair,
   fichier non fermé, fichier invalide)
-- [ ] `core/Peaks.kt` : pyramide min/max (bloc de base 256 trames, octets signés), fichier
-  `.peaks`, réduction à la volée pour un nombre de trames par pixel donné, repli sur l'audio brut
-  quand on zoome au-delà du bloc de base
-- [ ] `core/Resampler.kt` : sinc fenêtré (Kaiser), qualité réglable, en flux
-- [ ] Tests restants : fréquence conservée après rééchantillonnage (mesurée par FFT), pics = vrais min/max
-  (le pic d'un bloc retourné / décalé), réduction à la volée cohérente avec le calcul direct
+- [x] `core/Peaks.kt` : `PeakBuilder` (un seul passage, bloc de base 256 trames), `PeakData` (octets
+  signés ±127, min arrondi vers le bas et max vers le haut : la silhouette englobe toujours le signal),
+  `columns()` = réduction à la volée en colonnes de dessin pour un nombre de trames par pixel donné
+  (à utiliser tant que ≥ 256 trames/pixel), `columnsFromSamples()` pour le zoom serré (on lit alors
+  l'audio brut), format de fichier `.peaks` versionné (`A2PB`). `io/PeakFiles.kt` : `build` (en flux),
+  `save` atomique, `load` (null si abîmé), `loadOrBuild`
+  * Pas de second niveau de résumé pour l'instant : une heure entièrement dézoomée parcourt
+    ≈ 600 000 blocs par dessin. Acceptable derrière le cache bitmap de `TimelineView` ; à ajouter
+    seulement si la mesure sur appareil le demande.
+- [x] `core/Resampler.kt` : sinc fenêtré Kaiser (β 8,6), noyau tabulé sur 1024 phases interpolées,
+  lignes normalisées (le continu passe à l'identique), coupure à 95 % de la nouvelle Nyquist en
+  réduction, **en flux** (`process` par blocs de toute taille puis `finish`) ; `resampleAll` pour les
+  petits signaux. Même sortie, à 1e-6 près, quelle que soit la taille des blocs
+- [x] Tests : `PeaksTest` (9 : bloc englobant le vrai min/max, morceaux quelconques, colonnes vs calcul
+  direct, hors bornes, flux tronqué, fichier de crêtes abîmé recalculé) et `ResamplerTest` (9 :
+  44,1↔48 kHz à < 3e-3 d'un sinus idéal, ×2, repliement coupé (15 kHz → 22,05 kHz : RMS < 0,01),
+  bande passante, continu, stéréo, blocs de 1 à 4096)
 
 ### Étape 3 — Effets DSP purs
 - [ ] `dsp/Effect.kt` : `FrameReader`, `FrameWriter`, `RunContext` (progression, annulation),
