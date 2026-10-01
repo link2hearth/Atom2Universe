@@ -30,6 +30,7 @@ class Sf2Reader {
         private const val SDTA = "sdta"
         private const val PDTA = "pdta"
         private const val SMPL = "smpl"
+        private const val SM24 = "sm24"
 
         // pdta sub-chunks
         private const val PHDR = "phdr"
@@ -99,6 +100,7 @@ class Sf2Reader {
     private var sf2File: File? = null
     private var smplChunkStart: Long = 0
     private var smplChunkSize: Long = 0
+    private var sm24ChunkStart: Long = -1
 
     /**
      * Get the path to the currently parsed SF2 file.
@@ -144,6 +146,7 @@ class Sf2Reader {
         }
 
         sf2File = file
+        sm24ChunkStart = -1
 
         try {
             RandomAccessFile(file, "r").use { raf ->
@@ -193,6 +196,8 @@ class Sf2Reader {
                                         if (subId == SMPL) {
                                             smplChunkStart = raf.filePointer
                                             smplChunkSize = subSize
+                                        } else if (subId == SM24) {
+                                            sm24ChunkStart = raf.filePointer
                                         }
                                         raf.seek(raf.filePointer + subSize)
                                         // Align to even boundary
@@ -240,7 +245,7 @@ class Sf2Reader {
                     presetHeaders, presetBags, presetMods, presetGens,
                     instHeaders, instBags, instMods, instGens,
                     sampleHeaders
-                )
+                ).copy(smplDataOffset = smplChunkStart, sm24DataOffset = sm24ChunkStart)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error parsing SF2 file", e)
@@ -508,32 +513,38 @@ class Sf2Reader {
     private fun readString(raf: RandomAccessFile, length: Int): String {
         val bytes = ByteArray(length)
         raf.read(bytes)
-        // Find null terminator
+        // Find null terminator; Latin-1 keeps every byte, so names are written back unchanged
         val end = bytes.indexOf(0.toByte()).takeIf { it >= 0 } ?: length
-        return String(bytes, 0, end, Charsets.US_ASCII)
+        return String(bytes, 0, end, Charsets.ISO_8859_1)
     }
 
     private fun parseInfoChunk(raf: RandomAccessFile, endPos: Long): Sf2Info {
         var name = "Unknown"
         var engine = ""
         var comment = ""
+        val fields = mutableListOf<Sf2InfoField>()
 
-        while (raf.filePointer < endPos) {
+        while (raf.filePointer + 8 <= endPos) {
             val subId = readChunkId(raf)
             val subSize = readUInt32(raf).toInt()
             val subStart = raf.filePointer
+            if (subSize < 0 || subStart + subSize > endPos) break
 
+            val data = ByteArray(subSize)
+            raf.readFully(data)
+            fields.add(Sf2InfoField(subId, data))
+            val text = String(data, 0, data.indexOf(0.toByte()).takeIf { it >= 0 } ?: subSize, Charsets.ISO_8859_1).trim()
             when (subId) {
-                "INAM" -> name = readString(raf, subSize).trim()
-                "isng" -> engine = readString(raf, subSize).trim()
-                "ICMT" -> comment = readString(raf, subSize).trim()
+                "INAM" -> name = text
+                "isng" -> engine = text
+                "ICMT" -> comment = text
             }
 
             raf.seek(subStart + subSize)
             if (subSize % 2 != 0) raf.skipBytes(1)
         }
 
-        return Sf2Info(name, engine, comment)
+        return Sf2Info(name, engine, comment, fields)
     }
 
     private fun parsePresetHeaders(raf: RandomAccessFile, size: Long, list: MutableList<RawPresetHeader>) {
@@ -597,7 +608,7 @@ class Sf2Reader {
             val loopEnd = readUInt32(raf)
             val sampleRate = readUInt32(raf).toInt()
             val originalPitch = readInt8(raf)
-            val pitchCorrection = readInt8(raf)
+            val pitchCorrection = raf.readByte().toInt()
             val sampleLink = readUInt16(raf)
             val sampleType = readUInt16(raf)
 
@@ -634,7 +645,8 @@ class Sf2Reader {
                 sampleRate = header.sampleRate,
                 originalPitch = header.originalPitch,
                 pitchCorrection = header.pitchCorrection,
-                sampleType = header.sampleType
+                sampleType = header.sampleType,
+                sampleLink = header.sampleLink
             )
         }
 
@@ -930,8 +942,13 @@ class Sf2Reader {
 data class Sf2Info(
     val name: String,
     val engine: String,
-    val comment: String
+    val comment: String,
+    /** Every INFO sub-chunk as stored in the file, in file order. */
+    val fields: List<Sf2InfoField> = emptyList()
 )
+
+/** One INFO sub-chunk (ifil, INAM, ICOP...), kept as raw bytes so it can be written back unchanged. */
+class Sf2InfoField(val id: String, val data: ByteArray)
 
 /**
  * Result of parsing an SF2 file.
@@ -945,7 +962,11 @@ data class Sf2ParseResult(
     val presets: List<Sf2ParsedPreset>,
     val instruments: List<Sf2ParsedInstrument>,
     val samples: List<Sf2ParsedSample>,
-    val filePath: String
+    val filePath: String,
+    /** Byte offset of the smpl data in the file. */
+    val smplDataOffset: Long = 0,
+    /** Byte offset of the sm24 data (24-bit samples' low bytes), or -1 when absent. */
+    val sm24DataOffset: Long = -1
 ) {
     /**
      * Get total number of unique samples used across all presets.
@@ -1254,7 +1275,9 @@ data class Sf2ParsedSample(
     val sampleRate: Int,
     val originalPitch: Int,
     val pitchCorrection: Int,
-    val sampleType: Int
+    val sampleType: Int,
+    /** Index (in the file's sample headers) of the other channel of a stereo pair. */
+    val sampleLink: Int = 0
 ) {
     /**
      * Get sample duration in seconds.

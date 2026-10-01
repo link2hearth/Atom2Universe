@@ -143,6 +143,7 @@
     <string name="sf2_sample_name_label">Nome</string>
     <string name="sf2_save">Salva</string>
     <string name="sf2_sample_updated">Campione aggiornato</string>
+    <string name="sf2_sample_save_failed">Impossibile salvare il campione</string>
     <string name="sf2_edit_instrument">Modifica strumento</string>
     <string name="sf2_instrument_name">Nome strumento</string>
     <string name="sf2_instrument_name_default">Strumento %d</string>

@@ -201,6 +201,7 @@
     <string name="sf2_edit_sample_title">Éditer le sample</string>
     <string name="sf2_sample_name_label">Nom</string>
     <string name="sf2_sample_updated">Sample mis à jour</string>
+    <string name="sf2_sample_save_failed">Impossible d\'enregistrer le sample</string>
     <string name="sf2_edit_instrument">Éditer l\'instrument</string>
     <string name="sf2_instrument_name">Nom de l\'instrument</string>
     <string name="sf2_instrument_name_default">Instrument %d</string>

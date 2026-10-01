@@ -162,6 +162,7 @@
     <string name="sf2_sample_name_label">Название</string>
     <string name="sf2_save">Сохранить</string>
     <string name="sf2_sample_updated">Сэмпл обновлён</string>
+    <string name="sf2_sample_save_failed">Не удалось сохранить сэмпл</string>
     <string name="sf2_my_projects">Мои проекты</string>
     <string name="sf2_edit_instrument">Редактировать инструмент</string>
     <string name="sf2_instrument_name">Название инструмента</string>

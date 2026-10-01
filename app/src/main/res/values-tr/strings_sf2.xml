@@ -162,6 +162,7 @@
     <string name="sf2_sample_name_label">Ad</string>
     <string name="sf2_save">Kaydet</string>
     <string name="sf2_sample_updated">Örnek güncellendi</string>
+    <string name="sf2_sample_save_failed">Örnek kaydedilemedi</string>
     <string name="sf2_my_projects">Projelerim</string>
     <string name="sf2_edit_instrument">Enstrümanı düzenle</string>
     <string name="sf2_instrument_name">Enstrüman adı</string>

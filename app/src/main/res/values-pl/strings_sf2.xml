@@ -162,6 +162,7 @@
     <string name="sf2_sample_name_label">Nazwa</string>
     <string name="sf2_save">Zapisz</string>
     <string name="sf2_sample_updated">Próbka zaktualizowana</string>
+    <string name="sf2_sample_save_failed">Nie można zapisać próbki</string>
     <string name="sf2_my_projects">Moje projekty</string>
     <string name="sf2_edit_instrument">Edytuj instrument</string>
     <string name="sf2_instrument_name">Nazwa instrumentu</string>

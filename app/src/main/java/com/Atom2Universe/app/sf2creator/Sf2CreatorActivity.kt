@@ -28,7 +28,6 @@ import com.Atom2Universe.app.sf2creator.ui.RecordSampleFragment
 import com.Atom2Universe.app.sf2creator.ui.SampleEditorFragment
 import com.Atom2Universe.app.sf2creator.ui.Sf2ImportFragment
 import com.Atom2Universe.app.sf2creator.util.Sf2UnitConverter
-import com.Atom2Universe.app.sf2creator.util.WavUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -411,11 +410,9 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         }
 
         fragment.onSampleEditRequested = { sample ->
-            // Load audio data and open full editor
+            // Load audio data (WAV, or the imported SF2) and open full editor
             CoroutineScope(Dispatchers.Main).launch {
-                val audioData = withContext(Dispatchers.IO) {
-                    loadWavFile(File(sample.audioFilePath))
-                }
+                val audioData = Sf2ProjectRepository(this@Sf2CreatorActivity).loadSampleAudio(sample)
                 if (audioData != null) {
                     editingSampleEntity = sample
                     editingSampleAudio = audioData
@@ -802,13 +799,13 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         params: ExportFragment.SampleParams
     ) {
         CoroutineScope(Dispatchers.Main).launch {
-            val success = withContext(Dispatchers.IO) {
-                saveWavFile(File(originalSample.audioFilePath), editedAudio)
-            }
+            val repository = Sf2ProjectRepository(this@Sf2CreatorActivity)
+            // An imported sample has no WAV until its audio is changed
+            val savedSample = repository.saveEditedSampleAudio(originalSample, editedAudio)
 
-            if (success) {
+            if (savedSample != null) {
                 // Convert UI units (ms, %, Hz) to SF2 native units (timecents, centibels, cents)
-                val updatedSample = originalSample.copy(
+                val updatedSample = savedSample.copy(
                     name = params.name,
                     rootNote = params.rootNote,
                     keyRangeStart = params.keyRangeStart,
@@ -856,11 +853,16 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                     exclusiveClass = params.exclusiveClass
                 )
 
-                val repository = Sf2ProjectRepository(this@Sf2CreatorActivity)
                 repository.updateSample(updatedSample)
                 Toast.makeText(
                     this@Sf2CreatorActivity,
                     R.string.sf2_sample_updated,
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this@Sf2CreatorActivity,
+                    R.string.sf2_sample_save_failed,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -871,18 +873,6 @@ class Sf2CreatorActivity : AudioThemedActivity() {
             currentProjectId?.let { showProjectDetail(it) }
         }
     }
-
-    /**
-     * Load samples from a WAV file.
-     * Delegates to WavUtils.
-     */
-    private fun loadWavFile(file: File): ShortArray? = WavUtils.loadWavFile(file)
-
-    /**
-     * Save samples to a WAV file.
-     * Delegates to WavUtils.
-     */
-    private fun saveWavFile(file: File, samples: ShortArray): Boolean = WavUtils.writeWavFile(file, samples)
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()

@@ -87,7 +87,16 @@ data class Sf2SourceMetadataEntity(
     /**
      * Timestamp when the SF2 was imported.
      */
-    val importedAt: Long = System.currentTimeMillis()
+    val importedAt: Long = System.currentTimeMillis(),
+
+    /**
+     * Fingerprint of the project's SF2 content right after a complete import. While the
+     * project still produces the same fingerprint, export copies the source file as is.
+     */
+    val importFingerprint: String? = null,
+
+    /** Project name at import time: the source's own INAM is kept until the project is renamed. */
+    val importProjectName: String? = null
 )
 
 /**

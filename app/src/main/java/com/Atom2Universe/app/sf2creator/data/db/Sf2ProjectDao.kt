@@ -345,6 +345,41 @@ interface Sf2ProjectDao {
     @Query("DELETE FROM sf2_source_metadata WHERE projectId = :projectId")
     suspend fun deleteSourceMetadata(projectId: Long)
 
+    /** Records the project's SF2 content right after a complete import. */
+    @Query("UPDATE sf2_source_metadata SET importFingerprint = :fingerprint, importProjectName = :projectName WHERE projectId = :projectId")
+    suspend fun updateImportFingerprint(projectId: Long, fingerprint: String?, projectName: String?)
+
+    // ==================== Export ====================
+
+    @Query("SELECT * FROM sf2_presets WHERE projectId = :projectId ORDER BY id")
+    suspend fun getPresetZonesForExport(projectId: Long): List<Sf2PresetEntity>
+
+    @Query("SELECT * FROM sf2_instruments WHERE projectId = :projectId ORDER BY id")
+    suspend fun getInstrumentsForExport(projectId: Long): List<Sf2InstrumentEntity>
+
+    @Query("""
+        SELECT s.* FROM sf2_samples s
+        INNER JOIN sf2_instruments i ON s.instrumentId = i.id
+        WHERE i.projectId = :projectId
+        ORDER BY s.id
+    """)
+    suspend fun getSamplesForExport(projectId: Long): List<Sf2SampleEntity>
+
+    /** Every modulator of a project, whatever it is attached to. */
+    @Query("""
+        SELECT * FROM sf2_modulators WHERE
+            programId IN (SELECT id FROM sf2_programs WHERE projectId = :projectId)
+            OR presetId IN (SELECT id FROM sf2_presets WHERE projectId = :projectId)
+            OR instrumentId IN (SELECT id FROM sf2_instruments WHERE projectId = :projectId)
+            OR sampleId IN (
+                SELECT s.id FROM sf2_samples s
+                INNER JOIN sf2_instruments i ON s.instrumentId = i.id
+                WHERE i.projectId = :projectId
+            )
+        ORDER BY id
+    """)
+    suspend fun getModulatorsForExport(projectId: Long): List<Sf2ModulatorEntity>
+
     // ==================== Modification Tracking ====================
 
     /**

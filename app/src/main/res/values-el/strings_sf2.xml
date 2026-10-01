@@ -162,6 +162,7 @@
     <string name="sf2_sample_name_label">Όνομα</string>
     <string name="sf2_save">Αποθήκευση</string>
     <string name="sf2_sample_updated">Το δείγμα ενημερώθηκε</string>
+    <string name="sf2_sample_save_failed">Δεν ήταν δυνατή η αποθήκευση του δείγματος</string>
     <string name="sf2_my_projects">Τα έργα μου</string>
     <string name="sf2_edit_instrument">Επεξεργασία οργάνου</string>
     <string name="sf2_instrument_name">Όνομα οργάνου</string>

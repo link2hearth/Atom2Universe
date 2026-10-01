@@ -162,6 +162,7 @@
     <string name="sf2_sample_name_label">Nama</string>
     <string name="sf2_save">Simpan</string>
     <string name="sf2_sample_updated">Sampel diperbarui</string>
+    <string name="sf2_sample_save_failed">Sampel tidak dapat disimpan</string>
     <string name="sf2_my_projects">Proyek saya</string>
     <string name="sf2_edit_instrument">Edit instrumen</string>
     <string name="sf2_instrument_name">Nama instrumen</string>

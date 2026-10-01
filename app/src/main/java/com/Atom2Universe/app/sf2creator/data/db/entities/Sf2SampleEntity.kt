@@ -178,5 +178,19 @@ data class Sf2SampleEntity(
      * Tracks what was modified: audio, params, name, loop, etc.
      * 0 = no modifications
      */
-    val modificationFlags: Int = 0
+    val modificationFlags: Int = 0,
+
+    // ==================== Imported SF2 zone (lossless round trip) ====================
+    /**
+     * Generators written explicitly in this zone of the imported SF2 ("gen:value,..."),
+     * null when the zone was not imported. Export starts from them, so values that the
+     * app does not edit (or that equal a default) are written back exactly.
+     */
+    val importedGenerators: String? = null,
+
+    /**
+     * The editable parameters as they were right after import (same encoding). At export,
+     * a parameter that differs from this baseline was edited and replaces the imported value.
+     */
+    val importBaseline: String? = null
 )

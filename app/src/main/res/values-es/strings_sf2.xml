@@ -162,6 +162,7 @@
     <string name="sf2_sample_name_label">Nombre</string>
     <string name="sf2_save">Guardar</string>
     <string name="sf2_sample_updated">Muestra actualizada</string>
+    <string name="sf2_sample_save_failed">No se pudo guardar la muestra</string>
     <string name="sf2_my_projects">Mis proyectos</string>
     <string name="sf2_edit_instrument">Editar instrumento</string>
     <string name="sf2_instrument_name">Nombre del instrumento</string>

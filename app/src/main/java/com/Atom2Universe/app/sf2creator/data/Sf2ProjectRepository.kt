@@ -13,9 +13,12 @@ import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2SampleEntity
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2SourceMetadataEntity
 import com.Atom2Universe.app.sf2creator.data.db.entities.ModificationFlags
 import com.Atom2Universe.app.sf2creator.reader.Sf2ParsedModulator
+import com.Atom2Universe.app.sf2creator.reader.Sf2ParsedPreset
+import com.Atom2Universe.app.sf2creator.reader.Sf2Reader
 import com.Atom2Universe.app.sf2creator.util.WavUtils
+import com.Atom2Universe.app.sf2creator.writer.Sf2Document
+import com.Atom2Universe.app.sf2creator.writer.Sf2DocumentWriter
 import com.Atom2Universe.app.sf2creator.writer.Sf2Writer
-import com.Atom2Universe.app.sf2creator.writer.Sf2WriterHybrid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -1346,7 +1349,8 @@ class Sf2ProjectRepository(private val context: Context) {
     }
 
     suspend fun updateSample(sample: Sf2SampleEntity) {
-        dao.updateSample(sample)
+        val previous = dao.getSampleById(sample.id)
+        dao.updateSample(if (previous != null) Sf2EditNoise.keepUnedited(previous, sample) else sample)
         // Mark sample as modified (parameters changed) for hybrid export detection
         markSampleModified(sample.id, ModificationFlags.MOD_FLAG_PARAMS)
         // Update project modification time
@@ -1372,7 +1376,65 @@ class Sf2ProjectRepository(private val context: Context) {
         }
     }
 
-    // ==================== Source Metadata (Hybrid Passthrough) ====================
+    // ==================== SF2 import ====================
+
+    /** Inserts an instrument built by [Sf2ImportMapper], with its global zone modulators. */
+    suspend fun insertImportedInstrument(instrument: Sf2InstrumentEntity, modulators: List<Sf2ParsedModulator>): Long {
+        val instrumentId = dao.insertInstrument(instrument)
+        saveInstrumentLevelModulators(instrumentId, modulators)
+        dao.updateProjectModifiedAt(instrument.projectId)
+        return instrumentId
+    }
+
+    /**
+     * Inserts an instrument zone built by [Sf2ImportMapper]. With [audio], the zone plays a
+     * WAV copy of it; otherwise it reads its source file.
+     */
+    suspend fun insertImportedSample(
+        sample: Sf2SampleEntity,
+        modulators: List<Sf2ParsedModulator>,
+        audio: ShortArray? = null
+    ): Long = withContext(Dispatchers.IO) {
+        var entity = sample
+        if (audio != null) {
+            val instrument = dao.getInstrumentById(sample.instrumentId) ?: return@withContext -1L
+            val projectDir = File(samplesDir, instrument.projectId.toString()).also { it.mkdirs() }
+            val audioFile = File(projectDir, "${System.nanoTime()}_${sample.name.replace(Regex("[^a-zA-Z0-9_-]"), "_")}.wav")
+            writeWavFile(audioFile, audio, sample.sampleRate)
+            entity = entity.copy(audioFilePath = audioFile.absolutePath)
+        }
+        val sampleId = dao.insertSample(entity)
+        if (modulators.isNotEmpty()) {
+            dao.insertModulators(modulators.map { mod ->
+                Sf2ModulatorEntity(
+                    sampleId = sampleId,
+                    srcOper = mod.srcOper,
+                    destOper = mod.destOper,
+                    amount = mod.amount,
+                    amtSrcOper = mod.amtSrcOper,
+                    transOper = mod.transOper
+                )
+            })
+        }
+        sampleId
+    }
+
+    /** Inserts a preset zone built by [Sf2ImportMapper], with its modulators. */
+    suspend fun insertImportedPresetZone(zone: Sf2PresetEntity, modulators: List<Sf2ParsedModulator>): Long {
+        val presetId = dao.insertPreset(zone)
+        savePresetLevelModulators(presetId, modulators)
+        dao.updateProjectModifiedAt(zone.projectId)
+        return presetId
+    }
+
+    /** Gives a program the global zone of an imported preset. */
+    suspend fun applyImportedProgramGlobals(programId: Long, preset: Sf2ParsedPreset) {
+        val program = dao.getProgramById(programId) ?: return
+        dao.updateProgram(Sf2ImportMapper.programGlobals(program, preset))
+        saveProgramLevelModulators(programId, preset.globalModulators)
+    }
+
+    // ==================== Source Metadata ====================
 
     /**
      * Save source metadata for a project.
@@ -1391,24 +1453,6 @@ class Sf2ProjectRepository(private val context: Context) {
     }
 
     /**
-     * Get sample index mapping from file (not SQLite) to avoid OOM for large SF2 files.
-     * Returns "{}" if file doesn't exist.
-     */
-    fun getSampleIndexMappingFromFile(projectId: Long): String {
-        val mappingFile = File(mappingsDir, "${projectId}.json")
-        return if (mappingFile.exists()) {
-            try {
-                mappingFile.readText()
-            } catch (e: Exception) {
-                android.util.Log.e("Sf2ProjectRepository", "Failed to read sample mapping file", e)
-                "{}"
-            }
-        } else {
-            "{}"
-        }
-    }
-
-    /**
      * Delete source metadata for a project.
      */
     suspend fun deleteSourceMetadata(projectId: Long) {
@@ -1424,19 +1468,6 @@ class Sf2ProjectRepository(private val context: Context) {
      */
     suspend fun updateChunkRegistry(projectId: Long, registry: String) {
         dao.updateChunkRegistry(projectId, registry)
-    }
-
-    /**
-     * Update the sample index mapping for a project.
-     * Writes to a file instead of SQLite to avoid OOM for large SF2 files.
-     */
-    suspend fun updateSampleIndexMapping(projectId: Long, mapping: String) {
-        val mappingFile = File(mappingsDir, "${projectId}.json")
-        try {
-            mappingFile.writeText(mapping)
-        } catch (e: Exception) {
-            android.util.Log.e("Sf2ProjectRepository", "Failed to write sample mapping file", e)
-        }
     }
 
     // ==================== Modification Tracking ====================
@@ -1508,680 +1539,126 @@ class Sf2ProjectRepository(private val context: Context) {
         return dao.hasModifiedSamples(projectId)
     }
 
-    /**
-     * Check if a project has been modified since import.
-     * This is the primary method for determining if hybrid passthrough can be used.
-     *
-     * Returns true if:
-     * - Any sample, preset, or instrument has isModifiedByUser = true
-     * - Any entity was added after import (MOD_FLAG_ADDED)
-     * - Any entity was deleted (MOD_FLAG_DELETED)
-     * - Any audio data was modified (MOD_FLAG_AUDIO)
-     *
-     * @param projectId The project ID to check
-     * @return true if the project has been modified, false if it's unchanged since import
-     */
-    suspend fun hasProjectBeenModified(projectId: Long): Boolean {
-        // Check if there's any source metadata (project was imported)
-        val metadata = dao.getSourceMetadata(projectId)
-        android.util.Log.d("Sf2ProjectRepository", "hasProjectBeenModified: metadata=${metadata != null}")
-        if (metadata == null) {
-            // Project was created from scratch, not imported
-            android.util.Log.d("Sf2ProjectRepository", "hasProjectBeenModified: no metadata -> modified=true")
-            return true
-        }
-
-        // Check various modification types
-        val hasUserMods = dao.hasAnyModifications(projectId)
-        android.util.Log.d("Sf2ProjectRepository", "hasProjectBeenModified: hasUserMods=$hasUserMods")
-        if (hasUserMods) {
-            android.util.Log.d("Sf2ProjectRepository", "Project $projectId has user modifications")
-            return true
-        }
-
-        val hasAdded = dao.hasAddedEntities(projectId)
-        android.util.Log.d("Sf2ProjectRepository", "hasProjectBeenModified: hasAdded=$hasAdded")
-        if (hasAdded) {
-            android.util.Log.d("Sf2ProjectRepository", "Project $projectId has added entities")
-            return true
-        }
-
-        val hasDeleted = dao.hasDeletedEntities(projectId)
-        android.util.Log.d("Sf2ProjectRepository", "hasProjectBeenModified: hasDeleted=$hasDeleted")
-        if (hasDeleted) {
-            android.util.Log.d("Sf2ProjectRepository", "Project $projectId has deleted entities")
-            return true
-        }
-
-        val hasAudioMods = dao.hasAudioModifications(projectId)
-        android.util.Log.d("Sf2ProjectRepository", "hasProjectBeenModified: hasAudioMods=$hasAudioMods")
-        if (hasAudioMods) {
-            android.util.Log.d("Sf2ProjectRepository", "Project $projectId has audio modifications")
-            return true
-        }
-
-        // Check chunk registry for modified chunks
-        try {
-            val registry = org.json.JSONObject(metadata.chunkRegistry)
-            for (key in registry.keys()) {
-                val chunk = registry.getJSONObject(key)
-                if (chunk.optBoolean("isModified", false)) {
-                    android.util.Log.d("Sf2ProjectRepository", "Project $projectId has modified chunk: $key")
-                    return true
-                }
-            }
-        } catch (e: Exception) {
-            // If we can't parse the registry, assume modified to be safe
-            android.util.Log.e("Sf2ProjectRepository", "Failed to parse chunk registry", e)
-            return true
-        }
-
-        android.util.Log.d("Sf2ProjectRepository", "Project $projectId has NO modifications since import")
-        return false
-    }
-
-    /**
-     * Check if only metadata/parameters were modified (not audio data).
-     * This determines if we can use smpl passthrough even with other modifications.
-     *
-     * @return true if audio data is unchanged, false if audio was modified
-     */
-    suspend fun canUseSmplPassthrough(projectId: Long): Boolean {
-        val metadata = dao.getSourceMetadata(projectId) ?: return false
-
-        // Check if smpl chunk is marked as modified in registry
-        try {
-            val registry = org.json.JSONObject(metadata.chunkRegistry)
-            if (registry.has("smpl")) {
-                val smplChunk = registry.getJSONObject("smpl")
-                if (smplChunk.optBoolean("isModified", false)) {
-                    return false
-                }
-            }
-        } catch (e: Exception) {
-            return false
-        }
-
-        // Check for audio modifications flag
-        if (dao.hasAudioModifications(projectId)) {
-            return false
-        }
-
-        // Check for added samples (which would require new audio)
-        if (dao.hasAddedEntities(projectId)) {
-            return false
-        }
-
-        return true
-    }
-
     // ==================== Export ====================
+
+    /** Everything stored for a project, for export. */
+    suspend fun loadExportSnapshot(projectId: Long): Sf2ProjectSnapshot? {
+        val project = dao.getProjectById(projectId) ?: return null
+        val metadata = dao.getSourceMetadata(projectId)
+        return Sf2ProjectSnapshot(
+            projectName = project.name,
+            programs = dao.getProgramsForProject(projectId),
+            presetZones = dao.getPresetZonesForExport(projectId),
+            instruments = dao.getInstrumentsForExport(projectId),
+            samples = dao.getSamplesForExport(projectId),
+            modulators = dao.getModulatorsForExport(projectId),
+            sourceFilePath = metadata?.sourceFilePath?.takeIf { File(it).exists() },
+            importProjectName = metadata?.importProjectName
+        )
+    }
+
+    private val projectWavAccess = object : Sf2ProjectExporter.WavAccess {
+        override fun frameCount(path: String): Int = File(path).let { if (it.isFile) WavUtils.getWavSampleCount(it) else 0 }
+        override fun identity(path: String): String = File(path).let { "$path:${it.length()}:${it.lastModified()}" }
+        override fun load(path: String): ShortArray? = WavUtils.loadWavFile(File(path))
+        override fun prepareLoop(data: ShortArray, sample: Sf2SampleEntity) =
+            Sf2Writer().prepareRecordedLoop(data, sample.sampleRate, sample.loopStart, sample.loopEnd)
+    }
+
+    private suspend fun buildExportDocument(projectId: Long): Sf2Document? {
+        val snapshot = loadExportSnapshot(projectId) ?: return null
+        return Sf2ProjectExporter.build(snapshot, { path -> Sf2Reader().parse(File(path)) }, projectWavAccess)
+    }
 
     /**
      * Export a project to an SF2 file.
-     * Uses the new hierarchy: Programs → Instruments → Samples
-     * Each Program becomes a SF2 Preset with all samples from its instruments.
      *
-     * Export strategies (in order of preference):
-     * 1. Direct copy: If no modifications, copy original SF2 file
-     * 2. Hybrid passthrough: If only metadata modified, copy smpl chunk from source
-     * 3. Full rebuild: Regenerate entire SF2 file
+     * A project imported from a whole SF2 and left unchanged is written as a copy of that
+     * file. Otherwise the file is rebuilt from the project ([Sf2ProjectExporter]): imported
+     * audio is copied as is, and every zone keeps the generators the app did not change.
      *
-     * @param projectId The project to export
-     * @param outputFile The output SF2 file
      * @return true if successful
      */
     suspend fun exportProjectToSf2(projectId: Long, outputFile: File): Boolean = withContext(Dispatchers.IO) {
-        val project = dao.getProjectById(projectId) ?: return@withContext false
-
-        // Check if we can copy the original SF2 file directly (no modifications since import)
-        val sourceMetadata = dao.getSourceMetadata(projectId)
-        android.util.Log.d("Sf2ProjectRepository", "Export: sourceMetadata=${sourceMetadata != null}, sourceFilePath=${sourceMetadata?.sourceFilePath}")
-        if (sourceMetadata != null && sourceMetadata.sourceFilePath != null) {
-            val sourceFile = File(sourceMetadata.sourceFilePath)
-            android.util.Log.d("Sf2ProjectRepository", "Export: sourceFile exists=${sourceFile.exists()}, path=${sourceFile.absolutePath}")
-            if (sourceFile.exists()) {
-                // Strategy 1: Check for complete absence of modifications using robust detection
-                val hasModifications = hasProjectBeenModified(projectId)
-                android.util.Log.d("Sf2ProjectRepository", "Export: hasModifications=$hasModifications")
-
-                if (!hasModifications) {
-                    android.util.Log.d("Sf2ProjectRepository",
-                        "Project has NO modifications since import, copying original SF2")
-                    try {
-                        sourceFile.copyTo(outputFile, overwrite = true)
-                        return@withContext true
-                    } catch (e: Exception) {
-                        android.util.Log.e("Sf2ProjectRepository", "Failed to copy source file, falling back to rebuild", e)
-                    }
-                } else {
-                    // Strategy 2: Check if we can use hybrid passthrough (smpl unchanged)
-                    val canPassthrough = canUseSmplPassthrough(projectId)
-                    if (canPassthrough) {
-                        android.util.Log.d("Sf2ProjectRepository",
-                            "Audio unchanged, attempting hybrid export with smpl passthrough")
-                        // Hybrid export will be attempted below after collecting presets
-                    } else {
-                        android.util.Log.d("Sf2ProjectRepository",
-                            "Audio modified or samples added, using full rebuild")
-                    }
-                }
-            }
-        }
-
-        val programs = dao.getProgramsForProject(projectId)
-
-        val sf2Writer = Sf2Writer()
-
-        // Helper function to convert SampleEntity to InMemorySample
-        // Uses lazy loading to avoid loading all audio data into memory at once
-        // Supports both WAV files (native/extracted) and SF2 source references (patch-based import)
-        suspend fun sampleEntityToInMemorySample(sampleEntity: Sf2SampleEntity): Sf2Writer.InMemorySample? {
-            // Determine sample count and create appropriate audio loader
-            val sampleCount: Int
-            val audioLoader: () -> ShortArray
-
-            if (!sampleEntity.isExtracted && sampleEntity.sourceFilePath != null) {
-                // PATCH-BASED: Read audio directly from source SF2 file
-                val sourceFile = File(sampleEntity.sourceFilePath)
-                if (!sourceFile.exists()) {
-                    android.util.Log.e("Sf2ProjectRepository", "Source SF2 file not found: ${sampleEntity.sourceFilePath}")
-                    return null
-                }
-                sampleCount = (sampleEntity.sourceSampleSize / 2).toInt() // 2 bytes per 16-bit sample
-                if (sampleCount <= 0) return null
-
-                audioLoader = {
-                    loadAudioFromSf2Source(
-                        sourceFile,
-                        sampleEntity.sourceSmplOffset,
-                        sampleEntity.sourceSampleSize
-                    )
-                }
-                android.util.Log.d("Sf2ProjectRepository", "Using SF2 source reference for sample: ${sampleEntity.name}, offset=${sampleEntity.sourceSmplOffset}, size=${sampleEntity.sourceSampleSize}")
+        try {
+            val document = buildExportDocument(projectId) ?: return@withContext false
+            val metadata = dao.getSourceMetadata(projectId)
+            val source = metadata?.sourceFilePath?.let { File(it) }
+            if (source != null && source.isFile && metadata.importFingerprint != null &&
+                metadata.importFingerprint == document.fingerprint()
+            ) {
+                source.copyTo(outputFile, overwrite = true)
             } else {
-                // NATIVE/EXTRACTED: Read from WAV file
-                val audioFile = File(sampleEntity.audioFilePath)
-                if (!audioFile.exists()) {
-                    android.util.Log.e("Sf2ProjectRepository", "WAV file not found: ${sampleEntity.audioFilePath}")
-                    return null
-                }
-                sampleCount = WavUtils.getWavSampleCount(audioFile)
-                if (sampleCount == 0) return null
-
-                audioLoader = {
-                    loadWavFile(audioFile) ?: ShortArray(0)
-                }
+                Sf2DocumentWriter.write(document, outputFile)
             }
-
-            // Load modulators for this sample (these are small, okay to load)
-            val modulatorEntities = dao.getModulatorsForSample(sampleEntity.id)
-            val modulators = modulatorEntities.map { mod ->
-                Sf2Writer.InMemoryModulator(
-                    srcOper = mod.srcOper,
-                    destOper = mod.destOper,
-                    amount = mod.amount,
-                    amtSrcOper = mod.amtSrcOper,
-                    transOper = mod.transOper
-                )
-            }
-
-            // All values are now in SF2 native units - no conversion needed
-            return Sf2Writer.InMemorySample(
-                name = sampleEntity.name,
-                // Don't load audio data yet - use lazy loading
-                samples = ShortArray(0),
-                sampleRate = sampleEntity.sampleRate,
-                rootNote = sampleEntity.rootNote,
-                keyRangeStart = sampleEntity.keyRangeStart,
-                keyRangeEnd = sampleEntity.keyRangeEnd,
-                loopStart = sampleEntity.loopStart,
-                loopEnd = sampleEntity.loopEnd,
-                hasLoop = sampleEntity.hasLoop,
-                sampleModes = sampleEntity.sampleModes,
-                attenuation = sampleEntity.attenuation,
-                fineTuneCents = sampleEntity.fineTuneCents,
-                // Volume Envelope - SF2 native units (timecents, centibels)
-                volEnvDelay = sampleEntity.volEnvDelay,
-                volEnvAttack = sampleEntity.volEnvAttack,
-                volEnvHold = sampleEntity.volEnvHold,
-                volEnvDecay = sampleEntity.volEnvDecay,
-                volEnvSustain = sampleEntity.volEnvSustain,  // centibels
-                volEnvRelease = sampleEntity.volEnvRelease,
-                // Filter - SF2 native units (absolute cents)
-                filterFc = sampleEntity.filterFc,
-                filterQ = sampleEntity.filterQ,
-                chorusSend = sampleEntity.chorusSend,
-                reverbSend = sampleEntity.reverbSend,
-                pan = sampleEntity.pan,
-                // Advanced SF2 parameters
-                velRangeStart = sampleEntity.velRangeStart,
-                velRangeEnd = sampleEntity.velRangeEnd,
-                coarseTune = sampleEntity.coarseTune,
-                scaleTuning = sampleEntity.scaleTuning,
-                // Modulation Envelope - SF2 native units
-                modEnvDelay = sampleEntity.modEnvDelay,
-                modEnvAttack = sampleEntity.modEnvAttack,
-                modEnvHold = sampleEntity.modEnvHold,
-                modEnvDecay = sampleEntity.modEnvDecay,
-                modEnvSustain = sampleEntity.modEnvSustain,  // centibels
-                modEnvRelease = sampleEntity.modEnvRelease,
-                modEnvToPitch = sampleEntity.modEnvToPitch,
-                modEnvToFilterFc = sampleEntity.modEnvToFilterFc,
-                // Vibrato LFO - SF2 native units
-                vibLfoDelay = sampleEntity.vibLfoDelay,
-                vibLfoFreq = sampleEntity.vibLfoFreq,
-                vibLfoToPitch = sampleEntity.vibLfoToPitch,
-                // Modulation LFO - SF2 native units
-                modLfoDelay = sampleEntity.modLfoDelay,
-                modLfoFreq = sampleEntity.modLfoFreq,
-                modLfoToPitch = sampleEntity.modLfoToPitch,
-                modLfoToFilterFc = sampleEntity.modLfoToFilterFc,
-                modLfoToVolume = sampleEntity.modLfoToVolume,
-                exclusiveClass = sampleEntity.exclusiveClass,
-                // Key-to-envelope scaling
-                keyToVolEnvHold = sampleEntity.keyToVolEnvHold,
-                keyToVolEnvDecay = sampleEntity.keyToVolEnvDecay,
-                keyToModEnvHold = sampleEntity.keyToModEnvHold,
-                keyToModEnvDecay = sampleEntity.keyToModEnvDecay,
-                // Fixed key/velocity
-                fixedKey = sampleEntity.fixedKey,
-                fixedVelocity = sampleEntity.fixedVelocity,
-                // Sample header fields
-                pitchCorrection = sampleEntity.pitchCorrection,
-                // Modulators
-                modulators = modulators,
-                // Lazy loading support
-                audioLoader = audioLoader,
-                sampleCount = sampleCount
-            )
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "SF2 export failed", e)
+            outputFile.delete()
+            false
         }
+    }
 
-        // Build preset export data for each program
-        // Structure: Program → Preset Zones → Instrument (shared) → Samples
-        val presetExportList = programs.mapNotNull { program ->
-            // Get all preset zones for this program
-            val presetZones = dao.getPresetZonesForProgram(program.id)
-
-            // Build InstrumentExportData for each preset zone
-            // Note: Multiple preset zones may reference the same instrument
-            val instruments = presetZones.mapNotNull { presetZone ->
-                // Get the instrument referenced by this preset zone
-                val instrumentEntity = dao.getInstrumentById(presetZone.instrumentId)
-                    ?: return@mapNotNull null
-
-                val samples = dao.getSamplesForInstrument(instrumentEntity.id)
-                val inMemorySamples = samples.mapNotNull { sampleEntity ->
-                    sampleEntityToInMemorySample(sampleEntity)
-                }
-
-                if (inMemorySamples.isEmpty()) return@mapNotNull null
-
-                // Load instrument-level modulators (IMOD global zone)
-                val instrumentModulators = dao.getModulatorsForInstrument(instrumentEntity.id).map { mod ->
-                    Sf2Writer.InMemoryModulator(
-                        srcOper = mod.srcOper,
-                        destOper = mod.destOper,
-                        amount = mod.amount,
-                        amtSrcOper = mod.amtSrcOper,
-                        transOper = mod.transOper
-                    )
-                }
-
-                // Build global parameters from instrument entity
-                // NOTE: globalXxx values are stored in native SF2 units (timecents for delays/times)
-                // so we use them directly without conversion
-                val globalParams = Sf2Writer.InstrumentGlobalParams(
-                    attenuation = instrumentEntity.globalAttenuation,
-                    coarseTune = instrumentEntity.globalCoarseTune,
-                    fineTune = instrumentEntity.globalFineTune,
-                    volEnvDelay = instrumentEntity.globalVolEnvDelay,
-                    volEnvAttack = instrumentEntity.globalVolEnvAttack,
-                    volEnvHold = instrumentEntity.globalVolEnvHold,
-                    volEnvDecay = instrumentEntity.globalVolEnvDecay,
-                    volEnvSustain = instrumentEntity.globalVolEnvSustain,
-                    volEnvRelease = instrumentEntity.globalVolEnvRelease,
-                    modEnvDelay = instrumentEntity.globalModEnvDelay,
-                    modEnvAttack = instrumentEntity.globalModEnvAttack,
-                    modEnvHold = instrumentEntity.globalModEnvHold,
-                    modEnvDecay = instrumentEntity.globalModEnvDecay,
-                    modEnvSustain = instrumentEntity.globalModEnvSustain,
-                    modEnvRelease = instrumentEntity.globalModEnvRelease,
-                    modEnvToPitch = instrumentEntity.globalModEnvToPitch,
-                    modEnvToFilterFc = instrumentEntity.globalModEnvToFilterFc,
-                    vibLfoDelay = instrumentEntity.globalVibLfoDelay,
-                    vibLfoFreq = instrumentEntity.globalVibLfoFreq,
-                    vibLfoToPitch = instrumentEntity.globalVibLfoToPitch,
-                    modLfoDelay = instrumentEntity.globalModLfoDelay,
-                    modLfoFreq = instrumentEntity.globalModLfoFreq,
-                    modLfoToPitch = instrumentEntity.globalModLfoToPitch,
-                    modLfoToFilterFc = instrumentEntity.globalModLfoToFilterFc,
-                    modLfoToVolume = instrumentEntity.globalModLfoToVolume,
-                    filterFc = instrumentEntity.globalFilterFc,
-                    filterQ = instrumentEntity.globalFilterQ,
-                    chorusSend = instrumentEntity.globalChorusSend,
-                    reverbSend = instrumentEntity.globalReverbSend,
-                    pan = instrumentEntity.globalPan,
-                    keyToModEnvHold = instrumentEntity.globalKeyToModEnvHold,
-                    keyToModEnvDecay = instrumentEntity.globalKeyToModEnvDecay,
-                    keyToVolEnvHold = instrumentEntity.globalKeyToVolEnvHold,
-                    keyToVolEnvDecay = instrumentEntity.globalKeyToVolEnvDecay,
-                    scaleTuning = instrumentEntity.globalScaleTuning,
-                    exclusiveClass = instrumentEntity.globalExclusiveClass
-                )
-
-                // Build preset zone parameters (PGEN) from preset zone entity
-                val presetZoneParams = Sf2Writer.PresetZoneParams(
-                    keyRangeLow = presetZone.pgenKeyRangeLow,
-                    keyRangeHigh = presetZone.pgenKeyRangeHigh,
-                    velRangeLow = presetZone.pgenVelRangeLow,
-                    velRangeHigh = presetZone.pgenVelRangeHigh,
-                    attenuation = presetZone.pgenAttenuation,
-                    coarseTune = presetZone.pgenCoarseTune,
-                    fineTune = presetZone.pgenFineTune,
-                    filterFc = presetZone.pgenFilterFc,
-                    filterQ = presetZone.pgenFilterQ,
-                    chorusSend = presetZone.pgenChorusSend,
-                    reverbSend = presetZone.pgenReverbSend,
-                    pan = presetZone.pgenPan,
-                    volEnvDelay = presetZone.pgenVolEnvDelay,
-                    volEnvAttack = presetZone.pgenVolEnvAttack,
-                    volEnvHold = presetZone.pgenVolEnvHold,
-                    volEnvDecay = presetZone.pgenVolEnvDecay,
-                    volEnvSustain = presetZone.pgenVolEnvSustain,
-                    volEnvRelease = presetZone.pgenVolEnvRelease,
-                    modEnvDelay = presetZone.pgenModEnvDelay,
-                    modEnvAttack = presetZone.pgenModEnvAttack,
-                    modEnvHold = presetZone.pgenModEnvHold,
-                    modEnvDecay = presetZone.pgenModEnvDecay,
-                    modEnvSustain = presetZone.pgenModEnvSustain,
-                    modEnvRelease = presetZone.pgenModEnvRelease,
-                    modEnvToPitch = presetZone.pgenModEnvToPitch,
-                    modEnvToFilterFc = presetZone.pgenModEnvToFilterFc,
-                    vibLfoDelay = presetZone.pgenVibLfoDelay,
-                    vibLfoFreq = presetZone.pgenVibLfoFreq,
-                    vibLfoToPitch = presetZone.pgenVibLfoToPitch,
-                    modLfoDelay = presetZone.pgenModLfoDelay,
-                    modLfoFreq = presetZone.pgenModLfoFreq,
-                    modLfoToPitch = presetZone.pgenModLfoToPitch,
-                    modLfoToFilterFc = presetZone.pgenModLfoToFilterFc,
-                    modLfoToVolume = presetZone.pgenModLfoToVolume,
-                    keyToModEnvHold = presetZone.pgenKeyToModEnvHold,
-                    keyToModEnvDecay = presetZone.pgenKeyToModEnvDecay,
-                    keyToVolEnvHold = presetZone.pgenKeyToVolEnvHold,
-                    keyToVolEnvDecay = presetZone.pgenKeyToVolEnvDecay,
-                    scaleTuning = presetZone.pgenScaleTuning,
-                    exclusiveClass = presetZone.pgenExclusiveClass
-                )
-
-                // Load preset zone modulators (PMOD) for this preset zone
-                val presetZoneModulators = dao.getModulatorsForPreset(presetZone.id).map { mod ->
-                    Sf2Writer.InMemoryModulator(
-                        srcOper = mod.srcOper,
-                        destOper = mod.destOper,
-                        amount = mod.amount,
-                        amtSrcOper = mod.amtSrcOper,
-                        transOper = mod.transOper
-                    )
-                }
-
-                Sf2Writer.InstrumentExportData(
-                    name = instrumentEntity.name,
-                    samples = inMemorySamples,
-                    globalParams = globalParams,
-                    globalModulators = instrumentModulators,
-                    presetZoneParams = presetZoneParams,
-                    presetZoneModulators = presetZoneModulators
-                )
-            }
-
-            if (instruments.isEmpty()) return@mapNotNull null
-
-            // Build global preset zone parameters from program entity
-            // These are written to a zone WITHOUT GEN_INSTRUMENT and apply to all zones
-            val presetGlobalParams = Sf2Writer.PresetZoneParams(
-                attenuation = program.globalAttenuation,
-                coarseTune = program.globalCoarseTune,
-                fineTune = program.globalFineTune,
-                filterFc = program.globalFilterFc,
-                filterQ = program.globalFilterQ,
-                chorusSend = program.globalChorusSend,
-                reverbSend = program.globalReverbSend,
-                pan = program.globalPan,
-                volEnvDelay = program.globalVolEnvDelay,
-                volEnvAttack = program.globalVolEnvAttack,
-                volEnvHold = program.globalVolEnvHold,
-                volEnvDecay = program.globalVolEnvDecay,
-                volEnvSustain = program.globalVolEnvSustain,
-                volEnvRelease = program.globalVolEnvRelease,
-                modEnvDelay = program.globalModEnvDelay,
-                modEnvAttack = program.globalModEnvAttack,
-                modEnvHold = program.globalModEnvHold,
-                modEnvDecay = program.globalModEnvDecay,
-                modEnvSustain = program.globalModEnvSustain,
-                modEnvRelease = program.globalModEnvRelease,
-                modEnvToPitch = program.globalModEnvToPitch,
-                modEnvToFilterFc = program.globalModEnvToFilterFc,
-                vibLfoDelay = program.globalVibLfoDelay,
-                vibLfoFreq = program.globalVibLfoFreq,
-                vibLfoToPitch = program.globalVibLfoToPitch,
-                modLfoDelay = program.globalModLfoDelay,
-                modLfoFreq = program.globalModLfoFreq,
-                modLfoToPitch = program.globalModLfoToPitch,
-                modLfoToFilterFc = program.globalModLfoToFilterFc,
-                modLfoToVolume = program.globalModLfoToVolume,
-                keyToModEnvHold = program.globalKeyToModEnvHold,
-                keyToModEnvDecay = program.globalKeyToModEnvDecay,
-                keyToVolEnvHold = program.globalKeyToVolEnvHold,
-                keyToVolEnvDecay = program.globalKeyToVolEnvDecay,
-                scaleTuning = program.globalScaleTuning,
-                exclusiveClass = program.globalExclusiveClass
-            )
-
-            // Load program-level modulators (PMOD global zone)
-            val programModulators = dao.getModulatorsForProgram(program.id).map { mod ->
-                Sf2Writer.InMemoryModulator(
-                    srcOper = mod.srcOper,
-                    destOper = mod.destOper,
-                    amount = mod.amount,
-                    amtSrcOper = mod.amtSrcOper,
-                    transOper = mod.transOper
-                )
-            }
-
-            Sf2Writer.PresetExportData(
-                name = program.name,
-                programNumber = program.programNumber,
-                bankNumber = program.bankNumber,
-                instruments = instruments,
-                modulators = programModulators,
-                presetGlobalParams = if (presetGlobalParams.hasNonDefaultParams()) presetGlobalParams else null
-            )
+    /**
+     * Records the state of a project right after an import from its source SF2. When the
+     * whole file was imported ([complete]), an unchanged project is later exported as an
+     * exact copy of it.
+     */
+    suspend fun recordImport(projectId: Long, complete: Boolean) = withContext(Dispatchers.IO) {
+        val project = dao.getProjectById(projectId) ?: return@withContext
+        // The name first: the exported INFO depends on it
+        dao.updateImportFingerprint(projectId, null, project.name)
+        if (complete) {
+            dao.updateImportFingerprint(projectId, buildExportDocument(projectId)?.fingerprint(), project.name)
         }
+    }
 
-        // Fallback: if no programs, use presets with their instruments directly
-        val finalPresetList = if (presetExportList.isEmpty()) {
-            val presetZones = dao.getPresetsForProject(projectId)
-            presetZones.mapNotNull { presetZone ->
-                val instrumentEntity = dao.getInstrumentById(presetZone.instrumentId)
-                    ?: return@mapNotNull null
+    // ==================== Sample audio ====================
 
-                val samples = dao.getSamplesForInstrument(instrumentEntity.id)
-                if (samples.isEmpty()) return@mapNotNull null
-
-                val inMemorySamples = samples.mapNotNull { sampleEntity ->
-                    sampleEntityToInMemorySample(sampleEntity)
-                }
-
-                if (inMemorySamples.isEmpty()) return@mapNotNull null
-
-                // Load instrument-level modulators (IMOD global zone)
-                val instrumentModulators = dao.getModulatorsForInstrument(instrumentEntity.id).map { mod ->
-                    Sf2Writer.InMemoryModulator(
-                        srcOper = mod.srcOper,
-                        destOper = mod.destOper,
-                        amount = mod.amount,
-                        amtSrcOper = mod.amtSrcOper,
-                        transOper = mod.transOper
-                    )
-                }
-
-                // Build global parameters from instrument entity
-                // NOTE: globalXxx values are stored in native SF2 units (timecents for delays/times)
-                val globalParams = Sf2Writer.InstrumentGlobalParams(
-                    attenuation = instrumentEntity.globalAttenuation,
-                    coarseTune = instrumentEntity.globalCoarseTune,
-                    fineTune = instrumentEntity.globalFineTune,
-                    volEnvDelay = instrumentEntity.globalVolEnvDelay,
-                    volEnvAttack = instrumentEntity.globalVolEnvAttack,
-                    volEnvHold = instrumentEntity.globalVolEnvHold,
-                    volEnvDecay = instrumentEntity.globalVolEnvDecay,
-                    volEnvSustain = instrumentEntity.globalVolEnvSustain,
-                    volEnvRelease = instrumentEntity.globalVolEnvRelease,
-                    modEnvDelay = instrumentEntity.globalModEnvDelay,
-                    modEnvAttack = instrumentEntity.globalModEnvAttack,
-                    modEnvHold = instrumentEntity.globalModEnvHold,
-                    modEnvDecay = instrumentEntity.globalModEnvDecay,
-                    modEnvSustain = instrumentEntity.globalModEnvSustain,
-                    modEnvRelease = instrumentEntity.globalModEnvRelease,
-                    modEnvToPitch = instrumentEntity.globalModEnvToPitch,
-                    modEnvToFilterFc = instrumentEntity.globalModEnvToFilterFc,
-                    vibLfoDelay = instrumentEntity.globalVibLfoDelay,
-                    vibLfoFreq = instrumentEntity.globalVibLfoFreq,
-                    vibLfoToPitch = instrumentEntity.globalVibLfoToPitch,
-                    modLfoDelay = instrumentEntity.globalModLfoDelay,
-                    modLfoFreq = instrumentEntity.globalModLfoFreq,
-                    modLfoToPitch = instrumentEntity.globalModLfoToPitch,
-                    modLfoToFilterFc = instrumentEntity.globalModLfoToFilterFc,
-                    modLfoToVolume = instrumentEntity.globalModLfoToVolume,
-                    filterFc = instrumentEntity.globalFilterFc,
-                    filterQ = instrumentEntity.globalFilterQ,
-                    chorusSend = instrumentEntity.globalChorusSend,
-                    reverbSend = instrumentEntity.globalReverbSend,
-                    pan = instrumentEntity.globalPan,
-                    keyToModEnvHold = instrumentEntity.globalKeyToModEnvHold,
-                    keyToModEnvDecay = instrumentEntity.globalKeyToModEnvDecay,
-                    keyToVolEnvHold = instrumentEntity.globalKeyToVolEnvHold,
-                    keyToVolEnvDecay = instrumentEntity.globalKeyToVolEnvDecay,
-                    scaleTuning = instrumentEntity.globalScaleTuning,
-                    exclusiveClass = instrumentEntity.globalExclusiveClass
-                )
-
-                // Build preset zone parameters from preset zone entity
-                val presetZoneParams = Sf2Writer.PresetZoneParams(
-                    keyRangeLow = presetZone.pgenKeyRangeLow,
-                    keyRangeHigh = presetZone.pgenKeyRangeHigh,
-                    velRangeLow = presetZone.pgenVelRangeLow,
-                    velRangeHigh = presetZone.pgenVelRangeHigh,
-                    attenuation = presetZone.pgenAttenuation,
-                    coarseTune = presetZone.pgenCoarseTune,
-                    fineTune = presetZone.pgenFineTune,
-                    filterFc = presetZone.pgenFilterFc,
-                    filterQ = presetZone.pgenFilterQ,
-                    chorusSend = presetZone.pgenChorusSend,
-                    reverbSend = presetZone.pgenReverbSend,
-                    pan = presetZone.pgenPan,
-                    volEnvDelay = presetZone.pgenVolEnvDelay,
-                    volEnvAttack = presetZone.pgenVolEnvAttack,
-                    volEnvHold = presetZone.pgenVolEnvHold,
-                    volEnvDecay = presetZone.pgenVolEnvDecay,
-                    volEnvSustain = presetZone.pgenVolEnvSustain,
-                    volEnvRelease = presetZone.pgenVolEnvRelease,
-                    modEnvDelay = presetZone.pgenModEnvDelay,
-                    modEnvAttack = presetZone.pgenModEnvAttack,
-                    modEnvHold = presetZone.pgenModEnvHold,
-                    modEnvDecay = presetZone.pgenModEnvDecay,
-                    modEnvSustain = presetZone.pgenModEnvSustain,
-                    modEnvRelease = presetZone.pgenModEnvRelease,
-                    modEnvToPitch = presetZone.pgenModEnvToPitch,
-                    modEnvToFilterFc = presetZone.pgenModEnvToFilterFc,
-                    vibLfoDelay = presetZone.pgenVibLfoDelay,
-                    vibLfoFreq = presetZone.pgenVibLfoFreq,
-                    vibLfoToPitch = presetZone.pgenVibLfoToPitch,
-                    modLfoDelay = presetZone.pgenModLfoDelay,
-                    modLfoFreq = presetZone.pgenModLfoFreq,
-                    modLfoToPitch = presetZone.pgenModLfoToPitch,
-                    modLfoToFilterFc = presetZone.pgenModLfoToFilterFc,
-                    modLfoToVolume = presetZone.pgenModLfoToVolume,
-                    keyToModEnvHold = presetZone.pgenKeyToModEnvHold,
-                    keyToModEnvDecay = presetZone.pgenKeyToModEnvDecay,
-                    keyToVolEnvHold = presetZone.pgenKeyToVolEnvHold,
-                    keyToVolEnvDecay = presetZone.pgenKeyToVolEnvDecay,
-                    scaleTuning = presetZone.pgenScaleTuning,
-                    exclusiveClass = presetZone.pgenExclusiveClass
-                )
-
-                // Load preset zone modulators
-                val presetZoneModulators = dao.getModulatorsForPreset(presetZone.id).map { mod ->
-                    Sf2Writer.InMemoryModulator(
-                        srcOper = mod.srcOper,
-                        destOper = mod.destOper,
-                        amount = mod.amount,
-                        amtSrcOper = mod.amtSrcOper,
-                        transOper = mod.transOper
-                    )
-                }
-
-                // Create single instrument for this preset zone
-                val instrument = Sf2Writer.InstrumentExportData(
-                    name = instrumentEntity.name,
-                    samples = inMemorySamples,
-                    globalParams = globalParams,
-                    globalModulators = instrumentModulators,
-                    presetZoneParams = presetZoneParams,
-                    presetZoneModulators = presetZoneModulators
-                )
-
-                Sf2Writer.PresetExportData(
-                    name = presetZone.name,
-                    programNumber = presetZone.programNumber,
-                    bankNumber = presetZone.bankNumber,
-                    instruments = listOf(instrument)
-                )
-            }
+    /** Audio of a sample: its WAV file, or its data in the imported SF2. */
+    suspend fun loadSampleAudio(sample: Sf2SampleEntity): ShortArray? = withContext(Dispatchers.IO) {
+        if (!sample.isExtracted && sample.sourceFilePath != null && sample.audioFilePath.isEmpty()) {
+            readSourceAudio(File(sample.sourceFilePath), sample.sourceSmplOffset, sample.sourceSampleSize)
         } else {
-            presetExportList
+            loadWavFile(File(sample.audioFilePath))
         }
+    }
 
-        if (finalPresetList.isEmpty()) return@withContext false
-
-        // Check if we can use hybrid export with smpl passthrough
-        val canUseHybrid = sourceMetadata != null &&
-                           sourceMetadata.sourceFilePath != null &&
-                           canUseSmplPassthrough(projectId)
-
-        if (canUseHybrid) {
-            // Try hybrid export with smpl passthrough
-            android.util.Log.d("Sf2ProjectRepository", "Attempting hybrid export for project $projectId")
-            val hybridWriter = Sf2WriterHybrid()
-
-            // Read sample mapping from file (not from SQLite to avoid OOM for large SF2)
-            val sampleMapping = getSampleIndexMappingFromFile(projectId)
-
-            val success = hybridWriter.exportWithPassthrough(
-                outputFile = outputFile,
-                sourceFilePath = sourceMetadata.sourceFilePath,
-                chunkRegistry = sourceMetadata.chunkRegistry,
-                sampleMapping = sampleMapping,
-                presets = finalPresetList,
-                soundFontName = project.name,
-                fallbackWriter = sf2Writer
-            )
-
-            if (success) {
-                android.util.Log.d("Sf2ProjectRepository", "Hybrid export successful")
-                return@withContext true
+    /**
+     * Stores the audio of a sample edited in the sample editor. A sample read from its
+     * imported SF2 keeps that reference while its audio is unchanged, and gets its own WAV
+     * file otherwise. Returns the sample with its audio reference, or null on failure.
+     */
+    suspend fun saveEditedSampleAudio(sample: Sf2SampleEntity, audio: ShortArray): Sf2SampleEntity? =
+        withContext(Dispatchers.IO) {
+            if (loadSampleAudio(sample)?.contentEquals(audio) == true) return@withContext sample
+            val target = if (sample.audioFilePath.isNotEmpty()) {
+                File(sample.audioFilePath)
+            } else {
+                val instrument = dao.getInstrumentById(sample.instrumentId) ?: return@withContext null
+                val projectDir = File(samplesDir, instrument.projectId.toString()).also { it.mkdirs() }
+                File(projectDir, "${System.nanoTime()}_${sample.name.replace(Regex("[^a-zA-Z0-9_-]"), "_")}.wav")
             }
-            // If hybrid export fails, fall through to standard export
-            android.util.Log.w("Sf2ProjectRepository", "Hybrid export failed, using standard export")
+            if (!WavUtils.writeWavFile(target, audio, sample.sampleRate)) return@withContext null
+            sample.copy(
+                audioFilePath = target.absolutePath,
+                isExtracted = true,
+                modificationFlags = sample.modificationFlags or ModificationFlags.MOD_FLAG_AUDIO
+            )
         }
 
-        // Write SF2 file with all presets (standard export)
-        sf2Writer.writeSf2MultiPreset(
-            outputFile = outputFile,
-            soundFontName = project.name,
-            presets = finalPresetList
-        )
+    private fun readSourceAudio(file: File, offset: Long, size: Long): ShortArray? = try {
+        java.io.RandomAccessFile(file, "r").use { raf ->
+            val bytes = ByteArray(size.toInt())
+            raf.seek(offset)
+            raf.readFully(bytes)
+            ShortArray(bytes.size / 2) { i ->
+                ((bytes[2 * i].toInt() and 0xFF) or (bytes[2 * i + 1].toInt() shl 8)).toShort()
+            }
+        }
+    } catch (e: Exception) {
+        Log.e(TAG, "Cannot read sample audio from ${file.absolutePath}", e)
+        null
     }
 
     // ==================== Audio File Utilities ====================
@@ -2199,43 +1676,4 @@ class Sf2ProjectRepository(private val context: Context) {
      * Delegates to WavUtils.
      */
     private fun loadWavFile(file: File): ShortArray? = WavUtils.loadWavFile(file)
-
-    /**
-     * Load audio data directly from an SF2 source file at a specific offset.
-     * Used for patch-based export where samples are not extracted to WAV files.
-     *
-     * @param sourceFile The source SF2 file
-     * @param offset Byte offset within the file where the sample data starts
-     * @param size Size in bytes of the sample data
-     * @return ShortArray containing the 16-bit PCM samples
-     */
-    private fun loadAudioFromSf2Source(sourceFile: File, offset: Long, size: Long): ShortArray {
-        try {
-            java.io.RandomAccessFile(sourceFile, "r").use { raf ->
-                raf.seek(offset)
-                val numSamples = (size / 2).toInt() // 2 bytes per 16-bit sample
-                val samples = ShortArray(numSamples)
-
-                // Read 16-bit little-endian samples
-                val buffer = ByteArray(size.toInt())
-                val bytesRead = raf.read(buffer)
-                if (bytesRead != size.toInt()) {
-                    android.util.Log.e("Sf2ProjectRepository", "Failed to read complete sample data: read $bytesRead, expected $size")
-                    return ShortArray(0)
-                }
-
-                // Convert bytes to shorts (little-endian)
-                for (i in 0 until numSamples) {
-                    val lo = buffer[i * 2].toInt() and 0xFF
-                    val hi = buffer[i * 2 + 1].toInt()
-                    samples[i] = ((hi shl 8) or lo).toShort()
-                }
-
-                return samples
-            }
-        } catch (e: Exception) {
-            android.util.Log.e("Sf2ProjectRepository", "Error reading audio from SF2 source: ${e.message}", e)
-            return ShortArray(0)
-        }
-    }
 }

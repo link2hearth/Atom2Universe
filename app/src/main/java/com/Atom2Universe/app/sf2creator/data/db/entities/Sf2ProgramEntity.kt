@@ -104,5 +104,19 @@ data class Sf2ProgramEntity(
 
     // ==================== Additional Global Generators ====================
     val globalScaleTuning: Int = 0,         // GEN 56 (0 = use sample default)
-    val globalExclusiveClass: Int = 0       // GEN 57 (0 = none)
+    val globalExclusiveClass: Int = 0,      // GEN 57 (0 = none)
+
+    // ==================== Imported SF2 zone (lossless round trip) ====================
+    /**
+     * Generators written explicitly in this zone of the imported SF2 ("gen:value,..."),
+     * null when the zone was not imported. Export starts from them, so values that the
+     * app does not edit (or that equal a default) are written back exactly.
+     */
+    val importedGenerators: String? = null,
+
+    /**
+     * The editable parameters as they were right after import (same encoding). At export,
+     * a parameter that differs from this baseline was edited and replaces the imported value.
+     */
+    val importBaseline: String? = null
 )

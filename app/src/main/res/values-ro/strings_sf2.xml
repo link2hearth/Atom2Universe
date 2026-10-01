@@ -162,6 +162,7 @@
     <string name="sf2_sample_name_label">Nume</string>
     <string name="sf2_save">Salvare</string>
     <string name="sf2_sample_updated">Mostră actualizată</string>
+    <string name="sf2_sample_save_failed">Mostra nu a putut fi salvată</string>
     <string name="sf2_my_projects">Proiectele mele</string>
     <string name="sf2_edit_instrument">Editare instrument</string>
     <string name="sf2_instrument_name">Nume instrument</string>
