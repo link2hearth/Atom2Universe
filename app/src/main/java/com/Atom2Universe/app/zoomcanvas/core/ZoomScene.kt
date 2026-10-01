@@ -62,8 +62,13 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
 
     private val logRatio = ln(ratio)
 
+    /** Ce qui a changé depuis la dernière écriture : les couches y notent chaque pose, retrait ou remplacement. */
+    private val log = ChangeLog()
+
+    private fun newLayer(depth: Long, ax: Double, ay: Double): Layer = Layer(depth, ax, ay).also { it.journal = log }
+
     /** Les couches, de la plus haute (la plus grande) à la plus profonde. Jamais vide. */
-    private val layers = ArrayList<Layer>().apply { add(Layer(0L, 0.0, 0.0)) }
+    private val layers = ArrayList<Layer>().apply { add(newLayer(0L, 0.0, 0.0)) }
     var firstDepth = 0L
         private set
     val lastDepth: Long get() = firstDepth + layers.size - 1
@@ -221,6 +226,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         cy = py - fy / zoom
         normalize()
         cameraVersion++
+        residencyCheck()
     }
 
     /** Place la caméra directement (reprise d'un projet, saut vers une couche). */
@@ -230,6 +236,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         normalize()
         trim()
         cameraVersion++
+        residencyCheck()
     }
 
     /**
@@ -256,7 +263,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
 
     /** La couche de dessous devient la couche de travail. */
     private fun descend() {
-        val child = layer(depth + 1) ?: Layer(depth + 1, Math.rint(cx), Math.rint(cy)).also { layers.add(it) }
+        val child = layer(depth + 1) ?: newLayer(depth + 1, Math.rint(cx), Math.rint(cy)).also { layers.add(it) }
         cx = (cx - child.ax) * ratio
         cy = (cy - child.ay) * ratio
         zoom /= ratio
@@ -272,7 +279,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
             // étant tout en haut, son ancre n'engageait rien, on peut la choisir.
             cur.ax = -Math.rint(cx / ratio)
             cur.ay = -Math.rint(cy / ratio)
-            layers.add(0, Layer(depth - 1, 0.0, 0.0))
+            layers.add(0, newLayer(depth - 1, 0.0, 0.0))
             firstDepth--
         }
         cx = cur.ax + cx / ratio
@@ -284,8 +291,8 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
 
     /** Crée les couches (vides) qui manquent pour que [d] soit dans la suite. */
     private fun ensureRangeIncludes(d: Long) {
-        while (d < firstDepth) { layers.add(0, Layer(firstDepth - 1, 0.0, 0.0)); firstDepth-- }
-        while (d > lastDepth) layers.add(Layer(lastDepth + 1, 0.0, 0.0))
+        while (d < firstDepth) { layers.add(0, newLayer(firstDepth - 1, 0.0, 0.0)); firstDepth-- }
+        while (d > lastDepth) layers.add(newLayer(lastDepth + 1, 0.0, 0.0))
     }
 
     /** Oublie les couches vides des extrémités qui ne servent ni à la caméra ni à une couche dessinée. */
@@ -305,19 +312,29 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
 
     // ---- Dessin ---------------------------------------------------------------------------
 
-    private var liveOriginX = 0.0
-    private var liveOriginY = 0.0
-    private var livePts = DoubleArray(64)
-    private var liveCount = 0
-    private var liveColor = 0
-    private var liveWidth = 1.0
-    private var liveKind = Stroke.PEN
+    /**
+     * Le trait en cours de tracé. Un seul objet, réutilisé : le rendu le lit tel quel à chaque image
+     * (sans copier ses points, qui grossissent avec le geste), sur le même fil que celui qui l'écrit.
+     */
+    class LiveStroke {
+        var originX = 0.0
+        var originY = 0.0
+        /** Les points (x, y) relatifs à l'origine ; [count] nombres sont valides. */
+        var pts = FloatArray(64)
+        var count = 0
+        var color = 0
+        var width = 1.0
+        var kind = Stroke.PEN
+        val isEraser: Boolean get() = color ushr 24 == 0
+    }
 
-    /** Le trait en cours (ou null) : dessiné par-dessus tout le reste. */
+    internal val live = LiveStroke()
+
+    /** Le trait en cours (ou null), copié : pour les tests ; le rendu lit [live]. */
     fun liveStroke(): Stroke? =
-        if (liveCount == 0) null else Stroke(0L, liveOriginX, liveOriginY, livePts.copyOf(liveCount), liveColor, liveWidth, liveKind)
+        if (live.count == 0) null else Stroke(0L, live.originX, live.originY, live.pts.copyOf(live.count), live.color, live.width, live.kind)
 
-    val isDrawing: Boolean get() = liveCount > 0
+    val isDrawing: Boolean get() = live.count > 0
 
     /**
      * Commence un trait à l'écart d'écran [sx], [sy]. [widthPx] est l'épaisseur à l'écran au moment
@@ -327,24 +344,26 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
      * [kind] : crayon, pinceau ou feutre ([Stroke.PEN], [Stroke.BRUSH], [Stroke.MARKER]).
      */
     fun beginStroke(sx: Double, sy: Double, color: Int, widthPx: Double, kind: Int = Stroke.PEN) {
-        anchorIfFresh(layer(depth)!!)
+        anchorIfFresh(working())
         val p = screenToLocal(sx, sy)
-        liveOriginX = p[0]
-        liveOriginY = p[1]
-        liveCount = 0
-        liveColor = color
-        liveWidth = widthPx / zoom
-        liveKind = if (color ushr 24 == 0) Stroke.PEN else kind
+        live.originX = p[0]
+        live.originY = p[1]
+        live.count = 0
+        live.color = color
+        live.width = widthPx / zoom
+        live.kind = if (color ushr 24 == 0) Stroke.PEN else kind
         appendLive(0.0, 0.0)
     }
 
     fun extendStroke(sx: Double, sy: Double) {
-        if (liveCount == 0) return
+        if (live.count == 0) return
+        // Un seul geste continu a une fin : au-delà, les points en plus sont ignorés (la ligne du fichier doit rester lisible).
+        if (live.count >= 2 * MAX_STROKE_POINTS) return
         // Forme en coordonnées locales autour du premier point : petite, quelle que soit la position.
-        val rx = (cx - liveOriginX) + sx / zoom
-        val ry = (cy - liveOriginY) + sy / zoom
-        val lx = livePts[liveCount - 2]
-        val ly = livePts[liveCount - 1]
+        val rx = (cx - live.originX) + sx / zoom
+        val ry = (cy - live.originY) + sy / zoom
+        val lx = live.pts[live.count - 2]
+        val ly = live.pts[live.count - 1]
         // Pas de points plus serrés qu'un demi-pixel : inutile et coûteux.
         val minStep = 0.5 / zoom
         if (abs(rx - lx) < minStep && abs(ry - ly) < minStep) return
@@ -352,21 +371,21 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
     }
 
     private fun appendLive(x: Double, y: Double) {
-        if (liveCount + 2 > livePts.size) livePts = livePts.copyOf(livePts.size * 2)
-        livePts[liveCount++] = x
-        livePts[liveCount++] = y
+        if (live.count + 2 > live.pts.size) live.pts = live.pts.copyOf(live.pts.size * 2)
+        live.pts[live.count++] = x.toFloat()
+        live.pts[live.count++] = y.toFloat()
     }
 
     fun cancelStroke() {
-        liveCount = 0
+        live.count = 0
     }
 
     /** Termine le trait et l'ajoute à la couche de travail. Un coup de gomme dans le vide ne laisse rien. */
     fun endStroke(): Stroke? {
-        if (liveCount == 0) return null
-        val l = layer(depth)!!
-        val s = Stroke(nextStrokeId, liveOriginX, liveOriginY, livePts.copyOf(liveCount), liveColor, liveWidth, liveKind)
-        liveCount = 0
+        if (live.count == 0) return null
+        val l = working()
+        val s = Stroke(nextStrokeId, live.originX, live.originY, live.pts.copyOf(live.count), live.color, live.width, live.kind)
+        live.count = 0
         if (s.isEraser && !l.touches(s)) return null
         nextStrokeId++
         l.add(s)
@@ -384,15 +403,13 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         rebase(l, Math.rint(cx / ratio) * ratio, Math.rint(cy / ratio) * ratio)
     }
 
-    /** Décale le repère de [l] de ([dx], [dy]) de ses propres unités, sans rien bouger à l'écran. */
+    /**
+     * Décale le repère de [l] de ([dx], [dy]) de ses propres unités, sans rien bouger à l'écran.
+     * Réservé à une couche vide (voir [anchorIfFresh]) : il n'y a donc aucun élément à décaler dedans.
+     */
     private fun rebase(l: Layer, dx: Double, dy: Double) {
         l.ax += dx / ratio
         l.ay += dy / ratio
-        for (i in l.strokes.indices) {
-            val s = l.strokes[i]
-            l.strokes[i] = Stroke(s.id, s.x - dx, s.y - dy, s.pts, s.color, s.width, s.kind)
-        }
-        l.mapBoxes { it.moved(-dx, -dy) }
         layer(l.depth + 1)?.let { it.ax -= dx; it.ay -= dy }
         if (l.depth == depth) { cx -= dx; cy -= dy }
     }
@@ -404,7 +421,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
      * taille qui tient dans [fitW]×[fitH] pixels d'écran.
      */
     fun addImage(key: String, pxW: Int, pxH: Int, fitW: Double, fitH: Double): ImageItem {
-        val l = layer(depth)!!
+        val l = working()
         anchorIfFresh(l)
         val k = min(fitW / pxW, fitH / pxH) / zoom
         val item = ImageItem(nextStrokeId++, key, pxW, pxH, cx, cy, pxW * k, pxH * k)
@@ -421,7 +438,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
     fun addText(text: String, sx: Double, sy: Double, fontPx: Double, color: Int, style: Int, font: String, unitWidth: Double): TextItem? {
         val t = text.take(TextItem.MAX_LENGTH)
         if (t.isBlank()) return null
-        val l = layer(depth)!!
+        val l = working()
         anchorIfFresh(l)
         val p = screenToLocal(sx, sy)
         val size = fontPx / zoom
@@ -555,7 +572,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
     }
 
     /** Les images utilisées par le projet (clés de fichier), pour ranger les fichiers orphelins. */
-    fun imageKeys(): Set<String> = layers.flatMap { l -> l.images.map { it.key } }.toSet()
+    fun imageKeys(): Set<String> = HashSet<String>().also { keys -> for (l in layers) l.imageKeys(keys) }
 
     private fun replaceBox(item: BoxItem) {
         layer(depth)?.replaceBox(item)
@@ -609,7 +626,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
      * [square] force une forme carrée / ronde / équilatérale (sans effet sur la ligne et la flèche).
      */
     fun beginShape(kind: ShapeKind, fill: ShapeFill, strokeColor: Int, fillColor: Int, widthPx: Double, sx: Double, sy: Double, square: Boolean) {
-        anchorIfFresh(layer(depth)!!)
+        anchorIfFresh(working())
         val p = screenToLocal(sx, sy)
         shapeAx = p[0]; shapeAy = p[1]; shapeBx = p[0]; shapeBy = p[1]
         shapeKind = kind; shapeFill = fill; shapeStroke = strokeColor; shapeFillColor = fillColor
@@ -654,7 +671,7 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         val probe = buildShape(0L)
         if (max(probe.w, probe.h) * zoom < MIN_SHAPE_PX) return null
         val item = probe.copy(id = nextStrokeId++)
-        layer(depth)!!.addBox(item)
+        working().addBox(item)
         record(Edit.AddBox(depth, item))
         return item
     }
@@ -705,14 +722,17 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
     // ---- Historique -----------------------------------------------------------------------
 
     sealed class Edit {
-        class Add(val depth: Long, val stroke: Stroke) : Edit()
-        class Move(val depth: Long, val dx: Double, val dy: Double) : Edit()
+        /** La couche que la modification touche : tant qu'elle est dans l'historique, on ne la décharge pas. */
+        abstract val depth: Long
+
+        class Add(override val depth: Long, val stroke: Stroke) : Edit()
+        class Move(override val depth: Long, val dx: Double, val dy: Double) : Edit()
         /** [index] : rang de dessin de l'objet (-1 : tout devant). */
-        class AddBox(val depth: Long, val item: BoxItem, val index: Int = -1) : Edit()
-        class RemoveBox(val depth: Long, val item: BoxItem, val index: Int) : Edit()
+        class AddBox(override val depth: Long, val item: BoxItem, val index: Int = -1) : Edit()
+        class RemoveBox(override val depth: Long, val item: BoxItem, val index: Int) : Edit()
         /** L'élément [id] passe du rang [from] au rang [to] de la pile de sa couche. */
-        class Reorder(val depth: Long, val id: Long, val from: Int, val to: Int) : Edit()
-        class ChangeBox(val depth: Long, val before: BoxItem, val after: BoxItem) : Edit()
+        class Reorder(override val depth: Long, val id: Long, val from: Int, val to: Int) : Edit()
+        class ChangeBox(override val depth: Long, val before: BoxItem, val after: BoxItem) : Edit()
     }
 
     private val undoStack = ArrayDeque<Edit>()
@@ -773,35 +793,157 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         }
     }
 
-    // ---- Chargement -----------------------------------------------------------------------
+    // ---- Enregistrement et chargement --------------------------------------------------------
+
+    /** Les couches telles que la base les connaît (profondeur → ancre) : on ne réécrit que celles qui ont changé. */
+    private var persisted = HashMap<Long, DoubleArray>()
+
+    /** Y a-t-il des objets posés, retirés ou remplacés qu'on n'a pas encore écrits ? */
+    val hasUnsavedItems: Boolean get() = !log.isEmpty
+
+    /**
+     * Prend ce qui a changé depuis le dernier appel, pour l'écrire : les objets touchés (leur dernier
+     * état), ceux qui sont partis, les couches dont la ligne change, et la caméra. Rapide : son coût
+     * suit le nombre de changements, pas la taille du dessin. Les objets sont immuables, le lot peut
+     * donc être écrit sur un autre fil. Si l'écriture échoue, [requeueChanges] le remet.
+     *
+     * Les couches gardées vont de la plus haute couche dessinée (ou de la caméra) à la plus profonde.
+     * Les couches vides coincées entre les deux ne gardent que leur ancre.
+     */
+    fun drainChanges(): SceneDelta {
+        var lo = depth
+        var hi = depth
+        for (l in layers) if (!l.isEmpty) { lo = min(lo, l.depth); hi = max(hi, l.depth) }
+        val rows = ArrayList<LayerRow>()
+        val kept = HashMap<Long, DoubleArray>()
+        for (d in lo..hi) {
+            val l = layer(d)!!
+            val known = persisted[d]
+            if (known == null || known[0] != l.ax || known[1] != l.ay || d in log.touchedLayers) {
+                val sum = l.summary()
+                rows.add(LayerRow(d, l.ax, l.ay, sum.count, sum.erasers, sum.bounds))
+            }
+            kept[d] = doubleArrayOf(l.ax, l.ay)
+        }
+        persisted = kept
+        val versions = HashMap<Long, Long>()
+        for (d in log.touchedLayers) layer(d)?.let { versions[d] = it.version }
+        val delta = SceneDelta(
+            ArrayList(log.upserts.values), log.deletes.toLongArray(), rows, lo, hi,
+            depth, cx, cy, zoom, nextStrokeId, contentVersion, cameraVersion, versions,
+        )
+        log.clear()
+        return delta
+    }
+
+    /** L'écriture de [delta] a échoué : ses changements repartent dans le journal (ce qui s'est passé depuis l'emporte). */
+    fun requeueChanges(delta: SceneDelta) {
+        log.requeue(delta)
+        persisted.clear()
+    }
 
     /**
      * Remplace tout le contenu (lecture d'un projet). [loaded] est une suite contiguë de couches
-     * commençant à [first].
+     * commençant à [first]. Ce qu'on vient de lire est déjà écrit : le journal repart vide.
      */
     fun restore(first: Long, loaded: List<Layer>, camDepth: Long, camX: Double, camY: Double, camZoom: Double, nextId: Long) {
         layers.clear()
         if (loaded.isEmpty()) {
-            layers.add(Layer(camDepth, 0.0, 0.0))
+            layers.add(newLayer(camDepth, 0.0, 0.0))
             firstDepth = camDepth
         } else {
-            layers.addAll(loaded)
+            for (l in loaded) { l.journal = log; layers.add(l) }
             firstDepth = first
             for (l in layers) l.used = l.used || !l.isEmpty
         }
         var maxId = 0L
-        for (l in layers) {
-            for (s in l.strokes) maxId = max(maxId, s.id)
-            for (i in l.images) maxId = max(maxId, i.id)
-            for (i in l.shapes) maxId = max(maxId, i.id)
-            for (i in l.texts) maxId = max(maxId, i.id)
-        }
+        for (l in layers) for (e in l.entries()) maxId = max(maxId, e.id)
         nextStrokeId = max(nextId, maxId + 1)
         undoStack.clear(); redoStack.clear()
+        persisted = HashMap<Long, DoubleArray>().also { m -> for (l in layers) m[l.depth] = doubleArrayOf(l.ax, l.ay) }
         val z = if (camZoom.isFinite() && camZoom > 0) camZoom else homeZoom
         val x = if (camX.isFinite()) camX else 0.0
         val y = if (camY.isFinite()) camY else 0.0
         setCamera(camDepth, x, y, z)
+        log.clear()
+        refreshResidency()
+    }
+
+    // ---- Couches en mémoire --------------------------------------------------------------------
+
+    /**
+     * Ce qui lit les éléments d'une couche dans la base : la scène ne connaît pas la base, elle dit
+     * seulement quelles couches elle voudra bientôt ([wantLoad], sans attendre : le résultat revient
+     * par [installLayer]) ou tout de suite ([loadNow], qui bloque : seulement si on va dessiner dans
+     * une couche pas encore arrivée).
+     */
+    interface LayerPager {
+        fun wantLoad(depth: Long)
+        fun loadNow(depth: Long): List<Pair<LayerItem, Long>>?
+    }
+
+    /** Sans pager (tests, projet neuf), toutes les couches restent en mémoire. */
+    var pager: LayerPager? = null
+
+    private var residencyDepth = Long.MIN_VALUE
+
+    /** À appeler après avoir posé le [pager] : charge et décharge selon la couche de travail actuelle. */
+    fun refreshResidency() {
+        residencyDepth = Long.MIN_VALUE
+        residencyCheck()
+    }
+
+    private fun residencyCheck() {
+        if (depth != residencyDepth) {
+            residencyDepth = depth
+            updateResidency()
+        }
+    }
+
+    /**
+     * Garde en mémoire la couche de travail, celle du dessus (pour quand on dézoome : elle est prête)
+     * et les deux d'en dessous (la deuxième s'affiche dès qu'on zoome assez pour changer de couche) ;
+     * demande celles qui manquent et décharge celles qui sont loin. Un peu plus de marge pour
+     * décharger que pour charger : autour d'un seuil, on ne recharge pas à chaque passage. On ne
+     * décharge jamais une couche pas encore écrite, ni une couche que l'historique d'annulation cite.
+     */
+    private fun updateResidency() {
+        val p = pager ?: return
+        for (d in depth - LOAD_ABOVE..depth + LOAD_BELOW) {
+            val l = layer(d) ?: continue
+            if (!l.isLoaded) p.wantLoad(d)
+        }
+        var pinned: HashSet<Long>? = null
+        for (l in layers) {
+            if (!l.isLoaded || l.depth in depth - KEEP_ABOVE..depth + KEEP_BELOW || l.dirty) continue
+            if (pinned == null) {
+                pinned = HashSet()
+                for (e in undoStack) pinned.add(e.depth)
+                for (e in redoStack) pinned.add(e.depth)
+            }
+            if (l.depth !in pinned) l.unload()
+        }
+    }
+
+    /** Les éléments de la couche [depth] viennent d'être lus : on les installe. Faux si elle est déjà là ou n'est plus voulue. */
+    fun installLayer(depth: Long, items: List<Pair<LayerItem, Long>>): Boolean {
+        val l = layer(depth) ?: return false
+        if (l.isLoaded || depth !in this.depth - KEEP_ABOVE..this.depth + KEEP_BELOW) return false
+        l.load(items)
+        return true
+    }
+
+    /** Le lot [delta] est écrit : les couches qu'il touchait (et qui n'ont pas bougé depuis) peuvent de nouveau être déchargées. */
+    fun markSaved(delta: SceneDelta) {
+        for ((d, v) in delta.layerVersions) layer(d)?.markSaved(v)
+        updateResidency()
+    }
+
+    /** La couche de travail, chargée : si elle n'est pas encore arrivée (on a zoomé très vite), on l'attend. */
+    private fun working(): Layer {
+        val l = layer(depth)!!
+        if (!l.isLoaded) pager?.loadNow(depth)?.let { l.load(it) }
+        return l
     }
 
     class View(var x: Double = 0.0, var y: Double = 0.0, var zoom: Double = 1.0)
@@ -827,340 +969,13 @@ class ZoomScene(val ratio: Double = DEFAULT_RATIO, val maxZoom: Double = Math.sq
         /** De combien un doigt déborde d'un objet pour le toucher (pixels d'écran). */
         const val HIT_SLACK_PX = 8.0
         const val MAX_HISTORY = 300
+        /** Points d'un seul trait (un geste sans lever le doigt, sur des dizaines d'écrans) : 100 000 points = 800 Ko. */
+        const val MAX_STROKE_POINTS = 100_000
+        /** Couches gardées en mémoire autour de la couche de travail : une au-dessus, deux en dessous (voir [updateResidency]). */
+        const val LOAD_ABOVE = 1L
+        const val LOAD_BELOW = 2L
+        /** On ne décharge qu'au-delà de celles-ci. */
+        const val KEEP_ABOVE = 2L
+        const val KEEP_BELOW = 3L
     }
-}
-
-/** Ce qu'une couche contient : un trait (gomme comprise), une image, une forme ou un texte, chacun avec son identifiant. */
-sealed interface LayerItem {
-    val id: Long
-}
-
-/**
- * Une couche : son ancre dans la couche du dessus (en unités de celle-ci), ses traits et ses images,
- * en coordonnées locales. Tout se dessine dans l'ordre où ça a été posé ([drawOrder]) : un coup de
- * gomme creuse ce qui a été posé avant lui, jamais ce qui vient après.
- */
-class Layer(val depth: Long, var ax: Double, var ay: Double) {
-    val strokes = ArrayList<Stroke>()
-    val images = ArrayList<ImageItem>()
-    val shapes = ArrayList<ShapeItem>()
-    val texts = ArrayList<TextItem>()
-
-    val isEmpty: Boolean get() = strokes.isEmpty() && images.isEmpty() && shapes.isEmpty() && texts.isEmpty()
-
-    /** Ce qu'on voit dans la couche (les coups de gomme ne comptent pas, ils ne font que creuser). */
-    val itemCount: Int get() = strokes.count { !it.isEraser } + images.size + shapes.size + texts.size
-    /** A déjà porté quelque chose : on ne l'oublie plus (l'historique compte sur son repère). */
-    var used = false
-
-    private var cached: DoubleArray? = null
-    private var boundsValid = false
-    private var order: List<LayerItem>? = null
-    private var eraser = false
-
-    /**
-     * Les identifiants dans l'ordre de dessin : du fond (premier) à l'avant (dernier). Par défaut,
-     * l'ordre où les éléments ont été posés ; la sélection peut les monter ou les descendre.
-     */
-    private val zOrder = ArrayList<Long>()
-
-    fun add(s: Stroke) {
-        strokes.add(s)
-        zOrder.add(s.id)
-        used = true
-        invalidate()
-    }
-
-    fun remove(id: Long) {
-        strokes.removeAll { it.id == id }
-        zOrder.remove(id)
-        invalidate()
-    }
-
-    fun addImage(i: ImageItem) = addBox(i)
-
-    /** Pose une image, une forme, un texte ou un trait, à la fin (devant tout) ou au rang [index] de l'ordre de dessin. */
-    fun addBox(b: BoxItem, index: Int = -1) {
-        when (b) {
-            is ImageItem -> images.add(b)
-            is ShapeItem -> shapes.add(b)
-            is TextItem -> texts.add(b)
-            is StrokeBox -> strokes.add(b.stroke)
-        }
-        if (index in 0..zOrder.size) zOrder.add(index, b.id) else zOrder.add(b.id)
-        used = true
-        invalidate()
-    }
-
-    /** Retire l'élément [id] et rend le rang qu'il avait dans l'ordre de dessin (-1 s'il n'y était pas). */
-    fun removeBox(id: Long): Int {
-        val at = zOrder.indexOf(id)
-        images.removeAll { it.id == id }
-        shapes.removeAll { it.id == id }
-        texts.removeAll { it.id == id }
-        strokes.removeAll { it.id == id }
-        if (at >= 0) zOrder.removeAt(at)
-        invalidate()
-        return at
-    }
-
-    /** Remplace l'élément de même identifiant : son rang de dessin ne change pas. */
-    fun replaceBox(b: BoxItem) {
-        when (b) {
-            is ImageItem -> { val k = images.indexOfFirst { it.id == b.id }; if (k >= 0) images[k] = b }
-            is ShapeItem -> { val k = shapes.indexOfFirst { it.id == b.id }; if (k >= 0) shapes[k] = b }
-            is TextItem -> { val k = texts.indexOfFirst { it.id == b.id }; if (k >= 0) texts[k] = b }
-            is StrokeBox -> { val k = strokes.indexOfFirst { it.id == b.id }; if (k >= 0) strokes[k] = b.stroke }
-        }
-        invalidate()
-    }
-
-    /** L'élément [id] (un coup de gomme compris : on l'édite dans le mode d'édition des gommes), ou null. */
-    fun box(id: Long): BoxItem? =
-        images.firstOrNull { it.id == id } ?: shapes.firstOrNull { it.id == id } ?: texts.firstOrNull { it.id == id }
-            ?: strokes.firstOrNull { it.id == id }?.let { StrokeBox(it) }
-
-    /**
-     * L'élément que touche le point, le plus en avant d'abord. Avec [below], celui qui est juste
-     * sous cet élément à cet endroit (et, s'il n'y en a plus, on repart du dessus) : un appui répété
-     * descend ainsi dans la pile. [textOnly] ne regarde que les textes ; [erasers] ne regarde que les
-     * coups de gomme (et eux seuls : sinon ils sont invisibles pour la sélection).
-     */
-    fun boxAt(px: Double, py: Double, slack: Double, below: Long? = null, textOnly: Boolean = false, erasers: Boolean = false): BoxItem? {
-        val hits = ArrayList<BoxItem>(2)
-        val items = drawOrder()
-        for (k in items.indices.reversed()) {
-            val item = items[k]
-            val box: BoxItem = when (item) {
-                is BoxItem -> if (erasers) continue else item
-                is Stroke -> if (item.isEraser != erasers) continue else StrokeBox(item)
-            }
-            if (textOnly && box !is TextItem) continue
-            if (box.hit(px, py, slack)) hits.add(box)
-        }
-        if (hits.isEmpty()) return null
-        if (below == null) return hits[0]
-        val at = hits.indexOfFirst { it.id == below }
-        return hits[if (at < 0) 0 else (at + 1) % hits.size]
-    }
-
-    /** Remplace tous les objets à boîte (hors traits) par [f] appliquée à chacun (recentrage de la couche). */
-    fun mapBoxes(f: (BoxItem) -> BoxItem) {
-        for (i in images.indices) images[i] = f(images[i]) as ImageItem
-        for (i in shapes.indices) shapes[i] = f(shapes[i]) as ShapeItem
-        for (i in texts.indices) texts[i] = f(texts[i]) as TextItem
-        invalidate()
-    }
-
-    fun invalidate() {
-        boundsValid = false
-        order = null
-    }
-
-    /** Traits, coups de gomme, images, formes et textes dans l'ordre de dessin : du fond vers l'avant. */
-    fun drawOrder(): List<LayerItem> =
-        order ?: run {
-            val byId = HashMap<Long, LayerItem>(zOrder.size * 2 + 1)
-            for (s in strokes) byId[s.id] = s
-            for (i in images) byId[i.id] = i
-            for (i in shapes) byId[i.id] = i
-            for (i in texts) byId[i.id] = i
-            zOrder.mapNotNull { byId[it] }
-        }.also { order = it }
-
-    // ---- Ordre de dessin ------------------------------------------------------------------
-
-    /** Remet l'ordre par défaut : celui des identifiants, donc de la pose. */
-    fun resetOrderById() {
-        zOrder.clear()
-        zOrder.addAll((strokes.map { it.id } + images.map { it.id } + shapes.map { it.id } + texts.map { it.id }).sorted())
-        invalidate()
-    }
-
-    /** Impose l'ordre [ids] (du fond vers l'avant) ; ce qui n'y figure pas est posé devant, dans l'ordre des identifiants. */
-    fun setOrder(ids: List<Long>) {
-        val known = HashSet<Long>(zOrder)
-        val wanted = ids.filter { it in known }.distinct()
-        val wantedSet = wanted.toSet()
-        val missing = zOrder.filter { it !in wantedSet }.sorted()
-        zOrder.clear()
-        zOrder.addAll(wanted)
-        zOrder.addAll(missing)
-        invalidate()
-    }
-
-    /** L'ordre n'est plus celui de la pose : il faut le ranger dans le fichier. */
-    val hasCustomOrder: Boolean get() = zOrder != zOrder.sorted()
-    val orderIds: List<Long> get() = zOrder
-
-    fun orderIndex(id: Long): Int = zOrder.indexOf(id)
-
-    private fun visibleAt(items: List<LayerItem>, k: Int): Boolean = !(items[k] is Stroke && (items[k] as Stroke).isEraser)
-
-    /**
-     * Le rang où irait [id] pour un déplacement [move], ou null s'il n'y a rien à faire. Les coups
-     * de gomme se traversent : « d'un cran » veut dire juste après le prochain élément visible.
-     * Passer devant un coup de gomme, c'est ne plus être creusé par lui ; passer derrière, l'être.
-     */
-    fun moveTarget(id: Long, move: OrderMove): Int? {
-        val items = drawOrder()
-        val i = items.indexOfFirst { it.id == id }
-        if (i < 0) return null
-        return when (move) {
-            OrderMove.FORWARD -> (i + 1 until items.size).firstOrNull { visibleAt(items, it) }
-            OrderMove.BACKWARD -> (i - 1 downTo 0).firstOrNull { visibleAt(items, it) }
-            OrderMove.TO_FRONT -> if (i < items.size - 1) items.size - 1 else null
-            OrderMove.TO_BACK -> if ((0 until i).any { visibleAt(items, it) }) 0 else null
-        }
-    }
-
-    /** Range [id] au rang [to] (compté dans l'ordre d'avant le déplacement). */
-    fun moveInOrder(id: Long, to: Int) {
-        val from = zOrder.indexOf(id)
-        if (from < 0) return
-        zOrder.removeAt(from)
-        zOrder.add(to.coerceIn(0, zOrder.size), id)
-        invalidate()
-    }
-
-    /** Rang de [id] parmi les éléments visibles (1 = le plus au fond) et leur nombre, ou null. */
-    fun visibleRank(id: Long): IntArray? {
-        val items = drawOrder()
-        val i = items.indexOfFirst { it.id == id }
-        if (i < 0) return null
-        // Pour un coup de gomme : le nombre d'éléments visibles qu'il y a sous lui, donc ceux qu'il creuse.
-        var rank = 0
-        var count = 0
-        for (k in items.indices) if (visibleAt(items, k)) { count++; if (k <= i) rank++ }
-        return intArrayOf(rank, count)
-    }
-
-    /** Contient au moins un coup de gomme : il faut alors la composer à part pour qu'il ne creuse qu'elle. */
-    val hasEraser: Boolean get() { bounds(); return eraser }
-
-    /**
-     * Rectangle englobant (minX, minY, maxX, maxY) de ce qu'on voit, épaisseur comprise, ou null si
-     * rien. Les coups de gomme n'y comptent pas : ils ne font que creuser.
-     */
-    fun bounds(): DoubleArray? {
-        if (!boundsValid) {
-            var x0 = Double.POSITIVE_INFINITY; var y0 = Double.POSITIVE_INFINITY
-            var x1 = Double.NEGATIVE_INFINITY; var y1 = Double.NEGATIVE_INFINITY
-            eraser = false
-            for (s in strokes) {
-                if (s.isEraser) { eraser = true; continue }
-                val h = s.width / 2
-                x0 = min(x0, s.x + s.minX - h); y0 = min(y0, s.y + s.minY - h)
-                x1 = max(x1, s.x + s.maxX + h); y1 = max(y1, s.y + s.maxY + h)
-            }
-            for (i in images) {
-                x0 = min(x0, i.x - i.w / 2); y0 = min(y0, i.y - i.h / 2)
-                x1 = max(x1, i.x + i.w / 2); y1 = max(y1, i.y + i.h / 2)
-            }
-            for (i in shapes) {
-                val b = ShapeGeometry.bounds(i)
-                x0 = min(x0, b[0]); y0 = min(y0, b[1]); x1 = max(x1, b[2]); y1 = max(y1, b[3])
-            }
-            for (i in texts) {
-                x0 = min(x0, i.x - i.w / 2); y0 = min(y0, i.y - i.h / 2)
-                x1 = max(x1, i.x + i.w / 2); y1 = max(y1, i.y + i.h / 2)
-            }
-            cached = if (x1 < x0) null else doubleArrayOf(x0, y0, x1, y1)
-            boundsValid = true
-        }
-        return cached
-    }
-
-    /** Le trait [s] passe-t-il sur ce qu'on voit de la couche ? (Un coup de gomme dans le vide ne sert à rien.) */
-    fun touches(s: Stroke): Boolean {
-        val b = bounds() ?: return false
-        val h = s.width / 2
-        return s.x + s.maxX + h >= b[0] && s.x + s.minX - h <= b[2] && s.y + s.maxY + h >= b[1] && s.y + s.minY - h <= b[3]
-    }
-
-    /** Plus grande dimension du contenu, en unités locales (0 si vide). */
-    fun extent(): Double {
-        val b = bounds() ?: return 0.0
-        return max(b[2] - b[0], b[3] - b[1])
-    }
-}
-
-/**
- * Un trait de dessin libre : sa position ([x], [y], en `Double`) et sa forme [pts] (paires x, y)
- * relative à cette position — le premier point vaut (0, 0). [width] est en unités de la couche.
- * Un trait de couleur transparente ([isEraser]) est un coup de gomme : il dessine de la
- * transparence, qui creuse ce que sa couche a reçu avant lui et laisse voir la couche du dessous.
- *
- * [kind] dit avec quoi il a été tracé : le crayon ([PEN]) garde la même épaisseur partout ; le
- * pinceau ([BRUSH]) s'affine aux deux bouts ; le feutre ([MARKER]) se multiplie avec ce qu'il
- * recouvre, comme une encre transparente (deux passages foncent).
- */
-class Stroke(
-    override val id: Long, val x: Double, val y: Double, val pts: DoubleArray, val color: Int, val width: Double,
-    val kind: Int = PEN,
-) : LayerItem {
-    companion object {
-        const val PEN = 0
-        const val BRUSH = 1
-        const val MARKER = 2
-
-        /** Le pinceau s'affine sur une longueur de [BRUSH_TAPER] fois son épaisseur, à chaque bout. */
-        const val BRUSH_TAPER = 3.0
-        /** Épaisseur du pinceau tout au bout, en part de son épaisseur. */
-        const val BRUSH_TIP = 0.15
-
-        /** Part de l'épaisseur du pinceau à [d] (unités de la couche) du bout le plus proche. */
-        fun brushFactor(d: Double, width: Double): Double {
-            val t = d / (BRUSH_TAPER * width)
-            return if (t >= 1.0) 1.0 else max(BRUSH_TIP, sqrt(max(t, 0.0)))
-        }
-    }
-
-    val pointCount: Int get() = pts.size / 2
-
-    val isEraser: Boolean get() = color ushr 24 == 0
-
-    val minX: Double
-    val minY: Double
-    val maxX: Double
-    val maxY: Double
-
-    init {
-        var a = Double.POSITIVE_INFINITY; var b = Double.POSITIVE_INFINITY
-        var c = Double.NEGATIVE_INFINITY; var d = Double.NEGATIVE_INFINITY
-        var i = 0
-        while (i < pts.size) {
-            a = min(a, pts[i]); c = max(c, pts[i])
-            b = min(b, pts[i + 1]); d = max(d, pts[i + 1])
-            i += 2
-        }
-        if (pts.isEmpty()) { a = 0.0; b = 0.0; c = 0.0; d = 0.0 }
-        minX = a; minY = b; maxX = c; maxY = d
-    }
-
-    private val totalLength: Double by lazy {
-        var sum = 0.0
-        var i = 0
-        while (i + 3 < pts.size) {
-            val dx = pts[i + 2] - pts[i]
-            val dy = pts[i + 3] - pts[i + 1]
-            sum += sqrt(dx * dx + dy * dy)
-            i += 2
-        }
-        sum
-    }
-
-    /** Longueur du trait (unités locales) : l'affinement du pinceau se règle dessus. */
-    fun length(): Double = totalLength
-}
-
-/**
- * Une image posée sur une couche : son centre ([x], [y]) et sa taille ([w], [h]) en unités de la
- * couche. Les pixels vivent dans un fichier du projet ([key]) de [pxW]×[pxH] pixels.
- */
-class ImageItem(override val id: Long, val key: String, val pxW: Int, val pxH: Int, override val x: Double, override val y: Double, override val w: Double, override val h: Double) : BoxItem {
-    override val keepsRatio: Boolean get() = true
-    fun contains(px: Double, py: Double) = hit(px, py, 0.0)
-    override fun moved(dx: Double, dy: Double) = ImageItem(id, key, pxW, pxH, x + dx, y + dy, w, h)
-    override fun boxed(x: Double, y: Double, w: Double, h: Double, crossX: Boolean, crossY: Boolean) = ImageItem(id, key, pxW, pxH, x, y, w, h)
 }

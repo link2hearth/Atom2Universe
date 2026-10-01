@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.InputType
 import android.text.format.DateUtils
+import android.text.format.Formatter
 import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
@@ -30,7 +31,7 @@ import com.Atom2Universe.app.pixelart.ui.primaryButton
 import com.Atom2Universe.app.pixelart.ui.promptText
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
-import com.Atom2Universe.app.zoomcanvas.core.ZoomProjectSummary
+import com.Atom2Universe.app.zoomcanvas.data.ZoomProjectSummary
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -177,6 +178,7 @@ private class ZoomProjectsAdapter(
         h.info.text = context.getString(
             R.string.zc_project_info,
             context.resources.getQuantityString(R.plurals.zc_layers_count, p.layerCount, p.layerCount),
+            Formatter.formatShortFileSize(context, p.sizeBytes),
             DateUtils.getRelativeTimeSpanString(p.modified, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS),
         )
         h.badge.visibility = View.GONE

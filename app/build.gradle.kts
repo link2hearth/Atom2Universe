@@ -161,6 +161,7 @@ val bancsDeMesure = listOf(
     "*.cosmorun.CosmoRunPreviewTest",
     "*.cosmorun.CosmoRunDebugTest",
     "*.trebuchet.TrebuchetApercuTest",
+    "*.zoomcanvas.ZoomPerfBench",
 )
 if (!providers.gradleProperty("bancsMesure").isPresent) {
     tasks.withType<Test>().configureEach {
@@ -238,6 +239,8 @@ dependencies {
     testImplementation(libs.junit)
     // Les org.json d'Android ne sont que des coquilles vides en JVM : le stockage des projets pixel art se teste avec la vraie bibliothèque.
     testImplementation("org.json:json:20240303")
+    // Une vraie base SQLite en JVM : la sauvegarde du canvas infini (Room) se teste de bout en bout.
+    testImplementation("org.robolectric:robolectric:4.14.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

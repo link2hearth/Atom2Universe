@@ -8,30 +8,20 @@ import com.Atom2Universe.app.zoomcanvas.core.ShapeItem
 import com.Atom2Universe.app.zoomcanvas.core.TextItem
 import com.Atom2Universe.app.zoomcanvas.core.ZoomRenderer
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
-import com.Atom2Universe.app.zoomcanvas.core.ZoomSnapshot
-import com.Atom2Universe.app.zoomcanvas.core.ZoomStore
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.File
 import kotlin.math.abs
 import kotlin.math.hypot
 
-/** Les formes et les textes du canvas infini : tracé, sélection, modification, rendu, fichier. */
+/** Les formes et les textes du canvas infini : tracé, sélection, modification, rendu. */
 class ZoomShapesTest {
 
     private val black = 0xFF000000.toInt()
     private val green = 0xFF44AA88.toInt()
-    private val dir = File.createTempFile("zoomshapes", "test").also { it.delete(); it.mkdirs() }
-
-    @After
-    fun tearDown() {
-        dir.deleteRecursively()
-    }
 
     /** Même géométrie que les tests de la scène : seuil au milieu de l'échelle, ouverte au zoom 1. */
     private fun scene() = ZoomScene(10.0, Math.sqrt(10.0), 1.0)
@@ -265,27 +255,6 @@ class ZoomShapesTest {
         scene.zoomAt(2.0, 13.0, -7.0)
         val after = scene.boxScreenRect(scene.box(s.id)!!)
         for (i in 0 until 4) assertEquals(before[i], after[i], 1e-6)
-    }
-
-    @Test
-    fun shapesAndTextsSurviveTheFile() {
-        val store = ZoomStore(dir)
-        val p = store.create("Formes", 10.0)
-        p.scene.zoomAt(3.0, 0.0, 0.0)
-        val a = p.scene.shape(ShapeKind.ARROW, -80.0, 10.0, 60.0, -40.0, ShapeFill.BOTH, 5.0)!!
-        val b = p.scene.shape(ShapeKind.HEXAGON, 0.0, 0.0, 50.0, 50.0, ShapeFill.FILL)!!
-        val t = p.scene.addText("Un texte\nà é ü ☃", 10.0, 10.0, 24.0, 0xFF123456.toInt(), TextItem.BOLD or TextItem.ITALIC, "Orbitron-Regular", 8.25)!!
-        store.save(ZoomSnapshot.of(p.meta, p.scene))
-
-        val loaded = store.load(p.meta.id)!!
-        assertEquals(a, loaded.scene.box(a.id))
-        assertEquals(b, loaded.scene.box(b.id))
-        assertEquals(t, loaded.scene.box(t.id))
-        assertEquals(p.scene.nextStrokeId, loaded.scene.nextStrokeId)
-        assertEquals(3, store.list().single().strokeCount)
-        // Une forme posée après la réouverture ne reprend pas un identifiant déjà pris.
-        val c = loaded.scene.shape(ShapeKind.RECT, 0.0, 0.0, 40.0, 40.0)!!
-        assertTrue(c.id > t.id)
     }
 
     @Test

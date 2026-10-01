@@ -6,8 +6,6 @@ import com.Atom2Universe.app.zoomcanvas.core.RenderList
 import com.Atom2Universe.app.zoomcanvas.core.Stroke
 import com.Atom2Universe.app.zoomcanvas.core.ZoomRenderer
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
-import com.Atom2Universe.app.zoomcanvas.core.ZoomSnapshot
-import com.Atom2Universe.app.zoomcanvas.core.ZoomProjectMeta
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -24,6 +22,11 @@ import kotlin.random.Random
  * ancrages. La règle n°1 — jamais de grandes coordonnées — y est vérifiée à des centaines de niveaux.
  */
 class ZoomSceneTest {
+
+    private companion object {
+        /** Erreur relative admise sur un trait : ses points sont des Float (7 chiffres) relatifs à son origine. */
+        const val ERR_FLOAT = 1e-6
+    }
 
     private val black = 0xFF000000.toInt()
 
@@ -94,8 +97,10 @@ class ZoomSceneTest {
         val s200 = scene.draw(gesture)
         val err200 = relativeError(scene, 200, s200, gesture)
 
-        assertTrue("niveau 0 : $err0", err0 < 1e-9)
-        assertTrue("niveau 200 : $err200", err200 < 1e-9)
+        // Les points d'un trait sont des Float relatifs à son origine : une erreur relative de 1e-7 au plus
+        // (un millième de pixel sur un trait de 300 px vu à ×25).
+        assertTrue("niveau 0 : $err0", err0 < ERR_FLOAT)
+        assertTrue("niveau 200 : $err200", err200 < ERR_FLOAT)
         // Les nombres restent de la taille d'un écran, même 200 niveaux plus bas.
         assertTrue(abs(s200.x) < 1e4 && abs(s200.y) < 1e4)
         assertTrue(abs(scene.cx) < 1e4 && abs(scene.cy) < 1e4)
@@ -103,7 +108,7 @@ class ZoomSceneTest {
         // Retour en haut : le trait du niveau 0 est toujours exactement là où on l'a dessiné.
         scene.zoomOutSteps(steps)
         assertTrue(scene.depth in 0L..1L)
-        assertTrue(relativeError(scene, 0, s0, gesture) < 1e-9)
+        assertTrue(relativeError(scene, 0, s0, gesture) < ERR_FLOAT)
     }
 
     @Test
@@ -152,7 +157,7 @@ class ZoomSceneTest {
 
         // Un trait dessiné là-bas s'affiche exactement sous le doigt, et sa forme reste locale.
         val far = scene.draw(gesture)
-        assertTrue(relativeError(scene, 0, far, gesture) < 1e-9)
+        assertTrue(relativeError(scene, 0, far, gesture) < ERR_FLOAT)
         assertTrue(far.pts.all { abs(it) < 1000 })
         assertEquals(1e9, far.x - s0.x, 1e-3)
 
@@ -160,19 +165,20 @@ class ZoomSceneTest {
         val steps = scene.zoomInto(30)
         assertTrue(abs(scene.cx) < 1e4 && abs(scene.cy) < 1e4)
         val deep = scene.draw(gesture)
-        assertTrue(relativeError(scene, 30, deep, gesture) < 1e-9)
+        assertTrue(relativeError(scene, 30, deep, gesture) < ERR_FLOAT)
 
         // Remontée : le trait lointain est toujours sous le doigt.
         scene.zoomOutSteps(steps)
         assertTrue(scene.depth in 0L..1L)
         // À 10^9 unités de l'origine de la couche, un Double ne distingue pas mieux que Math.ulp(1e9)
-        // (≈ 1,2e-7 unité) : on tolère deux de ces pas, soit quelques dix-millionièmes de pixel.
+        // (≈ 1,2e-7 unité) : on tolère deux de ces pas, soit quelques dix-millionièmes de pixel, plus
+        // l'arrondi des points du trait, qui sont des Float.
         val ulpPx = Math.ulp(1e9) * scene.viewOf(0).zoom
-        assertTrue(relativeError(scene, 0, far, gesture) * 300 <= 2 * ulpPx)
+        assertTrue(relativeError(scene, 0, far, gesture) * 300 <= 2 * ulpPx + ERR_FLOAT * 300)
 
         // Retour au point de départ : aucune dérive visible (bien moins d'un millième de pixel).
         repeat(1000) { scene.pan(stepPx, 0.0) }
-        assertTrue(relativeError(scene, 0, s0, gesture) < 1e-5 / 300)
+        assertTrue(relativeError(scene, 0, s0, gesture) < ERR_FLOAT)
     }
 
     // ---- Tailles et changement de couche --------------------------------------------------
@@ -488,7 +494,7 @@ class ZoomSceneTest {
         // Le repère est recentré sur la caméra, à un multiple du rapport près (ancre entière).
         assertTrue(abs(scene.cx) <= 5.0 + 1e-9 && abs(scene.cy) <= 5.0 + 1e-9)
         assertTrue(abs(s.x) < 1000 && abs(s.y) < 1000)
-        assertTrue(relativeError(scene, 3, s, gesture) < 1e-9)
+        assertTrue(relativeError(scene, 3, s, gesture) < ERR_FLOAT)
     }
 
     @Test
@@ -553,9 +559,11 @@ class ZoomSceneTest {
         // Couches 0 à 6 : 0 et 6 dessinées, 1 à 5 vides mais gardées pour leur ancre.
         assertEquals((0L..6L).toList(), scene.allLayers().map { it.depth })
         assertEquals(listOf(0L, 6L), scene.nonEmptyDepths())
-        val snap = ZoomSnapshot.of(ZoomProjectMeta("x", "x", 0, 0), scene)
-        assertEquals(0L, snap.firstDepth)
-        assertEquals(7, snap.layers.size)
+        // L'enregistrement garde la suite de couches de la première à la dernière dessinée, ancres comprises.
+        val delta = scene.drainChanges()
+        assertEquals(0L, delta.firstDepth)
+        assertEquals(6L, delta.lastDepth)
+        assertEquals(7, delta.layers.size)
     }
 
     @Test

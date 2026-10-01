@@ -5,7 +5,7 @@
     <string name="zc_untitled_n">Canvas %1$d</string>
     <string name="zc_new_title">Nouveau canvas infini</string>
     <string name="zc_name">Nom</string>
-    <string name="zc_project_info">%1$s · %2$s</string>
+    <string name="zc_project_info">%1$s · %2$s · %3$s</string>
     <string name="zc_create">Créer</string>
     <string name="zc_open_failed">Impossible d\'ouvrir ce canvas</string>
     <string name="zc_level">Niveau %1$s</string>

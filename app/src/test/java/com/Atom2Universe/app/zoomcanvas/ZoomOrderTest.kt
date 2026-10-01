@@ -7,27 +7,17 @@ import com.Atom2Universe.app.zoomcanvas.core.RenderList
 import com.Atom2Universe.app.zoomcanvas.core.StrokeBox
 import com.Atom2Universe.app.zoomcanvas.core.ZoomRenderer
 import com.Atom2Universe.app.zoomcanvas.core.ZoomScene
-import com.Atom2Universe.app.zoomcanvas.core.ZoomSnapshot
-import com.Atom2Universe.app.zoomcanvas.core.ZoomStore
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.File
 
 /** La pile des éléments d'une couche : tout se superpose par défaut, la sélection les monte ou les descend. */
 class ZoomOrderTest {
 
     private val black = 0xFF000000.toInt()
-    private val dir = File.createTempFile("zoomorder", "test").also { it.delete(); it.mkdirs() }
-
-    @After
-    fun tearDown() {
-        dir.deleteRecursively()
-    }
 
     private fun scene() = ZoomScene(10.0, Math.sqrt(10.0), 1.0)
 
@@ -331,24 +321,5 @@ class ZoomOrderTest {
         assertEquals(0.0, dot.w, 0.0)
         assertTrue(dot.x.isFinite() && dot.stroke.width.isFinite())
         assertNotNull(scene.boxAt(10.0, 10.0))
-    }
-
-    @Test
-    fun theCustomOrderSurvivesTheFileAndTheDefaultOneIsNotStored() {
-        val store = ZoomStore(dir)
-        val p = store.create("Pile", 10.0)
-        val a = p.scene.line(-40.0)
-        val b = p.scene.rect(-50.0, -50.0, 50.0, 50.0)
-        val c = p.scene.addText("T", 0.0, 0.0, 30.0, black, 0, "", 1.0)!!.id
-        store.save(ZoomSnapshot.of(p.meta, p.scene))
-        assertEquals(listOf(a, b, c), store.load(p.meta.id)!!.scene.stack())
-
-        p.scene.reorder(a, OrderMove.TO_FRONT)
-        store.save(ZoomSnapshot.of(p.meta, p.scene))
-        val loaded = store.load(p.meta.id)!!
-        assertEquals(listOf(b, c, a), loaded.scene.stack())
-        // Ce qu'on pose ensuite reste devant tout, et l'ordre rangé est stable.
-        val d = loaded.scene.rect(0.0, 0.0, 40.0, 40.0)
-        assertEquals(listOf(b, c, a, d), loaded.scene.stack())
     }
 }

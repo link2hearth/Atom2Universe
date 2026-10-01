@@ -125,7 +125,8 @@ data class TextItem(
 
     val bold: Boolean get() = style and BOLD != 0
     val italic: Boolean get() = style and ITALIC != 0
-    val lines: List<String> get() = text.split('\n')
+    /** Les lignes du texte, coupées une fois (le rendu les demande à chaque image). */
+    val lines: List<String> by lazy(LazyThreadSafetyMode.PUBLICATION) { text.split('\n') }
 
     override fun moved(dx: Double, dy: Double) = copy(x = x + dx, y = y + dy)
 
@@ -182,7 +183,7 @@ class StrokeBox(val stroke: Stroke) : BoxItem {
     override fun boxed(x: Double, y: Double, w: Double, h: Double, crossX: Boolean, crossY: Boolean): StrokeBox {
         val s = stroke
         val k = if (this.w > 0.0) w / this.w else if (this.h > 0.0) h / this.h else 1.0
-        val pts = DoubleArray(s.pts.size) { s.pts[it] * k }
+        val pts = FloatArray(s.pts.size) { (s.pts[it] * k).toFloat() }
         // Les points sont relatifs à l'origine : on l'installe pour que le centre de la boîte tombe en (x, y).
         val ox = x - k * (s.minX + s.maxX) / 2
         val oy = y - k * (s.minY + s.maxY) / 2
@@ -197,11 +198,13 @@ class StrokeBox(val stroke: Stroke) : BoxItem {
         val reach = slack + s.width / 2
         val lx = px - s.x
         val ly = py - s.y
+        // Hors de la boîte (épaisseur comprise), inutile de parcourir les points.
+        if (lx < s.minX - reach || lx > s.maxX + reach || ly < s.minY - reach || ly > s.maxY + reach) return false
         val p = s.pts
         if (p.size < 4) return hypot(lx - p[0], ly - p[1]) <= reach
         var i = 0
         while (i + 3 < p.size) {
-            val ax = p[i]; val ay = p[i + 1]
+            val ax = p[i].toDouble(); val ay = p[i + 1].toDouble()
             val dx = p[i + 2] - ax; val dy = p[i + 3] - ay
             val len2 = dx * dx + dy * dy
             val t = if (len2 <= 0.0) 0.0 else (((lx - ax) * dx + (ly - ay) * dy) / len2).coerceIn(0.0, 1.0)

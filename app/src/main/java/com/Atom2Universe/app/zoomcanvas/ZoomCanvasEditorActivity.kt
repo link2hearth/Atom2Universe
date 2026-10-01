@@ -192,6 +192,7 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
         val id = intent.getStringExtra(EXTRA_ID)
         if (id == null) { finish(); return }
         vm.thumbnailProvider = { canvasView.thumbnail() }
+        vm.onLayersLoaded = { canvasView.invalidate() }
         vm.open(id)
         lifecycleScope.launch {
             vm.state.collect { st ->
@@ -221,13 +222,14 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        vm.flush()
+        vm.flush(force = true)
         savePrefs()
         super.onPause()
     }
 
     override fun onDestroy() {
         vm.thumbnailProvider = null
+        vm.onLayersLoaded = null
         super.onDestroy()
     }
 
@@ -542,11 +544,14 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     // ---- Texte -------------------------------------------------------------------------------
 
-    private fun typefaceFor(font: String, style: Int): Typeface = typefaces.getOrPut("$font|$style") {
-        val base = if (font.isEmpty()) Typeface.DEFAULT else FontManager.getTypeface(this, font)
-        val bold = style and TextItem.BOLD != 0
-        val italic = style and TextItem.ITALIC != 0
-        Typeface.create(base, when { bold && italic -> Typeface.BOLD_ITALIC; bold -> Typeface.BOLD; italic -> Typeface.ITALIC; else -> Typeface.NORMAL })
+    /** Appelée aussi par les fils qui cuisent un cache raster : d'où le verrou (le gestionnaire de polices n'en a pas). */
+    private fun typefaceFor(font: String, style: Int): Typeface = synchronized(typefaces) {
+        typefaces.getOrPut("$font|$style") {
+            val base = if (font.isEmpty()) Typeface.DEFAULT else FontManager.getTypeface(this, font)
+            val bold = style and TextItem.BOLD != 0
+            val italic = style and TextItem.ITALIC != 0
+            Typeface.create(base, when { bold && italic -> Typeface.BOLD_ITALIC; bold -> Typeface.BOLD; italic -> Typeface.ITALIC; else -> Typeface.NORMAL })
+        }
     }
 
     /** Largeur de la ligne la plus longue de [text] pour une police de taille 1 (la scène en déduit la boîte). */
@@ -656,17 +661,20 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
 
     // ---- Images ------------------------------------------------------------------------------
 
+    /** Appelée aussi par les fils qui cuisent un cache raster : le cache de bitmaps est sûr, le suivi des chargements est verrouillé. */
     private fun bitmapFor(key: String): Bitmap? {
         bitmaps.get(key)?.let { return it }
         val p = vm.project ?: return null
-        if (loading.add(key)) {
+        val start = synchronized(loading) { loading.add(key) }
+        if (start) {
             val f = vm.store.imageFile(p.meta.id, key)
             lifecycleScope.launch {
                 val bmp = withContext(Dispatchers.IO) { if (f.isFile) BitmapFactory.decodeFile(f.path) else null }
-                loading.remove(key)
+                synchronized(loading) { loading.remove(key) }
                 if (bmp != null) {
                     bitmaps.put(key, bmp)
-                    canvasView.invalidate()
+                    // Les caches raster qui ont cuit un cadre gris à sa place sont à refaire.
+                    canvasView.invalidateCaches()
                 }
             }
         }
