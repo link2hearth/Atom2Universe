@@ -14,7 +14,7 @@
 |---|---|---|
 | 1 | Cœur du modèle : clips, pistes, repères, opérations de ligne de temps, undo/redo | ✅ fait (`audioeditor/core/`, `TimelineTest`) |
 | 2 | Fichiers PCM/WAV, mixeur, pics de forme d'onde, rééchantillonnage | ✅ fait (`core/Mixer|Peaks|Resampler`, `io/WavFile|PeakFiles`) |
-| 3 | Effets DSP purs — 3a socle + volume + filtres + dynamique ✅ ; 3b espace / modulation / temps-hauteur / bruit / génération ⬜ | 🟡 en cours |
+| 3 | Effets DSP purs : socle, volume, filtres / EQ, dynamique, espace / modulation, temps / hauteur, bruit, génération | ✅ fait (`audioeditor/dsp/`, 171 tests au total) |
 | 4 | Stockage des projets, import (décodage), export (FFmpeg), zip de projet, migration de l'ancien projet | ⬜ |
 | 5 | Moteur de lecture temps réel (`AudioTrack`) + enregistrement par-dessus (overdub) | ⬜ |
 | 6 | Galerie de projets en tuiles (écran de démarrage) + branchement dans le hub audio | ⬜ |
@@ -22,7 +22,7 @@
 | 8 | Export (feuille + formats), spectrogramme, analyse, repères, enveloppe de volume | ⬜ |
 | 9 | Nettoyage de l'ancien code et des anciens textes, textes en/fr, passe finale | ⬜ |
 
-Les étapes 1 → 5 sont du **code sans écran** : elles se testent en JVM et se livrent une par une
+Les étapes 1 → 5 sont du **code sans écran** (1, 2 et 3 sont faites) : elles se testent en JVM et se livrent une par une
 sans rien changer pour l'utilisateur tant que l'étape 6 n'a pas rebranché le hub. L'ancien éditeur
 continue donc de fonctionner pendant tout le chantier.
 
@@ -208,8 +208,9 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
 * Tests de l'éditeur audio : `sh ./gradlew --no-daemon :app:testDebugUnitTest --tests "*audioeditor.*"`
   (≈ 45 s une fois le cache chaud). **Ne pas se fier au seul « BUILD SUCCESSFUL »** : compter les tests dans
   `app/build/test-results/testDebugUnitTest/TEST-*audioeditor*.xml` (`tests=… failures=0`).
-* Vérifié le 2026-10-01 : compilation complète OK, 125 tests de l'éditeur audio verts
-  (Timeline 35, Mixer 13, WavFile 11, Peaks 9, Resampler 9, Effects 19, FiltersDynamics 18, RenderRange 11).
+* Vérifié le 2026-10-01 : compilation complète OK, 171 tests de l'éditeur audio verts
+  (Timeline 35, Mixer 13, WavFile 11, Peaks 9, Resampler 9, Effects 19, FiltersDynamics 18, RenderRange 11,
+  Space 18, TimePitch 15, NoiseGenerate 13).
 * Sans `-PbancsMesure`, les bancs de mesure sont exclus (voir `app/build.gradle.kts`).
 
 ## 6. Étapes détaillées
@@ -255,7 +256,7 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
   44,1↔48 kHz à < 3e-3 d'un sinus idéal, ×2, repliement coupé (15 kHz → 22,05 kHz : RMS < 0,01),
   bande passante, continu, stéréo, blocs de 1 à 4096)
 
-### Étape 3 — Effets DSP purs (🟡 3a faite, 3b en cours)
+### Étape 3 — Effets DSP purs ✅
 
 **3a — socle + volume + filtres + dynamique ✅**
 - [x] `dsp/Effect.kt` : `FrameReader` / `FrameWriter` (planaire, par blocs), `RunContext` (progression +
@@ -278,15 +279,46 @@ langues c'est du nettoyage facultatif (les clés orphelines ne gênent pas la co
 - [x] Tests : `EffectsTest` (19), `FiltersDynamicsTest` (18), `RenderRangeTest` (11), `DspTestUtil`
   (mesure du gain en dB d'un effet à une fréquence donnée)
 
-**3b — reste à faire**
-- [ ] Espace / modulation : écho, réverbération (Freeverb), chorus, flanger, phaser, trémolo, vibrato,
-  distorsion, bit-crusher
-- [ ] Temps / hauteur : vitesse (rééchantillonnage, `changesLength`), tempo (WSOLA), hauteur
-  (WSOLA + rééchantillonnage), Paulstretch, tronquer les silences
-- [ ] Réparation : réduction de bruit (profil + soustraction spectrale, STFT avec `latencyFrames`)
-- [ ] Génération : tonalité (sinus / carré / scie / triangle), bruit (blanc / rose / brun), métronome
-- [ ] Tests de propriété pour chacun (écho = retard exact ; tempo change la durée mais pas la hauteur
-  mesurée ; hauteur change la fréquence mesurée ; bruit réduit > X dB sur du bruit seul ; etc.)
+**3b — espace, modulation, temps / hauteur, bruit, génération ✅**
+- [x] `dsp/Fft.kt` : FFT radix-2 en place, double précision, tables par taille (sert à la réduction de
+  bruit, à Paulstretch et aux tests ; `FFTProcessor` existant reste réservé aux spectrogrammes)
+- [x] `dsp/Space.kt` : `Echo` (retour, queue jusqu'à −60 dB), `Reverb` (Freeverb : 8 peignes + 4
+  passe-tout par voie, voie droite décalée de 23, largeur stéréo, queue estimée d'après la taille de la
+  pièce), `Chorus`, `Flanger`, `Vibrato` (ligne à retard fractionnaire `ModDelay`), `Tremolo`,
+  `Phaser` (passe-tout 1er ordre balayés, coefficient recalculé tous les 16 échantillons),
+  `Distortion` (douce `tanh`, nette, « lampe » asymétrique), `BitCrusher` (entier signé sur n bits + maintien)
+- [x] `dsp/TimePitch.kt` : `ChangeSpeed` (rééchantillonnage), `ChangeTempo` (**WSOLA** : fenêtres de
+  Hann ~22 ms recouvertes à 50 %, recherche de ±8 ms par corrélation normalisée grossière sur signal
+  décimé ×4 puis affinée, décalage choisi sur le mono et appliqué à toutes les voies), `ChangePitch`
+  (WSOLA puis rééchantillonnage, ±24 demi-tons), `PaulStretch` (fenêtre sinus, phases aléatoires
+  hermitiennes, gain √2, graine reproductible), `TruncateSilence`
+- [x] `dsp/NoiseReduction.kt` : `NoiseProfile` (puissance moyenne par case, sur un échantillon de bruit) +
+  `NoiseReduction` (STFT 2 048 / saut 512, racine de Hann à l'analyse et à la synthèse, soustraction
+  spectrale avec sur-soustraction `10^(sensibilité/10)`, plancher `reductionDb`, lissage fréquentiel
+  qui **ne creuse jamais un pic utile**, gain qui remonte tout de suite et redescend lentement) ;
+  latence = 2 048 trames, compensée par le socle
+- [x] `dsp/Generate.kt` : `ToneReader` (sinus, carré et scie PolyBLEP, triangle, fondu de 2 ms),
+  `NoiseReader` (blanc, rose de Kellet, brun), `ClickTrackReader` (métronome accentué),
+  `GenerateSource.apply` (écrit une source 16 bits + crêtes et pose le clip, nouvelle piste ou existante)
+- [x] Tests : `SpaceTest` (18), `TimePitchTest` (15 : durée et fréquence mesurées après vitesse /
+  tempo / hauteur / Paulstretch, tempo = 1 redonne le signal), `NoiseGenerateTest` (13 : bruit seul
+  atténué de > 12 dB, tonalité conservée à ±1 dB, pente des bruits colorés par FFT, métronome)
+
+**Ce que l'étape a appris (à garder en tête pour l'interface)**
+- Tout effet qui ne garde pas la durée **exactement** doit déclarer `changesLength = true`
+  (tempo, hauteur, vitesse, Paulstretch, tronquer les silences) : `replaceRange(ripple = true)`
+  recolle alors la suite sans trou ni chevauchement. `ChangePitch` en fait partie : WSOLA rend la durée
+  à une fenêtre (≈ 10–20 ms) près.
+- Les effets « longueur conservée + queue » (écho, réverb) passent par `BlockEffect.tailFrames` ;
+  l'interface doit **prévenir** que la plage rendue dépasse la sélection (la queue recouvre la suite).
+- Un effet ne grave jamais volume / pan / enveloppe / sourdine de la piste (`TrackRangeReader`).
+- Les rendus sont en flottant 32 bits : l'écran peut proposer « Normaliser » juste après « Amplifier ».
+- Plafonds testés : tempo ×0,25–×4, hauteur ±24 demi-tons, Paulstretch ×1–×500, vitesse ×0,1–×10.
+  Les afficher dans les curseurs.
+- Mesure des tests : `DspTest.gainDb` (gain d'un effet à une fréquence), `zeroCrossFreq`,
+  `dominantFreq` (FFT) — réutilisables pour tout nouvel effet.
+- Piège rencontré : un test qui synthétise une voix avec vibrato doit **intégrer la phase**
+  (`phase += 2π·f(t)/fs`), pas calculer `sin(2π·f(t)·t)` — sinon la FM croît avec le temps.
 
 ### Étape 4 — Stockage, import, export
 - [ ] `io/ManifestCodec.kt` : `Project` ⇄ JSON (versionné, tolérant aux champs inconnus)
