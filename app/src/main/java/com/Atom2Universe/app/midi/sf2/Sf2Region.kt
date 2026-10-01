@@ -107,19 +107,22 @@ data class Sf2Region(
 
     companion object {
         /**
-         * Checks if a zone has an extreme rootKey offset that would produce
+         * Checks if a zone has an extreme pitch offset that would produce
          * unusable playback rates. Returns true if the zone should be skipped.
          *
          * Note: Many SF2 files intentionally stretch samples across wide ranges.
          * We only filter truly extreme cases that would sound broken.
+         * Le scale tuning est pris en compte : les bruitages GM (applaudissements, hélicoptère...)
+         * ont souvent une root key très éloignée mais 10 cents par touche seulement ; ils
+         * étaient écartés à tort et restaient muets.
          */
-        private fun hasExtremeRootKeyOffset(keyRange: IntRange, rootKey: Int, sampleName: String): Boolean {
+        private fun hasExtremePitchOffset(keyRange: IntRange, rootKey: Int, scaleTuning: Int): Boolean {
             val keyRangeCenter = (keyRange.first + keyRange.last) / 2
-            val semitoneOffset = kotlin.math.abs(keyRangeCenter - rootKey)
+            val centsOffset = (keyRangeCenter - rootKey) * scaleTuning
 
             // Only filter extremely stretched samples (>3 octaves with extreme rates)
-            if (semitoneOffset > 36) { // More than 3 octaves
-                val estimatedRate = 2.0.pow((keyRangeCenter - rootKey) / 12.0)
+            if (kotlin.math.abs(centsOffset) > 3600) {
+                val estimatedRate = 2.0.pow(centsOffset / 1200.0)
                 if (estimatedRate < 0.05 || estimatedRate > 20.0) {
                     return true
                 }
@@ -155,16 +158,55 @@ data class Sf2Region(
             val loopStart = clampIndex(loopStartRaw, start, end)
             val loopEnd = clampIndex(loopEndRaw, loopStart + 1, end)
 
-            // Determine root key (override or sample default)
-            val rootKey = zone.rootKey ?: sampleHeader.originalPitch
+            return build(zone, sampleId, sampleHeader, start, end, loopStart, loopEnd)
+        }
+
+        /**
+         * Creates a region for memory-mapped mode.
+         * Samples are read directly from the mmap'd file, so the data length is not known here:
+         * the sample header bounds are used instead.
+         */
+        fun fromZoneDataMmap(
+            zone: Sf2ZoneData,
+            sampleHeaders: List<Sf2SampleHeader>
+        ): Sf2Region? {
+            val sampleId = zone.sampleId ?: return null
+            val sampleHeader = zone.sampleHeader ?: sampleHeaders.getOrNull(sampleId) ?: return null
+
+            // Calculate sample boundaries with offsets (using original file positions)
+            val start = max(0L, sampleHeader.start + zone.startOffset)
+            val endRaw = sampleHeader.end + zone.endOffset
+            val end = max(start + 1, endRaw)
+
+            // Calculate loop boundaries with offsets
+            val loopStartRaw = sampleHeader.startLoop + zone.startLoopOffset
+            val loopEndRaw = sampleHeader.endLoop + zone.endLoopOffset
+            val loopStart = max(start, loopStartRaw)
+            val loopEnd = max(loopStart + 1, minOf(loopEndRaw, end))
+
+            return build(zone, sampleId, sampleHeader, start, end, loopStart, loopEnd)
+        }
+
+        private fun build(
+            zone: Sf2ZoneData,
+            sampleId: Int,
+            sampleHeader: Sf2SampleHeader,
+            start: Long,
+            end: Long,
+            loopStart: Long,
+            loopEnd: Long
+        ): Sf2Region? {
+            // Determine root key (override or sample default).
+            // Norme : originalPitch 255 = échantillon non accordé, 128-254 invalide -> 60.
+            val rootKey = zone.rootKey ?: sampleHeader.originalPitch.takeIf { it in 0..127 } ?: 60
+
+            // Norme : 0 à 1200 cents par touche (100 = gamme tempérée)
+            val scaleTuning = zone.scaleTuning.takeIf { it in 0..1200 } ?: 100
 
             // Skip zones with extreme pitch offsets (corrupt or unusual SF2 data)
-            if (hasExtremeRootKeyOffset(zone.keyRange, rootKey, sampleHeader.name)) {
+            if (hasExtremePitchOffset(zone.keyRange, rootKey, scaleTuning)) {
                 return null
             }
-
-            // Convert envelope data
-            val envelope = convertEnvelope(zone.volumeEnvelope)
 
             // Check if loop is valid and enabled
             val hasLoop = SampleModes.hasLoop(zone.sampleModes) && loopEnd > loopStart + 7
@@ -182,14 +224,14 @@ data class Sf2Region(
                 rootKey = rootKey,
                 coarseTune = zone.coarseTune,
                 fineTune = zone.fineTune,
-                scaleTuning = zone.scaleTuning.takeIf { it in 0..100 } ?: 100,
+                scaleTuning = scaleTuning,
                 pitchCorrection = sampleHeader.pitchCorrection,
                 attenuation = zone.attenuation,
                 pan = zone.pan ?: 0f,
                 exclusiveClass = zone.exclusiveClass,
                 reverbSend = zone.reverbSend,
                 chorusSend = zone.chorusSend,
-                volumeEnvelope = envelope,
+                volumeEnvelope = convertEnvelope(zone.volumeEnvelope),
                 sampleName = sampleHeader.name,
                 filterFc = zone.filterFc,
                 filterQ = zone.filterQ,
@@ -313,153 +355,6 @@ data class Sf2Region(
          */
         private fun timecentsToSeconds(timecents: Int): Float {
             return 2.0.pow(timecents / 1200.0).toFloat()
-        }
-
-        /**
-         * Creates a region from finalized zone data using SparseSampleData.
-         * This version is used for streaming/selective loading where only
-         * specific samples are loaded into memory.
-         */
-        fun fromZoneDataSparse(
-            zone: Sf2ZoneData,
-            sampleData: SparseSampleData,
-            sampleHeaders: List<Sf2SampleHeader>
-        ): Sf2Region? {
-            val sampleId = zone.sampleId ?: return null
-            val sampleHeader = zone.sampleHeader ?: sampleHeaders.getOrNull(sampleId) ?: return null
-
-            // For sparse data, we don't have the total data length upfront
-            // We use the sample header's end position as the upper bound
-            sampleHeader.end
-
-            // Calculate sample boundaries with offsets
-            val start = max(0L, sampleHeader.start + zone.startOffset)
-            val endRaw = sampleHeader.end + zone.endOffset
-            val end = max(start + 1, endRaw)
-
-            // Calculate loop boundaries with offsets
-            val loopStartRaw = sampleHeader.startLoop + zone.startLoopOffset
-            val loopEndRaw = sampleHeader.endLoop + zone.endLoopOffset
-            val loopStart = max(start, loopStartRaw)
-            val loopEnd = max(loopStart + 1, minOf(loopEndRaw, end))
-
-            // Determine root key (override or sample default)
-            val rootKey = zone.rootKey ?: sampleHeader.originalPitch
-
-            // Skip zones with extreme pitch offsets (corrupt or unusual SF2 data)
-            if (hasExtremeRootKeyOffset(zone.keyRange, rootKey, sampleHeader.name)) {
-                return null
-            }
-
-            // Convert envelope data
-            val envelope = convertEnvelope(zone.volumeEnvelope)
-
-            // Check if loop is valid and enabled
-            val hasLoop = SampleModes.hasLoop(zone.sampleModes) && loopEnd > loopStart + 7
-
-            return Sf2Region(
-                keyRange = zone.keyRange,
-                velRange = zone.velRange,
-                sampleId = sampleId,
-                sampleRate = sampleHeader.sampleRate.takeIf { it > 0 } ?: 44100,
-                sampleStart = start,
-                sampleEnd = end,
-                loopStart = loopStart,
-                loopEnd = loopEnd,
-                hasLoop = hasLoop,
-                rootKey = rootKey,
-                coarseTune = zone.coarseTune,
-                fineTune = zone.fineTune,
-                scaleTuning = zone.scaleTuning.takeIf { it in 0..100 } ?: 100,
-                pitchCorrection = sampleHeader.pitchCorrection,
-                attenuation = zone.attenuation,
-                pan = zone.pan ?: 0f,
-                exclusiveClass = zone.exclusiveClass,
-                reverbSend = zone.reverbSend,
-                chorusSend = zone.chorusSend,
-                volumeEnvelope = envelope,
-                sampleName = sampleHeader.name,
-                filterFc = zone.filterFc,
-                filterQ = zone.filterQ,
-                vibLfo = createVibLfoParams(zone),
-                modLfo = createModLfoParams(zone),
-                modEnvelope = convertEnvelope(zone.modEnvelope),
-                modEnvToPitch = zone.modEnvToPitch,
-                modEnvToFilterFc = zone.modEnvToFilterFc,
-                forcedKeyNum = zone.forcedKeyNum,
-                forcedVelocity = zone.forcedVelocity
-            )
-        }
-
-        /**
-         * Creates a region for memory-mapped mode.
-         * Similar to fromZoneDataSparse but doesn't need sample data array
-         * since samples will be read directly from the mmap'd file.
-         */
-        fun fromZoneDataMmap(
-            zone: Sf2ZoneData,
-            sampleHeaders: List<Sf2SampleHeader>
-        ): Sf2Region? {
-            val sampleId = zone.sampleId ?: return null
-            val sampleHeader = zone.sampleHeader ?: sampleHeaders.getOrNull(sampleId) ?: return null
-
-            // Calculate sample boundaries with offsets (using original file positions)
-            val start = max(0L, sampleHeader.start + zone.startOffset)
-            val endRaw = sampleHeader.end + zone.endOffset
-            val end = max(start + 1, endRaw)
-
-            // Calculate loop boundaries with offsets
-            val loopStartRaw = sampleHeader.startLoop + zone.startLoopOffset
-            val loopEndRaw = sampleHeader.endLoop + zone.endLoopOffset
-            val loopStart = max(start, loopStartRaw)
-            val loopEnd = max(loopStart + 1, minOf(loopEndRaw, end))
-
-            // Determine root key (override or sample default)
-            val rootKey = zone.rootKey ?: sampleHeader.originalPitch
-
-            // Skip zones with extreme pitch offsets (corrupt or unusual SF2 data)
-            if (hasExtremeRootKeyOffset(zone.keyRange, rootKey, sampleHeader.name)) {
-                return null
-            }
-
-            // Convert envelope data
-            val envelope = convertEnvelope(zone.volumeEnvelope)
-
-            // Check if loop is valid and enabled
-            val hasLoop = SampleModes.hasLoop(zone.sampleModes) && loopEnd > loopStart + 7
-
-            return Sf2Region(
-                keyRange = zone.keyRange,
-                velRange = zone.velRange,
-                sampleId = sampleId,
-                sampleRate = sampleHeader.sampleRate.takeIf { it > 0 } ?: 44100,
-                sampleStart = start,
-                sampleEnd = end,
-                loopStart = loopStart,
-                loopEnd = loopEnd,
-                hasLoop = hasLoop,
-                rootKey = rootKey,
-                coarseTune = zone.coarseTune,
-                fineTune = zone.fineTune,
-                scaleTuning = zone.scaleTuning.takeIf { it in 0..100 } ?: 100,
-                pitchCorrection = sampleHeader.pitchCorrection,
-                attenuation = zone.attenuation,
-                pan = zone.pan ?: 0f,
-                exclusiveClass = zone.exclusiveClass,
-                reverbSend = zone.reverbSend,
-                chorusSend = zone.chorusSend,
-                volumeEnvelope = envelope,
-                sampleName = sampleHeader.name,
-                filterFc = zone.filterFc,
-                filterQ = zone.filterQ,
-                vibLfo = createVibLfoParams(zone),
-                modLfo = createModLfoParams(zone),
-                modEnvelope = convertEnvelope(zone.modEnvelope),
-                modEnvToPitch = zone.modEnvToPitch,
-                modEnvToFilterFc = zone.modEnvToFilterFc,
-                forcedKeyNum = zone.forcedKeyNum,
-                forcedVelocity = zone.forcedVelocity
-            )
         }
     }
 }

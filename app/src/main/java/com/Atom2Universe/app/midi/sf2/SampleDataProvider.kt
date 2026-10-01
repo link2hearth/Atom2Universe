@@ -7,7 +7,6 @@ import java.io.RandomAccessFile
 import java.nio.ByteOrder
 import java.nio.MappedByteBuffer
 import java.nio.channels.FileChannel
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Interface for accessing SF2 sample data.
@@ -155,113 +154,5 @@ class MemoryMappedSampleProvider(
         } catch (e: Exception) {
             Log.w(TAG, "Error closing memory-mapped file", e)
         }
-    }
-}
-
-/**
- * Hybrid sample provider: in-memory array for loaded samples,
- * memory-mapped fallback for samples not in RAM.
- *
- * This is the recommended provider for streaming mode:
- * - Pre-loaded samples are served from fast array access
- * - Unexpected samples (e.g., late program changes) fall back to mmap
- */
-@Suppress("unused")
-class HybridSampleProvider(
-    private val loadedData: ShortArray,
-    private val loadedRanges: List<LoadedSampleRange>,
-    private val filePath: String,
-    private val smplByteOffset: Long,
-    private val smplByteSize: Long
-) : SampleDataProvider {
-
-    /**
-     * Represents a range of samples loaded into the compact array
-     */
-    data class LoadedSampleRange(
-        val originalStart: Long,   // Position in original SF2 file
-        val originalEnd: Long,     // End position (exclusive)
-        val compactStart: Long     // Position in loadedData array
-    ) {
-        val length: Long get() = originalEnd - originalStart
-
-        fun contains(originalIndex: Long): Boolean =
-            originalIndex >= originalStart && originalIndex < originalEnd
-
-        fun toCompactIndex(originalIndex: Long): Int {
-            val result = compactStart + (originalIndex - originalStart)
-            // Safety check for very large SF2 files (>2GB sample data)
-            return if (result <= Int.MAX_VALUE) result.toInt() else -1
-        }
-    }
-
-    // Lazy mmap fallback (only created if needed)
-    private var mmapFallback: MemoryMappedSampleProvider? = null
-    private val fallbackAccessCount = AtomicInteger(0)
-
-    override fun getSample(index: Long): Float {
-        // First try loaded data (fast path)
-        val compactIndex = findCompactIndex(index)
-        if (compactIndex != null && compactIndex >= 0 && compactIndex < loadedData.size) {
-            return loadedData[compactIndex] / 32768f
-        }
-
-        // Fallback to mmap (slow path)
-        return getFallbackSample(index)
-    }
-
-    override fun getSampleRaw(index: Long): Short {
-        val compactIndex = findCompactIndex(index)
-        if (compactIndex != null && compactIndex >= 0 && compactIndex < loadedData.size) {
-            return loadedData[compactIndex]
-        }
-        return getOrCreateFallback()?.getSampleRaw(index) ?: 0
-    }
-
-    private fun findCompactIndex(originalIndex: Long): Int? {
-        // Binary search through ranges
-        var low = 0
-        var high = loadedRanges.size - 1
-
-        while (low <= high) {
-            val mid = (low + high) ushr 1
-            val range = loadedRanges[mid]
-
-            when {
-                originalIndex < range.originalStart -> high = mid - 1
-                originalIndex >= range.originalEnd -> low = mid + 1
-                else -> return range.toCompactIndex(originalIndex)
-            }
-        }
-        return null
-    }
-
-    private fun getFallbackSample(index: Long): Float {
-        val fallback = getOrCreateFallback() ?: return 0f
-        fallbackAccessCount.incrementAndGet()
-        return fallback.getSample(index)
-    }
-
-    @Synchronized
-    private fun getOrCreateFallback(): MemoryMappedSampleProvider? {
-        if (mmapFallback == null && smplByteSize > 0) {
-            mmapFallback = MemoryMappedSampleProvider(filePath, smplByteOffset, smplByteSize)
-        }
-        return mmapFallback
-    }
-
-    override val sampleCount: Long get() = smplByteSize / 2
-    override val memoryUsageBytes: Long get() = loadedData.size.toLong() * 2
-    override val isMemoryMapped: Boolean get() = false  // Primary is array
-
-    /**
-     * Number of times fallback mmap was used
-     */
-    @Suppress("unused")
-    val fallbackAccessCountTotal: Int get() = fallbackAccessCount.get()
-
-    override fun close() {
-        mmapFallback?.close()
-        mmapFallback = null
     }
 }
