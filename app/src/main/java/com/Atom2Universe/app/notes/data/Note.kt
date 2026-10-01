@@ -28,5 +28,7 @@ data class Note(
     val colorHex: String? = null,
     val textColorMode: String = "auto",
     val dateCreated: Long = System.currentTimeMillis(),
-    val dateModified: Long = System.currentTimeMillis()
+    val dateModified: Long = System.currentTimeMillis(),
+    /** Mise à la corbeille à cette date ; null = note vivante. Effacée pour de bon après 30 jours. */
+    val deletedAt: Long? = null
 )

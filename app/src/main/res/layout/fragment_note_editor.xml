@@ -1,148 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- L'éditeur : la barre du haut, la page (titre, groupe et tags, texte, mentions), puis la barre
+     de mise en forme qui reste au-dessus du clavier. Le fond prend la couleur de la note. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nt_ed_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/transparent">
+    android:background="@color/audio_background"
+    android:orientation="vertical">
 
-    <include layout="@layout/view_editor_toolbar" />
+    <LinearLayout
+        android:id="@+id/nt_ed_top"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/nt_ed_back"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/px_back"
+            android:src="@drawable/ic_px_back" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/nt_ed_undo"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/px_undo"
+            android:src="@drawable/ic_px_undo" />
+
+        <ImageButton
+            android:id="@+id/nt_ed_redo"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/px_redo"
+            android:src="@drawable/ic_px_redo" />
+
+        <ImageButton
+            android:id="@+id/nt_ed_pin"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/notes_pin"
+            android:src="@drawable/ic_nt_pin" />
+
+        <ImageButton
+            android:id="@+id/nt_ed_star"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/notes_favorite"
+            android:src="@drawable/ic_nt_star" />
+
+        <ImageButton
+            android:id="@+id/nt_ed_more"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/px_more"
+            android:src="@drawable/ic_px_more" />
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nt_ed_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/note_title_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/notes_title_hint"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:inputType="text"
-                    android:imeOptions="actionNext" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/note_tags_chip_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" />
-
-            <com.Atom2Universe.app.notes.editor.RichTextEditor
-                android:id="@+id/note_rich_editor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:minHeight="200dp"
-                android:gravity="top"
-                android:textColor="@color/audio_text_primary"
-                android:textSize="16sp"
-                android:background="@null"
-                android:hint="@string/notes_content_hint"
-                android:inputType="textMultiLine|textCapSentences"
-                android:scrollbars="vertical" />
+            android:paddingStart="20dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
 
             <EditText
-                android:id="@+id/note_source_editor"
+                android:id="@+id/nt_ed_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:minHeight="200dp"
-                android:gravity="top"
-                android:textColor="@color/audio_text_secondary"
-                android:textSize="14sp"
-                android:fontFamily="monospace"
                 android:background="@null"
-                android:inputType="textMultiLine"
-                android:visibility="gone" />
+                android:hint="@string/notes_title_hint"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences"
+                android:imeOptions="actionNext"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/audio_text_primary"
+                android:textColorHint="@color/audio_text_tertiary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- Groupe et tags : des puces, la dernière en ajoute. -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-3dp"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/nt_ed_meta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp" />
+            </HorizontalScrollView>
+
+            <com.Atom2Universe.app.notes.editor.MarkdownEditText
+                android:id="@+id/nt_ed_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="@string/notes_content_hint"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lineSpacingMultiplier="1.2"
+                android:minHeight="240dp"
+                android:paddingTop="4dp"
+                android:textColor="@color/audio_text_primary"
+                android:textSize="17sp" />
 
             <TextView
-                android:id="@+id/note_voice_preview"
+                android:id="@+id/nt_ed_voice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:textColor="#3B82F6"
+                android:background="@drawable/bg_px_card"
+                android:padding="10dp"
+                android:textColor="?attr/colorAccent"
                 android:textSize="13sp"
-                android:background="@color/audio_surface"
                 android:visibility="gone" />
 
-            <!-- Backlinks section -->
+            <!-- Les notes qui citent celle-ci par [[son titre]]. -->
             <LinearLayout
-                android:id="@+id/backlinks_section"
+                android:id="@+id/nt_ed_backlinks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
                 android:orientation="vertical"
-                android:layout_marginTop="24dp"
                 android:visibility="gone">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/audio_surface" />
-
                 <TextView
-                    android:id="@+id/backlinks_header"
-                    android:layout_width="match_parent"
+                    android:id="@+id/nt_ed_backlinks_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
                     android:layout_marginBottom="8dp"
-                    android:textColor="@color/audio_text_tertiary"
-                    android:textSize="12sp"
+                    android:letterSpacing="0.08"
                     android:textAllCaps="true"
-                    android:letterSpacing="0.08" />
+                    android:textColor="@color/audio_text_tertiary"
+                    android:textSize="12sp" />
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/backlinks_chip_group"
+                    android:id="@+id/nt_ed_backlinks_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
             </LinearLayout>
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- STT / TTS bar -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/nt_ed_info"
+        style="@style/PxCaption"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:background="@color/audio_background"
-        android:gravity="center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/audio_text_tertiary" />
 
-        <ImageButton
-            android:id="@+id/btn_stt"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_mic_24"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/notes_stt_start"
-            app:tint="@color/audio_text_secondary" />
+    <HorizontalScrollView
+        android:id="@+id/nt_ed_toolbar_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/audio_surface"
+        android:elevation="8dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
-        <ImageButton
-            android:id="@+id/btn_tts"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_volume_up_24"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/notes_tts_speak"
-            app:tint="@color/audio_text_secondary" />
-
-    </LinearLayout>
-
+        <LinearLayout
+            android:id="@+id/nt_ed_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp" />
+    </HorizontalScrollView>
 </LinearLayout>

@@ -1,90 +1,79 @@
 package com.Atom2Universe.app.notes.repository
 
+import androidx.room.withTransaction
 import com.Atom2Universe.app.notes.data.*
+import com.Atom2Universe.app.notes.export.NoteExportManager
+import com.Atom2Universe.app.notes.editor.MarkdownSyntax
 import kotlinx.coroutines.flow.Flow
 
-class NotesRepository(
-    private val noteDao: NoteDao,
-    private val noteGroupDao: NoteGroupDao,
-    private val tagDao: TagDao,
-    private val tagCategoryDao: TagCategoryDao
-) {
+class NotesRepository(private val db: NotesDatabase) {
+
+    private val noteDao = db.noteDao()
+    private val noteGroupDao = db.noteGroupDao()
+    private val tagDao = db.tagDao()
+    private val tagCategoryDao = db.tagCategoryDao()
 
     // ─── Notes ───────────────────────────────────────────────────────────────
 
     fun getAllNotesWithTags(): Flow<List<NoteWithTags>> = noteDao.getAllNotesWithTags()
 
-    fun getUngroupedNotesWithTags(): Flow<List<NoteWithTags>> = noteDao.getUngroupedNotesWithTags()
+    fun getTrashedNotesWithTags(): Flow<List<NoteWithTags>> = noteDao.getTrashedNotesWithTags()
 
-    fun getNotesByGroupWithTags(groupId: Long): Flow<List<NoteWithTags>> =
-        noteDao.getNotesByGroupWithTags(groupId)
-
-    fun getFavoriteNotesWithTags(): Flow<List<NoteWithTags>> = noteDao.getFavoriteNotesWithTags()
-
-    fun getRecentNotesWithTags(limit: Int = 10): Flow<List<NoteWithTags>> =
-        noteDao.getRecentNotesWithTags(limit)
-
-    suspend fun getNoteWithTagsById(noteId: Long): NoteWithTags? =
-        noteDao.getNoteWithTagsById(noteId)
+    suspend fun getNoteWithTagsById(noteId: Long): NoteWithTags? = noteDao.getNoteWithTagsById(noteId)
 
     suspend fun getNoteById(noteId: Long): Note? = noteDao.getNoteById(noteId)
 
     suspend fun getNoteByTitle(title: String): Note? = noteDao.getNoteByTitle(title)
 
-    suspend fun getNotesByTagExcluding(tagId: Long, excludeNoteId: Long): List<NoteWithTags> =
-        noteDao.getNotesByTagExcluding(tagId, excludeNoteId)
+    suspend fun getAllTitles(): List<NoteTitle> = noteDao.getAllTitles()
+
+    /** Les notes qui citent celle-ci par `[[titre]]`. */
+    suspend fun getBacklinks(title: String, noteId: Long): List<NoteWithTags> =
+        if (title.isBlank()) emptyList() else noteDao.getNotesContaining("[[${title.trim()}]]", noteId)
 
     suspend fun insertNote(note: Note): Long = noteDao.insertNote(note)
 
     suspend fun updateNote(note: Note) = noteDao.updateNote(note)
 
-    suspend fun deleteNote(note: Note) = noteDao.deleteNote(note)
+    suspend fun deleteNoteForever(noteId: Long) = noteDao.deleteNoteById(noteId)
 
-    suspend fun deleteNoteById(noteId: Long) = noteDao.deleteNoteById(noteId)
+    suspend fun setPinned(noteId: Long, pinned: Boolean) = noteDao.updateNotePinned(noteId, pinned)
 
-    suspend fun toggleNotePinned(noteId: Long, isPinned: Boolean) =
-        noteDao.updateNotePinned(noteId, isPinned)
+    suspend fun setFavorite(noteId: Long, favorite: Boolean) = noteDao.updateNoteFavorite(noteId, favorite)
 
-    suspend fun toggleNoteFavorite(noteId: Long, isFavorite: Boolean) =
-        noteDao.updateNoteFavorite(noteId, isFavorite)
+    suspend fun updateNoteGroup(noteId: Long, groupId: Long?) = noteDao.updateNoteGroup(noteId, groupId)
 
-    suspend fun updateNoteGroup(noteId: Long, groupId: Long?) =
-        noteDao.updateNoteGroup(noteId, groupId)
+    suspend fun updateNoteColor(noteId: Long, colorHex: String?) = noteDao.updateNoteColor(noteId, colorHex)
 
-    suspend fun updateNoteColor(noteId: Long, colorHex: String?, textColorMode: String) =
-        noteDao.updateNoteColor(noteId, colorHex, textColorMode)
+    /** Une copie complète (texte, couleur, groupe, tags), jamais épinglée. */
+    suspend fun duplicateNote(noteId: Long, title: String): Long? = db.withTransaction {
+        val src = noteDao.getNoteWithTagsById(noteId) ?: return@withTransaction null
+        val now = System.currentTimeMillis()
+        val id = noteDao.insertNote(src.note.copy(id = 0, title = title, isPinned = false, dateCreated = now, dateModified = now))
+        src.tags.forEach { noteDao.insertNoteTag(NoteTag(id, it.id)) }
+        id
+    }
+
+    // ─── Corbeille ────────────────────────────────────────────────────────────
+
+    suspend fun moveToTrash(noteId: Long) = noteDao.setDeletedAt(noteId, System.currentTimeMillis())
+
+    suspend fun restoreFromTrash(noteId: Long) = noteDao.setDeletedAt(noteId, null)
+
+    suspend fun emptyTrash() = noteDao.emptyTrash()
+
+    suspend fun purgeTrash(maxAgeMs: Long) = noteDao.purgeTrashBefore(System.currentTimeMillis() - maxAgeMs)
 
     // ─── Note Tags ────────────────────────────────────────────────────────────
 
-    suspend fun setTagsForNote(noteId: Long, tagIds: List<Long>) {
+    suspend fun setTagsForNote(noteId: Long, tagIds: List<Long>) = db.withTransaction {
         noteDao.deleteAllTagsForNote(noteId)
         tagIds.forEach { tagId -> noteDao.insertNoteTag(NoteTag(noteId, tagId)) }
     }
 
-    suspend fun addTagToNote(noteId: Long, tagId: Long) =
-        noteDao.insertNoteTag(NoteTag(noteId, tagId))
-
-    suspend fun removeTagFromNote(noteId: Long, tagId: Long) =
-        noteDao.deleteNoteTag(NoteTag(noteId, tagId))
-
-    suspend fun getTagIdsForNote(noteId: Long): List<Long> = noteDao.getTagIdsForNote(noteId)
-
-    fun getNotesByTag(tagId: Long): Flow<List<NoteWithTags>> = noteDao.getNotesByTag(tagId)
-
-    // ─── Search ───────────────────────────────────────────────────────────────
-
-    suspend fun searchNotes(query: String): List<NoteWithTags> {
-        val ftsQuery = query.trim().split("\\s+".toRegex()).joinToString(" OR ") { "$it*" }
-        return noteDao.searchNotes(ftsQuery)
-    }
-
     // ─── Groups ───────────────────────────────────────────────────────────────
 
-    fun getAllGroups(): Flow<List<NoteGroup>> = noteGroupDao.getAllGroups()
-
     fun getAllGroupsWithCount(): Flow<List<GroupWithCount>> = noteGroupDao.getAllGroupsWithCount()
-
-    suspend fun getGroupById(groupId: Long): NoteGroup? = noteGroupDao.getGroupById(groupId)
 
     suspend fun insertGroup(group: NoteGroup): Long = noteGroupDao.insertGroup(group)
 
@@ -92,19 +81,11 @@ class NotesRepository(
 
     suspend fun deleteGroup(group: NoteGroup) = noteGroupDao.deleteGroup(group)
 
-    suspend fun updateGroupPosition(groupId: Long, position: Int) =
-        noteGroupDao.updateGroupPosition(groupId, position)
-
-    suspend fun updateGroupColor(groupId: Long, colorHex: String?, textColorMode: String) =
-        noteGroupDao.updateGroupColor(groupId, colorHex, textColorMode)
-
     suspend fun getGroupCount(): Int = noteGroupDao.getGroupCount()
 
     // ─── Tags ─────────────────────────────────────────────────────────────────
 
     fun getAllTagsWithCount(): Flow<List<TagWithCount>> = tagDao.getAllTagsWithCount()
-
-    suspend fun getTagById(tagId: Long): Tag? = tagDao.getTagById(tagId)
 
     suspend fun getTagByName(name: String): Tag? = tagDao.getTagByName(name)
 
@@ -116,28 +97,17 @@ class NotesRepository(
 
     suspend fun deleteTag(tag: Tag) = tagDao.deleteTag(tag)
 
-    suspend fun updateTagSortOrder(tagId: Long, sortOrder: Int) =
-        tagDao.updateTagSortOrder(tagId, sortOrder)
-
-    suspend fun updateTagCategory(tagId: Long, categoryId: Long?) =
-        tagDao.updateTagCategory(tagId, categoryId)
+    suspend fun updateTagCategory(tagId: Long, categoryId: Long?) = tagDao.updateTagCategory(tagId, categoryId)
 
     // ─── Categories ───────────────────────────────────────────────────────────
 
     fun getAllCategories(): Flow<List<TagCategory>> = tagCategoryDao.getAllCategories()
 
-    suspend fun getCategoryById(categoryId: Long): TagCategory? =
-        tagCategoryDao.getCategoryById(categoryId)
-
-    suspend fun insertCategory(category: TagCategory): Long =
-        tagCategoryDao.insertCategory(category)
+    suspend fun insertCategory(category: TagCategory): Long = tagCategoryDao.insertCategory(category)
 
     suspend fun updateCategory(category: TagCategory) = tagCategoryDao.updateCategory(category)
 
     suspend fun deleteCategory(category: TagCategory) = tagCategoryDao.deleteCategory(category)
-
-    suspend fun updateCategorySortOrder(categoryId: Long, sortOrder: Int) =
-        tagCategoryDao.updateCategorySortOrder(categoryId, sortOrder)
 
     // ─── Backup ───────────────────────────────────────────────────────────────
 
@@ -145,39 +115,64 @@ class NotesRepository(
     suspend fun getAllNoteTagsForBackup(): List<NoteTag> = noteDao.getAllNoteTagsForBackup()
     suspend fun getAllGroupsForBackup(): List<NoteGroup> = noteGroupDao.getAllGroupsForBackup()
     suspend fun getAllTagsForBackup(): List<Tag> = tagDao.getAllTagsForBackup()
-    suspend fun getAllCategoriesForBackup(): List<TagCategory> =
-        tagCategoryDao.getAllCategoriesForBackup()
+    suspend fun getAllCategoriesForBackup(): List<TagCategory> = tagCategoryDao.getAllCategoriesForBackup()
 
-    suspend fun replaceAllData(
+    /**
+     * Importe une sauvegarde. Les identifiants du fichier ne valent rien ici : catégories, tags et
+     * groupes sont retrouvés **par leur nom** (réutilisés s'ils existent déjà, créés sinon), et
+     * chaque note est rattachée à son groupe et à ses tags par ces noms. En mode [replace], tout
+     * est d'abord effacé ; sinon les notes s'ajoutent à celles qui existent.
+     */
+    suspend fun importBackup(
         categories: List<TagCategory>,
         tags: List<Tag>,
         groups: List<NoteGroup>,
-        notes: List<Note>,
-        noteTags: List<NoteTag>
-    ) {
-        tagCategoryDao.deleteAllCategories()
-        tagDao.deleteAllTags()
-        noteGroupDao.deleteAllGroups()
-        noteDao.deleteAllNotes()
-        noteDao.deleteAllNoteTags()
-
-        tagCategoryDao.insertCategories(categories)
-        tagDao.insertTags(tags)
-        noteGroupDao.insertGroups(groups)
-        noteDao.insertNotes(notes)
-        noteDao.insertNoteTags(noteTags)
-    }
-
-    suspend fun mergeData(
-        categories: List<TagCategory>,
-        tags: List<Tag>,
-        groups: List<NoteGroup>,
-        notes: List<Note>,
-        noteTags: List<NoteTag>
-    ) {
-        categories.forEach { tagCategoryDao.insertCategory(it.copy(id = 0)) }
-        tags.forEach { tagDao.insertTag(it.copy(id = 0)) }
-        groups.forEach { noteGroupDao.insertGroup(it.copy(id = 0)) }
-        notes.forEach { noteDao.insertNote(it.copy(id = 0)) }
+        notes: List<NoteExportManager.ImportedNoteData>,
+        replace: Boolean,
+    ) = db.withTransaction {
+        if (replace) {
+            noteDao.deleteAllNoteTags()
+            noteDao.deleteAllNotes()
+            tagDao.deleteAllTags()
+            tagCategoryDao.deleteAllCategories()
+            noteGroupDao.deleteAllGroups()
+        }
+        val categoryIds = tagCategoryDao.getAllCategoriesForBackup().associate { it.name.lowercase() to it.id }.toMutableMap()
+        val oldCategoryName = categories.associate { it.id to it.name }
+        for (c in categories) {
+            categoryIds.getOrPut(c.name.lowercase()) { tagCategoryDao.insertCategory(c.copy(id = 0)) }
+        }
+        val tagIds = tagDao.getAllTagsForBackup().associate { it.name.lowercase() to it.id }.toMutableMap()
+        for (t in tags) {
+            val cat = t.categoryId?.let { oldCategoryName[it] }?.let { categoryIds[it.lowercase()] }
+            tagIds.getOrPut(t.name.lowercase()) { tagDao.insertTag(t.copy(id = 0, categoryId = cat)) }
+        }
+        val groupIds = noteGroupDao.getAllGroupsForBackup().associate { it.name.lowercase() to it.id }.toMutableMap()
+        var position = groupIds.size
+        for (g in groups) {
+            groupIds.getOrPut(g.name.lowercase()) { noteGroupDao.insertGroup(g.copy(id = 0, position = position++)) }
+        }
+        for (n in notes) {
+            val groupId = n.groupName?.takeIf { it.isNotBlank() }?.let { name ->
+                groupIds.getOrPut(name.lowercase()) { noteGroupDao.insertGroup(NoteGroup(name = name, position = position++)) }
+            }
+            val id = noteDao.insertNote(
+                Note(
+                    title = n.title,
+                    content = n.content,
+                    contentPlainText = MarkdownSyntax.toPlainText(n.content),
+                    groupId = groupId,
+                    isFavorite = n.isFavorite,
+                    isPinned = n.isPinned,
+                    colorHex = n.colorHex,
+                    dateCreated = n.created ?: System.currentTimeMillis(),
+                    dateModified = n.modified ?: System.currentTimeMillis(),
+                )
+            )
+            for (tagName in n.tagNames) {
+                val tagId = tagIds.getOrPut(tagName.lowercase()) { tagDao.insertTag(Tag(name = tagName)) }
+                noteDao.insertNoteTag(NoteTag(id, tagId))
+            }
+        }
     }
 }

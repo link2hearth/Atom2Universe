@@ -2,6 +2,7 @@ package com.Atom2Universe.app.notes.export
 
 import android.content.Context
 import android.net.Uri
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.notes.data.*
 import com.Atom2Universe.app.notes.repository.NotesRepository
 import kotlinx.coroutines.Dispatchers
@@ -19,9 +20,11 @@ class NotesBackupManager(
 
     enum class ImportMode { MERGE, REPLACE }
 
+    /** Le résultat, déjà rédigé pour l'écran. */
     sealed class BackupResult {
-        data class Success(val message: String) : BackupResult()
-        data class Error(val message: String, val cause: Throwable? = null) : BackupResult()
+        abstract val message: String
+        data class Success(override val message: String) : BackupResult()
+        data class Error(override val message: String, val cause: Throwable? = null) : BackupResult()
     }
 
     suspend fun exportFullBackup(outputUri: Uri): BackupResult = withContext(Dispatchers.IO) {
@@ -69,9 +72,9 @@ class NotesBackupManager(
                     }
                 }
             }
-            BackupResult.Success("${notes.size} notes exportées")
+            BackupResult.Success(context.resources.getQuantityString(R.plurals.notes_backup_exported, notes.size, notes.size))
         } catch (e: Exception) {
-            BackupResult.Error("Erreur d'export: ${e.message}", e)
+            BackupResult.Error(context.getString(R.string.notes_backup_failed, e.message ?: ""), e)
         }
     }
 
@@ -81,8 +84,7 @@ class NotesBackupManager(
                 val categoriesFromFile = mutableListOf<TagCategory>()
                 val tagsFromFile = mutableListOf<Tag>()
                 val groupsFromFile = mutableListOf<NoteGroup>()
-                val notesFromFile = mutableListOf<Note>()
-                val noteTagsFromFile = mutableListOf<NoteTag>()
+                val notesFromFile = mutableListOf<NoteExportManager.ImportedNoteData>()
 
                 context.contentResolver.openInputStream(inputUri)?.use { ins ->
                     ZipInputStream(ins.buffered()).use { zip ->
@@ -96,19 +98,8 @@ class NotesBackupManager(
                                     tagsFromFile.addAll(parseTagsJson(text))
                                 entry.name == "groups.json" ->
                                     groupsFromFile.addAll(parseGroupsJson(text))
-                                entry.name.startsWith("notes/") && entry.name.endsWith(".md") -> {
-                                    val imported = NoteExportManager.parseImportContent(text)
-                                    notesFromFile.add(
-                                        Note(
-                                            title = imported.title,
-                                            content = imported.content,
-                                            contentPlainText = imported.content,
-                                            isFavorite = imported.isFavorite,
-                                            isPinned = imported.isPinned,
-                                            colorHex = imported.colorHex
-                                        )
-                                    )
-                                }
+                                entry.name.startsWith("notes/") && entry.name.endsWith(".md") ->
+                                    notesFromFile.add(NoteExportManager.parseImportContent(text))
                             }
                             zip.closeEntry()
                             entry = zip.nextEntry
@@ -116,18 +107,14 @@ class NotesBackupManager(
                     }
                 }
 
-                when (mode) {
-                    ImportMode.REPLACE -> repository.replaceAllData(
-                        categoriesFromFile, tagsFromFile, groupsFromFile, notesFromFile, noteTagsFromFile
-                    )
-                    ImportMode.MERGE -> repository.mergeData(
-                        categoriesFromFile, tagsFromFile, groupsFromFile, notesFromFile, noteTagsFromFile
-                    )
-                }
+                repository.importBackup(
+                    categoriesFromFile, tagsFromFile, groupsFromFile, notesFromFile,
+                    replace = mode == ImportMode.REPLACE,
+                )
 
-                BackupResult.Success("${notesFromFile.size} notes importées")
+                BackupResult.Success(context.resources.getQuantityString(R.plurals.notes_backup_imported, notesFromFile.size, notesFromFile.size))
             } catch (e: Exception) {
-                BackupResult.Error("Erreur d'import: ${e.message}", e)
+                BackupResult.Error(context.getString(R.string.notes_backup_failed, e.message ?: ""), e)
             }
         }
 

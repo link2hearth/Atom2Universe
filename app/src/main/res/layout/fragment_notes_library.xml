@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/audio_background">
+
+    <LinearLayout
+        android:id="@+id/nt_lib_top"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/audio_surface"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp">
+
+            <ImageButton
+                android:id="@+id/nt_lib_back"
+                style="@style/PxIconButton"
+                android:contentDescription="@string/px_back"
+                android:src="@drawable/ic_px_back" />
+
+            <TextView
+                android:id="@+id/nt_lib_title"
+                style="@style/PxTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="@string/hub_notes_title"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/nt_lib_search"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_px_chip"
+                android:hint="@string/notes_search_hint"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:textColor="@color/audio_text_primary"
+                android:textColorHint="@color/audio_text_tertiary"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/nt_lib_btn_search"
+                style="@style/PxIconButton"
+                android:contentDescription="@string/notes_search"
+                android:src="@drawable/ic_nt_search" />
+
+            <ImageButton
+                android:id="@+id/nt_lib_btn_more"
+                style="@style/PxIconButton"
+                android:contentDescription="@string/px_more"
+                android:src="@drawable/ic_px_more" />
+        </LinearLayout>
+
+        <!-- Les filtres : toutes, favoris, un tag choisi, puis chaque groupe. -->
+        <HorizontalScrollView
+            android:id="@+id/nt_lib_filters_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:paddingBottom="10dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/nt_lib_filters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="9dp"
+                android:paddingEnd="9dp" />
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <!-- Pas de marge en haut : avec clipToPadding=false, la grille remonterait d'une rangée. -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nt_lib_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingBottom="96dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nt_lib_top" />
+
+    <LinearLayout
+        android:id="@+id/nt_lib_empty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nt_lib_top">
+
+        <ImageView
+            android:id="@+id/nt_lib_empty_icon"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_nt_note"
+            app:tint="@color/audio_text_tertiary" />
+
+        <TextView
+            android:id="@+id/nt_lib_empty_text"
+            style="@style/PxTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="@string/notes_empty"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/nt_lib_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@string/notes_new_note"
+        android:textColor="?attr/a2uMidiAccentOnText"
+        app:backgroundTint="?attr/colorAccent"
+        app:icon="@drawable/ic_px_add"
+        app:iconTint="?attr/a2uMidiAccentOnText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

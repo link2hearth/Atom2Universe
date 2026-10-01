@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface TagDao {
 
     @Query("""
-        SELECT tags.*, COUNT(note_tags.noteId) as usageCount
+        SELECT tags.*, COUNT(notes.id) as usageCount
         FROM tags
         LEFT JOIN note_tags ON note_tags.tagId = tags.id
+        LEFT JOIN notes ON notes.id = note_tags.noteId AND notes.deletedAt IS NULL
         GROUP BY tags.id
         ORDER BY tags.sortOrder ASC, tags.name ASC
     """)

@@ -12,10 +12,7 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     val allNotesWithTags: StateFlow<List<NoteWithTags>> = repository.getAllNotesWithTags()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    val recentNotes: StateFlow<List<NoteWithTags>> = repository.getRecentNotesWithTags(10)
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-    val favoriteNotes: StateFlow<List<NoteWithTags>> = repository.getFavoriteNotesWithTags()
+    val trashedNotes: StateFlow<List<NoteWithTags>> = repository.getTrashedNotesWithTags()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     val allGroupsWithCount: StateFlow<List<GroupWithCount>> = repository.getAllGroupsWithCount()
@@ -27,134 +24,109 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     val allCategories: StateFlow<List<TagCategory>> = repository.getAllCategories()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    /**
+     * Le filtre de la bibliothèque, gardé ici pour survivre à un aller-retour dans l'éditeur.
+     * Un tag choisi dans l'écran des tags l'écrit avant de revenir à la bibliothèque.
+     */
+    val filter = MutableStateFlow<LibraryFilter>(LibraryFilter.All)
+
+    sealed class LibraryFilter {
+        data object All : LibraryFilter()
+        data object Favorites : LibraryFilter()
+        data class Group(val id: Long) : LibraryFilter()
+        data class TagFilter(val id: Long) : LibraryFilter()
+    }
+
     // ─── Notes ───────────────────────────────────────────────────────────────
 
-    fun getNotesByGroup(groupId: Long): Flow<List<NoteWithTags>> =
-        repository.getNotesByGroupWithTags(groupId)
+    suspend fun getNoteWithTagsById(noteId: Long): NoteWithTags? = repository.getNoteWithTagsById(noteId)
 
-    suspend fun getNoteWithTagsById(noteId: Long): NoteWithTags? =
-        repository.getNoteWithTagsById(noteId)
-
-    suspend fun saveNote(note: Note): Long = repository.insertNote(note)
+    suspend fun insertNote(note: Note): Long = repository.insertNote(note)
 
     suspend fun updateNote(note: Note) = repository.updateNote(note)
 
-    suspend fun deleteNote(note: Note) = repository.deleteNote(note)
+    fun setPinned(noteId: Long, pinned: Boolean) = viewModelScope.launch { repository.setPinned(noteId, pinned) }
 
-    fun togglePin(noteId: Long, isPinned: Boolean) = viewModelScope.launch {
-        repository.toggleNotePinned(noteId, isPinned)
+    fun setFavorite(noteId: Long, favorite: Boolean) = viewModelScope.launch { repository.setFavorite(noteId, favorite) }
+
+    fun setColor(noteId: Long, colorHex: String?) = viewModelScope.launch { repository.updateNoteColor(noteId, colorHex) }
+
+    fun moveNoteToGroup(noteId: Long, groupId: Long?) = viewModelScope.launch { repository.updateNoteGroup(noteId, groupId) }
+
+    suspend fun duplicate(noteId: Long, title: String): Long? = repository.duplicateNote(noteId, title)
+
+    suspend fun setTagsForNote(noteId: Long, tagIds: List<Long>) = repository.setTagsForNote(noteId, tagIds)
+
+    /** Une note vide ne mérite pas la corbeille : elle disparaît tout de suite. */
+    suspend fun deleteForever(noteId: Long) = repository.deleteNoteForever(noteId)
+
+    // ─── Corbeille ────────────────────────────────────────────────────────────
+
+    fun moveToTrash(noteId: Long) = viewModelScope.launch { repository.moveToTrash(noteId) }
+
+    fun restore(noteId: Long) = viewModelScope.launch { repository.restoreFromTrash(noteId) }
+
+    fun deleteFromTrash(noteId: Long) = viewModelScope.launch { repository.deleteNoteForever(noteId) }
+
+    fun emptyTrash() = viewModelScope.launch { repository.emptyTrash() }
+
+    fun purgeOldTrash() = viewModelScope.launch { repository.purgeTrash(TRASH_DAYS * 24L * 3600_000L) }
+
+    // ─── Liens entre notes ────────────────────────────────────────────────────
+
+    /** La note qui porte ce titre, créée vide si elle n'existe pas encore. */
+    suspend fun getOrCreateNoteByTitle(title: String): Long {
+        repository.getNoteByTitle(title)?.let { return it.id }
+        val now = System.currentTimeMillis()
+        return repository.insertNote(Note(title = title, dateCreated = now, dateModified = now))
     }
 
-    fun toggleFavorite(noteId: Long, isFavorite: Boolean) = viewModelScope.launch {
-        repository.toggleNoteFavorite(noteId, isFavorite)
-    }
+    suspend fun getBacklinks(title: String, noteId: Long): List<NoteWithTags> = repository.getBacklinks(title, noteId)
 
-    fun updateNoteColor(noteId: Long, colorHex: String?, textColorMode: String) =
-        viewModelScope.launch {
-            repository.updateNoteColor(noteId, colorHex, textColorMode)
-        }
-
-    fun moveNoteToGroup(noteId: Long, groupId: Long?) = viewModelScope.launch {
-        repository.updateNoteGroup(noteId, groupId)
-    }
-
-    // ─── Tags for note ────────────────────────────────────────────────────────
-
-    suspend fun setTagsForNote(noteId: Long, tagIds: List<Long>) =
-        repository.setTagsForNote(noteId, tagIds)
-
-    suspend fun addTagToNote(noteId: Long, tagId: Long) =
-        repository.addTagToNote(noteId, tagId)
-
-    suspend fun removeTagFromNote(noteId: Long, tagId: Long) =
-        repository.removeTagFromNote(noteId, tagId)
-
-    fun getNotesByTag(tagId: Long): Flow<List<NoteWithTags>> = repository.getNotesByTag(tagId)
-
-    // ─── Search ───────────────────────────────────────────────────────────────
-
-    private val _searchResults = MutableStateFlow<List<NoteWithTags>>(emptyList())
-    val searchResults: StateFlow<List<NoteWithTags>> = _searchResults.asStateFlow()
-
-    fun search(query: String) = viewModelScope.launch {
-        _searchResults.value = if (query.isBlank()) emptyList()
-        else repository.searchNotes(query)
-    }
+    suspend fun getAllTitles(): List<NoteTitle> = repository.getAllTitles()
 
     // ─── Groups ───────────────────────────────────────────────────────────────
 
-    suspend fun createGroup(name: String, colorHex: String? = null): Long {
-        val count = repository.getGroupCount()
-        return repository.insertGroup(NoteGroup(name = name, colorHex = colorHex, position = count))
-    }
+    suspend fun createGroup(name: String): Long =
+        repository.insertGroup(NoteGroup(name = name, position = repository.getGroupCount()))
 
-    suspend fun updateGroup(group: NoteGroup) = repository.updateGroup(group)
+    fun renameGroup(group: NoteGroup, name: String) = viewModelScope.launch { repository.updateGroup(group.copy(name = name)) }
 
-    suspend fun deleteGroup(group: NoteGroup) = repository.deleteGroup(group)
-
-    fun updateGroupColor(groupId: Long, colorHex: String?, textColorMode: String) =
-        viewModelScope.launch {
-            repository.updateGroupColor(groupId, colorHex, textColorMode)
-        }
-
-    fun reorderGroups(groups: List<NoteGroup>) = viewModelScope.launch {
-        groups.forEachIndexed { index, group ->
-            repository.updateGroupPosition(group.id, index)
-        }
+    fun deleteGroup(group: NoteGroup) = viewModelScope.launch {
+        repository.deleteGroup(group)
+        if ((filter.value as? LibraryFilter.Group)?.id == group.id) filter.value = LibraryFilter.All
     }
 
     // ─── Tags ─────────────────────────────────────────────────────────────────
 
-    suspend fun createTag(name: String, colorHex: String? = null, categoryId: Long? = null): Long =
-        repository.insertTag(Tag(name = name, colorHex = colorHex, categoryId = categoryId))
+    suspend fun getAllTags(): List<Tag> = repository.getAllTagsList()
 
-    suspend fun updateTag(tag: Tag) = repository.updateTag(tag)
+    /** Le tag de ce nom, créé s'il n'existe pas. */
+    suspend fun getOrCreateTag(name: String): Long =
+        repository.getTagByName(name)?.id ?: repository.insertTag(Tag(name = name))
 
-    suspend fun deleteTag(tag: Tag) = repository.deleteTag(tag)
+    fun renameTag(tag: Tag, name: String) = viewModelScope.launch { repository.updateTag(tag.copy(name = name)) }
 
-    fun reorderTags(tags: List<Tag>) = viewModelScope.launch {
-        tags.forEachIndexed { index, tag ->
-            repository.updateTagSortOrder(tag.id, index)
-        }
+    fun deleteTag(tag: Tag) = viewModelScope.launch {
+        repository.deleteTag(tag)
+        if ((filter.value as? LibraryFilter.TagFilter)?.id == tag.id) filter.value = LibraryFilter.All
     }
 
-    fun moveTagToCategory(tagId: Long, categoryId: Long?) = viewModelScope.launch {
-        repository.updateTagCategory(tagId, categoryId)
-    }
+    fun moveTagToCategory(tagId: Long, categoryId: Long?) = viewModelScope.launch { repository.updateTagCategory(tagId, categoryId) }
 
     // ─── Categories ───────────────────────────────────────────────────────────
 
-    suspend fun createCategory(name: String): Long =
-        repository.insertCategory(TagCategory(name = name))
+    fun createCategory(name: String) = viewModelScope.launch { repository.insertCategory(TagCategory(name = name)) }
 
-    suspend fun updateCategory(category: TagCategory) = repository.updateCategory(category)
+    fun renameCategory(category: TagCategory, name: String) = viewModelScope.launch { repository.updateCategory(category.copy(name = name)) }
 
-    suspend fun deleteCategory(category: TagCategory) = repository.deleteCategory(category)
-
-    fun reorderCategories(categories: List<TagCategory>) = viewModelScope.launch {
-        categories.forEachIndexed { index, cat ->
-            repository.updateCategorySortOrder(cat.id, index)
-        }
-    }
-
-    // ─── Wiki navigation ──────────────────────────────────────────────────────
-
-    suspend fun getOrCreateNoteForTag(tagName: String): Long {
-        val existing = repository.getNoteByTitle(tagName)
-        if (existing != null) return existing.id
-        val now = System.currentTimeMillis()
-        return repository.insertNote(
-            Note(title = tagName, content = "", contentPlainText = "",
-                dateCreated = now, dateModified = now)
-        )
-    }
-
-    suspend fun getBacklinksForNote(noteTitle: String, noteId: Long): List<NoteWithTags> {
-        val tag = repository.getTagByName(noteTitle) ?: return emptyList()
-        return repository.getNotesByTagExcluding(tag.id, noteId)
-    }
+    fun deleteCategory(category: TagCategory) = viewModelScope.launch { repository.deleteCategory(category) }
 
     // ─── Backup helpers ───────────────────────────────────────────────────────
 
     val repositoryRef: NotesRepository get() = repository
+
+    companion object {
+        const val TRASH_DAYS = 30
+    }
 }

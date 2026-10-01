@@ -1,4 +1,4 @@
-﻿package com.Atom2Universe.app.notes.data
+package com.Atom2Universe.app.notes.data
 
 import android.content.Context
 import androidx.room.Database
@@ -8,13 +8,12 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         Note::class,
-        NoteFts::class,
         NoteGroup::class,
         Tag::class,
         TagCategory::class,
         NoteTag::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class NotesDatabase : RoomDatabase() {

@@ -4,6 +4,10 @@ import com.Atom2Universe.app.notes.data.Note
 import com.Atom2Universe.app.notes.data.NoteGroup
 import com.Atom2Universe.app.notes.data.Tag
 
+/**
+ * Une note en fichier `.md` : un en-tête (tags, groupe, favori, couleur, dates), puis `# Titre`,
+ * puis le texte tel quel. Le même format sert à la sauvegarde complète et au partage d'une note.
+ */
 object NoteExportManager {
 
     fun generateExportContent(note: Note, tags: List<Tag>, group: NoteGroup?): String {
@@ -16,6 +20,8 @@ object NoteExportManager {
         if (note.isFavorite) sb.appendLine("favorite: true")
         if (note.isPinned) sb.appendLine("pinned: true")
         note.colorHex?.let { sb.appendLine("color: \"$it\"") }
+        sb.appendLine("created: ${note.dateCreated}")
+        sb.appendLine("modified: ${note.dateModified}")
         sb.appendLine("---")
         sb.appendLine()
         if (note.title.isNotBlank()) {
@@ -26,6 +32,10 @@ object NoteExportManager {
         return sb.toString()
     }
 
+    /** Le texte d'une note seule, à partager : titre puis contenu, sans en-tête. */
+    fun shareText(note: Note): String =
+        if (note.title.isBlank()) note.content else "# ${note.title}\n\n${note.content}"
+
     fun parseImportContent(content: String): ImportedNoteData {
         val lines = content.lines()
         var inFrontMatter = false
@@ -35,7 +45,7 @@ object NoteExportManager {
 
         for (line in lines) {
             when {
-                !inFrontMatter && !frontMatterDone && line.trim() == "---" -> inFrontMatter = true
+                !inFrontMatter && !frontMatterDone && contentLines.isEmpty() && line.trim() == "---" -> inFrontMatter = true
                 inFrontMatter && line.trim() == "---" -> {
                     inFrontMatter = false
                     frontMatterDone = true
@@ -46,17 +56,17 @@ object NoteExportManager {
         }
 
         val frontMatter = parseFrontMatter(frontMatterLines)
-        val bodyText = contentLines.dropWhile { it.isBlank() }.joinToString("\n")
+        val body = contentLines.dropWhile { it.isBlank() }
 
+        val h1Match = Regex("^# (.+)$").find(body.firstOrNull() ?: "")
         val title: String
         val noteContent: String
-        val h1Match = Regex("^# (.+)$").find(bodyText.lines().firstOrNull { it.isNotBlank() } ?: "")
         if (h1Match != null) {
             title = h1Match.groupValues[1]
-            noteContent = bodyText.lines().drop(1).dropWhile { it.isBlank() }.joinToString("\n")
+            noteContent = body.drop(1).dropWhile { it.isBlank() }.joinToString("\n")
         } else {
             title = ""
-            noteContent = bodyText
+            noteContent = body.joinToString("\n")
         }
 
         return ImportedNoteData(
@@ -66,7 +76,9 @@ object NoteExportManager {
             groupName = frontMatter["group"] as? String,
             isFavorite = frontMatter["favorite"] == true,
             isPinned = frontMatter["pinned"] == true,
-            colorHex = frontMatter["color"] as? String
+            colorHex = frontMatter["color"] as? String,
+            created = (frontMatter["created"] as? String)?.toLongOrNull(),
+            modified = (frontMatter["modified"] as? String)?.toLongOrNull(),
         )
     }
 
@@ -100,6 +112,8 @@ object NoteExportManager {
         val groupName: String?,
         val isFavorite: Boolean,
         val isPinned: Boolean,
-        val colorHex: String?
+        val colorHex: String?,
+        val created: Long? = null,
+        val modified: Long? = null,
     )
 }

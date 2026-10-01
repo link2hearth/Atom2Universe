@@ -12,7 +12,7 @@ interface NoteGroupDao {
     @Query("""
         SELECT note_groups.*, COUNT(notes.id) as noteCount
         FROM note_groups
-        LEFT JOIN notes ON notes.groupId = note_groups.id
+        LEFT JOIN notes ON notes.groupId = note_groups.id AND notes.deletedAt IS NULL
         GROUP BY note_groups.id
         ORDER BY note_groups.position ASC, note_groups.name ASC
     """)
