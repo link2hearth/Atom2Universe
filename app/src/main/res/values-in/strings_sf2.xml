@@ -282,4 +282,34 @@
     <string name="sf2_global_params_saved">Parameter global disimpan</string>
     <string name="sf2_preset_global_params_title_format">Global Preset: %1$s</string>
     <string name="sf2_edit_program_global_params">Parameter global preset</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Tempel: %1$s</string>
+    <string name="sf2_copy_all_programs">Salin semua program</string>
+    <string name="sf2_pasted_into_project">Ditempel ke “%1$s”</string>
+    <string name="sf2_project_default_name">Proyek %d</string>
+    <string name="sf2_programs_count">%d program</string>
+    <string name="sf2_clip_program">program “%1$s”</string>
+    <string name="sf2_clip_programs">%1$d program</string>
+    <string name="sf2_clip_instrument">instrumen “%1$s”</string>
+    <string name="sf2_clip_instruments">%1$d instrumen</string>
+    <string name="sf2_clip_sample">sampel “%1$s”</string>
+    <string name="sf2_clip_samples">%1$d sampel</string>
+    <string name="sf2_choose_program_first">Pilih program terlebih dahulu</string>
+    <string name="sf2_choose_instrument_first">Pilih instrumen terlebih dahulu</string>
+    <string name="sf2_paste_gone">Item yang disalin sudah tidak ada</string>
+    <string name="sf2_select">Pilih</string>
+    <string name="sf2_done">Selesai</string>
+    <string name="sf2_selected_count">%d dipilih</string>
+    <string name="sf2_select_several">Pilih beberapa</string>
+    <string name="sf2_delete_samples_confirm">Hapus %d sampel?</string>
+    <string name="sf2_copy_instrument">Salin instrumen</string>
+    <string name="sf2_add_sound_title">Tambah suara</string>
+    <string name="sf2_import_audio_files">File audio (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Rekam dengan mikrofon</string>
+    <string name="sf2_import_sf2_presets">Preset dari file SF2</string>
+    <string name="sf2_importing_audio">Membaca file audio… %1$d/%2$d</string>
+    <string name="sf2_audio_added">%d suara ditambahkan</string>
+    <string name="sf2_audio_unreadable">%d file tidak dapat dibaca</string>
+    <string name="sf2_audio_truncated">Suara dipotong menjadi %d dtk</string>
 </resources>

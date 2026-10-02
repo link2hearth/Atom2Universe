@@ -248,6 +248,47 @@ object Sf2ZoneGenerators {
         return generators
     }
 
+    // ==================== Moving a zone ====================
+
+    /** Instrument zone parameters the app shows from the global zone when the zone lacks them. */
+    private val RESOLVED_FROM_GLOBAL = listOf(GEN_KEY_RANGE, GEN_VEL_RANGE, GEN_KEYNUM, GEN_VELOCITY, GEN_SAMPLE_MODES, GEN_OVERRIDING_ROOT_KEY)
+
+    /**
+     * An instrument zone copied into another instrument: the values it played from its old
+     * global zone (loop mode, root key, ranges, fixed key and velocity) become its own, so it
+     * plays there as it is shown. Its other generators are copied as they are, like Polyphone
+     * does.
+     */
+    fun detachSampleZone(s: Sf2SampleEntity): Sf2SampleEntity {
+        val imported = decode(s.importedGenerators) ?: return s
+        val baseline = decode(s.importBaseline) ?: return s
+        val generators = imported.toMutableMap()
+        for (gen in RESOLVED_FROM_GLOBAL) {
+            if (gen in generators) continue
+            val value = baseline[gen] ?: continue
+            val absent = when (gen) {
+                GEN_KEY_RANGE, GEN_VEL_RANGE -> FULL_RANGE
+                GEN_KEYNUM, GEN_VELOCITY -> -1
+                GEN_SAMPLE_MODES -> 0
+                else -> baseline[BASE_ORIGINAL_PITCH]
+            }
+            if (value != absent && value >= 0) generators[gen] = value
+        }
+        return s.copy(importedGenerators = encode(generators))
+    }
+
+    /** A preset zone copied into another preset: ranges taken from the old global zone become its own. */
+    fun detachPresetZone(z: Sf2PresetEntity): Sf2PresetEntity {
+        val imported = decode(z.importedGenerators) ?: return z
+        val baseline = decode(z.importBaseline) ?: return z
+        val generators = imported.toMutableMap()
+        for (gen in listOf(GEN_KEY_RANGE, GEN_VEL_RANGE)) {
+            val value = baseline[gen]
+            if (gen !in generators && value != null && value != FULL_RANGE) generators[gen] = value
+        }
+        return z.copy(importedGenerators = encode(generators))
+    }
+
     /**
      * Generators in the order of the standard: key range first, velocity range second,
      * the instrument or sample reference ([terminal]) last.

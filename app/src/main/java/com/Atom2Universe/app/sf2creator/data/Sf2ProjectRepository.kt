@@ -73,22 +73,39 @@ class Sf2ProjectRepository(private val context: Context) {
         // Delete audio files for all samples in the project
         val samples = dao.getAllSamplesForProject(projectId)
         samples.forEach { sample ->
-            File(sample.audioFilePath).delete()
+            if (sample.audioFilePath.isNotEmpty()) File(sample.audioFilePath).delete()
         }
         // Delete the project directory
         File(samplesDir, projectId.toString()).deleteRecursively()
 
-        // Delete the SF2 source file if this was an imported project
-        val sourceMetadata = dao.getSourceMetadata(projectId)
-        if (sourceMetadata?.sourceFilePath != null) {
-            File(sourceMetadata.sourceFilePath).delete()
-        }
+        val sourcePaths = (samples.mapNotNull { it.sourceFilePath } +
+            listOfNotNull(dao.getSourceMetadata(projectId)?.sourceFilePath)).toSet()
 
         // Delete the sample index mapping file (stored separately from SQLite)
         File(mappingsDir, "${projectId}.json").delete()
 
         // Delete from database (cascades to presets, samples, and source metadata)
         dao.deleteProjectById(projectId)
+
+        // Imported SF2 files are kept while samples pasted or duplicated into other projects read them
+        for (path in sourcePaths) {
+            if (dao.countSamplesReadingSource(path) == 0 && dao.countProjectsWithSource(path) == 0) {
+                File(path).delete()
+            }
+        }
+    }
+
+    /** Key ranges and program counts of every project, for the gallery. */
+    suspend fun getProjectOverviews(): Map<Long, Sf2ProjectOverview> {
+        val spans = dao.getAllKeySpans().groupBy { it.projectId }
+        val programs = dao.getProgramCounts().associate { it.projectId to it.count }
+        return (spans.keys + programs.keys).associateWith { id ->
+            val keys = BooleanArray(128)
+            spans[id].orEmpty().forEach { span ->
+                for (k in span.low.coerceIn(0, 127)..span.high.coerceIn(0, 127)) keys[k] = true
+            }
+            Sf2ProjectOverview(programs[id] ?: 0, spans[id]?.size ?: 0, keys)
+        }
     }
 
     suspend fun getSampleCountForProject(projectId: Long): Int {
@@ -1613,6 +1630,35 @@ class Sf2ProjectRepository(private val context: Context) {
         }
     }
 
+    // ==================== Audio files ====================
+
+    /** A sound decoded from an audio file, with the note it plays if it has a clear pitch. */
+    class AudioFileSound(val name: String, val samples: ShortArray, val sampleRate: Int, val pitch: PitchResult?)
+
+    /**
+     * Adds sounds from audio files to an instrument, placed on the keyboard by
+     * [Sf2SamplePlacement]. A detected pitch that is slightly off is corrected in the sample.
+     * @return ids of the new samples
+     */
+    suspend fun addAudioFiles(instrumentId: Long, sounds: List<AudioFileSound>): List<Long> = withContext(Dispatchers.IO) {
+        val occupied = dao.getSamplesForInstrument(instrumentId)
+            .flatMap { (it.keyRangeStart.coerceIn(0, 127)..it.keyRangeEnd.coerceIn(0, 127)).toList() }
+            .toSet()
+        val placements = Sf2SamplePlacement.place(sounds.map { it.pitch?.midiNote }, occupied)
+        sounds.zip(placements).map { (sound, place) ->
+            addSampleToInstrument(
+                instrumentId = instrumentId,
+                name = sound.name.take(20),
+                samples = sound.samples,
+                sampleRate = sound.sampleRate,
+                rootNote = place.rootNote,
+                keyRangeStart = place.low,
+                keyRangeEnd = place.high,
+                pitchCorrection = -(sound.pitch?.cents ?: 0)
+            )
+        }
+    }
+
     // ==================== Sample audio ====================
 
     /** Audio of a sample: its WAV file, or its data in the imported SF2. */
@@ -1677,3 +1723,6 @@ class Sf2ProjectRepository(private val context: Context) {
      */
     private fun loadWavFile(file: File): ShortArray? = WavUtils.loadWavFile(file)
 }
+
+/** What the gallery shows of a project: counts and the keys that have a sound. */
+class Sf2ProjectOverview(val programCount: Int, val sampleCount: Int, val coveredKeys: BooleanArray)

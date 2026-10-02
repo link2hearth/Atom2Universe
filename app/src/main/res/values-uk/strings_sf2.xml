@@ -282,4 +282,34 @@
     <string name="sf2_global_params_saved">Глобальні параметри збережено</string>
     <string name="sf2_preset_global_params_title_format">Глобальний пресет: %1$s</string>
     <string name="sf2_edit_program_global_params">Глобальні параметри пресету</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Вставити: %1$s</string>
+    <string name="sf2_copy_all_programs">Копіювати всі програми</string>
+    <string name="sf2_pasted_into_project">Вставлено в «%1$s»</string>
+    <string name="sf2_project_default_name">Проєкт %d</string>
+    <string name="sf2_programs_count">Програм: %d</string>
+    <string name="sf2_clip_program">програма «%1$s»</string>
+    <string name="sf2_clip_programs">програм: %1$d</string>
+    <string name="sf2_clip_instrument">інструмент «%1$s»</string>
+    <string name="sf2_clip_instruments">інструментів: %1$d</string>
+    <string name="sf2_clip_sample">семпл «%1$s»</string>
+    <string name="sf2_clip_samples">семплів: %1$d</string>
+    <string name="sf2_choose_program_first">Спершу виберіть програму</string>
+    <string name="sf2_choose_instrument_first">Спершу виберіть інструмент</string>
+    <string name="sf2_paste_gone">Скопійованих елементів більше не існує</string>
+    <string name="sf2_select">Вибрати</string>
+    <string name="sf2_done">Готово</string>
+    <string name="sf2_selected_count">Вибрано: %d</string>
+    <string name="sf2_select_several">Вибрати кілька</string>
+    <string name="sf2_delete_samples_confirm">Видалити семпли (%d)?</string>
+    <string name="sf2_copy_instrument">Копіювати інструмент</string>
+    <string name="sf2_add_sound_title">Додати звук</string>
+    <string name="sf2_import_audio_files">Аудіофайли (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Записати з мікрофона</string>
+    <string name="sf2_import_sf2_presets">Пресети з файлу SF2</string>
+    <string name="sf2_importing_audio">Читання аудіофайлів… %1$d/%2$d</string>
+    <string name="sf2_audio_added">Додано звуків: %d</string>
+    <string name="sf2_audio_unreadable">Не вдалося прочитати файлів: %d</string>
+    <string name="sf2_audio_truncated">Звуки обрізано до %d с</string>
 </resources>

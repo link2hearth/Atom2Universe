@@ -349,6 +349,26 @@ interface Sf2ProjectDao {
     @Query("UPDATE sf2_source_metadata SET importFingerprint = :fingerprint, importProjectName = :projectName WHERE projectId = :projectId")
     suspend fun updateImportFingerprint(projectId: Long, fingerprint: String?, projectName: String?)
 
+    // ==================== Shared source files ====================
+
+    /** Samples, in any project, that read their audio from [path]. */
+    @Query("SELECT COUNT(*) FROM sf2_samples WHERE sourceFilePath = :path AND isExtracted = 0")
+    suspend fun countSamplesReadingSource(path: String): Int
+
+    @Query("SELECT COUNT(*) FROM sf2_source_metadata WHERE sourceFilePath = :path")
+    suspend fun countProjectsWithSource(path: String): Int
+
+    // ==================== Gallery ====================
+
+    @Query("""
+        SELECT i.projectId AS projectId, s.keyRangeStart AS low, s.keyRangeEnd AS high
+        FROM sf2_samples s INNER JOIN sf2_instruments i ON s.instrumentId = i.id
+    """)
+    suspend fun getAllKeySpans(): List<Sf2KeySpan>
+
+    @Query("SELECT projectId, COUNT(*) AS count FROM sf2_programs GROUP BY projectId")
+    suspend fun getProgramCounts(): List<Sf2ProjectCount>
+
     // ==================== Export ====================
 
     @Query("SELECT * FROM sf2_presets WHERE projectId = :projectId ORDER BY id")
@@ -608,3 +628,8 @@ interface Sf2ProjectDao {
         }
     }
 }
+
+/** Key range of one sample of a project. */
+data class Sf2KeySpan(val projectId: Long, val low: Int, val high: Int)
+
+data class Sf2ProjectCount(val projectId: Long, val count: Int)

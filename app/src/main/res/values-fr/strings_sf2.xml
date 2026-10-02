@@ -282,4 +282,34 @@
     <string name="sf2_seconds_format">%1$ds</string>
     <string name="sf2_recording_duration_format">%1$.1fs / %2$ds</string>
     <string name="sf2_noise_reduced">Bruit de fond réduit (%1$s dB)</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Coller : %1$s</string>
+    <string name="sf2_copy_all_programs">Copier tous les programmes</string>
+    <string name="sf2_pasted_into_project">Collé dans « %1$s »</string>
+    <string name="sf2_project_default_name">Projet %d</string>
+    <string name="sf2_programs_count">%d programme(s)</string>
+    <string name="sf2_clip_program">programme « %1$s »</string>
+    <string name="sf2_clip_programs">%1$d programmes</string>
+    <string name="sf2_clip_instrument">instrument « %1$s »</string>
+    <string name="sf2_clip_instruments">%1$d instruments</string>
+    <string name="sf2_clip_sample">sample « %1$s »</string>
+    <string name="sf2_clip_samples">%1$d samples</string>
+    <string name="sf2_choose_program_first">Choisissez d\'abord un programme</string>
+    <string name="sf2_choose_instrument_first">Choisissez d\'abord un instrument</string>
+    <string name="sf2_paste_gone">Les éléments copiés n\'existent plus</string>
+    <string name="sf2_select">Sélectionner</string>
+    <string name="sf2_done">Terminé</string>
+    <string name="sf2_selected_count">%d sélectionné(s)</string>
+    <string name="sf2_select_several">Sélectionner plusieurs</string>
+    <string name="sf2_delete_samples_confirm">Supprimer %d samples ?</string>
+    <string name="sf2_copy_instrument">Copier l\'instrument</string>
+    <string name="sf2_add_sound_title">Ajouter un son</string>
+    <string name="sf2_import_audio_files">Fichiers audio (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Enregistrer avec le micro</string>
+    <string name="sf2_import_sf2_presets">Presets d\'un fichier SF2</string>
+    <string name="sf2_importing_audio">Lecture des fichiers audio… %1$d/%2$d</string>
+    <string name="sf2_audio_added">%d son(s) ajouté(s)</string>
+    <string name="sf2_audio_unreadable">%d fichier(s) illisible(s)</string>
+    <string name="sf2_audio_truncated">Les sons ont été coupés à %d s</string>
 </resources>

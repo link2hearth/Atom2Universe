@@ -216,6 +216,10 @@
 
         <!-- SF2 Creator -->
         <activity
+            android:name=".sf2creator.Sf2LibraryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".sf2creator.Sf2CreatorActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"

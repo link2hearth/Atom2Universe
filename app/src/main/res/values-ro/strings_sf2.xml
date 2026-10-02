@@ -282,4 +282,34 @@
     <string name="sf2_global_params_saved">Parametri globali salvați</string>
     <string name="sf2_preset_global_params_title_format">Preset global: %1$s</string>
     <string name="sf2_edit_program_global_params">Parametri globali preset</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Lipește: %1$s</string>
+    <string name="sf2_copy_all_programs">Copiază toate programele</string>
+    <string name="sf2_pasted_into_project">Lipit în „%1$s”</string>
+    <string name="sf2_project_default_name">Proiect %d</string>
+    <string name="sf2_programs_count">%d program(e)</string>
+    <string name="sf2_clip_program">programul „%1$s”</string>
+    <string name="sf2_clip_programs">%1$d programe</string>
+    <string name="sf2_clip_instrument">instrumentul „%1$s”</string>
+    <string name="sf2_clip_instruments">%1$d instrumente</string>
+    <string name="sf2_clip_sample">mostra „%1$s”</string>
+    <string name="sf2_clip_samples">%1$d mostre</string>
+    <string name="sf2_choose_program_first">Alege mai întâi un program</string>
+    <string name="sf2_choose_instrument_first">Alege mai întâi un instrument</string>
+    <string name="sf2_paste_gone">Elementele copiate nu mai există</string>
+    <string name="sf2_select">Selectează</string>
+    <string name="sf2_done">Gata</string>
+    <string name="sf2_selected_count">%d selectate</string>
+    <string name="sf2_select_several">Selectează mai multe</string>
+    <string name="sf2_delete_samples_confirm">Ștergi %d mostre?</string>
+    <string name="sf2_copy_instrument">Copiază instrumentul</string>
+    <string name="sf2_add_sound_title">Adaugă un sunet</string>
+    <string name="sf2_import_audio_files">Fișiere audio (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Înregistrează cu microfonul</string>
+    <string name="sf2_import_sf2_presets">Preseturi dintr-un fișier SF2</string>
+    <string name="sf2_importing_audio">Se citesc fișierele audio… %1$d/%2$d</string>
+    <string name="sf2_audio_added">%d sunet(e) adăugat(e)</string>
+    <string name="sf2_audio_unreadable">%d fișier(e) nu au putut fi citite</string>
+    <string name="sf2_audio_truncated">Sunetele au fost scurtate la %d s</string>
 </resources>

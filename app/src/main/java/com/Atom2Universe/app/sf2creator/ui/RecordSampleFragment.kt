@@ -225,6 +225,8 @@ class RecordSampleFragment : Fragment() {
             reset()
         }
 
+        // Recording starts from a project: back returns to it, no list of projects here
+        myProjectsButton.visibility = if (onProjectsRequested != null) View.VISIBLE else View.GONE
         myProjectsButton.setOnClickListener {
             onProjectsRequested?.invoke()
         }

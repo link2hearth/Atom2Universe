@@ -282,4 +282,34 @@
     <string name="sf2_seconds_format">%1$ds</string>
     <string name="sf2_recording_duration_format">%1$.1fs / %2$ds</string>
     <string name="sf2_noise_reduced">Rumore di fondo ridotto (%1$s dB)</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Incolla: %1$s</string>
+    <string name="sf2_copy_all_programs">Copia tutti i programmi</string>
+    <string name="sf2_pasted_into_project">Incollato in «%1$s»</string>
+    <string name="sf2_project_default_name">Progetto %d</string>
+    <string name="sf2_programs_count">%d programma/i</string>
+    <string name="sf2_clip_program">programma «%1$s»</string>
+    <string name="sf2_clip_programs">%1$d programmi</string>
+    <string name="sf2_clip_instrument">strumento «%1$s»</string>
+    <string name="sf2_clip_instruments">%1$d strumenti</string>
+    <string name="sf2_clip_sample">campione «%1$s»</string>
+    <string name="sf2_clip_samples">%1$d campioni</string>
+    <string name="sf2_choose_program_first">Scegli prima un programma</string>
+    <string name="sf2_choose_instrument_first">Scegli prima uno strumento</string>
+    <string name="sf2_paste_gone">Gli elementi copiati non esistono più</string>
+    <string name="sf2_select">Seleziona</string>
+    <string name="sf2_done">Fatto</string>
+    <string name="sf2_selected_count">%d selezionati</string>
+    <string name="sf2_select_several">Seleziona più elementi</string>
+    <string name="sf2_delete_samples_confirm">Eliminare %d campioni?</string>
+    <string name="sf2_copy_instrument">Copia strumento</string>
+    <string name="sf2_add_sound_title">Aggiungi un suono</string>
+    <string name="sf2_import_audio_files">File audio (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Registra con il microfono</string>
+    <string name="sf2_import_sf2_presets">Preset da un file SF2</string>
+    <string name="sf2_importing_audio">Lettura dei file audio… %1$d/%2$d</string>
+    <string name="sf2_audio_added">%d suono/i aggiunto/i</string>
+    <string name="sf2_audio_unreadable">Impossibile leggere %d file</string>
+    <string name="sf2_audio_truncated">I suoni sono stati accorciati a %d s</string>
 </resources>

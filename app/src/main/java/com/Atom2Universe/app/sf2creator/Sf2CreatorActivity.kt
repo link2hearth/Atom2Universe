@@ -11,7 +11,6 @@ import com.Atom2Universe.app.audio.AudioFeedback as Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.audio.AudioThemedActivity
@@ -23,7 +22,6 @@ import com.Atom2Universe.app.sf2creator.reader.Sf2ParseResult
 import com.Atom2Universe.app.sf2creator.ui.ExportFragment
 import com.Atom2Universe.app.sf2creator.ui.PitchSelectionDialog
 import com.Atom2Universe.app.sf2creator.ui.ProjectDetailFragment
-import com.Atom2Universe.app.sf2creator.ui.ProjectManagerFragment
 import com.Atom2Universe.app.sf2creator.ui.RecordSampleFragment
 import com.Atom2Universe.app.sf2creator.ui.SampleEditorFragment
 import com.Atom2Universe.app.sf2creator.ui.Sf2ImportFragment
@@ -36,17 +34,13 @@ import com.Atom2Universe.app.util.enableImmersiveMode
 import java.io.File
 
 /**
- * Main activity for the SF2 Creator module.
- * Guides the user through recording a sample, detecting pitch, and exporting an SF2 file.
+ * A project of the SF2 creator, opened from the gallery ([Sf2LibraryActivity]).
  *
- * Flow:
- * 1. Record sample (RecordSampleFragment) - pitch auto-detected
- * 2. Edit sample (SampleEditorFragment) - trim, loop, process
- * 3. Name and export (ExportFragment) OR add to project
- *
- * Project flow:
- * - From Export: "Add to Project" → ProjectManager → select/create project → ProjectDetail
- * - From ProjectDetail: "Add sample" → back to Record flow
+ * Shows the project ([ProjectDetailFragment]), or first the presets to import when it
+ * opens an SF2 as a new project. From the project:
+ * - "Record": record (RecordSampleFragment), edit (SampleEditorFragment), adjust
+ *   (ExportFragment), then the sample goes into the instrument selected in the project;
+ * - editing a sample opens the waveform editor then its parameters.
  */
 class Sf2CreatorActivity : AudioThemedActivity() {
 
@@ -65,8 +59,11 @@ class Sf2CreatorActivity : AudioThemedActivity() {
 
     // Project state
     private var currentProjectId: Long? = null
-    private var pendingSampleParams: ExportFragment.SampleParams? = null
     private var returnToProjectAfterRecord: Boolean = false
+    /** Preset zone selected in the project when recording started: the sample goes into its instrument. */
+    private var recordTargetPresetId: Long = -1
+    /** The project was created to import an SF2: cancelling the import removes it. */
+    private var importingNewProject: Boolean = false
 
     // Sample editing state (when editing existing sample in project)
     private var editingSampleEntity: Sf2SampleEntity? = null
@@ -76,7 +73,6 @@ class Sf2CreatorActivity : AudioThemedActivity() {
     private var recordFragment: RecordSampleFragment? = null
     private var editorFragment: SampleEditorFragment? = null
     private var exportFragment: ExportFragment? = null
-    private var projectManagerFragment: ProjectManagerFragment? = null
     private var projectDetailFragment: ProjectDetailFragment? = null
     private var sf2ImportFragment: Sf2ImportFragment? = null
 
@@ -101,7 +97,17 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         setupBackPressedCallback()
 
         if (savedInstanceState == null) {
-            showRecordStep()
+            val projectId = intent.getLongExtra(EXTRA_PROJECT_ID, -1)
+            val importUri = intent.data
+            when {
+                projectId > 0 -> showProjectDetail(projectId)
+                importUri != null -> handleSf2ImportAsNewProject(importUri)
+                else -> {
+                    startActivity(Sf2LibraryActivity.intent(this))
+                    finish()
+                    return
+                }
+            }
         }
 
         updateUI()
@@ -119,41 +125,15 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                         showEditStep()
                     }
                     Step.EDIT -> showRecordStep()
-                    Step.RECORD -> {
-                        if (returnToProjectAfterRecord && currentProjectId != null) {
-                            // Return to project detail instead of exiting
-                            returnToProjectAfterRecord = false
-                            showProjectDetail(currentProjectId!!)
-                        } else {
-                            navigateBackToHub()
-                        }
-                    }
-                    Step.PROJECT_MANAGER -> {
-                        // If we came from Export with a pending sample, go back to export
-                        if (pendingSampleParams != null) {
-                            pendingSampleParams = null
-                            showExportStep()
-                        } else {
-                            showRecordStep()
-                        }
-                    }
-                    Step.PROJECT_DETAIL -> {
-                        currentProjectId = null
-                        showProjectManager()
-                    }
+                    Step.RECORD -> backToProject()
+                    Step.PROJECT_DETAIL -> finish()
                     Step.EDIT_PROJECT_SAMPLE -> {
                         // Cancel editing and return to project
                         editingSampleEntity = null
                         editingSampleAudio = null
-                        currentProjectId?.let { showProjectDetail(it) }
-                            ?: showProjectManager()
+                        backToProject()
                     }
-                    Step.SF2_IMPORT -> {
-                        // Cancel import and return to project detail
-                        sf2ImportFragment = null
-                        currentProjectId?.let { showProjectDetail(it) }
-                            ?: showProjectManager()
-                    }
+                    Step.SF2_IMPORT -> sf2ImportFragment?.onCancel?.invoke() ?: backToProject()
                 }
             }
         })
@@ -163,6 +143,12 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         titleText = findViewById(R.id.title_text)
         stepIndicator = findViewById(R.id.step_indicator)
         backButton = findViewById(R.id.back_button)
+    }
+
+    /** Back to the open project, or to the gallery. */
+    private fun backToProject() {
+        returnToProjectAfterRecord = false
+        currentProjectId?.let { showProjectDetail(it) } ?: finish()
     }
 
     private fun setupBackButton() {
@@ -180,10 +166,6 @@ class Sf2CreatorActivity : AudioThemedActivity() {
             recordedSamples = samples
             selectedPitch = pitch.midiNote
             showEditStep()
-        }
-        fragment.onProjectsRequested = {
-            // Navigate to project manager
-            showProjectManager()
         }
         recordFragment = fragment
 
@@ -307,12 +289,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
             }
         }
         fragment.onAddToProject = {
-            // Get current sample parameters and navigate to project manager
-            val params = fragment.getSampleParams()
-            if (params != null) {
-                pendingSampleParams = params
-                showProjectManager()
-            }
+            fragment.getSampleParams()?.let { addRecordedSampleToProject(it) }
         }
         exportFragment = fragment
 
@@ -320,15 +297,15 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         updateUI()
     }
 
-    private fun showProjectManager() {
-        currentStep = Step.PROJECT_MANAGER
-
-        val fragment = ProjectManagerFragment.newInstance()
-
-        // If we have a pending sample, pass it to the fragment
-        // Now supports keyRangeStart/End from SampleParams
-        pendingSampleParams?.let { params ->
-            fragment.pendingSampleToAdd = ProjectManagerFragment.PendingSample(
+    /** Adds the recorded sample to the instrument selected in the open project. */
+    private fun addRecordedSampleToProject(params: ExportFragment.SampleParams) {
+        val projectId = currentProjectId ?: return
+        CoroutineScope(Dispatchers.Main).launch {
+            val repository = Sf2ProjectRepository(this@Sf2CreatorActivity)
+            val instrumentId = repository.getPresetById(recordTargetPresetId)?.instrumentId
+                ?: repository.getOrCreateDefaultPreset(projectId).instrumentId
+            repository.addSampleToInstrument(
+                instrumentId = instrumentId,
                 name = params.name,
                 samples = params.samples,
                 sampleRate = params.sampleRate,
@@ -340,53 +317,20 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                 hasLoop = params.hasLoop,
                 attenuation = params.attenuation,
                 fineTuneCents = params.fineTuneCents,
-                attackMs = params.attackMs,
-                decayMs = params.decayMs,
-                sustainPercent = params.sustainPercent,
-                releaseMs = params.releaseMs,
-                filterCutoffHz = params.filterCutoffHz,
-                filterResonanceCb = params.filterResonanceCb,
+                volEnvAttack = Sf2UnitConverter.msToTimecents(params.attackMs),
+                volEnvDecay = Sf2UnitConverter.msToTimecents(params.decayMs),
+                volEnvSustain = Sf2UnitConverter.sustainPercentToCentibels(params.sustainPercent),
+                volEnvRelease = Sf2UnitConverter.msToTimecents(params.releaseMs),
+                filterFc = Sf2UnitConverter.hzToFilterCents(params.filterCutoffHz),
+                filterQ = params.filterResonanceCb,
                 chorusSend = params.chorusSend,
                 reverbSend = params.reverbSend,
                 pan = params.pan
             )
+            Toast.makeText(this@Sf2CreatorActivity, R.string.sf2_sample_added, Toast.LENGTH_SHORT).show()
+            savedExportParams = null
+            backToProject()
         }
-
-        fragment.onProjectSelected = { projectId ->
-            if (pendingSampleParams != null) {
-                // Sample was added to the project
-                Toast.makeText(this, R.string.sf2_sample_added, Toast.LENGTH_SHORT).show()
-                pendingSampleParams = null
-            }
-            currentProjectId = projectId
-            showProjectDetail(projectId)
-        }
-
-        fragment.onNewProjectCreated = { projectId ->
-            if (pendingSampleParams != null) {
-                // Sample was added to the new project
-                Toast.makeText(this, R.string.sf2_sample_added, Toast.LENGTH_SHORT).show()
-                pendingSampleParams = null
-            }
-            currentProjectId = projectId
-            showProjectDetail(projectId)
-        }
-
-        fragment.onRedefineNoteRequested = {
-            // User wants to go back to Export to change the note
-            pendingSampleParams = null
-            showExportStep()
-        }
-
-        fragment.onImportSf2Requested = { uri ->
-            // Import SF2 as a new project (1 SF2 = 1 Project architecture)
-            handleSf2ImportAsNewProject(uri)
-        }
-
-        projectManagerFragment = fragment
-
-        replaceFragment(fragment)
-        updateUI()
     }
 
     private fun showProjectDetail(projectId: Long) {
@@ -396,9 +340,17 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         val fragment = ProjectDetailFragment.newInstance(projectId)
 
         fragment.onAddSampleRequested = {
-            // Start the record flow, but mark that we should return to project
+            // Record a sample for the selected instrument, then come back to the project
+            recordTargetPresetId = fragment.getSelectedPresetId()
             returnToProjectAfterRecord = true
+            recordedFile = null
+            recordedSamples = null
+            savedExportParams = null
             showRecordStep()
+        }
+
+        fragment.onImportSf2Requested = {
+            sf2ImportLauncher.launch(arrayOf("*/*"))
         }
 
         fragment.onExportComplete = { exportedFile ->
@@ -513,6 +465,8 @@ class Sf2CreatorActivity : AudioThemedActivity() {
      * This is the "Polyphone-like" approach where each SF2 becomes its own project.
      */
     private fun handleSf2ImportAsNewProject(uri: Uri) {
+        currentStep = Step.SF2_IMPORT
+        updateUI()
         CoroutineScope(Dispatchers.Main).launch {
             // Show progress (using a toast since we don't have a progress overlay here)
             Toast.makeText(
@@ -557,6 +511,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                     R.string.sf2_import_failed,
                     Toast.LENGTH_SHORT
                 ).show()
+                finish()
                 return@launch
             }
 
@@ -571,6 +526,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                     Toast.LENGTH_LONG
                 ).show()
                 tempFile.delete()
+                finish()
                 return@launch
             }
 
@@ -586,6 +542,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
                 tempFile.delete()
+                finish()
                 return@launch
             }
 
@@ -598,6 +555,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
             }
 
             currentProjectId = projectId
+            importingNewProject = true
 
             // Show the import fragment to select which presets to import
             showSf2Import(parseResult, tempFile, projectId)
@@ -634,6 +592,7 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         fragment.onImportComplete = { _ ->
             // Clean up temp file
             tempFile.delete()
+            importingNewProject = false
             // Return to project detail and refresh
             showProjectDetail(projectId)
         }
@@ -641,8 +600,16 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         fragment.onCancel = {
             // Clean up temp file
             tempFile.delete()
-            // Return to project detail
-            showProjectDetail(projectId)
+            sf2ImportFragment = null
+            if (importingNewProject) {
+                // Nothing was imported: the project made for it goes away
+                CoroutineScope(Dispatchers.Main).launch {
+                    Sf2ProjectRepository(this@Sf2CreatorActivity).deleteProject(projectId)
+                    finish()
+                }
+            } else {
+                showProjectDetail(projectId)
+            }
         }
 
         sf2ImportFragment = fragment
@@ -897,10 +864,6 @@ class Sf2CreatorActivity : AudioThemedActivity() {
                 stepIndicator.text = getString(R.string.sf2_step_3_of_3)
                 stepIndicator.visibility = View.VISIBLE
             }
-            Step.PROJECT_MANAGER -> {
-                titleText.text = getString(R.string.sf2_project_manager)
-                stepIndicator.visibility = View.GONE
-            }
             Step.PROJECT_DETAIL -> {
                 titleText.text = getString(R.string.sf2_project_detail_title)
                 stepIndicator.visibility = View.GONE
@@ -916,20 +879,26 @@ class Sf2CreatorActivity : AudioThemedActivity() {
         }
     }
 
-    private fun navigateBackToHub() {
-        if (isTaskRoot) {
-            startActivity(Intent(this, AudioHubActivity::class.java))
-        }
-        finish()
-    }
-
     private enum class Step {
         RECORD,
         EDIT,
         EXPORT,
-        PROJECT_MANAGER,
         PROJECT_DETAIL,
         EDIT_PROJECT_SAMPLE,
         SF2_IMPORT
+    }
+
+    companion object {
+        private const val EXTRA_PROJECT_ID = "project_id"
+
+        /** Opens a project of the gallery. */
+        fun openIntent(context: Context, projectId: Long): Intent =
+            Intent(context, Sf2CreatorActivity::class.java).putExtra(EXTRA_PROJECT_ID, projectId)
+
+        /** Imports an SF2 file as a new project. */
+        fun importIntent(context: Context, uri: Uri): Intent =
+            Intent(context, Sf2CreatorActivity::class.java)
+                .setData(uri)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 }

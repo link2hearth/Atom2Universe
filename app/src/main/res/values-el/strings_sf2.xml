@@ -282,4 +282,34 @@
     <string name="sf2_global_params_saved">Οι γενικές παράμετροι αποθηκεύτηκαν</string>
     <string name="sf2_preset_global_params_title_format">Γενικές προεπιλογής: %1$s</string>
     <string name="sf2_edit_program_global_params">Γενικές παράμετροι προεπιλογής</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Επικόλληση: %1$s</string>
+    <string name="sf2_copy_all_programs">Αντιγραφή όλων των προγραμμάτων</string>
+    <string name="sf2_pasted_into_project">Επικολλήθηκε στο «%1$s»</string>
+    <string name="sf2_project_default_name">Έργο %d</string>
+    <string name="sf2_programs_count">%d πρόγραμμα(τα)</string>
+    <string name="sf2_clip_program">πρόγραμμα «%1$s»</string>
+    <string name="sf2_clip_programs">%1$d προγράμματα</string>
+    <string name="sf2_clip_instrument">όργανο «%1$s»</string>
+    <string name="sf2_clip_instruments">%1$d όργανα</string>
+    <string name="sf2_clip_sample">δείγμα «%1$s»</string>
+    <string name="sf2_clip_samples">%1$d δείγματα</string>
+    <string name="sf2_choose_program_first">Επιλέξτε πρώτα ένα πρόγραμμα</string>
+    <string name="sf2_choose_instrument_first">Επιλέξτε πρώτα ένα όργανο</string>
+    <string name="sf2_paste_gone">Τα στοιχεία που αντιγράφηκαν δεν υπάρχουν πλέον</string>
+    <string name="sf2_select">Επιλογή</string>
+    <string name="sf2_done">Τέλος</string>
+    <string name="sf2_selected_count">%d επιλεγμένα</string>
+    <string name="sf2_select_several">Επιλογή πολλών</string>
+    <string name="sf2_delete_samples_confirm">Διαγραφή %d δειγμάτων;</string>
+    <string name="sf2_copy_instrument">Αντιγραφή οργάνου</string>
+    <string name="sf2_add_sound_title">Προσθήκη ήχου</string>
+    <string name="sf2_import_audio_files">Αρχεία ήχου (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Ηχογράφηση με το μικρόφωνο</string>
+    <string name="sf2_import_sf2_presets">Presets από αρχείο SF2</string>
+    <string name="sf2_importing_audio">Ανάγνωση αρχείων ήχου… %1$d/%2$d</string>
+    <string name="sf2_audio_added">Προστέθηκαν %d ήχοι</string>
+    <string name="sf2_audio_unreadable">Δεν ήταν δυνατή η ανάγνωση %d αρχείων</string>
+    <string name="sf2_audio_truncated">Οι ήχοι περικόπηκαν στα %d δ</string>
 </resources>

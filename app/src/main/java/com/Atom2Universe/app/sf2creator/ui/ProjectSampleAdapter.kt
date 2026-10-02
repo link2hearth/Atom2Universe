@@ -53,6 +53,43 @@ class ProjectSampleAdapter(
         setSelectedSample(-1)
     }
 
+    // ==================== Multiple selection ====================
+
+    /** Several samples can be ticked (to copy or delete them together). */
+    var selectionMode = false
+        private set
+    private val checked = LinkedHashSet<Long>()
+    var onSelectionChanged: ((Int) -> Unit)? = null
+
+    fun startSelection(first: Long? = null) {
+        selectionMode = true
+        checked.clear()
+        first?.let { checked.add(it) }
+        notifyItemRangeChanged(0, itemCount)
+        onSelectionChanged?.invoke(checked.size)
+    }
+
+    fun endSelection() {
+        selectionMode = false
+        checked.clear()
+        notifyItemRangeChanged(0, itemCount)
+        onSelectionChanged?.invoke(0)
+    }
+
+    /** Ticked samples, in list order. */
+    fun checkedSamples(): List<Sf2SampleEntity> = currentList.filter { it.id in checked }
+
+    private fun toggle(sample: Sf2SampleEntity, position: Int) {
+        if (!checked.remove(sample.id)) checked.add(sample.id)
+        notifyItemChanged(position)
+        onSelectionChanged?.invoke(checked.size)
+    }
+
+    override fun onCurrentListChanged(previousList: MutableList<Sf2SampleEntity>, currentList: MutableList<Sf2SampleEntity>) {
+        // Samples deleted meanwhile are no longer ticked
+        if (checked.retainAll(currentList.map { it.id }.toSet())) onSelectionChanged?.invoke(checked.size)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SampleViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_project_sample, parent, false)
@@ -91,7 +128,8 @@ class ProjectSampleAdapter(
             loopIndicator.visibility = if (sample.hasLoop) View.VISIBLE else View.GONE
 
             // Apply selection highlight
-            val isSelected = sample.id == selectedSampleId
+            val isSelected = if (selectionMode) sample.id in checked else sample.id == selectedSampleId
+            deleteButton.visibility = if (selectionMode) View.GONE else View.VISIBLE
             if (isSelected) {
                 val accentColor = getThemeColor(R.attr.a2uMidiAccent)
                 cardView.strokeColor = accentColor
@@ -104,14 +142,14 @@ class ProjectSampleAdapter(
                 onDeleteClick(sample)
             }
 
-            // Item click to select sample
+            // Item click to select sample (or tick it)
             itemView.setOnClickListener {
-                onItemClick?.invoke(sample)
+                if (selectionMode) toggle(sample, bindingAdapterPosition) else onItemClick?.invoke(sample)
             }
 
-            // Long click to edit sample
+            // Long click: sample options (or tick it)
             itemView.setOnLongClickListener {
-                onLongClick?.invoke(sample)
+                if (selectionMode) toggle(sample, bindingAdapterPosition) else onLongClick?.invoke(sample)
                 true
             }
         }

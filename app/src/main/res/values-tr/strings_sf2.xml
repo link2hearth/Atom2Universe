@@ -282,4 +282,34 @@
     <string name="sf2_global_params_saved">Global parametreler kaydedildi</string>
     <string name="sf2_preset_global_params_title_format">Genel Ön Ayar: %1$s</string>
     <string name="sf2_edit_program_global_params">Ön ayar genel parametreleri</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Yapıştır: %1$s</string>
+    <string name="sf2_copy_all_programs">Tüm programları kopyala</string>
+    <string name="sf2_pasted_into_project">“%1$s” içine yapıştırıldı</string>
+    <string name="sf2_project_default_name">Proje %d</string>
+    <string name="sf2_programs_count">%d program</string>
+    <string name="sf2_clip_program">“%1$s” programı</string>
+    <string name="sf2_clip_programs">%1$d program</string>
+    <string name="sf2_clip_instrument">“%1$s” enstrümanı</string>
+    <string name="sf2_clip_instruments">%1$d enstrüman</string>
+    <string name="sf2_clip_sample">“%1$s” örneği</string>
+    <string name="sf2_clip_samples">%1$d örnek</string>
+    <string name="sf2_choose_program_first">Önce bir program seçin</string>
+    <string name="sf2_choose_instrument_first">Önce bir enstrüman seçin</string>
+    <string name="sf2_paste_gone">Kopyalanan öğeler artık mevcut değil</string>
+    <string name="sf2_select">Seç</string>
+    <string name="sf2_done">Bitti</string>
+    <string name="sf2_selected_count">%d seçildi</string>
+    <string name="sf2_select_several">Birden çok seç</string>
+    <string name="sf2_delete_samples_confirm">%d örnek silinsin mi?</string>
+    <string name="sf2_copy_instrument">Enstrümanı kopyala</string>
+    <string name="sf2_add_sound_title">Ses ekle</string>
+    <string name="sf2_import_audio_files">Ses dosyaları (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Mikrofonla kaydet</string>
+    <string name="sf2_import_sf2_presets">SF2 dosyasından presetler</string>
+    <string name="sf2_importing_audio">Ses dosyaları okunuyor… %1$d/%2$d</string>
+    <string name="sf2_audio_added">%d ses eklendi</string>
+    <string name="sf2_audio_unreadable">%d dosya okunamadı</string>
+    <string name="sf2_audio_truncated">Sesler %d sn\'ye kısaltıldı</string>
 </resources>

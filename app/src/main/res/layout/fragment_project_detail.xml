@@ -178,12 +178,30 @@
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:backgroundTint="?attr/a2uMidiAccent"
-            android:drawableStart="@drawable/ic_mic"
+            android:drawableStart="@drawable/ic_px_add"
             android:drawablePadding="4dp"
             android:drawableTint="@android:color/white"
             android:text="@string/sf2_add_sample"
             android:textColor="@color/audio_on_accent"
             android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/paste_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/audio_surface_raised"
+            android:drawableStart="@drawable/ic_px_paste"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/audio_text_primary"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/px_paste"
+            android:textColor="@color/audio_text_primary"
+            android:textSize="11sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/export_project_button"
@@ -316,18 +334,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/keyboard_section" />
 
-    <!-- Samples label -->
-    <TextView
-        android:id="@+id/samples_label"
+    <!-- Samples header: label, and actions on several samples -->
+    <LinearLayout
+        android:id="@+id/samples_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/sf2_samples_label"
-        android:textColor="@color/audio_text_secondary"
-        android:textSize="14sp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/keyboard_empty_hint" />
+        app:layout_constraintTop_toBottomOf="@id/keyboard_empty_hint">
+
+        <TextView
+            android:id="@+id/samples_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sf2_samples_label"
+            android:textColor="@color/audio_text_secondary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/samples_copy_button"
+            style="@style/Sf2HeaderAction"
+            android:text="@string/px_copy"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/samples_delete_button"
+            style="@style/Sf2HeaderAction"
+            android:text="@string/px_delete"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/samples_select_button"
+            style="@style/Sf2HeaderAction"
+            android:text="@string/sf2_select" />
+    </LinearLayout>
 
     <!-- Samples list -->
     <androidx.recyclerview.widget.RecyclerView
@@ -339,7 +383,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/samples_label" />
+        app:layout_constraintTop_toBottomOf="@id/samples_header" />
 
     <!-- Empty state for samples -->
     <TextView
@@ -357,7 +401,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/samples_label" />
+        app:layout_constraintTop_toBottomOf="@id/samples_header" />
 
     <!-- Progress overlay -->
     <LinearLayout

@@ -27,7 +27,12 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.fluidsynth.FluidSynthEngine
 import com.Atom2Universe.app.midi.sf2.Sf2Engine
 import com.Atom2Universe.app.midi.sf2.Sf2FileCache
-import com.Atom2Universe.app.sf2creator.data.Sf2Clipboard
+import com.Atom2Universe.app.pixelart.ui.SheetItem
+import com.Atom2Universe.app.pixelart.ui.actionSheet
+import com.Atom2Universe.app.pixelart.ui.confirm
+import com.Atom2Universe.app.sf2creator.audio.AudioFileDecoder
+import com.Atom2Universe.app.sf2creator.audio.PitchDetector
+import com.Atom2Universe.app.sf2creator.data.Sf2ProjectClipboard
 import com.Atom2Universe.app.sf2creator.data.Sf2ProjectRepository
 import com.Atom2Universe.app.sf2creator.util.WavUtils
 import com.Atom2Universe.app.sf2creator.data.db.entities.Sf2PresetEntity
@@ -55,7 +60,12 @@ class ProjectDetailFragment : Fragment() {
     private lateinit var programText: TextView
     private lateinit var changeProgramButton: Button
     private lateinit var addSampleButton: Button
+    private lateinit var pasteButton: Button
     private lateinit var exportProjectButton: Button
+    private lateinit var samplesLabel: TextView
+    private lateinit var samplesCopyButton: TextView
+    private lateinit var samplesDeleteButton: TextView
+    private lateinit var samplesSelectButton: TextView
     private lateinit var samplesRecycler: RecyclerView
     private lateinit var samplesEmptyState: TextView
     private lateinit var progressOverlay: View
@@ -117,6 +127,7 @@ class ProjectDetailFragment : Fragment() {
 
     // Callbacks
     var onAddSampleRequested: (() -> Unit)? = null
+    var onImportSf2Requested: (() -> Unit)? = null
     var onExportComplete: ((File) -> Unit)? = null
     var onSampleEditRequested: ((Sf2SampleEntity) -> Unit)? = null
 
@@ -125,6 +136,13 @@ class ProjectDetailFragment : Fragment() {
         ActivityResultContracts.CreateDocument("application/octet-stream")
     ) { uri: Uri? ->
         uri?.let { exportToUri(it) }
+    }
+
+    // Audio files (WAV, MP3, FLAC...) added to the selected instrument
+    private val audioFilesLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenMultipleDocuments()
+    ) { uris: List<Uri> ->
+        if (uris.isNotEmpty()) importAudioFiles(uris)
     }
 
     override fun onCreateView(
@@ -157,7 +175,12 @@ class ProjectDetailFragment : Fragment() {
         programText = view.findViewById(R.id.program_text)
         changeProgramButton = view.findViewById(R.id.change_program_button)
         addSampleButton = view.findViewById(R.id.add_sample_button)
+        pasteButton = view.findViewById(R.id.paste_button)
         exportProjectButton = view.findViewById(R.id.export_project_button)
+        samplesLabel = view.findViewById(R.id.samples_label)
+        samplesCopyButton = view.findViewById(R.id.samples_copy_button)
+        samplesDeleteButton = view.findViewById(R.id.samples_delete_button)
+        samplesSelectButton = view.findViewById(R.id.samples_select_button)
         samplesRecycler = view.findViewById(R.id.samples_recycler)
         samplesEmptyState = view.findViewById(R.id.samples_empty_state)
         progressOverlay = view.findViewById(R.id.progress_overlay)
@@ -203,7 +226,14 @@ class ProjectDetailFragment : Fragment() {
                 showSampleOptionsDialog(sample)
             }
         )
+        adapter.onSelectionChanged = { count -> updateSelectionHeader(count) }
         samplesRecycler.adapter = adapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Something may have been copied in another project meanwhile
+        updatePasteButton()
     }
 
     /**
@@ -233,31 +263,13 @@ class ProjectDetailFragment : Fragment() {
     }
 
     private fun showSampleOptionsDialog(sample: Sf2SampleEntity) {
-        val optionsList = mutableListOf(
-            getString(R.string.sf2_copy_sample),
-            getString(R.string.sf2_edit_waveform),
-            getString(R.string.sf2_edit_parameters)
-        )
-
-        // Add paste option if clipboard has samples
-        if (Sf2Clipboard.hasSamples()) {
-            optionsList.add(getString(R.string.sf2_paste_here))
-        }
-
-        optionsList.add(getString(R.string.sf2_delete_sample))
-
-        AlertDialog.Builder(requireContext())
-            .setTitle(sample.name)
-            .setItems(optionsList.toTypedArray()) { _, which ->
-                when (optionsList[which]) {
-                    getString(R.string.sf2_copy_sample) -> copySample(sample)
-                    getString(R.string.sf2_edit_waveform) -> onSampleEditRequested?.invoke(sample)
-                    getString(R.string.sf2_edit_parameters) -> showSampleParametersDialog(sample)
-                    getString(R.string.sf2_paste_here) -> pasteToPreset(selectedPresetId)
-                    getString(R.string.sf2_delete_sample) -> showDeleteSampleConfirmation(sample)
-                }
-            }
-            .show()
+        requireContext().actionSheet(sample.name, listOf(
+            SheetItem(R.drawable.ic_px_tune, getString(R.string.sf2_edit_parameters)) { showSampleParametersDialog(sample) },
+            SheetItem(R.drawable.ic_px_pencil, getString(R.string.sf2_edit_waveform)) { onSampleEditRequested?.invoke(sample) },
+            SheetItem(R.drawable.ic_px_copy, getString(R.string.sf2_copy_sample)) { copySamples(listOf(sample)) },
+            SheetItem(R.drawable.ic_px_sel_rect, getString(R.string.sf2_select_several)) { adapter.startSelection(sample.id) },
+            SheetItem(R.drawable.ic_px_delete, getString(R.string.sf2_delete_sample), destructive = true) { showDeleteSampleConfirmation(sample) }
+        )).show()
     }
 
     /**
@@ -278,11 +290,127 @@ class ProjectDetailFragment : Fragment() {
         ).show()
     }
 
-    private fun copySample(sample: Sf2SampleEntity) {
+    // ==================== Copy / paste ====================
+
+    private fun copySamples(samples: List<Sf2SampleEntity>) {
+        Sf2ProjectActions.copySamples(requireContext(), projectId, samples.map { it.id }, samples.map { it.name })
+        Toast.makeText(requireContext(), R.string.sf2_copied, Toast.LENGTH_SHORT).show()
+        updatePasteButton()
+    }
+
+    private fun updatePasteButton() {
+        val content = context?.let { Sf2ProjectClipboard.get(it) }
+        pasteButton.visibility = if (content != null) View.VISIBLE else View.GONE
+        if (content != null) pasteButton.text = getString(R.string.sf2_paste_into, content.label)
+    }
+
+    /** Programs go into the project, instruments into the selected program, samples into the selected instrument. */
+    private fun paste() {
+        val instrumentId = currentPresets.find { it.id == selectedPresetId }?.instrumentId
         viewLifecycleOwner.lifecycleScope.launch {
-            Sf2Clipboard.copySample(requireContext(), sample)
-            Toast.makeText(requireContext(), R.string.sf2_copied, Toast.LENGTH_SHORT).show()
+            val outcome = Sf2ProjectActions.paste(requireContext(), projectId, selectedProgramId.takeIf { it > 0 }, instrumentId)
+            Sf2ProjectActions.failureMessage(requireContext(), outcome)?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+            if (outcome is Sf2ProjectActions.PasteOutcome.Pasted) {
+                Toast.makeText(requireContext(), getString(R.string.sf2_pasted, outcome.ids.size), Toast.LENGTH_SHORT).show()
+                // Show what was pasted (the lists themselves follow the database)
+                when (outcome.kind) {
+                    Sf2ProjectClipboard.Kind.PROGRAMS -> {
+                        selectedProgramId = outcome.ids.first()
+                        selectedPresetId = -1
+                        updateProgramsChips()
+                        observePresets()
+                    }
+                    Sf2ProjectClipboard.Kind.INSTRUMENTS -> {
+                        selectedPresetId = outcome.ids.first()
+                        observePresets()
+                    }
+                    Sf2ProjectClipboard.Kind.SAMPLES -> Unit
+                }
+            }
         }
+    }
+
+    // ==================== Several samples ====================
+
+    private fun updateSelectionHeader(count: Int) {
+        val selecting = adapter.selectionMode
+        samplesLabel.text = if (selecting) getString(R.string.sf2_selected_count, count) else getString(R.string.sf2_samples_label)
+        samplesSelectButton.setText(if (selecting) R.string.sf2_done else R.string.sf2_select)
+        val actions = if (selecting && count > 0) View.VISIBLE else View.GONE
+        samplesCopyButton.visibility = actions
+        samplesDeleteButton.visibility = actions
+    }
+
+    private fun deleteSamples(samples: List<Sf2SampleEntity>) {
+        requireContext().confirm(R.string.sf2_delete_sample, getString(R.string.sf2_delete_samples_confirm, samples.size), R.string.px_delete, true) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                samples.forEach { repository.deleteSample(it.id) }
+                adapter.endSelection()
+            }
+        }
+    }
+
+    // ==================== Adding sounds ====================
+
+    private fun showAddSoundSheet() {
+        requireContext().actionSheet(getString(R.string.sf2_add_sound_title), listOf(
+            SheetItem(R.drawable.ic_folder_open, getString(R.string.sf2_import_audio_files)) {
+                audioFilesLauncher.launch(arrayOf("audio/*"))
+            },
+            SheetItem(R.drawable.ic_mic, getString(R.string.sf2_record_with_mic)) { onAddSampleRequested?.invoke() },
+            SheetItem(R.drawable.ic_px_import, getString(R.string.sf2_import_sf2_presets)) { onImportSf2Requested?.invoke() }
+        )).show()
+    }
+
+    /** Decodes the chosen audio files and adds them to the selected instrument. */
+    private fun importAudioFiles(uris: List<Uri>) {
+        val instrumentId = currentPresets.find { it.id == selectedPresetId }?.instrumentId
+        if (instrumentId == null) {
+            Toast.makeText(requireContext(), R.string.sf2_choose_instrument_first, Toast.LENGTH_SHORT).show()
+            return
+        }
+        val context = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
+            val sounds = mutableListOf<Sf2ProjectRepository.AudioFileSound>()
+            var unreadable = 0
+            var truncated = false
+            for ((index, uri) in uris.withIndex()) {
+                showProgress(getString(R.string.sf2_importing_audio, index + 1, uris.size))
+                val sound = withContext(Dispatchers.IO) {
+                    val decoded = AudioFileDecoder.decode(context, uri) ?: return@withContext null
+                    truncated = truncated || decoded.truncated
+                    // The first seconds are enough to find the note of a sound
+                    val head = decoded.samples.copyOf(minOf(decoded.samples.size, decoded.sampleRate * 3))
+                    val pitch = PitchDetector().detectPitch(head, decoded.sampleRate)
+                    Sf2ProjectRepository.AudioFileSound(
+                        name = displayName(uri),
+                        samples = decoded.samples,
+                        sampleRate = decoded.sampleRate,
+                        pitch = pitch.takeIf { it.confidence > 0.3f && it.frequency > 0f }
+                    )
+                }
+                if (sound == null) unreadable++ else sounds += sound
+            }
+            if (sounds.isNotEmpty()) repository.addAudioFiles(instrumentId, sounds)
+            hideProgress()
+            val messages = mutableListOf<String>()
+            if (sounds.isNotEmpty()) messages += getString(R.string.sf2_audio_added, sounds.size)
+            if (unreadable > 0) messages += getString(R.string.sf2_audio_unreadable, unreadable)
+            if (truncated) messages += getString(R.string.sf2_audio_truncated, AudioFileDecoder.MAX_SECONDS)
+            Toast.makeText(requireContext(), messages.joinToString("\n"), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /** File name without its extension, for the sample name. */
+    private fun displayName(uri: Uri): String {
+        val name = runCatching {
+            requireContext().contentResolver.query(uri, arrayOf(android.provider.OpenableColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+                if (c.moveToFirst()) c.getString(0) else null
+            }
+        }.getOrNull() ?: uri.lastPathSegment.orEmpty()
+        return name.substringBeforeLast('.').ifEmpty { getString(R.string.sf2_unnamed_sample) }
     }
 
     private fun setupKeyboard() {
@@ -381,7 +509,24 @@ class ProjectDetailFragment : Fragment() {
 
     private fun setupButtons() {
         addSampleButton.setOnClickListener {
-            onAddSampleRequested?.invoke()
+            showAddSoundSheet()
+        }
+
+        pasteButton.setOnClickListener { paste() }
+
+        samplesSelectButton.setOnClickListener {
+            if (adapter.selectionMode) adapter.endSelection() else adapter.startSelection()
+        }
+        samplesCopyButton.setOnClickListener {
+            val samples = adapter.checkedSamples()
+            if (samples.isNotEmpty()) {
+                copySamples(samples)
+                adapter.endSelection()
+            }
+        }
+        samplesDeleteButton.setOnClickListener {
+            val samples = adapter.checkedSamples()
+            if (samples.isNotEmpty()) deleteSamples(samples)
         }
 
         exportProjectButton.setOnClickListener {
@@ -676,47 +821,17 @@ class ProjectDetailFragment : Fragment() {
 
     private fun showProgramOptionsDialog(program: Sf2ProgramEntity) {
         val instrumentCount = programInstrumentCounts[program.id] ?: 0
-        val optionsList = mutableListOf(
-            getString(R.string.sf2_edit_program),
-            getString(R.string.sf2_edit_program_global_params),
-            getString(R.string.sf2_copy_program)
-        )
-
-        // Add paste option if clipboard has a program
-        if (Sf2Clipboard.hasProgram()) {
-            optionsList.add(getString(R.string.sf2_paste_program))
-        }
-
-        optionsList.add(getString(R.string.sf2_delete_program))
-
-        // Show program info in title
         val title = "${program.name}\nProgram ${program.programNumber} · Bank ${program.bankNumber} · $instrumentCount instruments"
-
-        AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setItems(optionsList.toTypedArray()) { _, which ->
-                when (optionsList[which]) {
-                    getString(R.string.sf2_edit_program) -> showEditProgramDialog(program)
-                    getString(R.string.sf2_edit_program_global_params) -> showEditProgramGlobalParamsDialog(program)
-                    getString(R.string.sf2_copy_program) -> copyProgram(program)
-                    getString(R.string.sf2_paste_program) -> pasteProgram()
-                    getString(R.string.sf2_delete_program) -> confirmDeleteProgram(program)
-                }
-            }
-            .show()
-    }
-
-    private fun pasteProgram() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val newProgramId = Sf2Clipboard.pasteProgramToProject(requireContext(), projectId)
-            if (newProgramId != null) {
-                Toast.makeText(requireContext(), R.string.sf2_pasted_program, Toast.LENGTH_SHORT).show()
-                // Select the new program
-                selectedProgramId = newProgramId
-            } else {
-                Toast.makeText(requireContext(), R.string.sf2_paste_failed, Toast.LENGTH_SHORT).show()
-            }
-        }
+        requireContext().actionSheet(title, listOf(
+            SheetItem(R.drawable.ic_px_rename, getString(R.string.sf2_edit_program)) { showEditProgramDialog(program) },
+            SheetItem(R.drawable.ic_px_tune, getString(R.string.sf2_edit_program_global_params)) { showEditProgramGlobalParamsDialog(program) },
+            SheetItem(R.drawable.ic_px_copy, getString(R.string.sf2_copy_program)) {
+                Sf2ProjectActions.copyPrograms(requireContext(), projectId, listOf(program.id), listOf(program.name))
+                Toast.makeText(requireContext(), R.string.sf2_copied, Toast.LENGTH_SHORT).show()
+                updatePasteButton()
+            },
+            SheetItem(R.drawable.ic_px_delete, getString(R.string.sf2_delete_program), destructive = true) { confirmDeleteProgram(program) }
+        )).show()
     }
 
     private fun showEditProgramDialog(program: Sf2ProgramEntity) {
@@ -783,13 +898,6 @@ class ProjectDetailFragment : Fragment() {
                 loadProject()
             }
         }.show()
-    }
-
-    private fun copyProgram(program: Sf2ProgramEntity) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            Sf2Clipboard.copyProgram(requireContext(), program)
-            Toast.makeText(requireContext(), R.string.sf2_copied, Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun confirmDeleteProgram(program: Sf2ProgramEntity) {
@@ -885,36 +993,18 @@ class ProjectDetailFragment : Fragment() {
 
     private fun showPresetOptionsDialog(preset: Sf2PresetEntity) {
         val sampleCount = presetSampleCounts[preset.id] ?: 0
-        val optionsList = mutableListOf(
-            getString(R.string.sf2_edit_instrument),
-            getString(R.string.sf2_edit_global_params),
-            getString(R.string.sf2_program_change),
-            getString(R.string.sf2_copy_preset)
-        )
-
-        // Add paste option if clipboard has content
-        if (Sf2Clipboard.hasContent()) {
-            optionsList.add(getString(R.string.sf2_paste_here))
-        }
-
-        optionsList.add(getString(R.string.sf2_delete_preset))
-
-        // Show instrument info in title
         val title = "${preset.name}\nProgram ${preset.programNumber} · $sampleCount samples"
-
-        AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setItems(optionsList.toTypedArray()) { _, which ->
-                when (optionsList[which]) {
-                    getString(R.string.sf2_edit_instrument) -> showEditInstrumentDialog(preset)
-                    getString(R.string.sf2_edit_global_params) -> showEditGlobalParamsDialog(preset)
-                    getString(R.string.sf2_program_change) -> showProgramSelectionDialogForPreset(preset)
-                    getString(R.string.sf2_copy_preset) -> copyPreset(preset)
-                    getString(R.string.sf2_paste_here) -> pasteToPreset(preset.id)
-                    getString(R.string.sf2_delete_preset) -> confirmDeletePreset(preset)
-                }
-            }
-            .show()
+        requireContext().actionSheet(title, listOf(
+            SheetItem(R.drawable.ic_px_rename, getString(R.string.sf2_edit_instrument)) { showEditInstrumentDialog(preset) },
+            SheetItem(R.drawable.ic_px_tune, getString(R.string.sf2_edit_global_params)) { showEditGlobalParamsDialog(preset) },
+            SheetItem(R.drawable.ic_music_note, getString(R.string.sf2_program_label)) { showProgramSelectionDialogForPreset(preset) },
+            SheetItem(R.drawable.ic_px_copy, getString(R.string.sf2_copy_instrument)) {
+                Sf2ProjectActions.copyInstruments(requireContext(), projectId, listOf(preset.id), listOf(preset.name))
+                Toast.makeText(requireContext(), R.string.sf2_copied, Toast.LENGTH_SHORT).show()
+                updatePasteButton()
+            },
+            SheetItem(R.drawable.ic_px_delete, getString(R.string.sf2_delete_preset), destructive = true) { confirmDeletePreset(preset) }
+        )).show()
     }
 
     /**
@@ -997,29 +1087,6 @@ class ProjectDetailFragment : Fragment() {
                     loadProject()
                 }
             }.show()
-        }
-    }
-
-    private fun copyPreset(preset: Sf2PresetEntity) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val samples = repository.getSamplesForInstrument(preset.instrumentId)
-            Sf2Clipboard.copyPreset(requireContext(), preset, samples)
-            Toast.makeText(requireContext(), R.string.sf2_copied, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun pasteToPreset(presetId: Long) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            // Get the preset to find its instrument
-            val preset = repository.getPresetById(presetId) ?: return@launch
-            val pastedCount = Sf2Clipboard.pasteToInstrument(requireContext(), preset.instrumentId)
-            if (pastedCount > 0) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.sf2_pasted, pastedCount),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         }
     }
 
@@ -1122,6 +1189,7 @@ class ProjectDetailFragment : Fragment() {
 
     private fun loadSamples() {
         if (selectedPresetId <= 0) return
+        if (adapter.selectionMode) adapter.endSelection()
 
         // Cancel previous samples collection to avoid multiple collectors
         samplesCollectionJob?.cancel()
@@ -1597,10 +1665,7 @@ class ProjectDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.sf2_project_not_found, Toast.LENGTH_SHORT).show()
                 return@launch
             }
-
-            // Sanitize filename and launch SAF picker
-            val sanitizedName = project.name.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-            exportLauncher.launch("$sanitizedName.sf2")
+            exportLauncher.launch(Sf2ProjectActions.fileName(project.name))
         }
     }
 
@@ -1609,41 +1674,14 @@ class ProjectDetailFragment : Fragment() {
      */
     private fun exportToUri(uri: Uri) {
         showProgress(true)
-
         viewLifecycleOwner.lifecycleScope.launch {
-            val success = withContext(Dispatchers.IO) {
-                try {
-                    // Create a temporary file first
-                    val tempFile = File(requireContext().cacheDir, "temp_project_export.sf2")
-
-                    val exportSuccess = repository.exportProjectToSf2(projectId, tempFile)
-
-                    if (exportSuccess && Sf2Writer().validateSf2(tempFile)) {
-                        // Copy temp file to user-selected URI
-                        requireContext().contentResolver.openOutputStream(uri)?.use { outputStream ->
-                            tempFile.inputStream().use { inputStream ->
-                                inputStream.copyTo(outputStream)
-                            }
-                        }
-                        tempFile.delete()
-                        true
-                    } else {
-                        tempFile.delete()
-                        false
-                    }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error saving SF2 file", e)
-                    false
-                }
-            }
-
+            val success = Sf2ProjectActions.exportToUri(requireContext(), projectId, uri)
             showProgress(false)
-
-            if (success) {
-                Toast.makeText(requireContext(), R.string.sf2_save_as_success, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), R.string.sf2_export_failed, Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(
+                requireContext(),
+                if (success) R.string.sf2_save_as_success else R.string.sf2_export_failed,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

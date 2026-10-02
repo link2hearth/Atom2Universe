@@ -282,4 +282,34 @@
     <string name="sf2_global_params_saved">Parámetros globales guardados</string>
     <string name="sf2_preset_global_params_title_format">Global Preset: %1$s</string>
     <string name="sf2_edit_program_global_params">Parámetros globales del preset</string>
+
+    <!-- Gallery, copy/paste between projects, audio files -->
+    <string name="sf2_paste_into">Pegar: %1$s</string>
+    <string name="sf2_copy_all_programs">Copiar todos los programas</string>
+    <string name="sf2_pasted_into_project">Pegado en «%1$s»</string>
+    <string name="sf2_project_default_name">Proyecto %d</string>
+    <string name="sf2_programs_count">%d programa(s)</string>
+    <string name="sf2_clip_program">programa «%1$s»</string>
+    <string name="sf2_clip_programs">%1$d programas</string>
+    <string name="sf2_clip_instrument">instrumento «%1$s»</string>
+    <string name="sf2_clip_instruments">%1$d instrumentos</string>
+    <string name="sf2_clip_sample">muestra «%1$s»</string>
+    <string name="sf2_clip_samples">%1$d muestras</string>
+    <string name="sf2_choose_program_first">Elige primero un programa</string>
+    <string name="sf2_choose_instrument_first">Elige primero un instrumento</string>
+    <string name="sf2_paste_gone">Los elementos copiados ya no existen</string>
+    <string name="sf2_select">Seleccionar</string>
+    <string name="sf2_done">Hecho</string>
+    <string name="sf2_selected_count">%d seleccionado(s)</string>
+    <string name="sf2_select_several">Seleccionar varios</string>
+    <string name="sf2_delete_samples_confirm">¿Eliminar %d muestras?</string>
+    <string name="sf2_copy_instrument">Copiar instrumento</string>
+    <string name="sf2_add_sound_title">Añadir un sonido</string>
+    <string name="sf2_import_audio_files">Archivos de audio (WAV, MP3, FLAC…)</string>
+    <string name="sf2_record_with_mic">Grabar con el micrófono</string>
+    <string name="sf2_import_sf2_presets">Presets de un archivo SF2</string>
+    <string name="sf2_importing_audio">Leyendo archivos de audio… %1$d/%2$d</string>
+    <string name="sf2_audio_added">%d sonido(s) añadido(s)</string>
+    <string name="sf2_audio_unreadable">No se pudo leer %d archivo(s)</string>
+    <string name="sf2_audio_truncated">Los sonidos se recortaron a %d s</string>
 </resources>
