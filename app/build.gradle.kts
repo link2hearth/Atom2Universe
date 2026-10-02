@@ -20,14 +20,13 @@ android {
         applicationId = "com.Atom2Universe.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 6
+        versionCode = 7
 
-        versionName = "0.1.6"
+        versionName = "0.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Seules l'anglais (défaut) et le français sont livrés. Les autres traductions
-        // sont rangées hors du dépôt : « Documents NON commit du projet/localisations-en-attente ».
+        // Seules l'anglais (défaut) et le français sont livrés.
         resourceConfigurations += listOf("en", "fr")
 
         // arm64 uniquement pour réduire la taille de l'APK
