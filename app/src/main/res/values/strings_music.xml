@@ -337,11 +337,6 @@
     <string name="navidrome_not_configured">Navidrome not configured</string>
     <string name="navidrome_loading">Loading Navidrome library…</string>
     <string name="navidrome_browse_desc">Browse Navidrome library</string>
-    <string name="music_settings_trusted_wifi">This is my home network</string>
-    <string name="music_settings_trusted_wifi_active">LAN sync active on «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">LAN sync disabled on this network</string>
-    <string name="music_settings_trusted_wifi_no_wifi">Not connected to Wi-Fi</string>
-    <string name="music_settings_trusted_wifi_unknown_network">Wi-Fi network</string>
 
     <!-- Music visual scenes -->
     <string name="music_viz_liquid_chrome">Vibrating liquid</string>

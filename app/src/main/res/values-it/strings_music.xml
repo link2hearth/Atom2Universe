@@ -388,9 +388,4 @@ Questa azione non può essere annullata.</string>
     <string name="navidrome_not_configured">Navidrome non configurato</string>
     <string name="navidrome_loading">Caricamento libreria Navidrome…</string>
     <string name="navidrome_browse_desc">Sfoglia la libreria Navidrome</string>
-    <string name="music_settings_trusted_wifi">Questa è la mia rete domestica</string>
-    <string name="music_settings_trusted_wifi_active">Sync LAN attiva su «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">Sync LAN disattivata su questa rete</string>
-    <string name="music_settings_trusted_wifi_no_wifi">Non connesso al Wi-Fi</string>
-    <string name="music_settings_trusted_wifi_unknown_network">Rete Wi-Fi</string>
 </resources>

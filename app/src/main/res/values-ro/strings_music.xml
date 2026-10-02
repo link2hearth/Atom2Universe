@@ -344,9 +344,4 @@
     <string name="navidrome_not_configured">Navidrome neconfigurat</string>
     <string name="navidrome_loading">Se încarcă biblioteca Navidrome…</string>
     <string name="navidrome_browse_desc">Explorare bibliotecă Navidrome</string>
-    <string name="music_settings_trusted_wifi">Aceasta este rețeaua mea de acasă</string>
-    <string name="music_settings_trusted_wifi_active">Sincronizare LAN activă pe «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">Sincronizare LAN dezactivată pe această rețea</string>
-    <string name="music_settings_trusted_wifi_no_wifi">Neconectat la Wi-Fi</string>
-    <string name="music_settings_trusted_wifi_unknown_network">Rețea Wi-Fi</string>
 </resources>

@@ -40,7 +40,6 @@ import com.Atom2Universe.app.music.lyrics.LyricsManager
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import com.Atom2Universe.app.util.CacheCleanerManager
-import com.Atom2Universe.app.music.sync.peer.A2USyncService
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
@@ -212,9 +211,6 @@ class AudioHubActivity : com.Atom2Universe.app.audio.AudioThemedActivity(), Audi
 
         // Lancer le nettoyage des fichiers orphelins en arrière-plan
         launchCacheCleanup()
-
-        // Démarrer la synchronisation P2P LAN
-        A2USyncService.startLanSync(this)
 
         // Initialize views
         playPauseButton = findViewById(R.id.play_pause_button)

@@ -330,9 +330,4 @@
     <string name="navidrome_not_configured">Navidrome belum dikonfigurasi</string>
     <string name="navidrome_loading">Memuat pustaka Navidrome…</string>
     <string name="navidrome_browse_desc">Jelajahi pustaka Navidrome</string>
-    <string name="music_settings_trusted_wifi">Ini adalah jaringan rumah saya</string>
-    <string name="music_settings_trusted_wifi_active">Sinkronisasi LAN aktif di «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">Sinkronisasi LAN dinonaktifkan di jaringan ini</string>
-    <string name="music_settings_trusted_wifi_no_wifi">Tidak terhubung ke Wi-Fi</string>
-    <string name="music_settings_trusted_wifi_unknown_network">Jaringan Wi-Fi</string>
 </resources>

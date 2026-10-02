@@ -337,9 +337,4 @@
     <string name="navidrome_not_configured">Navidrome no configurado</string>
     <string name="navidrome_loading">Cargando biblioteca Navidrome…</string>
     <string name="navidrome_browse_desc">Explorar biblioteca Navidrome</string>
-    <string name="music_settings_trusted_wifi">Esta es mi red de casa</string>
-    <string name="music_settings_trusted_wifi_active">Sincronizacion LAN activa en «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">Sincronizacion LAN desactivada en esta red</string>
-    <string name="music_settings_trusted_wifi_no_wifi">No conectado a Wi-Fi</string>
-    <string name="music_settings_trusted_wifi_unknown_network">red Wi-Fi</string>
 </resources>

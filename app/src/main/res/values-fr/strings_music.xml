@@ -344,11 +344,6 @@
     <string name="music_viz_julia_grayscale">Julia Grayscale</string>
     <string name="music_viz_penrose">Losanges flottants</string>
     <string name="music_viz_penrose_true">Penrose</string>
-    <string name="music_settings_trusted_wifi">C\'est mon réseau Wi-Fi de confiance</string>
-    <string name="music_settings_trusted_wifi_active">Sync LAN active sur «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">Sync LAN désactivée sur ce réseau</string>
-    <string name="music_settings_trusted_wifi_no_wifi">Aucun Wi-Fi connecté</string>
-    <string name="music_settings_trusted_wifi_unknown_network">réseau Wi-Fi</string>
 
     <!-- Music visual scenes -->
     <string name="music_viz_liquid_chrome">Liquide vibrant</string>

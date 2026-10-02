@@ -37,10 +37,4 @@ interface LyricsDao {
      */
     @Query("SELECT * FROM lyrics_cache")
     suspend fun getAll(): List<LyricsEntity>
-
-    @Query("SELECT * FROM lyrics_cache WHERE lastModified >= :since AND noLyricsFound = 0 AND lyrics != ''")
-    suspend fun getModifiedSince(since: Long): List<LyricsEntity>
-
-    @Query("SELECT MAX(lastModified) FROM lyrics_cache WHERE noLyricsFound = 0 AND lyrics != ''")
-    suspend fun getLatestModifiedTimestamp(): Long?
 }

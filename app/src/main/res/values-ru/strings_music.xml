@@ -351,9 +351,4 @@
     <string name="navidrome_not_configured">Navidrome не настроен</string>
     <string name="navidrome_loading">Загрузка библиотеки Navidrome…</string>
     <string name="navidrome_browse_desc">Просмотр библиотеки Navidrome</string>
-    <string name="music_settings_trusted_wifi">Это моя домашняя сеть</string>
-    <string name="music_settings_trusted_wifi_active">Синхронизация по LAN активна в сети «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">Синхронизация по LAN отключена в этой сети</string>
-    <string name="music_settings_trusted_wifi_no_wifi">Wi-Fi не подключён</string>
-    <string name="music_settings_trusted_wifi_unknown_network">сеть Wi-Fi</string>
 </resources>

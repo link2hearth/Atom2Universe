@@ -26,8 +26,6 @@ import com.Atom2Universe.app.music.lyrics.api.LyricsApiConfig
 import com.Atom2Universe.app.music.navidrome.SubsonicApiClient
 import com.Atom2Universe.app.music.sync.CloudSyncManager
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
-import com.Atom2Universe.app.music.sync.peer.A2USyncService
-import com.Atom2Universe.app.music.sync.peer.TrustedNetworkManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -87,11 +85,6 @@ class MusicSettingsActivity : AudioThemedActivity() {
     private lateinit var textCloudLinkSummary: TextView
     private lateinit var btnResetPlayCounts: MaterialButton
 
-    // LAN Sync Views
-    private lateinit var optionTrustedWifi: LinearLayout
-    private lateinit var switchTrustedWifi: SwitchMaterial
-    private lateinit var textTrustedWifiStatus: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
@@ -103,7 +96,6 @@ class MusicSettingsActivity : AudioThemedActivity() {
         setupToolbar()
         setupViews()
         setupCloudLinkSection()
-        setupTrustedWifiSection()
         loadPreferences()
     }
 
@@ -724,57 +716,6 @@ class MusicSettingsActivity : AudioThemedActivity() {
                 ).show()
             }
         }
-    }
-
-    // ==================== LAN Sync Section ====================
-
-    private fun setupTrustedWifiSection() {
-        optionTrustedWifi     = findViewById(R.id.option_trusted_wifi)
-        switchTrustedWifi     = findViewById(R.id.switch_trusted_wifi)
-        textTrustedWifiStatus = findViewById(R.id.text_trusted_wifi_status)
-
-        updateTrustedWifiUI()
-
-        optionTrustedWifi.setOnClickListener { switchTrustedWifi.toggle() }
-
-        switchTrustedWifi.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                TrustedNetworkManager.trustCurrentNetwork(this)
-                A2USyncService.startLanSync(this)
-            } else {
-                TrustedNetworkManager.untrustCurrentNetwork(this)
-                A2USyncService.stopLanSync(this)
-            }
-            updateTrustedWifiUI()
-        }
-    }
-
-    private fun updateTrustedWifiUI() {
-        val networkName = TrustedNetworkManager.getCurrentNetworkName(this)
-        val onWifi      = TrustedNetworkManager.isOnWifi(this)
-        val isTrusted   = TrustedNetworkManager.isCurrentNetworkTrusted(this)
-
-        // Bloquer le listener pendant la mise à jour programmatique
-        switchTrustedWifi.setOnCheckedChangeListener(null)
-        switchTrustedWifi.isChecked = isTrusted
-        switchTrustedWifi.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                TrustedNetworkManager.trustCurrentNetwork(this)
-                A2USyncService.startLanSync(this)
-            } else {
-                TrustedNetworkManager.untrustCurrentNetwork(this)
-                A2USyncService.stopLanSync(this)
-            }
-            updateTrustedWifiUI()
-        }
-
-        textTrustedWifiStatus.text = when {
-            !onWifi -> getString(R.string.music_settings_trusted_wifi_no_wifi)
-            isTrusted && networkName != null -> getString(R.string.music_settings_trusted_wifi_active, networkName)
-            isTrusted -> getString(R.string.music_settings_trusted_wifi_active, getString(R.string.music_settings_trusted_wifi_unknown_network))
-            else -> getString(R.string.music_settings_trusted_wifi_inactive)
-        }
-        switchTrustedWifi.isEnabled = onWifi
     }
 
     // ==================== Navidrome Configuration ====================

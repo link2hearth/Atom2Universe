@@ -210,32 +210,8 @@ object ListenEventsSyncFile {
         )
     }
 
-    // ==================== Tableau nu (sync LAN) ====================
-
-    /**
-     * Le transport LAN échange de petits deltas en direct : pas de dictionnaire
-     * ni de résumé, juste un tableau d'écoutes complètes.
-     */
-    fun encodeArray(events: List<ListenEvent>): JSONArray {
-        val array = JSONArray()
-        for (e in events) {
-            array.put(JSONObject().apply {
-                put("uuid", e.uuid)
-                put("trackKey", e.trackKey)
-                put("deviceId", e.deviceId)
-                put("listenedAt", e.listenedAt)
-                put("durationListenedMs", e.durationListenedMs)
-                put("trackDurationMs", e.trackDurationMs)
-                put("title", e.title)
-                put("artist", e.artist)
-                put("album", e.album)
-                put("isMigrated", e.isMigrated)
-            })
-        }
-        return array
-    }
-
-    fun decodeArray(array: JSONArray): List<ListenEvent> {
+    /** Tableau d'écoutes complètes, chacune avec ses métadonnées (format 1). */
+    private fun decodeArray(array: JSONArray): List<ListenEvent> {
         val result = ArrayList<ListenEvent>(array.length())
         for (i in 0 until array.length()) {
             val e = array.getJSONObject(i)

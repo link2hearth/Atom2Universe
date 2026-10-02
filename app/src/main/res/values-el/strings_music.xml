@@ -337,9 +337,4 @@
     <string name="navidrome_not_configured">Το Navidrome δεν έχει ρυθμιστεί</string>
     <string name="navidrome_loading">Φόρτωση βιβλιοθήκης Navidrome…</string>
     <string name="navidrome_browse_desc">Περιήγηση στη βιβλιοθήκη Navidrome</string>
-    <string name="music_settings_trusted_wifi">Αυτό είναι το οικιακό μου δίκτυο</string>
-    <string name="music_settings_trusted_wifi_active">Συγχρονισμός LAN ενεργός στο «%1$s»</string>
-    <string name="music_settings_trusted_wifi_inactive">Συγχρονισμός LAN απενεργοποιημένος σε αυτό το δίκτυο</string>
-    <string name="music_settings_trusted_wifi_no_wifi">Δεν υπάρχει σύνδεση Wi-Fi</string>
-    <string name="music_settings_trusted_wifi_unknown_network">Δίκτυο Wi-Fi</string>
 </resources>

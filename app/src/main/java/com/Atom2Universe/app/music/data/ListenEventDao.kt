@@ -31,13 +31,6 @@ interface ListenEventDao {
     suspend fun getLocalEventsSince(deviceId: String, sinceTimestamp: Long): List<ListenEvent>
 
     /**
-     * Dernière écoute produite par un appareil donné.
-     * Sert de curseur "depuis quand" lors d'une sync, sans charger les events en mémoire.
-     */
-    @Query("SELECT MAX(listenedAt) FROM listen_events WHERE deviceId = :deviceId")
-    suspend fun getLatestTimestampForDevice(deviceId: String): Long?
-
-    /**
      * Nombre d'écoutes détenues pour un couple (appareil, morceau).
      *
      * Sert à réconcilier le résumé agrégé qu'un appareil envoie pour ses écoutes
