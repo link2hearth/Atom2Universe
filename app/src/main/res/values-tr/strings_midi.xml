@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Mevcut albüm/klasör</string>
     <string name="midi_shuffle_scope_artist">Mevcut sanatçı (tüm albümler)</string>
     <string name="midi_shuffle_scope_library">Tüm kütüphane</string>
-    <string name="midi_channels_active">Aktif parçalar</string>
     <string name="midi_no_channels">Parça algılanmadı</string>
     <string name="midi_mute_track">Parçayı sustur</string>
     <string name="midi_unmute_track">Parça sesini aç</string>
     <string name="midi_toggle_keyboard">Klavyeyi göster/gizle</string>
     <string name="midi_practice_mode">Pratik modu</string>
-    <string name="midi_refresh_keyboards">Klavyeleri yenile</string>
-    <string name="midi_keyboards_refreshed">Klavyeler yenilendi</string>
     <string name="midi_two_hands_practice">İki el pratiği</string>
     <string name="midi_favorite">Favori</string>
     <string name="midi_added_to_favorites">Favorilere eklendi</string>

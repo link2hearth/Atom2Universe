@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Álbum/pasta atual</string>
     <string name="midi_shuffle_scope_artist">Artista atual (todos os álbuns)</string>
     <string name="midi_shuffle_scope_library">Biblioteca inteira</string>
-    <string name="midi_channels_active">Faixas ativas</string>
     <string name="midi_no_channels">Nenhuma faixa detectada</string>
     <string name="midi_mute_track">Silenciar faixa</string>
     <string name="midi_unmute_track">Ativar som da faixa</string>
     <string name="midi_toggle_keyboard">Mostrar/ocultar teclado</string>
     <string name="midi_practice_mode">Modo prática</string>
-    <string name="midi_refresh_keyboards">Atualizar teclados</string>
-    <string name="midi_keyboards_refreshed">Teclados atualizados</string>
     <string name="midi_two_hands_practice">Prática com duas mãos</string>
     <string name="midi_favorite">Favorito</string>
     <string name="midi_added_to_favorites">Adicionado aos favoritos</string>

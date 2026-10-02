@@ -122,9 +122,6 @@
     <string name="px_shape_arrow">Arrow</string>
 
     <!-- Sélection -->
-    <string name="px_sel_replace">New selection</string>
-    <string name="px_sel_add">Add to selection</string>
-    <string name="px_sel_subtract">Subtract from selection</string>
     <string name="px_sel_all">Select all</string>
     <string name="px_sel_none">Deselect</string>
     <string name="px_sel_invert">Invert selection</string>

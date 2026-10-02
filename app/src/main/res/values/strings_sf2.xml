@@ -87,7 +87,6 @@
     <string name="sf2_preview">Preview</string>
     <string name="sf2_gain_label">Volume (dB)</string>
     <string name="sf2_gain_value">%1$.1f dB</string>
-    <string name="sf2_envelope_label">Envelope (ADSR)</string>
     <string name="sf2_attack_label">Attack</string>
     <string name="sf2_decay_label">Decay</string>
     <string name="sf2_sustain_label">Sustain</string>
@@ -96,19 +95,14 @@
     <string name="sf2_percent_value">%1$d%%</string>
     <string name="sf2_fine_tune_label">Fine Tuning (cents)</string>
     <string name="sf2_cents_value">%1$+d ct</string>
-    <string name="sf2_filter_label">Low-Pass Filter</string>
     <string name="sf2_filter_cutoff_label">Cutoff</string>
     <string name="sf2_filter_resonance_label">Reso</string>
     <string name="sf2_filter_cutoff_value_hz">%1$d Hz</string>
     <string name="sf2_filter_cutoff_value_khz">%1$.1f kHz</string>
-    <string name="sf2_filter_resonance_value">%1$.1f dB</string>
-    <string name="sf2_effects_send_label">Effects Send</string>
     <string name="sf2_chorus_send_label">Chorus</string>
     <string name="sf2_reverb_send_label">Reverb</string>
     <string name="sf2_effects_send_value">%1$.1f%%</string>
     <string name="sf2_pan_label">Pan (Stereo Balance)</string>
-    <string name="sf2_pan_left">L</string>
-    <string name="sf2_pan_right">R</string>
     <string name="sf2_pan_value_center">Center</string>
     <string name="sf2_pan_value_left">L %1$d%%</string>
     <string name="sf2_pan_value_right">R %1$d%%</string>
@@ -120,7 +114,6 @@
     <string name="sf2_selected_slider">%1$s selected</string>
     <string name="sf2_add_to_project">Add to project</string>
     <string name="sf2_project_manager">SF2 Projects</string>
-    <string name="sf2_project_manager_subtitle">Create multi-sample SoundFonts</string>
     <string name="sf2_new_project">New project</string>
     <string name="sf2_project_name_hint">Project name</string>
     <string name="sf2_no_projects">No projects yet.\nCreate one to start building a multi-sample SoundFont!</string>
@@ -137,9 +130,6 @@
     <string name="sf2_project_not_found">Project not found</string>
     <string name="sf2_no_samples">No samples yet.\nTap \"Add sample\" to record one!</string>
     <string name="sf2_note_info">Note: %1$s</string>
-    <string name="sf2_note_conflict_title">Note already exists</string>
-    <string name="sf2_choose_other_project">Choose other project</string>
-    <string name="sf2_redefine_note">Change the note</string>
     <string name="sf2_preview_keyboard">Test project</string>
     <string name="sf2_keyboard_no_samples_hint">Add samples to test the project</string>
     <string name="sf2_preview_engine">Engine: %1$s</string>
@@ -152,7 +142,6 @@
     <string name="sf2_set_key_range">Set range</string>
     <string name="sf2_range_start">Start note</string>
     <string name="sf2_range_end">End note</string>
-    <string name="sf2_range_conflict">This range overlaps with an existing sample</string>
     <string name="sf2_key_range_dialog_title">Set Key Range</string>
     <string name="sf2_root_note_fixed">Root note (fixed): %1$s</string>
     <string name="sf2_range_preview">Range: %1$s to %2$s (%3$d notes)</string>
@@ -203,14 +192,9 @@
     <string name="sf2_zone_detail">%1$s · Root: %2$s · %3$s</string>
     <string name="sf2_sample_detail">Root: %1$s · %2$s · %3$s %4$s</string>
     <string name="sf2_has_loop">· Loop</string>
-    <string name="sf2_copy_preset">Copy preset</string>
     <string name="sf2_copy_sample">Copy sample</string>
-    <string name="sf2_paste_here">Paste here</string>
     <string name="sf2_copied">Copied to clipboard</string>
     <string name="sf2_pasted">Pasted %d item(s)</string>
-    <string name="sf2_paste_program">Paste program</string>
-    <string name="sf2_pasted_program">Program pasted successfully</string>
-    <string name="sf2_paste_failed">Paste failed</string>
     <string name="sf2_programs_label">Programs (MIDI 0-127)</string>
     <string name="sf2_add_program">Add program</string>
     <string name="sf2_new_program">New program</string>
@@ -313,4 +297,8 @@
     <string name="sf2_audio_unreadable">%d file(s) could not be read</string>
     <string name="sf2_audio_truncated">Sounds were shortened to %d s</string>
     <string name="sf2_project_card_info" translatable="false">%1$s · %2$s · %3$s</string>
+
+    <!-- Formerly hard-coded -->
+    <string name="sf2_no_free_program">All program numbers (0-127) are already in use. Cannot create more programs.</string>
+    <string name="sf2_instrument_not_found">Instrument not found</string>
 </resources>

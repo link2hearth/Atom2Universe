@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Поточний альбом/папка</string>
     <string name="midi_shuffle_scope_artist">Поточний виконавець (усі альбоми)</string>
     <string name="midi_shuffle_scope_library">Уся бібліотека</string>
-    <string name="midi_channels_active">Активні доріжки</string>
     <string name="midi_no_channels">Доріжок не виявлено</string>
     <string name="midi_mute_track">Вимкнути доріжку</string>
     <string name="midi_unmute_track">Увімкнути доріжку</string>
     <string name="midi_toggle_keyboard">Показати/сховати клавіатуру</string>
     <string name="midi_practice_mode">Режим практики</string>
-    <string name="midi_refresh_keyboards">Оновити клавіатури</string>
-    <string name="midi_keyboards_refreshed">Клавіатури оновлено</string>
     <string name="midi_two_hands_practice">Практика двома руками</string>
     <string name="midi_favorite">Обране</string>
     <string name="midi_added_to_favorites">Додано до обраного</string>

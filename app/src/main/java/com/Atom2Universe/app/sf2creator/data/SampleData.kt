@@ -170,19 +170,6 @@ data class SampleData(
 }
 
 /**
- * Represents a complete SF2 project with metadata and samples.
- */
-data class Sf2Project(
-    val id: Long = System.currentTimeMillis(),
-    val name: String,
-    val samples: List<SampleData> = emptyList(),
-    val presetNumber: Int = 0,
-    val bankNumber: Int = 0,
-    val createdAt: Long = System.currentTimeMillis(),
-    val modifiedAt: Long = System.currentTimeMillis()
-)
-
-/**
  * Result of pitch detection.
  */
 data class PitchResult(

@@ -22,16 +22,13 @@
     <string name="midi_shuffle_scope_current">Current album/folder</string>
     <string name="midi_shuffle_scope_artist">Current artist (all albums)</string>
     <string name="midi_shuffle_scope_library">Entire library</string>
-    <string name="midi_channels_active">Active tracks</string>
     <string name="midi_no_channels">No tracks detected</string>
     <string name="midi_mute_track">Mute track</string>
     <string name="midi_unmute_track">Unmute track</string>
     <string name="midi_toggle_keyboard">Show/hide keyboard</string>
     <string name="midi_practice_mode">Practice mode</string>
-    <string name="midi_refresh_keyboards">Refresh keyboards</string>
     <string name="midi_channel_volume">Track volume</string>
     <string name="midi_shuffle_count">Shuffle: %1$d tracks</string>
-    <string name="midi_keyboards_refreshed">Keyboards refreshed</string>
     <string name="midi_two_hands_practice">Two hands practice</string>
     <string name="midi_favorite">Favorite</string>
     <string name="midi_added_to_favorites">Added to favorites</string>
@@ -458,4 +455,29 @@ The file was imported but some instruments may not work correctly.</string>
     <string name="practice_export_button">Export</string>
     <string name="practice_export_success">Exported to %s</string>
     <string name="practice_export_error">Export error: %s</string>
+
+    <!-- SoundFont import, validation and misc messages (formerly hard-coded) -->
+    <string name="midi_builtin_synth_hint">Using the built-in Sonivox synthesizer. You can load a custom SoundFont (.sf2) from Settings for better sound quality.</string>
+    <string name="midi_soundfont_imported">SoundFont imported: %1$s (%2$d MB)</string>
+    <string name="midi_soundfont_loading_engine">Loading SoundFont into the MIDI engine…</string>
+    <string name="midi_soundfont_import_error">Error: %1$s</string>
+    <string name="midi_no_folder_configured">No MIDI folder configured. Choose a folder first.</string>
+    <string name="midi_sf2_err_not_found">File not found or access denied</string>
+    <string name="midi_sf2_err_format">Invalid file format. Only .sf2 files are supported.</string>
+    <string name="midi_sf2_err_too_small">File too small to be a valid SoundFont.</string>
+    <string name="midi_sf2_err_permission">Permission denied. Please grant file access.</string>
+    <string name="midi_sf2_err_unknown">Unknown error occurred</string>
+    <string name="midi_sf2_large_with_warning">Warning: large file (%1$d MB)\n\n%2$s</string>
+    <string name="midi_sf2_large_info">Info: large file (%1$d MB). Loading may take time.</string>
+    <string name="midi_sf2_val_missing">SF2 file not found</string>
+    <string name="midi_sf2_val_unreadable">Unable to read the SF2 file. It may be corrupted.</string>
+    <string name="midi_sf2_val_error">Error while validating the SF2 file</string>
+    <string name="midi_sf2_val_critical">This SF2 file looks corrupted or invalid and may not work properly.</string>
+    <string name="midi_sf2_val_zones">This SF2 file contains many unusual configurations (%1$d problematic zones). Some instruments may sound different from what is expected.</string>
+    <string name="midi_sf2_val_presets">This SF2 file has %1$d presets with suspicious configurations. Audio quality may be affected.</string>
+    <string name="midi_sf2_val_minor">This SF2 file has a few unusual configurations but should work.</string>
+    <string name="midi_sf2_val_unavailable">Validation not available</string>
+    <string name="practice_image_load_error">Error loading image</string>
+    <string name="practice_export_cannot_write">Cannot write to folder</string>
+    <string name="practice_export_unknown">unknown error</string>
 </resources>

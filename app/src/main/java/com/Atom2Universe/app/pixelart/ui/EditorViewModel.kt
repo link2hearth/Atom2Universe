@@ -2,6 +2,7 @@ package com.Atom2Universe.app.pixelart.ui
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.Atom2Universe.app.pixelart.core.EditorSession
@@ -103,6 +104,10 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 PixelArtStorage.saveMutex.withLock { store.save(plan) }
                 withContext(Dispatchers.Main) { p.doc.markSaved(plan.dirty) }
+            } catch (e: Exception) {
+                // Disque plein ou fichier verrouillé : rien n'est acquitté, les cels restent « sales »
+                // et la prochaine écriture les reprendra. Sans cela l'exception tuerait l'appli.
+                Log.w("PixelArtStorage", "Enregistrement impossible", e)
             } finally {
                 PixelArtStorage.writesInFlight.update { it - 1 }
             }

@@ -2546,7 +2546,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             try {
                 val destDir = DocumentFile.fromTreeUri(ctx, treeUri)
                 if (destDir == null || !destDir.canWrite()) {
-                    Toast.makeText(ctx, getString(R.string.practice_export_error, "Cannot write to folder"), Toast.LENGTH_LONG).show()
+                    Toast.makeText(ctx, getString(R.string.practice_export_error, getString(R.string.practice_export_cannot_write)), Toast.LENGTH_LONG).show()
                     wavFile.delete()  // Nettoyer le fichier temporaire en cas d'erreur
                     return@launch
                 }
@@ -2558,7 +2558,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
 
                 Toast.makeText(ctx, getString(R.string.practice_export_success, "$filename.wav"), Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                Toast.makeText(ctx, getString(R.string.practice_export_error, e.message ?: "unknown"), Toast.LENGTH_LONG).show()
+                Toast.makeText(ctx, getString(R.string.practice_export_error, e.message ?: getString(R.string.practice_export_unknown)), Toast.LENGTH_LONG).show()
                 wavFile.delete()  // Nettoyer le fichier temporaire en cas d'exception
             } finally {
                 pendingExportWavFile = null
@@ -3781,7 +3781,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
         } else {
             Toast.makeText(
                 requireContext(),
-                "Error loading image",
+                getString(R.string.practice_image_load_error),
                 Toast.LENGTH_SHORT
             ).show()
         }

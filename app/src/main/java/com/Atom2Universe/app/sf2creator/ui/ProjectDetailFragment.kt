@@ -929,7 +929,7 @@ class ProjectDetailFragment : Fragment() {
                 // All program numbers (0-127) are already used
                 Toast.makeText(
                     requireContext(),
-                    "All program numbers (0-127) are already in use. Cannot create more programs.",
+                    getString(R.string.sf2_no_free_program),
                     Toast.LENGTH_LONG
                 ).show()
                 return@launch
@@ -1077,7 +1077,7 @@ class ProjectDetailFragment : Fragment() {
             // Get the instrument associated with this preset zone
             val instrument = repository.getInstrumentById(preset.instrumentId)
             if (instrument == null) {
-                Toast.makeText(requireContext(), "Instrument not found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.sf2_instrument_not_found, Toast.LENGTH_SHORT).show()
                 return@launch
             }
             InstrumentGlobalEditDialog(requireContext(), instrument) { updatedInstrument ->

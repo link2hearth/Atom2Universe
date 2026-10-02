@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.midi.sf2
 
+import android.content.Context
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.analyzer.MidiFileAnalyzer
 import java.io.File
 
@@ -34,7 +36,6 @@ object Sf2FileCache {
     // Cached validation result
     private var cachedValidationPath: String? = null
     private var cachedValidationResult: Sf2Validator.ValidationResult? = null
-    private var cachedValidationWarning: String? = null
     private var cachedValidationDone: Boolean = false
 
     private val lock = Any()
@@ -203,39 +204,29 @@ object Sf2FileCache {
 
     /**
      * Validate an SF2 file and return a user-friendly warning message if issues are found.
+     * The message is built here, in the language of [context], from the cached validation result.
      */
-    fun validateAndGetWarning(sf2Path: String): String? {
+    fun validateAndGetWarning(context: Context, sf2Path: String): String? {
         synchronized(lock) {
-            if (cachedValidationPath == sf2Path && cachedValidationDone) {
-                return cachedValidationWarning
-            }
-
-            val file = File(sf2Path)
-            if (!file.exists()) {
-                return "Fichier SF2 introuvable"
-            }
-
-            try {
-                val parser = Sf2StreamingParser()
-                val metadata = getOrParseMetadata(sf2Path, parser)
-                if (metadata == null) {
-                    return "Impossible de lire le fichier SF2. Il pourrait etre corrompu."
-                }
-
-                val result = Sf2Validator.validate(metadata)
-                val warning = Sf2Validator.quickCheck(metadata)
-
-                cachedValidationPath = sf2Path
-                cachedValidationResult = result
-                cachedValidationWarning = warning
-                cachedValidationDone = true
-
-                return warning
-
+            if (!File(sf2Path).exists()) return context.getString(R.string.midi_sf2_val_missing)
+            return try {
+                val result = validate(sf2Path) ?: return context.getString(R.string.midi_sf2_val_unreadable)
+                Sf2Validator.warningFor(context, result)
             } catch (_: Exception) {
-                return "Erreur lors de la validation du fichier SF2"
+                context.getString(R.string.midi_sf2_val_error)
             }
         }
+    }
+
+    /** Validates (once per file) and keeps the result; null when the file cannot be parsed. */
+    private fun validate(sf2Path: String): Sf2Validator.ValidationResult? {
+        if (cachedValidationPath == sf2Path && cachedValidationDone) return cachedValidationResult
+        val metadata = getOrParseMetadata(sf2Path, Sf2StreamingParser()) ?: return null
+        val result = Sf2Validator.validate(metadata)
+        cachedValidationPath = sf2Path
+        cachedValidationResult = result
+        cachedValidationDone = true
+        return result
     }
 
     /**
@@ -243,20 +234,8 @@ object Sf2FileCache {
      */
     fun getValidationResult(sf2Path: String): Sf2Validator.ValidationResult? {
         synchronized(lock) {
-            if (cachedValidationPath == sf2Path) {
-                return cachedValidationResult
-            }
-            validateAndGetWarning(sf2Path)
-            return cachedValidationResult
+            return try { validate(sf2Path) } catch (_: Exception) { null }
         }
-    }
-
-    /**
-     * Get a detailed validation report for debugging.
-     */
-    fun getValidationReport(sf2Path: String): String {
-        val result = getValidationResult(sf2Path)
-        return result?.getDetailedReport() ?: "Validation not available"
     }
 
     private fun getOrParseMetadata(sf2Path: String, parser: Sf2StreamingParser): Sf2Metadata? {
@@ -320,7 +299,6 @@ object Sf2FileCache {
             loadedPresetsKey = null
             cachedValidationPath = null
             cachedValidationResult = null
-            cachedValidationWarning = null
             cachedValidationDone = false
         }
     }

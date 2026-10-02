@@ -47,10 +47,12 @@ import com.Atom2Universe.app.pixelart.ui.label
 import com.Atom2Universe.app.pixelart.ui.primaryButton
 import com.Atom2Universe.app.pixelart.ui.scrollRow
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 /**
  * L'éditeur d'une note. Tout s'enregistre seul : peu après chaque frappe, et en quittant. Une note
@@ -190,13 +192,17 @@ class NoteEditorFragment : Fragment(R.layout.fragment_note_editor) {
             contentPlainText = MarkdownSyntax.toPlainText(content),
             dateModified = if (changed || note.id == 0L) System.currentTimeMillis() else note.dateModified,
         )
-        if (note.id == 0L) {
-            note = note.copy(id = vm.insertNote(note))
-            requireArguments().putLong(ARG_NOTE_ID, note.id)
-        } else {
-            vm.updateNote(note)
+        // Une frappe annule la sauvegarde en cours : sans NonCancellable, une insertion déjà faite en base
+        // pouvait perdre son identifiant en route, et la sauvegarde suivante recréait la note en double.
+        withContext(NonCancellable) {
+            if (note.id == 0L) {
+                note = note.copy(id = vm.insertNote(note))
+                requireArguments().putLong(ARG_NOTE_ID, note.id)
+            } else {
+                vm.updateNote(note)
+            }
+            vm.setTagsForNote(note.id, tagIds.toList())
         }
-        vm.setTagsForNote(note.id, tagIds.toList())
         if (changed) loadBacklinks()
     }
 

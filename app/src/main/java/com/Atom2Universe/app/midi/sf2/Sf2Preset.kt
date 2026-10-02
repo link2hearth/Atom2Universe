@@ -35,11 +35,3 @@ data class Sf2Preset(
     }
 }
 
-/**
- * Represents an instrument (internal to SF2, referenced by presets)
- */
-data class Sf2Instrument(
-    val name: String,
-    val zones: List<Sf2ZoneData>,
-    val globalZone: Sf2ZoneData?
-)

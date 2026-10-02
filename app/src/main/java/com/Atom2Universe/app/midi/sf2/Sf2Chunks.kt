@@ -106,18 +106,6 @@ data class Sf2SampleHeader(
 }
 
 /**
- * Modulator (pmod/imod) - 10 bytes per record
- * Defines modulation routing (not fully implemented in this basic port)
- */
-data class Sf2ModulatorEntry(
-    val srcOper: Int,           // Source modulator operator
-    val destOper: Int,          // Destination generator
-    val amount: Int,            // Modulation amount
-    val amtSrcOper: Int,        // Amount source operator
-    val transOper: Int          // Transform operator
-)
-
-/**
  * Zone defaults with all generator values
  * Used to accumulate generator values across preset and instrument zones
  */

@@ -148,6 +148,15 @@ class AudioEditorActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) { vm.pause() }
     }
 
+    /**
+     * Le bouton « Stop » de la notification d'enregistrement : il doit marcher écran éteint ou appli en
+     * arrière-plan, donc l'écoute dure de onCreate à onDestroy et non de onStart à onStop.
+     */
+    private var micStopRegistered = false
+    private val micStop = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) { vm.stopRecording() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
@@ -157,6 +166,10 @@ class AudioEditorActivity : AppCompatActivity() {
         val id = intent.getStringExtra(EXTRA_PROJECT_ID)
         if (id == null) { finish(); return }
         vm.load(id)
+        ContextCompat.registerReceiver(
+            this, micStop, IntentFilter(MicRecordingService.ACTION_STOP_FROM_NOTIFICATION), ContextCompat.RECEIVER_NOT_EXPORTED,
+        )
+        micStopRegistered = true
 
         timeline = findViewById(R.id.ed_timeline)
         timeText = findViewById(R.id.ed_time)
@@ -198,6 +211,11 @@ class AudioEditorActivity : AppCompatActivity() {
                 launch { vm.messages.collect { Toast.makeText(this@AudioEditorActivity, it, Toast.LENGTH_SHORT).show() } }
             }
         }
+    }
+
+    override fun onDestroy() {
+        if (micStopRegistered) unregisterReceiver(micStop)
+        super.onDestroy()
     }
 
     override fun onStart() {

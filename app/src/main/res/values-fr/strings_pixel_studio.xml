@@ -122,9 +122,6 @@
     <string name="px_shape_arrow">Flèche</string>
 
     <!-- Sélection -->
-    <string name="px_sel_replace">Nouvelle sélection</string>
-    <string name="px_sel_add">Ajouter à la sélection</string>
-    <string name="px_sel_subtract">Retirer de la sélection</string>
     <string name="px_sel_all">Tout sélectionner</string>
     <string name="px_sel_none">Désélectionner</string>
     <string name="px_sel_invert">Inverser la sélection</string>

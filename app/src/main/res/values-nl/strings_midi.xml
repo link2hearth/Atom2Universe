@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Huidig album/map</string>
     <string name="midi_shuffle_scope_artist">Huidige artiest (alle albums)</string>
     <string name="midi_shuffle_scope_library">Hele bibliotheek</string>
-    <string name="midi_channels_active">Actieve sporen</string>
     <string name="midi_no_channels">Geen sporen gedetecteerd</string>
     <string name="midi_mute_track">Spoor dempen</string>
     <string name="midi_unmute_track">Spoor dempen opheffen</string>
     <string name="midi_toggle_keyboard">Keyboard tonen/verbergen</string>
     <string name="midi_practice_mode">Oefenmodus</string>
-    <string name="midi_refresh_keyboards">Keyboards vernieuwen</string>
-    <string name="midi_keyboards_refreshed">Keyboards vernieuwd</string>
     <string name="midi_two_hands_practice">Oefenen met twee handen</string>
     <string name="midi_favorite">Favoriet</string>
     <string name="midi_added_to_favorites">Toegevoegd aan favorieten</string>

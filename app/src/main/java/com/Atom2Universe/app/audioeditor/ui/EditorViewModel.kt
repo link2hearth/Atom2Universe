@@ -8,6 +8,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.AndroidViewModel
@@ -215,6 +216,10 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
         AudioEditorStorage.ioScope.launch {
             try {
                 AudioEditorStorage.saveMutex.withLock { store.finish(id, p, m, touch = touched) }
+            } catch (e: Exception) {
+                // Disque plein : le manifeste d'avant reste intact (écriture atomique), mieux vaut perdre
+                // cette sauvegarde que l'application.
+                Log.w("AudioEditor", "Fermeture du projet : enregistrement impossible", e)
             } finally {
                 AudioEditorStorage.writesInFlight.value--
             }
@@ -254,6 +259,9 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val written = AudioEditorStorage.saveMutex.withLock { store.save(id, p, m, touch = touched) }
                 main.post { meta = written; savedRevision = rev }
+            } catch (e: Exception) {
+                // Rien n'est acquitté (savedRevision reste en arrière) : la prochaine sauvegarde réessaiera.
+                Log.w("AudioEditor", "Enregistrement impossible", e)
             } finally {
                 AudioEditorStorage.writesInFlight.value--
             }

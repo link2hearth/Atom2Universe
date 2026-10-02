@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Τρέχον άλμπουμ/φάκελος</string>
     <string name="midi_shuffle_scope_artist">Τρέχων καλλιτέχνης (όλα τα άλμπουμ)</string>
     <string name="midi_shuffle_scope_library">Ολόκληρη η βιβλιοθήκη</string>
-    <string name="midi_channels_active">Ενεργά κομμάτια</string>
     <string name="midi_no_channels">Δεν εντοπίστηκαν κομμάτια</string>
     <string name="midi_mute_track">Σίγαση κομματιού</string>
     <string name="midi_unmute_track">Κατάργηση σίγασης κομματιού</string>
     <string name="midi_toggle_keyboard">Εμφάνιση/απόκρυψη πληκτρολογίου</string>
     <string name="midi_practice_mode">Λειτουργία εξάσκησης</string>
-    <string name="midi_refresh_keyboards">Ανανέωση πληκτρολογίων</string>
-    <string name="midi_keyboards_refreshed">Τα πληκτρολόγια ανανεώθηκαν</string>
     <string name="midi_two_hands_practice">Εξάσκηση με δύο χέρια</string>
     <string name="midi_favorite">Αγαπημένο</string>
     <string name="midi_added_to_favorites">Προστέθηκε στα αγαπημένα</string>

@@ -639,7 +639,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
             if (!isConfigured) {
                 Toast.makeText(
                     this@MidiPlayerActivity,
-                    "Using built-in Sonivox synthesizer. You can load a custom SoundFont (.sf2) from Settings for better sound quality.",
+                    getString(R.string.midi_builtin_synth_hint),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -687,7 +687,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
                     val sizeMB = result.fileSize / 1024 / 1024
                     Toast.makeText(
                         this@MidiPlayerActivity,
-                        "SoundFont imported: ${result.fileName} (${sizeMB} MB)",
+                        getString(R.string.midi_soundfont_imported, result.fileName, sizeMB),
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -707,7 +707,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
 
                     Toast.makeText(
                         this@MidiPlayerActivity,
-                        "Loading SoundFont into MIDI engine...",
+                        getString(R.string.midi_soundfont_loading_engine),
                         Toast.LENGTH_LONG
                     ).show()
 
@@ -719,7 +719,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
                 is SoundFontManager.ImportResult.Error -> {
                     Toast.makeText(
                         this@MidiPlayerActivity,
-                        "Error: ${result.message}",
+                        getString(R.string.midi_soundfont_import_error, result.message),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -748,7 +748,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
 
             Toast.makeText(
                 this@MidiPlayerActivity,
-                "Scan completed: $count MIDI files found",
+                getString(R.string.midi_folder_scan_complete, count),
                 Toast.LENGTH_LONG
             ).show()
 
@@ -891,7 +891,7 @@ class MidiPlayerActivity : AudioThemedActivity() {
             if (folderUri == null) {
                 Toast.makeText(
                     this@MidiPlayerActivity,
-                    "Aucun dossier MIDI configuré. Sélectionnez un dossier d'abord.",
+                    getString(R.string.midi_no_folder_configured),
                     Toast.LENGTH_LONG
                 ).show()
                 return@launch
@@ -1532,7 +1532,8 @@ class MidiPlayerActivity : AudioThemedActivity() {
                 lifecycleScope.launch {
                     val path = soundFontManager.getCurrentSoundFontPath()
                     if (path != null) {
-                        val report = com.Atom2Universe.app.midi.sf2.Sf2FileCache.getValidationReport(path)
+                        val report = com.Atom2Universe.app.midi.sf2.Sf2FileCache.getValidationResult(path)?.getDetailedReport()
+                            ?: getString(R.string.midi_sf2_val_unavailable)
                         AlertDialog.Builder(this@MidiPlayerActivity)
                             .setTitle(R.string.midi_sf2_report_title)
                             .setMessage(report)

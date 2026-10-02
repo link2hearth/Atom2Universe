@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.midi.sf2
 
+import android.content.Context
+import com.Atom2Universe.app.R
 import kotlin.math.abs
 import kotlin.math.pow
 
@@ -445,28 +447,16 @@ object Sf2Validator {
     }
 
     /**
-     * Quick check to determine if an SF2 file might have problems.
-     * Returns a user-friendly message if issues are likely.
+     * User-friendly message (in the language of [context]) when the validation result says the file
+     * is likely to have problems; null when it looks fine.
      */
-    fun quickCheck(metadata: Sf2Metadata): String? {
-        val result = validate(metadata)
-
-        return when {
-            result.hasCriticalIssues -> {
-                "Ce fichier SF2 semble corrompu ou invalide et pourrait ne pas fonctionner correctement."
-            }
-            result.stats.problematicZoneCount > 100 -> {
-                "Ce fichier SF2 contient de nombreuses configurations inhabituelles (${result.stats.problematicZoneCount} zones problematiques). " +
-                "Certains instruments pourraient sonner differemment de ce qui est attendu."
-            }
-            result.stats.suspiciousPresetCount > 20 -> {
-                "Ce fichier SF2 a ${result.stats.suspiciousPresetCount} presets avec des configurations suspectes. " +
-                "La qualite audio pourrait etre affectee."
-            }
-            result.warnings.size > 50 -> {
-                "Ce fichier SF2 a quelques configurations inhabituelles mais devrait fonctionner."
-            }
-            else -> null
-        }
+    fun warningFor(context: Context, result: ValidationResult): String? = when {
+        result.hasCriticalIssues -> context.getString(R.string.midi_sf2_val_critical)
+        result.stats.problematicZoneCount > 100 ->
+            context.getString(R.string.midi_sf2_val_zones, result.stats.problematicZoneCount)
+        result.stats.suspiciousPresetCount > 20 ->
+            context.getString(R.string.midi_sf2_val_presets, result.stats.suspiciousPresetCount)
+        result.warnings.size > 50 -> context.getString(R.string.midi_sf2_val_minor)
+        else -> null
     }
 }

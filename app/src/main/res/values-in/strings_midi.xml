@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Album/folder saat ini</string>
     <string name="midi_shuffle_scope_artist">Artis saat ini (semua album)</string>
     <string name="midi_shuffle_scope_library">Seluruh pustaka</string>
-    <string name="midi_channels_active">Trek aktif</string>
     <string name="midi_no_channels">Tidak ada trek terdeteksi</string>
     <string name="midi_mute_track">Bisukan trek</string>
     <string name="midi_unmute_track">Bunyikan trek</string>
     <string name="midi_toggle_keyboard">Tampilkan/sembunyikan keyboard</string>
     <string name="midi_practice_mode">Mode latihan</string>
-    <string name="midi_refresh_keyboards">Segarkan keyboard</string>
-    <string name="midi_keyboards_refreshed">Keyboard disegarkan</string>
     <string name="midi_two_hands_practice">Latihan dua tangan</string>
     <string name="midi_favorite">Favorit</string>
     <string name="midi_added_to_favorites">Ditambahkan ke favorit</string>

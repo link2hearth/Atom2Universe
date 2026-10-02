@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Album/dosar curent</string>
     <string name="midi_shuffle_scope_artist">Artist curent (toate albumele)</string>
     <string name="midi_shuffle_scope_library">Întreaga bibliotecă</string>
-    <string name="midi_channels_active">Piste active</string>
     <string name="midi_no_channels">Nicio pistă detectată</string>
     <string name="midi_mute_track">Dezactivare pistă</string>
     <string name="midi_unmute_track">Activare pistă</string>
     <string name="midi_toggle_keyboard">Afișare/ascundere tastatură</string>
     <string name="midi_practice_mode">Mod practică</string>
-    <string name="midi_refresh_keyboards">Reîmprospătare tastaturi</string>
-    <string name="midi_keyboards_refreshed">Tastaturi reîmprospătate</string>
     <string name="midi_two_hands_practice">Practică cu două mâini</string>
     <string name="midi_favorite">Favorit</string>
     <string name="midi_added_to_favorites">Adăugat la favorite</string>

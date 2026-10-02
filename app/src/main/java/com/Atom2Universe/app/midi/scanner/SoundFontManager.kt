@@ -3,6 +3,7 @@ package com.Atom2Universe.app.midi.scanner
 import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
+import com.Atom2Universe.app.R
 import com.Atom2Universe.app.midi.repository.SettingsRepository
 import com.Atom2Universe.app.midi.sf2.Sf2FileCache
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,7 @@ class SoundFontManager(
             val sourceFile = DocumentFile.fromSingleUri(context, sourceUri)
 
             if (sourceFile == null || !sourceFile.exists()) {
-                return@withContext ImportResult.Error("File not found or access denied")
+                return@withContext ImportResult.Error(context.getString(R.string.midi_sf2_err_not_found))
             }
 
             val fileName = sourceFile.name ?: "soundfont.sf2"
@@ -57,13 +58,13 @@ class SoundFontManager(
 
             // Validation: extension .sf2
             if (!fileName.lowercase().endsWith(".sf2")) {
-                return@withContext ImportResult.Error("Invalid file format. Only .sf2 files are supported.")
+                return@withContext ImportResult.Error(context.getString(R.string.midi_sf2_err_format))
             }
 
             // Validation: taille minimale (SF2 valide fait au moins quelques KB)
             val minSize = 10 * 1024L // 10 KB
             if (fileSize < minSize) {
-                return@withContext ImportResult.Error("File too small to be a valid SoundFont.")
+                return@withContext ImportResult.Error(context.getString(R.string.midi_sf2_err_too_small))
             }
 
             // Avertissement pour les très gros fichiers (>500 MB)
@@ -88,15 +89,15 @@ class SoundFontManager(
             settingsRepository.saveSoundFontLabel(fileName)
 
             // Valide le contenu du SF2 et récupère les avertissements
-            val contentWarning = Sf2FileCache.validateAndGetWarning(destFile.absolutePath)
+            val contentWarning = Sf2FileCache.validateAndGetWarning(context, destFile.absolutePath)
 
             // Combine les avertissements (taille + contenu)
             val combinedWarning = when {
                 sizeWarning != null && contentWarning != null -> {
-                    "Warning: Large file (${fileSize / 1024 / 1024} MB)\n\n$contentWarning"
+                    context.getString(R.string.midi_sf2_large_with_warning, fileSize / 1024 / 1024, contentWarning)
                 }
                 sizeWarning != null -> {
-                    "Info: Large file (${fileSize / 1024 / 1024} MB). Loading may take time."
+                    context.getString(R.string.midi_sf2_large_info, fileSize / 1024 / 1024)
                 }
                 contentWarning != null -> contentWarning
                 else -> null
@@ -110,9 +111,9 @@ class SoundFontManager(
             )
 
         } catch (e: SecurityException) {
-            return@withContext ImportResult.Error("Permission denied. Please grant file access.")
+            return@withContext ImportResult.Error(context.getString(R.string.midi_sf2_err_permission))
         } catch (e: Exception) {
-            return@withContext ImportResult.Error(e.message ?: "Unknown error occurred")
+            return@withContext ImportResult.Error(e.message ?: context.getString(R.string.midi_sf2_err_unknown))
         }
     }
 

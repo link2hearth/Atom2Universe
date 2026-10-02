@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Bieżący album/folder</string>
     <string name="midi_shuffle_scope_artist">Bieżący wykonawca (wszystkie albumy)</string>
     <string name="midi_shuffle_scope_library">Cała biblioteka</string>
-    <string name="midi_channels_active">Aktywne ścieżki</string>
     <string name="midi_no_channels">Nie wykryto ścieżek</string>
     <string name="midi_mute_track">Wycisz ścieżkę</string>
     <string name="midi_unmute_track">Włącz ścieżkę</string>
     <string name="midi_toggle_keyboard">Pokaż/ukryj klawiaturę</string>
     <string name="midi_practice_mode">Tryb ćwiczenia</string>
-    <string name="midi_refresh_keyboards">Odśwież klawiatury</string>
-    <string name="midi_keyboards_refreshed">Klawiatury odświeżone</string>
     <string name="midi_two_hands_practice">Ćwiczenie na dwie ręce</string>
     <string name="midi_favorite">Ulubione</string>
     <string name="midi_added_to_favorites">Dodano do ulubionych</string>

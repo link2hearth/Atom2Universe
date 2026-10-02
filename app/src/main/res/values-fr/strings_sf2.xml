@@ -123,7 +123,6 @@
     <string name="sf2_preview">Aperçu</string>
     <string name="sf2_gain_label">Volume (dB)</string>
     <string name="sf2_gain_value">%1$.1f dB</string>
-    <string name="sf2_envelope_label">Enveloppe (ADSR)</string>
     <string name="sf2_attack_label">Attaque</string>
     <string name="sf2_decay_label">Déclin</string>
     <string name="sf2_sustain_label">Maintien</string>
@@ -132,19 +131,14 @@
     <string name="sf2_percent_value">%1$d%%</string>
     <string name="sf2_fine_tune_label">Accordage fin (cents)</string>
     <string name="sf2_cents_value">%1$+d ct</string>
-    <string name="sf2_filter_label">Filtre passe-bas</string>
     <string name="sf2_filter_cutoff_label">Coupure</string>
     <string name="sf2_filter_resonance_label">Réso</string>
     <string name="sf2_filter_cutoff_value_hz">%1$d Hz</string>
     <string name="sf2_filter_cutoff_value_khz">%1$.1f kHz</string>
-    <string name="sf2_filter_resonance_value">%1$.1f dB</string>
-    <string name="sf2_effects_send_label">Envoi d\'effets</string>
     <string name="sf2_chorus_send_label">Chorus</string>
     <string name="sf2_reverb_send_label">Réverbe</string>
     <string name="sf2_effects_send_value">%1$.1f%%</string>
     <string name="sf2_pan_label">Pan (Balance stéréo)</string>
-    <string name="sf2_pan_left">G</string>
-    <string name="sf2_pan_right">D</string>
     <string name="sf2_pan_value_center">Centre</string>
     <string name="sf2_pan_value_left">G %1$d%%</string>
     <string name="sf2_pan_value_right">D %1$d%%</string>
@@ -161,7 +155,6 @@
     <string name="sf2_save_as_success">SoundFont enregistré avec succès</string>
     <string name="sf2_add_to_project">Ajouter au projet</string>
     <string name="sf2_project_manager">Projets SF2</string>
-    <string name="sf2_project_manager_subtitle">Créer des SoundFonts multi-samples</string>
     <string name="sf2_new_project">Nouveau projet</string>
     <string name="sf2_project_name_hint">Nom du projet</string>
     <string name="sf2_no_projects">Pas encore de projets.\nCréez-en un pour commencer à construire un SoundFont multi-samples !</string>
@@ -178,9 +171,6 @@
     <string name="sf2_project_not_found">Projet introuvable</string>
     <string name="sf2_no_samples">Pas encore de samples.\nAppuyez sur " Ajouter un sample " pour en enregistrer un !</string>
     <string name="sf2_note_info">Note : %1$s</string>
-    <string name="sf2_note_conflict_title">Note déjà existante</string>
-    <string name="sf2_choose_other_project">Choisir un autre projet</string>
-    <string name="sf2_redefine_note">Changer la note</string>
     <string name="sf2_my_projects">Mes projets</string>
     <string name="sf2_preview_keyboard">Tester le projet</string>
     <string name="sf2_keyboard_no_samples_hint">Ajoutez des samples pour tester le projet</string>
@@ -194,7 +184,6 @@
     <string name="sf2_set_key_range">Définir la plage</string>
     <string name="sf2_range_start">Note de début</string>
     <string name="sf2_range_end">Note de fin</string>
-    <string name="sf2_range_conflict">Cette plage chevauche un sample existant</string>
     <string name="sf2_key_range_dialog_title">Définir la plage de notes</string>
     <string name="sf2_root_note_fixed">Note fondamentale (fixe) : %1$s</string>
     <string name="sf2_range_preview">Plage : %1$s à %2$s (%3$d notes)</string>
@@ -242,14 +231,9 @@
     <string name="sf2_zone_detail">%1$s · Racine : %2$s · %3$s</string>
     <string name="sf2_sample_detail">Racine : %1$s · %2$s · %3$s %4$s</string>
     <string name="sf2_has_loop">· Loop</string>
-    <string name="sf2_copy_preset">Copier le preset</string>
     <string name="sf2_copy_sample">Copier le sample</string>
-    <string name="sf2_paste_here">Coller ici</string>
     <string name="sf2_copied">Copié dans le presse-papiers</string>
     <string name="sf2_pasted">%d élément(s) collé(s)</string>
-    <string name="sf2_paste_program">Coller le programme</string>
-    <string name="sf2_pasted_program">Programme collé avec succès</string>
-    <string name="sf2_paste_failed">Échec du collage</string>
     <string name="sf2_programs_label">Programmes (MIDI 0-127)</string>
     <string name="sf2_add_program">Ajouter un programme</string>
     <string name="sf2_new_program">Nouveau programme</string>
@@ -312,4 +296,8 @@
     <string name="sf2_audio_added">%d son(s) ajouté(s)</string>
     <string name="sf2_audio_unreadable">%d fichier(s) illisible(s)</string>
     <string name="sf2_audio_truncated">Les sons ont été coupés à %d s</string>
+
+    <!-- Auparavant en dur -->
+    <string name="sf2_no_free_program">Les 128 numéros de programme (0-127) sont tous utilisés. Impossible d\'en créer d\'autres.</string>
+    <string name="sf2_instrument_not_found">Instrument introuvable</string>
 </resources>

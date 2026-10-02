@@ -22,14 +22,11 @@
     <string name="midi_shuffle_scope_current">Album/cartella corrente</string>
     <string name="midi_shuffle_scope_artist">Artista corrente (tutti gli album)</string>
     <string name="midi_shuffle_scope_library">Intera libreria</string>
-    <string name="midi_channels_active">Tracce attive</string>
     <string name="midi_no_channels">Nessuna traccia rilevata</string>
     <string name="midi_mute_track">Silenzia traccia</string>
     <string name="midi_unmute_track">Riattiva traccia</string>
     <string name="midi_toggle_keyboard">Mostra/nascondi tastiera</string>
     <string name="midi_practice_mode">Modalità esercizio</string>
-    <string name="midi_refresh_keyboards">Aggiorna tastiere</string>
-    <string name="midi_keyboards_refreshed">Tastiere aggiornate</string>
     <string name="midi_two_hands_practice">Esercizio a due mani</string>
     <string name="midi_favorite">Preferito</string>
     <string name="midi_added_to_favorites">Aggiunto ai preferiti</string>

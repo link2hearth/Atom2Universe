@@ -22,16 +22,13 @@
     <string name="midi_shuffle_scope_current">Album/Dossier actuel</string>
     <string name="midi_shuffle_scope_artist">Artiste actuel (tous les albums)</string>
     <string name="midi_shuffle_scope_library">Toute la bibliothèque</string>
-    <string name="midi_channels_active">Pistes actives</string>
     <string name="midi_no_channels">Aucune piste détectée</string>
     <string name="midi_mute_track">Couper le son de la piste</string>
     <string name="midi_unmute_track">Activer le son de la piste</string>
     <string name="midi_toggle_keyboard">Afficher/masquer le clavier</string>
     <string name="midi_practice_mode">Mode pratique</string>
-    <string name="midi_refresh_keyboards">Actualiser les claviers</string>
     <string name="midi_channel_volume">Volume de la piste</string>
     <string name="midi_shuffle_count">Lecture aléatoire : %1$d morceaux</string>
-    <string name="midi_keyboards_refreshed">Claviers actualisés</string>
     <string name="midi_two_hands_practice">Entraînement deux mains</string>
     <string name="midi_favorite">Favori</string>
     <string name="midi_added_to_favorites">Ajouté aux favoris</string>
@@ -460,4 +457,29 @@ Le fichier a été importé mais certains instruments pourraient ne pas fonction
     <string name="practice_current_instrument">%1$d: %2$s</string>
     <string name="practice_recording_filename">Recording_%1$s</string>
     <string name="practice_volume_percent">%1$d%%</string>
+
+    <!-- Import et validation des SoundFonts, messages divers (auparavant en dur) -->
+    <string name="midi_builtin_synth_hint">Synthétiseur Sonivox intégré utilisé. Une SoundFont (.sf2) peut être chargée depuis les réglages pour un meilleur son.</string>
+    <string name="midi_soundfont_imported">SoundFont importée : %1$s (%2$d Mo)</string>
+    <string name="midi_soundfont_loading_engine">Chargement de la SoundFont dans le moteur MIDI…</string>
+    <string name="midi_soundfont_import_error">Erreur : %1$s</string>
+    <string name="midi_no_folder_configured">Aucun dossier MIDI configuré. Sélectionnez d\'abord un dossier.</string>
+    <string name="midi_sf2_err_not_found">Fichier introuvable ou accès refusé</string>
+    <string name="midi_sf2_err_format">Format de fichier invalide. Seuls les fichiers .sf2 sont acceptés.</string>
+    <string name="midi_sf2_err_too_small">Fichier trop petit pour être une SoundFont valide.</string>
+    <string name="midi_sf2_err_permission">Permission refusée. Autorisez l\'accès au fichier.</string>
+    <string name="midi_sf2_err_unknown">Erreur inconnue</string>
+    <string name="midi_sf2_large_with_warning">Attention : fichier volumineux (%1$d Mo)\n\n%2$s</string>
+    <string name="midi_sf2_large_info">Info : fichier volumineux (%1$d Mo). Le chargement peut prendre du temps.</string>
+    <string name="midi_sf2_val_missing">Fichier SF2 introuvable</string>
+    <string name="midi_sf2_val_unreadable">Impossible de lire le fichier SF2. Il est peut-être corrompu.</string>
+    <string name="midi_sf2_val_error">Erreur lors de la validation du fichier SF2</string>
+    <string name="midi_sf2_val_critical">Ce fichier SF2 semble corrompu ou invalide et pourrait ne pas fonctionner correctement.</string>
+    <string name="midi_sf2_val_zones">Ce fichier SF2 contient de nombreuses configurations inhabituelles (%1$d zones problématiques). Certains instruments pourraient sonner différemment de ce qui est attendu.</string>
+    <string name="midi_sf2_val_presets">Ce fichier SF2 a %1$d presets avec des configurations suspectes. La qualité audio pourrait être affectée.</string>
+    <string name="midi_sf2_val_minor">Ce fichier SF2 a quelques configurations inhabituelles mais devrait fonctionner.</string>
+    <string name="midi_sf2_val_unavailable">Validation indisponible</string>
+    <string name="practice_image_load_error">Erreur de chargement de l\'image</string>
+    <string name="practice_export_cannot_write">Impossible d\'écrire dans le dossier</string>
+    <string name="practice_export_unknown">erreur inconnue</string>
 </resources>
