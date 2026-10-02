@@ -63,7 +63,9 @@ class PipeTapView @JvmOverloads constructor(
         val run = animationsActive && isAttachedToWindow && isShown &&
             windowVisibility == VISIBLE && ValueAnimator.areAnimatorsEnabled() && game != null
         if (run && !animator.isStarted) animator.start()
-        else if (!run) animator.cancel()
+        // cancel() exige un fil à Looper : l'aperçu du hub est dessiné sur un fil d'arrière-plan,
+        // où l'animateur n'a jamais démarré et n'a donc rien à annuler.
+        else if (!run && animator.isStarted) animator.cancel()
         invalidate()
     }
 

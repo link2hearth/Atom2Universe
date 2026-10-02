@@ -17,7 +17,8 @@ class EscapeLabyrinthView @JvmOverloads constructor(
             if (field !== value) {
                 terrain = null
                 previous = null
-                animator.cancel()
+                // cancel() exige un fil à Looper : l'aperçu du hub se dessine sur un fil d'arrière-plan.
+                if (animator.isStarted) animator.cancel()
                 progress = 1f
             }
             field = value
