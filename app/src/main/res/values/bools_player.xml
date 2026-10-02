@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lecteur plein écran : en portrait tout est empilé ; layout-land passe à deux colonnes -->
+    <bool name="player_two_pane">false</bool>
+</resources>

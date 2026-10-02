@@ -178,7 +178,7 @@
             android:name=".music.FullPlayerActivity"
             android:exported="false"
             android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:configChanges="keyboardHidden"
             android:theme="@style/Theme.A2U" />
 
         <activity

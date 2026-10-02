@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.music.model.MusicTrack
 import com.Atom2Universe.app.music.lyrics.api.AlternativeLyrics
+import com.Atom2Universe.app.util.followImmersiveMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -69,6 +70,7 @@ class LyricsBottomSheet : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        dialog.followImmersiveMode()
 
         // Configurer le dialog pour se redimensionner quand le clavier apparaît
         @Suppress("DEPRECATION")

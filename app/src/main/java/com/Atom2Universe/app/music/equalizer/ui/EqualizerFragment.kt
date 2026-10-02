@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.music.equalizer.ui
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import com.Atom2Universe.app.music.equalizer.data.EqPreset
 import com.Atom2Universe.app.music.equalizer.data.OverrideSource
 import com.Atom2Universe.app.music.equalizer.data.ResolvedPreset
 import com.Atom2Universe.app.music.model.MusicTrack
+import com.Atom2Universe.app.util.followImmersiveMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
@@ -63,6 +65,10 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
     private var currentTrack: MusicTrack? = null
     private var isUpdatingUI = false
     private var isInitialized = false
+
+    // La feuille suit le mode plein écran de l'écran du lecteur (sinon elle ramène les barres système)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        super.onCreateDialog(savedInstanceState).also { it.followImmersiveMode() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -731,7 +737,8 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
                 }
             }
             .setNegativeButton(R.string.cancel, null)
-            .show()
+            .create()
+            .also { it.followImmersiveMode(); it.show() }
     }
 
     private fun saveCurrentAsPreset(name: String) {
@@ -760,7 +767,8 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
                 deletePreset(preset)
             }
             .setNegativeButton(R.string.cancel, null)
-            .show()
+            .create()
+            .also { it.followImmersiveMode(); it.show() }
     }
 
     private fun deletePreset(preset: EqPreset) {

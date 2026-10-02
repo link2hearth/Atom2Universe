@@ -5,6 +5,7 @@ import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.appcompat.widget.TooltipCompat
 
 /**
  * Appui long « de sortie » sur une flèche retour : maintenir [holdMs] quitte l'écran d'un coup,
@@ -36,6 +37,8 @@ class HoldToExit private constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     private fun install() {
+        // Sans ça, la bulle « retour » (et sa vibration) surgit vers 1 s et on lâche avant la sortie
+        TooltipCompat.setTooltipText(view, null)
         view.setOnTouchListener { v, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {

@@ -82,6 +82,21 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
     companion object {
         const val EXTRA_OPEN_FULL_PLAYER = "extra_open_full_player"
         const val EXTRA_FROM_CLICKER_WIDGET = "extra_from_clicker_widget"
+
+        private var lastInstance: java.lang.ref.WeakReference<MusicPlayerActivity>? = null
+
+        /**
+         * Ferme l'écran bibliothèque encore empilé sous le lecteur plein écran, pour que l'appui
+         * long de sortie du lecteur quitte tout le module d'un coup.
+         * @return true si cet écran était la racine de la tâche (il faudra alors rouvrir le hub).
+         */
+        fun finishLibraryScreen(): Boolean {
+            val library = lastInstance?.get()?.takeUnless { it.isFinishing || it.isDestroyed }
+                ?: return false
+            val wasRoot = library.isTaskRoot
+            library.finish()
+            return wasRoot
+        }
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -318,6 +333,7 @@ class MusicPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lastInstance = java.lang.ref.WeakReference(this)
         enableImmersiveMode()
         setContentView(R.layout.activity_music_player)
 

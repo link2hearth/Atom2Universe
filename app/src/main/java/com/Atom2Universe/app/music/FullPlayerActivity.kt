@@ -55,6 +55,8 @@ import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.launch
 import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.HoldToExit
+import com.Atom2Universe.app.util.followImmersiveMode
 import com.Atom2Universe.app.util.applySystemBarsVisibility
 import com.Atom2Universe.app.music.equalizer.MusicEqualizerManager
 import com.Atom2Universe.app.music.equalizer.ui.EqualizerFragment
@@ -131,6 +133,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         private const val PREFS_NAME = "music_player_prefs"
         private const val PREF_VISUALIZER_MODE = "visualizer_mode"
         private const val PREF_SHOW_ALBUM_ART = "show_album_art"
+        private const val STATE_TRUE_FULLSCREEN = "true_fullscreen"
         private const val FULLSCREEN_CONTROLS_HIDE_DELAY = 5000L // 5 secondes
     }
 
@@ -243,6 +246,16 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         }
 
         refreshPlaybackState()
+
+        // La rotation recrée l'activité (pour changer de layout) : rester en plein écran visuel
+        if (savedInstanceState?.getBoolean(STATE_TRUE_FULLSCREEN) == true && btnFullscreen.isVisible) {
+            window.decorView.post { enterTrueFullscreen() }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(STATE_TRUE_FULLSCREEN, isTrueFullscreen)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -468,7 +481,29 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     }
 
     private fun setupToolbar() {
-        toolbar.setNavigationOnClickListener { navigateBackToHub() }
+        // Clic : retour à l'écran précédent. Appui long (1,5 s) : quitte tout le module musique,
+        // sans repasser par les niveaux de la bibliothèque empilés dessous.
+        var holdToExit: HoldToExit? = null
+        toolbar.setNavigationOnClickListener {
+            if (holdToExit?.fired != true) navigateBackToHub()
+        }
+        toolbar.post {
+            // Le bouton de navigation n'a pas d'identifiant : c'est le seul ImageButton de la barre
+            val backButton = (0 until toolbar.childCount)
+                .map { toolbar.getChildAt(it) }
+                .firstOrNull { it is ImageButton }
+            if (backButton != null) {
+                holdToExit = HoldToExit.attach(backButton) { exitMusicModule() }
+            }
+        }
+    }
+
+    private fun exitMusicModule() {
+        val libraryWasRoot = MusicPlayerActivity.finishLibraryScreen()
+        if (isTaskRoot || libraryWasRoot) {
+            startActivity(Intent(this, AudioHubActivity::class.java))
+        }
+        finish()
     }
 
     private fun setupControls() {
@@ -689,7 +724,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
                 }
             }
             .setNegativeButton(R.string.music_cancel, null)
-            .show()
+            .create()
+            .also { it.followImmersiveMode(); it.show() }
     }
 
     private fun toggleAlbumArtVisibility() {
@@ -710,7 +746,7 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
     }
 
     private fun updateAlbumArtVisibility() {
-        // Update album art container visibility
+        // Update album art container visibility (en paysage, updateVisualizerVisibility a le dernier mot)
         albumArtContainer.visibility = if (isAlbumArtVisible) View.VISIBLE else View.GONE
 
         // Update toggle button icon
@@ -726,6 +762,14 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         val isVisualizerEnabled = currentVisualizerMode != AudioVisualizerView.VisualizationMode.NONE
         visualizer.visibility = if (isVisualizerEnabled) View.VISIBLE else View.GONE
 
+        // Paysage : la colonne de gauche ne reste jamais vide, la pochette revient
+        // d'elle-même quand le visuel est coupé (la préférence « masquer » n'est pas touchée).
+        val isTwoPane = resources.getBoolean(R.bool.player_two_pane)
+        if (isTwoPane) {
+            albumArtContainer.visibility =
+                if (isAlbumArtVisible || !isVisualizerEnabled) View.VISIBLE else View.GONE
+        }
+
         // Check if we should use fullscreen mode (central visualizer + album art hidden)
         val isCentralMode = visualizer.isCentralMode()
         val shouldBeFullscreen = !isAlbumArtVisible && isCentralMode && isVisualizerEnabled
@@ -738,7 +782,24 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         val constraintSet = ConstraintSet()
         constraintSet.clone(parent)
 
-        if (shouldBeFullscreen) {
+        if (isTwoPane) {
+            // Paysage : le visuel vit dans la colonne de gauche. Pochette visible → simple
+            // bandeau sous elle ; pochette masquée → il prend toute la hauteur de la scène.
+            if (!isAlbumArtVisible && isVisualizerEnabled) {
+                constraintSet.connect(
+                    R.id.visualizer,
+                    ConstraintSet.TOP,
+                    R.id.toolbar,
+                    ConstraintSet.BOTTOM,
+                    (4 * resources.displayMetrics.density).toInt()
+                )
+                constraintSet.constrainHeight(R.id.visualizer, ConstraintSet.MATCH_CONSTRAINT)
+            } else {
+                constraintSet.clear(R.id.visualizer, ConstraintSet.TOP)
+                constraintSet.constrainHeight(R.id.visualizer, (56 * resources.displayMetrics.density).toInt())
+            }
+            constraintSet.setDimensionRatio(R.id.visualizer, null)
+        } else if (shouldBeFullscreen) {
             // Fullscreen mode: visualizer prend toute la largeur, hauteur = celle de la pochette
             // Connect to toolbar bottom instead of album_art_container bottom
             constraintSet.connect(
@@ -1386,7 +1447,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
                 updateVisualizerButtons()
                 if (isTrueFullscreen) updateFullscreenVisualizerButtons()
             }
-            .show()
+            .create()
+            .also { it.followImmersiveMode(); it.show() }
     }
 
     // ====================================================================
