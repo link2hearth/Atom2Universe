@@ -48,11 +48,38 @@ class Bouton internal constructor(
     var declencheur: PhysBody? = null
         private set
 
+    /**
+     * Combien de secondes la bille doit rester dans la zone, ou zero si l'effleurer suffit.
+     *
+     * C'est le verbe « tenir » : on ne cherche plus a atteindre le bouton mais a **s'y
+     * arreter**, ce qui demande de freiner — une cuvette, un butoir — et pas seulement de
+     * descendre.
+     */
+    var duree = 0f
+        internal set
+
+    /** Depuis combien de temps la bille est dans la zone, d'une traite. Retombe a zero si elle sort. */
+    var tenue = 0f
+        internal set
+
+    /** Avancement de la tenue, de 0 a 1, pour le dessin. */
+    val progression: Float get() = if (duree > 0f) (tenue / duree).coerceIn(0f, 1f) else 0f
+
     /** 0 ou 1 : c'est l'etat `active` du dessin. */
     val enfoncement: Float get() = if (declenche) 1f else 0f
 
+    /**
+     * Le seul corps que le bouton accepte, ou `null` s'il les accepte tous.
+     *
+     * Dans un tableau a bille temoin, la bille de depart peut tomber dans la zone sans rien
+     * gagner : ce qui doit y arriver, c'est l'autre.
+     */
+    var exige: PhysBody? = null
+        internal set
+
     internal fun activer(par: PhysBody) {
         if (declenche) return
+        exige?.let { if (it !== par) return }
         declenche = true
         declencheur = par
     }
@@ -62,6 +89,23 @@ class Bouton internal constructor(
         declenche = false
         declencheur = null
     }
+}
+
+/**
+ * Un anneau : une zone de detection en plein air, par ou la bille doit passer.
+ *
+ * Il n'a **aucun corps solide** — on le traverse, sinon ce serait un obstacle et pas un
+ * passage. Plusieurs anneaux se franchissent **dans l'ordre** : le deuxieme ne compte pas
+ * tant que le premier n'a pas ete passe, ce qui fait d'un tableau un parcours et pas une
+ * simple cible.
+ */
+class Anneau internal constructor(
+    /** La zone de detection, ronde, pour que le cercle dessine soit exactement ce qui compte. */
+    val zone: PhysBody
+) {
+    /** Vrai une fois la bille passee, et il le reste. */
+    var franchi = false
+        internal set
 }
 
 /**
@@ -132,6 +176,38 @@ class Plateau(
         private set
     var bouton: Bouton? = null
         private set
+
+    /**
+     * La bille temoin : une seconde bille, dorée, posee par le tableau sur un perchoir.
+     *
+     * Elle est **a celle qui doit gagner** : le bouton ne reconnait qu'elle. La bille de
+     * depart ne sert alors qu'a la liberer — il faut la lui amener, la toucher, et ce
+     * qu'elle fait ensuite est le vrai probleme. C'est la machine en deux temps, sans qu'un
+     * joueur puisse la contourner en posant sa propre bille : dans ces tableaux la piece
+     * « bille » n'est pas proposee.
+     */
+    var temoin: PhysBody? = null
+        private set
+
+    /** Le pilier qui porte la bille temoin. Scelle, comme le socle du bouton. */
+    var perchoir: PhysBody? = null
+        private set
+
+    /** Les anneaux a franchir, dans l'ordre ou ils sont poses. */
+    val anneaux = ArrayList<Anneau>()
+
+    /** Les deux murets qui forment la cuvette du bouton, quand il faut y tenir. */
+    var cuvette: List<PhysBody> = emptyList()
+        private set
+
+    /** Ce qui est actuellement dans la zone du bouton, tenu a jour par les evenements. */
+    private val dansLeBouton = HashSet<PhysBody>()
+
+    /**
+     * Les corps que la chaine a atteints : touches par la bille de depart, ou par un corps
+     * mobile deja atteint. Voir [chaine].
+     */
+    private val atteints = HashSet<PhysBody>()
 
     init {
         monde.add(sol)
@@ -211,6 +287,7 @@ class Plateau(
         }
         monde.add(zone)
         val b = Bouton(zone)
+        b.exige = temoin
         bouton = b
         return b
     }
@@ -244,6 +321,89 @@ class Plateau(
         socle = pilier
         return pilier
     }
+
+    /**
+     * Pose la bille temoin sur un pilier dont le sommet est a [haut], et fait du bouton un
+     * bouton qui ne reconnait qu'elle. Le pilier est etroit : la moindre poussee la fait
+     * tomber, ce qui est voulu — le tableau demande de la liberer, pas de la deloger de
+     * force.
+     */
+    fun poserTemoin(x: Float, haut: Float, rayon: Float = 0.11f, masse: Float = 2f): PhysBody {
+        temoin?.let { monde.remove(it) }
+        perchoir?.let { monde.remove(it) }
+        val pilier = PhysBody(0.17f, haut / 2f, 0f).apply {
+            this.x = x
+            this.y = haut / 2f
+            lockPosition = true
+            lockRotation = true
+            friction = 0.5f
+            restitution = 0.02f
+            refreshMass()
+        }
+        monde.add(pilier)
+        perchoir = pilier
+        val b = PhysBody.circle(rayon, masse).apply {
+            this.x = x
+            this.y = haut + rayon + 0.005f
+            friction = 0.25f
+            restitution = 0.1f
+            category = MOBILE
+        }
+        monde.add(b)
+        temoin = b
+        bouton?.exige = b
+        return b
+    }
+
+    /**
+     * Pose un anneau centre en ([x], [y]). Il ne reconnait que la bille qui compte : la
+     * temoin quand il y en a une, sinon la bille de depart et celles du joueur. Un domino
+     * qui rouleraient dedans n'a rien « franchi ».
+     */
+    fun poserAnneau(x: Float, y: Float, rayon: Float = 0.4f): Anneau {
+        val zone = PhysBody.circle(rayon, 1f).apply {
+            this.x = x
+            this.y = y
+            lockPosition = true
+            lockRotation = true
+            isSensor = true
+            collidesWith = MOBILE
+            refreshMass()
+        }
+        monde.add(zone)
+        return Anneau(zone).also { anneaux.add(it) }
+    }
+
+    /**
+     * Ceinture le bouton de deux murets pour qu'on puisse s'y arreter.
+     *
+     * Ce sont de vrais corps scelles, pas du decor : une bille qui arrive trop vite doit
+     * pouvoir en rebondir, et c'est ce qui fait de « tenir » un probleme de freinage.
+     */
+    fun poserCuvette(x: Float, ecart: Float = 0.42f) {
+        for (c in cuvette) monde.remove(c)
+        cuvette = listOf(-1f, 1f).map { cote ->
+            PhysBody(0.1f, 0.2f, 0f).apply {
+                this.x = x + cote * ecart
+                this.y = 0.2f
+                lockPosition = true
+                lockRotation = true
+                friction = 0.55f
+                restitution = 0.05f
+                refreshMass()
+            }.also { monde.add(it) }
+        }
+    }
+
+    /** Vrai quand tous les anneaux sont franchis : le bouton ne compte qu'alors. */
+    val anneauxFranchis: Boolean get() = anneaux.all { it.franchi }
+
+    /** Vrai si la bille est en train de tenir dans la zone : la machine n'est pas arretee, elle attend. */
+    fun enTenue(): Boolean = bouton?.let { it.duree > 0f && !it.declenche && it.tenue > 0f } == true
+
+    private fun accepteAnneau(corps: PhysBody): Boolean =
+        if (temoin != null) corps === temoin
+        else corps === bille || (corps.owner as? Piece)?.type == TypePiece.BILLE
 
     /** Les jets d'air des ventilateurs posés. Refait à chaque image, il est court. */
     private val souffles = ArrayList<Souffle>()
@@ -283,13 +443,101 @@ class Plateau(
     fun avancer(dt: Float) {
         souffler()
         monde.stepFrame(dt)
-        val b = bouton ?: return
+        propager()
+        lireLesZones()
+        lireLeBouton(dt)
+    }
+
+    /**
+     * Les anneaux se franchissent **dans l'ordre** : un anneau n'est compte que si tous
+     * ceux d'avant le sont deja. Sans cette regle, le dernier anneau suffirait a lui seul
+     * et les autres ne seraient que du decor.
+     */
+    private fun lireLesZones() {
         for (e in monde.contactEvents) {
-            if (!e.begin || !e.sensor) continue
+            if (!e.sensor) continue
+            for ((i, a) in anneaux.withIndex()) {
+                if (!e.begin || a.franchi) continue
+                val entre = e.other(a.zone) ?: continue
+                if (accepteAnneau(entre) && (0 until i).all { anneaux[it].franchi }) a.franchi = true
+            }
+            val b = bouton ?: continue
             val entre = e.other(b.zone) ?: continue
-            b.activer(entre)
+            if (e.begin) {
+                dansLeBouton.add(entre)
+                // Un bouton qu'il suffit d'effleurer se decide a l'entree ; un bouton qu'il faut
+                // tenir se decide plus bas, image apres image.
+                if (b.duree == 0f && anneauxFranchis) b.activer(entre)
+            } else {
+                dansLeBouton.remove(entre)
+            }
         }
     }
+
+    /**
+     * Tenir : le compteur grimpe tant que la bille qui compte est dans la zone, et **retombe
+     * a zero** des qu'elle en sort. Une bille qui traverse a toute vitesse ne cumule rien.
+     */
+    private fun lireLeBouton(dt: Float) {
+        val b = bouton ?: return
+        if (b.duree <= 0f || b.declenche) return
+        val present = if (anneauxFranchis) dansLeBouton.firstOrNull { b.exige == null || it === b.exige } else null
+        if (present == null) {
+            b.tenue = 0f
+            return
+        }
+        b.tenue += dt
+        if (b.tenue >= b.duree) b.activer(present)
+    }
+
+    /**
+     * Fait avancer la chaine : un corps touche par la bille de depart, ou par un corps
+     * mobile deja touche, est atteint a son tour.
+     *
+     * **Seul ce qui bouge transmet.** Une rampe scellee est atteinte par la bille mais ne
+     * touche rien de plus : sans cette regle, la bille frolant une rampe qui en frole une
+     * autre ferait croire a une chaine la ou il n'y a que deux planches voisines. Un domino
+     * touche par un domino atteint, lui, est atteint — c'est exactement ce qu'on veut
+     * compter.
+     *
+     * On repasse sur les evenements de l'image tant que ca avance : deux contacts nes dans
+     * la meme image se lisent dans un ordre quelconque, et le second ne doit pas depender
+     * de ce hasard.
+     */
+    private fun propager() {
+        val depart = bille
+        val evenements = monde.contactEvents
+        var change = true
+        while (change) {
+            change = false
+            for (e in evenements) {
+                if (!e.begin || e.sensor) continue
+                val a = e.a ?: continue
+                val c = e.b ?: continue
+                if (transmet(a, depart) && atteints.add(c)) change = true
+                if (transmet(c, depart) && atteints.add(a)) change = true
+            }
+        }
+    }
+
+    private fun transmet(corps: PhysBody, depart: PhysBody?): Boolean =
+        !corps.immovable && (corps === depart || corps in atteints)
+
+    /**
+     * Combien de pieces posees la chaine a atteintes, torches exceptees.
+     *
+     * C'est la **note du tableau** : une piece posee mais jamais touchee n'a rien fait, et
+     * ce jeu recompense la machine dont chaque piece sert, pas celle qui en a le moins.
+     */
+    fun chaine(): Int = pieces.count { it.type != TypePiece.TORCHE && estAtteinte(it) }
+
+    /** Combien de pieces posees comptent pour la note : toutes sauf les torches. */
+    fun comptees(): Int = pieces.count { it.type != TypePiece.TORCHE }
+
+    private fun estAtteinte(p: Piece): Boolean = p.corps.any { it in atteints }
+
+    /** Vrai si cette piece a ete atteinte par la chaine : le dessin la fait briller. */
+    fun atteinte(p: Piece): Boolean = estAtteinte(p)
 
     /**
      * Vrai quand plus rien ne bouge assez pour que la suite change quoi que ce soit.
@@ -301,7 +549,9 @@ class Plateau(
 
     /** Vrai quand la bille est sortie du tableau — une machine ratée, pas une machine lente. */
     fun billePerdue(): Boolean {
-        val b = bille ?: return true
+        // Dans un tableau a temoin, c'est elle qu'on ne doit pas perdre : la bille de depart,
+        // elle, a le droit de sortir une fois son travail fait.
+        val b = temoin ?: bille ?: return true
         return b.x < -largeur / 2f - 0.5f || b.x > largeur / 2f + 0.5f || b.y < -1f || b.y > hauteur + 3f
     }
 

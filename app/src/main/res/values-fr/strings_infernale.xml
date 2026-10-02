@@ -18,7 +18,9 @@
     <string name="infernale_launch">Lancer</string>
     <string name="infernale_replay">Rejouer</string>
     <string name="infernale_clear">Tout enlever</string>
-    <string name="infernale_won">Le portail s\'ouvre !  %1$s   %2$d pièces</string>
+    <string name="infernale_won">Le portail s\'ouvre !  %1$s   chaîne %2$d / %3$d</string>
+    <string name="infernale_timer">%1$.1f s</string>
+    <string name="infernale_timeout">Temps écoulé. Réessayez plus vite.</string>
     <string name="infernale_failed">La machine s\'est arrêtée. Corrigez et réessayez.</string>
     <string name="infernale_board">Tableau %1$d</string>
     <string name="infernale_hint">Un doigt pour se déplacer, deux pour zoomer. Choisissez une pièce, touchez le tableau pour la poser.</string>
@@ -33,7 +35,7 @@
     <string name="infernale_piece_fan">Ventilateur</string>
     <string name="infernale_piece_drum">Tambour</string>
     <string name="infernale_piece_pulley">Poulie</string>
-    <string name="infernale_placed">Posées : %1$d  ·  par %2$d</string>
+    <string name="infernale_placed">Posées : %1$d</string>
     <string name="infernale_role_ramp">Planche inclinée, scellée. Elle guide la bille qui tombe dessus.</string>
     <string name="infernale_role_plot">Plot rebondissant, scellé. La bille repart de biais.</string>
     <string name="infernale_role_block">Mur scellé. Il barre le passage, ou il renvoie.</string>

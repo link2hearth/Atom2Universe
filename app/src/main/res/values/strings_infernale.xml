@@ -18,7 +18,9 @@
     <string name="infernale_launch">Launch</string>
     <string name="infernale_replay">Replay</string>
     <string name="infernale_clear">Clear</string>
-    <string name="infernale_won">The portal opens!  %1$s   %2$d pieces</string>
+    <string name="infernale_won">The portal opens!  %1$s   chain %2$d / %3$d</string>
+    <string name="infernale_timer">%1$.1f s</string>
+    <string name="infernale_timeout">Time\'s up. Try again, faster.</string>
     <string name="infernale_failed">The machine stopped. Adjust and try again.</string>
     <string name="infernale_board">Board %1$d</string>
     <string name="infernale_hint">Drag with one finger to move around, two to zoom. Pick a piece, tap the board to place it.</string>
@@ -33,7 +35,7 @@
     <string name="infernale_piece_fan">Fan</string>
     <string name="infernale_piece_drum">Drum</string>
     <string name="infernale_piece_pulley">Pulley</string>
-    <string name="infernale_placed">Placed: %1$d  ·  par %2$d</string>
+    <string name="infernale_placed">Placed: %1$d</string>
     <string name="infernale_role_ramp">Fixed sloped plank. It guides the ball where it falls.</string>
     <string name="infernale_role_plot">Fixed bouncy peg. The ball leaves at an angle.</string>
     <string name="infernale_role_block">Fixed wall. It blocks, or sends back.</string>

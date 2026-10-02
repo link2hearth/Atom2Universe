@@ -6,6 +6,7 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.RadialGradient
 import android.graphics.Path
+import android.graphics.RectF
 import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -210,6 +211,10 @@ class InfernaleView @JvmOverloads constructor(
     }
     private val billeP = Paint().apply { color = 0xFFD8DEEC.toInt(); isAntiAlias = true }
     private val billeReflet = Paint().apply { color = 0xFFFFFFFF.toInt(); isAntiAlias = true }
+
+    /** La bille temoin : de l'or, pour qu'on la distingue de celle du depart au premier regard. */
+    private val billeOr = Paint().apply { color = 0xFFF2C14E.toInt(); isAntiAlias = true }
+    private val billeOrReflet = Paint().apply { color = 0xFFFFF1B8.toInt(); isAntiAlias = true }
     private val billeOmbre = Paint().apply { color = 0x66000000; isAntiAlias = true }
     private val traineeP = Paint().apply {
         color = 0x5588C8FF.toInt(); strokeWidth = 3f; isAntiAlias = true
@@ -239,6 +244,21 @@ class InfernaleView @JvmOverloads constructor(
     // deduite de la signature au lieu d'etre lue dans la documentation, et la vue
     // plantait des la premiere image.
     private val centre = FloatArray(3)
+
+    /** Le modele du compte a rebours, avec un `%1$.1f` : le texte vient de l'activite, traduit. */
+    var formatChrono: String = "%1\$.1f"
+
+    private val anneauTrait = Paint().apply {
+        style = Paint.Style.STROKE; isAntiAlias = true
+    }
+    private val tenueTrait = Paint().apply {
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; isAntiAlias = true
+        color = 0xFF7DF0B0.toInt()
+    }
+    private val chronoTexte = Paint().apply {
+        isAntiAlias = true; textAlign = Paint.Align.CENTER; typeface = android.graphics.Typeface.DEFAULT_BOLD
+    }
+    private val arc = RectF()
     private val ancre = FloatArray(3)
     private val trace = Path()
     private val segments = FloatArray(4 * 64)
@@ -533,19 +553,25 @@ class InfernaleView @JvmOverloads constructor(
         peindreParois(c, p)
         peindreSol(c)
         p.plateau.socle?.let { boite(c, it, 0, pierre, pierreClaire) }
+        p.plateau.perchoir?.let { boite(c, it, 0, pierre, pierreClaire) }
+        for (muret in p.plateau.cuvette) boite(c, muret, 0, pierre, pierreClaire)
         peindrePortail(c, p)
+        peindreAnneaux(c, p)
 
         for (piece in p.plateau.pieces) peindrePiece(c, piece)
         for (piece in p.plateau.pieces) piece.souffle?.let { peindreVent(c, it) }
 
         peindreTrainee(c)
         p.plateau.bille?.let { peindreBille(c, it) }
+        p.plateau.temoin?.let { peindreBille(c, it, billeOr, billeOrReflet) }
 
         // La piece designee, en dernier : elle doit se voir par-dessus ses voisines.
         if (selection >= 0) {
             p.plateau.pieces.getOrNull(selection)?.let { encadrer(c, it) }
             p.placees().getOrNull(selection)?.let { peindrePoignees(c, it) }
         }
+
+        peindreChrono(c, p)
 
         apercuPiece?.let { fantome ->
             val teinte = if (apercuRefus == Refus.OK) apercuOk else apercuNon
@@ -651,6 +677,18 @@ class InfernaleView @JvmOverloads constructor(
             cx + demiL * 0.09f, crane + demiL * 0.3f, ivoireOmbre
         )
 
+        // Tenir : un anneau de jauge autour de la zone, qui se remplit tant que la bille y reste
+        // et retombe quand elle en sort.
+        if (b.duree > 0f && !b.declenche) {
+            val rj = demiH * 2.1f
+            arc.set(cx - rj, cy - rj, cx + rj, cy + rj)
+            tenueTrait.strokeWidth = echelle * 0.06f
+            tenueTrait.alpha = 70
+            c.drawArc(arc, 0f, 360f, false, tenueTrait)
+            tenueTrait.alpha = 255
+            if (b.progression > 0f) c.drawArc(arc, -90f, 360f * b.progression, false, tenueTrait)
+        }
+
         // La zone sensible elle-meme, discrete mais visible : le joueur doit savoir ou
         // viser, et une porte fermee ne le dit pas.
         if (ouverture < 1f) {
@@ -663,6 +701,59 @@ class InfernaleView @JvmOverloads constructor(
                 c.drawCircle(cx + cos(a) * r, cy - hauteur * 0.35f + sin(a) * r * 0.6f, echelle * 0.05f, or)
             }
         }
+    }
+
+    /**
+     * Les anneaux : un cercle lumineux en plein air. Le **prochain a passer** pulse et brille,
+     * ceux d'apres restent ternes, ceux deja franchis passent a l'or fixe — l'ordre se lit
+     * sans un mot.
+     */
+    private fun peindreAnneaux(c: Canvas, p: Partie) {
+        val anneaux = p.plateau.anneaux
+        if (anneaux.isEmpty()) return
+        val prochain = anneaux.indexOfFirst { !it.franchi }
+        for ((i, a) in anneaux.withIndex()) {
+            val z = a.zone
+            val r = z.parts[0].radius * echelle
+            val cx = ex(z.x)
+            val cy = ey(z.y)
+            val epaisseur = echelle * 0.07f
+            when {
+                a.franchi -> {
+                    anneauTrait.color = 0xFFFFC65A.toInt()
+                    anneauTrait.alpha = 150
+                }
+                i == prochain -> {
+                    anneauTrait.color = 0xFF6FE3FF.toInt()
+                    anneauTrait.alpha = (170 + 70 * sin(horloge * 4f)).toInt().coerceIn(90, 255)
+                    orPale.alpha = 40
+                    c.drawCircle(cx, cy, r * 1.15f, halo)
+                }
+                else -> {
+                    anneauTrait.color = 0xFF6FE3FF.toInt()
+                    anneauTrait.alpha = 70
+                }
+            }
+            anneauTrait.strokeWidth = epaisseur
+            c.drawCircle(cx, cy, r, anneauTrait)
+            if (a.franchi) {
+                anneauTrait.strokeWidth = epaisseur * 0.5f
+                anneauTrait.alpha = 90
+                c.drawCircle(cx, cy, r * 0.82f, anneauTrait)
+            }
+        }
+    }
+
+    /** Le compte a rebours, en haut, en gros : seule chose que le joueur doit regarder en jouant. */
+    private fun peindreChrono(c: Canvas, p: Partie) {
+        val reste = p.tempsRestant ?: return
+        chronoTexte.textSize = height * 0.075f
+        chronoTexte.color = when {
+            reste <= 0f -> 0xFFFF6A5A.toInt()
+            reste < 2f && p.lancee -> 0xFFFFA24A.toInt()
+            else -> 0xCCE8ECF8.toInt()
+        }
+        c.drawText(String.format(formatChrono, reste), width / 2f, height * 0.11f, chronoTexte)
     }
 
     private fun peindrePiece(c: Canvas, piece: Piece) {
@@ -968,7 +1059,12 @@ class InfernaleView @JvmOverloads constructor(
         }
     }
 
-    private fun peindreBille(c: Canvas, b: PhysBody) {
+    private fun peindreBille(
+        c: Canvas,
+        b: PhysBody,
+        corps: Paint = billeP,
+        reflet: Paint = billeReflet
+    ) {
         b.partWorld(0, centre)
         val r = b.parts[0].radius * echelle
         val x = ex(centre[0])
@@ -978,8 +1074,8 @@ class InfernaleView @JvmOverloads constructor(
         val h = (centre[1] / 2.5f).coerceIn(0f, 1f)
         billeOmbre.alpha = (70 * (1f - h)).toInt().coerceIn(0, 90)
         c.drawOval(x - r * (1f + h), ey(0f) - r * 0.2f, x + r * (1f + h), ey(0f) + r * 0.3f, billeOmbre)
-        c.drawCircle(x, y, r, billeP)
-        c.drawCircle(x - r * 0.3f, y - r * 0.32f, r * 0.32f, billeReflet)
+        c.drawCircle(x, y, r, corps)
+        c.drawCircle(x - r * 0.3f, y - r * 0.32f, r * 0.32f, reflet)
         c.drawCircle(x, y, r, contour)
     }
 

@@ -54,6 +54,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         niveau = prefs.getInt(CLE_NIVEAU, 1)
 
         vue = findViewById(R.id.infernale_view)
+        vue.formatChrono = getString(R.string.infernale_timer)
         etat = findViewById(R.id.infernale_status)
         titre = findViewById(R.id.infernale_board)
         reserve = findViewById(R.id.infernale_stock)
@@ -156,16 +157,11 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         if (gagneAnnonce) return
         gagneAnnonce = true
 
-        // **Le bareme porte sur la machine, pas sur la patience.** Le joueur a toutes les
-        // pieces et peut relancer autant qu'il veut ; compter les essais reviendrait a
-        // punir le seul geste qui fait ce jeu, qui est d'essayer en regardant. Ce qu'on
-        // note, c'est l'economie : faire tenir la chaine en moins de pieces que le « par ».
-        val par = partie.tableau.par
-        val etoiles = when {
-            partie.posees <= par -> 3
-            partie.posees <= par + 3 -> 2
-            else -> 1
-        }
+        // **Le bareme porte sur la machine, pas sur la patience, ni sur l'economie.** Le
+        // joueur a toutes les pieces et peut relancer autant qu'il veut. Ce qu'on note, c'est
+        // la chaine : combien des pieces posees ont vraiment servi. Trois etoiles, c'est une
+        // machine ou rien n'est la pour faire joli.
+        val etoiles = partie.etoiles
         val avant = prefs.getInt(CLE_ETOILES + niveau, 0)
         if (etoiles > avant) {
             prefs.edit { putInt(CLE_ETOILES + niveau, etoiles) }
@@ -179,6 +175,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         etat.text = getString(
             R.string.infernale_won,
             "★".repeat(etoiles) + "☆".repeat(3 - etoiles),
+            partie.chaine,
             partie.posees
         )
         majCommandes()
@@ -188,7 +185,9 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         val partie = vue.partieCourante() ?: return
         if (partie.gagne) return
         etat.setTextColor(0xFFE0A055.toInt())
-        etat.text = getString(R.string.infernale_failed)
+        etat.text = getString(
+            if (partie.tempsEcoule) R.string.infernale_timeout else R.string.infernale_failed
+        )
         majCommandes()
     }
 
@@ -211,7 +210,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
                     R.string.infernale_piece_named, getString(nom(type)), getString(role(type))
                 )
                 partie.posees == 0 -> getString(R.string.infernale_hint)
-                else -> getString(R.string.infernale_placed, partie.posees, partie.tableau.par)
+                else -> getString(R.string.infernale_placed, partie.posees)
             }
         }
         majReglage()
@@ -321,7 +320,12 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private fun construireReserve(partie: Partie) {
         reserve.removeAllViews()
         if (partie.lancee) return
-        for (type in TypePiece.entries) reserve.addView(caseReserve(type))
+        for (type in TypePiece.entries) {
+            // Un tableau a bille temoin ne propose pas de bille : on n'y contourne pas la
+            // bille de depart, et une case qui ne ferait rien serait un piege.
+            if (type == TypePiece.BILLE && partie.tableau.avecTemoin) continue
+            reserve.addView(caseReserve(type))
+        }
     }
 
     private fun caseReserve(type: TypePiece): View =

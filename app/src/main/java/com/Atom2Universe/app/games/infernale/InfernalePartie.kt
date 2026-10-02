@@ -13,7 +13,44 @@ enum class Refus {
     OCCUPE,
 
     /** On ne pose plus rien une fois la machine lancee. */
-    DEJA_LANCEE
+    DEJA_LANCEE,
+
+    /**
+     * Cette piece n'existe pas dans ce tableau.
+     *
+     * La bille posee y est retiree : avec une bille a soi, on contournerait la bille de
+     * depart, et le tableau perdrait sa seule question.
+     */
+    INTERDIT
+}
+
+/**
+ * Ce que vaut une machine : sa **chaine**, c'est-a-dire combien de pieces posees ont
+ * vraiment servi.
+ *
+ * Elle remplace le « par » — le nombre de pieces qu'on attendait — qui recompensait la
+ * machine la plus avare. Une machine infernale se juge a l'inverse : plus il se passe de
+ * choses, mieux c'est, a condition que rien ne soit la pour faire joli.
+ */
+object Notation {
+
+    /** Taille de chaine a partir de laquelle on parle d'une vraie machine. */
+    const val CHAINE_BELLE = 5
+
+    /** Taille de chaine a partir de laquelle la machine fait mieux qu'un toboggan. */
+    const val CHAINE_HONNETE = 3
+
+    /**
+     * 0 tant que le portail est ferme. Une etoile pour l'ouvrir ; deux si la chaine
+     * compte au moins [CHAINE_HONNETE] pieces ; trois si elle en compte [CHAINE_BELLE] et
+     * qu'**aucune** piece posee n'est restee en dehors.
+     */
+    fun etoiles(gagne: Boolean, atteintes: Int, comptees: Int): Int = when {
+        !gagne -> 0
+        atteintes >= CHAINE_BELLE && atteintes >= comptees -> 3
+        atteintes >= CHAINE_HONNETE -> 2
+        else -> 1
+    }
 }
 
 /**
@@ -51,6 +88,12 @@ class Partie(val tableau: Tableau) {
 
     val gagne: Boolean get() = plateau.gagne
 
+    /** Les pieces posees que la chaine a atteintes. Voir [Plateau.chaine]. */
+    val chaine: Int get() = plateau.chaine()
+
+    /** Les etoiles que vaut la machine telle qu'elle est. */
+    val etoiles: Int get() = Notation.etoiles(gagne, chaine, plateau.comptees())
+
     /**
      * Vrai quand la machine s'est arretee sans gagner : c'est un echec, pas une attente.
      *
@@ -60,18 +103,25 @@ class Partie(val tableau: Tableau) {
      * l'apprendre.
      */
     val echoue: Boolean
-        get() = lancee && !gagne && chrono > 1.2f && (plateau.billePerdue() || plateau.immobile())
+        get() = lancee && !gagne && (tempsEcoule ||
+            (chrono > 1.2f && (plateau.billePerdue() || plateau.immobile()) && !plateau.enTenue()))
+
+    /**
+     * Vrai quand le temps accorde est passe. Une machine encore en train de rouler a perdu :
+     * c'est le seul echec qui n'attend pas que tout se soit arrete.
+     */
+    val tempsEcoule: Boolean get() = lancee && !gagne && tableau.limite > 0f && chrono >= tableau.limite
+
+    /** Temps qu'il reste a la machine pour ouvrir le portail, ou `null` s'il n'y a pas de limite. */
+    val tempsRestant: Float?
+        get() = if (tableau.limite > 0f) (tableau.limite - chrono).coerceAtLeast(0f) else null
 
     /** Les poses du joueur, dans l'ordre. */
     fun placees(): List<Pose> = placements.toList()
 
     /**
-     * Nombre de pieces posees.
-     *
-     * C'est devenu la note du tableau. Le joueur a toute la panoplie a chaque fois, donc
-     * finir n'est plus la question — **finir avec peu** l'est. Les etoiles se comptent
-     * la-dessus et plus sur le nombre d'essais : recommencer ne doit rien couter, sinon on
-     * decourage precisement le geste qui fait ce jeu, qui est de reessayer en regardant.
+     * Nombre de pieces posees, pour l'affichage. La note, elle, se lit sur [chaine] : ce
+     * qui compte n'est pas combien on en a posees mais combien ont servi.
      */
     val posees: Int get() = placements.size
 
@@ -86,6 +136,7 @@ class Partie(val tableau: Tableau) {
      */
     fun verifier(pose: Pose, sauf: Int = -1): Refus {
         if (lancee) return Refus.DEJA_LANCEE
+        if (pose.type == TypePiece.BILLE && tableau.avecTemoin) return Refus.INTERDIT
         val essai = pose.creer()
         if (!Placement.dansLeCadre(essai, tableau.cadreMinX, tableau.cadreMaxX, tableau.cadreMaxY)) {
             return Refus.HORS_TABLEAU
@@ -161,7 +212,10 @@ class Partie(val tableau: Tableau) {
     fun avancer(dt: Float) {
         if (!lancee) return
         plateau.avancer(dt)
-        chrono += dt
+        // Le temps s'arrete a la victoire : le portail qui s'ouvre se regarde pendant que la
+        // physique continue, et un compte a rebours qui descendrait a zero sur une machine
+        // gagnee ferait croire qu'on a perdu.
+        if (!gagne) chrono += dt
     }
 
     /**
@@ -200,6 +254,9 @@ class Partie(val tableau: Tableau) {
             out.addAll(corps[i].corps)
         }
         plateau.bille?.let { out.add(it) }
+        plateau.temoin?.let { out.add(it) }
+        plateau.perchoir?.let { out.add(it) }
+        out.addAll(plateau.cuvette)
         for (c in out) c.updateAabb()
         return out
     }
