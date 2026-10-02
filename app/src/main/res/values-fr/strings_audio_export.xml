@@ -13,6 +13,10 @@
     <string name="ae_fmt_ogg">Ogg Vorbis</string>
     <string name="ae_export_bitrate">Débit</string>
     <string name="ae_unit_kbps">%1$d kb/s</string>
+    <string name="ae_unit_kbps_avg">≈ %1$d kb/s</string>
+    <string name="ae_export_bitrate_mode">Mode du débit</string>
+    <string name="ae_export_cbr">Constant</string>
+    <string name="ae_export_vbr">Variable</string>
     <string name="ae_export_range">Plage</string>
     <string name="ae_export_whole">Tout le projet</string>
     <string name="ae_export_selection">Sélection</string>

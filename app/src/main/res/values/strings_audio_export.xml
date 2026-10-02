@@ -13,6 +13,10 @@
     <string name="ae_fmt_ogg">Ogg Vorbis</string>
     <string name="ae_export_bitrate">Bitrate</string>
     <string name="ae_unit_kbps">%1$d kb/s</string>
+    <string name="ae_unit_kbps_avg">≈ %1$d kb/s</string>
+    <string name="ae_export_bitrate_mode">Bitrate mode</string>
+    <string name="ae_export_cbr">Constant</string>
+    <string name="ae_export_vbr">Variable</string>
     <string name="ae_export_range">Range</string>
     <string name="ae_export_whole">Whole project</string>
     <string name="ae_export_selection">Selection</string>

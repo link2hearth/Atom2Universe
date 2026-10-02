@@ -223,6 +223,12 @@ fun Project.pasteAt(cb: Clipboard, trackIds: Collection<Int>, at: Long, ripple: 
     return p.copy(nextId = next)
 }
 
+/** Supprime le vide avant le premier clip : tout remonte d'autant, les pistes restent alignées entre elles. */
+fun Project.removeLeadingGap(): Project {
+    val s = start
+    return if (s <= 0) this else deleteRange(tracks.map { it.id }, 0, s, ripple = true)
+}
+
 /** Garde seulement [[from], [to]) et recale le début du projet sur 0 (« Rogner »). */
 fun Project.trimToRange(from: Long, to: Long): Project {
     if (to <= from) return this

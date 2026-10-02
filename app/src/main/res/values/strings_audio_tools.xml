@@ -8,6 +8,7 @@
     <string name="ae_display_spectro">Spectrogram</string>
     <string name="ae_mixdown">Mix the tracks into one</string>
     <string name="ae_mixdown_name">Mix</string>
+    <string name="ae_remove_lead_gap">Remove the empty space at the start</string>
     <string name="ae_mixdown_progress_title">Mixing</string>
     <string name="ae_menu_analyze">Analyze…</string>
     <string name="ae_an_title">Analysis</string>

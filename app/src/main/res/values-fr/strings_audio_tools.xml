@@ -7,6 +7,7 @@
     <string name="ae_display_wave">Forme d\'onde</string>
     <string name="ae_display_spectro">Spectrogramme</string>
     <string name="ae_mixdown">Mixer les pistes en une</string>
+    <string name="ae_remove_lead_gap">Supprimer le vide au début</string>
     <string name="ae_mixdown_name">Mixage</string>
     <string name="ae_mixdown_progress_title">Mixage en cours</string>
     <string name="ae_menu_analyze">Analyser…</string>

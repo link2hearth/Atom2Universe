@@ -231,6 +231,25 @@ class AudioExporterTest {
     }
 
     @Test
+    fun `le debit variable passe par la qualite et jamais par -b a`() {
+        val i = File(dir, "in.wav").absoluteFile
+        val o = File(dir, "o.bin").absoluteFile
+        fun vbr(f: ExportFormat, br: Int) = FfmpegArgs.build(i, o, ExportOptions(f, br, vbr = true), 44100)
+
+        val mp3 = vbr(ExportFormat.MP3, 128)
+        assertEquals(listOf("-y", "-i", i.path, "-vn", "-q:a", "5", "-id3v2_version", "3", o.path), mp3)
+        assertEquals(listOf("-c:a", "libvorbis", "-q:a", "6"), vbr(ExportFormat.OGG, 192).subList(4, 8))
+        assertFalse("-b:a" in vbr(ExportFormat.OGG, 192))
+        // L'AAC n'a pas de mode variable : l'option est ignorée.
+        assertTrue("-b:a" in vbr(ExportFormat.AAC, 128))
+        // Les crans du curseur donnent des qualités qui montent avec le débit (0 = meilleure pour LAME).
+        val q = listOf(64, 96, 128, 160, 192, 224, 256, 320).map { FfmpegArgs.mp3VbrQuality(it) }
+        assertEquals(q.sortedDescending(), q)
+        val v = listOf(64, 96, 128, 160, 192, 224, 256, 320).map { FfmpegArgs.vorbisQuality(it) }
+        assertEquals(v.sorted(), v)
+    }
+
+    @Test
     fun `les metadonnees passent en arguments separes sans echappement`() {
         val tags = ExportTags(title = "L'été \"chaud\" \$HOME `ls`; rm -rf /\nligne 2", artist = "  ", album = "Alb", year = "")
         val a = FfmpegArgs.build(File(dir, "i.wav").absoluteFile, File(dir, "o.mp3").absoluteFile, ExportOptions(ExportFormat.MP3, tags = tags), 44100)

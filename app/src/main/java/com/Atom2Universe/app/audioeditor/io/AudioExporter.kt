@@ -14,6 +14,9 @@ enum class ExportFormat(val extension: String) {
     WAV16("wav"), WAV24("wav"), WAV32F("wav"), MP3("mp3"), AAC("m4a"), FLAC("flac"), OGG("ogg");
 
     val lossy get() = this == MP3 || this == AAC || this == OGG
+
+    /** Le débit variable n'existe que pour ces deux encodeurs (l'AAC de FFmpeg n'a pas de mode variable fiable). */
+    val hasVbr get() = this == MP3 || this == OGG
 }
 
 class ExportTags(val title: String = "", val artist: String = "", val album: String = "", val year: String = "") {
@@ -24,6 +27,7 @@ class ExportTags(val title: String = "", val artist: String = "", val album: Str
  * @param to fin de la plage en trames ; −1 = jusqu'à la fin du projet
  * @param sampleRate fréquence de sortie ; 0 = celle du projet
  * @param mono mélange les deux voies en une
+ * @param vbr débit variable (MP3, Ogg) : [bitrateKbps] devient le débit moyen visé, pas un débit imposé
  */
 class ExportOptions(
     val format: ExportFormat,
@@ -33,6 +37,7 @@ class ExportOptions(
     val tags: ExportTags = ExportTags(),
     val sampleRate: Int = 0,
     val mono: Boolean = false,
+    val vbr: Boolean = false,
 )
 
 /** [peak] : crête du mixage avant écrêtage ; au-dessus de 1, un format entier ou un encodeur a coupé le signal. */
@@ -101,6 +106,32 @@ object OfflineMix {
 /** Construit la ligne de commande FFmpeg d'un export. Fonction pure : on la teste sans FFmpeg. */
 object FfmpegArgs {
 
+    /** Qualité VBR de LAME (0 = la meilleure, 9 = la plus légère) dont le débit moyen approche [kbps]. */
+    fun mp3VbrQuality(kbps: Int): Int = when {
+        kbps >= 240 -> 0
+        kbps >= 210 -> 1
+        kbps >= 180 -> 2
+        kbps >= 170 -> 3
+        kbps >= 145 -> 4
+        kbps >= 115 -> 5
+        kbps >= 105 -> 6
+        kbps >= 90 -> 7
+        kbps >= 75 -> 8
+        else -> 9
+    }
+
+    /** Qualité VBR de Vorbis (0 … 9) dont le débit moyen approche [kbps]. */
+    fun vorbisQuality(kbps: Int): Int = when {
+        kbps < 80 -> 0
+        kbps < 112 -> 2
+        kbps < 144 -> 4
+        kbps < 176 -> 5
+        kbps < 208 -> 6
+        kbps < 240 -> 7
+        kbps < 288 -> 8
+        else -> 9
+    }
+
     /** [input] : le WAV flottant mixé ; [output] : le fichier final. Les deux doivent être des chemins absolus. */
     fun build(input: File, output: File, o: ExportOptions, projectRate: Int): List<String> {
         require(input.isAbsolute && output.isAbsolute) { "chemins absolus requis" }
@@ -112,10 +143,13 @@ object FfmpegArgs {
             ExportFormat.WAV16 -> a += listOf("-c:a", "pcm_s16le")
             ExportFormat.WAV24 -> a += listOf("-c:a", "pcm_s24le")
             ExportFormat.WAV32F -> a += listOf("-c:a", "pcm_f32le")
-            ExportFormat.MP3 -> a += listOf("-b:a", br, "-id3v2_version", "3")
+            ExportFormat.MP3 -> {
+                a += if (o.vbr) listOf("-q:a", mp3VbrQuality(o.bitrateKbps).toString()) else listOf("-b:a", br)
+                a += listOf("-id3v2_version", "3")
+            }
             ExportFormat.AAC -> a += listOf("-c:a", "aac", "-b:a", br)
             ExportFormat.FLAC -> a += listOf("-compression_level", "8")
-            ExportFormat.OGG -> a += listOf("-c:a", "libvorbis", "-b:a", br)
+            ExportFormat.OGG -> a += listOf("-c:a", "libvorbis") + if (o.vbr) listOf("-q:a", vorbisQuality(o.bitrateKbps).toString()) else listOf("-b:a", br)
         }
         if (o.sampleRate > 0 && o.sampleRate != projectRate) a += listOf("-ar", o.sampleRate.toString())
         // Les métadonnées passent en arguments séparés : aucun échappement à maintenir.

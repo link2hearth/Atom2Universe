@@ -43,6 +43,7 @@ import com.Atom2Universe.app.audioeditor.core.moveTrack
 import com.Atom2Universe.app.audioeditor.core.removeTrack
 import com.Atom2Universe.app.audioeditor.core.silenceRange
 import com.Atom2Universe.app.audioeditor.core.splitAt
+import com.Atom2Universe.app.audioeditor.core.removeLeadingGap
 import com.Atom2Universe.app.audioeditor.core.trimToRange
 import com.Atom2Universe.app.audioeditor.engine.AndroidAudioSink
 import com.Atom2Universe.app.audioeditor.engine.LoopRange
@@ -478,6 +479,11 @@ class EditorViewModel(app: Application) : AndroidViewModel(app) {
             ui.selEnd = ui.selEnd - a
             touch()
         }
+    }
+
+    fun removeLeadingGap() {
+        if (project.start <= 0) return
+        edit("lead_gap") { it.removeLeadingGap() }
     }
 
     fun silenceSelection() {

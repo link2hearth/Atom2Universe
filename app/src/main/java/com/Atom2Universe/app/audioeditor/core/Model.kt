@@ -186,6 +186,9 @@ data class Project(
     /** Fin du dernier clip : la durée du projet. */
     val length: Long get() = tracks.maxOfOrNull { it.end } ?: 0L
 
+    /** Début du premier clip : tout ce qui précède est du vide (un bord gauche rogné ou un clip glissé en laisse). */
+    val start: Long get() = tracks.flatMap { it.clips }.minOfOrNull { it.start } ?: 0L
+
     fun track(id: Int): Track? = tracks.firstOrNull { it.id == id }
 
     fun indexOfTrack(id: Int): Int = tracks.indexOfFirst { it.id == id }

@@ -18,6 +18,7 @@ import com.Atom2Universe.app.audioeditor.core.moveTrack
 import com.Atom2Universe.app.audioeditor.core.insertSilence
 import com.Atom2Universe.app.audioeditor.core.moveClip
 import com.Atom2Universe.app.audioeditor.core.pasteAt
+import com.Atom2Universe.app.audioeditor.core.removeLeadingGap
 import com.Atom2Universe.app.audioeditor.core.repeatRange
 import com.Atom2Universe.app.audioeditor.core.replaceRange
 import com.Atom2Universe.app.audioeditor.core.reverseRange
@@ -161,6 +162,18 @@ class TimelineTest {
         val q = p.trimClipLeft(c, 250)
         val x = q.clipsOf(t).single()
         assertEquals(250L, x.start); assertEquals(750L, x.length); assertEquals(250L, x.srcStart)
+    }
+
+    @Test
+    fun `rogner a gauche laisse un vide que supprimer le vide du debut reprend`() {
+        val (p, t, c) = base()
+        val cut = p.trimClipLeft(c, 250)
+        assertEquals(250L, cut.start)
+        val q = cut.removeLeadingGap()
+        val x = q.clipsOf(t).single()
+        assertEquals(0L, q.start); assertEquals(0L, x.start); assertEquals(750L, x.length); assertEquals(250L, x.srcStart)
+        // Sans vide, rien ne change.
+        assertEquals(p, p.removeLeadingGap())
     }
 
     @Test

@@ -359,6 +359,7 @@ class AudioEditorActivity : AppCompatActivity() {
         if (vm.targetTracks().count { id -> vm.project.track(id)?.clips?.isNotEmpty() == true } >= 2) {
             items += SheetItem(R.drawable.ic_px_merge_down, getString(R.string.ae_mixdown)) { vm.mixDown(getString(R.string.ae_mixdown_name)) }
         }
+        if (vm.project.start > 0) items += SheetItem(R.drawable.ic_ae_trim, getString(R.string.ae_remove_lead_gap)) { vm.removeLeadingGap() }
         items += SheetItem(R.drawable.ic_ae_record, getString(R.string.ae_overdub), checked = vm.ui.overdub) { vm.ui.overdub = !vm.ui.overdub }
         if (vm.ui.hasSelection) {
             items += SheetItem(R.drawable.ic_ae_loop, getString(R.string.ae_repeat_selection)) {
