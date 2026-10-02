@@ -186,10 +186,10 @@ class PixelArtStoreTest {
     @Test
     fun manifesteAbimeNeCasseNiLaListeNiLeChargement() {
         val p = store.create("ok", 4, 4)
-        val bad = File(dir, "cassé").apply { mkdirs() }
+        val bad = File(dir, "casse").apply { mkdirs() }
         File(bad, "manifest.json").writeText("{pas du json")
         assertEquals(1, store.list().size)
-        assertNull(store.load("cassé"))
+        assertNull(store.load("casse"))
         assertNotNull(store.load(p.meta.id))
     }
 
