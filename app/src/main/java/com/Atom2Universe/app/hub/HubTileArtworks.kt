@@ -115,7 +115,7 @@ object HubTileArtworks {
             com.Atom2Universe.app.audio.MidiHubTileDrawable::class,
         com.Atom2Universe.app.radio.RadioActivity::class.java.name to
             com.Atom2Universe.app.audio.RadioHubTileDrawable::class,
-        com.Atom2Universe.app.audioeditor.AudioEditorActivity::class.java.name to
+        com.Atom2Universe.app.audioeditor.AudioEditorLibraryActivity::class.java.name to
             com.Atom2Universe.app.audio.AudioEditorHubTileDrawable::class,
         com.Atom2Universe.app.sf2creator.Sf2CreatorActivity::class.java.name to
             com.Atom2Universe.app.audio.Sf2CreatorHubTileDrawable::class,

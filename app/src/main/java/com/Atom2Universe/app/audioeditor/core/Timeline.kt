@@ -23,6 +23,12 @@ private fun Project.coversAllTracks(ids: Set<Int>): Boolean = tracks.isNotEmpty(
 
 fun Project.addSource(source: Source): Project = copy(sources = sources + (source.id to source))
 
+/** Oublie les sources qu'aucun clip n'utilise (à faire à la fermeture, quand l'historique n'a plus à les ressusciter). */
+fun Project.withoutUnusedSources(): Project {
+    val used = usedSourceIds()
+    return if (sources.keys.all { it in used }) this else copy(sources = sources.filterKeys { it in used })
+}
+
 /** Ajoute une piste vide en position [at] ; rend le projet et l'identifiant de la piste. */
 fun Project.addTrack(name: String, color: Int = 0, at: Int = tracks.size): Pair<Project, Int> {
     val t = Track(id = nextId, name = name, color = color)
@@ -40,6 +46,23 @@ fun Project.moveTrack(trackId: Int, toIndex: Int): Project {
     val t = list.removeAt(from)
     list.add(toIndex.coerceIn(0, list.size), t)
     return copy(tracks = list)
+}
+
+/**
+ * Copie la piste juste après elle (mêmes réglages, mêmes clips, qui partagent les mêmes sources : rien n'est
+ * recopié sur le disque). Rend le projet et l'identifiant de la nouvelle piste.
+ */
+fun Project.duplicateTrack(trackId: Int, name: String): Pair<Project, Int?> {
+    val i = indexOfTrack(trackId)
+    if (i < 0) return this to null
+    val src = tracks[i]
+    var next = nextId
+    val newId = next++
+    val clips = src.clips.map { it.copy(id = next++) }
+    val copy = src.copy(id = newId, name = name, clips = clips, solo = false)
+    val list = tracks.toMutableList()
+    list.add(i + 1, copy)
+    return copy(tracks = list, nextId = next) to newId
 }
 
 /**
@@ -351,3 +374,52 @@ fun Project.removeMarker(id: Int): Project = copy(markers = markers.filter { it.
 
 fun Project.updateMarker(id: Int, f: (Marker) -> Marker): Project =
     copy(markers = markers.map { if (it.id == id) f(it) else it }.sortedBy { it.pos })
+
+// ---- Enveloppe de volume -------------------------------------------------------------------
+
+/** Gain maximal d'un point d'enveloppe (×2 = +6 dB) : l'échelle de l'outil va de 0 à cette valeur. */
+const val ENVELOPE_MAX_GAIN = 2f
+
+/**
+ * Pose un point d'enveloppe à la trame [frame] (il remplace celui qui s'y trouve déjà). Rend le projet et le rang
+ * du point dans la liste, ou −1 si la piste n'existe pas ou est verrouillée.
+ */
+fun Project.addEnvelopePoint(trackId: Int, frame: Long, gain: Float): Pair<Project, Int> {
+    val t = track(trackId)
+    if (t == null || t.locked) return this to -1
+    val f = frame.coerceAtLeast(0)
+    val point = EnvPoint(f, gain.coerceIn(0f, ENVELOPE_MAX_GAIN))
+    val list = t.envelope.toMutableList()
+    val same = list.indexOfFirst { it.frame == f }
+    val index = if (same >= 0) { list[same] = point; same } else {
+        val after = list.indexOfFirst { it.frame > f }.let { if (it < 0) list.size else it }
+        list.add(after, point)
+        after
+    }
+    return mapTrack(trackId) { it.copy(envelope = list) } to index
+}
+
+/** Déplace le point de rang [index] ; il ne dépasse jamais ses voisins, l'ordre des points reste croissant. */
+fun Project.moveEnvelopePoint(trackId: Int, index: Int, frame: Long, gain: Float): Project {
+    val t = track(trackId)
+    if (t == null || t.locked || index !in t.envelope.indices) return this
+    val e = t.envelope
+    val lo = if (index > 0) e[index - 1].frame + 1 else 0L
+    val hi = if (index < e.size - 1) e[index + 1].frame - 1 else Long.MAX_VALUE
+    val f = if (lo > hi) e[index].frame else frame.coerceIn(lo, hi)
+    val list = e.toMutableList()
+    list[index] = EnvPoint(f, gain.coerceIn(0f, ENVELOPE_MAX_GAIN))
+    return mapTrack(trackId) { it.copy(envelope = list) }
+}
+
+fun Project.removeEnvelopePoint(trackId: Int, index: Int): Project {
+    val t = track(trackId)
+    if (t == null || t.locked || index !in t.envelope.indices) return this
+    return mapTrack(trackId) { it.copy(envelope = it.envelope.filterIndexed { i, _ -> i != index }) }
+}
+
+fun Project.clearEnvelope(trackId: Int): Project {
+    val t = track(trackId)
+    if (t == null || t.locked || t.envelope.isEmpty()) return this
+    return mapTrack(trackId) { it.copy(envelope = emptyList()) }
+}

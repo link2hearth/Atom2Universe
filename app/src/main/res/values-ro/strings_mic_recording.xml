@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_recording_channel_name">Înregistrare microfon</string>
+    <string name="mic_recording_channel_description">Menține înregistrarea microfonului activă în fundal</string>
+    <string name="mic_recording_notif_title">Înregistrare în progres</string>
+    <string name="mic_recording_notif_text">Înregistrarea microfonului este activă</string>
+    <string name="mic_recording_action_stop_notif">Oprire înregistrare</string>
+</resources>

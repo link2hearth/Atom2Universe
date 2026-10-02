@@ -1,1198 +1,554 @@
 package com.Atom2Universe.app.audioeditor
 
-import android.Manifest
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.net.Uri
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.Manifest
+import android.media.AudioManager
 import android.os.Bundle
-import android.provider.OpenableColumns
-import android.util.Log
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.SeekBar
 import android.widget.TextView
-import com.Atom2Universe.app.audio.AudioFeedback as Toast
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
+import androidx.activity.viewModels
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.Atom2Universe.app.AppThemeManager
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.audio.AudioThemedActivity
+import com.Atom2Universe.app.audioeditor.core.FadeShape
+import com.Atom2Universe.app.audioeditor.core.Marker
+import com.Atom2Universe.app.audioeditor.engine.AndroidMicSource
+import com.Atom2Universe.app.audioeditor.core.setClipGain
+import com.Atom2Universe.app.audioeditor.ui.AnalysisUi
+import com.Atom2Universe.app.audioeditor.ui.EditorViewModel
+import com.Atom2Universe.app.audioeditor.io.AudioExporter
+import com.Atom2Universe.app.audioeditor.ui.EffectUi
+import com.Atom2Universe.app.audioeditor.ui.ExportRequest
+import com.Atom2Universe.app.audioeditor.ui.ExportUi
+import com.Atom2Universe.app.audioeditor.ui.mime
+import com.Atom2Universe.app.audioeditor.ui.ProgressHandle
+import com.Atom2Universe.app.audioeditor.ui.progressDialog
+import com.Atom2Universe.app.audioeditor.ui.Tool
+import com.Atom2Universe.app.audioeditor.ui.TimelineMath
+import com.Atom2Universe.app.audioeditor.ui.TimelineView
+import com.Atom2Universe.app.audioeditor.ui.TrackColors
+import com.Atom2Universe.app.pixelart.ui.LabeledSlider
+import com.Atom2Universe.app.pixelart.ui.SheetItem
+import com.Atom2Universe.app.pixelart.ui.bottomSheet
+import com.Atom2Universe.app.pixelart.ui.chip
+import com.Atom2Universe.app.pixelart.ui.label
+import com.Atom2Universe.app.pixelart.ui.dp
+import com.Atom2Universe.app.pixelart.ui.scrollRow
+import com.Atom2Universe.app.pixelart.ui.secondaryButton
+import com.Atom2Universe.app.pixelart.ui.actionSheet
+import com.Atom2Universe.app.pixelart.ui.confirm
+import com.Atom2Universe.app.pixelart.ui.iconButton
+import com.Atom2Universe.app.pixelart.ui.promptText
 import com.Atom2Universe.app.util.enableImmersiveMode
-import com.Atom2Universe.app.AudioHubActivity
-import com.google.android.material.button.MaterialButton
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Locale
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicInteger
+import kotlin.math.abs
+import kotlin.math.log10
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 /**
- * Main Activity for the Audio Editor module.
- * Provides audio playback, waveform visualization, recording, and basic editing capabilities.
+ * L'éditeur d'un projet audio : chronologie multipiste, transport, barre d'édition. Tout l'état vit dans
+ * [EditorViewModel] (la rotation recrée l'écran sans rien perdre, même en pleine lecture) ; cet écran
+ * ne fait que le montrer et lui transmettre les actions.
  */
-class AudioEditorActivity : AudioThemedActivity() {
+class AudioEditorActivity : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
     }
 
-    companion object {
-        private const val PERMISSION_REQUEST_RECORD_AUDIO = 1001
-    }
+    private val vm: EditorViewModel by viewModels()
 
-    private lateinit var viewModel: AudioEditorViewModel
-
-    // Views - Tracks
-    // Bug 2.29: trackViews access synchronized via trackViewsLock
-    private lateinit var tracksContainer: android.widget.LinearLayout
-    private lateinit var tracksScrollView: android.widget.ScrollView
-    private lateinit var tvEmptyState: TextView
-    private var activeWaveformView: WaveformView? = null
-    private var activeSpectrumView: SpectrumView? = null
-    private val trackViewsLock = Any()
-    private val trackViews = mutableMapOf<Int, View>()
-
-    // Views - Playback
+    private lateinit var timeline: TimelineView
+    private lateinit var timeText: TextView
+    private lateinit var title: TextView
+    private lateinit var loading: ProgressBar
     private lateinit var btnPlay: ImageButton
-    private lateinit var btnPause: ImageButton
-    private lateinit var btnStop: ImageButton
-    private lateinit var btnOpen: MaterialButton
-    private lateinit var btnRecord: MaterialButton
-    private lateinit var btnExport: MaterialButton
-    private lateinit var btnTrim: ImageButton
-    private lateinit var tvFileName: TextView
-    private lateinit var tvCurrentTime: TextView
-    private lateinit var tvDuration: TextView
-    private lateinit var seekBar: SeekBar
-    private lateinit var progressBar: ProgressBar
-    private lateinit var loadingOverlay: View
-    private lateinit var btnBack: ImageButton
-
-    // Views - Edit toolbar
-    private lateinit var btnCopy: ImageButton
-    private lateinit var btnCut: ImageButton
-    private lateinit var btnPaste: ImageButton
-    private lateinit var btnDelete: ImageButton
-
-    // Views - Undo/Redo
+    private lateinit var btnLoop: ImageButton
     private lateinit var btnUndo: ImageButton
     private lateinit var btnRedo: ImageButton
+    private lateinit var effects: EffectUi
+    private lateinit var exportUi: ExportUi
+    private lateinit var analysisUi: AnalysisUi
+    private lateinit var btnRecord: ImageButton
+    private lateinit var level: ProgressBar
+    private var levelShown = 0f
+    /** Le projet vient d'être créé depuis « Enregistrer tout de suite » : on lance l'enregistrement dès qu'il est prêt. */
+    private var pendingRecord = false
+    private var progress: ProgressHandle? = null
 
-    // Views - Recording
-    private lateinit var recordingOverlay: View
-    private lateinit var recordingIndicator: View
-    private lateinit var tvRecordingDuration: TextView
-    private lateinit var recordingWaveformView: RecordingWaveformView
-    private lateinit var btnCancelRecording: MaterialButton
-    private lateinit var btnStopRecording: ImageButton
+    /** Un bouton de la barre d'édition et ce qui décide s'il est utilisable / allumé. */
+    private class EditButton(val view: ImageButton, val enabled: () -> Boolean, val on: (() -> Boolean)? = null)
 
-    // Blink animation for recording indicator
-    private val blinkAnimation = AlphaAnimation(1f, 0f).apply {
-        duration = 500
-        repeatMode = Animation.REVERSE
-        repeatCount = Animation.INFINITE
+    private val editButtons = ArrayList<EditButton>()
+    private var ticking = false
+
+    /** Crée un fichier audio : le sélecteur reçoit le bon type MIME (qui change avec le format) et un nom proposé. */
+    private class CreateAudioFile : ActivityResultContract<Pair<String, String>, Uri?>() {
+        override fun createIntent(context: Context, input: Pair<String, String>) =
+            Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE).setType(input.first).putExtra(Intent.EXTRA_TITLE, input.second)
+        override fun parseResult(resultCode: Int, intent: Intent?): Uri? = if (resultCode == RESULT_OK) intent?.data else null
     }
 
-    // Bug 2.40: File picker with error handling
-    private val openFileLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        try {
-            if (result.resultCode == RESULT_OK) {
-                result.data?.data?.let { uri ->
-                    val displayName = getFileName(uri)
-                    viewModel.loadAudioFile(uri, displayName)
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("AudioEditorActivity", "Error handling file picker result", e)
-            Toast.makeText(this, getString(R.string.audio_editor_error_generic, e.message ?: "Unknown error"), Toast.LENGTH_LONG).show()
+    private val pickExportFile = registerForActivityResult(CreateAudioFile()) { uri ->
+        val req = vm.pendingExport
+        vm.pendingExport = null
+        if (uri != null && req != null) vm.exportAudio(req, uri)
+    }
+
+    private val saveMarkersFile = registerForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri ->
+        if (uri != null) vm.exportMarkers(uri)
+    }
+
+    private val openMarkersFile = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) vm.importMarkers(uri)
+    }
+
+    private val pickExportFolder = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        val req = vm.pendingExport
+        vm.pendingExport = null
+        if (uri != null && req != null) vm.exportAudio(req, uri)
+    }
+
+    private val micPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) vm.startRecording() else Toast.makeText(this, R.string.ae_rec_no_permission, Toast.LENGTH_SHORT).show()
+    }
+
+    private val tick = object : Runnable {
+        override fun run() {
+            if (!vm.isPlaying && !vm.isRecording) { ticking = false; refresh(); return }
+            updateTime()
+            updateLevel()
+            timeline.postOnAnimation(this)
         }
     }
 
-    // Export file picker
-    private val exportFileLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            result.data?.data?.let { uri ->
-                pendingExportFormat?.let { format ->
-                    performExport(uri, format)
-                }
-            }
-        }
-    }
-
-    private var pendingExportFormat: AudioEditorViewModel.ExportFormat? = null
-    private var pendingBitrate = 320
-    private var pendingMetadata: AudioMetadata? = null
-    private lateinit var btnToggleVisualMode: ImageButton
-    private val waveformExtractor by lazy { WaveformExtractor(applicationContext) }
-    private val fftProcessor = FFTProcessor()
-    private var currentVisualMode = VisualMode.WAVEFORM
-
-    // Track spectrogram loading jobs per track to allow cancellation
-    private val spectrogramLoadingJobs = mutableMapOf<Int, Job>()
-
-    // Bug 2.41: Throttle recording waveform updates (every 50ms)
-    private var lastWaveformUpdateTime = 0L
-    private val waveformUpdateThrottleMs = 50L
-
-    private val micStopReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == MicRecordingService.ACTION_STOP_FROM_NOTIFICATION) {
-                viewModel.stopRecording()
-            }
-        }
+    /** Casque débranché : on ne continue pas à jouer sur le haut-parleur. */
+    private val noisy = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) { vm.pause() }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_audio_editor)
 
-        viewModel = ViewModelProvider(this)[AudioEditorViewModel::class.java]
+        val id = intent.getStringExtra(EXTRA_PROJECT_ID)
+        if (id == null) { finish(); return }
+        vm.load(id)
 
-        initViews()
-        setupListeners()
-        observeViewModel()
+        timeline = findViewById(R.id.ed_timeline)
+        timeText = findViewById(R.id.ed_time)
+        title = findViewById(R.id.ed_title)
+        loading = findViewById(R.id.ed_loading)
+        btnPlay = findViewById(R.id.ed_btn_play)
+        btnLoop = findViewById(R.id.ed_btn_loop)
+        btnUndo = findViewById(R.id.ed_btn_undo)
+        btnRedo = findViewById(R.id.ed_btn_redo)
+        btnRecord = findViewById(R.id.ed_btn_record)
+        level = findViewById(R.id.ed_level)
+        pendingRecord = savedInstanceState == null && intent.getBooleanExtra(EXTRA_RECORD, false)
+        effects = EffectUi(this, vm)
+        exportUi = ExportUi(this, vm, ::startExport)
+        analysisUi = AnalysisUi(this, vm)
+        timeline.bind(vm)
+        timeline.onTrackMenu = ::showTrackMenu
 
-        val filter = IntentFilter(MicRecordingService.ACTION_STOP_FROM_NOTIFICATION)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(micStopReceiver, filter, RECEIVER_NOT_EXPORTED)
-        } else {
-            @Suppress("UnspecifiedRegisterReceiverFlag")
-            registerReceiver(micStopReceiver, filter)
-        }
-
-        // Check if there's a saved project and show choice dialog
-        checkForSavedProject()
-    }
-
-    override fun onDestroy() {
-        try {
-            unregisterReceiver(micStopReceiver)
-        } catch (_: Exception) {}
-        super.onDestroy()
-    }
-
-    private fun checkForSavedProject() {
-        if (viewModel.hasSavedProject()) {
-            // Show dialog to choose between continue or new project
-            AlertDialog.Builder(this)
-                .setTitle(R.string.audio_editor_title)
-                .setMessage(R.string.audio_editor_project_found_message)
-                .setPositiveButton(R.string.common_continue) { _, _ ->
-                    viewModel.loadSavedProject()
-                }
-                .setNegativeButton(R.string.audio_editor_new_project) { _, _ ->
-                    viewModel.startNewProject()
-                }
-                .setCancelable(false)
-                .show()
-        } else {
-            // No saved project, start fresh
-            viewModel.startNewProject()
-        }
-    }
-
-    private fun initViews() {
-        // Tracks views
-        tracksContainer = findViewById(R.id.tracksContainer)
-        tracksScrollView = findViewById(R.id.tracksScrollView)
-        tvEmptyState = findViewById(R.id.tvEmptyState)
-
-        // Playback views
-        btnPlay = findViewById(R.id.btnPlay)
-        btnPause = findViewById(R.id.btnPause)
-        btnStop = findViewById(R.id.btnStop)
-        btnOpen = findViewById(R.id.btnOpen)
-        btnRecord = findViewById(R.id.btnRecord)
-        btnExport = findViewById(R.id.btnExport)
-        btnTrim = findViewById(R.id.btnTrim)
-        tvFileName = findViewById(R.id.tvFileName)
-        tvCurrentTime = findViewById(R.id.tvCurrentTime)
-        tvDuration = findViewById(R.id.tvDuration)
-        seekBar = findViewById(R.id.seekBar)
-        progressBar = findViewById(R.id.progressBar)
-        loadingOverlay = findViewById(R.id.loadingOverlay)
-        btnBack = findViewById(R.id.btnBack)
-        // Recording views
-        recordingOverlay = findViewById(R.id.recordingOverlay)
-        recordingIndicator = findViewById(R.id.recordingIndicator)
-        tvRecordingDuration = findViewById(R.id.tvRecordingDuration)
-        recordingWaveformView = findViewById(R.id.recordingWaveformView)
-        btnCancelRecording = findViewById(R.id.btnCancelRecording)
-        btnStopRecording = findViewById(R.id.btnStopRecording)
-
-        // Edit toolbar
-        btnCopy = findViewById(R.id.btnCopy)
-        btnCut = findViewById(R.id.btnCut)
-        btnPaste = findViewById(R.id.btnPaste)
-        btnDelete = findViewById(R.id.btnDelete)
-
-        // Undo/Redo
-        btnUndo = findViewById(R.id.btnUndo)
-        btnRedo = findViewById(R.id.btnRedo)
-
-        // Visual mode toggle
-        btnToggleVisualMode = findViewById(R.id.btnToggleVisualMode)
-
-        // Initial state
-        updatePlaybackButtons(AudioEditorViewModel.PlaybackState.STOPPED)
-        btnExport.isEnabled = false
-        btnTrim.isEnabled = false
-        updateEditButtons(hasSelection = false, hasClipboard = false)
-        updateToggleButtonIcon()
-    }
-
-    private fun setupListeners() {
-        // Navigation
-        btnBack.setOnClickListener { navigateBackToHub() }
-
-        // File operations
-        btnOpen.setOnClickListener { openFilePicker() }
-        btnExport.setOnClickListener { showExportDialog() }
-
-        // Playback controls
-        btnPlay.setOnClickListener { viewModel.play() }
-        btnPause.setOnClickListener { viewModel.pause() }
-        btnStop.setOnClickListener { viewModel.stopPlayback() }
-        btnTrim.setOnClickListener { trimSelection() }
-
-        // Edit toolbar
-        btnCopy.setOnClickListener { copySelection() }
-        btnCut.setOnClickListener { cutSelection() }
-        btnPaste.setOnClickListener { pasteAtPlayhead() }
-        btnDelete.setOnClickListener { deleteSelection() }
-
-        // Undo/Redo
-        btnUndo.setOnClickListener { performUndo() }
-        btnRedo.setOnClickListener { performRedo() }
-
-        // Visual mode toggle
-        btnToggleVisualMode.setOnClickListener {
-            currentVisualMode = when (currentVisualMode) {
-                VisualMode.WAVEFORM -> VisualMode.SPECTROGRAM
-                VisualMode.SPECTROGRAM -> VisualMode.WAVEFORM
-            }
-            updateToggleButtonIcon()
-        }
-
-        // Recording
-        btnRecord.setOnClickListener { startRecordingWithPermission() }
-        btnStopRecording.setOnClickListener { stopRecording() }
-        btnCancelRecording.setOnClickListener { cancelRecording() }
-
-        // SeekBar
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    val progressFloat = progress / 1000f
-                    viewModel.seekTo(progressFloat)
-                }
-            }
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        findViewById<View>(R.id.ed_btn_back).setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        // Pendant un enregistrement, « retour » l'arrête et le range dans le projet au lieu de quitter.
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() { if (vm.isRecording) vm.stopRecording() else finish() }
         })
+        btnRecord.setOnClickListener { toggleRecord() }
+        findViewById<View>(R.id.ed_btn_more).setOnClickListener { showMainMenu() }
+        btnUndo.setOnClickListener { vm.undo() }
+        btnRedo.setOnClickListener { vm.redo() }
+        findViewById<View>(R.id.ed_btn_to_start).setOnClickListener { vm.toStart() }
+        btnPlay.setOnClickListener { vm.togglePlay() }
+        findViewById<View>(R.id.ed_btn_stop).setOnClickListener { vm.stop() }
+        btnLoop.setOnClickListener { vm.toggleLoop() }
+        buildEditBar()
 
-        // Waveform listeners are now set up in refreshTrackViews()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { vm.version.collect { refresh() } }
+                launch { vm.state.collect { refresh() } }
+                launch { vm.work.collect { showWork(it) } }
+                launch { vm.messages.collect { Toast.makeText(this@AudioEditorActivity, it, Toast.LENGTH_SHORT).show() } }
+            }
+        }
     }
 
-    private fun observeViewModel() {
-        // Tracks list
-        viewModel.tracks.observe(this) { tracks ->
-            refreshTrackViews(tracks)
-        }
+    override fun onStart() {
+        super.onStart()
+        ContextCompat.registerReceiver(this, noisy, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), ContextCompat.RECEIVER_NOT_EXPORTED)
+    }
 
-        // Active track index
-        viewModel.activeTrackIndex.observe(this) { activeIndex ->
-            updateActiveTrackHighlight(activeIndex)
+    override fun onStop() {
+        unregisterReceiver(noisy)
+        progress?.dismiss()
+        progress = null
+        if (vm.state.value == EditorViewModel.State.READY) vm.stopPreview()
+        if (vm.state.value == EditorViewModel.State.READY) {
+            vm.saveNow()
+            // Une rotation ne doit pas couper le son ; quitter l'écran, si.
+            if (!isChangingConfigurations) vm.pause()
         }
+        super.onStop()
+    }
 
-        // Waveform data
-        viewModel.waveformData.observe(this) { data ->
-            data?.let {
-                activeWaveformView?.setWaveformData(it)
-                btnExport.isEnabled = true
+    // ---- Barre d'édition -----------------------------------------------------------------------------
+
+    private fun addEdit(@DrawableRes icon: Int, @StringRes description: Int, enabled: () -> Boolean = { true }, on: (() -> Boolean)? = null, action: () -> Unit) {
+        val b = iconButton(icon, description) { action() }
+        findViewById<LinearLayout>(R.id.ed_edit_bar).addView(b)
+        editButtons.add(EditButton(b, enabled, on))
+    }
+
+    private fun buildEditBar() {
+        addEdit(R.drawable.ic_ae_envelope, R.string.ae_tool_envelope, on = { vm.ui.tool == Tool.ENVELOPE }) {
+            vm.ui.tool = if (vm.ui.tool == Tool.ENVELOPE) Tool.SELECT else Tool.ENVELOPE
+            vm.touch()
+        }
+        addEdit(R.drawable.ic_px_tune, R.string.ae_clip_settings, { vm.selectedClip() != null }) { showClipSheet() }
+        addEdit(R.drawable.ic_px_cut, R.string.ae_cut, { vm.ui.hasSelection }) { vm.cutSelection() }
+        addEdit(R.drawable.ic_px_copy, R.string.ae_copy, { vm.ui.hasSelection }) { vm.copySelection() }
+        addEdit(R.drawable.ic_px_paste, R.string.ae_paste, { vm.canPaste }) { vm.paste() }
+        addEdit(R.drawable.ic_px_delete, R.string.ae_delete, { vm.ui.hasSelection }) { vm.deleteSelection() }
+        addEdit(R.drawable.ic_ae_split, R.string.ae_split) { vm.splitAtCursor() }
+        addEdit(R.drawable.ic_ae_trim, R.string.ae_trim, { vm.ui.hasSelection }) { vm.trimToSelection() }
+        addEdit(R.drawable.ic_ae_silence, R.string.ae_silence, { vm.ui.hasSelection }) { vm.silenceSelection() }
+        addEdit(R.drawable.ic_ae_select_all, R.string.ae_select_all) { vm.selectAll() }
+        addEdit(R.drawable.ic_ae_fx, R.string.ae_effects) { effects.showEffects() }
+        addEdit(R.drawable.ic_ae_snap, R.string.ae_snap, on = { vm.ui.snap }) { vm.ui.snap = !vm.ui.snap; vm.touch() }
+        addEdit(R.drawable.ic_ae_zoom_out, R.string.ae_zoom_out) { timeline.zoomOut() }
+        addEdit(R.drawable.ic_ae_zoom_in, R.string.ae_zoom_in) { timeline.zoomIn() }
+        addEdit(R.drawable.ic_ae_zoom_fit, R.string.ae_zoom_fit) { timeline.zoomFit() }
+    }
+
+    // ---- Export --------------------------------------------------------------------------------------
+
+    /** La feuille a composé la demande : on choisit où écrire (un fichier, ou un dossier pour « un fichier par piste »). */
+    private fun startExport(req: ExportRequest) {
+        vm.pendingExport = req
+        if (req.perTrack) pickExportFolder.launch(null)
+        else pickExportFile.launch(req.options.format.mime to "${AudioExporter.safeName(req.baseName)}.${req.options.format.extension}")
+    }
+
+    // ---- Enregistrement ------------------------------------------------------------------------------
+
+    private fun toggleRecord() {
+        if (vm.state.value != EditorViewModel.State.READY) return
+        when {
+            vm.isRecording -> vm.stopRecording()
+            AndroidMicSource.hasPermission(this) -> vm.startRecording()
+            else -> micPermission.launch(Manifest.permission.RECORD_AUDIO)
+        }
+    }
+
+    /** Le vumètre monte d'un coup et redescend doucement : une crête brève reste lisible. */
+    private fun updateLevel() {
+        val l = vm.recordLevel
+        levelShown = if (l > levelShown) l else levelShown * 0.85f
+        level.progress = (levelShown.coerceIn(0f, 1f) * level.max).toInt()
+    }
+
+    // ---- Travail long (rendu d'un effet, génération) ---------------------------------------------------
+
+    /** La boîte de progression suit l'état du ViewModel : elle réapparaît après une rotation tant que le travail dure. */
+    private fun showWork(w: EditorViewModel.Work?) {
+        if (w == null) {
+            progress?.dismiss()
+            progress = null
+            return
+        }
+        val handle = progress ?: progressDialog(w.title) { vm.cancelWork() }.also { progress = it }
+        handle.update(w.label, w.progress)
+    }
+
+    // ---- Mise à jour de l'écran ---------------------------------------------------------------------
+
+    private fun refresh() {
+        when (vm.state.value) {
+            EditorViewModel.State.LOADING -> loading.visibility = View.VISIBLE
+            EditorViewModel.State.FAILED -> {
+                Toast.makeText(this, R.string.ae_open_failed, Toast.LENGTH_SHORT).show()
+                finish()
             }
-        }
-
-        // Playback state
-        viewModel.playbackState.observe(this) { state ->
-            updatePlaybackButtons(state)
-        }
-
-        viewModel.playbackProgress.observe(this) { progress ->
-            seekBar.progress = (progress * 1000).toInt()
-            activeWaveformView?.setPlaybackProgress(progress)
-            activeSpectrumView?.setPlaybackProgress(progress)
-        }
-
-        viewModel.currentPosition.observe(this) { position ->
-            tvCurrentTime.text = formatTime(position)
-        }
-
-        viewModel.duration.observe(this) { duration ->
-            tvDuration.text = formatTime(duration)
-        }
-
-        // Loading state
-        viewModel.isLoading.observe(this) { isLoading ->
-            loadingOverlay.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-
-        // Errors
-        viewModel.errorMessage.observe(this) { error ->
-            error?.let {
-                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-            }
-        }
-
-        // File name
-        viewModel.fileName.observe(this) { name ->
-            tvFileName.text = name
-        }
-
-        // Operation progress
-        viewModel.operationProgress.observe(this) { progress ->
-            if (progress >= 0) {
-                progressBar.visibility = View.VISIBLE
-                progressBar.isIndeterminate = true
-            } else {
-                progressBar.visibility = View.GONE
-            }
-        }
-
-        // Recording state - show/hide overlay based on recording state
-        viewModel.isRecording.observe(this) { isRecording ->
-            if (isRecording) {
-                // Make sure overlay is visible when recording
-                if (recordingOverlay.visibility != View.VISIBLE) {
-                    showRecordingOverlay()
+            EditorViewModel.State.READY -> {
+                loading.visibility = View.GONE
+                title.text = vm.name
+                updateTime()
+                val rec = vm.isRecording
+                setEnabled(btnUndo, vm.canUndo && !rec)
+                setEnabled(btnRedo, vm.canRedo && !rec)
+                btnRecord.setColorFilter(if (rec) 0xFFE53935.toInt() else Color.TRANSPARENT, android.graphics.PorterDuff.Mode.SRC_ATOP)
+                btnRecord.contentDescription = getString(if (rec) R.string.ae_record_stop else R.string.ae_record)
+                level.visibility = if (rec) View.VISIBLE else View.INVISIBLE
+                val playing = vm.isPlaying
+                btnPlay.setImageResource(if (playing) R.drawable.ic_px_pause else R.drawable.ic_px_play)
+                btnPlay.contentDescription = getString(if (playing) R.string.ae_pause else R.string.ae_play)
+                btnLoop.isSelected = vm.ui.loop
+                btnLoop.alpha = if (vm.ui.loop) 1f else 0.55f
+                for (e in editButtons) {
+                    setEnabled(e.view, e.enabled() && !rec)
+                    e.on?.let { e.view.isSelected = it() }
                 }
-            } else {
-                hideRecordingOverlay()
-            }
-        }
-
-        // Bug 2.41: Throttle recording waveform updates to prevent UI overload
-        viewModel.recordingAmplitude.observe(this) { amplitude ->
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastWaveformUpdateTime >= waveformUpdateThrottleMs) {
-                recordingWaveformView.setCurrentAmplitude(amplitude)
-                recordingWaveformView.addAmplitude(amplitude)
-                lastWaveformUpdateTime = currentTime
-            }
-        }
-
-        viewModel.recordingDurationMs.observe(this) { durationMs ->
-            tvRecordingDuration.text = formatTime(durationMs)
-        }
-
-        // Clipboard state
-        viewModel.hasClipboard.observe(this) { hasClipboard ->
-            val hasSelection = getActiveSelection() != null
-            updateEditButtons(hasSelection, hasClipboard)
-        }
-
-        // Undo/Redo state
-        viewModel.canUndo.observe(this) { canUndo ->
-            updateUndoRedoButtons(canUndo, viewModel.canRedo.value ?: false)
-        }
-
-        viewModel.canRedo.observe(this) { canRedo ->
-            updateUndoRedoButtons(viewModel.canUndo.value ?: false, canRedo)
-        }
-    }
-
-    // ==================== Recording ====================
-
-    private fun startRecordingWithPermission() {
-        if (checkRecordPermission()) {
-            // Show overlay immediately for better UX
-            showRecordingOverlay()
-            viewModel.startRecording()
-        } else {
-            requestRecordPermission()
-        }
-    }
-
-    private fun checkRecordPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestRecordPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECORD_AUDIO)) {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.common_permission_required)
-                .setMessage(R.string.audio_editor_mic_permission_message)
-                .setPositiveButton(R.string.common_ok) { _, _ ->
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.RECORD_AUDIO),
-                        PERMISSION_REQUEST_RECORD_AUDIO
-                    )
+                timeline.invalidate()
+                if (pendingRecord) { pendingRecord = false; toggleRecord() }
+                if ((playing || rec) && !ticking) {
+                    ticking = true
+                    timeline.postOnAnimation(tick)
                 }
-                .setNegativeButton(R.string.common_cancel, null)
-                .show()
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                PERMISSION_REQUEST_RECORD_AUDIO
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_RECORD_AUDIO) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Show overlay and start recording
-                showRecordingOverlay()
-                viewModel.startRecording()
-            } else {
-                Toast.makeText(this, R.string.audio_editor_permission_denied, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun stopRecording() {
-        viewModel.stopRecording()
+    private fun setEnabled(v: View, enabled: Boolean) {
+        v.isEnabled = enabled
+        v.alpha = if (enabled) 1f else 0.35f
     }
 
-    private fun cancelRecording() {
-        viewModel.cancelRecording()
+    private fun updateTime() {
+        timeText.text = clockText(vm.playheadFrame())
     }
 
-    private fun showRecordingOverlay() {
-        recordingOverlay.visibility = View.VISIBLE
-        recordingWaveformView.clear()
-        recordingIndicator.startAnimation(blinkAnimation)
+    private fun clockText(frames: Long): String {
+        val c = TimelineMath.clock(frames, vm.project.sampleRate)
+        return if (c.hours > 0) getString(R.string.ae_clock_hms_cs, c.hours, c.minutes, c.seconds, c.centis)
+        else getString(R.string.ae_time_mss_cs, c.minutes, c.seconds, c.centis)
     }
 
-    private fun hideRecordingOverlay() {
-        recordingOverlay.visibility = View.GONE
-        recordingIndicator.clearAnimation()
-    }
+    // ---- Menus --------------------------------------------------------------------------------------
 
-    // ==================== Playback ====================
-
-    private fun updatePlaybackButtons(state: AudioEditorViewModel.PlaybackState) {
-        when (state) {
-            AudioEditorViewModel.PlaybackState.PLAYING -> {
-                btnPlay.visibility = View.GONE
-                btnPause.visibility = View.VISIBLE
-            }
-            AudioEditorViewModel.PlaybackState.PAUSED,
-            AudioEditorViewModel.PlaybackState.STOPPED -> {
-                btnPlay.visibility = View.VISIBLE
-                btnPause.visibility = View.GONE
+    private fun showMainMenu() {
+        val items = ArrayList<SheetItem>()
+        items += SheetItem(R.drawable.ic_px_add, getString(R.string.ae_add_track)) { vm.addTrack(getString(R.string.ae_track_n, vm.project.tracks.size + 1)) }
+        items += SheetItem(R.drawable.ic_px_star, getString(R.string.ae_add_marker)) {
+            vm.addMarker(getString(R.string.ae_marker_n, vm.project.markers.size + 1))
+        }
+        if (vm.project.markers.isNotEmpty()) {
+            items += SheetItem(R.drawable.ic_px_up, getString(R.string.ae_prev_marker)) { jumpToMarker(false) }
+            items += SheetItem(R.drawable.ic_px_down, getString(R.string.ae_next_marker)) { jumpToMarker(true) }
+        }
+        items += SheetItem(R.drawable.ic_px_grid, getString(R.string.ae_markers)) { showMarkerList() }
+        items += SheetItem(R.drawable.ic_ae_fx, getString(R.string.ae_generate)) { effects.showGenerators() }
+        items += SheetItem(R.drawable.ic_px_export, getString(R.string.ae_menu_export_audio)) { exportUi.show() }
+        items += SheetItem(R.drawable.ic_px_eye, getString(R.string.ae_menu_analyze)) { analysisUi.show() }
+        if (vm.targetTracks().count { id -> vm.project.track(id)?.clips?.isNotEmpty() == true } >= 2) {
+            items += SheetItem(R.drawable.ic_px_merge_down, getString(R.string.ae_mixdown)) { vm.mixDown(getString(R.string.ae_mixdown_name)) }
+        }
+        items += SheetItem(R.drawable.ic_ae_record, getString(R.string.ae_overdub), checked = vm.ui.overdub) { vm.ui.overdub = !vm.ui.overdub }
+        if (vm.ui.hasSelection) {
+            items += SheetItem(R.drawable.ic_ae_loop, getString(R.string.ae_repeat_selection)) {
+                promptText(R.string.ae_repeat_times, "1", R.string.px_ok, number = true) { n ->
+                    n.toIntOrNull()?.coerceIn(1, 99)?.let { vm.repeatSelection(it) }
+                }
             }
         }
+        actionSheet(null, items).show()
     }
 
-    // ==================== File Operations ====================
+    private fun jumpToMarker(forward: Boolean) {
+        if (vm.jumpToMarker(forward)) timeline.reveal(vm.ui.cursor)
+    }
 
-    private fun openFilePicker() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "audio/*"
+    private fun showMarkerList() {
+        val files = ArrayList<SheetItem>()
+        if (vm.project.markers.isNotEmpty()) {
+            files += SheetItem(R.drawable.ic_px_export, getString(R.string.ae_markers_export)) {
+                saveMarkersFile.launch("${AudioExporter.safeName(vm.name)}.markers.txt")
+            }
         }
-        openFileLauncher.launch(intent)
+        files += SheetItem(R.drawable.ic_px_import, getString(R.string.ae_markers_import)) {
+            openMarkersFile.launch(arrayOf("text/plain", "text/*", "application/octet-stream"))
+        }
+        val items = files + vm.project.markers.map { m ->
+            val name = m.name.ifEmpty { getString(R.string.ae_marker_n, vm.project.markers.indexOf(m) + 1) }
+            SheetItem(R.drawable.ic_px_star, "${clockText(m.pos)}  $name") { showMarkerActions(m) }
+        }
+        actionSheet(getString(R.string.ae_markers), items).show()
     }
 
-    private fun showExportDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_export_audio, null)
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .create()
+    private fun showMarkerActions(m: Marker) {
+        actionSheet(m.name.ifEmpty { clockText(m.pos) }, listOf(
+            SheetItem(R.drawable.ic_px_play, getString(R.string.ae_goto)) { vm.goToMarker(m.id); timeline.reveal(m.pos) },
+            SheetItem(R.drawable.ic_px_rename, getString(R.string.ae_rename)) {
+                promptText(R.string.ae_rename, m.name, R.string.px_ok) { name -> vm.renameMarker(m.id, name) }
+            },
+            SheetItem(R.drawable.ic_px_delete, getString(R.string.ae_delete), destructive = true) { vm.removeMarker(m.id) },
+        )).show()
+    }
 
-        // Format spinner
-        val spinnerFormat = dialogView.findViewById<android.widget.Spinner>(R.id.spinnerFormat)
-        val formats = AudioEditorViewModel.ExportFormat.entries
-        val formatAdapter = android.widget.ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            formats.map { it.displayName }
+    // ---- Réglages d'un clip ---------------------------------------------------------------------------
+
+    private fun showClipSheet() {
+        val clip = vm.selectedClip() ?: return
+        val trackName = vm.project.findClip(clip.id)?.first?.name
+        var gestureStarted = false
+        val shapes = listOf(
+            FadeShape.LINEAR to R.string.ae_shape_linear,
+            FadeShape.EXPONENTIAL to R.string.ae_shape_exp,
+            FadeShape.LOGARITHMIC to R.string.ae_shape_log,
+            FadeShape.S_CURVE to R.string.ae_shape_s,
+            FadeShape.EQUAL_POWER to R.string.ae_shape_equal,
         )
-        formatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerFormat.adapter = formatAdapter
+        val current = when {
+            !clip.fadeIn.isNone -> clip.fadeIn.shape
+            !clip.fadeOut.isNone -> clip.fadeOut.shape
+            else -> clip.fadeIn.shape
+        }
+        val dialog = bottomSheet(clip.name.ifEmpty { trackName }) { root, dlg ->
+            val db = (20 * log10(clip.gain.coerceAtLeast(1e-4f))).roundToInt().coerceIn(-24, 12)
+            root.addView(LabeledSlider(this, getString(R.string.ae_gain), -24, 12, db, { getString(R.string.ae_gain_db, it) }) { value ->
+                // Un seul pas d'annulation pour tout le glissement du curseur.
+                if (!gestureStarted) { vm.beginGesture(); gestureStarted = true }
+                val g = 10f.pow(value / 20f)
+                vm.previewGesture { it.setClipGain(clip.id, g) }
+            })
 
-        // Bitrate spinner
-        val bitrateContainer = dialogView.findViewById<View>(R.id.bitrateContainer)
-        val spinnerBitrate = dialogView.findViewById<android.widget.Spinner>(R.id.spinnerBitrate)
-        val bitrates = listOf("128 kbps", "192 kbps", "256 kbps", "320 kbps")
-        val bitrateValues = listOf(128, 192, 256, 320)
-        val bitrateAdapter = android.widget.ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            bitrates
-        )
-        bitrateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerBitrate.adapter = bitrateAdapter
-        spinnerBitrate.setSelection(3) // Default to 320 kbps
-
-        // Show/hide bitrate based on format
-        spinnerFormat.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val format = formats[position]
-                bitrateContainer.visibility = if (format == AudioEditorViewModel.ExportFormat.WAV ||
-                    format == AudioEditorViewModel.ExportFormat.FLAC) View.GONE else View.VISIBLE
+            root.addView(label(getString(R.string.ae_fade_curve), 12f).apply { setPadding(dp(2), dp(16), 0, dp(6)) })
+            val chips = ArrayList<Pair<FadeShape, android.widget.TextView>>()
+            for ((shape, text) in shapes) {
+                chips.add(shape to chip(getString(text)) {
+                    vm.setClipFadeShape(clip.id, shape)
+                    chips.forEach { (s, c) -> c.isSelected = s == shape }
+                })
             }
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+            chips.forEach { (s, c) -> c.isSelected = s == current }
+            root.addView(scrollRow(*chips.map { it.second }.toTypedArray()))
+
+            val row = LinearLayout(this)
+            row.addView(secondaryButton(getString(R.string.ae_reverse), R.drawable.ic_px_flip_h) { dlg.dismiss(); vm.reverseClip(clip.id) })
+            row.addView(secondaryButton(getString(R.string.ae_duplicate), R.drawable.ic_px_copy) { dlg.dismiss(); vm.duplicateClip(clip.id) })
+            row.addView(secondaryButton(getString(R.string.ae_delete), R.drawable.ic_px_delete) { dlg.dismiss(); vm.deleteClip(clip.id) })
+            root.addView(row, LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(18) })
         }
-
-        // Metadata fields
-        val etTitle = dialogView.findViewById<android.widget.EditText>(R.id.etTitle)
-        val etArtist = dialogView.findViewById<android.widget.EditText>(R.id.etArtist)
-        val etAlbum = dialogView.findViewById<android.widget.EditText>(R.id.etAlbum)
-        val etYear = dialogView.findViewById<android.widget.EditText>(R.id.etYear)
-
-        // Pre-fill title with file name
-        viewModel.fileName.value?.substringBeforeLast(".")?.let {
-            etTitle.setText(it)
-        }
-
-        // Buttons
-        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialogView.findViewById<View>(R.id.btnExport).setOnClickListener {
-            val selectedFormat = formats[spinnerFormat.selectedItemPosition]
-            pendingExportFormat = selectedFormat
-            pendingBitrate = bitrateValues[spinnerBitrate.selectedItemPosition]
-
-            // Collect metadata
-            pendingMetadata = AudioMetadata(
-                title = etTitle.text.toString().takeIf { it.isNotBlank() },
-                artist = etArtist.text.toString().takeIf { it.isNotBlank() },
-                album = etAlbum.text.toString().takeIf { it.isNotBlank() },
-                year = etYear.text.toString().takeIf { it.isNotBlank() }
-            )
-
-            dialog.dismiss()
-            launchExportFilePicker(selectedFormat)
-        }
-
+        dialog.setOnDismissListener { if (gestureStarted) vm.commitGesture("gain") }
         dialog.show()
     }
 
-    private fun launchExportFilePicker(format: AudioEditorViewModel.ExportFormat) {
-        pendingExportFormat = format
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = when (format) {
-                AudioEditorViewModel.ExportFormat.MP3 -> "audio/mpeg"
-                AudioEditorViewModel.ExportFormat.WAV -> "audio/wav"
-                AudioEditorViewModel.ExportFormat.FLAC -> "audio/flac"
-                AudioEditorViewModel.ExportFormat.OGG -> "audio/ogg"
-                AudioEditorViewModel.ExportFormat.AAC -> "audio/mp4"
-            }
-            val baseName = viewModel.fileName.value?.substringBeforeLast(".") ?: "export"
-            putExtra(Intent.EXTRA_TITLE, "$baseName.${format.extension}")
+    /** Réglages d'une piste : volume, panoramique, couleur, puis les actions (renommer, verrouiller, dupliquer, monter, descendre, supprimer). */
+    private fun showTrackMenu(trackId: Int) {
+        val t = vm.project.track(trackId) ?: return
+        val index = vm.project.indexOfTrack(trackId)
+        val last = vm.project.tracks.size - 1
+        var vol = t.volume
+        var pan = t.pan
+        var gesture = false
+
+        fun mix() {
+            if (!gesture) { vm.beginGesture(); gesture = true }
+            vm.previewTrackMix(trackId, vol, pan)
         }
-        exportFileLauncher.launch(intent)
-    }
+        // Le glissement des curseurs est un seul pas d'annulation ; il doit être validé avant toute autre action.
+        fun commitMix() {
+            if (gesture) { vm.commitGesture("track_mix"); gesture = false }
+        }
+        fun panText(v: Int) = when {
+            v == 0 -> getString(R.string.ae_pan_center)
+            v < 0 -> getString(R.string.ae_pan_left, -v)
+            else -> getString(R.string.ae_pan_right, v)
+        }
 
-    private fun performExport(uri: Uri, format: AudioEditorViewModel.ExportFormat) {
-        val cacheDir = cacheDir
-        val tempOutput = java.io.File(cacheDir, "export_temp.${format.extension}")
+        val dialog = bottomSheet(t.name) { root, dlg ->
+            root.addView(LabeledSlider(this, getString(R.string.ae_volume), 0, 200, (t.volume * 100).roundToInt().coerceIn(0, 200),
+                { getString(R.string.ae_unit_percent, it.toString()) }) { v -> vol = v / 100f; mix() })
+            root.addView(LabeledSlider(this, getString(R.string.ae_pan), -100, 100, (t.pan * 100).roundToInt().coerceIn(-100, 100),
+                { panText(it) }) { v -> pan = if (abs(v) <= 3) 0f else v / 100f; mix() })
 
-        viewModel.exportAudio(tempOutput.absolutePath, format, pendingBitrate, pendingMetadata) { success, error ->
-            // Bug 2.43: Ensure temp file is always cleaned up in finally block
-            try {
-                if (success) {
-                    try {
-                        contentResolver.openOutputStream(uri)?.use { output ->
-                            tempOutput.inputStream().use { input ->
-                                input.copyTo(output)
-                            }
-                        }
-                        Toast.makeText(this, R.string.audio_editor_export_success, Toast.LENGTH_SHORT).show()
-                    } catch (e: Exception) {
-                        Toast.makeText(this, getString(R.string.audio_editor_save_failed, e.message), Toast.LENGTH_LONG).show()
+            // Couleur : « Auto » reprend la palette selon la place de la piste.
+            root.addView(label(getString(R.string.ae_track_color), 12f).apply { setPadding(dp(2), dp(14), 0, dp(6)) })
+            val swatches = ArrayList<Pair<Int, View>>()
+            fun markColor(color: Int) = swatches.forEach { (c, v) -> v.alpha = if (c == color) 1f else 0.45f }
+            val auto = chip(getString(R.string.ae_color_auto)) { commitMix(); vm.setTrackColor(trackId, 0); markColor(0) }
+            swatches.add(0 to auto)
+            val views = ArrayList<View>()
+            views.add(auto)
+            for (color in TrackColors.PALETTE) {
+                val sw = View(this).apply {
+                    background = GradientDrawable().apply { shape = GradientDrawable.OVAL; setColor(color) }
+                    layoutParams = LinearLayout.LayoutParams(dp(32), dp(32)).apply { setMargins(dp(5), 0, dp(5), 0) }
+                    setOnClickListener { commitMix(); vm.setTrackColor(trackId, color); markColor(color) }
+                }
+                swatches.add(color to sw)
+                views.add(sw)
+            }
+            markColor(t.color)
+            root.addView(scrollRow(*views.toTypedArray()))
+
+            // Affichage : forme d'onde ou spectrogramme.
+            root.addView(label(getString(R.string.ae_track_display), 12f).apply { setPadding(dp(2), dp(14), 0, dp(6)) })
+            val spectro = trackId in vm.ui.spectrogramTracks
+            val displayChips = ArrayList<TextView>()
+            for ((i, text) in listOf(R.string.ae_display_wave, R.string.ae_display_spectro).withIndex()) {
+                displayChips.add(chip(getString(text)) {
+                    commitMix()
+                    vm.toggleSpectrogram(trackId, i == 1)
+                    displayChips.forEachIndexed { k, c -> c.isSelected = k == i }
+                })
+            }
+            displayChips.forEachIndexed { k, c -> c.isSelected = (k == 1) == spectro }
+            root.addView(scrollRow(*displayChips.toTypedArray()))
+
+            fun row(vararg buttons: View) = LinearLayout(this).also { r ->
+                buttons.forEach { r.addView(it) }
+                root.addView(r, LinearLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(12) })
+            }
+            fun act(text: Int, enabled: Boolean = true, run: () -> Unit) = secondaryButton(getString(text)) {
+                if (enabled) { commitMix(); dlg.dismiss(); run() }
+            }.apply { alpha = if (enabled) 1f else 0.35f }
+
+            row(
+                act(R.string.ae_rename) {
+                    promptText(R.string.ae_rename, t.name, R.string.px_ok) { name ->
+                        if (name.isNotEmpty()) vm.updateTrack(trackId, "rename") { it.copy(name = name) }
                     }
-                } else {
-                    Toast.makeText(this, getString(R.string.audio_editor_export_failed, error), Toast.LENGTH_LONG).show()
-                }
-            } finally {
-                // Always clean up temp file
-                if (tempOutput.exists()) {
-                    val deleted = tempOutput.delete()
-                    if (!deleted) {
-                        Log.w("AudioEditorActivity", "Failed to delete temp export file: ${tempOutput.absolutePath}")
-                    }
-                }
-            }
+                },
+                act(if (t.locked) R.string.ae_unlock_track else R.string.ae_lock_track) { vm.toggleLock(trackId) },
+                act(R.string.ae_duplicate) { vm.duplicateTrack(trackId, getString(R.string.ae_copy_of, t.name)) },
+            )
+            row(
+                act(R.string.ae_move_up, index > 0) { vm.moveTrack(trackId, -1) },
+                act(R.string.ae_move_down, index < last) { vm.moveTrack(trackId, 1) },
+                act(R.string.ae_delete) {
+                    confirm(R.string.ae_delete_track_title, getString(R.string.ae_delete_track_message, t.name), R.string.ae_delete, true) { vm.removeTrack(trackId) }
+                },
+            )
+            if (t.envelope.isNotEmpty()) row(act(R.string.ae_envelope_reset) { vm.clearEnvelope(trackId) })
         }
+        dialog.setOnDismissListener { commitMix() }
+        dialog.show()
     }
 
-    // ==================== Editing ====================
+    companion object {
+        private const val EXTRA_PROJECT_ID = "project_id"
 
-    private fun trimSelection() {
-        val selection = getActiveSelection() ?: return
-        val duration = viewModel.duration.value ?: return
+        private const val EXTRA_RECORD = "start_recording"
 
-        val startMs = (selection.first * duration).toLong()
-        val endMs = (selection.second * duration).toLong()
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.audio_editor_trim_title)
-            .setMessage(getString(R.string.audio_editor_trim_message, formatTime(startMs), formatTime(endMs)))
-            .setPositiveButton(R.string.audio_editor_trim_action) { _, _ ->
-                viewModel.trimAudio(startMs, endMs) { success, error ->
-                    if (success) {
-                        clearActiveSelection()
-                        Toast.makeText(this, R.string.audio_editor_trim_success, Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, getString(R.string.audio_editor_trim_failed, error), Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-            .setNegativeButton(R.string.common_cancel, null)
-            .show()
-    }
-
-    private fun copySelection() {
-        val selection = getActiveSelection() ?: return
-        val duration = viewModel.duration.value ?: return
-
-        val startMs = (selection.first * duration).toLong()
-        val endMs = (selection.second * duration).toLong()
-
-        viewModel.copySelection(startMs, endMs) { success, error ->
-            if (success) {
-                Toast.makeText(this, R.string.audio_editor_copy_success, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, getString(R.string.audio_editor_copy_failed, error), Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    private fun cutSelection() {
-        val selection = getActiveSelection() ?: return
-        val duration = viewModel.duration.value ?: return
-
-        val startMs = (selection.first * duration).toLong()
-        val endMs = (selection.second * duration).toLong()
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.audio_editor_cut_title)
-            .setMessage(getString(R.string.audio_editor_cut_message, formatTime(startMs), formatTime(endMs)))
-            .setPositiveButton(R.string.audio_editor_cut_action) { _, _ ->
-                viewModel.cutSelection(startMs, endMs) { success, error ->
-                    if (success) {
-                        clearActiveSelection()
-                        Toast.makeText(this, R.string.audio_editor_cut_success, Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, getString(R.string.audio_editor_cut_failed, error), Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-            .setNegativeButton(R.string.common_cancel, null)
-            .show()
-    }
-
-    private fun pasteAtPlayhead() {
-        val duration = viewModel.duration.value ?: return
-        val progress = viewModel.playbackProgress.value ?: 0f
-        val positionMs = (progress * duration).toLong()
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.audio_editor_paste_title)
-            .setMessage(getString(R.string.audio_editor_paste_message, formatTime(positionMs)))
-            .setPositiveButton(R.string.audio_editor_paste_action) { _, _ ->
-                viewModel.pasteAtPosition(positionMs) { success, error ->
-                    if (success) {
-                        Toast.makeText(this, R.string.audio_editor_paste_success, Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, getString(R.string.audio_editor_paste_failed, error), Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-            .setNegativeButton(R.string.common_cancel, null)
-            .show()
-    }
-
-    private fun deleteSelection() {
-        val selection = getActiveSelection() ?: return
-        val duration = viewModel.duration.value ?: return
-
-        val startMs = (selection.first * duration).toLong()
-        val endMs = (selection.second * duration).toLong()
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.audio_editor_delete_title)
-            .setMessage(getString(R.string.audio_editor_delete_message, formatTime(startMs), formatTime(endMs)))
-            .setPositiveButton(R.string.common_delete) { _, _ ->
-                viewModel.deleteSelection(startMs, endMs) { success, error ->
-                    if (success) {
-                        clearActiveSelection()
-                        Toast.makeText(this, R.string.audio_editor_delete_success, Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, getString(R.string.audio_editor_delete_failed, error), Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-            .setNegativeButton(R.string.common_cancel, null)
-            .show()
-    }
-
-    private fun performUndo() {
-        viewModel.undo { success, error ->
-            if (success) {
-                clearActiveSelection()
-                Toast.makeText(this, R.string.audio_editor_undo_success, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, getString(R.string.audio_editor_undo_failed, error), Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun performRedo() {
-        viewModel.redo { success, error ->
-            if (success) {
-                clearActiveSelection()
-                Toast.makeText(this, R.string.audio_editor_redo_success, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, getString(R.string.audio_editor_redo_failed, error), Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun updateUndoRedoButtons(canUndo: Boolean, canRedo: Boolean) {
-        btnUndo.isEnabled = canUndo
-        btnUndo.alpha = if (canUndo) 1f else 0.4f
-
-        btnRedo.isEnabled = canRedo
-        btnRedo.alpha = if (canRedo) 1f else 0.4f
-    }
-
-    /**
-     * Navigue vers le Hub si l'activité est la racine de la tâche (lancée depuis widget/raccourci),
-     * sinon termine simplement l'activité pour revenir à l'écran précédent.
-     */
-    private fun navigateBackToHub() {
-        if (isTaskRoot) {
-            startActivity(Intent(this, AudioHubActivity::class.java))
-        }
-        finish()
-    }
-
-    private fun updateEditButtons(hasSelection: Boolean, hasClipboard: Boolean) {
-        btnCopy.isEnabled = hasSelection
-        btnCopy.alpha = if (hasSelection) 1f else 0.4f
-
-        btnCut.isEnabled = hasSelection
-        btnCut.alpha = if (hasSelection) 1f else 0.4f
-
-        btnDelete.isEnabled = hasSelection
-        btnDelete.alpha = if (hasSelection) 1f else 0.4f
-
-        btnPaste.isEnabled = hasClipboard
-        btnPaste.alpha = if (hasClipboard) 1f else 0.4f
-
-        btnTrim.isEnabled = hasSelection
-        btnTrim.alpha = if (hasSelection) 1f else 0.4f
-    }
-
-    // ==================== Selection Helpers ====================
-
-    private fun getActiveSelection(): Pair<Float, Float>? {
-        return if (currentVisualMode == VisualMode.SPECTROGRAM) {
-            activeSpectrumView?.getSelection()
-        } else {
-            activeWaveformView?.getSelection()
-        }
-    }
-
-    private fun clearActiveSelection() {
-        if (currentVisualMode == VisualMode.SPECTROGRAM) {
-            activeSpectrumView?.clearSelection()
-        } else {
-            activeWaveformView?.clearSelection()
-        }
-    }
-
-    // ==================== Utilities ====================
-
-    private fun getFileName(uri: Uri): String {
-        var name = "Audio"
-        contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            if (cursor.moveToFirst() && nameIndex >= 0) {
-                name = cursor.getString(nameIndex)
-            }
-        }
-        return name
-    }
-
-    private fun formatTime(ms: Long): String {
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(ms) % 60
-        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-    }
-
-    // ==================== Multi-Track Management ====================
-
-    // For drag & drop - Bug 2.30: Use AtomicInteger to prevent race conditions
-    private var draggedView: View? = null
-    private val draggedIndexAtomic = AtomicInteger(-1)
-
-    private fun refreshTrackViews(tracks: List<AudioTrack>) {
-        // Bug 2.29: Synchronized access to trackViews
-        synchronized(trackViewsLock) {
-            // Clear existing views
-            tracksContainer.removeAllViews()
-            trackViews.clear()
-
-            // Show/hide empty state
-            if (tracks.isEmpty()) {
-                tvEmptyState.visibility = View.VISIBLE
-                tracksScrollView.visibility = View.GONE
-                activeWaveformView = null
-                btnExport.isEnabled = false
-                return
-            }
-
-            tvEmptyState.visibility = View.GONE
-            tracksScrollView.visibility = View.VISIBLE
-
-            // Create view for each track
-            tracks.forEachIndexed { index, track ->
-                val trackView = layoutInflater.inflate(R.layout.item_audio_track, tracksContainer, false)
-
-                // Track number
-                val tvTrackNumber = trackView.findViewById<TextView>(R.id.tvTrackNumber)
-                tvTrackNumber.text = getString(R.string.audio_editor_track_number, index + 1)
-
-                // Track name
-                val tvTrackName = trackView.findViewById<TextView>(R.id.tvTrackName)
-                tvTrackName.text = track.name
-
-                // Track duration
-                val tvTrackDuration = trackView.findViewById<TextView>(R.id.tvTrackDuration)
-                tvTrackDuration.text = formatTime(track.durationMs)
-
-                // Waveform
-                val waveformView = trackView.findViewById<WaveformView>(R.id.trackWaveformView)
-                track.waveformData?.let {
-                    waveformView.setWaveformData(it)
-                }
-
-                // Spectrogram
-                val spectrumView = trackView.findViewById<SpectrumView>(R.id.trackSpectrumView)
-
-                // Set up waveform and spectrum listeners
-                setupWaveformListeners(waveformView)
-                setupSpectrumListeners(spectrumView)
-
-                // Click on track container to make active
-                val trackContainer = trackView.findViewById<View>(R.id.trackContainer)
-                trackContainer.setOnClickListener {
-                    viewModel.setActiveTrack(index)
-                }
-
-                // Remove button
-                val btnRemove = trackView.findViewById<ImageButton>(R.id.btnRemoveTrack)
-                btnRemove.setOnClickListener {
-                    AlertDialog.Builder(this)
-                        .setTitle(R.string.audio_editor_delete_track_title)
-                        .setMessage(getString(R.string.audio_editor_delete_track_message, track.name))
-                        .setPositiveButton(R.string.common_delete) { _, _ ->
-                            viewModel.removeTrack(index)
-                        }
-                        .setNegativeButton(R.string.common_cancel, null)
-                        .show()
-                }
-
-                // Drag handle for reordering
-                val dragHandle = trackView.findViewById<View>(R.id.dragHandle)
-                setupDragHandle(dragHandle, trackView, index)
-
-                tracksContainer.addView(trackView)
-                trackViews[index] = trackView
-            }
-        }
-
-        // Update highlight for active track
-        val activeIndex = viewModel.activeTrackIndex.value ?: -1
-        updateActiveTrackHighlight(activeIndex)
-        updateToggleButtonIcon()
-    }
-
-    @android.annotation.SuppressLint("ClickableViewAccessibility")
-    private fun setupDragHandle(dragHandle: View, trackView: View, index: Int) {
-        dragHandle.setOnLongClickListener {
-            draggedView = trackView
-            // Bug 2.30: Use AtomicInteger for thread-safe access
-            draggedIndexAtomic.set(index)
-            trackView.alpha = 0.7f
-            true
-        }
-
-        dragHandle.setOnTouchListener { _, event ->
-            when (event.action) {
-                android.view.MotionEvent.ACTION_MOVE -> {
-                    if (draggedView != null) {
-                        // Find target position based on Y coordinate
-                        val y = event.rawY
-                        var targetIndex = -1
-                        // Bug 2.30: Read atomic value once for consistency
-                        val currentDraggedIndex = draggedIndexAtomic.get()
-
-                        for (i in 0 until tracksContainer.childCount) {
-                            val child = tracksContainer.getChildAt(i)
-                            val location = IntArray(2)
-                            child.getLocationOnScreen(location)
-                            val childCenterY = location[1] + child.height / 2
-
-                            if (y < childCenterY) {
-                                targetIndex = i
-                                break
-                            }
-                        }
-
-                        if (targetIndex == -1) {
-                            targetIndex = tracksContainer.childCount - 1
-                        }
-
-                        // Visual feedback - highlight drop position
-                        for (i in 0 until tracksContainer.childCount) {
-                            val child = tracksContainer.getChildAt(i)
-                            if (child != draggedView) {
-                                child.alpha = if (i == targetIndex && targetIndex != currentDraggedIndex) 0.5f else 1f
-                            }
-                        }
-                    }
-                }
-                android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> {
-                    if (draggedView != null) {
-                        // Find final target position
-                        val y = event.rawY
-                        var targetIndex = tracksContainer.childCount - 1
-                        // Bug 2.30: Read atomic value once for consistency
-                        val currentDraggedIndex = draggedIndexAtomic.get()
-
-                        for (i in 0 until tracksContainer.childCount) {
-                            val child = tracksContainer.getChildAt(i)
-                            val location = IntArray(2)
-                            child.getLocationOnScreen(location)
-                            val childCenterY = location[1] + child.height / 2
-
-                            if (y < childCenterY) {
-                                targetIndex = i
-                                break
-                            }
-                        }
-
-                        // Move track if position changed
-                        if (targetIndex != currentDraggedIndex && currentDraggedIndex >= 0) {
-                            viewModel.moveTrack(currentDraggedIndex, targetIndex)
-                        }
-
-                        // Reset visual state
-                        for (i in 0 until tracksContainer.childCount) {
-                            tracksContainer.getChildAt(i).alpha = 1f
-                        }
-
-                        draggedView = null
-                        // Bug 2.30: Reset atomic value
-                        draggedIndexAtomic.set(-1)
-                    }
-                }
-            }
-            false
-        }
-    }
-
-    private fun updateActiveTrackHighlight(activeIndex: Int) {
-        // Bug 2.29: Synchronized access to trackViews
-        synchronized(trackViewsLock) {
-            // Update visual highlight for all tracks
-            trackViews.forEach { (index, view) ->
-                val trackContainer = view.findViewById<View>(R.id.trackContainer)
-                trackContainer.setBackgroundResource(
-                    if (index == activeIndex) R.drawable.track_background_active
-                    else R.drawable.track_background_inactive
-                )
-            }
-
-            // Update active view references
-            if (activeIndex >= 0 && trackViews.containsKey(activeIndex)) {
-                val activeView = trackViews[activeIndex]
-                activeWaveformView = activeView?.findViewById(R.id.trackWaveformView)
-                activeSpectrumView = activeView?.findViewById(R.id.trackSpectrumView)
-
-                // Update waveform data from active track
-                viewModel.getActiveTrack()?.let { track ->
-                    track.waveformData?.let { data ->
-                        activeWaveformView?.setWaveformData(data)
-                    }
-                    if (currentVisualMode == VisualMode.SPECTROGRAM) {
-                        activeSpectrumView?.let { view -> loadSpectrogram(track, view) }
-                    }
-                    // Update file name display
-                    tvFileName.text = track.name
-                }
-            } else {
-                activeWaveformView = null
-                activeSpectrumView = null
-            }
-        }
-
-        // Update edit buttons based on new active view
-        val hasSelection = getActiveSelection() != null
-        val hasClipboard = viewModel.hasClipboard.value ?: false
-        updateEditButtons(hasSelection, hasClipboard)
-    }
-
-    private fun setupWaveformListeners(waveformView: WaveformView) {
-        waveformView.onSeekListener = { progress ->
-            viewModel.seekTo(progress)
-        }
-
-        waveformView.onSelectionChangedListener = { start, end ->
-            // -1f indicates no selection
-            val hasSelection = start >= 0f && end >= 0f && start != end
-            val hasClipboard = viewModel.hasClipboard.value ?: false
-            updateEditButtons(hasSelection, hasClipboard)
-        }
-    }
-
-    private fun setupSpectrumListeners(spectrumView: SpectrumView) {
-        spectrumView.onSeekListener = { progress ->
-            viewModel.seekTo(progress)
-        }
-
-        spectrumView.onSelectionChangedListener = { start, end ->
-            val hasSelection = start >= 0f && end >= 0f && start != end
-            val hasClipboard = viewModel.hasClipboard.value ?: false
-            updateEditButtons(hasSelection, hasClipboard)
-        }
-    }
-
-    private fun updateToggleButtonIcon() {
-        val showSpectrogram = currentVisualMode == VisualMode.SPECTROGRAM
-
-        // Update button icon: show the opposite mode icon (what you'll switch TO)
-        btnToggleVisualMode.setImageResource(
-            if (showSpectrogram) R.drawable.ic_waveform else R.drawable.ic_spectrum
-        )
-
-        val tracks = viewModel.tracks.value ?: emptyList()
-        // Bug 2.29 & 2.42: Synchronized access to trackViews with safe copy to prevent ConcurrentModification
-        val trackViewsCopy: List<Pair<Int, View>>
-        synchronized(trackViewsLock) {
-            trackViewsCopy = trackViews.entries.map { it.key to it.value }
-        }
-        trackViewsCopy.forEach { (index, trackView) ->
-            val waveformView = trackView.findViewById<WaveformView>(R.id.trackWaveformView)
-            val spectrumView = trackView.findViewById<SpectrumView>(R.id.trackSpectrumView)
-
-            // Synchronize selection between views before toggling visibility
-            if (showSpectrogram) {
-                // Switching TO spectrogram: copy waveform selection to spectrum
-                val sel = waveformView.getSelection()
-                if (sel != null) {
-                    spectrumView.setSelection(sel.first, sel.second)
-                } else {
-                    spectrumView.clearSelection()
-                }
-            } else {
-                // Switching TO waveform: copy spectrum selection to waveform
-                val sel = spectrumView.getSelection()
-                if (sel != null) {
-                    waveformView.setSelection(sel.first, sel.second)
-                } else {
-                    waveformView.clearSelection()
-                }
-            }
-
-            waveformView.visibility = if (showSpectrogram) View.GONE else View.VISIBLE
-            spectrumView.visibility = if (showSpectrogram) View.VISIBLE else View.GONE
-
-            if (showSpectrogram && index < tracks.size) {
-                loadSpectrogram(tracks[index], spectrumView)
-            }
-        }
-    }
-
-    private fun loadSpectrogram(track: AudioTrack, spectrumView: SpectrumView) {
-        val cachedData = track.cachedSpectrogramData
-        val cachedSampleRate = track.cachedSpectrogramSampleRate
-        val cachedFftSize = track.cachedSpectrogramFftSize
-        if (cachedData != null && cachedSampleRate != null && cachedFftSize != null) {
-            spectrumView.setSpectrogramData(cachedData, cachedSampleRate, cachedFftSize)
-            return
-        }
-
-        // Get track index to track the job
-        val trackIndex = viewModel.tracks.value?.indexOf(track) ?: -1
-
-        // Cancel any existing job for this track
-        if (trackIndex >= 0) {
-            spectrogramLoadingJobs[trackIndex]?.cancel()
-        }
-
-        spectrumView.clear()
-        val job = lifecycleScope.launch {
-            try {
-                val rawAudio = withContext(Dispatchers.IO) {
-                    waveformExtractor.extractRawSamples(track.uri)
-                }
-                val fftSize = FFTProcessor.FFT_SIZE_1024
-                val spectrogram = withContext(Dispatchers.Default) {
-                    fftProcessor.computeSpectrogram(rawAudio.samples, fftSize)
-                }
-                track.cachedSpectrogramData = spectrogram
-                track.cachedSpectrogramSampleRate = rawAudio.sampleRate
-                track.cachedSpectrogramFftSize = fftSize
-                spectrumView.setSpectrogramData(spectrogram, rawAudio.sampleRate, fftSize)
-            } catch (_: kotlinx.coroutines.CancellationException) {
-                // Job was cancelled, do nothing
-            } catch (e: Exception) {
-                spectrumView.clear()
-                Toast.makeText(this@AudioEditorActivity, e.message ?: "Spectrogram error", Toast.LENGTH_SHORT).show()
-            } finally {
-                // Remove job from tracking map when done
-                if (trackIndex >= 0) {
-                    spectrogramLoadingJobs.remove(trackIndex)
-                }
-            }
-        }
-
-        // Store the job for potential cancellation
-        if (trackIndex >= 0) {
-            spectrogramLoadingJobs[trackIndex] = job
-        }
-    }
-
-    private enum class VisualMode {
-        WAVEFORM,
-        SPECTROGRAM
+        /** [record] : lancer l'enregistrement dès l'ouverture (projet créé depuis « Enregistrer tout de suite »). */
+        fun intent(context: Context, projectId: String, record: Boolean = false) =
+            Intent(context, AudioEditorActivity::class.java).putExtra(EXTRA_PROJECT_ID, projectId).putExtra(EXTRA_RECORD, record)
     }
 }

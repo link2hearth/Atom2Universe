@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Audio editor: effects and generators (step 7c) -->
+    <string name="ae_effects">Effects</string>
+    <string name="ae_generate">Generate</string>
+    <string name="ae_preview">Preview</string>
+    <string name="ae_preview_stop">Stop preview</string>
+    <string name="ae_preview_preparing">Preparing…</string>
+    <string name="ae_apply">Apply</string>
+    <string name="ae_insert">Insert</string>
+    <string name="ae_effect_progress_title">Applying effect</string>
+    <string name="ae_generate_progress_title">Generating</string>
+    <string name="ae_effect_failed">The effect could not be applied</string>
+    <string name="ae_noise_capture">Capture the noise profile</string>
+    <string name="ae_noise_captured">Noise profile captured</string>
+
+    <!-- Units (one %1$s = the number) -->
+    <string name="ae_unit_db">%1$s dB</string>
+    <string name="ae_unit_hz">%1$s Hz</string>
+    <string name="ae_unit_ms">%1$s ms</string>
+    <string name="ae_unit_s">%1$s s</string>
+    <string name="ae_unit_percent">%1$s %%</string>
+    <string name="ae_unit_ratio">%1$s:1</string>
+    <string name="ae_unit_semitones">%1$s semitones</string>
+    <string name="ae_unit_db_oct">%1$s dB/oct</string>
+    <string name="ae_unit_times">×%1$s</string>
+    <string name="ae_unit_bpm">%1$s BPM</string>
+    <string name="ae_unit_bits">%1$s bits</string>
+    <string name="ae_band_hz">%1$s Hz</string>
+    <string name="ae_band_khz">%1$s kHz</string>
+
+    <!-- Categories -->
+    <string name="ae_cat_volume">Volume and fades</string>
+    <string name="ae_cat_channels">Channels</string>
+    <string name="ae_cat_filters">Filters and equalizer</string>
+    <string name="ae_cat_dynamics">Dynamics</string>
+    <string name="ae_cat_time">Time and pitch</string>
+    <string name="ae_cat_space">Space and modulation</string>
+    <string name="ae_cat_repair">Repair</string>
+
+    <!-- Effects -->
+    <string name="ae_fx_amplify">Amplify</string>
+    <string name="ae_fx_normalize">Normalize</string>
+    <string name="ae_fx_fade_in">Fade in</string>
+    <string name="ae_fx_fade_out">Fade out</string>
+    <string name="ae_fx_invert">Invert the phase</string>
+    <string name="ae_fx_mono">Stereo to mono</string>
+    <string name="ae_fx_swap">Swap left and right</string>
+    <string name="ae_fx_filter">Filter</string>
+    <string name="ae_fx_eq">Graphic equalizer</string>
+    <string name="ae_fx_bass_treble">Bass and treble</string>
+    <string name="ae_fx_compressor">Compressor</string>
+    <string name="ae_fx_limiter">Limiter</string>
+    <string name="ae_fx_gate">Noise gate</string>
+    <string name="ae_fx_speed">Change speed</string>
+    <string name="ae_fx_tempo">Change tempo</string>
+    <string name="ae_fx_pitch">Change pitch</string>
+    <string name="ae_fx_paulstretch">Extreme stretch</string>
+    <string name="ae_fx_truncate">Truncate silences</string>
+    <string name="ae_fx_echo">Echo</string>
+    <string name="ae_fx_reverb">Reverb</string>
+    <string name="ae_fx_chorus">Chorus</string>
+    <string name="ae_fx_flanger">Flanger</string>
+    <string name="ae_fx_vibrato">Vibrato</string>
+    <string name="ae_fx_tremolo">Tremolo</string>
+    <string name="ae_fx_phaser">Phaser</string>
+    <string name="ae_fx_distortion">Distortion</string>
+    <string name="ae_fx_bitcrusher">Bit crusher</string>
+    <string name="ae_fx_noise_reduction">Noise reduction</string>
+
+    <!-- Generators -->
+    <string name="ae_gen_silence">Silence</string>
+    <string name="ae_gen_tone">Tone</string>
+    <string name="ae_gen_noise">Noise</string>
+    <string name="ae_gen_click">Click track</string>
+
+    <!-- Parameters -->
+    <string name="ae_p_gain">Gain</string>
+    <string name="ae_p_target">Target level</string>
+    <string name="ae_p_measure">Measure</string>
+    <string name="ae_opt_peak">Peak</string>
+    <string name="ae_opt_rms">RMS</string>
+    <string name="ae_p_remove_dc">Remove the DC offset</string>
+    <string name="ae_p_independent">Each channel on its own</string>
+    <string name="ae_p_limit_peak">Never go above 0 dB</string>
+    <string name="ae_p_type">Type</string>
+    <string name="ae_opt_lowpass">Low-pass</string>
+    <string name="ae_opt_highpass">High-pass</string>
+    <string name="ae_opt_bandpass">Band-pass</string>
+    <string name="ae_opt_notch">Notch</string>
+    <string name="ae_p_freq">Frequency</string>
+    <string name="ae_p_q">Width (Q)</string>
+    <string name="ae_p_slope">Slope</string>
+    <string name="ae_p_bass">Bass</string>
+    <string name="ae_p_treble">Treble</string>
+    <string name="ae_p_threshold">Threshold</string>
+    <string name="ae_p_ratio">Ratio</string>
+    <string name="ae_p_attack">Attack</string>
+    <string name="ae_p_release">Release</string>
+    <string name="ae_p_knee">Knee</string>
+    <string name="ae_p_makeup">Make-up gain</string>
+    <string name="ae_p_ceiling">Ceiling</string>
+    <string name="ae_p_lookahead">Look-ahead</string>
+    <string name="ae_p_reduction">Reduction</string>
+    <string name="ae_p_hold">Hold</string>
+    <string name="ae_p_speed">Speed</string>
+    <string name="ae_p_tempo">Tempo</string>
+    <string name="ae_p_pitch">Pitch</string>
+    <string name="ae_p_stretch">Stretch</string>
+    <string name="ae_p_window">Window</string>
+    <string name="ae_p_min_silence">Shortest silence</string>
+    <string name="ae_p_keep">Keep</string>
+    <string name="ae_p_delay">Delay</string>
+    <string name="ae_p_decay">Decay</string>
+    <string name="ae_p_room">Room size</string>
+    <string name="ae_p_damping">Damping</string>
+    <string name="ae_p_wet">Reverb level</string>
+    <string name="ae_p_dry">Direct sound level</string>
+    <string name="ae_p_width">Stereo width</string>
+    <string name="ae_p_rate">Rate</string>
+    <string name="ae_p_depth">Depth</string>
+    <string name="ae_p_mix">Mix</string>
+    <string name="ae_p_feedback">Feedback</string>
+    <string name="ae_p_stages">Stages</string>
+    <string name="ae_p_drive">Drive</string>
+    <string name="ae_p_output">Output level</string>
+    <string name="ae_opt_soft">Soft</string>
+    <string name="ae_opt_hard">Hard</string>
+    <string name="ae_opt_tube">Tube</string>
+    <string name="ae_p_bits">Resolution</string>
+    <string name="ae_p_downsample">Downsampling</string>
+    <string name="ae_p_sensitivity">Sensitivity</string>
+    <string name="ae_p_smoothing">Smoothing</string>
+    <string name="ae_p_duration">Duration</string>
+    <string name="ae_p_beats">Beats per bar</string>
+    <string name="ae_p_level">Level</string>
+    <string name="ae_opt_sine">Sine</string>
+    <string name="ae_opt_square">Square</string>
+    <string name="ae_opt_saw">Sawtooth</string>
+    <string name="ae_opt_triangle">Triangle</string>
+    <string name="ae_opt_white">White</string>
+    <string name="ae_opt_pink">Pink</string>
+    <string name="ae_opt_brown">Brown</string>
+</resources>

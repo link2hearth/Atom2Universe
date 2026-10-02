@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.audioeditor.AudioEditorActivity
+import com.Atom2Universe.app.audioeditor.AudioEditorLibraryActivity
 import com.Atom2Universe.app.dictaphone.DictaphoneActivity
 import com.Atom2Universe.app.hub.BaseHubActivity
 import com.Atom2Universe.app.hub.HubTile
@@ -81,7 +81,7 @@ class AudioSubHubActivity : BaseHubActivity() {
             descriptionRes = R.string.audio_hub_editor_desc,
             iconRes = R.drawable.ic_content_cut,
             defaultColorRes = R.color.audio_hub_tile_editor,
-            activityClass = AudioEditorActivity::class.java
+            activityClass = AudioEditorLibraryActivity::class.java
         ),
         HubTile(
             id = "sf2_creator",

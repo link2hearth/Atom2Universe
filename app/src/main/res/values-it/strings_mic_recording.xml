@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mic_recording_action_stop_notif">Ferma registrazione</string>
+    <string name="mic_recording_channel_description">Mantiene attiva la registrazione del microfono in background</string>
+    <string name="mic_recording_channel_name">Registrazione microfono</string>
+    <string name="mic_recording_notif_text">Registrazione microfono attiva</string>
+    <string name="mic_recording_notif_title">Registrazione in corso</string>
+</resources>

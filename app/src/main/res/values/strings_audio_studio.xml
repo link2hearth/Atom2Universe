@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Éditeur audio : galerie de projets -->
+    <string name="ae_library_title">Audio Editor</string>
+    <string name="ae_library_empty">No audio projects yet</string>
+    <string name="ae_new">New</string>
+    <string name="ae_new_title">New audio project</string>
+    <string name="ae_name_hint">Name</string>
+    <string name="ae_untitled_n">Project %1$d</string>
+    <string name="ae_track_n">Track %1$d</string>
+    <string name="ae_copy_of">Copy of %1$s</string>
+    <string name="ae_sample_rate">Sample rate</string>
+    <string name="ae_rate_44100">44.1 kHz</string>
+    <string name="ae_rate_48000">48 kHz</string>
+    <string name="ae_create_empty">Create an empty project</string>
+    <string name="ae_import_files">Import audio files…</string>
+
+    <string name="ae_menu_open_audio">Open an audio file</string>
+    <string name="ae_menu_import_project">Import a project file</string>
+    <string name="ae_open">Open</string>
+    <string name="ae_rename">Rename</string>
+    <string name="ae_duplicate">Duplicate</string>
+    <string name="ae_export_project">Export the project file</string>
+    <string name="ae_delete">Delete</string>
+    <string name="ae_delete_project_title">Delete this project?</string>
+    <string name="ae_delete_project_message">“%1$s” and its audio will be permanently deleted.</string>
+
+    <string name="ae_import_progress">Importing %1$d of %2$d: %3$s</string>
+    <string name="ae_import_failed">Couldn\'t import this audio</string>
+    <string name="ae_open_failed">Couldn\'t open this file</string>
+    <string name="ae_export_failed">Export failed</string>
+
+    <string name="ae_migrating">Converting the previous project…</string>
+    <string name="ae_legacy_project_name">Previous project</string>
+
+    <string name="ae_time_mss">%1$d:%2$02d</string>
+    <string name="ae_time_hmmss">%1$d:%2$02d:%3$02d</string>
+    <string name="ae_project_info">%1$s · %2$s · %3$s</string>
+    <plurals name="ae_tracks_count">
+        <item quantity="one">%d track</item>
+        <item quantity="other">%d tracks</item>
+    </plurals>
+
+    <!-- Éditeur audio : écran d'édition -->
+    <string name="ae_undo">Undo</string>
+    <string name="ae_redo">Redo</string>
+    <string name="ae_cut">Cut</string>
+    <string name="ae_copy">Copy</string>
+    <string name="ae_paste">Paste</string>
+    <string name="ae_split">Split at the cursor</string>
+    <string name="ae_trim">Keep only the selection</string>
+    <string name="ae_silence">Silence the selection</string>
+    <string name="ae_select_all">Select all</string>
+    <string name="ae_snap">Snap</string>
+    <string name="ae_zoom_in">Zoom in</string>
+    <string name="ae_zoom_out">Zoom out</string>
+    <string name="ae_zoom_fit">Fit the project</string>
+    <string name="ae_loop">Loop</string>
+    <string name="ae_play">Play</string>
+    <string name="ae_pause">Pause</string>
+    <string name="ae_stop">Stop</string>
+    <string name="ae_to_start">Go to start</string>
+    <string name="ae_mute_short">M</string>
+    <string name="ae_solo_short">S</string>
+    <string name="ae_locked_short">Locked</string>
+    <string name="ae_add_track">Add a track</string>
+    <string name="ae_lock_track">Lock the track</string>
+    <string name="ae_unlock_track">Unlock the track</string>
+    <string name="ae_delete_track_title">Delete this track?</string>
+    <string name="ae_delete_track_message">“%1$s” and its clips will be removed from the project.</string>
+    <string name="ae_error_playback">Playback stopped: audio output error</string>
+    <string name="ae_time_mss_cs">%1$d:%2$02d.%3$02d</string>
+    <string name="ae_clock_hms_cs">%1$d:%2$02d:%3$02d.%4$02d</string>
+
+    <!-- Éditeur audio : 7b (clips, repères) -->
+    <string name="ae_clip_settings">Clip settings</string>
+    <string name="ae_gain">Gain</string>
+    <string name="ae_gain_db">%1$d dB</string>
+    <string name="ae_fade_curve">Fade curve</string>
+    <string name="ae_shape_linear">Linear</string>
+    <string name="ae_shape_exp">Exponential</string>
+    <string name="ae_shape_log">Logarithmic</string>
+    <string name="ae_shape_s">S-curve</string>
+    <string name="ae_shape_equal">Equal power</string>
+    <string name="ae_reverse">Reverse</string>
+    <string name="ae_add_marker">Add a marker</string>
+    <string name="ae_prev_marker">Previous marker</string>
+    <string name="ae_next_marker">Next marker</string>
+    <string name="ae_markers">Markers</string>
+    <string name="ae_marker_n">Marker %1$d</string>
+    <string name="ae_goto">Go to</string>
+    <string name="ae_repeat_selection">Repeat the selection…</string>
+    <string name="ae_repeat_times">Repeat how many times?</string>
+
+    <!-- Éditeur audio : 7d (enregistrement, réglages de piste) -->
+    <string name="ae_record">Record</string>
+    <string name="ae_record_stop">Stop recording</string>
+    <string name="ae_recording">Recording</string>
+    <string name="ae_record_progress_title">Saving the recording</string>
+    <string name="ae_rec_no_permission">Microphone access is needed to record</string>
+    <string name="ae_rec_init_failed">The microphone is unavailable</string>
+    <string name="ae_rec_write_failed">Recording stopped: the storage is full</string>
+    <string name="ae_rec_read_failed">Recording stopped: microphone error</string>
+    <string name="ae_overdub">Play the tracks while recording</string>
+    <string name="ae_start_recording">Record right away</string>
+    <string name="ae_volume">Volume</string>
+    <string name="ae_pan">Pan</string>
+    <string name="ae_pan_center">Center</string>
+    <string name="ae_pan_left">L %1$d</string>
+    <string name="ae_pan_right">R %1$d</string>
+    <string name="ae_track_color">Color</string>
+    <string name="ae_color_auto">Auto</string>
+    <string name="ae_move_up">Move up</string>
+    <string name="ae_move_down">Move down</string>
+</resources>

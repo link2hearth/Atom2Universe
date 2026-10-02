@@ -13,6 +13,8 @@ import com.Atom2Universe.app.audioeditor.core.copyRange
 import com.Atom2Universe.app.audioeditor.core.deleteClip
 import com.Atom2Universe.app.audioeditor.core.deleteRange
 import com.Atom2Universe.app.audioeditor.core.duplicateClip
+import com.Atom2Universe.app.audioeditor.core.duplicateTrack
+import com.Atom2Universe.app.audioeditor.core.moveTrack
 import com.Atom2Universe.app.audioeditor.core.insertSilence
 import com.Atom2Universe.app.audioeditor.core.moveClip
 import com.Atom2Universe.app.audioeditor.core.pasteAt
@@ -404,5 +406,36 @@ class TimelineTest {
         // « a » n'est plus utilisée par le projet courant mais l'annulation peut la ramener.
         assertFalse("a" in s.project.usedSourceIds())
         assertTrue("a" in s.sourcesInHistory())
+    }
+
+    @Test
+    fun `dupliquer une piste copie ses reglages et ses clips avec de nouveaux identifiants, juste apres elle`() {
+        val (p0, t, c) = base()
+        val p = p0.addTrack("Piste 2").first.mapTrack(t) { it.copy(volume = 0.5f, pan = -0.25f, color = 0x123456, mute = true, solo = true) }
+        val (q, copyId) = p.duplicateTrack(t, "Copie")
+        val copy = q.track(copyId!!)!!
+        assertEquals(listOf(t, copyId, p.tracks[1].id), q.tracks.map { it.id })
+        assertEquals("Copie", copy.name)
+        assertEquals(0.5f, copy.volume, 0f)
+        assertEquals(-0.25f, copy.pan, 0f)
+        assertEquals(0x123456, copy.color)
+        assertTrue(copy.mute)
+        assertFalse("la copie n'est jamais en solo", copy.solo)
+        assertEquals(1, copy.clips.size)
+        assertNotEquals(c, copy.clips.single().id)
+        assertEquals("a", copy.clips.single().sourceId)
+        // Les identifiants restent uniques dans tout le projet.
+        val ids = q.tracks.flatMap { tr -> tr.clips.map { it.id } + tr.id }
+        assertEquals(ids.size, ids.toSet().size)
+        assertEquals(p0.tracks.single().clips, q.track(t)!!.clips)
+    }
+
+    @Test
+    fun `monter et descendre une piste change son rang sans toucher au reste`() {
+        val (p0, t, _) = base()
+        val (p1, t2) = p0.addTrack("Piste 2")
+        assertEquals(listOf(t2, t), p1.moveTrack(t2, 0).tracks.map { it.id })
+        assertEquals(listOf(t, t2), p1.moveTrack(t2, 99).tracks.map { it.id })
+        assertEquals(p1.tracks, p1.moveTrack(12345, 0).tracks)
     }
 }

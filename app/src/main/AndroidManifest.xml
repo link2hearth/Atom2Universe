@@ -200,11 +200,18 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
 
-        <!-- Audio Editor -->
+        <!-- Audio Editor : galerie de projets (l'entrée du module) -->
+        <!-- Pas de recréation à la rotation : un import ou une conversion en cours garde sa boîte de progression -->
+        <activity
+            android:name=".audioeditor.AudioEditorLibraryActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/Theme.A2U" />
+
+        <!-- Audio Editor : l'éditeur d'un projet. Pas de configChanges : une rotation recrée l'écran, le projet vit dans un ViewModel -->
         <activity
             android:name=".audioeditor.AudioEditorActivity"
             android:exported="false"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:theme="@style/Theme.A2U" />
 
         <!-- SF2 Creator -->

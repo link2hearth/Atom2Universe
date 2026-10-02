@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:background="@drawable/bg_px_card"
+    android:foreground="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/project_thumb"
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/project_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|start"
+            android:layout_margin="2dp"
+            android:background="@drawable/bg_px_scrim"
+            android:contentDescription="@string/px_more"
+            android:padding="5dp"
+            android:src="@drawable/ic_px_more"
+            app:tint="@color/audio_text_primary" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/project_name"
+        style="@style/PxTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/project_info"
+        style="@style/PxCaption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" />
+</LinearLayout>
