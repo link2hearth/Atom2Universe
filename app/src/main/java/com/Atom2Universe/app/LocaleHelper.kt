@@ -18,8 +18,10 @@ object LocaleHelper {
     private const val PREFS_NAME = "atom2univers_prefs"
     private const val KEY_LANGUAGE = "app_language"
 
-    // Supported languages (alphabetically sorted by display name)
-    val SUPPORTED_LANGUAGES = listOf("in", "de", "el", "en", "es", "fr", "it", "nl", "pl", "pt", "ro", "tr", "ru", "uk")
+    // Seules l'anglais et le français sont livrés. Les autres traductions sont rangées hors du dépôt
+    // (« Documents NON commit du projet/localisations-en-attente ») ; les noms d'affichage plus bas
+    // restent pour le jour où elles reviennent.
+    val SUPPORTED_LANGUAGES = listOf("en", "fr")
     const val DEFAULT_LANGUAGE = "en"
 
     /**
@@ -27,7 +29,9 @@ object LocaleHelper {
      */
     fun getLanguage(context: Context): String {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE) ?: DEFAULT_LANGUAGE
+        val stored = prefs.getString(KEY_LANGUAGE, DEFAULT_LANGUAGE) ?: DEFAULT_LANGUAGE
+        // Un choix enregistré dans une langue retirée (ancienne version) retombe sur le défaut.
+        return if (stored in SUPPORTED_LANGUAGES) stored else DEFAULT_LANGUAGE
     }
 
     /**

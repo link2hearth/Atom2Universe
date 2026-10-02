@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Назад</string>
-    <string name="pixel_art_color_hue">Оттенок</string>
-    <string name="pixel_art_color_saturation">Насыщенность</string>
-    <string name="pixel_art_color_brightness">Яркость</string>
-    <string name="pixel_art_color_alpha">Альфа</string>
-    <string name="pixel_art_color_presets">Быстрые цвета</string>
-</resources>

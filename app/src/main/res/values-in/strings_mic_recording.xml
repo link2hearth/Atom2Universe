@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="mic_recording_action_stop_notif">Hentikan rekaman</string>
-    <string name="mic_recording_channel_description">Menjaga rekaman mikrofon tetap berjalan di latar belakang</string>
-    <string name="mic_recording_channel_name">Rekaman Mikrofon</string>
-    <string name="mic_recording_notif_text">Rekaman mikrofon aktif</string>
-    <string name="mic_recording_notif_title">Sedang merekam</string>
-</resources>

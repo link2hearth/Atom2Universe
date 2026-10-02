@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Geri</string>
-    <string name="pixel_art_color_hue">Ton</string>
-    <string name="pixel_art_color_saturation">Doygunluk</string>
-    <string name="pixel_art_color_brightness">Parlaklık</string>
-    <string name="pixel_art_color_alpha">Alfa</string>
-    <string name="pixel_art_color_presets">Hızlı renkler</string>
-</resources>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Wstecz</string>
-    <string name="pixel_art_color_hue">Odcień</string>
-    <string name="pixel_art_color_saturation">Nasycenie</string>
-    <string name="pixel_art_color_brightness">Jasność</string>
-    <string name="pixel_art_color_alpha">Alfa</string>
-    <string name="pixel_art_color_presets">Szybkie kolory</string>
-</resources>

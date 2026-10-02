@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Volver</string>
-    <string name="pixel_art_color_hue">Tono</string>
-    <string name="pixel_art_color_saturation">Saturación</string>
-    <string name="pixel_art_color_brightness">Brillo</string>
-    <string name="pixel_art_color_alpha">Transparencia</string>
-    <string name="pixel_art_color_presets">Colores rápidos</string>
-</resources>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="mic_recording_channel_name">Εγγραφή μικροφώνου</string>
-    <string name="mic_recording_channel_description">Διατηρεί την εγγραφή μικροφώνου σε λειτουργία παρασκηνίου</string>
-    <string name="mic_recording_notif_title">Εγγραφή σε εξέλιξη</string>
-    <string name="mic_recording_notif_text">Η εγγραφή μικροφώνου είναι ενεργή</string>
-    <string name="mic_recording_action_stop_notif">Διακοπή εγγραφής</string>
-</resources>

@@ -26,24 +26,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Déclarer explicitement toutes les langues supportées pour l'AAB
-        resourceConfigurations += listOf(
-            "en",  // Anglais (défaut)
-
-            "fr",  // Français
-            "el",  // Grec
-            "de",  // Allemand
-            "es",  // Espagnol
-            "it",  // Italien
-            "nl",  // Néerlandais
-            "pl",  // Polonais
-            "pt",  // Portugais
-            "ro",  // Roumain
-            "ru",  // Russe
-            "tr",  // Turc
-            "uk",  // Ukrainien
-            "in"   // Indonésien (values-in)
-        )
+        // Seules l'anglais (défaut) et le français sont livrés. Les autres traductions
+        // sont rangées hors du dépôt : « Documents NON commit du projet/localisations-en-attente ».
+        resourceConfigurations += listOf("en", "fr")
 
         // arm64 uniquement pour réduire la taille de l'APK
         // ChromeOS (x86_64) n'est pas ciblé

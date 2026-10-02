@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Înapoi</string>
-    <string name="pixel_art_color_hue">Nuanță</string>
-    <string name="pixel_art_color_saturation">Saturație</string>
-    <string name="pixel_art_color_brightness">Luminozitate</string>
-    <string name="pixel_art_color_alpha">Transparență</string>
-    <string name="pixel_art_color_presets">Culori rapide</string>
-</resources>

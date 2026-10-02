@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Terug</string>
-    <string name="pixel_art_color_hue">Tint</string>
-    <string name="pixel_art_color_saturation">Verzadiging</string>
-    <string name="pixel_art_color_brightness">Helderheid</string>
-    <string name="pixel_art_color_alpha">Alfa</string>
-    <string name="pixel_art_color_presets">Snelle kleuren</string>
-</resources>

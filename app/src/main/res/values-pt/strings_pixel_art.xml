@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Voltar</string>
-    <string name="pixel_art_color_hue">Tonalidade</string>
-    <string name="pixel_art_color_saturation">Saturação</string>
-    <string name="pixel_art_color_brightness">Brilho</string>
-    <string name="pixel_art_color_alpha">Alfa</string>
-    <string name="pixel_art_color_presets">Cores rápidas</string>
-</resources>

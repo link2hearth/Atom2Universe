@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Πίσω</string>
-    <string name="pixel_art_color_hue">Απόχρωση</string>
-    <string name="pixel_art_color_saturation">Κορεσμός</string>
-    <string name="pixel_art_color_brightness">Φωτεινότητα</string>
-    <string name="pixel_art_color_alpha">Αδιαφάνεια</string>
-    <string name="pixel_art_color_presets">Γρήγορα χρώματα</string>
-</resources>

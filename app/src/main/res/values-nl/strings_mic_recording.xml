@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="mic_recording_action_stop_notif">Opname stoppen</string>
-    <string name="mic_recording_channel_description">Houdt microfoonopname actief op de achtergrond</string>
-    <string name="mic_recording_channel_name">Microfoonopname</string>
-    <string name="mic_recording_notif_text">Microfoonopname actief</string>
-    <string name="mic_recording_notif_title">Opname bezig</string>
-</resources>

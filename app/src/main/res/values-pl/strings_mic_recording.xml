@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="mic_recording_action_stop_notif">Zatrzymaj nagrywanie</string>
-    <string name="mic_recording_channel_description">Utrzymuje nagrywanie mikrofonu w tle</string>
-    <string name="mic_recording_channel_name">Nagrywanie mikrofonu</string>
-    <string name="mic_recording_notif_text">Nagrywanie mikrofonu aktywne</string>
-    <string name="mic_recording_notif_title">Nagrywanie w toku</string>
-</resources>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="canvas_back">Kembali</string>
-    <string name="pixel_art_color_hue">Rona</string>
-    <string name="pixel_art_color_saturation">Saturasi</string>
-    <string name="pixel_art_color_brightness">Kecerahan</string>
-    <string name="pixel_art_color_alpha">Transparansi</string>
-    <string name="pixel_art_color_presets">Warna cepat</string>
-</resources>

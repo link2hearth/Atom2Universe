@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="mic_recording_action_stop_notif">Остановить запись</string>
-    <string name="mic_recording_channel_description">Поддерживает запись микрофона в фоновом режиме</string>
-    <string name="mic_recording_channel_name">Запись микрофона</string>
-    <string name="mic_recording_notif_text">Запись с микрофона активна</string>
-    <string name="mic_recording_notif_title">Запись идёт</string>
-</resources>
