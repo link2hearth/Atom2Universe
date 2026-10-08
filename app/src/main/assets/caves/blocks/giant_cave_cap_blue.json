@@ -1,0 +1,15 @@
+{
+  "id": 2644,
+  "name": "giant_cave_cap_blue",
+  "texture_top": "cave_art:b_cap_blue",
+  "texture_side": "cave_art:b_cap_side_blue",
+  "texture_bottom": "cave_art:b_gills_blue",
+  "color": "#9BAFEA",
+  "hardness": 0.6,
+  "light_emission": 3,
+  "drop": "giant_cave_cap_blue",
+  "creative_tab": "nature",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

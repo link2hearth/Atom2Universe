@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Back</string>
+    <string name="hub_toggle_view">Toggle view</string>
+    <string name="hub_edit_mode">Edit mode</string>
+    <string name="hub_confirm_edit">Done editing</string>
+    <string name="notification_channel_audio_name">Audio playback</string>
+    <string name="notification_channel_audio_description">Keeps audio playback running in background.</string>
+    <string name="hub_edit_tile">Edit tile</string>
+    <string name="hub_change_language">Change language</string>
+    <string name="hub_select_language">Select language</string>
+<string name="hub_settings">Settings</string>
+    <string name="confirm_return_menu_yes">Yes</string>
+    <string name="confirm_return_menu_no">No</string>
+    <string name="main_hub_clicker_stats_desc">Atom clicker statistics</string>
+    <string name="hub_games_title">Games</string>
+    <string name="hub_games_desc">Mini-games: chess, sudoku, solitaire…</string>
+    <string name="hub_clicker_title">Clicker</string>
+    <string name="hub_clicker_desc">Idle crypto clicker with gacha</string>
+    <string name="hub_creative_title">Creations</string>
+    <string name="hub_creative_desc">Pixel art and canvas editor</string>
+    <string name="banner_label_earth">Earth</string>
+    <string name="banner_label_chess">Chess</string>
+    <string name="banner_label_draughts">Draughts</string>
+    <string name="banner_label_blackjack">BlackJack</string>
+    <string name="banner_label_pipetap">PipeTap</string>
+    <string name="banner_label_music">Music</string>
+    <string name="hub_audio_title">Audio</string>
+    <string name="hub_audio_desc">Music, MIDI, radio and audio tools</string>
+    <string name="audio_sub_hub_title">Audio</string>
+    <string name="audio_sub_hub_subtitle">Music, MIDI, radio and tools</string>
+    <string name="hub_shortcut_add_title">Quick shortcut</string>
+    <string name="hub_shortcut_add_message">Use « %1$s » as a quick shortcut on the hub tile?</string>
+    <string name="hub_shortcut_exists_message">« %1$s » is already a shortcut. Move to first position (Yes) or remove it (No)?</string>
+    <string name="hub_shortcut_added">Shortcut added</string>
+    <string name="periodic_toggle_rarities_desc">Show/hide rarities</string>
+    <string name="hub_stats_title">Statistics</string>
+    <string name="hub_stats_desc">Listening, games and reading recaps</string>
+
+    <string name="back_button_desc">Back</string>
+    <string name="hub_tile_ready_badge">%1$d ready</string>
+    <string name="hub_theme_current">Current theme: %1$s</string>
+    <string name="hub_appearance_color_current">Appearance: %1$s. Color: %2$s</string>
+    <string name="hub_artwork_ace_rank">A</string>
+    <string name="hub_style_brightness_color_current">Theme: %1$s, %2$s, %3$s</string>
+</resources>

@@ -1,0 +1,14 @@
+{
+  "id": 9017,
+  "name": "cotton_navy",
+  "texture_top": "cozy:cloth:5:000080",
+  "texture_side": "cozy:cloth:5:000080",
+  "texture_bottom": "cozy:cloth:5:000080",
+  "color": "#000080",
+  "hardness": 1.0,
+  "drop": "cotton_navy",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

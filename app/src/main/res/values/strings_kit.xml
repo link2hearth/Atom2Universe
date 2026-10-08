@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Écran commun des jeux du kit (puzzles de Simon Tatham, jeux d'OpenSpiel) -->
+    <string name="kit_undo">Undo</string>
+    <string name="kit_redo">Redo</string>
+    <string name="kit_restart">Restart</string>
+    <string name="kit_new">New</string>
+    <string name="kit_rules">Rules</string>
+    <string name="kit_time">%1$d:%2$02d</string>
+    <string name="kit_solved_in">Solved in %1$s</string>
+    <string name="kit_solved">Solved</string>
+    <string name="kit_lost">Game over</string>
+    <string name="kit_best">Best %1$s</string>
+    <string name="kit_separator">" · "</string>
+    <string name="kit_size">%1$d×%2$d</string>
+    <string name="kit_easy">Easy</string>
+    <string name="kit_medium">Medium</string>
+    <string name="kit_hard">Hard</string>
+    <string name="kit_expert">Expert</string>
+    <string name="kit_moves">Moves: %1$d</string>
+    <string name="kit_erase">✕</string>
+    <string name="kit_pencil">✎</string>
+    <string name="kit_hint">Hint · %1$d</string>
+    <string name="kit_demo_stop">Stop</string>
+</resources>

@@ -1,0 +1,20 @@
+{
+  "id": "mummy",
+  "model": "mummy",
+  "hp_base": 6,
+  "damage_base": 2,
+  "speed": 2.0,
+  "attack_range": 1.6,
+  "detect_range": 12.0,
+  "eye_height": 1.7,
+  "radius": 0.5,
+  "sprite_scale": 0.90,
+  "biomes": ["any"],
+  "spawn_zone_min": 11,
+  "spawn_weight": 35,
+  "behavior": "aggressive",
+  "retreat": "cocoon",
+  "boss_eligible": true,
+  "xp_base": 5,
+  "resistances": { "fire": 1.6, "poison": 0.0, "bleed": 0.0 }
+}

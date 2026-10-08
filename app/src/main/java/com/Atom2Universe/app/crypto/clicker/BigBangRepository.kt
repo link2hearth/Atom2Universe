@@ -1,0 +1,40 @@
+package com.Atom2Universe.app.crypto.clicker
+
+import android.content.Context
+import androidx.core.content.edit
+
+class BigBangRepository(context: Context) {
+
+    companion object {
+        const val UNLOCK_THRESHOLD = 178
+    }
+
+    private val prefs = context.getSharedPreferences("big_bang_prefs", Context.MODE_PRIVATE)
+
+    fun isUnlocked(): Boolean = prefs.getBoolean("unlocked", false)
+    fun markUnlocked() = prefs.edit { putBoolean("unlocked", true) }
+
+    fun getLevel(bonus: BigBangBonus): Int = prefs.getInt(bonus.id, 0)
+
+    fun addLevels(bonus: BigBangBonus, count: Int) =
+        prefs.edit { putInt(bonus.id, getLevel(bonus) + count) }
+
+    fun resetUnlock() = prefs.edit {
+        putBoolean("unlocked", false)
+        putInt("big_bang_count", 0)
+    }
+
+    fun getBigBangCount(): Int = prefs.getInt("big_bang_count", 0)
+
+    fun incrementBigBangCount() =
+        prefs.edit { putInt("big_bang_count", getBigBangCount() + 1) }
+
+    /** Écritures directes — utilisées par la restauration d'une sauvegarde Drive. */
+    fun setUnlocked(unlocked: Boolean) = prefs.edit { putBoolean("unlocked", unlocked) }
+
+    fun setLevel(bonus: BigBangBonus, level: Int) =
+        prefs.edit { putInt(bonus.id, level.coerceAtLeast(0)) }
+
+    fun setBigBangCount(count: Int) =
+        prefs.edit { putInt("big_bang_count", count.coerceAtLeast(0)) }
+}

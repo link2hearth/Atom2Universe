@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ForgePanel builds the forge window: equipped items, bag and the reforge button. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/roguelike_forge"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B101B"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:visibility="gone" />

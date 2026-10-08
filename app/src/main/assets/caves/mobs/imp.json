@@ -1,0 +1,20 @@
+{
+  "id": "imp",
+  "model": "imp",
+  "hp_base": 3,
+  "damage_base": 2,
+  "speed": 3.4,
+  "attack_range": 1.5,
+  "detect_range": 13.0,
+  "eye_height": 1.0,
+  "radius": 0.35,
+  "sprite_scale": 0.60,
+  "biomes": ["any"],
+  "spawn_zone_min": 3,
+  "spawn_weight": 60,
+  "behavior": "aggressive",
+  "retreat": "cocoon",
+  "boss_eligible": true,
+  "xp_base": 6,
+  "resistances": { "fire": 0.0, "ice": 1.5 }
+}

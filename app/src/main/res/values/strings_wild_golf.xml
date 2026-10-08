@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_wild_course">Wild Detours</string>
+    <string name="classic_wild_description">Course 3 · Advanced. 18 holes with branching fairways, central woodland and hills, narrow shortcuts between lakes and contoured greens. Build a par along the wide route or cut across with precision.</string>
+    <string-array name="classic_wild_holes">
+        <item>The Two-Way Oak</item>
+        <item>Thread Between Lakes</item>
+        <item>The Peninsula</item>
+        <item>The Giant’s Back</item>
+        <item>The Cape Wager</item>
+        <item>Serpent Islands</item>
+        <item>The Wind Redan</item>
+        <item>The Sand Sea</item>
+        <item>The Pine S</item>
+        <item>The Horseshoe</item>
+        <item>The Divided Forest</item>
+        <item>The Hourglass</item>
+        <item>The Trident</item>
+        <item>The Giant’s Balconies</item>
+        <item>The Twin Capes</item>
+        <item>The Last Long Iron</item>
+        <item>The Shore Choice</item>
+        <item>The Bold Causeway</item>
+    </string-array>
+    <string-array name="classic_wild_tips">
+        <item>Go around the wooded hill: wide left or tighter right with a better approach angle.</item>
+        <item>The broad right crescent builds a prudent par 5. The left shortcut is a 17 m ribbon between two lakes.</item>
+        <item>Carry the water without running into the rear sand. The right apron offers a bailout.</item>
+        <item>The high hill blocks the direct line. Use the wide left elbow or the shorter right saddle.</item>
+        <item>From the high tee, attack the green across the lake or set up an approach on the right terrace.</item>
+        <item>Follow the wide right bank or hop between the small left landings: water fills the gaps.</item>
+        <item>The high right apron feeds towards the diagonal green. Short shots find sand.</item>
+        <item>Two fairways skirt the huge central bunker. Left is wide; right demands a placed drive.</item>
+        <item>The broad right S avoids the pines; the left route is shorter with little room to miss.</item>
+        <item>The descent adds distance. Choose the broad right bank or the small left landing beside the lake.</item>
+        <item>Two routes encircle the wooded hill. The broad left detour offers space; the right route shortens the approach.</item>
+        <item>Control carry between front water and rear sand. The right apron avoids the narrowest target.</item>
+        <item>Three routes: wide left, short right, or a 17 m ribbon between the two central bunkers.</item>
+        <item>Skirt the wooded ridge on either balcony. The green climbs: take enough club to reach the terrace.</item>
+        <item>Cut across either cape over water. The bank routes remain playable with several placed shots.</item>
+        <item>Place a long iron between lake and sand; the front-left apron sets up a conservative chip.</item>
+        <item>The left shelf is wide but leaves a diagonal approach. The right lane hugs water and opens the green.</item>
+        <item>Final par 5: build along the broad right crescent or brave the 18 m causeway between the lakes.</item>
+    </string-array>
+</resources>

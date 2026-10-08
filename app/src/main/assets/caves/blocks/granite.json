@@ -1,0 +1,16 @@
+{
+  "id": 2001,
+  "name": "granite",
+  "texture_top": "cozy:material:3:B3A29D",
+  "texture_side": "cozy:material:3:B3A29D",
+  "texture_bottom": "cozy:material:3:B3A29D",
+  "color": "#B3A29D",
+  "hardness": 3.0,
+  "drop": "granite",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "us_red_desert",
+  "noise_offsets": [-400, 0, 600],
+  "surface_blocks": [
+    {"block": "redstone_redsand", "noise_min": 0.45},
+    {"block": "redsand", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.04,
+  "surface_variety_offset": 800,
+  "dirt_block": "redsand",
+  "stone_block": "redstone",
+  "height_base": -2.0,
+  "height_amplitude": 13.0,
+  "height_roughness": 3.0,
+  "topsoil_depth": 5,
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
+  "bush_density": 0.04,
+  "bush_block": "leaves_fall",
+  "decoration_density": 0.04,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.0,
+  "vegetation_blocks": [],
+  "wheat_enabled": false,
+  "structures": []
+}

@@ -1,0 +1,18 @@
+{
+  "ingredients": [
+    {
+      "tag": "planks",
+      "count": 4
+    },
+    {
+      "id": 9808,
+      "count": 1
+    },
+    {
+      "id": 9804,
+      "count": 1
+    }
+  ],
+  "result": 9824,
+  "result_count": 1
+}

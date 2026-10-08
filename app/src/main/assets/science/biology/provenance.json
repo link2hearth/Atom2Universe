@@ -1,0 +1,4025 @@
+{
+  "source": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/isa_BP3D_4.0_obj_99.zip",
+  "sourceSha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+  "metadataSha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "combinedAtlasLicense": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "facialMuscles": {
+    "source": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/MuscularSystem100.fbx",
+    "sourceSha256": "4c19df534d5d84aabbce08604306aa0485b43e8a2483c72a95b569e1dfea2279",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "licenseDeclaration": "https://github.com/Z-Anatomy/Models-of-human-anatomy/blob/master/License.txt",
+    "structures": 52,
+    "sourceObjects": [
+      "Frontalis muscle.l",
+      "Frontalis muscle.r",
+      "Occipitalis muscle.l",
+      "Occipitalis muscle.r",
+      "Temporoparietalis muscle.l",
+      "Temporoparietalis muscle.r",
+      "Nasalis muscle.l",
+      "Nasalis muscle.r",
+      "Orbital part of orbicularis oculi.l",
+      "Orbital part of orbicularis oculi.r",
+      "Palpebral part of orbicularis oculi.l",
+      "Palpebral part of orbicularis oculi.r",
+      "Orbicularis oris muscle.l",
+      "Orbicularis oris muscle.r",
+      "Zygomaticus major muscle.l",
+      "Zygomaticus major muscle.r",
+      "Zygomaticus minor muscle.l",
+      "Zygomaticus minor muscle.r",
+      "Corrugator supercilii.l",
+      "Corrugator supercilii.r",
+      "Depressor anguli oris.l",
+      "Depressor anguli oris.r",
+      "Depressor labii inferioris.l",
+      "Depressor labii inferioris.r",
+      "Levator anguli oris.l",
+      "Levator anguli oris.r",
+      "Procerus muscle.l",
+      "Procerus muscle.r",
+      "Risorius muscle.l",
+      "Risorius muscle.r",
+      "Levator labii superioris.l",
+      "Levator labii superioris.r",
+      "Depressor septi nasi.l",
+      "Depressor septi nasi.r",
+      "Mentalis muscle.l",
+      "Mentalis muscle.r",
+      "Levator nasolabialis.l",
+      "Levator nasolabialis.r",
+      "Bucinator.l",
+      "Bucinator.r",
+      "Superficial part of masseter.l",
+      "Superficial part of masseter.r",
+      "Deep part of masseter.l",
+      "Deep part of masseter.r",
+      "Medial pterygoid muscle.l",
+      "Medial pterygoid muscle.r",
+      "Inferior head of lateral pterygoid muscle.l",
+      "Inferior head of lateral pterygoid muscle.r",
+      "Superior head of lateral pterygoid muscle.l",
+      "Superior head of lateral pterygoid muscle.r",
+      "Temporalis muscle.l",
+      "Temporalis muscle.r"
+    ],
+    "modifications": "Selected facial and chewing muscles; static FBX hierarchy baked including mirrored instances; centimetres to metres; shared similarity registration to BodyParts3D skull; normals recomputed; per-structure materials. Original facial mesh detail retained.",
+    "alignment": {
+      "rowMatrix": [
+        [
+          1.0245816323653203,
+          0.0002651241834706599,
+          0.0016166015587164326
+        ],
+        [
+          -0.00028549711435165863,
+          1.0245013718821046,
+          0.012925268852140443
+        ],
+        [
+          -0.001613128274503395,
+          -0.012925702792101803,
+          1.0245001362109807
+        ]
+      ],
+      "offsetMetres": [
+        -0.0001746841848163929,
+        -0.1104264390017613,
+        0.06748972709379279
+      ],
+      "referenceSourceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea",
+      "method": "Trimmed nearest-vertex similarity registration on frontal bone, paired maxillae, paired zygomatic bones and mandible; parietal bones held out for checking. Sources differ; this is not medical validation.",
+      "medianResidualRangeMm": [
+        0.5,
+        3.08
+      ],
+      "maxP95ResidualMm": 6.01
+    }
+  },
+  "cartilage": {
+    "source": "BodyParts3D 4.0",
+    "conceptClasses": [
+      "FMA55107",
+      "FMA7538"
+    ],
+    "structures": 50,
+    "sourceElements": 51,
+    "groups": {
+      "intervertebralDiscs": 23,
+      "costalStructures": 14,
+      "laryngealCartilages": 8,
+      "nasalCartilages": 5
+    },
+    "modifications": "Original skeletal coordinates and full source mesh detail preserved; OBJ to GLB; smooth normals; independent materials. Identical cricoid meshes FJ2440 and FJ2769 deduplicated under FMA9615.",
+    "localIdentifications": {
+      "BP3D_FJ3211": "Source labels FJ3211 only as an intervertebral disk (FMA10446 class); T12-L1 level identified from spatial order between the labelled T11-T12 and L1-L2 discs and the T12/L1 vertebral bodies. No specific FMA identifier is asserted."
+    },
+    "limitations": "Not a complete cartilage or joint model. Costal source meshes are labelled for ribs 1 to 7 per side; no separate cartilages for ribs 8 to 10. Joint-surface cartilage, auricular cartilage, epiglottis and ligaments are not included. Four menisci from Z-Anatomy are documented separately in the menisci section."
+  },
+  "menisci": {
+    "source": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/Joints100.fbx",
+    "sourceSha256": "f4ba7a910cdaef99e31530f368628780d9f06b5d77853f8b721f47f67137e823",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "structures": 4,
+    "sourceObjects": [
+      "Medial meniscus.l",
+      "Medial meniscus.r",
+      "Lateral meniscus.l",
+      "Lateral meniscus.r"
+    ],
+    "modifications": "Static FBX world transforms including mirrored instances; centimetres to metres; uniform scale and rigid registration to each proximal tibia, then small rigid contact adjustments per meniscus; original source vertices and triangulated topology retained, with no simplification or non-rigid deformation; smooth normals and independent materials.",
+    "registration": {
+      "method": "Similarity ICP from proximal 40 mm of each source tibia to target triangles in proximal 60 mm, keeping the nearest 98% of samples for 100 iterations at most. Each meniscus then receives a rigid pose correction minimizing bone penetrations below -0.2 mm, tethered to its tibial pose with weight 0.004, for at most 50 iterations. Bone shapes and all meniscus vertex distances up to a uniform scale are preserved.",
+      "coordinates": "FBX world centimetres / 100, then row vector @ matrix + offset in metres; +X anatomical left, +Y superior, +Z anterior.",
+      "boneReferenceSource": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/SkeletalSystem100.fbx",
+      "boneReferenceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea",
+      "validation": "Signed distances sampled at source vertices and triangle centroids; positive outside bone, negative penetration. Not a clinical validation. Separate held-out sample checks are available via validate_menisci.py.",
+      "initialSeeds": {
+        "l": {
+          "matrix": [
+            [
+              0.9382695128828106,
+              0.004673983263847071,
+              0.008221755755555853
+            ],
+            [
+              -0.004043254565689656,
+              0.9356566818701044,
+              -0.07049360224123458
+            ],
+            [
+              -0.008549589450480177,
+              0.0704545934973556,
+              0.9356292946289955
+            ]
+          ],
+          "offset": [
+            0.004472013321782195,
+            -0.03164600212977198,
+            0.13837773627478683
+          ]
+        },
+        "r": {
+          "matrix": [
+            [
+              0.9404010710033704,
+              -0.00171894484268644,
+              -0.024531668647403852
+            ],
+            [
+              0.0001374684392417841,
+              0.9387744033876624,
+              -0.060510598483657384
+            ],
+            [
+              0.02459143428973636,
+              0.0604863344487831,
+              0.9384538329544015
+            ]
+          ],
+          "offset": [
+            -0.0019198834494488226,
+            -0.03298777591549884,
+            0.13244142001282846
+          ]
+        }
+      },
+      "tibialRegistration": {
+        "l": {
+          "matrix": [
+            [
+              0.9338363020560941,
+              0.0040069480669420055,
+              -0.22264031885488866
+            ],
+            [
+              -0.0037226576470065185,
+              0.9600095733562246,
+              0.0016634707280731302
+            ],
+            [
+              0.22264525378426725,
+              -0.0007547728193330524,
+              0.9338434170329356
+            ]
+          ],
+          "offset": [
+            0.01097841453601743,
+            -0.04229714201009466,
+            0.12772840863318918
+          ],
+          "surfaceResidualMm": {
+            "median": 0.14922064541482377,
+            "p95": 0.5089167775301935,
+            "max": 0.9618559475986157
+          }
+        },
+        "r": {
+          "matrix": [
+            [
+              0.9335567541951839,
+              -0.004396773031403363,
+              0.22337382718125692
+            ],
+            [
+              0.004065685893696681,
+              0.9599079448658258,
+              0.0019024110545160513
+            ],
+            [
+              -0.22338009866795538,
+              -0.000904077716169452,
+              0.9335651695241828
+            ]
+          ],
+          "offset": [
+            -0.011171920554273039,
+            -0.042294902936008405,
+            0.12766437754015514
+          ],
+          "surfaceResidualMm": {
+            "median": 0.14030666621456883,
+            "p95": 0.4613296431006716,
+            "max": 1.1601336819779606
+          }
+        }
+      },
+      "structures": {
+        "Medial meniscus.l": {
+          "matrix": [
+            [
+              0.9330902334645892,
+              0.02984178252010769,
+              -0.22380145325586867
+            ],
+            [
+              -0.03471198393380653,
+              0.9592430555614556,
+              -0.016817989740768157
+            ],
+            [
+              0.22309796196916576,
+              0.02443838422572165,
+              0.9334158081970003
+            ]
+          ],
+          "offset": [
+            0.024131897296394686,
+            -0.042249780662829084,
+            0.1355870996034521
+          ],
+          "correctionAngleDegrees": 2.15485142215757,
+          "centroidCorrectionMm": [
+            -0.13298456755380522,
+            0.12454624075108889,
+            -0.07635438663253225
+          ],
+          "sampledBoneClearanceMm": {
+            "tibia": {
+              "minimum": -0.415269667120081,
+              "p05": 0.270520250048213,
+              "median": 2.4360600040341707,
+              "maximum": 11.1375391490342
+            },
+            "femur": {
+              "minimum": -0.3735093350760861,
+              "p05": 1.3739370270825775,
+              "median": 4.056115928419686,
+              "maximum": 11.428080377427527
+            }
+          }
+        },
+        "Lateral meniscus.l": {
+          "matrix": [
+            [
+              0.9239571446141313,
+              -0.18301698484842335,
+              -0.18558821197455605
+            ],
+            [
+              0.19284555481113125,
+              0.9398617971559488,
+              0.033247563622007995
+            ],
+            [
+              0.1753533380249938,
+              -0.0692790859798577,
+              0.9413217416695033
+            ]
+          ],
+          "offset": [
+            -0.0725356501107887,
+            -0.016564383242756636,
+            0.11003143511300643
+          ],
+          "correctionAngleDegrees": 12.21630011121993,
+          "centroidCorrectionMm": [
+            1.600617724721018,
+            1.2067820795311213,
+            -0.7738336358908277
+          ],
+          "sampledBoneClearanceMm": {
+            "tibia": {
+              "minimum": -0.8761931665620885,
+              "p05": -0.4885357612233154,
+              "median": 3.3728349228749077,
+              "maximum": 10.504377616915514
+            },
+            "femur": {
+              "minimum": -1.6370035313840572,
+              "p05": -0.24733464145007322,
+              "median": 2.854224942039438,
+              "maximum": 10.166219311919786
+            }
+          }
+        },
+        "Medial meniscus.r": {
+          "matrix": [
+            [
+              0.932984012097368,
+              -0.030419724441201404,
+              0.22373843014055161
+            ],
+            [
+              0.03603686988964473,
+              0.9590357071613006,
+              -0.019881347648491896
+            ],
+            [
+              -0.22290264414177302,
+              0.027722992996513686,
+              0.933268052855159
+            ]
+          ],
+          "offset": [
+            -0.02469334130919106,
+            -0.04202597658083542,
+            0.1368962333066242
+          ],
+          "correctionAngleDegrees": 2.3099152469573085,
+          "centroidCorrectionMm": [
+            0.13958549566008005,
+            0.1799697736855066,
+            -0.07587370923049785
+          ],
+          "sampledBoneClearanceMm": {
+            "tibia": {
+              "minimum": -0.3562508331273515,
+              "p05": 0.3440319611381861,
+              "median": 2.605719865530344,
+              "maximum": 11.00177143959633
+            },
+            "femur": {
+              "minimum": -0.364399715260091,
+              "p05": 1.3642281724054672,
+              "median": 4.085987860451746,
+              "maximum": 11.475757058884955
+            }
+          }
+        },
+        "Lateral meniscus.r": {
+          "matrix": [
+            [
+              0.92191555280798,
+              0.1965422334242131,
+              0.18134573487545105
+            ],
+            [
+              -0.20551591971463526,
+              0.9372102703357338,
+              0.02904354501791767
+            ],
+            [
+              -0.17110912255266492,
+              -0.06671934684918794,
+              0.9421855488816486
+            ]
+          ],
+          "offset": [
+            0.0781596989361331,
+            -0.013975470467711852,
+            0.11151619728185495
+          ],
+          "correctionAngleDegrees": 13.008753546935905,
+          "centroidCorrectionMm": [
+            -1.3625409668921868,
+            1.3072087211687955,
+            -0.7019581243274398
+          ],
+          "sampledBoneClearanceMm": {
+            "tibia": {
+              "minimum": -0.8802115694721454,
+              "p05": -0.5066630718486491,
+              "median": 3.459089052521796,
+              "maximum": 10.698112325798158
+            },
+            "femur": {
+              "minimum": -1.6865589230353268,
+              "p05": -0.21449183131676908,
+              "median": 2.829667187933214,
+              "maximum": 10.246568980706453
+            }
+          }
+        }
+      }
+    },
+    "limitations": "Different source poses and reduced bone surface detail leave small placement discrepancies. Surface checks describe mesh geometry only, not clinical accuracy. Meniscus attachments, internal fibres, vascular zones and articular cartilage are not represented."
+  },
+  "organs": {
+    "source": "BodyParts3D 4.0",
+    "structures": 44,
+    "sourceElements": 106,
+    "partOfMetadataSha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+    "modifications": "Original source positions and mesh detail; OBJ to GLB; smooth normals and illustrative tissue colours. Explicit parenchymal/wall subset excludes vascular trees and cavity casts. Intestinal loops and thymic lobes grouped by organ.",
+    "grouping": {
+      "FMA7088": "Only ventricular wall FJ2428 and atrial walls FJ2438/FJ2439. FJ2428 is classified as ventricular wall by IS-A although missing from the PART-OF heart listing.",
+      "FMA7197": "Eight liver parts FJ2816 and FJ2818–FJ2824 combined without assigning segment numbers. FJ2409 overlaps the FJ2822 surface and is excluded. Source sector/segment labels are inconsistent and are not exposed as individual segment identifications.",
+      "FMA7198": "Use FJ1895, the source pancreas concept. FJ2629 is an overlapping parenchymal variant and is excluded.",
+      "FMA7208": "31 ileal elements from the IS-A zone-of-ileum set; FJ2599 appears separately as cecum/ileocecal junction."
+    },
+    "limitations": "Selected organ surfaces of an adult male, not a complete visceral system. No bulbospongiosus or ischiocavernosus muscle meshes in the imported sources. No separately identified sigmoid colon or parotid glands in this subset. Brain and peripheral nerves, vascular networks, female reproductive organs, histology and moving physiology are not included. Primary display systems and regions are navigation groups, not exclusive physiological classifications."
+  },
+  "visceralAdditions": {
+    "source": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/VisceralSystem100.fbx",
+    "sourceSha256": "22b301c93327929c9a14ee582d1848b550a950376e221a6d1078c7256bb83d0e",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "structures": 6,
+    "sourceObjects": [
+      "Superior lobe of right lung",
+      "Middle lobe of right lung",
+      "Inferior lobe of right lung",
+      "Superior lobe of left lung",
+      "Inferior lobe of left lung",
+      "Thyroid gland"
+    ],
+    "modifications": "Six static meshes only; FBX hierarchy and instance transforms; centimetres to metres; one shared thoracic similarity registration, then a joint rigid adjustment of both left lung lobes to reduce heart contact errors. No non-rigid deformation; smooth normals and illustrative colours. Source topology retained without simplification.",
+    "registration": {
+      "matrix": [
+        [
+          0.9439514021405064,
+          -0.001642483193773571,
+          0.00022544050243531694
+        ],
+        [
+          0.0016405589098853549,
+          0.9439190286458574,
+          0.007821387614346087
+        ],
+        [
+          -0.00023904168080632413,
+          -0.007820983743035312,
+          0.943920427393038
+        ]
+      ],
+      "offset": [
+        -0.002822375941994669,
+        0.0010857316777574955,
+        0.08497095459374718
+      ],
+      "checks": {
+        "First rib.l": {
+          "medianMm": 1.510672401291252,
+          "p95Mm": 2.9707431301486102
+        },
+        "First rib.r": {
+          "medianMm": 1.503838551811015,
+          "p95Mm": 2.7569093940636358
+        },
+        "Fourth rib.l": {
+          "medianMm": 2.009094605688717,
+          "p95Mm": 5.63111756555974
+        },
+        "Fourth rib.r": {
+          "medianMm": 1.9354672536661857,
+          "p95Mm": 4.799336786122841
+        },
+        "Eighth rib.l": {
+          "medianMm": 2.9525922508486904,
+          "p95Mm": 6.643741382446626
+        },
+        "Eighth rib.r": {
+          "medianMm": 3.0179276549150345,
+          "p95Mm": 6.521596623221388
+        },
+        "Twelfth rib.l": {
+          "medianMm": 2.758649031472638,
+          "p95Mm": 12.493881465791238
+        },
+        "Twelfth rib.r": {
+          "medianMm": 2.8405048938251434,
+          "p95Mm": 11.86710589391969
+        },
+        "Vertebra T1": {
+          "medianMm": 2.5807374891586923,
+          "p95Mm": 4.0325636791429655
+        },
+        "Vertebra T6": {
+          "medianMm": 1.970811821543615,
+          "p95Mm": 3.017309321805884
+        },
+        "Vertebra T12": {
+          "medianMm": 1.9290080427663607,
+          "p95Mm": 3.6696104160150753
+        }
+      },
+      "leftLungAdjustment": {
+        "centroidDisplacementMm": [
+          2.2908800565377696,
+          1.6657187370829885,
+          -0.046794890851062365
+        ],
+        "angleDegrees": 4.179951306677286,
+        "checks": {
+          "heart": {
+            "inside": 126,
+            "maxPenetrationMm": 3.5261609603062514,
+            "samples": 2400
+          },
+          "ribs": {
+            "inside": 24,
+            "maxPenetrationMm": 11.373329713737402,
+            "samples": 1800
+          }
+        },
+        "matrix": [
+          [
+            0.9982548893766338,
+            -0.008114602901374857,
+            -0.05849212814898395
+          ],
+          [
+            0.00560465867474551,
+            0.9990615953871967,
+            -0.04294783374662799
+          ],
+          [
+            0.0587857434824443,
+            0.042545056612271585,
+            0.9973636019632331
+          ]
+        ],
+        "offset": [
+          -0.010079892508262918,
+          -0.0007607726334173393,
+          0.05630021436937095
+        ],
+        "scale": 1
+      },
+      "skeletalSourceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea",
+      "method": "Equal-bone-weighted, 90%-trimmed nearest-vertex ICP on eight ribs and T1/T6/T12; one thoracic similarity. Left lobes adjusted together by a rigid transform against sampled heart/rib contacts, with original-pose anchors. No non-rigid deformation.",
+      "limitations": "Nearest-vertex residuals and sampled contact depths do not establish anatomical accuracy. Different source poses and lung inflation leave residual intersections; no claim of clinical validation."
+    },
+    "limitations": "Cross-source alignment is approximate; source poses, lung inflation and surface detail differ. This is an educational surface atlas, not a clinically validated model. Alveoli and fine tissue structure are not modelled.",
+    "excludedSourceAssets": "All other VisceralSystem meshes, including the kidneys with a separate CC BY-NC attribution, are excluded. Both kidneys in the atlas come from BodyParts3D 4.0 CC BY 4.0."
+  },
+  "trunkMuscles": {
+    "source": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/MuscularSystem100.fbx",
+    "sourceSha256": "4c19df534d5d84aabbce08604306aa0485b43e8a2483c72a95b569e1dfea2279",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "licenseDeclaration": "https://github.com/Z-Anatomy/Models-of-human-anatomy/blob/master/License.txt",
+    "structures": 8,
+    "sourceObjects": [
+      "Rectus abdominis muscle.l",
+      "Rectus abdominis muscle.r",
+      "Transversus abdominis muscle.l",
+      "Transversus abdominis muscle.r",
+      "Quadratus lumborum muscle.l",
+      "Quadratus lumborum muscle.r",
+      "Pyramidalis muscle.l",
+      "Pyramidalis muscle.r"
+    ],
+    "modifications": "Selected paired rectus abdominis, transversus abdominis, quadratus lumborum and pyramidalis muscles. Static hierarchy including mirrored instances baked, centimetres converted to metres, one shared uniform-scale/rotation/translation fitted to BodyParts3D bones, normals recomputed. Complete source topology preserved; no per-muscle warp or duplication of the existing oblique and posterior serratus muscles.",
+    "alignment": {
+      "matrix": [
+        [
+          0.9400478304757721,
+          0.0022041035390022463,
+          -0.0015209759734684785
+        ],
+        [
+          -0.0021704575506384075,
+          0.9398261569317241,
+          0.020473858539512703
+        ],
+        [
+          0.0015686154223989454,
+          -0.020470263727281515,
+          0.9398274324423178
+        ]
+      ],
+      "offset": [
+        0.0018705491248102197,
+        0.004376681672269456,
+        0.06864084918140832
+      ],
+      "scale": 0.9400516448698593,
+      "baselineThoraxMedianP95Mm": {
+        "Vertebra L1": [
+          2.1721380217120703,
+          3.6060421990811538
+        ],
+        "Vertebra L2": [
+          2.274613313043325,
+          3.8385795447515996
+        ],
+        "Vertebra L3": [
+          1.7723208804354507,
+          3.757853238187587
+        ],
+        "Vertebra L4": [
+          2.5213509620326904,
+          6.169605717825173
+        ],
+        "Vertebra L5": [
+          2.9922932438967407,
+          5.7852317643018525
+        ],
+        "Hip bone.l": [
+          6.428542821373898,
+          15.405648921185884
+        ],
+        "Hip bone.r": [
+          5.692588089732017,
+          13.825036158445986
+        ],
+        "Sixth rib.l": [
+          2.555050143206305,
+          4.890440549281289
+        ],
+        "Sixth rib.r": [
+          2.909016541268289,
+          5.130475177817969
+        ],
+        "Eighth rib.l": [
+          2.8471477426272043,
+          6.723116995154091
+        ],
+        "Eighth rib.r": [
+          2.5654308641028654,
+          6.378953694075713
+        ],
+        "Tenth rib.l": [
+          2.2403654581247436,
+          6.597465974076965
+        ],
+        "Tenth rib.r": [
+          2.290886196298541,
+          6.792698642809725
+        ],
+        "Twelfth rib.l": [
+          2.733197813952234,
+          13.036232762842065
+        ],
+        "Twelfth rib.r": [
+          2.5679060890702172,
+          12.519571837789885
+        ]
+      },
+      "checks": {
+        "Vertebra L1": {
+          "medianMm": 3.0654293696745754,
+          "p95Mm": 5.477655135242035,
+          "heldOut": false
+        },
+        "Vertebra L2": {
+          "medianMm": 3.3913050126804514,
+          "p95Mm": 5.949075014121461,
+          "heldOut": true
+        },
+        "Vertebra L3": {
+          "medianMm": 2.772742247506687,
+          "p95Mm": 5.47396857927551,
+          "heldOut": false
+        },
+        "Vertebra L4": {
+          "medianMm": 2.928173116206013,
+          "p95Mm": 5.729242918625962,
+          "heldOut": true
+        },
+        "Vertebra L5": {
+          "medianMm": 1.959566415146305,
+          "p95Mm": 3.3389031490322325,
+          "heldOut": false
+        },
+        "Hip bone.l": {
+          "medianMm": 5.5324829018128465,
+          "p95Mm": 13.082734964298147,
+          "heldOut": false
+        },
+        "Hip bone.r": {
+          "medianMm": 5.161556321131249,
+          "p95Mm": 12.876282758467292,
+          "heldOut": false
+        },
+        "Sixth rib.l": {
+          "medianMm": 2.263339499702958,
+          "p95Mm": 5.139857490293945,
+          "heldOut": false
+        },
+        "Sixth rib.r": {
+          "medianMm": 2.418303440001646,
+          "p95Mm": 5.738806280994903,
+          "heldOut": false
+        },
+        "Eighth rib.l": {
+          "medianMm": 2.6978750278175436,
+          "p95Mm": 7.779617915233115,
+          "heldOut": true
+        },
+        "Eighth rib.r": {
+          "medianMm": 2.5708045873801035,
+          "p95Mm": 8.043754555467101,
+          "heldOut": true
+        },
+        "Tenth rib.l": {
+          "medianMm": 1.8812543618771733,
+          "p95Mm": 6.718690314315199,
+          "heldOut": false
+        },
+        "Tenth rib.r": {
+          "medianMm": 2.018848523467362,
+          "p95Mm": 6.363871386575988,
+          "heldOut": false
+        },
+        "Twelfth rib.l": {
+          "medianMm": 2.3189266060659715,
+          "p95Mm": 13.49020607196142,
+          "heldOut": false
+        },
+        "Twelfth rib.r": {
+          "medianMm": 2.351788019306923,
+          "p95Mm": 13.94699115251984,
+          "heldOut": false
+        }
+      },
+      "method": "Single similarity transform fitted to 11 named skeletal parts; four bones held out. Per-bone equal-weight trimmed nearest-vertex registration, 400 samples and 60 iterations.",
+      "surfaceChecks": {
+        "Vertebra L1": {
+          "medianMm": 2.809134875283448,
+          "p95Mm": 5.319484516060039,
+          "maximumMm": 6.941021899374402,
+          "samples": 200
+        },
+        "Vertebra L2": {
+          "medianMm": 3.2087100002024433,
+          "p95Mm": 5.83875265737691,
+          "maximumMm": 7.344761018404129,
+          "samples": 200
+        },
+        "Vertebra L3": {
+          "medianMm": 2.2589971275725977,
+          "p95Mm": 4.874548057126024,
+          "maximumMm": 6.430326478312141,
+          "samples": 200
+        },
+        "Vertebra L4": {
+          "medianMm": 1.7373743917857734,
+          "p95Mm": 5.192406399362229,
+          "maximumMm": 6.968602482032113,
+          "samples": 200
+        },
+        "Vertebra L5": {
+          "medianMm": 1.3115163880271261,
+          "p95Mm": 2.995298570412585,
+          "maximumMm": 3.9475866358909486,
+          "samples": 200
+        },
+        "Hip bone.l": {
+          "medianMm": 3.333795234870041,
+          "p95Mm": 11.835171310494411,
+          "maximumMm": 15.982603749940278,
+          "samples": 200
+        },
+        "Hip bone.r": {
+          "medianMm": 2.7263544315282915,
+          "p95Mm": 10.218061338966866,
+          "maximumMm": 16.174075780834897,
+          "samples": 200
+        },
+        "Sixth rib.l": {
+          "medianMm": 2.1681635687764143,
+          "p95Mm": 5.903660143391052,
+          "maximumMm": 7.6347085664594605,
+          "samples": 200
+        },
+        "Sixth rib.r": {
+          "medianMm": 2.2292064982109,
+          "p95Mm": 4.465246048569328,
+          "maximumMm": 7.028446759221075,
+          "samples": 200
+        },
+        "Eighth rib.l": {
+          "medianMm": 2.345511489147176,
+          "p95Mm": 7.2274659032516455,
+          "maximumMm": 10.427987567591199,
+          "samples": 200
+        },
+        "Eighth rib.r": {
+          "medianMm": 2.656398772391219,
+          "p95Mm": 8.320370805049091,
+          "maximumMm": 10.672750354260302,
+          "samples": 200
+        },
+        "Tenth rib.l": {
+          "medianMm": 1.5100231952840781,
+          "p95Mm": 7.883219475368733,
+          "maximumMm": 11.607850471438448,
+          "samples": 200
+        },
+        "Tenth rib.r": {
+          "medianMm": 1.8380052830059967,
+          "p95Mm": 6.8351915787796464,
+          "maximumMm": 12.058008981176338,
+          "samples": 200
+        },
+        "Twelfth rib.l": {
+          "medianMm": 2.171386960385056,
+          "p95Mm": 13.743733002142944,
+          "maximumMm": 14.743984968733182,
+          "samples": 200
+        },
+        "Twelfth rib.r": {
+          "medianMm": 2.068966427918373,
+          "p95Mm": 13.106783732642386,
+          "maximumMm": 15.079358843374731,
+          "samples": 200
+        }
+      },
+      "surfaceCheckMethod": "200 independently sampled source bone vertices per bone (seed 83), measured against target triangles, not just target vertices.",
+      "initialMatrix": [
+        [
+          0.9439514021405064,
+          -0.001642483193773571,
+          0.00022544050243531694
+        ],
+        [
+          0.0016405589098853549,
+          0.9439190286458574,
+          0.007821387614346087
+        ],
+        [
+          -0.00023904168080632413,
+          -0.007820983743035312,
+          0.943920427393038
+        ]
+      ],
+      "initialOffset": [
+        -0.002822375941994669,
+        0.0010857316777574955,
+        0.08497095459374718
+      ],
+      "skeletalSourceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea"
+    },
+    "limitations": "Approximate registration between different source anatomies. Median point-to-bone-surface errors range from 1.31 to 3.34 mm; 95th-percentile errors reach 13.75 mm at the twelfth ribs and 11.84 mm at the pelvis. Attachments therefore remain approximate and are not a validated clinical reconstruction. No contraction or muscle-fibre simulation.",
+    "educationalReferences": [
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-4-axial-muscles-of-the-abdominal-wall-and-thorax",
+      "https://pubmed.ncbi.nlm.nih.gov/18441751/",
+      "https://pubmed.ncbi.nlm.nih.gov/19159363/"
+    ]
+  },
+  "licenseDeclaration": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+  "modifications": "Skeletal/teeth/muscular/cartilage/organ subset; OBJ to GLB; millimetres to metres; axis rotation; smooth normals; merged source parts per anatomical concept; duplicate identical geometry removed within each concept; per-structure materials. Large muscular meshes: exact coincident vertices welded, then quadric error reduction (fast-simplification 0.1.13) per connected component, retaining every component and bounding planes within 0.75 mm; this is not medical validation. Muscle heads and zones retain their source identities. Two source left/right association pairs corrected from geometry coordinates; see muscularLateralityCorrections.",
+  "triangles": 3634776,
+  "renderedStructures": 1773,
+  "packaging": {
+    "format": "Draco-compressed GLB in independent gzip members; concatenate decompressed parts in modelParts order",
+    "modelBytes": 15872536,
+    "modelSha256": "1584a8ef57ea33d45cb7747d9b11913ef576dbb164d26a8d924da31f1a740a6f",
+    "parts": [
+      {
+        "file": "atlas-000.part.gzip",
+        "bytes": 14338882,
+        "sha256": "47a51d9be611f5db0b34c46d55c5d17134f34cd1bee1652adeae321f219f2ef3"
+      }
+    ]
+  },
+  "originalTriangles": 7869674,
+  "muscleReductions": {
+    "unchanged-small": 337,
+    "reduced": 45
+  },
+  "muscularStructures": 442,
+  "muscularSourceElements": 407,
+  "muscularConceptClasses": [
+    "FMA5022",
+    "FMA85453",
+    "FMA10474"
+  ],
+  "muscularAdditionalConcepts": [
+    "FMA33581",
+    "FMA33583",
+    "FMA33586",
+    "FMA33587"
+  ],
+  "muscularLateralityCorrections": {
+    "FMA37388": [
+      "FJ1469"
+    ],
+    "FMA37389": [
+      "FJ1469M"
+    ],
+    "FMA46633": [
+      "FJ2754"
+    ],
+    "FMA46634": [
+      "FJ2742"
+    ]
+  },
+  "educationalReferences": [
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/9-3-cartilaginous-joints",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/9-6-anatomy-of-selected-synovial-joints",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-3-axial-muscles-of-the-head-neck-and-back",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-4-axial-muscles-of-the-abdominal-wall-and-thorax",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/22-1-organs-and-structures-of-the-respiratory-system",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-3-the-mouth-pharynx-and-esophagus",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-4-the-stomach",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-5-the-small-and-large-intestines",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-6-accessory-organs-in-digestion-the-liver-pancreas-and-gallbladder",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-2-gross-anatomy-of-urine-transport",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/25-3-gross-anatomy-of-the-kidney",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/17-3-the-pituitary-gland-and-hypothalamus",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/17-4-the-thyroid-gland",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/17-6-the-adrenal-glands",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems",
+    "https://openstax.org/books/anatomy-and-physiology/pages/27-1-anatomy-and-physiology-of-the-male-reproductive-system",
+    "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work",
+    "https://www.nei.nih.gov/eye-health-information/healthy-vision/nei-for-kids/about-eye",
+    "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work/how-tears-work",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC6486368/",
+    "https://ncbi.nlm.nih.gov/mesh/68007765",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-2-the-central-nervous-system",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-3-circulation-and-the-central-nervous-system",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-3-motor-responses",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/15-1-divisions-of-the-autonomic-nervous-system",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/16-3-the-cranial-nerve-exam",
+    "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/desc.html",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-1-structure-and-function-of-blood-vessels",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-5-circulatory-pathways",
+    "https://github.com/LluisV/Z-Anatomy/blob/PC-Version/README.md",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/4-3-connective-tissue-supports-and-protects",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/23-1-overview-of-the-digestive-system",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/5-1-layers-of-the-skin",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/5-2-accessory-structures-of-the-skin",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-4-axial-muscles-of-the-abdominal-wall-and-thorax",
+    "https://pubmed.ncbi.nlm.nih.gov/18441751/",
+    "https://pubmed.ncbi.nlm.nih.gov/19159363/"
+  ],
+  "referenceBones": 206,
+  "renderedReferenceBones": 199,
+  "teeth": 28,
+  "missingReferenceBones": [
+    "reference_left_malleus",
+    "reference_left_incus",
+    "reference_left_stapes",
+    "reference_right_malleus",
+    "reference_right_incus",
+    "reference_right_stapes",
+    "reference_coccyx"
+  ],
+  "senses": {
+    "source": "BodyParts3D 4.0",
+    "license": "CC BY 4.0",
+    "structures": 42,
+    "sourceElements": 44,
+    "isAMetadataSha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+    "modifications": "Original anatomical coordinates, no spheres or replacement geometry. OBJ to GLB with smooth normals, illustrative colours and translucent optical/fluid surfaces. Each choroid combines its two source parts; the external-ear mesh contains both auricles. The pupil remains the existing iris aperture, with no extra mesh. Explicit cleanup of tiny opposite-orbit debris is detailed below.",
+    "removedOppositeOrbitTriangles": {
+      "FJ1340": 18,
+      "FJ1368": 4,
+      "FJ1337": 10,
+      "FJ1371": 4
+    },
+    "cleanupRule": "For these four right-eye OBJ files only, remove the asserted number of triangles lying entirely at X > 0. Their area is below 0.003 square millimetres per file and below 0.00011 percent of the mesh surface. Remove the now-unused vertices; all surviving positions and triangle winding are unchanged.",
+    "transparency": {
+      "cornea": 0.045,
+      "lens": 0.035,
+      "vitreous": 0.0125,
+      "anterior_chamber": 0.0125,
+      "lacrimal_lake": 0.2
+    },
+    "limitations": "Illustrative transparency, not a refractive or physiological eye simulation. No microscopic retinal or corneal layers, moving accommodation, conjunctiva or complete eyelid skin. The anterior chamber and lacrimal lake are cavity/fluid volumes. Only the right levator tendon is supplied. No tympanic membranes, middle-ear ossicle meshes, cochleae or vestibular labyrinths in this source subset. Optic nerves and ocular vessels belong to their respective atlas layers; existing extraocular muscles are not duplicated.",
+    "educationalReferences": [
+      "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work",
+      "https://www.nei.nih.gov/eye-health-information/healthy-vision/nei-for-kids/about-eye",
+      "https://www.nei.nih.gov/eye-health-information/healthy-vision/how-eyes-work/how-tears-work",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6486368/",
+      "https://ncbi.nlm.nih.gov/mesh/68007765"
+    ]
+  },
+  "nervous": {
+    "source": "BodyParts3D 4.0 and Z-Anatomy",
+    "structures": 373,
+    "bodyPartsStructures": 126,
+    "sourceElements": 143,
+    "metadataSha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+    "modifications": "Explicit IS-A identities; original source positions and topology; unit/axis conversion, smooth normals and illustrative colours. Bilateral source parts remain grouped when no side-specific FMA identity is supplied.",
+    "grouping": "Brain regions, deep nuclei, tracts and cavities are distinct source selections, with no repeated source element. Optic nerves each combine orbital and intracranial pieces. Superior colliculus brachia FJ1735/FJ1736 have reversed lateral labels in source metadata, so the verified bilateral parent FMA72417 is used without exposing incorrect side labels. Corpus-callosum and named tracts are used instead of a superimposed whole-hemisphere white-matter envelope.",
+    "limitations": "Surface atlas, not histology or tractography. FJ1737 is the central canal of the spinal cord, not spinal cord tissue. BodyParts3D contains selected orbital nerves but not a complete set of cranial or peripheral nerves. Ventricular casts are explicitly labelled as spaces. No cerebral sulcal or cellular detail beyond the supplied surfaces is synthesized.",
+    "references": [
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-2-the-central-nervous-system",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-3-circulation-and-the-central-nervous-system",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-3-motor-responses",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/15-1-divisions-of-the-autonomic-nervous-system",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/16-3-the-cranial-nerve-exam"
+    ],
+    "externalAdditions": {
+      "source": "Z-Anatomy",
+      "sourceUrl": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/NervousSystem100.fbx",
+      "sourceSha256": "3ea1aad64956cad27348a27b8fb50494b7cc307c6bc77bee0810ec2a67dff2b1",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "structures": 247,
+      "registration": {
+        "matrix": [
+          [
+            0.9832479600211577,
+            0.0005057536840308755,
+            0.0003785012146997866
+          ],
+          [
+            -0.0005011512944411513,
+            0.9831765006117404,
+            -0.011860330010544963
+          ],
+          [
+            -0.0003845742301818462,
+            0.011860134644684387,
+            0.9831765554795323
+          ]
+        ],
+        "offset": [
+          1.7760305390246423e-7,
+          -0.04590766307336047,
+          0.11273368518557911
+        ],
+        "boneReferenceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea",
+        "regional": [
+          {
+            "name": "head",
+            "bones": [
+              "Occipital bone",
+              "Frontal bone"
+            ],
+            "matrix": [
+              [
+                1.0267059520899366,
+                0.0012258577430051389,
+                -0.0010081990478496543
+              ],
+              [
+                -0.0012253472952052167,
+                1.026706315897019,
+                0.0005202601324208594
+              ],
+              [
+                0.0010088193754601545,
+                -0.0005190562524110331,
+                1.0267065520943675
+              ]
+            ],
+            "offset": [
+              0.0013467309127593403,
+              -0.11461716215406081,
+              0.08729866144087214
+            ],
+            "anchors": [
+              [
+                -0.000778935045454545,
+                1.6356464407954547,
+                -0.09633005634090906
+              ],
+              [
+                0.004494051613636364,
+                1.6052479922499996,
+                -0.08036055104545453
+              ],
+              [
+                0.015257899818181818,
+                1.5732260023636364,
+                -0.04754149404545455
+              ],
+              [
+                0.002081928272727273,
+                1.5648662474772728,
+                -0.017687184340909098
+              ],
+              [
+                -0.005990259454545454,
+                1.5610662617727267,
+                -0.010879778045454544
+              ],
+              [
+                0.022026935136363637,
+                1.6836917159318185,
+                0.02665692415909091
+              ],
+              [
+                0.005069227204545456,
+                1.6489956144999995,
+                0.04123075884090909
+              ],
+              [
+                0.012012013204545457,
+                1.6179416789772731,
+                0.05697690293181819
+              ],
+              [
+                -0.014762070181818182,
+                1.608186807795454,
+                0.05215746759090909
+              ],
+              [
+                -0.00974131765909091,
+                1.601795144818182,
+                0.06947208486363635
+              ]
+            ]
+          },
+          {
+            "name": "cervical",
+            "bones": [
+              "Vertebra C3",
+              "Vertebra C7"
+            ],
+            "matrix": [
+              [
+                0.9789153470522077,
+                -0.004904341792497876,
+                0.00992297411022892
+              ],
+              [
+                0.006369404579341003,
+                0.9673596013792154,
+                -0.15024182833919644
+              ],
+              [
+                -0.009052550409392101,
+                0.1502967854911816,
+                0.9673296761084392
+              ]
+            ],
+            "offset": [
+              -0.010408283460469282,
+              -0.02166930621889973,
+              0.31417669957883043
+            ],
+            "anchors": [
+              [
+                -0.02168321165909091,
+                1.5087038207499999,
+                -0.015386299295454547
+              ],
+              [
+                -0.00928919818181818,
+                1.5115859704772725,
+                -0.014826582068181824
+              ],
+              [
+                0.002281224772727272,
+                1.5061482315227268,
+                -0.027850129568181815
+              ],
+              [
+                0.013525172545454543,
+                1.511950457318182,
+                -0.013784605863636364
+              ],
+              [
+                0.02390786825,
+                1.5082950588863637,
+                -0.016161199795454544
+              ],
+              [
+                -0.015984745863636365,
+                1.4506950316136364,
+                -0.0459086143409091
+              ],
+              [
+                -0.010412414090909091,
+                1.4505035084090907,
+                -0.035709932386363635
+              ],
+              [
+                -0.0017052581136363639,
+                1.4493484682499997,
+                -0.027616489568181822
+              ],
+              [
+                0.013857782590909092,
+                1.4491839174318184,
+                -0.02242036875
+              ],
+              [
+                0.025042045250000002,
+                1.4530576805681816,
+                -0.024244964659090908
+              ]
+            ]
+          },
+          {
+            "name": "thoracic",
+            "bones": [
+              "Vertebra T6",
+              "Vertebra T12"
+            ],
+            "matrix": [
+              [
+                0.9399486029207974,
+                0.0009731083410287508,
+                0.0005968141205224375
+              ],
+              [
+                -0.0009704920761249078,
+                0.9399398261914887,
+                -0.004106159268873895
+              ],
+              [
+                -0.0006010591218952671,
+                0.004105540033637382,
+                0.9399401377367927
+              ]
+            ],
+            "offset": [
+              0.0004834572747589548,
+              0.004991649673687482,
+              0.10128087981843215
+            ],
+            "anchors": [
+              [
+                -0.0022802231363636366,
+                1.3301758509772725,
+                -0.05450125772727274
+              ],
+              [
+                -0.0005455018181818179,
+                1.3310660054772727,
+                -0.07134391429545454
+              ],
+              [
+                0.0035083066590909083,
+                1.3250443103863636,
+                -0.07355022529545453
+              ],
+              [
+                0.008903342636363637,
+                1.3248264765227273,
+                -0.08216426368181817
+              ],
+              [
+                0.003073310727272727,
+                1.2998900946136362,
+                -0.09100421911363639
+              ],
+              [
+                -0.004290244886363637,
+                1.127677882159091,
+                -0.05987098629545458
+              ],
+              [
+                -0.0018373688863636368,
+                1.1376221452499997,
+                -0.052071201477272726
+              ],
+              [
+                0.0044371961136363625,
+                1.1490762467499998,
+                -0.048423414136363634
+              ],
+              [
+                0.0026900468636363636,
+                1.1457825400454544,
+                -0.03501953347727272
+              ],
+              [
+                0.003046233545454545,
+                1.1469213857045455,
+                -0.012398427500000002
+              ]
+            ]
+          },
+          {
+            "name": "lumbar",
+            "bones": [
+              "Vertebra L3"
+            ],
+            "matrix": [
+              [
+                0.9454474141717681,
+                -0.004368838103227162,
+                -0.005025019686379395
+              ],
+              [
+                0.004927175618447493,
+                0.9389556312752094,
+                0.1106941550864429
+              ],
+              [
+                0.004478896029792104,
+                -0.11071759699119364,
+                0.9389551127397698
+              ]
+            ],
+            "offset": [
+              -0.005743244615293462,
+              0.005089487861255515,
+              -0.021259314248126007
+            ],
+            "anchors": [
+              [
+                -0.019553337659090907,
+                1.0535054898409089,
+                -0.017359258659090906
+              ],
+              [
+                -0.009928892181818182,
+                1.042454173522727,
+                -0.02779693700000001
+              ],
+              [
+                0.008017211272727273,
+                1.0460385784545456,
+                -0.02668044852272727
+              ],
+              [
+                0.011282811613636364,
+                1.0391300868863633,
+                -0.039359948545454534
+              ],
+              [
+                0.023389233181818177,
+                1.044818335340909,
+                -0.03736975265909092
+              ]
+            ]
+          },
+          {
+            "name": "pelvis",
+            "bones": [
+              "Sacrum",
+              "Hip bone.l",
+              "Hip bone.r"
+            ],
+            "matrix": [
+              [
+                0.9856006575117932,
+                -0.0019358348253221314,
+                -0.007439571090283374
+              ],
+              [
+                0.00184143646071669,
+                0.9855497408393098,
+                -0.012492726103116103
+              ],
+              [
+                0.007463496917628822,
+                0.012478446908786689,
+                0.9855233814266725
+              ]
+            ],
+            "offset": [
+              -0.0015237078920879521,
+              -0.03683831075092714,
+              0.09621321301274266
+            ],
+            "anchors": [
+              [
+                0.0020355056590909085,
+                0.8851883923636364,
+                -0.0797073750681818
+              ],
+              [
+                0.0003980272954545455,
+                0.9124232448636366,
+                -0.07536569529545456
+              ],
+              [
+                0.006575757295454546,
+                0.9339799879318182,
+                -0.05871314052272729
+              ],
+              [
+                0.0062219902954545455,
+                0.9458218846136366,
+                -0.04392688454545454
+              ],
+              [
+                0.0016105515454545457,
+                0.962729218340909,
+                -0.03311686449999999
+              ],
+              [
+                0.03605798929545455,
+                0.8193464597727274,
+                -0.00933222909090909
+              ],
+              [
+                0.052488902204545454,
+                0.8530671145227271,
+                -0.011657821045454547
+              ],
+              [
+                0.07367830056818182,
+                0.8930476286363636,
+                -0.016438649227272725
+              ],
+              [
+                0.07888801720454543,
+                0.9468236999090909,
+                -0.018379414863636364
+              ],
+              [
+                0.11335675447727271,
+                0.9833627647954544,
+                0.0045933784772727295
+              ],
+              [
+                -0.03050618429545454,
+                0.8172589578181815,
+                -0.0044368482045454545
+              ],
+              [
+                -0.039727422227272734,
+                0.8445785003409086,
+                0.003699704136363637
+              ],
+              [
+                -0.0733089775909091,
+                0.880665796,
+                -0.017261307613636367
+              ],
+              [
+                -0.07369629915909091,
+                0.940645653090909,
+                -0.02657821881818182
+              ],
+              [
+                -0.09314282195454546,
+                0.9867251974772728,
+                -0.020262087522727273
+              ]
+            ]
+          },
+          {
+            "name": "arm.l",
+            "bones": [
+              "Humerus.l",
+              "Clavicle.l"
+            ],
+            "matrix": [
+              [
+                0.9596136807982082,
+                0.021262775450048427,
+                0.00430821528055387
+              ],
+              [
+                -0.021266607718681024,
+                0.9596229266204629,
+                0.0008079692725037099
+              ],
+              [
+                -0.004289258080659799,
+                -0.0009032155702806334,
+                0.9598488783035486
+              ]
+            ],
+            "offset": [
+              0.027228552265741376,
+              -0.01774918975735096,
+              0.10003246041733511
+            ],
+            "anchors": [
+              [
+                0.17787175559090915,
+                1.3893276100227272,
+                -0.022209371659090912
+              ],
+              [
+                0.17280026179545457,
+                1.3593450656590913,
+                -0.026968862522727264
+              ],
+              [
+                0.20947499759090907,
+                1.2169542140227274,
+                -0.03628966590909091
+              ],
+              [
+                0.2197398577727273,
+                1.1157393740454544,
+                -0.03868218922727272
+              ],
+              [
+                0.2224265699318182,
+                1.0987836183863637,
+                -0.03527509170454545
+              ],
+              [
+                0.01963498359090909,
+                1.4026104687500003,
+                0.03744579134090909
+              ],
+              [
+                0.055199929431818194,
+                1.4068656415454548,
+                0.03038281688636364
+              ],
+              [
+                0.09257735195454546,
+                1.411532511068182,
+                0.0006822463863636366
+              ],
+              [
+                0.11509136195454545,
+                1.4168251215681815,
+                -0.031476388068181815
+              ],
+              [
+                0.14611908545454544,
+                1.4161801741136364,
+                -0.040545652590909094
+              ]
+            ]
+          },
+          {
+            "name": "forearm.l",
+            "bones": [
+              "Radius.l",
+              "Ulna.l"
+            ],
+            "matrix": [
+              [
+                0.9655617288690002,
+                -0.0021062470570683864,
+                -0.006384891897860343
+              ],
+              [
+                0.002116343799199089,
+                0.965581620096634,
+                0.0015203283161625346
+              ],
+              [
+                0.006381552329673463,
+                -0.0015342856969691129,
+                0.9655628292011711
+              ]
+            ],
+            "offset": [
+              -0.0014640140636354715,
+              -0.02029962556460907,
+              0.10216614673216647
+            ],
+            "anchors": [
+              [
+                0.23789486988636363,
+                1.087941394340909,
+                -0.03028529227272728
+              ],
+              [
+                0.24078192872727275,
+                1.0663066511363635,
+                -0.02293154390909091
+              ],
+              [
+                0.25939027331818176,
+                0.95008210925,
+                -0.007144618227272728
+              ],
+              [
+                0.2674742178181818,
+                0.8701153607500001,
+                0.014976435477272725
+              ],
+              [
+                0.27545852913636354,
+                0.8613352555227273,
+                0.015862479227272727
+              ],
+              [
+                0.21370554149999998,
+                1.105788772681818,
+                -0.049177723568181814
+              ],
+              [
+                0.21645246072727276,
+                1.0892093586363638,
+                -0.03506648445454546
+              ],
+              [
+                0.2231220058181818,
+                1.0738243520000001,
+                -0.03465003159090908
+              ],
+              [
+                0.23684162465909092,
+                0.9497462005909089,
+                -0.009225759659090909
+              ],
+              [
+                0.24659759154545455,
+                0.8658377550454546,
+                0.013454030227272732
+              ]
+            ]
+          },
+          {
+            "name": "hand.l",
+            "bones": [
+              "First metacarpal bone.l",
+              "Third metacarpal bone.l",
+              "Fifth metacarpal bone.l"
+            ],
+            "matrix": [
+              [
+                0.968043082345375,
+                0.000310857491437912,
+                -0.00023537506382859295
+              ],
+              [
+                -0.00031105665179622223,
+                0.9680427640036947,
+                -0.0008195208234005658
+              ],
+              [
+                0.00023511180325248523,
+                0.0008195963888591218,
+                0.9680427853637122
+              ]
+            ],
+            "offset": [
+              0.0003576652237712308,
+              -0.023382274373009437,
+              0.10225659260954907
+            ],
+            "anchors": [
+              [
+                0.31432862445454546,
+                0.8143939915227272,
+                0.04826338138636364
+              ],
+              [
+                0.3108155695681818,
+                0.8155476111363638,
+                0.047200456159090895
+              ],
+              [
+                0.3083011443409091,
+                0.8173416975454547,
+                0.04269503781818182
+              ],
+              [
+                0.29651966881818176,
+                0.8365281779318182,
+                0.032809035386363636
+              ],
+              [
+                0.2865581057045455,
+                0.841896483090909,
+                0.028931391454545454
+              ],
+              [
+                0.2681531903181818,
+                0.8331855250000001,
+                0.017045520818181812
+              ],
+              [
+                0.26668573084090913,
+                0.8268482547499999,
+                0.01889093084090909
+              ],
+              [
+                0.2695409780227273,
+                0.8101088407045453,
+                0.021331321454545454
+              ],
+              [
+                0.2736933926590908,
+                0.7814437626363635,
+                0.033195817386363624
+              ],
+              [
+                0.2734248831590909,
+                0.7732889581363636,
+                0.03697747249999999
+              ],
+              [
+                0.24777521279545447,
+                0.835279492068182,
+                0.025517980704545452
+              ],
+              [
+                0.24778972618181816,
+                0.8292133154545457,
+                0.024082857863636373
+              ],
+              [
+                0.24384649968181812,
+                0.8058130762045453,
+                0.029543228068181826
+              ],
+              [
+                0.23990880224999997,
+                0.7877612860227274,
+                0.038380043818181823
+              ],
+              [
+                0.23833798688636365,
+                0.7835643293636365,
+                0.040199230659090916
+              ]
+            ]
+          },
+          {
+            "name": "thigh.l",
+            "bones": [
+              "Femur.l"
+            ],
+            "matrix": [
+              [
+                1.0270669740696787,
+                -0.010353056765469592,
+                0.05120503880686062
+              ],
+              [
+                0.013496413702213305,
+                1.0263626924569247,
+                -0.06319162411267994
+              ],
+              [
+                -0.05046769858810504,
+                0.06378204101806786,
+                1.0251734358883076
+              ]
+            ],
+            "offset": [
+              -0.01136061284296204,
+              -0.07034873601610281,
+              0.13454311445537484
+            ],
+            "anchors": [
+              [
+                0.07630307981818182,
+                0.44410186859090905,
+                -0.03008478402272728
+              ],
+              [
+                0.0809134345681818,
+                0.4974051859318181,
+                -0.02513341820454545
+              ],
+              [
+                0.09969323297727271,
+                0.715884537590909,
+                -0.010337160022727271
+              ],
+              [
+                0.11082760568181817,
+                0.8240506822045454,
+                -0.014265427818181818
+              ],
+              [
+                0.10528406170454545,
+                0.8593713482272727,
+                -0.009421732340909088
+              ]
+            ]
+          },
+          {
+            "name": "shin.l",
+            "bones": [
+              "Tibia.l",
+              "Fibula.l"
+            ],
+            "matrix": [
+              [
+                0.9086199553857612,
+                0.032784967344013254,
+                -0.2817889578122951
+              ],
+              [
+                -0.026593183987239505,
+                0.9511792937476017,
+                0.024916818921068982
+              ],
+              [
+                0.28244056612694407,
+                -0.015911983408001203,
+                0.9088697538942674
+              ]
+            ],
+            "offset": [
+              0.02056475820534623,
+              -0.0794010322597963,
+              0.1277533068769444
+            ],
+            "anchors": [
+              [
+                0.07462551136363635,
+                0.08931462225000003,
+                -0.03895190629545455
+              ],
+              [
+                0.0778495918636364,
+                0.2491706711818182,
+                -0.028831009136363637
+              ],
+              [
+                0.07683877036363634,
+                0.3800809389772726,
+                -0.025798019272727277
+              ],
+              [
+                0.08415419402272727,
+                0.4140361759772729,
+                -0.041975617659090914
+              ],
+              [
+                0.07587989172727275,
+                0.42871846165909083,
+                -0.03239200081818182
+              ],
+              [
+                0.10032198340909089,
+                0.06482804936363636,
+                -0.04944904338636363
+              ],
+              [
+                0.09951106379545455,
+                0.15289048045454542,
+                -0.04805523761363635
+              ],
+              [
+                0.10922774234090907,
+                0.31546361918181814,
+                -0.04583659049999999
+              ],
+              [
+                0.11233454061363637,
+                0.39532232902272724,
+                -0.04178280968181818
+              ],
+              [
+                0.11381576702272728,
+                0.41092599636363636,
+                -0.04537579779545455
+              ]
+            ]
+          },
+          {
+            "name": "foot.l",
+            "bones": [
+              "Talus.l",
+              "Calcaneus.l",
+              "First metatarsal bone.l",
+              "Third metatarsal bone.l",
+              "Fifth metatarsal bone.l"
+            ],
+            "matrix": [
+              [
+                0.9389773528391868,
+                0.0038470185435878984,
+                -0.22702723998544286
+              ],
+              [
+                -0.0036157552402531004,
+                0.9660328982998588,
+                0.001414958793002784
+              ],
+              [
+                0.22703104096384086,
+                -0.0005255879266137229,
+                0.9389841673788626
+              ]
+            ],
+            "offset": [
+              0.010697707797917011,
+              -0.07982177444390218,
+              0.12817234440744615
+            ],
+            "anchors": [
+              [
+                0.07111316888636364,
+                0.06958411122727273,
+                -0.015232429636363636
+              ],
+              [
+                0.07236839538636362,
+                0.07130842190909091,
+                -0.027040983250000008
+              ],
+              [
+                0.07270097175000002,
+                0.0641494866818182,
+                -0.03362289597727272
+              ],
+              [
+                0.07220899690909093,
+                0.06651504515909092,
+                -0.04411600245454545
+              ],
+              [
+                0.07737906602272726,
+                0.060631586795454544,
+                -0.05488064743181819
+              ],
+              [
+                0.07610892493181817,
+                0.029180003363636353,
+                -0.07657660647727274
+              ],
+              [
+                0.07615375888636362,
+                0.028952608409090915,
+                -0.05941727729545454
+              ],
+              [
+                0.08149028000000003,
+                0.04980653470454546,
+                -0.0503237436590909
+              ],
+              [
+                0.07766309143181818,
+                0.04831924681818181,
+                -0.03482021356818182
+              ],
+              [
+                0.08695260345454546,
+                0.050333318409090916,
+                -0.023560558159090913
+              ],
+              [
+                0.07207154350000002,
+                0.050250103227272726,
+                0.02703483988636363
+              ],
+              [
+                0.07351850602272726,
+                0.044215244045454544,
+                0.028623495704545455
+              ],
+              [
+                0.07475487920454543,
+                0.03752989563636363,
+                0.044359103409090904
+              ],
+              [
+                0.07300478154545455,
+                0.02325020647727273,
+                0.06854097213636362
+              ],
+              [
+                0.07031831020454545,
+                0.021999090136363638,
+                0.07871544745454545
+              ],
+              [
+                0.10624366445454546,
+                0.020730282909090906,
+                0.07668020654545457
+              ],
+              [
+                0.10409708927272728,
+                0.020339279999999998,
+                0.06894775056818181
+              ],
+              [
+                0.10319542304545455,
+                0.03326195047727273,
+                0.05286319293181819
+              ],
+              [
+                0.0985385889772727,
+                0.041818721386363646,
+                0.027643884227272722
+              ],
+              [
+                0.09724078327272728,
+                0.04604677729545455,
+                0.0178059524090909
+              ],
+              [
+                0.12981398165909092,
+                0.016174842,
+                0.0545795846590909
+              ],
+              [
+                0.12727825636363635,
+                0.017235512022727273,
+                0.04622950493181817
+              ],
+              [
+                0.11714719497727272,
+                0.02611202015909091,
+                0.022595254500000005
+              ],
+              [
+                0.11239404402272726,
+                0.033263031977272726,
+                0.008736528068181818
+              ],
+              [
+                0.11163292109090907,
+                0.02930976602272727,
+                -0.006116879022727274
+              ]
+            ]
+          },
+          {
+            "name": "arm.r",
+            "bones": [
+              "Humerus.r",
+              "Clavicle.r"
+            ],
+            "matrix": [
+              [
+                0.9591422967650064,
+                -0.016062204843962955,
+                -0.007251027173403866
+              ],
+              [
+                0.01607334705644664,
+                0.9591684732561012,
+                0.0014158704504973702
+              ],
+              [
+                0.007226294619089003,
+                -0.0015371240288753463,
+                0.9592757346972608
+              ]
+            ],
+            "offset": [
+              -0.021289783402477377,
+              -0.01616491638589168,
+              0.09880089523081648
+            ],
+            "anchors": [
+              [
+                -0.21920318577272727,
+                1.0998744612272722,
+                -0.034325571590909085
+              ],
+              [
+                -0.21482097147727275,
+                1.1247364987500001,
+                -0.037458229386363624
+              ],
+              [
+                -0.19138488534090906,
+                1.3019805784090908,
+                -0.02946241275
+              ],
+              [
+                -0.1677462645909091,
+                1.374982725090909,
+                -0.02151526634090909
+              ],
+              [
+                -0.17413864675,
+                1.3920258467727271,
+                -0.021708984272727275
+              ],
+              [
+                -0.14181124729545458,
+                1.416914097159091,
+                -0.038307496795454546
+              ],
+              [
+                -0.10776362961363638,
+                1.4162410098863643,
+                -0.024170374431818176
+              ],
+              [
+                -0.0852758714090909,
+                1.409365023090909,
+                0.008684198613636366
+              ],
+              [
+                -0.04336647063636364,
+                1.4063281491818185,
+                0.034655031318181824
+              ],
+              [
+                -0.01767143702272727,
+                1.3994976955227274,
+                0.03712987188636364
+              ]
+            ]
+          },
+          {
+            "name": "forearm.r",
+            "bones": [
+              "Radius.r",
+              "Ulna.r"
+            ],
+            "matrix": [
+              [
+                0.9666229062005064,
+                0.0027060928372061818,
+                0.01676705890224978
+              ],
+              [
+                -0.0027185252584731564,
+                0.96676803264201,
+                0.0006933080882105446
+              ],
+              [
+                -0.01676504766155326,
+                -0.0007403494057247296,
+                0.9666264454554564
+              ]
+            ],
+            "offset": [
+              0.002068734010109319,
+              -0.021198349780292003,
+              0.10532265482724912
+            ],
+            "anchors": [
+              [
+                -0.2787277988409091,
+                0.8608970845681817,
+                0.015182096727272726
+              ],
+              [
+                -0.26596892075,
+                0.8672702332045457,
+                0.016349018749999996
+              ],
+              [
+                -0.2611891522272727,
+                0.9285398349318186,
+                -0.0005010490227272727
+              ],
+              [
+                -0.24368265731818187,
+                1.0455318172045458,
+                -0.017957887977272716
+              ],
+              [
+                -0.23771277209090902,
+                1.0868316201363633,
+                -0.029290865113636374
+              ],
+              [
+                -0.24554932390909087,
+                0.8678996917727274,
+                0.014415283068181817
+              ],
+              [
+                -0.23152963600000004,
+                0.9950024709772727,
+                -0.019285870136363636
+              ],
+              [
+                -0.22196617922727266,
+                1.0759964005681821,
+                -0.03481749636363637
+              ],
+              [
+                -0.21518623647727278,
+                1.0898533376590913,
+                -0.03764085456818181
+              ],
+              [
+                -0.21236697086363632,
+                1.1043049286818176,
+                -0.049389257727272734
+              ]
+            ]
+          },
+          {
+            "name": "hand.r",
+            "bones": [
+              "First metacarpal bone.r",
+              "Third metacarpal bone.r",
+              "Fifth metacarpal bone.r"
+            ],
+            "matrix": [
+              [
+                0.9672397487316948,
+                -0.0006861434287361707,
+                -0.0004372085833303177
+              ],
+              [
+                0.0006862112150249137,
+                0.9672398358921365,
+                0.0001498273148786314
+              ],
+              [
+                0.00043710218314497464,
+                -0.00015013744073854023,
+                0.9672399804966365
+              ]
+            ],
+            "offset": [
+              -0.000840529729730477,
+              -0.022809131234703184,
+              0.10135993644660851
+            ],
+            "anchors": [
+              [
+                -0.2865100710227274,
+                0.8417048664318184,
+                0.028981341454545447
+              ],
+              [
+                -0.2974282573409091,
+                0.8346666914772723,
+                0.03363003918181818
+              ],
+              [
+                -0.3086357221818182,
+                0.8173916503636363,
+                0.04336700722727272
+              ],
+              [
+                -0.31059860770454545,
+                0.8153233152045455,
+                0.04671897059090908
+              ],
+              [
+                -0.31422657325,
+                0.8140173147499999,
+                0.04734267093181819
+              ],
+              [
+                -0.27300132009090905,
+                0.7728393178863636,
+                0.03650299488636363
+              ],
+              [
+                -0.273647932,
+                0.7810960362954545,
+                0.033110711704545465
+              ],
+              [
+                -0.2689161201818182,
+                0.8109713391136364,
+                0.020651576295454548
+              ],
+              [
+                -0.26668310599999995,
+                0.8273071693636361,
+                0.02007119270454545
+              ],
+              [
+                -0.26777859631818185,
+                0.833034602,
+                0.016359266022727272
+              ],
+              [
+                -0.2384714229318182,
+                0.7836668748181815,
+                0.04035657406818182
+              ],
+              [
+                -0.2396754240681818,
+                0.7879322802727274,
+                0.03834507386363637
+              ],
+              [
+                -0.24327567729545452,
+                0.8047738613863639,
+                0.030215430977272726
+              ],
+              [
+                -0.24773461545454553,
+                0.8293368976590911,
+                0.024546628386363626
+              ],
+              [
+                -0.2476788975227273,
+                0.835242091590909,
+                0.02513453327272727
+              ]
+            ]
+          },
+          {
+            "name": "thigh.r",
+            "bones": [
+              "Femur.r"
+            ],
+            "matrix": [
+              [
+                0.9969886570437472,
+                0.008766672613881824,
+                -0.030838098171834947
+              ],
+              [
+                -0.011008966791446403,
+                0.9947590228864682,
+                -0.07312669934855147
+              ],
+              [
+                0.03011055459070033,
+                0.07342926500183442,
+                0.9943418540245607
+              ]
+            ],
+            "offset": [
+              0.006136661588247924,
+              -0.04367388411732831,
+              0.14352472215785197
+            ],
+            "anchors": [
+              [
+                -0.09225154370454546,
+                0.8594701765454548,
+                -0.00877358140909091
+              ],
+              [
+                -0.10952392172727272,
+                0.8014470354545459,
+                -0.015018968136363636
+              ],
+              [
+                -0.09691775197727276,
+                0.6316449455227272,
+                -0.006858756295454546
+              ],
+              [
+                -0.0777955379090909,
+                0.4823596961136364,
+                -0.02737499515909091
+              ],
+              [
+                -0.07222359400000002,
+                0.4453091835681817,
+                -0.03334153797727273
+              ]
+            ]
+          },
+          {
+            "name": "shin.r",
+            "bones": [
+              "Tibia.r",
+              "Fibula.r"
+            ],
+            "matrix": [
+              [
+                1.0360684545781662,
+                -0.0064016143631820035,
+                0.23600030961051033
+              ],
+              [
+                0.006288746493412897,
+                1.0626071446689485,
+                0.0012153767914180372
+              ],
+              [
+                -0.2360033441929445,
+                0.00021167604643952925,
+                1.0360875185512566
+              ]
+            ],
+            "offset": [
+              -0.004995700659327723,
+              -0.08582870141197063,
+              0.13302223223917414
+            ],
+            "anchors": [
+              [
+                -0.07490981275,
+                0.4277836354545455,
+                -0.031444827454545465
+              ],
+              [
+                -0.06962857536363637,
+                0.4125899502954546,
+                -0.04270517429545455
+              ],
+              [
+                -0.07474132813636364,
+                0.37630343899999996,
+                -0.02539854406818182
+              ],
+              [
+                -0.07711224961363637,
+                0.17412183463636366,
+                -0.03190984393181818
+              ],
+              [
+                -0.06557660552272726,
+                0.08363258368181818,
+                -0.03807604027272728
+              ],
+              [
+                -0.11309778011363636,
+                0.4093601468409091,
+                -0.04394065879545455
+              ],
+              [
+                -0.10872740200000001,
+                0.3863771168636363,
+                -0.043285526022727276
+              ],
+              [
+                -0.10774925436363635,
+                0.29385305243181825,
+                -0.047965585704545455
+              ],
+              [
+                -0.0979090690909091,
+                0.11659881013636365,
+                -0.04752024647727273
+              ],
+              [
+                -0.09863623038636363,
+                0.06614613322727274,
+                -0.04964759970454546
+              ]
+            ]
+          },
+          {
+            "name": "foot.r",
+            "bones": [
+              "Talus.r",
+              "Calcaneus.r",
+              "First metatarsal bone.r",
+              "Third metatarsal bone.r",
+              "Fifth metatarsal bone.r"
+            ],
+            "matrix": [
+              [
+                0.9404704965189987,
+                -0.004663348052506021,
+                0.22702996653053423
+              ],
+              [
+                0.004593964053803241,
+                0.9674850351982197,
+                0.0008423196416420308
+              ],
+              [
+                -0.22703138111764803,
+                0.00025921621769556263,
+                0.9404816809142922
+              ]
+            ],
+            "offset": [
+              -0.01064280593202345,
+              -0.07996846418354522,
+              0.12817051887178404
+            ],
+            "anchors": [
+              [
+                -0.07287703395454545,
+                0.06283492554545454,
+                -0.054752167999999976
+              ],
+              [
+                -0.0709164044090909,
+                0.06448359259090908,
+                -0.04321051429545454
+              ],
+              [
+                -0.06858865136363639,
+                0.06370666061363635,
+                -0.03370314343181818
+              ],
+              [
+                -0.07338799972727274,
+                0.07213833656818182,
+                -0.02683792288636365
+              ],
+              [
+                -0.07244529070454545,
+                0.06971809718181816,
+                -0.01631401515909091
+              ],
+              [
+                -0.07525682302272726,
+                0.028671525727272718,
+                -0.07726589743181815
+              ],
+              [
+                -0.07727291104545454,
+                0.030581944795454553,
+                -0.061764834909090904
+              ],
+              [
+                -0.08114071459090906,
+                0.048883366000000004,
+                -0.0505901901590909
+              ],
+              [
+                -0.07627218820454541,
+                0.04980021011363636,
+                -0.03677731481818182
+              ],
+              [
+                -0.08690889031818182,
+                0.048702820454545444,
+                -0.02321112888636364
+              ],
+              [
+                -0.06860947061363636,
+                0.021235033840909093,
+                0.07943017165909089
+              ],
+              [
+                -0.07067163795454544,
+                0.02353781015909091,
+                0.07203573706818182
+              ],
+              [
+                -0.072516156,
+                0.0344736855909091,
+                0.05111204379545456
+              ],
+              [
+                -0.07262856486363635,
+                0.043958108090909095,
+                0.029507865272727272
+              ],
+              [
+                -0.0714837141363636,
+                0.050639441318181815,
+                0.02713554234090909
+              ],
+              [
+                -0.09646940040909091,
+                0.046314756000000006,
+                0.01788331043181818
+              ],
+              [
+                -0.09928618397727275,
+                0.04333026075,
+                0.02693340129545455
+              ],
+              [
+                -0.10278409145454549,
+                0.035611273477272734,
+                0.04945585475
+              ],
+              [
+                -0.1050160646818182,
+                0.02134048054545455,
+                0.06821368254545457
+              ],
+              [
+                -0.10631325734090909,
+                0.01995442590909091,
+                0.07573493611363637
+              ],
+              [
+                -0.11281126243181819,
+                0.028725554840909093,
+                -0.009793116863636361
+              ],
+              [
+                -0.11022827575000002,
+                0.03191379488636364,
+                0.003156144
+              ],
+              [
+                -0.11436345638636362,
+                0.02834852354545454,
+                0.015289092840909086
+              ],
+              [
+                -0.1263652383409091,
+                0.017558456931818175,
+                0.04298082636363637
+              ],
+              [
+                -0.12812692736363634,
+                0.01589815486363636,
+                0.05427784797727271
+              ]
+            ]
+          }
+        ],
+        "blendWidthMetres": 0.06,
+        "method": "Continuous blend of 17 regional similarity registrations, each fitted to explicitly paired skeletal surfaces. Gaussian distance to five shaft landmarks per reference bone weights the same coordinate field for every nerve vertex. No neural branches are added or moved independently.",
+        "checks": {
+          "Occipital bone": {
+            "medianMm": 1.785666961429587,
+            "p95Mm": 3.4442888052647422
+          },
+          "Frontal bone": {
+            "medianMm": 1.2670158480300082,
+            "p95Mm": 3.233810140920033
+          },
+          "Vertebra C3": {
+            "medianMm": 1.838325538047888,
+            "p95Mm": 3.543012749334636
+          },
+          "Vertebra C7": {
+            "medianMm": 1.5422437760837373,
+            "p95Mm": 3.414801492939141
+          },
+          "Vertebra T6": {
+            "medianMm": 1.5856109394637523,
+            "p95Mm": 2.7976636805653836
+          },
+          "Vertebra T12": {
+            "medianMm": 1.4351092359926259,
+            "p95Mm": 2.9676687530059396
+          },
+          "Vertebra L3": {
+            "medianMm": 1.846171520417737,
+            "p95Mm": 2.9914163503886377
+          },
+          "Sacrum": {
+            "medianMm": 2.1463244070904914,
+            "p95Mm": 4.349527329607547
+          },
+          "Clavicle.l": {
+            "medianMm": 3.1364066399905766,
+            "p95Mm": 8.238366649316893
+          },
+          "Clavicle.r": {
+            "medianMm": 2.7447607988694496,
+            "p95Mm": 6.941342658593477
+          },
+          "Humerus.l": {
+            "medianMm": 2.0804277451464004,
+            "p95Mm": 4.903259260284584
+          },
+          "Humerus.r": {
+            "medianMm": 1.5165307662389698,
+            "p95Mm": 3.707691622360304
+          },
+          "Radius.l": {
+            "medianMm": 1.8544448530023543,
+            "p95Mm": 6.008752934077672
+          },
+          "Radius.r": {
+            "medianMm": 1.1793095144088892,
+            "p95Mm": 6.822475556631382
+          },
+          "Ulna.l": {
+            "medianMm": 1.5593930930977036,
+            "p95Mm": 5.055095583168428
+          },
+          "Ulna.r": {
+            "medianMm": 1.2513309272989253,
+            "p95Mm": 3.0036334318213926
+          },
+          "Femur.l": {
+            "medianMm": 4.186127147339112,
+            "p95Mm": 15.440382565671829
+          },
+          "Femur.r": {
+            "medianMm": 3.7365589044839678,
+            "p95Mm": 9.98736313787599
+          },
+          "Tibia.l": {
+            "medianMm": 6.756760122618395,
+            "p95Mm": 15.813464299132649
+          },
+          "Tibia.r": {
+            "medianMm": 3.1250008824534232,
+            "p95Mm": 8.35492134928119
+          },
+          "Fibula.l": {
+            "medianMm": 4.285115546232602,
+            "p95Mm": 12.100119924258339
+          },
+          "Fibula.r": {
+            "medianMm": 3.3726678804274473,
+            "p95Mm": 6.443466458600041
+          },
+          "Hip bone.l": {
+            "medianMm": 3.9514816039800427,
+            "p95Mm": 8.821118217599649
+          },
+          "Hip bone.r": {
+            "medianMm": 3.079043074649344,
+            "p95Mm": 9.202642087293574
+          },
+          "Talus.l": {
+            "medianMm": 2.011806738779737,
+            "p95Mm": 3.622688333643694
+          },
+          "Talus.r": {
+            "medianMm": 1.8834958822743793,
+            "p95Mm": 3.7699976990151187
+          },
+          "Calcaneus.l": {
+            "medianMm": 2.0245813226041394,
+            "p95Mm": 3.6808756615743996
+          },
+          "Calcaneus.r": {
+            "medianMm": 1.8317098976716866,
+            "p95Mm": 3.08246234821076
+          },
+          "First metacarpal bone.l": {
+            "medianMm": 0.6540153973095636,
+            "p95Mm": 2.336876124786039
+          },
+          "First metacarpal bone.r": {
+            "medianMm": 0.41501468710171163,
+            "p95Mm": 1.8990734213919216
+          },
+          "First metatarsal bone.l": {
+            "medianMm": 1.3868128939357824,
+            "p95Mm": 3.776683945086499
+          },
+          "First metatarsal bone.r": {
+            "medianMm": 2.326930192594618,
+            "p95Mm": 5.283027482590612
+          },
+          "Third metacarpal bone.l": {
+            "medianMm": 0.6977718283817539,
+            "p95Mm": 2.67723907387192
+          },
+          "Third metacarpal bone.r": {
+            "medianMm": 0.3364158621401238,
+            "p95Mm": 2.1709349007493044
+          },
+          "Third metatarsal bone.l": {
+            "medianMm": 1.2637103838984725,
+            "p95Mm": 3.1030873122712603
+          },
+          "Third metatarsal bone.r": {
+            "medianMm": 1.6235466446568583,
+            "p95Mm": 3.1840288394146445
+          },
+          "Fifth metacarpal bone.l": {
+            "medianMm": 0.7376451896494304,
+            "p95Mm": 1.8727160967633485
+          },
+          "Fifth metacarpal bone.r": {
+            "medianMm": 0.5673882669474082,
+            "p95Mm": 1.9476766025886414
+          },
+          "Fifth metatarsal bone.l": {
+            "medianMm": 1.7756994317378658,
+            "p95Mm": 3.4890517683743667
+          },
+          "Fifth metatarsal bone.r": {
+            "medianMm": 1.4273883525003814,
+            "p95Mm": 2.5340522613147587
+          }
+        },
+        "referenceBoneCount": 40
+      },
+      "attribution": "Z-Anatomy / Gauthier Kervyn, based on BodyParts3D / DBCLS; cranial nerves reference: University of Dundee, CAHID, CC BY 4.0 as declared in the upstream model license.",
+      "modifications": "Selected named nerve meshes, static FBX triangulation, centimetres to metres, one continuous bone-guided pose registration, recomputed smooth normals, illustrative colours. No new branches, no independent branch repositioning.",
+      "registrationValidation": {
+        "jacobianSamples": 38648,
+        "minimumJacobianDeterminant": 0.7891640907587109,
+        "sampledLocalScaleRange": [
+          0.7484508209579434,
+          1.2322497152515166
+        ],
+        "sampledLocalScaleP01P99": [
+          0.9039720503465489,
+          1.0945617770393734
+        ],
+        "checkedSurfaceJunctions": 6,
+        "interpretation": "Approximate geometry checks, not clinical validation or exact calibre preservation. Topology and common coordinates remain unchanged; the smooth pose adjustment can alter local dimensions."
+      },
+      "limitations": "Approximate registration between different source bodies, not verified foraminal or surgical anatomy. Multiple spinal levels are grouped, and source distal coverage is incomplete. Z-Anatomy optic/trochlear/ophthalmic nerves and full oculomotor nerves are excluded to avoid overlap with the direct BodyParts3D orbit. Cranial III is represented by its BodyParts3D orbital branches only. The non-triangulable Spinal dura mesh is excluded. Brain, telencephalic white matter, labyrinth/ear and eye models are excluded from this addition."
+    }
+  },
+  "vascular": {
+    "source": "BodyParts3D 4.0",
+    "license": "CC BY 4.0",
+    "structures": 396,
+    "sourceElements": 1014,
+    "trianglesBeforeConversion": 1893540,
+    "isaMetadataSha256": "a3de74423f943b0d724ae8f59b3a817f87c423a544f8db98113b1980817cbeaf",
+    "partOfMetadataSha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+    "modifications": "Original coordinates and full mesh detail; OBJ to GLB, smooth normals and conventional red/blue colours. Named source collections group smaller branches. Each retained OBJ occurs in exactly one vascular selection. No vascular tube is fabricated or widened.",
+    "sourcePartition": "Explicit checked-in table includes vessels, trunks, segments and sets from IS-A plus selected PART-OF coronary, pulmonary, hepatic arterial and portal trees. Parent collections are partitioned after these named trees to avoid double rendering; their complementary branches remain separate. Mixed digital/perforating sets are split between hands and feet by the original geometry.",
+    "excludedRedundantElements": {
+      "FJ1846": "Rounded duplicate of celiac trunk FJ3421, maximum vertex difference 0.01005 mm; retain the newer named representation.",
+      "FJ1853": "Rounded duplicate of portal segment FJ3082, maximum surface difference 0.01004 mm.",
+      "FJ2025": "Rounded duplicate of marginal colic artery FJ3534, maximum surface difference 0.01000 mm.",
+      "FJ2011,FJ1928": "Overlapping variants of the superior mesenteric artery trunk. Retain the more detailed named trunk FJ3644; complete trajectories overlap, maximum discrepancy 3.52 mm near endpoints.",
+      "FJ1844": "Overlapping alternate basilar artery; retain FJ1672. Reciprocal surface medians 0.227/0.436 mm.",
+      "FJ2034": "Overlapping ileal arterial segment; retain FJ3437. Reciprocal surface medians 0.245/0.294 mm.",
+      "FJ2038,FJ2046": "Older overlapping right/left renal artery trunks; retain FJ3576/FJ3476. Reciprocal surface medians 0.425/0.384 mm right and 0.198/0.097 mm left.",
+      "FJ3530": "Overlaps left epigastric venous surface FJ2122 with contradictory superior/superficial labels; keep FJ2122 under a local uncertain identity. Median reciprocal errors 0.009/0.040 mm; the older surface has a 7 mm endpoint extension.",
+      "FJ3615": "Overlaps FJ2178 but is labelled superior instead of superficial epigastric vein. Retain FJ2178 under a local, explicitly uncertain epigastric venous identity. Maximum reciprocal surface error 0.179 mm.",
+      "FJ1931,FJ1932": "Alternate thoracic/abdominal descending aorta surfaces overlapping the complete descending aorta FJ3427. Preserve FJ3427 together with arch FJ3411 and ascending aorta FJ3413.",
+      "FJ2013": "Identical vertex coordinates to FJ1846 (celiac artery).",
+      "FJ2386": "Identical vertex coordinates to FJ1916 (caudate branch of right hepatic artery).",
+      "FJ2394": "Identical vertex coordinates to FJ1924 (right-lobe branch of right hepatic artery)."
+    },
+    "laterality": "Ascending lumbar vein source association corrected: FMA4843 right uses FJ3493 (entirely anatomical right and joining the azygos pathway), FMA4950 left uses FJ3589 (entirely left and joining the hemiazygos pathway). Source metadata associates these files in reverse. Coordinates and shapes are unchanged. Laterality of visceral vessels refers to named branches and does not necessarily follow the body midline.",
+    "limitations": "Macroscopic source subset, not a complete vascular system: no capillary beds, no separate vessel-wall layers or valves, no haemodynamics. Some fine branches are grouped and remain incomplete in the source. Pulmonary vessels originate from BodyParts3D and lung surfaces from a registered Z-Anatomy model, so local contacts remain approximate. BodyParts3D 4.0 metadata contains no separately identifiable lymph nodes or lymphatic vessels; those are not silently represented by blood vessels.",
+    "references": [
+      "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/desc.html",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-1-structure-and-function-of-blood-vessels",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/20-5-circulatory-pathways",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/19-1-heart-anatomy"
+    ]
+  },
+  "lymphatic": {
+    "source": "Z-Anatomy — The libre 3D atlas of anatomy",
+    "sourceUrl": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/LymphoidOrgans100.fbx",
+    "sha256": "310ff82f502f4f3a79e85f99ddc2009bba9514338119af9edff87b20cf1b3609",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Z-Anatomy / Gauthier Kervyn; BodyParts3D / The Database Center for Life Science (CC BY-SA 2.1 Japan); FBX export distributed by Lluís Vinent Juanico.",
+    "structures": 160,
+    "lymphNodeGroups": 158,
+    "palatineTonsils": 2,
+    "sourceObjects": [
+      "(Anterior tibial node).l",
+      "(Anterior tibial node).r",
+      "(Fibular node).l",
+      "(Fibular node).r",
+      "(Intermediate deep inguinal node).l",
+      "(Intermediate deep inguinal node).r",
+      "(Intermediate lacunar node).l",
+      "(Intermediate lacunar node).r",
+      "(Lateral lacunar node).l",
+      "(Lateral lacunar node).r",
+      "(Medial lacunar node).l",
+      "(Medial lacunar node).r",
+      "(Posterior tibial node).l",
+      "(Posterior tibial node).r",
+      "(Proximal deep inguinal node).l",
+      "(Proximal deep inguinal node).r",
+      "(Retropyloric nodes)",
+      "(Subpyloric nodes)",
+      "(Suprapyloric node)",
+      "Anterior axillary nodes.l",
+      "Anterior axillary nodes.r",
+      "Anterior inferior jugular nodes.l",
+      "Anterior inferior jugular nodes.r",
+      "Apical axillary nodes.l",
+      "Apical axillary nodes.r",
+      "Appendicular nodes",
+      "Brachial nodes.l",
+      "Brachial nodes.r",
+      "Brachiocephalic nodes",
+      "Bucinator node.l",
+      "Bucinator node.r",
+      "Central axillary nodes.l",
+      "Central axillary nodes.r",
+      "Central superior mesenteric nodes",
+      "Coeliac nodes",
+      "Cubital nodes.l",
+      "Cubital nodes.r",
+      "Cystic node",
+      "Deep popliteal nodes.l",
+      "Deep popliteal nodes.r",
+      "Ileocolic nodes",
+      "Inferior deep lateral cervical nodes.l",
+      "Inferior deep lateral cervical nodes.r",
+      "Inferior diaphragmatic nodes",
+      "Inferior epigastric nodes.l",
+      "Inferior epigastric nodes.r",
+      "Inferior gluteal nodes.l",
+      "Inferior gluteal nodes.r",
+      "Inferior pancreatic nodes",
+      "Inferior superficial inguinal nodes.l",
+      "Inferior superficial inguinal nodes.r",
+      "Inferior tracheobronchial nodes",
+      "Infra-auricular nodes.l",
+      "Infra-auricular nodes.r",
+      "Infraclavicular nodes.l",
+      "Infraclavicular nodes.r",
+      "Intercostal nodes.l",
+      "Intercostal nodes.r",
+      "Intermediate common iliac nodes",
+      "Intermediate external iliac nodes.l",
+      "Intermediate external iliac nodes.r",
+      "Intermediate lumbar nodes",
+      "Interpectoral nodes.l",
+      "Interpectoral nodes.r",
+      "Intraglandular parotid nodes.l",
+      "Intraglandular parotid nodes.r",
+      "Intrapulmonary nodes",
+      "Jugulodigastric node.l",
+      "Jugulodigastric node.r",
+      "Juxta-intestinal mesenteric nodes",
+      "Juxta-oesophageal nodes",
+      "Lateral aortic nodes",
+      "Lateral axillary nodes.l",
+      "Lateral axillary nodes.r",
+      "Lateral caval nodes",
+      "Lateral common iliac nodes",
+      "Lateral pericardial nodes",
+      "Lateral sacral nodes.l",
+      "Lateral sacral nodes.r",
+      "Lateral superior jugular node.l",
+      "Lateral superior jugular node.r",
+      "Lateral vesical nodes.l",
+      "Lateral vesical nodes.r",
+      "Left colic nodes",
+      "Mandibular node.l",
+      "Mandibular node.r",
+      "Mastoid nodes.l",
+      "Mastoid nodes.r",
+      "Medial common iliac nodes",
+      "Medial external iliac nodes.l",
+      "Medial external iliac nodes.r",
+      "Median sacral nodes",
+      "Middle colic nodes",
+      "Nasolabial node.l",
+      "Nasolabial node.r",
+      "Node of arch of azygos vein",
+      "Node of ligamentum arteriosum",
+      "Obturator nodes.l",
+      "Obturator nodes.r",
+      "Occipital nodes.l",
+      "Occipital nodes.r",
+      "Palatine tonsil.l",
+      "Palatine tonsil.r",
+      "Paracolic superior mesenteric nodes",
+      "Pararectal nodes",
+      "Parasternal nodes.l",
+      "Parasternal nodes.r",
+      "Paratracheal cervical nodes",
+      "Paratracheal thoracic nodes",
+      "Posterior axillary nodes.l",
+      "Posterior axillary nodes.r",
+      "Postvesical nodes",
+      "Pre-aortic nodes",
+      "Pre-auricular nodes.l",
+      "Pre-auricular nodes.r",
+      "Precaecal nodes",
+      "Precaval nodes",
+      "Prepericardial nodes",
+      "Pretracheal nodes.l",
+      "Pretracheal nodes.r",
+      "Prevertebral nodes",
+      "Prevesical nodes",
+      "Retro-aortic nodes",
+      "Retrocaecal nodes",
+      "Retrocaval nodes",
+      "Retropharyngeal nodes.l",
+      "Retropharyngeal nodes.r",
+      "Right colic nodes",
+      "Right gastric nodes",
+      "Right gastro-omental nodes",
+      "Sigmoid nodes",
+      "Splenic nodes",
+      "Subaortic nodes",
+      "Submandibular nodes.l",
+      "Submandibular nodes.r",
+      "Submental nodes.l",
+      "Submental nodes.r",
+      "Superficial anterior cervical nodes",
+      "Superficial lateral cervical nodes.l",
+      "Superficial lateral cervical nodes.r",
+      "Superficial parotid nodes.l",
+      "Superficial parotid nodes.r",
+      "Superficial popliteal nodes.l",
+      "Superficial popliteal nodes.r",
+      "Superior diaphragmatic nodes",
+      "Superior gluteal nodes.l",
+      "Superior gluteal nodes.r",
+      "Superior pancreatic nodes",
+      "Superior pancreaticoduodenal nodes",
+      "Superior tracheobronchial nodes",
+      "Superolateral superficial inguinal nodes.l",
+      "Superolateral superficial inguinal nodes.r",
+      "Superomedial superficial inguinal nodes.l",
+      "Superomedial superficial inguinal nodes.r",
+      "Supraclavicular nodes.l",
+      "Supraclavicular nodes.r",
+      "Supratrochlear nodes.l",
+      "Supratrochlear nodes.r",
+      "Thyroid nodes.l",
+      "Thyroid nodes.r"
+    ],
+    "modifications": "Static FBX hierarchy baked; centimetres to metres; each named object receives a uniform-scale rigid regional skeletal registration; original vertices and triangles retained without simplification or deformation; normals and illustrative material rebuilt.",
+    "registration": {
+      "method": "Each lymph-node group or palatine tonsil uses a single regional rigid similarity from existing source-to-atlas bone registrations. No within-object deformation, topology changes, invented nodes or collecting vessels. The region is chosen explicitly by anatomy; neck C3/C7 by source object vertical midpoint 148 cm. Coordinate signs use anatomical left positive X. Infraclavicular groups use clavicle fits, sacral groups the sacrum fit, occipital groups the occipital fit, retro-aortic/retrocaval groups L3, and juxta-oesophageal groups T6 after contact checks.",
+      "skeletalSourceUrl": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/SkeletalSystem100.fbx",
+      "skeletalSourceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea",
+      "limitations": "Nearest bone surface/vertex residuals measure registration only. Lymph-node group positions and tissue contacts across source bodies remain approximate; not a clinical validation. A source object may contain several nodes.",
+      "transforms": {
+        "head": {
+          "matrix": [
+            [
+              1.0245816323653203,
+              0.0002651241834706599,
+              0.0016166015587164326
+            ],
+            [
+              -0.00028549711435165863,
+              1.0245013718821046,
+              0.012925268852140443
+            ],
+            [
+              -0.001613128274503395,
+              -0.012925702792101803,
+              1.0245001362109807
+            ]
+          ],
+          "offset": [
+            -0.0001746841848163929,
+            -0.1104264390017613,
+            0.06748972709379279
+          ],
+          "reference": "facial_content.py / align_z_anatomy.py"
+        },
+        "thorax": {
+          "matrix": [
+            [
+              0.9439514021405064,
+              -0.001642483193773571,
+              0.00022544050243531694
+            ],
+            [
+              0.0016405589098853549,
+              0.9439190286458574,
+              0.007821387614346087
+            ],
+            [
+              -0.00023904168080632413,
+              -0.007820983743035312,
+              0.943920427393038
+            ]
+          ],
+          "offset": [
+            -0.002822375941994669,
+            0.0010857316777574955,
+            0.08497095459374718
+          ],
+          "reference": "visceral_registration.json / align_viscera.py"
+        },
+        "trunk": {
+          "matrix": [
+            [
+              0.9400478304757721,
+              0.0022041035390022463,
+              -0.0015209759734684785
+            ],
+            [
+              -0.0021704575506384075,
+              0.9398261569317241,
+              0.020473858539512703
+            ],
+            [
+              0.0015686154223989454,
+              -0.020470263727281515,
+              0.9398274324423178
+            ]
+          ],
+          "offset": [
+            0.0018705491248102197,
+            0.004376681672269456,
+            0.06864084918140832
+          ],
+          "reference": "trunk_muscle_registration.json / trunk_muscle_content.py"
+        },
+        "Vertebra C3": {
+          "matrix": [
+            [
+              1.0148834808869251,
+              0.006462676535552925,
+              0.02293129727835646
+            ],
+            [
+              -0.00310975989048218,
+              1.0046749884177326,
+              -0.14551490439568524
+            ],
+            [
+              -0.02362075308484242,
+              0.14540457977608104,
+              1.0044180696123894
+            ]
+          ],
+          "offset": [
+            0.003681009530160502,
+            -0.0778593502550824,
+            0.3074388917371869
+          ],
+          "medianMm": 1.2292620171909263,
+          "p95Mm": 2.533417404686999,
+          "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+        },
+        "Vertebra C7": {
+          "matrix": [
+            [
+              0.9206361854657912,
+              0.003862567187973436,
+              0.0007960863575959884
+            ],
+            [
+              -0.0037861761990456806,
+              0.9176642241063386,
+              -0.07392276938044104
+            ],
+            [
+              -0.0011036523728692094,
+              0.07391881721052182,
+              0.9176716894300545
+            ]
+          ],
+          "offset": [
+            0.004586737528973673,
+            0.047550444600585884,
+            0.2025937784218184
+          ],
+          "medianMm": 1.041387321282027,
+          "p95Mm": 2.875362353043269,
+          "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+        },
+        "Humerus.l": {
+          "matrix": [
+            [
+              0.9675427448172175,
+              0.00036785417939877863,
+              0.0048028173385967505
+            ],
+            [
+              -0.00034721598728159464,
+              0.9675457390087568,
+              -0.004157858412412356
+            ],
+            [
+              -0.00480435345737606,
+              0.004156083351208304,
+              0.9675338808427102
+            ]
+          ],
+          "offset": [
+            0.0003953954990708053,
+            -0.022434892265100537,
+            0.10642323451604453
+          ],
+          "medianMm": 0.9832629713833804,
+          "p95Mm": 3.9714736187412187,
+          "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+        },
+        "Humerus.r": {
+          "matrix": [
+            [
+              0.9678347772883571,
+              -0.000041474296122658305,
+              -0.002050219539890675
+            ],
+            [
+              0.00003235134043750189,
+              0.967827368144183,
+              -0.004306468806170178
+            ],
+            [
+              0.0020503837859682825,
+              0.00430639060821313,
+              0.9678251971174039
+            ]
+          ],
+          "offset": [
+            -0.000049384104877508994,
+            -0.022769958626802866,
+            0.10722517494029665
+          ],
+          "medianMm": 0.2232899973917927,
+          "p95Mm": 3.250187266143466,
+          "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+        },
+        "Hip bone.l": {
+          "matrix": [
+            [
+              0.9845476475835009,
+              -0.0200589455533998,
+              -0.06108928638444775
+            ],
+            [
+              0.021542303027173082,
+              0.9861325206054531,
+              0.02338618298274508
+            ],
+            [
+              0.060582104519080714,
+              -0.024670287341308154,
+              0.9844742343527421
+            ]
+          ],
+          "offset": [
+            -0.013288878160528234,
+            -0.035485473533372835,
+            0.06887495431284046
+          ],
+          "medianMm": 3.047963025548349,
+          "p95Mm": 6.970788756115778,
+          "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+        },
+        "Hip bone.r": {
+          "matrix": [
+            [
+              0.98218675343517,
+              0.03597049083378564,
+              0.05377383215005337
+            ],
+            [
+              -0.03734330661424876,
+              0.9833056659649145,
+              0.02432621201204219
+            ],
+            [
+              -0.05282971404465276,
+              -0.02631370230349804,
+              0.9825441110929769
+            ]
+          ],
+          "offset": [
+            0.028481481344983392,
+            -0.032650562237827474,
+            0.06700452623002162
+          ],
+          "medianMm": 3.2504011590864383,
+          "p95Mm": 6.315272535866028,
+          "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+        },
+        "Tibia.l": {
+          "matrix": [
+            [
+              0.9338363020560941,
+              0.0040069480669420055,
+              -0.22264031885488866
+            ],
+            [
+              -0.0037226576470065185,
+              0.9600095733562246,
+              0.0016634707280731302
+            ],
+            [
+              0.22264525378426725,
+              -0.0007547728193330524,
+              0.9338434170329356
+            ]
+          ],
+          "offset": [
+            0.01097841453601743,
+            -0.04229714201009466,
+            0.12772840863318918
+          ],
+          "surfaceResidualMm": {
+            "median": 0.14922064541482377,
+            "p95": 0.5089167775301935,
+            "max": 0.9618559475986157
+          },
+          "reference": "meniscus_registration.json tibialRegistration / align_menisci.py; no meniscus pose correction"
+        },
+        "Tibia.r": {
+          "matrix": [
+            [
+              0.9335567541951839,
+              -0.004396773031403363,
+              0.22337382718125692
+            ],
+            [
+              0.004065685893696681,
+              0.9599079448658258,
+              0.0019024110545160513
+            ],
+            [
+              -0.22338009866795538,
+              -0.000904077716169452,
+              0.9335651695241828
+            ]
+          ],
+          "offset": [
+            -0.011171920554273039,
+            -0.042294902936008405,
+            0.12766437754015514
+          ],
+          "surfaceResidualMm": {
+            "median": 0.14030666621456883,
+            "p95": 0.4613296431006716,
+            "max": 1.1601336819779606
+          },
+          "reference": "meniscus_registration.json tibialRegistration / align_menisci.py; no meniscus pose correction"
+        },
+        "Clavicle.l": {
+          "matrix": [
+            [
+              0.9425221484463957,
+              0.08959798502482479,
+              0.00367031208715097
+            ],
+            [
+              -0.08965949575143471,
+              0.9422648671322525,
+              0.02207635416399709
+            ],
+            [
+              -0.0015636281285361085,
+              -0.02232468747971579,
+              0.9465138318161782
+            ]
+          ],
+          "offset": [
+            0.1255346413307995,
+            -0.0008763160541636061,
+            0.07041133200362726
+          ],
+          "medianMm": 1.608270941706425,
+          "p95Mm": 3.6929178651516033,
+          "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+        },
+        "Clavicle.r": {
+          "matrix": [
+            [
+              0.9487332044937213,
+              -0.08721095561190187,
+              -0.011037214288628491
+            ],
+            [
+              0.08744985467398525,
+              0.9485140958471814,
+              0.022266501378141876
+            ],
+            [
+              0.008949513701484878,
+              -0.02318455061852248,
+              0.9524729114279544
+            ]
+          ],
+          "offset": [
+            -0.12247499352080504,
+            -0.009555353741958816,
+            0.0693489257191777
+          ],
+          "medianMm": 1.4189876190493402,
+          "p95Mm": 3.6331161992724073,
+          "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+        },
+        "Sacrum": {
+          "matrix": [
+            [
+              0.9628444346191045,
+              0.00007457335767877956,
+              -0.00036445106859880536
+            ],
+            [
+              -0.00007240753789492774,
+              0.9628275224713249,
+              0.005718425624954704
+            ],
+            [
+              0.0003648875382009378,
+              -0.005718397790815308,
+              0.962827456217644
+            ]
+          ],
+          "offset": [
+            -0.0004222792864320298,
+            -0.0163346780502297,
+            0.0792156575515947
+          ],
+          "medianMm": 0.7425230675923893,
+          "p95Mm": 4.175257665159614,
+          "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+        },
+        "Occipital bone": {
+          "matrix": [
+            [
+              1.0281498941785825,
+              0.003603347645555315,
+              0.0008192710458613839
+            ],
+            [
+              -0.00360416914271531,
+              1.028149699983937,
+              0.0010317976855238728
+            ],
+            [
+              -0.0008156494909056389,
+              -0.0010346629491888746,
+              1.0281556907430032
+            ]
+          ],
+          "offset": [
+            0.005022968293377114,
+            -0.11689813034563978,
+            0.08652976478049915
+          ],
+          "medianMm": 0.567118841269741,
+          "p95Mm": 2.105518305985955,
+          "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+        },
+        "Vertebra L3": {
+          "matrix": [
+            [
+              0.9454474141717686,
+              -0.004368838103227263,
+              -0.00502501968637938
+            ],
+            [
+              0.004927175618447443,
+              0.9389556312752115,
+              0.1106941550864424
+            ],
+            [
+              0.0044788960297921215,
+              -0.11071759699119404,
+              0.9389551127397713
+            ]
+          ],
+          "offset": [
+            -0.005743244615293415,
+            0.005089487861251962,
+            -0.021259314248125563
+          ],
+          "medianMm": 0.6664289791603472,
+          "p95Mm": 2.4970946777282155,
+          "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+        },
+        "Vertebra T6": {
+          "matrix": [
+            [
+              0.943843391146382,
+              -0.001639921355039813,
+              0.001207687503741162
+            ],
+            [
+              0.001629872350470832,
+              0.943811861603989,
+              0.007810779320543777
+            ],
+            [
+              -0.0012212154922770237,
+              -0.007808675650990281,
+              0.9438124962507966
+            ]
+          ],
+          "offset": [
+            -0.002962894033113068,
+            -0.001263100712129983,
+            0.08582544796431571
+          ],
+          "medianMm": 0.7762095996097884,
+          "p95Mm": 2.2085891084707905,
+          "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+        }
+      },
+      "objects": {
+        "(Anterior tibial node).l": "Tibia.l",
+        "(Anterior tibial node).r": "Tibia.r",
+        "(Fibular node).l": "Tibia.l",
+        "(Fibular node).r": "Tibia.r",
+        "(Intermediate deep inguinal node).l": "Hip bone.l",
+        "(Intermediate deep inguinal node).r": "Hip bone.r",
+        "(Intermediate lacunar node).l": "Hip bone.l",
+        "(Intermediate lacunar node).r": "Hip bone.r",
+        "(Lateral lacunar node).l": "Hip bone.l",
+        "(Lateral lacunar node).r": "Hip bone.r",
+        "(Medial lacunar node).l": "Hip bone.l",
+        "(Medial lacunar node).r": "Hip bone.r",
+        "(Posterior tibial node).l": "Tibia.l",
+        "(Posterior tibial node).r": "Tibia.r",
+        "(Proximal deep inguinal node).l": "Hip bone.l",
+        "(Proximal deep inguinal node).r": "Hip bone.r",
+        "(Retropyloric nodes)": "trunk",
+        "(Subpyloric nodes)": "trunk",
+        "(Suprapyloric node)": "trunk",
+        "Anterior axillary nodes.l": "Humerus.l",
+        "Anterior axillary nodes.r": "Humerus.r",
+        "Anterior inferior jugular nodes.l": "Vertebra C7",
+        "Anterior inferior jugular nodes.r": "Vertebra C7",
+        "Apical axillary nodes.l": "Humerus.l",
+        "Apical axillary nodes.r": "Humerus.r",
+        "Appendicular nodes": "trunk",
+        "Brachial nodes.l": "Humerus.l",
+        "Brachial nodes.r": "Humerus.r",
+        "Brachiocephalic nodes": "thorax",
+        "Bucinator node.l": "head",
+        "Bucinator node.r": "head",
+        "Central axillary nodes.l": "Humerus.l",
+        "Central axillary nodes.r": "Humerus.r",
+        "Central superior mesenteric nodes": "trunk",
+        "Coeliac nodes": "trunk",
+        "Cubital nodes.l": "Humerus.l",
+        "Cubital nodes.r": "Humerus.r",
+        "Cystic node": "trunk",
+        "Deep popliteal nodes.l": "Tibia.l",
+        "Deep popliteal nodes.r": "Tibia.r",
+        "Ileocolic nodes": "trunk",
+        "Inferior deep lateral cervical nodes.l": "Vertebra C7",
+        "Inferior deep lateral cervical nodes.r": "Vertebra C7",
+        "Inferior diaphragmatic nodes": "trunk",
+        "Inferior epigastric nodes.l": "trunk",
+        "Inferior epigastric nodes.r": "trunk",
+        "Inferior gluteal nodes.l": "Hip bone.l",
+        "Inferior gluteal nodes.r": "Hip bone.r",
+        "Inferior pancreatic nodes": "trunk",
+        "Inferior superficial inguinal nodes.l": "Hip bone.l",
+        "Inferior superficial inguinal nodes.r": "Hip bone.r",
+        "Inferior tracheobronchial nodes": "thorax",
+        "Infra-auricular nodes.l": "head",
+        "Infra-auricular nodes.r": "head",
+        "Infraclavicular nodes.l": "Clavicle.l",
+        "Infraclavicular nodes.r": "Clavicle.r",
+        "Intercostal nodes.l": "thorax",
+        "Intercostal nodes.r": "thorax",
+        "Intermediate common iliac nodes": "trunk",
+        "Intermediate external iliac nodes.l": "Hip bone.l",
+        "Intermediate external iliac nodes.r": "Hip bone.r",
+        "Intermediate lumbar nodes": "trunk",
+        "Interpectoral nodes.l": "Humerus.l",
+        "Interpectoral nodes.r": "Humerus.r",
+        "Intraglandular parotid nodes.l": "head",
+        "Intraglandular parotid nodes.r": "head",
+        "Intrapulmonary nodes": "thorax",
+        "Jugulodigastric node.l": "Vertebra C3",
+        "Jugulodigastric node.r": "Vertebra C3",
+        "Juxta-intestinal mesenteric nodes": "trunk",
+        "Juxta-oesophageal nodes": "Vertebra T6",
+        "Lateral aortic nodes": "trunk",
+        "Lateral axillary nodes.l": "Humerus.l",
+        "Lateral axillary nodes.r": "Humerus.r",
+        "Lateral caval nodes": "trunk",
+        "Lateral common iliac nodes": "trunk",
+        "Lateral pericardial nodes": "thorax",
+        "Lateral sacral nodes.l": "Sacrum",
+        "Lateral sacral nodes.r": "Sacrum",
+        "Lateral superior jugular node.l": "Vertebra C3",
+        "Lateral superior jugular node.r": "Vertebra C3",
+        "Lateral vesical nodes.l": "Hip bone.l",
+        "Lateral vesical nodes.r": "Hip bone.r",
+        "Left colic nodes": "trunk",
+        "Mandibular node.l": "head",
+        "Mandibular node.r": "head",
+        "Mastoid nodes.l": "head",
+        "Mastoid nodes.r": "head",
+        "Medial common iliac nodes": "trunk",
+        "Medial external iliac nodes.l": "Hip bone.l",
+        "Medial external iliac nodes.r": "Hip bone.r",
+        "Median sacral nodes": "trunk",
+        "Middle colic nodes": "trunk",
+        "Nasolabial node.l": "head",
+        "Nasolabial node.r": "head",
+        "Node of arch of azygos vein": "thorax",
+        "Node of ligamentum arteriosum": "thorax",
+        "Obturator nodes.l": "Hip bone.l",
+        "Obturator nodes.r": "Hip bone.r",
+        "Occipital nodes.l": "Occipital bone",
+        "Occipital nodes.r": "Occipital bone",
+        "Palatine tonsil.l": "head",
+        "Palatine tonsil.r": "head",
+        "Paracolic superior mesenteric nodes": "trunk",
+        "Pararectal nodes": "trunk",
+        "Parasternal nodes.l": "thorax",
+        "Parasternal nodes.r": "thorax",
+        "Paratracheal cervical nodes": "Vertebra C7",
+        "Paratracheal thoracic nodes": "thorax",
+        "Posterior axillary nodes.l": "Humerus.l",
+        "Posterior axillary nodes.r": "Humerus.r",
+        "Postvesical nodes": "trunk",
+        "Pre-aortic nodes": "trunk",
+        "Pre-auricular nodes.l": "head",
+        "Pre-auricular nodes.r": "head",
+        "Precaecal nodes": "trunk",
+        "Precaval nodes": "trunk",
+        "Prepericardial nodes": "thorax",
+        "Pretracheal nodes.l": "Vertebra C7",
+        "Pretracheal nodes.r": "Vertebra C7",
+        "Prevertebral nodes": "thorax",
+        "Prevesical nodes": "trunk",
+        "Retro-aortic nodes": "Vertebra L3",
+        "Retrocaecal nodes": "trunk",
+        "Retrocaval nodes": "Vertebra L3",
+        "Retropharyngeal nodes.l": "Vertebra C3",
+        "Retropharyngeal nodes.r": "Vertebra C3",
+        "Right colic nodes": "trunk",
+        "Right gastric nodes": "trunk",
+        "Right gastro-omental nodes": "trunk",
+        "Sigmoid nodes": "trunk",
+        "Splenic nodes": "trunk",
+        "Subaortic nodes": "thorax",
+        "Submandibular nodes.l": "head",
+        "Submandibular nodes.r": "head",
+        "Submental nodes.l": "head",
+        "Submental nodes.r": "head",
+        "Superficial anterior cervical nodes": "Vertebra C7",
+        "Superficial lateral cervical nodes.l": "Vertebra C7",
+        "Superficial lateral cervical nodes.r": "Vertebra C7",
+        "Superficial parotid nodes.l": "head",
+        "Superficial parotid nodes.r": "head",
+        "Superficial popliteal nodes.l": "Tibia.l",
+        "Superficial popliteal nodes.r": "Tibia.r",
+        "Superior diaphragmatic nodes": "thorax",
+        "Superior gluteal nodes.l": "Hip bone.l",
+        "Superior gluteal nodes.r": "Hip bone.r",
+        "Superior pancreatic nodes": "trunk",
+        "Superior pancreaticoduodenal nodes": "trunk",
+        "Superior tracheobronchial nodes": "thorax",
+        "Superolateral superficial inguinal nodes.l": "Hip bone.l",
+        "Superolateral superficial inguinal nodes.r": "Hip bone.r",
+        "Superomedial superficial inguinal nodes.l": "Hip bone.l",
+        "Superomedial superficial inguinal nodes.r": "Hip bone.r",
+        "Supraclavicular nodes.l": "Vertebra C7",
+        "Supraclavicular nodes.r": "Vertebra C7",
+        "Supratrochlear nodes.l": "Humerus.l",
+        "Supratrochlear nodes.r": "Humerus.r",
+        "Thyroid nodes.l": "Vertebra C7",
+        "Thyroid nodes.r": "Vertebra C7"
+      },
+      "contactCheck": {
+        "method": "Held-out deterministic samples: up to 200 vertices plus 200 triangle centroids per object, seed 891. Bone interior by generalized winding number, nearest triangle distance for interior samples. Diagnostic against unchanged BodyParts3D skeletal GLB. This is sampled geometric QA, not a medical validation.",
+        "samples": 59414,
+        "maximumSampledBonePenetrationMm": 3.760362895262792,
+        "groupsWithPenetrationOver2mm": {
+          "Retrocaval nodes": 3.386250531640052,
+          "Superior gluteal nodes.r": 3.760362895262792,
+          "Intercostal nodes.l": 2.13373340955819
+        },
+        "sourceComparison": "Several original Z-Anatomy node/tonsil surfaces already intersect its own bones by approximately 1–2.5 mm. Regional registration reduces added discrepancies but cannot make these source surfaces clinically exact without changing their shape. No anatomy was fabricated to conceal those limits."
+      }
+    },
+    "excluded": "Joined annotation meshes (.j), generic demonstration node, section planes, source spleen and thymic lobes. The atlas spleen and thymus already come from BodyParts3D.",
+    "limitations": "158 named lymph-node groups, not a claim of 158 individual nodes or a complete lymphatic network. No collecting vessels, thoracic duct, right lymphatic duct or lymph flow is supplied by this FBX. Regional registration between different source bodies is approximate; local tissue contacts are not clinically validated.",
+    "references": [
+      "https://github.com/LluisV/Z-Anatomy/blob/PC-Version/README.md",
+      "https://openstax.org/books/anatomy-and-physiology-2e/pages/21-1-anatomy-of-the-lymphatic-and-immune-systems"
+    ]
+  },
+  "connective": {
+    "source": "BodyParts3D 4.0",
+    "structures": 24,
+    "modifications": "Original source geometry, coordinates and FMA identifiers; illustrative colours and smooth normals.",
+    "limitations": "Selected identifiable connective surfaces, not the complete ligament or fascial system. Ocular supports are in the sensory layer. Ambiguous intermediate tendon FJ1581 and overlapping levator-ani tendinous-arch variants are excluded."
+  },
+  "skin": {
+    "source": "BodyParts3D 4.0",
+    "structures": 3,
+    "modifications": "Skin topology and indices retained. Local outward accommodation of the outer skin surface covers confirmed protrusions of the iliotibial tracts, medial gastrocnemius heads, sartorius muscles and anterior-neck platysma. The inner surface is retained, with approximately 0.5 mm of target cover and a smooth 20 mm transition around supporting face corners. Displacements are bounded at 8 mm around the iliotibial tracts and 12 mm in the additional regions. Original and displayed muscle geometry, hair and all other anatomical meshes are unchanged. Illustrative uniform material colours; layer initially hidden.",
+    "skinAccommodation": {
+      "version": 2,
+      "method": "Local outward accommodation of the existing outer lateral-thigh skin sheet, retaining the inner sheet coordinates around unchanged BodyParts3D iliotibial tracts. Vertex and triangle-centroid constraints propagated to the three supporting skin-face corners, 0.5 mm target cover, maximum constraint field with a 6 mm plateau and smoothstep falloff to 20 mm around those corners. Per-vertex external smooth normals; topology and indices retained. No global inflation or tendon displacement. The same local external-sheet accommodation covers confirmed source protrusions of the medial gastrocnemius heads, sartorius muscles and anterior-neck platysma. A six-direction source-surface visibility test identifies the outer sheet in these bounded regions. Original and displayed muscle coordinates remain unchanged; both constrain the skin.",
+      "targetCoverMm": 0.5,
+      "blendRadiusMm": 20,
+      "displacementLimitMm": 12,
+      "changedVertices": 2301,
+      "totalVertices": 102467,
+      "maximumDisplacementMm": 9.316425076021318,
+      "sourceVerticesSha256": "46c946cb959f948318316a50a7a6c9176b73311ceb448a3ee4972647dedc51fb",
+      "sourceIndicesSha256": "cbbbef0671a74493def850ccc9cd7e44dae88b323e32c88a806f06d5f11e24e9",
+      "tracts": {
+        "FJ1423": {
+          "sourceObjSha256": "5be6b36001c18933694ec0871ed262da14c5b6c5f4d1f51b4cf5cd9b074bd76f",
+          "samples": 26597,
+          "iterations": 1,
+          "outsideBeforeOver01mm": 1650,
+          "maximumOutsideBeforeMm": 4.593681285673698,
+          "outsideAfterOver01mm": 0,
+          "maximumSignedDistanceAfterMm": -0.49259466882545333,
+          "seedBoundsMetres": [
+            [
+              -0.16534100000000002,
+              0.452509,
+              0.035888800000000005
+            ],
+            [
+              -0.123253,
+              0.934126,
+              0.11063200000000001
+            ]
+          ]
+        },
+        "FJ1423M": {
+          "sourceObjSha256": "bfd57c0dcc185bf4fd7396064bc1c27c7e438427605f7826b4cfdbeb5e40f589",
+          "samples": 26597,
+          "iterations": 1,
+          "outsideBeforeOver01mm": 3452,
+          "maximumOutsideBeforeMm": 5.799180840423698,
+          "outsideAfterOver01mm": 0,
+          "maximumSignedDistanceAfterMm": -0.4880059819021993,
+          "seedBoundsMetres": [
+            [
+              0.12280100000000001,
+              0.445911,
+              0.034321199999999996
+            ],
+            [
+              0.163526,
+              0.9418300000000001,
+              0.110749
+            ]
+          ]
+        }
+      },
+      "limitations": "Illustrative local accommodation of differing source surfaces, not measured skin or subcutaneous-tissue thickness. Other anatomical meshes, natural openings and the rest of the skin remain unchanged. This does not establish whole-body clinical containment or validation.",
+      "superficialRegions": {
+        "right_medial_leg": {
+          "samples": 16741,
+          "maximumSignedDistancesByPassMm": [
+            8.816425076021316,
+            -0.488628582921321
+          ],
+          "outsideBeforeOver01mm": 1106,
+          "maximumOutsideBeforeMm": 8.816425076021316,
+          "outsideAfterOver01mm": 0,
+          "maximumSignedDistanceAfterMm": -0.488628582921321,
+          "sourceObjSha256": {
+            "FJ1397": "d7f3aa44801171baade1a59c40a8f8bda72097bec07047f93f24ebaac4546cb4",
+            "FJ1434": "670d0351a8f017d4792ee7c5780557b5468a298e128cf44da9443d2712d24eb7"
+          }
+        },
+        "left_medial_leg": {
+          "samples": 16739,
+          "maximumSignedDistancesByPassMm": [
+            7.55411862939086,
+            -0.4773334001300318
+          ],
+          "outsideBeforeOver01mm": 732,
+          "maximumOutsideBeforeMm": 7.55411862939086,
+          "outsideAfterOver01mm": 0,
+          "maximumSignedDistanceAfterMm": -0.4773334001300318,
+          "sourceObjSha256": {
+            "FJ1397M": "43545b226adb517579273570e6bcb30943c5f22a1687aba6e11d6e1634175f05",
+            "FJ1434M": "4c32d96cf9113542f135a32f8a709505fee10796b9b076cc16c7efe665778bc8"
+          }
+        },
+        "anterior_neck": {
+          "samples": 32025,
+          "maximumSignedDistancesByPassMm": [
+            3.9980212703129525,
+            -0.47495514879441547
+          ],
+          "outsideBeforeOver01mm": 3934,
+          "maximumOutsideBeforeMm": 3.9980212703129525,
+          "outsideAfterOver01mm": 0,
+          "maximumSignedDistanceAfterMm": -0.47495514879441547,
+          "sourceObjSha256": {
+            "FJ1558": "21711ac424696b6bc9a08ed225405228a26eef29beb237b7d9d8ed5a0a65d394",
+            "FJ1587": "6b7deb39529e4ae7aeb013bdcbca4d7c773035d75d4d2e7c821bb1bdc1852790"
+          }
+        }
+      }
+    },
+    "limitations": "Adult male surface only. The local adjustments are illustrative accommodations between source surfaces, not measured skin or subcutaneous-tissue thickness. No separately modelled skin microanatomy, nails or individual follicles. Skin is one whole-body mesh. Coverage of the targeted structures does not establish whole-body clinical validation."
+  },
+  "externalVisibility": {
+    "defaultVisible": false,
+    "scope": "External genitalia only; internal reproductive organs retained",
+    "hiddenStructures": [
+      "FMA18247",
+      "FMA18256",
+      "FMA18257",
+      "FMA19617",
+      "FMA19618",
+      "FMA20818",
+      "FMA20819",
+      "FMA21354",
+      "FMA21384",
+      "FMA21385",
+      "FMA21386",
+      "FMA7211",
+      "FMA7212"
+    ],
+    "base": {
+      "nodes": 1773,
+      "meshes": 1773,
+      "materials": 1773,
+      "accessors": 5319,
+      "bufferViews": 5319,
+      "binaryBytes": 140568972
+    },
+    "variants": {
+      "__external_hidden_FMA14341": {
+        "verticesSha256": "6cc1bcf270bd749098915ee6e3dfc6ab7a6f2b124fc0993b9ca5217b376dd0bd",
+        "indicesSha256": "06defc88bcc01de663a3a3071b48d1a368c180f9dd5cd2951c7e335669d373cf",
+        "triangles": 4164
+      },
+      "__external_hidden_FMA14345": {
+        "verticesSha256": "cd3284c8252d2d5cbe6cecfc0a2f09311a9d128872d349b0fd9ea54f2b4f75d2",
+        "indicesSha256": "d3f0e336db7d93e2318025abe9ec5bd0594e548a646a83addd018edee88de471",
+        "triangles": 4442
+      },
+      "__external_hidden_FMA14759": {
+        "verticesSha256": "e90a057b26069b0bf32361257d251b4daf972175b9a3fc137a6ceae3a3d77ef5",
+        "indicesSha256": "98bd5c051ddd6737b9fc8b69811d90d8d898229062b92e8e4fd342d1640057a6",
+        "triangles": 4017
+      },
+      "__external_hidden_FMA14760": {
+        "verticesSha256": "a829ed130c8b20487a718322de242e9390bd61a0f14cbc2f2f01207e22448ef2",
+        "indicesSha256": "88a5bc55e97a1559efe2920232a95964e16153eb79d9e80e9dba176aaf46f5c6",
+        "triangles": 3760
+      },
+      "__external_hidden_FMA19667": {
+        "verticesSha256": "97903d9b72573f38b40922b6cc25e3ab2f33a25ff74e6d7437bb00230ae6ed76",
+        "indicesSha256": "d523dbd8da7aee016f75a66d8b94586a7f02644a1241d8a5aa0c02b87da39dc5",
+        "triangles": 184
+      },
+      "__external_hidden_FMA7163": {
+        "verticesSha256": "ddb6abf6eda26941918a07c67ee34df4096f48c597dc37ea838ea6f70b7c3e64",
+        "indicesSha256": "25b3e59180a89378c52b52ca8b253c243c996d89f2788cc0b1e42b053d8b37da",
+        "triangles": 53366
+      }
+    },
+    "surfaceAdaptation": {
+      "scope": "External genital display only; internal organs and breast silhouette retained",
+      "anatomicalSourceMeshesModified": false,
+      "clinicalUse": "Illustrative reversible display closure, not anatomy",
+      "structures": {
+        "FMA7163": {
+          "method": "Local quadratic cut with separate, closed external and internal display caps",
+          "changedRefinedTriangles": 12841,
+          "caps": [
+            {
+              "wall": "outer",
+              "boundaryVertices": 501,
+              "capTriangles": 38515,
+              "offsetMm": 0.3,
+              "curvatureErrorBoundMm": 0.11389259156694811,
+              "boundaryBounds": [
+                [
+                  -0.046669055358238704,
+                  0.6698968479890055,
+                  0.11302533238392296
+                ],
+                [
+                  0.04709886035707109,
+                  0.8209321121183464,
+                  0.18466137506193686
+                ]
+              ]
+            },
+            {
+              "wall": "inner",
+              "boundaryVertices": 475,
+              "capTriangles": 31899,
+              "offsetMm": -2,
+              "curvatureErrorBoundMm": 0.11900418617853385,
+              "boundaryBounds": [
+                [
+                  -0.04509620450191992,
+                  0.6759376799415272,
+                  0.11389312778083818
+                ],
+                [
+                  0.045501653293967596,
+                  0.8185618198598094,
+                  0.18157792050580746
+                ]
+              ]
+            }
+          ],
+          "minimumAnalyticWallSeparationMm": 2.180995813821466,
+          "sourceVertices": 102467,
+          "sourceTriangles": 203382,
+          "vertices": 134176,
+          "triangles": 266830,
+          "sourceVerticesSha256": "2ae75b8fcbee4e0509e31502d96e016325c1e8fc5bc45ccaa95600336b808338",
+          "sourceIndicesSha256": "cbbbef0671a74493def850ccc9cd7e44dae88b323e32c88a806f06d5f11e24e9",
+          "bounds": {
+            "min": [
+              -0.3341189920902252,
+              -0.0781112015247345,
+              -0.045247599482536316
+            ],
+            "max": [
+              0.3328250050544739,
+              1.6413600444793701,
+              0.24678300321102142
+            ]
+          }
+        },
+        "FMA19667": {
+          "method": "Distal clipping behind the neutral skin, proximal route retained",
+          "cutEnds": "Open sectional display ends; no reconstructed anatomy",
+          "changedRefinedTriangles": 274,
+          "minimumSurfaceClearanceMm": 1.4800069389494497,
+          "sourceVertices": 358,
+          "sourceTriangles": 440,
+          "vertices": 149,
+          "triangles": 184,
+          "sourceVerticesSha256": "000d6976b0a6bd155c77eec2a37fef35f29625f39e236cec7737e9d4a529b91c",
+          "sourceIndicesSha256": "f55dafef8e200c4efa42bfd32afc317ff3da23efb919c6f4cc6dad01d22a5693",
+          "bounds": {
+            "min": [
+              -0.001578136463649571,
+              0.769091010093689,
+              0.07995270192623138
+            ],
+            "max": [
+              0.00027297899941913784,
+              0.7925119996070862,
+              0.1337028443813324
+            ]
+          }
+        },
+        "FMA14759": {
+          "method": "Distal clipping behind the neutral skin, proximal route retained",
+          "cutEnds": "Open sectional display ends; no reconstructed anatomy",
+          "changedRefinedTriangles": 1642,
+          "minimumSurfaceClearanceMm": 1.4358319828944137,
+          "sourceVertices": 6497,
+          "sourceTriangles": 12938,
+          "vertices": 5767,
+          "triangles": 11479,
+          "sourceVerticesSha256": "5d9bc74df2e128c255b472c79f9da4ca4fe3df3eeec289adc66c815c8a436ed5",
+          "sourceIndicesSha256": "27f8f115e1fb097a68b2f7f4b42bf9e9c26538d791662572cbf99d5a6b7e883a",
+          "bounds": {
+            "min": [
+              -0.06756330281496048,
+              0.7735624313354492,
+              0.07998629659414291
+            ],
+            "max": [
+              0.005744350142776966,
+              1.026859998703003,
+              0.14932599663734436
+            ]
+          }
+        },
+        "FMA14760": {
+          "method": "Distal clipping behind the neutral skin, proximal route retained",
+          "cutEnds": "Open sectional display ends; no reconstructed anatomy",
+          "changedRefinedTriangles": 1819,
+          "minimumSurfaceClearanceMm": 1.4524074799601023,
+          "sourceVertices": 6233,
+          "sourceTriangles": 12420,
+          "vertices": 5400,
+          "triangles": 10746,
+          "sourceVerticesSha256": "5b7be1223001765c2c344bf2cb75e99e2f6aa4bec55e804b81222713c44ad9f1",
+          "sourceIndicesSha256": "c7a7a2691fb5137a19bc768ed232c8f67739e4f32c09bc17b80b85e4d6880d57",
+          "bounds": {
+            "min": [
+              0.007519859820604324,
+              0.7761217355728149,
+              0.08489099889993668
+            ],
+            "max": [
+              0.06984829902648926,
+              1.0249899625778198,
+              0.14912599325180054
+            ]
+          }
+        },
+        "FMA14341": {
+          "method": "Distal clipping behind the neutral skin, proximal route retained",
+          "cutEnds": "Open sectional display ends; no reconstructed anatomy",
+          "changedRefinedTriangles": 1839,
+          "minimumSurfaceClearanceMm": 1.4413684310472623,
+          "sourceVertices": 6899,
+          "sourceTriangles": 13640,
+          "vertices": 6033,
+          "triangles": 11900,
+          "sourceVerticesSha256": "038db2859290591a05effd407ff3124d3d33f414fcfdc9385afad71a22cdc92e",
+          "sourceIndicesSha256": "782b82806303a29e6e34e3471cd20096dbf089ce5aa20fad0ef657531f5eea17",
+          "bounds": {
+            "min": [
+              -0.06967529654502869,
+              0.7713119983673096,
+              0.07933119684457779
+            ],
+            "max": [
+              -0.011836700141429901,
+              1.0221500396728516,
+              0.1495330035686493
+            ]
+          }
+        },
+        "FMA14345": {
+          "method": "Distal clipping behind the neutral skin, proximal route retained",
+          "cutEnds": "Open sectional display ends; no reconstructed anatomy",
+          "changedRefinedTriangles": 1945,
+          "minimumSurfaceClearanceMm": 1.4346862777021956,
+          "sourceVertices": 7286,
+          "sourceTriangles": 14488,
+          "vertices": 6375,
+          "triangles": 12694,
+          "sourceVerticesSha256": "0c4fa1e73891239d306f6daf28bd29033a5e34118d588fd9feb40269b84bce40",
+          "sourceIndicesSha256": "65f8424640695680c4226c1220c097b35e1b728ce0e2ad91d0523ddb6bbfeea1",
+          "bounds": {
+            "min": [
+              0.013290099799633026,
+              0.7739149332046509,
+              0.08515249937772751
+            ],
+            "max": [
+              0.07254280149936676,
+              1.0361000299453735,
+              0.14934100210666656
+            ]
+          }
+        }
+      }
+    },
+    "generatorSha256": "c82e3f713019570f94290d81b38eb0e09ada43e256154b9aa4406fc0ec8a8cfc",
+    "providerSha256": "171033978f6d9550ff638103e39b9c523e59929494668aa6118a5a54a8aff2c2"
+  },
+  "mobileOptimization": {
+    "version": 1,
+    "sourceModelSha256": "198496c7e71f9a679633b75f7cb2f30cb31a0bc89a2739f423ab5bac8cf1ba71",
+    "toolSha256": "3428c49efb37c12f16996944737949f317374d05a58c43132c02ce47322b4695",
+    "dependencies": {
+      "draco3dgltf": "1.5.7",
+      "gltf-validator": "2.0.0-dev.3.10",
+      "meshoptimizer": "1.3.0"
+    },
+    "inputBytes": 111558633,
+    "outputBytes": 14338882,
+    "inputTriangles": 7312045,
+    "outputTriangles": 3704709,
+    "inputVertices": 4173438,
+    "outputVertices": 2316155,
+    "method": "Mobile display derivative: exact attribute welding; error-bounded meshoptimizer simplification with locked borders, extrema and a triangle in every connected island; per-mesh Draco position quantization (14/16 bits, 20 or lossless when needed to keep islands separate) and normals (10 bits). Names, materials, layers and display variants retained.",
+    "maximumSimplifierErrorMetres": 0.0006999931065365672,
+    "sourceGeometryNote": "Source descriptions and registrations above describe the imported originals. Packaged surfaces are now simplified mobile derivatives, not byte-identical source geometry."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": 2052,
+  "name": "greystone_greysand",
+  "texture_top": "cozy:material:5:A7B0B7",
+  "texture_side": "cozy:material:5:A7B0B7",
+  "texture_bottom": "cozy:material:5:A7B0B7",
+  "color": "#A7B0B7",
+  "hardness": 3.5,
+  "drop": "greystone",
+  "harvest_category": "fractured_stone",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

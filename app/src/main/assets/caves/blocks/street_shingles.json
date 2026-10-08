@@ -1,0 +1,14 @@
+{
+  "id": 2712,
+  "name": "street_shingles",
+  "texture_top": "street:shingles",
+  "texture_side": "street:shingles",
+  "texture_bottom": "street:shingles",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_shingles",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

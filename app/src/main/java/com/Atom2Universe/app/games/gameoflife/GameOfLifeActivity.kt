@@ -1,0 +1,391 @@
+package com.Atom2Universe.app.games.gameoflife
+
+import com.Atom2Universe.app.science.SciencePalette
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.Gravity
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.SeekBar
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import com.Atom2Universe.app.R
+import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
+import com.Atom2Universe.app.util.enableImmersiveMode
+
+class GameOfLifeActivity : ThemedActivity() {
+
+    private val palette by lazy { SciencePalette(this) }
+
+    private lateinit var gameView: GameOfLifeView
+    private lateinit var playPauseBtn: ImageButton
+    private lateinit var generationText: TextView
+    private lateinit var aliveText: TextView
+
+    private val handler = Handler(Looper.getMainLooper())
+    private var isRunning = false
+    private var generation = 0
+    private var intervalMs = intervalFor(DEFAULT_SPEED)
+
+    private val stepRunnable = object : Runnable {
+        override fun run() {
+            if (isRunning) {
+                gameView.step()
+                generation++
+                updateStats()
+                handler.postDelayed(this, intervalMs)
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableImmersiveMode()
+
+        val root = buildUI()
+        setContentView(root)
+
+        gameView.onCellCountChanged = { alive ->
+            aliveText.text = getString(R.string.gol_cells_alive, alive)
+        }
+        // Randomise après que la vue soit mesurée pour connaître ses dimensions
+        gameView.post {
+            gameView.randomize()
+            updateStats()
+        }
+    }
+
+    private fun buildUI(): FrameLayout {
+        val root = FrameLayout(this).apply {
+            setBackgroundColor(palette.background)
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        }
+
+        gameView = GameOfLifeView(this).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        }
+        root.addView(gameView)
+
+        val topBar = buildTopBar()
+        root.addView(topBar, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).also { it.gravity = Gravity.TOP })
+
+        val bottomBar = buildBottomBar()
+        root.addView(bottomBar, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).also { it.gravity = Gravity.BOTTOM })
+
+        return root
+    }
+
+    private fun buildTopBar(): LinearLayout {
+        val dp = resources.displayMetrics.density
+        val bar = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
+            setBackgroundColor(palette.surface)
+        }
+
+        val backBtn = ImageButton(this).apply {
+            setImageResource(R.drawable.ic_app_back)
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            imageTintList = android.content.res.ColorStateList.valueOf(palette.text)
+            contentDescription = getString(R.string.back)
+            setOnClickListener { finish() }
+        }
+        bar.addView(backBtn, LinearLayout.LayoutParams((36 * dp).toInt(), (36 * dp).toInt()))
+
+        val title = TextView(this).apply {
+            setText(R.string.gol_title)
+            textSize = 16f
+            setTextColor(palette.text)
+            android.graphics.Typeface.DEFAULT_BOLD.also { typeface = it }
+            setPadding((12 * dp).toInt(), 0, 0, 0)
+        }
+        bar.addView(title, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+
+        val stats = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.END
+            setPadding((8 * dp).toInt(), 0, 0, 0)
+        }
+        generationText = TextView(this).apply {
+            text = getString(R.string.gol_generation, 0)
+            textSize = 11f
+            setTextColor(palette.secondary)
+            gravity = Gravity.END
+        }
+        stats.addView(generationText, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ))
+
+        aliveText = TextView(this).apply {
+            text = getString(R.string.gol_cells_alive, 0)
+            textSize = 11f
+            setTextColor(palette.secondary)
+            gravity = Gravity.END
+        }
+        stats.addView(aliveText, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ))
+        bar.addView(stats)
+
+        val infoBtn = ImageButton(this).apply {
+            setImageResource(R.drawable.ic_info)
+            val selectableBackground = android.util.TypedValue()
+            theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, selectableBackground, true)
+            setBackgroundResource(selectableBackground.resourceId)
+            imageTintList = android.content.res.ColorStateList.valueOf(palette.accent)
+            setPadding((12 * dp).toInt(), (12 * dp).toInt(), (12 * dp).toInt(), (12 * dp).toInt())
+            contentDescription = getString(R.string.gol_info_title)
+            tooltipText = getString(R.string.gol_info_title)
+            setOnClickListener { showInfoDialog() }
+        }
+        bar.addView(infoBtn, LinearLayout.LayoutParams((48 * dp).toInt(), (48 * dp).toInt()))
+
+        return bar
+    }
+
+    private fun showInfoDialog() {
+        ImmersiveAlertDialogBuilder(this)
+            .setTitle(R.string.gol_info_title)
+            .setMessage(R.string.gol_info_text)
+            .setPositiveButton(R.string.close, null)
+            .show()
+    }
+
+    private fun buildBottomBar(): LinearLayout {
+        val dp = resources.displayMetrics.density
+        val bar = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (16 * dp).toInt())
+            setBackgroundColor(palette.surface)
+        }
+
+        val speedRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.bottomMargin = (6 * dp).toInt() }
+        }
+        val speedLabel = TextView(this).apply {
+            text = getString(R.string.gol_speed_value, 1000.0 / intervalMs)
+            textSize = 11f
+            setTextColor(palette.secondary)
+            setPadding(0, 0, (8 * dp).toInt(), 0)
+        }
+        speedRow.addView(speedLabel)
+        val seekBar = SeekBar(this).apply {
+            max = 9
+            // Le curseur, le libellé et la simulation partagent la même vitesse initiale.
+            progress = DEFAULT_SPEED
+            contentDescription = speedLabel.text
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
+                    intervalMs = intervalFor(progress)
+                    speedLabel.text = getString(R.string.gol_speed_value, 1000.0 / intervalMs)
+                    sb.contentDescription = speedLabel.text
+                }
+                override fun onStartTrackingTouch(sb: SeekBar) {}
+                override fun onStopTrackingTouch(sb: SeekBar) {}
+            })
+        }
+        speedRow.addView(seekBar)
+        bar.addView(speedRow)
+
+        val btnRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+        }
+
+        playPauseBtn = ImageButton(this).apply {
+            setImageResource(android.R.drawable.ic_media_play)
+            contentDescription = getString(R.string.gol_play)
+            background = palette.control()
+            imageTintList = android.content.res.ColorStateList.valueOf(palette.accent)
+            setPadding((12 * dp).toInt(), (8 * dp).toInt(), (12 * dp).toInt(), (8 * dp).toInt())
+            setOnClickListener { togglePlay() }
+        }
+        btnRow.addView(playPauseBtn, LinearLayout.LayoutParams((52 * dp).toInt(), (44 * dp).toInt()).also {
+            it.marginEnd = (8 * dp).toInt()
+        })
+
+        fun actionBtn(labelRes: Int, onClick: () -> Unit): TextView {
+            return TextView(this).apply {
+                setText(labelRes)
+                textSize = 13f
+                setTextColor(palette.text)
+                gravity = Gravity.CENTER
+                background = palette.control()
+                setPadding((16 * dp).toInt(), (10 * dp).toInt(), (16 * dp).toInt(), (10 * dp).toInt())
+                setOnClickListener { onClick() }
+            }
+        }
+
+        val clearBtn = actionBtn(R.string.gol_clear) {
+            stopSim()
+            generation = 0
+            gameView.clear()
+            updateStats()
+        }
+        btnRow.addView(clearBtn, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).also { it.marginEnd = (8 * dp).toInt() })
+
+        val randomBtn = actionBtn(R.string.gol_random) {
+            stopSim()
+            generation = 0
+            gameView.randomize()
+            updateStats()
+        }
+        btnRow.addView(randomBtn, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).also { it.marginEnd = (8 * dp).toInt() })
+
+        val presetsBtn = actionBtn(R.string.gol_preset_label) { showPresetsDialog() }
+        btnRow.addView(presetsBtn)
+
+        bar.addView(btnRow)
+
+        val hint = TextView(this).apply {
+            setText(R.string.gol_zoom_hint)
+            textSize = 9f
+            setTextColor(palette.secondary)
+            gravity = Gravity.CENTER
+            val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            lp.topMargin = (6 * dp).toInt()
+            layoutParams = lp
+        }
+        bar.addView(hint)
+
+        return bar
+    }
+
+    private fun togglePlay() {
+        if (isRunning) stopSim() else startSim()
+    }
+
+    private fun startSim() {
+        isRunning = true
+        playPauseBtn.setImageResource(android.R.drawable.ic_media_pause)
+        playPauseBtn.contentDescription = getString(R.string.gol_pause)
+        handler.post(stepRunnable)
+    }
+
+    private fun stopSim() {
+        isRunning = false
+        playPauseBtn.setImageResource(android.R.drawable.ic_media_play)
+        playPauseBtn.contentDescription = getString(R.string.gol_play)
+        handler.removeCallbacks(stepRunnable)
+    }
+
+    private fun updateStats() {
+        generationText.text = getString(R.string.gol_generation, generation)
+    }
+
+    private fun showPresetsDialog() {
+        val wasRunning = isRunning
+        stopSim()
+
+        val presets = listOf(
+            getString(R.string.gol_preset_glider) to GLIDER,
+            getString(R.string.gol_preset_pulsar) to PULSAR,
+            getString(R.string.gol_preset_gosper) to GOSPER_GUN,
+            getString(R.string.gol_preset_lwss) to LWSS
+        )
+
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
+            .setTitle(R.string.gol_preset_label)
+            .setItems(presets.map { it.first }.toTypedArray()) { _, i ->
+                generation = 0
+                gameView.clear()
+                gameView.placePattern(presets[i].second)
+                updateStats()
+                if (wasRunning) startSim()
+            }
+            .setOnCancelListener { if (wasRunning) startSim() }
+            .show()
+    }
+
+    // La simulation tournait encore application en arrière-plan (jusqu'à 125 pas par seconde).
+    override fun onPause() {
+        super.onPause()
+        if (isRunning) stopSim()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(stepRunnable)
+    }
+
+    companion object {
+        private const val DEFAULT_SPEED = 2 // 300 ms, soit environ 3,3 générations par seconde.
+
+        private fun intervalFor(speed: Int): Long = when (speed) {
+            0 -> 1000L; 1 -> 500L; 2 -> 300L; 3 -> 200L; 4 -> 150L
+            5 -> 100L; 6 -> 60L; 7 -> 30L; 8 -> 16L; else -> 8L
+        }
+
+        val GLIDER = arrayOf(
+            intArrayOf(0, 1, 0),
+            intArrayOf(0, 0, 1),
+            intArrayOf(1, 1, 1)
+        )
+
+        val PULSAR = arrayOf(
+            intArrayOf(0,0,1,1,1,0,0,0,1,1,1,0,0),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(1,0,0,0,0,1,0,1,0,0,0,0,1),
+            intArrayOf(1,0,0,0,0,1,0,1,0,0,0,0,1),
+            intArrayOf(1,0,0,0,0,1,0,1,0,0,0,0,1),
+            intArrayOf(0,0,1,1,1,0,0,0,1,1,1,0,0),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(0,0,1,1,1,0,0,0,1,1,1,0,0),
+            intArrayOf(1,0,0,0,0,1,0,1,0,0,0,0,1),
+            intArrayOf(1,0,0,0,0,1,0,1,0,0,0,0,1),
+            intArrayOf(1,0,0,0,0,1,0,1,0,0,0,0,1),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(0,0,1,1,1,0,0,0,1,1,1,0,0)
+        )
+
+        val GOSPER_GUN = arrayOf(
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1),
+            intArrayOf(1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+            intArrayOf(0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+        )
+
+        val LWSS = arrayOf(
+            intArrayOf(0,1,0,0,1),
+            intArrayOf(1,0,0,0,0),
+            intArrayOf(1,0,0,0,1),
+            intArrayOf(1,1,1,1,0)
+        )
+    }
+}

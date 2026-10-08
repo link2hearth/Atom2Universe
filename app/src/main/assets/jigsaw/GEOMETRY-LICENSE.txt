@@ -1,0 +1,11 @@
+Jigsaw tab geometry is adapted from Draradech/jigsaw:
+https://github.com/Draradech/jigsaw
+https://github.com/Draradech/jigsaw/blob/master/jigsaw.html
+
+The upstream README dedicates everything except its browser save function to CC0 1.0:
+https://creativecommons.org/publicdomain/zero/1.0/
+https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+The browser save function (separately described upstream as probably CC BY-SA)
+is not included or used. No upstream interface, export code, or sample images
+are included. Geometry has been adapted to Kotlin, a seeded RNG and shared edges.

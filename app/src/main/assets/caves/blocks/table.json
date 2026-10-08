@@ -1,0 +1,15 @@
+{
+  "id": 8001,
+  "name": "table",
+  "texture_top": "cozy:utility:1",
+  "texture_side": "cozy:utility:14",
+  "texture_bottom": "cozy:utility:15",
+  "color": "#BD985F",
+  "hardness": 2.0,
+  "drop": "table",
+  "creative_tab": "functional",
+  "orient_mode": "facing",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared visual scale: numbers preserve the validated rounded geometry exactly.
+         Layouts select a size; appearance controls its value. No screen duplication. -->
+    <attr name="a2uCorner4" format="dimension" />
+    <attr name="a2uCorner6" format="dimension" />
+    <attr name="a2uCorner8" format="dimension" />
+    <attr name="a2uCorner10" format="dimension" />
+    <attr name="a2uCorner12" format="dimension" />
+    <attr name="a2uCorner14" format="dimension" />
+    <attr name="a2uCorner16" format="dimension" />
+    <attr name="a2uCorner18" format="dimension" />
+    <attr name="a2uCorner20" format="dimension" />
+    <attr name="a2uCorner24" format="dimension" />
+    <attr name="a2uCorner28" format="dimension" />
+    <attr name="a2uCorner32" format="dimension" />
+    <attr name="a2uElevation1" format="dimension" />
+    <attr name="a2uElevation2" format="dimension" />
+    <attr name="a2uElevation3" format="dimension" />
+    <attr name="a2uElevation4" format="dimension" />
+    <attr name="a2uElevation6" format="dimension" />
+    <attr name="a2uElevation8" format="dimension" />
+    <attr name="a2uElevation10" format="dimension" />
+    <attr name="a2uElevation12" format="dimension" />
+    <attr name="a2uScreenBackground" format="reference" />
+    <attr name="a2uPanelBackground" format="reference" />
+    <attr name="a2uRowBackground" format="reference" />
+    <attr name="a2uChipBackground" format="reference" />
+    <attr name="a2uDialogBackground" format="reference" />
+    <attr name="a2uPopupBackground" format="reference" />
+    <attr name="a2uTabBackground" format="reference" />
+    <attr name="a2uControlBackground" format="reference" />
+    <attr name="a2uSelectedRowBackground" format="reference" />
+    <attr name="a2uCornerScale" format="float" />
+    <attr name="a2uElevationScale" format="float" />
+    <attr name="a2uSurfaceGradients" format="boolean" />
+    <attr name="a2uControlShape" format="integer" />
+    <attr name="a2uPanelStartColor" format="color" />
+    <attr name="a2uScreenStartColor" format="color" />
+    <attr name="a2uMaterialButtonStyle" format="reference" />
+    <attr name="a2uPlatformButtonStyle" format="reference" />
+    <attr name="a2uCollectionTileBackground" format="reference" />
+    <attr name="a2uCollectionIconBackground" format="reference" />
+    <attr name="a2uFabShape" format="reference" />
+    <attr name="a2uOrnaments" format="boolean" />
+    <attr name="a2uProjectBackground" format="reference" />
+
+    <!-- Inherited by Theme.A2U, including dialogs and contexts outside ThemedActivity. -->
+    <style name="Theme.A2U.AppearanceDefaults" parent="Theme.A2U.PaletteDefaults">
+        <item name="a2uCorner4">4dp</item>
+        <item name="a2uCorner6">6dp</item>
+        <item name="a2uCorner8">8dp</item>
+        <item name="a2uCorner10">10dp</item>
+        <item name="a2uCorner12">12dp</item>
+        <item name="a2uCorner14">14dp</item>
+        <item name="a2uCorner16">16dp</item>
+        <item name="a2uCorner18">18dp</item>
+        <item name="a2uCorner20">20dp</item>
+        <item name="a2uCorner24">24dp</item>
+        <item name="a2uCorner28">28dp</item>
+        <item name="a2uCorner32">32dp</item>
+        <item name="a2uElevation1">1dp</item>
+        <item name="a2uElevation2">2dp</item>
+        <item name="a2uElevation3">3dp</item>
+        <item name="a2uElevation4">4dp</item>
+        <item name="a2uElevation6">6dp</item>
+        <item name="a2uElevation8">8dp</item>
+        <item name="a2uElevation10">10dp</item>
+        <item name="a2uElevation12">12dp</item>
+        <item name="a2uScreenBackground">@drawable/audio_screen_background</item>
+        <item name="a2uPanelBackground">@drawable/audio_panel_background</item>
+        <item name="a2uRowBackground">@drawable/audio_row_background</item>
+        <item name="a2uChipBackground">@drawable/audio_chip_background</item>
+        <item name="a2uDialogBackground">@drawable/audio_dialog_background</item>
+        <item name="a2uPopupBackground">@drawable/audio_popup_background</item>
+        <item name="a2uTabBackground">@drawable/audio_tab_background</item>
+        <item name="a2uControlBackground">@drawable/audio_control_background</item>
+        <item name="a2uSelectedRowBackground">@drawable/audio_selected_row_background</item>
+        <item name="a2uCornerScale">1.0</item>
+        <item name="a2uElevationScale">1.0</item>
+        <item name="a2uSurfaceGradients">true</item>
+        <item name="a2uControlShape">1</item>
+        <item name="a2uPanelStartColor">?attr/a2uMusicAccentDim</item>
+        <item name="a2uScreenStartColor">?attr/a2uMusicAccentDim</item>
+        <item name="a2uMaterialButtonStyle">@style/Widget.A2U.Audio.Button</item>
+        <item name="a2uPlatformButtonStyle">@style/Widget.A2U.Audio.PlatformButton</item>
+        <item name="a2uCollectionTileBackground">@drawable/all_tracks_tile_bg</item>
+        <item name="a2uCollectionIconBackground">@drawable/all_tracks_icon_bg</item>
+        <item name="a2uFabShape">@style/ShapeAppearance.A2U.Fab.Rounded</item>
+        <item name="a2uOrnaments">false</item>
+        <item name="a2uProjectBackground">@drawable/library_project_background</item>
+    </style>
+
+    <!-- Rounded is the base. Apply color first to reset any previous appearance. -->
+    <style name="ThemeOverlay.A2U.Appearance.Rounded" parent="" />
+
+    <!-- Closed ornamental contours replace panel/card shapes. These radii only serve compact
+         controls and artwork insets; color, brightness, gradients and animation stay independent. -->
+    <style name="ThemeOverlay.A2U.Appearance.Illuminated" parent="">
+        <item name="a2uOrnaments">true</item>
+        <item name="a2uCornerScale">0.75</item>
+        <item name="a2uCorner4">3dp</item>
+        <item name="a2uCorner6">4.5dp</item>
+        <item name="a2uCorner8">6dp</item>
+        <item name="a2uCorner10">7.5dp</item>
+        <item name="a2uCorner12">9dp</item>
+        <item name="a2uCorner14">10.5dp</item>
+        <item name="a2uCorner16">12dp</item>
+        <item name="a2uCorner18">13.5dp</item>
+        <item name="a2uCorner20">15dp</item>
+        <item name="a2uCorner24">18dp</item>
+        <item name="a2uCorner28">21dp</item>
+        <item name="a2uCorner32">24dp</item>
+        <item name="a2uPanelBackground">@drawable/ornament_panel_background</item>
+        <item name="a2uDialogBackground">@drawable/ornament_dialog_background</item>
+        <item name="a2uPopupBackground">@drawable/ornament_popup_background</item>
+        <item name="a2uRowBackground">@drawable/ornament_row_background</item>
+        <item name="a2uProjectBackground">@drawable/ornament_project_background</item>
+    </style>
+
+    <style name="ThemeOverlay.A2U.Appearance.Classic" parent="">
+        <item name="a2uCorner4">0dp</item>
+        <item name="a2uCorner6">0dp</item>
+        <item name="a2uCorner8">0dp</item>
+        <item name="a2uCorner10">0dp</item>
+        <item name="a2uCorner12">0dp</item>
+        <item name="a2uCorner14">0dp</item>
+        <item name="a2uCorner16">0dp</item>
+        <item name="a2uCorner18">0dp</item>
+        <item name="a2uCorner20">0dp</item>
+        <item name="a2uCorner24">0dp</item>
+        <item name="a2uCorner28">0dp</item>
+        <item name="a2uCorner32">0dp</item>
+        <item name="a2uElevation1">0dp</item>
+        <item name="a2uElevation2">0dp</item>
+        <item name="a2uElevation3">0dp</item>
+        <item name="a2uElevation4">0dp</item>
+        <item name="a2uElevation6">0dp</item>
+        <item name="a2uElevation8">0dp</item>
+        <item name="a2uElevation10">0dp</item>
+        <item name="a2uElevation12">0dp</item>
+        <item name="a2uCornerScale">0.0</item>
+        <item name="a2uElevationScale">0.0</item>
+        <item name="a2uControlShape">0</item>
+        <item name="a2uMaterialButtonStyle">@style/Widget.A2U.Classic.Button</item>
+        <item name="a2uPlatformButtonStyle">@style/Widget.A2U.Classic.PlatformButton</item>
+        <item name="a2uCollectionTileBackground">@drawable/audio_panel_background</item>
+        <item name="a2uCollectionIconBackground">@drawable/audio_chip_background</item>
+        <item name="a2uFabShape">@style/ShapeAppearance.A2U.Fab.Classic</item>
+    </style>
+
+    <style name="ShapeAppearance.A2U.Fab.Rounded" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="Widget.A2U.Classic.Button" parent="Widget.A2U.Audio.Button">
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+    <style name="Widget.A2U.Classic.PlatformButton" parent="Widget.A2U.Audio.PlatformButton">
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+    <style name="ShapeAppearance.A2U.Fab.Classic" parent="">
+        <item name="cornerSize">0dp</item>
+    </style>
+    <style name="Widget.A2U.Fab" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="shapeAppearanceOverlay">?attr/a2uFabShape</item>
+        <item name="elevation">?attr/a2uElevation6</item>
+        <item name="pressedTranslationZ">?attr/a2uElevation6</item>
+        <item name="hoveredFocusedTranslationZ">?attr/a2uElevation2</item>
+    </style>
+</resources>

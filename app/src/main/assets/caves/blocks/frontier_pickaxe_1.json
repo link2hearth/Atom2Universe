@@ -1,0 +1,17 @@
+{
+  "id": 9833,
+  "name": "frontier_pickaxe_1",
+  "texture_top": "frontier:9833:top",
+  "texture_side": "frontier:9833:side",
+  "texture_bottom": "frontier:9833:top",
+  "color": "#A78960",
+  "hardness": 0.1,
+  "drop": "frontier_pickaxe_1",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": true,
+  "transparent": true,
+  "harvest_category": "resource",
+  "placement_rule": "any",
+  "tags": []
+}

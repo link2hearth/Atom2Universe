@@ -1,0 +1,417 @@
+package com.Atom2Universe.app.games.roguelike
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import kotlin.random.Random
+
+/**
+ * Ce que fait chaque élément, vérifié sur un ennemi seul qui frappe à chaque tour. Le d20
+ * des jets de sauvegarde est truqué : 1, le monstre rate toujours son jet (l'effet prend) ;
+ * 20, il le réussit toujours.
+ */
+class RelicTest {
+
+    private fun fightWith(relic: Relic, type: MonsterType = MonsterType.GOBLIN, d20: Int = 1): Combat {
+        val hero = Hero.starter().apply { addRelic(relic) }
+        // Très solide : il survit au sort, on peut regarder l'effet
+        val enemy = Enemy(type, maxHp = 1000, damage = 3, cadence = 1, countdown = 1)
+        return Combat(hero, 1, listOf(enemy), ambush = false, rng = Random(1), d20 = { d20 })
+    }
+
+    /** Un tour ennemi complet : les attaquants frappent (parade parfaite), puis on revient au joueur. */
+    private fun enemyTurn(c: Combat): EnemyTurnStart = c.passEnemyTurns(Timing.PERFECT)
+
+    @Test
+    fun leHerosNeufNaPasDeRelique() {
+        val hero = Hero.starter()
+        assertTrue(hero.relics.isEmpty())
+        assertTrue(hero.relicSlots.all { it == null })
+    }
+
+    // ── Glace ───────────────────────────────────────────────────────────────────
+
+    @Test
+    fun laGlaceFigeSiLeJetEstRate() {
+        val c = fightWith(Relic.ICE_SHARD, d20 = 1)
+        val hit = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
+        assertFalse(hit.save!!.saved)
+        // Sa jauge est arrêtée un tour du héros : il ne joue pas avant le prochain tour du héros
+        assertTrue("un délai : il n'a pas frappé", enemyTurn(c).attackers.isEmpty())
+        assertEquals(CombatPhase.PLAYER_TURN, c.phase)
+        c.attack(0, Timing.MISS)
+        assertEquals("dégelé, il frappe au tour suivant", listOf(0), c.startEnemyTurn().attackers)
+    }
+
+    @Test
+    fun laGlaceNeFigePasSiLeJetEstReussi() {
+        val c = fightWith(Relic.ICE_SHARD, d20 = 20)
+        assertTrue(c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.save!!.saved)
+        assertEquals(listOf(0), c.startEnemyTurn().attackers)
+    }
+
+    @Test
+    fun unSwipeParfaitImposeLeDesavantage() {
+        // Les dés sortent 20 puis 1 : avec désavantage, le monstre garde le 1
+        val dice = ArrayDeque(listOf(20, 1))
+        val hero = Hero.starter().apply { addRelic(Relic.ICE_SHARD) }
+        val c = Combat(hero, 1, listOf(Enemy(MonsterType.RAT, 1000, 3, 1, 1)), ambush = false,
+            rng = Random(1), d20 = { dice.removeFirst() })
+        val save = c.castRelic(Relic.ICE_SHARD, 0, Timing.PERFECT).main!!.save!!
+        assertTrue(save.disadvantage)
+        assertEquals(1, save.roll)
+        assertFalse(save.saved)
+    }
+
+    @Test
+    fun unSwipeBienMonteLeDD() {
+        val normal = fightWith(Relic.ICE_SHARD, d20 = 10).castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.save!!
+        val good = fightWith(Relic.ICE_SHARD, d20 = 10).castRelic(Relic.ICE_SHARD, 0, Timing.GOOD).main!!.save!!
+        assertEquals(normal.dc + SpellSave.GOOD_STRIKE_DC, good.dc)
+        assertFalse(good.disadvantage)
+    }
+
+    @Test
+    fun leGesteDeLaFoudreCompteAChaqueJet() {
+        val hero = Hero.starter().apply { addRelic(Relic.LIGHTNING) }
+        var rolls = 0
+        val c = Combat(hero, 1, listOf(Enemy(MonsterType.RAT, 1000, 3, 1, 1)), ambush = false,
+            rng = Random(1), d20 = { rolls++; 20 })
+        c.castRelic(Relic.LIGHTNING, 0, Timing.PERFECT)
+        val save = c.startEnemyTurn().saves.single().save
+        assertTrue("le désavantage suit la paralysie", save.disadvantage)
+        assertEquals(2, rolls)
+    }
+
+    // ── Foudre ──────────────────────────────────────────────────────────────────
+
+    @Test
+    fun laFoudreFaitPerdreLAttaqueSurUnJetRate() {
+        val c = fightWith(Relic.LIGHTNING, d20 = 1)
+        c.castRelic(Relic.LIGHTNING, 0, Timing.MISS)
+        val turn = enemyTurn(c)
+        assertTrue(turn.attackers.isEmpty())
+        assertEquals(Element.LIGHTNING, turn.stopped.single().element)
+        assertFalse(turn.saves.single().save.saved)
+    }
+
+    @Test
+    fun laFoudreLaissePasserSurUnJetReussi() {
+        val c = fightWith(Relic.LIGHTNING, d20 = 20)
+        c.castRelic(Relic.LIGHTNING, 0, Timing.MISS)
+        val turn = c.startEnemyTurn()
+        assertEquals(listOf(0), turn.attackers)
+        assertTrue(turn.saves.single().save.saved)
+    }
+
+    // ── Rage ────────────────────────────────────────────────────────────────────
+
+    @Test
+    fun deuxControlesDAffileeFontEnrager() {
+        val c = fightWith(Relic.LIGHTNING, d20 = 1)
+        c.castRelic(Relic.LIGHTNING, 0, Timing.MISS)
+        val t1 = enemyTurn(c)                                  // 1er coup perdu
+        assertTrue(t1.enraged.isEmpty())
+        c.attack(0, Timing.MISS)
+        val t2 = enemyTurn(c)                                  // 2e coup perdu : il enrage
+        assertEquals(listOf(0), t2.enraged)
+        val e = c.enemies[0]
+        assertTrue(e.enraged)
+        assertEquals("la rage efface la paralysie", 0, e.paralyzedTurns)
+        c.attack(0, Timing.MISS)
+        assertEquals("enragé, il frappe", listOf(0), c.startEnemyTurn().attackers)
+    }
+
+    @Test
+    fun onNeControlePasUnEnnemiEnrage() {
+        val c = fightWith(Relic.ICE_SHARD, d20 = 1)
+        c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS)
+        enemyTurn(c)
+        c.relicCooldowns.clear()                               // comme si la SAG avait tout rechargé
+        val second = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
+        assertTrue("2e gel d'affilée : il enrage", second.enraged)
+        enemyTurn(c)
+        c.relicCooldowns.clear()
+        val third = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!
+        assertEquals(SaveReason.RAGE, third.save!!.reason)
+        assertTrue(third.save!!.saved)
+    }
+
+    @Test
+    fun frapperRemetLaSerieAZero() {
+        val c = fightWith(Relic.ICE_SHARD, d20 = 1)
+        c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS)
+        enemyTurn(c)                                           // figé
+        c.attack(0, Timing.MISS)
+        enemyTurn(c)                                           // il frappe : la série repart de zéro
+        assertEquals(0, c.enemies[0].controlStreak)
+        c.relicCooldowns.clear()
+        assertFalse(c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.enraged)
+    }
+
+    @Test
+    fun enrageSaJaugeSeRemplitDeuxFoisPlusVite() {
+        fun brute(rage: Int) = Enemy(MonsterType.TROLL, 1000, 3, cadence = 4, countdown = 4).apply { rageTurns = rage }
+        val calm = Combat(Hero.starter(), 1, listOf(brute(0)), ambush = false, rng = Random(1), d20 = { 1 })
+        val angry = Combat(Hero.starter(), 1, listOf(brute(3)), ambush = false, rng = Random(1), d20 = { 1 })
+        assertEquals(3.5, calm.timeUntilTurn(0), 1e-9)
+        assertEquals(1.75, angry.timeUntilTurn(0), 1e-9)
+    }
+
+    @Test
+    fun unRatEnrageFrappeDeuxFoisEntreDeuxToursDuHeros() {
+        val rat = Enemy(MonsterType.RAT, 1000, 3, cadence = 1, countdown = 1).apply { rageTurns = 3 }
+        val c = Combat(Hero.starter(), 1, listOf(rat), ambush = false, rng = Random(1), d20 = { 1 }, attackDie = { 1 })
+        c.attack(0, Timing.MISS)
+        assertEquals(listOf(0, 0), c.passEnemyTurns().attackers)
+    }
+
+    // ── Affinités ───────────────────────────────────────────────────────────────
+
+    @Test
+    fun chaqueMonstreResisteAUnElementAuPlusEtPersonneNEstImmunise() {
+        // Un monstre fétiche par carte, qui résiste à 50 % à un élément (le propriétaire, 23/09/2026)
+        for (t in MonsterType.entries) {
+            val affinities = Element.entries.map { t.affinity(it) }
+            assertFalse("$t est immunisé à quelque chose", Affinity.IMMUNE in affinities)
+            assertTrue("$t résiste à plusieurs éléments", affinities.count { it == Affinity.RESISTANT } <= 1)
+        }
+    }
+
+    @Test
+    fun unMonstreFeticheNeVitQueDansSaCarte() {
+        val home = mapOf(
+            MonsterType.ZOMBIE to setOf(DungeonTheme.CEMETERY, DungeonTheme.CRYPT),
+            MonsterType.SKELETON to setOf(DungeonTheme.DUNGEON),
+            MonsterType.BEAR to setOf(DungeonTheme.FOREST),
+            MonsterType.SNAKE to setOf(DungeonTheme.FIELDS),
+            MonsterType.DEMON to setOf(DungeonTheme.BATTLEFIELD),
+            MonsterType.SCORPION to setOf(DungeonTheme.MINE, DungeonTheme.MINE_DEPOT),
+            MonsterType.VAMPIRE to setOf(DungeonTheme.LIBRARY),
+            MonsterType.PIRATE_BRUTE to setOf(DungeonTheme.PIRATE, DungeonTheme.PIRATE_CABIN, DungeonTheme.PORT),
+            MonsterType.GOBLIN to setOf(DungeonTheme.INN),
+            MonsterType.ALIEN_CRAWLER to setOf(DungeonTheme.SPACESHIP),
+        )
+        for (t in MonsterType.entries) {
+            val resists = Element.entries.any { t.affinity(it) == Affinity.RESISTANT }
+            assertEquals("$t : un monstre qui résiste est un monstre fétiche", resists, t in home)
+        }
+        for ((t, themes) in home) assertEquals("$t ne vit que chez lui", themes, DungeonBestiary.habitats(t).toSet())
+    }
+
+    @Test
+    fun unVulnerablePrendDouble() {
+        val c = fightWith(Relic.FIREBALL, type = MonsterType.RAT)
+        val (_, hi) = c.hero.relicDamage(Relic.FIREBALL)
+        // Geste parfait : le coup maximal, sans la défense qui ne pèse que sur un geste raté
+        val hit = c.castRelic(Relic.FIREBALL, 0, Timing.PERFECT).main!!
+        assertEquals(Affinity.VULNERABLE, hit.affinity)
+        assertTrue(hit.damage >= 2 * hi)
+    }
+
+    @Test
+    fun lesAffinitesDeplacentLeJet() {
+        val dc = Hero.starter().spellDc(Relic.ICE_SHARD)
+        val normal = SpellSave.landChance(dc, SpellSave.monsterProficiency(1))
+        assertEquals("équipement de départ contre l'étage 1 : une fois sur deux", 0.5f, normal, 1e-4f)
+        assertEquals(0.75f, SpellSave.landChance(dc, SpellSave.monsterProficiency(1) + Affinity.VULNERABLE.saveBonus), 1e-4f)
+        assertEquals(0.25f, SpellSave.landChance(dc, SpellSave.monsterProficiency(1) + Affinity.RESISTANT.saveBonus), 1e-4f)
+    }
+
+    // ── Feu, poison ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun lePoisonSeProlongeEtSEteint() {
+        val c = fightWith(Relic.VENOM)
+        val enemy = c.enemies[0]
+        // On lance, on attend la recharge en attaquant, on relance : le poison dure plus longtemps, sans mordre plus fort
+        c.castRelic(Relic.VENOM, 0, Timing.MISS)
+        while (!c.canCast(Relic.VENOM)) {
+            if (c.phase == CombatPhase.ENEMY_TURN) enemyTurn(c) else c.attack(0, Timing.MISS)
+        }
+        val left = enemy.poisonTurns
+        c.castRelic(Relic.VENOM, 0, Timing.MISS)
+        assertEquals(minOf(left + Relic.VENOM.effectTurns, Relic.POISON_MAX_TURNS), enemy.poisonTurns)
+        val tick = c.startEnemyTurn().ticks.single()
+        assertEquals(Element.POISON, tick.element)
+        // Le gobelin est vulnérable au poison : il ronge double, mais une seule fois
+        assertEquals(2 * c.hero.poisonDose(Relic.VENOM), tick.damage)
+        c.endEnemyTurn()
+        repeat(Relic.POISON_MAX_TURNS) {
+            if (c.phase == CombatPhase.PLAYER_TURN) c.attack(0, Timing.MISS)
+            enemyTurn(c)
+        }
+        assertEquals(0, enemy.poisonTurns)
+    }
+
+    @Test
+    fun leFeuBrule() {
+        val c = fightWith(Relic.FIREBALL)
+        c.castRelic(Relic.FIREBALL, 0, Timing.MISS)
+        assertEquals(Relic.FIREBALL.effectTurns, c.enemies[0].burnTurns)
+        assertEquals(Element.FIRE, c.startEnemyTurn().ticks.single().element)
+    }
+
+    // ── Porter, recharger ───────────────────────────────────────────────────────
+
+    @Test
+    fun uneReliqueRangeeNeSeLancePas() {
+        val c = fightWith(Relic.FIREBALL)
+        c.hero.toggleRelic(Relic.FIREBALL)
+        assertFalse(c.canCast(Relic.FIREBALL))
+    }
+
+    @Test
+    fun lesEmplacementsPleinsRefusent() {
+        val hero = Hero.starter()
+        assertEquals("un seul emplacement au départ", 1, hero.unlockedRelicSlots)
+        assertTrue(hero.addRelic(Relic.FIREBALL))
+        assertFalse("deuxième relique : trouvée mais pas portée", hero.addRelic(Relic.ICE_SHARD))
+        assertEquals(Hero.RelicToggle.SLOTS_FULL, hero.toggleRelic(Relic.ICE_SHARD))
+        assertEquals(Hero.RelicToggle.REMOVED, hero.toggleRelic(Relic.FIREBALL))
+        assertEquals(Hero.RelicToggle.EQUIPPED, hero.toggleRelic(Relic.ICE_SHARD))
+    }
+
+    /** Les emplacements s'ouvrent aux étages 50, 100 et 500, et se remplissent tout seuls. */
+    @Test
+    fun lesEmplacementsSOuvrentEnDescendant() {
+        val hero = Hero.starter()
+        hero.addRelic(Relic.FIREBALL); hero.addRelic(Relic.ICE_SHARD); hero.addRelic(Relic.VENOM)
+        assertFalse(hero.reachFloor(49))
+        assertEquals(1, hero.unlockedRelicSlots)
+        assertTrue("l'étage 50 ouvre le 2e", hero.reachFloor(50))
+        assertEquals(Relic.ICE_SHARD, hero.relicSlots[1])
+        assertTrue(hero.reachFloor(100))
+        assertEquals(Relic.VENOM, hero.relicSlots[2])
+        assertFalse("rien de neuf entre 100 et 500", hero.reachFloor(499))
+        assertTrue(hero.reachFloor(500))
+        assertEquals(4, hero.unlockedRelicSlots)
+        assertFalse("remonter ne referme rien", hero.reachFloor(1))
+        assertEquals(4, hero.unlockedRelicSlots)
+    }
+
+    @Test
+    fun leSortSuitLaPuissanceDeLArme() {
+        val hero = Hero.starter()
+        val (lo1, hi1) = hero.relicDamage(Relic.FIREBALL)
+        assertTrue(lo1 < hi1)
+        val dc1 = hero.spellDc(Relic.ICE_SHARD)
+        hero.equipped[EquipSlot.WEAPON] = LootSystem.create(ItemBase.SWORD, 13, Rarity.COMMON, 0, Random(0))
+        assertTrue(hero.relicDamage(Relic.FIREBALL).first > hi1)
+        assertTrue("la maîtrise suit l'arme", hero.spellDc(Relic.ICE_SHARD) > dc1)
+    }
+
+    /** Un héros avec un anneau qui donne [points] dans [attr]. */
+    private fun heroWith(attr: StatType, points: Int) = Hero.starter().apply {
+        equipped[EquipSlot.RING] = LootSystem.create(ItemBase.RING, 1, Rarity.COMMON, 0, Random(0))
+            .copy(implicits = listOf(StatRoll(attr, points.toFloat())), affixes = emptyList())
+    }
+
+    @Test
+    fun chaqueReliqueSuitSaCaracteristique() {
+        // Les Lames empoisonnées sont au voleur (DEX), la Boule de feu au mage (INT)
+        val base = Hero.starter()
+        val dex = heroWith(StatType.DEX, 10)
+        val int = heroWith(StatType.INT, 10)
+        assertTrue(dex.relicPower(Relic.POISONED_BLADES) > base.relicPower(Relic.POISONED_BLADES))
+        assertEquals(base.relicPower(Relic.POISONED_BLADES), int.relicPower(Relic.POISONED_BLADES), 1e-4f)
+        assertTrue(int.relicPower(Relic.FIREBALL) > base.relicPower(Relic.FIREBALL))
+        assertEquals(base.relicPower(Relic.FIREBALL), dex.relicPower(Relic.FIREBALL), 1e-4f)
+    }
+
+    @Test
+    fun leDdSuitLaCaracDeLaRelique() {
+        val int = heroWith(StatType.INT, 6)
+        val dex = heroWith(StatType.DEX, 6)
+        assertEquals(Hero.starter().spellDc(Relic.LIGHTNING) + 3, int.spellDc(Relic.LIGHTNING))
+        assertEquals(Hero.starter().spellDc(Relic.LIGHTNING), dex.spellDc(Relic.LIGHTNING))
+        assertEquals(Hero.starter().spellDc(Relic.POISONED_BLADES) + 3, dex.spellDc(Relic.POISONED_BLADES))
+    }
+
+    @Test
+    fun laRechargeSeGardeDUnCombatALAutre() {
+        val c = fightWith(Relic.FIREBALL)
+        c.castRelic(Relic.FIREBALL, 0, Timing.MISS)
+        val hero = c.hero
+        val left = hero.relicCooldown(Relic.FIREBALL)
+        assertTrue(left > 0)
+        // Nouveau combat tout de suite (enchaîné) : la relique n'est pas prête
+        val next = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 3, 1, 1)), ambush = false, rng = Random(2))
+        assertFalse(next.canCast(Relic.FIREBALL))
+        // Marcher recharge lentement, se reposer vite
+        repeat(Hero.RELIC_WALK_STEPS - 1) { hero.walkRelics() }
+        assertEquals(left, hero.relicCooldown(Relic.FIREBALL))
+        hero.walkRelics()
+        assertEquals(left - 1, hero.relicCooldown(Relic.FIREBALL))
+        hero.tickRelics(left - 1)
+        assertTrue(next.canCast(Relic.FIREBALL))
+    }
+
+    @Test
+    fun seReposerRechargeLesReliques() {
+        val g = RoguelikeGame(rng = Random(5))
+        g.hero.addRelic(Relic.VENOM)
+        g.hero.relicCooldowns[Relic.VENOM] = 2
+        assertTrue("PV pleins, mais une relique à recharger : on peut se reposer", g.canRest())
+        g.rest()
+        assertEquals(0, g.hero.relicCooldown(Relic.VENOM))
+    }
+
+    @Test
+    fun chaqueSortVautSonBudget() {
+        for (r in Relic.entries) {
+            val hit = RelicBudget.hitCoef(r)
+            val targets = RelicBudget.targets(r)
+            // Ce que vaut l'effet sur une cible, recompté ici à partir de ce que le combat fait vraiment
+            val effect = when (r.effect) {
+                RelicEffect.NONE      -> 0f
+                RelicEffect.BURN      -> hit * Relic.BURN_SHARE * r.effectTurns
+                RelicEffect.FREEZE    -> RelicBudget.FREEZE_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
+                RelicEffect.PARALYZE  -> RelicBudget.PARALYSIS_TURN_VALUE * r.effectTurns * RelicBudget.REF_LAND_CHANCE
+                // Le coup ne paie qu'une part des doses : la cible meurt souvent avant la fin
+                RelicEffect.POISON    -> r.doseCoef * r.effectTurns * RelicBudget.POISON_PAID_SHARE
+                RelicEffect.FRACTURE  -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns
+                RelicEffect.MARK      -> RelicBudget.MARK_VALUE
+                // L'affaiblissement de chaque ennemi, plus les coups renforcés du héros, partagés
+                RelicEffect.WARCRY    -> RelicBudget.WEAKEN_TURN_VALUE * r.effectTurns +
+                    RelicBudget.empowerBonus(r) * Relic.WARCRY_ATTACKS / targets
+                RelicEffect.ENCHANT_POISON -> r.doseCoef * RelicBudget.enchantDoseTicks(r)
+                RelicEffect.BLEED     -> RelicBudget.bleedCoef(r) * r.effectTurns * RelicBudget.REF_ATTACKS_PER_TURN
+                RelicEffect.BLEED_ON_CRIT -> RelicBudget.REF_CRIT_CHANCE *
+                    RelicBudget.bleedCoef(r) * Relic.FAN_BLEED_TURNS * RelicBudget.REF_ATTACKS_PER_TURN
+                RelicEffect.ACID      -> RelicBudget.FRACTURE_TURN_VALUE * r.effectTurns +
+                    r.doseCoef * Relic.ENCHANT_DOSE_TURNS * RelicBudget.POISON_PAID_SHARE
+                // Le surplus du coup contre un figé, à la fréquence où on en trouve un
+                RelicEffect.CRYSTALLIZE -> RelicBudget.share(r) - hit
+                // Des prix payés : le coup en vaut plus que la part
+                RelicEffect.DELAYED   -> -hit * RelicBudget.DELAY_PREMIUM / (1f + RelicBudget.DELAY_PREMIUM)
+                RelicEffect.BLIND     -> RelicBudget.BLIND_TURN_VALUE * r.effectTurns
+                // Comptés en PV ou en contrôle, faute d'échange PV ↔ épée : toute la part
+                RelicEffect.SMOKE, RelicEffect.BARRIER,
+                RelicEffect.STONESKIN, RelicEffect.CHARM,
+                RelicEffect.HASTE, RelicEffect.HOURGLASS -> RelicBudget.share(r)
+                // Ralentissement et soin : une part du coup, le reste dans l'effet
+                RelicEffect.SLOW      -> RelicBudget.share(r) * RelicBudget.SLOW_EFFECT_SHARE
+                RelicEffect.DRAIN     -> RelicBudget.share(r) * RelicBudget.DRAIN_EFFECT_SHARE
+                RelicEffect.FEAR      -> RelicBudget.FEAR_VALUE
+                RelicEffect.PUSH      -> RelicBudget.PUSH_VALUE
+            }
+            assertEquals("$r : (coup + effet) × cibles = 1 épée + la prime",
+                1f + RelicBudget.SHARE_PER_TURN * r.cooldown, (hit + effect) * targets, 1e-4f)
+            // Un sort qui ne frappe presque plus n'est pas un sort : l'effet coûte trop cher
+            if (r.hits) assertTrue("$r frappe encore ($hit)", hit >= 0.3f) else assertEquals(0f, hit)
+        }
+    }
+
+    @Test
+    fun leJetEstBienUnD20() {
+        val hero = Hero.starter().apply { addRelic(Relic.ICE_SHARD) }
+        val c = Combat(hero, 1, listOf(Enemy(MonsterType.GOBLIN, 1000, 3, 1, 1)), ambush = false, rng = Random(9))
+        val save = c.castRelic(Relic.ICE_SHARD, 0, Timing.MISS).main!!.save
+        assertNotNull(save)
+        assertTrue(save!!.roll in 1..20)
+        assertEquals(save.roll + SpellSave.monsterProficiency(1) + MonsterType.GOBLIN.affinity(Element.ICE).saveBonus, save.total)
+    }
+}

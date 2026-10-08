@@ -1,0 +1,16 @@
+{
+  "id": 2509,
+  "name": "slab_brick_obsidian",
+  "texture_top": "cozy:material:12:656C7F",
+  "texture_side": "cozy:material:12:656C7F",
+  "texture_bottom": "cozy:material:12:656C7F",
+  "color": "#656C7F",
+  "hardness": 3.5,
+  "drop": "slab_brick_obsidian",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "harvest_category": "recoverable",
+  "slab": true
+}

@@ -1,0 +1,17 @@
+{
+  "id": 1004,
+  "name": "wood_jungle",
+  "texture_top": "cozy:material:8:91A06A",
+  "texture_side": "cozy:material:7:91A06A",
+  "texture_bottom": "cozy:material:8:91A06A",
+  "color": "#91A06A",
+  "hardness": 2.0,
+  "drop": "wood_jungle",
+  "creative_tab": "wood",
+  "orient_mode": "axis",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "logs"
+  ]
+}

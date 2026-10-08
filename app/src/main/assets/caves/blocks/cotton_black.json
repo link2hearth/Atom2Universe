@@ -1,0 +1,14 @@
+{
+  "id": 9001,
+  "name": "cotton_black",
+  "texture_top": "cozy:cloth:5:1A1A1A",
+  "texture_side": "cozy:cloth:5:1A1A1A",
+  "texture_bottom": "cozy:cloth:5:1A1A1A",
+  "color": "#1A1A1A",
+  "hardness": 1.0,
+  "drop": "cotton_black",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

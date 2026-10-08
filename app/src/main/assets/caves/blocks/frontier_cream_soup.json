@@ -1,0 +1,17 @@
+{
+  "id": 9864,
+  "name": "frontier_cream_soup",
+  "texture_top": "frontier:9864:top",
+  "texture_side": "frontier:9864:side",
+  "texture_bottom": "frontier:9864:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_cream_soup",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

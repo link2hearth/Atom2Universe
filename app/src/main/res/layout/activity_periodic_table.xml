@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:background="?attr/a2uScreenBackground">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="?attr/a2uPanelBackground"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginBottom="8dp"
+    android:elevation="?attr/a2uElevation2"
+    android:gravity="center_vertical">
+
+    <ImageButton
+      android:id="@+id/back_button"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:src="@drawable/ic_app_back"
+            android:tint="@color/audio_text_primary"
+      android:contentDescription="@string/back"
+      android:background="?attr/selectableItemBackground"
+      android:scaleType="centerInside" />
+
+    <TextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="@string/periodic_table_title"
+      android:textSize="24sp"
+      android:textStyle="bold"
+      android:gravity="center"
+      android:textColor="@color/audio_text_primary" />
+
+    <ImageButton
+      android:id="@+id/toggle_rarity_button"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:src="@android:drawable/ic_menu_view"
+      android:contentDescription="@string/periodic_toggle_rarities_desc"
+      android:background="?attr/selectableItemBackground"
+      android:scaleType="centerInside"
+      app:tint="@color/audio_text_primary" />
+
+  </LinearLayout>
+
+  <Button
+    android:id="@+id/card_studio_button"
+    android:visibility="gone"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/card_studio_open" />
+
+  <HorizontalScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <ScrollView
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent">
+
+      <GridLayout
+        android:id="@+id/periodic_grid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="18"
+        android:padding="8dp"
+        android:rowCount="9" />
+
+    </ScrollView>
+
+  </HorizontalScrollView>
+
+</LinearLayout>

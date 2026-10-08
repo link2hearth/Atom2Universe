@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="golf_info">Controls and tips</string>
+    <string name="golf_done">Done</string>
+    <string name="golf_tips">Course tips</string>
+    <string name="golf_expand">%1$s · expand</string>
+    <string name="golf_collapse">%1$s · collapse</string>
+    <string name="golf_title">Golf</string>
+    <string name="golf_description">3D golf · 18-hole courses</string>
+    <string name="golf_continue">Continue</string>
+    <string name="golf_new_course">New course</string>
+    <string name="golf_course_best">Best: %1$d (%2$s)</string>
+    <string name="golf_menu">Menu</string>
+    <string name="golf_retry">Retry</string>
+    <string name="golf_next">Next hole</string>
+    <string name="golf_result_hole_in_one">Hole in one!</string>
+    <string name="golf_result_albatross">Albatross!</string>
+    <string name="golf_result_eagle">Eagle!</string>
+    <string name="golf_result_birdie">Birdie!</string>
+    <string name="golf_result_par">Par</string>
+    <string name="golf_result_bogey">Bogey</string>
+    <string name="golf_result_double_bogey">Double bogey</string>
+    <string name="golf_result_over">+%1$d</string>
+    <string name="golf_result_line">%1$s · %2$s</string>
+    <string name="golf_scorecard">Scorecard</string>
+    <string name="golf_total">Total %1$d · Par %2$d</string>
+    <string name="golf_back">Back</string>
+    <string name="golf_play">Play</string>
+    <string name="golf_relative_over">+%1$d</string>
+    <string name="golf_relative_under">−%1$d</string>
+</resources>

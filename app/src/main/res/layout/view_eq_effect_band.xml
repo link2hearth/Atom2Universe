@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Effect band (Bass Boost / Virtualizer) - visually distinct from frequency bands -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="4dp">
+
+    <!-- Percentage value display -->
+    <TextView
+        android:id="@+id/txtEffectValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0%"
+        android:textSize="10sp"
+        android:textColor="?attr/a2uMusicAccent"
+        android:gravity="center"/>
+
+    <!-- Vertical slider container with different background color -->
+    <FrameLayout
+        android:layout_width="36dp"
+        android:layout_height="140dp"
+        android:layout_marginVertical="4dp"
+        android:background="?attr/a2uMusicAccentDim">
+
+        <!-- The SeekBar will be rotated 270 degrees to become vertical -->
+        <SeekBar
+            android:id="@+id/seekBarEffect"
+            android:layout_width="140dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:rotation="270"
+            android:max="1000"
+            android:progress="0"
+            android:progressTint="?attr/a2uMusicAccent"
+            android:thumbTint="@color/white"
+            android:splitTrack="false"
+            android:thumbOffset="0dp"/>
+    </FrameLayout>
+
+    <!-- Effect label -->
+    <TextView
+        android:id="@+id/txtEffectName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bass"
+        android:textSize="11sp"
+        android:textColor="?attr/a2uMusicAccent"
+        android:gravity="center"/>
+</LinearLayout>

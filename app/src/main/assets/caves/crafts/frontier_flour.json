@@ -1,0 +1,13 @@
+{
+  "ingredients": [
+    {
+      "id": 9700,
+      "count": 2
+    }
+  ],
+  "result": 9810,
+  "result_count": 2,
+  "tools": [
+    9819
+  ]
+}

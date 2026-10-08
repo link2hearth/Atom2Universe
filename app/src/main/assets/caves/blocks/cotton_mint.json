@@ -1,0 +1,14 @@
+{
+  "id": 9016,
+  "name": "cotton_mint",
+  "texture_top": "cozy:cloth:5:98FF98",
+  "texture_side": "cozy:cloth:5:98FF98",
+  "texture_bottom": "cozy:cloth:5:98FF98",
+  "color": "#98FF98",
+  "hardness": 1.0,
+  "drop": "cotton_mint",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

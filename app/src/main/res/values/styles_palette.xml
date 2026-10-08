@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Semantic colors shared by XML and Kotlin. audio_* resource names remain compatible. -->
+    <attr name="a2uBackgroundColor" format="color" />
+    <attr name="a2uSurfaceColor" format="color" />
+    <attr name="a2uRaisedColor" format="color" />
+    <attr name="a2uTextColor" format="color" />
+    <attr name="a2uSecondaryTextColor" format="color" />
+    <attr name="a2uTertiaryTextColor" format="color" />
+    <attr name="a2uOutlineColor" format="color" />
+    <attr name="a2uOnAccentColor" format="color" />
+    <attr name="a2uRippleColor" format="color" />
+    <attr name="a2uLightPalette" format="boolean" />
+    <attr name="a2uMediaChromeBackground" format="reference|color" />
+    <attr name="a2uScreenGradientCenter" format="float" />
+    <attr name="a2uVisualizerBackgroundColor" format="color" />
+    <attr name="a2uLyricsScrimColor" format="color" />
+
+    <!-- Every Theme.A2U variant inherits these defaults, including API 31 and night mode. -->
+    <style name="Theme.A2U.PaletteDefaults" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="a2uBackgroundColor">#10141C</item>
+        <item name="a2uSurfaceColor">#202733</item>
+        <item name="a2uRaisedColor">#2B3442</item>
+        <item name="a2uTextColor">#F5F7FA</item>
+        <item name="a2uSecondaryTextColor">#B9C3D2</item>
+        <item name="a2uTertiaryTextColor">#7C8799</item>
+        <item name="a2uOutlineColor">#28FFFFFF</item>
+        <item name="a2uOnAccentColor">#10141C</item>
+        <item name="a2uRippleColor">#24FFFFFF</item>
+        <item name="a2uLightPalette">false</item>
+        <item name="a2uMediaChromeBackground">#80000000</item>
+        <item name="a2uScreenGradientCenter">0.25</item>
+        <item name="a2uVisualizerBackgroundColor">#000000</item>
+        <item name="a2uLyricsScrimColor">#60000000</item>
+    </style>
+    <style name="ThemeOverlay.A2U.Palette.Dark" parent="">
+        <item name="isLightTheme">false</item>
+        <item name="a2uLightPalette">false</item>
+    </style>
+    <style name="ThemeOverlay.A2U.Palette.Dark.Neutral" parent="">
+        <item name="a2uBackgroundColor">#141414</item>
+        <item name="a2uSurfaceColor">#242424</item>
+        <item name="a2uRaisedColor">#303030</item>
+        <item name="a2uTextColor">#F5F5F5</item>
+        <item name="a2uSecondaryTextColor">#C2C2C2</item>
+        <item name="a2uTertiaryTextColor">#959595</item>
+    </style>
+    <style name="ThemeOverlay.A2U.Palette.Light" parent="">
+        <item name="isLightTheme">true</item>
+        <item name="a2uLightPalette">true</item>
+        <item name="a2uBackgroundColor">#F4F5F7</item>
+        <item name="a2uSurfaceColor">#FCFCFD</item>
+        <item name="a2uRaisedColor">#E6E8EC</item>
+        <item name="a2uTextColor">#20242C</item>
+        <item name="a2uSecondaryTextColor">#505966</item>
+        <item name="a2uTertiaryTextColor">#626B78</item>
+        <item name="a2uOutlineColor">#3020242C</item>
+        <item name="a2uOnAccentColor">#FFFFFF</item>
+        <item name="a2uRippleColor">#2020242C</item>
+        <item name="a2uMediaChromeBackground">?attr/a2uPanelBackground</item>
+        <item name="a2uScreenGradientCenter">0.55</item>
+        <item name="a2uVisualizerBackgroundColor">?attr/a2uBackgroundColor</item>
+        <item name="a2uLyricsScrimColor">#CC10141C</item>
+    </style>
+
+    <!-- Tint is deliberately applied after shapes: square corners can also have gradients. -->
+    <style name="ThemeOverlay.A2U.SurfaceTint.On" parent="">
+        <item name="a2uSurfaceGradients">true</item>
+        <item name="a2uPanelStartColor">?attr/a2uMusicAccentDim</item>
+        <item name="a2uScreenStartColor">?attr/a2uMusicAccentDim</item>
+    </style>
+    <style name="ThemeOverlay.A2U.SurfaceTint.Off" parent="">
+        <item name="a2uSurfaceGradients">false</item>
+        <item name="a2uPanelStartColor">?attr/a2uSurfaceColor</item>
+        <item name="a2uScreenStartColor">?attr/a2uBackgroundColor</item>
+        <item name="a2uCollectionTileBackground">@drawable/audio_panel_background</item>
+        <item name="a2uCollectionIconBackground">@drawable/audio_chip_background</item>
+    </style>
+</resources>

@@ -1,0 +1,14 @@
+{
+  "id": 2308,
+  "name": "terracotta",
+  "texture_top": "cozy:material:5:C18C73",
+  "texture_side": "cozy:material:5:C18C73",
+  "texture_bottom": "cozy:material:5:C18C73",
+  "color": "#C18C73",
+  "hardness": 1.5,
+  "drop": "terracotta",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

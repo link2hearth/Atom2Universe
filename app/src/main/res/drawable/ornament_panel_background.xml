@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<drawable xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    class="com.Atom2Universe.app.OrnamentDrawable"
+    android:drawable="@drawable/audio_panel_background"
+    app:ornamentForm="cartouche" />

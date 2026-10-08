@@ -1,0 +1,18 @@
+{
+  "id": 3110,
+  "name": "stick",
+  "texture_top": "cozy:resource:10:A88B68",
+  "texture_side": "cozy:resource:10:A88B68",
+  "texture_bottom": "cozy:resource:10:A88B68",
+  "color": "#A88B68",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "stick",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

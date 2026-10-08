@@ -1,0 +1,32 @@
+{
+  "id": "us_desert",
+  "noise_offsets": [-600, 0, 800],
+  "surface_blocks": [
+    {"block": "redsand", "noise_min": 0.2},
+    {"block": "sand", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.04,
+  "surface_variety_offset": 400,
+  "dirt_block": "sand",
+  "stone_block": "greystone",
+  "height_base": -2.0,
+  "height_amplitude": 12.0,
+  "height_roughness": 3.0,
+  "topsoil_depth": 5,
+  "tree_density_base": 0.0,
+  "tree_density_noise_scale": 0.0,
+  "tree_type": "none",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
+  "bush_density": 0.0,
+  "decoration_density": 0.07,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.05,
+  "vegetation_blocks": [
+    {"block": "grass_tan", "weight": 2},
+    {"block": "grass_brown", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}

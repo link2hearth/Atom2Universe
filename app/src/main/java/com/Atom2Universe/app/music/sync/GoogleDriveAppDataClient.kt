@@ -1,0 +1,622 @@
+@file:Suppress("DEPRECATION")
+
+package com.Atom2Universe.app.music.sync
+
+import android.content.Context
+import android.util.Log
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.http.ByteArrayContent
+import com.google.api.client.http.FileContent
+import com.google.api.client.http.javanet.NetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
+import com.google.api.services.drive.model.File
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
+import java.util.Calendar
+import java.util.Date
+
+/**
+ * Client for Google Drive App Data folder operations.
+ *
+ * The App Data folder is a special hidden folder that:
+ * - Is invisible to the user in Google Drive
+ * - Can only be accessed by this app
+ * - Is automatically deleted when the app is uninstalled
+ * - Counts toward the user's Drive storage quota, like any other file of theirs
+ */
+class GoogleDriveAppDataClient(
+    private val context: Context,
+    private val account: GoogleSignInAccount
+) {
+    companion object {
+        private const val TAG = "GoogleDriveAppDataClient"
+        private const val APP_DATA_FOLDER = "appDataFolder"
+    }
+
+    private val driveService: Drive by lazy {
+        val credential = GoogleAccountCredential.usingOAuth2(
+            context,
+            listOf(DriveScopes.DRIVE_APPDATA)
+        ).apply {
+            selectedAccount = account.account
+        }
+
+        Drive.Builder(
+            NetHttpTransport(),
+            GsonFactory.getDefaultInstance(),
+            credential
+        )
+            .setApplicationName("A2U")
+            .build()
+    }
+
+    /**
+     * Reads a JSON file from the App Data folder.
+     *
+     * @param filename The name of the file to read
+     * @return The file contents as a string, or null if not found
+     */
+    suspend fun readJsonFile(filename: String): String? = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name = '$filename'")
+                .setFields("files(id, name)")
+                .execute()
+
+            val file = files.files.firstOrNull()
+            if (file == null) {
+                Log.d(TAG, "File not found: $filename")
+                return@withContext null
+            }
+
+            val outputStream = ByteArrayOutputStream()
+            driveService.files().get(file.id)
+                .executeMediaAndDownloadTo(outputStream)
+
+            val content = outputStream.toString("UTF-8")
+            Log.d(TAG, "Read file: $filename (${content.length} bytes)")
+            content
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reading $filename", e)
+            null
+        }
+    }
+
+    /** What a checked read found: the file, no file at all, or no answer from Drive. */
+    sealed class ReadResult {
+        data class Found(val content: String) : ReadResult()
+        data object NotFound : ReadResult()
+        data object Failed : ReadResult()
+    }
+
+    /**
+     * Like [readJsonFile], but tells "this file does not exist" from "Drive did not answer".
+     *
+     * [readJsonFile] folds both into null, which is harmless for a module that only reads. It is
+     * not for one that writes afterwards: taking a failed read for an empty cloud means publishing
+     * over a file nobody looked at.
+     */
+    suspend fun readJsonFileChecked(filename: String): ReadResult = withContext(Dispatchers.IO) {
+        try {
+            val file = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name = '$filename'")
+                .setFields("files(id, name)")
+                .execute()
+                .files.firstOrNull()
+                ?: return@withContext ReadResult.NotFound
+            val outputStream = ByteArrayOutputStream()
+            driveService.files().get(file.id).executeMediaAndDownloadTo(outputStream)
+            ReadResult.Found(outputStream.toString("UTF-8"))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reading $filename", e)
+            ReadResult.Failed
+        }
+    }
+
+    /**
+     * Writes a JSON file to the App Data folder.
+     * Creates the file if it doesn't exist, updates if it does.
+     *
+     * @param filename The name of the file to write
+     * @param content The content to write
+     * @return true if successful, false otherwise
+     */
+    suspend fun writeJsonFile(filename: String, content: String): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                val existingFiles = driveService.files().list()
+                    .setSpaces(APP_DATA_FOLDER)
+                    .setQ("name = '$filename'")
+                    .setFields("files(id)")
+                    .execute()
+
+                val mediaContent = ByteArrayContent.fromString("application/json", content)
+
+                if (existingFiles.files.isNotEmpty()) {
+                    // Update existing file
+                    driveService.files().update(
+                        existingFiles.files[0].id,
+                        null,
+                        mediaContent
+                    ).execute()
+                } else {
+                    // Create new file
+                    val fileMetadata = File().apply {
+                        name = filename
+                        parents = listOf(APP_DATA_FOLDER)
+                    }
+                    driveService.files().create(fileMetadata, mediaContent)
+                        .setFields("id")
+                        .execute()
+                }
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "Error writing $filename", e)
+                false
+            }
+        }
+
+    /**
+     * Lists all files in the App Data folder.
+     *
+     * @return List of file names
+     */
+    @Suppress("unused")
+    suspend fun listFiles(): List<String> = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setFields("files(id, name, modifiedTime)")
+                .execute()
+            files.files.map { it.name }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error listing files", e)
+            emptyList()
+        }
+    }
+
+    /**
+     * Lists delta files matching a pattern.
+     *
+     * @param pattern The pattern to match (e.g., "playcounts_device_")
+     * @return List of matching file names
+     */
+    suspend fun listDeltaFiles(pattern: String = "playcounts_device_"): List<String> =
+        withContext(Dispatchers.IO) {
+            try {
+                val files = driveService.files().list()
+                    .setSpaces(APP_DATA_FOLDER)
+                    .setQ("name contains '$pattern'")
+                    .setFields("files(id, name, modifiedTime)")
+                    .execute()
+                files.files.map { it.name }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error listing delta files", e)
+                emptyList()
+            }
+        }
+
+    /**
+     * Deletes a file from the App Data folder.
+     *
+     * @param filename The name of the file to delete
+     * @return true if successful or file didn't exist, false on error
+     */
+    suspend fun deleteFile(filename: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name = '$filename'")
+                .setFields("files(id)")
+                .execute()
+
+            files.files.forEach { file ->
+                driveService.files().delete(file.id).execute()
+                Log.d(TAG, "Deleted file: $filename")
+            }
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Error deleting $filename", e)
+            false
+        }
+    }
+
+    /**
+     * Gets the total storage used by App Data files.
+     *
+     * @return Storage used in bytes
+     */
+    @Suppress("unused")
+    suspend fun getStorageUsed(): Long = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setFields("files(id, size)")
+                .execute()
+
+            files.files.sumOf { it.size?.toLong() ?: 0L }.also {
+                Log.d(TAG, "Storage used: $it bytes")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting storage used", e)
+            0L
+        }
+    }
+
+    /**
+     * Checks if a file exists in the App Data folder.
+     *
+     * @param filename The name of the file to check
+     * @return true if the file exists
+     */
+    @Suppress("unused")
+    suspend fun fileExists(filename: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name = '$filename'")
+                .setFields("files(id)")
+                .execute()
+
+            files.files.isNotEmpty()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking if file exists: $filename", e)
+            false
+        }
+    }
+
+    /**
+     * Deletes files older than a specified number of days.
+     *
+     * @param prefix File name prefix to match
+     * @param olderThanDays Delete files older than this many days
+     * @return Number of files deleted
+     */
+    suspend fun deleteOldFiles(prefix: String, olderThanDays: Int): Int =
+        withContext(Dispatchers.IO) {
+            try {
+                val cutoffDate = Calendar.getInstance().apply {
+                    add(Calendar.DAY_OF_YEAR, -olderThanDays)
+                }.time
+
+                val files = driveService.files().list()
+                    .setSpaces(APP_DATA_FOLDER)
+                    .setQ("name contains '$prefix'")
+                    .setFields("files(id, name, modifiedTime)")
+                    .execute()
+
+                var deletedCount = 0
+                files.files.filter { file ->
+                    file.modifiedTime?.value?.let { time ->
+                        Date(time).before(cutoffDate)
+                    } == true
+                }.forEach { file ->
+                    driveService.files().delete(file.id).execute()
+                    Log.d(TAG, "Deleted old file: ${file.name}")
+                    deletedCount++
+                }
+
+                Log.d(TAG, "Deleted $deletedCount old files with prefix '$prefix'")
+                deletedCount
+            } catch (e: Exception) {
+                Log.e(TAG, "Error deleting old files", e)
+                0
+            }
+        }
+
+    // ==================== Binary File Operations (for images) ====================
+
+    /**
+     * Reads a binary file from the App Data folder.
+     *
+     * @param filename The name of the file to read
+     * @return The file contents as ByteArray, or null if not found
+     */
+    suspend fun readBinaryFile(filename: String): ByteArray? = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name = '$filename'")
+                .setFields("files(id, name)")
+                .execute()
+
+            val file = files.files.firstOrNull()
+            if (file == null) {
+                Log.d(TAG, "Binary file not found: $filename")
+                return@withContext null
+            }
+
+            val outputStream = ByteArrayOutputStream()
+            driveService.files().get(file.id)
+                .executeMediaAndDownloadTo(outputStream)
+
+            val bytes = outputStream.toByteArray()
+            Log.d(TAG, "Read binary file: $filename (${bytes.size} bytes)")
+            bytes
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reading binary file: $filename", e)
+            null
+        }
+    }
+
+    /**
+     * Writes a binary file (e.g., image) to the App Data folder.
+     * Creates the file if it doesn't exist, updates if it does.
+     *
+     * @param filename The name of the file to write
+     * @param content The binary content to write
+     * @param mimeType The MIME type of the file (default: image/jpeg)
+     * @return true if successful, false otherwise
+     */
+    suspend fun writeBinaryFile(
+        filename: String,
+        content: ByteArray,
+        mimeType: String = "image/jpeg"
+    ): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val existingFiles = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name = '$filename'")
+                .setFields("files(id)")
+                .execute()
+
+            val mediaContent = ByteArrayContent(mimeType, content)
+
+            if (existingFiles.files.isNotEmpty()) {
+                // Update existing file
+                driveService.files().update(
+                    existingFiles.files[0].id,
+                    null,
+                    mediaContent
+                ).execute()
+            } else {
+                // Create new file
+                val fileMetadata = File().apply {
+                    name = filename
+                    parents = listOf(APP_DATA_FOLDER)
+                }
+                driveService.files().create(fileMetadata, mediaContent)
+                    .setFields("id")
+                    .execute()
+            }
+            Log.d(TAG, "Wrote binary file: $filename (${content.size} bytes)")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Error writing binary file: $filename", e)
+            false
+        }
+    }
+
+    /**
+     * Inventaire complet du dossier applicatif : un descripteur par fichier.
+     *
+     * Contrairement à [listFiles], la liste est paginée jusqu'au bout — sans quoi
+     * Drive s'arrête à sa page par défaut et l'addition des tailles serait fausse
+     * dès qu'un compte dépasse la centaine de fichiers.
+     *
+     * @return La liste des fichiers, ou une liste vide en cas d'erreur.
+     */
+    suspend fun listFileDetails(): List<DriveFileInfo> = listFileDetailsChecked() ?: emptyList()
+
+    /**
+     * Comme [listFileDetails], mais une erreur de Drive donne null au lieu d'une liste vide.
+     *
+     * Une liste vide veut dire « rien là-haut » ; la confondre avec « Drive n'a pas répondu »
+     * ferait republier par-dessus un fichier que personne n'a regardé.
+     *
+     * @param query filtre Drive (`name = 'px_ab12.zip'`), ou null pour tout lister.
+     */
+    suspend fun listFileDetailsChecked(query: String? = null): List<DriveFileInfo>? = withContext(Dispatchers.IO) {
+        try {
+            val result = mutableListOf<DriveFileInfo>()
+            var pageToken: String? = null
+            do {
+                val page = driveService.files().list()
+                    .setSpaces(APP_DATA_FOLDER)
+                    .setQ(query)
+                    .setFields("nextPageToken, files(id, name, size, modifiedTime, description)")
+                    .setPageSize(1000)
+                    .setPageToken(pageToken)
+                    .execute()
+
+                page.files.forEach { file ->
+                    result += DriveFileInfo(
+                        id = file.id,
+                        name = file.name ?: "",
+                        size = file.getSize() ?: 0L,
+                        modifiedTime = file.modifiedTime?.value ?: 0L,
+                        description = file.description
+                    )
+                }
+                pageToken = page.nextPageToken
+            } while (pageToken != null)
+
+            Log.d(TAG, "Inventory: ${result.size} file(s), ${result.sumOf { it.size }} bytes")
+            result
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error listing file details", e)
+            null
+        }
+    }
+
+    // ==================== Fichiers volumineux (projets créatifs) ====================
+
+    /**
+     * Envoie un fichier du disque, sans le charger en mémoire.
+     *
+     * Un projet de dessin peut peser des dizaines de Mo : [ByteArrayContent] le tiendrait
+     * entier dans le tas, deux fois. Ici Drive lit le fichier par morceaux, en envoi reprenable.
+     *
+     * @param existingId l'identifiant Drive du fichier à remplacer, ou null pour en créer un
+     * @param description texte libre rangé avec le fichier : c'est ce qui permet de lister des
+     *   projets (nom, version) sans rien télécharger
+     * @return l'identifiant Drive du fichier, ou null si l'envoi a échoué
+     */
+    suspend fun uploadFile(
+        name: String,
+        file: java.io.File,
+        mimeType: String,
+        description: String?,
+        existingId: String?
+    ): String? = withContext(Dispatchers.IO) {
+        try {
+            val media = FileContent(mimeType, file)
+            val metadata = File().apply {
+                this.description = description
+                if (existingId == null) {
+                    this.name = name
+                    parents = listOf(APP_DATA_FOLDER)
+                }
+            }
+            val sent = if (existingId != null) {
+                driveService.files().update(existingId, metadata, media).setFields("id").execute()
+            } else {
+                driveService.files().create(metadata, media).setFields("id").execute()
+            }
+            Log.d(TAG, "Uploaded file: $name (${file.length()} bytes)")
+            sent.id
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error uploading $name", e)
+            null
+        }
+    }
+
+    /** Télécharge un fichier vers le disque, sans passer par la mémoire. */
+    suspend fun downloadToFile(fileId: String, target: java.io.File): Boolean = withContext(Dispatchers.IO) {
+        try {
+            FileOutputStream(target).use { out ->
+                driveService.files().get(fileId).executeMediaAndDownloadTo(out)
+            }
+            true
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.e(TAG, "Error downloading file id=$fileId", e)
+            target.delete()
+            false
+        }
+    }
+
+    /**
+     * Supprime des fichiers déjà identifiés par [listFileDetails].
+     *
+     * Passer par l'identifiant évite la recherche par nom que fait [deleteFile] :
+     * une seule requête par fichier au lieu de deux.
+     *
+     * @return Le nombre de fichiers réellement supprimés.
+     */
+    suspend fun deleteByIds(ids: List<String>): Int = withContext(Dispatchers.IO) {
+        var deleted = 0
+        for (id in ids) {
+            try {
+                driveService.files().delete(id).execute()
+                deleted++
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to delete file id=$id", e)
+            }
+        }
+        Log.d(TAG, "Deleted $deleted of ${ids.size} file(s) by id")
+        deleted
+    }
+
+    /**
+     * Lists files matching a prefix pattern.
+     *
+     * @param prefix The prefix to match (e.g., "artist_img_")
+     * @return List of matching file names
+     */
+    suspend fun listFilesWithPrefix(prefix: String): List<String> = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setQ("name contains '$prefix'")
+                .setFields("files(id, name, modifiedTime)")
+                .execute()
+            files.files.map { it.name }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error listing files with prefix: $prefix", e)
+            emptyList()
+        }
+    }
+
+    /**
+     * Deletes multiple files by their names.
+     *
+     * @param filenames List of file names to delete
+     * @return Number of files successfully deleted
+     */
+    @Suppress("unused")
+    suspend fun deleteFiles(filenames: List<String>): Int = withContext(Dispatchers.IO) {
+        var deletedCount = 0
+        for (filename in filenames) {
+            if (deleteFile(filename)) {
+                deletedCount++
+            }
+        }
+        Log.d(TAG, "Deleted $deletedCount of ${filenames.size} files")
+        deletedCount
+    }
+
+    /**
+     * Deletes ALL files in the App Data folder.
+     * This is a destructive operation that cannot be undone.
+     *
+     * @return Number of files deleted, or -1 on error
+     */
+    suspend fun deleteAllFiles(): Int = withContext(Dispatchers.IO) {
+        try {
+            val files = driveService.files().list()
+                .setSpaces(APP_DATA_FOLDER)
+                .setFields("files(id, name)")
+                .execute()
+
+            var deletedCount = 0
+            files.files.forEach { file ->
+                try {
+                    driveService.files().delete(file.id).execute()
+                    Log.d(TAG, "Deleted file: ${file.name}")
+                    deletedCount++
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to delete file: ${file.name}", e)
+                }
+            }
+
+            Log.d(TAG, "Deleted ALL files: $deletedCount total")
+            deletedCount
+        } catch (e: Exception) {
+            Log.e(TAG, "Error deleting all files", e)
+            -1
+        }
+    }
+}
+
+/**
+ * Un fichier du dossier applicatif, tel que Drive le décrit.
+ *
+ * @property id identifiant Drive, seule clé utilisable pour supprimer sans re-chercher
+ * @property name nom du fichier, c'est lui qui porte le domaine (musique, jeux…)
+ * @property size taille en octets ; Drive renvoie null pour un fichier vide, on lit 0
+ * @property modifiedTime date de dernière écriture, en millisecondes epoch
+ * @property description texte libre rangé avec le fichier, null s'il n'en a pas
+ */
+data class DriveFileInfo(
+    val id: String,
+    val name: String,
+    val size: Long,
+    val modifiedTime: Long,
+    val description: String? = null
+)

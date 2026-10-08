@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Color Picker -->
+    <dimen name="color_button_size">32dp</dimen>
+    <dimen name="color_button_margin">4dp</dimen>
+
+    <!-- Pixel Art Editor -->
+    <dimen name="palette_max_height">76dp</dimen>
+
+</resources>

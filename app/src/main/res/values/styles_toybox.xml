@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Thème Android natif explicite : les menus du jeu ne dépendent pas des
+         couleurs de texte forcées par le thème global de l'application. -->
+    <style name="Theme.Toybox.Dialog" parent="android:style/Theme.Material.Dialog.Alert">
+        <item name="android:colorBackground">#30364A</item>
+        <item name="android:windowBackground">#30364A</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#E0E5F2</item>
+        <item name="android:textColorHint">#C7CEE0</item>
+        <item name="android:colorAccent">#FFE7A8</item>
+        <item name="android:colorControlNormal">#D7DFF2</item>
+        <item name="android:colorControlActivated">#FFE7A8</item>
+    </style>
+</resources>

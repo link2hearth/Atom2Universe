@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_region_body">Whole body</string>
+    <string name="bio_layer_senses">Eyes and sensory structures</string>
+    <string name="bio_layer_nervous">Nervous system</string>
+    <string name="bio_layer_vascular">Blood vessels</string>
+    <string name="bio_layer_lymphatic">Lymph nodes and tonsils</string>
+    <string name="bio_colors_lymphatic">Colour lymphoid structures by region</string>
+    <string name="bio_layer_connective">Ligaments, tendons and fasciae</string>
+    <string name="bio_layer_skin">Skin and hair</string>
+    <string name="bio_colors_senses">Colour sensory structures by group</string>
+    <string name="bio_colors_nervous">Colour nervous structures by group</string>
+    <string name="bio_colors_vascular">Colour vessels by territory</string>
+    <string name="bio_colors_connective">Colour connective tissues by group</string>
+    <string name="bio_colors_skin">Colour skin and hair by group</string>
+    <string name="bio_system_coverage_count">%1$s: %2$d selectable structures</string>
+    <string name="bio_systems_coverage">These layers represent the surfaces available in the source datasets. Structure counts include subdivisions and grouped branches, not complete physiological systems. Vessel colours are illustrative: red for systemic arteries and pulmonary veins, blue for systemic veins and pulmonary arteries. Capillaries and microscopic tissues are absent. Eyes contain separately selectable coats and optical structures; transparent materials are illustrative, without optical simulation. Middle and inner ear tissues are absent. The lymphoid layer contains 158 named groups of lymph nodes and two palatine tonsils, without collecting vessels or lymphatic ducts. Skin is a single external surface. Added nerves and lymph nodes use approximate alignment between atlases; local dimensions and contacts are not clinically validated.</string>
+    <string name="bio_systems_modifications">Additional BodyParts3D surfaces: eyes and orbital supports, external ears, brain structures, blood vessels, selected connective tissues, skin and hair. Source layout retained, with surfaces simplified for mobile; bilingual original summaries and illustrative materials added. Four right eye surfaces contain tiny isolated fragments in the opposite orbit; only those documented fragments were removed. Duplicate vascular variants were excluded; ascending lumbar vein sides were corrected from geometry. Two epigastric venous portions retain uncertain identities. Additional Z-Anatomy surfaces: eight trunk muscles, 247 nervous structures and 160 lymphoid structures. Trunk muscles and lymphoid structures retain their source shapes with uniform scaling and rigid alignment. Nerves use a continuous bone-guided pose adjustment that can change local dimensions. Detailed inventories, exclusions, transformations and measured limitations are recorded in the bundled provenance file.</string>
+    <string name="bio_reference_senses">Eyes and senses · OpenStax anatomy</string>
+    <string name="bio_reference_nervous">Nervous system · OpenStax anatomy</string>
+    <string name="bio_reference_vascular">Blood vessels · OpenStax anatomy</string>
+    <string name="bio_reference_skin">Skin · OpenStax anatomy</string>
+</resources>

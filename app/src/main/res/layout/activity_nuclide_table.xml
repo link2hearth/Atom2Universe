@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/a2uScreenBackground">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="?attr/a2uPanelBackground"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:elevation="?attr/a2uElevation2"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_app_back"
+            android:tint="@color/audio_text_primary"
+            android:contentDescription="@string/back"
+            android:background="?attr/selectableItemBackground"
+            android:scaleType="centerInside" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/nuclide_table_title"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="?attr/a2uMidiAccent" />
+
+        <!-- Légende compacte -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingEnd="4dp">
+
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/nuclide_stable" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/nuclide_alpha" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/nuclide_beta_minus" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/nuclide_beta_plus" android:layout_marginEnd="2dp"/>
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/nuclide_fission"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Chart + Detail panel côte à côte -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <!-- Carte de Segrè -->
+        <com.Atom2Universe.app.science.nuclide.NuclideChartView
+            android:id="@+id/nuclide_chart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <!-- Panel détail -->
+        <LinearLayout
+            android:id="@+id/nuclide_detail_panel"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/audio_surface"
+            android:padding="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/nuclide_detail_notation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/nuclide_detail_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/audio_text_secondary"
+                android:gravity="center"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/nuclide_detail_stability"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/audio_surface_raised"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nuclide_label_zn"
+                android:textSize="11sp"
+                android:textColor="@color/audio_text_secondary" />
+
+            <TextView
+                android:id="@+id/nuclide_detail_zn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/audio_text_primary"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nuclide_label_halflife"
+                android:textSize="11sp"
+                android:textColor="@color/audio_text_secondary" />
+
+            <TextView
+                android:id="@+id/nuclide_detail_halflife"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/audio_text_primary"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nuclide_label_decay"
+                android:textSize="11sp"
+                android:textColor="@color/audio_text_secondary" />
+
+            <TextView
+                android:id="@+id/nuclide_detail_decay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/audio_text_primary"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nuclide_label_spin"
+                android:textSize="11sp"
+                android:textColor="@color/audio_text_secondary" />
+
+            <TextView
+                android:id="@+id/nuclide_detail_spin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/audio_text_primary"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nuclide_label_be"
+                android:textSize="11sp"
+                android:textColor="@color/audio_text_secondary" />
+
+            <TextView
+                android:id="@+id/nuclide_detail_be"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/audio_text_primary"
+                android:paddingBottom="8dp" />
+
+        </LinearLayout>
+
+        <!-- Hint initial quand rien n'est sélectionné -->
+        <TextView
+            android:id="@+id/nuclide_hint"
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:text="@string/nuclide_hint"
+            android:textSize="12sp"
+            android:textColor="@color/audio_text_tertiary"
+            android:gravity="center"
+            android:padding="16dp" />
+
+    </LinearLayout>
+
+    <!-- Légende bas -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/audio_surface"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="6dp"
+        android:gravity="center">
+
+        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/nuclide_stable"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/nuclide_legend_stable" android:textSize="10sp"
+            android:textColor="@color/audio_text_secondary" android:layout_marginStart="4dp" android:layout_marginEnd="10dp"/>
+
+        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/nuclide_alpha"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/nuclide_legend_alpha" android:textSize="10sp"
+            android:textColor="@color/audio_text_secondary" android:layout_marginStart="4dp" android:layout_marginEnd="10dp"/>
+
+        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/nuclide_beta_minus"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/nuclide_legend_beta_minus" android:textSize="10sp"
+            android:textColor="@color/audio_text_secondary" android:layout_marginStart="4dp" android:layout_marginEnd="10dp"/>
+
+        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/nuclide_beta_plus"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/nuclide_legend_beta_plus" android:textSize="10sp"
+            android:textColor="@color/audio_text_secondary" android:layout_marginStart="4dp" android:layout_marginEnd="10dp"/>
+
+        <View android:layout_width="12dp" android:layout_height="12dp" android:background="@color/nuclide_fission"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/nuclide_legend_fission" android:textSize="10sp"
+            android:textColor="@color/audio_text_secondary" android:layout_marginStart="4dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

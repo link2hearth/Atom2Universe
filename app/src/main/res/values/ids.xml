@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="wobble_animator_tag" type="id"/>
+    <item name="immersive_dialog_binding" type="id"/>
+    <item name="immersive_focus_binding" type="id"/>
+    <item name="music_artwork_binding" type="id"/>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_window_plank">Fenêtre en chêne</string>
+    <string name="cave_block_window_wood_plank_white">Fenêtre en bouleau</string>
+    <string name="cave_block_window_plank_red">Fenêtre en séquoia</string>
+    <string name="cave_block_window_plank_dark">Fenêtre en bois sombre</string>
+    <string name="cave_block_window_plank_jungle">Fenêtre de jungle</string>
+    <string name="cave_block_window_plank_blue">Fenêtre bleue</string>
+    <string name="cave_block_window_plank_purple">Fenêtre violette</string>
+    <string name="cave_block_window_plank_yellow">Fenêtre jaune</string>
+    <string name="cave_block_window_plank_pink">Fenêtre rose</string>
+    <string name="cave_block_window_plank_sapin">Fenêtre en sapin</string>
+    <string name="cave_window_hint">Fenêtre fixe, hauteur : un bloc. Centrée dans le bloc et orientée face à vous lors de la pose. Vitrage transparent et cadre en bois en volume.</string>
+</resources>

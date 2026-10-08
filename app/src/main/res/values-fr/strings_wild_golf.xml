@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_wild_course">Les Détours Sauvages</string>
+    <string name="classic_wild_description">Parcours 3 · Avancé. 18 trous à choix multiples : bosquets et collines au centre, fairways bifurqués, raccourcis étroits entre les lacs et greens à relief. La voie large permet de construire le par ; couper exige de la précision.</string>
+    <string-array name="classic_wild_holes">
+        <item>Le chêne aux deux chemins</item>
+        <item>Le fil entre les eaux</item>
+        <item>La presqu’île</item>
+        <item>Le dos du géant</item>
+        <item>Le pari du cap</item>
+        <item>Les îlots du serpent</item>
+        <item>Le redan des vents</item>
+        <item>La mer de sable</item>
+        <item>Le S des pins</item>
+        <item>Le fer à cheval</item>
+        <item>La forêt partagée</item>
+        <item>Le sablier</item>
+        <item>Le trident</item>
+        <item>Les balcons du géant</item>
+        <item>Les deux caps</item>
+        <item>Le dernier long fer</item>
+        <item>Le choix des berges</item>
+        <item>La chaussée de l’audace</item>
+    </string-array>
+    <string-array name="classic_wild_tips">
+        <item>Contourne le bosquet et sa colline : large à gauche, plus serré à droite avec un meilleur angle.</item>
+        <item>Le grand croissant à droite construit un par 5 prudent. À gauche, un ruban de 17 m passe entre deux lacs.</item>
+        <item>Porte la balle au-delà de l’eau sans dépasser dans le sable. Le tablier droit offre un refuge.</item>
+        <item>La haute colline barre la ligne directe. Le large coude gauche assure ; le col droit raccourcit.</item>
+        <item>Depuis le départ haut, tente le green au-delà du lac ou prépare une approche depuis le plateau droit.</item>
+        <item>Reste sur la grande rive droite, ou saute entre les petites réceptions à gauche : leurs intervalles sont dans l’eau.</item>
+        <item>Le tablier haut à droite accompagne la balle vers le green en diagonale. Un coup trop court trouve le sable.</item>
+        <item>Deux fairways contournent le grand bunker central. Le gauche est large, le droit exige un départ placé.</item>
+        <item>Le grand S à droite contourne les pins ; le chemin gauche raccourcit mais laisse peu de marge.</item>
+        <item>La descente ajoute de la distance. Choisis la grande rive droite ou la petite réception gauche, près du lac.</item>
+        <item>Deux voies encerclent la colline boisée. Le grand détour gauche offre de la place ; la voie droite raccourcit l’approche.</item>
+        <item>Dose le vol entre l’eau devant et le sable derrière. Le tablier droit évite de viser la partie la plus étroite.</item>
+        <item>Trois voies : large à gauche, courte à droite, ou un ruban de 17 m entre les deux bunkers centraux.</item>
+        <item>Contourne la crête boisée par un balcon. Le green monte : garde assez de club pour atteindre le plateau.</item>
+        <item>Deux caps permettent de couper au-dessus de l’eau. Les voies de berge restent jouables en plusieurs coups.</item>
+        <item>Un long fer précis entre lac et bunker ; le tablier avant gauche permet de préparer un chip prudent.</item>
+        <item>Le plateau gauche est large, mais laisse une approche en diagonale. La voie droite longe le lac et ouvre le green.</item>
+        <item>Dernier par 5 : construis par le grand croissant droit ou ose la chaussée de 18 m entre les deux lacs.</item>
+    </string-array>
+</resources>

@@ -1,0 +1,24 @@
+Pooltool Kotlin physics port for Atom2Universe
+
+Original project: Pooltool, Copyright Evan Kiefl and contributors.
+https://github.com/ekiefl/pooltool
+Upstream revision: 81040e931facada508bbab2e53ab820295bbd90e
+License: Apache License 2.0 (see POOLTOOL-LICENSE.txt).
+
+Adapted in Kotlin: sliding/rolling/spinning/airborne evolution, instantaneous
+point cue strike and squirt, Alciatore frictional inelastic ball collisions,
+Han 2005 cushion collisions. Original Python/NumPy implementation replaced
+with Kotlin vectors. Android integration, table geometry, continuous collision
+scheduling, rules, procedural artwork, environments and audio are new work.
+This is a port of these physics models, not of Pooltool's Python GUI or every
+optional resolver. Han is used for grounded balls; an impulse model handles
+airborne cushion contacts. Pocket jaws and landing use bounded impulses.
+
+Kiefl, E. (2024). Pooltool: A Python package for realistic billiards simulation.
+Journal of Open Source Software, 9(101), 7301.
+https://doi.org/10.21105/joss.07301
+
+References used by Pooltool:
+Han (2005), Dynamics in Carom and Three Cushion Billiards.
+David Alciatore, billiards technical proofs A-5, A-6, A-14, A-30, A-31.
+https://billiards.colostate.edu/technical_proofs/

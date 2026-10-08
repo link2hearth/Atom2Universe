@@ -1,0 +1,17 @@
+{
+  "id": 4001,
+  "name": "redsand",
+  "texture_top": "cozy:material:6:C9977B",
+  "texture_side": "cozy:material:6:C9977B",
+  "texture_bottom": "cozy:material:6:C9977B",
+  "color": "#C9977B",
+  "hardness": 0.5,
+  "falling": true,
+  "drop": "redsand",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "sand"
+  ]
+}

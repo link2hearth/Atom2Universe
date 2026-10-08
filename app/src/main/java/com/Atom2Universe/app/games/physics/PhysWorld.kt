@@ -1,0 +1,1039 @@
+package com.Atom2Universe.app.games.physics
+
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.sqrt
+
+/**
+ * Le monde physique : la liste des corps, celle des liaisons, et la boucle de
+ * simulation.
+ *
+ * Le fonctionnement reprend celui de Box2D-Lite, en trois temps à chaque pas :
+ *  1. **détection** des contacts (théorème de l'axe séparateur pour les boîtes,
+ *     point le plus proche pour les disques) ;
+ *  2. **résolution** des contacts et des liaisons par impulsions séquentielles
+ *     (plusieurs passes qui corrigent tour à tour chaque point) ;
+ *  3. **intégration** des positions.
+ *
+ * Les impulsions sont conservées d'une image à l'autre (« warm starting ») :
+ * c'est ce qui rend une pile de briques stable au lieu de trembler.
+ */
+class PhysWorld {
+
+    val bodies = ArrayList<PhysBody>()
+    val joints = ArrayList<Joint>()
+    /**
+     * Les contacts suivis d'une image à l'autre.
+     *
+     * **Le rangement compte, et il doit être celui de l'insertion.** Les impulsions
+     * séquentielles corrigent les contacts l'un après l'autre : changer leur ordre
+     * change le résultat. Or la clé d'un contact est faite des identifiants des corps,
+     * qui viennent d'un compteur global jamais remis à zéro — une table de hachage
+     * ordinaire les range donc dans un ordre qui dépend du **nombre de corps créés
+     * depuis le lancement de l'application**. Deux fois le même tir, dans la même
+     * partie, ne donnaient pas le même effondrement : mesuré, deux mètres d'écart sur
+     * une pierre.
+     *
+     * Rien de tout ça n'est visible dans un bac à sable, et tout le devient dès qu'un
+     * niveau doit être reproductible à partir de sa graine. Une table à ordre d'insertion
+     * range les contacts dans l'ordre où la détection les a trouvés, qui ne dépend que
+     * de l'ordre des corps dans le monde.
+     */
+    private val arbiters = LinkedHashMap<Long, Arbiter>()
+    private val fresh = Array(2) { Contact() }
+    private val doomed = ArrayList<Long>()
+
+    /**
+     * Les contacts à résoudre, remis à plat dans l'ordre de la table.
+     *
+     * Le solveur parcourt la liste des contacts vingt-deux fois par pas — seize
+     * passes de vitesses, six de positions, plus les mesures. Le faire sur la table
+     * elle-même fabriquait vingt-deux itérateurs par pas, donc sept cents par image
+     * de vol : rien de dramatique, mais c'est du travail pour le ramasse-miettes au
+     * pire moment. Un tableau parcouru par indice n'alloue rien, et l'ordre reste
+     * exactement celui de la table.
+     */
+    private val active = ArrayList<Arbiter>()
+
+    /** Les liaisons à résoudre : celles dont au moins un corps est éveillé. */
+    private val activeJoints = ArrayList<Joint>()
+
+    /**
+     * Les couples de corps qui se touchent, suivis d'un pas à l'autre.
+     *
+     * C'est volontairement une table **à part** de [arbiters], et c'est le prix d'une
+     * distinction qui compte. Un contact du solveur, c'est un couple de **formes** : un
+     * corps composé de trois boîtes posé sur une planche en fabrique trois. Un
+     * événement de jeu, c'est un couple de **corps** : la caisse a touché la planche,
+     * une fois. Compter les naissances sur les arbitres aurait donné trois « la caisse
+     * arrive » puis, au gré des coins qui se décollent, des « elle repart » alors
+     * qu'elle est toujours posée.
+     *
+     * L'ordre d'insertion est gardé pour la même raison que celui des contacts : les
+     * événements doivent tomber dans le même ordre à chaque relecture d'une graine.
+     */
+    private val touches = LinkedHashMap<Long, Touch>()
+    private val doomedTouches = ArrayList<Long>()
+
+    /** Un couple de corps qui se touchent, et la date de la dernière fois qu'on l'a vu. */
+    private class Touch(val a: PhysBody, val b: PhysBody, val sensor: Boolean) {
+        var stamp = 0
+    }
+
+    /**
+     * Les événements du pas écoulé, et la réserve d'objets qui les porte.
+     *
+     * Les objets sont réemployés : une machine qui déclenche trente contacts par
+     * seconde n'a pas à faire travailler le ramasse-miettes pour autant. [events] ne
+     * contient jamais que les [ContactEvent] de tête de [eventPool], dans l'ordre, ce
+     * qui rend l'indexation de la réserve triviale.
+     */
+    private val eventPool = ArrayList<ContactEvent>()
+    private val events = ArrayList<ContactEvent>()
+
+    /**
+     * Ce qui s'est touché et ce qui s'est séparé pendant le dernier [stepFrame] ou
+     * [step] — voir [ContactEvent].
+     *
+     * **La liste est remplie pendant le pas et lue après**, jamais l'inverse : le jeu
+     * ne reçoit pas de rappel au milieu d'une résolution. C'est délibéré. Un rappel
+     * qui tombe entre deux sous-pas invite à retirer un corps, en ajouter un autre ou
+     * vider le monde pendant que le solveur travaille dessus, et ce genre de panne ne
+     * se reproduit jamais deux fois de la même façon. Ici, quand la liste se lit, le
+     * pas est fini : on peut tout faire.
+     *
+     * Un même couple peut y figurer deux fois dans la même image, une naissance et une
+     * mort, et c'est exactement ce qu'il faut savoir : une boule rapide a traversé la
+     * zone entre deux affichages.
+     */
+    val contactEvents: List<ContactEvent> get() = events
+
+    // Tampons de la recherche de paires. Ils vivent avec le monde plutôt que dans la
+    // méthode : un pas ne doit rien allouer du tout.
+    private var aabbMinX = FloatArray(0)
+    private var aabbMaxX = FloatArray(0)
+    private var aabbMinY = FloatArray(0)
+    private var aabbMaxY = FloatArray(0)
+    private var sweepKeys = LongArray(0)
+    private var pairBuf = LongArray(64)
+
+    var gravity = PhysicsConstants.STANDARD_GRAVITY
+
+    /** Nombre de passes du solveur de vitesses : plus il y en a, plus les piles sont stables. */
+    var iterations = 14
+
+    /**
+     * Nombre de passes du solveur de **positions**.
+     *
+     * Le moteur résout séparément les vitesses et les positions. Les vitesses
+     * empêchent les corps de s'enfoncer davantage ; les positions rattrapent
+     * l'enfoncement déjà là, en poussant sur des vitesses fantômes qui ne servent
+     * qu'au déplacement. C'est cette séparation qui empêche le solveur de créer de
+     * l'énergie, et c'est ce qui permet à une chaîne de liaisons de tenir.
+     */
+    var positionIterations = 6
+
+    /**
+     * Vitesse d'approche à partir de laquelle un contact compte comme un choc :
+     * en dessous, pas de rebond et pas de dégât. Sans ce seuil, une caisse posée
+     * par terre s'abîmerait toute seule sous son propre poids et tremblerait.
+     */
+    var impactSpeedThreshold = 0.5f
+
+    /**
+     * Enfoncement que la passe de position laisse subsister, en mètres.
+     *
+     * Un solveur d'impulsions a besoin d'un peu de recouvrement pour savoir qu'il y a
+     * contact : s'il séparait les corps jusqu'au contact exact, il passerait son temps
+     * à osciller entre « touche » et « touche pas ». Cinq millimètres est la valeur
+     * classique, et elle ne se voit pas sur une caisse posée par terre.
+     *
+     * Elle se voit en revanche sur une **pile**, où elle s'additionne : un mur de vingt
+     * assises s'enfonce de dix centimètres dans lui-même, s'affaisse de travers, et
+     * finit par s'écrouler tout seul. C'est la raison pour laquelle un jeu de cibles
+     * empilées peut vouloir la resserrer, au prix de quelques passes de plus.
+     */
+    var allowedPenetration = 0.005f
+
+    /** Nombre maximal de sous-pas consentis par image (voir [stepFrame]). */
+    var maxSubSteps = 32
+
+    /**
+     * Mise en sommeil des corps immobiles.
+     *
+     * Un corps qui n'a plus bougé depuis [sleepDelay] s'endort : il n'est plus
+     * intégré, ses contacts ne sont plus ni cherchés ni résolus, et il ne coûte plus
+     * que la mise à jour de sa boîte englobante. Il se réveille dès qu'un corps
+     * éveillé le touche pour de bon, ou qu'on le lui demande.
+     *
+     * C'est la seule façon de rendre une cible empilée abordable. Le coût d'une image
+     * vaut le nombre de corps **actifs** multiplié par le nombre de sous-pas : un boulet
+     * à cent trente mètres par seconde force trente-deux sous-pas au moment où il touche,
+     * et les soixante-dix pierres d'un château étaient résolues à chacun **alors
+     * qu'aucune ne bougeait**. Mesuré : 7,3 ms par image de simulation, contre 0,2 une
+     * fois les pierres endormies.
+     *
+     * Le réglage est volontairement à l'arrêt par défaut : un jeu où le joueur pose
+     * des pièces à la main n'y gagnerait rien et pourrait s'y perdre.
+     */
+    var sleepEnabled = false
+
+    /** Vitesse en dessous de laquelle un corps est candidat au sommeil, en m/s. */
+    var sleepLinearTol = 0.04f
+
+    /** Rotation en dessous de laquelle un corps est candidat au sommeil, en rad/s. */
+    var sleepAngularTol = 0.06f
+
+    /**
+     * Durée d'immobilité exigée avant l'endormissement, en secondes.
+     *
+     * Elle ne se compte pas en pas mais en temps : un pas peut valoir huit
+     * millisecondes ou deux cent cinquante microsecondes selon ce qui vole.
+     */
+    var sleepDelay = 0.4f
+
+    /**
+     * Le vent, en mètres par seconde. Il ne pousse que ce qui a une traînée.
+     *
+     * Ce n'est pas une force appliquée aux corps : c'est **la vitesse de l'air**, et
+     * elle n'entre nulle part ailleurs que dans le calcul de la traînée. Une pierre de
+     * château, qui n'a pas de traînée parce qu'elle n'en a jamais eu besoin, ne sent
+     * donc rien — ce qui tombe bien, un château ne s'envole pas.
+     */
+    var windX = 0f
+    var windY = 0f
+
+    /**
+     * Amortissement ambiant, en fraction de vitesse perdue **par seconde**.
+     *
+     * Il ne représente rien de physique : c'est une petite friction numérique qui
+     * aide un tas de caisses à finir par se taire, pour que [isAtRest] puisse
+     * déclarer la fin d'un coup. L'air, lui, se modélise pour de bon avec
+     * [PhysBody.dragFactor].
+     *
+     * L'unité compte. C'était autrefois un facteur appliqué **par pas** (0,999),
+     * réglé du temps où une image valait un pas. Depuis les sous-pas adaptatifs, une
+     * image de jeu peut valoir trente-deux pas : le même facteur freinait alors
+     * trente-deux fois plus. Un boulet de trébuchet en vol perdait 38 % de sa vitesse
+     * par seconde et retombait à la moitié de sa portée — un frottement fantôme, dont
+     * l'intensité dépendait de la vitesse de la simulation elle-même.
+     */
+    /**
+     * L'air du monde, par seconde. Un corps peut s'en écarter : voir
+     * [PhysBody.linearDamping].
+     */
+    var linearDamping = 0.05f
+    var angularDamping = 0.3f
+
+    private var linearKeep = 1f
+    private var angularKeep = 1f
+
+    private var stamp = 0
+
+    /**
+     * Ajoute un corps au monde, **une seule fois**.
+     *
+     * Le test d'appartenance coute un parcours de la liste, ce qui rendrait un
+     * chargement de cent pierres quadratique — quelques milliers de comparaisons, une
+     * fois, au moment ou l'on batit un site. C'est un prix derisoire a cote de ce qu'il
+     * evite.
+     *
+     * Un corps present deux fois dans la liste est apparie **avec lui-meme** par le
+     * balayage large : sa categorie satisfait son propre masque, et le solveur se met a
+     * inventer des contacts entre les morceaux d'une seule et meme pierre. La
+     * construction se fige ou part de travers, sans exception ni message. Et
+     * [remove] n'en retire qu'un exemplaire, laissant un fantome dans la simulation.
+     *
+     * On a paye ce piege une fois : deux appels legitimes pris separement — celui qui
+     * fabrique les pierres et celui qui les remet apres un vidage — s'enchainaient dans
+     * le chargement d'un site.
+     */
+    fun add(body: PhysBody) {
+        if (bodies.contains(body)) return
+        bodies.add(body)
+    }
+
+    fun remove(body: PhysBody) {
+        bodies.remove(body)
+        wakeNeighbours(body)
+        forgetContacts(body)
+        forgetTouches(body)
+        joints.removeAll { it.a === body || it.b === body }
+    }
+
+    /**
+     * Oublie les couples de contact d'un corps qui **quitte le monde**, sans émettre
+     * d'événement.
+     *
+     * La tentation serait d'annoncer la séparation — le contact a bien cessé, après
+     * tout. Mais il a cessé parce que le jeu vient lui-même de retirer la pièce : il
+     * n'apprendrait rien, et l'événement lui rendrait un corps qu'il a déjà jeté. Ne
+     * rien dire est plus honnête que de parler d'un absent.
+     *
+     * À ne pas confondre avec [forgetContacts], qui sert à téléporter un corps **resté**
+     * dans le monde : celui-là garde ses couples, et la séparation lui sera annoncée
+     * normalement au pas suivant, puisqu'elle aura bien lieu.
+     */
+    private fun forgetTouches(body: PhysBody) {
+        doomedTouches.clear()
+        for ((k, t) in touches) if (t.a === body || t.b === body) doomedTouches.add(k)
+        for (k in doomedTouches) touches.remove(k)
+    }
+
+    /**
+     * Réveille ce qui touchait un corps qu'on retire du monde.
+     *
+     * Sans ça, une pierre reste **suspendue en l'air** à la place de celle qui vient
+     * d'éclater sous elle : un corps endormi n'est plus intégré du tout, donc il ne
+     * retombe pas.
+     *
+     * Deux chemins, et il en faut deux. Les contacts mémorisés donnent les voisins
+     * d'un corps qui bougeait encore — c'est le cas ordinaire, une pierre qui casse
+     * sous un coup. Mais deux dormeurs n'ont plus de contact mémorisé du tout, par
+     * construction : le moteur ne cherche pas les contacts entre deux corps qui
+     * dorment. D'où le second chemin, le voisinage géométrique, qui coûte un
+     * parcours de la liste des corps — une misère, puisqu'on ne retire un corps que
+     * lorsqu'il casse.
+     */
+    private fun wakeNeighbours(body: PhysBody) {
+        for (arb in arbiters.values) {
+            if (arb.a === body) arb.b.wake() else if (arb.b === body) arb.a.wake()
+        }
+        body.updateAabb()
+        val marge = 0.05f
+        for (bd in bodies) {
+            if (!bd.sleeping) continue
+            if (bd.aabbMinX > body.aabbMaxX + marge || bd.aabbMaxX < body.aabbMinX - marge) continue
+            if (bd.aabbMinY > body.aabbMaxY + marge || bd.aabbMaxY < body.aabbMinY - marge) continue
+            bd.wake()
+        }
+    }
+
+    /** Réveille tout le monde : à faire quand le jeu rebâtit sa scène. */
+    fun wakeAll() {
+        for (bd in bodies) bd.wake()
+    }
+
+    fun addJoint(joint: Joint) {
+        joints.add(joint)
+    }
+
+    fun removeJoint(joint: Joint) {
+        joints.remove(joint)
+    }
+
+    fun clear() {
+        bodies.clear()
+        joints.clear()
+        arbiters.clear()
+        active.clear()
+        activeJoints.clear()
+        // Les couples et les événements parlent de corps qui viennent de disparaître.
+        // La réserve, elle, survit au vidage : on lui retire donc ses références à la
+        // main, sinon un niveau abandonné resterait accroché par ses derniers contacts
+        // jusqu'à ce que le niveau suivant réemploie les objets un par un.
+        touches.clear()
+        events.clear()
+        for (e in eventPool) e.set(null, null)
+    }
+
+    /**
+     * Retire du monde tout ce qui appartient à [owner], et rien d'autre.
+     *
+     * C'est le geste qu'on écrivait « vider le monde puis y remettre ce qu'on veut
+     * garder ». Ça marchait tant qu'un monde ne portait qu'une machine et son site ; ça
+     * ne marche plus dès que deux machines s'y succèdent, puisque remonter l'une
+     * effacerait l'autre.
+     *
+     * Les liaisons partent avec leurs corps : une liaison dont un bout a quitté le monde
+     * ne peut plus rien tirer, et la laisser reviendrait à garder une chape accrochée à
+     * un bras qui n'existe plus.
+     */
+    fun removeOwned(owner: Any) {
+        var i = joints.size - 1
+        while (i >= 0) {
+            val j = joints[i]
+            if (j.a.owner === owner || j.b.owner === owner) joints.removeAt(i)
+            i--
+        }
+        i = bodies.size - 1
+        while (i >= 0) {
+            if (bodies[i].owner === owner) bodies.removeAt(i)
+            i--
+        }
+        // Les contacts mémorisés d'un corps parti n'ont plus de sens, et les listes de
+        // travail se refont à chaque image de toute façon.
+        doomed.clear()
+        for ((k, arb) in arbiters) {
+            if (arb.a.owner === owner || arb.b.owner === owner) doomed.add(k)
+        }
+        for (k in doomed) arbiters.remove(k)
+        doomedTouches.clear()
+        for ((k, t) in touches) {
+            if (t.a.owner === owner || t.b.owner === owner) doomedTouches.add(k)
+        }
+        for (k in doomedTouches) touches.remove(k)
+        active.clear()
+        activeJoints.clear()
+    }
+
+    /** Oublie les contacts mémorisés d'un corps (à faire quand on le téléporte). */
+    fun forgetContacts(body: PhysBody) {
+        doomed.clear()
+        for ((k, arb) in arbiters) if (arb.a === body || arb.b === body) doomed.add(k)
+        for (k in doomed) arbiters.remove(k)
+    }
+
+    /** Remet à zéro les chocs encaissés par tous les corps. */
+    fun clearImpacts() {
+        for (bd in bodies) bd.impactAccum = 0f
+    }
+
+    /**
+     * Simule une image entière, en la découpant en autant de sous-pas qu'il faut
+     * pour que rien ne traverse rien.
+     *
+     * Le moteur teste les collisions à des positions figées : un boulet à 30 m/s
+     * avance de 50 cm par image à 60 Hz, et passerait **au travers** d'une planche
+     * de 10 cm sans jamais la toucher. On mesure donc le corps le plus rapide et
+     * le corps le plus mince, et on subdivise le pas jusqu'à ce que le premier ne
+     * puisse plus franchir le second d'un seul bond.
+     *
+     * Au repos, [maxSubSteps] n'est jamais atteint : un monde tranquille coûte un
+     * seul sous-pas, exactement comme avant.
+     */
+    fun stepFrame(dt: Float) {
+        if (dt <= 0f) return
+        // On consomme l'image par tranches, en **recalculant la taille de la
+        // tranche après chacune**. C'est indispensable dès qu'un choc entre en jeu :
+        // le contrepoids d'une machine de jet frappe le bras au milieu de l'image et
+        // le fait passer de zéro à trois tours par seconde. Un découpage décidé une
+        // fois pour toutes au début de l'image aurait taillé les pas pour un bras
+        // immobile, et le reste de l'image se serait joué à pleine vitesse avec des
+        // pas énormes — le boulet traversait sa butée.
+        // Les événements du pas précédent ont été lus, ou ne le seront jamais. Ceux de
+        // cette image s'accumulent sur **tous** les sous-pas : c'est tout l'intérêt,
+        // puisque c'est dans un sous-pas que passe la boule trop rapide pour l'image.
+        events.clear()
+        var remaining = dt
+        var guard = 0
+        while (remaining > 1e-6f && guard < 4 * maxSubSteps) {
+            val h = minOf(remaining, safeStep(dt))
+            stepInternal(h, clearForces = false)
+            remaining -= h
+            guard++
+        }
+        clearForces()
+    }
+
+    /**
+     * Marge de sécurité, en mètres, ajoutée à la portée d'un corps quand on cherche ce
+     * qu'il peut toucher pendant l'image.
+     *
+     * Elle couvre ce que la vitesse mesurée **au début** du pas ne dit pas : la
+     * pesanteur ajoute seize centimètres par seconde à chaque image, et surtout une
+     * impulsion peut accélérer un corps au milieu d'un sous-pas — le contrepoids qui
+     * frappe le bras fait passer celui-ci de zéro à trois tours par seconde. Un demi-
+     * mètre est deux ordres de grandeur au-dessus du premier effet, et [stepFrame]
+     * recalcule après chaque sous-pas, ce qui rattrape le second dès le pas suivant.
+     */
+    private val reachMargin = 0.5f
+
+    /**
+     * Durée pendant laquelle, à l'état actuel, rien ne peut franchir l'épaisseur de ce
+     * qu'il peut **réellement atteindre**.
+     *
+     * La vitesse retenue est celle du **point le plus rapide** de chaque corps,
+     * rotation comprise : le centre d'un bras de douze mètres avance lentement
+     * pendant que son extrémité file à vingt mètres par seconde.
+     *
+     * Et la finesse ne compte qu'**en fonction de la distance**. C'était le défaut de la
+     * version précédente, qui croisait bêtement le corps le plus rapide du monde avec le
+     * plus mince : une pierre de dix centimètres posée à l'autre bout du château comptait
+     * exactement autant qu'une pierre juste devant le boulet. Résultat, un château remis
+     * dans la simulation quarante mètres avant l'impact faisait tomber le pas à sa valeur
+     * plancher — trente-deux sous-pas par image, chacun rebalayant cent corps — pendant
+     * tout le quart de seconde que le joueur regarde, et **alors que rien ne pouvait
+     * encore se toucher**.
+     *
+     * La règle est maintenant celle de l'avancement conservatif : pour chaque corps qui
+     * bouge, on ne retient que ce qu'il peut joindre d'ici la fin de l'image, et le pas
+     * est taillé sur l'épaisseur de ceux-là seulement. Une paire écartée l'est parce que
+     * son écart dépasse ce que les deux corps peuvent combler en une image entière — donc
+     * *a fortiori* en un sous-pas, qui est toujours plus court. Et comme [stepFrame]
+     * refait ce calcul après chaque sous-pas, la contrainte revient d'elle-même dès que
+     * le boulet entre dans la portée des premières pierres.
+     *
+     * Une pierre endormie compte comme les autres : elle ne bouge pas, mais elle reste un
+     * obstacle, et l'ignorer serait exactement le bug qu'on ne veut pas — voir
+     * `PhysicsTunnelTest`.
+     */
+    private fun safeStep(frameDt: Float): Float {
+        // 1. La plus petite épaisseur du monde, et le corps le plus rapide. Ni l'un ni
+        // l'autre ne décide du pas : ils ne servent qu'à écarter vite le travail inutile.
+        var thinnest = Float.MAX_VALUE
+        var fastest = -1
+        var fastestSpeed = 0f
+        for (i in bodies.indices) {
+            val bd = bodies[i]
+            if (!bd.inWorld) continue
+            // Un corps que personne ne peut toucher n'a pas à imposer son épaisseur :
+            // l'axe d'une machine de jet fait huit centimètres et ne sert qu'à porter
+            // une liaison, mais il faisait découper l'image en douze sous-pas pour
+            // que rien ne le traverse — alors que rien ne peut le traverser.
+            if (bd.collidesWith != 0 && bd.smallestHalfExtent < thinnest) {
+                thinnest = bd.smallestHalfExtent
+            }
+            if (!bd.frozen) {
+                val s = speedOf(bd)
+                if (s > fastestSpeed) { fastestSpeed = s; fastest = i }
+            }
+        }
+        if (thinnest == Float.MAX_VALUE || fastest < 0 || fastestSpeed <= 0f) return frameDt
+
+        // 2. Le plus rapide d'abord : c'est lui qui abaisse la limite, et une limite
+        // basse permet d'écarter tous les autres d'une seule division. Sans ce
+        // passe-droit, l'élagage dépendrait de l'ordre des corps dans la liste.
+        var limit = frameDt
+        limit = narrowBy(bodies[fastest], fastestSpeed, frameDt, limit)
+        for (i in bodies.indices) {
+            if (i == fastest) continue
+            val a = bodies[i]
+            if (!a.inWorld || a.frozen) continue
+            val sa = speedOf(a)
+            if (sa <= 0f) continue
+            // Élagage : même contre la pièce la plus mince du monde, ce corps-ci ne
+            // peut pas abaisser la limite. Inutile de chercher ce qu'il pourrait
+            // toucher — et c'est ce qui garde le calcul linéaire pendant qu'un château
+            // s'effondre, où soixante pierres bougent en même temps mais où une seule
+            // décide du pas.
+            //
+            // La borne est honnête : toute paire vaut au moins deux fois la plus petite
+            // demi-épaisseur du monde, donc au moins `thinnest × 2 × 0,25 / sa`.
+            if (thinnest * 0.5f / sa >= limit) continue
+            limit = narrowBy(a, sa, frameDt, limit)
+        }
+
+        // Le plancher garantit que l'image finit toujours par être consommée, même
+        // face à une vitesse aberrante.
+        return limit.coerceIn(frameDt / maxSubSteps, frameDt)
+    }
+
+    /** Vitesse du point le plus rapide d'un corps, rotation comprise. */
+    private fun speedOf(bd: PhysBody): Float =
+        sqrt(bd.speedSq) + abs(bd.omega) * bd.boundingRadius
+
+    /**
+     * Abaisse la limite de pas d'après ce que [a], lancé à [sa], peut atteindre.
+     *
+     * On divise par la seule vitesse de [a], et non par la vitesse de rapprochement de
+     * la paire. Ce n'est pas une approximation : chaque paire est examinée **des deux
+     * côtés**, une fois par corps mobile, et c'est le plus rapide des deux qui donne le
+     * pas le plus court. Le pas retenu vaut donc au pire `épaisseur / (4 × la plus grande
+     * des deux vitesses)`, et comme la somme de deux vitesses ne dépasse jamais deux fois
+     * la plus grande, les deux corps ne peuvent pas se rapprocher de plus de la moitié de
+     * cette épaisseur pendant le pas. C'est la marge de deux que retenait déjà l'ancienne
+     * version, à l'identique.
+     *
+     * **L'épaisseur en jeu est la somme des deux demi-épaisseurs, pas la plus petite.**
+     * C'est la géométrie qui le dit : deux corps se recouvrent tant que leurs centres
+     * sont distants de moins que la somme de leurs appuis, donc la fenêtre où la
+     * détection peut les voir se toucher est large de `2 × (ea + eb)` — un boulet de
+     * douze centimètres qui aborde une dalle de trois mètres a six mètres de fenêtre, et
+     * pas vingt-quatre centimètres. Retenir la plus petite des deux, comme le faisait
+     * la première version de cette règle, revenait à tailler les sous-pas sur le rayon
+     * du boulet lui-même : il rase le relief à deux mètres du sol pendant tout son vol,
+     * et l'image se découpait en quatorze sous-pas pour une dalle qu'aucun découpage ne
+     * lui fera jamais traverser.
+     *
+     * Le quart, lui, n'a pas bougé : le pas retenu laisse le déplacement relatif sous le
+     * quart de la fenêtre, soit quatre relevés à l'intérieur du recouvrement. C'est la
+     * marge exacte de l'ancienne règle, et ce n'est pas le moment de la rogner.
+     */
+    private fun narrowBy(a: PhysBody, sa: Float, frameDt: Float, current: Float): Float {
+        if (!a.inWorld || a.collidesWith == 0) return current
+        var limit = current
+        val ea = a.smallestHalfExtent
+        for (j in bodies.indices) {
+            val b = bodies[j]
+            if (b === a || !b.inWorld) continue
+            if (!a.collidesWith(b)) continue
+            // La vitesse du voisin entre dans la **portée** — c'est elle qui dit s'ils
+            // ont le temps de se joindre — mais pas dans la division : voir plus haut.
+            val sb = if (b.frozen) 0f else speedOf(b)
+            val reach = a.boundingRadius + b.boundingRadius + (sa + sb) * frameDt + reachMargin
+            val dx = b.x - a.x
+            val dy = b.y - a.y
+            if (dx * dx + dy * dy > reach * reach) continue
+            val safe = (ea + b.smallestHalfExtent) * 0.25f / sa
+            if (safe < limit) limit = safe
+        }
+        return limit
+    }
+
+    /** Nombre de sous-pas que [stepFrame] emploierait pour une image de [dt]. */
+    fun subStepsFor(dt: Float): Int =
+        ceil(dt / safeStep(dt)).toInt().coerceIn(1, maxSubSteps)
+
+    /** Simule un pas unique et consomme les forces extérieures accumulées. */
+    fun step(dt: Float) {
+        events.clear()
+        stepInternal(dt, clearForces = true)
+    }
+
+    private fun stepInternal(dt: Float, clearForces: Boolean) {
+        if (dt <= 0f) return
+        val invDt = 1f / dt
+        stamp++
+
+        // L'amortissement est donné par seconde : c'est ici qu'il devient un facteur
+        // pour ce pas-ci, quelle que soit sa durée.
+        linearKeep = (1f - linearDamping * dt).coerceIn(0f, 1f)
+        angularKeep = (1f - angularDamping * dt).coerceIn(0f, 1f)
+
+        broadPhase()
+        selectJoints()
+
+        // 1. Intégration des forces
+        for (bd in bodies) {
+            if (!bd.inWorld) continue
+            // Un couple posé de l'extérieur — le ressort d'une planche — est un ordre
+            // de bouger : il réveille son corps, sans quoi il serait avalé sans effet.
+            if (bd.forceX != 0f || bd.forceY != 0f || bd.torque != 0f) bd.wake()
+            if (bd.sleeping) continue
+            if (bd.invMass > 0f) {
+                bd.vx += bd.forceX * bd.invMass * dt
+                bd.vy += (bd.forceY * bd.invMass - gravity) * dt
+                // La traînée de l'air : elle s'oppose au mouvement et croît comme
+                // le carré de la vitesse. On la borne à ce qui annule exactement la
+                // vitesse dans le pas : sinon un pas un peu long la renverserait et
+                // l'air pousserait le corps en arrière, ce qui créerait de l'énergie.
+                if (bd.dragFactor > 0f) {
+                    // La traînée se mesure sur la vitesse **relative à l'air**, et pas
+                    // sur la vitesse dans le monde. C'est la seule façon honnête de
+                    // faire du vent : un corps immobile dans un vent de dix mètres par
+                    // seconde subit exactement ce que subirait le même corps lancé à
+                    // dix mètres par seconde dans de l'air calme. Sans vent, les deux
+                    // vitesses sont la même et rien ne change.
+                    val rx = bd.vx - windX
+                    val ry = bd.vy - windY
+                    val v = sqrt(rx * rx + ry * ry)
+                    if (v > 1e-4f) {
+                        // Bornée à ce qui annule exactement la vitesse relative : un pas
+                        // un peu long la renverserait sinon, et l'air pousserait le corps
+                        // plus vite que lui-même, ce qui créerait de l'énergie.
+                        val dv = minOf(bd.dragFactor * v * v * bd.invMass * dt, v)
+                        bd.vx -= dv * rx / v
+                        bd.vy -= dv * ry / v
+                    }
+                }
+            }
+            if (bd.invI > 0f && bd.torque != 0f) bd.omega += bd.invI * bd.torque * dt
+        }
+
+        // 2. Vitesses : on empêche les corps de s'enfoncer davantage.
+        // On **mesure d'abord tous les contacts, puis on les prépare** : la reprise des
+        // impulsions de l'image précédente bouscule les vitesses le temps d'un pas, et
+        // un contact mesuré après elle croirait à un choc violent là où rien ne bouge.
+        // Voir [Arbiter.measure].
+        for (i in active.indices) active[i].measure(impactSpeedThreshold)
+        for (i in active.indices) active[i].preStep(invDt)
+        for (i in activeJoints.indices) activeJoints[i].preStep(invDt)
+        repeat(iterations) {
+            for (i in active.indices) active[i].applyImpulse()
+            // Les liaisons sont résolues deux fois par passe : une chaîne de corps
+            // reliés fait circuler l'effort de proche en proche, et c'est le maillon
+            // le plus lent qui décide de la stabilité de l'ensemble.
+            for (i in activeJoints.indices) activeJoints[i].applyImpulse()
+            for (i in activeJoints.indices) activeJoints[i].applyImpulse()
+        }
+
+        // 2 bis. Comptabilisation des chocs, pour les cibles qui doivent casser.
+        for (i in active.indices) {
+            val arb = active[i]
+            if (!arb.impacting) continue
+            // L'énergie du **choc seul**, sans le poids que le contact porte par
+            // ailleurs : voir [Arbiter.impactEnergy].
+            val p = arb.impactEnergy
+            arb.a.impactAccum += p
+            arb.b.impactAccum += p
+        }
+
+        // 2 ter. Positions : on rattrape ce qui est déjà enfoncé ou décroché, sur
+        // les vitesses fantômes, qui ne donnent d'élan à personne.
+        for (bd in bodies) {
+            if (bd.frozen) continue
+            bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
+        }
+        repeat(positionIterations) {
+            for (i in active.indices) active[i].applyPositionImpulse(allowedPenetration)
+            for (i in activeJoints.indices) activeJoints[i].applyPositionImpulse()
+        }
+
+        // 3. Intégration des positions + amortissement léger (aide la mise au repos)
+        for (bd in bodies) {
+            if (!bd.inWorld || bd.sleeping) continue
+            // La vitesse fantôme s'ajoute au déplacement, jamais à la vitesse.
+            if (bd.invMass > 0f) {
+                bd.x += (bd.vx + bd.pvx) * dt
+                bd.y += (bd.vy + bd.pvy) * dt
+                // Un corps peut avoir son propre régime : voir [PhysBody.linearDamping].
+                // Sans réglage propre — le cas de presque tous — c'est celui du monde,
+                // déjà converti en facteur pour ce pas-ci.
+                val keep = if (bd.linearDamping < 0f) linearKeep
+                else (1f - bd.linearDamping * dt).coerceIn(0f, 1f)
+                bd.vx *= keep
+                bd.vy *= keep
+            }
+            if (bd.invI > 0f) {
+                bd.angle += (bd.omega + bd.pomega) * dt
+                bd.omega *= if (bd.angularDamping < 0f) angularKeep
+                else (1f - bd.angularDamping * dt).coerceIn(0f, 1f)
+            }
+            bd.pvx = 0f; bd.pvy = 0f; bd.pomega = 0f
+        }
+
+        // 4. Qui peut s'endormir ?
+        if (sleepEnabled) settleToSleep(dt)
+        if (clearForces) clearForces()
+    }
+
+    private fun clearForces() {
+        for (bd in bodies) bd.clearForces()
+    }
+
+    /**
+     * Retient les liaisons à résoudre, et réveille ce qu'elles tirent.
+     *
+     * Une liaison n'est pas un contact : elle ne se contente pas d'empêcher deux corps
+     * de se traverser, elle les **tient**, et elle pousse sur eux à chaque passe. Une
+     * liaison résolue contre un corps endormi lui verse donc de la vitesse qu'il
+     * n'intègre jamais — elle s'accumule, image après image, et le jour où quelque
+     * chose le réveille il part comme un ressort qu'on relâche. Mesuré : un boulet
+     * sortait à deux fois et demie l'énergie que la machine contient.
+     *
+     * D'où la règle : une liaison dont les deux corps dorment ne se résout pas du
+     * tout, et une liaison qui travaille réveille ses deux corps.
+     */
+    private fun selectJoints() {
+        activeJoints.clear()
+        for (i in joints.indices) {
+            val j = joints[i]
+            if (j.a.frozen && j.b.frozen) continue
+            if (j.a.sleeping) j.a.wake()
+            if (j.b.sleeping) j.b.wake()
+            activeJoints.add(j)
+        }
+    }
+
+    /** Aligne deux corps sur la plus petite de leurs deux horloges de repos. */
+    private fun shareRest(a: PhysBody, b: PhysBody) {
+        // Un corps immobile par nature n'a pas d'horloge : le sol garderait tout le
+        // monde éveillé.
+        if (a.immovable || b.immovable) return
+        val t = minOf(a.restTime, b.restTime)
+        a.restTime = t
+        b.restTime = t
+    }
+
+    /**
+     * Endort les corps qui n'ont plus bougé depuis assez longtemps.
+     *
+     * L'immobilité d'un instant ne prouve rien : une pierre lancée en l'air passe par
+     * une vitesse nulle au sommet de sa course, et une pile qui s'effondre marque des
+     * temps d'arrêt. C'est la **durée** qui décide, et elle se compte en secondes, pas
+     * en pas.
+     */
+    private fun settleToSleep(dt: Float) {
+        for (bd in bodies) {
+            if (!bd.inWorld || bd.sleeping || bd.immovable) continue
+            if (!bd.allowSleep) { bd.restTime = 0f; continue }
+            if (bd.speedSq < sleepLinearTol * sleepLinearTol && abs(bd.omega) < sleepAngularTol) {
+                bd.restTime += dt
+            } else {
+                bd.restTime = 0f
+            }
+        }
+
+        // Deux corps qui se touchent, ou que relie une liaison, s'endorment
+        // **ensemble**, en partageant le plus petit de leurs temps de repos.
+        //
+        // Sans ça, ils ne s'endorment jamais. Le premier à franchir le délai s'endort
+        // seul ; son voisin encore éveillé le touche donc au pas suivant, ce qui le
+        // réveille — c'est la règle, et c'est une bonne règle — et son compteur repart
+        // de zéro. Puis c'est au voisin de s'endormir, et le premier le réveille à son
+        // tour. Une pile de cinq caisses parfaitement immobiles se relançait ainsi
+        // indéfiniment.
+        //
+        // Le partage du plus petit temps revient à faire dormir des **îlots** : au
+        // bout de quelques pas, tout ce qui se touche partage la même horloge, franchit
+        // le délai au même pas, et s'endort d'un bloc. Un réveil, où qu'il arrive dans
+        // l'îlot, ramène tout le monde à zéro par le même chemin.
+        for (i in active.indices) shareRest(active[i].a, active[i].b)
+        for (i in joints.indices) shareRest(joints[i].a, joints[i].b)
+
+        for (bd in bodies) {
+            if (!bd.inWorld || bd.sleeping || bd.immovable) continue
+            if (bd.restTime >= sleepDelay) bd.sleep()
+        }
+    }
+
+    /**
+     * Vrai quand plus rien ne bouge dans le monde. C'est ce qui dit à un jeu de
+     * tir que le coup est terminé : le boulet s'est arrêté, les débris aussi.
+     */
+    fun isAtRest(linearTol: Float = 0.05f, angularTol: Float = 0.08f): Boolean {
+        for (bd in bodies) {
+            if (!bd.inWorld) continue
+            if (!bd.atRest(linearTol, angularTol)) return false
+        }
+        return true
+    }
+
+    /** Vitesse du corps le plus rapide, en m/s (0 si tout dort). */
+    fun fastestSpeed(): Float {
+        var best = 0f
+        for (bd in bodies) {
+            if (!bd.inWorld || bd.invMass == 0f) continue
+            val s = bd.speedSq
+            if (s > best) best = s
+        }
+        return sqrt(best)
+    }
+
+    /**
+     * Recherche des paires en contact, par **balayage** de l'axe des X.
+     *
+     * C'était autrefois la boucle la plus simple qui soit : tous les corps contre tous
+     * les autres. Correcte, et parfaitement tenable tant que le monde comptait dix
+     * pièces — mais son coût croît comme le carré du nombre de corps, et il se paie à
+     * chacun des trente-deux sous-pas qu'un boulet rapide impose. Avec un château de
+     * soixante-dix pierres, la recherche des paires mangeait à elle seule **60 % du
+     * temps de simulation**, l'essentiel en pure perte : pour chaque paire éloignée,
+     * elle interrogeait quand même la table des contacts, une fois par couple de
+     * formes, avec une clé qu'il faut emballer dans un objet à chaque appel.
+     *
+     * Le balayage range les corps par bord gauche, puis n'examine, pour chacun, que
+     * ceux dont le bord gauche tombe avant son bord droit. Deux constructions à trois
+     * cents mètres l'une de l'autre ne se rencontrent plus jamais, et l'ordre des
+     * paires retenues est rétabli à l'identique par un tri : **la simulation donne
+     * exactement les mêmes nombres qu'avant**, ce qui compte pour un jeu dont les
+     * niveaux doivent être reproductibles à partir de leur graine.
+     */
+    private fun broadPhase() {
+        val n = bodies.size
+        if (aabbMinX.size < n) {
+            aabbMinX = FloatArray(n); aabbMaxX = FloatArray(n)
+            aabbMinY = FloatArray(n); aabbMaxY = FloatArray(n)
+            sweepKeys = LongArray(n)
+        }
+
+        // 1. Boîte englobante de chaque corps, et clé de tri (bord gauche, indice).
+        // Un dormeur garde la sienne : il n'a pas bougé depuis qu'on l'a calculée.
+        var m = 0
+        for (i in 0 until n) {
+            val bd = bodies[i]
+            if (!bd.inWorld) continue
+            if (!bd.sleeping) bd.updateAabb()
+            aabbMinX[i] = bd.aabbMinX; aabbMaxX[i] = bd.aabbMaxX
+            aabbMinY[i] = bd.aabbMinY; aabbMaxY[i] = bd.aabbMaxY
+            // Le OU exclusif du bit de signe : `Arrays.sort` compare des entiers
+            // signés, alors que la clé, elle, doit se comparer comme un entier non
+            // signé — sans lui, tous les corps situés à droite de l'origine passent
+            // avant ceux de gauche, le balayage s'arrête au mauvais endroit et les
+            // contacts avec le sol se perdent. Symptôme : la construction traverse
+            // le sol et tombe indéfiniment.
+            sweepKeys[m++] =
+                (((sortableBits(aabbMinX[i]) shl 32) or (i.toLong() and 0xFFFFFFFFL)) xor Long.MIN_VALUE)
+        }
+        java.util.Arrays.sort(sweepKeys, 0, m)
+
+        // 2. Balayage : les paires dont les boîtes se chevauchent.
+        var np = 0
+        for (p in 0 until m) {
+            val i = (sweepKeys[p] and 0xFFFFFFFFL).toInt()
+            val a = bodies[i]
+            val aMaxX = aabbMaxX[i]
+            val aMinY = aabbMinY[i]
+            val aMaxY = aabbMaxY[i]
+            for (q in p + 1 until m) {
+                val j = (sweepKeys[q] and 0xFFFFFFFFL).toInt()
+                // Rangés par bord gauche : dès que le suivant commence après la fin
+                // de celui-ci, tous ceux d'après aussi. C'est tout le principe.
+                if (aabbMinX[j] > aMaxX) break
+                if (aabbMinY[j] > aMaxY || aabbMaxY[j] < aMinY) continue
+                val b = bodies[j]
+                // Les deux renvois qui suivent écartent des couples qui ne peuvent plus
+                // rien changer — sauf quand l'un des deux est un capteur, qui n'a
+                // justement rien à changer et tout à constater. Une boule qui s'endort
+                // à l'intérieur d'une zone de détection en sortirait sinon aussitôt,
+                // faute d'avoir été revue, et le jeu croirait qu'elle est repartie.
+                val watched = a.isSensor || b.isSensor
+                if (!watched) {
+                    if (a.immovable && b.immovable) continue
+                    // Deux corps qui dorment ne peuvent rien se faire. C'est ici que se
+                    // gagne le prix d'un château au repos : la paire est reconnue et
+                    // abandonnée en trois comparaisons.
+                    if (a.frozen && b.frozen) continue
+                }
+                if (!a.collidesWith(b)) continue
+                if (np == pairBuf.size) pairBuf = pairBuf.copyOf(np * 2)
+                val lo = if (i < j) i else j
+                val hi = if (i < j) j else i
+                pairBuf[np++] = (lo.toLong() shl 32) or hi.toLong()
+            }
+        }
+
+        // 3. Remise en ordre : le solveur corrige les contacts l'un après l'autre,
+        // donc l'ordre dans lequel on les découvre change le résultat. Triées par
+        // indices de corps, les paires retrouvent l'ordre de la boucle « tous contre
+        // tous », qui ne dépend que de l'ordre des corps dans le monde.
+        java.util.Arrays.sort(pairBuf, 0, np)
+
+        for (k in 0 until np) {
+            val key = pairBuf[k]
+            val a = bodies[(key ushr 32).toInt()]
+            val b = bodies[(key and 0xFFFFFFFFL).toInt()]
+            if (connectedByJoint(a, b)) continue
+            narrowPhase(a, b)
+        }
+
+        // Nettoyage des contacts qui n'ont pas été revus (corps écartés ou retirés)
+        doomed.clear()
+        for ((k, arb) in arbiters) if (arb.stamp != stamp) doomed.add(k)
+        for (k in doomed) arbiters.remove(k)
+
+        // Même chose pour les couples suivis, mais eux le disent en partant : un couple
+        // qu'on ne revoit pas est un contact qui s'est défait.
+        doomedTouches.clear()
+        for ((k, t) in touches) if (t.stamp != stamp) doomedTouches.add(k)
+        for (k in doomedTouches) {
+            val t = touches.remove(k) ?: continue
+            pushEvent(t.a, t.b, begin = false, sensor = t.sensor)
+        }
+
+        // Le solveur travaillera sur cette liste, dans l'ordre de la table.
+        active.clear()
+        for (arb in arbiters.values) active.add(arb)
+    }
+
+    /** Contacts entre deux corps proches, forme par forme. */
+    private fun narrowPhase(a: PhysBody, b: PhysBody) {
+        // Une zone de détection constate et ne pousse pas : pas de contact à fabriquer,
+        // donc rien à résoudre, et surtout **aucun dormeur à réveiller**. Une zone qui
+        // tiendrait éveillé ce qu'elle observe coûterait, à elle seule, le prix d'un
+        // décor entier qui aurait dû dormir.
+        //
+        // Un seul recouvrement suffit à répondre : on s'arrête au premier trouvé.
+        if (a.isSensor || b.isSensor) {
+            for (pa in a.parts.indices) {
+                for (pb in b.parts.indices) {
+                    if (Collider.collide(a, pa, b, pb, fresh) > 0) {
+                        markTouching(a, b, sensor = true)
+                        return
+                    }
+                }
+            }
+            return
+        }
+
+        var touching = false
+        for (pa in a.parts.indices) {
+            for (pb in b.parts.indices) {
+                val n = Collider.collide(a, pa, b, pb, fresh)
+                if (n <= 0) continue
+                touching = true
+                val arb = arbiters.getOrPut(pairKey(a, pa, b, pb)) { Arbiter(a, b, pa, pb) }
+                arb.update(fresh, n, Collider.normalX, Collider.normalY)
+                arb.stamp = stamp
+                // Un contact avéré avec un corps éveillé réveille le dormeur : c'est
+                // ainsi qu'un effondrement se propage de proche en proche dans une
+                // construction endormie, sans qu'on ait à tenir la liste de qui
+                // s'appuie sur qui.
+                //
+                // Et **seulement le dormeur** : réveiller un corps déjà éveillé
+                // remettrait son horloge de repos à zéro à chaque image, et plus
+                // rien ne s'endormirait jamais — une pile de caisses posées se
+                // réveillant elle-même indéfiniment par ses propres contacts.
+                if (b.sleeping && !a.frozen) b.wake()
+                if (a.sleeping && !b.frozen) a.wake()
+            }
+        }
+        if (touching) markTouching(a, b, sensor = false)
+    }
+
+    /**
+     * Note que ces deux corps se touchent à ce pas-ci, et annonce la naissance du
+     * contact si c'est la première fois.
+     */
+    private fun markTouching(a: PhysBody, b: PhysBody, sensor: Boolean) {
+        val key = touchKey(a, b)
+        val known = touches[key]
+        if (known != null) {
+            known.stamp = stamp
+            return
+        }
+        touches[key] = Touch(a, b, sensor).also { it.stamp = stamp }
+        pushEvent(a, b, begin = true, sensor = sensor)
+    }
+
+    /**
+     * Range un événement dans la liste, en réemployant l'objet de la fois d'avant.
+     *
+     * [events] ne contient jamais que les premiers éléments de [eventPool], dans le
+     * même ordre : sa taille est donc exactement l'indice du prochain objet libre.
+     */
+    private fun pushEvent(a: PhysBody, b: PhysBody, begin: Boolean, sensor: Boolean) {
+        val slot = events.size
+        val e = if (slot < eventPool.size) eventPool[slot]
+        else ContactEvent().also { eventPool.add(it) }
+        e.set(a, b, begin, sensor)
+        events.add(e)
+    }
+
+    /**
+     * Clé d'un couple de **corps**, indépendante de l'ordre dans lequel on les présente.
+     * À ne pas confondre avec [pairKey], qui descend jusqu'aux formes.
+     */
+    private fun touchKey(a: PhysBody, b: PhysBody): Long {
+        val ida = a.id.toLong() and 0xFFFFFFFFL
+        val idb = b.id.toLong() and 0xFFFFFFFFL
+        return if (ida < idb) (ida shl 32) or idb else (idb shl 32) or ida
+    }
+
+    /**
+     * Les bits d'un flottant, réarrangés pour que l'ordre entier soit l'ordre réel.
+     *
+     * Trier des couples (position, indice) sans rien allouer demande de les loger dans
+     * un entier long. Les flottants positifs se comparent déjà correctement bit à bit ;
+     * les négatifs se comparent à l'envers, d'où le retournement.
+     */
+    private fun sortableBits(f: Float): Long {
+        val b = f.toRawBits()
+        val k = if (b < 0) b.inv() else b xor Int.MIN_VALUE
+        return k.toLong() and 0xFFFFFFFFL
+    }
+
+    /** Vrai si une liaison relie déjà ces deux corps et interdit leur collision. */
+    private fun connectedByJoint(a: PhysBody, b: PhysBody): Boolean {
+        for (j in joints) {
+            // Une liaison décrochée n'existe plus physiquement : elle ne doit pas
+            // rendre ses anciennes pièces fantômes l'une pour l'autre.
+            if (!j.enabled) continue
+            if (j.collideConnected) continue
+            if ((j.a === a && j.b === b) || (j.a === b && j.b === a)) return true
+        }
+        return false
+    }
+
+    /**
+     * Clé d'un contact : le couple de corps **et** le couple de formes touchées.
+     * Deux formes d'un même corps qui touchent le même voisin doivent avoir chacune
+     * leur propre suivi, sinon leurs impulsions mémorisées se mélangeraient.
+     */
+    private fun pairKey(a: PhysBody, pa: Int, b: PhysBody, pb: Int): Long {
+        val ida = a.id.toLong() and 0xFFFFFF
+        val idb = b.id.toLong() and 0xFFFFFF
+        return (ida shl 40) or (idb shl 16) or ((pa.toLong() and 0xFF) shl 8) or (pb.toLong() and 0xFF)
+    }
+}

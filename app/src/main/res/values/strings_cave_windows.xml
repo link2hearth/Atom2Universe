@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_block_window_plank">Oak window</string>
+    <string name="cave_block_window_wood_plank_white">Birch window</string>
+    <string name="cave_block_window_plank_red">Redwood window</string>
+    <string name="cave_block_window_plank_dark">Dark wood window</string>
+    <string name="cave_block_window_plank_jungle">Jungle window</string>
+    <string name="cave_block_window_plank_blue">Blue window</string>
+    <string name="cave_block_window_plank_purple">Purple window</string>
+    <string name="cave_block_window_plank_yellow">Yellow window</string>
+    <string name="cave_block_window_plank_pink">Pink window</string>
+    <string name="cave_block_window_plank_sapin">Fir window</string>
+    <string name="cave_window_hint">Fixed window, one block high, centred in the block. Faces you when placed. Transparent glazing with a solid wooden frame.</string>
+</resources>

@@ -1,0 +1,1547 @@
+﻿package com.Atom2Universe.app.music.sync
+
+import android.content.Context
+import android.os.Build
+import android.os.SystemClock
+import android.util.Log
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.Atom2Universe.app.music.AlbumFavoritesManager
+import com.Atom2Universe.app.music.ArtistCustomizationManager
+import com.Atom2Universe.app.music.MusicFavoritesManager
+import com.Atom2Universe.app.music.MusicPlaylistManager
+import com.Atom2Universe.app.readingprogress.sync.ReadingProgressSyncManager
+import com.Atom2Universe.app.stats.sync.StatsSyncManager
+import com.Atom2Universe.app.crypto.sync.GamesSyncManager
+import com.Atom2Universe.app.music.data.MusicDatabase
+import com.Atom2Universe.app.music.sync.algorithm.AlbumFavoritesMerger
+import com.Atom2Universe.app.music.sync.algorithm.ArtistFavoritesMerger
+import com.Atom2Universe.app.music.sync.algorithm.FavoritesMerger
+import com.Atom2Universe.app.music.sync.algorithm.LyricsMerger
+import com.Atom2Universe.app.music.sync.algorithm.ListenEventsMerger
+import com.Atom2Universe.app.music.sync.algorithm.PlaylistsMerger
+import com.Atom2Universe.app.music.sync.data.SyncMetadata
+import com.Atom2Universe.app.music.sync.data.SyncMetadataDao
+import com.Atom2Universe.app.music.sync.model.AlbumFavoritesSyncFile
+import com.Atom2Universe.app.music.sync.model.ArtistFavoritesSyncFile
+import com.Atom2Universe.app.music.sync.model.DeviceInfo
+import com.Atom2Universe.app.music.sync.model.EqPresetsSyncFile
+import com.Atom2Universe.app.music.sync.model.FavoritesSyncFile
+import com.Atom2Universe.app.music.sync.model.LyricsSyncFile
+import com.Atom2Universe.app.music.sync.model.PlaylistsSyncFile
+import com.Atom2Universe.app.music.sync.model.SyncAlbumFavoriteEntry
+import com.Atom2Universe.app.music.sync.model.SyncArtistFavoriteEntry
+import com.Atom2Universe.app.music.sync.model.SyncFavoriteEntry
+import com.Atom2Universe.app.music.sync.model.SyncLyricsEntry
+import com.Atom2Universe.app.music.sync.model.SyncEqPreset
+import com.Atom2Universe.app.music.sync.model.SyncPlaylistEntry
+import com.Atom2Universe.app.music.sync.model.ListenEventsSyncFile
+import com.Atom2Universe.app.music.sync.model.SyncManifest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
+import java.util.concurrent.TimeUnit
+
+/**
+ * Main coordinator for cloud synchronization.
+ *
+ * Responsibilities:
+ * - Manage sync state (enabled, last sync time, device ID)
+ * - Publier le journal d’écoutes local et importer celui des autres appareils
+ * - Track local changes (favorites, lyrics, playlists, EQ)
+ * - Coordinate sync with Google Drive
+ * - Schedule nightly sync via WorkManager
+ */
+object CloudSyncManager {
+
+    private const val TAG = "CloudSyncManager"
+    private const val WORK_NAME = "a2u_cloud_sync"
+    private const val WORK_NAME_DEBOUNCED = "a2u_debounced_sync"
+
+    // Empreinte du dernier journal d'écoutes publié, pour ne pas ré-uploader à l'identique
+    private const val PREFS_SYNC_STATE = "a2u_cloud_sync_state"
+    private const val KEY_UPLOADED_EVENTS_COUNT = "uploaded_events_total"
+    private const val KEY_UPLOADED_EVENTS_LATEST = "uploaded_events_latest"
+    private const val SYNC_HOUR = 3  // 3 AM
+
+    // Instant sync configuration
+    private const val DEBOUNCE_DELAY_MINUTES = 10L  // 10 minutes debounce
+    private const val STARTUP_SYNC_THRESHOLD_MS = 3600_000L  // 1 hour since last sync
+
+    /**
+     * Les journaux d'écoutes vus sur Drive pendant la phase de téléchargement.
+     *
+     * Sert à une seule chose : savoir si le nôtre y est encore. Sans cela, un
+     * journal effacé côté cloud (ménage, réinstallation) ne serait jamais
+     * republié, parce que le raccourci d'envoi ne regarde que l'état local.
+     */
+    private var remoteJournals: Set<String> = emptySet()
+
+    private lateinit var appContext: Context
+    private lateinit var syncMetadataDao: SyncMetadataDao
+
+    private var isInitialized = false
+    // Sync state
+    @Volatile
+    private var isSyncInProgress = false
+
+    /**
+     * Initializes the CloudSyncManager.
+     * Call this at app startup.
+     */
+    suspend fun init(context: Context) {
+        if (isInitialized) return
+
+        appContext = context.applicationContext
+        val db = MusicDatabase.getInstance(appContext)
+        syncMetadataDao = db.syncMetadataDao()
+
+        // Ensure device is registered
+        ensureDeviceRegistered()
+
+        isInitialized = true
+        Log.d(TAG, "CloudSyncManager initialized")
+    }
+
+    /**
+     * Ensures the device has a unique ID in the database.
+     */
+    private suspend fun ensureDeviceRegistered() {
+        val existing = syncMetadataDao.get()
+        if (existing == null) {
+            val deviceId = UUID.randomUUID().toString()
+            val deviceName = Build.MODEL ?: "Android Device"
+            syncMetadataDao.insert(
+                SyncMetadata(
+                    id = 1,
+                    deviceId = deviceId,
+                    deviceName = deviceName,
+                    lastSyncTimestamp = 0,
+                    syncEnabled = false
+                )
+            )
+            Log.d(TAG, "Registered device: $deviceName ($deviceId)")
+        }
+    }
+
+    /**
+     * Checks if sync is enabled and user is signed in.
+     */
+    suspend fun isSyncEnabled(): Boolean {
+        if (!isInitialized) return false
+        val googleSignInManager = GoogleSignInManager(appContext)
+        return googleSignInManager.isSignedIn() &&
+                (syncMetadataDao.isSyncEnabled() == true)
+    }
+
+    /**
+     * Enables or disables sync.
+     *
+     * Aucune "baseline" à construire : les écoutes vivent dans le journal
+     * listen_events, qui contient déjà tout l'historique (la migration
+     * one-shot de MusicPlayCountManager y a converti les earnedPlayCount).
+     * Le premier export publiera donc l'historique complet.
+     */
+    suspend fun setSyncEnabled(enabled: Boolean) {
+        syncMetadataDao.setSyncEnabled(enabled)
+
+        if (enabled) {
+            scheduleNightlySync()
+        } else {
+            cancelScheduledSync()
+            cancelDebouncedSync()
+        }
+        Log.d(TAG, "Sync enabled: $enabled")
+    }
+
+    /**
+     * Gets the last sync timestamp.
+     */
+    suspend fun getLastSyncTimestamp(): Long {
+        return syncMetadataDao.getLastSyncTimestamp() ?: 0
+    }
+
+    /**
+     * Gets the device ID.
+     */
+    suspend fun getDeviceId(): String {
+        if (!isInitialized) {
+            return UUID.randomUUID().toString()
+        }
+
+        val metadata = syncMetadataDao.get()
+        if (metadata == null) {
+            val deviceId = UUID.randomUUID().toString()
+            val deviceName = Build.MODEL ?: "Android Device"
+            syncMetadataDao.insert(
+                SyncMetadata(
+                    id = 1,
+                    deviceId = deviceId,
+                    deviceName = deviceName,
+                    lastSyncTimestamp = 0,
+                    syncEnabled = false
+                )
+            )
+            return deviceId
+        }
+
+        if (metadata.deviceId.isBlank()) {
+            val deviceId = UUID.randomUUID().toString()
+            syncMetadataDao.insert(metadata.copy(deviceId = deviceId))
+            return deviceId
+        }
+
+        return metadata.deviceId
+    }
+
+    /**
+     * Schedules the nightly sync job.
+     */
+    fun scheduleNightlySync() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+
+        val syncRequest = PeriodicWorkRequestBuilder<SyncWorker>(
+            repeatInterval = 1,
+            repeatIntervalTimeUnit = TimeUnit.DAYS
+        )
+            .setConstraints(constraints)
+            .setInitialDelay(calculateDelayToNight(), TimeUnit.MILLISECONDS)
+            .addTag(WORK_NAME)
+            .build()
+
+        WorkManager.getInstance(appContext).enqueueUniquePeriodicWork(
+            WORK_NAME,
+            ExistingPeriodicWorkPolicy.KEEP,
+            syncRequest
+        )
+
+        Log.d(TAG, "Scheduled nightly sync")
+    }
+
+    /**
+     * Cancels the scheduled sync job.
+     */
+    private fun cancelScheduledSync() {
+        WorkManager.getInstance(appContext).cancelUniqueWork(WORK_NAME)
+        Log.d(TAG, "Cancelled scheduled sync")
+    }
+
+    /**
+     * Calculates delay until next sync time (3 AM).
+     */
+    private fun calculateDelayToNight(): Long {
+        val now = Calendar.getInstance()
+        val target = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, SYNC_HOUR)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            if (before(now)) {
+                add(Calendar.DAY_OF_MONTH, 1)
+            }
+        }
+        return target.timeInMillis - now.timeInMillis
+    }
+
+    // ==================== Instant Sync Methods ====================
+
+    /**
+     * Triggers a debounced sync after data changes.
+     * Call this after any data modification (play count, favorites, lyrics, playlists, etc.)
+     *
+     * Uses WorkManager to schedule a sync in DEBOUNCE_DELAY_MINUTES.
+     * If called again before the delay expires, the existing work is replaced (timer resets).
+     *
+     * WorkManager ensures the sync runs even if:
+     * - The app is in the background
+     * - The screen is off
+     * - The device is in doze mode (will run when constraints are met)
+     */
+    fun triggerDebouncedSync() {
+        if (!isInitialized) {
+            Log.d(TAG, "triggerDebouncedSync: not initialized, skipping")
+            return
+        }
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .setInitialDelay(DEBOUNCE_DELAY_MINUTES, TimeUnit.MINUTES)
+            .addTag(WORK_NAME_DEBOUNCED)
+            .build()
+
+        // REPLACE policy: cancels any pending debounced sync and schedules a new one
+        // This creates the "debounce" effect - each new change resets the timer
+        WorkManager.getInstance(appContext).enqueueUniqueWork(
+            WORK_NAME_DEBOUNCED,
+            ExistingWorkPolicy.REPLACE,
+            syncRequest
+        )
+
+        Log.d(TAG, "Debounced sync scheduled in $DEBOUNCE_DELAY_MINUTES minutes (WorkManager)")
+
+        // Planifie aussi l'export Syncthing (même débounce)
+        SyncthingManager.scheduleExport()
+    }
+
+    /**
+     * Performs a sync at app startup if conditions are met.
+     * Call this when MusicPlayerActivity starts.
+     *
+     * Conditions for startup sync:
+     * - CloudSyncManager is initialized
+     * - Sync is enabled and user is signed in
+     * - Last sync was more than STARTUP_SYNC_THRESHOLD_MS ago
+     *
+     * Uses WorkManager for immediate execution with network constraint.
+     */
+    suspend fun syncOnStartup() {
+        if (!isInitialized) {
+            Log.d(TAG, "syncOnStartup: not initialized, skipping")
+            return
+        }
+
+        // Check if sync is enabled
+        if (!isSyncEnabled()) {
+            Log.d(TAG, "syncOnStartup: sync not enabled, skipping")
+            return
+        }
+
+        // Check time since last sync
+        val lastSync = getLastSyncTimestamp()
+        val timeSinceLastSync = System.currentTimeMillis() - lastSync
+
+        if (timeSinceLastSync < STARTUP_SYNC_THRESHOLD_MS) {
+            Log.d(TAG, "syncOnStartup: last sync was ${timeSinceLastSync / 60000} min ago, skipping (threshold: ${STARTUP_SYNC_THRESHOLD_MS / 60000} min)")
+            return
+        }
+
+        // Schedule immediate sync via WorkManager (respects network constraint)
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()
+            .setConstraints(constraints)
+            .addTag("startup_sync")
+            .build()
+
+        WorkManager.getInstance(appContext).enqueue(syncRequest)
+        Log.d(TAG, "Startup sync scheduled (last sync was ${timeSinceLastSync / 60000} min ago)")
+    }
+
+    /**
+     * Cancels any pending debounced sync.
+     * Call this when sync is disabled or user signs out.
+     */
+    fun cancelDebouncedSync() {
+        WorkManager.getInstance(appContext).cancelUniqueWork(WORK_NAME_DEBOUNCED)
+        Log.d(TAG, "Debounced sync cancelled")
+    }
+
+    // ==================== End Instant Sync Methods ====================
+
+    /** Les grandes étapes d'une sync, pour dire à l'écran où on en est. */
+    enum class SyncStep { MUSIC_DOWNLOAD, LISTENS, MUSIC_UPLOAD, STATS, READING, GAMES, NOTES }
+
+    /** Étiquette des mesures de durée : `adb logcat -s SyncTiming` suffit à les lire. */
+    private const val TIMING_TAG = "SyncTiming"
+
+    /**
+     * Chronomètre un morceau de la sync et écrit sa durée dans le journal.
+     *
+     * `inline` pour que le bloc puisse appeler des fonctions suspendues. Le temps est
+     * noté même si le bloc échoue : c'est souvent là qu'il est le plus instructif.
+     */
+    private inline fun <T> timed(label: String, block: () -> T): T {
+        val start = SystemClock.elapsedRealtime()
+        try {
+            return block()
+        } finally {
+            Log.i(TIMING_TAG, "$label : ${SystemClock.elapsedRealtime() - start} ms")
+        }
+    }
+
+    /**
+     * Performs immediate sync.
+     *
+     * @param onStep appelé au début de chaque grande étape, depuis un fil d'arrière-plan :
+     *   l'écran qui s'en sert doit repasser sur le fil principal.
+     */
+    suspend fun syncNow(onStep: (SyncStep) -> Unit = {}): SyncResult = withContext(Dispatchers.IO) {
+        Log.d(TAG, "Starting sync...")
+
+        if (!isInitialized) {
+            return@withContext SyncResult.NotInitialized
+        }
+
+        // Prevent concurrent syncs
+        if (isSyncInProgress) {
+            Log.d(TAG, "Sync already in progress, skipping")
+            return@withContext SyncResult.Error("Sync already in progress")
+        }
+
+        val googleSignInManager = GoogleSignInManager(appContext)
+        if (!googleSignInManager.isSignedIn()) {
+            return@withContext SyncResult.NotSignedIn
+        }
+
+        val account = googleSignInManager.getSignedInAccount()
+            ?: return@withContext SyncResult.NotSignedIn
+
+        isSyncInProgress = true
+        val syncStart = SystemClock.elapsedRealtime()
+        try {
+            val client = GoogleDriveAppDataClient(appContext, account)
+
+            // Phase 1: Download
+            onStep(SyncStep.MUSIC_DOWNLOAD)
+            timed("download manifest") { downloadManifest(client) }
+            val cloudFavorites = timed("download favoris") { downloadFavorites(client) }
+            val cloudLyrics = timed("download paroles") { downloadLyrics(client) }
+            val cloudEqPresets = timed("download égaliseur") { downloadEqPresets(client) }
+            val cloudPlaylists = timed("download playlists") { downloadPlaylists(client) }
+            val cloudAlbumFavorites = timed("download albums favoris") { downloadAlbumFavorites(client) }
+            val cloudArtistFavorites = timed("download artistes favoris") { downloadArtistFavorites(client) }
+
+            // Phase 2: Merge
+            onStep(SyncStep.LISTENS)
+            val importedEvents = timed("écoutes (download + fusion)") { downloadAndMergeListenEvents(client) }
+            Log.d(TAG, "Listen events imported: $importedEvents")
+            timed("fusion locale (favoris, paroles, égaliseur, playlists)") {
+                mergeFavorites(cloudFavorites)
+                mergeLyrics(cloudLyrics)
+                mergeEqPresets(cloudEqPresets)
+                mergePlaylists(cloudPlaylists)
+                mergeAlbumFavorites(cloudAlbumFavorites)
+                mergeArtistFavorites(cloudArtistFavorites)
+            }
+
+            // Phase 3: Upload
+            onStep(SyncStep.MUSIC_UPLOAD)
+            timed("upload écoutes") { uploadListenEvents(client) }
+            timed("upload favoris") { uploadFavorites(client) }
+            timed("upload paroles") { uploadLyrics(client, cloudLyrics) }
+            timed("upload égaliseur") { uploadEqPresets(client) }
+            timed("upload playlists") { uploadPlaylists(client) }
+            timed("upload albums favoris") { uploadAlbumFavorites(client) }
+            timed("upload artistes favoris") { uploadArtistFavorites(client) }
+
+            timed("upload manifest") { updateManifest(client) }
+
+            // Phase 3.5: Sync stats (usage sessions)
+            onStep(SyncStep.STATS)
+            try {
+                val statsResult = timed("statistiques d'usage") { StatsSyncManager.syncStats() }
+                Log.d(TAG, "Stats sync: ${statsResult.message}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Stats sync failed (non-critical)", e)
+                // Continue sync even if stats fail
+            }
+
+            // Phase 3.6: Sync reading progress (books/comics)
+            onStep(SyncStep.READING)
+            try {
+                val progressResult = timed("progression de lecture") { ReadingProgressSyncManager.syncProgress() }
+                Log.d(TAG, "Reading progress sync: ${progressResult.message}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Reading progress sync failed (non-critical)", e)
+                // Continue sync even if progress sync fails
+            }
+
+            // Phase 3.7 : records, compteurs et suppressions des jeux. Jamais la partie du
+            // clicker : elle peut demander un choix, qu'une sync de nuit ne saurait pas poser.
+            onStep(SyncStep.GAMES)
+            try {
+                val gamesResult = timed("jeux (records et compteurs)") { GamesSyncManager.syncSharedStats() }
+                Log.d(TAG, "Games shared stats sync: $gamesResult")
+            } catch (e: Exception) {
+                Log.e(TAG, "Games shared stats sync failed (non-critical)", e)
+            }
+
+            // Phase 3.8 : les notes (un fichier, fusionné note par note).
+            onStep(SyncStep.NOTES)
+            try {
+                val notesResult = timed("notes") { com.Atom2Universe.app.notes.sync.NotesSyncManager.sync(appContext) }
+                Log.d(TAG, "Notes sync: ${notesResult.outcome}")
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e(TAG, "Notes sync failed (non-critical)", e)
+            }
+
+            // Update sync timestamp
+            syncMetadataDao.updateLastSyncTimestamp(System.currentTimeMillis())
+
+            Log.d(TAG, "Sync completed successfully")
+            SyncResult.Success
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Sync failed", e)
+            SyncResult.Error(e.message ?: "Unknown error")
+        } finally {
+            Log.i(TIMING_TAG, "TOTAL : ${SystemClock.elapsedRealtime() - syncStart} ms")
+            isSyncInProgress = false
+        }
+    }
+
+    /**
+     * Downloads the sync manifest from Google Drive.
+     */
+    private suspend fun downloadManifest(client: GoogleDriveAppDataClient): SyncManifest {
+        val json = client.readJsonFile("sync_manifest.json")
+        return if (json != null) {
+            try {
+                SyncManifest.fromJson(JSONObject(json))
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing manifest, creating new one", e)
+                SyncManifest()
+            }
+        } else {
+            SyncManifest()
+        }
+    }
+
+    /**
+     * Télécharge le journal d'écoutes des AUTRES appareils et le fusionne.
+     *
+     * Chaque appareil publie un unique fichier a2u_events_[deviceId].json,
+     * réécrit à chaque sync. Comme chaque écoute porte un UUID, la fusion est
+     * une union dédupliquée : re-télécharger le même fichier ne change rien,
+     * et l'ordre des appareils n'a aucune importance.
+     *
+     * @return nombre d'écoutes réellement ajoutées localement
+     */
+    private suspend fun downloadAndMergeListenEvents(client: GoogleDriveAppDataClient): Int {
+        val selfDeviceId = DeviceIdentity.getDeviceId(appContext)
+        val files = client.listFilesWithPrefix(ListenEventsSyncFile.FILE_PREFIX)
+        remoteJournals = files.toSet()
+        var imported = 0
+
+        for (filename in files) {
+            if (!ListenEventsSyncFile.isForeignEventsFile(filename, selfDeviceId)) continue
+            try {
+                val content = client.readJsonFile(filename) ?: continue
+                val payload = ListenEventsSyncFile.decode(JSONObject(content))
+                if (payload == null) {
+                    Log.w(TAG, "Unknown format in $filename, skipping")
+                    continue
+                }
+                imported += ListenEventsMerger.merge(appContext, payload)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing listen events file: $filename", e)
+            }
+        }
+
+        Log.d(TAG, "Listen events: read ${files.size} device file(s), imported $imported new")
+        return imported
+    }
+
+    /**
+     * Downloads favorites file if newer than local.
+     */
+    private suspend fun downloadFavorites(client: GoogleDriveAppDataClient): FavoritesSyncFile {
+        val json = client.readJsonFile(FavoritesSyncFile.FILENAME)
+        return if (json != null) {
+            try {
+                FavoritesSyncFile.fromJson(JSONObject(json))
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing favorites", e)
+                FavoritesSyncFile.empty()
+            }
+        } else {
+            FavoritesSyncFile.empty()
+        }
+    }
+
+    /**
+     * Télécharge le fichier des paroles, une seule fois par sync : la fusion et l'envoi
+     * s'en servent tous les deux.
+     *
+     * @return le fichier (vide s'il n'existe pas encore), ou null s'il est illisible.
+     *   Dans ce dernier cas l'envoi est sauté : renvoyer nos seules paroles écraserait
+     *   celles des autres appareils.
+     */
+    private suspend fun downloadLyrics(client: GoogleDriveAppDataClient): LyricsSyncFile? {
+        val json = client.readJsonFile(LyricsSyncFile.FILENAME) ?: return LyricsSyncFile.empty()
+        return try {
+            LyricsSyncFile.fromJson(JSONObject(json))
+        } catch (e: Exception) {
+            Log.e(TAG, "Error parsing lyrics", e)
+            null
+        }
+    }
+
+    /**
+     * Merges cloud favorites with local data.
+     */
+    private suspend fun mergeFavorites(cloudFavorites: FavoritesSyncFile) {
+        if (cloudFavorites.favorites.isEmpty()) return
+        FavoritesMerger.merge(appContext, cloudFavorites)
+    }
+
+    /**
+     * Merges cloud lyrics with local data.
+     */
+    private suspend fun mergeLyrics(cloudLyrics: LyricsSyncFile?) {
+        if (cloudLyrics == null || cloudLyrics.lyrics.isEmpty()) return
+        LyricsMerger.merge(appContext, cloudLyrics)
+    }
+
+    // ==================== Playlists Sync ====================
+
+    /**
+     * Downloads playlists sync file.
+     */
+    private suspend fun downloadPlaylists(client: GoogleDriveAppDataClient): PlaylistsSyncFile {
+        val json = client.readJsonFile(PlaylistsSyncFile.FILENAME)
+        return if (json != null) {
+            try {
+                PlaylistsSyncFile.fromJson(JSONObject(json))
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing playlists", e)
+                PlaylistsSyncFile.empty()
+            }
+        } else {
+            PlaylistsSyncFile.empty()
+        }
+    }
+
+    /**
+     * Merges cloud playlists with local data.
+     */
+    private suspend fun mergePlaylists(cloudPlaylists: PlaylistsSyncFile) {
+        if (cloudPlaylists.playlists.isEmpty()) return
+        PlaylistsMerger.merge(appContext, cloudPlaylists)
+    }
+
+    /**
+     * Uploads local playlists to Google Drive.
+     * Downloads existing cloud data first and merges with local (last-write-wins).
+     */
+    private suspend fun uploadPlaylists(client: GoogleDriveAppDataClient) {
+        val localPlaylists = MusicPlaylistManager.getAllPlaylistsForSync()
+        if (localPlaylists.isEmpty() && MusicPlaylistManager.getPlaylistsCount() == 0) {
+            Log.d(TAG, "No playlists to upload")
+            return
+        }
+
+        // Download existing cloud playlists
+        val cloudPlaylistsMap = mutableMapOf<String, SyncPlaylistEntry>()
+        try {
+            val cloudJson = client.readJsonFile(PlaylistsSyncFile.FILENAME)
+            if (cloudJson != null) {
+                val cloudFile = PlaylistsSyncFile.fromJson(JSONObject(cloudJson))
+                for (entry in cloudFile.playlists) {
+                    cloudPlaylistsMap[entry.id] = entry
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not read existing playlists from cloud", e)
+        }
+
+        // Merge: local takes precedence if timestamps are newer
+        for (localEntry in localPlaylists) {
+            val cloudEntry = cloudPlaylistsMap[localEntry.id]
+            if (cloudEntry == null) {
+                cloudPlaylistsMap[localEntry.id] = localEntry
+            } else {
+                val localTs = localEntry.getLastModifiedTimestamp()
+                val cloudTs = cloudEntry.getLastModifiedTimestamp()
+                if (localTs >= cloudTs) {
+                    cloudPlaylistsMap[localEntry.id] = localEntry
+                }
+            }
+        }
+
+        // Upload merged data
+        val syncFile = PlaylistsSyncFile(
+            version = 1,
+            lastModified = System.currentTimeMillis(),
+            playlists = cloudPlaylistsMap.values.toList()
+        )
+
+        val success = client.writeJsonFile(PlaylistsSyncFile.FILENAME, syncFile.toJson().toString())
+        if (success == true) {
+            MusicPlaylistManager.clearDeletedPlaylistsCache()
+            Log.d(TAG, "Uploaded ${cloudPlaylistsMap.size} playlists")
+        }
+    }
+
+    // ==================== Album Favorites Sync ====================
+
+    /**
+     * Downloads album favorites sync file.
+     */
+    private suspend fun downloadAlbumFavorites(client: GoogleDriveAppDataClient): AlbumFavoritesSyncFile {
+        val json = client.readJsonFile(AlbumFavoritesSyncFile.FILENAME)
+        return if (json != null) {
+            try {
+                AlbumFavoritesSyncFile.fromJson(JSONObject(json))
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing album favorites", e)
+                AlbumFavoritesSyncFile.empty()
+            }
+        } else {
+            AlbumFavoritesSyncFile.empty()
+        }
+    }
+
+    /**
+     * Merges cloud album favorites with local data.
+     */
+    private suspend fun mergeAlbumFavorites(cloudFavorites: AlbumFavoritesSyncFile) {
+        if (cloudFavorites.favorites.isEmpty()) return
+        AlbumFavoritesMerger.merge(appContext, cloudFavorites)
+    }
+
+    /**
+     * Uploads local album favorites to Google Drive.
+     * Downloads existing cloud data first and merges with local (last-write-wins).
+     */
+    private suspend fun uploadAlbumFavorites(client: GoogleDriveAppDataClient) {
+        val localFavorites = AlbumFavoritesManager.getAllFavoritesForSync()
+        if (localFavorites.isEmpty() && AlbumFavoritesManager.getFavoritesCount() == 0) {
+            Log.d(TAG, "No album favorites to upload")
+            return
+        }
+
+        // Download existing cloud favorites
+        val cloudFavoritesMap = mutableMapOf<String, SyncAlbumFavoriteEntry>()
+        try {
+            val cloudJson = client.readJsonFile(AlbumFavoritesSyncFile.FILENAME)
+            if (cloudJson != null) {
+                val cloudFile = AlbumFavoritesSyncFile.fromJson(JSONObject(cloudJson))
+                for (entry in cloudFile.favorites) {
+                    cloudFavoritesMap[entry.key] = entry
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not read existing album favorites from cloud", e)
+        }
+
+        // Merge: local takes precedence if timestamps are newer
+        for (localEntry in localFavorites) {
+            val cloudEntry = cloudFavoritesMap[localEntry.key]
+            if (cloudEntry == null) {
+                cloudFavoritesMap[localEntry.key] = localEntry
+            } else {
+                val localTs = localEntry.getLastModifiedTimestamp()
+                val cloudTs = cloudEntry.getLastModifiedTimestamp()
+                if (localTs >= cloudTs) {
+                    cloudFavoritesMap[localEntry.key] = localEntry
+                }
+            }
+        }
+
+        // Upload merged data
+        val syncFile = AlbumFavoritesSyncFile(
+            version = 1,
+            lastModified = System.currentTimeMillis(),
+            favorites = cloudFavoritesMap.values.toList()
+        )
+
+        val success = client.writeJsonFile(AlbumFavoritesSyncFile.FILENAME, syncFile.toJson().toString())
+        if (success == true) {
+            AlbumFavoritesManager.clearDeletedFavoritesCache()
+            Log.d(TAG, "Uploaded ${cloudFavoritesMap.size} album favorites")
+        }
+    }
+
+    // ==================== Artist Favorites Sync ====================
+
+    /**
+     * Downloads artist favorites sync file.
+     */
+    private suspend fun downloadArtistFavorites(client: GoogleDriveAppDataClient): ArtistFavoritesSyncFile {
+        val json = client.readJsonFile(ArtistFavoritesSyncFile.FILENAME)
+        return if (json != null) {
+            try {
+                ArtistFavoritesSyncFile.fromJson(JSONObject(json))
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing artist favorites", e)
+                ArtistFavoritesSyncFile.empty()
+            }
+        } else {
+            ArtistFavoritesSyncFile.empty()
+        }
+    }
+
+    /**
+     * Merges cloud artist favorites with local data.
+     */
+    private suspend fun mergeArtistFavorites(cloudFavorites: ArtistFavoritesSyncFile) {
+        if (cloudFavorites.favorites.isEmpty()) return
+        ArtistFavoritesMerger.merge(appContext, cloudFavorites)
+    }
+
+    /**
+     * Uploads local artist favorites to Google Drive.
+     * Downloads existing cloud data first and merges with local (last-write-wins).
+     */
+    private suspend fun uploadArtistFavorites(client: GoogleDriveAppDataClient) {
+        val localFavorites = ArtistCustomizationManager.getAllFavoritesForSync()
+        if (localFavorites.isEmpty() && ArtistCustomizationManager.getFavoriteArtistsCount() == 0) {
+            Log.d(TAG, "No artist favorites to upload")
+            return
+        }
+
+        // Download existing cloud favorites
+        val cloudFavoritesMap = mutableMapOf<String, SyncArtistFavoriteEntry>()
+        try {
+            val cloudJson = client.readJsonFile(ArtistFavoritesSyncFile.FILENAME)
+            if (cloudJson != null) {
+                val cloudFile = ArtistFavoritesSyncFile.fromJson(JSONObject(cloudJson))
+                for (entry in cloudFile.favorites) {
+                    cloudFavoritesMap[entry.key] = entry
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not read existing artist favorites from cloud", e)
+        }
+
+        // Merge: local takes precedence if timestamps are newer
+        for (localEntry in localFavorites) {
+            val cloudEntry = cloudFavoritesMap[localEntry.key]
+            if (cloudEntry == null) {
+                cloudFavoritesMap[localEntry.key] = localEntry
+            } else {
+                val localTs = localEntry.getLastModifiedTimestamp()
+                val cloudTs = cloudEntry.getLastModifiedTimestamp()
+                if (localTs >= cloudTs) {
+                    cloudFavoritesMap[localEntry.key] = localEntry
+                }
+            }
+        }
+
+        // Upload merged data
+        val syncFile = ArtistFavoritesSyncFile(
+            version = 1,
+            lastModified = System.currentTimeMillis(),
+            favorites = cloudFavoritesMap.values.toList()
+        )
+
+        val success = client.writeJsonFile(ArtistFavoritesSyncFile.FILENAME, syncFile.toJson().toString())
+        if (success == true) {
+            ArtistCustomizationManager.clearDeletedFavoritesCache()
+            Log.d(TAG, "Uploaded ${cloudFavoritesMap.size} artist favorites")
+        }
+    }
+
+    /**
+     * Publie le journal d'écoutes de CET appareil sur Drive.
+     *
+     * Un seul fichier par appareil, réécrit intégralement à chaque sync
+     * (a2u_events_[deviceId].json). Pas de fichier journalier à accumuler
+     * ni à nettoyer : l'appareil est toujours seul à écrire le sien, donc
+     * aucun conflit d'écriture n'est possible.
+     */
+    private suspend fun uploadListenEvents(client: GoogleDriveAppDataClient) {
+        val deviceId = DeviceIdentity.getDeviceId(appContext)
+        val payload = ListenEventsMerger.buildPayload(appContext, deviceId)
+
+        val total = payload.totalListenCount()
+        if (total == 0L) {
+            Log.d(TAG, "No local listen events to upload")
+            return
+        }
+
+        // Le fichier est réécrit en entier à chaque fois : on saute l'upload si le
+        // journal n'a pas bougé depuis la dernière publication. Le journal étant
+        // append-only, le total et la date de la plus récente suffisent à le dire.
+        val latestAt = payload.events.maxOfOrNull { it.listenedAt }
+            ?: payload.archive.maxOfOrNull { it.lastAt }
+            ?: 0L
+        val filename = ListenEventsSyncFile.filenameFor(deviceId)
+        val prefs = appContext.getSharedPreferences(PREFS_SYNC_STATE, Context.MODE_PRIVATE)
+        if (prefs.getLong(KEY_UPLOADED_EVENTS_COUNT, -1L) == total &&
+            prefs.getLong(KEY_UPLOADED_EVENTS_LATEST, -1L) == latestAt &&
+            remoteJournals.contains(filename)
+        ) {
+            Log.d(TAG, "Listen events unchanged since last upload ($total), skipping")
+            return
+        }
+
+        val body = ListenEventsSyncFile.encode(payload).toString()
+        val success = client.writeJsonFile(filename, body)
+
+        if (success) {
+            prefs.edit()
+                .putLong(KEY_UPLOADED_EVENTS_COUNT, total)
+                .putLong(KEY_UPLOADED_EVENTS_LATEST, latestAt)
+                .apply()
+            Log.d(
+                TAG,
+                "Uploaded $total listen events → $filename " +
+                        "(${payload.events.size} détaillées, ${payload.archive.size} morceaux résumés, " +
+                        "${body.length / 1024} Ko)"
+            )
+        } else {
+            Log.e(TAG, "Failed to upload listen events")
+        }
+    }
+
+    /**
+     * Uploads favorites to Google Drive.
+     * Merges local favorites (including deletions) with cloud data to preserve
+     * all soft-delete entries and their timestamps for proper conflict resolution.
+     */
+    private suspend fun uploadFavorites(client: GoogleDriveAppDataClient) {
+        val localFavorites = FavoritesMerger.getLocalFavorites(appContext)
+
+        // Download existing cloud favorites to merge
+        val cloudJson = client.readJsonFile(FavoritesSyncFile.FILENAME)
+        val cloudFavorites = if (cloudJson != null) {
+            try {
+                FavoritesSyncFile.fromJson(JSONObject(cloudJson)).favorites
+            } catch (_: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+
+        // Merge: local takes precedence, but preserve cloud entries not in local
+        val mergedMap = mutableMapOf<String, SyncFavoriteEntry>()
+
+        // Start with cloud favorites
+        for (cloudEntry in cloudFavorites) {
+            mergedMap[cloudEntry.key] = cloudEntry
+        }
+
+        // Override/add with local favorites (including soft-deleted ones)
+        for (localEntry in localFavorites) {
+            val existing = mergedMap[localEntry.key]
+            if (existing == null) {
+                // New entry from local
+                mergedMap[localEntry.key] = localEntry
+            } else {
+                // Conflict: use the one with the most recent timestamp
+                val localTimestamp = localEntry.getLastModifiedTimestamp()
+                val cloudTimestamp = existing.getLastModifiedTimestamp()
+
+                if (localTimestamp >= cloudTimestamp) {
+                    mergedMap[localEntry.key] = localEntry
+                }
+            }
+        }
+
+        val mergedFavorites = mergedMap.values.toList()
+
+        if (mergedFavorites.isEmpty()) {
+            Log.d(TAG, "No favorites to upload")
+            return
+        }
+
+        val syncFile = FavoritesSyncFile(
+            version = 2,
+            lastModified = System.currentTimeMillis(),
+            favorites = mergedFavorites
+        )
+
+        val success = client.writeJsonFile(FavoritesSyncFile.FILENAME, syncFile.toJson().toString())
+        if (success == true) {
+            // Clear the deleted favorites cache since they've been uploaded
+            MusicFavoritesManager.clearDeletedFavoritesCache()
+            Log.d(TAG, "Uploaded ${mergedFavorites.size} favorites (merged with cloud)")
+        } else {
+            Log.e(TAG, "Failed to upload favorites")
+        }
+    }
+
+    /**
+     * Uploads lyrics to Google Drive.
+     * Merges local lyrics (including deletions) with cloud data for proper sync.
+     *
+     * Le cloud ne porte que les paroles trouvées en ligne ou saisies à la main. Celles
+     * lues dans le tag d'un MP3 y étaient envoyées autrefois : elles sont retirées ici,
+     * à chaque envoi, et le fichier maigrit tout seul.
+     *
+     * Chaque entrée n'y reste que 90 jours après son ajout, sa modification ou sa
+     * suppression ([LyricsMerger.CLOUD_RETENTION_MS]) : le temps que tous les appareils
+     * la reçoivent. Les appareils qui l'ont reçue la gardent ; le cloud, non.
+     */
+    private suspend fun uploadLyrics(client: GoogleDriveAppDataClient, cloudFile: LyricsSyncFile?) {
+        if (cloudFile == null) {
+            Log.w(TAG, "Cloud lyrics unreadable, upload skipped")
+            return
+        }
+        val localLyrics = LyricsMerger.getLocalLyrics(appContext)
+        val cloudLyrics = cloudFile.lyrics
+
+        // Merge: local takes precedence, but preserve cloud entries not in local
+        val mergedMap = mutableMapOf<String, SyncLyricsEntry>()
+
+        val cutoff = System.currentTimeMillis() - LyricsMerger.CLOUD_RETENTION_MS
+
+        // Start with cloud lyrics
+        for (cloudEntry in cloudLyrics) {
+            // Lues dans un fichier : chaque appareil les a déjà dans son propre MP3.
+            if (cloudEntry.source == LyricsMerger.SOURCE_FILE) continue
+            // Plus de 90 jours : tous les appareils ont eu le temps de la recevoir.
+            if (cloudEntry.getLastModifiedTimestamp() < cutoff) continue
+            mergedMap[cloudEntry.key] = cloudEntry
+        }
+
+        // Override/add with local lyrics (including soft-deleted ones)
+        for (localEntry in localLyrics) {
+            // Même règle côté appareil : sans elle, l'appareil qui a trouvé ces paroles
+            // les renverrait à chaque sync et elles ne quitteraient jamais le cloud.
+            if (localEntry.getLastModifiedTimestamp() < cutoff) continue
+            val existing = mergedMap[localEntry.key]
+            if (existing == null) {
+                mergedMap[localEntry.key] = localEntry
+            } else {
+                // Conflict: use the one with the most recent timestamp
+                val localTimestamp = localEntry.getLastModifiedTimestamp()
+                val cloudTimestamp = existing.getLastModifiedTimestamp()
+
+                if (localTimestamp >= cloudTimestamp) {
+                    mergedMap[localEntry.key] = localEntry
+                }
+            }
+        }
+
+        // Une marque de suppression n'a besoin que de sa clé et de sa date : le texte
+        // des paroles effacées n'a plus rien à faire dans le cloud.
+        val mergedLyrics = mergedMap.values.map { if (it.isActive()) it else it.copy(lyrics = "") }
+
+        // Rien à garder : on n'écrit un fichier vide que s'il reste quelque chose à
+        // nettoyer, sinon on n'en crée pas pour rien.
+        if (mergedLyrics.isEmpty() && cloudLyrics.isEmpty()) {
+            Log.d(TAG, "No lyrics to upload")
+            return
+        }
+
+        val syncFile = LyricsSyncFile(
+            version = 1,
+            lastModified = System.currentTimeMillis(),
+            lyrics = mergedLyrics
+        )
+
+        val success = client.writeJsonFile(LyricsSyncFile.FILENAME, syncFile.toJson().toString())
+        if (success == true) {
+            // Clear the deleted lyrics cache since they've been uploaded
+            LyricsMerger.clearDeletedCache(appContext)
+            Log.d(TAG, "Uploaded ${mergedLyrics.size} lyrics entries (merged with cloud)")
+        } else {
+            Log.e(TAG, "Failed to upload lyrics")
+        }
+    }
+
+    // ==================== EQ PRESETS SYNC ====================
+
+    private const val DELETED_EQ_PRESETS_FILENAME = "deleted_eq_presets.json"
+    private val deletedEqPresetsCache = mutableMapOf<String, SyncEqPreset>()
+    private var isDeletedEqCacheLoaded = false
+
+    /**
+     * Downloads EQ presets file from Google Drive.
+     */
+    private suspend fun downloadEqPresets(client: GoogleDriveAppDataClient): EqPresetsSyncFile {
+        val json = client.readJsonFile(EqPresetsSyncFile.FILENAME)
+        return if (json != null) {
+            try {
+                EqPresetsSyncFile.fromJson(JSONObject(json))
+            } catch (e: Exception) {
+                Log.e(TAG, "Error parsing EQ presets", e)
+                EqPresetsSyncFile()
+            }
+        } else {
+            EqPresetsSyncFile()
+        }
+    }
+
+    /**
+     * Merges cloud EQ presets with local data.
+     * Only custom presets are synced (not system presets).
+     * Supports soft-delete for proper cross-device sync.
+     */
+    private suspend fun mergeEqPresets(cloudPresets: EqPresetsSyncFile) {
+        if (cloudPresets.presets.isEmpty()) return
+
+        loadDeletedEqPresetsCache()
+
+        val db = MusicDatabase.getInstance(appContext)
+        val eqPresetDao = db.eqPresetDao()
+
+        var addedCount = 0
+        var updatedCount = 0
+        var removedCount = 0
+
+        for (cloudPreset in cloudPresets.presets) {
+            val localPreset = eqPresetDao.getPresetByName(cloudPreset.name)
+            val localDeletedPreset = deletedEqPresetsCache[cloudPreset.name]
+
+            // Determine local timestamp
+            val localTimestamp = when {
+                localPreset != null -> localPreset.createdAt
+                localDeletedPreset != null -> localDeletedPreset.deletedAt ?: 0
+                else -> 0L
+            }
+
+            val cloudTimestamp = cloudPreset.getLastModifiedTimestamp()
+
+            if (cloudTimestamp > localTimestamp) {
+                // Cloud is newer
+                if (cloudPreset.isActive()) {
+                    // Cloud has active preset - add or update locally
+                    if (localPreset == null) {
+                        val newPreset = com.Atom2Universe.app.music.equalizer.data.EqPreset(
+                            name = cloudPreset.name,
+                            isSystemPreset = false,
+                            band32Hz = cloudPreset.band32Hz,
+                            band64Hz = cloudPreset.band64Hz,
+                            band125Hz = cloudPreset.band125Hz,
+                            band250Hz = cloudPreset.band250Hz,
+                            band500Hz = cloudPreset.band500Hz,
+                            band1kHz = cloudPreset.band1kHz,
+                            band2kHz = cloudPreset.band2kHz,
+                            band4kHz = cloudPreset.band4kHz,
+                            band8kHz = cloudPreset.band8kHz,
+                            band16kHz = cloudPreset.band16kHz,
+                            bassBoostStrength = cloudPreset.bassBoostStrength,
+                            virtualizerStrength = cloudPreset.virtualizerStrength,
+                            createdAt = cloudPreset.createdAt
+                        )
+                        eqPresetDao.insertPreset(newPreset)
+                        deletedEqPresetsCache.remove(cloudPreset.name)
+                        addedCount++
+                        Log.d(TAG, "Added EQ preset from cloud: ${cloudPreset.name}")
+                    } else if (!localPreset.isSystemPreset) {
+                        val updatedPreset = localPreset.copy(
+                            band32Hz = cloudPreset.band32Hz,
+                            band64Hz = cloudPreset.band64Hz,
+                            band125Hz = cloudPreset.band125Hz,
+                            band250Hz = cloudPreset.band250Hz,
+                            band500Hz = cloudPreset.band500Hz,
+                            band1kHz = cloudPreset.band1kHz,
+                            band2kHz = cloudPreset.band2kHz,
+                            band4kHz = cloudPreset.band4kHz,
+                            band8kHz = cloudPreset.band8kHz,
+                            band16kHz = cloudPreset.band16kHz,
+                            bassBoostStrength = cloudPreset.bassBoostStrength,
+                            virtualizerStrength = cloudPreset.virtualizerStrength
+                        )
+                        eqPresetDao.updatePreset(updatedPreset)
+                        updatedCount++
+                        Log.d(TAG, "Updated EQ preset from cloud: ${cloudPreset.name}")
+                    }
+                } else {
+                    // Cloud has deleted preset - remove locally
+                    if (localPreset != null && !localPreset.isSystemPreset) {
+                        eqPresetDao.deletePreset(localPreset)
+                        removedCount++
+                        Log.d(TAG, "Removed EQ preset from cloud: ${cloudPreset.name}")
+                    }
+                    deletedEqPresetsCache.remove(cloudPreset.name)
+                }
+            }
+        }
+
+        saveDeletedEqPresetsCache()
+        Log.d(TAG, "Merged EQ presets: added $addedCount, updated $updatedCount, removed $removedCount")
+    }
+
+    /**
+     * Uploads custom EQ presets to Google Drive.
+     * Only user-created presets are synced (not system presets).
+     * Merges with cloud data to preserve soft-delete entries.
+     */
+    private suspend fun uploadEqPresets(client: GoogleDriveAppDataClient) {
+        loadDeletedEqPresetsCache()
+
+        val db = MusicDatabase.getInstance(appContext)
+        val eqPresetDao = db.eqPresetDao()
+
+        // Get active custom presets
+        val customPresets = eqPresetDao.getUserPresets()
+
+        val localPresets = mutableListOf<SyncEqPreset>()
+
+        // Add active presets
+        for (preset in customPresets) {
+            localPresets.add(SyncEqPreset(
+                name = preset.name,
+                band32Hz = preset.band32Hz,
+                band64Hz = preset.band64Hz,
+                band125Hz = preset.band125Hz,
+                band250Hz = preset.band250Hz,
+                band500Hz = preset.band500Hz,
+                band1kHz = preset.band1kHz,
+                band2kHz = preset.band2kHz,
+                band4kHz = preset.band4kHz,
+                band8kHz = preset.band8kHz,
+                band16kHz = preset.band16kHz,
+                bassBoostStrength = preset.bassBoostStrength,
+                virtualizerStrength = preset.virtualizerStrength,
+                createdAt = preset.createdAt,
+                updatedAt = preset.createdAt,
+                deletedAt = null
+            ))
+        }
+
+        // Add deleted presets (soft-delete)
+        for ((_, deletedPreset) in deletedEqPresetsCache) {
+            localPresets.add(deletedPreset)
+        }
+
+        // Download existing cloud presets to merge
+        val cloudJson = client.readJsonFile(EqPresetsSyncFile.FILENAME)
+        val cloudPresets = if (cloudJson != null) {
+            try {
+                EqPresetsSyncFile.fromJson(JSONObject(cloudJson)).presets
+            } catch (_: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+
+        // Merge: local takes precedence
+        val mergedMap = mutableMapOf<String, SyncEqPreset>()
+
+        for (cloudPreset in cloudPresets) {
+            mergedMap[cloudPreset.name] = cloudPreset
+        }
+
+        for (localPreset in localPresets) {
+            val existing = mergedMap[localPreset.name]
+            if (existing == null) {
+                mergedMap[localPreset.name] = localPreset
+            } else {
+                val localTimestamp = localPreset.getLastModifiedTimestamp()
+                val cloudTimestamp = existing.getLastModifiedTimestamp()
+
+                if (localTimestamp >= cloudTimestamp) {
+                    mergedMap[localPreset.name] = localPreset
+                }
+            }
+        }
+
+        val mergedPresets = mergedMap.values.toList()
+
+        if (mergedPresets.isEmpty()) {
+            Log.d(TAG, "No EQ presets to upload")
+            return
+        }
+
+        val syncFile = EqPresetsSyncFile(
+            version = 1,
+            lastModified = System.currentTimeMillis(),
+            presets = mergedPresets
+        )
+
+        val success = client.writeJsonFile(EqPresetsSyncFile.FILENAME, syncFile.toJson().toString())
+        if (success == true) {
+            deletedEqPresetsCache.clear()
+            saveDeletedEqPresetsCache()
+            Log.d(TAG, "Uploaded ${mergedPresets.size} EQ presets (merged with cloud)")
+        } else {
+            Log.e(TAG, "Failed to upload EQ presets")
+        }
+    }
+
+    /**
+     * Tracks an EQ preset deletion for cloud sync.
+     * Call this when an EQ preset is deleted locally.
+     */
+    fun trackEqPresetDeletion(preset: com.Atom2Universe.app.music.equalizer.data.EqPreset) {
+        loadDeletedEqPresetsCache()
+
+        deletedEqPresetsCache[preset.name] = SyncEqPreset(
+            name = preset.name,
+            band32Hz = preset.band32Hz,
+            band64Hz = preset.band64Hz,
+            band125Hz = preset.band125Hz,
+            band250Hz = preset.band250Hz,
+            band500Hz = preset.band500Hz,
+            band1kHz = preset.band1kHz,
+            band2kHz = preset.band2kHz,
+            band4kHz = preset.band4kHz,
+            band8kHz = preset.band8kHz,
+            band16kHz = preset.band16kHz,
+            bassBoostStrength = preset.bassBoostStrength,
+            virtualizerStrength = preset.virtualizerStrength,
+            createdAt = preset.createdAt,
+            updatedAt = preset.createdAt,
+            deletedAt = System.currentTimeMillis()
+        )
+
+        saveDeletedEqPresetsCache()
+        Log.d(TAG, "Tracked EQ preset deletion: ${preset.name}")
+    }
+
+    // ==================== Deleted EQ Presets Cache Persistence ====================
+
+    private fun loadDeletedEqPresetsCache() {
+        if (isDeletedEqCacheLoaded) return
+
+        try {
+            val file = java.io.File(appContext.filesDir, DELETED_EQ_PRESETS_FILENAME)
+            if (file.exists()) {
+                val json = JSONObject(file.readText())
+                val array = json.optJSONArray("deletedPresets") ?: org.json.JSONArray()
+
+                for (i in 0 until array.length()) {
+                    val entry = array.getJSONObject(i)
+                    val name = entry.optString("name", "")
+                    if (name.isNotEmpty()) {
+                        deletedEqPresetsCache[name] = SyncEqPreset.fromJson(entry)
+                    }
+                }
+                Log.d(TAG, "Loaded ${deletedEqPresetsCache.size} deleted EQ presets")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error loading deleted EQ presets cache", e)
+        }
+
+        isDeletedEqCacheLoaded = true
+    }
+
+    private fun saveDeletedEqPresetsCache() {
+        try {
+            val json = JSONObject().apply {
+                put("deletedPresets", org.json.JSONArray().apply {
+                    deletedEqPresetsCache.values.forEach { preset ->
+                        put(preset.toJson())
+                    }
+                })
+            }
+
+            val file = java.io.File(appContext.filesDir, DELETED_EQ_PRESETS_FILENAME)
+            file.writeText(json.toString())
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving deleted EQ presets cache", e)
+        }
+    }
+
+    /**
+     * Updates the sync manifest on Google Drive.
+     */
+    private suspend fun updateManifest(client: GoogleDriveAppDataClient) {
+        val existingJson = client.readJsonFile("sync_manifest.json")
+        val existing = if (existingJson != null) {
+            try {
+                SyncManifest.fromJson(JSONObject(existingJson))
+            } catch (_: Exception) {
+                SyncManifest()
+            }
+        } else {
+            SyncManifest()
+        }
+
+        val deviceId = getDeviceId()
+        val metadata = syncMetadataDao.get()
+
+        val updatedDevices = existing.devices.toMutableMap()
+        updatedDevices[deviceId] = DeviceInfo(
+            name = metadata?.deviceName ?: "Unknown",
+            lastSeen = System.currentTimeMillis(),
+            lastDeltaDate = null  // hérité de l'ancien système de deltas, plus alimenté
+        )
+
+        val updatedManifest = existing.copy(
+            lastSyncTimestamp = System.currentTimeMillis(),
+            devices = updatedDevices
+        )
+
+        client.writeJsonFile("sync_manifest.json", updatedManifest.toJson().toString())
+        Log.d(TAG, "Updated manifest")
+    }
+
+    /**
+     * Remet les compteurs d'écoutes à plat après le bug de multiplication.
+     *
+     * 1. Supprime de Drive les fichiers de l'ANCIEN système de deltas
+     *    (playcounts_device_*.json), qui ne sont plus ni écrits ni lus
+     * 2. Remet playCount = earnedPlayCount (les vraies écoutes locales)
+     *
+     * Les écoutes des autres appareils seront réimportées proprement à la
+     * sync suivante depuis leur journal listen_events.
+     *
+     * IMPORTANT : à lancer sur TOUS les appareils touchés par le bug.
+     *
+     * @return Result with counts of what was reset
+     */
+    suspend fun resetPlayCountsAfterBug(): PlayCountResetResult = withContext(Dispatchers.IO) {
+        Log.d(TAG, "Starting play count reset after multiplication bug...")
+
+        if (!isInitialized) {
+            return@withContext PlayCountResetResult(
+                success = false,
+                errorMessage = "CloudSyncManager not initialized"
+            )
+        }
+
+        val googleSignInManager = GoogleSignInManager(appContext)
+        if (!googleSignInManager.isSignedIn()) {
+            return@withContext PlayCountResetResult(
+                success = false,
+                errorMessage = "Not signed in to Google"
+            )
+        }
+
+        val account = googleSignInManager.getSignedInAccount()
+            ?: return@withContext PlayCountResetResult(
+                success = false,
+                errorMessage = "Could not get Google account"
+            )
+
+        try {
+            val driveClient = GoogleDriveAppDataClient(appContext, account)
+            val db = MusicDatabase.getInstance(appContext)
+            val playCountDao = db.playCountDao()
+
+            // Step 1: purge des fichiers de l'ancien système de deltas
+            val deltaFiles = driveClient.listDeltaFiles()
+            var deletedCloudFiles = 0
+            for (filename in deltaFiles) {
+                if (driveClient.deleteFile(filename)) {
+                    deletedCloudFiles++
+                }
+            }
+            Log.d(TAG, "Deleted $deletedCloudFiles delta files from Google Drive")
+
+            // Step 2: Reset local playCount to earnedPlayCount
+            val beforeCount = playCountDao.countWithPlayCount()
+            playCountDao.resetPlayCountsToEarned()
+            val resetCount = beforeCount // All entries were potentially affected
+            Log.d(TAG, "Reset $resetCount play count entries to earnedPlayCount")
+
+            // Step 3: Update POPM tags in files to match new counts
+            // (This will be done progressively by MusicPopmSyncManager)
+
+            PlayCountResetResult(
+                success = true,
+                deletedCloudFiles = deletedCloudFiles,
+                resetPlayCounts = resetCount
+            )
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during play count reset", e)
+            PlayCountResetResult(
+                success = false,
+                errorMessage = e.message ?: "Unknown error"
+            )
+        }
+    }
+
+    /**
+     * Oublie ce que cet appareil croit avoir déjà publié comme journal d'écoutes.
+     *
+     * À appeler après toute suppression de journaux côté cloud : sans cela, le
+     * raccourci d'envoi tiendrait le fichier pour à jour et ne le republierait
+     * qu'à la prochaine écoute.
+     */
+    fun forgetUploadedEventsState() {
+        if (!isInitialized) return
+        appContext.getSharedPreferences(PREFS_SYNC_STATE, Context.MODE_PRIVATE)
+            .edit()
+            .remove(KEY_UPLOADED_EVENTS_COUNT)
+            .remove(KEY_UPLOADED_EVENTS_LATEST)
+            .apply()
+        remoteJournals = emptySet()
+        Log.d(TAG, "Uploaded listen-events state forgotten")
+    }
+
+    /**
+     * Deletes ALL cloud data from Google Drive appDataFolder.
+     * This is a destructive, irreversible operation.
+     *
+     * @return DeleteCloudDataResult with success status and file count
+     */
+    suspend fun deleteAllCloudData(): DeleteCloudDataResult = withContext(Dispatchers.IO) {
+        try {
+            if (!isInitialized) {
+                return@withContext DeleteCloudDataResult(
+                    success = false,
+                    errorMessage = "CloudSyncManager not initialized"
+                )
+            }
+
+            val signInManager = GoogleSignInManager(appContext)
+            val account = signInManager.getSignedInAccount()
+            if (account == null) {
+                return@withContext DeleteCloudDataResult(
+                    success = false,
+                    errorMessage = "Not signed in"
+                )
+            }
+
+            val client = GoogleDriveAppDataClient(appContext, account)
+            val deletedCount = client.deleteAllFiles()
+
+            if (deletedCount < 0) {
+                return@withContext DeleteCloudDataResult(
+                    success = false,
+                    errorMessage = "Failed to delete files"
+                )
+            }
+
+            // Reset last sync timestamp
+            syncMetadataDao.updateLastSyncTimestamp(0)
+            forgetUploadedEventsState()
+
+            Log.d(TAG, "Deleted all cloud data: $deletedCount files")
+
+            DeleteCloudDataResult(
+                success = true,
+                deletedFilesCount = deletedCount
+            )
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error deleting all cloud data", e)
+            DeleteCloudDataResult(
+                success = false,
+                errorMessage = e.message ?: "Unknown error"
+            )
+        }
+    }
+}
+
+/**
+ * Result of a sync operation.
+ */
+sealed class SyncResult {
+    object Success : SyncResult()
+    object NotInitialized : SyncResult()
+    object NotSignedIn : SyncResult()
+    object NotEnabled : SyncResult()
+    data class Error(val message: String) : SyncResult()
+}
+
+/**
+ * Result of the play count reset operation.
+ */
+data class PlayCountResetResult(
+    val success: Boolean,
+    val deletedCloudFiles: Int = 0,
+    val resetPlayCounts: Int = 0,
+    val errorMessage: String? = null
+)
+
+/**
+ * Result of deleting all cloud data.
+ */
+data class DeleteCloudDataResult(
+    val success: Boolean,
+    val deletedFilesCount: Int = 0,
+    val errorMessage: String? = null
+)

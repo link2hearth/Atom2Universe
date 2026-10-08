@@ -1,0 +1,17 @@
+{
+  "id": 2669,
+  "name": "basalt_bricks",
+  "texture_top": "cave_ruins:basalt_bricks",
+  "texture_side": "cave_ruins:basalt_bricks",
+  "texture_bottom": "cave_ruins:basalt_bricks",
+  "color": "#4A4548",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "basalt_bricks",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

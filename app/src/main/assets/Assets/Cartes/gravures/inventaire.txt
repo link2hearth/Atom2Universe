@@ -1,0 +1,66 @@
+Collection gravures : 64 motifs, identifiants communs aux cinq collections.
+
+01-abeille.jpg — Abeille : Abeille
+02-araignee.jpg — Araignée : Araignée
+03-arbre.jpg — Arbre : Chêne ; regroupé sous le motif Arbre pour la comparaison
+04-baleine.jpg — Baleine : Baleine à bosse
+05-bison.jpg — Bison : Bison
+06-ble.jpg — Blé : Blé
+07-bougie.jpg — Bougie : Bougie
+08-cannabis.jpg — Cannabis : Cannabis
+09-cerf.jpg — Cerf : Cerf
+10-cerise.jpg — Cerise : Cerise
+11-chat.jpg — Chat : Chat allongé
+12-cheval.jpg — Cheval : Cheval
+13-chien.jpg — Chien : Chien
+14-coccinelle.jpg — Coccinelle : Coccinelle
+15-colibri.jpg — Colibri : Colibri
+16-coq.jpg — Coq : Coq
+17-coquillage.jpg — Coquillage : Coquillage spiralé, type conque
+18-corbeau.jpg — Corbeau : Corbeau
+19-crabe.jpg — Crabe : Crabe
+20-crocodile.jpg — Crocodile : Crocodile
+21-cygne.jpg — Cygne : Cygne
+22-dauphin.jpg — Dauphin : Dauphin
+23-dinosaure-a-long-cou.jpg — Dinosaure à long cou : Dinosaure à long cou
+24-ecureuil.jpg — Écureuil : Écureuil
+25-elephant.jpg — Éléphant : Éléphant
+26-escargot.jpg — Escargot : Escargot
+27-etoile-de-mer.jpg — Étoile de mer : Étoile de mer
+28-fougere.jpg — Fougère : Fougère
+29-fourmi.jpg — Fourmi : Fourmi
+30-girafe.jpg — Girafe : Girafe
+31-herisson.jpg — Hérisson : Hérisson
+32-heron.jpg — Héron : Héron
+33-hibou.jpg — Hibou : Hibou
+34-hippopotame.jpg — Hippopotame : Hippopotame
+35-humains.jpg — Humains : Humains
+36-jonquille.jpg — Jonquille : Jonquille
+37-kangourou.jpg — Kangourou : Kangourou
+38-lapin.jpg — Lapin : Lapin
+39-lion.jpg — Lion : Lion à crinière
+40-livre.jpg — Livre : Livre
+41-lune.jpg — Lune : Lune
+42-manchot.jpg — Manchot : Manchot ; le nom du fichier utilise « pingouin »
+43-moineau.jpg — Moineau : Moineau
+44-mouton.jpg — Mouton : Mouton
+45-oiseau-marin.jpg — Oiseau marin : Oiseau marin
+46-ours.jpg — Ours : Ours
+47-panthere.jpg — Panthère : Panthère
+48-papillon.jpg — Papillon : Papillon
+49-perroquet.jpg — Perroquet : Perroquet, type ara
+50-pieuvre.jpg — Pieuvre : Pieuvre
+51-poisson.jpg — Poisson : Poisson tropical
+52-raisin.jpg — Raisin : Raisin
+53-renard.jpg — Renard : Renard
+54-requin.jpg — Requin : Requin
+55-rhinoceros.jpg — Rhinocéros : Rhinocéros
+56-rose.jpg — Rose : Rose
+57-sanglier.jpg — Sanglier : Sanglier
+58-serpent.jpg — Serpent : Serpent
+59-singe.jpg — Singe : Singe
+60-souris.jpg — Souris : Souris
+61-tortue.jpg — Tortue : Tortue marine
+62-tournesol.jpg — Tournesol : Tournesol
+63-tyrannosaure.jpg — Tyrannosaure : Tyrannosaure
+64-ver-de-terre.jpg — Ver de terre : Ver de terre

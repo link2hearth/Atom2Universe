@@ -1,0 +1,16 @@
+{
+  "id": 2405,
+  "name": "stairs_cobblestone",
+  "texture_top": "base_art:cobblestone:0",
+  "texture_side": "base_art:cobblestone:0",
+  "texture_bottom": "base_art:cobblestone:0",
+  "color": "#929DA4",
+  "hardness": 3,
+  "drop": "stairs_cobblestone",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "stairs": true,
+  "harvest_category": "recoverable"
+}

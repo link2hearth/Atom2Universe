@@ -1,0 +1,643 @@
+package com.Atom2Universe.app.games.caves.entity
+
+import com.Atom2Universe.app.games.caves.node.CombatNode
+import com.Atom2Universe.app.games.caves.node.EventBus
+import com.Atom2Universe.app.games.caves.node.PlayerNode
+import com.Atom2Universe.app.games.caves.world.*
+import kotlin.math.*
+import kotlin.random.Random
+
+internal class EnemyManager(private val world: World, seed: Long = 0L) {
+
+    val enemies = ArrayList<Enemy>(32)
+    private val current = DoubleArray(4)
+
+    val wardStoneZones: MutableList<Pair<Double, Double>> = mutableListOf()
+
+    val spawnManager = SpawnManager(
+        world          = world,
+        worldSeed      = seed,
+        enemies        = enemies,
+        wardStoneZones = wardStoneZones,
+        seed           = seed
+    )
+
+    /** Les joueurs que les monstres peuvent poursuivre ; chacun vise le plus proche. */
+    var targets: List<EnemyTarget> = emptyList()
+    /** Le joueur de l'appareil (le premier de la liste) : c'est lui que l'interface affiche. */
+    val player: PlayerNode? get() = targets.firstOrNull()?.node
+
+    var eventBus: EventBus? = null
+        set(v) { field = v; spawnManager.eventBus = v }
+
+    var worldSpawnX: Double
+        get() = spawnManager.worldSpawnX
+        set(v) { spawnManager.worldSpawnX = v }
+    var worldSpawnY: Double
+        get() = spawnManager.worldSpawnY
+        set(v) { spawnManager.worldSpawnY = v }
+    var worldSpawnZ: Double
+        get() = spawnManager.worldSpawnZ
+        set(v) { spawnManager.worldSpawnZ = v }
+
+    // Rétro-compatibilité : les callbacks UI routent vers PlayerNode
+    var playerHpCallback: ((hp: Int, maxHp: Int) -> Unit)?
+        get() = player?.onHpChanged
+        set(v) { player?.onHpChanged = v }
+    var shieldCallback: ((current: Int, max: Int) -> Unit)?
+        get() = player?.onShieldChanged
+        set(v) { player?.onShieldChanged = v }
+
+    var isCreative = false
+    var explorationCombat = false
+    /** Un coup de mêlée touche la cible, repoussée dans la direction (dx, dz). */
+    var meleeImpact: ((Enemy,EnemyTarget,Float,Float)->Unit)? = null
+    var rangedImpact: ((Enemy,Double,Double,Double)->Unit)? = null
+    var clearSight: ((Double,Double,Double,Double,Double,Double)->Boolean)? = null
+
+    // Fournit les dégâts thorns de l'arme équipée (0 si pas d'épines)
+
+
+    // ── Tick principal ────────────────────────────────────────────────────────
+
+    /** Simulation distance from the pause menu: enemies farther than this leave the world. */
+    var despawnChunks = DESPAWN_CHUNKS
+
+    fun update(dt: Float) {
+        if (isCreative) { enemies.clear(); return }
+        val first = targets.firstOrNull() ?: return
+        for (t in targets) {
+            t.hitCooldown = (t.hitCooldown - dt).coerceAtLeast(0f)
+            t.node.tickShield(dt)
+        }
+
+        for (e in enemies) if (e.hp > 0 && e.freezeTimer <= 0f) e.animTime += dt
+
+        // Never inside the spawn ring, or enemies would vanish as they appear.
+        val despawnDist2 = (maxOf(despawnChunks, SpawnManager.SPAWN_MAX_CHUNKS + 1) * CHUNK_SIZE).toDouble().let { it * it }
+        enemies.removeAll { e ->
+            if (e.hp <= 0) {
+                spawnManager.onEnemyDied(e)
+                return@removeAll true
+            }
+            // Un monstre ne quitte le monde que s'il est loin de tous les joueurs.
+            targets.all { t ->
+                val dx = e.x - t.x; val dz = e.z - t.z
+                val dy = if (explorationCombat) e.y - t.y else 0.0
+                dx * dx + dy * dy + dz * dz > despawnDist2
+            }
+        }
+
+        // Les apparitions se font encore autour du premier joueur seulement.
+        spawnManager.update(dt, first.x, first.y, first.z)
+
+        for (e in enemies) {
+            val frozen=e.freezeTimer>0f
+            if(!frozen) e.strikeTime = (e.strikeTime-dt).coerceAtLeast(0f)
+            e.attack?.let { it.flash = (it.flash - dt).coerceAtLeast(0f) }
+            e.attackRecovery = (e.attackRecovery - dt).coerceAtLeast(0f)
+            if (!frozen) {
+                e.hopRest = (e.hopRest - dt).coerceAtLeast(0f)
+                e.landingSquash = (e.landingSquash - dt).coerceAtLeast(0f)
+            }
+            val oldX=e.x; val oldZ=e.z
+            updateEnemy(e, dt, nearestTarget(e.x, e.y, e.z) ?: first)
+            val distance=hypot(e.x-oldX,e.z-oldZ).toFloat()
+            if(!frozen) {
+                val target=if(distance>.001f) 1f else 0f
+                e.motionBlend += (target-e.motionBlend)*(dt*12f).coerceAtMost(1f)
+                val gait=com.Atom2Universe.app.games.caves.render.MobModels.get(e.def.model).gait
+                e.walkPhase += distance*gait/2f
+            }
+        }
+    }
+
+    // ── IA ennemis ────────────────────────────────────────────────────────────
+
+    /** Le joueur le plus proche du point (x, y, z), ou null s'il n'y en a aucun. */
+    private fun nearestTarget(x: Double, y: Double, z: Double): EnemyTarget? {
+        var best: EnemyTarget? = null
+        var bestD2 = Double.MAX_VALUE
+        for (t in targets) {
+            val dx = t.x - x; val dy = t.y - y; val dz = t.z - z
+            val d2 = dx * dx + dy * dy + dz * dz
+            if (d2 < bestD2) { bestD2 = d2; best = t }
+        }
+        return best
+    }
+
+    private fun updateEnemy(e: Enemy, dt: Float, target: EnemyTarget) {
+        val px = target.x; val py = target.y; val pz = target.z
+        if (e.hitFlash > 0f) e.hitFlash -= dt
+
+        // Saignement : jauge qui redescend seule si le mob n'est pas retouché depuis
+        // un moment ; pleine, elle explose en un gros pourcentage des PV max.
+        if (e.bleedDecayGrace > 0f) {
+            e.bleedDecayGrace -= dt
+        } else if (e.bleedBuildup > 0f) {
+            e.bleedBuildup = (e.bleedBuildup - Enemy.BLEED_DECAY_PER_SEC * dt).coerceAtLeast(0f)
+        }
+        if (e.bleedBuildup >= Enemy.BLEED_BURST_THRESHOLD) {
+            val burst = (e.maxHp * Enemy.BLEED_BURST_FRACTION).toInt().coerceAtLeast(1)
+            e.hp = (e.hp - burst).coerceAtLeast(0); e.hitFlash = 0.25f
+            e.bleedBuildup = 0f
+        }
+
+        // Poison (tick toutes les 0.8s, 4s — dégâts moindres mais plus durables)
+        if (e.poisonTimer > 0f) {
+            e.poisonTimer -= dt; e.poisonTickTimer -= dt
+            if (e.poisonTickTimer <= 0f) {
+                e.poisonTickTimer = 0.8f
+                e.hp = (e.hp - e.poisonDamage).coerceAtLeast(0); e.hitFlash = 0.10f
+            }
+            if (e.poisonTimer <= 0f) { e.poisonTimer = 0f; e.poisonDamage = 0; e.poisonTickTimer = 0f }
+        }
+
+        // Feu (tick toutes les 0.3s, 2s — dégâts rapides et élevés)
+        if (e.fireTimer > 0f) {
+            e.fireTimer -= dt; e.fireTickTimer -= dt
+            if (e.fireTickTimer <= 0f) {
+                e.fireTickTimer = 0.3f
+                e.hp = (e.hp - e.fireDamage).coerceAtLeast(0); e.hitFlash = 0.18f
+            }
+            if (e.fireTimer <= 0f) { e.fireTimer = 0f; e.fireDamage = 0; e.fireTickTimer = 0f }
+        }
+
+        // Recul infligé par le joueur — déplacement amorti, même si étourdi.
+        applyMobKnockback(e, dt)
+        if (e.hp <= 0) { e.attackWindup = 0f; return }
+
+        // Repli (cocon ou bouclier) : immobile face au tireur, il regagne ce qu'on lui a pris de loin.
+        if (e.retreat > 0f) {
+            Harassment.update(e, dt)
+            e.attackWindup = 0f; e.attack = null
+            e.yaw = atan2((px - e.x).toFloat(), (pz - e.z).toFloat()) * (180f / PI.toFloat())
+            return
+        }
+
+        // Gel : immobilisation totale, aucune IA ni attaque tant que ça dure.
+        if (e.freezeTimer > 0f) { e.freezeTimer -= dt;e.attackWindup=0f;e.attack=null; return }
+        if(e.staggerTimer>0f) { e.staggerTimer=(e.staggerTimer-dt).coerceAtLeast(0f);e.attackWindup=0f;e.attack=null }
+
+        WaterCurrent.sample(world, e.x, e.y + 0.25, e.z, current)
+        val inWater = current[3] > 0.0
+        val response = 1.0 - exp(-4.0 * dt)
+        if (inWater) {
+            e.waterDriftX += (current[0] - e.waterDriftX) * response
+            e.waterDriftZ += (current[2] - e.waterDriftZ) * response
+            move(e, e.waterDriftX * dt, e.waterDriftZ * dt, allowStep = false)
+        } else { e.waterDriftX = 0.0; e.waterDriftZ = 0.0 }
+
+        if (e.confusionTimer > 0f) { e.confusionTimer -= dt; e.attack=null; e.attackWindup=0f }
+
+        e.contactCooldown=(e.contactCooldown-dt).coerceAtLeast(0f)
+        if(explorationCombat && e.contactCooldown==0f && target.hitCooldown<=0f && EnemyRig.touching(e,target) &&
+            clearSight?.invoke(e.x,e.y+.3,e.z,target.x,target.y-.8,target.z)==true) {
+            val length=hypot(target.x-e.x,target.z-e.z).coerceAtLeast(.001)
+            e.contactCooldown=.85f; target.hitCooldown=.32f
+            meleeImpact?.invoke(e,target,((target.x-e.x)/length).toFloat(),((target.z-e.z)/length).toFloat())
+        }
+        e.attack?.let { attack ->
+            if(e.attackWindup>0f) {
+                // Aim follows during the early gesture, then commits before release.
+                attack.x=e.x;attack.z=e.z
+                attack.y=e.y
+                if(!attack.ranged && e.attackWindup>attack.windup*.4f) {
+                    attack.yaw=atan2(px-e.x,pz-e.z)
+                    e.windupYaw=Math.toDegrees(attack.yaw).toFloat()
+                }
+                if(attack.ranged) EnemyRig.muzzle(e).let { attack.x=it.x;attack.y=it.y;attack.z=it.z }
+            }
+            if (e.confusionTimer > 0f) attack.lungeRemaining = 0f
+            if (attack.lungeRemaining > 0f) {
+                val step = min(dt, attack.lungeRemaining)
+                move(e, sin(attack.yaw) * attack.range * .65 * step / attack.rushDuration,
+                    cos(attack.yaw) * attack.range * .65 * step / attack.rushDuration, allowStep = false)
+                attack.lungeRemaining = (attack.lungeRemaining - dt).coerceAtLeast(0f)
+                resolveAttack(e, attack, target)
+            }
+            if(attack.activeRemaining>0f) {
+                attack.activeRemaining=(attack.activeRemaining-dt).coerceAtLeast(0f)
+                attack.x=e.x;attack.y=e.y;attack.z=e.z
+                resolveAttack(e,attack,target)
+            }
+            if(attack.followUpIn>0f) {
+                attack.followUpIn=(attack.followUpIn-dt).coerceAtLeast(0f)
+                if(attack.followUpIn==0f && attack.remainingHits>0) {
+                    attack.remainingHits--;attack.hitIndex++;attack.lungeHit=false
+                    e.strikeTime=.55f
+                    attack.x=e.x;attack.y=e.y;attack.z=e.z
+                    if(attack.ranged) rangedImpact?.invoke(e,attack.targetX,attack.targetY,attack.targetZ)
+                    else resolveAttack(e,attack,target)
+                }
+            }
+            if (e.def.id == "spider" && e.attackWindup > attack.windup - .12f) {
+                move(e, -sin(attack.yaw) * dt * 1.6, -cos(attack.yaw) * dt * 1.6, allowStep = false)
+                attack.x=e.x; attack.z=e.z
+            }
+        }
+
+
+        val dx = px - e.x; val dy = py - e.y; val dz = pz - e.z
+        val dist3d = sqrt(dx * dx + dy * dy + dz * dz)
+        val dist    = sqrt(dx * dx + dz * dz)   // XZ pour l'orientation et le déplacement
+
+        // Distance de garde souhaitée au centre du joueur : tient compte du rayon
+        // du mob pour que son corps n'entre pas dans la caméra en vue FPS.
+        val archer=explorationCombat && (e.def.id=="skeleton" && dist>4.0 ||
+            (e.def.id=="imp" || e.def.id=="wraith") && dist>3.0 || e.def.id=="spider" && dist>5.0)
+        val keep = if(archer) { if(e.def.id=="spider") 4.5 else 9.0 } else keepDist(e)
+        // La vue ne sert qu'à repérer (detectRange) ou à tirer (17 blocs) : au-delà, inutile de lancer
+        // le rayon, qui coûte 10 lectures de bloc par bloc de distance et par monstre, à chaque image.
+        val sight= !explorationCombat || dist3d<maxOf(e.def.detectRange,18.0) &&
+            clearSight?.invoke(e.x,e.y+e.def.eyeHeight,e.z,px,py-.2,pz)==true
+        val preparing=explorationCombat && (e.attackWindup>0f || e.staggerTimer>0f || e.attackRecovery>0f || e.attack?.busy==true)
+
+        val prevState = e.state
+        e.state = when (e.state) {
+            EnemyState.WANDER -> if (dist3d < e.def.detectRange && sight) EnemyState.CHASE else EnemyState.WANDER
+            EnemyState.CHASE  -> when {
+                dist3d <= keep + ATTACK_REACH    -> EnemyState.ATTACK
+                dist3d > e.def.detectRange * 2.0 -> { e.alertPlayed = false; EnemyState.WANDER }
+                else                              -> EnemyState.CHASE
+            }
+            EnemyState.ATTACK -> if (dist3d > keep + 1.5) EnemyState.CHASE else EnemyState.ATTACK
+        }
+        if (prevState == EnemyState.WANDER && e.state == EnemyState.CHASE && !e.alertPlayed) {
+            e.alertPlayed = true
+            eventBus?.publish(com.Atom2Universe.app.games.caves.node.GameEvent.MobNearby(e.isBoss))
+        }
+
+        val hopping = explorationCombat && e.def.id == "slime" && !inWater
+        if (hopping && !preparing && e.onGround && e.hopRest == 0f) {
+            e.velY = if (e.state == EnemyState.WANDER) 3.7 else 4.7
+            e.onGround = false
+        }
+        val spd = e.scaledSpeed.toDouble() * dt * if(preparing || hopping && e.onGround) 0.0 else if (inWater) 0.45 else 1.0
+        when (e.state) {
+            EnemyState.WANDER -> {
+                e.stuckTimer = 0f
+                e.wanderTimer -= dt
+                if (e.wanderTimer <= 0f) {
+                    val a = rng.nextFloat() * 2 * PI.toFloat()
+                    e.wanderDirX = sin(a); e.wanderDirZ = cos(a)
+                    e.wanderTimer = rng.nextFloat() * 3f + 2f
+                }
+                move(e, e.wanderDirX * spd * 0.4, e.wanderDirZ * spd * 0.4)
+                if (e.wanderDirX != 0f || e.wanderDirZ != 0f)
+                    e.yaw = atan2(e.wanderDirX, e.wanderDirZ) * (180f / PI.toFloat())
+            }
+            EnemyState.CHASE -> if (dist > keep) {
+                var nx = (dx / dist).toFloat()
+                var nz = (dz / dist).toFloat()
+                if (e.stuckTimer > 1.2f) {
+                    val sign = if ((e.stuckTimer * 3).toInt() % 2 == 0) 1f else -1f
+                    val px2 = -nz * sign * 0.7f; val pz2 = nx * sign * 0.7f
+                    nx = (nx + px2); nz = (nz + pz2)
+                    val len = sqrt(nx * nx + nz * nz).coerceAtLeast(0.001f)
+                    nx /= len; nz /= len
+                }
+                val prevX = e.x; val prevZ = e.z
+                move(e, nx * spd, nz * spd)
+                if (e.x == prevX && e.z == prevZ) e.stuckTimer += dt else e.stuckTimer = 0f
+                e.yaw = atan2(nx, nz) * (180f / PI.toFloat())
+            } else {
+                // À distance de garde : reste sur place, fait juste face au joueur.
+                e.stuckTimer = 0f
+                if (dist > 0.1) e.yaw = atan2((dx / dist).toFloat(), (dz / dist).toFloat()) * (180f / PI.toFloat())
+            }
+            EnemyState.ATTACK -> {
+                e.stuckTimer = 0f
+                if (dist > 0.1)
+                    e.yaw = atan2((px - e.x).toFloat(), (pz - e.z).toFloat()) * (180f / PI.toFloat())
+                // Maintien de la distance : si le joueur s'avance dans le mob, il recule.
+                if (dist in 0.1..(keep - 0.4)) {
+                    move(e, (-dx / dist) * spd * 0.8, (-dz / dist) * spd * 0.8)
+                }
+            }
+        }
+
+        if(explorationCombat && (e.attackWindup>0f || e.attackRecovery>0f || e.attack?.busy==true)) e.yaw=e.windupYaw
+
+        // Attaque : découplée de l'état de déplacement. Dès que le mob est à portée,
+        // le cooldown tourne et il frappe — la séparation entre mobs ne l'empêche plus.
+        e.attackCooldown -= dt
+        if (e.confusionTimer > 0f) {
+            e.attackWindup = 0f
+            // Électrique : le mob "bugue" et attaque l'allié le plus proche à sa portée
+            // au lieu du joueur, tant que la confusion dure.
+            if (e.attackCooldown <= 0f) {
+                var ally: Enemy? = null
+                var bestD2 = Double.MAX_VALUE
+                for (o in enemies) {
+                    if (o === e || o.hp <= 0) continue
+                    val adx = o.x - e.x; val adz = o.z - e.z
+                    val d2 = adx * adx + adz * adz
+                    if (d2 < bestD2) { bestD2 = d2; ally = o }
+                }
+                if (ally != null && bestD2 <= (keep + ATTACK_REACH) * (keep + ATTACK_REACH)) {
+                    e.attackCooldown = ATTACK_CD
+                    e.strikeTime = .55f
+                    ally.hp = (ally.hp - e.scaledDamage).coerceAtLeast(0)
+                    ally.hitFlash = 0.15f
+                    if (ally.state == EnemyState.WANDER) ally.state = EnemyState.CHASE
+                }
+            }
+        } else if(explorationCombat) {
+            if(e.staggerTimer==0f && e.hp>0 && e.attackRecovery==0f) {
+                if(e.attackWindup>0f) {
+                    e.attackWindup=(e.attackWindup-dt).coerceAtLeast(0f)
+                    if(e.attackWindup==0f) {
+                        val attack = e.attack!!
+                        e.attackCooldown=attack.recovery + if(attack.ranged) .48f else .16f
+                        e.attackRecovery=attack.recovery
+                        e.strikeTime=.55f
+                        if(attack.shape==AttackShape.BEAM) clipBeam(attack)
+                        attack.flash=.3f
+                        if(attack.remainingHits>0) attack.followUpIn=.38f
+                        if(attack.shape==AttackShape.SPIN) attack.activeRemaining=.55f
+                        if(attack.shape == AttackShape.ARROW || attack.shape == AttackShape.VENOM) {
+                            rangedImpact?.invoke(e,attack.targetX,attack.targetY,attack.targetZ)
+                        } else if(attack.rushing) {
+                            attack.lungeRemaining=attack.rushDuration
+                            if(attack.shape==AttackShape.LUNGE) { e.velY=3.2; e.onGround=false }
+                        } else resolveAttack(e,attack,target)
+                    }
+                } else if(e.attackCooldown<=0f && e.attack?.busy!=true && sight && (!hopping || e.onGround) &&
+                    (archer && dist<(if(e.def.id=="spider") 10 else 14) || !archer && abs(dy)<3 &&
+                        (dist<=keep+ATTACK_REACH || dist<6 && EnemyAttack.forEnemy(e,dist).shape==AttackShape.CHARGE))) {
+                    beginAttack(e,target,dist)
+                }
+            }
+        } else if (dist3d <= keep + ATTACK_REACH && e.attackCooldown <= 0f && target.hitCooldown <= 0f) {
+            e.attackCooldown = ATTACK_CD
+            e.strikeTime = .55f
+            target.hitCooldown = 0.5f
+            val bus = eventBus
+            val p   = target.node
+            if (bus != null) {
+                // Direction du recul : de l'ennemi vers le joueur, à l'horizontale.
+                val kdx = (px - e.x); val kdz = (pz - e.z)
+                val klen = sqrt(kdx * kdx + kdz * kdz).coerceAtLeast(0.001)
+                CombatNode.enemyAttacksPlayer(e, p, bus, (kdx / klen).toFloat(), (kdz / klen).toFloat())
+            }
+        }
+
+        // Séparation : les mobs s'évitent entre eux pour ne pas s'empiler.
+        if (!preparing) applySeparation(e, dt)
+
+        if (inWater) {
+            e.velY += (current[1] - e.velY) * response
+            e.velY = (e.velY - 4.0 * dt).coerceAtLeast(-3.0)
+        } else e.velY = (e.velY - GRAVITY * dt).coerceAtLeast(MAX_FALL.toDouble())
+        var newY = e.y + e.velY * dt
+        if (e.velY>0 && explorationCombat) {
+            val height=com.Atom2Universe.app.games.caves.render.MobModels.bodyHeightWorld(e.def.model,e.baseScale).toDouble()
+            val ceilingY=floor(newY+height).toInt()
+            val r=if(e.isSiteBoss) e.collisionRadius else e.def.radius.toDouble()*.8
+            for(bx in floor(e.x-r).toInt()..floor(e.x+r).toInt())
+                for(bz in floor(e.z-r).toInt()..floor(e.z+r).toInt()) {
+                    if(!isFreeForMob(bx,ceilingY,bz)) { newY=e.y;e.velY=0.0 }
+                }
+        }
+        val ground = solidGroundBelow(e.x, e.z, min(e.y+.1,newY+1.0))
+        if (ground != null && newY <= ground) {
+            if (!e.onGround && e.velY < -1) { e.landingSquash=.2f; e.hopRest=.22f }
+            e.y = ground; e.velY = 0.0; e.onGround = true
+        } else {
+            e.y = newY; e.onGround = false
+        }
+    }
+
+    private fun resolveAttack(e: Enemy, attack: EnemyAttack, target: EnemyTarget) {
+        val px = target.x; val py = target.y; val pz = target.z
+        if(target.hitCooldown>0f || attack.lungeHit) return
+        if(attack.rushing) {
+            val height=com.Atom2Universe.app.games.caves.render.MobModels.bodyHeightWorld(e.def.model,e.baseScale)
+            if(py-1.62>e.y+height || py<e.y || hypot(px-e.x,pz-e.z)>e.collisionRadius+.65) return
+            val forward=(px-e.x)*sin(attack.yaw)+(pz-e.z)*cos(attack.yaw)
+            if(forward < -e.collisionRadius) return
+        } else if(!attack.hits(px,py,pz,target.eyeDrop)) return
+        val originX=if(attack.rushing) e.x else attack.x
+        val originZ=if(attack.rushing) e.z else attack.z
+        val originY=if(attack.ranged) attack.y else e.y+e.def.eyeHeight
+        if(attack.ranged && clearSight?.invoke(e.x,originY,e.z,originX,originY,originZ)!=true) return
+        if(attack.shape!=AttackShape.BEAM && clearSight?.invoke(originX,originY,originZ,px,py-.6,pz)!=true) return
+        val dx=px-attack.x; val dz=pz-attack.z
+        val len=hypot(dx,dz).coerceAtLeast(.001)
+        target.hitCooldown=.30f
+        attack.lungeHit=true
+        meleeImpact?.invoke(e,target,(dx/len).toFloat(),(dz/len).toFloat())
+    }
+
+    private fun beginAttack(e: Enemy, target: EnemyTarget, distance: Double) {
+        val px = target.x; val py = target.y; val pz = target.z
+        val attack = EnemyAttack.forEnemy(e, distance)
+        e.attackSequence++
+        attack.x=e.x; attack.y=e.y; attack.z=e.z
+        attack.yaw=atan2(px-e.x,pz-e.z)
+        attack.targetX=px; attack.targetY=py-.6-target.eyeDrop*.5; attack.targetZ=pz
+        e.windupYaw=Math.toDegrees(attack.yaw).toFloat()
+        if(attack.ranged) EnemyRig.muzzle(e).let { attack.x=it.x;attack.y=it.y;attack.z=it.z }
+        if(attack.shape==AttackShape.BEAM) {
+            val dx=px-attack.x; val dy=attack.targetY-attack.y; val dz=pz-attack.z
+            val length=sqrt(dx*dx+dy*dy+dz*dz).coerceAtLeast(.001)
+            attack.targetX=attack.x+dx/length*attack.range
+            attack.targetY=attack.y+dy/length*attack.range
+            attack.targetZ=attack.z+dz/length*attack.range
+            clipBeam(attack)
+        }
+        e.attack=attack
+        e.attackWindup=attack.windup
+        e.windupYaw=Math.toDegrees(attack.yaw).toFloat()
+        e.strikeTime=0f
+    }
+
+    private fun clipBeam(attack: EnemyAttack) {
+        val dx=attack.targetX-attack.x;val dy=attack.targetY-attack.y;val dz=attack.targetZ-attack.z
+        val length=sqrt(dx*dx+dy*dy+dz*dz)
+        if(length<.001) return
+        var reach=0.0
+        while(reach<length) {
+            val next=min(length,reach+.2)
+            if(clearSight?.invoke(attack.x+dx/length*reach,attack.y+dy/length*reach,attack.z+dz/length*reach,
+                    attack.x+dx/length*next,attack.y+dy/length*next,attack.z+dz/length*next)!=true) break
+            reach=next
+        }
+        attack.targetX=attack.x+dx/length*reach
+        attack.targetY=attack.y+dy/length*reach
+        attack.targetZ=attack.z+dz/length*reach
+    }
+
+    /** Distance XZ à laquelle le mob se tient du centre du joueur (corps hors caméra). */
+    private fun keepDist(e: Enemy): Double =
+        (e.collisionRadius + PLAYER_STANDOFF).coerceAtLeast(e.def.attackRange)
+
+    /** Donne une impulsion de recul à [e], à l'opposé du joueur le plus proche (réduite pour les boss). */
+    fun knockbackFromPlayer(e: Enemy, strength: Double = MOB_KNOCKBACK) {
+        val from = nearestTarget(e.x, e.y, e.z) ?: return
+        val dx = e.x - from.x; val dz = e.z - from.z
+        val len = sqrt(dx * dx + dz * dz).coerceAtLeast(0.001)
+        val s = if (e.isBoss) strength * 0.4 else strength
+        e.knockX = dx / len * s
+        e.knockZ = dz / len * s
+        // Stop walking into the impulse, without interrupting every charged enemy attack.
+        e.attackRecovery = max(e.attackRecovery, .16f)
+    }
+
+    /** Applique le recul amorti de [e] (avec collision via [move]). */
+    private fun applyMobKnockback(e: Enemy, dt: Float) {
+        if (e.knockX == 0.0 && e.knockZ == 0.0) return
+        move(e, e.knockX * dt, e.knockZ * dt)
+        val damp = (KNOCK_DAMP * dt).coerceAtMost(1.0)
+        e.knockX -= e.knockX * damp
+        e.knockZ -= e.knockZ * damp
+        if (abs(e.knockX) < 0.1 && abs(e.knockZ) < 0.1) { e.knockX = 0.0; e.knockZ = 0.0 }
+    }
+
+    /** Repousse [e] des autres mobs trop proches pour éviter l'empilement. */
+    private fun applySeparation(e: Enemy, dt: Float) {
+        var sx = 0.0; var sz = 0.0
+        for (o in enemies) {
+            if (o === e || o.hp <= 0) continue
+            val dx = e.x - o.x; val dz = e.z - o.z
+            val d2 = dx * dx + dz * dz
+            val want = e.collisionRadius + o.collisionRadius + SEP_GAP
+            if (d2 in 1e-6..(want * want)) {
+                val d = sqrt(d2)
+                val push = (want - d) / want
+                sx += dx / d * push; sz += dz / d * push
+            }
+        }
+        if (sx != 0.0 || sz != 0.0) {
+            val spd = e.scaledSpeed.toDouble() * dt * SEP_STRENGTH
+            move(e, sx * spd, sz * spd)
+        }
+    }
+
+    // ── Déplacement + collision ───────────────────────────────────────────────
+
+    private fun move(e: Enemy, dx: Double, dz: Double, allowStep: Boolean = true) {
+        if (e.isSiteBoss) { moveSiteBoss(e,dx,dz,allowStep); return }
+        val r = e.def.radius.toDouble()
+        val footY = Math.floor(e.y + 0.002).toInt()
+        val headY = footY + 1
+
+        if (dx != 0.0) {
+            val tx = Math.floor(e.x + dx + if (dx > 0) r else -r).toInt()
+            val zMin = Math.floor(e.z - r + 0.05).toInt()
+            val zMax = Math.floor(e.z + r - 0.05).toInt()
+            // Boucle manuelle plutôt que (zMin..zMax).all{} : appelé plusieurs fois par mob
+            // par frame (déplacement, recul, séparation), un IntRange.all{} alloue son
+            // récepteur à chaque appel — du bruit de fond GC inutile à cette fréquence.
+            var freeX = true
+            for (bz in zMin..zMax) { if (!isFreeForMob(tx, footY, bz) || !isFreeForMob(tx, headY, bz)) { freeX = false; break } }
+            var stepX = false
+            if (!freeX && e.onGround && allowStep) {
+                stepX = true
+                for (bz in zMin..zMax) { if (!isFreeForMob(tx, footY + 1, bz) || !isFreeForMob(tx, headY + 1, bz)) { stepX = false; break } }
+            }
+            when {
+                freeX -> e.x += dx
+                stepX -> { e.velY = STEP_UP_VEL; e.x += dx }
+            }
+        }
+
+        if (dz != 0.0) {
+            val tz = Math.floor(e.z + dz + if (dz > 0) r else -r).toInt()
+            val xMin = Math.floor(e.x - r + 0.05).toInt()
+            val xMax = Math.floor(e.x + r - 0.05).toInt()
+            val fy2 = Math.floor(e.y + 0.002).toInt(); val hy2 = fy2 + 1
+            var freeZ = true
+            for (bx in xMin..xMax) { if (!isFreeForMob(bx, fy2, tz) || !isFreeForMob(bx, hy2, tz)) { freeZ = false; break } }
+            var stepZ = false
+            if (!freeZ && e.onGround && allowStep) {
+                stepZ = true
+                for (bx in xMin..xMax) { if (!isFreeForMob(bx, fy2 + 1, tz) || !isFreeForMob(bx, hy2 + 1, tz)) { stepZ = false; break } }
+            }
+            when {
+                freeZ -> e.z += dz
+                stepZ -> { e.velY = STEP_UP_VEL; e.z += dz }
+            }
+        }
+    }
+
+    /** Site guardians use their enlarged body, including overhangs above the usual two cells. */
+    private fun moveSiteBoss(e: Enemy, dx: Double, dz: Double, allowStep: Boolean) {
+        fun free(x: Double, y: Double, z: Double): Boolean {
+            val radius = e.collisionRadius
+            val height = com.Atom2Universe.app.games.caves.render.MobModels.bodyHeightWorld(e.def.model,e.baseScale)
+            for (bx in floor(x-radius+.01).toInt()..floor(x+radius-.01).toInt())
+                for (bz in floor(z-radius+.01).toInt()..floor(z+radius-.01).toInt())
+                    for (by in floor(y+.01).toInt()..floor(y+height-.01).toInt()) {
+                        if (world.getChunk(Math.floorDiv(bx,16),Math.floorDiv(by,16),Math.floorDiv(bz,16))?.generated != true ||
+                            !isFreeForMob(bx,by,bz)) return false
+                    }
+            return true
+        }
+        if (dx != 0.0) {
+            if (free(e.x+dx,e.y,e.z)) e.x += dx
+            else if (e.onGround && allowStep && free(e.x+dx,e.y+1,e.z)) {
+                e.velY=STEP_UP_VEL; e.x+=dx
+            }
+        }
+        if (dz != 0.0) {
+            if (free(e.x,e.y,e.z+dz)) e.z += dz
+            else if (e.onGround && allowStep && free(e.x,e.y+1,e.z+dz)) {
+                e.velY=STEP_UP_VEL; e.z+=dz
+            }
+        }
+    }
+
+    private fun isFreeForMob(bx: Int, by: Int, bz: Int): Boolean {
+        val b = world.blockAt(bx, by, bz)
+        return b == AIR || isWater(b) || isDecoration(b) || isMineRail(b)
+    }
+
+    private fun isMineRail(b: Short) = b == UndergroundSites.RAIL || b == UndergroundSites.RAIL_CROSSWISE
+
+    private fun solidGroundBelow(wx: Double, wz: Double, fromY: Double): Double? {
+        val bx = Math.floor(wx).toInt(); val bz = Math.floor(wz).toInt()
+        val startY = Math.floor(fromY).toInt()
+        for (by in startY downTo startY - 24) {
+            val b = world.blockAt(bx, by, bz)
+            // A rail is a sixteenth-block step, not a one-block wall through the mine.
+            if (isMineRail(b)) return by + .0625
+            if (b != AIR && !isWater(b) && !isDecoration(b)) return (by + 1).toDouble()
+        }
+        return null
+    }
+
+    // ── API publique ──────────────────────────────────────────────────────────
+
+    fun damageEnemy(e: Enemy, dmg: Int) {
+        CombatNode.damageEnemy(e, dmg)
+        knockbackFromPlayer(e)
+        if (e.state == EnemyState.WANDER) e.state = EnemyState.CHASE
+        eventBus?.publish(com.Atom2Universe.app.games.caves.node.GameEvent.MobHit(e.isBoss))
+    }
+
+    fun healPlayer(amount: Int) {
+        player?.applyHeal(amount)
+    }
+
+    fun computeLevel(blockX: Double, blockY: Double, blockZ: Double): Int =
+        spawnManager.computeLevel(blockX, blockY, blockZ)
+
+    companion object {
+        const val ATTACK_CD      = 1.5f
+        const val GRAVITY        = 20f
+        const val MAX_FALL       = -20f
+        const val STEP_UP_VEL    = 7.0
+        const val DESPAWN_CHUNKS = 4
+        const val ATTACK_REACH    = 0.6    // portée d'attaque au-delà de la distance de garde
+        const val PLAYER_STANDOFF = 1.5    // marge XZ au-delà du rayon du mob (corps hors caméra)
+        const val SEP_GAP         = 0.7    // espace désiré entre les surfaces de deux mobs
+        const val SEP_STRENGTH    = 0.9    // intensité de la force de séparation
+        const val MOB_KNOCKBACK   = 5.0    // vitesse initiale du recul d'un mob touché
+        const val KNOCK_DAMP      = 8.0    // amortissement du recul (par seconde)
+    }
+
+    // RNG local pour l'IA de wandering (indépendant du spawn)
+    private val rng = Random(seed xor 0x1A2B3C4D5E6F7A8BL)
+}

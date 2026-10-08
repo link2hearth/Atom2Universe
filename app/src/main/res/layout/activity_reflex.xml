@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#080818">
+
+    <!-- Tout le jeu (terrain, bandeau, menus) est dessiné par la vue. -->
+    <com.Atom2Universe.app.games.reflex.ReflexView
+        android:id="@+id/reflex_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="6dp"
+        android:src="@drawable/ic_arrow_back"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/back" />
+
+</FrameLayout>

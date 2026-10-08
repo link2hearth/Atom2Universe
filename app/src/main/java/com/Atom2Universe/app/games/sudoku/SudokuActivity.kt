@@ -1,0 +1,611 @@
+package com.Atom2Universe.app.games.sudoku
+
+import android.content.Context
+import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
+import com.Atom2Universe.app.LocaleHelper
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.Atom2Universe.app.R
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
+import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
+import com.Atom2Universe.app.games.sudoku.data.SudokuDatabase
+import com.Atom2Universe.app.games.sudoku.data.SudokuSaveEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.Atom2Universe.app.util.enableImmersiveMode
+
+class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListener {
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocale(newBase))
+    }
+
+    private lateinit var gridView: SudokuGridView
+    private lateinit var timerText: TextView
+    private lateinit var statusText: TextView
+    private lateinit var difficultySpinner: Spinner
+    private lateinit var newGameButton: Button
+    private lateinit var checkButton: Button
+    private lateinit var hintButton: Button
+    private lateinit var clearButton: Button
+    private lateinit var validateButton: Button
+    private lateinit var undoButton: Button
+    private lateinit var notesButton: Button
+
+    private val numberButtons = mutableListOf<Button>()
+
+    // ── Undo ─────────────────────────────────────────────────────────────────
+    private data class SudokuAction(val row: Int, val col: Int, val oldValue: Int, val newValue: Int)
+    private val undoStack = ArrayDeque<SudokuAction>()
+
+    private var currentDifficulty = SudokuDifficulty.MEDIUM
+    private var elapsedTimeMs: Long = 0
+    private var startTimeMs: Long = 0
+    private var isTimerRunning = false
+    private var isPuzzleSolved = false
+
+    // Selected number for "number first" mode (0 = no number selected)
+    private var selectedNumber: Int = 0
+    private var notesMode: Boolean = false
+
+    private val timerHandler = Handler(Looper.getMainLooper())
+    private val timerRunnable = object : Runnable {
+        override fun run() {
+            if (isTimerRunning) {
+                elapsedTimeMs = System.currentTimeMillis() - startTimeMs
+                updateTimerDisplay()
+                timerHandler.postDelayed(this, 1000)
+            }
+        }
+    }
+
+    private val database by lazy { SudokuDatabase.getInstance(this) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
+        super.onCreate(savedInstanceState)
+        enableImmersiveMode()
+        setContentView(R.layout.activity_sudoku)
+
+        initViews()
+        setupListeners()
+        loadSavedGame()
+    }
+
+    private fun initViews() {
+        gridView = findViewById(R.id.sudoku_grid)
+        timerText = findViewById(R.id.timer_text)
+        statusText = findViewById(R.id.status_text)
+        difficultySpinner = findViewById(R.id.difficulty_spinner)
+        newGameButton = findViewById(R.id.new_game_button)
+        checkButton = findViewById(R.id.check_button)
+        hintButton = findViewById(R.id.hint_button)
+        hintButton.text = getString(R.string.kit_hint, NeutrinoRewards.HINT_COST)
+        clearButton = findViewById(R.id.pad_clear)
+        validateButton = findViewById(R.id.pad_validate)
+        undoButton = findViewById(R.id.pad_undo)
+        notesButton = findViewById(R.id.pad_notes)
+
+        // Number pad buttons
+        numberButtons.add(findViewById(R.id.pad_1))
+        numberButtons.add(findViewById(R.id.pad_2))
+        numberButtons.add(findViewById(R.id.pad_3))
+        numberButtons.add(findViewById(R.id.pad_4))
+        numberButtons.add(findViewById(R.id.pad_5))
+        numberButtons.add(findViewById(R.id.pad_6))
+        numberButtons.add(findViewById(R.id.pad_7))
+        numberButtons.add(findViewById(R.id.pad_8))
+        numberButtons.add(findViewById(R.id.pad_9))
+
+        gridView.listener = this
+
+        setupDifficultySpinner()
+    }
+
+    private fun setupDifficultySpinner() {
+        val difficulties = SudokuDifficulty.entries.toTypedArray()
+        val labels = difficulties.map { getString(it.labelResId) }
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        difficultySpinner.adapter = adapter
+        difficultySpinner.setSelection(difficulties.indexOf(currentDifficulty))
+
+        difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                currentDifficulty = difficulties[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setupListeners() {
+        findViewById<View>(R.id.back_button).setOnClickListener { finish() }
+
+        newGameButton.setOnClickListener { onNewGameClicked() }
+
+        checkButton.setOnClickListener { onCheckClicked() }
+        hintButton.setOnClickListener { onHintClicked() }
+
+        clearButton.setOnClickListener { onClearClicked() }
+        validateButton.setOnClickListener { onCheckClicked() }
+
+        undoButton.setOnClickListener { onUndoClicked() }
+        notesButton.setOnClickListener { onNotesClicked() }
+
+        // Number pad
+        numberButtons.forEachIndexed { index, button ->
+            button.setOnClickListener { onNumberClicked(index + 1) }
+        }
+    }
+
+    private fun loadSavedGame() {
+        lifecycleScope.launch {
+            val save = withContext(Dispatchers.IO) {
+                database.sudokuDao().getSave()
+            }
+
+            if (save != null && !save.isSolved) {
+                showResumeDialog(save)
+            } else {
+                showNewGameDialog()
+            }
+        }
+    }
+
+    private fun showResumeDialog(save: SudokuSaveEntity) {
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
+            .setTitle(R.string.sudoku_dialog_confirm_new_title)
+            .setMessage(R.string.sudoku_dialog_confirm_new_message)
+            .setPositiveButton(R.string.sudoku_resume_game) { _, _ ->
+                restoreGame(save)
+            }
+            .setNegativeButton(R.string.sudoku_start_new) { _, _ ->
+                showNewGameDialog()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun restoreGame(save: SudokuSaveEntity) {
+        currentDifficulty = save.toDifficulty()
+        difficultySpinner.setSelection(SudokuDifficulty.entries.indexOf(currentDifficulty))
+
+        gridView.setBoard(save.toBoard())
+        gridView.setNotesMasks(save.toNotes())
+        elapsedTimeMs = save.elapsedTimeMs
+        isPuzzleSolved = false
+        clearHistory()
+        setNotesMode(false)
+
+        updateDifficultySettings()
+        updateValidation()
+        startTimer()
+
+        setStatus(getString(R.string.sudoku_status_no_error), isError = false)
+    }
+
+    private fun showNewGameDialog() {
+        val difficulties = SudokuDifficulty.entries.toTypedArray()
+        val labels = difficulties.map { getString(it.labelResId) }.toTypedArray()
+
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
+            .setTitle(R.string.sudoku_dialog_new_game_title)
+            .setItems(labels) { _, which ->
+                currentDifficulty = difficulties[which]
+                difficultySpinner.setSelection(which)
+                startNewGame()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun onNewGameClicked() {
+        if (gridView.getBoard().cells.any { row -> row.any { it != 0 } }) {
+            com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
+                .setTitle(R.string.sudoku_dialog_confirm_new_title)
+                .setMessage(R.string.sudoku_dialog_confirm_new_message)
+                .setPositiveButton(R.string.confirm) { _, _ -> showNewGameDialog() }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        } else {
+            showNewGameDialog()
+        }
+    }
+
+    private fun startNewGame() {
+        setStatus(getString(R.string.sudoku_status_generating), isError = false)
+        statusText.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            val board = withContext(Dispatchers.Default) {
+                SudokuGame.generatePuzzle(currentDifficulty)
+            }
+
+            gridView.setBoard(board)
+            assisted = false
+            GameStatsRepository(this@SudokuActivity).recordSudokuStarted()
+            elapsedTimeMs = 0
+            isPuzzleSolved = false
+            clearSelectedNumber()
+            clearHistory()
+            setNotesMode(false)
+
+            updateDifficultySettings()
+            startTimer()
+
+            val clues = board.cells.sumOf { row -> row.count { it != 0 } }
+            val difficultyLabel = getString(currentDifficulty.labelResId)
+            setStatus(
+                getString(R.string.sudoku_status_generated, difficultyLabel, clues),
+                isError = false
+            )
+
+            saveGame()
+        }
+    }
+
+    private fun updateDifficultySettings() {
+        val showErrors = currentDifficulty.showErrorsRealtime
+        val showConflicts = currentDifficulty.showConflictsRealtime
+
+        gridView.setShowMistakes(showErrors)
+        gridView.setShowConflicts(showConflicts)
+
+        // Hide check button in easy mode (errors shown automatically)
+        checkButton.visibility = if (currentDifficulty == SudokuDifficulty.EASY) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+        validateButton.visibility = checkButton.visibility
+    }
+
+    private fun startTimer() {
+        startTimeMs = System.currentTimeMillis() - elapsedTimeMs
+        isTimerRunning = true
+        timerHandler.post(timerRunnable)
+    }
+
+    private fun stopTimer() {
+        isTimerRunning = false
+        timerHandler.removeCallbacks(timerRunnable)
+    }
+
+    private fun updateTimerDisplay() {
+        val seconds = (elapsedTimeMs / 1000) % 60
+        val minutes = (elapsedTimeMs / 1000) / 60
+        timerText.text = getString(R.string.sudoku_time_format, minutes, seconds)
+    }
+
+    override fun onCellSelected(row: Int, col: Int) {
+        if (isPuzzleSolved) return
+
+        // If a number is pre-selected, place it in the clicked cell
+        if (selectedNumber > 0) {
+            val board = gridView.getBoard()
+            if (!board.isFixed(row, col)) {
+                if (notesMode) {
+                    if (gridView.toggleNoteAt(row, col, selectedNumber)) {
+                        saveGame()
+                    }
+                    return
+                }
+
+                val oldValue = board.getValue(row, col)
+                if (oldValue != selectedNumber) {
+                    gridView.setValueAtSelected(selectedNumber)
+                    recordAction(row, col, oldValue, selectedNumber)
+                }
+                updateValidation()
+                checkForCompletion()
+                saveGame()
+                // Keep the number selected for "painting" multiple cells
+            }
+        }
+
+        updateValidation()
+    }
+
+    private fun onNumberClicked(number: Int) {
+        if (isPuzzleSolved) return
+
+        if (notesMode) {
+            if (gridView.hasSelection()) {
+                if (gridView.toggleNoteAtSelected(number)) {
+                    saveGame()
+                }
+            } else if (selectedNumber == number) {
+                clearSelectedNumber()
+            } else {
+                selectNumber(number)
+            }
+            return
+        }
+
+        if (gridView.hasSelection()) {
+            // Mode: Cell selected first -> place number and deselect
+            val row = gridView.getSelectedRow()
+            val col = gridView.getSelectedCol()
+            val oldValue = gridView.getBoard().getValue(row, col)
+            if (oldValue != number) {
+                gridView.setValueAtSelected(number)
+                recordAction(row, col, oldValue, number)
+            }
+            gridView.clearSelection()
+            clearSelectedNumber()
+            updateValidation()
+            checkForCompletion()
+            saveGame()
+        } else {
+            // Mode: No cell selected -> toggle number selection for "painting" mode
+            if (selectedNumber == number) {
+                // Deselect if same number clicked again
+                clearSelectedNumber()
+            } else {
+                selectNumber(number)
+            }
+        }
+    }
+
+    private fun selectNumber(number: Int) {
+        selectedNumber = number
+        updateNumberButtonsHighlight()
+    }
+
+    private fun clearSelectedNumber() {
+        selectedNumber = 0
+        updateNumberButtonsHighlight()
+    }
+
+    private fun updateNumberButtonsHighlight() {
+        numberButtons.forEachIndexed { index, button ->
+            val buttonNumber = index + 1
+            if (buttonNumber == selectedNumber) {
+                // Highlight selected number
+                button.setBackgroundColor(ContextCompat.getColor(this, R.color.sudoku_pad_button_selected))
+            } else {
+                // Reset to default
+                button.setBackgroundColor(ContextCompat.getColor(this, R.color.sudoku_pad_button_background))
+            }
+        }
+        notesButton.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                if (notesMode) R.color.sudoku_pad_button_selected else R.color.sudoku_pad_button_background
+            )
+        )
+    }
+
+    private fun onNotesClicked() {
+        if (isPuzzleSolved) return
+        setNotesMode(!notesMode)
+    }
+
+    private fun setNotesMode(enabled: Boolean) {
+        notesMode = enabled
+        updateNumberButtonsHighlight()
+    }
+
+    private fun onClearClicked() {
+        if (isPuzzleSolved) return
+
+        // Clear selected number if any
+        if (selectedNumber > 0) {
+            clearSelectedNumber()
+        }
+
+        // Clear cell value if a cell is selected
+        if (gridView.hasSelection()) {
+            val row = gridView.getSelectedRow()
+            val col = gridView.getSelectedCol()
+            val oldValue = gridView.getBoard().getValue(row, col)
+            if (oldValue != 0) {
+                gridView.setValueAtSelected(0)
+                recordAction(row, col, oldValue, 0)
+            } else {
+                gridView.clearNotesAtSelected()
+            }
+            gridView.clearSelection()
+            updateValidation()
+            saveGame()
+        }
+    }
+
+    // ── Astuce ───────────────────────────────────────────────────────────────
+
+    /** Vrai dès qu'une astuce a servi dans la grille en cours : elle ne rapporte plus rien. */
+    private val hintPrefs by lazy { getSharedPreferences("sudoku_hints", MODE_PRIVATE) }
+    private var assisted: Boolean
+        get() = hintPrefs.getBoolean("assisted", false)
+        set(value) { hintPrefs.edit().putBoolean("assisted", value).apply() }
+
+    /**
+     * L'astuce (5 neutrinos, comme dans les puzzles du kit) : un chiffre faux est corrigé, sinon
+     * une case vide est révélée ; le chiffre devient donné, comme ceux de l'énoncé. Rien n'est
+     * payé s'il n'y a rien à montrer.
+     */
+    private fun onHintClicked() {
+        if (isPuzzleSolved) return
+        val board = gridView.getBoard()
+        val cells = (0 until 81).filter { !board.fixed[it / 9][it % 9] }
+        val wrong = cells.filter { board.cells[it / 9][it % 9].let { v -> v != 0 && v != board.solution[it / 9][it % 9] } }
+        val empty = cells.filter { board.cells[it / 9][it % 9] == 0 }
+        val cell = wrong.ifEmpty { empty }.randomOrNull() ?: return
+        if (!NeutrinoRepository(this).subtractBalance(NeutrinoRewards.HINT_COST)) return
+        assisted = true
+        val row = cell / 9; val col = cell % 9
+        board.cells[row][col] = board.solution[row][col]
+        board.fixed[row][col] = true
+        // Le chiffre révélé ne s'annule pas : on oublie les retours en arrière qui le touchent.
+        undoStack.removeAll { it.row == row && it.col == col }
+        updateUndoButton()
+        gridView.refresh()
+        updateValidation()
+        checkForCompletion()
+        saveGame()
+    }
+
+    private fun onCheckClicked() {
+        if (isPuzzleSolved) return
+
+        val board = gridView.getBoard()
+        val mistakes = SudokuGame.findMistakes(board)
+        val conflicts = SudokuGame.findConflicts(board)
+
+        gridView.setMistakes(mistakes)
+        gridView.setConflicts(conflicts)
+        gridView.setShowMistakes(true)
+        gridView.setShowConflicts(true)
+
+        val errorCount = mistakes.size + conflicts.size
+        if (errorCount > 0) {
+            setStatus(getString(R.string.sudoku_status_errors, errorCount), isError = true)
+        } else {
+            setStatus(getString(R.string.sudoku_status_no_error), isError = false)
+        }
+
+        // Reset after delay for non-easy modes
+        if (currentDifficulty != SudokuDifficulty.EASY) {
+            timerHandler.postDelayed({
+                gridView.setShowMistakes(false)
+                gridView.setShowConflicts(false)
+                gridView.refresh()
+            }, 2000)
+        }
+    }
+
+    private fun updateValidation() {
+        val board = gridView.getBoard()
+        val mistakes = SudokuGame.findMistakes(board)
+        val conflicts = SudokuGame.findConflicts(board)
+
+        gridView.setMistakes(mistakes)
+        gridView.setConflicts(conflicts)
+
+        if (currentDifficulty.showErrorsRealtime) {
+            val errorCount = mistakes.size
+            if (errorCount > 0) {
+                setStatus(getString(R.string.sudoku_status_mistakes, errorCount), isError = true)
+            } else {
+                setStatus(getString(R.string.sudoku_status_no_error), isError = false)
+            }
+        }
+    }
+
+    private fun checkForCompletion() {
+        if (isPuzzleSolved) return
+        val board = gridView.getBoard()
+
+        if (board.isSolved()) {
+            isPuzzleSolved = true
+            val helped = assisted
+            if (!helped) GameStatsRepository(this).recordSudokuWon()
+            stopTimer()
+            setStatus(getString(R.string.sudoku_status_solved), isError = false)
+            statusText.setTextColor(ContextCompat.getColor(this, R.color.sudoku_status_ok))
+
+            // Clear save on completion
+            lifecycleScope.launch(Dispatchers.IO) {
+                database.sudokuDao().deleteSave()
+            }
+
+            if (!helped) NeutrinoRepository(this).addBalance(NeutrinoRewards.sudoku(currentDifficulty.ordinal))
+            assisted = false
+
+            Toast.makeText(this, R.string.sudoku_status_solved, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun setStatus(message: String, isError: Boolean) {
+        statusText.text = message
+        statusText.visibility = View.VISIBLE
+        statusText.setTextColor(
+            ContextCompat.getColor(
+                this,
+                if (isError) R.color.sudoku_status_error else R.color.startup_text_secondary
+            )
+        )
+    }
+
+    // ── Undo ─────────────────────────────────────────────────────────────────
+
+    private fun recordAction(row: Int, col: Int, oldValue: Int, newValue: Int) {
+        undoStack.addLast(SudokuAction(row, col, oldValue, newValue))
+        updateUndoButton()
+    }
+
+    private fun clearHistory() {
+        undoStack.clear()
+        updateUndoButton()
+    }
+
+    private fun onUndoClicked() {
+        if (isPuzzleSolved || undoStack.isEmpty()) return
+        val action = undoStack.removeLast()
+        gridView.setValueAt(action.row, action.col, action.oldValue)
+        gridView.clearSelection()
+        updateUndoButton()
+        updateValidation()
+        saveGame()
+    }
+
+    private fun updateUndoButton() {
+        undoButton.isEnabled = undoStack.isNotEmpty()
+        undoButton.alpha = if (undoStack.isNotEmpty()) 1f else 0.35f
+    }
+
+    private fun saveGame() {
+        if (isPuzzleSolved) return
+
+        val board = gridView.getBoard()
+        // Tant qu'aucune grille n'est générée (choix de difficulté ouvert), il n'y a rien à
+        // reprendre : sauvegarder la grille vide proposerait plus tard de « reprendre » du vide.
+        if (board.fixed.none { row -> row.any { it } }) return
+        val notes = gridView.getNotesMasks()
+        val difficulty = currentDifficulty
+        val elapsed = elapsedTimeMs
+        lifecycleScope.launch(Dispatchers.IO) {
+            val save = SudokuSaveEntity.fromBoard(
+                board = board,
+                difficulty = difficulty,
+                elapsedTimeMs = elapsed,
+                isSolved = false,
+                notes = notes
+            )
+            database.sudokuDao().saveSave(save)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopTimer()
+        saveGame()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isPuzzleSolved && gridView.getBoard().cells.any { row -> row.any { it != 0 } }) {
+            startTimer()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timerHandler.removeCallbacksAndMessages(null)
+    }
+}

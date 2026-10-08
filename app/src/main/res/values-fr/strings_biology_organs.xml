@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_layer_organs">Organes</string>
+    <string name="bio_organ_structure">Organe, lobe, paroi d’organe ou tissu</string>
+    <string name="bio_organ_coverage">Organes : %1$d structures sélectionnables, dont les parois du cœur, cinq lobes pulmonaires, le foie, le tube digestif, les organes urinaires et plusieurs glandes. Les organes BodyParts3D conservent leurs positions d’origine ; les poumons et la thyroïde Z-Anatomy partagent un recalage approximatif sur la cage thoracique. Le cœur montre ses parois ; les valves sont absentes ; les vaisseaux coronaires figurent dans la couche vasculaire. Les corps érectiles du pénis et le gland sont inclus. Les muscles bulbo-spongieux et ischio-caverneux sont absents des sources importées. Le côlon sigmoïde et les glandes parotides ne sont pas modélisés séparément. Ce modèle masculin adulte ne comprend pas les organes reproducteurs féminins. Le cerveau, les réseaux nerveux, la structure fine des tissus et les animations physiologiques restent hors de cette couche. Les appareils et régions sont des groupes de navigation ; le pancréas possède par exemple aussi une fonction endocrine.</string>
+    <string name="bio_organ_reference">Organes internes · manuel d’anatomie OpenStax</string>
+    <string name="bio_visceral_modifications">Surfaces d’organes ajoutées : cinq lobes pulmonaires et la thyroïde de Z-Anatomy, recalés ensemble sur les os thoraciques par une échelle uniforme, une rotation et une translation. Les deux lobes gauches reçoivent ensuite un ajustement rigide commun pour réduire leur chevauchement avec le cœur. Les détails de surface sont simplifiés pour l’affichage mobile. Les poses d’origine diffèrent ; les contacts avec les organes voisins restent donc approximatifs. Tous les reins proviennent de BodyParts3D 4.0 ; les modèles rénaux Z-Anatomy portant une attribution supplémentaire non commerciale sont exclus.</string>
+    <string name="bio_colors_organs">Colorer les organes par appareil</string>
+    <string name="bio_colors_organs_hint">Les couleurs des organes sont indicatives. Désactivez les couleurs par appareil pour retrouver les teintes propres aux tissus.</string>
+    <string name="bio_organ_systems">Filtrer les organes par appareil</string>
+    <string name="bio_organ_systems_count">Appareils des organes · %1$d/%2$d ▾</string>
+    <string name="bio_organ_systems_hint">Ces filtres concernent uniquement la couche Organes internes. Ils se combinent aux régions. Le pancréas est classé dans la digestion et les testicules dans la reproduction, bien qu’ils aient aussi des fonctions endocrines.</string>
+    <string name="bio_system_cardiovascular">Cœur</string>
+    <string name="bio_system_respiratory">Appareil respiratoire</string>
+    <string name="bio_system_digestive">Appareil digestif</string>
+    <string name="bio_system_urinary">Appareil urinaire</string>
+    <string name="bio_system_endocrine">Glandes endocrines</string>
+    <string name="bio_system_lymphatic">Organes lymphoïdes</string>
+    <string name="bio_system_reproductive">Appareil reproducteur masculin</string>
+</resources>

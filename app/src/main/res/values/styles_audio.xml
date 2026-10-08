@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Le style commun de l'appli : posé par ThemedActivity sur chaque écran, après le thème de
+         couleur choisi (les attributs a2uMusicAccent en viennent). Né avec la suite audio, d'où
+         le nom des couleurs audio_* qu'il utilise. -->
+    <style name="ThemeOverlay.A2U.App" parent="">
+        <item name="a2uAudioTheme">true</item>
+        <item name="a2uMidiAccent">?attr/a2uMusicAccent</item>
+        <item name="a2uMidiAccentOnText">@color/audio_on_accent</item>
+        <item name="android:windowBackground">@color/audio_background</item>
+        <item name="android:colorBackground">@color/audio_background</item>
+        <item name="colorSurface">@color/audio_surface</item>
+        <item name="colorOnSurface">@color/audio_text_primary</item>
+        <item name="colorPrimary">?attr/a2uMusicAccent</item>
+        <item name="colorOnPrimary">@color/audio_on_accent</item>
+        <item name="colorSecondary">?attr/a2uMusicAccent</item>
+        <item name="colorOnSecondary">@color/audio_on_accent</item>
+        <item name="colorAccent">?attr/a2uMusicAccent</item>
+        <item name="android:colorAccent">?attr/a2uMusicAccent</item>
+        <item name="colorControlActivated">?attr/a2uMusicAccent</item>
+        <item name="colorControlNormal">@color/audio_text_secondary</item>
+        <item name="android:colorControlNormal">@color/audio_text_secondary</item>
+        <item name="colorControlHighlight">@color/audio_ripple</item>
+        <item name="colorButtonNormal">@color/audio_surface_raised</item>
+        <item name="editTextColor">@color/audio_text_primary</item>
+        <item name="homeAsUpIndicator">@drawable/ic_app_back</item>
+        <item name="colorOnBackground">@color/audio_text_primary</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:textColorPrimary">@color/audio_text_primary</item>
+        <item name="android:textColorSecondary">@color/audio_text_secondary</item>
+        <item name="android:textColorHint">@color/audio_text_secondary</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.A2U.Audio.AlertDialog</item>
+        <item name="android:alertDialogTheme">@style/ThemeOverlay.A2U.Audio.AlertDialog</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.A2U.Audio.AlertDialog</item>
+        <item name="android:dialogTheme">@style/ThemeOverlay.A2U.Audio.Dialog</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.A2U.Audio.BottomSheet</item>
+        <item name="popupMenuStyle">@style/Widget.A2U.Audio.PopupMenu</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.A2U.Audio.PopupMenu</item>
+        <item name="popupWindowStyle">@style/Widget.A2U.Audio.PopupWindow</item>
+        <item name="android:popupMenuStyle">@style/Widget.A2U.Audio.PopupMenu</item>
+        <item name="android:popupWindowStyle">@style/Widget.A2U.Audio.PopupWindow</item>
+        <item name="materialButtonStyle">?attr/a2uMaterialButtonStyle</item>
+        <item name="floatingActionButtonStyle">@style/Widget.A2U.Fab</item>
+        <item name="android:buttonStyle">?attr/a2uPlatformButtonStyle</item>
+        <item name="snackbarStyle">@style/Widget.A2U.Audio.Snackbar</item>
+        <item name="snackbarTextViewStyle">@style/Widget.A2U.Audio.SnackbarText</item>
+        <item name="snackbarButtonStyle">@style/Widget.A2U.Audio.DialogButton</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.A2U.Audio.Small</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.A2U.Audio.Medium</item>
+    </style>
+
+    <!-- La suite audio garde son nom de style, mais n'a plus rien en propre. -->
+    <style name="ThemeOverlay.A2U.Audio" parent="ThemeOverlay.A2U.App" />
+
+    <style name="ThemeOverlay.A2U.Audio.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:windowBackground">?attr/a2uDialogBackground</item>
+        <item name="colorSurface">@color/audio_surface</item>
+        <item name="colorPrimary">?attr/a2uMusicAccent</item>
+        <item name="colorAccent">?attr/a2uMusicAccent</item>
+        <item name="android:colorAccent">?attr/a2uMusicAccent</item>
+        <item name="android:textColorPrimary">@color/audio_text_primary</item>
+        <item name="android:textColorSecondary">@color/audio_text_secondary</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.A2U.Audio.DialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.A2U.Audio.DialogButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.A2U.Audio.DialogButton</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.A2U.Audio.Medium</item>
+    </style>
+
+    <style name="ThemeOverlay.A2U.Audio.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="a2uAudioTheme">true</item>
+        <item name="android:windowBackground">?attr/a2uDialogBackground</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.55</item>
+        <item name="colorSurface">@color/audio_surface</item>
+        <item name="colorPrimary">?attr/a2uMusicAccent</item>
+        <item name="colorAccent">?attr/a2uMusicAccent</item>
+        <item name="android:colorAccent">?attr/a2uMusicAccent</item>
+        <item name="android:textColorPrimary">@color/audio_text_primary</item>
+        <item name="android:textColorSecondary">@color/audio_text_secondary</item>
+        <item name="materialButtonStyle">?attr/a2uMaterialButtonStyle</item>
+        <item name="android:buttonStyle">?attr/a2uPlatformButtonStyle</item>
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.A2U.Audio.Small</item>
+    </style>
+
+    <style name="ThemeOverlay.A2U.Audio.BottomSheet" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.A2U.Audio.BottomSheet</item>
+        <item name="colorSurface">@color/audio_surface</item>
+        <item name="colorPrimary">?attr/a2uMusicAccent</item>
+        <item name="android:textColorPrimary">@color/audio_text_primary</item>
+        <item name="android:textColorSecondary">@color/audio_text_secondary</item>
+    </style>
+    <style name="Widget.A2U.Audio.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/audio_surface</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.A2U.Audio.Sheet</item>
+    </style>
+    <style name="ShapeAppearance.A2U.Audio.Small" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">?attr/a2uCorner16</item>
+    </style>
+    <style name="ShapeAppearance.A2U.Audio.Medium" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">?attr/a2uCorner24</item>
+    </style>
+    <style name="ShapeAppearance.A2U.Audio.Sheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">?attr/a2uCorner24</item>
+        <item name="cornerSizeTopRight">?attr/a2uCorner24</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+    <style name="Widget.A2U.Audio.Button" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">?attr/a2uCorner16</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/audio_on_accent</item>
+        <item name="backgroundTint">@color/audio_button_tint</item>
+    </style>
+    <style name="Widget.A2U.Audio.PlatformButton" parent="android:style/Widget.Material.Button">
+        <item name="android:background">?attr/a2uChipBackground</item>
+        <item name="android:textColor">@color/audio_text_primary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+    </style>
+    <style name="Widget.A2U.Audio.DialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/a2uMusicAccent</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">?attr/a2uCorner14</item>
+    </style>
+    <style name="Widget.A2U.Audio.PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:popupBackground">?attr/a2uPopupBackground</item>
+        <item name="android:popupElevation">?attr/a2uElevation12</item>
+    </style>
+    <style name="Widget.A2U.Audio.PopupWindow" parent="Widget.AppCompat.PopupWindow">
+        <item name="android:popupBackground">?attr/a2uPopupBackground</item>
+        <item name="android:popupElevation">?attr/a2uElevation12</item>
+    </style>
+    <style name="Widget.A2U.Audio.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="backgroundTint">@color/audio_surface_raised</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.A2U.Audio.Small</item>
+        <item name="android:elevation">?attr/a2uElevation8</item>
+    </style>
+    <style name="Widget.A2U.Audio.SnackbarText" parent="Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/audio_text_primary</item>
+        <item name="android:maxLines">5</item>
+    </style>
+</resources>

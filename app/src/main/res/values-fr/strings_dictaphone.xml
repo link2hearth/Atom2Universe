@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dictaphone_title">Dictaphone</string>
+    <string name="dictaphone_action_record">Enregistrer</string>
+    <string name="dictaphone_action_stop">Arrêter</string>
+    <string name="dictaphone_action_play">Lire</string>
+    <string name="dictaphone_action_rename">Renommer</string>
+    <string name="dictaphone_action_delete">Supprimer</string>
+    <string name="dictaphone_recordings_title">Enregistrements</string>
+    <string name="dictaphone_recordings_empty">Aucun enregistrement. Appuyez sur le micro pour commencer.</string>
+    <string name="dictaphone_status_saving">Sauvegarde en cours…</string>
+    <string name="dictaphone_rename_title">Renommer l\'enregistrement</string>
+    <string name="dictaphone_delete_title">Supprimer l\'enregistrement</string>
+    <string name="dictaphone_delete_message">Supprimer « %1$s » ?</string>
+    <string name="dictaphone_delete_confirm">Supprimer</string>
+    <string name="audio_hub_dictaphone_title">Dictaphone</string>
+    <string name="audio_hub_dictaphone_desc">Enregistreur vocal sauvegardé dans Musique</string>
+</resources>

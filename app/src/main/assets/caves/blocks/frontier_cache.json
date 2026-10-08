@@ -1,0 +1,20 @@
+{
+  "id": 9801,
+  "name": "frontier_cache",
+  "texture_top": "base_art:cache_top",
+  "texture_side": "base_art:cache_side",
+  "texture_bottom": "base_art:cache_bottom",
+  "texture_front": "base_art:cache_front",
+  "texture_back": "base_art:cache_back",
+  "orient_mode": "facing",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_chest",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

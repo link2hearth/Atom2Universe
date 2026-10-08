@@ -1,0 +1,18 @@
+{
+  "hardness": 1.5,
+  "placement_rule": "any",
+  "texture_bottom": "cozy:material:9:D7CDB4",
+  "orient_mode": "facing",
+  "texture_side": "cozy:material:9:D7CDB4",
+  "tags": [
+    "window"
+  ],
+  "id": 9221,
+  "transparent": true,
+  "window": 2,
+  "color": "#D7CDB4",
+  "drop": "window_wood_plank_white",
+  "name": "window_wood_plank_white",
+  "creative_tab": "wood",
+  "texture_top": "cozy:material:9:D7CDB4"
+}

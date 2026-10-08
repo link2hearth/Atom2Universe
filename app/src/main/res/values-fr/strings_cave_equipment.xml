@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_gear_helmet">Casque en %1$s · Tier %2$d</string>
+    <string name="cave_gear_chest">Plastron en %1$s · Tier %2$d</string>
+    <string name="cave_gear_legs">Jambières en %1$s · Tier %2$d</string>
+    <string name="cave_gear_boots">Bottes en %1$s · Tier %2$d</string>
+    <string name="cave_gear_slot_helmet">Casque</string>
+    <string name="cave_gear_slot_chest">Plastron</string>
+    <string name="cave_gear_slot_legs">Jambières</string>
+    <string name="cave_gear_slot_boots">Bottes</string>
+    <string name="cave_gear_speed">Vitesse de déplacement</string>
+    <string name="cave_gear_jump">Hauteur de saut</string>
+    <string name="cave_gear_attack">Vitesse d’attaque</string>
+    <string name="cave_gear_crit">Chance de critique</string>
+    <string name="cave_gear_crit_damage">Dégâts critiques</string>
+    <string name="cave_gear_dodge">Chance d’esquive</string>
+    <string name="cave_gear_hp">PV supplémentaires</string>
+    <string name="cave_gear_defense">Défense</string>
+    <string name="cave_gear_damage">Dégâts</string>
+    <string name="cave_gear_range">%1$s : %2$d–%3$d</string>
+    <string name="cave_gear_roll">%1$s : %2$d (fourchette %3$d–%4$d)</string>
+    <string name="cave_gear_bonus">%1$s : +%2$d%%</string>
+    <string name="cave_gear_bonus_range">%1$s : +%2$d–%3$d%%</string>
+    <string name="cave_gear_random_hint">Chaque fabrication tire ses statistiques indépendamment et reçoit deux bonus différents parmi cette liste :</string>
+    <string name="cave_gear_equip_hint" formatted="false">Les bonus d’armure s’appliquent quand elle est portée ; ceux d’une arme quand elle est tenue en mode combat. Un critique inflige 200% des dégâts, plus les bonus de dégâts critiques. La défense est comparée à la profondeur de l’attaquant.</string>
+    <string name="cave_gear_critical">Coup critique !</string>
+    <string name="cave_gear_dodged">Esquivé !</string>
+    <string name="cave_gear_equip">Équiper</string>
+    <string name="cave_gear_equipped">Équipement porté</string>
+    <string name="cave_gear_remove">Tout retirer</string>
+    <string name="cave_gear_totals">PV maximum : %1$d\nRéduction des dégâts à cette profondeur : %2$d%%</string>
+    <string name="cave_gear_legacy">Armure complète (ancienne)</string>
+    <string name="cave_gear_empty">%1$s : vide</string>
+    <string name="cave_gear_total_bonus">%1$s : +%2$d%% (plafond %3$d%%)</string>
+    <string name="cave_gear_compare">Actuellement porté : %1$s\n%2$s</string>
+</resources>

@@ -1,0 +1,20 @@
+{
+  "id": 2664,
+  "name": "laboratory_bench",
+  "texture_top": "cave_furniture:oak_planks",
+  "texture_side": "cave_furniture:oak_wood",
+  "texture_bottom": "cave_furniture:oak_planks",
+  "texture_front": "cave_furniture:oak_books",
+  "color": "#947958",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "laboratory_bench",
+  "creative_tab": "wood",
+  "orient_mode": "facing",
+  "furniture": "bookshelf",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "wood"
+  ]
+}

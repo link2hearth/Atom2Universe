@@ -1,0 +1,116 @@
+{
+  "matrix": [
+    [
+      0.9439514021405064,
+      -0.001642483193773571,
+      0.00022544050243531694
+    ],
+    [
+      0.0016405589098853549,
+      0.9439190286458574,
+      0.007821387614346087
+    ],
+    [
+      -0.00023904168080632413,
+      -0.007820983743035312,
+      0.943920427393038
+    ]
+  ],
+  "offset": [
+    -0.002822375941994669,
+    0.0010857316777574955,
+    0.08497095459374718
+  ],
+  "checks": {
+    "First rib.l": {
+      "medianMm": 1.510672401291252,
+      "p95Mm": 2.9707431301486102
+    },
+    "First rib.r": {
+      "medianMm": 1.503838551811015,
+      "p95Mm": 2.7569093940636358
+    },
+    "Fourth rib.l": {
+      "medianMm": 2.009094605688717,
+      "p95Mm": 5.63111756555974
+    },
+    "Fourth rib.r": {
+      "medianMm": 1.9354672536661857,
+      "p95Mm": 4.799336786122841
+    },
+    "Eighth rib.l": {
+      "medianMm": 2.9525922508486904,
+      "p95Mm": 6.643741382446626
+    },
+    "Eighth rib.r": {
+      "medianMm": 3.0179276549150345,
+      "p95Mm": 6.521596623221388
+    },
+    "Twelfth rib.l": {
+      "medianMm": 2.758649031472638,
+      "p95Mm": 12.493881465791238
+    },
+    "Twelfth rib.r": {
+      "medianMm": 2.8405048938251434,
+      "p95Mm": 11.86710589391969
+    },
+    "Vertebra T1": {
+      "medianMm": 2.5807374891586923,
+      "p95Mm": 4.0325636791429655
+    },
+    "Vertebra T6": {
+      "medianMm": 1.970811821543615,
+      "p95Mm": 3.017309321805884
+    },
+    "Vertebra T12": {
+      "medianMm": 1.9290080427663607,
+      "p95Mm": 3.6696104160150753
+    }
+  },
+  "leftLungAdjustment": {
+    "centroidDisplacementMm": [
+      2.2908800565377696,
+      1.6657187370829885,
+      -0.046794890851062365
+    ],
+    "angleDegrees": 4.179951306677286,
+    "checks": {
+      "heart": {
+        "inside": 126,
+        "maxPenetrationMm": 3.5261609603062514,
+        "samples": 2400
+      },
+      "ribs": {
+        "inside": 24,
+        "maxPenetrationMm": 11.373329713737402,
+        "samples": 1800
+      }
+    },
+    "matrix": [
+      [
+        0.9982548893766338,
+        -0.008114602901374857,
+        -0.05849212814898395
+      ],
+      [
+        0.00560465867474551,
+        0.9990615953871967,
+        -0.04294783374662799
+      ],
+      [
+        0.0587857434824443,
+        0.042545056612271585,
+        0.9973636019632331
+      ]
+    ],
+    "offset": [
+      -0.010079892508262918,
+      -0.0007607726334173393,
+      0.05630021436937095
+    ],
+    "scale": 1.0
+  },
+  "skeletalSourceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea",
+  "method": "Equal-bone-weighted, 90%-trimmed nearest-vertex ICP on eight ribs and T1/T6/T12; one thoracic similarity. Left lobes adjusted together by a rigid transform against sampled heart/rib contacts, with original-pose anchors. No non-rigid deformation.",
+  "limitations": "Nearest-vertex residuals and sampled contact depths do not establish anatomical accuracy. Different source poses and lung inflation leave residual intersections; no claim of clinical validation."
+}

@@ -1,0 +1,14 @@
+{
+  "id": 9020,
+  "name": "cotton_peach",
+  "texture_top": "cozy:cloth:5:FFCBA4",
+  "texture_side": "cozy:cloth:5:FFCBA4",
+  "texture_bottom": "cozy:cloth:5:FFCBA4",
+  "color": "#FFCBA4",
+  "hardness": 1.0,
+  "drop": "cotton_peach",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

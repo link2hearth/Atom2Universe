@@ -1,0 +1,18 @@
+{
+  "id": 3131,
+  "name": "pear",
+  "texture_top": "cozy:fruit:1:B2A357",
+  "texture_side": "cozy:fruit:1:B2A357",
+  "texture_bottom": "cozy:fruit:1:B2A357",
+  "color": "#B2A357",
+  "hardness": 0.3,
+  "drop": "pear",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "transparent": true,
+  "decoration": true,
+  "placeable": false,
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

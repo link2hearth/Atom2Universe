@@ -1,0 +1,14 @@
+{
+  "id": 2701,
+  "name": "street_concrete",
+  "texture_top": "street:concrete",
+  "texture_side": "street:concrete",
+  "texture_bottom": "street:concrete",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_concrete",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

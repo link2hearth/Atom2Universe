@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_title">Golf</string>
+    <string name="classic_entry">Golf classique · 18 trous</string>
+    <string name="classic_course">Les Jardins du Soleil</string>
+    <string name="classic_course_detail">18 trous · Par 72 · 14 clubs fixes</string>
+    <string name="classic_start">Jouer les 18 trous</string>
+    <string name="classic_resume">Continuer · trou %1$d</string>
+    <string name="classic_replace">Commencer un nouveau parcours et remplacer la partie en cours ?</string>
+    <string name="classic_practice">Choisir un trou d’entraînement</string>
+    <string name="classic_hole_choice">%1$d · %2$s\nPar %3$d · %4$d m</string>
+    <string name="classic_help">Comment jouer</string>
+    <string name="classic_help_body">Glisse sur le côté pour viser, pince pour zoomer. À chaque coup, le caddie propose un club et une cible ; change de club avec les flèches ou en touchant son nom. Le bouton caméra ou la carte ouvre une vue aérienne libre : deux doigts la déplacent, la zooment et la tournent, et un doigt règle toujours la visée, d’autant plus finement que tu es zoomé.\n\nPour frapper, pose un doigt n’importe où sur le parcours et tire-le vers le bas : plus tu tires, plus c’est puissant. Le vol pointillé et son cercle montrent où tomberait un coup propre sans vent, et la ligne pâle la roule qui suit. Tant que tu tiens, une aiguille balaie l’arc : lâche quand elle est au centre doré. Décentrée, la balle tourne de ce côté et perd de la distance. Remonte le doigt pour annuler.\n\nLa balle dans le coin règle l’endroit où le club la frappe : en bas, elle monte plus haut et s’arrête vite ; en haut, elle vole plus bas et roule plus loin ; à gauche ou à droite, elle tourne de ce côté. Le vent, les pentes et la position de la balle sont à toi de les lire : les points sur le green descendent la pente.\n\nL’eau et le hors limites ajoutent un coup de pénalité et ramènent la balle à la position précédente. Chaque coup compte. La partie se sauvegarde automatiquement.</string>
+    <string name="classic_hud">%1$d/%5$d · P%2$d · %3$d · %4$s</string>
+    <string name="classic_hud_accessible">Trou %1$d, %6$d sur %5$d dans cette partie, par %2$d, %3$d coups. Score total %4$s.</string>
+    <string name="classic_lie_distance">%1$s · %2$d m %3$s</string>
+    <string name="classic_wind_speed">%1$.1f m/s</string>
+    <string name="classic_uphill">↑%1$d m</string>
+    <string name="classic_downhill">↓%1$d m</string>
+    <string name="classic_club_choice">%1$s     %2$d m · %3$d°</string>
+    <string name="classic_choose_club">Choisir un club · portée fixe</string>
+    <string name="classic_scene_accessible">Parcours : glisse sur le côté pour viser, tire vers le bas pour frapper</string>
+    <string name="classic_shot_readout">%1$d %% · %2$d m</string>
+    <string name="classic_putt_readout">%1$.1f m</string>
+    <string name="classic_club_longer">Club plus long</string>
+    <string name="classic_club_shorter">Club plus court</string>
+    <string name="classic_spin_pad">Point d’impact sur la balle : en bas elle s’arrête vite, en haut elle roule plus loin, sur les côtés elle tourne</string>
+    <string name="classic_swing_left">À gauche</string>
+    <string name="classic_swing_right">À droite</string>
+    <string name="classic_swing_perfect">Parfait !</string>
+    <string name="classic_swing_good">Bien !</string>
+    <string name="classic_swing_miss">Coup raté</string>
+    <string name="classic_overview">Plan du trou · toucher pour survoler</string>
+    <string name="classic_penalty">Pénalité +1 · retour à la position précédente</string>
+    <string name="classic_score_row">Trou %1$02d     Par %2$d     %3$s</string>
+    <string name="classic_unplayed">—</string>
+    <string name="classic_even">E</string>
+    <string name="classic_sound_on">Activer le son</string>
+    <string name="classic_sound_off">Couper le son</string>
+    <string-array name="classic_clubs"><item>Driver</item><item>Bois 3</item><item>Bois 5</item><item>Hybride 4</item><item>Fer 5</item><item>Fer 6</item><item>Fer 7</item><item>Fer 8</item><item>Fer 9</item><item>PW</item><item>GW</item><item>SW</item><item>LW</item><item>Putter</item></string-array>
+    <string-array name="classic_lies"><item>Départ</item><item>Fairway</item><item>Rough</item><item>Sable</item><item>Green</item><item>Eau</item><item>Hors limites</item><item>Semi-rough</item><item>Collier du green</item></string-array>
+    <string-array name="classic_holes"><item>Premier rayon</item><item>Le verger</item><item>L’étang bleu</item><item>La grande prairie</item><item>La rive aux saules</item><item>Le virage des pins</item><item>La brise marine</item><item>Le moulin</item><item>La porte du jardin</item><item>La vallée</item><item>Les fleurs sauvages</item><item>La terrasse</item><item>La crique tranquille</item><item>Les dunes</item><item>La colline d’été</item><item>Le chant des oiseaux</item><item>Le dernier virage</item><item>Retour au bord de l’eau</item></string-array>
+    <string name="classic_golfer_title">Ton personnage</string>
+    <string name="classic_golfer_model">Personnage</string>
+    <string name="classic_golfer_outfit">Tenue</string>
+    <string name="classic_golfer_skin">Carnation</string>
+    <string name="classic_golfer_preview">Aperçu 3D du personnage. Glisse sur le côté pour le faire tourner.</string>
+    <string name="classic_golfer_rotate">Glisse pour faire tourner · tes choix sont sauvegardés</string>
+    <string-array name="classic_golfer_models"><item>Golfeur</item><item>Golfeuse</item></string-array>
+    <string-array name="classic_golfer_outfits"><item>Tour · polo, pantalon et casquette</item><item>Été · polo, short et visière</item><item>Club-house · pull col V et pantalon</item></string-array>
+    <string-array name="classic_golfer_skins"><item>Claire</item><item>Mate</item><item>Foncée</item></string-array>
+    <string name="classic_choose_course">Choisir un parcours</string>
+    <string name="classic_course_summary">%1$d trous · Par %2$d · %3$d m</string>
+    <string name="classic_gardens_description">Parcours 1 · Facile à maîtriser. Fairways très larges, greens doux et occasions de birdie ou d’eagle.</string>
+    <string name="classic_heather_course">Les Hauts de Bruyère</string>
+    <string name="classic_heather_description">Parcours 2 · Un cran au-dessus. Dévers, greens en diagonale et choix de placement, avec un côté sûr pour jouer prudemment.</string>
+    <string name="classic_hole_choice_tip">%1$d · %2$s\nPar %3$d · %4$d m\n%5$s</string>
+    <string-array name="classic_heather_holes">
+        <item>La lisière</item>
+        <item>Le coude des pins</item>
+        <item>Le redan doux</item>
+        <item>Les deux clairières</item>
+        <item>La fourche</item>
+        <item>Le cap de bruyère</item>
+        <item>Le bol tranquille</item>
+        <item>Le col des dunes</item>
+        <item>Le balcon</item>
+        <item>La descente</item>
+        <item>Les épaules croisées</item>
+        <item>La diagonale</item>
+        <item>La grande anse</item>
+        <item>La tentation</item>
+        <item>Le long retour</item>
+        <item>La rive haute</item>
+        <item>Le dernier redan</item>
+        <item>Le belvédère</item>
+    </string-array>
+    <string-array name="classic_heather_tips">
+        <item>Privilégie le côté opposé au bunker de fairway pour ouvrir le green.</item>
+        <item>Le grand plateau offre de la place ; couper le virage rapproche du bunker.</item>
+        <item>Vise le côté haut du green, opposé au bunker : le dévers accompagne la balle.</item>
+        <item>Deux clairières permettent de construire ce par 5 en trois coups.</item>
+        <item>Choisis un côté du bunker central pour dégager ton approche.</item>
+        <item>Suis le fairway le long de la berge pour éviter de devoir survoler l’eau.</item>
+        <item>Un fer court vers le centre ; le vallon accueille les coups prudents.</item>
+        <item>Pose-toi avant le creux, ou porte la balle jusqu’à la seconde terrasse.</item>
+        <item>Garde assez de club pour monter au balcon ; le fond est plus haut.</item>
+        <item>Profite de la descente, puis vise le centre du green bombé.</item>
+        <item>Le grand plateau extérieur donne le meilleur angle vers la crête.</item>
+        <item>Vise l’entrée en herbe ; la diagonale la plus courte rencontre le sable.</item>
+        <item>Contourne le lac par le fairway ; couper l’anse reste un choix.</item>
+        <item>Le grand plateau prépare une approche courte ; la ligne directe est plus étroite.</item>
+        <item>Un départ placé et un long fer peuvent utiliser l’entrée ouverte du green.</item>
+        <item>L’entrée en herbe offre un refuge, à l’écart du lac.</item>
+        <item>Place le départ loin du bunker de fairway pour ouvrir la diagonale vers le green.</item>
+        <item>Deux zones larges avant le green à niveaux : construis ton dernier par 5.</item>
+    </string-array>
+    <string-array name="classic_gardens_tips">
+        <item>Le large départ prépare une petite approche : vise ton premier birdie.</item>
+        <item>Utilise le grand plateau pour ouvrir le green au-delà du virage.</item>
+        <item>Un petit fer bien dosé peut rouler au trou ; l’étang reste sur le côté.</item>
+        <item>Un bon départ puis un bois ou un long fer peuvent préparer un putt d’eagle.</item>
+        <item>Suis le large fairway loin du lac, puis vise le centre du green.</item>
+        <item>Le virage est doux : privilégie un départ placé pour raccourcir l’approche.</item>
+        <item>Dose ton wedge depuis le départ surélevé ; le trou en un est possible.</item>
+        <item>Le fairway longe l’eau sans coupure : le green est attaquable en deux coups.</item>
+        <item>Profite de la grande réception ; le sable laisse le passage central ouvert.</item>
+        <item>Le départ descend, puis la montée vers le green reste douce.</item>
+        <item>Deux bons coups peuvent atteindre le grand green pour tenter l’eagle.</item>
+        <item>Un fer vers le plateau ouvert peut laisser un court putt, ou finir au trou.</item>
+        <item>À 240 m, le green est attaquable au départ pour tenter un putt d’eagle.</item>
+        <item>Utilise le large plateau pour négocier le dernier virage.</item>
+        <item>Le fairway traverse le vallon : une approche roulée reste possible.</item>
+        <item>Vise le grand green à l’écart du lac ; un coup précis peut finir au trou.</item>
+        <item>Le green en diagonale est désormais large, avec une entrée dégagée.</item>
+        <item>Un départ placé puis un bois peuvent offrir un dernier putt d’eagle.</item>
+    </string-array>
+    <string name="golf_play_length">%1$d trous</string>
+    <string name="golf_resume_length">Reprendre · %1$d</string>
+    <string name="golf_round_accessible">%1$s · %2$s</string>
+    <string name="golf_round_title">%1$s · %2$d trous</string>
+    <string name="golf_no_record">Pas encore de record</string>
+    <string name="golf_practice">Entraînement</string>
+    <string name="golf_hole_number">%1$02d</string>
+    <string name="golf_hole_detail">Par %1$d · %2$d m</string>
+    <string name="golf_front_nine">1–9</string>
+    <string name="golf_back_nine">10–18</string>
+    <string name="golf_full_round">18 trous</string>
+    <string name="golf_resume_section">↻ %1$s</string>
+    <string name="golf_section_title">%1$s · %2$s</string>
+    <string name="golf_hud_section">%1$d · %6$d/%5$d · P%2$d · %3$d · %4$s</string>
+</resources>

@@ -1,0 +1,37 @@
+{
+  "id": "us_wetlands",
+  "noise_offsets": [800, 0, 900],
+  "surface_blocks": [
+    {"block": "gravel_dirt", "noise_min": 0.35},
+    {"block": "grass", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.04,
+  "surface_variety_offset": 950,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 0.0,
+  "height_amplitude": 8.0,
+  "height_roughness": 2.0,
+  "topsoil_depth": 3,
+  "tree_density_base": 0.2,
+  "tree_density_noise_scale": 0.2,
+  "tree_type": "oak",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
+  "bush_density": 0.05,
+  "bush_block": "leaves",
+  "decoration_density": 0.035,
+  "decoration_blocks": ["rock_moss", "rock"],
+  "vegetation_density": 0.32,
+  "vegetation_blocks": [
+    {"block": "grass_wild1", "weight": 2},
+    {"block": "grass_wild2", "weight": 2},
+    {"block": "grass_wild3", "weight": 2},
+    {"block": "grass_wild4", "weight": 2},
+    {"block": "grass_brown", "weight": 1},
+    {"block": "grass_tan", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}

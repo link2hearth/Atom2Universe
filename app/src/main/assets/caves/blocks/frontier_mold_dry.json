@@ -1,0 +1,19 @@
+{
+  "id": 9829,
+  "name": "frontier_mold_dry",
+  "texture_top": "frontier:9829:top",
+  "texture_side": "frontier:9829:side",
+  "texture_bottom": "frontier:9829:top",
+  "color": "#B5613F",
+  "hardness": 0.5,
+  "drop": "fired_brick",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": [],
+  "block_height": 0.25,
+  "drop_count": 4
+}

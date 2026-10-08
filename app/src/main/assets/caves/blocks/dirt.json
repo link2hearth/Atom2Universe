@@ -1,0 +1,16 @@
+{
+  "id": 100,
+  "name": "dirt",
+  "texture_top": "base_art:dirt:0",
+  "texture_side": "base_art:dirt:0",
+  "texture_bottom": "base_art:dirt:0",
+  "color": "#A47D58",
+  "hardness": 0.8,
+  "drop": "dirt",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "soil"
+  ]
+}

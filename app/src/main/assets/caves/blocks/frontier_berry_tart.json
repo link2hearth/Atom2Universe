@@ -1,0 +1,17 @@
+{
+  "id": 9815,
+  "name": "frontier_berry_tart",
+  "texture_top": "frontier:9815:top",
+  "texture_side": "frontier:9815:side",
+  "texture_bottom": "frontier:9815:top",
+  "color": "#A78960",
+  "hardness": 0.1,
+  "drop": "frontier_berry_tart",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": true,
+  "transparent": true,
+  "harvest_category": "resource",
+  "placement_rule": "any",
+  "tags": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": 2713,
+  "name": "street_tile",
+  "texture_top": "street:tile",
+  "texture_side": "street:tile",
+  "texture_bottom": "street:tile",
+  "color": "#A6A39A",
+  "hardness": 3.0,
+  "drop": "street_tile",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/audio_background"
+    android:orientation="vertical">
+    <tag android:id="@id/app_effects_scene" android:value="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/audio_surface"
+        android:elevation="?attr/a2uElevation4"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <ImageButton
+            android:id="@+id/ed_btn_back"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/px_back"
+            android:src="@drawable/ic_app_back"
+            android:tint="@color/audio_text_primary" />
+
+        <TextView
+            android:id="@+id/ed_title"
+            style="@style/PxTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/ed_btn_undo"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/ae_undo"
+            android:src="@drawable/ic_px_undo" />
+
+        <ImageButton
+            android:id="@+id/ed_btn_redo"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/ae_redo"
+            android:src="@drawable/ic_px_redo" />
+
+        <ImageButton
+            android:id="@+id/ed_btn_more"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/px_more"
+            android:src="@drawable/ic_px_more" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.Atom2Universe.app.audioeditor.ui.TimelineView
+            android:id="@+id/ed_timeline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/ed_loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/audio_surface"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/ed_edit_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp" />
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/audio_surface_raised"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp">
+
+        <ImageButton
+            android:id="@+id/ed_btn_to_start"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/ae_to_start"
+            android:src="@drawable/ic_ae_to_start" />
+
+        <ImageButton
+            android:id="@+id/ed_btn_play"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/ae_play"
+            android:src="@drawable/ic_px_play" />
+
+        <ImageButton
+            android:id="@+id/ed_btn_stop"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/ae_stop"
+            android:src="@drawable/ic_ae_stop" />
+
+        <ImageButton
+            android:id="@+id/ed_btn_loop"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/ae_loop"
+            android:src="@drawable/ic_ae_loop" />
+
+        <ImageButton
+            android:id="@+id/ed_btn_record"
+            style="@style/PxIconButton"
+            android:contentDescription="@string/ae_record"
+            android:src="@drawable/ic_ae_record" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ed_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/audio_text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ProgressBar
+                android:id="@+id/ed_level"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="8dp"
+                android:max="1000"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,14 @@
+{
+  "id": 2002,
+  "name": "quartz",
+  "texture_top": "cozy:material:3:D5CCDD",
+  "texture_side": "cozy:material:3:D5CCDD",
+  "texture_bottom": "cozy:material:3:D5CCDD",
+  "color": "#D5CCDD",
+  "hardness": 2.5,
+  "drop": "quartz",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

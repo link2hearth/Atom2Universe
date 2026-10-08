@@ -1,0 +1,14 @@
+{
+  "id": 2014,
+  "name": "brick_cobalt",
+  "texture_top": "cozy:material:12:809FAE",
+  "texture_side": "cozy:material:12:809FAE",
+  "texture_bottom": "cozy:material:12:809FAE",
+  "color": "#809FAE",
+  "hardness": 3.5,
+  "drop": "brick_cobalt",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

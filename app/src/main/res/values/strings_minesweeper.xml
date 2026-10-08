@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minesweeper_title">Minesweeper</string>
+    <string name="minesweeper_description">Classic mine-clearing puzzle</string>
+    <string name="minesweeper_diff_easy">Easy · 10 mines</string>
+    <string name="minesweeper_diff_normal">Normal · 20 mines</string>
+    <string name="minesweeper_diff_medium">Medium · 40 mines</string>
+    <string name="minesweeper_diff_hard">Hard · 80 mines</string>
+    <string name="minesweeper_new_game">New game</string>
+    <string name="minesweeper_mines">Mines</string>
+    <string name="minesweeper_timer">Timer</string>
+    <string name="minesweeper_won">You won! 🎉  %1$s</string>
+    <string name="minesweeper_won_best">You won! 🏆 New best!  %1$s</string>
+    <string name="minesweeper_lost">Boom! 💥  Game over</string>
+    <string name="minesweeper_score_diff">Difficulty</string>
+    <string name="minesweeper_score_best">Best time</string>
+    <string name="minesweeper_score_none">—</string>
+    <string name="minesweeper_new_game_btn">New game</string>
+    <string name="minesweeper_abyss">ABYSS</string>
+    <string name="minesweeper_operation">MINESWEEPER / SONAR OPERATION</string>
+    <string name="minesweeper_ready">Sonar ready · Choose a sector</string>
+    <string name="minesweeper_scanning">Exploration in progress</string>
+    <string name="minesweeper_secured">Zone secured · Mission complete</string>
+    <string name="minesweeper_contact">Mine contact · Signal lost</string>
+    <string name="minesweeper_hint">Tap to explore · Hold to flag</string>
+    <string name="minesweeper_remaining">Mines − flags: %1$d</string>
+    <string name="minesweeper_explored">Explored: %1$d%%</string>
+    <string name="minesweeper_time_format">%1$02d:%2$02d</string>
+    <string name="minesweeper_number">%1$d</string>
+</resources>

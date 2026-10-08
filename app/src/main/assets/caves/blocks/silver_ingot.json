@@ -1,0 +1,18 @@
+{
+  "id": 3117,
+  "name": "silver_ingot",
+  "texture_top": "cozy:resource:17:CBD1D5",
+  "texture_side": "cozy:resource:17:CBD1D5",
+  "texture_bottom": "cozy:resource:17:CBD1D5",
+  "color": "#CBD1D5",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "silver_ingot",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

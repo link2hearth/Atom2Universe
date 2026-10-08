@@ -1,0 +1,17 @@
+{
+  "id": 2635,
+  "name": "cave_travertine",
+  "texture_top": "cave_art:a_cave_travertine_top",
+  "texture_side": "cave_art:a_cave_travertine",
+  "texture_bottom": "cave_art:a_cave_travertine_top",
+  "color": "#DACAAD",
+  "hardness": 1.5,
+  "light_emission": 0,
+  "drop": "cave_travertine",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

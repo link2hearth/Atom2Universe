@@ -1,0 +1,476 @@
+{
+  "version": 8,
+  "atlas": "ear",
+  "modelParts": [
+    "atlas-000.part.gzip"
+  ],
+  "modelBytes": 863576,
+  "defaultLayers": [
+    "skeleton",
+    "senses",
+    "nervous",
+    "vascular",
+    "connective"
+  ],
+  "hiddenByDefault": [
+    "openear_zeta_11",
+    "openear_zeta_temporal_context"
+  ],
+  "structures": [
+    {
+      "id": "openear_zeta_01",
+      "sourceName": "01_Scala Tympani",
+      "layer": "senses",
+      "region": "skull",
+      "category": "ear_ear_inner",
+      "wikiEn": "Scala tympani",
+      "wikiFr": "Rampe tympanique",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "01_Scala Tympani.ply",
+      "elements": [
+        "01_Scala Tympani.ply"
+      ],
+      "color": [
+        0.29,
+        0.66,
+        0.87
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_01",
+      "kind": "detail_ear_openear_zeta_01",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.005786560010164976,
+        0.0014488830929622054,
+        -0.0035397587344050407
+      ],
+      "max": [
+        0.0010239244438707829,
+        0.009931731969118118,
+        0.0015116366557776928
+      ]
+    },
+    {
+      "id": "openear_zeta_02",
+      "sourceName": "02_Scala Vestibuli",
+      "layer": "senses",
+      "region": "skull",
+      "category": "ear_ear_inner",
+      "wikiEn": "Bony labyrinth",
+      "wikiFr": "Labyrinthe osseux",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "02_Scala Vestibuli.ply",
+      "elements": [
+        "02_Scala Vestibuli.ply"
+      ],
+      "color": [
+        0.17,
+        0.43,
+        0.74
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_02",
+      "kind": "detail_ear_openear_zeta_02",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.013327726162970066,
+        -0.0051568662747740746,
+        -0.010273232124745846
+      ],
+      "max": [
+        0.0012906631454825401,
+        0.009962860494852066,
+        0.0018956856802105904
+      ]
+    },
+    {
+      "id": "openear_zeta_03",
+      "sourceName": "03_Malleus",
+      "layer": "skeleton",
+      "region": "skull",
+      "category": "ear_ear_ossicles",
+      "wikiEn": "Malleus",
+      "wikiFr": "Marteau (anatomie)",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "03_Malleus.ply",
+      "elements": [
+        "03_Malleus.ply"
+      ],
+      "color": [
+        0.94,
+        0.87,
+        0.68
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_03",
+      "kind": "detail_ear_openear_zeta_03",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.008042306639254093,
+        -0.002794349566102028,
+        0.0016463069478049874
+      ],
+      "max": [
+        0.0001337490975856781,
+        0.0004199312534183264,
+        0.00513393385335803
+      ]
+    },
+    {
+      "id": "openear_zeta_04",
+      "sourceName": "04_Incus",
+      "layer": "skeleton",
+      "region": "skull",
+      "category": "ear_ear_ossicles",
+      "wikiEn": "Incus",
+      "wikiFr": "Enclume (anatomie)",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "04_Incus.ply",
+      "elements": [
+        "04_Incus.ply"
+      ],
+      "color": [
+        0.89,
+        0.82,
+        0.64
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_04",
+      "kind": "detail_ear_openear_zeta_04",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.008099935948848724,
+        -0.005606393795460463,
+        -0.00006908988871145993
+      ],
+      "max": [
+        -0.0022556306794285774,
+        -0.000833477359265089,
+        0.003898010356351733
+      ]
+    },
+    {
+      "id": "openear_zeta_05",
+      "sourceName": "05_Stapes",
+      "layer": "skeleton",
+      "region": "skull",
+      "category": "ear_ear_ossicles",
+      "wikiEn": "Stapes",
+      "wikiFr": "Étrier (anatomie)",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "05_Stapes.ply",
+      "elements": [
+        "05_Stapes.ply"
+      ],
+      "color": [
+        0.96,
+        0.91,
+        0.76
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_05",
+      "kind": "detail_ear_openear_zeta_05",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.004883750807493925,
+        -0.0013144150143489242,
+        -0.0032991142943501472
+      ],
+      "max": [
+        -0.002561587141826749,
+        0.002689136192202568,
+        0.00012957747094333172
+      ]
+    },
+    {
+      "id": "openear_zeta_06",
+      "sourceName": "06_Facial Nerve",
+      "layer": "nervous",
+      "region": "skull",
+      "category": "ear_ear_nerves",
+      "wikiEn": "Facial nerve",
+      "wikiFr": "Nerf facial",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "06_Facial Nerve.ply",
+      "elements": [
+        "06_Facial Nerve.ply"
+      ],
+      "color": [
+        0.94,
+        0.77,
+        0.22
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_06",
+      "kind": "detail_ear_openear_zeta_06",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.007776792626827955,
+        -0.007195918820798397,
+        -0.006281623616814613
+      ],
+      "max": [
+        0.010933596640825272,
+        0.008037053048610687,
+        0.002392791211605072
+      ]
+    },
+    {
+      "id": "openear_zeta_07",
+      "sourceName": "07_Chorda Tympani",
+      "layer": "nervous",
+      "region": "skull",
+      "category": "ear_ear_nerves",
+      "wikiEn": "Chorda tympani",
+      "wikiFr": "Corde du tympan",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "07_Chorda Tympani.ply",
+      "elements": [
+        "07_Chorda Tympani.ply"
+      ],
+      "color": [
+        0.96,
+        0.84,
+        0.4
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_07",
+      "kind": "detail_ear_openear_zeta_07",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.0045727272517979145,
+        -0.0073146456852555275,
+        -0.005098844412714243
+      ],
+      "max": [
+        0.006921693217009306,
+        0.0017474163323640823,
+        0.0037853685207664967
+      ]
+    },
+    {
+      "id": "openear_zeta_08",
+      "sourceName": "08_Cochleovestibular Nerve",
+      "layer": "nervous",
+      "region": "skull",
+      "category": "ear_ear_nerves",
+      "wikiEn": "Vestibulocochlear nerve",
+      "wikiFr": "Nerf vestibulocochléaire",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "08_Cochleovestibular Nerve.ply",
+      "elements": [
+        "08_Cochleovestibular Nerve.ply"
+      ],
+      "color": [
+        0.9,
+        0.67,
+        0.18
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_08",
+      "kind": "detail_ear_openear_zeta_08",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.008143045008182526,
+        0.002494129119440913,
+        -0.012883752584457397
+      ],
+      "max": [
+        -0.0002291528508067131,
+        0.020256882533431053,
+        0.0001948503777384758
+      ]
+    },
+    {
+      "id": "openear_zeta_09",
+      "sourceName": "09_Tympanic Membrane",
+      "layer": "senses",
+      "region": "skull",
+      "category": "ear_ear_middle",
+      "wikiEn": "Eardrum",
+      "wikiFr": "Tympan (anatomie)",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "09_Tympanic Membrane.ply",
+      "elements": [
+        "09_Tympanic Membrane.ply"
+      ],
+      "color": [
+        0.79,
+        0.7,
+        0.82
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "opacity": 0.52,
+      "name": "bio_name_detail_ear_openear_zeta_09",
+      "kind": "detail_ear_openear_zeta_09",
+      "mesh": true,
+      "min": [
+        -0.004411657340824604,
+        -0.005559341516345739,
+        -0.001562829944305122
+      ],
+      "max": [
+        0.005113172344863415,
+        0.0027062655426561832,
+        0.006124471314251423
+      ]
+    },
+    {
+      "id": "openear_zeta_10",
+      "sourceName": "10_External Auditory Canal",
+      "layer": "senses",
+      "region": "skull",
+      "category": "ear_ear_external",
+      "wikiEn": "Ear canal",
+      "wikiFr": "Conduit auditif externe",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "10_External Auditory Canal.ply",
+      "elements": [
+        "10_External Auditory Canal.ply"
+      ],
+      "color": [
+        0.68,
+        0.51,
+        0.43
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "opacity": 0.14,
+      "name": "bio_name_detail_ear_openear_zeta_10",
+      "kind": "detail_ear_openear_zeta_10",
+      "mesh": true,
+      "min": [
+        -0.005575359333306551,
+        -0.01989300735294819,
+        -0.0009540996397845447
+      ],
+      "max": [
+        0.005711867939680815,
+        0.0026151612401008606,
+        0.012425784021615982
+      ]
+    },
+    {
+      "id": "openear_zeta_11",
+      "sourceName": "11_Sinus Dura",
+      "layer": "connective",
+      "region": "skull",
+      "category": "ear_ear_dural_context",
+      "wikiEn": "Sigmoid sinus",
+      "wikiFr": "Sinus sigmoïde",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "11_Sinus Dura.ply",
+      "elements": [
+        "11_Sinus Dura.ply"
+      ],
+      "color": [
+        0.48,
+        0.55,
+        0.68
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_11",
+      "kind": "detail_ear_openear_zeta_11",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.03129586577415466,
+        -0.024723483249545097,
+        -0.0360976941883564
+      ],
+      "max": [
+        0.015139099210500717,
+        0.016685599461197853,
+        0.03423571214079857
+      ]
+    },
+    {
+      "id": "openear_zeta_12",
+      "sourceName": "12_Carotis Interna",
+      "layer": "vascular",
+      "region": "skull",
+      "category": "ear_ear_vessels",
+      "wikiEn": "Internal carotid artery",
+      "wikiFr": "Artère carotide interne",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "12_Carotis Interna.ply",
+      "elements": [
+        "12_Carotis Interna.ply"
+      ],
+      "color": [
+        0.8,
+        0.2,
+        0.19
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_12",
+      "kind": "detail_ear_openear_zeta_12",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        0.0009081230382435024,
+        0.008071647956967354,
+        -0.002180208219215274
+      ],
+      "max": [
+        0.01266535185277462,
+        0.019378751516342163,
+        0.006789264269173145
+      ]
+    },
+    {
+      "id": "openear_zeta_temporal_context",
+      "sourceName": "Bone",
+      "layer": "skeleton",
+      "region": "skull",
+      "category": "ear_ear_temporal_context",
+      "wikiEn": "Temporal bone",
+      "wikiFr": "Os temporal",
+      "source": "OpenEar ZETA, right temporal bone, CC BY 4.0",
+      "sourceObject": "Bone.ply",
+      "elements": [
+        "Bone.ply"
+      ],
+      "color": [
+        0.85,
+        0.8,
+        0.66
+      ],
+      "standard": false,
+      "boneCount": 0,
+      "name": "bio_name_detail_ear_openear_zeta_temporal_context",
+      "kind": "detail_ear_openear_zeta_temporal_context",
+      "mesh": true,
+      "opacity": 1,
+      "min": [
+        -0.03246256709098816,
+        -0.033190976828336716,
+        -0.0403287447988987
+      ],
+      "max": [
+        0.03991575539112091,
+        0.026204105466604233,
+        0.03977449610829353
+      ]
+    }
+  ]
+}

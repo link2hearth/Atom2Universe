@@ -1,0 +1,33 @@
+{
+  "id": "us_tundra",
+  "noise_offsets": [-900, 0, 400],
+  "surface_blocks": [
+    {"block": "ice", "noise_min": 0.6},
+    {"block": "dirt_snow", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.04,
+  "surface_variety_offset": 200,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 4.0,
+  "height_amplitude": 14.0,
+  "height_roughness": 4.0,
+  "topsoil_depth": 3,
+  "tree_density_base": 0.02,
+  "tree_density_noise_scale": 0.02,
+  "tree_type": "birch",
+  "tree_min_height": 6,
+  "tree_max_height": 9,
+  "canopy_radius": 2,
+  "bush_density": 0.03,
+  "bush_block": "leaves_fall",
+  "decoration_density": 0.04,
+  "decoration_blocks": ["rock"],
+  "vegetation_density": 0.05,
+  "vegetation_blocks": [
+    {"block": "grass_tan", "weight": 2},
+    {"block": "grass_brown", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}

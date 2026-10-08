@@ -1,0 +1,17 @@
+{
+  "id": 9871,
+  "name": "frontier_charm",
+  "texture_top": "frontier:9871:top",
+  "texture_side": "frontier:9871:side",
+  "texture_bottom": "frontier:9871:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_charm",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

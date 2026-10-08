@@ -1,0 +1,1558 @@
+package com.Atom2Universe.app.games.roguelike
+
+import android.content.Context
+import android.graphics.*
+import android.os.SystemClock
+import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
+import com.Atom2Universe.app.R
+import kotlin.math.abs
+import kotlin.math.hypot
+import kotlin.math.min
+import kotlin.math.sin
+import kotlin.random.Random
+
+/**
+ * L'écran de combat façon FF / Pokémon : les ennemis en haut, le héros en bas, les
+ * actions en dessous — quatre boutons comme les quatre attaques d'un Pokémon (l'attaque
+ * à l'arme, deux reliques, le Spécial de l'archétype). Il mesure les deux gestes en rythme et les transmet au [Combat] :
+ *  - pendant sa propre attaque, un swipe quand le curseur traverse la zone dorée ;
+ *  - pendant l'attaque d'un ennemi, une touche au moment où l'anneau se referme.
+ * En paysage, la scène prend toute la largeur (ennemis à gauche, héros à droite avec ses
+ * pantins ou doubles) et les six boutons s'alignent en une rangée dessous.
+ */
+class CombatView @JvmOverloads constructor(
+    ctx: Context, attrs: AttributeSet? = null
+) : View(ctx, attrs) {
+
+    var onFinished:   (() -> Unit)? = null
+    var onOutcomeShown: (() -> Unit)? = null
+    var onStrike:     ((crit: Boolean) -> Unit)? = null
+    var onEnemyDied:  (() -> Unit)? = null
+    var onHeroHit:    (() -> Unit)? = null
+    var onParry:      ((perfect: Boolean) -> Unit)? = null
+
+    private var combat: Combat? = null
+    private var heroSpritePath: String? = null
+
+    companion object {
+        private const val INTRO_MS   = 700L
+        private const val HIT_MS     = 550L
+        private const val STATUS_MS  = 600L
+        private const val PAUSE_MS   = 450L
+        private const val IMPACT_MS  = 500L
+        private const val FLOAT_MS   = 900L
+
+        // Zone de la frappe, en fraction de la barre
+        private const val STRIKE_CENTER  = 0.72f
+
+        // Les gestes de reliques. Tous les temps sont
+        // allongés par l'aide au timing, comme la barre de frappe.
+        /** Aucun geste ne dure plus que ça : passé ce délai, c'est raté. */
+        private const val GESTURE_LIMIT_MS = 4000f
+        /** Foudre : la jauge est pleine à 3 fois la distance héros → cible dessinée. */
+        private const val DRAW_FULL_FACTOR = 3f
+        /** Feu : la flamme met ce temps à remplir la jauge (la zone tombe vers 1,1 s) ; un coup de doigt de 30 dp la lance. */
+        private const val CHARGE_FILL_MS = 1500f
+        private const val CHARGE_FLICK_DP = 30f
+        /** Glace : le givre met ce temps à remplir la jauge, doigt immobile à 14 dp près. */
+        private const val FREEZE_FILL_MS = 1800f
+        private const val FREEZE_STILL_DP = 14f
+        /** Poison : une dose, ce que la jauge perd par ms, la durée du geste et son échauffement. */
+        private const val DOSE_BUMP = .11f
+        private const val DOSE_DRAIN_PER_MS = .00042f
+        private const val DOSE_MS = 2400f
+        private const val DOSE_WARMUP_MS = 800f
+        /** Éclairs errants : un tour de cadran, trois zones, chacune de 120 à 270° plus loin que la précédente. */
+        private const val DIAL_TURN_MS = 1600f
+        private const val DIAL_FIRST_REACTION_MS = 1000f
+        private const val DIAL_MIN_GAP = 120f
+        private const val DIAL_MAX_GAP = 270f
+
+        // Fenêtre de parade autour de l'impact
+
+        // Couleurs des états du grimoire (celles des éléments sont dans elementColor)
+        private const val FRACTURED_COLOR = 0xFFBCAAA4.toInt()
+        private const val WEAKENED_COLOR  = 0xFFB0BEC5.toInt()
+        private const val BLINDED_COLOR   = 0xFF9E9E9E.toInt()
+        private const val MARKED_COLOR    = 0xFFFFD54F.toInt()
+        private const val RAGE_COLOR      = 0xFFFF5252.toInt()
+        private const val EMPOWERED_COLOR = 0xFFFF8A65.toInt()
+        private const val BLEED_COLOR     = 0xFFE53935.toInt()
+        private const val CHARMED_COLOR   = 0xFFF48FB1.toInt()
+        private const val BARRIER_COLOR   = 0xFF90CAF9.toInt()
+        private const val STONESKIN_COLOR = 0xFFBDBDBD.toInt()
+        private const val SLOWED_COLOR    = 0xFF9FA8DA.toInt()
+        private const val HASTE_COLOR     = 0xFF80CBC4.toInt()
+        private const val HOURGLASS_COLOR = 0xFFE6C75A.toInt()
+        private const val PUPPET_COLOR    = 0xFF80CBC4.toInt()
+        private const val ROLL_COLOR      = 0xFFAED581.toInt()
+
+        // Les portraits identifient les combattants ; seul le tour actif est doré.
+        private const val HERO_MARK    = 0xFFE0E0E0.toInt()
+        private const val CURRENT_MARK = 0xFFFFD54F.toInt()
+        private const val FROZEN_VEIL  = 0x6681D4FA
+    }
+
+    private enum class Stage { INTRO, CHOOSE, STRIKE_TIMING, PLAYER_APPROACH, PLAYER_HIT, HERO_STATUS, ENEMY_STATUS, ENEMY_PAUSE, ENEMY_WINDUP, ENEMY_IMPACT, END_PANEL }
+    private sealed class Action { object Attack : Action(); object Deadly : Action(); data class Cast(val relic: Relic) : Action() }
+
+    private var stage = Stage.INTRO
+    val isOutcomeShown: Boolean get() = stage == Stage.END_PANEL
+    private var stageStart = 0L
+    private var target = 0
+    private var pendingAction: Action? = null
+    private var visualAction: Action? = null
+    private var strikeTiming = Timing.MISS
+    private val approachMs get() = if (visualAction is Action.Cast) 580f else 220f
+    /** Vagabond : le geste du premier coup de l'Enchaînement, en attendant celui du second. */
+    private var chainFirst: Timing? = null
+    private val attackers = ArrayDeque<Int>()
+    private var attacker = -1
+    private var parry: Timing? = null
+    /** Le Sablier : l'élan de cette attaque est plus lent, et les fenêtres de parade plus larges. */
+    private var windupScale = 1f
+    private fun strikeMs() = CombatTiming.strikeMs(combat?.hero)
+    private fun strikeGood() = CombatTiming.strikeGood(combat?.hero)
+    private fun strikePerfect() = CombatTiming.strikePerfect(combat?.hero)
+    private fun windupMs() = (CombatTiming.windupMs(combat?.hero) * windupScale).toLong()
+    /** Les ennemis touchés par la dernière action : ils tremblent, et ceux qui meurent s'effacent. */
+    private var hitTargets = emptySet<Int>()
+    private var spellTargets = emptyList<Int>()
+    private val relicArt = RelicCombatArt()
+
+    private data class Floater(val text: String, val x: Float, val y: Float, val color: Int, val big: Boolean, val start: Long)
+    private val floaters = mutableListOf<Floater>()
+    private var banner: String? = null
+    private var bannerColor = Color.WHITE
+    private var bannerStart = 0L
+
+    // ── Géométrie ───────────────────────────────────────────────────────────────
+    private val density get() = resources.displayMetrics.density
+    private val sp get() = density * resources.configuration.fontScale
+
+    /** PV, dégâts, soins, or : abrégés au-delà de 100 000 (« 290k »). */
+    private fun num(v: Int) = DungeonNumbers.format(context, v)
+    private val enemyRects = mutableListOf<RectF>()
+    private var heroRect = RectF()
+    /** Partie « scène » : même repère 240 px et même miroir que la démo artistique. */
+    private var sceneRect = RectF()
+    /**
+     * Taille d'un pixel des personnages à l'écran. En portrait c'est celle du décor ; en
+     * paysage le décor remplit la largeur, mais les personnages se règlent sur la hauteur du sol.
+     */
+    private var sceneUnit = 1f
+    /** Écran plus large que haut : la scène sur toute la largeur, les boutons en une rangée dessous. */
+    private var landscape = false
+    /** En paysage, la bande sous la scène : consigne et boutons. */
+    private var panelRect = RectF()
+    /** Là où s'écrivent les PV et les effets du héros : sous lui en portrait, dans le panneau en paysage. */
+    private var statsRect = RectF()
+    private var hintX = 0f
+    private var hintY = 0f
+    private var hintRoom = 1f
+    private var ringX = 0f
+    private var ringY = 0f
+    private var attackBtn = RectF()
+    private val relicBtns = Array(Hero.RELIC_SLOTS) { RectF() }
+    private var specialBtn = RectF()
+    private var strikeBar = RectF()
+    private var orderBar = RectF()
+    /**
+     * Le coût de l'action que le doigt touche (ou qu'on est en train de jouer) : la barre
+     * d'ordre montre alors où tomberait le prochain tour du héros. Null : aucune action visée.
+     */
+    private var previewCost: Double? = null
+    private enum class SwipeDirection(val dx: Int, val dy: Int) { UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(1, 0) }
+    private var swipeDirection = SwipeDirection.UP
+    private var nextSwipeDirection = 0
+    /** Le geste de la relique qu'on lance ; null, c'est la barre de frappe. */
+    private var relicGesture: TouchGesture? = null
+    private val gestureArt = RelicGestureArt()
+    /** Le chemin de l'éclair du dernier dessin, en pixels d'écran, du héros à la cible. */
+    private var boltPath = FloatArray(0)
+    private var boltCount = 0
+    private var boltTiming = Timing.MISS
+
+    // ── Peintures ───────────────────────────────────────────────────────────────
+    private val pBg      = Paint()
+    private val pSprite  = Paint(Paint.FILTER_BITMAP_FLAG)
+    private val pText    = Paint(Paint.ANTI_ALIAS_FLAG).apply { textAlign = Paint.Align.CENTER; typeface = Typeface.DEFAULT_BOLD }
+    private val pFill    = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val pStroke  = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
+    private val pIcon    = Paint().apply { isFilterBitmap = false }
+    private val iconBounds = RectF()
+    private val iconDst = Rect()
+    private val pOverlay = Paint().apply { color = 0xCC000000.toInt() }
+    /** Rendu pixel-art partagé avec la démo, sans aucun bouton ni geste de celle-ci. */
+    private val dungeonArt = DungeonCombatArt()
+    private val puppetArt = DungeonPuppetArt()
+    private var puppetAttackTargets = emptyList<Int>()
+    private var commandedPuppetAttack = false
+    private var visualPuppetTarget = -1
+    private var brokenMirror = -1
+    private var heroHurtImpact = false
+    private var puppetHpBeforeImpact = emptyList<Int>()
+
+    // ── Démarrage ───────────────────────────────────────────────────────────────
+
+    fun start(c: Combat, heroSprite: String) {
+        combat = c
+        puppetAttackTargets = emptyList()
+        commandedPuppetAttack = false
+        visualPuppetTarget = -1
+        brokenMirror = -1
+        heroHurtImpact = false
+        puppetHpBeforeImpact = emptyList()
+        dungeonArt.prepareCombat(c)
+        visualAction = null
+        spellTargets = emptyList()
+        strikeTiming = Timing.MISS
+        heroSpritePath = heroSprite
+        target = c.aliveIndices().firstOrNull() ?: 0
+        attackers.clear(); attacker = -1; parry = null; pendingAction = null; chainFirst = null; hitTargets = emptySet(); previewCost = null
+        relicGesture = null; boltCount = 0
+        floaters.clear(); banner = null
+        layoutRects()
+        enter(Stage.INTRO)
+    }
+
+    private fun enter(s: Stage) {
+        val newOutcome = s == Stage.END_PANEL && stage != Stage.END_PANEL
+        stage = s
+        stageStart = SystemClock.uptimeMillis()
+        if (newOutcome) onOutcomeShown?.invoke()
+        if (s == Stage.STRIKE_TIMING) {
+            swipeDirection = SwipeDirection.entries[nextSwipeDirection++ % SwipeDirection.entries.size]
+            val relic = (pendingAction as? Action.Cast)?.relic
+            relicGesture = relic?.let { buildRelicGesture(it) }
+        } else relicGesture = null
+        postInvalidateOnAnimation()
+    }
+
+    private fun elapsed() = SystemClock.uptimeMillis() - stageStart
+
+    private fun showBanner(text: String, color: Int) {
+        banner = text; bannerColor = color; bannerStart = SystemClock.uptimeMillis()
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        pBg.shader = LinearGradient(0f, 0f, 0f, h.toFloat(), 0xFF1B1420.toInt(), 0xFF0A0A0F.toInt(), Shader.TileMode.CLAMP)
+        layoutRects()
+    }
+
+    private fun layoutRects() {
+        val c = combat ?: return
+        if (width == 0) return
+        val w = width.toFloat(); val h = height.toFloat()
+        landscape = w > h
+        val m = 10f * density
+        orderBar = RectF(m, 6f * density, w - m, 6f * density + 36f * density)
+        enemyRects.clear()
+        if (landscape) {
+            // Les six boutons sur une rangée en bas, la consigne juste au-dessus.
+            val bh = min(64f * density, h * .14f)
+            val buttonsTop = h - m - bh
+            val sceneBottom = buttonsTop - 30f * sp
+            sceneRect = RectF(0f, 0f, w, sceneBottom)
+            panelRect = RectF(0f, sceneBottom, w, h)
+            // Le décor (240 px de large) remplit toute la largeur : il est simplement rogné
+            // en hauteur, et montre moins de mur. Les personnages, eux, se règlent sur la
+            // hauteur du sol, sinon ils deviendraient énormes.
+            val backdropScale = w / 240f
+            val floor = min(84f, sceneBottom / backdropScale * .28f) * backdropScale
+            val u = min((sceneBottom - floor) / 150f, w / 300f)
+            sceneUnit = u
+            fun monster(left: Float, top: Float) = RectF(left, top, left + 46f * u, top + 44f * u)
+            // Les ennemis à gauche, en formation : une colonne de front (côté héros), en
+            // haut et en bas, et le chef derrière elle, au milieu, protégé par les deux
+            // autres. Sous chacun, la place de sa barre de vie et de ses effets.
+            val upper = floor + 2f * u
+            val lower = sceneBottom - (44f + 30f) * u
+            val mid = (upper + lower) / 2f
+            val back = 24f * u
+            val front = back + 74f * u
+            val types = c.enemies.map { it.type }
+            val boss = c.enemies.indices.firstOrNull { Encounters.isBoss(types, it) }
+            val guards = c.enemies.indices.filter { it != boss }
+            val spots = arrayOfNulls<Pair<Float, Float>>(c.enemies.size)
+            when (guards.size) {
+                0 -> {}
+                1 -> spots[guards[0]] = front to mid
+                else -> {
+                    spots[guards[0]] = front to upper
+                    spots[guards[1]] = front to lower
+                    for (extra in guards.drop(2)) spots[extra] = back to mid
+                }
+            }
+            if (boss != null) spots[boss] = if (guards.isEmpty()) front to mid else back to mid
+            for (spot in spots) {
+                val (x, y) = spot ?: (front to mid)
+                enemyRects += monster(x, y)
+            }
+            // Le héros à droite, sans coller au bord, à mi-hauteur du sol : ses pantins ou
+            // doubles se placent devant lui, au-dessus et en dessous.
+            val heroTop = (floor + sceneBottom) / 2f - 22f * u
+            val heroRight = w - maxOf(60f * u, w * .12f)
+            heroRect = RectF(heroRight - 36f * u, heroTop, heroRight, heroTop + 36f * u)
+        } else {
+            val scale = w / 240f
+            sceneUnit = scale
+            sceneRect = RectF(0f, 0f, w, h * .79f)
+            val worldHeight = sceneRect.height() / scale
+            val floorY = min(84f, worldHeight * .28f)
+            fun monster(left: Float, top: Float) = RectF(
+                sceneRect.left + left * scale, sceneRect.top + top * scale,
+                sceneRect.left + (left + 46f) * scale, sceneRect.top + (top + 44f) * scale)
+            // Même composition que la démo : le chef (index 0) occupe toujours le coin bas gauche.
+            val rawXs = floatArrayOf(178f, 178f, 99f)
+            val rawYs = floatArrayOf(worldHeight - 45f, floorY + (worldHeight - floorY) * .40f, worldHeight - 45f)
+            for (i in c.enemies.indices) {
+                val rawX = rawXs[i.coerceAtMost(rawXs.lastIndex)]
+                val rawY = rawYs[i.coerceAtMost(rawYs.lastIndex)]
+                enemyRects += monster(240f - rawX - 46f, rawY - 18f)
+            }
+            val heroLeft = sceneRect.left + (240f - 38f - 36f) * scale
+            val heroTop = sceneRect.top + (floorY + 16f) * scale
+            heroRect = RectF(heroLeft, heroTop, heroLeft + 36f * scale, heroTop + 36f * scale)
+        }
+
+        if (landscape) {
+            // Une rangée : Attaque, Spécial, puis les quatre reliques.
+            val bh = min(64f * density, h * .14f)
+            val cellW = (w - 7 * m) / 6f
+            val top = h - m - bh
+            fun cell(col: Int) = RectF(m + col * (cellW + m), top, m + col * (cellW + m) + cellW, top + bh)
+            attackBtn = cell(0)
+            specialBtn = cell(1)
+            for (i in relicBtns.indices) relicBtns[i] = cell(2 + i)
+            // La fiche du héros sous lui, comme en portrait : dans le mur, le décor la cachait.
+            val statsRight = min(w - 16f * density, heroRect.centerX() + 110f * density)
+            statsRect = RectF(statsRight - 220f * density, heroRect.bottom, statsRight, sceneRect.bottom)
+            hintX = w / 2f
+            hintY = top - 8f * density
+            hintRoom = w - 2 * m
+            val length = min(sceneRect.width() * .5f, sceneRect.height() * .7f)
+            strikeBar = RectF(sceneRect.centerX() - length / 2f, sceneRect.centerY() - 11f * density,
+                sceneRect.centerX() + length / 2f, sceneRect.centerY() + 11f * density)
+            ringX = sceneRect.centerX(); ringY = sceneRect.centerY()
+        } else {
+            panelRect = RectF()
+            // Grille 3 × 2 : l'attaque et le Spécial à gauche, les quatre reliques à droite
+            val cellW = (w - 4 * m) / 3f
+            val bh = h * 0.075f
+            val row1 = h * 0.81f
+            val row2 = row1 + bh + m
+            fun cell(col: Int, top: Float) = RectF(m + col * (cellW + m), top, m + col * (cellW + m) + cellW, top + bh)
+            attackBtn    = cell(0, row1)
+            specialBtn   = cell(0, row2)
+            relicBtns[0] = cell(1, row1)
+            relicBtns[1] = cell(2, row1)
+            relicBtns[2] = cell(1, row2)
+            relicBtns[3] = cell(2, row2)
+            statsRect = RectF(heroRect.left - 12f * density, heroRect.bottom, w - 16f * density, h)
+            hintX = w / 2f
+            hintY = h * 0.78f
+            hintRoom = w - 20f * density
+            strikeBar = RectF(w * 0.16f, h * .5f - 11f * density, w * 0.84f, h * .5f + 11f * density)
+            ringX = w / 2f; ringY = h / 2f
+        }
+    }
+
+    // ── Boucle d'animation ──────────────────────────────────────────────────────
+
+    private fun tick() {
+        val c = combat ?: return
+        val t = elapsed()
+        when (stage) {
+            Stage.INTRO -> if (t >= INTRO_MS) proceed()
+            Stage.STRIKE_TIMING -> {
+                val gesture = relicGesture
+                if (gesture != null) {
+                    gesture.update(t.toFloat())
+                    gesture.result?.let { finishRelicGesture(gesture, it) }
+                } else if (t >= strikeMs()) resolveStrike(Timing.MISS)
+            }
+            Stage.PLAYER_APPROACH -> if (t >= approachMs) applyPlayerStrike(strikeTiming)
+            Stage.PLAYER_HIT -> if (t >= HIT_MS) afterPlayerAction()
+            Stage.HERO_STATUS -> if (t >= STATUS_MS) proceed()
+            Stage.ENEMY_STATUS -> if (t >= STATUS_MS) {
+                if (c.phase == CombatPhase.VICTORY) enter(Stage.END_PANEL) else nextAttacker()
+            }
+            Stage.ENEMY_PAUSE -> if (t >= PAUSE_MS) nextAttacker()
+            Stage.ENEMY_WINDUP -> {
+                val lateLimit = windupMs() + goodWindow() + lateMissWindow()
+                val tapped = parry
+                if (t >= lateLimit || (tapped != null && t >= windupMs())) resolveEnemyStrike(tapped ?: Timing.MISS)
+            }
+            Stage.ENEMY_IMPACT -> if (t >= IMPACT_MS) {
+                if (c.phase == CombatPhase.DEFEAT) enter(Stage.END_PANEL) else nextAttacker()
+            }
+            Stage.CHOOSE, Stage.END_PANEL -> {}
+        }
+    }
+
+    /** En garde (guerrier), les deux fenêtres de parade doublent. */
+    private fun guardMult() = if ((combat?.guardTurns ?: 0) > 0) 2 else 1
+    private fun goodWindow() = (CombatTiming.parryGood(combat?.hero) * guardMult() * windupScale).toInt()
+    private fun perfectWindow() = (CombatTiming.parryPerfect(combat?.hero) * guardMult() * windupScale).toInt()
+    /** Laisse le cercle sortir de la zone verte avant de terminer un geste sans appui. */
+    private fun lateMissWindow() = (120 * windupScale).toInt()
+
+    // ── Tour du joueur ──────────────────────────────────────────────────────────
+
+    private fun choose(action: Action) {
+        val c = combat ?: return
+        pendingAction = action
+        chainFirst = null
+        // La barre d'ordre garde l'aperçu pendant le geste
+        previewCost = when (action) {
+            is Action.Cast -> c.relicCost(action.relic)
+            Action.Deadly  -> c.specialCost()
+            Action.Attack  -> c.attackCost()
+        }
+        enter(Stage.STRIKE_TIMING)
+    }
+
+    private fun resolveStrike(timing: Timing) {
+        visualAction = pendingAction
+        commandedPuppetAttack = pendingAction == Action.Attack && combat?.puppetsAttack == true
+        spellTargets = when ((pendingAction as? Action.Cast)?.relic?.target) {
+            RelicTarget.ALL, RelicTarget.CHAIN -> listOf(target) + (combat?.aliveIndices()?.filter { it != target } ?: emptyList())
+            RelicTarget.MISSILES, RelicTarget.SELF -> emptyList()
+            else -> listOf(target)
+        }
+        strikeTiming = timing
+        if (pendingAction == Action.Deadly && combat?.hero?.archetype == Archetype.VAGABOND && chainFirst == null) {
+            applyPlayerStrike(timing)
+            return
+        }
+        enter(Stage.PLAYER_APPROACH)
+    }
+
+    /**
+     * Le geste de la relique, s'il en a un autre que la barre de frappe. Les cibles sont des
+     * cercles sur les ennemis (55 % de leur largeur) ; la zone de chaque jauge est celle de la
+     * barre de frappe, élargie de la même façon par l'aide au timing, et tous les temps sont
+     * allongés comme elle.
+     */
+    private fun buildRelicGesture(relic: Relic): TouchGesture? {
+        val c = combat ?: return null
+        val enemy = enemyRects[target.coerceIn(0, enemyRects.lastIndex)]
+        val ex = enemy.centerX(); val ey = enemy.centerY()
+        val reach = enemy.width() * .55f
+        val cx = heroRect.centerX(); val cy = heroRect.centerY()
+        val self = relic.target == RelicTarget.SELF
+        val gx = if (self) cx else ex
+        val gy = if (self) cy else ey
+        val gr = if (self) heroRect.width() * .55f else reach
+        val pace = strikeMs().toFloat() / CombatTiming.STRIKE_MS
+        val limit = GESTURE_LIMIT_MS * pace
+        return when (RelicGesture.of(relic)) {
+            RelicGesture.SWIPE -> null
+            // L'éclair part juste devant le héros, côté cible
+            RelicGesture.DRAW_BOLT -> {
+                val distance = hypot(ex - cx, ey - cy).coerceAtLeast(1f)
+                val pull = heroRect.width() * .55f
+                val sx = cx + (ex - cx) / distance * pull
+                val sy = cy + (ey - cy) / distance * pull
+                DrawGesture(sx, sy, targetX = ex, targetY = ey, targetRadius = reach,
+                    fullLength = hypot(ex - sx, ey - sy) * DRAW_FULL_FACTOR,
+                    center = STRIKE_CENTER, good = strikeGood(), perfect = strikePerfect(),
+                    limitMs = limit, step = 5f * density)
+            }
+            // La jauge se peint sur chaque ennemi que le sort touchera
+            RelicGesture.CHARGE -> {
+                val struck = if (relic.target == RelicTarget.ONE) listOf(target.coerceIn(0, enemyRects.lastIndex)) else c.aliveIndices()
+                val targets = FloatArray(struck.size * 3)
+                struck.forEachIndexed { i, index ->
+                    val r = enemyRects[index]
+                    targets[i * 3] = r.centerX(); targets[i * 3 + 1] = r.centerY(); targets[i * 3 + 2] = r.width() * .55f
+                }
+                ChargeGesture(cx, cy, targets = targets,
+                    fillMs = CHARGE_FILL_MS * pace, flick = CHARGE_FLICK_DP * density, center = STRIKE_CENTER, good = strikeGood(), perfect = strikePerfect(),
+                    limitMs = limit)
+            }
+            RelicGesture.WAVE -> WaveGesture(cx, cy, heroRect.width() * .75f,
+                fillMs = CHARGE_FILL_MS * pace, center = STRIKE_CENTER, good = strikeGood(),
+                perfect = strikePerfect(), limitMs = limit)
+            RelicGesture.HOURGLASS -> HourglassGesture(width / 2f, height * .45f,
+                radius = min(width * .32f, height * .22f), limitMs = limit * 2f)
+            RelicGesture.FREEZE -> FreezeGesture(gx, gy, gr, stillRadius = FREEZE_STILL_DP * density,
+                fillMs = FREEZE_FILL_MS * pace, center = STRIKE_CENTER, good = strikeGood(), perfect = strikePerfect(),
+                limitMs = limit, onHero = self)
+            RelicGesture.DOSE -> DoseGesture(gx, gy, gr, bump = DOSE_BUMP, drainPerMs = DOSE_DRAIN_PER_MS / pace,
+                durationMs = DOSE_MS * pace, warmupMs = DOSE_WARMUP_MS * pace, center = STRIKE_CENTER, good = strikeGood(),
+                perfectShare = .75f, goodShare = .45f, limitMs = limit, onWeapon = relic == Relic.POISONED_BLADES)
+            // Au moins une seconde avant l'entrée dans la première zone verte, même avec les bonus de timing.
+            RelicGesture.DIAL -> {
+                val speed = 360f / (DIAL_TURN_MS * pace)
+                val goodMs = strikeGood() * strikeMs()
+                val gaps = FloatArray(RelicGesture.dialZones(relic)) { DIAL_MIN_GAP + Random.nextFloat() * (DIAL_MAX_GAP - DIAL_MIN_GAP) }
+                gaps[0] = gaps[0].coerceAtLeast((DIAL_FIRST_REACTION_MS + goodMs) * speed)
+                DialGesture(gx, gy, gr, gaps = gaps, degPerMs = speed,
+                    goodMs = goodMs, perfectMs = strikePerfect() * strikeMs())
+            }
+        }
+    }
+
+    /** Fin du geste : la foudre garde le dessin du doigt pour son éclair, puis le sort part. */
+    private fun finishRelicGesture(gesture: TouchGesture, timing: Timing) {
+        relicGesture = null
+        if (gesture is DrawGesture) {
+            boltPath = gesture.traced.copyOf(gesture.tracedCount * 2)
+            boltCount = gesture.tracedCount
+            boltTiming = timing
+        }
+        resolveStrike(timing)
+    }
+
+    private fun applyPlayerStrike(timing: Timing) {
+        val c = combat ?: return
+        if (!c.enemies[target].alive) target = c.aliveIndices().first()
+        // L'Enchaînement : un geste par coup. Le premier est noté, la barre repart pour le second
+        if (pendingAction == Action.Deadly && c.hero.archetype == Archetype.VAGABOND && chainFirst == null) {
+            chainFirst = timing
+            when (timing) {
+                Timing.PERFECT -> showBanner(context.getString(R.string.roguelike_combat_perfect), 0xFFFFD54F.toInt())
+                Timing.GOOD    -> showBanner(context.getString(R.string.roguelike_combat_good), 0xFFAED581.toInt())
+                Timing.MISS    -> {}
+            }
+            enter(Stage.STRIKE_TIMING)
+            return
+        }
+        val hits = when (val a = pendingAction) {
+            is Action.Cast -> c.castRelic(a.relic, target, timing).hits
+            Action.Deadly -> when (c.hero.archetype) {
+                Archetype.VAGABOND -> c.chain(target, chainFirst ?: timing, timing)
+                Archetype.BARBARIAN -> listOf(c.smash(target, timing))
+                else -> listOf(c.deadlyStrike(target, timing))
+            }
+            else           -> listOf(c.attack(target, timing))
+        }
+        chainFirst = null
+        pendingAction = null
+        previewCost = null
+        when (timing) {
+            Timing.PERFECT -> showBanner(context.getString(R.string.roguelike_combat_perfect), 0xFFFFD54F.toInt())
+            Timing.GOOD    -> showBanner(context.getString(R.string.roguelike_combat_good), 0xFFAED581.toInt())
+            Timing.MISS    -> {}
+        }
+        showHits(hits)
+    }
+
+    /** Ce que la dernière action a fait à chaque ennemi touché, puis on passe au tour ennemi. */
+    private fun showHits(hits: List<HitResult>) {
+        puppetAttackTargets = hits.filter { it.echo > 0 || commandedPuppetAttack && it.damage > 0 }.map { it.target }
+        spellTargets = hits.map { it.target }
+        hitTargets = hits.filter { !it.noDamage && it.damage > 0 }.map { it.target }.toSet()
+        floatHits(hits)
+        if (hits.any { !it.noDamage && it.damage > 0 }) onStrike?.invoke(hits.any { it.crit })
+        if (hits.any { it.killed }) onEnemyDied?.invoke()
+        enter(Stage.PLAYER_HIT)
+    }
+
+    /** Les textes d'une touche sur chaque ennemi : dégâts, affinité, réactions, jets. */
+    private fun floatHits(hits: List<HitResult>) {
+        for (result in hits) {
+            val r = enemyRects[result.target]
+            if (!result.noDamage) floatText(
+                if (result.damage == 0) context.getString(R.string.roguelike_combat_no_damage)
+                else if (result.crit) context.getString(R.string.roguelike_combat_crit_damage, num(result.damage))
+                else context.getString(R.string.roguelike_combat_damage, num(result.damage)),
+                r.centerX(), r.top, if (result.crit) 0xFFFFEB3B.toInt() else Color.WHITE, result.crit,
+            )
+            var y = r.top + 26f * sp
+            if (result.echo > 0) {
+                floatText(context.getString(R.string.roguelike_combat_echo, num(result.echo)), r.centerX(), y, PUPPET_COLOR, false)
+                y += 22f * sp
+            }
+            affinityRes(result.affinity)?.let { (res, color) ->
+                floatText(context.getString(res), r.centerX(), y, color, false)
+                y += 22f * sp
+            }
+            // Les réactions : c'est comme ça qu'on les découvre
+            for (reaction in result.reactions) {
+                floatText(context.getString(reaction.labelRes), r.centerX(), y, reaction.color, true)
+                y += 26f * sp
+            }
+            if (result.explosion > 0)
+                floatText(context.getString(R.string.roguelike_combat_damage, num(result.explosion)), r.centerX(), r.centerY(),
+                    Reaction.EXPLOSION.color, true)
+            result.save?.let { floatSave(it, r) }
+            if (result.enraged) floatText(context.getString(R.string.roguelike_combat_enraged), r.centerX(), r.bottom, 0xFFFF5252.toInt(), true)
+        }
+    }
+
+    /** Garde et Image miroir : pas de geste, le tour part tout de suite. */
+    private fun useInstantSpecial(c: Combat) {
+        commandedPuppetAttack = false
+        visualAction = null
+        puppetAttackTargets = emptyList()
+        when (c.hero.archetype) {
+            Archetype.WARRIOR -> { c.guard(); showBanner(context.getString(R.string.roguelike_combat_guard), 0xFFBCAAA4.toInt()) }
+            Archetype.MAGE    -> { c.mirrorImage(); showBanner(context.getString(R.string.roguelike_combat_mirror_cast), 0xFFB39DDB.toInt()) }
+            Archetype.NECROMANCER -> {
+                val cost = c.puppetRecallHpCost
+                val hits = c.recallPuppets()
+                floatText(context.getString(R.string.roguelike_combat_damage, num(cost)),
+                    heroRect.centerX(), heroRect.top, 0xFFEF5350.toInt(), false)
+                showBanner(context.getString(R.string.roguelike_combat_puppets), PUPPET_COLOR)
+                showHits(hits)
+                puppetAttackTargets = hits.map { it.target }
+                return
+            }
+            else -> return
+        }
+        hitTargets = emptySet()
+        enter(Stage.PLAYER_HIT)
+    }
+
+    /** La fin du tour du héros (Météore, Régénération) s'affiche, puis la main passe. */
+    private fun afterPlayerAction() {
+        val c = combat ?: return
+        val end = c.lastHeroTurnEnd
+        if (end.isEmpty) { proceed(); return }
+        hitTargets = end.meteor.map { it.target }.toSet()
+        if (end.meteor.isNotEmpty()) {
+            showBanner(context.getString(R.string.roguelike_combat_meteor_impact), Relic.METEOR.color or 0xFF303030.toInt())
+            floatHits(end.meteor)
+            if (end.meteor.any { it.killed }) onEnemyDied?.invoke()
+        }
+        if (end.healed > 0)
+            floatText(context.getString(R.string.roguelike_combat_heal, num(end.healed)), heroRect.centerX(), heroRect.top, 0xFF81C784.toInt(), false)
+        floatTicks(end.ticks)
+        enter(Stage.HERO_STATUS)
+    }
+
+    /** La main passe à qui la jauge désigne : un ennemi, le héros, ou la fin du combat. */
+    private fun proceed() {
+        val c = combat ?: return
+        when (c.phase) {
+            CombatPhase.VICTORY, CombatPhase.DEFEAT -> enter(Stage.END_PANEL)
+            CombatPhase.ENEMY_TURN -> beginEnemyTurn()
+            CombatPhase.PLAYER_TURN -> {
+                attacker = -1
+                if (!c.enemies[target].alive) target = c.aliveIndices().firstOrNull() ?: 0
+                enter(Stage.CHOOSE)
+            }
+        }
+    }
+
+    // ── Tour des ennemis ────────────────────────────────────────────────────────
+
+    private fun beginEnemyTurn() {
+        val c = combat ?: return
+        val turn = c.startEnemyTurn()
+        attackers.clear(); attackers.addAll(turn.attackers)
+        floatTicks(turn.ticks)
+        for (stop in turn.stopped) {
+            val r = enemyRects[stop.enemy]
+            val res = when (stop.element) {
+                Element.ICE -> R.string.roguelike_combat_frozen_skip
+                Element.PHYSICAL -> R.string.roguelike_combat_feared_skip
+                else -> R.string.roguelike_combat_paralyzed_skip
+            }
+            floatText(context.getString(res), r.centerX(), r.centerY(), elementColor(stop.element), false)
+        }
+        for (s in turn.saves) floatSave(s.save, enemyRects[s.enemy])
+        for (i in turn.enraged)
+            floatText(context.getString(R.string.roguelike_combat_enraged), enemyRects[i].centerX(), enemyRects[i].bottom, 0xFFFF5252.toInt(), true)
+        when {
+            turn.ticks.isNotEmpty() || turn.stopped.isNotEmpty() || turn.saves.isNotEmpty() -> enter(Stage.ENEMY_STATUS)
+            turn.attackers.isEmpty() -> enter(Stage.ENEMY_PAUSE)
+            else                     -> nextAttacker()
+        }
+    }
+
+    /** Ce que rongent la brûlure, le poison, l'Aube. */
+    private fun floatTicks(ticks: List<DotTick>) {
+        for (tick in ticks) {
+            val r = enemyRects[tick.enemy]
+            floatText(context.getString(R.string.roguelike_combat_damage, num(tick.damage)), r.centerX(), r.top, elementColor(tick.element), false)
+            if (tick.killed) onEnemyDied?.invoke()
+        }
+    }
+
+    /** « Efficace ! », « Peu efficace… », « Immunisé ! » : c'est comme ça qu'on apprend les affinités. */
+    private fun affinityRes(a: Affinity): Pair<Int, Int>? = when (a) {
+        Affinity.VULNERABLE -> R.string.roguelike_combat_effective to 0xFFFFD54F.toInt()
+        Affinity.RESISTANT  -> R.string.roguelike_combat_not_effective to 0xFF90A4AE.toInt()
+        Affinity.IMMUNE     -> R.string.roguelike_combat_immune to 0xFF90A4AE.toInt()
+        Affinity.NORMAL     -> null
+    }
+
+    /** Le jet de sauvegarde à l'écran, façon D&D : « 🎲 14 contre DD 13 ». */
+    private fun floatSave(save: SaveRoll, r: RectF) {
+        when (save.reason) {
+            SaveReason.IMMUNE -> {}
+            SaveReason.RAGE   -> floatText(context.getString(R.string.roguelike_combat_save_rage), r.centerX(), r.bottom + 14f * sp, 0xFFB0BEC5.toInt(), false)
+            // Le dé reste caché pour l'instant : on ne montre que le résultat.
+            // Pour le montrer : R.string.roguelike_combat_save_roll (save.total, save.dc).
+            SaveReason.ROLLED -> if (save.saved)
+                floatText(context.getString(R.string.roguelike_combat_resisted), r.centerX(), r.centerY(), 0xFFB0BEC5.toInt(), false)
+        }
+    }
+
+    private fun elementColor(e: Element) = when (e) {
+        Element.FIRE      -> 0xFFFF8A65.toInt()
+        Element.ICE       -> 0xFF81D4FA.toInt()
+        Element.LIGHTNING -> 0xFFFFEE58.toInt()
+        Element.POISON    -> 0xFF9CCC65.toInt()
+        Element.PHYSICAL  -> 0xFFE0E0E0.toInt()
+        Element.HOLY      -> 0xFFFFF59D.toInt()
+    }
+
+    private fun nextAttacker() {
+        val c = combat ?: return
+        if (c.phase == CombatPhase.VICTORY) { enter(Stage.END_PANEL); return }
+        val next = attackers.removeFirstOrNull()
+        if (next == null) {
+            // Le tour de cet ennemi est fini : la jauge dit qui joue ensuite
+            c.endEnemyTurn()
+            attacker = -1
+            proceed()
+            return
+        }
+        attacker = next
+        brokenMirror = -1
+        puppetHpBeforeImpact = emptyList()
+        // Le même pantin que dans throughPuppets intercepte visuellement le coup.
+        visualPuppetTarget = c.puppetHp.indexOfFirst { it > 0 }
+        heroHurtImpact = false
+        parry = null
+        windupScale = if (c.hourglassStrikes > 0) Relic.HOURGLASS_SLOW else 1f
+        enter(Stage.ENEMY_WINDUP)
+    }
+
+    private fun resolveEnemyStrike(timing: Timing) {
+        val c = combat ?: return
+        puppetHpBeforeImpact = c.puppetHp.toList()
+        val strike = c.resolveStrike(attacker, timing)
+        heroHurtImpact = strike.damage > 0
+        brokenMirror = if (strike.imageHit) c.mirrorImages else -1
+        if (strike.charmed || strike.bledOut) visualPuppetTarget = -1
+        val ar = enemyRects[attacker]
+        if (strike.bleed > 0) {
+            floatText(context.getString(R.string.roguelike_combat_damage, num(strike.bleed)), ar.centerX(), ar.top, BLEED_COLOR, false)
+            if (strike.bledOut) { onEnemyDied?.invoke(); enter(Stage.ENEMY_IMPACT); return }
+        }
+        if (strike.charmed) {
+            floatText(context.getString(R.string.roguelike_combat_charmed_strike), ar.centerX(), ar.bottom, CHARMED_COLOR, true)
+            strike.charmHit?.let { hit ->
+                val r = enemyRects[hit.target]
+                floatText(context.getString(R.string.roguelike_combat_damage, num(hit.damage)), r.centerX(), r.top, CHARMED_COLOR, true)
+                if (hit.killed) onEnemyDied?.invoke()
+            }
+            enter(Stage.ENEMY_IMPACT)
+            return
+        }
+        if (strike.thorns > 0) {
+            floatText(context.getString(R.string.roguelike_combat_thorns, num(strike.thorns)), ar.centerX(), ar.bottom, STONESKIN_COLOR, false)
+            if (strike.thornsKilled) onEnemyDied?.invoke()
+        }
+        if (strike.absorbed > 0)
+            floatText(context.getString(R.string.roguelike_combat_absorbed, num(strike.absorbed)), heroRect.centerX(), heroRect.bottom, BARRIER_COLOR, false)
+        if (strike.puppetAbsorbed > 0) {
+            val defender = if (visualPuppetTarget >= 0) companionBounds(visualPuppetTarget) else heroRect
+            floatText(context.getString(R.string.roguelike_combat_puppet_absorbed, num(strike.puppetAbsorbed)), defender.centerX(), defender.top, PUPPET_COLOR, false)
+        }
+        if (strike.recovered)
+            floatText(context.getString(R.string.roguelike_combat_counterspell), heroRect.centerX(), heroRect.bottom, 0xFFB39DDB.toInt(), false)
+        if (strike.missed) {
+            // Le texte dit ce que fait le héros, pas ce que rate le monstre : avec un bouclier
+            // ou en guerrier il encaisse sur son armure, sinon il s'écarte
+            val hero = c.hero
+            val res = if (hero.hasShield || hero.archetype == Archetype.WARRIOR) R.string.roguelike_combat_blocked
+                else R.string.roguelike_combat_dodged
+            floatText(context.getString(res), heroRect.centerX(), heroRect.top, 0xFFB0BEC5.toInt(), true)
+            if (timing != Timing.MISS) onParry?.invoke(timing == Timing.PERFECT)
+            enter(Stage.ENEMY_IMPACT)
+            return
+        }
+        if (strike.imageHit) {
+            val image = companionBounds(brokenMirror)
+            floatText(context.getString(R.string.roguelike_combat_image_hit), image.centerX(), image.top, 0xFFB39DDB.toInt(), true)
+            enter(Stage.ENEMY_IMPACT)
+            return
+        }
+        if (strike.blocked || strike.dodged) {
+            val roll = strike.dodged && c.hero.archetype == Archetype.VAGABOND
+            showBanner(context.getString(when { roll -> R.string.roguelike_combat_roll; strike.blocked -> R.string.roguelike_combat_blocked
+                else -> R.string.roguelike_combat_dodged }), if (roll) ROLL_COLOR else 0xFFFFD54F.toInt())
+            onParry?.invoke(true)
+            strike.counter?.let { hit ->
+                val r = enemyRects[hit.target]
+                floatText(context.getString(R.string.roguelike_combat_counter, num(hit.damage)), r.centerX(), r.top, Color.WHITE, true)
+                if (hit.killed) onEnemyDied?.invoke()
+            }
+            enter(Stage.ENEMY_IMPACT)
+            return
+        }
+        when (timing) {
+            Timing.PERFECT -> { showBanner(context.getString(R.string.roguelike_combat_parry_perfect), 0xFFFFD54F.toInt()); onParry?.invoke(true) }
+            Timing.GOOD    -> { showBanner(context.getString(R.string.roguelike_combat_parry_good), 0xFF81D4FA.toInt()); onParry?.invoke(false) }
+            Timing.MISS    -> { showBanner(context.getString(R.string.roguelike_combat_parry_miss), 0xFFEF5350.toInt()); if (heroHurtImpact) onHeroHit?.invoke() }
+        }
+        if (strike.damage > 0) floatText(context.getString(R.string.roguelike_combat_damage, num(strike.damage)), heroRect.centerX(), heroRect.top,
+            if (timing == Timing.MISS) 0xFFEF5350.toInt() else 0xFFB0BEC5.toInt(), timing == Timing.MISS)
+        enter(Stage.ENEMY_IMPACT)
+    }
+
+    private fun floatText(text: String, x: Float, y: Float, color: Int, big: Boolean) {
+        floaters += Floater(text, x, y, color, big, SystemClock.uptimeMillis())
+    }
+
+    // ── Dessin ──────────────────────────────────────────────────────────────────
+
+    override fun onDraw(canvas: Canvas) {
+        val c = combat ?: return
+        tick()
+        if (combat == null) return
+        canvas.drawColor(0xFF161F30.toInt())
+        dungeonArt.drawBackdrop(canvas, sceneRect)
+        if (landscape) canvas.drawRect(panelRect, pBg)
+
+        drawOrderBar(canvas, c)
+        drawPuppets(canvas, c)
+        drawMirrorImages(canvas, c)
+        drawEnemies(canvas, c)
+        drawHero(canvas, c)
+        val casting = visualAction as? Action.Cast
+        if (casting != null && (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)) {
+            val impact = stage == Stage.PLAYER_HIT
+            val progress = elapsed() / if (impact) HIT_MS.toFloat() else approachMs
+            if (RelicGesture.of(casting.relic) == RelicGesture.DRAW_BOLT && boltCount >= 2) {
+                val weapon = casting.relic == Relic.MARTEAU_FOUDRE || casting.relic == Relic.THUNDER_CLUB
+                relicArt.drawTracedBolt(canvas, sceneRect, boltPath, boltCount, casting.relic, progress, impact,
+                    boltTiming, sceneUnit, if (weapon) RelicArt.icon(casting.relic) else null)
+            } else relicArt.draw(canvas, sceneRect, heroRect, enemyRects, spellTargets,
+                casting.relic, progress, impact, pixel = sceneUnit)
+        }
+        if (stage == Stage.HERO_STATUS && c.lastHeroTurnEnd.meteor.isNotEmpty()) {
+            relicArt.draw(canvas, sceneRect, heroRect, enemyRects, c.lastHeroTurnEnd.meteor.map { it.target },
+                Relic.METEOR, elapsed() / STATUS_MS.toFloat(), true, meteorFall = true, pixel = sceneUnit)
+        }
+        drawButtons(canvas, c)
+        drawHint(canvas)
+        if (stage == Stage.STRIKE_TIMING) relicGesture?.let { gestureArt.draw(canvas, it, elapsed().toFloat(), density) } ?: drawStrikeBar(canvas)
+        if (stage == Stage.ENEMY_WINDUP) drawParryRing(canvas)
+        drawFloaters(canvas)
+        drawBanner(canvas)
+        if (stage == Stage.INTRO) drawIntro(canvas)
+        if (stage == Stage.END_PANEL) drawEndPanel(canvas, c)
+
+        if (isShown && windowVisibility == VISIBLE) {
+            if (stage != Stage.CHOOSE && stage != Stage.END_PANEL || floaters.isNotEmpty() || banner != null || previewCost != null)
+                postInvalidateOnAnimation()
+            else postInvalidateDelayed(100L)
+        }
+    }
+
+    private fun companionBounds(index: Int): RectF {
+        val unit = sceneUnit
+        val size = 32f * unit
+        val top = heroRect.top
+        val cx: Float
+        val y: Float
+        if (landscape) {
+            // En paysage, un carré de deux sur deux devant le héros (côté ennemis) : le
+            // dessous du héros reste libre pour sa fiche.
+            cx = heroRect.centerX() - (if (index <= 1) 48f else 92f) * unit
+            y = top + (if (index % 2 == 0) -28f else 28f) * unit
+        } else {
+            cx = if (index == 0 || index == 2) heroRect.centerX() - 53f * unit else heroRect.centerX()
+            y = when (index) { 0 -> top; 3 -> top - 43f * unit; else -> top + 57f * unit }
+        }
+        return RectF(cx - size / 2f, y, cx + size / 2f, y + 36f * unit)
+    }
+
+    private fun drawMirrorImages(canvas: Canvas, c: Combat) {
+        val breaking = stage == Stage.ENEMY_IMPACT && brokenMirror >= 0
+        val count = c.mirrorImages + if (breaking) 1 else 0
+        for (i in 0 until count) {
+            val bounds = companionBounds(i)
+            val shatter = if (breaking && i == brokenMirror)
+                ((elapsed() / IMPACT_MS.toFloat() - .25f) / .75f).coerceIn(0f, 1f) else 0f
+            val unit = sceneUnit
+            bounds.offset(sin(SystemClock.uptimeMillis() / 520.0 + i * 1.7).toFloat() * unit, -shatter * 8f * unit)
+            val alpha = (145 * (1f - shatter)).toInt()
+            canvas.saveLayerAlpha(sceneRect, alpha)
+            dungeonArt.drawHero(canvas, bounds, c.hero, actorKey = "mirror:$i",
+                casting = stage == Stage.PLAYER_APPROACH && visualAction is Action.Cast,
+                swing = stage == Stage.PLAYER_HIT && visualAction == Action.Attack && elapsed() < 220L)
+            pStroke.color = 0xFFB39DDB.toInt()
+            pStroke.strokeWidth = unit
+            canvas.drawOval(bounds.left + 6f * unit, bounds.bottom,
+                bounds.right - 6f * unit, bounds.bottom + 3f * unit, pStroke)
+            canvas.restore()
+            if (shatter > 0f) dungeonArt.drawImpact(canvas, bounds, shatter, true, false, 100 + i)
+        }
+    }
+
+    private fun drawPuppets(canvas: Canvas, c: Combat) {
+        val unit = sceneUnit
+        for ((i, hp) in c.puppetHp.withIndex()) {
+            val hurt = stage == Stage.ENEMY_IMPACT && hp < puppetHpBeforeImpact.getOrElse(i) { hp }
+            if (hp <= 0 && !hurt) continue
+            val bounds = companionBounds(i)
+            val attacking = commandedPuppetAttack &&
+                (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)
+            if (attacking) {
+                val destination = enemyRects.getOrNull(target)
+                val progress = if (stage == Stage.PLAYER_APPROACH) (elapsed() / approachMs).coerceIn(0f, 1f)
+                    else (1f - elapsed() / HIT_MS.toFloat()).coerceIn(0f, 1f)
+                if (destination != null) bounds.offset(
+                    (destination.centerX() - bounds.centerX()) * progress * .55f,
+                    (destination.centerY() - bounds.centerY()) * progress * .55f)
+            }
+            if (hurt) bounds.offset(sin(elapsed() / 25.0).toFloat() * 2f * unit, 0f)
+            val fade = if (hp <= 0) (1f - elapsed() / IMPACT_MS.toFloat()).coerceIn(0f, 1f) else 1f
+            canvas.saveLayerAlpha(sceneRect, (255 * fade).toInt())
+            puppetArt.draw(canvas, bounds,
+                SystemClock.uptimeMillis(), i, hp.toFloat() / c.puppetMaxHp)
+            if (hurt) dungeonArt.drawImpact(canvas, bounds, elapsed() / IMPACT_MS.toFloat(), false, false, 200 + i)
+            canvas.restore()
+            if (stage == Stage.PLAYER_HIT && puppetAttackTargets.isNotEmpty()) {
+                val destination = enemyRects.getOrNull(puppetAttackTargets[i % puppetAttackTargets.size])
+                if (destination != null) puppetArt.drawBolt(canvas, bounds, destination,
+                    (elapsed() / HIT_MS.toFloat()).coerceIn(0f, 1f))
+            }
+        }
+    }
+
+    private fun drawEnemies(canvas: Canvas, c: Combat) {
+        for ((i, e) in c.enemies.withIndex()) {
+            val base = enemyRects.getOrNull(i) ?: continue
+            if (!e.alive && !((stage == Stage.PLAYER_HIT || stage == Stage.HERO_STATUS) && i in hitTargets)) continue
+            val r = RectF(base)
+
+            // L'attaquant s'avance pendant son élan
+            if (attacker == i && (stage == Stage.ENEMY_WINDUP || stage == Stage.ENEMY_IMPACT)) {
+                val progress = if (stage == Stage.ENEMY_WINDUP)
+                    ((elapsed() - windupMs() + 400f) / 400f).coerceIn(0f, 1f)
+                else if (brokenMirror >= 0)
+                    (1f - (elapsed() / IMPACT_MS.toFloat() - .3f) / .7f).coerceIn(0f, 1f)
+                else (1f - elapsed() / IMPACT_MS.toFloat()).coerceIn(0f, 1f)
+                val unit = sceneUnit
+                val destination = if (visualPuppetTarget >= 0) companionBounds(visualPuppetTarget) else RectF(heroRect)
+                if (stage == Stage.ENEMY_IMPACT && brokenMirror >= 0) {
+                    // Le résultat du jet est connu à l'impact : le dernier mouvement révèle le double frappé.
+                    val mirror = companionBounds(brokenMirror)
+                    val redirect = (elapsed() / (IMPACT_MS * .25f)).coerceIn(0f, 1f)
+                    destination.offset((mirror.left - destination.left) * redirect, (mirror.top - destination.top) * redirect)
+                }
+                r.offset((destination.left - 27f * unit - base.left) * progress,
+                    (destination.top - base.top) * progress)
+            }
+            // Recul quand on le touche
+            val hitNow = (stage == Stage.PLAYER_HIT || stage == Stage.HERO_STATUS) && i in hitTargets
+            if (hitNow) r.offset(sin(elapsed() / 30.0).toFloat() * 6f * density, 0f)
+
+            dungeonArt.drawShadow(canvas, r)
+            val spriteAlpha = if (!e.alive) ((1f - elapsed().toFloat() / HIT_MS).coerceIn(0f, 1f) * 255).toInt() else 255
+            dungeonArt.drawMonster(canvas, r, e.type, spriteAlpha, icy = e.frozen, hurt = hitNow, index = i)
+            if (hitNow && visualAction !is Action.Cast && stage == Stage.PLAYER_HIT) dungeonArt.drawImpact(canvas, r, elapsed() / HIT_MS.toFloat(), e.frozen, visualAction !is Action.Cast, i)
+            pSprite.alpha = 255
+
+            val barTop = base.bottom + 4f * density
+            // Même barre pixel-art que la démo : le cadre clair désigne la cible.
+            val unit = sceneUnit
+            val bar = RectF(base.centerX() - 26f * unit, barTop, base.centerX() + 26f * unit, barTop + 6f * unit)
+            pFill.color = if (target == i && e.alive) 0xFF91A9B5.toInt() else 0xFF111729.toInt()
+            canvas.drawRect(bar, pFill)
+            val inner = RectF(bar).apply { inset(unit, unit) }
+            pFill.color = 0xFF111729.toInt(); canvas.drawRect(inner, pFill)
+            val filledRight = inner.left + inner.width() * (e.hp.toFloat() / e.maxHp).coerceIn(0f, 1f)
+            pFill.color = 0xFFAA505D.toInt()
+            canvas.drawRect(inner.left, inner.top, filledRight, inner.bottom, pFill)
+            pFill.color = 0xFFDD897D.toInt()
+            canvas.drawRect(inner.left, inner.top, filledRight, inner.top + unit, pFill)
+            pText.textSize = 12f * sp
+            val hp = context.getString(R.string.roguelike_combat_hp, num(e.hp), num(e.maxHp))
+            val textRoom = inner.width() - 2f * unit
+            val measured = pText.measureText(hp)
+            if (measured > textRoom) pText.textSize *= textRoom / measured
+            val textY = bar.bottom + 3f * density - pText.ascent()
+            val halfText = pText.measureText(hp) / 2f + 3f * density
+            pFill.color = 0xFF111729.toInt()
+            canvas.drawRect(base.centerX() - halfText, textY + pText.ascent() - density,
+                base.centerX() + halfText, textY + pText.descent() + density, pFill)
+            pText.color = Color.WHITE
+            canvas.drawText(hp, base.centerX(), textY, pText)
+
+            if (e.alive) {
+                drawStatuses(canvas, e, base.centerX(), textY + pText.descent() + 14f * sp)
+            }
+        }
+    }
+
+    /**
+     * La barre d'ordre des tours, façon FFX : à gauche celui qui a la main (cadre doré), puis
+     * les tours à venir tels que la jauge les prévoit ([Combat.forecast]). Chaque ennemi garde
+     * son apparence dans les portraits ; un ennemi gelé est voilé de glace (il perdra ce
+     * tour) ; le Météore a sa case là où il tombe. Quand le doigt vise une action, la case du
+     * prochain tour du héros s'allume : c'est là qu'il tomberait.
+     */
+    private fun drawOrderBar(canvas: Canvas, c: Combat) {
+        val current = when (c.phase) {
+            CombatPhase.PLAYER_TURN -> Combat.HERO
+            CombatPhase.ENEMY_TURN  -> c.actingEnemy
+            else -> return
+        }
+        val b = orderBar
+        val cell = b.height()
+        val gap = 5f * density
+        val afterCurrent = 8f * density
+        val count = ((b.width() - afterCurrent + gap) / (cell + gap)).toInt()
+        if (count < 2) return
+        val slots = listOf(TurnSlot(current, frozen = current >= 0 && c.enemies[current].frozen)) +
+            c.forecast(count - 1, previewCost ?: c.attackCost())
+        val preview = previewCost != null
+        var previewDone = false
+        var x = b.left
+        for ((k, slot) in slots.withIndex()) {
+            val r = RectF(x, b.top, x + cell, b.bottom)
+            val lit = preview && k > 0 && slot.actor == Combat.HERO && !previewDone
+            if (lit) {
+                previewDone = true
+                // Le prochain tour du héros, si l'action visée part : il pulse
+                r.offset(0f, -2f * density * (1f + sin(SystemClock.uptimeMillis() / 120.0).toFloat()))
+            }
+            drawOrderCell(canvas, c, slot, r, current = k == 0, lit = lit)
+            x += cell + gap + if (k == 0) afterCurrent else 0f
+        }
+    }
+
+    private fun drawOrderCell(canvas: Canvas, c: Combat, slot: TurnSlot, r: RectF, current: Boolean, lit: Boolean) {
+        val corner = 6f * density
+        pFill.color = 0xFF263238.toInt()
+        canvas.drawRoundRect(r, corner, corner, pFill)
+        val inner = RectF(r).apply { inset(3f * density, 3f * density) }
+        val mark = when (slot.actor) {
+            Combat.METEOR -> {
+                // Le Météore : une boule de feu, pas un portrait
+                pFill.color = Relic.METEOR.color
+                canvas.drawCircle(inner.centerX(), inner.centerY(), inner.width() * 0.42f, pFill)
+                pFill.color = elementColor(Element.FIRE)
+                canvas.drawCircle(inner.centerX() - inner.width() * 0.1f, inner.centerY() - inner.width() * 0.1f, inner.width() * 0.2f, pFill)
+                Relic.METEOR.color
+            }
+            Combat.HERO -> {
+                dungeonArt.drawHero(canvas, inner, c.hero, portrait = true)
+                HERO_MARK
+            }
+            else -> {
+                dungeonArt.drawMonster(canvas, inner, c.enemies[slot.actor].type, index = slot.actor, portrait = true)
+                0xFF42566B.toInt()
+            }
+        }
+        if (slot.frozen) { pFill.color = FROZEN_VEIL; canvas.drawRoundRect(r, corner, corner, pFill) }
+        pStroke.color = if (current || lit) CURRENT_MARK else mark
+        pStroke.strokeWidth = (if (current || lit) 3f else 2f) * density
+        canvas.drawRoundRect(r, corner, corner, pStroke)
+    }
+
+    /** Les effets en cours sous la barre de vie, chacun à sa couleur. */
+    private fun drawStatuses(canvas: Canvas, e: Enemy, cx: Float, y: Float) {
+        val parts = buildList<Pair<String, Int>> {
+            if (e.burnTurns > 0) add(context.getString(R.string.roguelike_combat_burning, e.burnTurns) to elementColor(Element.FIRE))
+            if (e.poisonTurns > 0) add(context.getString(R.string.roguelike_combat_poisoned, e.poisonTurns) to elementColor(Element.POISON))
+            if (e.frozen) add(context.getString(R.string.roguelike_combat_frozen) to elementColor(Element.ICE))
+            if (e.paralyzedTurns > 0) add(context.getString(R.string.roguelike_combat_paralyzed, e.paralyzedTurns) to elementColor(Element.LIGHTNING))
+            if (e.breachedTurns > 0) add(context.getString(R.string.roguelike_combat_breached, e.breachedTurns) to FRACTURED_COLOR)
+            if (e.fracturedTurns > 0) add(context.getString(R.string.roguelike_combat_fractured, e.fracturedTurns) to FRACTURED_COLOR)
+            if (e.weakenedTurns > 0) add(context.getString(R.string.roguelike_combat_weakened, e.weakenedTurns) to WEAKENED_COLOR)
+            if (e.blindedTurns > 0) add(context.getString(R.string.roguelike_combat_blinded, e.blindedTurns) to BLINDED_COLOR)
+            if (e.marked) add(context.getString(R.string.roguelike_combat_marked) to MARKED_COLOR)
+            if (e.bleedTurns > 0) add(context.getString(R.string.roguelike_combat_bleeding, e.bleedTurns) to BLEED_COLOR)
+            if (e.charmed) add(context.getString(R.string.roguelike_combat_charmed) to CHARMED_COLOR)
+            if (e.enraged) add(context.getString(R.string.roguelike_combat_rage_status, e.rageTurns) to RAGE_COLOR)
+            if (e.frightened) add(context.getString(R.string.roguelike_combat_frightened) to FRACTURED_COLOR)
+            if (e.fragile) add(context.getString(R.string.roguelike_combat_fragile) to elementColor(Element.ICE))
+            when (e.elementMark) {
+                Element.FIRE -> add(context.getString(R.string.roguelike_combat_mark_fire) to elementColor(Element.FIRE))
+                Element.ICE -> add(context.getString(R.string.roguelike_combat_mark_ice) to elementColor(Element.ICE))
+                Element.LIGHTNING -> add(context.getString(R.string.roguelike_combat_mark_lightning) to elementColor(Element.LIGHTNING))
+                else -> {}
+            }
+            if (e.slowed) add(context.getString(R.string.roguelike_combat_slowed, kotlin.math.ceil(e.slowTime).toInt()) to SLOWED_COLOR)
+        }
+        pText.textSize = 11f * sp
+        pText.textAlign = Paint.Align.LEFT
+        // Deux effets par ligne au plus : trois ennemis côte à côte laissent peu de place
+        val gap = 8f * density
+        parts.chunked(2).forEachIndexed { line, pair ->
+            val widths = pair.map { pText.measureText(it.first) }
+            var x = cx - (widths.sum() + gap * (pair.size - 1)) / 2f
+            for ((i, part) in pair.withIndex()) {
+                pText.color = part.second
+                canvas.drawText(part.first, x, y + line * 13f * sp, pText)
+                x += widths[i] + gap
+            }
+        }
+        pText.textAlign = Paint.Align.CENTER
+    }
+
+    private fun drawHero(canvas: Canvas, c: Combat) {
+        val r = RectF(heroRect)
+        val melee = (visualAction == Action.Attack && !commandedPuppetAttack) || visualAction == Action.Deadly
+        if (melee && (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)) {
+            val destination = enemyRects.getOrNull(target)
+            val progress = if (stage == Stage.PLAYER_APPROACH) (elapsed() / 220f).coerceIn(0f, 1f)
+                else (1f - (elapsed() - 100f) / (HIT_MS - 100f)).coerceIn(0f, 1f)
+            val unit = sceneUnit
+            if (destination != null) r.offset((destination.left + 36f * unit - heroRect.left) * progress,
+                (destination.top + 8f * unit - heroRect.top) * progress)
+        }
+        val blocking = c.guardTurns > 0 || (stage == Stage.ENEMY_IMPACT && parry != null && parry != Timing.MISS)
+        if (stage == Stage.ENEMY_IMPACT && !blocking && heroHurtImpact) r.offset(sin(elapsed() / 25.0).toFloat() * 7f * density, 0f)
+        dungeonArt.drawShadow(canvas, r, hero = true)
+        dungeonArt.drawHero(canvas, r, c.hero,
+            windup = (stage == Stage.STRIKE_TIMING && pendingAction !is Action.Cast &&
+                !(pendingAction == Action.Attack && c.puppetsAttack)) || (stage == Stage.PLAYER_APPROACH && melee),
+            swing = stage == Stage.PLAYER_HIT && melee && elapsed() < 220L,
+            casting = (stage == Stage.STRIKE_TIMING && pendingAction is Action.Cast) ||
+                (commandedPuppetAttack && (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT)) ||
+                ((stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT) && visualAction is Action.Cast),
+            blocking = blocking,
+            invocation = (visualAction as? Action.Cast)?.relic == Relic.METEOR &&
+                (stage == Stage.PLAYER_APPROACH || stage == Stage.PLAYER_HIT),
+            castProgress = if (stage == Stage.PLAYER_APPROACH) elapsed() / approachMs else 1f - elapsed() / HIT_MS.toFloat())
+
+        drawHeroStats(canvas, c)
+    }
+
+    /** PV, barre de vie et effets du héros, dans [statsRect]. */
+    private fun drawHeroStats(canvas: Canvas, c: Combat) {
+        val hero = c.hero
+        val left = statsRect.left
+        val right = statsRect.right
+        val top = statsRect.top
+        pText.textAlign = Paint.Align.LEFT
+        pText.textSize = 15f * sp; pText.color = Color.WHITE
+        canvas.drawText(context.getString(R.string.roguelike_combat_hp, num(hero.hp), num(hero.maxHp)), left, top + 18f * density, pText)
+        val bar = RectF(left, top + 24f * density, right, top + 30f * density)
+        pFill.color = 0xFF333333.toInt(); canvas.drawRect(bar, pFill)
+        val ratio = hero.hp.toFloat() / hero.maxHp
+        pFill.color = when { ratio > 0.5f -> 0xFF43A047.toInt(); ratio > 0.25f -> 0xFFFB8C00.toInt(); else -> 0xFFE53935.toInt() }
+        canvas.drawRect(bar.left, bar.top, bar.left + bar.width() * ratio, bar.bottom, pFill)
+        // Garde et doubles sous la barre de vie
+        pText.textSize = 12f * sp
+        var y = bar.bottom + 16f * sp
+        if (c.guardTurns > 0) {
+            pText.color = 0xFFBCAAA4.toInt()
+            canvas.drawText(context.getString(R.string.roguelike_combat_guarding, c.guardTurns), left, y, pText)
+            y += 15f * sp
+        }
+        if (c.mirrorImages > 0) {
+            pText.color = 0xFFB39DDB.toInt()
+            canvas.drawText(context.getString(R.string.roguelike_combat_images, c.mirrorImages), left, y, pText)
+            y += 15f * sp
+        }
+        if (c.rollReady) {
+            pText.color = ROLL_COLOR
+            canvas.drawText(context.getString(R.string.roguelike_combat_roll_ready), left, y, pText)
+            y += 15f * sp
+        }
+        if (c.puppetHp.isNotEmpty()) {
+            pText.color = PUPPET_COLOR
+            canvas.drawText(context.getString(R.string.roguelike_combat_puppets_line, c.puppetHp.count { it > 0 }, c.puppetHp.size), left, y, pText)
+            y += 15f * sp
+        }
+        if (c.empoweredAttacks > 0) {
+            pText.color = EMPOWERED_COLOR
+            canvas.drawText(context.getString(R.string.roguelike_combat_empowered, c.empoweredAttacks), left, y, pText)
+            y += 15f * sp
+        }
+        val buffs = buildList<Pair<String, Int>> {
+            if (c.poisonedBlades > 0) add(context.getString(R.string.roguelike_combat_poisoned_blades, c.poisonedBlades) to elementColor(Element.POISON))
+            if (c.ambushReady) add(context.getString(R.string.roguelike_combat_ambush_ready) to MARKED_COLOR)
+            if (c.barrier > 0) add(context.getString(R.string.roguelike_combat_barrier, num(c.barrier)) to BARRIER_COLOR)
+            if (c.stoneskinTurns > 0) add(context.getString(R.string.roguelike_combat_stoneskin, c.stoneskinTurns) to STONESKIN_COLOR)
+            if (c.hasteTurns > 0) add(context.getString(R.string.roguelike_combat_haste, c.hasteTurns) to HASTE_COLOR)
+            if (c.hourglassStrikes > 0) add(context.getString(R.string.roguelike_combat_hourglass, c.hourglassStrikes) to HOURGLASS_COLOR)
+            if (c.meteorTurns > 0) add(context.getString(R.string.roguelike_combat_meteor_incoming, c.meteorTurns) to elementColor(Element.FIRE))
+        }
+        for ((text, color) in buffs) {
+            pText.color = color
+            canvas.drawText(text, left, y, pText)
+            y += 15f * sp
+        }
+        pText.textAlign = Paint.Align.CENTER
+    }
+
+    private fun drawButtons(canvas: Canvas, c: Combat) {
+        val active = stage == Stage.CHOOSE
+        drawButton(canvas, attackBtn, context.getString(R.string.roguelike_combat_attack), null, active, 0xFF8D2B2B.toInt())
+        for ((i, r) in relicBtns.withIndex()) {
+            val relic = c.hero.relicSlots[i]
+            if (i >= c.hero.unlockedRelicSlots) {
+                // Pas encore ouvert : l'étage qui l'ouvrira
+                drawButton(canvas, r, context.getString(R.string.roguelike_combat_relic_locked),
+                    context.getString(R.string.roguelike_combat_relic_unlock_floor, Hero.RELIC_SLOT_FLOORS[i - 1]), false, 0)
+                continue
+            }
+            if (relic == null) {
+                drawButton(canvas, r, context.getString(R.string.roguelike_combat_relic_empty), null, false, 0)
+                continue
+            }
+            val cd = c.relicCooldowns[relic] ?: 0
+            val castable = active && c.canCast(relic)
+            drawButton(canvas, r, context.getString(relic.labelRes),
+                if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd) else null,
+                castable, relic.color, RelicArt.icon(relic))
+            gestureArt.drawGlyph(canvas, RelicGesture.of(relic), r, castable, density)
+        }
+        val archetype = c.hero.archetype
+        if (archetype == null) {
+            drawButton(canvas, specialBtn, context.getString(R.string.roguelike_combat_special),
+                context.getString(R.string.roguelike_combat_special_locked), false, 0)
+        } else {
+            val cd = c.hero.specialCooldown
+            drawButton(canvas, specialBtn, context.getString(archetype.specialRes),
+                if (cd > 0) context.getString(R.string.roguelike_combat_cooldown, cd)
+                else if (archetype == Archetype.NECROMANCER)
+                    context.getString(R.string.roguelike_combat_puppet_hp_cost, num(c.puppetRecallHpCost))
+                else context.getString(archetype.labelRes),
+                active && c.canUseSpecial(), archetype.color)
+        }
+    }
+
+    private fun drawButton(canvas: Canvas, r: RectF, label: String, sub: String?, enabled: Boolean, color: Int,
+        icon: Bitmap? = null) {
+        pFill.color = if (enabled) color else 0xFF2A2A2A.toInt()
+        canvas.drawRoundRect(r, 12f * density, 12f * density, pFill)
+        // L'icône de la relique à gauche ; le texte se centre dans la place qui reste
+        var left = r.left
+        if (icon != null) {
+            val side = min(r.height() * .72f, r.width() * .34f)
+            val pad = (r.height() - side) / 2f
+            iconBounds.set(r.left + pad, r.top + pad, r.left + pad + side, r.top + pad + side)
+            pIcon.alpha = if (enabled) 255 else 110
+            PixelArtIcon.draw(canvas, icon, iconBounds, pIcon, iconDst)
+            left = iconBounds.right
+        }
+        val cx = (left + r.right) / 2f
+        pText.color = if (enabled) Color.WHITE else 0xFF777777.toInt()
+        pText.textSize = 15f * sp
+        // Un nom long rétrécit plutôt que de déborder du bouton
+        val room = r.right - left - 12f * density
+        val tw = pText.measureText(label)
+        if (tw > room) pText.textSize *= room / tw
+        val y = if (sub == null) r.centerY() + 5f * sp else r.centerY() - 2f * sp
+        canvas.drawText(label, cx, y, pText)
+        if (sub != null) {
+            pText.textSize = 11f * sp
+            canvas.drawText(sub, cx, r.centerY() + 15f * sp, pText)
+        }
+    }
+
+    private fun drawHint(canvas: Canvas) {
+        val res = when (stage) {
+            Stage.CHOOSE        -> R.string.roguelike_combat_hint_choose
+            // Les gestes de reliques se lisent tout seuls : pas de consigne écrite
+            Stage.STRIKE_TIMING -> if (relicGesture != null) return else R.string.roguelike_combat_hint_strike
+            Stage.ENEMY_WINDUP  -> R.string.roguelike_combat_hint_parry
+            else -> return
+        }
+        val lines = context.getString(res).split('\n')
+        pText.color = 0xFFB0BEC5.toInt()
+        lines.forEachIndexed { index, text ->
+            pText.textSize = 14f * sp
+            val room = hintRoom.coerceAtLeast(1f)
+            val textWidth = pText.measureText(text)
+            if (textWidth > room) pText.textSize *= room / textWidth
+            canvas.drawText(text, hintX, hintY - (lines.lastIndex - index) * 17f * sp, pText)
+        }
+    }
+
+    private fun drawStrikeBar(canvas: Canvas) {
+        val horizontal = swipeDirection.dy != 0
+        val b = if (horizontal) strikeBar else RectF(
+            strikeBar.centerX() - strikeBar.height() / 2f,
+            strikeBar.centerY() - strikeBar.width() / 2f,
+            strikeBar.centerX() + strikeBar.height() / 2f,
+            strikeBar.centerY() + strikeBar.width() / 2f,
+        )
+        val cr = min(b.width(), b.height()) / 2f
+        DungeonTimingShadow.draw(canvas, b.left, b.top, b.right, b.bottom, cr, density)
+        pFill.color = 0xFF263238.toInt(); canvas.drawRoundRect(b, cr, cr, pFill)
+        fun along(p: Float) = if (horizontal) b.left + b.width() * p else b.top + b.height() * p
+        val goodL = along(STRIKE_CENTER - strikeGood())
+        val goodR = along(STRIKE_CENTER + strikeGood())
+        pFill.color = 0xFF7CB342.toInt()
+        if (horizontal) canvas.drawRoundRect(goodL, b.top, goodR, b.bottom, cr, cr, pFill)
+        else canvas.drawRoundRect(b.left, goodL, b.right, goodR, cr, cr, pFill)
+        val perfL = along(STRIKE_CENTER - strikePerfect())
+        val perfR = along(STRIKE_CENTER + strikePerfect())
+        if (horizontal) DungeonTimingShadow.draw(canvas, perfL, b.top - 3f * density, perfR, b.bottom + 3f * density, cr, density)
+        else DungeonTimingShadow.draw(canvas, b.left - 3f * density, perfL, b.right + 3f * density, perfR, cr, density)
+        pFill.color = 0xFFE53935.toInt()
+        if (horizontal) canvas.drawRoundRect(perfL, b.top - 3f * density, perfR, b.bottom + 3f * density, cr, cr, pFill)
+        else canvas.drawRoundRect(b.left - 3f * density, perfL, b.right + 3f * density, perfR, cr, cr, pFill)
+        val cursor = along((elapsed().toFloat() / strikeMs()).coerceIn(0f, 1f))
+        if (horizontal) DungeonTimingShadow.draw(canvas, cursor - 3f * density, b.top - 8f * density, cursor + 3f * density, b.bottom + 8f * density, 0f, density)
+        else DungeonTimingShadow.draw(canvas, b.left - 8f * density, cursor - 3f * density, b.right + 8f * density, cursor + 3f * density, 0f, density)
+        pFill.color = Color.WHITE
+        if (horizontal) canvas.drawRect(cursor - 3f * density, b.top - 8f * density, cursor + 3f * density, b.bottom + 8f * density, pFill)
+        else canvas.drawRect(b.left - 8f * density, cursor - 3f * density, b.right + 8f * density, cursor + 3f * density, pFill)
+        drawSwipeArrow(canvas, if (horizontal) along(STRIKE_CENTER) else b.centerX(), if (horizontal) b.centerY() else along(STRIKE_CENTER))
+    }
+
+    /** Flèche positionnée sur la fenêtre de timing : verticale ou pivotée comme le croquis. */
+    private fun drawSwipeArrow(canvas: Canvas, x: Float, y: Float) {
+        val d = 26f * density
+        val head = 11f * density
+        val dx = swipeDirection.dx.toFloat(); val dy = swipeDirection.dy.toFloat()
+        pStroke.strokeCap = Paint.Cap.ROUND; pStroke.strokeJoin = Paint.Join.ROUND
+        fun drawArrow() {
+            canvas.drawLine(x - dx * d, y - dy * d, x + dx * d, y + dy * d, pStroke)
+            canvas.drawLine(x + dx * d, y + dy * d, x + dx * (d - head) - dy * head, y + dy * (d - head) + dx * head, pStroke)
+            canvas.drawLine(x + dx * d, y + dy * d, x + dx * (d - head) + dy * head, y + dy * (d - head) - dx * head, pStroke)
+        }
+        // Dessiner tout le contour avant le vert évite les raccords sombres dans la pointe.
+        pStroke.color = 0xFF111729.toInt(); pStroke.strokeWidth = 8f * density
+        drawArrow()
+        pStroke.color = 0xFF43C06B.toInt(); pStroke.strokeWidth = 4f * density
+        drawArrow()
+        pStroke.strokeCap = Paint.Cap.BUTT; pStroke.strokeJoin = Paint.Join.MITER
+    }
+
+    /** Geste de parade d'origine : toucher quand les deux cercles coïncident. */
+    private fun drawParryRing(canvas: Canvas) {
+        val cx = ringX; val cy = ringY
+        val inner = heroRect.width() * 0.62f
+        val p = elapsed().toFloat() / windupMs()
+        // Même taille et approche qu'à l'origine. Après la cible, le cercle continue
+        // sans rayon négatif ni arrêt, même avec une fenêtre de parade très longue.
+        val radius = inner * if (p <= 1f) 1f + 2.2f * (1f - p)
+            else kotlin.math.exp(-2.2f * (p - 1f))
+        // Les bandes montrent les mêmes tolérances que la reconnaissance du geste.
+        fun band(window: Int, color: Int) {
+            val fraction = window.toFloat() / windupMs()
+            val outer = inner * (1f + 2.2f * fraction)
+            val inside = inner * kotlin.math.exp(-2.2f * fraction)
+            pStroke.color = color
+            pStroke.strokeWidth = outer - inside
+            canvas.drawCircle(cx, cy, (outer + inside) / 2f, pStroke)
+        }
+        band(goodWindow(), 0x304CAF50)
+        band(perfectWindow(), 0x50FFD54F)
+        // Sous le blanc, un trait plus large laisse 1 dp de noir de chaque côté.
+        pStroke.strokeWidth = 5f * density
+        pStroke.color = Color.BLACK
+        canvas.drawCircle(cx, cy, inner, pStroke)
+        pStroke.strokeWidth = 3f * density
+        pStroke.color = Color.WHITE
+        canvas.drawCircle(cx, cy, inner, pStroke)
+        pStroke.strokeWidth = 5f * density
+        pStroke.color = when (parry) { Timing.PERFECT -> 0xFFFFD54F.toInt(); Timing.GOOD -> 0xFF81D4FA.toInt(); Timing.MISS -> 0xFF616161.toInt(); null -> 0xFFEF5350.toInt() }
+        canvas.drawCircle(cx, cy, radius, pStroke)
+    }
+
+    private fun drawFloaters(canvas: Canvas) {
+        val now = SystemClock.uptimeMillis()
+        floaters.removeAll { now - it.start > FLOAT_MS }
+        for (f in floaters) {
+            val p = (now - f.start).toFloat() / FLOAT_MS
+            pText.textSize = (if (f.big) 30f else 22f) * sp
+            pText.color = f.color
+            pText.alpha = ((1f - p) * 255).toInt().coerceIn(0, 255)
+            canvas.drawText(f.text, f.x, f.y - p * 50f * density, pText)
+            pText.alpha = 255
+        }
+    }
+
+    private fun drawBanner(canvas: Canvas) {
+        val text = banner ?: return
+        val age = SystemClock.uptimeMillis() - bannerStart
+        if (age > FLOAT_MS) { banner = null; return }
+        pText.textSize = 26f * sp; pText.color = bannerColor
+        pText.alpha = ((1f - age.toFloat() / FLOAT_MS) * 255).toInt().coerceIn(0, 255)
+        canvas.drawText(text, sceneRect.centerX(), height * 0.42f, pText)
+        pText.alpha = 255
+    }
+
+    private fun drawIntro(canvas: Canvas) {
+        val p = (elapsed().toFloat() / INTRO_MS).coerceIn(0f, 1f)
+        pOverlay.alpha = ((1f - p) * 204).toInt()
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pOverlay)
+        pOverlay.alpha = 204
+        pText.textSize = 32f * sp; pText.color = 0xFFFF7043.toInt()
+        val c = combat
+        val res = if (c != null && c.ambush) R.string.roguelike_combat_ambush else R.string.roguelike_combat_start
+        canvas.drawText(context.getString(res), width / 2f, height * 0.40f, pText)
+    }
+
+    private fun drawEndPanel(canvas: Canvas, c: Combat) {
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), pOverlay)
+        val cx = width / 2f; var y = height * 0.35f
+        if (c.phase == CombatPhase.VICTORY) {
+            val r = c.rewards ?: return
+            pText.textSize = 34f * sp; pText.color = 0xFFFFD54F.toInt()
+            canvas.drawText(context.getString(R.string.roguelike_combat_victory), cx, y, pText)
+            pText.textSize = 18f * sp; pText.color = Color.WHITE
+            y += 50f * sp
+            canvas.drawText(context.getString(R.string.roguelike_combat_reward_gold, num(r.gold)), cx, y, pText)
+            if (r.equipment.isNotEmpty()) {
+                y += 30f * sp
+                pText.color = 0xFF81D4FA.toInt()
+                canvas.drawText(context.resources.getQuantityString(R.plurals.roguelike_combat_reward_items, r.equipment.size, r.equipment.size), cx, y, pText)
+            }
+        } else {
+            pText.textSize = 34f * sp; pText.color = 0xFFEF5350.toInt()
+            canvas.drawText(context.getString(R.string.roguelike_death_title), cx, y, pText)
+        }
+        pText.textSize = 14f * sp; pText.color = 0xFFB0BEC5.toInt()
+        canvas.drawText(context.getString(R.string.roguelike_combat_tap_continue), cx, height * 0.70f, pText)
+    }
+
+    // ── Toucher ─────────────────────────────────────────────────────────────────
+
+    private var downX = 0f
+    private var downY = 0f
+    private var gestureConsumed = false
+    private var gestureStage: Stage? = null
+
+    private fun recognizeStrike(x: Float, y: Float, time: Long) {
+        if (gestureConsumed || gestureStage != Stage.STRIKE_TIMING || stage != Stage.STRIKE_TIMING) return
+        val dx = x - downX
+        val dy = y - downY
+        val length = hypot(dx, dy)
+        if (length <= 24f * density) return
+        gestureConsumed = true
+        val d = abs((time - stageStart).toFloat() / strikeMs() - STRIKE_CENTER)
+        val directed = (dx * swipeDirection.dx + dy * swipeDirection.dy) / length >= .72f
+        resolveStrike(if (!directed) Timing.MISS else when {
+            d <= strikePerfect() -> Timing.PERFECT
+            d <= strikeGood() -> Timing.GOOD
+            else -> Timing.MISS
+        })
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val c = combat ?: return false
+        val gesture = relicGesture
+        if (gesture != null && stage == Stage.STRIKE_TIMING) {
+            relicGestureTouch(gesture, event)
+            return true
+        }
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                downX = event.x; downY = event.y
+                gestureConsumed = false
+                gestureStage = stage
+                if (stage == Stage.CHOOSE) setPreview(previewAt(c, event.x, event.y))
+                // La parade se joue à l'appui : c'est le geste le plus précis
+                if (stage == Stage.ENEMY_WINDUP && parry == null) {
+                    gestureConsumed = true
+                    val delta = abs(event.eventTime - stageStart - windupMs())
+                    parry = when {
+                        delta <= perfectWindow() -> Timing.PERFECT
+                        delta <= goodWindow()    -> Timing.GOOD
+                        else                     -> Timing.MISS   // trop tôt ou trop tard, pas de second essai
+                    }
+                    when (parry) {
+                        Timing.PERFECT -> showBanner(context.getString(R.string.roguelike_combat_parry_perfect), 0xFFFFD54F.toInt())
+                        Timing.GOOD -> showBanner(context.getString(R.string.roguelike_combat_parry_good), 0xFF81D4FA.toInt())
+                        else -> showBanner(context.getString(R.string.roguelike_combat_parry_miss), 0xFFEF5350.toInt())
+                    }
+                    postInvalidateOnAnimation()
+                }
+            }
+            MotionEvent.ACTION_MOVE -> if (!gestureConsumed) {
+                for (i in 0 until event.historySize) recognizeStrike(event.getHistoricalX(i), event.getHistoricalY(i), event.getHistoricalEventTime(i))
+                recognizeStrike(event.x, event.y, event.eventTime)
+                if (stage == Stage.CHOOSE && gestureStage == stage) setPreview(previewAt(c, event.x, event.y))
+            }
+            MotionEvent.ACTION_POINTER_DOWN, MotionEvent.ACTION_CANCEL -> {
+                gestureConsumed = true
+                setPreview(null)
+            }
+            MotionEvent.ACTION_UP -> {
+                if (stage == Stage.CHOOSE) setPreview(null)
+                recognizeStrike(event.x, event.y, event.eventTime)
+                if (gestureConsumed || gestureStage != stage) return true
+                val dist = hypot(event.x - downX, event.y - downY)
+                val swipe = dist > 24f * density
+                when (stage) {
+                    Stage.CHOOSE -> if (!swipe) handleChooseTap(c, downX, downY)
+                    Stage.END_PANEL -> if (!swipe) {
+                        combat = null
+                        onFinished?.invoke()
+                    }
+                    else -> {}
+                }
+            }
+        }
+        return true
+    }
+
+    /**
+     * Le geste de la relique reçoit tous les doigts (le feu en demande deux), chacun avec son
+     * identifiant ; tout ce qui suit ce toucher est ignoré par le reste de l'écran.
+     */
+    private fun relicGestureTouch(gesture: TouchGesture, event: MotionEvent) {
+        fun at(time: Long) = (time - stageStart).toFloat()
+        val index = event.actionIndex
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                gestureConsumed = true
+                gestureStage = stage
+                gesture.down(event.getPointerId(0), event.x, event.y, at(event.eventTime))
+            }
+            MotionEvent.ACTION_POINTER_DOWN ->
+                gesture.down(event.getPointerId(index), event.getX(index), event.getY(index), at(event.eventTime))
+            MotionEvent.ACTION_MOVE -> {
+                for (h in 0 until event.historySize) for (p in 0 until event.pointerCount)
+                    gesture.move(event.getPointerId(p), event.getHistoricalX(p, h), event.getHistoricalY(p, h), at(event.getHistoricalEventTime(h)))
+                for (p in 0 until event.pointerCount)
+                    gesture.move(event.getPointerId(p), event.getX(p), event.getY(p), at(event.eventTime))
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP ->
+                gesture.up(event.getPointerId(index), event.getX(index), event.getY(index), at(event.eventTime))
+            MotionEvent.ACTION_CANCEL -> for (p in 0 until event.pointerCount)
+                gesture.up(event.getPointerId(p), event.getX(p), event.getY(p), at(event.eventTime))
+        }
+        gesture.result?.let { finishRelicGesture(gesture, it) }
+        postInvalidateOnAnimation()
+    }
+
+    /** Le coût de l'action sous le doigt, si elle est jouable : c'est l'aperçu de la barre d'ordre. */
+    private fun previewAt(c: Combat, x: Float, y: Float): Double? {
+        val slot = relicBtns.indexOfFirst { it.contains(x, y) }
+        val relic = if (slot >= 0) c.hero.relicSlots[slot] else null
+        return when {
+            attackBtn.contains(x, y) -> c.attackCost()
+            specialBtn.contains(x, y) && c.canUseSpecial() -> c.specialCost()
+            relic != null && c.canCast(relic) -> c.relicCost(relic)
+            else -> null
+        }
+    }
+
+    private fun setPreview(cost: Double?) {
+        if (cost == previewCost) return
+        previewCost = cost
+        postInvalidateOnAnimation()
+    }
+
+    private fun handleChooseTap(c: Combat, x: Float, y: Float) {
+        val tappedEnemy = enemyRects.indexOfFirst { it.contains(x, y) }
+        when {
+            tappedEnemy >= 0 && c.enemies[tappedEnemy].alive -> { target = tappedEnemy; invalidate() }
+            attackBtn.contains(x, y) -> choose(Action.Attack)
+            specialBtn.contains(x, y) && c.canUseSpecial() ->
+                if (c.hero.archetype == Archetype.ROGUE || c.hero.archetype == Archetype.VAGABOND || c.hero.archetype == Archetype.BARBARIAN) choose(Action.Deadly) else useInstantSpecial(c)
+            else -> {
+                val slot = relicBtns.indexOfFirst { it.contains(x, y) }
+                val relic = if (slot >= 0) c.hero.relicSlots[slot] else null
+                if (relic != null && c.canCast(relic)) {
+                    choose(Action.Cast(relic))
+                }
+            }
+        }
+    }
+}

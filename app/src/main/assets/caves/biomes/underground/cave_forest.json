@@ -1,0 +1,33 @@
+{
+  "id": "us_cave_forest",
+  "noise_offsets": [2400, 0, 2300],
+  "surface_blocks": [
+    {"block": "grass", "noise_min": -99}
+  ],
+  "surface_variety_scale": 0.0,
+  "surface_variety_offset": 0,
+  "dirt_block": "dirt",
+  "stone_block": "stone",
+  "height_base": 2.0,
+  "height_amplitude": 12.0,
+  "height_roughness": 3.0,
+  "topsoil_depth": 3,
+  "tree_density_base": 0.20,
+  "tree_density_noise_scale": 0.15,
+  "tree_type": "oak",
+  "tree_min_height": 3,
+  "tree_max_height": 5,
+  "canopy_radius": 2,
+  "bush_density": 0.05,
+  "bush_block": "leaves",
+  "decoration_density": 0.02,
+  "decoration_blocks": ["rock_moss", "mushroom_brown"],
+  "vegetation_density": 0.25,
+  "vegetation_blocks": [
+    {"block": "grass_wild1", "weight": 2},
+    {"block": "grass_wild2", "weight": 2},
+    {"block": "mushroom_tan", "weight": 1}
+  ],
+  "wheat_enabled": false,
+  "structures": []
+}

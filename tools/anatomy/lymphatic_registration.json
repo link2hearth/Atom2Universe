@@ -1,0 +1,640 @@
+{
+  "method": "Each lymph-node group or palatine tonsil uses a single regional rigid similarity from existing source-to-atlas bone registrations. No within-object deformation, topology changes, invented nodes or collecting vessels. The region is chosen explicitly by anatomy; neck C3/C7 by source object vertical midpoint 148 cm. Coordinate signs use anatomical left positive X. Infraclavicular groups use clavicle fits, sacral groups the sacrum fit, occipital groups the occipital fit, retro-aortic/retrocaval groups L3, and juxta-oesophageal groups T6 after contact checks.",
+  "skeletalSourceUrl": "https://raw.githubusercontent.com/LluisV/Z-Anatomy/PC-Version/Resources/Models/FBX/SkeletalSystem100.fbx",
+  "skeletalSourceSha256": "294a649765cd060a62a4095da52b9c8ef2d97769aa447e196448aa5f7d596dea",
+  "limitations": "Nearest bone surface/vertex residuals measure registration only. Lymph-node group positions and tissue contacts across source bodies remain approximate; not a clinical validation. A source object may contain several nodes.",
+  "transforms": {
+    "head": {
+      "matrix": [
+        [
+          1.0245816323653203,
+          0.0002651241834706599,
+          0.0016166015587164326
+        ],
+        [
+          -0.00028549711435165863,
+          1.0245013718821046,
+          0.012925268852140443
+        ],
+        [
+          -0.001613128274503395,
+          -0.012925702792101803,
+          1.0245001362109807
+        ]
+      ],
+      "offset": [
+        -0.0001746841848163929,
+        -0.1104264390017613,
+        0.06748972709379279
+      ],
+      "reference": "facial_content.py / align_z_anatomy.py"
+    },
+    "thorax": {
+      "matrix": [
+        [
+          0.9439514021405064,
+          -0.001642483193773571,
+          0.00022544050243531694
+        ],
+        [
+          0.0016405589098853549,
+          0.9439190286458574,
+          0.007821387614346087
+        ],
+        [
+          -0.00023904168080632413,
+          -0.007820983743035312,
+          0.943920427393038
+        ]
+      ],
+      "offset": [
+        -0.002822375941994669,
+        0.0010857316777574955,
+        0.08497095459374718
+      ],
+      "reference": "visceral_registration.json / align_viscera.py"
+    },
+    "trunk": {
+      "matrix": [
+        [
+          0.9400478304757721,
+          0.0022041035390022463,
+          -0.0015209759734684785
+        ],
+        [
+          -0.0021704575506384075,
+          0.9398261569317241,
+          0.020473858539512703
+        ],
+        [
+          0.0015686154223989454,
+          -0.020470263727281515,
+          0.9398274324423178
+        ]
+      ],
+      "offset": [
+        0.0018705491248102197,
+        0.004376681672269456,
+        0.06864084918140832
+      ],
+      "reference": "trunk_muscle_registration.json / trunk_muscle_content.py"
+    },
+    "Vertebra C3": {
+      "matrix": [
+        [
+          1.0148834808869251,
+          0.006462676535552925,
+          0.02293129727835646
+        ],
+        [
+          -0.00310975989048218,
+          1.0046749884177326,
+          -0.14551490439568524
+        ],
+        [
+          -0.02362075308484242,
+          0.14540457977608104,
+          1.0044180696123894
+        ]
+      ],
+      "offset": [
+        0.003681009530160502,
+        -0.0778593502550824,
+        0.3074388917371869
+      ],
+      "medianMm": 1.2292620171909263,
+      "p95Mm": 2.533417404686999,
+      "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+    },
+    "Vertebra C7": {
+      "matrix": [
+        [
+          0.9206361854657912,
+          0.003862567187973436,
+          0.0007960863575959884
+        ],
+        [
+          -0.0037861761990456806,
+          0.9176642241063386,
+          -0.07392276938044104
+        ],
+        [
+          -0.0011036523728692094,
+          0.07391881721052182,
+          0.9176716894300545
+        ]
+      ],
+      "offset": [
+        0.004586737528973673,
+        0.047550444600585884,
+        0.2025937784218184
+      ],
+      "medianMm": 1.041387321282027,
+      "p95Mm": 2.875362353043269,
+      "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+    },
+    "Humerus.l": {
+      "matrix": [
+        [
+          0.9675427448172175,
+          0.00036785417939877863,
+          0.0048028173385967505
+        ],
+        [
+          -0.00034721598728159464,
+          0.9675457390087568,
+          -0.004157858412412356
+        ],
+        [
+          -0.00480435345737606,
+          0.004156083351208304,
+          0.9675338808427102
+        ]
+      ],
+      "offset": [
+        0.0003953954990708053,
+        -0.022434892265100537,
+        0.10642323451604453
+      ],
+      "medianMm": 0.9832629713833804,
+      "p95Mm": 3.9714736187412187,
+      "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+    },
+    "Humerus.r": {
+      "matrix": [
+        [
+          0.9678347772883571,
+          -4.1474296122658305e-05,
+          -0.002050219539890675
+        ],
+        [
+          3.235134043750189e-05,
+          0.967827368144183,
+          -0.004306468806170178
+        ],
+        [
+          0.0020503837859682825,
+          0.00430639060821313,
+          0.9678251971174039
+        ]
+      ],
+      "offset": [
+        -4.9384104877508994e-05,
+        -0.022769958626802866,
+        0.10722517494029665
+      ],
+      "medianMm": 0.2232899973917927,
+      "p95Mm": 3.250187266143466,
+      "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+    },
+    "Hip bone.l": {
+      "matrix": [
+        [
+          0.9845476475835009,
+          -0.0200589455533998,
+          -0.06108928638444775
+        ],
+        [
+          0.021542303027173082,
+          0.9861325206054531,
+          0.02338618298274508
+        ],
+        [
+          0.060582104519080714,
+          -0.024670287341308154,
+          0.9844742343527421
+        ]
+      ],
+      "offset": [
+        -0.013288878160528234,
+        -0.035485473533372835,
+        0.06887495431284046
+      ],
+      "medianMm": 3.047963025548349,
+      "p95Mm": 6.970788756115778,
+      "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+    },
+    "Hip bone.r": {
+      "matrix": [
+        [
+          0.98218675343517,
+          0.03597049083378564,
+          0.05377383215005337
+        ],
+        [
+          -0.03734330661424876,
+          0.9833056659649145,
+          0.02432621201204219
+        ],
+        [
+          -0.05282971404465276,
+          -0.02631370230349804,
+          0.9825441110929769
+        ]
+      ],
+      "offset": [
+        0.028481481344983392,
+        -0.032650562237827474,
+        0.06700452623002162
+      ],
+      "medianMm": 3.2504011590864383,
+      "p95Mm": 6.315272535866028,
+      "reference": "align_nervous.py regional rigid similarity fit; local_bone_alignment.json"
+    },
+    "Tibia.l": {
+      "matrix": [
+        [
+          0.9338363020560941,
+          0.0040069480669420055,
+          -0.22264031885488866
+        ],
+        [
+          -0.0037226576470065185,
+          0.9600095733562246,
+          0.0016634707280731302
+        ],
+        [
+          0.22264525378426725,
+          -0.0007547728193330524,
+          0.9338434170329356
+        ]
+      ],
+      "offset": [
+        0.01097841453601743,
+        -0.04229714201009466,
+        0.12772840863318918
+      ],
+      "surfaceResidualMm": {
+        "median": 0.14922064541482377,
+        "p95": 0.5089167775301935,
+        "max": 0.9618559475986157
+      },
+      "reference": "meniscus_registration.json tibialRegistration / align_menisci.py; no meniscus pose correction"
+    },
+    "Tibia.r": {
+      "matrix": [
+        [
+          0.9335567541951839,
+          -0.004396773031403363,
+          0.22337382718125692
+        ],
+        [
+          0.004065685893696681,
+          0.9599079448658258,
+          0.0019024110545160513
+        ],
+        [
+          -0.22338009866795538,
+          -0.000904077716169452,
+          0.9335651695241828
+        ]
+      ],
+      "offset": [
+        -0.011171920554273039,
+        -0.042294902936008405,
+        0.12766437754015514
+      ],
+      "surfaceResidualMm": {
+        "median": 0.14030666621456883,
+        "p95": 0.4613296431006716,
+        "max": 1.1601336819779606
+      },
+      "reference": "meniscus_registration.json tibialRegistration / align_menisci.py; no meniscus pose correction"
+    },
+    "Clavicle.l": {
+      "matrix": [
+        [
+          0.9425221484463957,
+          0.08959798502482479,
+          0.00367031208715097
+        ],
+        [
+          -0.08965949575143471,
+          0.9422648671322525,
+          0.02207635416399709
+        ],
+        [
+          -0.0015636281285361085,
+          -0.02232468747971579,
+          0.9465138318161782
+        ]
+      ],
+      "offset": [
+        0.1255346413307995,
+        -0.0008763160541636061,
+        0.07041133200362726
+      ],
+      "medianMm": 1.608270941706425,
+      "p95Mm": 3.6929178651516033,
+      "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+    },
+    "Clavicle.r": {
+      "matrix": [
+        [
+          0.9487332044937213,
+          -0.08721095561190187,
+          -0.011037214288628491
+        ],
+        [
+          0.08744985467398525,
+          0.9485140958471814,
+          0.022266501378141876
+        ],
+        [
+          0.008949513701484878,
+          -0.02318455061852248,
+          0.9524729114279544
+        ]
+      ],
+      "offset": [
+        -0.12247499352080504,
+        -0.009555353741958816,
+        0.0693489257191777
+      ],
+      "medianMm": 1.4189876190493402,
+      "p95Mm": 3.6331161992724073,
+      "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+    },
+    "Sacrum": {
+      "matrix": [
+        [
+          0.9628444346191045,
+          7.457335767877956e-05,
+          -0.00036445106859880536
+        ],
+        [
+          -7.240753789492774e-05,
+          0.9628275224713249,
+          0.005718425624954704
+        ],
+        [
+          0.0003648875382009378,
+          -0.005718397790815308,
+          0.962827456217644
+        ]
+      ],
+      "offset": [
+        -0.0004222792864320298,
+        -0.0163346780502297,
+        0.0792156575515947
+      ],
+      "medianMm": 0.7425230675923893,
+      "p95Mm": 4.175257665159614,
+      "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+    },
+    "Occipital bone": {
+      "matrix": [
+        [
+          1.0281498941785825,
+          0.003603347645555315,
+          0.0008192710458613839
+        ],
+        [
+          -0.00360416914271531,
+          1.028149699983937,
+          0.0010317976855238728
+        ],
+        [
+          -0.0008156494909056389,
+          -0.0010346629491888746,
+          1.0281556907430032
+        ]
+      ],
+      "offset": [
+        0.005022968293377114,
+        -0.11689813034563978,
+        0.08652976478049915
+      ],
+      "medianMm": 0.567118841269741,
+      "p95Mm": 2.105518305985955,
+      "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+    },
+    "Vertebra L3": {
+      "matrix": [
+        [
+          0.9454474141717686,
+          -0.004368838103227263,
+          -0.00502501968637938
+        ],
+        [
+          0.004927175618447443,
+          0.9389556312752115,
+          0.1106941550864424
+        ],
+        [
+          0.0044788960297921215,
+          -0.11071759699119404,
+          0.9389551127397713
+        ]
+      ],
+      "offset": [
+        -0.005743244615293415,
+        0.005089487861251962,
+        -0.021259314248125563
+      ],
+      "medianMm": 0.6664289791603472,
+      "p95Mm": 2.4970946777282155,
+      "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+    },
+    "Vertebra T6": {
+      "matrix": [
+        [
+          0.943843391146382,
+          -0.001639921355039813,
+          0.001207687503741162
+        ],
+        [
+          0.001629872350470832,
+          0.943811861603989,
+          0.007810779320543777
+        ],
+        [
+          -0.0012212154922770237,
+          -0.007808675650990281,
+          0.9438124962507966
+        ]
+      ],
+      "offset": [
+        -0.002962894033113068,
+        -0.001263100712129983,
+        0.08582544796431571
+      ],
+      "medianMm": 0.7762095996097884,
+      "p95Mm": 2.2085891084707905,
+      "reference": "align_nervous.py local_bone_alignment.json; regional rigid similarity"
+    }
+  },
+  "objects": {
+    "(Anterior tibial node).l": "Tibia.l",
+    "(Anterior tibial node).r": "Tibia.r",
+    "(Fibular node).l": "Tibia.l",
+    "(Fibular node).r": "Tibia.r",
+    "(Intermediate deep inguinal node).l": "Hip bone.l",
+    "(Intermediate deep inguinal node).r": "Hip bone.r",
+    "(Intermediate lacunar node).l": "Hip bone.l",
+    "(Intermediate lacunar node).r": "Hip bone.r",
+    "(Lateral lacunar node).l": "Hip bone.l",
+    "(Lateral lacunar node).r": "Hip bone.r",
+    "(Medial lacunar node).l": "Hip bone.l",
+    "(Medial lacunar node).r": "Hip bone.r",
+    "(Posterior tibial node).l": "Tibia.l",
+    "(Posterior tibial node).r": "Tibia.r",
+    "(Proximal deep inguinal node).l": "Hip bone.l",
+    "(Proximal deep inguinal node).r": "Hip bone.r",
+    "(Retropyloric nodes)": "trunk",
+    "(Subpyloric nodes)": "trunk",
+    "(Suprapyloric node)": "trunk",
+    "Anterior axillary nodes.l": "Humerus.l",
+    "Anterior axillary nodes.r": "Humerus.r",
+    "Anterior inferior jugular nodes.l": "Vertebra C7",
+    "Anterior inferior jugular nodes.r": "Vertebra C7",
+    "Apical axillary nodes.l": "Humerus.l",
+    "Apical axillary nodes.r": "Humerus.r",
+    "Appendicular nodes": "trunk",
+    "Brachial nodes.l": "Humerus.l",
+    "Brachial nodes.r": "Humerus.r",
+    "Brachiocephalic nodes": "thorax",
+    "Bucinator node.l": "head",
+    "Bucinator node.r": "head",
+    "Central axillary nodes.l": "Humerus.l",
+    "Central axillary nodes.r": "Humerus.r",
+    "Central superior mesenteric nodes": "trunk",
+    "Coeliac nodes": "trunk",
+    "Cubital nodes.l": "Humerus.l",
+    "Cubital nodes.r": "Humerus.r",
+    "Cystic node": "trunk",
+    "Deep popliteal nodes.l": "Tibia.l",
+    "Deep popliteal nodes.r": "Tibia.r",
+    "Ileocolic nodes": "trunk",
+    "Inferior deep lateral cervical nodes.l": "Vertebra C7",
+    "Inferior deep lateral cervical nodes.r": "Vertebra C7",
+    "Inferior diaphragmatic nodes": "trunk",
+    "Inferior epigastric nodes.l": "trunk",
+    "Inferior epigastric nodes.r": "trunk",
+    "Inferior gluteal nodes.l": "Hip bone.l",
+    "Inferior gluteal nodes.r": "Hip bone.r",
+    "Inferior pancreatic nodes": "trunk",
+    "Inferior superficial inguinal nodes.l": "Hip bone.l",
+    "Inferior superficial inguinal nodes.r": "Hip bone.r",
+    "Inferior tracheobronchial nodes": "thorax",
+    "Infra-auricular nodes.l": "head",
+    "Infra-auricular nodes.r": "head",
+    "Infraclavicular nodes.l": "Clavicle.l",
+    "Infraclavicular nodes.r": "Clavicle.r",
+    "Intercostal nodes.l": "thorax",
+    "Intercostal nodes.r": "thorax",
+    "Intermediate common iliac nodes": "trunk",
+    "Intermediate external iliac nodes.l": "Hip bone.l",
+    "Intermediate external iliac nodes.r": "Hip bone.r",
+    "Intermediate lumbar nodes": "trunk",
+    "Interpectoral nodes.l": "Humerus.l",
+    "Interpectoral nodes.r": "Humerus.r",
+    "Intraglandular parotid nodes.l": "head",
+    "Intraglandular parotid nodes.r": "head",
+    "Intrapulmonary nodes": "thorax",
+    "Jugulodigastric node.l": "Vertebra C3",
+    "Jugulodigastric node.r": "Vertebra C3",
+    "Juxta-intestinal mesenteric nodes": "trunk",
+    "Juxta-oesophageal nodes": "Vertebra T6",
+    "Lateral aortic nodes": "trunk",
+    "Lateral axillary nodes.l": "Humerus.l",
+    "Lateral axillary nodes.r": "Humerus.r",
+    "Lateral caval nodes": "trunk",
+    "Lateral common iliac nodes": "trunk",
+    "Lateral pericardial nodes": "thorax",
+    "Lateral sacral nodes.l": "Sacrum",
+    "Lateral sacral nodes.r": "Sacrum",
+    "Lateral superior jugular node.l": "Vertebra C3",
+    "Lateral superior jugular node.r": "Vertebra C3",
+    "Lateral vesical nodes.l": "Hip bone.l",
+    "Lateral vesical nodes.r": "Hip bone.r",
+    "Left colic nodes": "trunk",
+    "Mandibular node.l": "head",
+    "Mandibular node.r": "head",
+    "Mastoid nodes.l": "head",
+    "Mastoid nodes.r": "head",
+    "Medial common iliac nodes": "trunk",
+    "Medial external iliac nodes.l": "Hip bone.l",
+    "Medial external iliac nodes.r": "Hip bone.r",
+    "Median sacral nodes": "trunk",
+    "Middle colic nodes": "trunk",
+    "Nasolabial node.l": "head",
+    "Nasolabial node.r": "head",
+    "Node of arch of azygos vein": "thorax",
+    "Node of ligamentum arteriosum": "thorax",
+    "Obturator nodes.l": "Hip bone.l",
+    "Obturator nodes.r": "Hip bone.r",
+    "Occipital nodes.l": "Occipital bone",
+    "Occipital nodes.r": "Occipital bone",
+    "Palatine tonsil.l": "head",
+    "Palatine tonsil.r": "head",
+    "Paracolic superior mesenteric nodes": "trunk",
+    "Pararectal nodes": "trunk",
+    "Parasternal nodes.l": "thorax",
+    "Parasternal nodes.r": "thorax",
+    "Paratracheal cervical nodes": "Vertebra C7",
+    "Paratracheal thoracic nodes": "thorax",
+    "Posterior axillary nodes.l": "Humerus.l",
+    "Posterior axillary nodes.r": "Humerus.r",
+    "Postvesical nodes": "trunk",
+    "Pre-aortic nodes": "trunk",
+    "Pre-auricular nodes.l": "head",
+    "Pre-auricular nodes.r": "head",
+    "Precaecal nodes": "trunk",
+    "Precaval nodes": "trunk",
+    "Prepericardial nodes": "thorax",
+    "Pretracheal nodes.l": "Vertebra C7",
+    "Pretracheal nodes.r": "Vertebra C7",
+    "Prevertebral nodes": "thorax",
+    "Prevesical nodes": "trunk",
+    "Retro-aortic nodes": "Vertebra L3",
+    "Retrocaecal nodes": "trunk",
+    "Retrocaval nodes": "Vertebra L3",
+    "Retropharyngeal nodes.l": "Vertebra C3",
+    "Retropharyngeal nodes.r": "Vertebra C3",
+    "Right colic nodes": "trunk",
+    "Right gastric nodes": "trunk",
+    "Right gastro-omental nodes": "trunk",
+    "Sigmoid nodes": "trunk",
+    "Splenic nodes": "trunk",
+    "Subaortic nodes": "thorax",
+    "Submandibular nodes.l": "head",
+    "Submandibular nodes.r": "head",
+    "Submental nodes.l": "head",
+    "Submental nodes.r": "head",
+    "Superficial anterior cervical nodes": "Vertebra C7",
+    "Superficial lateral cervical nodes.l": "Vertebra C7",
+    "Superficial lateral cervical nodes.r": "Vertebra C7",
+    "Superficial parotid nodes.l": "head",
+    "Superficial parotid nodes.r": "head",
+    "Superficial popliteal nodes.l": "Tibia.l",
+    "Superficial popliteal nodes.r": "Tibia.r",
+    "Superior diaphragmatic nodes": "thorax",
+    "Superior gluteal nodes.l": "Hip bone.l",
+    "Superior gluteal nodes.r": "Hip bone.r",
+    "Superior pancreatic nodes": "trunk",
+    "Superior pancreaticoduodenal nodes": "trunk",
+    "Superior tracheobronchial nodes": "thorax",
+    "Superolateral superficial inguinal nodes.l": "Hip bone.l",
+    "Superolateral superficial inguinal nodes.r": "Hip bone.r",
+    "Superomedial superficial inguinal nodes.l": "Hip bone.l",
+    "Superomedial superficial inguinal nodes.r": "Hip bone.r",
+    "Supraclavicular nodes.l": "Vertebra C7",
+    "Supraclavicular nodes.r": "Vertebra C7",
+    "Supratrochlear nodes.l": "Humerus.l",
+    "Supratrochlear nodes.r": "Humerus.r",
+    "Thyroid nodes.l": "Vertebra C7",
+    "Thyroid nodes.r": "Vertebra C7"
+  },
+  "contactCheck": {
+    "method": "Held-out deterministic samples: up to 200 vertices plus 200 triangle centroids per object, seed 891. Bone interior by generalized winding number, nearest triangle distance for interior samples. Diagnostic against unchanged BodyParts3D skeletal GLB. This is sampled geometric QA, not a medical validation.",
+    "samples": 59414,
+    "maximumSampledBonePenetrationMm": 3.760362895262792,
+    "groupsWithPenetrationOver2mm": {
+      "Retrocaval nodes": 3.386250531640052,
+      "Superior gluteal nodes.r": 3.760362895262792,
+      "Intercostal nodes.l": 2.13373340955819
+    },
+    "sourceComparison": "Several original Z-Anatomy node/tonsil surfaces already intersect its own bones by approximately 1–2.5 mm. Regional registration reduces added discrepancies but cannot make these source surfaces clinically exact without changing their shape. No anatomy was fabricated to conceal those limits."
+  }
+}

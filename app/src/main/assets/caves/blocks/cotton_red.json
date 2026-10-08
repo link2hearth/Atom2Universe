@@ -1,0 +1,14 @@
+{
+  "id": 9023,
+  "name": "cotton_red",
+  "texture_top": "cozy:cloth:5:CC0000",
+  "texture_side": "cozy:cloth:5:CC0000",
+  "texture_bottom": "cozy:cloth:5:CC0000",
+  "color": "#CC0000",
+  "hardness": 1.0,
+  "drop": "cotton_red",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

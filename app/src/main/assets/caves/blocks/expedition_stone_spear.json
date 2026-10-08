@@ -1,0 +1,12 @@
+{
+  "id": 9901,
+  "name": "expedition_stone_spear",
+  "texture_top": "expedition:9901:top",
+  "texture_side": "expedition:9901:side",
+  "texture_bottom": "expedition:9901:top",
+  "color": "#9BAFB9",
+  "hardness": 3.0,
+  "drop": "expedition_stone_spear",
+  "creative_tab": "resources",
+  "placeable": false
+}

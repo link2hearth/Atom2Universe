@@ -1,0 +1,17 @@
+{
+  "id": 2603,
+  "name": "glowstone_cyan",
+  "texture_top": "underground:cyan",
+  "texture_side": "underground:cyan",
+  "texture_bottom": "underground:cyan",
+  "color": "#85D9E4",
+  "hardness": 1.5,
+  "light_emission": 8,
+  "drop": "glowstone_cyan",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

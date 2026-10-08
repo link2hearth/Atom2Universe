@@ -1,0 +1,18 @@
+{
+  "id": 3120,
+  "name": "mineral_powder",
+  "texture_top": "cozy:resource:20:676575",
+  "texture_side": "cozy:resource:20:676575",
+  "texture_bottom": "cozy:resource:20:676575",
+  "color": "#676575",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "mineral_powder",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

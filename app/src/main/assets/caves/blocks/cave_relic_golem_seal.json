@@ -1,0 +1,18 @@
+{
+  "id": 2725,
+  "name": "cave_relic_golem_seal",
+  "texture_top": "cave_relics:golem_seal_top",
+  "texture_side": "cave_relics:golem_seal_side",
+  "texture_bottom": "cave_relics:golem_seal_top",
+  "color": "#435C80",
+  "hardness": 1.5,
+  "light_emission": 3,
+  "drop": "cave_relic_golem_seal",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ],
+  "block_height": 0.5
+}

@@ -1,0 +1,16 @@
+{
+  "id": 6001,
+  "name": "water",
+  "texture_top": "cozy:utility:6",
+  "texture_side": "cozy:utility:6",
+  "texture_bottom": "cozy:utility:6",
+  "color": "#78B9BA",
+  "hardness": 100.0,
+  "water": true,
+  "drop": "",
+  "harvest_category": "liquid",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

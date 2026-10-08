@@ -1,0 +1,578 @@
+package com.Atom2Universe.app.games.caves
+
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.view.Gravity
+import android.view.View
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import com.Atom2Universe.app.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+internal class CaveHud(private val activity: CaveActivity) {
+    fun controlIcon(button: Button, kind: String, label: String) {
+        button.text = ""; button.contentDescription = label; button.backgroundTintList = null
+        val inset = android.graphics.drawable.InsetDrawable(CaveActionDrawable(kind), CaveUiStyle.dp(activity, 9))
+        button.background = android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x447DAD8B),
+            android.graphics.drawable.LayerDrawable(arrayOf(CaveUiStyle.panel(activity, 0x66293F33, 0x6686A38C), inset)), null)
+    }
+
+    private val res get() = activity.resources
+    private val dp  get() = res.displayMetrics.density
+
+    // ── Slots hotbar ──────────────────────────────────────────────────────────
+    val slotViews  = arrayOfNulls<FrameLayout>(CaveActivity.ACTIVE_SIZE)
+    val slotColors = arrayOfNulls<View>(CaveActivity.ACTIVE_SIZE)
+    val slotCounts = arrayOfNulls<TextView>(CaveActivity.ACTIVE_SIZE)
+
+    // ── Overlay active bar ────────────────────────────────────────────────────
+    val overlayActiveFrames = arrayOfNulls<FrameLayout>(CaveActivity.ACTIVE_SIZE)
+    val overlayActiveColors = arrayOfNulls<View>(CaveActivity.ACTIVE_SIZE)
+    val overlayActiveCounts = arrayOfNulls<TextView>(CaveActivity.ACTIVE_SIZE)
+
+    // ── HP / Bouclier ─────────────────────────────────────────────────────────
+    var hpBarFg: View? = null
+    var hpText: TextView? = null
+    var hpBarMaxWidth = 0
+    var shieldBarFg: View? = null
+    var shieldContainer: View? = null
+    private var sprintIndicator: TextView? = null
+    private var vitals: CaveVitalsView? = null
+    private var quickbarWidth = 0
+
+    fun setInventoryOpen(open: Boolean) {
+        vitals?.visibility = if (open) View.INVISIBLE else View.VISIBLE
+        if (open) hideWeaponInHand()
+    }
+
+
+    // ── Hotbar ────────────────────────────────────────────────────────────────
+
+    fun buildHotbarUI(container: LinearLayout) {
+        val sideButtonsWidth = 54
+        val fixedWidth = sideButtonsWidth + 10 + CaveActivity.ACTIVE_SIZE * 4
+        val sz = CaveItemTile.edge(activity)
+        container.layoutParams=container.layoutParams.apply { height=sz+CaveUiStyle.dp(activity,6) }
+        container.gravity = Gravity.CENTER
+        container.background = CaveUiStyle.panel(activity, 0x7822382D, 0x6686A38C)
+        container.setPadding((5*dp).toInt(), (3*dp).toInt(), (5*dp).toInt(), (3*dp).toInt())
+        quickbarWidth = CaveActivity.ACTIVE_SIZE * sz + (fixedWidth * dp).toInt()
+        container.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            vitals?.layoutParams = vitals?.layoutParams?.also { it.width = (container.width - 22*dp).toInt().coerceAtLeast(1) }
+        }
+        repeat(CaveActivity.ACTIVE_SIZE) { i ->
+            val slot=CaveItemTile(activity).apply {
+                layoutParams=LinearLayout.LayoutParams(sz,sz).apply { setMargins((2*dp).toInt(),0,(2*dp).toInt(),0) }
+                setOnClickListener {
+                    if(activity.invOverlay.visibility==View.VISIBLE) activity.invManager.onOverlayActiveSlotClick(i)
+                    else activity.renderer.selectSlot(i)
+                }
+            }
+            container.addView(slot);slotViews[i]=slot
+        }
+        container.addView(android.widget.ImageButton(activity).apply {
+            layoutParams = LinearLayout.LayoutParams((48*dp).toInt(), (48*dp).toInt()).also { it.marginStart = (6*dp).toInt() }
+            background = CaveUiStyle.panel(activity, 0x99718D70.toInt(), CaveUiStyle.ACCENT)
+            setPadding((10*dp).toInt(),(10*dp).toInt(),(10*dp).toInt(),(10*dp).toInt())
+            setImageDrawable(CaveActionDrawable("bag")); contentDescription = activity.getString(R.string.cave_ui_bag)
+            setOnClickListener {
+                if (activity.invOverlay.visibility == View.VISIBLE) activity.invManager.closeInventory()
+                else activity.invManager.openInventory()
+            }
+        })
+    }
+
+    fun updateHotbarUI(slots: Array<Short?>, selected: Int) {
+        slots.forEachIndexed { i, type ->
+            val count = activity.renderer.inventoryStacks.at(i)?.count ?: 0
+            val eff      = if (count > 0) type else null
+            slotViews[i]?.background = CaveUiStyle.panel(activity,
+                if (i == selected) 0xAE688365.toInt() else 0x55405748,
+                if (i == selected) CaveUiStyle.ACCENT else 0x7786A38C,
+                i == selected)
+            slotViews[i]?.contentDescription = activity.getString(R.string.cave_ui_shortcut_description, i + 1,
+                eff?.let { activity.blockName(it) } ?: activity.getString(R.string.cave_ui_empty_slot))
+            slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
+                else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
+            slotCounts[i]?.text = if (eff != null) CaveUiStyle.count(activity,count) else ""
+            bindTile(slotViews[i],eff,count,i==selected)
+        }
+
+        // Arme à distance en main : son nom et ses munitions.
+        val weapon = com.Atom2Universe.app.games.caves.entity.RangedProfile.of(slots.getOrNull(selected))
+        if (weapon != null) showWeaponInHand(weapon.type) else hideWeaponInHand()
+    }
+
+    private fun hideWeaponInHand() {
+        weaponTooltipView?.visibility = View.GONE
+    }
+
+    fun slotDrawable(type: Short?, selected: Boolean): GradientDrawable =
+        CaveUiStyle.panel(activity, if (selected) 0xAE688365.toInt() else 0x55405748,
+            if (selected) CaveUiStyle.ACCENT else 0x7786A38C, selected)
+
+    // ── Hotbar highlighting pendant l'inventaire ──────────────────────────────
+
+    fun updateHotbarForInventory() {
+        updateActiveBarOverlay()
+        val inv = activity.invManager
+        val base = inv.hotbarBase()
+        for (i in 0 until CaveActivity.ACTIVE_SIZE) {
+            val invIdx = base + i
+            val type  = inv.invSlots.getOrNull(invIdx)
+            val count = activity.renderer.inventoryStacks.at(i)?.count ?: 0
+            val eff   = if (count > 0) type else null
+            val isSel    = inv.barSlotHighlighted(i)
+            val isCursor = inv.dragSourceIdx < 0 && inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
+            slotViews[i]?.background  = when {
+                isSel    -> overlaySlotDrawable(selected = true)
+                isCursor -> overlaySlotDrawable(selected = false, cursor = true)
+                else     -> slotDrawable(eff, false)
+            }
+            slotColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
+                else GradientDrawable().apply { setColor(android.graphics.Color.TRANSPARENT); cornerRadius = 3 * dp }
+            slotCounts[i]?.text = if (eff != null) CaveUiStyle.count(activity,count) else ""
+            bindTile(slotViews[i],eff,count,isSel || isCursor)
+        }
+    }
+
+    // Rebind the real HUD tiles; opening a panel never creates another shortcut bar.
+
+    fun buildOverlayActiveBar() {
+        val inv = activity.invManager
+        repeat(CaveActivity.ACTIVE_SIZE) { i ->
+            val tile = slotViews[i] as? CaveItemTile ?: return@repeat
+            overlayActiveFrames[i]=tile
+            inv.bindBarGestures(tile,i)
+            tile.setOnDragListener(inv.makeSlotDragListener { inv.hotbarBase()+i })
+        }
+    }
+    private fun bindTile(view: FrameLayout?,id: Short?,count: Int,selected: Boolean) {
+        (view as? CaveItemTile)?.bind(id?.let { activity.blockDrawable(it,3f) },
+            id?.let(activity::blockName) ?: activity.getString(R.string.cave_ui_empty_slot),count,
+            selected=selected,favorite=id?.let(activity.invManager::isFavorite)==true)
+    }
+
+    fun updateActiveBarOverlay() {
+        val inv = activity.invManager
+        if(inv.storagePageOpen) return
+        val base = inv.hotbarBase()
+        for (i in 0 until CaveActivity.ACTIVE_SIZE) {
+            val invIdx = base + i
+            val type  = inv.invSlots.getOrNull(invIdx)
+            val count = activity.renderer.inventoryStacks.at(i)?.count ?: 0
+            val eff   = if (count > 0) type else null
+            val isSel    = inv.barSlotHighlighted(i)
+            val isCursor = inv.dragSourceIdx < 0 && inv.invGpZone == InvGpZone.HOTBAR && invIdx == inv.invGpCursor
+            overlayActiveFrames[i]?.background = overlaySlotDrawable(isSel, isCursor)
+            overlayActiveFrames[i]?.contentDescription=activity.getString(R.string.cave_ui_shortcut_description,i+1,
+                eff?.let { activity.blockName(it) } ?: activity.getString(R.string.cave_ui_empty_slot))
+            overlayActiveColors[i]?.background = if (eff != null) activity.blockDrawable(eff, 3f)
+                else GradientDrawable().apply { setColor(Color.TRANSPARENT); cornerRadius = 3 * dp }
+            overlayActiveCounts[i]?.text = if (eff != null) CaveUiStyle.count(activity,count) else ""
+            bindTile(overlayActiveFrames[i],eff,count,isSel || isCursor)
+        }
+    }
+
+    fun updateActiveSlotHighlights() {
+        val inv = activity.invManager
+        for (i in 0 until CaveActivity.ACTIVE_SIZE) {
+            val isSel = inv.barSlotHighlighted(i)
+            overlayActiveFrames[i]?.background = overlaySlotDrawable(isSel)
+        }
+    }
+
+    fun overlaySlotDrawable(selected: Boolean, cursor: Boolean = false): GradientDrawable =
+        CaveUiStyle.panel(activity, if (selected) CaveUiStyle.SELECTED else 0x55405748,
+            if (selected) CaveUiStyle.ACCENT else if (cursor) 0xFFB0D5D3.toInt() else CaveUiStyle.BORDER, selected || cursor)
+
+    // ── Barre HP / Bouclier ───────────────────────────────────────────────────
+
+    fun buildHealthBar(root: FrameLayout, assault: Boolean = false) {
+        vitals = CaveVitalsView(activity, assault).also { view ->
+            view.layoutParams = FrameLayout.LayoutParams(quickbarWidth.coerceAtLeast((420*dp).toInt()), ((if (assault) 44 else 30)*dp).toInt()).also {
+                it.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL; it.bottomMargin = if(assault) (16*dp).toInt() else CaveItemTile.edge(activity)+(23*dp).toInt()
+            }
+            root.addView(view)
+        }
+    }
+    fun updateHealthBar(hp: Int, maxHp: Int) { vitals?.health(hp, maxHp) }
+    fun updateSprintIndicator(active: Boolean) { vitals?.sprint(active) }
+    fun updateShieldBar(current: Int, max: Int) { vitals?.shield(current, max) }
+
+    // ── Arme en main (style Minecraft, bas-droite) ────────────────────────────
+
+    private var weaponTooltipView: LinearLayout? = null
+    private var weaponTooltipName: android.widget.TextView? = null
+
+    // ── Flash rouge de dégât ────────────────────────────────────────────────────
+
+    private var damageFlash: View? = null
+    private var combatFeedback: CombatFeedbackView? = null
+    fun meleeHit(heavy: Boolean) { combatFeedback?.hit(heavy) }
+    fun combatCharge(percent: Int) { combatFeedback?.charge(percent) }
+
+    /** Vignette radiale rouge plein écran, transparente au centre, animée en alpha. */
+    fun buildDamageFlash(root: FrameLayout) {
+        val dm = res.displayMetrics
+        val v = View(activity).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+            background = GradientDrawable().apply {
+                gradientType = GradientDrawable.RADIAL_GRADIENT
+                gradientRadius = maxOf(dm.widthPixels, dm.heightPixels) * 0.62f
+                // Centre transparent → bords rouges (vignette)
+                colors = intArrayOf(Color.TRANSPARENT, Color.TRANSPARENT, Color.argb(190, 185, 12, 12))
+            }
+            alpha = 0f
+            isClickable = false
+            isFocusable = false
+        }
+        root.addView(v)
+        damageFlash = v
+        combatFeedback=CombatFeedbackView(activity).also {
+            root.addView(it,FrameLayout.LayoutParams((72*dp).toInt(),(72*dp).toInt(),Gravity.CENTER))
+        }
+    }
+
+    /** Déclenche un flash : pleine intensité puis fondu vers 0. */
+    fun flashDamage() {
+        val v = damageFlash ?: return
+        v.animate().cancel()
+        v.alpha = 0.7f
+        v.animate().alpha(0f).setDuration(420).start()
+    }
+
+    private var magazineText: android.widget.TextView? = null
+    fun updateWeaponStatus(text: String) { magazineText?.text=text }
+
+    fun buildWeaponInHand(root: FrameLayout) {
+        // Nom de l'arme affiché dans la barre hotbar (collé à droite)
+        val tooltip = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.END
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).also {
+                it.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+                it.setMargins(0, 0, 0, ((if (activity.renderer.mode.singleWeapon) 66 else 108) * dp).toInt())
+            }
+            setPadding((10 * dp).toInt(), (4 * dp).toInt(), (10 * dp).toInt(), (4 * dp).toInt())
+            background = GradientDrawable().apply { setColor(0x7622382D); cornerRadius = 12 * dp }
+            visibility = View.GONE
+        }
+        val nameTv = android.widget.TextView(activity).apply {
+            textSize = 11f; setTextColor(Color.WHITE)
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            gravity = Gravity.END
+        }
+        tooltip.addView(nameTv)
+        magazineText=android.widget.TextView(activity).apply { textSize=10f;setTextColor(0xFFE5C987.toInt());gravity=Gravity.END }
+        tooltip.addView(magazineText)
+        root.addView(tooltip)
+        weaponTooltipView = tooltip
+        weaponTooltipName = nameTv
+    }
+
+
+    private fun showWeaponInHand(type: String) {
+        weaponTooltipName?.text = activity.weaponName(type)
+        weaponTooltipName?.setTextColor(Color.WHITE)
+        weaponTooltipView?.visibility = View.VISIBLE
+    }
+
+
+    // ── Panneau zone A–B → carte Assaut (mode créatif uniquement) ────────────────
+
+    private var btnStructA: Button? = null
+    private var btnStructB: Button? = null
+    private var tvStructDims: android.widget.TextView? = null
+    private var structPanel: LinearLayout? = null
+    private var structPanelExpanded = false
+    private var btnStructMap: android.widget.Button? = null
+
+    fun buildStructurePanel(root: FrameLayout) {
+        val panel = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.gravity = Gravity.TOP or Gravity.END; it.setMargins(0, (56 * dp).toInt(), (8 * dp).toInt(), 0) }
+            setPadding((6 * dp).toInt(), (4 * dp).toInt(), (6 * dp).toInt(), (4 * dp).toInt())
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                setColor(0xCC001122.toInt()); cornerRadius = 8 * dp
+                setStroke((1 * dp).toInt(), 0x6600FF88.toInt())
+            }
+            visibility = View.GONE
+        }
+        structPanel = panel
+
+        val header = LinearLayout(activity).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        header.addView(android.widget.TextView(activity).apply {
+            text = "📐 Structure"; textSize = 11f; setTextColor(0xFF00FF88.toInt())
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        })
+        panel.addView(header)
+
+        val row = LinearLayout(activity).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT).also { it.topMargin = (4 * dp).toInt() }
+        }
+        fun mkBtn(label: String) = Button(activity).apply {
+            text = label; textSize = 10f; setTextColor(Color.WHITE)
+            setBackgroundColor(0x8800FF88.toInt())
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, (32 * dp).toInt()
+            ).also { it.setMargins(0, 0, (4 * dp).toInt(), 0) }
+            setPadding((8 * dp).toInt(), 0, (8 * dp).toInt(), 0)
+        }
+
+        val bA = mkBtn("A ?"); btnStructA = bA
+        val bB = mkBtn("B ?"); btnStructB = bB
+        row.addView(bA); row.addView(bB)
+
+        val tvDims = android.widget.TextView(activity).apply {
+            text = ""; textSize = 9f; setTextColor(0xAAFFFFFF.toInt())
+            visibility = View.GONE
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, 0, (6 * dp).toInt(), 0) }
+        }
+        tvStructDims = tvDims
+        row.addView(tvDims)
+
+        // La zone A–B s'exporte en carte du mode Assaut.
+        val bMap = mkBtn("🗺").also {
+            it.setBackgroundColor(0x88FF8C00.toInt()); it.visibility = View.GONE
+        }
+        btnStructMap = bMap
+        row.addView(bMap)
+        panel.addView(row)
+        root.addView(panel)
+
+        bA.setOnClickListener { onCornerAPressed() }
+        bB.setOnClickListener { onCornerBPressed() }
+        bMap.setOnClickListener { onExportMapPressed() }
+    }
+
+    fun showStructurePanel(show: Boolean) {
+        structPanel?.visibility = if (show) View.VISIBLE else View.GONE
+        if (!show) {
+            activity.renderer.structCornerA = null
+            activity.renderer.structCornerB = null
+            refreshStructureButtons()
+        }
+    }
+
+    private fun onCornerAPressed() {
+        val b = activity.renderer.currentLookAtBlock ?: return
+        activity.renderer.structCornerA = b
+        refreshStructureButtons()
+    }
+
+    private fun onCornerBPressed() {
+        val b = activity.renderer.currentLookAtBlock ?: return
+        activity.renderer.structCornerB = b
+        refreshStructureButtons()
+    }
+
+    private fun refreshStructureButtons() {
+        val a = activity.renderer.structCornerA
+        val b = activity.renderer.structCornerB
+        btnStructA?.text = if (a != null) "A ✓" else "A ?"
+        btnStructB?.text = if (b != null) "B ✓" else "B ?"
+        if (a != null && b != null) {
+            val sx = kotlin.math.abs(a.first  - b.first)  + 1
+            val sy = kotlin.math.abs(a.second - b.second) + 1
+            val sz = kotlin.math.abs(a.third  - b.third)  + 1
+            tvStructDims?.text = "${sx}×${sy}×${sz}"
+            tvStructDims?.visibility = View.VISIBLE
+            btnStructMap?.visibility = View.VISIBLE
+        } else {
+            tvStructDims?.visibility = View.GONE
+            btnStructMap?.visibility = View.GONE
+        }
+    }
+
+    // ── Mode Assaut : manche, chrono, score ───────────────────────────────────
+
+    private var matchLine: android.widget.TextView? = null
+    private var matchMessage: android.widget.TextView? = null
+    private var headshotView: android.widget.TextView? = null
+    private var shieldPickupView: android.widget.TextView? = null
+    private val hideShieldPickup = Runnable { shieldPickupView?.visibility = View.GONE }
+    private val hideHeadshot = Runnable { headshotView?.visibility = View.GONE }
+
+    fun buildMatchPanel(root: FrameLayout) {
+        val panel = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT).also {
+                it.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                it.topMargin = (10 * dp).toInt()
+            }
+        }
+        val line = android.widget.TextView(activity).apply {
+            textSize = 13f; setTextColor(Color.WHITE)
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setPadding((12 * dp).toInt(), (5 * dp).toInt(), (12 * dp).toInt(), (5 * dp).toInt())
+            background = CaveUiStyle.panel(activity, 0x7822382D, 0x6686A38C)
+        }
+        val message = android.widget.TextView(activity).apply {
+            textSize = 18f; setTextColor(0xFFFFE082.toInt()); gravity = Gravity.CENTER
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setShadowLayer(4 * dp, 0f, 0f, Color.BLACK)
+            setPadding(0, (10 * dp).toInt(), 0, 0)
+            visibility = View.GONE
+        }
+        val headshot = android.widget.TextView(activity).apply {
+            text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_headshot)
+            textSize = 16f; setTextColor(0xFFFF5252.toInt())
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setShadowLayer(4 * dp, 0f, 0f, Color.BLACK)
+            setPadding(0, (8 * dp).toInt(), 0, 0)
+            visibility = View.GONE
+        }
+        panel.addView(line); panel.addView(message); panel.addView(headshot)
+        shieldPickupView = android.widget.TextView(activity).apply {
+            textSize = 15f; setTextColor(0xFF6DE3FF.toInt())
+            gravity = Gravity.CENTER
+            setShadowLayer(4 * dp, 0f, 0f, Color.BLACK)
+            visibility = View.GONE
+        }.also { panel.addView(it) }
+        root.addView(panel)
+        matchLine = line; matchMessage = message; headshotView = headshot
+    }
+
+    fun updateMatchPanel(s: com.Atom2Universe.app.games.caves.mode.AssaultMatch.Status) {
+        if (s.phase == com.Atom2Universe.app.games.caves.mode.AssaultMatch.Phase.CHOOSING_WEAPON) {
+            matchLine?.text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_choose_weapon, s.round + 1)
+            matchMessage?.visibility = View.GONE
+            return
+        }
+        val seconds = s.secondsLeft
+        matchLine?.text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_hud,
+            s.round, seconds / 60, seconds % 60, s.targetsDown, s.targetsTotal, s.headshots, s.score)
+
+        val end = s.lastEnd
+        val between = s.phase == com.Atom2Universe.app.games.caves.mode.AssaultMatch.Phase.BETWEEN_ROUNDS
+        if (!between || end == null) {
+            matchMessage?.visibility = View.GONE
+            return
+        }
+        val verdict = when (end) {
+            com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.CLEARED ->
+                activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_cleared, s.lastTimeBonus)
+            com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.TIME_UP ->
+                activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_time_up, s.targetsDown, s.targetsTotal)
+            com.Atom2Universe.app.games.caves.mode.AssaultMatch.RoundEnd.DIED ->
+                activity.getString(com.Atom2Universe.app.R.string.cave_assault_round_died, s.targetsDown, s.targetsTotal)
+        }
+        val next = activity.getString(com.Atom2Universe.app.R.string.cave_assault_next_round, s.pauseSecondsLeft)
+        matchMessage?.text = "$verdict\n$next"
+        matchMessage?.visibility = View.VISIBLE
+    }
+
+    fun flashHeadshot() {
+        val view = headshotView ?: return
+        view.removeCallbacks(hideHeadshot)
+        view.visibility = View.VISIBLE
+        view.postDelayed(hideHeadshot, 900)
+    }
+
+    fun flashShieldPickup(amount: Int) {
+        val view = shieldPickupView ?: return
+        view.removeCallbacks(hideShieldPickup)
+        view.text = activity.getString(com.Atom2Universe.app.R.string.cave_assault_shield_collected, amount)
+        view.visibility = View.VISIBLE
+        view.postDelayed(hideShieldPickup, 1400)
+    }
+
+    // ── Export en carte Assaut ────────────────────────────────────────────────
+
+    private fun onExportMapPressed() {
+        val a = activity.renderer.structCornerA ?: return
+        val b = activity.renderer.structCornerB ?: return
+
+        if (!com.Atom2Universe.app.games.caves.world.A2MapStorage.hasStorageAccess()) {
+            android.app.AlertDialog.Builder(activity)
+                .setTitle(com.Atom2Universe.app.R.string.cave_storage_access_title)
+                .setMessage(com.Atom2Universe.app.R.string.cave_storage_access_message)
+                .setPositiveButton(com.Atom2Universe.app.R.string.cave_storage_open_settings) { _, _ ->
+                    com.Atom2Universe.app.games.caves.world.A2MapStorage.openStorageSettings(activity)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+            return
+        }
+
+        val minX = minOf(a.first, b.first);   val maxX = maxOf(a.first, b.first)
+        val minY = minOf(a.second, b.second); val maxY = maxOf(a.second, b.second)
+        val minZ = minOf(a.third, b.third);   val maxZ = maxOf(a.third, b.third)
+        val sx = maxX - minX + 1; val sy = maxY - minY + 1; val sz = maxZ - minZ + 1
+        val volume = sx.toLong() * sy * sz
+        val maxVolume = com.Atom2Universe.app.games.caves.world.A2Map.MAX_VOLUME
+        if (volume > maxVolume) {
+            android.widget.Toast.makeText(activity,
+                activity.getString(com.Atom2Universe.app.R.string.cave_map_export_too_big, volume, maxVolume),
+                android.widget.Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val input = android.widget.EditText(activity).apply {
+            setHint(com.Atom2Universe.app.R.string.cave_map_export_hint); setSingleLine(true)
+        }
+        android.app.AlertDialog.Builder(activity)
+            .setTitle(com.Atom2Universe.app.R.string.cave_map_export_title)
+            .setView(input)
+            .setPositiveButton(com.Atom2Universe.app.R.string.cave_map_export_confirm) { _, _ ->
+                val name = input.text.toString().trim().ifEmpty { "map_${System.currentTimeMillis() / 1000}" }
+                val world = activity.renderer.world
+                activity.lifecycleScope.launch(Dispatchers.IO) {
+                    val message = runCatching {
+                        if (!isZoneLoaded(world, minX..maxX, minY..maxY, minZ..maxZ)) {
+                            activity.getString(com.Atom2Universe.app.R.string.cave_map_export_not_loaded)
+                        } else {
+                            val map = com.Atom2Universe.app.games.caves.world.A2Map.capture(name, sx, sy, sz,
+                                blockAt = { x, y, z -> world.blockAt(minX + x, minY + y, minZ + z) },
+                                metaAt  = { x, y, z -> world.metaAt(minX + x, minY + y, minZ + z) })
+                            if (map.spawnsA.isEmpty() && map.spawnsB.isEmpty()) {
+                                activity.getString(com.Atom2Universe.app.R.string.cave_map_export_no_spawn)
+                            } else {
+                                val file = com.Atom2Universe.app.games.caves.world.A2MapStorage.save(map, name)
+                                activity.getString(com.Atom2Universe.app.R.string.cave_map_export_done, file.name)
+                            }
+                        }
+                    }.getOrElse { activity.getString(com.Atom2Universe.app.R.string.cave_map_export_failed) }
+                    withContext(Dispatchers.Main) {
+                        android.widget.Toast.makeText(activity, message, android.widget.Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    /** Vrai si tous les chunks de la zone sont chargés : ailleurs, la capture ne lirait que de l'air. */
+    private fun isZoneLoaded(
+        world: com.Atom2Universe.app.games.caves.world.World,
+        xs: IntRange, ys: IntRange, zs: IntRange
+    ): Boolean {
+        val size = com.Atom2Universe.app.games.caves.world.CHUNK_SIZE
+        for (cy in Math.floorDiv(ys.first, size)..Math.floorDiv(ys.last, size))
+            for (cz in Math.floorDiv(zs.first, size)..Math.floorDiv(zs.last, size))
+                for (cx in Math.floorDiv(xs.first, size)..Math.floorDiv(xs.last, size))
+                    if (world.getChunk(cx, cy, cz)?.generated != true) return false
+        return true
+    }
+}

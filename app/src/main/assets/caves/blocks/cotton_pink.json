@@ -1,0 +1,14 @@
+{
+  "id": 9021,
+  "name": "cotton_pink",
+  "texture_top": "cozy:cloth:5:FFC0CB",
+  "texture_side": "cozy:cloth:5:FFC0CB",
+  "texture_bottom": "cozy:cloth:5:FFC0CB",
+  "color": "#FFC0CB",
+  "hardness": 1.0,
+  "drop": "cotton_pink",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

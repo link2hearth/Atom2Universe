@@ -1,0 +1,14 @@
+{
+  "id": 9027,
+  "name": "cotton_sky",
+  "texture_top": "cozy:cloth:5:87CEEB",
+  "texture_side": "cozy:cloth:5:87CEEB",
+  "texture_bottom": "cozy:cloth:5:87CEEB",
+  "color": "#87CEEB",
+  "hardness": 1.0,
+  "drop": "cotton_sky",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

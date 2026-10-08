@@ -1,0 +1,16 @@
+{
+  "id": 103,
+  "name": "gravel_dirt",
+  "texture_top": "cozy:material:4:AA9981",
+  "texture_side": "cozy:material:4:AA9981",
+  "texture_bottom": "cozy:material:4:AA9981",
+  "color": "#AA9981",
+  "hardness": 0.8,
+  "decoration": false,
+  "drop": "gravel",
+  "harvest_category": "covered_soil",
+  "creative_tab": "terrain",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

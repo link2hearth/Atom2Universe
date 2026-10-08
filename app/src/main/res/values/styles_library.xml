@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Les galeries de projets partagent le même habillage, quelle que soit leur activité.
+         Les attributs d'apparence gardent les angles droits et l'absence de relief en Classique. -->
+    <style name="A2ULibraryHeader" parent="">
+        <item name="android:background">?attr/a2uPanelBackground</item>
+        <item name="android:clipToOutline">true</item>
+        <item name="android:elevation">?attr/a2uElevation2</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="A2UProjectCard" parent="">
+        <item name="android:background">?attr/a2uProjectBackground</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:clipToOutline">true</item>
+        <item name="android:elevation">?attr/a2uElevation4</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Découper le conteneur, car les adapters remplacent le fond des images
+         (damier Pixel Art, papier Canvas...) lors du recyclage des tuiles. -->
+    <style name="A2UProjectPreview" parent="">
+        <item name="android:background">@drawable/library_project_preview_background</item>
+        <item name="android:clipToOutline">true</item>
+    </style>
+
+    <style name="A2ULibraryNewButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton">
+        <item name="shapeAppearanceOverlay">@style/A2ULibraryActionShape</item>
+        <item name="android:elevation">?attr/a2uElevation6</item>
+        <item name="elevation">?attr/a2uElevation6</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="A2ULibraryActionShape" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">?attr/a2uCorner24</item>
+    </style>
+</resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="jigsaw_choose_photo">Choose a photo</string>
+    <string name="jigsaw_grid_choice">%1$d pieces\n%2$d × %3$d</string>
+    <string name="jigsaw_grid_accessibility">%1$d pieces, %2$d columns and %3$d rows</string>
+    <string name="jigsaw_title">Jigsaw puzzle</string>
+    <string name="jigsaw_description">Discover a hidden image or assemble your photos, with a grid adapted to their format.</string>
+    <string name="jigsaw_back">Back</string>
+    <string name="jigsaw_help">How to play</string>
+    <string name="jigsaw_resume">Resume saved puzzle</string>
+    <string name="jigsaw_resume_summary">Resume · %1$d / %2$d pieces</string>
+    <string name="jigsaw_view_finished">View completed puzzle</string>
+    <string name="jigsaw_style">Image collection</string>
+    <string name="jigsaw_collection_puzzle">Puzzle illustrations</string>
+    <string name="jigsaw_all_collections">All collections · Surprise</string>
+    <string name="jigsaw_difficulty">Number of pieces</string>
+    <string name="jigsaw_piece_count">%1$d pieces</string>
+    <string name="jigsaw_count_short">%1$d</string>
+    <string name="jigsaw_rotation">Rotate pieces</string>
+    <string name="jigsaw_layout">Arrangement</string>
+    <string name="jigsaw_layout_tray_short">Carousel</string>
+    <string name="jigsaw_layout_table_short">Free table</string>
+    <string name="jigsaw_mystery_mark">?</string>
+    <string name="jigsaw_mystery_title">An image to discover</string>
+    <string name="jigsaw_mystery_accessibility">Hidden surprise image. No image preview.</string>
+    <string name="jigsaw_start_surprise">Surprise image</string>
+    <string name="jigsaw_new_puzzle">New puzzle</string>
+    <string name="jigsaw_replace_title">Start a new puzzle?</string>
+    <string name="jigsaw_replace_message">The puzzle in progress will be replaced.</string>
+    <string name="jigsaw_start">Start</string>
+    <string name="jigsaw_recenter">Recenter the table and pieces</string>
+    <string name="jigsaw_more">More options</string>
+    <string name="jigsaw_edges">Edge pieces only</string>
+    <string name="jigsaw_ghost">Transparent image guide</string>
+    <string name="jigsaw_hide_ghost">Hide image guide</string>
+    <string name="jigsaw_tidy">Return loose pieces to the carousel</string>
+    <string name="jigsaw_spread">Spread loose pieces</string>
+    <string name="jigsaw_rotate">Rotate selected piece</string>
+    <string name="jigsaw_guide_buy_accessibility">Unlock transparent image guide for %1$d neutrino for this entire puzzle</string>
+    <string name="jigsaw_guide_description">Unlock a transparent guide for this entire puzzle. Show or hide it freely afterwards. Your completion reward stays the same.</string>
+    <string name="jigsaw_guide_unlock">Unlock · %1$d neutrino</string>
+    <string name="jigsaw_guide_balance">Balance: %1$d neutrinos</string>
+    <string name="jigsaw_guide_insufficient">Not enough neutrinos · Balance: %1$d</string>
+    <string name="jigsaw_guide_save_error">The purchase could not be saved. Please try again.</string>
+    <string name="jigsaw_time">%1$02d:%2$02d</string>
+    <string name="jigsaw_status">%1$d / %2$d · %3$s</string>
+    <string name="jigsaw_solved_status">Completed · %3$s</string>
+    <plurals name="jigsaw_tray">
+        <item quantity="one">%d piece</item>
+        <item quantity="other">%d pieces</item>
+    </plurals>
+    <plurals name="jigsaw_tray_edges">
+        <item quantity="one">%d edge piece</item>
+        <item quantity="other">%d edge pieces</item>
+    </plurals>
+    <string name="jigsaw_board_accessibility">Jigsaw table. Use one finger to move pieces, browse the carousel or drag the background to move the table. Use two fingers together to move or zoom the table. The corner marks indicate the puzzle frame.</string>
+    <string name="jigsaw_table_accessibility">Free jigsaw table. Use one finger to move a piece or group, or drag the background to move the table. Use two fingers together to move or zoom the table. The corner marks indicate the puzzle frame.</string>
+    <string name="jigsaw_completed_accessibility">Completed puzzle. The full image is revealed. Drag with one finger to move the image. Use two fingers together to zoom or move it.</string>
+    <string name="jigsaw_well_done">Puzzle completed!</string>
+    <string name="jigsaw_replay_animation">Replay animation</string>
+    <string name="jigsaw_completion_reward">%1$d neutrinos earned</string>
+    <string name="jigsaw_completion_status">%1$s\n%2$s</string>
+    <string name="jigsaw_rules">Choose a surprise image or a photo from your device, then the number of pieces, the arrangement and, if you like, piece rotation. No preview: the image appears through its pieces, then in full at the end.\n\nCarousel: browse the bottom tray and drag a piece upwards to put it on the table. To put a loose piece back, drop it on the carousel or tap it twice.\n\nFree table: the pieces start scattered around the empty frame.\n\nOne finger moves a piece or a group; on the background, it moves the table. Two fingers move and zoom the table. The coloured corner marks show the frame. Line a piece up with its neighbour or with its place in the frame, then release it to attach it.\n\nThe eye unlocks the transparent image for the whole puzzle; its price is on its badge. Afterwards, it shows or hides the image for free. Your reward stays the same.\n\nWith rotation on, touch a piece, then the rotate button. The ⋮ menu shows only the edge pieces and tidies loose pieces. The four-corner button recentres the table.\n\nThe neutrino reward depends on the number of pieces and is paid once per puzzle. Progress saves by itself; one puzzle is kept at a time.</string>
+</resources>

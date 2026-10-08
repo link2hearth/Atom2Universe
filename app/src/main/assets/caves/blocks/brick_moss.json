@@ -1,0 +1,14 @@
+{
+  "id": 2016,
+  "name": "brick_moss",
+  "texture_top": "cozy:material:12:94A180",
+  "texture_side": "cozy:material:12:94A180",
+  "texture_bottom": "cozy:material:12:94A180",
+  "color": "#94A180",
+  "hardness": 3.5,
+  "drop": "brick_moss",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

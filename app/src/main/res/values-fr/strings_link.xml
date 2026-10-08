@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="link_title">Intrication</string>
+    <string name="link_description">Ramène chaque atome au repos</string>
+    <string name="link_moves_label">Coups :</string>
+    <string name="link_difficulty_easy">Petit</string>
+    <string name="link_difficulty_medium">Moyen</string>
+    <string name="link_difficulty_hard">Grand</string>
+    <string name="link_pairs_few">Peu de jumelles</string>
+    <string name="link_pairs_normal">Jumelles normales</string>
+    <string name="link_pairs_many">Beaucoup de jumelles</string>
+    <string name="link_mode_classic">Classique</string>
+    <string name="link_mode_perfect">Parfait</string>
+    <string name="link_btn_undo">Annuler</string>
+    <string name="link_btn_restart">Réinitialiser</string>
+    <string name="link_btn_new_level">Nouveau</string>
+    <string name="link_msg_new_level">Nouveau niveau %1$s. Reliez %2$d cases pour ajuster les valeurs !</string>
+    <string name="link_msg_new_level_perfect">Mode Parfait — %1$s. Trouvez les %2$d bons coups.</string>
+    <string name="link_msg_progress">%1$d cases normales et %2$d cases + restantes à ajuster.</string>
+    <string name="link_msg_invalid_pattern">Motif invalide pour cette longueur de lien.</string>
+    <string name="link_msg_undo">Dernier coup annulé.</string>
+    <string name="link_msg_nothing_to_undo">Aucun coup à annuler.</string>
+    <string name="link_msg_restart">Puzzle réinitialisé.</string>
+    <string name="link_victory_check">✓</string>
+    <string name="link_victory_title">Au repos</string>
+    <string name="link_victory_moves">%1$d coups</string>
+    <string name="link_floor">Étage %1$d/%2$d</string>
+    <string name="link_floor_boss">Étage final</string>
+    <string name="link_score">%1$d pts</string>
+    <string name="link_floor_points">+%1$d points</string>
+    <string name="link_floor_perfect">Parfait · +%1$d points</string>
+    <string name="link_next_floor">Étage suivant</string>
+    <string name="link_run_over">Partie terminée</string>
+    <string name="link_run_summary">%1$d points · record %2$d</string>
+    <string name="link_run_new_best">%1$d points · nouveau record !</string>
+    <plurals name="link_run_perfect">
+        <item quantity="one">%1$d étage parfait sur %2$d · +%3$d neutrinos</item>
+        <item quantity="other">%1$d étages parfaits sur %2$d · +%3$d neutrinos</item>
+    </plurals>
+    <string name="link_floor_cell">%1$d · %2$d</string>
+    <string name="link_new_run">Nouvelle partie</string>
+    <string name="link_restart_floor">Recommencer l\'étage</string>
+    <string name="link_new_run_confirm">Abandonner cette partie ?</string>
+</resources>

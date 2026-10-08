@@ -1,0 +1,20 @@
+{
+  "id": 3113,
+  "name": "charcoal",
+  "texture_top": "cozy:resource:13:545759",
+  "texture_side": "cozy:resource:13:545759",
+  "texture_bottom": "cozy:resource:13:545759",
+  "color": "#545759",
+  "hardness": 0.1,
+  "decoration": true,
+  "transparent": true,
+  "placeable": false,
+  "drop": "charcoal",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "fuel"
+  ]
+}

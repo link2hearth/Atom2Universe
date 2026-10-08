@@ -1,0 +1,14 @@
+{
+  "id": 9011,
+  "name": "cotton_indigo",
+  "texture_top": "cozy:cloth:5:4B0082",
+  "texture_side": "cozy:cloth:5:4B0082",
+  "texture_bottom": "cozy:cloth:5:4B0082",
+  "color": "#4B0082",
+  "hardness": 1.0,
+  "drop": "cotton_indigo",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

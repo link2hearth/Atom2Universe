@@ -1,0 +1,20 @@
+{
+  "id": "wraith",
+  "model": "wraith",
+  "hp_base": 7,
+  "damage_base": 4,
+  "speed": 2.8,
+  "attack_range": 1.8,
+  "detect_range": 16.0,
+  "eye_height": 1.7,
+  "radius": 0.5,
+  "sprite_scale": 1.00,
+  "biomes": ["any"],
+  "spawn_zone_min": 21,
+  "spawn_weight": 6,
+  "behavior": "aggressive",
+  "retreat": "cocoon",
+  "boss_eligible": true,
+  "xp_base": 14,
+  "resistances": { "electric": 1.5, "poison": 0.0, "bleed": 0.0, "ice": 0.0 }
+}

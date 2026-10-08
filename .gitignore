@@ -1,0 +1,61 @@
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# Gradle / local
+.gradle/
+local.properties
+.cxx/
+.externalNativeBuild/
+**/build/
+captures/
+
+# Kotlin (often generated locally)
+.kotlin/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.log
+
+# Signing keys (IMPORTANT - never commit these!)
+*.jks
+*.keystore
+key.properties
+
+# Google Services / Firebase (contains API keys)
+google-services.json
+
+# APK / AAB outputs
+*.apk
+*.aab
+# Generated release outputs (metadata and packaged baseline profiles)
+/app/release/
+
+# Claude / notes
+.claude/
+CLAUDE.md
+AGENTS.md
+logs Claude Code/
+
+# Outils et copies de travail locaux (jamais versionnes : lourds et propres a la machine)
+jadx-tool/
+karballo-master/
+repo backup/
+
+# In-app billing / Play Console sensitive files
+app/src/main/assets/billing*.json
+app/src/main/assets/billing*.properties
+play-billing*.json
+
+# Polices et licences optionnelles, conservées uniquement sur cette machine
+/app/src/main/assets/fonts/
+
+# Images de puzzle optionnelles, conservées uniquement sur cette machine
+/app/src/main/assets/Assets/Puzzle/
+
+# Collections de cartes optionnelles, conservées uniquement sur cette machine
+/app/src/main/assets/Assets/Cartes/**/*.jpg
+/app/src/main/assets/Assets/Cartes/**/*.jpeg
+/app/src/main/assets/Assets/Cartes/**/*.png
+/app/src/main/assets/Assets/Cartes/**/*.webp

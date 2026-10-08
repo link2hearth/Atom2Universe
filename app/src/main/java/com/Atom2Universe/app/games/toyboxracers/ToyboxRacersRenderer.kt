@@ -1,0 +1,1415 @@
+package com.Atom2Universe.app.games.toyboxracers
+
+import android.opengl.GLES30
+import android.opengl.GLSurfaceView
+import android.opengl.Matrix
+import com.Atom2Universe.app.games.toyboxracers.driving.ArcadeCar
+import com.Atom2Universe.app.games.toyboxracers.driving.VehicleContacts
+import com.Atom2Universe.app.games.toyboxracers.ai.RivalCar
+import com.Atom2Universe.app.games.toyboxracers.editor.ActiveWorldKind
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxDecor
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxTrackSection
+import com.Atom2Universe.app.games.toyboxracers.editor.TrackStyle
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxRotationAxis
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolume
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxVolumeKind
+import com.Atom2Universe.app.games.toyboxracers.editor.ToyboxWorld
+import com.Atom2Universe.app.games.toyboxracers.game.RaceDifficulty
+import com.Atom2Universe.app.games.toyboxracers.game.RacePhase
+import com.Atom2Universe.app.games.toyboxracers.game.RaceSession
+import com.Atom2Universe.app.games.toyboxracers.game.PlayMode
+import com.Atom2Universe.app.games.toyboxracers.render.ColoredMesh
+import com.Atom2Universe.app.games.toyboxracers.render.ChaseCamera
+import com.Atom2Universe.app.games.toyboxracers.render.PrototypeMeshFactory
+import com.Atom2Universe.app.games.toyboxracers.render.VehicleMeshes
+import com.Atom2Universe.app.games.toyboxracers.render.RescueMeshes
+import com.Atom2Universe.app.games.toyboxracers.render.ToyboxShader
+import com.Atom2Universe.app.games.toyboxracers.render.TurboEffects
+import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack
+import com.Atom2Universe.app.games.toyboxracers.track.PrototypeTrack.Vec3
+import com.Atom2Universe.app.games.toyboxracers.track.RoomBox
+import com.Atom2Universe.app.games.toyboxracers.track.RoomThemes
+import com.Atom2Universe.app.games.toyboxracers.track.RoomKind
+import com.Atom2Universe.app.games.toyboxracers.track.SceneChoice
+import javax.microedition.khronos.egl.EGLConfig
+import javax.microedition.khronos.opengles.GL10
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.exp
+import kotlin.math.sin
+
+internal class ToyboxRacersRenderer(
+    initialDifficulty: RaceDifficulty,
+    initialScene: SceneChoice = SceneChoice(),
+    private val hudListener: (HudState) -> Unit
+) : GLSurfaceView.Renderer {
+
+    data class HudState(
+        val speedKmh: Int,
+        val lap: Int,
+        val elapsedSeconds: Float,
+        val airborne: Boolean,
+        /** Vrai seulement pour le petit saut du bouton, pas pour un vrai vol. */
+        val hopping: Boolean,
+        val offRoad: Boolean,
+        val drifting: Boolean,
+        val turboCharge: Float,
+        val turboLevel: Int,
+        val turboBoosting: Boolean,
+        val turboReleaseSerial: Int,
+        val reversing: Boolean,
+        val racePhase: RacePhase,
+        val countdownSeconds: Float,
+        val position: Int,
+        val wrongWay: Boolean,
+        val difficulty: RaceDifficulty,
+        val finishPosition: Int,
+        val finishSerial: Int,
+        val mode: PlayMode,
+        val playerX: Float,
+        val playerY: Float,
+        val playerZ: Float,
+        val playerYaw: Float,
+        val rivalPositions: List<Vec3>,
+        val scene: SceneChoice,
+        val rescuing: Boolean,
+        val nextCheckpoint: Int,
+        val lapElapsedSeconds: Float,
+        val lastLapSeconds: Float,
+        val bestLapSeconds: Float,
+        val lapSerial: Int
+    )
+
+    private var track = PrototypeTrack(scene = initialScene)
+    private var car = ArcadeCar(track)
+    private val turboEffects = TurboEffects()
+    private var raceSession = RaceSession(track)
+    private val vehicleContacts = VehicleContacts()
+    private var rivals = List(5) { RivalCar(track, it) }
+    private var difficulty = initialDifficulty
+    private var mode = PlayMode.EXPLORATION
+    private var simulationInitialized = false
+    private var explorationSeconds = 0f
+    private var lastRescueAnchorSerial = 0
+
+    @Volatile private var steeringInput = 0f
+    @Volatile private var acceleratorInput = false
+    @Volatile private var brakeInput = false
+    @Volatile private var hopInput = false
+    @Volatile private var throttleInput = 0f
+    @Volatile private var brakeAmountInput = 0f
+    @Volatile private var resetRequested = false
+    @Volatile private var rescueRequested = false
+    @Volatile private var wideCamera = false
+    @Volatile private var reducedCameraMotion = false
+    @Volatile private var requestedDifficulty = initialDifficulty
+    @Volatile private var requestedMode = PlayMode.EXPLORATION
+    @Volatile private var paused = false
+    @Volatile private var discardFrameTime = false
+    @Volatile private var requestedScene = initialScene
+    @Volatile private var requestedWorldKind = ActiveWorldKind.CUSTOM
+    private var activeWorldKind = ActiveWorldKind.CUSTOM
+    @Volatile private var editorActive = false
+    @Volatile private var editorForwardInput = 0f
+    @Volatile private var editorStrafeInput = 0f
+    @Volatile private var editorYawInput = 0f
+    @Volatile private var editorPitchInput = 0f
+    @Volatile private var requestedWorld = ToyboxWorld()
+    @Volatile private var worldDirty = true
+    @Volatile private var previewKind = ToyboxVolumeKind.FLOOR
+    @Volatile private var previewWidth = 20f
+    @Volatile private var previewHeight = 0.6f
+    @Volatile private var previewDepth = 20f
+    @Volatile private var previewGrid = 1f
+    @Volatile private var previewFloorY = 0f
+    @Volatile private var previewSolid = true
+    @Volatile private var previewColor = ToyboxVolumeKind.FLOOR.color
+    @Volatile private var previewQuarterTurns = 0
+    @Volatile private var previewYawDegrees = 0f
+    @Volatile private var previewPitchDegrees = 0f
+    @Volatile private var previewRollDegrees = 0f
+    @Volatile private var previewRotationAxis = ToyboxRotationAxis.YAW
+    @Volatile private var selectedPreview: ToyboxVolume? = null
+    @Volatile private var previewVisible = false
+    @Volatile private var trackPreview: ToyboxTrackSection? = null
+    @Volatile private var decorPreview: ToyboxDecor? = null
+
+    private lateinit var shader: ToyboxShader
+    private lateinit var trackMesh: ColoredMesh
+    private lateinit var environmentMesh: ColoredMesh
+    private lateinit var carMesh: ColoredMesh
+    private lateinit var wheelMesh: ColoredMesh
+    private lateinit var shadowMesh: ColoredMesh
+    private lateinit var rivalMeshes: List<ColoredMesh>
+    private lateinit var headlights: List<ColoredMesh>
+    private lateinit var taillights: List<ColoredMesh>
+    private lateinit var lampGlows: List<ColoredMesh>
+    private lateinit var rearGlows: List<ColoredMesh>
+    private lateinit var boostJetMesh: ColoredMesh
+    private lateinit var rescueDroneMesh: ColoredMesh
+    private lateinit var rescuePropellerMesh: ColoredMesh
+    private lateinit var rescueCableMesh: ColoredMesh
+    private lateinit var rescueHookMesh: ColoredMesh
+    private val rescueModel = FloatArray(16)
+    private val rescuePartModel = FloatArray(16)
+    private val vehicleStyles = VehicleMeshes.Style.entries
+    private val rivalWheelSpins = FloatArray(5)
+    private val jetModel = FloatArray(16)
+    private var effectSeconds = 0f
+    private var worldMesh: ColoredMesh? = null
+    private var previewMesh: ColoredMesh? = null
+    private var trackPreviewMesh: ColoredMesh? = null
+    private var decorPreviewMesh: ColoredMesh? = null
+    private var currentWorld = ToyboxWorld()
+    private var lastPreviewVolume: ToyboxVolume? = null
+    private var lastPreviewTrack: ToyboxTrackSection? = null
+    private var lastPreviewDecor: ToyboxDecor? = null
+    @Volatile private var previewMeshDirty = true
+    @Volatile private var trackPreviewMeshDirty = true
+    @Volatile private var decorPreviewMeshDirty = true
+
+    private val projection = FloatArray(16)
+    private val view = FloatArray(16)
+    private val viewProjection = FloatArray(16)
+    private val identity = FloatArray(16)
+    private val carModel = FloatArray(16)
+    private val wheelModel = FloatArray(16)
+    private val shadowModel = FloatArray(16)
+    private val rivalModels = Array(5) { FloatArray(16) }
+    private val inverseViewProjection = FloatArray(16)
+
+    private var lastFrameNanos = 0L
+    private var accumulator = 0f
+    private var hudAccumulator = 0f
+    private var cameraPosition = Vec3(0f, 5f, 10f)
+    private var cameraReady = false
+    private var cameraObstacles = cameraObstaclesForTrack()
+    private var visualPitch = 0f
+    private var cameraKick = 0f
+    private var cameraKickVisual = 0f
+    private var visualTurbo = 0f
+    private var visualDriftLean = 0f
+    private var visualRoll = 0f
+    // Animation du véhicule : braquage des roues avant, rotation des roues,
+    // assiette sous les gaz/au frein, écrasement à la réception et inclinaison
+    // du châssis dans la glisse. Tout est visuel et n'entre jamais en physique.
+    private var visualSteer = 0f
+    private var wheelSpinDegrees = 0f
+    private var visualDrive = 0f
+    private var visualLean = 0f
+    private var suspensionSquash = 0f
+    private var hopLift = 0f
+    private var lastLandingSerial = 0
+    private var lastHopSerial = 0
+    private var editorCameraPosition = Vec3(0f, 16f, -38f)
+    private var editorCameraYaw = 0f
+    private var editorCameraPitch = -0.22f
+    private var previewAnchorReady = false
+    private var previewAnchorX = 0f
+    private var previewAnchorZ = 0f
+    private var surfaceWidth = 1
+    private var surfaceHeight = 1
+    // État de rendu interpolé entre deux pas de simulation. L'écran affiche
+    // 120 images par seconde alors que la simulation en calcule 60 : sans ces
+    // deux photos, une image sur deux montrerait exactement la même chose que
+    // la précédente, et l'autre un saut double. C'est ce battement à 60 Hz que
+    // l'œil perçoit comme une vibration de l'image.
+    private var previousCarPosition = Vec3(0f, 0f, 0f)
+    private var previousCarYaw = 0f
+    private var renderCarPosition = Vec3(0f, 0f, 0f)
+    private var renderCarYaw = 0f
+    private val previousRivalPositions = Array(5) { Vec3(0f, 0f, 0f) }
+    private val previousRivalYaws = FloatArray(5)
+    private val renderRivalPositions = Array(5) { Vec3(0f, 0f, 0f) }
+    private val renderRivalYaws = FloatArray(5)
+
+    fun setSteering(value: Float) {
+        steeringInput = value.coerceIn(-1f, 1f)
+    }
+
+    fun setBraking(braking: Boolean) {
+        brakeInput = braking
+    }
+
+    fun setAccelerating(accelerating: Boolean) {
+        acceleratorInput = accelerating
+    }
+
+    /** Bouton saut/dérapage : tenu pour glisser, relâché pour relancer. */
+    fun setHopping(hopping: Boolean) {
+        hopInput = hopping
+    }
+
+    /** Gâchette analogique. Le tactile n'y touche pas et garde le tout ou rien. */
+    fun setThrottle(value: Float) {
+        throttleInput = value.coerceIn(0f, 1f)
+    }
+
+    fun setBrakeAmount(value: Float) {
+        brakeAmountInput = value.coerceIn(0f, 1f)
+    }
+
+    fun requestReset() {
+        resetRequested = true
+    }
+
+    fun requestRescue() { rescueRequested = true }
+
+    fun setCameraComfort(wideView: Boolean, reducedMotion: Boolean) {
+        wideCamera = wideView
+        reducedCameraMotion = reducedMotion
+    }
+
+    fun setScene(scene: SceneChoice) {
+        requestedScene = scene
+        resetRequested = true
+    }
+
+    fun setMode(value: PlayMode) {
+        requestedMode = value
+        resetRequested = true
+    }
+
+    /** Un seul monde est jamais dessiné/simulé à la fois : bascule entre le
+     * circuit classique (ruban procédural) et le monde bâti dans l'éditeur. */
+    fun setActiveWorldKind(kind: ActiveWorldKind) {
+        requestedWorldKind = kind
+    }
+
+    fun setPaused(value: Boolean) {
+        if (value) {
+            steeringInput = 0f
+            acceleratorInput = false
+            brakeInput = false
+            hopInput = false
+            throttleInput = 0f
+            brakeAmountInput = 0f
+        }
+        discardFrameTime = true
+        paused = value
+    }
+
+    fun setDifficulty(value: RaceDifficulty) {
+        requestedDifficulty = value
+        resetRequested = true
+    }
+
+    fun setEditorActive(value: Boolean) {
+        editorActive = value
+        discardFrameTime = true
+        if (value) {
+            steeringInput = 0f
+            acceleratorInput = false
+            brakeInput = false
+            hopInput = false
+            throttleInput = 0f
+            brakeAmountInput = 0f
+            editorCameraPosition = Vec3(renderCarPosition.x, maxOf(7f, renderCarPosition.y + 8f), renderCarPosition.z - 28f)
+            editorCameraYaw = renderCarYaw
+            editorCameraPitch = -0.22f
+            resetEditorPreviewAnchor()
+            cameraReady = false
+        } else {
+            editorForwardInput = 0f
+            editorStrafeInput = 0f
+            editorYawInput = 0f
+            editorPitchInput = 0f
+            cameraReady = false
+        }
+    }
+
+    fun setEditorInput(strafe: Float, forward: Float, yaw: Float, pitch: Float) {
+        editorStrafeInput = strafe.coerceIn(-1f, 1f)
+        editorForwardInput = forward.coerceIn(-1f, 1f)
+        editorYawInput = yaw.coerceIn(-1f, 1f)
+        editorPitchInput = pitch.coerceIn(-1f, 1f)
+    }
+
+    fun setEditorWorld(world: ToyboxWorld) {
+        requestedWorld = world
+    }
+
+    fun setEditorSelection(volume: ToyboxVolume?) {
+        selectedPreview = volume
+        previewMeshDirty = true
+    }
+
+    fun setEditorPreviewVisible(value: Boolean) {
+        previewVisible = value
+        previewMeshDirty = true
+    }
+
+    fun setEditorDecorPreview(decor: ToyboxDecor?) {
+        decorPreview = decor
+        decorPreviewMeshDirty = true
+    }
+
+    fun setEditorTrackPreview(section: ToyboxTrackSection?) {
+        trackPreview = section
+        trackPreviewMeshDirty = true
+    }
+
+    fun resetEditorPreviewAnchor() {
+        val forward = horizontalEditorForward()
+        previewAnchorX = snap(editorCameraPosition.x + forward.x * 18f, previewGrid.coerceAtLeast(0.01f))
+        previewAnchorZ = snap(editorCameraPosition.z + forward.z * 18f, previewGrid.coerceAtLeast(0.01f))
+        previewAnchorReady = true
+        previewMeshDirty = true
+    }
+
+    fun setEditorPreview(
+        kind: ToyboxVolumeKind,
+        width: Float,
+        height: Float,
+        depth: Float,
+        grid: Float,
+        floorY: Float,
+        solid: Boolean,
+        color: Int,
+        quarterTurns: Int = 0,
+        yawDegrees: Float = quarterTurns * 90f,
+        pitchDegrees: Float = 0f,
+        rollDegrees: Float = 0f,
+        rotationAxis: ToyboxRotationAxis = ToyboxRotationAxis.YAW
+    ) {
+        previewKind = kind
+        previewWidth = width.coerceAtLeast(0.05f)
+        previewHeight = height.coerceAtLeast(0.05f)
+        previewDepth = depth.coerceAtLeast(0.05f)
+        previewGrid = grid.coerceAtLeast(0.01f)
+        previewFloorY = floorY
+        previewSolid = solid
+        previewColor = color
+        previewQuarterTurns = quarterTurns
+        previewYawDegrees = yawDegrees
+        previewPitchDegrees = pitchDegrees
+        previewRollDegrees = rollDegrees
+        previewRotationAxis = rotationAxis
+        previewMeshDirty = true
+    }
+
+    fun moveEditorPreview(dx: Float, dz: Float) {
+        ensurePreviewAnchor()
+        val grid = previewGrid.coerceAtLeast(0.01f)
+        previewAnchorX = snap(previewAnchorX + dx, grid)
+        previewAnchorZ = snap(previewAnchorZ + dz, grid)
+        previewMeshDirty = true
+    }
+
+    fun editorNudgeDelta(strafe: Float, forward: Float, grid: Float): Vec3 {
+        val horizontalForward = horizontalEditorForward()
+        val right = Vec3(horizontalForward.z, 0f, -horizontalForward.x)
+        return right * (strafe * grid) + horizontalForward * (forward * grid)
+    }
+
+    fun moveEditorCameraHeight(delta: Float) {
+        editorCameraPosition = Vec3(
+            editorCameraPosition.x,
+            (editorCameraPosition.y + delta).coerceIn(2.2f, 65f),
+            editorCameraPosition.z
+        )
+    }
+
+    fun makePreviewVolume(id: Long): ToyboxVolume {
+        val grid = previewGrid.coerceAtLeast(0.01f)
+        ensurePreviewAnchor()
+        val rawX = previewAnchorX
+        val rawZ = previewAnchorZ
+        val width = snap(previewWidth, grid).coerceAtLeast(grid)
+        val height = snap(previewHeight, grid).coerceAtLeast(grid)
+        val depth = snap(previewDepth, grid).coerceAtLeast(grid)
+        val floorY = snap(previewFloorY, grid)
+        val centerY = if (previewKind == ToyboxVolumeKind.FLOOR) floorY - height * 0.5f else floorY + height * 0.5f
+        return ToyboxVolume(
+            id = id,
+            kind = previewKind,
+            x = snap(rawX, grid),
+            y = centerY,
+            z = snap(rawZ, grid),
+            width = width,
+            height = height,
+            depth = depth,
+            solid = previewSolid,
+            color = previewColor,
+            quarterTurns = previewQuarterTurns,
+            yawDegrees = previewYawDegrees,
+            pitchDegrees = previewPitchDegrees,
+            rollDegrees = previewRollDegrees
+        )
+    }
+
+    private fun ensurePreviewAnchor() {
+        if (!previewAnchorReady) resetEditorPreviewAnchor()
+    }
+
+    fun pickVolume(screenX: Float, screenY: Float, volumes: List<ToyboxVolume>): Long? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = (far - near).normalized()
+        return volumes
+            .mapNotNull { volume -> rayBoxDistance(near, direction, volume)?.let { distance -> volume.id to distance } }
+            .minByOrNull { it.second }
+            ?.first
+    }
+
+    enum class EditorPickKind { VOLUME, TRACK, DECOR }
+    data class EditorPick(val kind: EditorPickKind, val id: Long, val distance: Float)
+
+    /** Pick visible parts independently of their collision flag, in camera depth order. */
+    fun pickEditorObject(screenX: Float, screenY: Float, world: ToyboxWorld): EditorPick? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection,0,viewProjection,0)) return null
+        val near = unproject(screenX,screenY,-1f) ?: return null
+        val far = unproject(screenX,screenY,1f) ?: return null
+        val direction = (far-near).normalized()
+        val hits = buildList {
+            world.decorations.forEach { decor ->
+                decor.placement()?.let { placement ->
+                    placement.model.parts.mapNotNull { part ->
+                        rayBoxDistance(near,direction,ToyboxVolume(decor.id,ToyboxVolumeKind.DECOR,
+                            placement.x+placement.rotatedX(part.x,part.z)*placement.scale,
+                            placement.y+part.y*placement.scale,
+                            placement.z+placement.rotatedZ(part.x,part.z)*placement.scale,
+                            part.width*placement.scale,part.height*placement.scale,part.depth*placement.scale,
+                            yawDegrees=placement.yawDegrees))
+                    }.minOrNull()?.let { add(EditorPick(EditorPickKind.DECOR,decor.id,it)) }
+                }
+            }
+            world.trackSections.forEach { section -> section.meshSections.mapNotNull {
+                rayTrackSectionDistance(near,direction,it)
+            }.minOrNull()?.let { add(EditorPick(EditorPickKind.TRACK,section.id,it)) } }
+            world.volumes.forEach { volume -> rayBoxDistance(near,direction,volume)?.let {
+                add(EditorPick(EditorPickKind.VOLUME,volume.id,it))
+            } }
+        }
+        return hits.minByOrNull { it.distance }
+    }
+
+    fun pickDecor(screenX: Float, screenY: Float, decorations: List<ToyboxDecor>): Long? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = (far - near).normalized()
+        return decorations
+            .mapNotNull { decor ->
+                val distance = decor.placement()
+                    ?.solids
+                    ?.mapNotNull { box -> rayBoxDistance(near, direction, box) }
+                    ?.minOrNull()
+                distance?.let { decor.id to it }
+            }
+            .minByOrNull { it.second }
+            ?.first
+    }
+
+    fun pickTrackSection(screenX: Float, screenY: Float, sections: List<ToyboxTrackSection>): Long? {
+        if (!editorActive || !Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = (far - near).normalized()
+        return sections
+            .mapNotNull { section -> section.meshSections.mapNotNull { rayTrackSectionDistance(near, direction, it) }.minOrNull()?.let { distance -> section.id to distance } }
+            .minByOrNull { it.second }
+            ?.first
+    }
+
+    fun projectEditorPoint(x: Float, y: Float, z: Float): Pair<Float, Float>? {
+        val output = FloatArray(4)
+        Matrix.multiplyMV(output, 0, viewProjection, 0, floatArrayOf(x, y, z, 1f), 0)
+        if (output[3] <= 0f) return null
+        return (output[0] / output[3] + 1f) * surfaceWidth * 0.5f to
+            (1f - output[1] / output[3]) * surfaceHeight * 0.5f
+    }
+
+    fun editorPointOnPlane(screenX: Float, screenY: Float, height: Float): Vec3? {
+        if (!Matrix.invertM(inverseViewProjection, 0, viewProjection, 0)) return null
+        val near = unproject(screenX, screenY, -1f) ?: return null
+        val far = unproject(screenX, screenY, 1f) ?: return null
+        val direction = far - near
+        if (kotlin.math.abs(direction.y) < 0.0001f) return null
+        val t = (height - near.y) / direction.y
+        if (t !in 0f..1f) return null
+        return near + direction * t
+    }
+
+    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        // Le contexte précédent n'existe plus. Ses identifiants peuvent déjà désigner
+        // de nouveaux objets : les oublier, surtout ne pas appeler glDelete dessus.
+        worldMesh = null
+        previewMesh = null
+        trackPreviewMesh = null
+        decorPreviewMesh = null
+        lastPreviewVolume = null
+        lastPreviewTrack = null
+        lastPreviewDecor = null
+        previewMeshDirty = true
+        trackPreviewMeshDirty = true
+        decorPreviewMeshDirty = true
+        GLES30.glClearColor(0.72f, 0.86f, 0.94f, 1f)
+        GLES30.glEnable(GLES30.GL_DEPTH_TEST)
+        GLES30.glEnable(GLES30.GL_CULL_FACE)
+        GLES30.glCullFace(GLES30.GL_BACK)
+        shader = ToyboxShader()
+        trackMesh = PrototypeMeshFactory.track(track).also { it.upload() }
+        environmentMesh = PrototypeMeshFactory.environment(track).also { it.upload() }
+        carMesh = PrototypeMeshFactory.carBody(floatArrayOf(1f, .25f, .39f, 1f)).also { it.upload() }
+        wheelMesh = PrototypeMeshFactory.carWheel().also { it.upload() }
+        val rivalColors = arrayOf(
+            floatArrayOf(0.42f, 0.85f, 0.70f, 1f),
+            floatArrayOf(0.68f, 0.58f, 0.92f, 1f),
+            floatArrayOf(0.52f, 0.78f, 0.98f, 1f),
+            floatArrayOf(1.00f, 0.78f, 0.36f, 1f),
+            floatArrayOf(0.93f, 0.42f, 0.64f, 1f)
+        )
+        rivalMeshes = rivalColors.mapIndexed { index, color ->
+            PrototypeMeshFactory.carBody(color, vehicleStyles[index + 1]).also { it.upload() }
+        }
+        headlights = vehicleStyles.map { VehicleMeshes.lights(it, rear = false).also { mesh -> mesh.upload() } }
+        taillights = vehicleStyles.map { VehicleMeshes.lights(it, rear = true).also { mesh -> mesh.upload() } }
+        lampGlows = vehicleStyles.map { VehicleMeshes.lights(it, rear = false, glow = true).also { mesh -> mesh.upload() } }
+        rearGlows = vehicleStyles.map { VehicleMeshes.lights(it, rear = true, glow = true).also { mesh -> mesh.upload() } }
+        boostJetMesh = VehicleMeshes.boostJets().also { it.upload() }
+        rescueDroneMesh = RescueMeshes.drone().also { it.upload() }
+        rescuePropellerMesh = RescueMeshes.propeller().also { it.upload() }
+        rescueCableMesh = RescueMeshes.cable().also { it.upload() }
+        rescueHookMesh = RescueMeshes.hook().also { it.upload() }
+        shadowMesh = PrototypeMeshFactory.shadow().also { it.upload() }
+        currentWorld = requestedWorld
+        car.setEditorWorld(currentWorld)
+        car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
+        worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
+        turboEffects.upload()
+        turboEffects.reset(car.turboReleaseSerial)
+        Matrix.setIdentityM(identity, 0)
+        lastFrameNanos = 0L
+        accumulator = 0f
+        cameraReady = false
+        // Recréer les ressources GPU ne doit pas effacer une partie suspendue.
+        if (!simulationInitialized) {
+            resetRace()
+            simulationInitialized = true
+        }
+    }
+
+    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        surfaceWidth = width.coerceAtLeast(1)
+        surfaceHeight = height.coerceAtLeast(1)
+        GLES30.glViewport(0, 0, width, height)
+        val aspect = width.toFloat() / height.coerceAtLeast(1)
+        Matrix.perspectiveM(projection, 0, 58f, aspect, 0.1f, 420f)
+    }
+
+    override fun onDrawFrame(gl: GL10?) {
+        val now = System.nanoTime()
+        if (lastFrameNanos == 0L) lastFrameNanos = now
+        val skipTime = paused || discardFrameTime
+        discardFrameTime = false
+        val frameSeconds = if (skipTime) 0f else
+            ((now - lastFrameNanos) / 1_000_000_000f).coerceIn(0f, 0.10f)
+        lastFrameNanos = now
+        // Physics state belongs exclusively to the GL/simulation thread.
+        val frameWorld = requestedWorld
+        if (!editorActive || resetRequested) car.setEditorWorld(frameWorld)
+        car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
+
+        if (resetRequested) {
+            val scene = requestedScene
+            if (scene != track.scene) {
+                track = PrototypeTrack(scene = scene)
+                cameraObstacles = cameraObstaclesForTrack()
+                car = ArcadeCar(track)
+                car.setEditorWorld(frameWorld)
+                raceSession = RaceSession(track)
+                rivals = List(5) { RivalCar(track, it) }
+                trackMesh.destroy()
+                environmentMesh.destroy()
+                trackMesh = PrototypeMeshFactory.track(track).also { it.upload() }
+                environmentMesh = PrototypeMeshFactory.environment(track).also { it.upload() }
+                discardFrameTime = true
+            }
+            difficulty = requestedDifficulty
+            mode = requestedMode
+            car.sandboxMode = requestedWorldKind == ActiveWorldKind.CUSTOM
+            resetRace()
+            resetRequested = false
+        }
+
+        activeWorldKind = requestedWorldKind
+        // `car` peut avoir été recréé juste au-dessus (changement de scène) : on
+        // resynchronise systématiquement, jamais seulement quand le genre change.
+        car.sandboxMode = activeWorldKind == ActiveWorldKind.CUSTOM
+        // Un monde bâti dans l'éditeur n'a ni tour ni adversaires : la course
+        // n'a de sens que sur un circuit classique.
+        if (activeWorldKind == ActiveWorldKind.CUSTOM) mode = PlayMode.EXPLORATION
+        car.courseRescueEnabled = mode == PlayMode.RACE
+
+        rebuildWorldMeshesIfNeeded(frameWorld)
+
+        if (editorActive) {
+            updateEditorCamera(frameSeconds)
+            renderScene(frameSeconds)
+            return
+        }
+
+        accumulator = if (skipTime) 0f else (accumulator + frameSeconds).coerceAtMost(0.20f)
+        // Vider l'accumulateur remet l'interpolation au début du dernier pas :
+        // sans recaler la borne de départ, la pause ferait reculer l'image d'un pas.
+        if (skipTime) captureSimulationState()
+        while (accumulator >= FIXED_STEP) {
+            captureSimulationState()
+            val collisionBefore = car.collisionSerial
+            val rescueBefore = car.rescuing
+            if (rescueRequested) {
+                rescueRequested = false
+                if (mode == PlayMode.EXPLORATION || raceSession.phase == RacePhase.RACING) car.requestRescue()
+            }
+            if (mode == PlayMode.EXPLORATION) {
+                updatePlayer()
+                explorationSeconds += FIXED_STEP
+            } else when (raceSession.phase) {
+                RacePhase.COUNTDOWN -> raceSession.updateCountdown(FIXED_STEP, car.distance)
+                RacePhase.RACING -> {
+                    updatePlayer()
+                    rivals.forEach { it.update(FIXED_STEP, difficulty, car, rivals) }
+                    vehicleContacts.resolve(car, rivals)
+                    if (!rescueBefore && car.rescuing) raceSession.restoreRescuePoint(car.rescueAnchorDistance)
+                    if (rescueBefore && !car.rescuing) raceSession.restoreRescuePoint(car.distance)
+                    // Un tremplin fait franchir un bout de tour en vol : au-dessus de la
+                    // route, la progression compte comme sur les roues, sinon un point de
+                    // passage survolé serait perdu et le tour ne compterait pas.
+                    raceSession.updateRace(
+                        FIXED_STEP,
+                        car.distance,
+                        (car.groundedOnRoad || car.airborne) && !car.offRoad,
+                        rivals,
+                        recovering = car.rescuing || rescueBefore
+                    )
+                    if (car.rescueAnchorSerial != lastRescueAnchorSerial && !car.rescuing) {
+                        raceSession.rememberRescuePoint()
+                        lastRescueAnchorSerial = car.rescueAnchorSerial
+                    }
+                }
+                RacePhase.FINISHED -> Unit
+            }
+            if (mode == PlayMode.EXPLORATION || raceSession.phase == RacePhase.RACING)
+                if (car.rescuing) turboEffects.reset(car.turboReleaseSerial)
+                else turboEffects.update(FIXED_STEP, car)
+            if (car.collisionSerial != collisionBefore) {
+                cameraKick = maxOf(cameraKick, (car.collisionImpact / 24f).coerceAtMost(.45f))
+            }
+            accumulator -= FIXED_STEP
+            hudAccumulator += FIXED_STEP
+        }
+        interpolateSimulationState()
+
+        updateCamera(frameSeconds)
+        renderScene(frameSeconds)
+
+        if (hudAccumulator >= 0.10f) {
+            hudAccumulator = 0f
+            hudListener(
+                HudState(
+                    speedKmh = (car.speed * 11.5f).toInt(),
+                    lap = raceSession.playerLap,
+                    elapsedSeconds = if (mode == PlayMode.RACE) raceSession.raceSeconds else explorationSeconds,
+                    airborne = car.airborne,
+                    hopping = car.hopping,
+                    offRoad = car.offRoad,
+                    drifting = car.drifting,
+                    turboCharge = car.turboCharge,
+                    turboLevel = car.turboLevel,
+                    turboBoosting = car.turboBoostSeconds > 0f,
+                    turboReleaseSerial = car.turboReleaseSerial,
+                    reversing = car.reversing,
+                    racePhase = raceSession.phase,
+                    countdownSeconds = raceSession.countdownSeconds,
+                    position = raceSession.playerPosition,
+                    wrongWay = raceSession.wrongWay,
+                    difficulty = difficulty,
+                    finishPosition = raceSession.finishPosition,
+                    finishSerial = raceSession.finishSerial,
+                    mode = mode,
+                    playerX = car.worldPosition.x,
+                    playerY = car.worldPosition.y,
+                    playerZ = car.worldPosition.z,
+                    playerYaw = car.yawRadians,
+                    rivalPositions = if (mode == PlayMode.RACE) rivals.map { it.worldPosition } else emptyList(),
+                    scene = track.scene,
+                    rescuing = car.rescuing,
+                    nextCheckpoint = raceSession.nextCheckpoint,
+                    lapElapsedSeconds = raceSession.lapElapsedSeconds,
+                    lastLapSeconds = raceSession.lastLapSeconds,
+                    bestLapSeconds = raceSession.bestLapSeconds,
+                    lapSerial = raceSession.lapSerial
+                )
+            )
+        }
+    }
+
+    /** Photo de l'état avant le pas : l'autre borne de l'interpolation. */
+    private fun captureSimulationState() {
+        previousCarPosition = car.worldPosition
+        previousCarYaw = car.yawRadians
+        rivals.forEachIndexed { index, rival ->
+            previousRivalPositions[index] = rival.worldPosition
+            previousRivalYaws[index] = rival.yawRadians
+        }
+    }
+
+    private fun interpolateSimulationState() {
+        // Ce qui reste dans l'accumulateur dit où l'on se trouve entre les deux
+        // pas : à 120 Hz il vaut une demi-image sur deux, et c'est exactement la
+        // moitié de mouvement qui manquait.
+        val alpha = (accumulator / FIXED_STEP).coerceIn(0f, 1f)
+        renderCarPosition = lerp(previousCarPosition, car.worldPosition, alpha)
+        // Le cap du joueur s'accumule sans jamais être ramené dans un tour :
+        // deux pas voisins ne peuvent pas être séparés par un saut de 2π.
+        renderCarYaw = previousCarYaw + (car.yawRadians - previousCarYaw) * alpha
+        rivals.forEachIndexed { index, rival ->
+            renderRivalPositions[index] = lerp(previousRivalPositions[index], rival.worldPosition, alpha)
+            // Celui des rivaux sort d'un atan2 : il saute de +π à -π au passage,
+            // donc on interpole l'écart le plus court et non la valeur brute.
+            renderRivalYaws[index] = previousRivalYaws[index] +
+                angleDifference(rival.yawRadians, previousRivalYaws[index]) * alpha
+        }
+    }
+
+    private fun angleDifference(target: Float, current: Float): Float {
+        var value = target - current
+        while (value > PI) value -= (2.0 * PI).toFloat()
+        while (value < -PI) value += (2.0 * PI).toFloat()
+        return value
+    }
+
+    private fun updatePlayer() {
+        val previousRelease = car.turboReleaseSerial
+        val throttle = maxOf(throttleInput, if (acceleratorInput) 1f else 0f)
+        val brakeAmount = maxOf(brakeAmountInput, if (brakeInput) 1f else 0f)
+        car.update(
+            FIXED_STEP,
+            ArcadeCar.Input(
+                steering = steeringInput,
+                accelerating = throttle > TRIGGER_ENGAGE,
+                braking = brakeAmount > TRIGGER_ENGAGE,
+                hopping = hopInput,
+                throttle = throttle,
+                brakeAmount = brakeAmount
+            )
+        )
+        if (car.turboReleaseSerial != previousRelease) cameraKick = 1f
+    }
+
+    private fun updateCamera(frameSeconds: Float) {
+        // La hauteur de la caméra suit la voiture, mais pas la pente instantanée.
+        // Elle reste ainsi stable lors de la cassure entre le tremplin et le vide.
+        // Son cap vient de la voiture et jamais de la piste : sortir de la route
+        // ne peut donc provoquer aucune rotation automatique de la vue. Il est
+        // lu sur l'état interpolé, car la direction du regard n'est pas amortie :
+        // un cap qui avance par à-coups fait sauter toute l'image d'un bloc.
+        val horizontalForward = Vec3(
+            kotlin.math.sin(renderCarYaw),
+            0f,
+            kotlin.math.cos(renderCarYaw)
+        )
+        val right = Vec3(horizontalForward.z, 0f, -horizontalForward.x)
+        val wantedDriftLean = if (car.drifting && !reducedCameraMotion) car.headingOffset.coerceIn(-0.45f, 0.45f) else 0f
+        visualDriftLean += (wantedDriftLean - visualDriftLean) * smoothing(7f, frameSeconds)
+        cameraKick = (cameraKick - frameSeconds * 2.4f).coerceAtLeast(0f)
+        cameraKickVisual += ((if(reducedCameraMotion) 0f else cameraKick) - cameraKickVisual) * smoothing(5f, frameSeconds)
+        val target = renderCarPosition + horizontalForward * 2.1f +
+            right * (visualDriftLean * 0.9f) + Vec3(0f, 0.60f, 0f)
+        // La caméra recule avec la vitesse : c'est ce qui fait sentir le turbo
+        // même quand le compteur est déjà proche du plafond.
+        visualTurbo += ((if (car.turboBoostSeconds > 0f && !reducedCameraMotion) 1f else 0f) - visualTurbo) * smoothing(4f, frameSeconds)
+        Matrix.perspectiveM(projection, 0, 58f + visualTurbo * 7f,
+            surfaceWidth.toFloat() / surfaceHeight, .1f, 420f)
+        val speedPull = if(reducedCameraMotion) 0f else (car.speed * 0.048f).coerceIn(0f, 1.05f)
+        val wanted = renderCarPosition -
+            horizontalForward * ((if(wideCamera) 8.2f else 5.2f) + speedPull + cameraKickVisual * 0.55f) +
+            right * (visualDriftLean * 1.15f) +
+            Vec3(0f, (if(wideCamera) 4.4f else 3.0f) + speedPull * 0.25f + cameraKickVisual * 0.12f, 0f)
+        if (!cameraReady) {
+            cameraPosition = wanted
+            cameraReady = true
+        } else {
+            cameraPosition = lerp(cameraPosition, wanted, smoothing(6.5f, frameSeconds))
+        }
+        if(activeWorldKind == ActiveWorldKind.LEGACY) {
+            cameraPosition = ChaseCamera.unobstructed(renderCarPosition+Vec3(0f,.9f,0f),cameraPosition,cameraObstacles)
+        }
+        Matrix.setLookAtM(
+            view, 0,
+            cameraPosition.x, cameraPosition.y, cameraPosition.z,
+            target.x, target.y, target.z,
+            -right.x * visualDriftLean * 0.10f, 1f, -right.z * visualDriftLean * 0.10f
+        )
+        Matrix.multiplyMM(viewProjection, 0, projection, 0, view, 0)
+    }
+
+    private fun updateEditorCamera(frameSeconds: Float) {
+        Matrix.perspectiveM(projection, 0, 58f, surfaceWidth.toFloat() / surfaceHeight, .1f, 420f)
+        val seconds = frameSeconds.coerceAtMost(0.05f)
+        editorCameraYaw += editorYawInput * seconds * 2.4f
+        editorCameraPitch = (editorCameraPitch + editorPitchInput * seconds * 1.45f).coerceIn(-1.05f, 0.55f)
+        val horizontalForward = horizontalEditorForward()
+        val forward = editorForward()
+        val right = Vec3(horizontalForward.z, 0f, -horizontalForward.x)
+        val speed = 35f
+        editorCameraPosition = editorCameraPosition +
+            horizontalForward * (editorForwardInput * speed * seconds) +
+            right * (editorStrafeInput * speed * seconds) +
+            Vec3(0f, 0f, 0f)
+        editorCameraPosition = Vec3(
+            editorCameraPosition.x.coerceIn(-180f, 180f),
+            editorCameraPosition.y.coerceIn(2.2f, 65f),
+            editorCameraPosition.z.coerceIn(-150f, 150f)
+        )
+        val target = editorCameraPosition + forward * 18f
+        Matrix.setLookAtM(
+            view, 0,
+            editorCameraPosition.x, editorCameraPosition.y, editorCameraPosition.z,
+            target.x, target.y, target.z,
+            0f, 1f, 0f
+        )
+        Matrix.multiplyMM(viewProjection, 0, projection, 0, view, 0)
+        val preview = when {
+            selectedPreview != null -> selectedPreview
+            previewVisible -> makePreviewVolume(PREVIEW_ID)
+            else -> null
+        }
+        if (previewMeshDirty || preview != lastPreviewVolume) {
+            previewMesh?.destroy()
+            previewMesh = preview?.let {
+                PrototypeMeshFactory.world(
+                    ToyboxWorld(volumes = emptyList(), trackSections = emptyList()),
+                    it,
+                    previewRotationAxis
+                ).also { mesh -> mesh.upload() }
+            }
+            lastPreviewVolume = preview
+            previewMeshDirty = false
+        }
+        val trackSection = trackPreview
+        if (trackPreviewMeshDirty || trackSection != lastPreviewTrack) {
+            trackPreviewMesh?.destroy()
+            trackPreviewMesh = trackSection?.let {
+                PrototypeMeshFactory.world(ToyboxWorld(volumes = emptyList(), trackSections = listOf(it))).also { mesh -> mesh.upload() }
+            }
+            lastPreviewTrack = trackSection
+            trackPreviewMeshDirty = false
+        }
+        val decor = decorPreview
+        if (decorPreviewMeshDirty || decor != lastPreviewDecor) {
+            decorPreviewMesh?.destroy()
+            decorPreviewMesh = decor?.let {
+                PrototypeMeshFactory.world(
+                    ToyboxWorld(volumes = emptyList(), trackSections = emptyList(), decorations = listOf(it)),
+                    surfacePriorityStart = currentWorld.decorations.count { decor ->
+                        decor.placement()?.model?.surfacePriority?.let { priority -> priority > 0 } == true
+                    } + 1
+                ).also { mesh -> mesh.upload() }
+            }
+            lastPreviewDecor = decor
+            decorPreviewMeshDirty = false
+        }
+    }
+
+    private fun renderScene(frameSeconds: Float) {
+        val theme = RoomThemes.theme(if(activeWorldKind == ActiveWorldKind.LEGACY && !track.scene.circuit.usesHouseLayout)
+            track.scene.room else RoomKind.BEDROOM)
+        GLES30.glClearColor(((theme.sky shr 16) and 255)/255f,((theme.sky shr 8) and 255)/255f,(theme.sky and 255)/255f,1f)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
+        GLES30.glUseProgram(shader.program)
+        shader.material()
+        shader.atmosphere(theme)
+        val eye = if(editorActive) editorCameraPosition else cameraPosition
+        shader.eye(eye.x, eye.y, eye.z)
+        if (editorActive) {
+            worldMesh?.draw(shader, viewProjection, identity)
+            GLES30.glEnable(GLES30.GL_BLEND)
+            GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+            GLES30.glDepthMask(false)
+            GLES30.glDisable(GLES30.GL_CULL_FACE)
+            previewMesh?.draw(shader, viewProjection, identity)
+            trackPreviewMesh?.draw(shader, viewProjection, identity)
+            decorPreviewMesh?.draw(shader, viewProjection, identity)
+            GLES30.glEnable(GLES30.GL_CULL_FACE)
+            GLES30.glDepthMask(true)
+            GLES30.glDisable(GLES30.GL_BLEND)
+            return
+        }
+        if (activeWorldKind == ActiveWorldKind.LEGACY) {
+            environmentMesh.draw(shader, viewProjection, identity)
+            trackMesh.draw(shader, viewProjection, identity)
+        } else {
+            worldMesh?.draw(shader, viewProjection, identity)
+        }
+
+        val shouldDrawShadow = car.airborne || !car.groundedOnRoad || car.offRoad ||
+            (activeWorldKind == ActiveWorldKind.LEGACY && track.isJumpGap(car.distance))
+        if (shouldDrawShadow) {
+            val maximumShadowY = renderCarPosition.y - PrototypeTrack.CAR_CLEARANCE + 0.02f
+            val groundY = if (activeWorldKind == ActiveWorldKind.CUSTOM) {
+                currentWorld.volumes
+                    .filter { it.solid }
+                    .mapNotNull { it.topSurfaceYForShadow(renderCarPosition.x, renderCarPosition.z) }
+                    .filter { it <= maximumShadowY }
+                    .maxOrNull() ?: 0f
+            } else {
+                maxOf(
+                    track.groundHeightAt(renderCarPosition.x, renderCarPosition.z),
+                    track.furnitureHeightAt(renderCarPosition.x, renderCarPosition.z, maximumShadowY)
+                )
+            }
+            Matrix.setIdentityM(shadowModel, 0)
+            Matrix.translateM(
+                shadowModel, 0,
+                renderCarPosition.x,
+                groundY + 0.025f,
+                renderCarPosition.z
+            )
+            GLES30.glEnable(GLES30.GL_BLEND)
+            GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+            GLES30.glDepthMask(false)
+            shadowMesh.draw(shader, viewProjection, shadowModel)
+            GLES30.glDepthMask(true)
+            GLES30.glDisable(GLES30.GL_BLEND)
+        }
+
+        val heading = renderCarYaw
+        val targetPitch = if (car.airborne) 0f else car.pitchRadians.coerceIn(-MAX_VISUAL_PITCH, MAX_VISUAL_PITCH)
+        val targetRoll = if (car.airborne) 0f else car.rollRadians.coerceIn(-0.34f, 0.34f)
+        // Évite la cassure visuelle d'une image au moment où les roues quittent
+        // le tremplin ou touchent la réception, perçue comme un petit lag.
+        // Le taux est par seconde : écrit par image, il amortissait deux fois
+        // plus vite sur un écran 120 Hz que sur un 60 Hz.
+        visualPitch += (targetPitch - visualPitch) * smoothing(PITCH_SMOOTHING_RATE, frameSeconds)
+        visualRoll += (targetRoll - visualRoll) * smoothing(PITCH_SMOOTHING_RATE, frameSeconds)
+        updateCarAnimation(frameSeconds)
+        Matrix.setIdentityM(carModel, 0)
+        Matrix.translateM(carModel, 0, renderCarPosition.x, renderCarPosition.y, renderCarPosition.z)
+        Matrix.rotateM(carModel, 0, heading * 180f / PI.toFloat(), 0f, 1f, 0f)
+        Matrix.rotateM(carModel, 0, -visualPitch * 180f / PI.toFloat(), 1f, 0f, 0f)
+        Matrix.rotateM(carModel, 0, visualRoll * 180f / PI.toFloat(), 0f, 0f, 1f)
+        Matrix.translateM(carModel, 0, 0f, CAR_VISUAL_SUSPENSION_OFFSET, 0f)
+        // Les roues sont posées sur le repère du véhicule avant qu'il ne prenne
+        // son assiette : elles suivent la carrosserie sans s'enfoncer dans le sol.
+        shader.material(gloss = .18f)
+        val visiblePlayer = car.rescueProtectionSeconds <= 0f ||
+            (car.rescueProtectionSeconds * 8f).toInt() % 2 == 0
+        if (visiblePlayer) drawWheels()
+        // La carrosserie seule reçoit le tangage moteur, la gîte et l'écrasement.
+        Matrix.rotateM(carModel, 0, -visualDrive * 180f / PI.toFloat(), 1f, 0f, 0f)
+        Matrix.rotateM(carModel, 0, visualLean * 180f / PI.toFloat(), 0f, 0f, 1f)
+        Matrix.translateM(carModel, 0, 0f, hopLift, 0f)
+        Matrix.scaleM(
+            carModel, 0,
+            1f + suspensionSquash * 0.10f,
+            1f - suspensionSquash * 0.20f,
+            1f + suspensionSquash * 0.07f
+        )
+        shader.material(gloss = .42f)
+        if (visiblePlayer) {
+            carMesh.draw(shader, viewProjection, carModel)
+            drawVehicleLights(0, carModel, brakeInput || brakeAmountInput > TRIGGER_ENGAGE)
+        }
+        renderRivals(frameSeconds)
+        if (car.rescuing) drawRescuer()
+        // Transparences après toutes les carrosseries : la profondeur les masque correctement.
+        effectSeconds = (effectSeconds + frameSeconds) % 100f
+        GLES30.glEnable(GLES30.GL_BLEND)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
+        GLES30.glDepthMask(false)
+        GLES30.glDisable(GLES30.GL_CULL_FACE)
+        shader.material(emission = 1f)
+        if (visiblePlayer) {
+            lampGlows[0].draw(shader, viewProjection, carModel)
+            rearGlows[0].draw(shader, viewProjection, carModel)
+        }
+        if (mode == PlayMode.RACE) for (index in rivals.indices) {
+            lampGlows[index + 1].draw(shader, viewProjection, rivalModels[index])
+            rearGlows[index + 1].draw(shader, viewProjection, rivalModels[index])
+        }
+        if (car.turboBoostSeconds > 0f) {
+            System.arraycopy(carModel, 0, jetModel, 0, 16)
+            Matrix.translateM(jetModel, 0, 0f, 0f, -.817f)
+            val pulse = 1f + sin(effectSeconds * 43f) * .12f + sin(effectSeconds * 71f) * .06f
+            Matrix.scaleM(jetModel, 0, 1f, 1f, pulse)
+            boostJetMesh.draw(shader, viewProjection, jetModel)
+        }
+        if (mode == PlayMode.RACE) for (index in rivals.indices) {
+            if (rivals[index].turboBoostSeconds <= 0f) continue
+            System.arraycopy(rivalModels[index], 0, jetModel, 0, 16)
+            val exhaustZ = if (vehicleStyles[index + 1] == VehicleMeshes.Style.COMPACT) -.737f else -.817f
+            Matrix.translateM(jetModel, 0, 0f, 0f, exhaustZ)
+            Matrix.scaleM(jetModel, 0, 1f, 1f, 1f + sin(effectSeconds * 43f + index) * .12f)
+            boostJetMesh.draw(shader, viewProjection, jetModel)
+        }
+        turboEffects.draw(shader, viewProjection, identity, view)
+        shader.material()
+        GLES30.glEnable(GLES30.GL_CULL_FACE)
+        GLES30.glDepthMask(true)
+        GLES30.glDisable(GLES30.GL_BLEND)
+    }
+
+    /** Toute l'animation du véhicule : elle ne modifie jamais la simulation. */
+    private fun updateCarAnimation(frameSeconds: Float) {
+        val seconds = frameSeconds.coerceAtMost(0.05f)
+        // Braquage : la commande du joueur, plus le contre-braquage naturel que
+        // demande le travers. En glisse, les roues avant pointent vers l'extérieur.
+        val wantedSteer = (car.steeringVisual * 0.55f + car.headingOffset * 0.80f)
+            .coerceIn(-1f, 1f)
+        visualSteer += (wantedSteer - visualSteer) * smoothing(11f, seconds)
+
+        val forwardSpeed = car.speed * kotlin.math.cos(car.headingOffset)
+        val direction = if (car.reversing) -1f else 1f
+        wheelSpinDegrees += forwardSpeed * direction / PrototypeMeshFactory.CAR_WHEEL_RADIUS *
+            seconds * 180f / PI.toFloat()
+        if (wheelSpinDegrees > 360f || wheelSpinDegrees < -360f) wheelSpinDegrees %= 360f
+
+        // Assiette moteur : la voiture s'assoit sur l'arrière aux gaz et plonge
+        // sur l'avant au frein. Le turbo appuie franchement le mouvement.
+        val wantedDrive = when {
+            car.airborne -> 0f
+            car.turboBoostSeconds > 0f -> -0.075f
+            brakeInput || brakeAmountInput > TRIGGER_ENGAGE -> 0.055f
+            acceleratorInput || throttleInput > TRIGGER_ENGAGE -> -0.040f
+            else -> 0f
+        }
+        visualDrive += (wantedDrive - visualDrive) * smoothing(6f, seconds)
+
+        // Gîte : le châssis se couche vers l'extérieur du virage, d'autant plus
+        // que la voiture est en travers. C'est ce qui rend la glisse lisible.
+        val wantedLean = (-car.headingOffset * 0.60f).coerceIn(-0.30f, 0.30f)
+        visualLean += (wantedLean - visualLean) * smoothing(8f, seconds)
+
+        if (car.hopSerial != lastHopSerial) {
+            lastHopSerial = car.hopSerial
+            hopLift = HOP_VISUAL_LIFT
+        }
+        hopLift += (0f - hopLift) * smoothing(9f, seconds)
+        if (car.landingSerial != lastLandingSerial) {
+            lastLandingSerial = car.landingSerial
+            suspensionSquash = (car.landingImpact / 9f).coerceIn(0.25f, 1f)
+        }
+        suspensionSquash += (0f - suspensionSquash) * smoothing(9f, seconds)
+    }
+
+    private fun drawWheels() {
+        val steerDegrees = visualSteer * MAX_WHEEL_STEER_DEGREES
+        for (wheelZ in PrototypeMeshFactory.CAR_WHEEL_Z) {
+            val steered = wheelZ > 0f
+            for (wheelX in PrototypeMeshFactory.CAR_WHEEL_X) {
+                System.arraycopy(carModel, 0, wheelModel, 0, 16)
+                Matrix.translateM(wheelModel, 0, wheelX, PrototypeMeshFactory.CAR_WHEEL_Y, wheelZ)
+                if (steered) Matrix.rotateM(wheelModel, 0, steerDegrees, 0f, 1f, 0f)
+                Matrix.rotateM(wheelModel, 0, wheelSpinDegrees, 1f, 0f, 0f)
+                wheelMesh.draw(shader, viewProjection, wheelModel)
+            }
+        }
+    }
+
+    private fun drawVehicleLights(index: Int, model: FloatArray, braking: Boolean = false) {
+        shader.material(emission = 1f)
+        headlights[index].draw(shader, viewProjection, model)
+        shader.material(emission = if (braking) 1f else .40f)
+        taillights[index].draw(shader, viewProjection, model)
+        shader.material()
+    }
+
+    private fun drawRescuer() {
+        val hover = sin(effectSeconds * 7f) * .045f
+        Matrix.setIdentityM(rescueModel, 0)
+        Matrix.translateM(rescueModel, 0, renderCarPosition.x, renderCarPosition.y + 2.15f + hover, renderCarPosition.z)
+        Matrix.rotateM(rescueModel, 0, renderCarYaw * 180f / PI.toFloat(), 0f, 1f, 0f)
+        shader.material(gloss = .28f)
+        rescueDroneMesh.draw(shader, viewProjection, rescueModel)
+        for (x in floatArrayOf(-.55f, .55f)) for (z in floatArrayOf(-.28f, .28f)) {
+            System.arraycopy(rescueModel, 0, rescuePartModel, 0, 16)
+            Matrix.translateM(rescuePartModel, 0, x, .15f, z)
+            Matrix.rotateM(rescuePartModel, 0, effectSeconds * 1500f * if (x * z > 0f) 1f else -1f, 0f, 1f, 0f)
+            rescuePropellerMesh.draw(shader, viewProjection, rescuePartModel)
+        }
+        System.arraycopy(rescueModel, 0, rescuePartModel, 0, 16)
+        Matrix.translateM(rescuePartModel, 0, 0f, -.86f - hover * .5f, 0f)
+        Matrix.scaleM(rescuePartModel, 0, 1f, 1.3f + hover, 1f)
+        rescueCableMesh.draw(shader, viewProjection, rescuePartModel)
+        System.arraycopy(rescueModel, 0, rescuePartModel, 0, 16)
+        Matrix.translateM(rescuePartModel, 0, 0f, -1.58f - hover, 0f)
+        rescueHookMesh.draw(shader, viewProjection, rescuePartModel)
+        shader.material()
+    }
+
+    private fun renderRivals(frameSeconds: Float) {
+        if (mode != PlayMode.RACE) return
+        rivals.forEachIndexed { index, rival ->
+            val model = rivalModels[index]
+            Matrix.setIdentityM(model, 0)
+            val position = renderRivalPositions[index]
+            Matrix.translateM(model, 0, position.x, position.y, position.z)
+            Matrix.rotateM(model, 0, renderRivalYaws[index] * 180f / PI.toFloat(), 0f, 1f, 0f)
+            // La pente et les roues suivent désormais aussi les voitures adverses.
+            val sample = track.sampleAt(rival.distance)
+            val pitch = kotlin.math.atan2(sample.tangent.y,
+                kotlin.math.sqrt(sample.tangent.x * sample.tangent.x + sample.tangent.z * sample.tangent.z))
+            if (track.crossingAt(rival.distance) == null)
+                Matrix.rotateM(model, 0, -pitch * 180f / PI.toFloat(), 1f, 0f, 0f)
+            Matrix.translateM(model, 0, 0f, CAR_VISUAL_SUSPENSION_OFFSET, 0f)
+            shader.material(gloss = .42f)
+            rivalMeshes[index].draw(shader, viewProjection, model)
+            drawVehicleLights(index + 1, model)
+            rivalWheelSpins[index] = (rivalWheelSpins[index] + rival.speed * frameSeconds.coerceAtMost(.05f) /
+                PrototypeMeshFactory.CAR_WHEEL_RADIUS * 180f / PI.toFloat()) % 360f
+            shader.material(gloss = .18f)
+            for (z in PrototypeMeshFactory.CAR_WHEEL_Z) for (x in PrototypeMeshFactory.CAR_WHEEL_X) {
+                System.arraycopy(model, 0, wheelModel, 0, 16)
+                Matrix.translateM(wheelModel, 0, x, PrototypeMeshFactory.CAR_WHEEL_Y, z)
+                Matrix.rotateM(wheelModel, 0, rivalWheelSpins[index], 1f, 0f, 0f)
+                wheelMesh.draw(shader, viewProjection, wheelModel)
+            }
+            shader.material()
+        }
+    }
+
+    private fun resetRace() {
+        rescueRequested = false
+        car.reset()
+        rivalWheelSpins.fill(0f)
+        effectSeconds = 0f
+        rivals.forEach { it.reset(difficulty) }
+        raceSession.reset(car.distance)
+        lastRescueAnchorSerial = car.rescueAnchorSerial
+        explorationSeconds = 0f
+        accumulator = 0f
+        hudAccumulator = 0.10f
+        cameraReady = false
+        visualPitch = 0f
+        cameraKick = 0f
+        cameraKickVisual = 0f
+        visualTurbo = 0f
+        visualDriftLean = 0f
+        visualRoll = 0f
+        visualSteer = 0f
+        wheelSpinDegrees = 0f
+        visualDrive = 0f
+        visualLean = 0f
+        suspensionSquash = 0f
+        hopLift = 0f
+        lastLandingSerial = car.landingSerial
+        lastHopSerial = car.hopSerial
+        captureSimulationState()
+        interpolateSimulationState()
+        turboEffects.reset(car.turboReleaseSerial)
+    }
+
+    private fun lerp(a: Vec3, b: Vec3, t: Float) = a + (b - a) * t
+
+    private fun cameraObstaclesForTrack(): List<RoomBox> {
+        if(track.scene.circuit.usesHouseLayout) return track.furnitureSolids
+        val w=PrototypeTrack.ROOM_HALF_WIDTH
+        val d=PrototypeTrack.ROOM_HALF_DEPTH
+        val h=PrototypeTrack.ROOM_WALL_HEIGHT
+        return track.furnitureSolids + listOf(
+            RoomBox(-w-.75f,h/2f,0f,1.5f,h,d*2f,0), RoomBox(w+.75f,h/2f,0f,1.5f,h,d*2f,0),
+            RoomBox(0f,h/2f,-d-.75f,w*2f,h,1.5f,0), RoomBox(0f,h/2f,d+.75f,w*2f,h,1.5f,0)
+        )
+    }
+
+    /**
+     * Amortissement exprimé par seconde et non par image : la même constante
+     * donne le même ressenti à 60 comme à 120 images par seconde.
+     */
+    private fun smoothing(rate: Float, seconds: Float) = 1f - exp(-rate * seconds)
+
+    private fun rebuildWorldMeshesIfNeeded(world: ToyboxWorld) {
+        if (!worldDirty && currentWorld === world) return
+        discardFrameTime = true
+        currentWorld = world
+        worldMesh?.destroy()
+        worldMesh = PrototypeMeshFactory.world(currentWorld).also { it.upload() }
+        previewMesh?.destroy()
+        previewMesh = null
+        lastPreviewVolume = null
+        previewMeshDirty = true
+        trackPreviewMesh?.destroy()
+        trackPreviewMesh = null
+        lastPreviewTrack = null
+        trackPreviewMeshDirty = true
+        decorPreviewMesh?.destroy()
+        decorPreviewMesh = null
+        lastPreviewDecor = null
+        decorPreviewMeshDirty = true
+        worldDirty = false
+    }
+
+    private fun horizontalEditorForward() = Vec3(sin(editorCameraYaw), 0f, cos(editorCameraYaw)).normalized()
+
+    private fun editorForward(): Vec3 {
+        val flat = cos(editorCameraPitch)
+        return Vec3(
+            sin(editorCameraYaw) * flat,
+            sin(editorCameraPitch),
+            cos(editorCameraYaw) * flat
+        ).normalized()
+    }
+
+    private fun snap(value: Float, grid: Float): Float =
+        kotlin.math.round(value / grid) * grid
+
+    private fun unproject(screenX: Float, screenY: Float, ndcZ: Float): Vec3? {
+        val ndcX = screenX / surfaceWidth.toFloat() * 2f - 1f
+        val ndcY = 1f - screenY / surfaceHeight.toFloat() * 2f
+        val input = floatArrayOf(ndcX, ndcY, ndcZ, 1f)
+        val output = FloatArray(4)
+        Matrix.multiplyMV(output, 0, inverseViewProjection, 0, input, 0)
+        val w = output[3]
+        if (kotlin.math.abs(w) < 0.0001f) return null
+        return Vec3(output[0] / w, output[1] / w, output[2] / w)
+    }
+
+    private fun rayBoxDistance(origin: Vec3, direction: Vec3, box: ToyboxVolume): Float? {
+        val local = box.localPoint(origin.x, origin.y, origin.z)
+        val directionLocal = box.localPoint(origin.x + direction.x, origin.y + direction.y, origin.z + direction.z)
+        val localOrigin = Vec3(local.x, local.y, local.z)
+        val localDirection = Vec3(directionLocal.x - local.x, directionLocal.y - local.y, directionLocal.z - local.z)
+        return rayBoxDistance(
+            localOrigin,
+            localDirection,
+            -box.width * 0.5f,
+            box.width * 0.5f,
+            -box.height * 0.5f,
+            box.height * 0.5f,
+            -box.depth * 0.5f,
+            box.depth * 0.5f
+        )
+    }
+
+    private fun ToyboxVolume.topSurfaceYForShadow(x: Float, z: Float): Float? {
+        if (x < left || x > right || z < back || z > front) return null
+        val top = height * 0.5f
+        val a = worldPoint(-width * 0.5f, top, -depth * 0.5f)
+        val b = worldPoint(width * 0.5f, top, -depth * 0.5f)
+        val c = worldPoint(width * 0.5f, top, depth * 0.5f)
+        val d = worldPoint(-width * 0.5f, top, depth * 0.5f)
+        return triangleSurfaceY(x, z, a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z)
+            ?: triangleSurfaceY(x, z, a.x, a.y, a.z, c.x, c.y, c.z, d.x, d.y, d.z)
+    }
+
+    private fun triangleSurfaceY(
+        x: Float,
+        z: Float,
+        ax: Float,
+        ay: Float,
+        az: Float,
+        bx: Float,
+        by: Float,
+        bz: Float,
+        cx: Float,
+        cy: Float,
+        cz: Float
+    ): Float? {
+        val denominator = (bz - cz) * (ax - cx) + (cx - bx) * (az - cz)
+        if (kotlin.math.abs(denominator) < 0.000001f) return null
+        val u = ((bz - cz) * (x - cx) + (cx - bx) * (z - cz)) / denominator
+        val v = ((cz - az) * (x - cx) + (ax - cx) * (z - cz)) / denominator
+        val w = 1f - u - v
+        if (u < -0.035f || v < -0.035f || w < -0.035f) return null
+        return ay * u + by * v + cy * w
+    }
+
+    private fun rayBoxDistance(origin: Vec3, direction: Vec3, box: RoomBox): Float? {
+        val halfWidth = box.width * 0.5f
+        val halfHeight = box.height * 0.5f
+        val halfDepth = box.depth * 0.5f
+        return rayBoxDistance(
+            origin,
+            direction,
+            box.x - halfWidth,
+            box.x + halfWidth,
+            box.y - halfHeight,
+            box.y + halfHeight,
+            box.z - halfDepth,
+            box.z + halfDepth
+        )
+    }
+
+    private fun rayTrackSectionDistance(origin: Vec3, direction: Vec3, section: ToyboxTrackSection): Float? {
+        fun cross(a: Vec3, b: Vec3) = Vec3(a.y*b.z-a.z*b.y, a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x)
+        fun dot(a: Vec3, b: Vec3) = a.x*b.x + a.y*b.y + a.z*b.z
+        fun triangle(a: Vec3, b: Vec3, c: Vec3): Float? {
+            val edge1 = b - a
+            val edge2 = c - a
+            val h = cross(direction, edge2)
+            val determinant = dot(edge1, h)
+            if (kotlin.math.abs(determinant) < 0.000001f) return null
+            val s = origin - a
+            val u = dot(s, h) / determinant
+            if (u !in 0f..1f) return null
+            val q = cross(s, edge1)
+            val v = dot(direction, q) / determinant
+            if (v < 0f || u + v > 1f) return null
+            return (dot(edge2, q) / determinant).takeIf { it >= 0f }
+        }
+        fun point(along: Float, side: Float) = section.corner(along, side).let {
+            Vec3(it.x, it.y + PrototypeTrack.ROAD_SURFACE_LIFT, it.z)
+        }
+        val a = point(-1f, -1f)
+        val b = point(1f, -1f)
+        val c = point(1f, 1f)
+        val d = point(-1f, 1f)
+        val hits = mutableListOf<Float>()
+        fun face(p: Vec3, q: Vec3, r: Vec3, s: Vec3) {
+            triangle(p,q,r)?.let(hits::add)
+            triangle(p,r,s)?.let(hits::add)
+        }
+        face(a,b,c,d)
+        val up = Vec3(0f, TrackStyle.BARRIER_HEIGHT, 0f)
+        if (section.barriers and 1 != 0) face(a,b,b+up,a+up)
+        if (section.barriers and 2 != 0) face(d,c,c+up,d+up)
+        return hits.minOrNull()
+    }
+    private fun rayBoxDistance(
+        origin: Vec3,
+        direction: Vec3,
+        minX: Float,
+        maxX: Float,
+        minY: Float,
+        maxY: Float,
+        minZ: Float,
+        maxZ: Float
+    ): Float? {
+        var tMin = 0f
+        var tMax = 500f
+
+        fun slab(originValue: Float, directionValue: Float, minValue: Float, maxValue: Float): Boolean {
+            if (kotlin.math.abs(directionValue) < 0.0001f) return originValue in minValue..maxValue
+            var t1 = (minValue - originValue) / directionValue
+            var t2 = (maxValue - originValue) / directionValue
+            if (t1 > t2) {
+                val tmp = t1
+                t1 = t2
+                t2 = tmp
+            }
+            tMin = maxOf(tMin, t1)
+            tMax = minOf(tMax, t2)
+            return tMin <= tMax
+        }
+
+        if (!slab(origin.x, direction.x, minX, maxX)) return null
+        if (!slab(origin.y, direction.y, minY, maxY)) return null
+        if (!slab(origin.z, direction.z, minZ, maxZ)) return null
+        return tMin
+    }
+
+    companion object {
+        private const val FIXED_STEP = 1f / 60f
+        /** Équivaut à l'ancien 0,14 par image, mais mesuré à 60 images par seconde. */
+        private const val PITCH_SMOOTHING_RATE = 9.05f
+        private const val MAX_VISUAL_PITCH = 0.76f
+        private const val CAR_VISUAL_SUSPENSION_OFFSET = -0.21f
+        private const val MAX_WHEEL_STEER_DEGREES = 26f
+        private const val HOP_VISUAL_LIFT = 0.05f
+        private const val TRIGGER_ENGAGE = 0.12f
+        private const val PREVIEW_ID = -1L
+    }
+}

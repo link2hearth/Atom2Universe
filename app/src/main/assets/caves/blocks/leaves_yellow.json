@@ -1,0 +1,16 @@
+{
+  "id": 1028,
+  "name": "leaves_yellow",
+  "texture_top": "cozy:leaf:10:ADA16B",
+  "texture_side": "cozy:leaf:10:ADA16B",
+  "texture_bottom": "cozy:leaf:10:ADA16B",
+  "color": "#ADA16B",
+  "hardness": 0.3,
+  "transparent": true,
+  "drop": "",
+  "harvest_category": "fragile",
+  "creative_tab": "wood",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

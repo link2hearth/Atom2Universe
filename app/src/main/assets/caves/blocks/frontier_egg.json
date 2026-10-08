@@ -1,0 +1,17 @@
+{
+  "id": 9852,
+  "name": "frontier_egg",
+  "texture_top": "frontier:9852:top",
+  "texture_side": "frontier:9852:side",
+  "texture_bottom": "frontier:9852:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_egg",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

@@ -1,0 +1,18 @@
+{
+  "id": 2730,
+  "name": "cave_relic_spectral_tablet",
+  "texture_top": "cave_relics:spectral_tablet_top",
+  "texture_side": "cave_relics:spectral_tablet_side",
+  "texture_bottom": "cave_relics:spectral_tablet_top",
+  "color": "#5F527D",
+  "hardness": 1.5,
+  "light_emission": 2,
+  "drop": "cave_relic_spectral_tablet",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ],
+  "block_height": 0.5
+}

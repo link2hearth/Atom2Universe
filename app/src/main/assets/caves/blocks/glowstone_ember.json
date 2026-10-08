@@ -1,0 +1,17 @@
+{
+  "id": 2605,
+  "name": "glowstone_ember",
+  "texture_top": "underground:ember",
+  "texture_side": "underground:ember",
+  "texture_bottom": "underground:ember",
+  "color": "#E99A65",
+  "hardness": 1.5,
+  "light_emission": 9,
+  "drop": "glowstone_ember",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

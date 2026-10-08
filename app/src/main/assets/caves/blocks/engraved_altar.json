@@ -1,0 +1,17 @@
+{
+  "id": 2663,
+  "name": "engraved_altar",
+  "texture_top": "cave_ruins:altar_top",
+  "texture_side": "cave_ruins:altar_side",
+  "texture_bottom": "cave_ruins:funerary_bricks",
+  "color": "#88968C",
+  "hardness": 1.5,
+  "light_emission": 2,
+  "drop": "engraved_altar",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "stone"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": 1001,
+  "name": "wood_white",
+  "texture_top": "cozy:material:8:D7CDB4",
+  "texture_side": "cozy:material:11",
+  "texture_bottom": "cozy:material:8:D7CDB4",
+  "color": "#D7CDB4",
+  "hardness": 2.0,
+  "drop": "wood_white",
+  "creative_tab": "wood",
+  "orient_mode": "axis",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [
+    "logs"
+  ]
+}

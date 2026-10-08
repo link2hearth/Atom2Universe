@@ -1,0 +1,63 @@
+Atom2Universe - female reference anatomy and detailed right ear
+
+These two datasets and their adaptations are distributed under Creative Commons
+Attribution 4.0 International (CC BY 4.0).
+Licence: https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+
+Female anatomy
+Kristen Browne; Heidi Schlehlein. 2023. 3D Reference Organ Set for Female, v1.5.
+Human Reference Atlas / HuBMAP, based on the Visible Human Female data provided
+by the National Library of Medicine.
+DOI: https://doi.org/10.48539/HBM352.BTSQ.586
+Source: https://purl.humanatlas.io/ref-organ/united-female/v1.5
+Metadata and licence declaration:
+https://raw.githubusercontent.com/hubmapconsortium/hra-kg/main/digital-objects/ref-organ/united-female/v1.5/raw/metadata.yaml
+
+Detailed ear
+Daniel Sieber, Peter Erfurt, Samuel John, Gabriel Ribeiro Dos Santos,
+Daniel Schurzig, Mads Sølvsten Sørensen, Thomas Lenarz.
+The OpenEar library of 3D models of the human temporal bone based on computed
+tomography and micro-slicing. Scientific Data 6, 180297 (2019).
+DOI: https://doi.org/10.1038/sdata.2018.297
+Dataset: https://zenodo.org/records/1473724
+Publication and data licence declaration:
+https://pmc.ncbi.nlm.nih.gov/articles/PMC6326113/
+Selected specimen: ZETA, right ear.
+
+Adaptations
+Selection of named anatomical surfaces; conversion to glTF/GLB and lossless
+gzip fragments; recalculated normals; illustrative material colours;
+original English and French educational summaries.
+The clitoral, vestibular bulb, labial and female urethral supplements are original
+mathematical educational reconstructions by Atom2Universe, also distributed
+under CC BY 4.0. Published anatomical dimensions and spatial relationships guide
+their illustrative shape; no third-party genital model was copied or traced.
+They are individually labelled as reconstructions, not HRA donor segmentations.
+Their parameter record and references are in female/provenance.json.
+The source skin, distal vagina and bladder neck remain closed surfaces. The
+native HRA bladder neck already overlaps the right pubic surface; the supplement
+does not correct this source alignment. Labial bases overlap deeper teaching
+surfaces instead of partitioning tissue volumes. Clitoral hood, vestibular
+glands, pelvic-floor muscles and detailed vulvar nerves/vessels remain absent.
+
+Anatomical references for these original reconstructions:
+Jackson et al. (2019), clitoral anatomy and dimensions:
+https://doi.org/10.1016/j.ajog.2019.06.048
+Lloyd et al. (2005), variation in female genital appearance:
+https://doi.org/10.1111/j.1471-0528.2004.00517.x
+O'Connell and DeLancey (2005), clitoral anatomy on MRI:
+https://pmc.ncbi.nlm.nih.gov/articles/PMC1283096/
+Attari et al. (2021), female urethral anatomy and mechanics:
+https://doi.org/10.1007/s10439-021-02765-4
+Liu et al. (2025), female urethral morphology:
+https://doi.org/10.1007/s00192-025-06045-w
+
+Only the contextual temporal bone is simplified for mobile rendering. The fine
+ear structures are retained. Whole-body and local-ear datasets are separate,
+not registered into one another. Full per-dataset element inventories, source
+hashes, transformations, measured limitations and exclusions are recorded in
+female/provenance.json and ear/provenance.json alongside their models.
+
+The original authors do not endorse this application. These adaptations have
+not undergone clinical validation and do not provide a complete anatomical atlas.

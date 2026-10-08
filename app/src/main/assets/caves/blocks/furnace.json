@@ -1,0 +1,16 @@
+{
+  "id": 8000,
+  "name": "furnace",
+  "texture_top": "cozy:utility:13",
+  "texture_side": "cozy:utility:12",
+  "texture_bottom": "cozy:utility:13",
+  "texture_front": "cozy:utility:0",
+  "color": "#B4B9B7",
+  "hardness": 3.0,
+  "drop": "furnace",
+  "creative_tab": "functional",
+  "orient_mode": "facing",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

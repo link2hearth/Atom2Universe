@@ -1,0 +1,124 @@
+package com.Atom2Universe.app.games.caves.node
+
+import org.json.JSONObject
+
+// Modes d'orientation — stockés dans Chunk.meta (bits 0-1)
+const val ORIENT_NONE: Byte   = 0  // non orientable
+const val KINETIC_ROD = 1
+const val KINETIC_PLATE = 2
+/** A machine: a full cube to walk into and point at, drawn whole by KineticRenderer. */
+const val KINETIC_MACHINE = 3
+const val FURNITURE_BOOKSHELF = 1
+const val FURNITURE_BARREL = 2
+const val ORIENT_FACING: Byte = 1  // tourne horizontalement (N/S/E/W), toujours droit
+const val ORIENT_AXIS: Byte   = 2  // s'aligne sur un axe (X/Y/Z), peut se coucher
+
+internal data class BlockDef(
+    val id: Short,
+    val name: String,
+    val textureTop: String,
+    val textureSide: String,
+    val textureBottom: String,
+    val textureFront: String?,      // face avant (facing uniquement) ; null → textureSide
+    val textureSideGrass: String?,  // face latérale quand dessus est AIR (transition herbe)
+    val textureSideSand: String?,   // face latérale quand dessus est SAND/REDSAND
+    val textureSideSnow: String?,   // face latérale quand dessus est SNOW/ICE
+    val color: Int,
+    val hardness: Float,
+    val decoration: Boolean,
+    val transparent: Boolean,
+    val water: Boolean,
+    val falling: Boolean,
+    val waterlogged: Boolean,
+    val lightEmission: Int,
+    val drop: String,
+    val creativeTab: String,
+    val spriteMargin: Float,
+    val spriteHeight: Float,
+    val orientMode: Byte = ORIENT_NONE,
+    val placeable: Boolean = true,
+    val harvestCategory: String = "recoverable",
+    val dropCount: Int = 1,
+    val tags: Set<String> = emptySet(),
+    val placementRule: String = "any",
+    val replaceable: Boolean = false,
+    val stairs: Boolean = false,
+    val slab: Boolean = false,
+    val door: Boolean = false,
+    /** Fixed, one-cell glazed frame; 1..10 select its woodwork pattern. */
+    val windowShape: Int = 0,
+    val spriteWidth: Float = 1f,
+    val blockHeight: Float = 1f,
+    /** Turning part drawn by KineticRenderer, oriented by its ORIENT_AXIS meta
+     * (see PartialBlockModel.shaftAxis): 0 = none, [KINETIC_ROD] (shaft, crank), [KINETIC_PLATE] (cogwheels)
+     * or [KINETIC_MACHINE] (mill, press, crusher, loom). */
+    val kineticShape: Int = 0,
+    /** Static furniture uses the same boxes for meshing, collision and picking. */
+    val furnitureShape: Int = 0,
+    /** Opposite the front on horizontally facing blocks; defaults to the ordinary side. */
+    val textureBack: String? = null,
+    // indices assignés par BlockRegistry.buildTextureAtlas()
+    var layerTop: Int = -1,
+    var layerSide: Int = -1,
+    var layerBottom: Int = -1,
+    var layerFront: Int = -1,
+    var layerBack: Int = -1,
+    var layerSideGrass: Int = -1,
+    var layerSideSand: Int = -1,
+    var layerSideSnow: Int = -1,
+) {
+    /** Not a full cube: collision, picking and meshing go through PartialBlockModel. */
+    val partial: Boolean get() = stairs || slab || door || windowShape != 0 || blockHeight < 1f || kinetic || furnitureShape != 0
+    val kinetic: Boolean get() = kineticShape != 0
+
+    companion object {
+        fun fromJson(j: JSONObject): BlockDef {
+            val colorStr = j.optString("color", "#444444").trimStart('#')
+            val colorInt = (0xFF000000.toInt()) or colorStr.toLong(16).toInt()
+            val orientMode: Byte = when (j.optString("orient_mode", "")) {
+                "facing" -> ORIENT_FACING
+                "axis"   -> ORIENT_AXIS
+                else     -> ORIENT_NONE
+            }
+            return BlockDef(
+                id              = j.getInt("id").toShort(),
+                name            = j.getString("name"),
+                textureTop      = j.getString("texture_top"),
+                textureSide     = j.getString("texture_side"),
+                textureBottom   = j.getString("texture_bottom"),
+                textureFront     = j.optString("texture_front", "").ifEmpty { null },
+                textureBack      = j.optString("texture_back", "").ifEmpty { null },
+                textureSideGrass = j.optString("texture_side_grass", "").ifEmpty { null },
+                textureSideSand  = j.optString("texture_side_sand", "").ifEmpty { null },
+                textureSideSnow  = j.optString("texture_side_snow", "").ifEmpty { null },
+                color           = colorInt,
+                hardness        = j.optDouble("hardness", 1.0).toFloat(),
+                decoration      = j.optBoolean("decoration", false),
+                transparent     = j.optBoolean("transparent", false),
+                water           = j.optBoolean("water", false),
+                falling         = j.optBoolean("falling", false),
+                waterlogged     = j.optBoolean("waterlogged", false),
+                lightEmission   = j.optInt("light_emission", 0),
+                drop            = j.optString("drop", ""),
+                creativeTab     = j.optString("creative_tab", "terrain"),
+                spriteMargin    = j.optDouble("sprite_margin", 0.10).toFloat(),
+                spriteHeight    = j.optDouble("sprite_height", 0.90).toFloat(),
+                spriteWidth     = j.optDouble("sprite_width", 1.0).toFloat(),
+                blockHeight     = j.optDouble("block_height", 1.0).toFloat(),
+                orientMode      = orientMode,
+                placeable       = j.optBoolean("placeable", true),
+                harvestCategory = j.optString("harvest_category", "recoverable"),
+                dropCount       = j.optInt("drop_count", 1),
+                tags            = j.optJSONArray("tags")?.let { a -> (0 until a.length()).map { a.getString(it) }.toSet() } ?: emptySet(),
+                placementRule   = j.optString("placement_rule", "any"),
+                replaceable     = j.optBoolean("replaceable", false),
+                stairs          = j.optBoolean("stairs", false),
+                slab            = j.optBoolean("slab", false),
+                door            = j.optBoolean("door", false),
+                windowShape     = j.optInt("window", 0),
+                kineticShape    = when (j.optString("kinetic", "")) { "rod" -> KINETIC_ROD; "plate" -> KINETIC_PLATE; "machine" -> KINETIC_MACHINE; else -> 0 },
+                furnitureShape  = when (j.optString("furniture", "")) { "bookshelf" -> FURNITURE_BOOKSHELF; "barrel" -> FURNITURE_BARREL; else -> 0 },
+            )
+        }
+    }
+}

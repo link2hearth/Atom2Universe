@@ -1,0 +1,18 @@
+{
+  "id": 2304,
+  "name": "clay",
+  "texture_top": "cozy:nature:4",
+  "texture_side": "cozy:nature:4",
+  "texture_bottom": "cozy:nature:4",
+  "color": "#B7A69B",
+  "hardness": 1,
+  "drop": "clay_ball",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "drop_count": 4,
+  "harvest_category": "resource_block",
+  "tags": [
+    "soil"
+  ]
+}

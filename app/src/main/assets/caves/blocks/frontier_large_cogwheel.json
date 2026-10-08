@@ -1,0 +1,19 @@
+{
+  "id": 9809,
+  "name": "frontier_large_cogwheel",
+  "texture_top": "frontier:9809:top",
+  "texture_side": "frontier:9809:side",
+  "texture_bottom": "frontier:9809:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_large_cogwheel",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": true,
+  "orient_mode": "axis",
+  "kinetic": "plate",
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

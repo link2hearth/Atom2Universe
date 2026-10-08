@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0D0D0D">
+
+    <!-- Banner : back | music | floor+level | character -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="12dp"
+        android:gravity="center_vertical"
+        android:background="#1A1A1A">
+
+        <ImageButton
+            android:id="@+id/roguelike_btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back" />
+
+        <ImageButton
+            android:id="@+id/roguelike_btn_music"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_volume_up_24"
+            android:tint="#EEEEEE"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/roguelike_music_mute" />
+
+        <TextView
+            android:id="@+id/roguelike_tv_floorlevel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:textColor="#EEEEEE"
+            android:gravity="center"
+            android:fontFamily="monospace"
+            android:textStyle="bold"
+            tools:text="Floor 1" />
+
+        <androidx.appcompat.widget.AppCompatButton android:id="@+id/roguelike_btn_inventory" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:minWidth="48dp" android:minHeight="48dp"
+            android:paddingHorizontal="8dp" android:textSize="11sp" android:textAllCaps="false"
+            android:background="@drawable/bg_roguelike_character_button"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:fontFamily="monospace"
+            android:textColor="#FFFFFF"
+            tools:text="Warrior\n45/50" />
+    </LinearLayout>
+
+    <!-- Carte + écran de combat par-dessus -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.Atom2Universe.app.games.roguelike.RoguelikeView
+            android:id="@+id/roguelike_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.Atom2Universe.app.games.roguelike.CombatView
+            android:id="@+id/roguelike_combat_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <include layout="@layout/roguelike_inventory_panel" />
+
+        <include layout="@layout/roguelike_forge_panel" />
+
+        <include layout="@layout/roguelike_lexicon_panel" />
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Audio editor: export (step 8) -->
+    <string name="ae_menu_export_audio">Export audio…</string>
+    <string name="ae_export_title">Export audio</string>
+    <string name="ae_export_format">Format</string>
+    <string name="ae_fmt_wav16">WAV 16-bit</string>
+    <string name="ae_fmt_wav24">WAV 24-bit</string>
+    <string name="ae_fmt_wav32f">WAV 32-bit float</string>
+    <string name="ae_fmt_mp3">MP3</string>
+    <string name="ae_fmt_aac">AAC (M4A)</string>
+    <string name="ae_fmt_flac">FLAC</string>
+    <string name="ae_fmt_ogg">Ogg Vorbis</string>
+    <string name="ae_export_bitrate">Bitrate</string>
+    <string name="ae_unit_kbps">%1$d kb/s</string>
+    <string name="ae_unit_kbps_avg">≈ %1$d kb/s</string>
+    <string name="ae_export_bitrate_mode">Bitrate mode</string>
+    <string name="ae_export_cbr">Constant</string>
+    <string name="ae_export_vbr">Variable</string>
+    <string name="ae_export_range">Range</string>
+    <string name="ae_export_whole">Whole project</string>
+    <string name="ae_export_selection">Selection</string>
+    <string name="ae_export_channels">Channels</string>
+    <string name="ae_export_stereo">Stereo</string>
+    <string name="ae_export_mono">Mono</string>
+    <string name="ae_export_rate_project">Same as the project</string>
+    <string name="ae_export_files">Files</string>
+    <string name="ae_export_one_file">One file</string>
+    <string name="ae_export_per_track">One file per track</string>
+    <string name="ae_tag_title">Title</string>
+    <string name="ae_tag_artist">Artist</string>
+    <string name="ae_tag_album">Album</string>
+    <string name="ae_tag_year">Year</string>
+    <string name="ae_export_go">Export</string>
+    <string name="ae_export_progress_title">Exporting</string>
+    <string name="ae_export_audio_done">Export finished</string>
+    <string name="ae_export_audio_clipped">Export finished, but the sound went over 0 dB and was clipped</string>
+</resources>

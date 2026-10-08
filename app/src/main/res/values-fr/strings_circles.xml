@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="circles_title">Circles</string>
+    <string name="circles_back">Retour</string>
+    <string name="circles_diff_easy">Facile</string>
+    <string name="circles_diff_medium">Moyen</string>
+    <string name="circles_diff_hard">Difficile</string>
+    <string name="circles_label_moves">Coups :</string>
+    <string name="circles_btn_new">Nouveau</string>
+    <string name="circles_btn_restart">Recommencer</string>
+    <string name="circles_btn_hint">Aide</string>
+    <string name="circles_btn_again">Rejouer</string>
+    <string name="circles_btn_next">Niveau suivant</string>
+    <string name="circles_win_title">Résonance !</string>
+    <string name="circles_win_message">Synchronisation en %1$d coup(s) !</string>
+    <string name="circles_reward_format">+%1$d ν</string>
+    <string name="circles_toast_reward">Circles : +%1$d neutrino(s) !</string>
+    <string name="circles_toast_reward_disabled">Circles : pas de récompense — l\'aide a été utilisée.</string>
+    <!-- Tuile hub -->
+    <string name="circles_hub_title">Circles</string>
+    <string name="circles_hub_desc">Faites pivoter les anneaux pour aligner toutes les couleurs</string>
+</resources>

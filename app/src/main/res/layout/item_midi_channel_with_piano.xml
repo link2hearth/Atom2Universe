@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?attr/a2uPanelBackground"
+    android:layout_marginVertical="4dp">
+
+    <!-- En-tête : puce du canal, instrument + volume, activité, actions -->
+    <LinearLayout
+        android:id="@+id/channel_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp"
+        android:paddingVertical="8dp"
+        android:background="?attr/selectableItemBackground">
+
+        <!-- Puce numérotée, teintée à la couleur du canal -->
+        <TextView
+            android:id="@+id/channel_number"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/midi_channel_chip"
+            android:gravity="center"
+            android:textColor="@color/audio_on_accent"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            tools:text="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <!-- Nom de l'instrument + badge multi-programmes -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/instrument_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/audio_text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="0: Piano acoustique" />
+
+                <TextView
+                    android:id="@+id/multi_program_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="1dp"
+                    android:background="@drawable/multi_program_badge_bg"
+                    android:textColor="@color/audio_text_primary"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:text="x3"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- Volume du canal -->
+            <SeekBar
+                android:id="@+id/volume_slider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="26dp"
+                android:max="100"
+                android:progress="100"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
+                android:progressTint="?attr/a2uMidiAccent"
+                android:thumbTint="?attr/a2uMidiAccent"
+                android:contentDescription="@string/midi_channel_volume"
+                tools:progress="80" />
+
+        </LinearLayout>
+
+        <com.Atom2Universe.app.midi.visualizer.ChannelActivityView
+            android:id="@+id/channel_activity"
+            android:layout_width="22dp"
+            android:layout_height="16dp"
+            android:layout_marginHorizontal="6dp" />
+
+        <ImageButton
+            android:id="@+id/btn_practice"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_piano"
+            android:scaleType="centerInside"
+            android:padding="9dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="?attr/a2uMidiAccent"
+            android:contentDescription="@string/midi_practice_mode" />
+
+        <ImageButton
+            android:id="@+id/btn_mute"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_volume_up_24"
+            android:scaleType="centerInside"
+            android:padding="9dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/audio_text_secondary"
+            android:contentDescription="@string/midi_mute_track" />
+
+        <ImageButton
+            android:id="@+id/btn_toggle_keyboard"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_chevron_down"
+            android:scaleType="centerInside"
+            android:padding="9dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/audio_text_secondary"
+            android:contentDescription="@string/midi_toggle_keyboard" />
+
+    </LinearLayout>
+
+    <!-- Clavier, posé dans un caisson sombre (repliable) -->
+    <FrameLayout
+        android:id="@+id/piano_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="6dp"
+        android:background="@drawable/midi_keyboard_well">
+
+        <com.Atom2Universe.app.midi.visualizer.PianoKeyboardView
+            android:id="@+id/piano_keyboard"
+            android:layout_width="match_parent"
+            android:layout_height="64dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

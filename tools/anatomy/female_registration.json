@@ -1,0 +1,17 @@
+{
+  "source": "Human Reference Atlas united-female v1.5",
+  "sourceSha256": "472567a56896b9b7890508da6501fbf858e56aaa30745365f7a71ade782b529c",
+  "method": "Native donor geometry; common rigid translation only. No transfer from BodyParts3D or sex morphing.",
+  "units": "metres",
+  "axes": {"x": "subject left", "y": "superior", "z": "anterior"},
+  "translation": [0.0, 0.794760942, 0.0],
+  "sourceSkinBounds": [[-0.489561558, -0.794760942, -0.222619534], [0.4778805, 0.8715873, 0.106666975]],
+  "sourceSceneHasNodeTransforms": false,
+  "limitations": [
+    "The HRA organ set is an anatomical reference assembly, not a complete dissection of a single individual.",
+    "No skull, ribs, shoulder girdle, upper-limb skeleton, hands or feet are supplied. Most skeletal muscles and peripheral nerves are absent.",
+    "Six lumbar-labelled source meshes are retained as one source lumbar region; no diagnosis of a transitional vertebra is inferred.",
+    "Pregnancy reference objects (placenta, amnion and umbilical cord) and the separate Yao lymph-node specimen are excluded.",
+    "No separately selectable clitoris, labia, female urethra or pelvic-floor muscles are supplied. The external perineal skin is smooth and does not depict a detailed vulva."
+  ]
+}

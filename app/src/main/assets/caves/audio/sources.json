@@ -1,0 +1,452 @@
+[
+  {
+    "file": "gun_0.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/1911/A_34P.wav",
+    "input_sha256": "df95fc52049f3d1e4cf0a8c018fc0f0b4abded12de1d615a279422206c415935",
+    "selection_seconds": [
+      1.53,
+      1.98
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.44118,
+    "sha256": "9d83801686fbbd92603414dc29cd41842ffa78dc2cac9986a3cb3b43a49fa772"
+  },
+  {
+    "file": "gun_1.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/1911/A_34P.wav",
+    "input_sha256": "df95fc52049f3d1e4cf0a8c018fc0f0b4abded12de1d615a279422206c415935",
+    "selection_seconds": [
+      6.64,
+      7.09
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.43828,
+    "sha256": "676ead7cc69876ee0124209cc3a8902403c9104977e95b1dfab9e24ac3935ba1"
+  },
+  {
+    "file": "gun_2.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/1911/A_42P.wav",
+    "input_sha256": "8e84438e771c157155a6a1ff47a6a7a7d81b6f39b185d41e426c57337a82254a",
+    "selection_seconds": [
+      0.93,
+      1.3800000000000001
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.44082,
+    "sha256": "a7bb24a66b65fbf3f281ca255407b6e368a34894838d86aaf58da53519e9ff1d"
+  },
+  {
+    "file": "smg_0.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/Carl Gustav M45/G_20P.wav",
+    "input_sha256": "137630298417203c83f885402f1b5d10913c1b96ca0ad31fde50d30314bf3223",
+    "selection_seconds": [
+      0.33,
+      0.53
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.18553,
+    "sha256": "a5faeecb64c3f0d8b1d2aba4f7974a1deceb1af5604215f689e0ec4cbbe1a410"
+  },
+  {
+    "file": "smg_1.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/Carl Gustav M45/G_20P.wav",
+    "input_sha256": "137630298417203c83f885402f1b5d10913c1b96ca0ad31fde50d30314bf3223",
+    "selection_seconds": [
+      2.24,
+      2.4400000000000004
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.1839,
+    "sha256": "2f0cea78c359652eed2a885cf1ac30f341ec5da3ed8f5076b01c9208c44165f3"
+  },
+  {
+    "file": "smg_2.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/Carl Gustav M45/G_20P.wav",
+    "input_sha256": "137630298417203c83f885402f1b5d10913c1b96ca0ad31fde50d30314bf3223",
+    "selection_seconds": [
+      5.25,
+      5.45
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.18617,
+    "sha256": "9b6d04dea8a5a493f8973f353f02cde651f6c71ace88c50e8b6104ae58252b40"
+  },
+  {
+    "file": "lever_rifle_0.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/Marlin 336/I_17P.wav",
+    "input_sha256": "335d11d62004f66de48f87fa6b98b986dd33ac03c7f8a2340b2432a714ff186e",
+    "selection_seconds": [
+      0.59,
+      1.19
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.59061,
+    "sha256": "44a6311b138930d4fec504466dc38aab0145fca328314cb29cbb63eaefb8caf6"
+  },
+  {
+    "file": "lever_rifle_1.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/Marlin 336/I_17P.wav",
+    "input_sha256": "335d11d62004f66de48f87fa6b98b986dd33ac03c7f8a2340b2432a714ff186e",
+    "selection_seconds": [
+      6.83,
+      7.43
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.58889,
+    "sha256": "62215e618dc393922c878b0aa37055eb258fde6db1bc06505fb5b8267fb8554a"
+  },
+  {
+    "file": "lever_rifle_2.wav",
+    "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+    "title": "The Free Firearm Sound Library",
+    "source": "https://opengameart.org/content/the-free-firearm-sound-library",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Prepared SFX Library/Marlin 336/I_22P.wav",
+    "input_sha256": "88c2a543ae4df36975557d0715e46b33e3667853ae6bb6633016f5fb79ff17f1",
+    "selection_seconds": [
+      0.73,
+      1.33
+    ],
+    "peak": 0.78,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.34989,
+    "sha256": "bf271e39d451ab614eb5f6691fef61d50aedda0d8725dcfa7dea99ac326cdad8"
+  },
+  {
+    "file": "bow.wav",
+    "author": "artisticdude",
+    "title": "Battle Sound Effects",
+    "source": "https://opengameart.org/content/battle-sound-effects",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/battle_sound_effects/Bow.wav",
+    "input_sha256": "0dc8cf132cf583563936ac3a4d776e196210d5f6703b4ebdd7c68e8f35b9f3e3",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.7,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.29524,
+    "sha256": "cf6b63b5edf27039968cac553b5808f5ec971821a722934d43f179a5f91af102"
+  },
+  {
+    "file": "sling.wav",
+    "author": "artisticdude",
+    "title": "Battle Sound Effects",
+    "source": "https://opengameart.org/content/battle-sound-effects",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/battle_sound_effects/swish_4.wav",
+    "input_sha256": "a53382f21d9c7e4d7a1d6e8cddc9ce9779740f9ad2ba4d9012ee20318c04f24c",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.6,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.25728,
+    "sha256": "7179bd0a96d1ed4468054c8d0d1350bea1776edbeb3408ddb90aad87c9f76c2b"
+  },
+  {
+    "file": "crossbow.wav",
+    "author": "spookymodem",
+    "title": "Crossbow Shot",
+    "source": "https://opengameart.org/content/crossbow-shot",
+    "license": "CC-BY-3.0",
+    "license_url": "https://creativecommons.org/licenses/by/3.0/",
+    "original": "Crossbow Shot.wav",
+    "input_sha256": "eaf9df1081f884e8999bff5a0f3a17ee6913df8c0224860e0faca89d0a5d5637",
+    "selection_seconds": [
+      0.27,
+      0.51
+    ],
+    "peak": 0.72,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.21528,
+    "sha256": "904e441a596637e018180a16ebe42ed2bfe1638d9a1f6d8a7b4b03de114b051c"
+  },
+  {
+    "file": "animal_cow_0.wav",
+    "author": "Secretlondon",
+    "title": "Farm animals / Mudchute City Farm, London",
+    "source": "https://opengameart.org/content/farm-animals",
+    "license": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "original": "extracted/MudchuteAnimals/Mudchute_cow_1.ogg",
+    "input_sha256": "ac0a7dc56e6abc7b17a45d8bea5644350516dd2b995f1da506849892aaf8650b",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.7,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 2.19429,
+    "sha256": "60651b51a56a0c3fa3e4c4381f2eee93042c14dd849c64f5c2f8bab76553ddb0"
+  },
+  {
+    "file": "animal_cow_1.wav",
+    "author": "Secretlondon",
+    "title": "Farm animals / Mudchute City Farm, London",
+    "source": "https://opengameart.org/content/farm-animals",
+    "license": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "original": "extracted/MudchuteAnimals/Mudchute_cow_1.ogg",
+    "input_sha256": "ac0a7dc56e6abc7b17a45d8bea5644350516dd2b995f1da506849892aaf8650b",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.65,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 2.19429,
+    "sha256": "4892b9fdf972813888478930cbebd77394ff63bfcca930f5bfaf1d5e29ca45b4"
+  },
+  {
+    "file": "animal_pig_0.wav",
+    "author": "Secretlondon",
+    "title": "Farm animals / Mudchute City Farm, London",
+    "source": "https://opengameart.org/content/farm-animals",
+    "license": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "original": "extracted/MudchuteAnimals/Mudchute_pig_1.ogg",
+    "input_sha256": "f057e30313a5d7519618babac527166e23e3d931dd925d83df4ac43a589a0a5c",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.65,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.35991,
+    "sha256": "217216f6835990f2fcb27973d39c7de289c139b15b70ba203dd7d0e82d289e95"
+  },
+  {
+    "file": "animal_pig_1.wav",
+    "author": "Secretlondon",
+    "title": "Farm animals / Mudchute City Farm, London",
+    "source": "https://opengameart.org/content/farm-animals",
+    "license": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "original": "extracted/MudchuteAnimals/Mudchute_pig_2.ogg",
+    "input_sha256": "4d70e3687f0ddfc8a41aabe934465bc661fb4de05c9333531eea079a7d59ea1e",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.65,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.33379,
+    "sha256": "1bba62e07e5c241dc5634be6b6fb1c4bbd74252cc4f0a2bcc34e6550b2da8db5"
+  },
+  {
+    "file": "animal_sheep_0.wav",
+    "author": "mikewest; edited by AntumDeluge",
+    "title": "Sheep Baa",
+    "source": "https://opengameart.org/content/sheep-baa",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "sheep_baa.flac",
+    "input_sha256": "b2687077a29c044e57220b660c616f9336a0b454519f67bbc59954e0574acc70",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.68,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.82322,
+    "sha256": "56dcb907db68df508ffeff95d7b645f720c28688a0ba98828e48edbe88ed3f9b"
+  },
+  {
+    "file": "animal_sheep_1.wav",
+    "author": "Secretlondon",
+    "title": "Farm animals / Mudchute City Farm, London",
+    "source": "https://opengameart.org/content/farm-animals",
+    "license": "CC-BY-SA-3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "original": "extracted/MudchuteAnimals/Mudchute_sheep_1.ogg",
+    "input_sha256": "b88b4ff9afabd30fccc52c56fac0b9faefcb962c6fbd2dd130a1816e7a171554",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.68,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 1.13778,
+    "sha256": "b2462592ed31c3d1855c5c447299d69900653b52ee3ccf7d70b0b83dd1b23652"
+  },
+  {
+    "file": "animal_chicken_0.wav",
+    "author": "IMadeIt",
+    "title": "Chicken Sound Effect",
+    "source": "https://opengameart.org/content/chicken-sound-effect",
+    "license": "CC-BY-3.0",
+    "license_url": "https://creativecommons.org/licenses/by/3.0/",
+    "original": "extracted/Chicken Sound Effect.ogg",
+    "input_sha256": "5b682d1052aa856b0849f9fd7518455e464ad8510841a710c2800b43245c252c",
+    "selection_seconds": [
+      0.18,
+      0.56
+    ],
+    "peak": 0.62,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.38,
+    "sha256": "d286c4ab74035b4db4058a9acd12adde402e48353aee4fa505837d4bfab8a425"
+  },
+  {
+    "file": "animal_chicken_1.wav",
+    "author": "IMadeIt",
+    "title": "Chicken Sound Effect",
+    "source": "https://opengameart.org/content/chicken-sound-effect",
+    "license": "CC-BY-3.0",
+    "license_url": "https://creativecommons.org/licenses/by/3.0/",
+    "original": "extracted/Chicken Sound Effect.ogg",
+    "input_sha256": "5b682d1052aa856b0849f9fd7518455e464ad8510841a710c2800b43245c252c",
+    "selection_seconds": [
+      1.04,
+      1.55
+    ],
+    "peak": 0.62,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.51002,
+    "sha256": "5a9a09538acd45658ec93be46b79dcdcf189af027d403da22a627f9a5674227e"
+  },
+  {
+    "file": "hurt.wav",
+    "author": "Kenney",
+    "title": "Impact Sounds",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Audio/impactPunch_heavy_000.ogg",
+    "input_sha256": "b33a8f14068aec24ec69ba85e5e87fdc41228975f6a1a3e44a6e7d6fc3d9f8d8",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.65,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.40812,
+    "sha256": "b33c34707a5f6f9ec3adbd7c18ffcdd05476ede71ac31ed609dee08051a00b91"
+  },
+  {
+    "file": "boss.wav",
+    "author": "Kenney",
+    "title": "Impact Sounds",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Audio/impactWood_heavy_000.ogg",
+    "input_sha256": "15ff82332f342c30e469215539e1cc57e11b221aa2cf7e11e811d313a9927f3d",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.65,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades.",
+    "duration_seconds": 0.31302,
+    "sha256": "6a254edd075e1b401a3fb1ae24cf7896ac1213e9586e918ae7b79cdd6ba792f1"
+  },
+  {
+    "file": "step_stone_loop.wav",
+    "author": "Kenney",
+    "title": "Impact Sounds",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Audio/footstep_concrete_000.ogg",
+    "input_sha256": "d7267e183067757c92c169de2a379abea592cfca6b39bb2e8feea15221ad79fe",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.56,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades. Footsteps: 1200 Hz low-pass, no makeup gain. Single contact at processed sample 0, max 120 ms; faded into a 460 ms loop.",
+    "duration_seconds": 0.46,
+    "sha256": "b812a6033c08ba21cc131ce269383e3d5c3f1324a221750d3dd7baaff040c39b"
+  },
+  {
+    "file": "step_earth_loop.wav",
+    "author": "Kenney",
+    "title": "Impact Sounds",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Audio/footstep_grass_000.ogg",
+    "input_sha256": "9d49497777405d78d7cf7f2888e28277f3a23192300cfd1d79d54876b20f479f",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.56,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades. Footsteps: 1200 Hz low-pass, no makeup gain. Single contact at processed sample 0, max 120 ms; faded into a 460 ms loop.",
+    "duration_seconds": 0.46,
+    "sha256": "77c74824a415ba9c9b263b5af262935875af0e290a2e44c79f401bff27045cc8"
+  },
+  {
+    "file": "step_wood_loop.wav",
+    "author": "Kenney",
+    "title": "Impact Sounds",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "original": "extracted/Audio/footstep_wood_000.ogg",
+    "input_sha256": "5f1c252942a220d658121bd9417448cd19649ded9fff2ff15f6e50899373ce8e",
+    "selection_seconds": [
+      0,
+      null
+    ],
+    "peak": 0.56,
+    "modifications": "Excerpt; mono; anti-aliased 22050 Hz conversion; DC removal; gain; edge fades. Footsteps: 1200 Hz low-pass, no makeup gain. Single contact at processed sample 0, max 120 ms; faded into a 460 ms loop.",
+    "duration_seconds": 0.46,
+    "sha256": "59b8957c61313a4695f05ce46dab0eca3f79096f08c4ff3609cf66968c943033"
+  }
+]

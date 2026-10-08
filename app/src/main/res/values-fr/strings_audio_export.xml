@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Éditeur audio : export (étape 8) -->
+    <string name="ae_menu_export_audio">Exporter l\'audio…</string>
+    <string name="ae_export_title">Exporter l\'audio</string>
+    <string name="ae_export_format">Format</string>
+    <string name="ae_fmt_wav16">WAV 16 bits</string>
+    <string name="ae_fmt_wav24">WAV 24 bits</string>
+    <string name="ae_fmt_wav32f">WAV 32 bits flottant</string>
+    <string name="ae_fmt_mp3">MP3</string>
+    <string name="ae_fmt_aac">AAC (M4A)</string>
+    <string name="ae_fmt_flac">FLAC</string>
+    <string name="ae_fmt_ogg">Ogg Vorbis</string>
+    <string name="ae_export_bitrate">Débit</string>
+    <string name="ae_unit_kbps">%1$d kb/s</string>
+    <string name="ae_unit_kbps_avg">≈ %1$d kb/s</string>
+    <string name="ae_export_bitrate_mode">Mode du débit</string>
+    <string name="ae_export_cbr">Constant</string>
+    <string name="ae_export_vbr">Variable</string>
+    <string name="ae_export_range">Plage</string>
+    <string name="ae_export_whole">Tout le projet</string>
+    <string name="ae_export_selection">Sélection</string>
+    <string name="ae_export_channels">Canaux</string>
+    <string name="ae_export_stereo">Stéréo</string>
+    <string name="ae_export_mono">Mono</string>
+    <string name="ae_export_rate_project">Comme le projet</string>
+    <string name="ae_export_files">Fichiers</string>
+    <string name="ae_export_one_file">Un seul fichier</string>
+    <string name="ae_export_per_track">Un fichier par piste</string>
+    <string name="ae_tag_title">Titre</string>
+    <string name="ae_tag_artist">Artiste</string>
+    <string name="ae_tag_album">Album</string>
+    <string name="ae_tag_year">Année</string>
+    <string name="ae_export_go">Exporter</string>
+    <string name="ae_export_progress_title">Exportation</string>
+    <string name="ae_export_audio_done">Exportation terminée</string>
+    <string name="ae_export_audio_clipped">Exportation terminée, mais le son dépassait 0 dB et a été écrêté</string>
+</resources>

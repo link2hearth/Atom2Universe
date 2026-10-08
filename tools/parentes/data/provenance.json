@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "retrieved": "2026-10-05",
+  "synth_id": "opentree16.1",
+  "taxonomy": "3.7draft3",
+  "source_created": "2025-12-20 00:55:58",
+  "snapshot_collection": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/phylo_snapshot/concrete_rank_collection.json",
+  "snapshot_collection_sha256": "b7c846cf5d94c3fab7f3dccf815891d5e3f0cb0b6d298f2d60708ed5f25328a8",
+  "scope": "Synthetic topology, node annotations, OTT identifiers and taxonomic cross-identifiers. No source-study trees, articles, images, or supplementary trait datasets are redistributed.",
+  "license": "CC0-1.0 for OpenTree-produced synthesis and OTT; general site policy retains prior-terms caveat.",
+  "license_evidence": [
+    {
+      "url": "https://tree.opentreeoflife.org/opentree/about/licenses",
+      "scope": "General data policy, conditional on prior terms"
+    },
+    {
+      "url": "https://phylo.bio.ku.edu/ot/2017-OpenTree-ABI-proposal.pdf",
+      "section": "6.2 Intellectual property, printed C-12 / PDF page 12",
+      "scope": "Explicit CC0 declaration for the synthetic tree and OTT, separately from input-study licences"
+    }
+  ],
+  "modifications": [
+    "Selection of 1758 terminal species",
+    "Union of full source lineages; no edges rewired",
+    "Original EN/FR seed names and group articles; additional Wikidata labels, short descriptions and aliases matched by scientific name",
+    "Unary nodes may be hidden only in the view",
+    "No dates or branch lengths imported"
+  ],
+  "selection_report": "selection.json",
+  "reviewed_exceptions": [
+    "Macropus rufus replaced by accepted Osphranter rufus before import",
+    "Latimeria chalumnae accepted as a species despite its unranked OTT record",
+    "Synechococcus elongatus excluded because it is suppressed in synthesis; Nostoc commune selected instead",
+    "Escherichia coli OTT query maps to an unnamed synthetic MRCA; source-node identity and requested taxon identity both retained"
+  ],
+  "selection_sha256": "d0d3e96c664736596e26aef5539f266cfb0d5fccc77aa1a8d87f3bb4762f8970",
+  "tree_sha256": "792c03bb2c4d2b5e8d1db7a2e6b02b6c36128a491b23dd5f2e9467df8496f12e"
+}

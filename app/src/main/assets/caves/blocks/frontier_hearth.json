@@ -1,0 +1,18 @@
+{
+  "id": 9870,
+  "name": "frontier_hearth",
+  "texture_top": "frontier:9870:top",
+  "texture_side": "frontier:9870:side",
+  "texture_bottom": "frontier:9870:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_hearth",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": [],
+  "light_emission": 14
+}

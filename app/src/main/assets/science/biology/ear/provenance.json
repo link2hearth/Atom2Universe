@@ -1,0 +1,238 @@
+{
+  "source": "OpenEar library, ZETA specimen",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "Sieber DM, Erfurt P, John S, Ribeiro dos Santos G, Schurzig D, Sørensen MS, Lenarz T. The OpenEar library of 3D models of the human temporal bone based on computed tomography and micro-slicing (2019). DOI:10.1038/sdata.2018.297; dataset DOI:10.5281/zenodo.1473724. CC BY 4.0.",
+  "sourceArchive": {
+    "url": "https://zenodo.org/api/records/1473724/files/ZETA.zip/content",
+    "bytes": 3868308936,
+    "publishedMd5": "66fc062426086d2757e837593fd548e5",
+    "verification": "ZIP members extracted with CRC checks and individually pinned SHA-256; full multi-GB archive not downloaded."
+  },
+  "laterality": "Right temporal bone: primary archive folder 01_CBCT_Unembedded/DICOM_rechts_20150826_X. No mirroring.",
+  "units": "Source PLY coordinates in millimetres; one common rigid display transform then conversion to metres. No scale fitting.",
+  "registration": "Separate local specimen, not registered to the BodyParts3D body. Display axes do not assert clinical whole-head orientation.",
+  "displayTransform": {
+    "rotation": [
+      [
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ]
+    ],
+    "centerMm": [
+      23,
+      25,
+      33
+    ]
+  },
+  "sourceFiles": {
+    "01_Scala Tympani.ply": {
+      "sha256": "98af05f86d72ec8333e943f49b1e46a1a6994f4e1fa84237d748c9b9648d6057",
+      "vertices": 8000,
+      "triangles": 15996,
+      "bytes": 304149,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "02_Scala Vestibuli.ply": {
+      "sha256": "bfc2675fde44dc5aa3701a2e6cd6937cf376731980de2b2a22848374492e2610",
+      "vertices": 10000,
+      "triangles": 20008,
+      "bytes": 384267,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "03_Malleus.ply": {
+      "sha256": "52e00f6afe6946e8adf6e2514acbf072950e62dac4d39ca8edc0d87b2ffb1cc2",
+      "vertices": 2000,
+      "triangles": 3996,
+      "bytes": 76148,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "04_Incus.ply": {
+      "sha256": "f967dd6b0fc5f195fe76a3605f8a5acfaf522c62667d0acf194637574c2049ee",
+      "vertices": 2000,
+      "triangles": 3996,
+      "bytes": 76148,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "05_Stapes.ply": {
+      "sha256": "91da300f4245514218410d33a371be2470e53b30c4197001ebf9879988bb3364",
+      "vertices": 1000,
+      "triangles": 2000,
+      "bytes": 42161,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "06_Facial Nerve.ply": {
+      "sha256": "eac4659a931547f7076268916a0764aee68d4fa8b608f705152f83e24e451003",
+      "vertices": 10000,
+      "triangles": 19996,
+      "bytes": 384111,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "07_Chorda Tympani.ply": {
+      "sha256": "8ff2794c19781737d95f1727e432cca894b0a0e415fb314bc4409469fec35dd1",
+      "vertices": 3000,
+      "triangles": 5996,
+      "bytes": 118109,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "08_Cochleovestibular Nerve.ply": {
+      "sha256": "c18b95a8c6969bcc1af9ec3043219cca199e618b61ed0234e34a5e442cba5f8a",
+      "vertices": 8003,
+      "triangles": 16018,
+      "bytes": 304471,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "09_Tympanic Membrane.ply": {
+      "sha256": "1c4e249ccd92245b310c0f90faa7f8b3f314fd36595edb008d82ec9fcc96ca8d",
+      "vertices": 4000,
+      "triangles": 7996,
+      "bytes": 156109,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "10_External Auditory Canal.ply": {
+      "sha256": "a147fe221fbbd4049997c8e25a7ee39e4b2bdf5e41f99df26fbb69a5ea6967f4",
+      "vertices": 8000,
+      "triangles": 15996,
+      "bytes": 308110,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "11_Sinus Dura.ply": {
+      "sha256": "fad44c122c79d2d3fa9cc662795dea8c735d6db03c3e469dca44834c371df4fe",
+      "vertices": 50603,
+      "triangles": 101104,
+      "bytes": 1925752,
+      "boundaryEdges": 12,
+      "nonmanifoldEdges": 0
+    },
+    "12_Carotis Interna.ply": {
+      "sha256": "cbe91185a03494fa05d0cb27fcb00bcce30a39cdf57dd1976f2060832cb2d0c5",
+      "vertices": 8000,
+      "triangles": 15996,
+      "bytes": 304149,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "Bone.ply": {
+      "sha256": "380e7ab49bbcb57ac62bd1fd0a1670391c648a7021186ee514d7fe68a67a4573",
+      "vertices": 3559010,
+      "triangles": 7120812,
+      "bytes": 135278955
+    }
+  },
+  "temporalContext": {
+    "sourceTriangles": 7120812,
+    "contextTriangles": 145000,
+    "sourceVertices": 3559010,
+    "contextVertices": 71104,
+    "components": 626,
+    "samplesPerDirection": 1024,
+    "sampleSeed": 9203,
+    "units": "mm",
+    "sourceToContext": {
+      "median": 0.012333177753565468,
+      "p95": 0.05298813626445183,
+      "p99": 0.07550653409122954,
+      "max": 0.09672393838621088
+    },
+    "contextToSource": {
+      "median": 0.014391846753869245,
+      "p95": 0.05267535173088007,
+      "p99": 0.07774881828871542,
+      "max": 0.13554146222742047
+    },
+    "bboxDriftMm": 0.028137031702634374,
+    "method": "Area-weighted independent surface samples; exact point-to-triangle distances using conservative centroid-sphere pruning. Maximum is sampled, not a certified continuous Hausdorff bound.",
+    "cacheSha256": "c522d2558ede90b39940e09e69e3d9a4c86bf48741f683cfd2dbfee3b68f8814",
+    "tool": "PyMeshLab 2025.7 / meshing_decimation_quadric_edge_collapse",
+    "parameters": {
+      "targetfacenum": 145000,
+      "qualitythr": 0.3,
+      "preserveboundary": true,
+      "preservetopology": true,
+      "preservenormal": true,
+      "optimalplacement": true,
+      "autoclean": false
+    },
+    "postprocess": "Remove unreferenced vertices only. No hole filling, island deletion or smoothing.",
+    "visibility": "Hidden by default; context only, not suitable for surgical measurements.",
+    "sourceTopology": {
+      "euler": -1396,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    },
+    "reducedTopology": {
+      "euler": -1396,
+      "boundaryEdges": 0,
+      "nonmanifoldEdges": 0
+    }
+  },
+  "modifications": "All twelve fine PLY surfaces retain all original vertices, indices, winding and mutual distances. One shared translation/rotation and unit conversion. Illustrative colours and selected transparency. Only temporal bone context is simplified; no fabricated ear structures or contralateral mirror.",
+  "limitations": "One cropped cadaveric specimen, not a complete ear or clinical reference standard. The scala vestibuli mesh includes vestibular spaces as one source group. The sinus/dura mesh combines tissues. No independent organ of Corti, hair cells, membranous labyrinth, ossicular ligaments, stapedius or tensor tympani, Eustachian tube or pinna. Source preparation, segmentation and smoothing limit accuracy; no sound propagation or surgical simulation.",
+  "references": [
+    "https://zenodo.org/records/1473724",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC6326113/",
+    "https://www.nidcd.nih.gov/health/how-do-we-hear",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception"
+  ],
+  "defaultLayers": [
+    "skeleton",
+    "senses",
+    "nervous",
+    "vascular",
+    "connective"
+  ],
+  "structures": 13,
+  "triangles": 253774,
+  "packaging": {
+    "format": "Draco-compressed GLB in independent gzip members; concatenate decompressed parts in modelParts order",
+    "modelBytes": 863576,
+    "modelSha256": "9718ec2313ff1dc673e221f8b89ad0a6ea6f5937e5308ec0a6516e19839de7c7",
+    "parts": [
+      {
+        "file": "atlas-000.part.gzip",
+        "bytes": 845326,
+        "sha256": "a1a44ebbfe66df975a9dcfc89a995c2cb24f8e0b44e84aa33b590bc6d1acc8bf"
+      }
+    ]
+  },
+  "mobileOptimization": {
+    "version": 1,
+    "sourceModelSha256": "1f0dfb6953b2b2bdc790dec5dffbe3d7020e450d7ab0e70009f6106dda9fc77e",
+    "toolSha256": "3428c49efb37c12f16996944737949f317374d05a58c43132c02ce47322b4695",
+    "dependencies": {
+      "draco3dgltf": "1.5.7",
+      "gltf-validator": "2.0.0-dev.3.10",
+      "meshoptimizer": "1.3.0"
+    },
+    "inputBytes": 5688369,
+    "outputBytes": 845326,
+    "inputTriangles": 374098,
+    "outputTriangles": 253774,
+    "inputVertices": 185710,
+    "outputVertices": 126308,
+    "method": "Mobile display derivative: exact attribute welding; error-bounded meshoptimizer simplification with locked borders, extrema and a triangle in every connected island; per-mesh Draco position quantization (14/16 bits, 20 or lossless when needed to keep islands separate) and normals (10 bits). Names, materials, layers and display variants retained.",
+    "maximumSimplifierErrorMetres": 0.000024921564545365982,
+    "sourceGeometryNote": "Source descriptions and registrations above describe the imported originals. Packaged surfaces are now simplified mobile derivatives, not byte-identical source geometry."
+  }
+}

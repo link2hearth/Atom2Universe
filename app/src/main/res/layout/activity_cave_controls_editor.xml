@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101C22">
+
+    <!-- Full-screen coordinates match the game. -->
+    <FrameLayout
+        android:id="@+id/cave_editor_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Indice centre -->
+    <TextView
+        android:id="@+id/cave_editor_touch_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/cave_controls_hint"
+        android:textColor="#33FFFFFF"
+        android:textSize="12sp" />
+
+    <!-- Barre supérieure -->
+    <LinearLayout
+        android:id="@+id/cave_editor_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_gravity="top"
+        android:background="#EE000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cave_controls_editor_title"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/cave_editor_btn_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginEnd="8dp"
+            android:background="#55FF4444"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="0dp"
+            android:text="@string/cave_controls_reset"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/cave_editor_btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:background="#554499FF"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="0dp"
+            android:text="@string/cave_controls_save"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/cave_editor_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="44dp"
+        android:orientation="horizontal"
+        android:background="#EE101C22">
+        <RadioButton
+            android:id="@+id/cave_editor_tab_touch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/cave_controls_tab_touch"
+            android:textColor="#FFFFFF" />
+        <RadioButton
+            android:id="@+id/cave_editor_tab_gamepad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/cave_controls_tab_gamepad"
+            android:textColor="#FFFFFF" />
+    </RadioGroup>
+
+    <ScrollView
+        android:id="@+id/cave_editor_gamepad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="92dp"
+        android:fillViewport="true"
+        android:visibility="gone" />
+
+</FrameLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/startup_button_background" />
+            <corners android:radius="8dp" />
+            <padding
+                android:bottom="8dp"
+                android:left="12dp"
+                android:right="12dp"
+                android:top="8dp" />
+        </shape>
+    </item>
+    <item android:gravity="center_vertical|end">
+        <rotate
+            android:fromDegrees="135"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="135">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/startup_text_secondary" />
+                <size
+                    android:width="10dp"
+                    android:height="10dp" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

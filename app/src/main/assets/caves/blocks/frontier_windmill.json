@@ -1,0 +1,18 @@
+{
+  "id": 9824,
+  "name": "frontier_windmill",
+  "texture_top": "frontier:9824:top",
+  "texture_side": "frontier:9824:side",
+  "texture_bottom": "frontier:9824:top",
+  "color": "#A78960",
+  "hardness": 2.0,
+  "drop": "frontier_windmill",
+  "creative_tab": "functional",
+  "placeable": true,
+  "decoration": false,
+  "transparent": false,
+  "orient_mode": "axis",
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

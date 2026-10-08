@@ -1,0 +1,17 @@
+{
+  "id": 9854,
+  "name": "frontier_cheese",
+  "texture_top": "frontier:9854:top",
+  "texture_side": "frontier:9854:side",
+  "texture_bottom": "frontier:9854:top",
+  "color": "#8EAFA6",
+  "hardness": 2.0,
+  "drop": "frontier_cheese",
+  "creative_tab": "resources",
+  "placeable": false,
+  "decoration": false,
+  "transparent": false,
+  "harvest_category": "recoverable",
+  "placement_rule": "any",
+  "tags": []
+}

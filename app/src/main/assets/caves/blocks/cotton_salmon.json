@@ -1,0 +1,14 @@
+{
+  "id": 9025,
+  "name": "cotton_salmon",
+  "texture_top": "cozy:cloth:5:FA8072",
+  "texture_side": "cozy:cloth:5:FA8072",
+  "texture_bottom": "cozy:cloth:5:FA8072",
+  "color": "#FA8072",
+  "hardness": 1.0,
+  "drop": "cotton_salmon",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bio_external_genitals">Parties génitales externes</string>
+    <string name="bio_show_external_genitals">Afficher les parties génitales externes</string>
+    <string name="bio_hide_external_genitals">Masquer les parties génitales externes</string>
+    <string name="bio_atlas_choice">Modèle anatomique</string>
+    <string name="bio_atlas_male">Corps masculin</string>
+    <string name="bio_atlas_female">Corps féminin</string>
+    <string name="bio_atlas_ear">Oreille droite · vue détaillée</string>
+    <string name="bio_ear_view_main">Vue principale</string>
+    <string name="bio_ear_view_opposite">Vue opposée</string>
+    <string name="bio_ear_view_left">Quart de tour gauche</string>
+    <string name="bio_ear_view_right">Quart de tour droit</string>
+    <string name="bio_female_coverage">Anatomie féminine de référence du Human Reference Atlas, fondée sur le Visible Human Female. Les structures importées conservent leurs rapports spatiaux dans cet assemblage de référence, avec des surfaces simplifiées pour l’affichage mobile. La couverture comprend la peau, le bassin, les organes génitaux internes, les tissus mammaires et une sélection d’autres os et organes. Le squelette et les muscles sont incomplets. Le clitoris, les bulbes vestibulaires, les grandes et petites lèvres et l’urètre féminin sont des reconstitutions pédagogiques originales, fondées sur des dimensions et rapports anatomiques publiés. Leurs fiches les distinguent des surfaces segmentées. Les formes labiales sont un exemple illustratif parmi de nombreuses variations ; la peau et certaines extrémités des organes sources restent fermées. Les muscles du plancher pelvien, les glandes vestibulaires et les détails neurovasculaires de la vulve ne sont pas reconstitués. La région lombaire source comporte six maillages regroupés sans leur attribuer une numérotation clinique. Cette adaptation ne bénéficie pas d’une validation clinique.</string>
+    <string name="bio_ear_coverage">Modèle local d’une oreille droite du spécimen ZETA d’OpenEar. Les osselets, le tympan, les espaces cochléaires, les nerfs et les structures voisines conservent leurs rapports d’origine. Il s’agit de l’étude d’un spécimen, sans recalage dans les modèles du corps entier. L’os temporal et les douze structures fines sont simplifiés pour l’affichage mobile, avec davantage de détails conservés sur les petits éléments de l’oreille. La rampe vestibulaire, le vestibule et les espaces des canaux semi-circulaires forment un ensemble source ; les conduits membraneux et l’organe de Corti ne sont pas individualisés. Les axes de vue appartiennent au prélèvement, sans orientation clinique. Couleurs et transparences sont illustratives ; les surfaces ne simulent ni le son ni les écoulements liquidiens.</string>
+    <string name="bio_female_source">Anatomie féminine · Human Reference Atlas</string>
+    <string name="bio_ear_source">Oreille détaillée · données OpenEar</string>
+    <string name="bio_detail_license_offline">Anatomie féminine et oreille · attribution hors ligne</string>
+    <string name="bio_detail_attribution">Anatomie féminine : Kristen Browne et Heidi Schlehlein, Human Reference Atlas / HuBMAP, données Visible Human Female de la National Library of Medicine, CC BY 4.0. Oreille : Daniel Sieber et collaborateurs, données OpenEar, spécimen ZETA, CC BY 4.0. Sélection de surfaces, conversion vers GLB, fiches originales bilingues et matériaux illustratifs. Les compléments génitaux féminins et urétraux sont des reconstitutions pédagogiques originales d’Atom2Universe, distinctes des segmentations HRA. Les inventaires, références anatomiques et modifications détaillées accompagnent chaque modèle.</string>
+</resources>

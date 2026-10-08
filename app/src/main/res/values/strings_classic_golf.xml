@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_title">Golf</string>
+    <string name="classic_entry">Classic golf · 18 holes</string>
+    <string name="classic_course">The Sunny Gardens</string>
+    <string name="classic_course_detail">18 holes · Par 72 · 14 fixed clubs</string>
+    <string name="classic_start">Play 18 holes</string>
+    <string name="classic_resume">Continue · hole %1$d</string>
+    <string name="classic_replace">Start a new round and replace your current round?</string>
+    <string name="classic_practice">Choose a practice hole</string>
+    <string name="classic_hole_choice">%1$d · %2$s\nPar %3$d · %4$d m</string>
+    <string name="classic_help">How to play</string>
+    <string name="classic_help_body">Swipe sideways to aim and pinch to zoom. For each shot the caddie picks a club and a target; change the club with the arrows or by tapping its name. The camera button or the map opens a free aerial view: two fingers move, zoom and turn it, and one finger still adjusts the aim, more finely the closer you zoom.\n\nTo shoot, put a finger anywhere on the course and draw it down: the further you pull, the more power. The dotted flight and its ring show where a clean shot would land without wind, and the pale line the run that follows. While you hold, a needle sweeps the arc: let go when it is in the gold centre. Off centre, the ball curves to that side and loses distance. Slide back up to cancel.\n\nThe ball in the corner sets where the club meets it: low, the ball climbs higher and stops quickly; high, it flies lower and runs further; left or right, it curves that way. Wind, slopes and the lie are yours to read: the dots on the green flow downhill.\n\nWater or out of bounds adds one penalty stroke and returns the ball to the previous position. Every stroke counts. Your round saves automatically.</string>
+    <string name="classic_hud">%1$d/%5$d · P%2$d · %3$d · %4$s</string>
+    <string name="classic_hud_accessible">Hole %1$d, %6$d of %5$d in this round, par %2$d, %3$d strokes. Total score %4$s.</string>
+    <string name="classic_lie_distance">%1$s · %2$d m %3$s</string>
+    <string name="classic_wind_speed">%1$.1f m/s</string>
+    <string name="classic_uphill">↑%1$d m</string>
+    <string name="classic_downhill">↓%1$d m</string>
+    <string name="classic_club_choice">%1$s     %2$d m · %3$d°</string>
+    <string name="classic_choose_club">Choose a club · fixed carry</string>
+    <string name="classic_scene_accessible">Course: swipe sideways to aim, draw down to shoot</string>
+    <string name="classic_shot_readout">%1$d%% · %2$d m</string>
+    <string name="classic_putt_readout">%1$.1f m</string>
+    <string name="classic_club_longer">Longer club</string>
+    <string name="classic_club_shorter">Shorter club</string>
+    <string name="classic_spin_pad">Contact point on the ball: low stops quickly, high runs further, the sides curve</string>
+    <string name="classic_swing_left">Left</string>
+    <string name="classic_swing_right">Right</string>
+    <string name="classic_swing_perfect">Perfect!</string>
+    <string name="classic_swing_good">Good!</string>
+    <string name="classic_swing_miss">Mishit</string>
+    <string name="classic_overview">Hole map · tap for aerial view</string>
+    <string name="classic_penalty">Penalty +1 · replay from the previous position</string>
+    <string name="classic_score_row">Hole %1$02d     Par %2$d     %3$s</string>
+    <string name="classic_unplayed">—</string>
+    <string name="classic_even">E</string>
+    <string name="classic_sound_on">Enable sound</string>
+    <string name="classic_sound_off">Mute sound</string>
+    <string-array name="classic_clubs"><item>Driver</item><item>3 Wood</item><item>5 Wood</item><item>4 Hybrid</item><item>5 Iron</item><item>6 Iron</item><item>7 Iron</item><item>8 Iron</item><item>9 Iron</item><item>PW</item><item>GW</item><item>SW</item><item>LW</item><item>Putter</item></string-array>
+    <string-array name="classic_lies"><item>Tee</item><item>Fairway</item><item>Rough</item><item>Sand</item><item>Green</item><item>Water</item><item>Out</item><item>Semi-rough</item><item>Fringe</item></string-array>
+    <string-array name="classic_holes"><item>First light</item><item>The orchard</item><item>Blue pond</item><item>The long meadow</item><item>Willow bank</item><item>Pine bend</item><item>Sea breeze</item><item>The windmill</item><item>Garden gate</item><item>Down the valley</item><item>Wildflowers</item><item>The terrace</item><item>Quiet cove</item><item>The dunes</item><item>Summer hill</item><item>Birdsong</item><item>Last turn</item><item>Home by the water</item></string-array>
+    <string name="classic_golfer_title">Your golfer</string>
+    <string name="classic_golfer_model">Character</string>
+    <string name="classic_golfer_outfit">Outfit</string>
+    <string name="classic_golfer_skin">Skin tone</string>
+    <string name="classic_golfer_preview">3D golfer preview. Drag sideways to rotate.</string>
+    <string name="classic_golfer_rotate">Drag to rotate · your choices are saved</string>
+    <string-array name="classic_golfer_models"><item>Male golfer</item><item>Female golfer</item></string-array>
+    <string-array name="classic_golfer_outfits"><item>Tour · polo, trousers and cap</item><item>Summer · polo, shorts and visor</item><item>Clubhouse · V-neck knitwear and trousers</item></string-array>
+    <string-array name="classic_golfer_skins"><item>Light</item><item>Medium</item><item>Deep</item></string-array>
+    <string name="classic_choose_course">Choose a course</string>
+    <string name="classic_course_summary">%1$d holes · Par %2$d · %3$d m</string>
+    <string name="classic_gardens_description">Course 1 · Easy to master. Very wide fairways, gentle greens and birdie or eagle opportunities.</string>
+    <string name="classic_heather_course">Heather Heights</string>
+    <string name="classic_heather_description">Course 2 · A small step up. Sloping fairways, angled greens and placement choices, with a safe side for cautious play.</string>
+    <string name="classic_hole_choice_tip">%1$d · %2$s\nPar %3$d · %4$d m\n%5$s</string>
+    <string-array name="classic_heather_holes">
+        <item>Woodland Edge</item>
+        <item>Pine Elbow</item>
+        <item>Gentle Redan</item>
+        <item>Twin Clearings</item>
+        <item>The Fork</item>
+        <item>Heather Cape</item>
+        <item>Quiet Bowl</item>
+        <item>Dune Saddle</item>
+        <item>The Balcony</item>
+        <item>Downhill Run</item>
+        <item>Crossed Shoulders</item>
+        <item>The Diagonal</item>
+        <item>The Long Cove</item>
+        <item>The Temptation</item>
+        <item>The Long Return</item>
+        <item>High Bank</item>
+        <item>Last Redan</item>
+        <item>The Overlook</item>
+    </string-array>
+    <string-array name="classic_heather_tips">
+        <item>Favour the side away from the fairway bunker to open up the green.</item>
+        <item>The broad shelf offers room; cutting the corner brings the bunker into play.</item>
+        <item>Aim for the high side of the green, away from the bunker: the slope feeds the ball.</item>
+        <item>Two clearings let you build this par 5 in three shots.</item>
+        <item>Choose a side of the central bunker to open your approach.</item>
+        <item>Follow the fairway along the shore to avoid a forced water carry.</item>
+        <item>A short iron to the centre; the bowl welcomes a cautious shot.</item>
+        <item>Lay up before the hollow or carry to the second shelf.</item>
+        <item>Take enough club to climb to the balcony; the back shelf is higher.</item>
+        <item>Use the downhill drive, then aim for the centre of the crowned green.</item>
+        <item>The broad outside shelf gives the best angle to the ridge.</item>
+        <item>Aim for the grass entrance; the shortest diagonal meets sand.</item>
+        <item>Follow the fairway around the lake; cutting the cove remains optional.</item>
+        <item>The broad shelf leaves a short approach; the direct line is narrower.</item>
+        <item>A placed drive and long iron can use the open front of the green.</item>
+        <item>The grass entrance offers a bailout away from the lake.</item>
+        <item>Place the drive away from the fairway bunker to open the diagonal approach.</item>
+        <item>Two wide landing areas before the tiered green: build your closing par 5.</item>
+    </string-array>
+    <string-array name="classic_gardens_tips">
+        <item>The broad landing leaves a short approach: aim for your first birdie.</item>
+        <item>Use the broad shelf to open up the green beyond the bend.</item>
+        <item>A well-judged short iron can run into the cup; the pond stays to the side.</item>
+        <item>A good drive followed by a wood or long iron can set up an eagle putt.</item>
+        <item>Follow the wide fairway away from the lake, then aim for the green centre.</item>
+        <item>The bend is gentle: place the drive to leave a shorter approach.</item>
+        <item>Judge the wedge from the raised tee; a hole in one is possible.</item>
+        <item>The fairway follows the water without a gap: the green is reachable in two.</item>
+        <item>Enjoy the broad landing; the sand leaves the central route open.</item>
+        <item>The drive goes downhill, followed by a gentle climb to the green.</item>
+        <item>Two good shots can reach the broad green for an eagle attempt.</item>
+        <item>An iron to the open plateau can leave a short putt, or find the cup.</item>
+        <item>At 240 m, the green is reachable from the tee for an eagle putt.</item>
+        <item>Use the broad shelf to negotiate the last bend.</item>
+        <item>The fairway crosses the hollow: a running approach remains possible.</item>
+        <item>Aim for the broad green away from the lake; a precise shot can find the cup.</item>
+        <item>The angled green is now broad, with an open entrance.</item>
+        <item>A placed drive followed by a wood can offer one last eagle putt.</item>
+    </string-array>
+    <string name="golf_play_length">%1$d holes</string>
+    <string name="golf_resume_length">Resume · %1$d</string>
+    <string name="golf_round_accessible">%1$s · %2$s</string>
+    <string name="golf_round_title">%1$s · %2$d holes</string>
+    <string name="golf_no_record">No record yet</string>
+    <string name="golf_practice">Practice</string>
+    <string name="golf_hole_number">%1$02d</string>
+    <string name="golf_hole_detail">Par %1$d · %2$d m</string>
+    <string name="golf_front_nine">1–9</string>
+    <string name="golf_back_nine">10–18</string>
+    <string name="golf_full_round">18 holes</string>
+    <string name="golf_resume_section">↻ %1$s</string>
+    <string name="golf_section_title">%1$s · %2$s</string>
+    <string name="golf_hud_section">%1$d · %6$d/%5$d · P%2$d · %3$d · %4$s</string>
+</resources>

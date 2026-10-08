@@ -1,0 +1,2604 @@
+{
+  "source": "Human Reference Atlas, united-female v1.5",
+  "sourceUrl": "https://cdn.humanatlas.io/digital-objects/ref-organ/united-female/v1.5/assets/3d-vh-f-united.glb",
+  "sourceSha256": "472567a56896b9b7890508da6501fbf858e56aaa30745365f7a71ade782b529c",
+  "crosswalkSha256": "8b67f6d66873f2458c68471c5c086ea4405aa6682337612795defced9785a437",
+  "authors": [
+    "Kristen Browne",
+    "Heidi Schlehlein"
+  ],
+  "publisher": "HuBMAP",
+  "doi": "https://doi.org/10.48539/HBM352.BTSQ.586",
+  "year": 2023,
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "upstreamDescription": "Reference organ assembly created using the Visible Human Female dataset, National Library of Medicine.",
+  "registration": {
+    "source": "Human Reference Atlas united-female v1.5",
+    "sourceSha256": "472567a56896b9b7890508da6501fbf858e56aaa30745365f7a71ade782b529c",
+    "method": "Native donor geometry; common rigid translation only. No transfer from BodyParts3D or sex morphing.",
+    "units": "metres",
+    "axes": {
+      "x": "subject left",
+      "y": "superior",
+      "z": "anterior"
+    },
+    "translation": [
+      0,
+      0.794760942,
+      0
+    ],
+    "sourceSkinBounds": [
+      [
+        -0.489561558,
+        -0.794760942,
+        -0.222619534
+      ],
+      [
+        0.4778805,
+        0.8715873,
+        0.106666975
+      ]
+    ],
+    "sourceSceneHasNodeTransforms": false,
+    "limitations": [
+      "The HRA organ set is an anatomical reference assembly, not a complete dissection of a single individual.",
+      "No skull, ribs, shoulder girdle, upper-limb skeleton, hands or feet are supplied. Most skeletal muscles and peripheral nerves are absent.",
+      "Six lumbar-labelled source meshes are retained as one source lumbar region; no diagnosis of a transitional vertebra is inferred.",
+      "Pregnancy reference objects (placenta, amnion and umbilical cord) and the separate Yao lymph-node specimen are excluded.",
+      "No separately selectable clitoris, labia, female urethra or pelvic-floor muscles are supplied. The external perineal skin is smooth and does not depict a detailed vulva."
+    ]
+  },
+  "educationalReferences": [
+    "https://humanatlas.io/3d-reference-library",
+    "https://3d.nih.gov/entries/3DPX-020992",
+    "https://doi.org/10.48539/HBM352.BTSQ.586",
+    "https://training.seer.cancer.gov/anatomy/reproductive/female/",
+    "https://training.seer.cancer.gov/anatomy/reproductive/female/ovaries.html",
+    "https://training.seer.cancer.gov/anatomy/reproductive/female/tract.html",
+    "https://training.seer.cancer.gov/anatomy/reproductive/female/glands.html",
+    "https://www.cancer.gov/types/breast/what-is-breast-cancer",
+    "https://openstax.org/books/anatomy-and-physiology-2e/pages/8-3-the-pelvic-girdle-and-pelvis"
+  ],
+  "modifications": "Curated anatomical selection; source patches grouped into selectable organs; one common vertical translation; original triangles retained; educational materials and bilingual labels added. No male geometry, sex morph, remeshing or invented surfaces. Separate original educational reconstructions supplement the missing external genital and urethral structures; these are labelled as reconstructions and are not HRA segmentations. The retained HRA surface coordinates and triangles are unchanged.",
+  "sourceMeshNodes": 888,
+  "importedSourceNodes": 398,
+  "sourceLabelIssues": [
+    {
+      "sourceNodes": [
+        447,
+        448
+      ],
+      "issue": "The raw left/right names and crosswalk for the round uterine ligaments are reversed relative to their coordinates and uterine/ovarian attachments.",
+      "handling": "Kept as one bilateral structure; raw names and ontology IDs preserved without asserting the erroneous laterality."
+    }
+  ],
+  "renderedStructures": 169,
+  "triangles": 1331525,
+  "excludedSourceNodes": [
+    {
+      "sourceNode": 26,
+      "sourceObject": "VH_F_fovea_R"
+    },
+    {
+      "sourceNode": 27,
+      "sourceObject": "VH_F_macula_lutea_R"
+    },
+    {
+      "sourceNode": 28,
+      "sourceObject": "VH_F_optic_disc_R"
+    },
+    {
+      "sourceNode": 30,
+      "sourceObject": "VH_F_palpebral_conjunctiva_of_right_upper_eyelid"
+    },
+    {
+      "sourceNode": 31,
+      "sourceObject": "VH_F_palpebral_conjunctiva_of_right_lower_eyelid"
+    },
+    {
+      "sourceNode": 34,
+      "sourceObject": "VH_F_pupil_R"
+    },
+    {
+      "sourceNode": 35,
+      "sourceObject": "VH_F_ciliary_processes_R"
+    },
+    {
+      "sourceNode": 36,
+      "sourceObject": "VH_F_suspensory_ligament_of_lens_R"
+    },
+    {
+      "sourceNode": 37,
+      "sourceObject": "VH_F_ora_serrata_of_retina_R"
+    },
+    {
+      "sourceNode": 38,
+      "sourceObject": "VH_F_corneo_scleral_junction_R"
+    },
+    {
+      "sourceNode": 40,
+      "sourceObject": "VH_F_schlemms_canal_R"
+    },
+    {
+      "sourceNode": 41,
+      "sourceObject": "VH_F_aqueous_humor_R"
+    },
+    {
+      "sourceNode": 43,
+      "sourceObject": "VH_F_ciliary_muscle_R"
+    },
+    {
+      "sourceNode": 44,
+      "sourceObject": "VH_F_trabecular_meshwork_R"
+    },
+    {
+      "sourceNode": 46,
+      "sourceObject": "VH_F_bulbar_conjunctiva_R"
+    },
+    {
+      "sourceNode": 51,
+      "sourceObject": "VH_F_fovea_L"
+    },
+    {
+      "sourceNode": 52,
+      "sourceObject": "VH_F_macula_lutea_L"
+    },
+    {
+      "sourceNode": 53,
+      "sourceObject": "VH_F_optic_disc_L"
+    },
+    {
+      "sourceNode": 55,
+      "sourceObject": "VH_F_palpebral_conjunctiva_of_left_upper_eyelid"
+    },
+    {
+      "sourceNode": 56,
+      "sourceObject": "VH_F_palpebral_conjunctiva_of_left_lower_eyelid"
+    },
+    {
+      "sourceNode": 59,
+      "sourceObject": "VH_F_bulbar_conjunctiva_L"
+    },
+    {
+      "sourceNode": 61,
+      "sourceObject": "VH_F_trabecular_meshwork_L"
+    },
+    {
+      "sourceNode": 63,
+      "sourceObject": "VH_F_ciliary_muscle_L"
+    },
+    {
+      "sourceNode": 64,
+      "sourceObject": "VH_F_aqueous_humor_L"
+    },
+    {
+      "sourceNode": 65,
+      "sourceObject": "VH_F_schlemms_canal_L"
+    },
+    {
+      "sourceNode": 67,
+      "sourceObject": "VH_F_corneo_scleral_junction_L"
+    },
+    {
+      "sourceNode": 68,
+      "sourceObject": "VH_F_ora_serrata_of_retina_L"
+    },
+    {
+      "sourceNode": 69,
+      "sourceObject": "VH_F_suspensory_ligament_of_lens_L"
+    },
+    {
+      "sourceNode": 70,
+      "sourceObject": "VH_F_ciliary_processes_L"
+    },
+    {
+      "sourceNode": 71,
+      "sourceObject": "VH_F_pupil_L"
+    },
+    {
+      "sourceNode": 76,
+      "sourceObject": "VH_F_dura_mater_right"
+    },
+    {
+      "sourceNode": 79,
+      "sourceObject": "VH_F_dura_mater_left"
+    },
+    {
+      "sourceNode": 84,
+      "sourceObject": "Allen_olfactory_bulb_L"
+    },
+    {
+      "sourceNode": 85,
+      "sourceObject": "Allen_anterior_olfactory_nucleus_L"
+    },
+    {
+      "sourceNode": 86,
+      "sourceObject": "Allen_piriform_region_L"
+    },
+    {
+      "sourceNode": 87,
+      "sourceObject": "Allen_frontal_agranular_insular_cortex_area_Fl_L"
+    },
+    {
+      "sourceNode": 88,
+      "sourceObject": "Allen_temporal_agranular_insular_cortex_area_Tl_L"
+    },
+    {
+      "sourceNode": 89,
+      "sourceObject": "Allen_head_of_caudate_L"
+    },
+    {
+      "sourceNode": 90,
+      "sourceObject": "Allen_body_of_caudate_L"
+    },
+    {
+      "sourceNode": 91,
+      "sourceObject": "Allen_tail_of_caudate_L"
+    },
+    {
+      "sourceNode": 92,
+      "sourceObject": "Allen_putamen_L"
+    },
+    {
+      "sourceNode": 93,
+      "sourceObject": "Allen_nucleus_accumbens_L"
+    },
+    {
+      "sourceNode": 94,
+      "sourceObject": "Allen_external_segment_of_globus_pallidus_L"
+    },
+    {
+      "sourceNode": 95,
+      "sourceObject": "Allen_internal_segment_of_globus_pallidus_L"
+    },
+    {
+      "sourceNode": 96,
+      "sourceObject": "Allen_claustrum_L"
+    },
+    {
+      "sourceNode": 97,
+      "sourceObject": "Allen_basal_forebrain_L"
+    },
+    {
+      "sourceNode": 98,
+      "sourceObject": "Allen_septal_nuclei_L"
+    },
+    {
+      "sourceNode": 99,
+      "sourceObject": "Allen_amygdaloid_complex_L"
+    },
+    {
+      "sourceNode": 100,
+      "sourceObject": "Allen_anterior_amygdaloid_area_L"
+    },
+    {
+      "sourceNode": 101,
+      "sourceObject": "Allen_central_nuclear_group_L"
+    },
+    {
+      "sourceNode": 102,
+      "sourceObject": "Allen_lateral_nucleus_L"
+    },
+    {
+      "sourceNode": 103,
+      "sourceObject": "Allen_basolateral_nucleus_basal_nucleus_L"
+    },
+    {
+      "sourceNode": 104,
+      "sourceObject": "Allen_basomedial_nucleus_accessory_basal_nucleus_L"
+    },
+    {
+      "sourceNode": 105,
+      "sourceObject": "Allen_anterior_cortical_nucleus_L"
+    },
+    {
+      "sourceNode": 106,
+      "sourceObject": "Allen_posterior_cortical_nucleus_L"
+    },
+    {
+      "sourceNode": 107,
+      "sourceObject": "Allen_medial_nucleus_L"
+    },
+    {
+      "sourceNode": 108,
+      "sourceObject": "Allen_amygdalohippocampal_area_L"
+    },
+    {
+      "sourceNode": 109,
+      "sourceObject": "Allen_bed_nucleus_of_stria_terminalis_L"
+    },
+    {
+      "sourceNode": 110,
+      "sourceObject": "Allen_thalamus_L"
+    },
+    {
+      "sourceNode": 111,
+      "sourceObject": "Allen_anterior_nuclear_complex_of_thalamus_L"
+    },
+    {
+      "sourceNode": 112,
+      "sourceObject": "Allen_lateral_dorsal_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 113,
+      "sourceObject": "Allen_mediodorsal_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 114,
+      "sourceObject": "Allen_reuniens_nucleus_medioventral_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 115,
+      "sourceObject": "Allen_lateral_posterior_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 116,
+      "sourceObject": "Allen_pulvinar_of_thalamus_L"
+    },
+    {
+      "sourceNode": 117,
+      "sourceObject": "Allen_ventral_anterior_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 118,
+      "sourceObject": "Allen_ventral_lateral_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 119,
+      "sourceObject": "Allen_ventral_posterior_lateral_nucleus_L"
+    },
+    {
+      "sourceNode": 120,
+      "sourceObject": "Allen_ventral_posterior_medial_nucleus_L"
+    },
+    {
+      "sourceNode": 121,
+      "sourceObject": "Allen_dorsal_lateral_geniculate_nucleus_L"
+    },
+    {
+      "sourceNode": 122,
+      "sourceObject": "Allen_medial_geniculate_nuclei_L"
+    },
+    {
+      "sourceNode": 123,
+      "sourceObject": "Allen_centromedian_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 124,
+      "sourceObject": "Allen_parafascicular_nucleus_of_thalamus_L"
+    },
+    {
+      "sourceNode": 125,
+      "sourceObject": "Allen_habenular_nuclei_L"
+    },
+    {
+      "sourceNode": 126,
+      "sourceObject": "Allen_pineal_body_L"
+    },
+    {
+      "sourceNode": 127,
+      "sourceObject": "Allen_zona_incerta_L"
+    },
+    {
+      "sourceNode": 128,
+      "sourceObject": "Allen_supraoptic_region_of_HTH_L"
+    },
+    {
+      "sourceNode": 129,
+      "sourceObject": "Allen_preoptic_region_of_HTH_L"
+    },
+    {
+      "sourceNode": 130,
+      "sourceObject": "Allen_tuberal_region_of_HTH_L"
+    },
+    {
+      "sourceNode": 131,
+      "sourceObject": "Allen_white_matter_of_forebrain_L"
+    },
+    {
+      "sourceNode": 132,
+      "sourceObject": "Allen_anterior_commissure_L"
+    },
+    {
+      "sourceNode": 133,
+      "sourceObject": "Allen_corpus_callosum_L"
+    },
+    {
+      "sourceNode": 134,
+      "sourceObject": "Allen_fornix_L"
+    },
+    {
+      "sourceNode": 135,
+      "sourceObject": "Allen_mammillothalamic_tract_L"
+    },
+    {
+      "sourceNode": 136,
+      "sourceObject": "Allen_optic_tract_L"
+    },
+    {
+      "sourceNode": 137,
+      "sourceObject": "Allen_anterior_horn_of_lateral_ventricle_L"
+    },
+    {
+      "sourceNode": 138,
+      "sourceObject": "Allen_body_of_lateral_ventricle_L"
+    },
+    {
+      "sourceNode": 139,
+      "sourceObject": "Allen_posterior_horn_of_lateral_ventricle_L"
+    },
+    {
+      "sourceNode": 140,
+      "sourceObject": "Allen_inferior_horn_of_lateral_ventricle_L"
+    },
+    {
+      "sourceNode": 141,
+      "sourceObject": "Allen_third_ventricle_L"
+    },
+    {
+      "sourceNode": 142,
+      "sourceObject": "Allen_cerebellar_vermis_L"
+    },
+    {
+      "sourceNode": 143,
+      "sourceObject": "Allen_cerebellar_deep_nuclei_L"
+    },
+    {
+      "sourceNode": 144,
+      "sourceObject": "Allen_white_matter_of_hindbrain_L"
+    },
+    {
+      "sourceNode": 145,
+      "sourceObject": "Allen_olfactory_tract_L"
+    },
+    {
+      "sourceNode": 146,
+      "sourceObject": "Allen_precentral_gyrus_L"
+    },
+    {
+      "sourceNode": 147,
+      "sourceObject": "Allen_superior_frontal_gyrus_L"
+    },
+    {
+      "sourceNode": 148,
+      "sourceObject": "Allen_middle_frontal_gyrus_L"
+    },
+    {
+      "sourceNode": 149,
+      "sourceObject": "Allen_inferior_frontal_gyrus_triangular_part_L"
+    },
+    {
+      "sourceNode": 150,
+      "sourceObject": "Allen_inferior_frontal_gyrus_opercular_part_L"
+    },
+    {
+      "sourceNode": 151,
+      "sourceObject": "Allen_gyrus_rectus_straight_gyrus_L"
+    },
+    {
+      "sourceNode": 152,
+      "sourceObject": "Allen_medial_orbital_gyrus_L"
+    },
+    {
+      "sourceNode": 153,
+      "sourceObject": "Allen_anterior_intermediate_orbital_gyrus_L"
+    },
+    {
+      "sourceNode": 154,
+      "sourceObject": "Allen_posterior_intermediate_orbital_gyrus_L"
+    },
+    {
+      "sourceNode": 155,
+      "sourceObject": "Allen_lateral_orbital_gyrus_L"
+    },
+    {
+      "sourceNode": 156,
+      "sourceObject": "Allen_paracentral_lobule_rostral_part_L"
+    },
+    {
+      "sourceNode": 157,
+      "sourceObject": "Allen_frontal_operculum_L"
+    },
+    {
+      "sourceNode": 158,
+      "sourceObject": "Allen_postcentral_gyrus_L"
+    },
+    {
+      "sourceNode": 159,
+      "sourceObject": "Allen_supraparietal_lobule_L"
+    },
+    {
+      "sourceNode": 160,
+      "sourceObject": "Allen_supramarginal_gyrus_L"
+    },
+    {
+      "sourceNode": 161,
+      "sourceObject": "Allen_angular_gyrus_L"
+    },
+    {
+      "sourceNode": 162,
+      "sourceObject": "Allen_precuneus_L"
+    },
+    {
+      "sourceNode": 163,
+      "sourceObject": "Allen_paracentral_lobule_caudal_part_L"
+    },
+    {
+      "sourceNode": 164,
+      "sourceObject": "Allen_superior_temporal_gyrus_L"
+    },
+    {
+      "sourceNode": 165,
+      "sourceObject": "Allen_middle_temporal_gyrus_L"
+    },
+    {
+      "sourceNode": 166,
+      "sourceObject": "Allen_inferior_temporal_gyrus_L"
+    },
+    {
+      "sourceNode": 167,
+      "sourceObject": "Allen_occipitotemporal_fusiform_gyrus_temporal_part_L"
+    },
+    {
+      "sourceNode": 168,
+      "sourceObject": "Allen_transverse_temporal_gyrus_Heschls_gyrus_L"
+    },
+    {
+      "sourceNode": 169,
+      "sourceObject": "Allen_planum_temporale_L"
+    },
+    {
+      "sourceNode": 170,
+      "sourceObject": "Allen_temporal_pole_L"
+    },
+    {
+      "sourceNode": 171,
+      "sourceObject": "Allen_planum_polare_L"
+    },
+    {
+      "sourceNode": 172,
+      "sourceObject": "Allen_occipital_pole_L"
+    },
+    {
+      "sourceNode": 173,
+      "sourceObject": "Allen_cuneus_L"
+    },
+    {
+      "sourceNode": 174,
+      "sourceObject": "Allen_lingual_gyrus_medial_occipitotemporal_gyrus_L"
+    },
+    {
+      "sourceNode": 175,
+      "sourceObject": "Allen_lateral_occipitotemporal_fusiform_gyrus_occipital_part_L"
+    },
+    {
+      "sourceNode": 176,
+      "sourceObject": "Allen_inferior_occipital_gyrus_L"
+    },
+    {
+      "sourceNode": 177,
+      "sourceObject": "Allen_superior_occipital_gyrus_L"
+    },
+    {
+      "sourceNode": 178,
+      "sourceObject": "Allen_cingulate_gyrus_rostral_anterior_part_L"
+    },
+    {
+      "sourceNode": 179,
+      "sourceObject": "Allen_cingulate_gyrus_caudal_posterior_part_L"
+    },
+    {
+      "sourceNode": 180,
+      "sourceObject": "Allen_ingulo_parahippocampal_isthmus_L"
+    },
+    {
+      "sourceNode": 181,
+      "sourceObject": "Allen_subcallosal_gyrus_parolfactory_gyrus_L"
+    },
+    {
+      "sourceNode": 182,
+      "sourceObject": "Allen_anterior_parahippocampal_gyrus_L"
+    },
+    {
+      "sourceNode": 183,
+      "sourceObject": "Allen_posterior_parahippocampal_gyrus_L"
+    },
+    {
+      "sourceNode": 184,
+      "sourceObject": "Allen_gyrus_ambiens_L"
+    },
+    {
+      "sourceNode": 185,
+      "sourceObject": "Allen_head_of_hippocampus_L"
+    },
+    {
+      "sourceNode": 186,
+      "sourceObject": "Allen_body_of_hippocampus_L"
+    },
+    {
+      "sourceNode": 187,
+      "sourceObject": "Allen_tail_of_hippocampus_L"
+    },
+    {
+      "sourceNode": 188,
+      "sourceObject": "Allen_long_insular_gyri_L"
+    },
+    {
+      "sourceNode": 189,
+      "sourceObject": "Allen_short_insular_gyri_L"
+    },
+    {
+      "sourceNode": 190,
+      "sourceObject": "Allen_limen_insula_L"
+    },
+    {
+      "sourceNode": 191,
+      "sourceObject": "Allen_pretectal_region_L"
+    },
+    {
+      "sourceNode": 192,
+      "sourceObject": "Allen_substantia_nigra_L"
+    },
+    {
+      "sourceNode": 193,
+      "sourceObject": "Allen_superior_colliculus_L"
+    },
+    {
+      "sourceNode": 194,
+      "sourceObject": "Allen_cerebral_peduncle_crus_cerebri_L"
+    },
+    {
+      "sourceNode": 195,
+      "sourceObject": "Allen_superior_cerebellar_peduncle_brachium_conjunctivum_L"
+    },
+    {
+      "sourceNode": 196,
+      "sourceObject": "Allen_cerebral_aqueduct_L"
+    },
+    {
+      "sourceNode": 197,
+      "sourceObject": "Allen_paravermis_of_cerebellum_L"
+    },
+    {
+      "sourceNode": 198,
+      "sourceObject": "Allen_lateral_hemisphere_of_cerebellum_L"
+    },
+    {
+      "sourceNode": 199,
+      "sourceObject": "Allen_basilar_part_of_pons_L"
+    },
+    {
+      "sourceNode": 200,
+      "sourceObject": "Allen_pontine_tegmentum_L"
+    },
+    {
+      "sourceNode": 201,
+      "sourceObject": "Allen_pyramidal_part_of_medulla_oblongata_L"
+    },
+    {
+      "sourceNode": 202,
+      "sourceObject": "Allen_tegmentum_of_medulla_oblongata_L"
+    },
+    {
+      "sourceNode": 203,
+      "sourceObject": "Allen_inferior_olive_L"
+    },
+    {
+      "sourceNode": 204,
+      "sourceObject": "Allen_middle_cerebellar_peduncle_L"
+    },
+    {
+      "sourceNode": 205,
+      "sourceObject": "Allen_fourth_ventricle_L"
+    },
+    {
+      "sourceNode": 206,
+      "sourceObject": "Allen_central_canal_of_medulla_oblongata_L"
+    },
+    {
+      "sourceNode": 207,
+      "sourceObject": "Allen_midline_nuclear_complex_L"
+    },
+    {
+      "sourceNode": 208,
+      "sourceObject": "Allen_lateral_olfactory_gyrus_L"
+    },
+    {
+      "sourceNode": 209,
+      "sourceObject": "Allen_parietal_operculum_L"
+    },
+    {
+      "sourceNode": 210,
+      "sourceObject": "Allen_optic_radiation_L"
+    },
+    {
+      "sourceNode": 211,
+      "sourceObject": "Allen_posteroventral_putamen_L"
+    },
+    {
+      "sourceNode": 212,
+      "sourceObject": "Allen_atrium_of_lateral_ventricle_L"
+    },
+    {
+      "sourceNode": 213,
+      "sourceObject": "Allen_paracingulate_gyrus_L"
+    },
+    {
+      "sourceNode": 214,
+      "sourceObject": "Allen_rostral_gyrus_L"
+    },
+    {
+      "sourceNode": 215,
+      "sourceObject": "Allen_frontomarginal_gyrus_L"
+    },
+    {
+      "sourceNode": 216,
+      "sourceObject": "Allen_frontal_pole_L"
+    },
+    {
+      "sourceNode": 217,
+      "sourceObject": "Allen_inferior_cerebellar_peduncle_L"
+    },
+    {
+      "sourceNode": 218,
+      "sourceObject": "Allen_perirhinal_gyrus_rostral_part_of_FuGt_L"
+    },
+    {
+      "sourceNode": 220,
+      "sourceObject": "Allen_olfactory_bulb_R"
+    },
+    {
+      "sourceNode": 221,
+      "sourceObject": "Allen_anterior_olfactory_nucleus_R"
+    },
+    {
+      "sourceNode": 222,
+      "sourceObject": "Allen_piriform_region_R"
+    },
+    {
+      "sourceNode": 223,
+      "sourceObject": "Allen_frontal_agranular_insular_cortex_area_Fl_R"
+    },
+    {
+      "sourceNode": 224,
+      "sourceObject": "Allen_temporal_agranular_insular_cortex_area_Tl_R"
+    },
+    {
+      "sourceNode": 225,
+      "sourceObject": "Allen_head_of_caudate_R"
+    },
+    {
+      "sourceNode": 226,
+      "sourceObject": "Allen_body_of_caudate_R"
+    },
+    {
+      "sourceNode": 227,
+      "sourceObject": "Allen_tail_of_caudate_R"
+    },
+    {
+      "sourceNode": 228,
+      "sourceObject": "Allen_putamen_R"
+    },
+    {
+      "sourceNode": 229,
+      "sourceObject": "Allen_nucleus_accumbens_R"
+    },
+    {
+      "sourceNode": 230,
+      "sourceObject": "Allen_external_segment_of_globus_pallidus_R"
+    },
+    {
+      "sourceNode": 231,
+      "sourceObject": "Allen_internal_segment_of_globus_pallidus_R"
+    },
+    {
+      "sourceNode": 232,
+      "sourceObject": "Allen_claustrum_R"
+    },
+    {
+      "sourceNode": 233,
+      "sourceObject": "Allen_basal_forebrain_R"
+    },
+    {
+      "sourceNode": 234,
+      "sourceObject": "Allen_septal_nuclei_R"
+    },
+    {
+      "sourceNode": 235,
+      "sourceObject": "Allen_amygdaloid_complex_R"
+    },
+    {
+      "sourceNode": 236,
+      "sourceObject": "Allen_anterior_amygdaloid_area_R"
+    },
+    {
+      "sourceNode": 237,
+      "sourceObject": "Allen_central_nuclear_group_R"
+    },
+    {
+      "sourceNode": 238,
+      "sourceObject": "Allen_lateral_nucleus_R"
+    },
+    {
+      "sourceNode": 239,
+      "sourceObject": "Allen_basolateral_nucleus_basal_nucleus_R"
+    },
+    {
+      "sourceNode": 240,
+      "sourceObject": "Allen_basomedial_nucleus_accessory_basal_nucleus_R"
+    },
+    {
+      "sourceNode": 241,
+      "sourceObject": "Allen_anterior_cortical_nucleus_R"
+    },
+    {
+      "sourceNode": 242,
+      "sourceObject": "Allen_posterior_cortical_nucleus_R"
+    },
+    {
+      "sourceNode": 243,
+      "sourceObject": "Allen_medial_nucleus_R"
+    },
+    {
+      "sourceNode": 244,
+      "sourceObject": "Allen_amygdalohippocampal_area_R"
+    },
+    {
+      "sourceNode": 245,
+      "sourceObject": "Allen_bed_nucleus_of_stria_terminalis_R"
+    },
+    {
+      "sourceNode": 246,
+      "sourceObject": "Allen_thalamus_R"
+    },
+    {
+      "sourceNode": 247,
+      "sourceObject": "Allen_anterior_nuclear_complex_of_thalamus_R"
+    },
+    {
+      "sourceNode": 248,
+      "sourceObject": "Allen_lateral_dorsal_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 249,
+      "sourceObject": "Allen_mediodorsal_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 250,
+      "sourceObject": "Allen_reuniens_nucleus_medioventral_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 251,
+      "sourceObject": "Allen_lateral_posterior_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 252,
+      "sourceObject": "Allen_pulvinar_of_thalamus_R"
+    },
+    {
+      "sourceNode": 253,
+      "sourceObject": "Allen_ventral_anterior_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 254,
+      "sourceObject": "Allen_ventral_lateral_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 255,
+      "sourceObject": "Allen_ventral_posterior_lateral_nucleus_R"
+    },
+    {
+      "sourceNode": 256,
+      "sourceObject": "Allen_ventral_posterior_medial_nucleus_R"
+    },
+    {
+      "sourceNode": 257,
+      "sourceObject": "Allen_dorsal_lateral_geniculate_nucleus_R"
+    },
+    {
+      "sourceNode": 258,
+      "sourceObject": "Allen_medial_geniculate_nuclei_R"
+    },
+    {
+      "sourceNode": 259,
+      "sourceObject": "Allen_centromedian_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 260,
+      "sourceObject": "Allen_parafascicular_nucleus_of_thalamus_R"
+    },
+    {
+      "sourceNode": 261,
+      "sourceObject": "Allen_habenular_nuclei_R"
+    },
+    {
+      "sourceNode": 262,
+      "sourceObject": "Allen_pineal_body_R"
+    },
+    {
+      "sourceNode": 263,
+      "sourceObject": "Allen_zona_incerta_R"
+    },
+    {
+      "sourceNode": 264,
+      "sourceObject": "Allen_supraoptic_region_of_HTH_R"
+    },
+    {
+      "sourceNode": 265,
+      "sourceObject": "Allen_white_matter_of_forebrain_R"
+    },
+    {
+      "sourceNode": 266,
+      "sourceObject": "Allen_anterior_commissure_R"
+    },
+    {
+      "sourceNode": 267,
+      "sourceObject": "Allen_corpus_callosum_R"
+    },
+    {
+      "sourceNode": 268,
+      "sourceObject": "Allen_fornix_R"
+    },
+    {
+      "sourceNode": 269,
+      "sourceObject": "Allen_mammillothalamic_tract_R"
+    },
+    {
+      "sourceNode": 270,
+      "sourceObject": "Allen_optic_tract_R"
+    },
+    {
+      "sourceNode": 271,
+      "sourceObject": "Allen_anterior_horn_of_lateral_ventricle_R"
+    },
+    {
+      "sourceNode": 272,
+      "sourceObject": "Allen_body_of_lateral_ventricle_R"
+    },
+    {
+      "sourceNode": 273,
+      "sourceObject": "Allen_posterior_horn_of_lateral_ventricle_R"
+    },
+    {
+      "sourceNode": 274,
+      "sourceObject": "Allen_inferior_horn_of_lateral_ventricle_R"
+    },
+    {
+      "sourceNode": 275,
+      "sourceObject": "Allen_third_ventricle_R"
+    },
+    {
+      "sourceNode": 276,
+      "sourceObject": "Allen_cerebellar_vermis_R"
+    },
+    {
+      "sourceNode": 277,
+      "sourceObject": "Allen_cerebellar_deep_nuclei_R"
+    },
+    {
+      "sourceNode": 278,
+      "sourceObject": "Allen_white_matter_of_hindbrain_R"
+    },
+    {
+      "sourceNode": 279,
+      "sourceObject": "Allen_olfactory_tract_R"
+    },
+    {
+      "sourceNode": 280,
+      "sourceObject": "Allen_precentral_gyrus_R"
+    },
+    {
+      "sourceNode": 281,
+      "sourceObject": "Allen_superior_frontal_gyrus_R"
+    },
+    {
+      "sourceNode": 282,
+      "sourceObject": "Allen_middle_frontal_gyrus_R"
+    },
+    {
+      "sourceNode": 283,
+      "sourceObject": "Allen_inferior_frontal_gyrus_triangular_part_R"
+    },
+    {
+      "sourceNode": 284,
+      "sourceObject": "Allen_inferior_frontal_gyrus_opercular_part_R"
+    },
+    {
+      "sourceNode": 285,
+      "sourceObject": "Allen_gyrus_rectus_straight_gyrus_R"
+    },
+    {
+      "sourceNode": 286,
+      "sourceObject": "Allen_medial_orbital_gyrus_R"
+    },
+    {
+      "sourceNode": 287,
+      "sourceObject": "Allen_anterior_intermediate_orbital_gyrus_R"
+    },
+    {
+      "sourceNode": 288,
+      "sourceObject": "Allen_posterior_intermediate_orbital_gyrus_R"
+    },
+    {
+      "sourceNode": 289,
+      "sourceObject": "Allen_lateral_orbital_gyrus_R"
+    },
+    {
+      "sourceNode": 290,
+      "sourceObject": "Allen_paracentral_lobule_rostral_part_R"
+    },
+    {
+      "sourceNode": 291,
+      "sourceObject": "Allen_frontal_operculum_R"
+    },
+    {
+      "sourceNode": 292,
+      "sourceObject": "Allen_postcentral_gyrus_R"
+    },
+    {
+      "sourceNode": 293,
+      "sourceObject": "Allen_supraparietal_lobule_R"
+    },
+    {
+      "sourceNode": 294,
+      "sourceObject": "Allen_supramarginal_gyrus_R"
+    },
+    {
+      "sourceNode": 295,
+      "sourceObject": "Allen_angular_gyrus_R"
+    },
+    {
+      "sourceNode": 296,
+      "sourceObject": "Allen_precuneus_R"
+    },
+    {
+      "sourceNode": 297,
+      "sourceObject": "Allen_paracentral_lobule_caudal_part_R"
+    },
+    {
+      "sourceNode": 298,
+      "sourceObject": "Allen_superior_temporal_gyrus_R"
+    },
+    {
+      "sourceNode": 299,
+      "sourceObject": "Allen_middle_temporal_gyrus_R"
+    },
+    {
+      "sourceNode": 300,
+      "sourceObject": "Allen_inferior_temporal_gyrus_R"
+    },
+    {
+      "sourceNode": 301,
+      "sourceObject": "Allen_occipitotemporal_fusiform_gyrus_temporal_part_R"
+    },
+    {
+      "sourceNode": 302,
+      "sourceObject": "Allen_transverse_temporal_gyrus_Heschls_gyrus_R"
+    },
+    {
+      "sourceNode": 303,
+      "sourceObject": "Allen_planum_temporale_R"
+    },
+    {
+      "sourceNode": 304,
+      "sourceObject": "Allen_temporal_pole_R"
+    },
+    {
+      "sourceNode": 305,
+      "sourceObject": "Allen_planum_polare_R"
+    },
+    {
+      "sourceNode": 306,
+      "sourceObject": "Allen_occipital_pole_R"
+    },
+    {
+      "sourceNode": 307,
+      "sourceObject": "Allen_cuneus_R"
+    },
+    {
+      "sourceNode": 308,
+      "sourceObject": "Allen_lingual_gyrus_medial_occipitotemporal_gyrus_R"
+    },
+    {
+      "sourceNode": 309,
+      "sourceObject": "Allen_lateral_occipitotemporal_fusiform_gyrus_occipital_part_R"
+    },
+    {
+      "sourceNode": 310,
+      "sourceObject": "Allen_inferior_occipital_gyrus_R"
+    },
+    {
+      "sourceNode": 311,
+      "sourceObject": "Allen_superior_occipital_gyrus_R"
+    },
+    {
+      "sourceNode": 312,
+      "sourceObject": "Allen_cingulate_gyrus_rostral_anterior_part_R"
+    },
+    {
+      "sourceNode": 313,
+      "sourceObject": "Allen_cingulate_gyrus_caudal_posterior_part_R"
+    },
+    {
+      "sourceNode": 314,
+      "sourceObject": "Allen_ingulo_parahippocampal_isthmus_R"
+    },
+    {
+      "sourceNode": 315,
+      "sourceObject": "Allen_subcallosal_gyrus_parolfactory_gyrus_R"
+    },
+    {
+      "sourceNode": 316,
+      "sourceObject": "Allen_anterior_parahippocampal_gyrus_R"
+    },
+    {
+      "sourceNode": 317,
+      "sourceObject": "Allen_posterior_parahippocampal_gyrus_R"
+    },
+    {
+      "sourceNode": 318,
+      "sourceObject": "Allen_gyrus_ambiens_R"
+    },
+    {
+      "sourceNode": 319,
+      "sourceObject": "Allen_head_of_hippocampus_R"
+    },
+    {
+      "sourceNode": 320,
+      "sourceObject": "Allen_body_of_hippocampus_R"
+    },
+    {
+      "sourceNode": 321,
+      "sourceObject": "Allen_tail_of_hippocampus_R"
+    },
+    {
+      "sourceNode": 322,
+      "sourceObject": "Allen_long_insular_gyri_R"
+    },
+    {
+      "sourceNode": 323,
+      "sourceObject": "Allen_short_insular_gyri_R"
+    },
+    {
+      "sourceNode": 324,
+      "sourceObject": "Allen_limen_insula_R"
+    },
+    {
+      "sourceNode": 325,
+      "sourceObject": "Allen_pretectal_region_R"
+    },
+    {
+      "sourceNode": 326,
+      "sourceObject": "Allen_red_nucleus_R"
+    },
+    {
+      "sourceNode": 327,
+      "sourceObject": "Allen_substantia_nigra_R"
+    },
+    {
+      "sourceNode": 328,
+      "sourceObject": "Allen_superior_colliculus_R"
+    },
+    {
+      "sourceNode": 329,
+      "sourceObject": "Allen_inferior_colliculus_R"
+    },
+    {
+      "sourceNode": 330,
+      "sourceObject": "Allen_cerebral_peduncle_crus_cerebri_R"
+    },
+    {
+      "sourceNode": 331,
+      "sourceObject": "Allen_superior_cerebellar_peduncle_brachium_conjunctivum_R"
+    },
+    {
+      "sourceNode": 332,
+      "sourceObject": "Allen_cerebral_aqueduct_R"
+    },
+    {
+      "sourceNode": 333,
+      "sourceObject": "Allen_paravermis_of_cerebellum_R"
+    },
+    {
+      "sourceNode": 334,
+      "sourceObject": "Allen_lateral_hemisphere_of_cerebellum_R"
+    },
+    {
+      "sourceNode": 335,
+      "sourceObject": "Allen_basilar_part_of_pons_R"
+    },
+    {
+      "sourceNode": 336,
+      "sourceObject": "Allen_pontine_tegmentum_R"
+    },
+    {
+      "sourceNode": 337,
+      "sourceObject": "Allen_pyramidal_part_of_medulla_oblongata_R"
+    },
+    {
+      "sourceNode": 338,
+      "sourceObject": "Allen_tegmentum_of_medulla_oblongata_R"
+    },
+    {
+      "sourceNode": 339,
+      "sourceObject": "Allen_inferior_olive_R"
+    },
+    {
+      "sourceNode": 340,
+      "sourceObject": "Allen_inferior_cerebellar_peduncle_R"
+    },
+    {
+      "sourceNode": 341,
+      "sourceObject": "Allen_middle_cerebellar_peduncle_R"
+    },
+    {
+      "sourceNode": 342,
+      "sourceObject": "Allen_fourth_ventricle_R"
+    },
+    {
+      "sourceNode": 343,
+      "sourceObject": "Allen_central_canal_of_medulla_oblongata_R"
+    },
+    {
+      "sourceNode": 344,
+      "sourceObject": "Allen_midline_nuclear_complex_R"
+    },
+    {
+      "sourceNode": 345,
+      "sourceObject": "Allen_lateral_olfactory_gyrus_R"
+    },
+    {
+      "sourceNode": 346,
+      "sourceObject": "Allen_parietal_operculum_R"
+    },
+    {
+      "sourceNode": 347,
+      "sourceObject": "Allen_optic_radiation_R"
+    },
+    {
+      "sourceNode": 348,
+      "sourceObject": "Allen_posteroventral_putamen_R"
+    },
+    {
+      "sourceNode": 349,
+      "sourceObject": "Allen_atrium_of_lateral_ventricle_R"
+    },
+    {
+      "sourceNode": 350,
+      "sourceObject": "Allen_paracingulate_gyrus_R"
+    },
+    {
+      "sourceNode": 351,
+      "sourceObject": "Allen_rostral_gyrus_R"
+    },
+    {
+      "sourceNode": 352,
+      "sourceObject": "Allen_frontomarginal_gyrus_R"
+    },
+    {
+      "sourceNode": 353,
+      "sourceObject": "Allen_frontal_pole_R"
+    },
+    {
+      "sourceNode": 354,
+      "sourceObject": "Allen_perirhinal_gyrus_rostral_part_of_FuGt_R"
+    },
+    {
+      "sourceNode": 355,
+      "sourceObject": "Allen_hypothalamus_L"
+    },
+    {
+      "sourceNode": 356,
+      "sourceObject": "Allen_hypothalamus_R"
+    },
+    {
+      "sourceNode": 357,
+      "sourceObject": "Allen_subthalamic_nucleus_R"
+    },
+    {
+      "sourceNode": 358,
+      "sourceObject": "Allen_mammillary_region_of_HTH_R"
+    },
+    {
+      "sourceNode": 359,
+      "sourceObject": "Allen_midbrain_tegmentum_R"
+    },
+    {
+      "sourceNode": 360,
+      "sourceObject": "Allen_tuberal_region_of_HTH_R"
+    },
+    {
+      "sourceNode": 361,
+      "sourceObject": "Allen_preoptic_region_of_HTH_R"
+    },
+    {
+      "sourceNode": 362,
+      "sourceObject": "Allen_midbrain_tegmentum_L"
+    },
+    {
+      "sourceNode": 363,
+      "sourceObject": "Allen_red_nucleus_L"
+    },
+    {
+      "sourceNode": 364,
+      "sourceObject": "Allen_inferior_colliculus_L"
+    },
+    {
+      "sourceNode": 365,
+      "sourceObject": "Allen_mammillary_region_of_HTH_L"
+    },
+    {
+      "sourceNode": 366,
+      "sourceObject": "Allen_subthalamic_nucleus_L"
+    },
+    {
+      "sourceNode": 368,
+      "sourceObject": "VH_F_C1_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 369,
+      "sourceObject": "VH_F_C2_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 370,
+      "sourceObject": "VH_F_C3_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 371,
+      "sourceObject": "VH_F_C4_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 372,
+      "sourceObject": "VH_F_C5_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 373,
+      "sourceObject": "VH_F_C6_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 374,
+      "sourceObject": "VH_F_C7_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 375,
+      "sourceObject": "VH_F_C8_segment_of_cervical_spinal_cord"
+    },
+    {
+      "sourceNode": 376,
+      "sourceObject": "VH_F_first_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 377,
+      "sourceObject": "VH_F_second_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 378,
+      "sourceObject": "VH_F_third_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 379,
+      "sourceObject": "VH_F_fourth_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 380,
+      "sourceObject": "VH_F_fifth_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 381,
+      "sourceObject": "VH_F_seventh_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 382,
+      "sourceObject": "VH_F_eigth_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 383,
+      "sourceObject": "VH_F_sixth_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 384,
+      "sourceObject": "VH_F_ninth_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 385,
+      "sourceObject": "VH_F_tenth_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 386,
+      "sourceObject": "VH_F_eleventh_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 387,
+      "sourceObject": "VH_F_twelfth_thoracic_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 388,
+      "sourceObject": "VH_F_first_lumbar_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 389,
+      "sourceObject": "VH_F_second_lumbar_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 390,
+      "sourceObject": "VH_F_third_lumbar_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 391,
+      "sourceObject": "VH_F_fourth_lumbar_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 392,
+      "sourceObject": "VH_F_fifth_lumbar_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 393,
+      "sourceObject": "VH_F_first_sacral_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 394,
+      "sourceObject": "VH_F_second_sacral_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 395,
+      "sourceObject": "VH_F_third_sacral_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 396,
+      "sourceObject": "VH_F_fourth_sacral_spinal_cord_segment"
+    },
+    {
+      "sourceNode": 400,
+      "sourceObject": "VH_F_medial_rectus_extraocular_muscle_L"
+    },
+    {
+      "sourceNode": 401,
+      "sourceObject": "VH_F_inferior_rectus_extraocular_muscle_L"
+    },
+    {
+      "sourceNode": 402,
+      "sourceObject": "VH_F_superior_rectus_extraocular_muscle_L"
+    },
+    {
+      "sourceNode": 403,
+      "sourceObject": "VH_F_inferior_oblique_extraocular_muscle_L"
+    },
+    {
+      "sourceNode": 404,
+      "sourceObject": "VH_F_lateral_rectus_extraocular_muscle_L"
+    },
+    {
+      "sourceNode": 405,
+      "sourceObject": "VH_F_superior_oblique_extraocular_muscle_L"
+    },
+    {
+      "sourceNode": 407,
+      "sourceObject": "VH_F_medial_rectus_extraocular_muscle_R"
+    },
+    {
+      "sourceNode": 408,
+      "sourceObject": "VH_F_inferior_rectus_extraocular_muscle_R"
+    },
+    {
+      "sourceNode": 409,
+      "sourceObject": "VH_F_superior_rectus_extraocular_muscle_R"
+    },
+    {
+      "sourceNode": 410,
+      "sourceObject": "VH_F_inferior_oblique_extraocular_muscle_R"
+    },
+    {
+      "sourceNode": 411,
+      "sourceObject": "VH_F_lateral_rectus_extraocular_muscle_R"
+    },
+    {
+      "sourceNode": 412,
+      "sourceObject": "VH_F_superior_oblique_extraocular_muscle_R"
+    },
+    {
+      "sourceNode": 422,
+      "sourceObject": "VH_F_basal_plate"
+    },
+    {
+      "sourceNode": 423,
+      "sourceObject": "VH_F_chorionic_plate"
+    },
+    {
+      "sourceNode": 424,
+      "sourceObject": "VH_F_placenta_vessels"
+    },
+    {
+      "sourceNode": 425,
+      "sourceObject": "VH_F_amnion"
+    },
+    {
+      "sourceNode": 427,
+      "sourceObject": "VH_F_umbilical_cord"
+    },
+    {
+      "sourceNode": 428,
+      "sourceObject": "VH_F_umbilical_artery_1"
+    },
+    {
+      "sourceNode": 429,
+      "sourceObject": "VH_F_umbilical_artery_2"
+    },
+    {
+      "sourceNode": 430,
+      "sourceObject": "VH_F_umbilical_vein"
+    },
+    {
+      "sourceNode": 445,
+      "sourceObject": "VH_F_uterovesical_pouch"
+    },
+    {
+      "sourceNode": 472,
+      "sourceObject": "VH_F_abdominal_ostium_of_uterine_tube"
+    },
+    {
+      "sourceNode": 484,
+      "sourceObject": "VH_F_palatine_tonsil_L"
+    },
+    {
+      "sourceNode": 485,
+      "sourceObject": "VH_F_palatine_tonsil_R"
+    },
+    {
+      "sourceNode": 547,
+      "sourceObject": "VH_F_coronary_ligament_of_liver"
+    },
+    {
+      "sourceNode": 548,
+      "sourceObject": "VH_F_falciform_ligament"
+    },
+    {
+      "sourceNode": 549,
+      "sourceObject": "VH_F_triangular_ligament_of_liver"
+    },
+    {
+      "sourceNode": 550,
+      "sourceObject": "VH_F_ligamentum_venosum"
+    },
+    {
+      "sourceNode": 551,
+      "sourceObject": "VH_F_round_ligament_of_liver"
+    },
+    {
+      "sourceNode": 552,
+      "sourceObject": "VH_F_hepataduodenal_ligament"
+    },
+    {
+      "sourceNode": 566,
+      "sourceObject": "VH_F_hilum_of_kidney_L"
+    },
+    {
+      "sourceNode": 597,
+      "sourceObject": "VH_F_hilum_of_kidney_R"
+    },
+    {
+      "sourceNode": 670,
+      "sourceObject": "VH_F_ureteral_orifice_R"
+    },
+    {
+      "sourceNode": 671,
+      "sourceObject": "VH_F_ureteral_orifice_L"
+    },
+    {
+      "sourceNode": 702,
+      "sourceObject": "VH_F_ophthalmic_vein_L"
+    },
+    {
+      "sourceNode": 703,
+      "sourceObject": "VH_F_superior_ophthalmic_vein_L"
+    },
+    {
+      "sourceNode": 704,
+      "sourceObject": "VH_F_inferior_ophthalmic_vein_L"
+    },
+    {
+      "sourceNode": 705,
+      "sourceObject": "VH_F_central_retinal_vein_L"
+    },
+    {
+      "sourceNode": 707,
+      "sourceObject": "VH_F_ophthalmic_vein_R"
+    },
+    {
+      "sourceNode": 708,
+      "sourceObject": "VH_F_superior_ophthalmic_vein_R"
+    },
+    {
+      "sourceNode": 709,
+      "sourceObject": "VH_F_inferior_ophthalmic_vein_R"
+    },
+    {
+      "sourceNode": 710,
+      "sourceObject": "VH_F_central_retinal_vein_R"
+    },
+    {
+      "sourceNode": 713,
+      "sourceObject": "VH_F_long_posterior_ciliary_artery_L"
+    },
+    {
+      "sourceNode": 714,
+      "sourceObject": "VH_F_opthalmic_artery_L"
+    },
+    {
+      "sourceNode": 715,
+      "sourceObject": "VH_F_central_retinal_artery_L"
+    },
+    {
+      "sourceNode": 717,
+      "sourceObject": "VH_F_long_posterior_ciliary_artery_R"
+    },
+    {
+      "sourceNode": 718,
+      "sourceObject": "VH_F_opthalmic_artery_R"
+    },
+    {
+      "sourceNode": 719,
+      "sourceObject": "VH_F_central_retinal_artery_R"
+    },
+    {
+      "sourceNode": 731,
+      "sourceObject": "VH_F_superior_mesenteric_vein"
+    },
+    {
+      "sourceNode": 732,
+      "sourceObject": "VH_F_superior_rectal_vein"
+    },
+    {
+      "sourceNode": 734,
+      "sourceObject": "VH_F_left_common_iliac_vein"
+    },
+    {
+      "sourceNode": 735,
+      "sourceObject": "VH_F_right_common_iliac_vein"
+    },
+    {
+      "sourceNode": 736,
+      "sourceObject": "VH_F_left_colic_vein"
+    },
+    {
+      "sourceNode": 737,
+      "sourceObject": "VH_F_right_colic_vein"
+    },
+    {
+      "sourceNode": 738,
+      "sourceObject": "VH_F_ileocolic_vein"
+    },
+    {
+      "sourceNode": 739,
+      "sourceObject": "VH_F_middle_colic_vein"
+    },
+    {
+      "sourceNode": 741,
+      "sourceObject": "VH_F_inferior_rectal_vein_L"
+    },
+    {
+      "sourceNode": 742,
+      "sourceObject": "VH_F_inferior_rectal_vein_R"
+    },
+    {
+      "sourceNode": 744,
+      "sourceObject": "VH_F_internal_iliac_vein_L"
+    },
+    {
+      "sourceNode": 745,
+      "sourceObject": "VH_F_internal_iliac_vein_R"
+    },
+    {
+      "sourceNode": 747,
+      "sourceObject": "VH_F_internal_pudendal_vein_L"
+    },
+    {
+      "sourceNode": 748,
+      "sourceObject": "VH_F_internal_pudendal_vein_R"
+    },
+    {
+      "sourceNode": 750,
+      "sourceObject": "VH_F_middle_rectal_vein_L"
+    },
+    {
+      "sourceNode": 751,
+      "sourceObject": "VH_F_middle_rectal_vein_R"
+    },
+    {
+      "sourceNode": 753,
+      "sourceObject": "VH_F_sigmoid_vein_a"
+    },
+    {
+      "sourceNode": 754,
+      "sourceObject": "VH_F_sigmoid_vein_c"
+    },
+    {
+      "sourceNode": 755,
+      "sourceObject": "VH_F_median_sacral_vein"
+    },
+    {
+      "sourceNode": 756,
+      "sourceObject": "VH_F_sigmoid_vein_b"
+    },
+    {
+      "sourceNode": 757,
+      "sourceObject": "VH_F_inferior_pancreaticoduodenal_vein"
+    },
+    {
+      "sourceNode": 758,
+      "sourceObject": "VH_F_inferior_mesenteric_vein"
+    },
+    {
+      "sourceNode": 760,
+      "sourceObject": "VH_F_left_colic_artery"
+    },
+    {
+      "sourceNode": 761,
+      "sourceObject": "VH_F_right_colic_artery"
+    },
+    {
+      "sourceNode": 762,
+      "sourceObject": "VH_F_ileocolic_artery"
+    },
+    {
+      "sourceNode": 763,
+      "sourceObject": "VH_F_middle_colic_artery"
+    },
+    {
+      "sourceNode": 764,
+      "sourceObject": "VH_F_celiac_trunk"
+    },
+    {
+      "sourceNode": 765,
+      "sourceObject": "VH_F_superior_rectal_artery"
+    },
+    {
+      "sourceNode": 766,
+      "sourceObject": "VH_F_superior_mesenteric_artery"
+    },
+    {
+      "sourceNode": 767,
+      "sourceObject": "VH_F_inferior_mesenteric_artery"
+    },
+    {
+      "sourceNode": 768,
+      "sourceObject": "VH_F_marginal_artery_of_Drummond"
+    },
+    {
+      "sourceNode": 770,
+      "sourceObject": "VH_F_sigmoid_artery_c"
+    },
+    {
+      "sourceNode": 771,
+      "sourceObject": "VH_F_sigmoid_artery_b"
+    },
+    {
+      "sourceNode": 772,
+      "sourceObject": "VH_F_sigmoid_artery_a"
+    },
+    {
+      "sourceNode": 775,
+      "sourceObject": "VH_F_splenic_artery"
+    },
+    {
+      "sourceNode": 777,
+      "sourceObject": "VH_F_splenic_vein"
+    },
+    {
+      "sourceNode": 780,
+      "sourceObject": "VH_F_cystic_artery"
+    },
+    {
+      "sourceNode": 782,
+      "sourceObject": "VH_F_cystic_vein"
+    },
+    {
+      "sourceNode": 785,
+      "sourceObject": "VH_F_middle_hepatic_artery_branch_of_left_hepatic_artery"
+    },
+    {
+      "sourceNode": 786,
+      "sourceObject": "VH_F_proper_hepatic_artery"
+    },
+    {
+      "sourceNode": 787,
+      "sourceObject": "VH_F_right_hepatic_artery"
+    },
+    {
+      "sourceNode": 788,
+      "sourceObject": "VH_F_common_hepatic_artery"
+    },
+    {
+      "sourceNode": 789,
+      "sourceObject": "VH_F_posterior_segmental_right_hepatic_artery"
+    },
+    {
+      "sourceNode": 790,
+      "sourceObject": "VH_F_anterior_segmental_right_hepatic_artery"
+    },
+    {
+      "sourceNode": 791,
+      "sourceObject": "VH_F_left_hepatic_artery"
+    },
+    {
+      "sourceNode": 793,
+      "sourceObject": "VH_F_hepatic_portal_vein"
+    },
+    {
+      "sourceNode": 794,
+      "sourceObject": "VH_F_middle_hepatic_vein"
+    },
+    {
+      "sourceNode": 795,
+      "sourceObject": "VH_F_left_hepatic_vein"
+    },
+    {
+      "sourceNode": 796,
+      "sourceObject": "VH_F_right_hepatic_vein"
+    },
+    {
+      "sourceNode": 797,
+      "sourceObject": "VH_F_right_branch_of_portal_vein"
+    },
+    {
+      "sourceNode": 798,
+      "sourceObject": "VH_F_left_branch_of_portal_vein"
+    },
+    {
+      "sourceNode": 802,
+      "sourceObject": "VH_F_pulmonary_vein_L_sup"
+    },
+    {
+      "sourceNode": 803,
+      "sourceObject": "VH_F_pulmonary_vein_R_inf"
+    },
+    {
+      "sourceNode": 804,
+      "sourceObject": "VH_F_pulmonary_vein_R_sup"
+    },
+    {
+      "sourceNode": 805,
+      "sourceObject": "VH_F_pulmonary_vein_L_inf"
+    },
+    {
+      "sourceNode": 807,
+      "sourceObject": "VH_F_coronary_sinus"
+    },
+    {
+      "sourceNode": 808,
+      "sourceObject": "VH_F_great_cardiac_vein"
+    },
+    {
+      "sourceNode": 809,
+      "sourceObject": "VH_F_middle_cardiac_vein"
+    },
+    {
+      "sourceNode": 810,
+      "sourceObject": "VH_F_oblique_vein_of_left_atrium"
+    },
+    {
+      "sourceNode": 811,
+      "sourceObject": "VH_F_left_marginal_vein"
+    },
+    {
+      "sourceNode": 812,
+      "sourceObject": "VH_F_posterior_vein_of_left_ventricle"
+    },
+    {
+      "sourceNode": 813,
+      "sourceObject": "VH_F_anterior_cardiac_vein"
+    },
+    {
+      "sourceNode": 814,
+      "sourceObject": "VH_F_small_cardiac_vein"
+    },
+    {
+      "sourceNode": 821,
+      "sourceObject": "VH_F_left_anterior_descending_artery"
+    },
+    {
+      "sourceNode": 822,
+      "sourceObject": "VH_F_left_circumflex_artery"
+    },
+    {
+      "sourceNode": 823,
+      "sourceObject": "VH_F_diagonal_branch_of_left_anterior_descending_artery"
+    },
+    {
+      "sourceNode": 824,
+      "sourceObject": "VH_F_left_coronary_artery"
+    },
+    {
+      "sourceNode": 825,
+      "sourceObject": "VH_F_left_marginal_branch"
+    },
+    {
+      "sourceNode": 826,
+      "sourceObject": "VH_F_left_posterior_descending_branch_of_circumflex_branch_of_left_coronary_artery"
+    },
+    {
+      "sourceNode": 827,
+      "sourceObject": "VH_F_posterior_left_ventricular_branch"
+    },
+    {
+      "sourceNode": 828,
+      "sourceObject": "VH_F_right_coronary_artery"
+    },
+    {
+      "sourceNode": 829,
+      "sourceObject": "VH_F_right_marginal_artery"
+    },
+    {
+      "sourceNode": 841,
+      "sourceObject": "VH_F_left_common_carotid_artery_a"
+    },
+    {
+      "sourceNode": 842,
+      "sourceObject": "VH_F_left_common_carotid_artery_b"
+    },
+    {
+      "sourceNode": 844,
+      "sourceObject": "VH_F_left_subclavian_artery_a"
+    },
+    {
+      "sourceNode": 845,
+      "sourceObject": "VH_F_left_subclavian_artery_b"
+    },
+    {
+      "sourceNode": 846,
+      "sourceObject": "VH_F_brachiocephalic_artery_b"
+    },
+    {
+      "sourceNode": 847,
+      "sourceObject": "VH_F_brachiocephalic_artery_a"
+    },
+    {
+      "sourceNode": 887,
+      "sourceObject": "VH_F_arytenoid_cartilage_R"
+    },
+    {
+      "sourceNode": 888,
+      "sourceObject": "VH_F_arytenoid_cartilage_L"
+    },
+    {
+      "sourceNode": 889,
+      "sourceObject": "VH_F_epiglotic_cartilage"
+    },
+    {
+      "sourceNode": 890,
+      "sourceObject": "VH_F_cricoid_cartilage"
+    },
+    {
+      "sourceNode": 891,
+      "sourceObject": "VH_F_thyroid_cartilage"
+    },
+    {
+      "sourceNode": 893,
+      "sourceObject": "VH_F_corniculate_cartilage_L"
+    },
+    {
+      "sourceNode": 894,
+      "sourceObject": "VH_F_corniculate_cartilage_R"
+    },
+    {
+      "sourceNode": 898,
+      "sourceObject": "VH_F_tracheal_cartilage"
+    },
+    {
+      "sourceNode": 903,
+      "sourceObject": "VH_F_cartilage_of_main_bronchus_R"
+    },
+    {
+      "sourceNode": 905,
+      "sourceObject": "VH_F_cartilage_of_main_bronchus_L"
+    },
+    {
+      "sourceNode": 908,
+      "sourceObject": "VH_F_cartilage_of_lobar_bronchus_L"
+    },
+    {
+      "sourceNode": 909,
+      "sourceObject": "VH_F_cartilage_of_tertiary_bronchus_L"
+    },
+    {
+      "sourceNode": 926,
+      "sourceObject": "VH_F_cartilage_of_lobar_bronchus_R"
+    },
+    {
+      "sourceNode": 927,
+      "sourceObject": "VH_F_cartilage_of_tertiary_bronchus_R"
+    },
+    {
+      "sourceNode": 954,
+      "sourceObject": "Yao_afferent_lymphatic_vessel"
+    },
+    {
+      "sourceNode": 955,
+      "sourceObject": "Yao_capsule_of_lymph_node"
+    },
+    {
+      "sourceNode": 956,
+      "sourceObject": "Yao_follicles"
+    },
+    {
+      "sourceNode": 957,
+      "sourceObject": "Yao_efferent_lymph_node"
+    },
+    {
+      "sourceNode": 958,
+      "sourceObject": "Yao_medulla_of_lymph_node"
+    },
+    {
+      "sourceNode": 959,
+      "sourceObject": "Yao_paracortex"
+    },
+    {
+      "sourceNode": 960,
+      "sourceObject": "Yao_blood_vasculature"
+    }
+  ],
+  "exclusions": [
+    "Placenta, amnion and umbilical cord are pregnancy reference models, excluded from the adult baseline.",
+    "Separate Yao lymph-node specimen is excluded.",
+    "Allen brain subdivisions and unreviewed small vascular/airway/eye annotations are outside this curated subset.",
+    "Uterovesical pouch and isolated abdominal tubal ostium reference surfaces are excluded, not presented as solid organs.",
+    "Skull, ribs, shoulder girdle, upper-limb skeleton, hand/foot bones, most muscles and peripheral nerves are not supplied by this reference organ set.",
+    "Clitoris, labia, female urethra and pelvic-floor muscles have no separate source meshes. The external perineal skin is smooth and does not depict a detailed vulva."
+  ],
+  "reconstructedSupplement": {
+    "source": "Original mathematical teaching reconstruction for Atom2Universe",
+    "reconstructed": true,
+    "sourceGeometry": "No third-party genital mesh copied, traced, registered or modified.",
+    "referenceData": "Published measurements and anatomical relationships guide an illustrative example, not a patient-specific or average shape.",
+    "references": [
+      "https://pubmed.ncbi.nlm.nih.gov/31254525/",
+      "https://pubmed.ncbi.nlm.nih.gov/15842291/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC1283096/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC8376757/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC12003430/",
+      "https://training.seer.cancer.gov/anatomy/reproductive/female/genitalia.html"
+    ],
+    "registration": {
+      "version": 1,
+      "kind": "Original illustrative reconstruction, not a segmented specimen",
+      "hraSourceSha256": "472567a56896b9b7890508da6501fbf858e56aaa30745365f7a71ade782b529c",
+      "units": "metres",
+      "coordinateSystem": "Native HRA female: X subject left, Y superior, Z anterior. Apply the same Y+0.794760942 translation as the base atlas.",
+      "midlineX": -0.0125,
+      "translation": [
+        0,
+        0.794760942,
+        0
+      ],
+      "anchors": {
+        "bladderNeckSourceNode": 666,
+        "bladderNeckCentre": [
+          -0.01252929,
+          -0.01658964,
+          -0.05181007
+        ],
+        "vaginaSourceNode": 431,
+        "vaginalDistalExtent": [
+          -0.013,
+          -0.05208706,
+          -0.074
+        ],
+        "pubicSourceNodes": [
+          970,
+          971
+        ],
+        "ischialSourceNodes": [
+          981,
+          982
+        ],
+        "urethralMeatus": [
+          -0.0125,
+          -0.049,
+          -0.044
+        ],
+        "clitoralGlansCentre": [
+          -0.0125,
+          -0.0385,
+          -0.0165
+        ]
+      },
+      "curves": {
+        "clitoral_body": [
+          [
+            -0.0125,
+            -0.0315,
+            -0.041
+          ],
+          [
+            -0.0125,
+            -0.026,
+            -0.022
+          ],
+          [
+            -0.0125,
+            -0.028,
+            -0.0165
+          ],
+          [
+            -0.0125,
+            -0.0355,
+            -0.0175
+          ]
+        ],
+        "crus_right": [
+          [
+            -0.059,
+            -0.048,
+            -0.079
+          ],
+          [
+            -0.049,
+            -0.047,
+            -0.061
+          ],
+          [
+            -0.031,
+            -0.037,
+            -0.045
+          ],
+          [
+            -0.0153,
+            -0.0315,
+            -0.041
+          ]
+        ],
+        "crus_left": [
+          [
+            0.035,
+            -0.048,
+            -0.079
+          ],
+          [
+            0.024,
+            -0.046,
+            -0.061
+          ],
+          [
+            0.006,
+            -0.037,
+            -0.045
+          ],
+          [
+            -0.0097,
+            -0.0315,
+            -0.041
+          ]
+        ],
+        "bulb_right": [
+          [
+            -0.032,
+            -0.0535,
+            -0.073
+          ],
+          [
+            -0.035,
+            -0.0475,
+            -0.065
+          ],
+          [
+            -0.026,
+            -0.0465,
+            -0.048
+          ],
+          [
+            -0.021,
+            -0.0415,
+            -0.04
+          ]
+        ],
+        "bulb_left": [
+          [
+            0.0075,
+            -0.0535,
+            -0.073
+          ],
+          [
+            0.0105,
+            -0.0475,
+            -0.065
+          ],
+          [
+            0.001,
+            -0.0465,
+            -0.048
+          ],
+          [
+            -0.004,
+            -0.0415,
+            -0.04
+          ]
+        ],
+        "urethra": [
+          [
+            -0.01253,
+            -0.0165,
+            -0.054
+          ],
+          [
+            -0.01253,
+            -0.026,
+            -0.061
+          ],
+          [
+            -0.0125,
+            -0.044,
+            -0.049
+          ],
+          [
+            -0.0125,
+            -0.049,
+            -0.044
+          ]
+        ],
+        "labium_majus_right": [
+          [
+            -0.0155,
+            -0.014,
+            0.004
+          ],
+          [
+            -0.0385,
+            -0.024,
+            -0.005
+          ],
+          [
+            -0.0385,
+            -0.058,
+            -0.067
+          ],
+          [
+            -0.0155,
+            -0.065,
+            -0.086
+          ]
+        ],
+        "labium_majus_left": [
+          [
+            -0.0095,
+            -0.014,
+            0.004
+          ],
+          [
+            0.0145,
+            -0.024,
+            -0.005
+          ],
+          [
+            0.015,
+            -0.058,
+            -0.067
+          ],
+          [
+            -0.0095,
+            -0.065,
+            -0.086
+          ]
+        ],
+        "labium_minus_right": [
+          [
+            -0.018,
+            -0.036,
+            -0.018
+          ],
+          [
+            -0.028,
+            -0.043,
+            -0.037
+          ],
+          [
+            -0.031,
+            -0.047,
+            -0.061
+          ],
+          [
+            -0.0165,
+            -0.055,
+            -0.077
+          ]
+        ],
+        "labium_minus_left": [
+          [
+            -0.007,
+            -0.036,
+            -0.018
+          ],
+          [
+            0.0035,
+            -0.043,
+            -0.037
+          ],
+          [
+            0.005,
+            -0.047,
+            -0.061
+          ],
+          [
+            -0.0085,
+            -0.055,
+            -0.077
+          ]
+        ]
+      },
+      "dimensions": {
+        "glansLengthMm": 8,
+        "glansWidthMm": 4.5,
+        "glansDepthMm": 4,
+        "bodyWidthMm": 9,
+        "bodyDepthMm": 6,
+        "crusMaximumWidthMm": 7.6,
+        "bulbMaximumWidthMm": 9.2,
+        "labiaMajoraMaximumThicknessMm": 13,
+        "labiaMinoraThicknessMm": 1.2,
+        "labiaMinoraIllustrativeFoldWidthMm": 15,
+        "urethraOuterMaximumTransverseDiameterMm": 6.8,
+        "urethraProximalTransverseDiameterMm": 4,
+        "urethraProximalDepthMm": 2.7,
+        "urethraLumenDisplayTransverseDiameterMm": 2.2,
+        "urethraLumenDisplayDepthMm": 1.2
+      },
+      "rationale": [
+        "Jackson et al. 2019, DOI10.1016/j.ajog.2019.06.048: measured glans/body/crura dimensions and glans-to-urethra distance guide scale, not an exact population-average shape.",
+        "Lloyd et al. 2005, DOI10.1111/j.1471-0528.2004.00517.x: broad ranges of labial dimensions; the reconstructed folds are one non-normative example.",
+        "O'Connell et al. 2005, PMID15879834, DOI10.1097/01.ju.0000158446.21396.c0: clitoral corpora/crura and bulbs surround the urethrovaginal complex anterolaterally. Bulbs and crura remain separately named.",
+        "Attari et al. 2021, DOI10.1007/s10439-021-02765-4 and Liu et al. 2025, DOI10.1007/s00192-025-06045-w: the female urethra is curved and related to the anterior vaginal wall, not a male urethra with the penile part removed."
+      ],
+      "limitations": [
+        "These meshes are mathematical teaching surfaces. They are not MRI/CT segmentation, donor-specific reconstruction, medical simulation or a clinical reference.",
+        "The existing HRA vagina has a closed distal segmentation and the skin has no detailed vulva. Both remain byte-for-byte unchanged; the supplement does not create a continuous native vaginal lumen or holes in the native skin.",
+        "The urethral wall has an illustrative open lumen and a proximal surface connection to the HRA bladder neck. The HRA neck is capped: no continuous fluid connection with the bladder lumen is claimed.",
+        "The native HRA bladder neck already intersects the right pubic surface. The reconstructed proximal wall narrows towards the posterior neck margin and curves behind the pubis; this does not repair the source overlap or establish a precise donor-specific junction.",
+        "Each named part is an independently selectable teaching surface, not a volumetric tissue partition. Overlap remains where the outer labial folds cover the deeper bulbs and crura; hidden-part selection can expose these illustrative interfaces.",
+        "Fine skin texture, clitoral hood, vessels, nerves, suspensory attachments, vestibular glands and pelvic-floor musculature are not reconstructed. Labial shapes and dimensions vary widely."
+      ]
+    },
+    "registrationSha256": "782b76af1645b5e4db74933d0731ad9ba2f452bbec08940f7c46bc07fa360fd3",
+    "generatorSha256": "a3641f46691e98260ced209918a4d6a67d7ea1443b3ee807a29d4ca6de2f9f89",
+    "renderedStructures": 11,
+    "triangles": 49880,
+    "metrics": {
+      "clitoral_glans": {
+        "vertices": 1202,
+        "triangles": 2400,
+        "nativeMin": [
+          -0.014748661908891465,
+          -0.04233368451907411,
+          -0.01876906337842544
+        ],
+        "nativeMax": [
+          -0.010251338091108536,
+          -0.034666315480925886,
+          -0.014230936621574564
+        ]
+      },
+      "clitoral_body": {
+        "vertices": 2050,
+        "triangles": 4096,
+        "nativeMin": [
+          -0.01695634475799669,
+          -0.03566204622936393,
+          -0.04174348480906048
+        ],
+        "nativeMax": [
+          -0.00804365524200331,
+          -0.025401110736925,
+          -0.0153450908984105
+        ],
+        "centrelineLengthMm": 28.76936975650584
+      },
+      "crus_left": {
+        "vertices": 2050,
+        "triangles": 4096,
+        "nativeMin": [
+          -0.011159639221094197,
+          -0.04871126588941747,
+          -0.07930149076266935
+        ],
+        "nativeMax": [
+          0.035485715133874864,
+          -0.028433298683867278,
+          -0.03739487339862907
+        ],
+        "centrelineLengthMm": 62.31868424882187
+      },
+      "crus_right": {
+        "vertices": 2050,
+        "triangles": 4096,
+        "nativeMin": [
+          -0.05949680908570612,
+          -0.04885911526432816,
+          -0.07927944701096823
+        ],
+        "nativeMax": [
+          -0.013841190774104863,
+          -0.028445286106669507,
+          -0.03739159720841832
+        ],
+        "centrelineLengthMm": 61.782135820210556
+      },
+      "bulb_left": {
+        "vertices": 2050,
+        "triangles": 4096,
+        "nativeMin": [
+          -0.004503145453898281,
+          -0.05378102391612814,
+          -0.07317128120588394
+        ],
+        "nativeMax": [
+          0.011267553159992888,
+          -0.041113586671333906,
+          -0.03980684130953467
+        ],
+        "centrelineLengthMm": 37.8994720140253
+      },
+      "bulb_right": {
+        "vertices": 2050,
+        "triangles": 4096,
+        "nativeMin": [
+          -0.03585755536310876,
+          -0.053781149936230246,
+          -0.07317135068077457
+        ],
+        "nativeMax": [
+          -0.020494257697247532,
+          -0.04111405258102054,
+          -0.03980688071269013
+        ],
+        "centrelineLengthMm": 37.73888079670311
+      },
+      "labium_majus_left": {
+        "vertices": 2050,
+        "triangles": 4096,
+        "nativeMin": [
+          -0.009720536047683677,
+          -0.06572986097992664,
+          -0.08626121333603196
+        ],
+        "nativeMax": [
+          0.016148171411897214,
+          -0.013455310742242287,
+          0.004564327482001985
+        ],
+        "centrelineLengthMm": 113.68130316542074
+      },
+      "labium_majus_right": {
+        "vertices": 2050,
+        "triangles": 4096,
+        "nativeMin": [
+          -0.04020808434955705,
+          -0.0657257276811052,
+          -0.08625541203625203
+        ],
+        "nativeMax": [
+          -0.015271699563244437,
+          -0.013461963900289142,
+          0.004557587907226964
+        ],
+        "centrelineLengthMm": 112.79337948914134
+      },
+      "labium_minus_left": {
+        "vertices": 1824,
+        "triangles": 3644,
+        "nativeMin": [
+          -0.009081324745356506,
+          -0.058278485019663484,
+          -0.07704644216977698
+        ],
+        "nativeMax": [
+          0.0017911125625145207,
+          -0.03597191373204709,
+          -0.017688097070818698
+        ],
+        "centrelineLengthMm": 65.5295493297588
+      },
+      "labium_minus_right": {
+        "vertices": 1824,
+        "triangles": 3644,
+        "nativeMin": [
+          -0.026986749355236605,
+          -0.0586030254566045,
+          -0.07705011409217953
+        ],
+        "nativeMax": [
+          -0.01591888705410161,
+          -0.03597096707736557,
+          -0.0176880930806358
+        ],
+        "centrelineLengthMm": 65.69548297177698
+      },
+      "female_urethra": {
+        "vertices": 5760,
+        "triangles": 11520,
+        "nativeMin": [
+          -0.015692462135624793,
+          -0.05040366265068033,
+          -0.05839531035197286
+        ],
+        "nativeMax": [
+          -0.009344876087112151,
+          -0.01572302316164849,
+          -0.04257531498261054
+        ]
+      },
+      "urethra": {
+        "centrelineLengthMm": 36.24367695694811
+      }
+    },
+    "sourceSearch": {
+      "FillodCosentino": "Official source licence CC BY-NC-SA: excluded, including conflicting CC0/CC BY mirrors.",
+      "UNIGE": "3D kits not found as meshes with a verified freely redistributable licence; the CC BY-SA statement in the 2020 paper concerns 2D drawings.",
+      "Wu2020": "Interactive pelvic-floor PDF is advertised, but mesh reuse licence and downloadable geometry were not verified.",
+      "Kiesel2022": "Article open access; STL files available only by author request, no downloadable licensed mesh identified."
+    }
+  },
+  "structures": 180,
+  "packaging": {
+    "format": "Draco-compressed GLB in independent gzip members; concatenate decompressed parts in modelParts order",
+    "modelBytes": 5337888,
+    "modelSha256": "e3a8267e08c1b6d22312493bf14b9bacb1430e3b7ef8eea869af447e3996d345",
+    "parts": [
+      {
+        "file": "atlas-000.part.gzip",
+        "bytes": 5080931,
+        "sha256": "4ec9979f2f6d016cdc4d21f7fa629d1a1a8c94e0e5b159dea2f1cc502ce50c9d"
+      }
+    ]
+  },
+  "externalVisibility": {
+    "defaultVisible": false,
+    "scope": "External genitalia only; internal reproductive organs retained",
+    "hiddenStructures": [
+      "A2U_FEMALE_BULB_LEFT",
+      "A2U_FEMALE_BULB_RIGHT",
+      "A2U_FEMALE_CLITORAL_BODY",
+      "A2U_FEMALE_CLITORAL_GLANS",
+      "A2U_FEMALE_CRUS_LEFT",
+      "A2U_FEMALE_CRUS_RIGHT",
+      "A2U_FEMALE_LABIUM_MAJUS_LEFT",
+      "A2U_FEMALE_LABIUM_MAJUS_RIGHT",
+      "A2U_FEMALE_LABIUM_MINUS_LEFT",
+      "A2U_FEMALE_LABIUM_MINUS_RIGHT"
+    ],
+    "base": {
+      "nodes": 180,
+      "meshes": 180,
+      "materials": 180,
+      "accessors": 540,
+      "bufferViews": 540,
+      "binaryBytes": 86707840
+    },
+    "variants": {},
+    "surfaceAdaptation": {
+      "scope": "External genital display only; internal organs and breast silhouette retained",
+      "anatomicalSourceMeshesModified": false,
+      "clinicalUse": "Illustrative reversible display closure, not anatomy",
+      "structures": {},
+      "skin": "HRAF_2 already has a smooth perineum. Detailed external structures are separate meshes; no female skin or urethra variant is needed."
+    },
+    "generatorSha256": "c82e3f713019570f94290d81b38eb0e09ada43e256154b9aa4406fc0ec8a8cfc",
+    "providerSha256": "171033978f6d9550ff638103e39b9c523e59929494668aa6118a5a54a8aff2c2"
+  },
+  "mobileOptimization": {
+    "version": 1,
+    "sourceModelSha256": "fbbb37411f6f8d24b5077000b6e142941dfcfb445d26946708d64e0ac6b7fc8d",
+    "toolSha256": "3428c49efb37c12f16996944737949f317374d05a58c43132c02ce47322b4695",
+    "dependencies": {
+      "draco3dgltf": "1.5.7",
+      "gltf-validator": "2.0.0-dev.3.10",
+      "meshoptimizer": "1.3.0"
+    },
+    "inputBytes": 53343130,
+    "outputBytes": 5080931,
+    "inputTriangles": 2961791,
+    "outputTriangles": 1331525,
+    "inputVertices": 2568921,
+    "outputVertices": 1751567,
+    "method": "Mobile display derivative: exact attribute welding; error-bounded meshoptimizer simplification with locked borders, extrema and a triangle in every connected island; per-mesh Draco position quantization (14/16 bits, 20 or lossless when needed to keep islands separate) and normals (10 bits). Names, materials, layers and display variants retained.",
+    "maximumSimplifierErrorMetres": 0.0006943332846276462,
+    "sourceGeometryNote": "Source descriptions and registrations above describe the imported originals. Packaged surfaces are now simplified mobile derivatives, not byte-identical source geometry."
+  }
+}

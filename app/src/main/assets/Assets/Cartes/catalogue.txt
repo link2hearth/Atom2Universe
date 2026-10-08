@@ -1,0 +1,70 @@
+Catalogue commun : 64 motifs dans bleu etoiles, rainbow, jaune vert, origami et gravures.
+Chaque identifiant représente le même motif dans les cinq styles.
+
+01-abeille — Abeille
+02-araignee — Araignée
+03-arbre — Arbre
+04-baleine — Baleine
+05-bison — Bison
+06-ble — Blé
+07-bougie — Bougie
+08-cannabis — Cannabis
+09-cerf — Cerf
+10-cerise — Cerise
+11-chat — Chat
+12-cheval — Cheval
+13-chien — Chien
+14-coccinelle — Coccinelle
+15-colibri — Colibri
+16-coq — Coq
+17-coquillage — Coquillage
+18-corbeau — Corbeau
+19-crabe — Crabe
+20-crocodile — Crocodile
+21-cygne — Cygne
+22-dauphin — Dauphin
+23-dinosaure-a-long-cou — Dinosaure à long cou
+24-ecureuil — Écureuil
+25-elephant — Éléphant
+26-escargot — Escargot
+27-etoile-de-mer — Étoile de mer
+28-fougere — Fougère
+29-fourmi — Fourmi
+30-girafe — Girafe
+31-herisson — Hérisson
+32-heron — Héron
+33-hibou — Hibou
+34-hippopotame — Hippopotame
+35-humains — Humains
+36-jonquille — Jonquille
+37-kangourou — Kangourou
+38-lapin — Lapin
+39-lion — Lion
+40-livre — Livre
+41-lune — Lune
+42-manchot — Manchot
+43-moineau — Moineau
+44-mouton — Mouton
+45-oiseau-marin — Oiseau marin
+46-ours — Ours
+47-panthere — Panthère
+48-papillon — Papillon
+49-perroquet — Perroquet
+50-pieuvre — Pieuvre
+51-poisson — Poisson
+52-raisin — Raisin
+53-renard — Renard
+54-requin — Requin
+55-rhinoceros — Rhinocéros
+56-rose — Rose
+57-sanglier — Sanglier
+58-serpent — Serpent
+59-singe — Singe
+60-souris — Souris
+61-tortue — Tortue
+62-tournesol — Tournesol
+63-tyrannosaure — Tyrannosaure
+64-ver-de-terre — Ver de terre
+
+Comparatif : les 64 motifs existent dans les cinq collections.
+Aucun motif exclusif à une ou plusieurs de ces collections.

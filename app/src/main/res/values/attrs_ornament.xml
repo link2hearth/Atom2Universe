@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="OrnamentPalette">
+        <attr name="a2uMusicAccent" />
+        <attr name="a2uSurfaceColor" />
+        <attr name="a2uTextColor" />
+    </declare-styleable>
+    <declare-styleable name="OrnamentDrawable">
+        <attr name="android:drawable" />
+        <attr name="ornamentForm">
+            <enum name="cartouche" value="0" />
+            <enum name="scroll" value="1" />
+            <enum name="interlace" value="2" />
+            <enum name="bracket" value="3" />
+        </attr>
+    </declare-styleable>
+</resources>

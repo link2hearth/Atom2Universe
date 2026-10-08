@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cave_gear_helmet">%1$s helmet · Tier %2$d</string>
+    <string name="cave_gear_chest">%1$s chestplate · Tier %2$d</string>
+    <string name="cave_gear_legs">%1$s leggings · Tier %2$d</string>
+    <string name="cave_gear_boots">%1$s boots · Tier %2$d</string>
+    <string name="cave_gear_slot_helmet">Helmet</string>
+    <string name="cave_gear_slot_chest">Chestplate</string>
+    <string name="cave_gear_slot_legs">Leggings</string>
+    <string name="cave_gear_slot_boots">Boots</string>
+    <string name="cave_gear_speed">Movement speed</string>
+    <string name="cave_gear_jump">Jump height</string>
+    <string name="cave_gear_attack">Attack speed</string>
+    <string name="cave_gear_crit">Critical chance</string>
+    <string name="cave_gear_crit_damage">Critical damage</string>
+    <string name="cave_gear_dodge">Dodge chance</string>
+    <string name="cave_gear_hp">Bonus HP</string>
+    <string name="cave_gear_defense">Defense</string>
+    <string name="cave_gear_damage">Damage</string>
+    <string name="cave_gear_range">%1$s: %2$d–%3$d</string>
+    <string name="cave_gear_roll">%1$s: %2$d (range %3$d–%4$d)</string>
+    <string name="cave_gear_bonus">%1$s: +%2$d%%</string>
+    <string name="cave_gear_bonus_range">%1$s: +%2$d–%3$d%%</string>
+    <string name="cave_gear_random_hint">Each craft rolls its stats independently and receives two different bonuses from this list:</string>
+    <string name="cave_gear_equip_hint" formatted="false">Armor bonuses apply while worn; weapon bonuses apply while held in combat mode. Critical hits deal 200% damage plus critical damage bonuses. Defense is compared with the attacker’s depth.</string>
+    <string name="cave_gear_critical">Critical hit!</string>
+    <string name="cave_gear_dodged">Dodged!</string>
+    <string name="cave_gear_equip">Equip</string>
+    <string name="cave_gear_equipped">Worn equipment</string>
+    <string name="cave_gear_remove">Unequip all</string>
+    <string name="cave_gear_totals">Maximum HP: %1$d\nDamage reduction at this depth: %2$d%%</string>
+    <string name="cave_gear_legacy">Complete armor (legacy)</string>
+    <string name="cave_gear_empty">%1$s: empty</string>
+    <string name="cave_gear_total_bonus">%1$s: +%2$d%% (cap %3$d%%)</string>
+    <string name="cave_gear_compare">Currently worn: %1$s\n%2$s</string>
+</resources>

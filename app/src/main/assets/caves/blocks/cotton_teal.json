@@ -1,0 +1,14 @@
+{
+  "id": 9029,
+  "name": "cotton_teal",
+  "texture_top": "cozy:cloth:5:008080",
+  "texture_side": "cozy:cloth:5:008080",
+  "texture_bottom": "cozy:cloth:5:008080",
+  "color": "#008080",
+  "hardness": 1.0,
+  "drop": "cotton_teal",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

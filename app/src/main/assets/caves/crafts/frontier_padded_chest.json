@@ -1,0 +1,18 @@
+{
+  "ingredients": [
+    {
+      "id": 9855,
+      "count": 2
+    },
+    {
+      "id": 3110,
+      "count": 8
+    },
+    {
+      "id": 3114,
+      "count": 1
+    }
+  ],
+  "result": 9800,
+  "result_count": 2
+}

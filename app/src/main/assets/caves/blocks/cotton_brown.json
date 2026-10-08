@@ -1,0 +1,14 @@
+{
+  "id": 9003,
+  "name": "cotton_brown",
+  "texture_top": "cozy:cloth:5:7B4F2E",
+  "texture_side": "cozy:cloth:5:7B4F2E",
+  "texture_bottom": "cozy:cloth:5:7B4F2E",
+  "color": "#7B4F2E",
+  "hardness": 1.0,
+  "drop": "cotton_brown",
+  "creative_tab": "cotton",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

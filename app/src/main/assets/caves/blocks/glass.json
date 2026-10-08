@@ -1,0 +1,16 @@
+{
+  "id": 8003,
+  "name": "glass",
+  "texture_top": "cozy:glass:5",
+  "texture_side": "cozy:glass:5",
+  "texture_bottom": "cozy:glass:5",
+  "color": "#C5DFDE",
+  "hardness": 1.5,
+  "transparent": true,
+  "drop": "",
+  "harvest_category": "fragile",
+  "creative_tab": "functional",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

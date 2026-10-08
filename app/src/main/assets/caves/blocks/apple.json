@@ -1,0 +1,18 @@
+{
+  "id": 3130,
+  "name": "apple",
+  "texture_top": "cozy:fruit:0:B65E4D",
+  "texture_side": "cozy:fruit:0:B65E4D",
+  "texture_bottom": "cozy:fruit:0:B65E4D",
+  "color": "#B65E4D",
+  "hardness": 0.3,
+  "drop": "apple",
+  "harvest_category": "resource",
+  "creative_tab": "resources",
+  "transparent": true,
+  "decoration": true,
+  "placeable": false,
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": []
+}

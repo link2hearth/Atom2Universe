@@ -1,0 +1,238 @@
+import org.gradle.api.tasks.PathSensitivity
+
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace = "com.Atom2Universe.app"
+    compileSdk = 36
+    buildFeatures {
+        buildConfig = true
+        prefab = true  // Enable prefab for native dependencies (FluidSynth)
+    }
+
+
+    defaultConfig {
+        applicationId = "com.Atom2Universe.app"
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 1
+
+        versionName = "0.2.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Seules l'anglais (défaut) et le français sont livrés.
+        resourceConfigurations += listOf("en", "fr")
+
+        // arm64 uniquement pour réduire la taille de l'APK
+        // ChromeOS (x86_64) n'est pas ciblé
+        ndk {
+            abiFilters += "arm64-v8a"
+        }
+
+        // Configure CMake for FluidSynth JNI wrapper
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-std=c++17"
+                arguments += "-DANDROID_STL=c++_shared"
+            }
+        }
+    }
+
+    // CMake build configuration
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
+    }
+
+    lint {
+        disable += "ChromeOsAbiSupport"
+    }
+
+    buildTypes {
+        debug {
+            // Suffixe pour avoir debug et release en parallèle
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-DEBUG"
+        }
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    // Résout les conflits de librairies natives entre mididriver, ffmpeg-kit et fluidsynth
+    packaging {
+        jniLibs {
+            pickFirsts += listOf(
+                "lib/arm64-v8a/libc++_shared.so",
+                "lib/arm64-v8a/liboboe.so"
+            )
+        }
+        resources {
+            excludes += listOf(
+                "META-INF/INDEX.LIST",
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt"
+            )
+        }
+    }
+
+    // Garde l'anglais ET le français dans l'AAB : sans ça, le Play Store n'installerait que
+    // la langue du téléphone, et le choix de langue dans l'appli n'aurait plus rien à afficher.
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+}
+
+/**
+ * Les fichiers de chaines comptent comme entrees des tests unitaires.
+ *
+ * `GearPanelFormatTest` lit `strings_trebuchet.xml` **sur le disque** pour essayer chaque
+ * format avec l'argument qu'il recevra a l'ecran : c'est le seul moyen d'attraper un
+ * `%d` nourri par un `Float`, que rien dans le Kotlin ne peut voir. Mais Gradle ne
+ * devine pas cette lecture — pour lui, une tache de test ne depend que des classes — et
+ * il declarait donc la tache a jour quand seul le XML avait bouge. Le garde-fou restait
+ * vert sur une chaine deja cassee, ce qui est pire que pas de garde-fou du tout.
+ */
+tasks.withType<Test>().configureEach {
+    inputs.files(
+        fileTree("src/main/res") { include("values*/strings*.xml") }
+    ).withPropertyName("stringResources").withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
+/**
+ * Deux familles dans `src/test`, qu'il ne faut pas lancer ensemble.
+ *
+ * - Les **garde-fous** verifient quelque chose (assertions) et durent quelques secondes :
+ *   ils tournent par defaut avec `testDebugUnitTest`.
+ * - Les **bancs de mesure** simulent des milliers de parties ou dessinent des apercus, pour
+ *   *regler* un jeu ; ils ne verifient (presque) rien et peuvent durer des dizaines de
+ *   minutes. Ils ne tournent que sur demande explicite :
+ *
+ *       ./gradlew testDebugUnitTest -PbancsMesure --tests "*RoguelikeSimulationTest.goldEconomy"
+ *
+ * Sans `-PbancsMesure`, ces classes sont exclues : meme un `--tests` qui les vise ne trouve
+ * rien. Quand un nouveau banc apparait, l'ajouter a cette liste.
+ */
+val bancsDeMesure = listOf(
+    "*.roguelike.RoguelikeSimulationTest",
+    "*.cosmorun.CosmoRunSimTest",
+    "*.cosmorun.CosmoRunPreviewTest",
+    "*.cosmorun.CosmoRunDebugTest",
+    "*.trebuchet.TrebuchetApercuTest",
+    "*.zoomcanvas.ZoomPerfBench",
+    "*.toyboxracers.ToyboxCircuitApercuTest",
+    "*.caves.world.CaveReliefApercuTest",
+    "*.golf.ClassicGolfApercuTest",
+    "*.golf.GardensScoringCalibrationTest",
+    "*.golf.GardensPuttingBenchmarkTest",
+)
+if (!providers.gradleProperty("bancsMesure").isPresent) {
+    tasks.withType<Test>().configureEach {
+        filter { bancsDeMesure.forEach { excludeTestsMatching(it) } }
+    }
+}
+
+dependencies {
+    // Atlas anatomique natif : conserver les trois bibliothèques à la même version.
+    implementation(libs.filament.android)
+    implementation(libs.filament.gltfio)
+    implementation(libs.filament.utils)
+    // Core Android
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+
+    // Layout & UI
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.gridlayout)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.flexbox)
+
+    // Lifecycle
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // Room Database (MIDI & Music library)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
+    // Media & Audio
+    implementation(libs.androidx.media)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.hls)
+
+    // Network & Async
+    implementation(libs.okhttp)
+    implementation(libs.kotlinx.coroutines.android)
+
+    // File access
+    implementation(libs.androidx.documentfile)
+
+    // MIDI Driver (Sonivox EAS synthesis) - local module
+    implementation(project(":mididriver"))
+
+    // SF2 SoundFont support via FluidSynth
+    implementation(libs.fluidsynth)
+
+    // MIDI Parser (android-midi-lib)
+    implementation(libs.android.midi.lib)
+
+    // JAudioTagger for ID3 tag editing - local module
+    implementation(project(":jaudiotagger"))
+
+    // FFmpeg-kit for audio processing (Audio Editor)
+    implementation(libs.ffmpeg.kit)
+
+    // Cloud Sync - Google Sign-In
+    implementation(libs.google.play.services.auth)
+    implementation(libs.kotlinx.coroutines.play.services)
+
+    // Google Play Billing (Premium)
+    implementation(libs.google.billing)
+
+    // Cloud Sync - Google Drive API
+    implementation(libs.google.api.client.android)
+    implementation(libs.google.api.services.drive)
+
+    // WorkManager for background sync
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // Testing
+    testImplementation(libs.junit)
+    // Les org.json d'Android ne sont que des coquilles vides en JVM : le stockage des projets pixel art se teste avec la vraie bibliothèque.
+    testImplementation("org.json:json:20240303")
+    // Une vraie base SQLite en JVM : la sauvegarde du canvas infini (Room) se teste de bout en bout.
+    testImplementation("org.robolectric:robolectric:4.14.1")
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+}

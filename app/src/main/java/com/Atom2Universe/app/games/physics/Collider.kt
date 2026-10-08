@@ -1,0 +1,839 @@
+package com.Atom2Universe.app.games.physics
+
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
+
+/** Un point de contact entre deux corps. */
+class Contact {
+    var px = 0f
+    var py = 0f
+    var separation = 0f
+
+    /** Impulsions accumulées, conservées d'une image à l'autre. */
+    var normalImpulse = 0f
+    var tangentImpulse = 0f
+
+    // Pré-calculs du solveur
+    var massNormal = 0f
+    var massTangent = 0f
+
+    /** Vitesse de rebond visée, calculée avant résolution (0 si le choc est mou). */
+    var bounce = 0f
+
+    /**
+     * Vitesse d'approche des deux corps en ce point, mesurée avant toute résolution,
+     * et comptée positive quand ils se rapprochent. C'est elle qui dit s'il y a choc,
+     * et de quelle violence.
+     */
+    var approach = 0f
+
+    /** Impulsion accumulée par la passe de position, sur les vitesses fantômes. */
+    var posImpulse = 0f
+    var rax = 0f
+    var ray = 0f
+    var rbx = 0f
+    var rby = 0f
+
+    /** Identifiant géométrique du point (quelle face contre quel sommet). */
+    var feature = 0
+
+    fun set(o: Contact) {
+        px = o.px; py = o.py; separation = o.separation
+        normalImpulse = o.normalImpulse; tangentImpulse = o.tangentImpulse
+        feature = o.feature
+    }
+}
+
+/**
+ * Une forme d'un corps, mise à plat en coordonnées monde.
+ *
+ * La détection travaille sur des **formes**, pas sur des corps : un corps peut en
+ * porter plusieurs, et chacune doit être testée séparément.
+ */
+internal class ShapeRef {
+    var shape = Shape.BOX
+    var x = 0f
+    var y = 0f
+    var angle = 0f
+    var halfW = 0f
+    var halfH = 0f
+    var radius = 0f
+
+    fun set(body: PhysBody, part: Int) {
+        val p = body.parts[part]
+        val c = cos(body.angle)
+        val s = sin(body.angle)
+        shape = p.shape
+        x = body.x + p.localX * c - p.localY * s
+        y = body.y + p.localX * s + p.localY * c
+        angle = body.angle + p.localAngle
+        halfW = p.halfW
+        halfH = p.halfH
+        radius = p.radius
+    }
+
+    fun corners(out: FloatArray) {
+        val c = cos(angle)
+        val s = sin(angle)
+        out[0] = x - halfW * c + halfH * s; out[1] = y - halfW * s - halfH * c
+        out[2] = x + halfW * c + halfH * s; out[3] = y + halfW * s - halfH * c
+        out[4] = x + halfW * c - halfH * s; out[5] = y + halfW * s + halfH * c
+        out[6] = x - halfW * c - halfH * s; out[7] = y - halfW * s + halfH * c
+    }
+
+    /** Écrit les sommets du polygone convexe et retourne leur nombre (3 ou 4). */
+    fun polygon(out: FloatArray): Int {
+        val c = cos(angle)
+        val s = sin(angle)
+        if (shape == Shape.TRIANGLE) {
+            // Le triangle local pointe vers le haut. Le centre de masse éventuel
+            // est déjà pris en compte dans localX/localY par PhysBody.compound.
+            out[0] = x - halfW * c + halfH * s; out[1] = y - halfW * s - halfH * c
+            out[2] = x + halfW * c + halfH * s; out[3] = y + halfW * s - halfH * c
+            out[4] = x - halfH * s; out[5] = y + halfH * c
+            return 3
+        }
+        corners(out)
+        return 4
+    }
+}
+
+/**
+ * Détection de collision entre deux formes, quelles qu'elles soient.
+ *
+ * Objet unique avec des tampons réutilisés : le moteur tourne sur un seul thread,
+ * donc on évite ainsi toute allocation pendant la simulation.
+ */
+internal object Collider {
+
+    private val refA = ShapeRef()
+    private val refB = ShapeRef()
+    private val vertsA = FloatArray(8)
+    private val vertsB = FloatArray(8)
+    private val segIn = FloatArray(4)
+    private val segMid = FloatArray(4)
+    private val segOut = FloatArray(4)
+    private val featIn = IntArray(2)
+    private val featMid = IntArray(2)
+    private val featOut = IntArray(2)
+
+    /** Normale du contact, orientée du corps A vers le corps B. */
+    var normalX = 0f
+        private set
+    var normalY = 0f
+        private set
+
+    private var sepValue = 0f
+    private var sepIndex = 0
+
+    /** Identifiant de point de contact pour les formes rondes : il n'y en a qu'un. */
+    private const val ROUND_FEATURE = -1
+
+    /**
+     * Marque les identifiants venant de [polygonPolygon], pour qu'ils ne se confondent
+     * jamais avec ceux de [boxBox].
+     *
+     * Le démarrage à chaud retrouve l'impulsion d'un contact par son identifiant : deux
+     * contacts différents qui porteraient le même numéro se prêteraient leur poussée, et
+     * une pile se mettrait à trembler sans raison visible.
+     */
+    private const val TRI_FEATURE = 1 shl 20
+
+    /**
+     * Calcule les points de contact entre la forme [pa] de [a] et la forme [pb] de
+     * [b], et les écrit dans [out]. Retourne le nombre de points (0 sans collision).
+     */
+    fun collide(a: PhysBody, pa: Int, b: PhysBody, pb: Int, out: Array<Contact>): Int {
+        refA.set(a, pa)
+        refB.set(b, pb)
+        return when {
+            refA.shape == Shape.CIRCLE && refB.shape == Shape.CIRCLE -> circleCircle(refA, refB, out)
+            refA.shape == Shape.CIRCLE -> circleBox(refA, refB, out, circleIsA = true)
+            refB.shape == Shape.CIRCLE -> circleBox(refB, refA, out, circleIsA = false)
+            refA.shape == Shape.BOX && refB.shape == Shape.BOX -> boxBox(refA, refB, out)
+            else -> polygonPolygon(refA, refB, out)
+        }
+    }
+
+    /**
+     * Contact entre deux polygones convexes dont au moins un est un triangle.
+     *
+     * **Il rend jusqu'à deux points de contact, comme [boxBox], et c'est tout le sujet.**
+     * Il n'en rendait qu'un, au milieu de la face d'appui, ce qui semblait raisonnable —
+     * « une base triangulaire repose sur toute sa longueur ». Mais un point unique ne
+     * transmet **aucun couple** : un triangle posé à plat ne peut alors ni tenir droit ni
+     * suivre le plan qui le porte, il pivote sur ce point comme sur une pointe.
+     *
+     * Le jeu d'équilibre l'a payé de deux façons. On a d'abord bloqué la rotation des
+     * triangles pour les empêcher de tourner sur place ; et un solide à rotation bloquée
+     * posé sur une planche qui s'incline **reste horizontal**, donc ne la touche plus que
+     * par un coin, et lui transmet son poids à ce coin au lieu du dessous de son centre de
+     * gravité. Mesuré le 04/09/2026 sur douze niveaux MEDIUM disposés au couple
+     * exactement nul : la planche partait à **6 à 9 degrés**, les rectangles suivant son
+     * angle au dixième près pendant que les triangles restaient à 0,00°. Aucun compteur
+     * ne pouvait le voir : les briques ne bougeaient pas d'un millimètre.
+     *
+     * Deux contacts, et le triangle redevient un solide ordinaire.
+     *
+     * L'algorithme est celui de [boxBox] — face de référence, face incidente, découpage —
+     * généralisé à un nombre quelconque de sommets. Il reste sur le chemin lent : les
+     * boîtes contre boîtes, qui sont l'immense majorité des contacts, gardent leur version
+     * spécialisée.
+     */
+    private fun polygonPolygon(a: ShapeRef, b: ShapeRef, out: Array<Contact>): Int {
+        val na = a.polygon(vertsA)
+        val nb = b.polygon(vertsB)
+
+        maxSeparationN(vertsA, na, vertsB, nb)
+        val sepA = sepValue
+        val faceA = sepIndex
+        if (sepA > 0f) return 0
+
+        maxSeparationN(vertsB, nb, vertsA, na)
+        val sepB = sepValue
+        val faceB = sepIndex
+        if (sepB > 0f) return 0
+
+        // Face de référence : celle qui sépare le mieux, avec le même petit biais que
+        // [boxBox] pour ne pas basculer d'une face à l'autre à chaque image.
+        val flip = sepB > sepA + 0.002f
+        val refVerts = if (flip) vertsB else vertsA
+        val incVerts = if (flip) vertsA else vertsB
+        val nRef = if (flip) nb else na
+        val nInc = if (flip) na else nb
+        val refIdx = if (flip) faceB else faceA
+
+        val rj = (refIdx + 1) % nRef
+        val r0x = refVerts[refIdx * 2]
+        val r0y = refVerts[refIdx * 2 + 1]
+        val r1x = refVerts[rj * 2]
+        val r1y = refVerts[rj * 2 + 1]
+        var tx = r1x - r0x
+        var ty = r1y - r0y
+        val tl = sqrt(tx * tx + ty * ty)
+        if (tl < 1e-6f) return 0
+        tx /= tl; ty /= tl
+        val nx = ty        // normale sortante de la face de référence
+        val ny = -tx
+
+        // Face incidente : celle dont la normale est la plus opposée à la référence.
+        var incIdx = 0
+        var minDot = Float.MAX_VALUE
+        for (i in 0 until nInc) {
+            val j = (i + 1) % nInc
+            val ex = incVerts[j * 2] - incVerts[i * 2]
+            val ey = incVerts[j * 2 + 1] - incVerts[i * 2 + 1]
+            val el = sqrt(ex * ex + ey * ey)
+            if (el < 1e-6f) continue
+            val d = (ey / el) * nx + (-ex / el) * ny
+            if (d < minDot) { minDot = d; incIdx = i }
+        }
+        val ij = (incIdx + 1) % nInc
+        segIn[0] = incVerts[incIdx * 2]; segIn[1] = incVerts[incIdx * 2 + 1]
+        segIn[2] = incVerts[ij * 2]; segIn[3] = incVerts[ij * 2 + 1]
+        featIn[0] = incIdx; featIn[1] = ij
+
+        // Découpage contre les deux bords latéraux de la face de référence.
+        val side0 = tx * r0x + ty * r0y
+        val side1 = tx * r1x + ty * r1y
+        if (clip(-tx, -ty, -side0, segIn, featIn, segMid, featMid, 8) < 2) return 0
+        if (clip(tx, ty, side1, segMid, featMid, segOut, featOut, 9) < 2) return 0
+
+        normalX = if (flip) -nx else nx
+        normalY = if (flip) -ny else ny
+
+        var count = 0
+        for (i in 0 until 2) {
+            val px = segOut[i * 2]
+            val py = segOut[i * 2 + 1]
+            val sep = (px - r0x) * nx + (py - r0y) * ny
+            if (sep <= 0f) {
+                val c = out[count]
+                c.px = px
+                c.py = py
+                c.separation = sep
+                c.normalImpulse = 0f
+                c.tangentImpulse = 0f
+                // Les identifiants de contact servent au démarrage à chaud : ils doivent
+                // rester stables d'une image à l'autre, et distincts de ceux de [boxBox].
+                c.feature = TRI_FEATURE or (if (flip) 1 shl 16 else 0) or
+                    (refIdx shl 8) or featOut[i]
+                count++
+            }
+        }
+        return count
+    }
+
+    /**
+     * Comme `maxSeparation`, mais pour un nombre quelconque de sommets.
+     *
+     * La version d'origine parcourait quatre sommets en dur (`and 3`) : appliquée à un
+     * triangle elle aurait lu un quatrième sommet qui n'existe pas.
+     */
+    private fun maxSeparationN(vr: FloatArray, nr: Int, vi: FloatArray, ni: Int) {
+        var best = -Float.MAX_VALUE
+        var bestI = 0
+        for (i in 0 until nr) {
+            val ax = vr[i * 2]
+            val ay = vr[i * 2 + 1]
+            val j = (i + 1) % nr
+            var nx = vr[j * 2 + 1] - ay
+            var ny = -(vr[j * 2] - ax)
+            val len = sqrt(nx * nx + ny * ny)
+            if (len < 1e-6f) continue
+            nx /= len; ny /= len
+            var minS = Float.MAX_VALUE
+            for (k in 0 until ni) {
+                val s = (vi[k * 2] - ax) * nx + (vi[k * 2 + 1] - ay) * ny
+                if (s < minS) minS = s
+            }
+            if (minS > best) { best = minS; bestI = i }
+        }
+        sepValue = best
+        sepIndex = bestI
+    }
+
+    // --------------------------- Disque contre disque ---------------------------
+
+    private fun circleCircle(a: ShapeRef, b: ShapeRef, out: Array<Contact>): Int {
+        val dx = b.x - a.x
+        val dy = b.y - a.y
+        val d2 = dx * dx + dy * dy
+        val r = a.radius + b.radius
+        if (d2 > r * r) return 0
+
+        val d = sqrt(d2)
+        // Deux centres confondus : la direction est arbitraire, mais il en faut une.
+        if (d < 1e-6f) {
+            normalX = 0f; normalY = 1f
+        } else {
+            normalX = dx / d; normalY = dy / d
+        }
+        val c = out[0]
+        c.separation = d - r
+        // Point au milieu du recouvrement, sur la ligne des centres.
+        c.px = a.x + normalX * (a.radius + c.separation * 0.5f)
+        c.py = a.y + normalY * (a.radius + c.separation * 0.5f)
+        c.normalImpulse = 0f
+        c.tangentImpulse = 0f
+        c.feature = ROUND_FEATURE
+        return 1
+    }
+
+    // ---------------------------- Disque contre boîte ----------------------------
+
+    /**
+     * Le principe : on ramène le centre du disque dans le repère de la boîte, on y
+     * cherche le point de la boîte le plus proche, et la normale suit ce segment.
+     *
+     * [circleIsA] dit si le disque est le corps A de la paire : la normale doit
+     * toujours aller de A vers B.
+     */
+    private fun circleBox(
+        circle: ShapeRef,
+        box: ShapeRef,
+        out: Array<Contact>,
+        circleIsA: Boolean
+    ): Int {
+        val c0 = cos(box.angle)
+        val s0 = sin(box.angle)
+        val dx = circle.x - box.x
+        val dy = circle.y - box.y
+        // Passage dans le repère de la boîte (rotation inverse)
+        val lx = dx * c0 + dy * s0
+        val ly = -dx * s0 + dy * c0
+
+        val clampedX = lx.coerceIn(-box.halfW, box.halfW)
+        val clampedY = ly.coerceIn(-box.halfH, box.halfH)
+
+        val nlx: Float
+        val nly: Float
+        val separation: Float
+
+        if (clampedX == lx && clampedY == ly) {
+            // Centre du disque à l'intérieur de la boîte : on ressort par la face
+            // la plus proche, sinon la normale n'aurait aucune direction définie.
+            val dxEdge = box.halfW - abs(lx)
+            val dyEdge = box.halfH - abs(ly)
+            if (dxEdge < dyEdge) {
+                nlx = if (lx < 0f) -1f else 1f
+                nly = 0f
+                separation = -dxEdge - circle.radius
+            } else {
+                nlx = 0f
+                nly = if (ly < 0f) -1f else 1f
+                separation = -dyEdge - circle.radius
+            }
+        } else {
+            val ox = lx - clampedX
+            val oy = ly - clampedY
+            val dist = sqrt(ox * ox + oy * oy)
+            if (dist > circle.radius) return 0
+            if (dist < 1e-6f) {
+                nlx = 0f; nly = 1f
+            } else {
+                nlx = ox / dist; nly = oy / dist
+            }
+            separation = dist - circle.radius
+        }
+
+        // Normale de la boîte vers le disque, ramenée dans le repère monde.
+        val wnx = nlx * c0 - nly * s0
+        val wny = nlx * s0 + nly * c0
+
+        val c = out[0]
+        c.separation = separation
+        // Point de contact : sur la surface du disque, du côté de la boîte.
+        c.px = circle.x - wnx * circle.radius
+        c.py = circle.y - wny * circle.radius
+        c.normalImpulse = 0f
+        c.tangentImpulse = 0f
+        c.feature = ROUND_FEATURE
+
+        if (circleIsA) {
+            // A = disque, B = boîte : la normale doit pointer vers la boîte.
+            normalX = -wnx; normalY = -wny
+        } else {
+            normalX = wnx; normalY = wny
+        }
+        return 1
+    }
+
+    // ---------------------------- Boîte contre boîte ----------------------------
+
+    /**
+     * Cherche, parmi les 4 faces du polygone [vr], celle qui sépare le mieux [vi].
+     * Résultat dans [sepValue] (distance, positive = pas de collision) et [sepIndex].
+     */
+    private fun maxSeparation(vr: FloatArray, vi: FloatArray) {
+        var best = -Float.MAX_VALUE
+        var bestI = 0
+        for (i in 0 until 4) {
+            val ax = vr[i * 2]
+            val ay = vr[i * 2 + 1]
+            val j = (i + 1) and 3
+            var nx = vr[j * 2 + 1] - ay
+            var ny = -(vr[j * 2] - ax)
+            val len = sqrt(nx * nx + ny * ny)
+            if (len < 1e-6f) continue
+            nx /= len; ny /= len
+            // Point de [vi] le plus « enfoncé » dans cette face
+            var minS = Float.MAX_VALUE
+            for (k in 0 until 4) {
+                val s = (vi[k * 2] - ax) * nx + (vi[k * 2 + 1] - ay) * ny
+                if (s < minS) minS = s
+            }
+            if (minS > best) { best = minS; bestI = i }
+        }
+        sepValue = best
+        sepIndex = bestI
+    }
+
+    /**
+     * Découpe le segment [srcP] par le demi-plan « produit scalaire (d, p) <= offset ».
+     * Retourne le nombre de points conservés (0 à 2), écrits dans [dstP].
+     */
+    private fun clip(
+        dx: Float, dy: Float, offset: Float,
+        srcP: FloatArray, srcF: IntArray,
+        dstP: FloatArray, dstF: IntArray,
+        edgeFeature: Int
+    ): Int {
+        var num = 0
+        val d0 = dx * srcP[0] + dy * srcP[1] - offset
+        val d1 = dx * srcP[2] + dy * srcP[3] - offset
+        if (d0 <= 0f) { dstP[num * 2] = srcP[0]; dstP[num * 2 + 1] = srcP[1]; dstF[num] = srcF[0]; num++ }
+        if (d1 <= 0f && num < 2) { dstP[num * 2] = srcP[2]; dstP[num * 2 + 1] = srcP[3]; dstF[num] = srcF[1]; num++ }
+        if (d0 * d1 < 0f && num < 2) {
+            val t = d0 / (d0 - d1)
+            dstP[num * 2] = srcP[0] + t * (srcP[2] - srcP[0])
+            dstP[num * 2 + 1] = srcP[1] + t * (srcP[3] - srcP[1])
+            dstF[num] = edgeFeature
+            num++
+        }
+        return num
+    }
+
+    private fun boxBox(a: ShapeRef, b: ShapeRef, out: Array<Contact>): Int {
+        a.corners(vertsA)
+        b.corners(vertsB)
+
+        maxSeparation(vertsA, vertsB)
+        val sepA = sepValue
+        val faceA = sepIndex
+        if (sepA > 0f) return 0
+
+        maxSeparation(vertsB, vertsA)
+        val sepB = sepValue
+        val faceB = sepIndex
+        if (sepB > 0f) return 0
+
+        // Face de référence : celle qui sépare le mieux (petit biais pour éviter
+        // de basculer d'une face à l'autre à chaque image).
+        val flip = sepB > sepA + 0.002f
+        val refVerts = if (flip) vertsB else vertsA
+        val incVerts = if (flip) vertsA else vertsB
+        val refIdx = if (flip) faceB else faceA
+
+        val rj = (refIdx + 1) and 3
+        val r0x = refVerts[refIdx * 2]
+        val r0y = refVerts[refIdx * 2 + 1]
+        val r1x = refVerts[rj * 2]
+        val r1y = refVerts[rj * 2 + 1]
+        var tx = r1x - r0x
+        var ty = r1y - r0y
+        val tl = sqrt(tx * tx + ty * ty)
+        if (tl < 1e-6f) return 0
+        tx /= tl; ty /= tl
+        val nx = ty        // normale sortante de la face de référence
+        val ny = -tx
+
+        // Face incidente : celle dont la normale est la plus opposée à la référence.
+        var incIdx = 0
+        var minDot = Float.MAX_VALUE
+        for (i in 0 until 4) {
+            val j = (i + 1) and 3
+            val ex = incVerts[j * 2] - incVerts[i * 2]
+            val ey = incVerts[j * 2 + 1] - incVerts[i * 2 + 1]
+            val el = sqrt(ex * ex + ey * ey)
+            if (el < 1e-6f) continue
+            val d = (ey / el) * nx + (-ex / el) * ny
+            if (d < minDot) { minDot = d; incIdx = i }
+        }
+        val ij = (incIdx + 1) and 3
+        segIn[0] = incVerts[incIdx * 2]; segIn[1] = incVerts[incIdx * 2 + 1]
+        segIn[2] = incVerts[ij * 2]; segIn[3] = incVerts[ij * 2 + 1]
+        featIn[0] = incIdx; featIn[1] = ij
+
+        // Découpage contre les deux bords latéraux de la face de référence.
+        val side0 = tx * r0x + ty * r0y
+        val side1 = tx * r1x + ty * r1y
+        if (clip(-tx, -ty, -side0, segIn, featIn, segMid, featMid, 8) < 2) return 0
+        if (clip(tx, ty, side1, segMid, featMid, segOut, featOut, 9) < 2) return 0
+
+        normalX = if (flip) -nx else nx
+        normalY = if (flip) -ny else ny
+
+        var count = 0
+        for (i in 0 until 2) {
+            val px = segOut[i * 2]
+            val py = segOut[i * 2 + 1]
+            val sep = (px - r0x) * nx + (py - r0y) * ny
+            if (sep <= 0f) {
+                val c = out[count]
+                c.px = px
+                c.py = py
+                c.separation = sep
+                c.normalImpulse = 0f
+                c.tangentImpulse = 0f
+                c.feature = (if (flip) 1 shl 16 else 0) or (refIdx shl 8) or featOut[i]
+                count++
+            }
+        }
+        return count
+    }
+}
+
+/**
+ * L'ensemble des contacts entre deux formes, conservé d'une image à l'autre.
+ *
+ * Les impulsions, elles, s'appliquent aux **corps** : c'est leur centre de masse
+ * qui bouge, quelle que soit la forme touchée.
+ */
+class Arbiter(
+    val a: PhysBody,
+    val b: PhysBody,
+    val partA: Int = 0,
+    val partB: Int = 0
+) {
+
+    val contacts = Array(2) { Contact() }
+    var count = 0
+    var normalX = 0f
+    var normalY = 0f
+    var friction = 0f
+    var restitution = 0f
+    var stamp = 0
+
+    /**
+     * Vrai quand les deux corps se sont vraiment percutés à ce pas, par opposition
+     * à un contact qui ne fait que porter un poids. C'est ce qui distingue un boulet
+     * qui frappe un mur d'une caisse tranquillement posée dessus.
+     */
+    var impacting = false
+        private set
+
+    /**
+     * Énergie du **choc seul**, en joules : celle que le rapprochement des deux corps
+     * dissipe, et rien d'autre.
+     *
+     * Deux décisions tiennent dans cette ligne, et les deux ont coûté un banc d'essai.
+     *
+     * D'abord, on ne compte **pas l'impulsion totale du contact**. Un contact fait
+     * deux métiers à la fois : porter un poids et encaisser un choc, et dans une
+     * construction le poids porté est de très loin le plus gros terme. Une assise du
+     * bas qui supporte sept assises de pierre voit passer seize cents kg·m/s par image
+     * rien que pour les tenir ; les compter revenait à faire payer à une pierre le mur
+     * qu'elle soutient, et le mur se broyait tout seul.
+     *
+     * Ensuite, on compte une **énergie** et non une quantité de mouvement. C'est le
+     * point le moins évident et le plus important. En quantité de mouvement, une pierre
+     * d'une tonne et demie qui se tasse de six centimètres délivre neuf cents kg·m/s,
+     * soit exactement autant qu'un boulet de douze kilos lancé à cent mètres par
+     * seconde — arithmétiquement vrai, et absurde comme modèle de casse. En énergie,
+     * la même pierre pèse trois cents joules contre soixante mille pour le boulet :
+     * deux cents fois moins, ce qui est l'ordre de grandeur que le bon sens attend.
+     *
+     * La valeur retenue est celle d'un choc parfaitement mou : la moitié de la masse
+     * effective du contact fois le carré de la vitesse d'approche.
+     */
+    var impactEnergy = 0f
+        private set
+
+    /**
+     * Vitesse que les deux surfaces cherchent à avoir l'une par rapport à l'autre, le
+     * long de la tangente du contact, en m/s. Zéro partout sauf si un tapis roulant est
+     * en jeu — voir [PhysBody.surfaceSpeed].
+     *
+     * Elle est calculée une fois par sous-pas, dans [measure], et pas à chaque passe du
+     * solveur : elle ne dépend que de la normale et de l'orientation des corps, qui ne
+     * bougent pas pendant qu'on résout.
+     */
+    var surfaceTangent = 0f
+        private set
+
+    private var posInvDt = 0f
+
+    /** Reprend les impulsions des contacts précédents quand ils correspondent (warm starting). */
+    fun update(fresh: Array<Contact>, freshCount: Int, nx: Float, ny: Float) {
+        for (i in 0 until freshCount) {
+            val nc = fresh[i]
+            for (j in 0 until count) {
+                val oc = contacts[j]
+                if (oc.feature == nc.feature) {
+                    nc.normalImpulse = oc.normalImpulse
+                    nc.tangentImpulse = oc.tangentImpulse
+                    break
+                }
+            }
+        }
+        for (i in 0 until freshCount) contacts[i].set(fresh[i])
+        count = freshCount
+        normalX = nx
+        normalY = ny
+        friction = sqrt(a.friction * b.friction)
+        restitution = maxOf(a.restitution, b.restitution)
+    }
+
+    /** Somme des impulsions normales appliquées au pas écoulé, en kg·m/s. */
+    fun totalNormalImpulse(): Float {
+        var s = 0f
+        for (i in 0 until count) s += contacts[i].normalImpulse
+        return s
+    }
+
+    /**
+     * Prépare la résolution. [impactSpeed] est la vitesse d'approche à partir de
+     * laquelle on considère qu'il y a choc : en dessous, pas de rebond et pas de dégât.
+     */
+    /**
+     * Mesure ce que ce contact **subit**, avant que le solveur n'ait touché à quoi que
+     * ce soit : vitesse d'approche, rebond visé, et énergie du choc.
+     *
+     * **Cette passe doit être faite pour tous les contacts avant que le moindre ne soit
+     * résolu**, et c'est pour ça qu'elle est séparée de [preStep]. La reprise des
+     * impulsions de l'image précédente — le warm starting — rend aux corps, d'un coup,
+     * tout l'effort qui tient la pile. Elle s'applique contact par contact, si bien
+     * qu'entre le premier et le dernier les corps portent des vitesses transitoires
+     * énormes, qui seront annulées à la fin du pas mais qui existent bel et bien entre
+     * deux.
+     *
+     * Tant que les deux choses étaient faites dans la même boucle, un contact mesuré
+     * tard voyait donc son voisin arriver à trois mètres par seconde alors que rien ne
+     * bougeait. Une tour de pierre, dont les contacts du bas portent quarante tonnes,
+     * s'infligeait ainsi quatorze kilojoules par image, indéfiniment, et se fêlait sans
+     * que personne ne l'ait touchée. Plus l'ouvrage était lourd, plus il se détruisait
+     * vite — le symptôme le plus trompeur de toute cette histoire.
+     */
+    fun measure(impactSpeed: Float) {
+        val nx = normalX
+        val ny = normalY
+        val tx = ny
+        val ty = -nx
+
+        impacting = false
+        impactEnergy = 0f
+
+        // Entraînement des surfaces : la bande de A et celle de B, projetées sur la
+        // tangente. Le test d'abord, parce que presque aucun contact n'est un tapis et
+        // que deux cosinus par contact et par sous-pas se paient sur un château entier.
+        //
+        // **Le sens est celui de A moins B, et pas l'inverse.** Le frottement ne regarde
+        // pas les centres de gravité, il regarde les deux matières qui se frôlent : la
+        // matière de A au point de contact va à `vA + sA`, celle de B à `vB + sB`, et
+        // c'est leur écart qu'il annule. Développé, il cherche donc à amener `vB − vA`
+        // sur `sA − sB`. Pris à l'envers — c'est l'erreur qu'on a faite — le tapis
+        // entraîne exactement à rebours de sa bande, ce qui se voit tout de suite mais
+        // ne se devine pas.
+        surfaceTangent = if (a.surfaceSpeed == 0f && b.surfaceSpeed == 0f) 0f else {
+            val sa = a.surfaceSpeed
+            val sb = b.surfaceSpeed
+            val ax = cos(a.angle) * sa; val ay = sin(a.angle) * sa
+            val bx = cos(b.angle) * sb; val by = sin(b.angle) * sb
+            (ax - bx) * tx + (ay - by) * ty
+        }
+
+        for (i in 0 until count) {
+            val c = contacts[i]
+            c.rax = c.px - a.x; c.ray = c.py - a.y
+            c.rbx = c.px - b.x; c.rby = c.py - b.y
+
+            // Masses effectives du contact : elles ne dépendent que des positions et
+            // des masses, donc rien n'empêche de les calculer ici, et l'énergie du choc
+            // en a besoin.
+            val rnA = c.rax * ny - c.ray * nx
+            val rnB = c.rbx * ny - c.rby * nx
+            val kn = a.invMass + b.invMass + a.invI * rnA * rnA + b.invI * rnB * rnB
+            c.massNormal = if (kn > 0f) 1f / kn else 0f
+
+            val rtA = c.rax * ty - c.ray * tx
+            val rtB = c.rbx * ty - c.rby * tx
+            val kt = a.invMass + b.invMass + a.invI * rtA * rtA + b.invI * rtB * rtB
+            c.massTangent = if (kt > 0f) 1f / kt else 0f
+
+            val dvx = (b.vx - b.omega * c.rby) - (a.vx - a.omega * c.ray)
+            val dvy = (b.vy + b.omega * c.rbx) - (a.vy + a.omega * c.rax)
+            val vn = dvx * nx + dvy * ny
+            c.approach = if (vn < 0f) -vn else 0f
+            if (vn < -impactSpeed) {
+                impacting = true
+                c.bounce = -restitution * vn
+            } else {
+                c.bounce = 0f
+            }
+
+            // La part « choc » de l'énergie : celle que dissiperait l'arrêt du
+            // rapprochement. On retranche le seuil plutôt que de le franchir d'un coup,
+            // sinon un contact qui l'effleure infligerait tout ce qu'un choc franc inflige.
+            val over = c.approach - impactSpeed
+            if (over > 0f) impactEnergy += 0.5f * c.massNormal * over * over
+        }
+    }
+
+    /**
+     * Prépare la résolution : rend aux corps les impulsions de l'image précédente.
+     *
+     * À n'appeler qu'après que [measure] a été passé sur **tous** les contacts du monde.
+     */
+    fun preStep(invDt: Float) {
+        posInvDt = invDt
+        val nx = normalX
+        val ny = normalY
+        val tx = ny
+        val ty = -nx
+        for (i in 0 until count) {
+            val c = contacts[i]
+            c.posImpulse = 0f
+            val px = c.normalImpulse * nx + c.tangentImpulse * tx
+            val py = c.normalImpulse * ny + c.tangentImpulse * ty
+            a.vx -= a.invMass * px; a.vy -= a.invMass * py
+            a.omega -= a.invI * (c.rax * py - c.ray * px)
+            b.vx += b.invMass * px; b.vy += b.invMass * py
+            b.omega += b.invI * (c.rbx * py - c.rby * px)
+        }
+    }
+
+    /**
+     * Une passe de replacement : sépare les corps déjà enfoncés l'un dans l'autre,
+     * en poussant sur les vitesses fantômes.
+     *
+     * C'est la moitié « positions » du solveur. Elle bouge les corps sans jamais
+     * leur donner d'élan, ce qui est exactement ce qu'il faut : un corps qu'on
+     * dégage d'un mur ne doit pas en ressortir lancé.
+     */
+    fun applyPositionImpulse(allowedPenetration: Float) {
+        // L'enfoncement est une longueur : divisé par la durée du pas, il devient
+        // la vitesse fantôme qui le résorbe. Le plafond évite qu'un corps très
+        // enfoncé ne soit dégagé d'un coup de canon.
+        val correctionRate = 0.35f * posInvDt
+        val maxCorrection = 0.2f * posInvDt
+        val nx = normalX
+        val ny = normalY
+        for (i in 0 until count) {
+            val c = contacts[i]
+            val err = ((c.separation + allowedPenetration) * correctionRate)
+                .coerceIn(-maxCorrection, 0f)
+            if (err == 0f && c.posImpulse == 0f) continue
+
+            val dvx = (b.pvx - b.pomega * c.rby) - (a.pvx - a.pomega * c.ray)
+            val dvy = (b.pvy + b.pomega * c.rbx) - (a.pvy + a.pomega * c.rax)
+            val vn = dvx * nx + dvy * ny
+
+            var dP = c.massNormal * (-vn - err)
+            val newP = maxOf(c.posImpulse + dP, 0f)
+            dP = newP - c.posImpulse
+            c.posImpulse = newP
+
+            val px = dP * nx
+            val py = dP * ny
+            a.pvx -= a.invMass * px; a.pvy -= a.invMass * py
+            a.pomega -= a.invI * (c.rax * py - c.ray * px)
+            b.pvx += b.invMass * px; b.pvy += b.invMass * py
+            b.pomega += b.invI * (c.rbx * py - c.rby * px)
+        }
+    }
+
+    /** Une passe du solveur : corrige les vitesses aux points de contact. */
+    fun applyImpulse() {
+        val nx = normalX
+        val ny = normalY
+        val tx = ny
+        val ty = -nx
+        for (i in 0 until count) {
+            val c = contacts[i]
+
+            // Vitesse relative au point de contact
+            var dvx = (b.vx - b.omega * c.rby) - (a.vx - a.omega * c.ray)
+            var dvy = (b.vy + b.omega * c.rbx) - (a.vy + a.omega * c.rax)
+
+            // -- Composante normale : empêche l'interpénétration, et fait rebondir --
+            val vn = dvx * nx + dvy * ny
+            // Seul le rebond entre ici. L'enfoncement déjà accumulé, lui, se
+            // rattrape dans la passe de position : le corriger sur les vitesses
+            // réelles reviendrait à créer de l'énergie à chaque image.
+            var dPn = c.massNormal * (-vn + c.bounce)
+            val newPn = maxOf(c.normalImpulse + dPn, 0f)
+            dPn = newPn - c.normalImpulse
+            c.normalImpulse = newPn
+            var px = dPn * nx
+            var py = dPn * ny
+            a.vx -= a.invMass * px; a.vy -= a.invMass * py
+            a.omega -= a.invI * (c.rax * py - c.ray * px)
+            b.vx += b.invMass * px; b.vy += b.invMass * py
+            b.omega += b.invI * (c.rbx * py - c.rby * px)
+
+            // -- Composante tangentielle : le frottement, borné par la loi de Coulomb --
+            dvx = (b.vx - b.omega * c.rby) - (a.vx - a.omega * c.ray)
+            dvy = (b.vy + b.omega * c.rbx) - (a.vy + a.omega * c.rax)
+            // La vitesse visée n'est pas toujours zéro : sur un tapis roulant, le
+            // frottement cherche à amener la charge à la vitesse de la bande au lieu de
+            // l'immobiliser. C'est le même calcul, décalé de [surfaceTangent] ; la borne
+            // de Coulomb, elle, ne bouge pas, donc la bande patine dès qu'elle demande
+            // plus que ce que le poids posé dessus permet de transmettre.
+            val vt = dvx * tx + dvy * ty - surfaceTangent
+            var dPt = c.massTangent * (-vt)
+            val maxPt = friction * c.normalImpulse
+            val oldPt = c.tangentImpulse
+            c.tangentImpulse = (oldPt + dPt).coerceIn(-maxPt, maxPt)
+            dPt = c.tangentImpulse - oldPt
+            px = dPt * tx
+            py = dPt * ty
+            a.vx -= a.invMass * px; a.vy -= a.invMass * py
+            a.omega -= a.invI * (c.rax * py - c.ray * px)
+            b.vx += b.invMass * px; b.vy += b.invMass * py
+            b.omega += b.invI * (c.rbx * py - c.rby * px)
+        }
+    }
+}

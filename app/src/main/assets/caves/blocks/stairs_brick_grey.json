@@ -1,0 +1,16 @@
+{
+  "id": 2406,
+  "name": "stairs_brick_grey",
+  "texture_top": "cozy:material:12:9DA5AE",
+  "texture_side": "cozy:material:12:9DA5AE",
+  "texture_bottom": "cozy:material:12:9DA5AE",
+  "color": "#9DA5AE",
+  "hardness": 3.0,
+  "drop": "stairs_brick_grey",
+  "creative_tab": "stone",
+  "placement_rule": "any",
+  "replaceable": false,
+  "tags": [],
+  "stairs": true,
+  "harvest_category": "recoverable"
+}
