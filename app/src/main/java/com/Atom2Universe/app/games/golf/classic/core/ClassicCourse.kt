@@ -25,6 +25,11 @@ enum class GolfClub(val carry: Float, val loft: Float, val launch: Float, val sp
 /** Width is the full mowing width. Zero-width nodes represent an intentional rough carry. */
 data class GolfRouteNode(val x: Float, val z: Float, val width: Float)
 data class GolfElevationNode(val z: Float, val height: Float)
+enum class GolfLandscapeStyle { PARKLAND, AUTUMN_HIGHLANDS }
+
+/** A designed carry and reception, used to validate risk/reward routes against real equipment. */
+data class GolfAttackLanding(val x: Float, val z: Float, val club: GolfClub,
+    val fromX: Float = 0f, val fromZ: Float = 0f)
 data class GolfMound(val x: Float, val z: Float, val height: Float, val rx: Float, val rz: Float)
 enum class GolfGreenForm { PLANE, TIER, RIDGE, SWALE, FALSE_FRONT, CROWN, PUNCHBOWL }
 
@@ -112,7 +117,9 @@ data class ClassicHole(
     val cupBowlDepth: Float = 0f,
     /** Additional mown corridors; the primary route remains the caddie's prudent line. */
     val alternateRoutes: List<List<GolfRouteNode>> = emptyList(),
-    val plantedTrees: List<GolfTree> = emptyList()
+    val plantedTrees: List<GolfTree> = emptyList(),
+    val landscapeStyle: GolfLandscapeStyle = GolfLandscapeStyle.PARKLAND,
+    val attackLandings: List<GolfAttackLanding> = emptyList()
 ) {
     private val greenCos = cos(greenShape.rotation)
     private val greenSin = sin(greenShape.rotation)
@@ -177,7 +184,8 @@ data class ClassicHole(
                     fairwaySignedDistance(x, z) > radius + 8f &&
                     abs(x - pathX(z)) > 5f + radius &&
                     (number % 3 != 0 || z / length !in .25f.. .48f)) {
-                    add(GolfTree(x, z, radius, i % 3))
+                    val kind=if(landscapeStyle==GolfLandscapeStyle.AUTUMN_HIGHLANDS && i%5<3)1 else i%3
+                    add(GolfTree(x, z, radius, kind))
                 }
             }
         }

@@ -6,6 +6,43 @@ import org.junit.Test
 import kotlin.math.*
 
 class WildDetoursCourseTest {
+    @Test fun attackShelvesMatchEquipmentAndStayClearOfHazards() {
+        for(h in WildDetoursCourse.holes) {
+            assertEquals(GolfLandscapeStyle.AUTUMN_HIGHLANDS,h.landscapeStyle)
+            if(h.par>3) assertTrue("No attack on ${h.number}",h.attackLandings.isNotEmpty())
+            for(a in h.attackLandings) {
+                val distance=hypot(a.x-a.fromX,a.z-a.fromZ)
+                assertTrue("Carry ${h.number}: $distance / ${a.club}",distance in a.club.carry*.70f..a.club.carry)
+                assertEquals("Reception ${h.number}",GolfLie.FAIRWAY,h.lieAt(a.x,a.z))
+                assertTrue("Hazard margin ${h.number}",h.hazards.all { it.signedDistance(a.x,a.z)>5f })
+                if(a.fromZ==0f && a.x!=0f) {
+                    val attack=hypot(h.finishX-a.x,h.length-a.z)
+                    val safe=h.openingTarget
+                    assertTrue("No shortcut benefit ${h.number}",attack+10f<hypot(h.finishX-safe.x,h.length-safe.z))
+                }
+            }
+        }
+        for(h in ClassicCourse.holes+HeatherCourse.holes) assertEquals(GolfLandscapeStyle.PARKLAND,h.landscapeStyle)
+    }
+
+    @Test fun realShotsCanStopOnEveryAttackShelfWithoutWind() {
+        for(h in WildDetoursCourse.holes) for(a in h.attackLandings) {
+            val angle=atan2(a.x-a.fromX,a.z-a.fromZ)
+            var found=false
+            for(percent in 65..100) {
+                val g=ClassicGame(h).apply {
+                    restore(GolfPoint(a.fromX,h.heightAt(a.fromX,a.fromZ),a.fromZ),0)
+                    windX=0f;windZ=0f;club=a.club;aimAngle=angle;hit(percent/100f)
+                }
+                var steps=0
+                while(g.state in listOf(GolfState.FLYING,GolfState.ROLLING) && steps++<2400) g.update(1f/60f)
+                if(g.state==GolfState.READY && g.lastPenalty==0 && g.lie==GolfLie.FAIRWAY &&
+                    hypot(g.ball.x-a.x,g.ball.z-a.z)<18f) { found=true;break }
+            }
+            assertTrue("Unplayable attack ${h.number}: ${a.club} to ${a.x}/${a.z}",found)
+        }
+    }
+
     @Test fun fullAdvancedRoundHasDryPrimaryRoutesAndReachableOpeningTargets() {
         val holes = WildDetoursCourse.holes
         assertEquals((1..18).toList(), holes.map { it.number })

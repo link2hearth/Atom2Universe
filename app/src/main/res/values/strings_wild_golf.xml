@@ -1,45 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="classic_wild_course">Wild Detours</string>
-    <string name="classic_wild_description">Course 3 · Advanced. 18 holes with branching fairways, central woodland and hills, narrow shortcuts between lakes and contoured greens. Build a par along the wide route or cut across with precision.</string>
+    <string name="classic_wild_course">Wild Highlands</string>
+    <string name="classic_wild_description">Course 3 · Advanced. 18 holes in the autumn highlands: golden grass, pines, rocks and cold lakes. Narrow landing shelves reward driver and wood carries, then precise hops between banks. The broad route remains the conservative choice.</string>
     <string-array name="classic_wild_holes">
-        <item>The Two-Way Oak</item>
-        <item>Thread Between Lakes</item>
-        <item>The Peninsula</item>
-        <item>The Giant’s Back</item>
-        <item>The Cape Wager</item>
-        <item>Serpent Islands</item>
-        <item>The Wind Redan</item>
-        <item>The Sand Sea</item>
-        <item>The Pine S</item>
-        <item>The Horseshoe</item>
-        <item>The Divided Forest</item>
-        <item>The Hourglass</item>
-        <item>The Trident</item>
-        <item>The Giant’s Balconies</item>
-        <item>The Twin Capes</item>
-        <item>The Last Long Iron</item>
-        <item>The Shore Choice</item>
-        <item>The Bold Causeway</item>
+        <item>The Amber Clearing</item><item>The Cold Twin Lakes</item><item>The Grey Peninsula</item>
+        <item>The Giant’s Saddle</item><item>The Golden Cape</item><item>The Three Stones</item>
+        <item>The Wind Redan</item><item>The Pale Quarry</item><item>The Pine S</item>
+        <item>The Autumn Cirque</item><item>The Divided Forest</item><item>The Cold Mirror</item>
+        <item>The Stone Trident</item><item>The Giant’s Balconies</item><item>The Twin Capes</item>
+        <item>The Last Long Iron</item><item>The Shore Choice</item><item>The Highland Lake Crossing</item>
     </string-array>
     <string-array name="classic_wild_tips">
-        <item>Go around the wooded hill: wide left or tighter right with a better approach angle.</item>
-        <item>The broad right crescent builds a prudent par 5. The left shortcut is a 17 m ribbon between two lakes.</item>
-        <item>Carry the water without running into the rear sand. The right apron offers a bailout.</item>
-        <item>The high hill blocks the direct line. Use the wide left elbow or the shorter right saddle.</item>
-        <item>From the high tee, attack the green across the lake or set up an approach on the right terrace.</item>
-        <item>Follow the wide right bank or hop between the small left landings: water fills the gaps.</item>
-        <item>The high right apron feeds towards the diagonal green. Short shots find sand.</item>
-        <item>Two fairways skirt the huge central bunker. Left is wide; right demands a placed drive.</item>
-        <item>The broad right S avoids the pines; the left route is shorter with little room to miss.</item>
-        <item>The descent adds distance. Choose the broad right bank or the small left landing beside the lake.</item>
-        <item>Two routes encircle the wooded hill. The broad left detour offers space; the right route shortens the approach.</item>
-        <item>Control carry between front water and rear sand. The right apron avoids the narrowest target.</item>
-        <item>Three routes: wide left, short right, or a 17 m ribbon between the two central bunkers.</item>
-        <item>Skirt the wooded ridge on either balcony. The green climbs: take enough club to reach the terrace.</item>
-        <item>Cut across either cape over water. The bank routes remain playable with several placed shots.</item>
-        <item>Place a long iron between lake and sand; the front-left apron sets up a conservative chip.</item>
-        <item>The left shelf is wide but leaves a diagonal approach. The right lane hugs water and opens the green.</item>
-        <item>Final par 5: build along the broad right crescent or brave the 18 m causeway between the lakes.</item>
+        <item>The broad left fairway is safe. A driver to the right clearing, about 232 m from the tee, leaves a shorter approach. Avoid the central ridge.</item>
+        <item>Follow the broad right bank, or carry a driver to the 225 m landing beyond the first lake. A wood 3 then jumps about 205 m across the second lake to the final shelf.</item>
+        <item>Water guards the entrance. An iron 5 covers the theoretical 155 m; the right apron is a bailout, while rear sand punishes excess distance.</item>
+        <item>The broad left elbow is safe. A driver can reach the small right saddle at about 227 m, opening the uphill approach. The ridge blocks the centre shortcut.</item>
+        <item>A driver carry of about 229 m clears the diagonal lake to the left cape and leaves a wedge. The right shelf builds the hole without that long crossing.</item>
+        <item>Three left landings: driver to the first at 220 m, iron 8 for the next 116 m hop, then pitching wedge for about 97 m. The right fairway avoids these small targets.</item>
+        <item>A wood 5 covers the theoretical 186 m. The high right apron opens a diagonal entrance; the bunker guards a short left landing.</item>
+        <item>The left fairway skirts the quarry. A driver of about 227 m reaches the small right tongue beyond the sand and shortens the approach.</item>
+        <item>The broad right S is conservative. A driver of about 226 m to the left landing cuts the detour; central pines block the direct line.</item>
+        <item>The descent adds carry. The small left landing is about 228 m from the tee: use the preview to control the driver. The broad right bank gives more margin.</item>
+        <item>The left detour is broad. A driver to the right clearing at about 232 m leaves less distance to the green, provided you stay beside the forest.</item>
+        <item>A hybrid covers the theoretical 170 m. Carry the front lake without rolling into rear sand; the right apron offers more depth.</item>
+        <item>Go broad left, aim a driver at the right tongue at 229 m, or use a wood 3 to the central 210 m pocket between bunkers. Sand beyond the centre then demands a change of angle.</item>
+        <item>A driver of about 229 m reaches the right balcony and cuts the detour. The left bank is broader; the final shot still climbs to the green.</item>
+        <item>Driver to the left cape at about 230 m, then wood 3 to the second cape at 202 m. Those landings leave an iron to the green; the broad right bank allows three conservative shots.</item>
+        <item>A wood 3 covers the theoretical 205 m. Right water and left sand frame the green; the front-left apron preserves a chip option.</item>
+        <item>The left shelf is broad. A driver of about 224 m reaches the small right landing between ridge and lake and opens a more direct approach.</item>
+        <item>Driver to the 220 m pocket beyond the first lake, then wood 3 for 210 m to the final landing. The broad right crescent avoids those two precise crossings.</item>
     </string-array>
 </resources>

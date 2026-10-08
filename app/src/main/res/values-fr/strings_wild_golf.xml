@@ -1,45 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="classic_wild_course">Les Détours Sauvages</string>
-    <string name="classic_wild_description">Parcours 3 · Avancé. 18 trous à choix multiples : bosquets et collines au centre, fairways bifurqués, raccourcis étroits entre les lacs et greens à relief. La voie large permet de construire le par ; couper exige de la précision.</string>
+    <string name="classic_wild_course">Les Hautes Terres Sauvages</string>
+    <string name="classic_wild_description">Parcours 3 · Avancé. 18 trous dans les hauts plateaux d’automne : herbes dorées, pins, rochers et lacs froids. Des réceptions étroites permettent de couper au driver ou au bois, puis de sauter de berge en berge. La voie large reste la route prudente.</string>
     <string-array name="classic_wild_holes">
-        <item>Le chêne aux deux chemins</item>
-        <item>Le fil entre les eaux</item>
-        <item>La presqu’île</item>
-        <item>Le dos du géant</item>
-        <item>Le pari du cap</item>
-        <item>Les îlots du serpent</item>
-        <item>Le redan des vents</item>
-        <item>La mer de sable</item>
-        <item>Le S des pins</item>
-        <item>Le fer à cheval</item>
-        <item>La forêt partagée</item>
-        <item>Le sablier</item>
-        <item>Le trident</item>
-        <item>Les balcons du géant</item>
-        <item>Les deux caps</item>
-        <item>Le dernier long fer</item>
-        <item>Le choix des berges</item>
-        <item>La chaussée de l’audace</item>
+        <item>La clairière d’ambre</item><item>Les deux lacs froids</item><item>La presqu’île grise</item>
+        <item>Le col du géant</item><item>Le cap doré</item><item>Les trois pierres</item>
+        <item>Le redan des vents</item><item>La carrière claire</item><item>Le S des pins</item>
+        <item>Le cirque d’automne</item><item>La forêt partagée</item><item>Le miroir froid</item>
+        <item>Le trident de pierre</item><item>Les balcons du géant</item><item>Les deux caps</item>
+        <item>Le dernier long fer</item><item>Le choix des berges</item><item>La traversée des hauts lacs</item>
     </string-array>
     <string-array name="classic_wild_tips">
-        <item>Contourne le bosquet et sa colline : large à gauche, plus serré à droite avec un meilleur angle.</item>
-        <item>Le grand croissant à droite construit un par 5 prudent. À gauche, un ruban de 17 m passe entre deux lacs.</item>
-        <item>Porte la balle au-delà de l’eau sans dépasser dans le sable. Le tablier droit offre un refuge.</item>
-        <item>La haute colline barre la ligne directe. Le large coude gauche assure ; le col droit raccourcit.</item>
-        <item>Depuis le départ haut, tente le green au-delà du lac ou prépare une approche depuis le plateau droit.</item>
-        <item>Reste sur la grande rive droite, ou saute entre les petites réceptions à gauche : leurs intervalles sont dans l’eau.</item>
-        <item>Le tablier haut à droite accompagne la balle vers le green en diagonale. Un coup trop court trouve le sable.</item>
-        <item>Deux fairways contournent le grand bunker central. Le gauche est large, le droit exige un départ placé.</item>
-        <item>Le grand S à droite contourne les pins ; le chemin gauche raccourcit mais laisse peu de marge.</item>
-        <item>La descente ajoute de la distance. Choisis la grande rive droite ou la petite réception gauche, près du lac.</item>
-        <item>Deux voies encerclent la colline boisée. Le grand détour gauche offre de la place ; la voie droite raccourcit l’approche.</item>
-        <item>Dose le vol entre l’eau devant et le sable derrière. Le tablier droit évite de viser la partie la plus étroite.</item>
-        <item>Trois voies : large à gauche, courte à droite, ou un ruban de 17 m entre les deux bunkers centraux.</item>
-        <item>Contourne la crête boisée par un balcon. Le green monte : garde assez de club pour atteindre le plateau.</item>
-        <item>Deux caps permettent de couper au-dessus de l’eau. Les voies de berge restent jouables en plusieurs coups.</item>
-        <item>Un long fer précis entre lac et bunker ; le tablier avant gauche permet de préparer un chip prudent.</item>
-        <item>Le plateau gauche est large, mais laisse une approche en diagonale. La voie droite longe le lac et ouvre le green.</item>
-        <item>Dernier par 5 : construis par le grand croissant droit ou ose la chaussée de 18 m entre les deux lacs.</item>
+        <item>Le large fairway gauche assure. Un driver vers la clairière droite, à environ 232 m du départ, laisse une approche plus courte. Évite la crête centrale.</item>
+        <item>Contourne par la grande rive droite, ou porte le driver vers la réception à 225 m au-delà du premier lac. De là, un bois 3 d’environ 205 m saute le second vers le plateau final.</item>
+        <item>Le lac protège l’entrée. Un fer 5 couvre les 155 m théoriques ; le tablier droit offre un refuge, le sable arrière punit un excès de longueur.</item>
+        <item>Le grand coude gauche est large. Le col droit se vise au driver, à environ 227 m : sa petite réception ouvre l’approche montante. La crête interdit de couper au centre.</item>
+        <item>Un driver d’environ 229 m franchit le lac diagonal vers le cap gauche et laisse un wedge. Le plateau droit permet de construire le trou sans ce grand saut.</item>
+        <item>Trois réceptions à gauche : driver sur la première à 220 m, fer 8 pour le saut suivant de 116 m, puis pitching wedge pour environ 97 m. Le fairway droit évite ces petites cibles.</item>
+        <item>Le bois 5 couvre les 186 m théoriques. Le tablier haut à droite ouvre une entrée diagonale ; le bunker protège la réception courte à gauche.</item>
+        <item>Le fairway gauche contourne la carrière. Un driver d’environ 227 m vise la petite langue droite au-delà du sable et raccourcit l’approche.</item>
+        <item>Le grand S à droite est prudent. Un driver d’environ 226 m vers la réception gauche coupe le détour ; les pins centraux ferment la ligne directe.</item>
+        <item>La descente allonge le vol. La petite réception gauche se trouve à environ 228 m du départ : dose le driver avec le guide. La grande rive droite offre davantage de marge.</item>
+        <item>Le détour gauche est large. Un driver vers la clairière droite à environ 232 m laisse moins de distance au green, à condition de rester à côté de la forêt.</item>
+        <item>Un hybride couvre les 170 m théoriques. Porte au-delà du lac frontal sans rouler dans le sable arrière ; le tablier droit offre plus de profondeur.</item>
+        <item>Large à gauche, driver précis vers la langue droite à 229 m, ou bois 3 vers la poche centrale à 210 m entre les bunkers. Le sable au-delà du centre impose ensuite un changement d’angle.</item>
+        <item>Un driver d’environ 229 m vise le balcon droit et réduit le détour. La rive gauche est plus large ; le dernier coup doit encore monter jusqu’au green.</item>
+        <item>Driver vers le cap gauche à environ 230 m, puis bois 3 sur le second cap à 202 m. Ces deux réceptions laissent un fer au green ; la grande rive droite permet trois coups prudents.</item>
+        <item>Le bois 3 couvre les 205 m théoriques. Le lac droit et le bunker gauche encadrent le green ; le tablier avant gauche garde une possibilité de chip.</item>
+        <item>Le plateau gauche est large. Un driver d’environ 224 m vise la petite réception droite entre crête et lac et ouvre une approche plus directe.</item>
+        <item>Driver sur la poche à 220 m au-delà du premier lac, puis bois 3 pour 210 m vers la dernière réception. Le grand croissant droit permet d’éviter ces deux traversées précises.</item>
     </string-array>
 </resources>

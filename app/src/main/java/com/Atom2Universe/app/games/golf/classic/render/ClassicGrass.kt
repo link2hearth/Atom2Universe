@@ -44,7 +44,8 @@ internal object GrassGeometry {
         fun blade(root:P,height:Float,width:Float,angle:Float,tint:Float) {
             val dx=cos(angle)*width;val dz=sin(angle)*width
             val bendX=sin(angle)*height*.27f;val bendZ=-cos(angle)*height*.27f
-            val base=C(.22f,.35f,.12f).shade(tint);val tip=C(.49f,.59f,.25f).shade(tint)
+            val base=(if(hole.highlands)C(.37f,.34f,.20f) else C(.22f,.35f,.12f)).shade(tint)
+            val tip=(if(hole.highlands)C(.64f,.56f,.33f) else C(.49f,.59f,.25f)).shade(tint)
             fun p(i:Int) {
                 when(i) {
                     0->vertex(root.x,root.y,root.z,base,root,0f)

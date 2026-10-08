@@ -7,6 +7,7 @@ import kotlin.random.Random
 
 /** Small original models, assembled once into spatial batches; no images or model downloads. */
 internal class ClassicDecor(private val hole:ClassicHole) {
+    private val backdrop=ClassicBackdrop(hole)
     private val wood=C(.36f,.25f,.16f)
     private val timber=C(.61f,.43f,.25f)
     private val iron=C(.16f,.22f,.21f)
@@ -36,6 +37,26 @@ internal class ClassicDecor(private val hole:ClassicHole) {
             val x=side*(hole.width*.55f+random.nextFloat()*65f)
             val z=random.nextFloat()*(hole.length+110f)-40f
             if(hole.lieAt(x,z)!=GolfLie.WATER) at(x,z){tree(it,x,z,3.7f+random.nextFloat()*2.7f,i%3,i+51f,true)}
+        }
+        // Uneven woodland islands frame every viewing direction, with open meadow between them.
+        val woodland=Random(hole.number*3571+83)
+        repeat(36) { cluster ->
+            val depth=75f+woodland.nextFloat()*210f
+            val x:Float
+            val z:Float
+            when(cluster%4) {
+                0 -> { x=backdrop.left-depth; z=backdrop.front+woodland.nextFloat()*(backdrop.back-backdrop.front) }
+                1 -> { x=backdrop.right+depth; z=backdrop.front+woodland.nextFloat()*(backdrop.back-backdrop.front) }
+                2 -> { x=backdrop.left+woodland.nextFloat()*(backdrop.right-backdrop.left); z=backdrop.front-depth }
+                else -> { x=backdrop.left+woodland.nextFloat()*(backdrop.right-backdrop.left); z=backdrop.back+depth }
+            }
+            repeat(4+cluster%4) { index ->
+                val angle=woodland.nextFloat()*2f*PI.toFloat()
+                val spread=sqrt(woodland.nextFloat())*23f
+                val tx=x+cos(angle)*spread; val tz=z+sin(angle)*spread
+                val radius=3.5f+woodland.nextFloat()*3.2f
+                at(tx,tz) { tree(it,tx,tz,radius,(cluster+index)%3,cluster*7f+index+103f,true) }
+            }
         }
         // Quiet clusters along the walking path, away from the playable corridor.
         for(i in 0..6) {
@@ -82,14 +103,15 @@ internal class ClassicDecor(private val hole:ClassicHole) {
             val side=if(i%2==0)-1f else 1f
             val x=hole.fairwayCenter(z)+side*(hole.fairwayWidth(z)*.5f+6f+random.nextFloat()*16f)
             if(dry(x,z,4f)&&abs(x-hole.pathX(z))>3f) at(x,z) { b ->
-                if(i%3==0)flowers(b,x,z,1.7f,i) else shrub(b,x,z,.45f+random.nextFloat()*.65f,i%3)
+                if(hole.highlands && i%3==0) rocks(b,x,z,1.1f+random.nextFloat()*.9f)
+                else if(i%3==0)flowers(b,x,z,1.7f,i) else shrub(b,x,z,.45f+random.nextFloat()*.65f,i%3)
             }
         }
         return chunks.values.map{it.build()}
     }
 
     private fun tree(b:MeshBuilder,x:Float,z:Float,r:Float,kind:Int,seed:Float,distant:Boolean=false) {
-        val y=hole.heightAt(x,z)
+        val y=if(distant && backdrop.outward(x,z)>0f) backdrop.surfaceHeight(x,z) else hole.heightAt(x,z)
         if(!distant) {
             b.cone(x,y,z,r*.072f,r*1.4f,wood,7,r*.035f)
             repeat(4) { i ->
@@ -117,7 +139,7 @@ internal class ClassicDecor(private val hole:ClassicHole) {
                 }
             }
             2 -> {
-                val leaf=C(.42f,.55f,.24f)
+                val leaf=if(hole.highlands)C(.64f,.43f,.20f) else C(.42f,.55f,.24f)
                 b.organic(x,y+r*1.70f,z,r*.64f,r*1.24f,r*.62f,leaf,seed,8,5)
                 if(!distant) repeat(4) { i ->
                     val a=i*2.4f+seed
@@ -126,7 +148,9 @@ internal class ClassicDecor(private val hole:ClassicHole) {
                 }
             }
             else -> {
-                val leaf=if(seed.toInt()%4==0)C(.38f,.54f,.22f) else C(.24f,.45f,.24f)
+                val leaf=if(hole.highlands) {
+                    if(seed.toInt()%3==0)C(.66f,.39f,.18f) else C(.53f,.47f,.23f)
+                } else if(seed.toInt()%4==0)C(.38f,.54f,.22f) else C(.24f,.45f,.24f)
                 b.organic(x,y+r*1.73f,z,r*.86f,r*.83f,r*.86f,leaf,seed,9,4)
                 val lobes=if(distant)2 else 6
                 repeat(lobes) { i ->
@@ -146,7 +170,7 @@ internal class ClassicDecor(private val hole:ClassicHole) {
     }
 
     private fun rocks(b:MeshBuilder,x:Float,z:Float,size:Float) {
-        val stone=C(.49f,.49f,.42f)
+        val stone=if(hole.highlands)C(.46f,.49f,.50f) else C(.49f,.49f,.42f)
         repeat(3){i ->
             val xx=x+cos(i*2.4f)*size*.6f;val zz=z+sin(i*2.4f)*size*.5f
             val r=size*(.65f-i*.14f);val y=hole.heightAt(xx,zz)

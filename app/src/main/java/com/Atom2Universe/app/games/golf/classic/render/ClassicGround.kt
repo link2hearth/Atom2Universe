@@ -102,12 +102,13 @@ internal class GroundMesh(private val vertices: FloatArray) {
  * The slope board ([SlopeBoard]) is drawn here too: continuous, anti-aliased lines of constant
  * screen width that follow the turf exactly, tinted progressively by height.
  */
-internal class GroundShader {
+internal class GroundShader(private val highlands:Boolean=false) {
     private var program = 0
     private var mvpLoc = 0; private var eyeLoc = 0; private var timeLoc = 0; private var overviewLoc = 0
     private var boardLoc = 0; private var boardSizeLoc = 0; private var boardCellLoc = 0
     private var holeLoc = 0; private var pixelLoc = 0; private var lineScaleLoc = 0
     private var cutWidthsLoc = 0
+    private var highlandsLoc = 0
 
     fun create() {
         program = link(VERTEX, FRAGMENT)
@@ -122,6 +123,7 @@ internal class GroundShader {
         pixelLoc = GL.glGetUniformLocation(program, "uPixel")
         lineScaleLoc = GL.glGetUniformLocation(program, "uLineScale")
         cutWidthsLoc = GL.glGetUniformLocation(program, "uCutWidths")
+        highlandsLoc = GL.glGetUniformLocation(program, "uHighlands")
     }
 
     /**
@@ -133,6 +135,7 @@ internal class GroundShader {
     fun draw(mesh: GroundMesh, viewProjection: FloatArray, eyeX: Float, eyeY: Float, eyeZ: Float, time: Float, overview: Boolean,
              board: SlopeBoard?, cell: Float, fineWeight: Float, holeX: Float, holeZ: Float, pixel: Float, lineScale: Float) {
         GL.glUseProgram(program)
+        GL.glUniform1f(highlandsLoc,if(highlands)1f else 0f)
         GL.glUniformMatrix4fv(mvpLoc, 1, false, viewProjection, 0)
         GL.glUniform3f(eyeLoc, eyeX, eyeY, eyeZ)
         GL.glUniform1f(timeLoc, time)
@@ -203,6 +206,7 @@ precision mediump float;
 uniform vec3 uEye;
 uniform float uTime;
 uniform float uOverview;
+uniform float uHighlands;
 uniform vec2 uCutWidths;
 // Slope board: squares fixed on the ground, lines along the world axes through the hole (uHole).
 // Window: the squares whose centre lies within radius of the segment uBoard (from xz, to xz);
@@ -275,9 +279,11 @@ void main() {
         float tee=1.0-smoothstep(-edge,edge,max(abs(p.x)-4.5,abs(p.y)-5.5));
         fairway=remaining*max(tee,1.0-smoothstep(-edge,edge,vCuts.x));
         semi=max(0.0,remaining-fairway)*(1.0-smoothstep(uCutWidths.x-edge,uCutWidths.x+edge,vCuts.x));
-        vec3 grass=vec3(.30,.46,.21)*(1.0-green-fringe-fairway-semi)
-            +vec3(.39,.58,.25)*fairway+vec3(.40,.50,.23)*semi
-            +vec3(.32,.52,.24)*fringe+vec3(.46,.65,.32)*green;
+        vec3 grass=mix(vec3(.30,.46,.21),vec3(.48,.43,.26),uHighlands)*(1.0-green-fringe-fairway-semi)
+            +mix(vec3(.39,.58,.25),vec3(.40,.51,.32),uHighlands)*fairway
+            +mix(vec3(.40,.50,.23),vec3(.46,.46,.29),uHighlands)*semi
+            +mix(vec3(.32,.52,.24),vec3(.35,.47,.30),uHighlands)*fringe
+            +mix(vec3(.46,.65,.32),vec3(.49,.61,.40),uHighlands)*green;
         float dry=1.0-clamp(sand+water,0.0,1.0);
         base=mix(vColour,grass*vCuts.z,dry);
         green*=dry; fringe*=dry; fairway*=dry; semi*=dry;
@@ -369,7 +375,7 @@ void main() {
         }
     }
     float fog=smoothstep(100.0,760.0,dist)*mix(.56,.13,uOverview);
-    gl_FragColor=vec4(mix(colour,vec3(.70,.79,.78),fog),1.0);
+    gl_FragColor=vec4(mix(colour,mix(vec3(.70,.79,.78),vec3(.68,.72,.76),uHighlands),fog),1.0);
 }
 """
     }

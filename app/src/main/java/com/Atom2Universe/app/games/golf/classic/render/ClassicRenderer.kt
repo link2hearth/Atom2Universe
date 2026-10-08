@@ -19,7 +19,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     @Volatile var frame = ClassicFrame(hole.tee, 0f, false, ShotPreview.NONE)
     private val landscape=ClassicLandscape(hole)
     private val terrain by lazy { landscape.terrain() }
-    private val groundShader=GroundShader()
+    private val groundShader=GroundShader(hole.highlands)
     private val grass=ClassicGrass(hole)
     private val lightShader=BoardLightShader()
     private var boardLights=FloatArray(0)
@@ -80,6 +80,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     private var matrixLoc=0; private var modelLoc=0; private var eyeLoc=0
     private var detailLoc=0; private var skyLoc=0; private var timeLoc=0; private var overviewLoc=0
     private var skyRayLoc=0
+    private var highlandsLoc=0
     private var screenHeight=1
     private val skyRays=FloatArray(9)
     private var dynamicBuffer=0
@@ -117,6 +118,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         timeLoc=GL.glGetUniformLocation(program,"uTime")
         overviewLoc=GL.glGetUniformLocation(program,"uOverview")
         skyRayLoc=GL.glGetUniformLocation(program,"uSkyRays")
+        highlandsLoc=GL.glGetUniformLocation(program,"uHighlands")
         meshes.forEach { it.upload() }
         terrain.upload(); groundShader.create(); lightShader.create()
         grass.create()
@@ -161,6 +163,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         GL.glUniform1f(timeLoc,time)
         GL.glUniform1f(overviewLoc,if(f.overview!=null) 1f else 0f)
         GL.glUniform1f(skyLoc,0f)
+        GL.glUniform1f(highlandsLoc,if(hole.highlands)1f else 0f)
         // Slope board, only while a shot is being prepared (gone during the stroke and the ball's run):
         // from above, around what the camera looks at, for any shot; otherwise from the ball to the hole for a putt.
         val putting=f.club==GolfClub.PUTTER
@@ -180,9 +183,11 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         GL.glUseProgram(program)
         identity(); scenery.forEach { if(it.visible(viewProjection)) draw(it,.12f) }
         identity()
-        Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-2.2f)
-        Matrix.rotateM(model,0,time*12f,0f,0f,1f)
-        draw(blades,.05f)
+        if(!hole.highlands) {
+            Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-2.2f)
+            Matrix.rotateM(model,0,time*12f,0f,0f,1f)
+            draw(blades,.05f)
+        }
         wildlife()
         if(f.overview==null) drawLeaves(f,dt)
         grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
@@ -547,6 +552,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             varying vec3 vColour;
             varying vec3 vWorld;
             uniform mat3 uSkyRays;
+            uniform float uHighlands;
             float skyHash(vec2 p) {
                 vec3 q=fract(vec3(p.xyx)*.1031);
                 q+=dot(q,q.yzx+33.33);
@@ -561,7 +567,8 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
                 if(uSky>0.5) {
                     vec3 ray=normalize(uSkyRays*vec3(vWorld.xy,1.0));
                     float up=max(ray.y,0.0);
-                    vec3 colour=mix(vec3(.79,.84,.79),vec3(.22,.47,.68),pow(up,.48));
+                    vec3 colour=mix(mix(vec3(.79,.84,.79),vec3(.75,.72,.67),uHighlands),
+                        mix(vec3(.22,.47,.68),vec3(.32,.42,.55),uHighlands),pow(up,.48));
                     vec3 sun=normalize(vec3(-.35,.86,-.36));
                     float glow=max(0.0,dot(ray,sun));
                     colour+=vec3(.26,.20,.10)*pow(glow,24.0);
@@ -569,7 +576,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
                     if(ray.y>0.015) {
                         vec2 p=ray.xz/(ray.y+.24)*2.2+vec2(uTime*.008,0.0);
                         float n=skyNoise(p)*.57+skyNoise(p*2.1)*.28+skyNoise(p*4.3)*.15;
-                        float clouds=smoothstep(.49,.72,n)*smoothstep(.015,.18,ray.y);
+                        float clouds=smoothstep(mix(.49,.40,uHighlands),.72,n)*smoothstep(.015,.18,ray.y);
                         vec3 cloud=mix(vec3(.69,.76,.77),vec3(.99,.97,.88),smoothstep(.48,.76,n));
                         colour=mix(colour,cloud,clouds*.91);
                     }
@@ -586,7 +593,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
                     colour=mix(colour,vec3(.68,.88,.85),ripple*.16*grainFade);
                 }
                 float fog=smoothstep(100.0,760.0,distanceToEye)*mix(.56,.13,uOverview);
-                colour=mix(colour,vec3(.70,.79,.78),fog);
+                colour=mix(colour,mix(vec3(.70,.79,.78),vec3(.68,.72,.76),uHighlands),fog);
                 gl_FragColor=vec4(colour,1.0);
             }
         """.trimIndent())

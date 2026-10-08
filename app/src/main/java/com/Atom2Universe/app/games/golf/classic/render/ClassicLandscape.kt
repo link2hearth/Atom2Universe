@@ -8,6 +8,7 @@ import kotlin.math.*
 
 /** The ground (with the hole cut out), vegetation and buildings are baked into immutable batches. */
 internal class ClassicLandscape(private val hole: ClassicHole) {
+    private val palette=ClassicPalette(hole)
     // Local canopy queries bake soft tree shade into the terrain colours, with no shadow-map pass.
     private val shadeTrees by lazy {
         val cells=HashMap<Pair<Int,Int>,MutableList<com.Atom2Universe.app.games.golf.classic.core.GolfTree>>()
@@ -56,22 +57,22 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
             val lie=hole.lieAt(x,z)
             val fair=hole.fairwaySignedDistance(x,z)
             val greenDistance=hole.greenSignedDistance(x,z)
-            var colour=C(.30f,.46f,.21f)
-            colour=colour.mix(C(.39f,.58f,.25f), ((1.15f-fair)/2.3f).coerceIn(0f,1f))
+            var colour=palette.rough
+            colour=colour.mix(palette.fairway, ((1.15f-fair)/2.3f).coerceIn(0f,1f))
             if(greenDistance<2.2f) {
-                colour=colour.mix(C(.32f,.52f,.24f),((2.2f-greenDistance)/1.1f).coerceIn(0f,1f))
-                colour=colour.mix(C(.46f,.65f,.32f),((.40f-greenDistance)/.8f).coerceIn(0f,1f))
+                colour=colour.mix(palette.fringe,((2.2f-greenDistance)/1.1f).coerceIn(0f,1f))
+                colour=colour.mix(palette.green,((.40f-greenDistance)/.8f).coerceIn(0f,1f))
             }
-            if(lie==GolfLie.TEE) colour=C(.39f,.61f,.29f)
+            if(lie==GolfLie.TEE) colour=palette.fairway
             for(hazard in hole.hazards) {
                 val d=hazard.signedDistance(x,z)
                 if(d<1.4f && greenDistance>0f) {
                     if(hazard.lie==GolfLie.BUNKER) {
                         colour=colour.mix(C(.54f,.57f,.25f),((1.4f-d)/1.4f).coerceIn(0f,1f))
-                        colour=colour.mix(C(.83f,.76f,.58f),((.2f-d)/.7f).coerceIn(0f,1f))
+                        colour=colour.mix(palette.sand,((.2f-d)/.7f).coerceIn(0f,1f))
                     } else {
                         colour=colour.mix(C(.50f,.62f,.36f),((1.4f-d)/1.4f).coerceIn(0f,1f))
-                        colour=colour.mix(C(.15f,.40f,.43f),((.2f-d)/.6f).coerceIn(0f,1f))
+                        colour=colour.mix(palette.water,((.2f-d)/.6f).coerceIn(0f,1f))
                     }
                 }
             }
@@ -182,30 +183,62 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
         val cupLeft=bands.minOf { it.cupLeft }; val cupRight=bands.maxOf { it.cupRight }
         val cupBack=bands.minOf { it.cupBack }; val cupFront=bands.maxOf { it.cupFront }
         if(cupLeft<cupRight) cupPatch(b,cupLeft,cupBack,cupRight,cupFront,::sampleAt)
-        // A coarse continuous apron extends beyond the playable rectangle in overview mode.
-        // Its exact inner edges coincide with the fine grid, avoiding cracks and overlapping faces.
-        val left=-(hole.width+80f)/2
-        val right=left+nx*step
-        val back=-40f+nz*step
-        fun distantHeight(x:Float,z:Float):Float {
-            val outward=max(max(left-x,x-right),max(-40f-z,z-back)).coerceAtLeast(0f)
-            val t=((outward-25f)/140f).coerceIn(0f,1f)
-            return hole.heightAt(x,z)+t*t*(3f-2f*t)*(25f+16f*sin(x*.012f+z*.009f)+9f*cos(z*.024f-x*.006f))
+        // A single shared lattice surrounds the course, including the four apron corners.
+        // At the inner seam its edge has exactly the subdivisions of the playable mesh.
+        val backdrop=ClassicBackdrop(hole)
+        val distantPoints=HashMap<Pair<Float,Float>,P>()
+        val distantSamples=HashMap<Pair<Float,Float>,GroundSample>()
+        fun distantPoint(x:Float,z:Float)=distantPoints.getOrPut(x to z) { P(x,backdrop.heightAt(x,z),z) }
+        fun distantSample(x:Float,z:Float):GroundSample = distantSamples.getOrPut(x to z) {
+            if(backdrop.outward(x,z)==0f) return@getOrPut sampleAt(x,z)
+            val dx=(backdrop.heightAt(x+.4f,z)-backdrop.heightAt(x-.4f,z))/.8f
+            val dz=(backdrop.heightAt(x,z+.4f)-backdrop.heightAt(x,z-.4f))/.8f
+            val light=.77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f)
+            val variation=.5f+.5f*sin(x*.019f+sin(z*.013f)*2f)*cos(z*.021f)
+            val colour=palette.rough.mix(if(hole.highlands) C(.57f,.48f,.31f) else C(.36f,.49f,.25f),variation*.55f)
+            GroundSample(colour.shade(light),Turf.ROUGH,light=light)
         }
-        fun apron(x0:Float,z0:Float,x1:Float,z1:Float) {
-            val columns=ceil((x1-x0)/25f).toInt()
-            val rows=ceil((z1-z0)/25f).toInt()
-            val dx=(x1-x0)/columns; val dz=(z1-z0)/rows
-            for(j in 0 until rows) for(i in 0 until columns) {
-                val x=x0+i*dx; val z=z0+j*dz
-                b.quad(P(x,distantHeight(x,z),z),P(x+dx,distantHeight(x+dx,z),z),
-                    P(x+dx,distantHeight(x+dx,z+dz),z+dz),P(x,distantHeight(x,z+dz),z+dz),C(.30f,.46f,.21f),Turf.ROUGH)
+        for(j in 0 until backdrop.zs.size-1) for(i in 0 until backdrop.xs.size-1) {
+            val x=backdrop.xs[i]; val xx=backdrop.xs[i+1]
+            val z=backdrop.zs[j]; val zz=backdrop.zs[j+1]
+            if(x>=backdrop.left && xx<=backdrop.right && z>=backdrop.front && zz<=backdrop.back) continue
+            val edge=ArrayList<P>(8)
+            fun side(ax:Float,az:Float,bx:Float,bz:Float,seam:Boolean) {
+                if(!seam) { edge+=distantPoint(ax,az); return }
+                // Only this edge needs the 2.5 m (or refined) playable lattice. Its other
+                // three edges keep the coarse lattice shared by neighbouring apron cells.
+                val horizontal=az==bz
+                val cells=(max(abs(bx-ax),abs(bz-az))/step).roundToInt()
+                for(cell in 0 until cells) {
+                    val sx=ax+(bx-ax)*cell/cells; val sz=az+(bz-az)*cell/cells
+                    val ex=ax+(bx-ax)*(cell+1)/cells; val ez=az+(bz-az)*(cell+1)/cells
+                    val ix=if(horizontal) ((min(sx,ex)-backdrop.left)/step).roundToInt()
+                        else if(ax==backdrop.left)0 else nx-1
+                    val iz=if(!horizontal) ((min(sz,ez)-backdrop.front)/step).roundToInt()
+                        else if(az==backdrop.front)0 else nz-1
+                    val pieces=if(fine(ix,iz))3 else 1
+                    for(k in 0 until pieces) edge+=distantPoint(sx+(ex-sx)*k/pieces,sz+(ez-sz)*k/pieces)
+                }
+            }
+            val withinX=x>=backdrop.left && xx<=backdrop.right
+            val withinZ=z>=backdrop.front && zz<=backdrop.back
+            side(x,z,xx,z,z==backdrop.back && withinX)
+            side(xx,z,xx,zz,xx==backdrop.left && withinZ)
+            side(xx,zz,x,zz,zz==backdrop.front && withinX)
+            side(x,zz,x,z,x==backdrop.right && withinZ)
+            if(edge.size==4) {
+                val samples=edge.map { distantSample(it.x,it.z) }
+                b.triangle(edge[0],edge[1],edge[2],samples[0],samples[1],samples[2])
+                b.triangle(edge[0],edge[2],edge[3],samples[0],samples[2],samples[3])
+            } else {
+                val centre=distantPoint((x+xx)*.5f,(z+zz)*.5f)
+                val middle=distantSample(centre.x,centre.z)
+                for(k in edge.indices) {
+                    val a=edge[k]; val c=edge[(k+1)%edge.size]
+                    b.triangle(centre,a,c,middle,distantSample(a.x,a.z),distantSample(c.x,c.z))
+                }
             }
         }
-        apron(-520f,-480f,left,hole.length+420f)
-        apron(right,-480f,520f,hole.length+420f)
-        apron(left,-480f,right,-40f)
-        apron(left,back,right,hole.length+420f)
         // A winding sandy cart path follows the right edge without crossing the playing line.
         val gravel=Turf(sand=.55f)
         var z=-15f
@@ -282,8 +315,9 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
     fun scenery(): List<ClassicMesh> {
         val b=MeshBuilder()
         val homeX=-hole.width*.34f; val homeZ=10f
-        cottage(b,homeX,homeZ)
-        mill(b)
+        if(hole.highlands) highlandLodge(b,homeX,homeZ) else {
+            cottage(b,homeX,homeZ); mill(b)
+        }
         cart(b,pathX(35f)+2.5f,35f)
         cart(b,pathX(hole.length*.76f)+2.5f,hole.length*.76f)
         golfBag(b,hole.tee.x+4f,hole.tee.z-1f)
@@ -311,6 +345,24 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
             val a=i*1.25f
             b.sphere(x+cos(a)*.8f,y+1.05f,z+sin(a)*.65f,.16f,
                 if(i%2==0) C(1f,.68f,.68f) else C(1f,.92f,.45f),5,3)
+        }
+    }
+
+    private fun highlandLodge(b:MeshBuilder,x:Float,z:Float) {
+        val y=hole.heightAt(x,z)
+        b.box(x,y,z,8f,3.4f,6f,C(.49f,.48f,.43f))
+        val roof=C(.23f,.28f,.30f)
+        b.quad(P(x-4.6f,y+3.4f,z-3.6f),P(x+4.6f,y+3.4f,z-3.6f),P(x+4.6f,y+5.4f,z),P(x-4.6f,y+5.4f,z),roof)
+        b.quad(P(x-4.6f,y+5.4f,z),P(x+4.6f,y+5.4f,z),P(x+4.6f,y+3.4f,z+3.6f),P(x-4.6f,y+3.4f,z+3.6f),roof)
+        b.box(x,y,z-3.05f,1.5f,2.4f,.15f,C(.27f,.22f,.18f))
+        for(side in listOf(-1f,1f)) b.box(x+side*2.6f,y+1.5f,z-3.1f,1.2f,1.1f,.15f,C(.75f,.58f,.32f))
+        b.box(x+2.6f,y+3.4f,z+1f,.8f,2.7f,.8f,C(.43f,.43f,.40f))
+        // A ruined watchtower beyond the boundary replaces the pastoral windmill.
+        val tx=millX; val tz=millZ; val ty=hole.heightAt(tx,tz)
+        b.cone(tx,ty,tz,2.8f,8.5f,C(.43f,.45f,.44f),8,2.5f)
+        for(i in 0..7) {
+            val a=i*PI.toFloat()/4f
+            b.box(tx+cos(a)*2.3f,ty+8.5f,tz+sin(a)*2.3f,.85f,1.1f,.85f,C(.48f,.49f,.46f))
         }
     }
 
