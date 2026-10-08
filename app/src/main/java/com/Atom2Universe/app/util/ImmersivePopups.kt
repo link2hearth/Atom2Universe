@@ -107,6 +107,14 @@ private class PopupBarsContext(context: Context) : ContextWrapper(context) {
     private val popupManager by lazy {
         val actual = baseContext.getSystemService(WINDOW_SERVICE) as WindowManager
         object : WindowManager by actual {
+            // La délégation Kotlin ne transmet pas les méthodes par défaut Java : sans ces deux
+            // redéfinitions, PopupMenu plante (UnsupportedOperationException) sur Android 11+.
+            @androidx.annotation.RequiresApi(Build.VERSION_CODES.R)
+            override fun getMaximumWindowMetrics() = actual.maximumWindowMetrics
+
+            @androidx.annotation.RequiresApi(Build.VERSION_CODES.R)
+            override fun getCurrentWindowMetrics() = actual.currentWindowMetrics
+
             override fun addView(view: View, params: ViewGroup.LayoutParams) {
                 val windowParams = params as? WindowManager.LayoutParams
                 val borrowedFocus = windowParams != null &&
