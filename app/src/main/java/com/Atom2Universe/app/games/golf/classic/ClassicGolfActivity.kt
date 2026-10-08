@@ -79,6 +79,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private val lieNames by lazy { resources.getStringArray(R.array.classic_lies) }
     private var windRose: ClassicWindRose? = null
     private var gridShown = true
+    private var lieView: ClassicLieView? = null
     private var gridButton: GolfIcon? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -283,6 +284,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         val dock=ui.row().apply {
             setPadding(ui.dp(12),ui.dp(18),ui.dp(12),ui.dp(10))
         }
+        lieView=ClassicLieView(this).also{dock.addView(it,LinearLayout.LayoutParams(ui.dp(112),ui.dp(60)))}
         dock.addView(View(this),LinearLayout.LayoutParams(0,1,1f))
         spinPad=ClassicSpinPad(this,getString(R.string.classic_spin_pad)){x,y->
             if(canSetShot()){g.setSpin(x,y);spinPad?.spinX=g.spinX;spinPad?.spinY=g.spinY;previewDirty=true;save()}
@@ -482,10 +484,14 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             getString(R.string.classic_hud_accessible,h.number,h.par,g.strokes,total,if(round)roundLength.count else course.holes.size,if(round)h.number-roundLength.startIndex else h.number))
         windRose?.set(g.aimAngle,g.windX,g.windZ)
         val elevation=(h.cup.y-g.ball.y).roundToInt()
-        lieLabel?.show(getString(R.string.classic_lie_distance,lieNames[g.lie.ordinal],g.distanceToCup.roundToInt(),getString(if(elevation>=0)R.string.classic_uphill else R.string.classic_downhill,abs(elevation))))
+        val grip=(g.lieGrip*100).roundToInt()
+        val slope=getString(if(elevation>=0)R.string.classic_uphill else R.string.classic_downhill,abs(elevation))
+        lieLabel?.show(if(grip<100)getString(R.string.classic_lie_distance_loss,lieNames[g.lie.ordinal],g.distanceToCup.roundToInt(),slope,grip)
+            else getString(R.string.classic_lie_distance,lieNames[g.lie.ordinal],g.distanceToCup.roundToInt(),slope))
         clubBadge?.set(g.club,clubNames[g.club.ordinal],
             getString(R.string.golf_result_line,getString(R.string.classic_choose_club),getString(R.string.classic_club_choice,clubNames[g.club.ordinal],g.club.carry.roundToInt(),g.club.loft.roundToInt())))
         val ready=canSetShot()
+        lieView?.let{it.visibility=if(g.state==GolfState.READY&&g.club!=GolfClub.PUTTER)View.VISIBLE else View.INVISIBLE;if(it.visibility==View.VISIBLE)it.set(g.lieSlopeAlong,g.lieSlopeSide)}
         clubBadge?.isEnabled=ready
         clubUp?.isEnabled=ready&&g.club.ordinal>0
         clubDown?.isEnabled=ready&&g.club.ordinal<GolfClub.entries.lastIndex

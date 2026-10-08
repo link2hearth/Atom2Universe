@@ -119,7 +119,8 @@ internal class ClassicMap(context: Context, val hole: ClassicHole) : View(contex
     var preview: List<GolfPoint> = emptyList()
         set(value) { if (field != value) { field = value; invalidate() } }
     private var scale = 1f
-    private fun sx(x:Float) = width/2f+x*scale
+    // +x is on the left of a player looking down +z, so the map runs the other way to match the 3D view.
+    private fun sx(x:Float) = width/2f-x*scale
     private fun sy(z:Float) = height*.5f+(hole.length*.5f-z)*scale
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int) {
         super.onSizeChanged(w,h,oldw,oldh)
@@ -138,7 +139,7 @@ internal class ClassicMap(context: Context, val hole: ClassicHole) : View(contex
             val ready=rasters.get(key) ?: run {
                 val pixels=IntArray(bw*bh)
                 for(j in 0 until bh) for(i in 0 until bw) {
-                    val x=(i.toFloat()/bw*w-w*.5f)/worldScale
+                    val x=-(i.toFloat()/bw*w-w*.5f)/worldScale
                     val z=hole.length*.5f-(j.toFloat()/bh*h-h*.5f)/worldScale
                     val colour=when(hole.lieAt(x,z)) {
                         GolfLie.GREEN -> 0xFFBDE58B.toInt()

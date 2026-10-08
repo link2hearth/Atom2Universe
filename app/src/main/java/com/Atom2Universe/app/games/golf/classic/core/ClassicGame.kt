@@ -25,7 +25,7 @@ class ClassicGame(val hole: ClassicHole) {
     var strokes: Int = 0
         private set
     var club: GolfClub = GolfClub.DRIVER
-    /** Contact point on the ball: +x curves right, +y is struck high (lower flight, half the backspin, longer run). */
+    /** Contact point on the ball: +x curves right, +y is struck high (a little lower, much less backspin, so a longer run: the total never falls short). */
     var spinX: Float = 0f
         private set
     var spinY: Float = 0f
@@ -43,6 +43,12 @@ class ClassicGame(val hole: ClassicHole) {
     var lastPenalty: Int = 0
         private set
     val lie: GolfLie get() = hole.lieAt(ball.x, ball.z)
+    /** Share of the club's speed the lie lets through: 1 on the tee and fairway, less in the rough and sand. */
+    val lieGrip: Float get() = lieEfficiency(lie, club)
+    /** Ground rise per metre under the ball along the shot (+ uphill, towards the target). */
+    val lieSlopeAlong: Float get() = lieSlope(true)
+    /** Ground rise per metre under the ball across the shot (+ higher on the right). */
+    val lieSlopeSide: Float get() = lieSlope(false)
     val distanceToCup: Float get() = hypot(hole.cup.x - ball.x, hole.cup.z - ball.z)
     val velocity: GolfPoint get() = GolfPoint(b.vx, b.vy, b.vz)
     // An interrupted shot is counted, but restores a safe position; reopening cannot erase a stroke.
@@ -113,7 +119,7 @@ class ClassicGame(val hole: ClassicHole) {
             b.vx = sin(heading) * speed; b.vz = cos(heading) * speed
             state = GolfState.ROLLING
         } else {
-            launch(b, p, miss)
+            launch(b, p, miss, lieSlopeAlong, lieSlopeSide)
             state = GolfState.FLYING
         }
         return true
@@ -418,15 +424,32 @@ class ClassicGame(val hole: ClassicHole) {
     private fun puttSpeed(power: Float): Float =
         sqrt(2f * GolfBallPhysics.rolling(GolfLie.GREEN) * power * GolfClub.PUTTER.carry)
 
-    private fun launch(into: BallState, power: Float, miss: Float) {
+    /** Terrain gradient over a stride around the ball, seen along or across the aim. */
+    private fun lieSlope(along: Boolean): Float {
+        if (club == GolfClub.PUTTER) return 0f
+        val h = .6f
+        val gx = (hole.heightAt(ball.x + h, ball.z) - hole.heightAt(ball.x - h, ball.z)) / (2f * h)
+        val gz = (hole.heightAt(ball.x, ball.z + h) - hole.heightAt(ball.x, ball.z - h)) / (2f * h)
+        val s = sin(aimAngle); val c = cos(aimAngle)
+        return (if (along) gx * s + gz * c else -gx * c + gz * s).coerceIn(-.4f, .4f)
+    }
+
+    /**
+     * [along] and [side] are the lie's slopes: uphill sends the ball higher and shorter, downhill
+     * lower; a side slope starts it towards the lower side, like a miss. The guide leaves
+     * both at zero: it always shows a shot from level ground.
+     */
+    private fun launch(into: BallState, power: Float, miss: Float, along: Float = 0f, side: Float = 0f) {
         val lie = lie
         val swing = GolfCalibration.swing(club, power)
-        val speed = swing * GolfCalibration.fullSpeed(club) * lieEfficiency(lie, club) * (1f - .1f * miss * miss)
-        val spin = club.spinRpm * swing * (1f - .5f * spinY) * when (lie) {
+        val speed = swing * GolfCalibration.fullSpeed(club) * lieEfficiency(lie, club) * (1f - .1f * miss * miss) * (1f - .5f * max(0f, along))
+        val base = GolfCalibration.launch(club, swing) - (if (spinY > 0f) .6f else 1.5f) * spinY
+        val angle = max(base + .8f * Math.toDegrees(atan(along).toDouble()).toFloat(), min(base, 2f))
+        val spin = club.spinRpm * swing * (1f - (if (spinY > 0f) .08f else .5f) * spinY) * when (lie) {
             GolfLie.ROUGH -> .55f; GolfLie.SEMI_ROUGH -> .8f; GolfLie.BUNKER -> .7f; else -> 1f
         }
-        GolfBallPhysics.launch(into, ball.x, ball.y, ball.z, speed, GolfCalibration.launch(club, swing) - 1.5f * spinY, spin,
-            aimAngle - miss * .035f, spinX * 15f + miss * 24f)
+        GolfBallPhysics.launch(into, ball.x, ball.y, ball.z, speed, angle, spin,
+            aimAngle - miss * .035f + side * .12f, spinX * 15f + miss * 24f - side * 60f)
     }
 
     companion object {
