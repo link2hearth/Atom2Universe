@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.midi.practice.themes
 
+import com.Atom2Universe.app.R
 import android.graphics.Color
 
 /**
@@ -11,8 +12,8 @@ import android.graphics.Color
  */
 class ClassicTheme : BasePracticeTheme() {
     override val id = "classic"
-    override val displayName = "Classique"
-    override val description = "Style simple et épuré"
+    override val displayNameRes = R.string.midi_theme_classic_name
+    override val descriptionRes = R.string.midi_theme_classic_desc
 
 
     override fun getBackgroundColors() = Pair(
@@ -34,8 +35,8 @@ class ClassicTheme : BasePracticeTheme() {
  */
 class RainbowTheme : BasePracticeTheme() {
     override val id = "rainbow"
-    override val displayName = "Arc-en-ciel"
-    override val description = "Couleurs arc-en-ciel basées sur la note"
+    override val displayNameRes = R.string.midi_theme_rainbow_name
+    override val descriptionRes = R.string.midi_theme_rainbow_desc
 
 
     companion object {
@@ -74,8 +75,8 @@ class RainbowTheme : BasePracticeTheme() {
  */
 class NeonTheme : BasePracticeTheme() {
     override val id = "neon"
-    override val displayName = "Néon"
-    override val description = "Couleurs néon vibrantes"
+    override val displayNameRes = R.string.midi_theme_neon_name
+    override val descriptionRes = R.string.midi_theme_neon_desc
 
 
     companion object {
@@ -116,8 +117,8 @@ class NeonTheme : BasePracticeTheme() {
  */
 class OceanTheme : BasePracticeTheme() {
     override val id = "ocean"
-    override val displayName = "Océan"
-    override val description = "Dégradés bleu-turquoise apaisants"
+    override val displayNameRes = R.string.midi_theme_ocean_name
+    override val descriptionRes = R.string.midi_theme_ocean_desc
 
 
     companion object {
@@ -157,8 +158,8 @@ class OceanTheme : BasePracticeTheme() {
  */
 class FireTheme : BasePracticeTheme() {
     override val id = "fire"
-    override val displayName = "Feu"
-    override val description = "Dégradés rouge-orange-jaune"
+    override val displayNameRes = R.string.midi_theme_fire_name
+    override val descriptionRes = R.string.midi_theme_fire_desc
 
 
     companion object {

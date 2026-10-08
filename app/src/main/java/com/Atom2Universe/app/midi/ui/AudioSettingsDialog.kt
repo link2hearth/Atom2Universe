@@ -117,7 +117,7 @@ class AudioSettingsDialog : DialogFragment() {
         // Ajouter les chips pour les presets de normalisation
         MidiAudioMixer.NormalizationPreset.values().forEachIndexed { index, preset ->
             val chip = Chip(requireContext()).apply {
-                text = preset.label
+                text = getString(preset.labelRes)
                 isCheckable = true
                 tag = index
             }

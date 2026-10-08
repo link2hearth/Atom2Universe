@@ -36,13 +36,7 @@ class FallingNotesView @JvmOverloads constructor(
     /**
      * Styles visuels disponibles
      */
-    enum class VisualStyle(val displayName: String) {
-        CLASSIC("Classique"),
-        RAINBOW("Arc-en-ciel"),
-        NEON("Néon"),
-        OCEAN("Océan"),
-        FIRE("Feu")
-    }
+    enum class VisualStyle { CLASSIC, RAINBOW, NEON, OCEAN, FIRE }
 
     /**
      * Direction des notes (falling = MIDI playback, rising = free practice)

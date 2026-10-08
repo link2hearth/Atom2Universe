@@ -10,6 +10,7 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.StringRes
 import com.Atom2Universe.app.R
 import com.google.android.material.card.MaterialCardView
 import kotlin.math.hypot
@@ -42,7 +43,7 @@ class EarthMoonWidgetView @JvmOverloads constructor(
 
     private val views = EarthMoonCanvasView.CameraView.values()
     private var currentViewIndex = 0
-    private var fixedLocationName: String = ""
+    @StringRes private var fixedLocationName: Int = 0
     private var currentLocationIndex: Int = 0
 
     // Seuil en pixels pour distinguer tap vs drag
@@ -125,11 +126,11 @@ class EarthMoonWidgetView @JvmOverloads constructor(
         canvasView.showTerminator = show
     }
 
-    fun setFixedLocation(latDeg: Double, lonDeg: Double, name: String) {
+    fun setFixedLocation(latDeg: Double, lonDeg: Double, @StringRes nameRes: Int) {
         canvasView.fixedLatDeg = latDeg
         canvasView.fixedLonDeg = lonDeg
-        fixedLocationName = name
-        currentLocationIndex = EarthMoonCanvasView.LOCATION_PRESETS.indexOfFirst { it.name == name }.coerceAtLeast(0)
+        fixedLocationName = nameRes
+        currentLocationIndex = EarthMoonCanvasView.LOCATION_PRESETS.indexOfFirst { it.nameRes == nameRes }.coerceAtLeast(0)
         updateViewLabel()
     }
 
@@ -139,7 +140,7 @@ class EarthMoonWidgetView @JvmOverloads constructor(
         val preset = presets[currentLocationIndex]
         canvasView.fixedLatDeg = preset.latDeg
         canvasView.fixedLonDeg = preset.lonDeg
-        fixedLocationName = preset.name
+        fixedLocationName = preset.nameRes
         MainClickerPreferences.setEarthFixedLocationIndex(context, currentLocationIndex)
         updateViewLabel()
     }
@@ -152,10 +153,10 @@ class EarthMoonWidgetView @JvmOverloads constructor(
 
     private fun updateViewLabel() {
         val view = views[currentViewIndex]
-        viewLabel.text = if (view == EarthMoonCanvasView.CameraView.FIXED_LOCATION && fixedLocationName.isNotEmpty()) {
-            fixedLocationName
+        viewLabel.text = if (view == EarthMoonCanvasView.CameraView.FIXED_LOCATION && fixedLocationName != 0) {
+            context.getString(fixedLocationName)
         } else {
-            view.label
+            context.getString(view.labelRes)
         }
     }
 

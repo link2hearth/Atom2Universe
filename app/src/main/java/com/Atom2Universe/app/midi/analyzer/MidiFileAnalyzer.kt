@@ -1,5 +1,6 @@
 ﻿package com.Atom2Universe.app.midi.analyzer
 
+import com.Atom2Universe.app.R
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -98,16 +99,13 @@ class MidiFileAnalyzer(private val context: Context) {
             }
 
         /** Liste des instruments utilises */
-        val instrumentsList: String
-            get() {
-                return channels
-                    .filter { !it.isDrumChannel }
-                    .flatMap { it.instrumentNames }
-                    .distinct()
-                    .take(5)
-                    .joinToString(", ")
-                    .let { if (channels.any { c -> c.isDrumChannel }) "$it, Batterie" else it }
-            }
+        fun instrumentsList(context: Context): String = channels
+            .filter { !it.isDrumChannel }
+            .flatMap { it.instrumentNames }
+            .distinct()
+            .take(5)
+            .joinToString(", ")
+            .let { if (channels.any { c -> c.isDrumChannel }) "$it, ${context.getString(R.string.gm_drum_channel)}" else it }
     }
 
     data class ChannelInfo(
@@ -135,17 +133,17 @@ class MidiFileAnalyzer(private val context: Context) {
             context.contentResolver.openInputStream(uri)?.use { stream ->
                 val midiFile = MidiFile(stream)
                 parseMidiFile(fileName, fileSize, midiFile)
-            } ?: createErrorInfo(fileName, fileSize, "Impossible d'ouvrir le fichier")
+            } ?: createErrorInfo(fileName, fileSize, context.getString(R.string.midi_analyzer_err_open))
 
         } catch (e: SecurityException) {
-            createErrorInfo("", 0, "Acces refuse")
+            createErrorInfo("", 0, context.getString(R.string.midi_analyzer_err_denied))
         } catch (e: Exception) {
-            createErrorInfo("", 0, "Fichier introuvable ou corrompu")
+            createErrorInfo("", 0, context.getString(R.string.midi_analyzer_err_corrupt))
         }
     }
 
     private fun getFileInfo(uri: Uri): Pair<String, Long> {
-        var fileName = "Fichier MIDI"
+        var fileName = context.getString(R.string.midi_analyzer_default_name)
         var fileSize = 0L
 
         try {

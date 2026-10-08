@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.trebuchet
 
+import android.content.Context
+import com.Atom2Universe.app.R
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -849,36 +851,41 @@ object TargetGenerator {
     private const val PAR_NEAR = 0.85f
     private const val PAR_FAR = 1.35f
 
-    /** Un nom lisible, pour l'écran de fin de niveau. */
-    fun label(level: TargetLevel): String = buildString {
-        append(
+    /** Un nom lisible, dans la langue de l'app, pour l'écran de niveau. */
+    fun label(context: Context, level: TargetLevel): String {
+        val site = context.getString(
             when (level.kind) {
-                SiteKind.HAMEAU -> "Hameau"
-                SiteKind.FERME -> "Ferme fortifiée"
-                SiteKind.CHATEAU -> "Château"
-                SiteKind.DONJON -> "Donjon"
-                SiteKind.VILLAGE -> "Village"
-                SiteKind.MOULIN -> "Moulin"
-                SiteKind.BOURG -> "Bourg étagé"
-                SiteKind.CITE_ANTIQUE -> "Cité antique"
-                SiteKind.NECROPOLE -> "Nécropole"
-                SiteKind.CHATEAU_CARTES -> "Château de cartes"
-                SiteKind.SEIGNEURIE -> "Seigneurie protégée"
-                SiteKind.VILLE -> "Centre-ville"
-                SiteKind.METROPOLE -> "Métropole"
+                SiteKind.HAMEAU -> R.string.trebuchet_site_hamlet
+                SiteKind.FERME -> R.string.trebuchet_site_farm
+                SiteKind.CHATEAU -> R.string.trebuchet_site_castle
+                SiteKind.DONJON -> R.string.trebuchet_site_keep
+                SiteKind.VILLAGE -> R.string.trebuchet_site_village
+                SiteKind.MOULIN -> R.string.trebuchet_site_mill
+                SiteKind.BOURG -> R.string.trebuchet_site_tiered_town
+                SiteKind.CITE_ANTIQUE -> R.string.trebuchet_site_ancient_city
+                SiteKind.NECROPOLE -> R.string.trebuchet_site_necropolis
+                SiteKind.CHATEAU_CARTES -> R.string.trebuchet_site_house_of_cards
+                SiteKind.SEIGNEURIE -> R.string.trebuchet_site_manor
+                SiteKind.VILLE -> R.string.trebuchet_site_downtown
+                SiteKind.METROPOLE -> R.string.trebuchet_site_metropolis
             }
         )
         // Le relief ne se dit que quand il change quelque chose au tir : annoncer « en
         // plaine » à chaque niveau plat serait du bruit.
-        when (level.shape) {
-            TerrainShape.PLAINE -> Unit
-            TerrainShape.TERRASSES -> append(" en terrasses")
-            TerrainShape.GRADINS -> append(" en gradins")
-            TerrainShape.COLLINE -> append(" derrière la colline")
-            TerrainShape.MESA -> append(" sur la butte")
-            TerrainShape.VALLON -> append(" au fond du vallon")
-            TerrainShape.CRETE -> append(" derrière la crête")
+        val shape = when (level.shape) {
+            TerrainShape.PLAINE -> null
+            TerrainShape.TERRASSES -> R.string.trebuchet_shape_terraces
+            TerrainShape.GRADINS -> R.string.trebuchet_shape_steps
+            TerrainShape.COLLINE -> R.string.trebuchet_shape_hill
+            TerrainShape.MESA -> R.string.trebuchet_shape_mesa
+            TerrainShape.VALLON -> R.string.trebuchet_shape_valley
+            TerrainShape.CRETE -> R.string.trebuchet_shape_ridge
         }
-        append(" · ${level.distance.roundToInt()} m")
+        val named = if (shape == null) site else context.getString(shape, site)
+        return context.getString(R.string.trebuchet_site_label, named, level.distance.roundToInt())
     }
+
+    /** Une description brute pour les tests et les bancs de mesure, sans contexte Android. */
+    fun debugLabel(level: TargetLevel): String =
+        "${level.kind} ${level.shape} · ${level.distance.roundToInt()} m"
 }

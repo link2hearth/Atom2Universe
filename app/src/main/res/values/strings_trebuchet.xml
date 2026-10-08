@@ -209,4 +209,24 @@
     <string name="trebuchet_ghosts_menu">Past shots…</string>
     <string name="trebuchet_sound">Sound effects</string>
     <string name="trebuchet_win">SITE RAZED in %1$d shot(s)! Long-press « %2$s » for the next site.</string>
+    <string name="trebuchet_site_hamlet">Hamlet</string>
+    <string name="trebuchet_site_farm">Fortified farm</string>
+    <string name="trebuchet_site_castle">Castle</string>
+    <string name="trebuchet_site_keep">Keep</string>
+    <string name="trebuchet_site_village">Village</string>
+    <string name="trebuchet_site_mill">Mill</string>
+    <string name="trebuchet_site_tiered_town">Tiered town</string>
+    <string name="trebuchet_site_ancient_city">Ancient city</string>
+    <string name="trebuchet_site_necropolis">Necropolis</string>
+    <string name="trebuchet_site_house_of_cards">House of cards</string>
+    <string name="trebuchet_site_manor">Protected manor</string>
+    <string name="trebuchet_site_downtown">Downtown</string>
+    <string name="trebuchet_site_metropolis">Metropolis</string>
+    <string name="trebuchet_shape_terraces">%1$s on terraces</string>
+    <string name="trebuchet_shape_steps">%1$s on descending steps</string>
+    <string name="trebuchet_shape_hill">%1$s behind the hill</string>
+    <string name="trebuchet_shape_mesa">%1$s on the mesa</string>
+    <string name="trebuchet_shape_valley">%1$s at the bottom of the valley</string>
+    <string name="trebuchet_shape_ridge">%1$s behind the ridge</string>
+    <string name="trebuchet_site_label">%1$s · %2$d m</string>
 </resources>

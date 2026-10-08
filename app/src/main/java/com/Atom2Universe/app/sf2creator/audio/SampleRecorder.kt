@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.sf2creator.audio
 
+import com.Atom2Universe.app.R
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -149,7 +150,7 @@ class SampleRecorder(private val context: Context) {
     fun startPreparing(): Boolean {
         if (!hasRecordPermission()) {
             Log.e(TAG, "No record permission")
-            _recordingState.value = RecordingState.Error("Permission d'enregistrement non accordée")
+            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_permission))
             return false
         }
 
@@ -162,7 +163,7 @@ class SampleRecorder(private val context: Context) {
             val minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
             if (minBufferSize == AudioRecord.ERROR || minBufferSize == AudioRecord.ERROR_BAD_VALUE) {
                 Log.e(TAG, "Invalid buffer size: $minBufferSize")
-                _recordingState.value = RecordingState.Error("Configuration audio invalide")
+                _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_config))
                 return false
             }
 
@@ -180,7 +181,7 @@ class SampleRecorder(private val context: Context) {
                 Log.e(TAG, "AudioRecord not initialized")
                 audioRecord?.release()
                 audioRecord = null
-                _recordingState.value = RecordingState.Error("Impossible d'initialiser l'enregistrement")
+                _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_init))
                 return false
             }
 
@@ -212,11 +213,11 @@ class SampleRecorder(private val context: Context) {
 
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception", e)
-            _recordingState.value = RecordingState.Error("Permission refusée: ${e.message}")
+            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_permission_denied, e.message))
             return false
         } catch (e: Exception) {
             Log.e(TAG, "Error starting preparation", e)
-            _recordingState.value = RecordingState.Error("Erreur: ${e.message}")
+            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_generic, e.message))
             return false
         }
     }
@@ -295,7 +296,7 @@ class SampleRecorder(private val context: Context) {
 
         if (samples == null || samples.isEmpty()) {
             Log.e(TAG, "Failed to extract samples from buffer")
-            _recordingState.value = RecordingState.Error("Aucune donnée enregistrée")
+            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_no_data))
             return
         }
 
@@ -333,7 +334,7 @@ class SampleRecorder(private val context: Context) {
 
         } catch (e: Exception) {
             Log.e(TAG, "Error saving WAV file", e)
-            _recordingState.value = RecordingState.Error("Erreur de sauvegarde: ${e.message}")
+            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_save, e.message))
         }
 
         _amplitude.value = 0f
@@ -497,10 +498,10 @@ class SampleRecorder(private val context: Context) {
 
                     } catch (e: Exception) {
                         Log.e(TAG, "Error saving WAV file", e)
-                        _recordingState.value = RecordingState.Error("Erreur de sauvegarde: ${e.message}")
+                        _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_save, e.message))
                     }
                 } else {
-                    _recordingState.value = RecordingState.Error("Aucune donnée enregistrée")
+                    _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_no_data))
                 }
 
                 _amplitude.value = 0f
@@ -508,7 +509,7 @@ class SampleRecorder(private val context: Context) {
 
         } catch (e: Exception) {
             Log.e(TAG, "Error in capture loop", e)
-            _recordingState.value = RecordingState.Error("Erreur de capture: ${e.message}")
+            _recordingState.value = RecordingState.Error(context.getString(R.string.sf2_rec_err_capture, e.message))
         }
     }
 

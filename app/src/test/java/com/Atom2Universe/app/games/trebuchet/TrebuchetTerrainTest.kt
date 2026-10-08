@@ -271,7 +271,7 @@ class TrebuchetTerrainTest {
             vus += lvl.shape
             val dalles = lvl.terrain.bodies().size
             println(
-                "RELIEF $seed ${TargetGenerator.label(lvl)} : " +
+                "RELIEF $seed ${TargetGenerator.debugLabel(lvl)} : " +
                     "${"%.1f".format(lvl.terrain.lowest)}..${"%.1f".format(lvl.terrain.highest)} m, " +
                     "$dalles dalles, ${lvl.structure.blocks.size} corps, " +
                     "site ${"%.0f".format(lvl.structure.width)} m de front"
@@ -325,7 +325,7 @@ class TrebuchetTerrainTest {
             val hauteur = g.targets.ruinHeight()
             repeat(180) { g.step(1f / 60f) }
             println(
-                "TENUE $seed ${TargetGenerator.label(g.level!!)} : " +
+                "TENUE $seed ${TargetGenerator.debugLabel(g.level!!)} : " +
                     "crête ${"%.2f".format(hauteur)} -> ${"%.2f".format(g.targets.ruinHeight())}, " +
                     "abîmé ${"%.1f".format(g.targets.brokenRatio * 100)}%, " +
                     "renversées ${g.targets.pieceToppled}/${g.targets.pieces.size}"

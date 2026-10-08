@@ -94,7 +94,7 @@ class TrebuchetApercuTest {
         }
         sb.append(
             """<text x="14" y="30" fill="#dfe8f0" font-family="sans-serif" font-size="22">""" +
-                "graine ${lvl.seed} — ${TargetGenerator.label(lvl)} — " +
+                "graine ${lvl.seed} — ${TargetGenerator.debugLabel(lvl)} — " +
                 "${lvl.structure.blocks.size} corps</text>"
         )
         sb.append("</svg>")

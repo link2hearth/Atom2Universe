@@ -35,4 +35,7 @@
     <string name="chess_status_draw_fifty">Nulle : cinquante coups sans prise ni coup de pion</string>
     <string name="chess_status_draw_material">Nulle : plus assez de pièces pour mater</string>
     <string name="chess_time_format">%1$02d:%2$02d</string>
+    <string name="games_ai_error">Erreur IA</string>
+    <string name="chess_ai_no_legal_move">Aucun coup légal trouvé</string>
+    <string name="draughts_ai_no_move">Aucun coup trouvé</string>
 </resources>

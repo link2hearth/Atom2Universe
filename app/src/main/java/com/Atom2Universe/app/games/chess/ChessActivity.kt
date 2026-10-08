@@ -375,9 +375,9 @@ class ChessActivity : AppCompatActivity(),
         }, 200)
     }
 
-    override fun onAIError(error: String) {
+    override fun onAIError(messageRes: Int) {
         runOnUiThread {
-            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
         }
     }
 

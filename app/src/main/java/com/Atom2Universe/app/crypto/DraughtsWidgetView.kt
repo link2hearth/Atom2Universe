@@ -292,7 +292,7 @@ class DraughtsWidgetView @JvmOverloads constructor(
         }, 250)
     }
 
-    override fun onAIError(error: String) { aiThinking = false }
+    override fun onAIError(messageRes: Int) { aiThinking = false }
 
     // ── Fin de partie ─────────────────────────────────────────────────────────
     private fun checkGameOver() {

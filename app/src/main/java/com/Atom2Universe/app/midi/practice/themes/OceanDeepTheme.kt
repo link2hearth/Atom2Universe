@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.midi.practice.themes
 
+import com.Atom2Universe.app.R
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -27,8 +28,8 @@ import kotlin.random.Random
 class OceanDeepTheme : BasePracticeTheme() {
 
     override val id = "ocean_deep"
-    override val displayName = "Océan Profond"
-    override val description = "Plongez dans les profondeurs avec bulles et vie marine"
+    override val displayNameRes = R.string.midi_theme_deep_ocean_name
+    override val descriptionRes = R.string.midi_theme_deep_ocean_desc
     companion object {
         // Couleurs de l'océan profond
         private val DEEP_COLORS = intArrayOf(

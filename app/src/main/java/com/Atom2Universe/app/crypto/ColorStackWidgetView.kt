@@ -210,7 +210,7 @@ class ColorStackWidgetView @JvmOverloads constructor(
     private fun afterMove() {
         colorStackView.refresh()
         if (game.solved) {
-            resultText.text = "🎉 Trié !"
+            resultText.text = context.getString(R.string.color_stack_widget_solved)
             resultOverlay.visibility = VISIBLE
             context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .edit { remove(KEY_SAVE) }

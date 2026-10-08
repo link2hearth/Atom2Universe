@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.midi.practice.themes
 
+import com.Atom2Universe.app.R
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -28,8 +29,8 @@ class CustomBackgroundTheme(
 ) : BasePracticeTheme() {
 
     override val id = "custom_background"
-    override val displayName = "Personnalisé"
-    override val description = "Votre image en fond"
+    override val displayNameRes = R.string.midi_theme_custom_name
+    override val descriptionRes = R.string.midi_theme_custom_desc
     // Bitmap de l'image de fond (chargé paresseusement)
     private var backgroundBitmap: Bitmap? = null
     private var scaledBitmap: Bitmap? = null  // Version pré-scalée pour performance

@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
+import androidx.annotation.StringRes
 
 /**
  * Interface définissant un thème visuel complet pour le mode Practice.
@@ -21,10 +22,10 @@ interface PracticeTheme {
     val id: String
 
     /** Nom d'affichage du thème */
-    val displayName: String
+    @get:StringRes val displayNameRes: Int
 
     /** Description courte */
-    val description: String
+    @get:StringRes val descriptionRes: Int
 
     // ========== COULEURS DE BASE ==========
 

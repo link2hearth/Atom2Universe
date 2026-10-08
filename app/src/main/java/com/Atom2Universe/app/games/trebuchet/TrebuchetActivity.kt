@@ -1019,13 +1019,13 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
         bestText.text = when {
             lvl != null && game.targets.cleared -> getString(
                 R.string.trebuchet_level_cleared,
-                TargetGenerator.label(lvl),
+                TargetGenerator.label(this, lvl),
                 game.hitCount,
                 TargetGenerator.par(lvl)
             ) + mention
             lvl != null -> getString(
                 R.string.trebuchet_level,
-                TargetGenerator.label(lvl),
+                TargetGenerator.label(this, lvl),
                 (game.targets.score * 100f).toInt(),
                 (game.targets.winRatio * 100f).toInt(),
                 game.hitCount,

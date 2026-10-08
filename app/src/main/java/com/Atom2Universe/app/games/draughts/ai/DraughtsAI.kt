@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.draughts.ai
 
+import com.Atom2Universe.app.R
+import androidx.annotation.StringRes
 import com.Atom2Universe.app.games.draughts.DraughtsDifficulty
 import com.Atom2Universe.app.games.draughts.DraughtsGame
 import com.Atom2Universe.app.games.draughts.DraughtsMove
@@ -15,7 +17,7 @@ class DraughtsAI(
     interface AIListener {
         fun onAIThinking()
         fun onAIMoveFound(move: DraughtsMove, thinkTimeMs: Long)
-        fun onAIError(error: String)
+        fun onAIError(@StringRes messageRes: Int)
     }
 
     private val engine = DraughtsEngine()
@@ -38,10 +40,10 @@ class DraughtsAI(
                 val elapsed = System.currentTimeMillis() - start
                 withContext(Dispatchers.Main) {
                     if (move != null) listener.onAIMoveFound(move, elapsed)
-                    else listener.onAIError("Aucun coup trouvé")
+                    else listener.onAIError(R.string.draughts_ai_no_move)
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { listener.onAIError(e.message ?: "Erreur IA") }
+                withContext(Dispatchers.Main) { listener.onAIError(R.string.games_ai_error) }
             }
         }
     }

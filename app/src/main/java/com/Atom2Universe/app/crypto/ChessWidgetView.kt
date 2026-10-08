@@ -396,7 +396,7 @@ class ChessWidgetView @JvmOverloads constructor(
         }
     }
 
-    override fun onAIError(error: String) {
+    override fun onAIError(messageRes: Int) {
         // Erreur silencieuse dans le widget
     }
 

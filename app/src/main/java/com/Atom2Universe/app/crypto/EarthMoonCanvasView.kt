@@ -3,6 +3,8 @@ package com.Atom2Universe.app.crypto
 import android.animation.ValueAnimator
 import android.graphics.*
 import android.content.Context
+import com.Atom2Universe.app.R
+import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.view.View
 import okhttp3.OkHttpClient
@@ -26,42 +28,42 @@ class EarthMoonCanvasView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    enum class CameraView(val label: String) {
-        FROM_SUN("Depuis le Soleil ☀"),
-        SUN_RIGHT("Soleil à droite"),
-        OPPOSITE_SUN("Face à la nuit"),
-        SUN_LEFT("Soleil à gauche"),
-        FROM_ABOVE("Vue du dessus"),
-        FROM_BELOW("Vue du dessous"),
-        EPIC_REALTIME("Photo NASA • direct"),
-        FIXED_LOCATION("Vue fixe 📌")
+    enum class CameraView(@StringRes val labelRes: Int) {
+        FROM_SUN(R.string.earth_view_from_sun),
+        SUN_RIGHT(R.string.earth_view_sun_right),
+        OPPOSITE_SUN(R.string.earth_view_night),
+        SUN_LEFT(R.string.earth_view_sun_left),
+        FROM_ABOVE(R.string.earth_view_above),
+        FROM_BELOW(R.string.earth_view_below),
+        EPIC_REALTIME(R.string.earth_view_nasa),
+        FIXED_LOCATION(R.string.earth_view_fixed)
     }
 
     companion object {
-        data class LocationPreset(val name: String, val latDeg: Double, val lonDeg: Double)
+        data class LocationPreset(@StringRes val nameRes: Int, val latDeg: Double, val lonDeg: Double)
 
         val LOCATION_PRESETS = listOf(
-            LocationPreset("Greenwich / Équateur", 0.0, 0.0),
-            LocationPreset("Paris", 48.9, 2.4),
-            LocationPreset("New York", 40.7, -74.0),
-            LocationPreset("Los Angeles", 34.1, -118.2),
-            LocationPreset("La Havane / Cuba", 23.1, -82.4),
-            LocationPreset("Guyane française", 4.9, -52.3),
-            LocationPreset("Lima / Pérou", -12.0, -77.0),
-            LocationPreset("São Paulo", -23.5, -46.6),
-            LocationPreset("Moscou", 55.8, 37.6),
-            LocationPreset("Le Caire / Afrique du Nord", 30.1, 31.2),
-            LocationPreset("Nairobi / Afrique centrale", -1.3, 36.8),
-            LocationPreset("Le Cap / Afrique du Sud", -33.9, 18.4),
-            LocationPreset("Dubaï", 25.2, 55.3),
-            LocationPreset("New Delhi / Inde", 28.6, 77.2),
-            LocationPreset("Mumbai / Inde", 19.1, 72.9),
-            LocationPreset("Beijing", 39.9, 116.4),
-            LocationPreset("Tokyo", 35.7, 139.7),
-            LocationPreset("Sydney", -33.9, 151.2),
-            LocationPreset("Auckland", -36.9, 174.8),
-            LocationPreset("Hawaï", 21.3, -157.8),
-            LocationPreset("Pacifique Central", 0.0, -180.0)
+            LocationPreset(R.string.earth_loc_greenwich, 0.0, 0.0),
+            LocationPreset(R.string.earth_loc_paris, 48.9, 2.4),
+            LocationPreset(R.string.earth_loc_new_york, 40.7, -74.0),
+            LocationPreset(R.string.earth_loc_los_angeles, 34.1, -118.2),
+            LocationPreset(R.string.earth_loc_havana, 23.1, -82.4),
+            LocationPreset(R.string.earth_loc_guyana, 4.9, -52.3),
+            LocationPreset(R.string.earth_loc_lima, -12.0, -77.0),
+            LocationPreset(R.string.earth_loc_sao_paulo, -23.5, -46.6),
+            LocationPreset(R.string.earth_loc_moscow, 55.8, 37.6),
+            LocationPreset(R.string.earth_loc_cairo, 30.1, 31.2),
+            LocationPreset(R.string.earth_loc_nairobi, -1.3, 36.8),
+            LocationPreset(R.string.earth_loc_cape_town, -33.9, 18.4),
+            LocationPreset(R.string.earth_loc_dubai, 25.2, 55.3),
+            LocationPreset(R.string.earth_loc_new_delhi, 28.6, 77.2),
+            LocationPreset(R.string.earth_loc_mumbai, 19.1, 72.9),
+            LocationPreset(R.string.earth_loc_beijing, 39.9, 116.4),
+            LocationPreset(R.string.earth_loc_tokyo, 35.7, 139.7),
+            LocationPreset(R.string.earth_loc_sydney, -33.9, 151.2),
+            LocationPreset(R.string.earth_loc_auckland, -36.9, 174.8),
+            LocationPreset(R.string.earth_loc_hawaii, 21.3, -157.8),
+            LocationPreset(R.string.earth_loc_central_pacific, 0.0, -180.0)
         )
     }
 

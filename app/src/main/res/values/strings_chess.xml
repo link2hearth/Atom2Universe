@@ -35,4 +35,7 @@
     <string name="chess_status_draw_fifty">Draw: fifty moves without a capture or pawn move</string>
     <string name="chess_status_draw_material">Draw: not enough material to checkmate</string>
     <string name="chess_time_format">%1$02d:%2$02d</string>
+    <string name="games_ai_error">AI error</string>
+    <string name="chess_ai_no_legal_move">No legal move found</string>
+    <string name="draughts_ai_no_move">No move found</string>
 </resources>

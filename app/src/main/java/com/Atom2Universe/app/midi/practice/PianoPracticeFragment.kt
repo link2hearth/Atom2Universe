@@ -1735,18 +1735,18 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
                         }
                     }
                 } else {
-                    showError("Impossible d'ouvrir le fichier MIDI")
+                    showError(getString(R.string.midi_practice_err_open))
                     return
                 }
             } catch (_: Exception) {
-                showError("Erreur lors de l'ouverture du fichier MIDI")
+                showError(getString(R.string.midi_practice_err_opening))
                 return
             }
         } else {
             // Chemin de fichier normal
             val file = File(args.trackFilePath)
             if (!file.exists()) {
-                showError("Fichier MIDI introuvable")
+                showError(getString(R.string.midi_practice_err_not_found))
                 return
             }
             loadSuccess = if (args.isTwoHandsMode) {
@@ -1800,7 +1800,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             markerSeekBar.setMaxDuration(durationMs)
             markerSeekBar.setProgress(0f)
         } else {
-            showError("Erreur lors du chargement du fichier MIDI")
+            showError(getString(R.string.midi_practice_err_loading))
         }
     }
 
@@ -3294,7 +3294,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             btnPlayPause.setImageResource(R.drawable.ic_pause)
             startAnimation()
         } else {
-            showError("Impossible de demarrer la lecture")
+            showError(getString(R.string.midi_practice_err_start))
         }
     }
 
@@ -3742,7 +3742,7 @@ class PianoPracticeFragment : Fragment(), MidiKeyboardSettingsDialog.OnSettingsC
             context = requireContext(),
             onThemeSelected = { theme ->
                 applyCurrentThemeToAllViews()
-                val message = getString(R.string.theme_applied, theme.displayName)
+                val message = getString(R.string.theme_applied, getString(theme.displayNameRes))
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             },
             onCustomThemeConfigureRequested = {

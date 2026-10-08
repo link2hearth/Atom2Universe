@@ -316,7 +316,7 @@ class MidiTrackAdapter(
                 infoTempo.text = tempoInfo
 
                 // Instruments
-                infoInstruments.text = info.instrumentsList
+                infoInstruments.text = info.instrumentsList(itemView.context)
 
                 // Copyright
                 if (info.copyright != null) {

@@ -215,10 +215,10 @@ class DraughtsActivity : ThemedActivity(),
         animateAIMove(move)
     }
 
-    override fun onAIError(error: String) {
+    override fun onAIError(messageRes: Int) {
         aiThinking = false
         animating = false
-        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, messageRes, Toast.LENGTH_SHORT).show()
         updateStatus()
     }
 

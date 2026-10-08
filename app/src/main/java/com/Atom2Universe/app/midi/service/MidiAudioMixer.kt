@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.midi.service
 
+import com.Atom2Universe.app.R
+import androidx.annotation.StringRes
 import java.util.Locale
 
 /**
@@ -21,17 +23,17 @@ object MidiAudioMixer {
      * Presets de normalisation
      */
     enum class NormalizationPreset(
-        val label: String,
+        @StringRes val labelRes: Int,
         val masterGain: Float,      // Réduction globale (0.0-1.0)
         val velocityCap: Int,       // Velocity max autorisée
         val compressionThreshold: Int, // Seuil de compression
         val compressionRatio: Float    // Ratio de compression au-dessus du seuil
     ) {
-        OFF("Désactivé", 1.0f, 127, 127, 1.0f),
-        LIGHT("Léger", 0.85f, 120, 100, 0.8f),
-        MEDIUM("Moyen", 0.75f, 110, 90, 0.6f),
-        STRONG("Fort", 0.65f, 100, 80, 0.5f),
-        AGGRESSIVE("Agressif", 0.55f, 90, 70, 0.4f)
+        OFF(R.string.midi_mix_off, 1.0f, 127, 127, 1.0f),
+        LIGHT(R.string.midi_mix_light, 0.85f, 120, 100, 0.8f),
+        MEDIUM(R.string.midi_mix_medium, 0.75f, 110, 90, 0.6f),
+        STRONG(R.string.midi_mix_strong, 0.65f, 100, 80, 0.5f),
+        AGGRESSIVE(R.string.midi_mix_aggressive, 0.55f, 90, 70, 0.4f)
     }
 
     // Paramètres actuels

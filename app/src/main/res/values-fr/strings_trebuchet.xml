@@ -207,4 +207,24 @@
     <string name="trebuchet_ghosts_menu">Fantômes…</string>
     <string name="trebuchet_sound">Bruitages</string>
     <string name="trebuchet_win">SITE RASÉ en %1$d coup(s) ! Appui long sur « %2$s » pour le site suivant.</string>
+    <string name="trebuchet_site_hamlet">Hameau</string>
+    <string name="trebuchet_site_farm">Ferme fortifiée</string>
+    <string name="trebuchet_site_castle">Château</string>
+    <string name="trebuchet_site_keep">Donjon</string>
+    <string name="trebuchet_site_village">Village</string>
+    <string name="trebuchet_site_mill">Moulin</string>
+    <string name="trebuchet_site_tiered_town">Bourg étagé</string>
+    <string name="trebuchet_site_ancient_city">Cité antique</string>
+    <string name="trebuchet_site_necropolis">Nécropole</string>
+    <string name="trebuchet_site_house_of_cards">Château de cartes</string>
+    <string name="trebuchet_site_manor">Seigneurie protégée</string>
+    <string name="trebuchet_site_downtown">Centre-ville</string>
+    <string name="trebuchet_site_metropolis">Métropole</string>
+    <string name="trebuchet_shape_terraces">%1$s en terrasses</string>
+    <string name="trebuchet_shape_steps">%1$s en gradins</string>
+    <string name="trebuchet_shape_hill">%1$s derrière la colline</string>
+    <string name="trebuchet_shape_mesa">%1$s sur la butte</string>
+    <string name="trebuchet_shape_valley">%1$s au fond du vallon</string>
+    <string name="trebuchet_shape_ridge">%1$s derrière la crête</string>
+    <string name="trebuchet_site_label">%1$s · %2$d m</string>
 </resources>

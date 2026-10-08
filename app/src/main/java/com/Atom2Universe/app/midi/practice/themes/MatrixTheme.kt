@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.midi.practice.themes
 
+import com.Atom2Universe.app.R
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -22,8 +23,8 @@ import androidx.core.graphics.toColorInt
 class MatrixTheme : BasePracticeTheme() {
 
     override val id = "matrix"  // Keep internal ID for compatibility
-    override val displayName = "Hacker"
-    override val description = "Cascade de symboles style hacker"
+    override val displayNameRes = R.string.midi_theme_hacker_name
+    override val descriptionRes = R.string.midi_theme_hacker_desc
     companion object {
         // Le vert Matrix iconique
         private const val MATRIX_GREEN = 0xFF00FF41.toInt()

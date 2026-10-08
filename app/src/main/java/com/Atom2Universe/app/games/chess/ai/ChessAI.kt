@@ -1,5 +1,7 @@
 package com.Atom2Universe.app.games.chess.ai
 
+import com.Atom2Universe.app.R
+import androidx.annotation.StringRes
 import android.content.Context
 import com.Atom2Universe.app.games.chess.ChessDifficulty
 import com.Atom2Universe.app.games.chess.ChessGame
@@ -40,7 +42,7 @@ class ChessAI(
          * Appelé en cas d'erreur
          * @param error Message d'erreur
          */
-        fun onAIError(error: String)
+        fun onAIError(@StringRes messageRes: Int)
     }
 
     /**
@@ -76,14 +78,14 @@ class ChessAI(
                     if (bestMove != null) {
                         listener.onAIMoveFound(bestMove, thinkTime)
                     } else {
-                        listener.onAIError("Aucun coup légal trouvé")
+                        listener.onAIError(R.string.chess_ai_no_legal_move)
                     }
                 }
             } catch (e: CancellationException) {
                 // Recherche annulée, ne rien faire
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    listener.onAIError("Erreur IA: ${e.message}")
+                    listener.onAIError(R.string.games_ai_error)
                 }
             }
         }

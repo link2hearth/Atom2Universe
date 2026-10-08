@@ -311,7 +311,7 @@ class CustomThemeDialog(
 
         // Nom du thème
         val nameText = TextView(context).apply {
-            text = theme.displayName
+            text = context.getString(theme.displayNameRes)
             setTextColor(AudioStyle.primaryText(context))
             textSize = 14f
             layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)

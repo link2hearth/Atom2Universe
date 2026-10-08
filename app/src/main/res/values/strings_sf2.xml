@@ -301,4 +301,12 @@
     <!-- Formerly hard-coded -->
     <string name="sf2_no_free_program">All program numbers (0-127) are already in use. Cannot create more programs.</string>
     <string name="sf2_instrument_not_found">Instrument not found</string>
+    <string name="sf2_rec_err_permission">Recording permission not granted</string>
+    <string name="sf2_rec_err_config">Invalid audio configuration</string>
+    <string name="sf2_rec_err_init">Unable to start recording</string>
+    <string name="sf2_rec_err_no_data">No data recorded</string>
+    <string name="sf2_rec_err_permission_denied">Permission denied: %1$s</string>
+    <string name="sf2_rec_err_generic">Error: %1$s</string>
+    <string name="sf2_rec_err_save">Save error: %1$s</string>
+    <string name="sf2_rec_err_capture">Capture error: %1$s</string>
 </resources>

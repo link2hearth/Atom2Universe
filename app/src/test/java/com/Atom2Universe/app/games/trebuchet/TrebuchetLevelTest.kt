@@ -24,7 +24,7 @@ class TrebuchetLevelTest {
             val lvl = TargetGenerator.generate(seed)
             val s = lvl.structure
             println(
-                "NIVEAU $seed ${TargetGenerator.label(lvl)} : ${s.blocks.size} corps, " +
+                "NIVEAU $seed ${TargetGenerator.debugLabel(lvl)} : ${s.blocks.size} corps, " +
                     "pile ${s.deepestStack()}, ${"%.1f".format(s.baseHeight)} m de haut, " +
                     "${"%.1f".format(s.width)} m de front, " +
                     "${(s.totalMass / 1000f).toInt()} t"
@@ -132,7 +132,7 @@ class TrebuchetLevelTest {
                     x += pas
                 }
                 println(
-                    "VILLE graine $seed ${TargetGenerator.label(lvl)} : ${s.blocks.size} corps, " +
+                    "VILLE graine $seed ${TargetGenerator.debugLabel(lvl)} : ${s.blocks.size} corps, " +
                         "${"%.0f".format(s.baseHeight)} m de haut sur ${"%.0f".format(s.width)} m, " +
                         "plus grand vide ${"%.0f".format(pire)} m, pile ${s.deepestStack()}"
                 )
@@ -412,7 +412,7 @@ class TrebuchetLevelTest {
             val g = TrebuchetGame()
             g.loadLevel(seed)
             val f = g.targets
-            val nom = TargetGenerator.label(g.level!!)
+            val nom = TargetGenerator.debugLabel(g.level!!)
             var coups = 0
             val courbe = StringBuilder()
             while (coups < 40 && f.pieces.isNotEmpty() && !f.cleared) {

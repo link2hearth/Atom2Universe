@@ -159,14 +159,14 @@ class ThemeSelectionDialog(
         }
 
         val nameText = TextView(context).apply {
-            text = theme.displayName
+            text = context.getString(theme.displayNameRes)
             setTextColor(AudioStyle.primaryText(context))
             textSize = 16f
         }
         textContainer.addView(nameText)
 
         val descText = TextView(context).apply {
-            text = theme.description
+            text = context.getString(theme.descriptionRes)
             setTextColor(AudioStyle.secondaryText(context))
             textSize = 12f
         }
@@ -249,7 +249,7 @@ class ThemeSelectionDialog(
         }
 
         val nameText = TextView(context).apply {
-            text = theme.displayName
+            text = context.getString(theme.displayNameRes)
             setTextColor(AudioStyle.primaryText(context))
             textSize = 16f
         }
@@ -257,9 +257,9 @@ class ThemeSelectionDialog(
 
         val descText = TextView(context).apply {
             text = if (hasImage) {
-                "${theme.description} - ${context.getString(R.string.custom_theme_image_set)}"
+                "${context.getString(theme.descriptionRes)} - ${context.getString(R.string.custom_theme_image_set)}"
             } else {
-                theme.description
+                context.getString(theme.descriptionRes)
             }
             setTextColor(AudioStyle.secondaryText(context))
             textSize = 12f
@@ -269,7 +269,7 @@ class ThemeSelectionDialog(
         // Thème de base info
         val baseTheme = theme.getBaseTheme()
         val baseInfo = TextView(context).apply {
-            text = context.getString(R.string.midi_theme_base, baseTheme.displayName)
+            text = context.getString(R.string.midi_theme_base, context.getString(baseTheme.displayNameRes))
             setTextColor(AudioStyle.accent(context))
             textSize = 11f
             setPadding(0, dp(2), 0, 0)

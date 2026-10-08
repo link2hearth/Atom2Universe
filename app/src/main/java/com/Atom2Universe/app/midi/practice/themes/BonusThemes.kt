@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.midi.practice.themes
 
+import com.Atom2Universe.app.R
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -20,8 +21,8 @@ import kotlin.math.sin
 class GalaxyTheme : BasePracticeTheme() {
 
     override val id = "galaxy"
-    override val displayName = "Galaxie"
-    override val description = "Voyage cosmique parmi les étoiles et nébuleuses"
+    override val displayNameRes = R.string.midi_theme_galaxy_name
+    override val descriptionRes = R.string.midi_theme_galaxy_desc
 
 
     companion object {
@@ -431,8 +432,8 @@ class GalaxyTheme : BasePracticeTheme() {
 class CyberpunkTheme : BasePracticeTheme() {
 
     override val id = "cyberpunk"
-    override val displayName = "Cyberpunk"
-    override val description = "Ville néon cyberpunk"
+    override val displayNameRes = R.string.midi_theme_cyberpunk_name
+    override val descriptionRes = R.string.midi_theme_cyberpunk_desc
 
 
     companion object {
@@ -642,8 +643,8 @@ class CyberpunkTheme : BasePracticeTheme() {
 class MinimalTheme : BasePracticeTheme() {
 
     override val id = "minimal"
-    override val displayName = "Minimal"
-    override val description = "Élégance épurée en noir et blanc"
+    override val displayNameRes = R.string.midi_theme_minimal_name
+    override val descriptionRes = R.string.midi_theme_minimal_desc
 
 
     override fun getBackgroundColors() = Pair(

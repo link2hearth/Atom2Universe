@@ -569,16 +569,16 @@ class GachaActivity : AppCompatActivity() {
     }
 
     private fun categoryLabel(category: String): String = when (category) {
-        "nonmetal"             -> "Non-métal"
-        "noble-gas"            -> "Gaz noble"
-        "alkali-metal"         -> "Métal alcalin"
-        "alkaline-earth-metal" -> "Métal alcalino-terreux"
-        "metalloid"            -> "Métalloïde"
-        "halogen"              -> "Halogène"
-        "transition-metal"     -> "Métal de transition"
-        "post-transition-metal"-> "Métal pauvre"
-        "lanthanide"           -> "Lanthanide"
-        "actinide"             -> "Actinide"
+        "nonmetal"             -> getString(R.string.periodic_category_nonmetal)
+        "noble-gas"            -> getString(R.string.periodic_category_noble_gas)
+        "alkali-metal"         -> getString(R.string.periodic_category_alkali_metal)
+        "alkaline-earth-metal" -> getString(R.string.periodic_category_alkaline_earth_metal)
+        "metalloid"            -> getString(R.string.periodic_category_metalloid)
+        "halogen"              -> getString(R.string.periodic_category_halogen)
+        "transition-metal"     -> getString(R.string.periodic_category_transition_metal)
+        "post-transition-metal"-> getString(R.string.periodic_category_post_transition_metal)
+        "lanthanide"           -> getString(R.string.periodic_category_lanthanide)
+        "actinide"             -> getString(R.string.periodic_category_actinide)
         else                   -> category
     }
 

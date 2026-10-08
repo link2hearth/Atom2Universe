@@ -300,4 +300,12 @@
     <!-- Auparavant en dur -->
     <string name="sf2_no_free_program">Les 128 numéros de programme (0-127) sont tous utilisés. Impossible d\'en créer d\'autres.</string>
     <string name="sf2_instrument_not_found">Instrument introuvable</string>
+    <string name="sf2_rec_err_permission">Permission d\'enregistrement non accordée</string>
+    <string name="sf2_rec_err_config">Configuration audio invalide</string>
+    <string name="sf2_rec_err_init">Impossible d\'initialiser l\'enregistrement</string>
+    <string name="sf2_rec_err_no_data">Aucune donnée enregistrée</string>
+    <string name="sf2_rec_err_permission_denied">Permission refusée: %1$s</string>
+    <string name="sf2_rec_err_generic">Erreur: %1$s</string>
+    <string name="sf2_rec_err_save">Erreur de sauvegarde: %1$s</string>
+    <string name="sf2_rec_err_capture">Erreur de capture: %1$s</string>
 </resources>

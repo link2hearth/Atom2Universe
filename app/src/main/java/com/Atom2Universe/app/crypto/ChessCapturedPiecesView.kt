@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.crypto
 
+import com.Atom2Universe.app.R
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -82,7 +83,7 @@ class ChessCapturedPiecesView @JvmOverloads constructor(
 
         if (blacks.isEmpty() && whites.isEmpty()) {
             val ty = height / 2f - (fallbackPaint.descent() + fallbackPaint.ascent()) / 2f
-            canvas.drawText("♟ Échecs", width / 2f, ty, fallbackPaint)
+            canvas.drawText("♟ ${context.getString(R.string.chess_title)}", width / 2f, ty, fallbackPaint)
             return
         }
 

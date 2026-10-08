@@ -1996,7 +1996,7 @@ class MainClickerActivity : ThemedActivity() {
         earthMoonWidgetView.setShowTerminator(MainClickerPreferences.isEarthShowTerminator(this))
         val fixedLocIndex = MainClickerPreferences.getEarthFixedLocationIndex(this)
         val fixedPreset = EarthMoonCanvasView.LOCATION_PRESETS.getOrElse(fixedLocIndex) { EarthMoonCanvasView.LOCATION_PRESETS[0] }
-        earthMoonWidgetView.setFixedLocation(fixedPreset.latDeg, fixedPreset.lonDeg, fixedPreset.name)
+        earthMoonWidgetView.setFixedLocation(fixedPreset.latDeg, fixedPreset.lonDeg, fixedPreset.nameRes)
         if (earthWidgetEnabled) startAstronomyLoop() else stopAstronomyLoop()
     }
 
