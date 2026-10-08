@@ -7,7 +7,6 @@ import android.graphics.Path
 import android.view.View
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.golf.GolfUi
-import java.util.Random
 import kotlin.math.*
 
 /**
@@ -82,64 +81,4 @@ internal class ClassicWindRose(context: Context) : View(context) {
         p.clearShadowLayer()
         p.typeface = android.graphics.Typeface.DEFAULT
     }
-}
-
-/**
- * Thin streaks of air drifting over the scene in the direction the wind pushes: more and faster
- * with a stronger wind. It never takes touches.
- */
-internal class ClassicWindStreaks(context: Context) : View(context) {
-    private val d = resources.displayMetrics.density
-    private val p = Paint(Paint.ANTI_ALIAS_FLAG).apply { strokeCap = Paint.Cap.ROUND; color = 0xFFFFFFFF.toInt() }
-    private val random = Random(7)
-    private val xs = FloatArray(COUNT) { random.nextFloat() }
-    private val ys = FloatArray(COUNT) { random.nextFloat() }
-    private val pace = FloatArray(COUNT) { .7f + .6f * random.nextFloat() }
-    private var dirX = 0f
-    private var dirY = -1f
-    private var strength = 0f
-    private var waited = 0f
-
-    init { isClickable = false; isFocusable = false; importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO }
-
-    /** Advances the streaks; redraws at about 30 images a second, which is plenty for thin lines. */
-    fun update(dt: Float, aim: Float, windX: Float, windZ: Float) {
-        waited += dt
-        if (waited < .033f || width == 0) return
-        val step = waited.coerceAtMost(.1f); waited = 0f
-        strength = hypot(windX, windZ)
-        val a = (aim - atan2(windX, windZ)).let { if (it.isFinite()) it else 0f }
-        dirX = sin(a); dirY = -cos(a)
-        val shown = visibleCount()
-        for (i in 0 until shown) {
-            val v = (50f + 45f * strength) * d * pace[i] * step
-            xs[i] += dirX * v / width; ys[i] += dirY * v / height
-            if (xs[i] < -.1f || xs[i] > 1.1f || ys[i] < -.1f || ys[i] > 1.1f) respawn(i)
-        }
-        invalidate()
-    }
-
-    private fun visibleCount() = (4 + strength * 5f).toInt().coerceIn(4, COUNT)
-
-    /** A streak that left the screen comes back upstream, on the edge the wind comes from. */
-    private fun respawn(i: Int) {
-        val ax = abs(dirX); val ay = abs(dirY)
-        if (random.nextFloat() * (ax + ay) < ax) {
-            xs[i] = if (dirX > 0f) -.05f else 1.05f; ys[i] = random.nextFloat()
-        } else {
-            ys[i] = if (dirY > 0f) -.05f else 1.05f; xs[i] = random.nextFloat()
-        }
-    }
-
-    override fun onDraw(c: Canvas) {
-        val length = (16f + 11f * strength) * d
-        p.strokeWidth = 1.6f * d
-        for (i in 0 until visibleCount()) {
-            val x = xs[i] * width; val y = ys[i] * height
-            p.alpha = 40 + (pace[i] * 40f).toInt()
-            c.drawLine(x, y, x - dirX * length * pace[i], y - dirY * length * pace[i], p)
-        }
-    }
-
-    private companion object { const val COUNT = 26 }
 }

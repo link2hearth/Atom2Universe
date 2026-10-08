@@ -57,6 +57,11 @@ data class ClassicFrame(
     /** The player is drawing the shot back: the guide is live. */
     val aiming: Boolean = false,
     val golfer: GolferAppearance = GolferAppearance(),
+    /** The slope grid is shown (the player reads the green); hidden, the board is not drawn at all. */
+    val grid: Boolean = true,
+    /** Where the wind pushes the ball, m/s: it carries the leaves. */
+    val windX: Float = 0f,
+    val windZ: Float = 0f,
 )
 
 @SuppressLint("ViewConstructor")

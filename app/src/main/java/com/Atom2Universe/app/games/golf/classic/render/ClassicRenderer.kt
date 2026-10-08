@@ -63,7 +63,19 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         cone(0f,0f,0f,.014f,.5f,C(.98f,.97f,.92f),12,.21f)
         cone(0f,.5f,0f,.21f,.08f,C(1f,.34f,.22f),12,.21f)
     }.build() }
-    private val meshes get() = scenery+listOf(blades,ball,shadow,ring,bird,rabbit,sky,flag,pin,hazardPin,cupMarker)
+    /** Dead leaves in three autumn tones: flat kites, seen from both sides. */
+    private val leaves by lazy { listOf(C(.74f,.44f,.16f),C(.62f,.5f,.17f),C(.55f,.27f,.12f)).map { colour ->
+        MeshBuilder().apply {
+            val a=P(0f,0f,-.09f); val b=P(.045f,0f,0f); val c=P(0f,0f,.09f); val d=P(-.045f,0f,0f)
+            quad(a,b,c,d,colour); quad(d,c,b,a,colour)
+        }.build()
+    } }
+    private val meshes get() = scenery+listOf(blades,ball,shadow,ring,bird,rabbit,sky,flag,pin,hazardPin,cupMarker)+leaves
+    // A few leaves carried by the wind a couple of metres above the turf; each waits a while before the next one.
+    private val leafX=FloatArray(LEAVES); private val leafY=FloatArray(LEAVES); private val leafZ=FloatArray(LEAVES)
+    private val leafWait=FloatArray(LEAVES) { 1f+it*2.5f }
+    private val leafAge=FloatArray(LEAVES); private val leafSeed=FloatArray(LEAVES) { it*1.9f+.4f }
+    private val leafRandom=java.util.Random(11)
     private var program=0
     private var matrixLoc=0; private var modelLoc=0; private var eyeLoc=0
     private var detailLoc=0; private var skyLoc=0; private var timeLoc=0; private var overviewLoc=0
@@ -92,6 +104,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     private var previousTime=0L
     private var time=0f
     private var released=false
+    private companion object { const val LEAVES=3 }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         released=false
@@ -151,7 +164,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         // Slope board, only while a shot is being prepared (gone during the stroke and the ball's run):
         // from above, around what the camera looks at, for any shot; otherwise from the ball to the hole for a putt.
         val putting=f.club==GolfClub.PUTTER
-        val shownBoard=if(f.flying||f.preview==ShotPreview.NONE) null else when {
+        val shownBoard=if(f.flying||f.preview==ShotPreview.NONE||!f.grid) null else when {
             f.overview!=null -> SlopeBoard.around(hole,lookX,lookZ,sqrt((lookX-eyeX).pow(2)+(lookY-eyeY).pow(2)+(lookZ-eyeZ).pow(2)),
                 if(putting) hole.heightAt(f.ball.x,f.ball.z) else null)
             putting -> SlopeBoard.forPutt(hole,f.ball,f.preview.landing)
@@ -171,6 +184,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         Matrix.rotateM(model,0,time*12f,0f,0f,1f)
         draw(blades,.05f)
         wildlife()
+        if(f.overview==null) drawLeaves(f,dt)
         grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
         GL.glUseProgram(program)
         val ground=hole.heightAt(f.ball.x,f.ball.z)
@@ -302,6 +316,41 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         identity(); Matrix.translateM(model,0,x,hole.heightAt(x,z)+hop,z)
         Matrix.rotateM(model,0,35f,0f,1f,0f)
         draw(rabbit,0f)
+    }
+
+    /** Rare dead leaves drifting with the wind: they come in upwind of the view, cross it and are gone. */
+    private fun drawLeaves(f:ClassicFrame,dt:Float) {
+        val wind=hypot(f.windX,f.windZ)
+        if(wind<.05f) return
+        val ux=f.windX/wind; val uz=f.windZ/wind
+        var fx=lookX-eyeX; var fz=lookZ-eyeZ
+        val fl=hypot(fx,fz).coerceAtLeast(1e-3f); fx/=fl; fz/=fl
+        for(i in 0 until LEAVES) {
+            if(leafWait[i]>0f) {
+                leafWait[i]-=dt
+                if(leafWait[i]>0f) continue
+                // Appears ahead of the camera and upwind of the middle of the view.
+                val depth=6f+leafRandom.nextFloat()*18f; val side=(leafRandom.nextFloat()-.5f)*20f; val upwind=12f+leafRandom.nextFloat()*8f
+                leafX[i]=eyeX+fx*depth-fz*side-ux*upwind; leafZ[i]=eyeZ+fz*depth+fx*side-uz*upwind
+                leafY[i]=hole.heightAt(leafX[i],leafZ[i])+1.6f+leafRandom.nextFloat()*2.4f
+                leafAge[i]=0f
+            }
+            leafAge[i]+=dt
+            val seed=leafSeed[i]
+            leafX[i]+=(f.windX*.8f+sin(time*1.3f+seed)*.5f)*dt
+            leafZ[i]+=(f.windZ*.8f+cos(time*1.1f+seed)*.5f)*dt
+            leafY[i]+=sin(time*1.7f+seed*2f)*.35f*dt-.05f*dt
+            val ground=hole.heightAt(leafX[i],leafZ[i])
+            leafY[i]=max(leafY[i],ground+.8f)
+            val away=hypot(leafX[i]-eyeX,leafZ[i]-eyeZ)
+            if(away>46f||leafAge[i]>26f) { leafWait[i]=3f+leafRandom.nextFloat()*9f; continue }
+            val scale=max(1f,away*.07f)
+            identity(); Matrix.translateM(model,0,leafX[i],leafY[i],leafZ[i])
+            Matrix.rotateM(model,0,time*70f+seed*57f,0f,1f,0f)
+            Matrix.rotateM(model,0,sin(time*3.1f+seed)*55f,1f,0f,0f)
+            Matrix.scaleM(model,0,scale,scale,scale)
+            draw(leaves[i%leaves.size],0f)
+        }
     }
 
     /** The same model/rig as the wardrobe, in a proper right-handed local frame. */

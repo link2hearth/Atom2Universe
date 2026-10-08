@@ -78,7 +78,8 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private val clubNames by lazy { resources.getStringArray(R.array.classic_clubs) }
     private val lieNames by lazy { resources.getStringArray(R.array.classic_lies) }
     private var windRose: ClassicWindRose? = null
-    private var windStreaks: ClassicWindStreaks? = null
+    private var gridShown = true
+    private var gridButton: GolfIcon? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -259,13 +260,15 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         val s=ClassicSurface(this,h)
         s.onReady={if(surface===s){sceneReady=true;sceneSpinner?.visibility=View.GONE;refreshHud()}}
         surface=s;root.addView(s,FrameLayout.LayoutParams(-1,-1))
-        windStreaks=ClassicWindStreaks(this).also{root.addView(it,FrameLayout.LayoutParams(-1,-1))}
         val gesture=ClassicShotOverlay(this,swing,shotListener).apply{contentDescription=getString(R.string.classic_scene_accessible)}
         overlay=gesture;root.addView(gesture,FrameLayout.LayoutParams(-1,-1))
         val top=ui.column().apply{setPadding(ui.dp(10),ui.dp(10),ui.dp(10),0)}
         val row=ui.row()
         row.addView(icon(GolfIcon.Kind.BACK,R.string.golf_menu){showMenu()},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)))
         label=ui.pill().apply{textSize=14f;setPadding(ui.dp(8),ui.dp(8),ui.dp(8),ui.dp(8))};row.addView(label,LinearLayout.LayoutParams(0,-2,1f).apply{setMargins(ui.dp(6),0,ui.dp(6),0)})
+        gridShown=prefs.getBoolean("grid",true)
+        gridButton=icon(GolfIcon.Kind.GRID,R.string.classic_grid_toggle){toggleGrid()}.apply{highlighted=!gridShown;alpha=.75f}
+        row.addView(gridButton,LinearLayout.LayoutParams(ui.dp(36),ui.dp(36)).apply{rightMargin=ui.dp(6)})
         row.addView(icon(GolfIcon.Kind.CARD,R.string.golf_scorecard){scorecard(false)},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)))
         top.addView(row)
         lieLabel=ui.pill().apply{textSize=12f;setPadding(ui.dp(12),ui.dp(6),ui.dp(12),ui.dp(6));minHeight=ui.dp(32)}
@@ -394,6 +397,12 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         previewDirty=true
     }
 
+    /** Grid shown: the putt guide is a plain line and the player reads the slopes. Hidden: the guide rolls like the ball. */
+    private fun toggleGrid(){
+        gridShown=!gridShown;prefs.edit().putBoolean("grid",gridShown).apply()
+        gridButton?.highlighted=!gridShown;previewDirty=true
+    }
+
     private fun stepClub(delta:Int){
         val g=game?:return;if(!canSetShot())return
         g.club=GolfClub.entries[(g.club.ordinal+delta).coerceIn(0,GolfClub.entries.lastIndex)]
@@ -437,7 +446,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         if(g.state==GolfState.HOLED&&!completed){completed=true;audio.holed();root.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);finishHole()}
         if(previewDirty&&g.state==GolfState.READY&&pendingStrike==null&&time-lastPreview>33_000_000L){
             lastPreview=time;previewDirty=false
-            preview=g.preview(guidePower(g))
+            preview=g.preview(guidePower(g),simulatePutt=!gridShown)
             miniMap?.preview=preview.flight+preview.roll
             overlay?.readout=if(g.club==GolfClub.PUTTER)getString(R.string.classic_putt_readout,preview.carry)
                 else getString(R.string.classic_shot_readout,(guidePower(g)*100).roundToInt(),preview.carry.roundToInt())
@@ -450,12 +459,11 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         }
         val power=if(swingTime>=0f)strikePower else if(pulling)GolfSwing.power(pullFraction,g.club) else 1f
         val shown=if(g.state==GolfState.READY&&pendingStrike==null&&swingTime<0f)preview else ShotPreview.NONE
-        val frame=ClassicFrame(g.ball,g.aimAngle,g.state==GolfState.FLYING||g.state==GolfState.ROLLING,shown,overview,zoom,g.club,pose,power,pulling,golfer)
+        val frame=ClassicFrame(g.ball,g.aimAngle,g.state==GolfState.FLYING||g.state==GolfState.ROLLING,shown,overview,zoom,g.club,pose,power,pulling,golfer,gridShown,g.windX,g.windZ)
         // Still for a while (the camera has finished gliding): the scenery's own slow motion is drawn at half rate.
         if(frame!=lastSubmitted){lastSubmitted=frame;lastChange=time}
         surface?.submit(frame,time-lastChange>CALM_NANOS,time)
         if(pulling)overlay?.invalidate()
-        windStreaks?.update(dt,g.aimAngle,g.windX,g.windZ)
         if(time-lastHud>150_000_000L){lastHud=time;refreshHud();miniMap?.ball=g.ball}
         if(resumed)Choreographer.getInstance().postFrameCallback(this)
     }

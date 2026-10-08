@@ -131,14 +131,28 @@ class ClassicGame(val hole: ClassicHole) {
     }
 
     /** Nominal guide for [power]: flight to the first landing, then the flat-turf run. */
-    fun preview(power: Float): ShotPreview {
+    fun preview(power: Float, simulatePutt: Boolean = true): ShotPreview {
         if (state != GolfState.READY) return ShotPreview.NONE
         val p = if (power.isFinite()) power.coerceIn(0f, 1f) else 0f
-        val key = listOf(ball, club, p, aimAngle, spinX, spinY)
+        val key = listOf(ball, club, p, aimAngle, spinX, spinY, simulatePutt)
         if (key == previewKey) return previewValue
         previewKey = key
-        previewValue = if (club == GolfClub.PUTTER) puttPreview(p) else flightPreview(p)
+        previewValue = if (club != GolfClub.PUTTER) flightPreview(p) else if (simulatePutt) puttPreview(p) else puttLine(p)
         return previewValue
+    }
+
+    /** With the slope grid on, the putt is a plain line of the right length: the player reads the slopes. */
+    private fun puttLine(power: Float): ShotPreview {
+        val range = power * club.carry
+        val points = ArrayList<GolfPoint>(25)
+        for (i in 0..24) {
+            val distance = range * i / 24f
+            val x = ball.x + sin(aimAngle) * distance
+            val z = ball.z + cos(aimAngle) * distance
+            points.add(GolfPoint(x, hole.heightAt(x, z) + RADIUS, z))
+        }
+        val end = points.last()
+        return ShotPreview(points, end, emptyList(), isHazard(end.x, end.z), range)
     }
 
     /** The putt rolls on the real slopes: the line bends and stops where the ball would. */
@@ -227,7 +241,9 @@ class ClassicGame(val hole: ClassicHole) {
                     }
                 }
             } else {
-                GolfBallPhysics.rollingStep(sim, gradientX(sim.px, sim.pz), gradientZ(sim.px, sim.pz), hole.lieAt(sim.px, sim.pz))
+                val gx = gradientX(sim.px, sim.pz); val gz = gradientZ(sim.px, sim.pz)
+                val surface = hole.lieAt(sim.px, sim.pz)
+                GolfBallPhysics.rollingStep(sim, gx, gz, surface)
                 val entry = cup.entry(fromX, fromZ, sim.px, sim.pz)
                 if (entry >= 0f) {
                     sim.px = fromX + (sim.px - fromX) * entry; sim.pz = fromZ + (sim.pz - fromZ) * entry
@@ -235,7 +251,7 @@ class ClassicGame(val hole: ClassicHole) {
                 }
                 sim.py = hole.heightAt(sim.px, sim.pz) + RADIUS; sim.vy = 0f
                 if (isHazard(sim.px, sim.pz)) { mark(); return points to true }
-                if (hypot(sim.vx, sim.vz) < .03f && GolfBallPhysics.canRest(gradientX(sim.px, sim.pz), gradientZ(sim.px, sim.pz), hole.lieAt(sim.px, sim.pz))) break
+                if (hypot(sim.vx, sim.vz) < .03f && GolfBallPhysics.canRest(gx, gz, surface)) break
             }
             if (steps % 6 == 0) mark()
         }

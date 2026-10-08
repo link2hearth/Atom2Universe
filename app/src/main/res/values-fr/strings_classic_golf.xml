@@ -14,6 +14,7 @@
     <string name="classic_hud">%1$d/%5$d · P%2$d · %3$d · %4$s</string>
     <string name="classic_hud_accessible">Trou %1$d, %6$d sur %5$d dans cette partie, par %2$d, %3$d coups. Score total %4$s.</string>
     <string name="classic_lie_distance">%1$s · %2$d m %3$s</string>
+    <string name="classic_grid_toggle">Grille de pente</string>
     <string name="classic_wind_speed">%1$.1f m/s</string>
     <string name="classic_uphill">↑%1$d m</string>
     <string name="classic_downhill">↓%1$d m</string>

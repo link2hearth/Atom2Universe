@@ -19,7 +19,7 @@ import kotlin.math.*
 
 /** Tiny vector controls: no drawable or bitmap assets, with real accessible click targets. */
 internal class GolfIcon(context: Context, private val kind: Kind, description: String, action: () -> Unit) : View(context) {
-    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD }
+    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD, GRID }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     var highlighted = false; set(value) { field = value; invalidate() }
@@ -46,6 +46,7 @@ internal class GolfIcon(context: Context, private val kind: Kind, description: S
             Kind.FLAG -> { path.moveTo(19f,35f); path.lineTo(19f,12f); path.lineTo(33f,17f); path.lineTo(19f,22f); c.drawOval(12f,32f,32f,37f,paint) }
             Kind.HELP -> { c.drawCircle(24f,24f,12f,paint); c.drawPoint(24f,18f,paint); path.moveTo(24f,23f); path.lineTo(24f,31f) }
             Kind.SOUND -> { path.moveTo(13f,20f); path.lineTo(19f,20f); path.lineTo(25f,14f); path.lineTo(25f,34f); path.lineTo(19f,28f); path.lineTo(13f,28f); path.close(); c.drawArc(22f,15f,36f,33f,-65f,130f,false,paint); if(highlighted)c.drawLine(13f,35f,35f,13f,paint) }
+            Kind.GRID -> { for(v in intArrayOf(19,29)){c.drawLine(v.toFloat(),13f,v.toFloat(),35f,paint);c.drawLine(13f,v.toFloat(),35f,v.toFloat(),paint)}; if(highlighted)c.drawLine(12f,36f,36f,12f,paint) }
             Kind.CARD -> { c.drawRoundRect(14f,12f,34f,36f,3f,3f,paint); for(y in 18..30 step 6)c.drawLine(19f,y.toFloat(),29f,y.toFloat(),paint) }
         }
         c.drawPath(path,paint); c.restore()
