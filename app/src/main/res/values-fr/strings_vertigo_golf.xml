@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_vertigo_course">Les Hauts Défis</string>
+    <string name="classic_vertigo_description">Parcours 4 · Expert. 18 trous entre lacs et carrières. Les grands fairways extérieurs offrent un détour sûr et nettement plus long. Les raccourcis passent par de petites réceptions isolées : un bois 3 ou un driver dosé permet de gagner des coups, à condition de maîtriser la portée et la roule. Les petits greens demandent ensuite une approche précise.</string>
+    <string-array name="classic_vertigo_holes">
+        <item>La clairière suspendue</item><item>Les deux îlots</item><item>La coupe du lac</item>
+        <item>Les dents de la carrière</item><item>Le cap solitaire</item><item>Les berges décalées</item>
+        <item>Le redan de sable</item><item>La poche blanche</item><item>La presqu’île étroite</item>
+        <item>Le refuge du cirque</item><item>Le dernier balcon</item><item>Le miroir du vertige</item>
+        <item>Le passage des aiguilles</item><item>La terrasse haute</item><item>La double traversée</item>
+        <item>Le long saut</item><item>La langue des eaux</item><item>Les îles du retour</item>
+    </string-array>
+    <string-array name="classic_vertigo_tips">
+        <item>Vise la petite réception à environ 198 m avec un bois 3 ou un driver dosé. Elle laisse environ 187 m au green. Le large détour contourne toute la cuvette ; un coup trop long après la réception retrouve le lac.</item>
+        <item>Deux réceptions isolées : environ 201 m depuis le départ, puis 196 m entre les îlots. Bois 3 ou driver dosé pour chacune ; il reste ensuite environ 182 m. La grande boucle extérieure évite les traversées mais demande davantage de placements.</item>
+        <item>Le petit green est à environ 157 m, derrière le lac : fer 5 ou hybride dosé. La large berge opposée offre une réception plus facile, mais laisse une longue approche diagonale.</item>
+        <item>Le bois 3 ou le driver dosé atteint la poche à environ 206 m, entre les zones de sable. Il reste environ 200 m au green. Arrête la balle sur la poche : survoler la carrière ne suffit pas.</item>
+        <item>La cible isolée est à environ 190 m et ne fait que 18 m de large. Bois 3 ou driver dosé ; il reste environ 182 m au green. La voie large part loin sur la rive opposée.</item>
+        <item>Première réception à environ 204 m, seconde à environ 202 m, avec un changement d’angle. Un bois 3 ou un driver dosé peut jouer les deux sauts. Il reste environ 197 m ; les terrasses extérieures évitent ces petites cibles.</item>
+        <item>Bois 5 ou bois 3 dosé pour les 187 m vers le petit green. Le sable punit le coup trop court. La grande réception opposée permet de construire le trou avec une approche supplémentaire.</item>
+        <item>La poche au-delà du sable est à environ 205 m : bois 3 ou driver dosé. Elle laisse environ 210 m au green. Le grand fairway extérieur offre de la largeur, avec un retour beaucoup plus long.</item>
+        <item>La presqu’île à environ 202 m offre seulement 18 m de largeur. Bois 3 ou driver dosé ; l’approche restante fait environ 201 m. Le lac derrière la réception impose de contrôler aussi la roule.</item>
+        <item>La petite réception à environ 192 m laisse environ 192 m au green. Choisis un bois 3 ou dose le driver. Le grand cirque de la rive opposée ajoute des coups de placement.</item>
+        <item>Le balcon isolé est à environ 214 m. Bois 3 bien dosé ou driver réduit ; il reste environ 214 m en montée. Le fairway extérieur est large, mais son retour vers le green est très long.</item>
+        <item>Le petit green se trouve à environ 174 m : hybride ou bois 5 dosé. Eau devant et sur le côté, sable derrière. La large rive opposée permet une réception prudente suivie d’une approche diagonale.</item>
+        <item>La poche entre les aiguilles de sable est à environ 198 m, avec 18 m de largeur. Bois 3 ou driver dosé ; il reste environ 197 m au green. Le détour large contourne toute la carrière.</item>
+        <item>La terrasse isolée est à environ 210 m : bois 3 ou driver dosé. Le green reste à environ 203 m, en montée. La grande boucle extérieure permet de placer la balle sans viser cette petite terrasse.</item>
+        <item>Deux sauts : environ 212 m depuis le départ, puis 211 m vers la seconde réception. Bois 3 ou driver dosé ; il reste environ 209 m au green. Le long croissant extérieur évite les lacs au prix de plusieurs placements.</item>
+        <item>Environ 199 m jusqu’au petit green : bois 3 ou driver dosé. Le large refuge de la rive opposée est plus facile à atteindre, mais impose une longue approche. Lis le guide pour éviter la roule dans le sable arrière.</item>
+        <item>La langue isolée est à environ 204 m et fait 18 m de large. Bois 3 ou driver dosé ; il reste environ 210 m au green. L’eau encadre la réception, tandis que le fairway extérieur offre une grande boucle sèche.</item>
+        <item>Première île à environ 195 m, puis saut de 202 m vers la seconde. Bois 3 ou driver dosé pour les deux ; il reste environ 192 m au green. Le plus grand détour du parcours reste large et sec, mais sensiblement plus long.</item>
+    </string-array>
+</resources>

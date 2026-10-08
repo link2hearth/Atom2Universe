@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="classic_wild_course">Les Hautes Terres Sauvages</string>
-    <string name="classic_wild_description">Parcours 3 · Avancé. 18 trous dans les hauts plateaux d’automne : herbes dorées, pins, rochers et lacs froids. Des réceptions étroites permettent de couper au driver ou au bois, puis de sauter de berge en berge. La voie large reste la route prudente.</string>
+    <string name="classic_wild_description">Parcours 3 · Avancé. 18 trous dans les hauts plateaux d’automne : herbes dorées, pins, rochers et lacs froids. Les greens prolongent les voies étroites : réussir les traversées au driver ou au bois permet de gagner un coup. Les larges détours offrent des réceptions plus sûres, mais demandent un coup supplémentaire. Sur les par 3, un refuge court permet de jouer le green en deux coups.</string>
     <string-array name="classic_wild_holes">
         <item>La clairière d’ambre</item><item>Les deux lacs froids</item><item>La presqu’île grise</item>
-        <item>Le col du géant</item><item>Le cap doré</item><item>Les trois pierres</item>
+        <item>Le col du géant</item><item>Le cap doré</item><item>Les pierres du torrent</item>
         <item>Le redan des vents</item><item>La carrière claire</item><item>Le S des pins</item>
         <item>Le cirque d’automne</item><item>La forêt partagée</item><item>Le miroir froid</item>
         <item>Le trident de pierre</item><item>Les balcons du géant</item><item>Les deux caps</item>
         <item>Le dernier long fer</item><item>Le choix des berges</item><item>La traversée des hauts lacs</item>
     </string-array>
     <string-array name="classic_wild_tips">
-        <item>Le large fairway gauche assure. Un driver vers la clairière droite, à environ 232 m du départ, laisse une approche plus courte. Évite la crête centrale.</item>
-        <item>Contourne par la grande rive droite, ou porte le driver vers la réception à 225 m au-delà du premier lac. De là, un bois 3 d’environ 205 m saute le second vers le plateau final.</item>
-        <item>Le lac protège l’entrée. Un fer 5 couvre les 155 m théoriques ; le tablier droit offre un refuge, le sable arrière punit un excès de longueur.</item>
-        <item>Le grand coude gauche est large. Le col droit se vise au driver, à environ 227 m : sa petite réception ouvre l’approche montante. La crête interdit de couper au centre.</item>
-        <item>Un driver d’environ 229 m franchit le lac diagonal vers le cap gauche et laisse un wedge. Le plateau droit permet de construire le trou sans ce grand saut.</item>
-        <item>Trois réceptions à gauche : driver sur la première à 220 m, fer 8 pour le saut suivant de 116 m, puis pitching wedge pour environ 97 m. Le fairway droit évite ces petites cibles.</item>
-        <item>Le bois 5 couvre les 186 m théoriques. Le tablier haut à droite ouvre une entrée diagonale ; le bunker protège la réception courte à gauche.</item>
-        <item>Le fairway gauche contourne la carrière. Un driver d’environ 227 m vise la petite langue droite au-delà du sable et raccourcit l’approche.</item>
-        <item>Le grand S à droite est prudent. Un driver d’environ 226 m vers la réception gauche coupe le détour ; les pins centraux ferment la ligne directe.</item>
-        <item>La descente allonge le vol. La petite réception gauche se trouve à environ 228 m du départ : dose le driver avec le guide. La grande rive droite offre davantage de marge.</item>
-        <item>Le détour gauche est large. Un driver vers la clairière droite à environ 232 m laisse moins de distance au green, à condition de rester à côté de la forêt.</item>
-        <item>Un hybride couvre les 170 m théoriques. Porte au-delà du lac frontal sans rouler dans le sable arrière ; le tablier droit offre plus de profondeur.</item>
-        <item>Large à gauche, driver précis vers la langue droite à 229 m, ou bois 3 vers la poche centrale à 210 m entre les bunkers. Le sable au-delà du centre impose ensuite un changement d’angle.</item>
-        <item>Un driver d’environ 229 m vise le balcon droit et réduit le détour. La rive gauche est plus large ; le dernier coup doit encore monter jusqu’au green.</item>
-        <item>Driver vers le cap gauche à environ 230 m, puis bois 3 sur le second cap à 202 m. Ces deux réceptions laissent un fer au green ; la grande rive droite permet trois coups prudents.</item>
-        <item>Le bois 3 couvre les 205 m théoriques. Le lac droit et le bunker gauche encadrent le green ; le tablier avant gauche garde une possibilité de chip.</item>
-        <item>Le plateau gauche est large. Un driver d’environ 224 m vise la petite réception droite entre crête et lac et ouvre une approche plus directe.</item>
-        <item>Driver sur la poche à 220 m au-delà du premier lac, puis bois 3 pour 210 m vers la dernière réception. Le grand croissant droit permet d’éviter ces deux traversées précises.</item>
+        <item>Le green est derrière la clairière étroite : un driver précis vers la réception à 232 m laisse environ 150 m. Le grand fairway extérieur laisse plus de 280 m et demande un coup de placement supplémentaire.</item>
+        <item>Driver vers la poche à 225 m, puis bois 3 pour 205 m vers la dernière berge : il reste environ 117 m au green. Les larges plateaux extérieurs permettent de contourner les lacs en quatre coups avant le putt.</item>
+        <item>Attaque le petit green au-delà du lac pour arriver en un coup. Le large refuge court, décalé sur la rive sèche, évite la traversée directe mais laisse un chip d’environ 68 m. Attention au sable derrière le green.</item>
+        <item>Le green est juste après le passage étroit à gauche dans la vue du départ. Un driver précis vers la réception à 227 m laisse environ 193 m. Le grand détour à droite laisse plus de 310 m : prévois un coup de placement, puis l’approche.</item>
+        <item>Le green prolonge le cap étroit. Un driver vers la réception à 229 m au-delà du lac laisse environ 154 m. Depuis le grand plateau opposé, il reste environ 299 m : le détour demande une approche supplémentaire.</item>
+        <item>Driver vers la première pierre à 220 m, puis bois 3 pour 211 m vers la seconde berge : il reste environ 125 m. La grande rive extérieure évite les petites réceptions mais demande quatre coups pour rejoindre le green.</item>
+        <item>Le petit green se vise directement avec un long club, au-delà du bunker. Le large tablier court offre une cible plus facile, puis laisse environ 87 m à jouer. Lis la montée dans le guide.</item>
+        <item>Porte le driver au-delà de la carrière vers la langue étroite à 227 m : le green se trouve environ 183 m plus loin, dans son prolongement. Le large fairway extérieur laisse plus de 310 m et impose un coup supplémentaire.</item>
+        <item>La réception étroite à 226 m coupe le S des pins et laisse environ 209 m au green. Depuis le grand plateau opposé, il reste environ 329 m : joue un placement avant l’approche.</item>
+        <item>La descente allonge le vol : dose le driver vers la petite réception à 228 m. Le green est du même côté, à environ 141 m. La grande rive opposée laisse environ 287 m et demande un coup supplémentaire.</item>
+        <item>Un driver précis vers la clairière à 232 m ouvre environ 212 m au green, derrière la voie étroite. Le grand détour de l’autre côté de la forêt laisse plus de 335 m et demande une approche supplémentaire.</item>
+        <item>Le green étroit est au-delà du lac, avec du sable derrière. Vise directement pour arriver en un coup, ou choisis le large refuge sur la rive sèche : il reste alors environ 76 m à jouer.</item>
+        <item>Le driver vers la langue étroite à 229 m laisse environ 139 m. Le bois 3 vers la poche centrale à 210 m laisse environ 178 m avec du sable à contourner. La grande voie extérieure laisse environ 287 m et demande un coup supplémentaire.</item>
+        <item>Le green est dans le prolongement du balcon étroit : un driver précis vers la réception à 229 m laisse environ 215 m en montée. Le large balcon opposé laisse plus de 335 m : prévois un placement avant l’approche.</item>
+        <item>Driver vers le premier cap à 230 m, puis bois 3 pour 202 m vers le second : il reste environ 142 m au green. Les grands plateaux de la rive opposée permettent quatre coups prudents avant le putt.</item>
+        <item>Un long club peut rejoindre directement le green encadré par le lac et le bunker. Le large tablier court sur la rive sèche offre une réception plus facile, mais laisse un chip d’environ 74 m.</item>
+        <item>Le driver vers la petite réception à 224 m, entre crête et lac, laisse environ 187 m au green. Le plateau large de l’autre côté laisse plus de 307 m et demande un coup de placement supplémentaire.</item>
+        <item>Driver vers la poche à 220 m, puis bois 3 pour 210 m vers la dernière réception : il reste environ 128 m au green. La grande rive extérieure évite les deux traversées précises mais demande quatre coups avant le putt.</item>
     </string-array>
 </resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_snow_course">Les Cimes Blanches</string>
+    <string name="classic_snow_description">Parcours 6 · 18 trous dans les montagnes enneigées. Longues descentes vers des plateaux, cols, remontées et par 3 en hauteur ou en contrebas. Les réceptions offrent des terrasses jouables, les greens restent doux, et les fairways sont dégagés. Lis la trajectoire et la roule dans le guide : le dénivelé change la portée. Une balle orange reste visible sur la neige.</string>
+    <string-array name="classic_snow_holes">
+        <item>La première descente</item><item>Les quatre cents mètres</item><item>Le balcon blanc</item>
+        <item>Le premier col</item><item>La montée des sapins</item><item>Le plateau d’altitude</item>
+        <item>Le green en contrebas</item><item>La selle enneigée</item><item>Le vallon clair</item>
+        <item>La combe et la remontée</item><item>La terrasse des cimes</item><item>Le drapeau en hauteur</item>
+        <item>La grande pente</item><item>Le col des mélèzes</item><item>Le vallon suspendu</item>
+        <item>Le plongeon des neiges</item><item>Le dernier passage</item><item>Le grand plateau blanc</item>
+    </string-array>
+    <string-array name="classic_snow_tips">
+        <item>Le trou descend de 38 m jusqu’à une terrasse finale. Dose le premier coup vers la large réception à 180 m ; la descente allonge le vol et la roule. Le green repose sur un plateau.</item>
+        <item>Une descente de 54 m sur les 400 premiers mètres, puis un plateau jusqu’au green. Deux larges réceptions vers 190 et 350 m permettent de contrôler la progression. Ne choisis pas la puissance à partir de la seule distance horizontale.</item>
+        <item>Le green est 10 m plus haut, à 125 m du départ. La montée raccourcit le vol : vérifie le club dans le guide. Le grand green et son tablier donnent de la place pour l’arrivée.</item>
+        <item>Monte de 9 m jusqu’au col, puis descends vers la terrasse du green. La réception à 150 m permet de préparer la traversée. Évite de confondre la crête et le drapeau en contrebas.</item>
+        <item>Une montée régulière de 11 m, puis une terrasse finale. Vise la large réception vers 145 m et conserve un club suffisamment long pour l’approche montante.</item>
+        <item>Le parcours gagne 24 m sur ses 400 premiers mètres avant le plateau final. Les terrasses vers 150 et 300 m donnent une position calme pour chaque coup suivant. Privilégie des placements maîtrisés.</item>
+        <item>Le green est 29 m en contrebas, à 165 m horizontalement. Un club plus court peut suffire ; utilise le guide pour poser la balle sur le grand green plutôt que la laisser courir derrière.</item>
+        <item>Monte vers la selle à 160 m, traverse le col, puis attaque le green sur la terrasse inférieure. Le dénivelé inverse la stratégie entre le premier coup et l’approche.</item>
+        <item>Une descente de 33 m vers un plateau. La large réception à 170 m permet d’arrêter le premier coup. Le green est presque dans l’axe ; soigne surtout la longueur.</item>
+        <item>Descends dans la combe, puis remonte de 8 m vers le green. Le premier coup vers 145 m demande du dosage ; le second doit franchir la remontée avec assez de portée.</item>
+        <item>Le trou gagne 15 m et finit sur une terrasse. La réception vers 150 m offre une position stable pour la longue approche. Lis le vol réel avant de chercher le drapeau.</item>
+        <item>Le drapeau est 13 m plus haut, à 145 m horizontalement. La grande surface de réception accepte une arrivée bien dosée. La montée peut demander plusieurs clubs de plus qu’un trou plat.</item>
+        <item>Une longue descente de 55 m sur les 400 premiers mètres ouvre un large plateau. Place la balle sur les réceptions vers 180 et 340 m ; le dernier coup se joue ensuite presque à plat.</item>
+        <item>Un col 8 m au-dessus du départ, puis une descente de 14 m vers le green. La réception à 145 m permet de reprendre une position calme avant d’attaquer la pente opposée.</item>
+        <item>Descends de 12 m vers la réception à 165 m, puis remonte de 9 m sur la terrasse du green. Le premier placement permet de changer de club avant l’approche montante.</item>
+        <item>Le green est 37 m en contrebas, à 190 m horizontalement. Le vol s’allonge fortement. Dose un club plus court et garde une marge pour l’arrivée et la roule.</item>
+        <item>Monte de 8 m au passage, puis descends de 19 m vers le green. La réception à 155 m ouvre une vue sur le versant suivant. Le dernier plateau reçoit l’approche.</item>
+        <item>La grande pente descend de 59 m jusqu’à environ 410 m, puis laisse 155 m de plateau. Deux larges terrasses vers 190 et 350 m structurent les premiers coups. Le grand green termine le parcours sur une surface calme.</item>
+    </string-array>
+</resources>

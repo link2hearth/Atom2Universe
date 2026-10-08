@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_vertigo_course">Highland Challenges</string>
+    <string name="classic_vertigo_description">Course 4 · Expert. 18 holes among lakes and quarries. Broad outside fairways provide a safe, considerably longer detour. Shortcuts use small isolated receptions: a wood 3 or controlled driver can save shots, provided you manage carry and rollout. Small greens then demand an accurate approach.</string>
+    <string-array name="classic_vertigo_holes">
+        <item>The Hanging Clearing</item><item>The Twin Islets</item><item>The Lake Cup</item>
+        <item>The Quarry Teeth</item><item>The Lonely Cape</item><item>The Offset Banks</item>
+        <item>The Sand Redan</item><item>The White Pocket</item><item>The Narrow Peninsula</item>
+        <item>The Cirque Refuge</item><item>The Last Balcony</item><item>The Vertigo Mirror</item>
+        <item>The Needle Passage</item><item>The High Terrace</item><item>The Double Crossing</item>
+        <item>The Long Leap</item><item>The Water Tongue</item><item>The Homeward Islands</item>
+    </string-array>
+    <string-array name="classic_vertigo_tips">
+        <item>Aim for the small reception about 198 m away with a wood 3 or controlled driver. It leaves about 187 m to the green. The broad detour skirts the entire basin; too much rollout from the reception finds water again.</item>
+        <item>Two isolated receptions: about 201 m from the tee, then 196 m between islets. Use a wood 3 or controlled driver for each; about 182 m then remain. The broad outside loop avoids the carries but needs more setup shots.</item>
+        <item>The small green lies about 157 m away beyond the lake: iron 5 or controlled hybrid. The broad opposite bank is an easier reception but leaves a long diagonal approach.</item>
+        <item>A wood 3 or controlled driver reaches the pocket about 206 m away between sand hazards. About 200 m remain. Stop on the pocket: merely flying over the quarry is not enough.</item>
+        <item>The isolated target lies about 190 m away and is only 18 m wide. Use a wood 3 or controlled driver; about 182 m remain. The broad route swings far around the opposite bank.</item>
+        <item>First reception about 204 m away, second carry about 202 m with a change of angle. A wood 3 or controlled driver can play both. About 197 m remain; outside terraces avoid the small targets.</item>
+        <item>Wood 5 or controlled wood 3 for the 187 m to the small green. Sand punishes a short shot. The broad opposite reception builds the hole with an extra approach.</item>
+        <item>The pocket beyond the sand lies about 205 m away: wood 3 or controlled driver. About 210 m remain. The broad outside fairway offers width with a much longer return to the green.</item>
+        <item>The peninsula about 202 m away offers only 18 m of width. Use a wood 3 or controlled driver; the approach is about 201 m. Water behind the reception demands rollout control.</item>
+        <item>The small reception about 192 m away leaves about 192 m to the green. Choose a wood 3 or control the driver. The broad cirque on the opposite bank adds setup shots.</item>
+        <item>The isolated balcony lies about 214 m away. A controlled wood 3 or reduced driver leaves about 214 m uphill. The outside fairway is broad, but its return to the green is very long.</item>
+        <item>The small green lies about 174 m away: hybrid or controlled wood 5. Water guards the front and side, with rear sand. The broad opposite bank allows a conservative reception followed by a diagonal approach.</item>
+        <item>The pocket between sand needles lies about 198 m away and is 18 m wide. Use a wood 3 or controlled driver; about 197 m remain. The broad detour skirts the entire quarry.</item>
+        <item>The isolated terrace lies about 210 m away: wood 3 or controlled driver. The green is about 203 m further uphill. The broad outside loop lets you set up without targeting the small terrace.</item>
+        <item>Two carries: about 212 m from the tee, then 211 m to the second reception. Wood 3 or controlled driver; about 209 m remain. The long outside crescent avoids the lakes with several setup shots.</item>
+        <item>About 199 m to the small green: wood 3 or controlled driver. The broad refuge on the opposite bank is easier to reach but requires a long approach. Read the preview to avoid rolling into rear sand.</item>
+        <item>The isolated tongue lies about 204 m away and is 18 m wide. Use a wood 3 or controlled driver; about 210 m remain. Water frames the reception while the outside fairway follows a broad dry loop.</item>
+        <item>First island about 195 m away, then a 202 m carry to the second. Wood 3 or controlled driver for both; about 192 m remain. The largest detour on the course stays broad and dry but is considerably longer.</item>
+    </string-array>
+</resources>

@@ -25,11 +25,12 @@ internal class ClassicBackdrop(private val hole: ClassicHole) {
     fun outward(x: Float, z: Float) = max(max(left-x, x-right), max(front-z, z-back)).coerceAtLeast(0f)
 
     fun heightAt(x: Float, z: Float): Float {
+        if(hole.islands.isNotEmpty()) return hole.heightAt(x,z)
         val t = ((outward(x,z)-25f)/140f).coerceIn(0f,1f)
         val phase = hole.number * .73f
         val hills = 29f + 15f*sin(x*.012f+z*.009f+phase) +
             10f*cos(z*.024f-x*.006f-phase) + 7f*sin(x*.031f+z*.017f)
-        return hole.heightAt(x,z) + t*t*(3f-2f*t)*hills*(if(hole.highlands)1.45f else 1f)
+        return hole.heightAt(x,z) + t*t*(3f-2f*t)*hills*(if(hole.snowy)2.8f else if(hole.highlands)1.45f else 1f)
     }
 
     /** Trees sit on the actual triangles, including where a hill bends between samples. */

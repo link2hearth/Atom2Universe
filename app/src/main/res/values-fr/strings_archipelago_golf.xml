@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_archipelago_course">L’Archipel</string>
+    <string name="classic_archipelago_description">Parcours 5 · 18 trous sur de véritables îles, entièrement entourées d’eau. Des greens aux positions naturelles, des îlots de tailles variées, et plusieurs étapes au choix sur les par 4 et 5. Choisis ton île selon le club, le vent et l’angle du coup suivant. Toute balle qui manque la terre tombe dans l’eau.</string>
+    <string-array name="classic_archipelago_holes">
+        <item>La première rive</item><item>Les six escales</item><item>Le petit lagon</item>
+        <item>Les trois mouillages</item><item>Les îles jumelles</item><item>La traversée bleue</item>
+        <item>La perle ronde</item><item>Le triangle des eaux</item><item>Les deux jardins</item>
+        <item>Le large bassin</item><item>Les îlots dispersés</item><item>Le miroir calme</item>
+        <item>La halte oblique</item><item>Les trois rivages</item><item>Le grand chapelet</item>
+        <item>L’île lointaine</item><item>Les dernières escales</item><item>Le cœur de l’archipel</item>
+    </string-array>
+    <string-array name="classic_archipelago_tips">
+        <item>Deux îles de réception vers 180 et 210 m. Choisis celle qui convient à ton club ; le green est légèrement décalé, à 325 m du départ. Garde de la marge pour la roule.</item>
+        <item>Trois îles pour le premier coup, puis trois autres pour préparer le green. Tu peux changer de ligne entre les deux groupes. Vise le centre de la terre, puis choisis la traversée suivante.</item>
+        <item>Un green sur une île, à environ 126 m. Un fer dosé suffit ; la couronne de rough retient certains écarts, mais l’eau entoure toute l’île.</item>
+        <item>Une grande île sur le côté, une réception centrale et un petit îlot plus avancé. Le choix dépend de ta portée et de la direction que tu veux garder pour le green.</item>
+        <item>Deux îles avant le grand green. Le trou est court : place un bois ou un fer sur celle dont la taille et l’angle te plaisent, puis traverse vers le drapeau.</item>
+        <item>Deux premières îles, puis trois escales possibles avant le green. La grande île centrale offre davantage de surface ; les îlots latéraux proposent d’autres angles.</item>
+        <item>Environ 151 m jusqu’au petit green isolé. Le centre laisse de la marge jusqu’au rivage. Dose un fer long ou un hybride et surveille le vent.</item>
+        <item>Trois îlots dispersés autour de la ligne du départ. Tu peux viser celui qui correspond à ton club : il n’existe pas de fairway continu entre eux et le green.</item>
+        <item>Deux îles de tailles différentes offrent des réceptions vers 177 et 203 m. Choisis la place qui te laisse une approche confortable au green.</item>
+        <item>Une grande réception centrale et deux îlots latéraux. Le green reste proche après le premier saut ; choisis surtout la marge au rivage et l’angle d’approche.</item>
+        <item>Trois îles accueillent le premier coup. Le petit îlot avancé demande plus de précision, tandis que les autres offrent des positions différentes pour la traversée finale.</item>
+        <item>Le green est sur une île à environ 170 m, presque droit devant. Un hybride ou un bois dosé peut traverser le lac. Laisse la balle s’arrêter avant la rive arrière.</item>
+        <item>Un petit îlot oblique et une grande île plus proche. Les deux permettent une approche courte au green ; choisis selon ton club et la surface de réception.</item>
+        <item>Trois premières îles, avec des réceptions vers 186 à 227 m. Tu peux changer de côté pour l’approche ; aucun chemin terrestre ne relie les îlots.</item>
+        <item>Six îles de réception forment un chapelet autour de la ligne du trou. Construis ton trajet en deux étapes, puis vise l’île du green. Vérifie la portée entre les centres avant chaque saut.</item>
+        <item>L’île du green se trouve à environ 190 m. Un bois dosé convient à la traversée. La surface autour du green offre une marge, mais un excès de roule finit dans l’eau.</item>
+        <item>Trois îles de réception, chacune avec une taille et un angle différents. Choisis librement ta première étape, puis traverse vers le green légèrement décalé.</item>
+        <item>Trois premières îles et trois dernières escales avant le grand green central. Tu peux composer plusieurs trajets ; privilégie les portées que tu maîtrises et garde une marge au bord de chaque île.</item>
+    </string-array>
+</resources>

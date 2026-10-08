@@ -25,7 +25,7 @@ enum class GolfClub(val carry: Float, val loft: Float, val launch: Float, val sp
 /** Width is the full mowing width. Zero-width nodes represent an intentional rough carry. */
 data class GolfRouteNode(val x: Float, val z: Float, val width: Float)
 data class GolfElevationNode(val z: Float, val height: Float)
-enum class GolfLandscapeStyle { PARKLAND, AUTUMN_HIGHLANDS }
+enum class GolfLandscapeStyle { PARKLAND, AUTUMN_HIGHLANDS, SNOW_MOUNTAINS }
 
 /** A designed carry and reception, used to validate risk/reward routes against real equipment. */
 data class GolfAttackLanding(val x: Float, val z: Float, val club: GolfClub,
@@ -119,7 +119,12 @@ data class ClassicHole(
     val alternateRoutes: List<List<GolfRouteNode>> = emptyList(),
     val plantedTrees: List<GolfTree> = emptyList(),
     val landscapeStyle: GolfLandscapeStyle = GolfLandscapeStyle.PARKLAND,
-    val attackLandings: List<GolfAttackLanding> = emptyList()
+    val attackLandings: List<GolfAttackLanding> = emptyList(),
+    /** Keep randomly planted canopies outside designed carries; landing hazards still apply. */
+    val attackTreeClearance: Float = 0f,
+    /** An archipelago replaces continuous land: everything outside these contours is water. */
+    val islands: List<GolfHazard> = emptyList(),
+    val islandWaterLevel: Float = 0f
 ) {
     private val greenCos = cos(greenShape.rotation)
     private val greenSin = sin(greenShape.rotation)
@@ -161,11 +166,19 @@ data class ClassicHole(
         }
     }
 
+    private val primaryFairwayIndex by lazy { GolfFairwayIndex(fairwaySamples, 15f) }
+    private val alternateFairwayIndexes by lazy { alternateSamples.map { GolfFairwayIndex(it, SEMI_ROUGH_WIDTH) } }
+    private val teeTerrainHeight by lazy { terrainHeight(0f, 0f) }
+    private val waterLevels by lazy {
+        hazards.filter { it.lie == GolfLie.WATER }.associateWith { terrainHeight(it.x, it.z) - 1.2f }
+    }
+
     val tee: GolfPoint = GolfPoint(0f, heightAt(0f, 0f) + BALL_RADIUS, 0f)
     val cup: GolfPoint = GolfPoint(finishX, heightAt(finishX, length), length)
     val openingTarget: GolfPoint get() = recommendedLanding(tee)
 
     val trees: List<GolfTree> by lazy {
+        if (islands.isNotEmpty()) return@lazy plantedTrees
         val random = Random(number * 7349)
         buildList {
             addAll(plantedTrees)
@@ -182,9 +195,17 @@ data class ClassicHole(
                 if (hypot(x - cup.x, z - cup.z) > 25f + radius && hypot(x, z) > 15f + radius &&
                     hazards.none { it.signedDistance(x, z) < radius + 3f } &&
                     fairwaySignedDistance(x, z) > radius + 8f &&
+                    (attackTreeClearance <= 0f || attackLandings.none { a ->
+                        val dx = a.x - a.fromX; val dz = a.z - a.fromZ
+                        val t = (((x - a.fromX) * dx + (z - a.fromZ) * dz) /
+                            (dx * dx + dz * dz).coerceAtLeast(1f)).coerceIn(0f, 1f)
+                        hypot(x - a.fromX - dx * t, z - a.fromZ - dz * t) <
+                            radius * 1.5f + attackTreeClearance
+                    }) &&
                     abs(x - pathX(z)) > 5f + radius &&
                     (number % 3 != 0 || z / length !in .25f.. .48f)) {
-                    val kind=if(landscapeStyle==GolfLandscapeStyle.AUTUMN_HIGHLANDS && i%5<3)1 else i%3
+                    val kind=if(landscapeStyle==GolfLandscapeStyle.SNOW_MOUNTAINS ||
+                        landscapeStyle==GolfLandscapeStyle.AUTUMN_HIGHLANDS && i%5<3)1 else i%3
                     add(GolfTree(x, z, radius, kind))
                 }
             }
@@ -245,37 +266,15 @@ data class ClassicHole(
     }
 
     fun fairwaySignedDistance(x: Float, z: Float): Float {
+        if (islands.isNotEmpty()) return islandSignedDistance(x, z) + ISLAND_ROUGH_WIDTH
         var distance = primaryFairwaySignedDistance(x, z)
-        for (samples in alternateSamples) {
-            for (i in 0 until samples.lastIndex) {
-                val a = samples[i]; val b = samples[i + 1]
-                val maxRadius = max(a.width, b.width) * .5f
-                if (maxRadius < 2f || z < a.z - maxRadius - SEMI_ROUGH_WIDTH ||
-                    z > b.z + maxRadius + SEMI_ROUGH_WIDTH) continue
-                val dx = b.x - a.x; val dz = b.z - a.z
-                val t = (((x - a.x) * dx + (z - a.z) * dz) / (dx*dx + dz*dz)).coerceIn(0f, 1f)
-                distance = min(distance, hypot(x - a.x - dx*t, z - a.z - dz*t) -
-                    (a.width + (b.width - a.width) * t) * .5f)
-            }
-        }
+        for (index in alternateFairwayIndexes) distance = min(distance, index.signedDistance(x, z))
         return distance
     }
 
     private fun primaryFairwaySignedDistance(x: Float, z: Float): Float {
         if (route.isNotEmpty()) {
-            var best = Float.POSITIVE_INFINITY
-            val samples = fairwaySamples
-            for (i in 0 until samples.lastIndex) {
-                val a = samples[i]; val b = samples[i + 1]
-                val maxRadius = max(a.width, b.width) * .5f
-                if (maxRadius < 2f) continue
-                if (z < a.z - maxRadius - 15f || z > b.z + maxRadius + 15f) continue
-                val dx = b.x - a.x; val dz = b.z - a.z
-                val t = (((x - a.x) * dx + (z - a.z) * dz) / (dx*dx + dz*dz)).coerceIn(0f,1f)
-                val radius = (a.width + (b.width - a.width) * t) * .5f
-                val distance = hypot(x - a.x - dx*t, z - a.z - dz*t) - radius
-                best = min(best, distance)
-            }
+            val best = primaryFairwayIndex.signedDistance(x, z)
             return if (best.isFinite()) best else max(15f, abs(x - fairwayCenter(z)))
         }
         val w = fairwayWidth(z)
@@ -293,6 +292,12 @@ data class ClassicHole(
         greenRadius * greenShape.aspect, greenRadius / greenShape.aspect,
         greenCos, greenSin, greenShape.shape, greenShape.phase
     )
+
+    fun islandSignedDistance(x: Float, z: Float): Float {
+        var distance = Float.POSITIVE_INFINITY
+        for (island in islands) distance = min(distance, island.signedDistance(x, z))
+        return distance
+    }
 
     private fun terrainBase(x: Float, z: Float): Float {
         var h: Float
@@ -336,7 +341,7 @@ data class ClassicHole(
         return h
     }
 
-    fun waterHeight(hazard: GolfHazard): Float = terrainHeight(hazard.x, hazard.z) - 1.2f
+    fun waterHeight(hazard: GolfHazard): Float = waterLevels[hazard] ?: (terrainHeight(hazard.x, hazard.z) - 1.2f)
 
     fun heightAt(x: Float, z: Float): Float {
         val greenDistance = greenSignedDistance(x, z)
@@ -346,6 +351,13 @@ data class ClassicHole(
             cupBowlDepth * (1f - smooth((hypot(dx, dz) - .2f) / 16f))
         // Most putting/mesh samples need no route, mound, shelf or hazard evaluation.
         if (greenDistance <= 2f) return greenHeight
+        if (islands.isNotEmpty()) {
+            val shore = islandSignedDistance(x, z)
+            if (shore >= 0f) return islandWaterLevel
+            val land = islandWaterLevel + (elevation - islandWaterLevel) * smooth(-shore / 6f)
+            val blend = smooth((greenDistance - 2f) / 8f)
+            return greenHeight * (1f - blend) + land * blend
+        }
         var height = terrainHeight(x, z)
         for (hazard in hazards) if (hazard.lie == GolfLie.WATER) {
             val d = hazard.signedDistance(x, z)
@@ -356,7 +368,7 @@ data class ClassicHole(
         }
         // Tee boxes are genuinely level, with a rounded bank outside the playing platform.
         val teeBlend = smooth((max(abs(x) / 5.5f, abs(z) / 7f) - 1f) / 1.4f)
-        height = terrainHeight(0f, 0f) * (1f - teeBlend) + height * teeBlend
+        height = teeTerrainHeight * (1f - teeBlend) + height * teeBlend
         // Continue the designed surface through the 2 m collar, then blend into its supporting
         // bank. Both endpoints have zero blend derivative: no inherited bumps at the green edge.
         val greenBlend = smooth((greenDistance - 2f) / 24f)
@@ -395,6 +407,7 @@ data class ClassicHole(
         if (abs(x) > width * .5f || z < -20f || z > length + 55f) return GolfLie.OUT
         val greenDistance = greenSignedDistance(x, z)
         if (greenDistance <= 0f) return GolfLie.GREEN
+        if (islands.isNotEmpty() && islandSignedDistance(x, z) >= 0f) return GolfLie.WATER
         if (abs(x) < 4.5f && abs(z) < 5.5f) return GolfLie.TEE
         hazards.firstOrNull { it.contains(x, z) }?.let { return it.lie }
         if (greenDistance <= FRINGE_WIDTH) return GolfLie.FRINGE
@@ -406,7 +419,17 @@ data class ClassicHole(
 
     /** Caddie orientation only: does not choose power, correct a swing or play a stroke. */
     fun recommendedLanding(ball: GolfPoint): GolfPoint {
-        if (par == 3 || length - ball.z < 225f) return cup
+        if (islands.isNotEmpty()) {
+            val reach = if (lieAt(ball.x, ball.z) == GolfLie.TEE) 225f else 205f
+            if (hypot(cup.x - ball.x, cup.z - ball.z) <= reach) return cup
+            val target = islands.filter { it.z > ball.z + 30f &&
+                hypot(it.x - ball.x, it.z - ball.z) <= reach }
+                .minByOrNull { hypot(cup.x - it.x, cup.z - it.z) }
+                ?: islands.filter { it.z > ball.z + 30f }.minByOrNull { hypot(it.x - ball.x, it.z - ball.z) }
+            if (target != null) return GolfPoint(target.x, heightAt(target.x, target.z), target.z)
+            return cup
+        }
+        if (par == 3 || hypot(cup.x - ball.x, cup.z - ball.z) < 225f) return cup
         val z = max(landingZ, ball.z + 160f).coerceAtMost(length - 35f)
         val center = fairwayCenter(z)
         val offsets = floatArrayOf(0f, -7f, 7f, -12f, 12f)
@@ -419,6 +442,7 @@ data class ClassicHole(
     companion object {
         const val SEMI_ROUGH_WIDTH = 3f
         const val FRINGE_WIDTH = 2f
+        const val ISLAND_ROUGH_WIDTH = 6f
         const val BALL_RADIUS = GolfBallPhysics.RADIUS
         /** The regulation hole: 108 mm across, at least 4 inches deep, with a 2.4 m flagstick. */
         const val CUP_RADIUS = .054f

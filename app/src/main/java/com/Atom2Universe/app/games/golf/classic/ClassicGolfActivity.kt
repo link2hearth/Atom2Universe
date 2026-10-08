@@ -123,11 +123,18 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         head.addView(icon(GolfIcon.Kind.HELP,R.string.golf_info){help()},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)))
         col.addView(head)
         val wide=resources.configuration.screenWidthDp>=600
-        val cards=if(wide)ui.row().apply{gravity=Gravity.TOP}else ui.column()
-        ClassicCourses.all.forEach { definition ->
-            cards.addView(courseTile(definition),LinearLayout.LayoutParams(if(wide)0 else -1,-2,if(wide)1f else 0f).apply{
-                setMargins(ui.dp(4),ui.dp(12),ui.dp(4),0)
-            })
+        val cards=ui.column()
+        ClassicCourses.all.chunked(if(wide)2 else 1).forEach { definitions ->
+            val row=if(wide)ui.row().apply{gravity=Gravity.TOP}else cards
+            definitions.forEach { definition ->
+                row.addView(courseTile(definition),LinearLayout.LayoutParams(if(wide)0 else -1,-2,if(wide)1f else 0f).apply{
+                    setMargins(ui.dp(4),ui.dp(12),ui.dp(4),0)
+                })
+            }
+            if(wide) {
+                if(definitions.size==1)row.addView(View(this),LinearLayout.LayoutParams(0,0,1f))
+                cards.addView(row)
+            }
         }
         col.addView(cards)
         root.addView(ScrollView(this).apply{addView(col)},FrameLayout.LayoutParams(-1,-1))

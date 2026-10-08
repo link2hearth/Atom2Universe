@@ -5,6 +5,9 @@ import com.Atom2Universe.app.games.golf.classic.core.ClassicCourse
 import com.Atom2Universe.app.games.golf.classic.core.ClassicHole
 import com.Atom2Universe.app.games.golf.classic.core.HeatherCourse
 import com.Atom2Universe.app.games.golf.classic.core.WildDetoursCourse
+import com.Atom2Universe.app.games.golf.classic.core.VertigoCourse
+import com.Atom2Universe.app.games.golf.classic.core.ArchipelagoCourse
+import com.Atom2Universe.app.games.golf.classic.core.SnowPeaksCourse
 
 /** Stable IDs keep saved rounds separate when more courses are added or reordered. */
 data class ClassicCourseDefinition(
@@ -30,7 +33,16 @@ object ClassicCourses {
             "classic_golf_v2_heather", HeatherCourse.holes),
         ClassicCourseDefinition("wild_detours", R.string.classic_wild_course, R.string.classic_wild_description,
             R.array.classic_wild_holes, R.array.classic_wild_tips,
-            "classic_golf_v2_wild_detours", WildDetoursCourse.holes)
+            "classic_golf_v2_wild_detours", WildDetoursCourse.holes),
+        ClassicCourseDefinition("vertigo", R.string.classic_vertigo_course, R.string.classic_vertigo_description,
+            R.array.classic_vertigo_holes, R.array.classic_vertigo_tips,
+            "classic_golf_v2_vertigo", VertigoCourse.holes),
+        ClassicCourseDefinition("archipelago", R.string.classic_archipelago_course, R.string.classic_archipelago_description,
+            R.array.classic_archipelago_holes, R.array.classic_archipelago_tips,
+            "classic_golf_v2_archipelago", ArchipelagoCourse.holes),
+        ClassicCourseDefinition("snow_peaks", R.string.classic_snow_course, R.string.classic_snow_description,
+            R.array.classic_snow_holes, R.array.classic_snow_tips,
+            "classic_golf_v2_snow_peaks", SnowPeaksCourse.holes)
     )
 
     fun find(id: String?): ClassicCourseDefinition = all.firstOrNull { it.id == id } ?: all.first()

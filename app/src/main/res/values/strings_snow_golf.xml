@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="classic_snow_course">White Peaks</string>
+    <string name="classic_snow_description">Course 6 · 18 holes in snowy mountains. Long descents to plateaus, mountain passes, climbs and elevated or downhill par 3s. Receptions provide playable terraces, greens stay gentle, and fairways are cleared. Read flight and rollout in the preview: elevation changes carry. An orange ball remains visible against snow.</string>
+    <string-array name="classic_snow_holes">
+        <item>The First Descent</item><item>The Four Hundred Metres</item><item>The White Balcony</item>
+        <item>The First Pass</item><item>The Pine Climb</item><item>The High Plateau</item>
+        <item>The Green Below</item><item>The Snowy Saddle</item><item>The Bright Valley</item>
+        <item>The Hollow and Climb</item><item>The Summit Terrace</item><item>The Elevated Flag</item>
+        <item>The Long Slope</item><item>The Larch Pass</item><item>The Hanging Valley</item>
+        <item>The Snow Dive</item><item>The Last Passage</item><item>The Broad White Plateau</item>
+    </string-array>
+    <string-array name="classic_snow_tips">
+        <item>The hole descends 38 m to a final terrace. Control the opening shot to the broad 180 m reception: the descent adds carry and rollout. The green sits on a plateau.</item>
+        <item>A 54 m descent over the first 400 m, followed by a plateau to the green. Broad receptions around 190 and 350 m control progress. Do not choose power from horizontal distance alone.</item>
+        <item>The green is 10 m higher, 125 m from the tee. The climb reduces carry: check the club in the preview. The broad green and apron give room for the arrival.</item>
+        <item>Climb 9 m to the pass, then descend to the green terrace. The 150 m reception prepares the crossing. Distinguish the ridge from the flag below it.</item>
+        <item>A steady 11 m climb, then a final terrace. Aim for the broad reception around 145 m and keep enough club for the uphill approach.</item>
+        <item>The course climbs 24 m over its first 400 m before the final plateau. Terraces around 150 and 300 m provide calm positions for the next shots. Favour controlled placements.</item>
+        <item>The green lies 29 m below, 165 m horizontally away. A shorter club may suffice; use the preview to land on the broad green without running through.</item>
+        <item>Climb to the saddle at 160 m, cross the pass, then attack the green on the lower terrace. Elevation reverses the strategy between drive and approach.</item>
+        <item>A 33 m descent to a plateau. The broad 170 m reception can stop the opening shot. The green is almost straight ahead; concentrate on length.</item>
+        <item>Descend into the hollow, then climb 8 m to the green. Control the opening shot around 145 m; the approach needs enough carry for the climb.</item>
+        <item>The hole climbs 15 m and finishes on a terrace. The 150 m reception provides a stable position for the long approach. Read the real flight before attacking the flag.</item>
+        <item>The flag is 13 m higher, 145 m horizontally away. The broad reception accepts a controlled arrival. The climb may require several more clubs than a flat hole.</item>
+        <item>A long 55 m descent over the first 400 m opens a broad plateau. Use the receptions around 180 and 340 m; the final shot is then almost level.</item>
+        <item>A pass 8 m above the tee, followed by a 14 m descent to the green. The 145 m reception restores a calm stance before the opposite slope.</item>
+        <item>Descend 12 m to the 165 m reception, then climb 9 m to the green terrace. The first placement lets you change clubs before the uphill approach.</item>
+        <item>The green lies 37 m below, 190 m horizontally away. Carry increases substantially. Control a shorter club and allow room for landing and rollout.</item>
+        <item>Climb 8 m to the passage, then descend 19 m to the green. The 155 m reception opens the next slope. The final plateau receives the approach.</item>
+        <item>The long slope descends 59 m to about 410 m, then leaves a 155 m plateau. Broad terraces around 190 and 350 m structure the first shots. The broad green finishes on a calm surface.</item>
+    </string-array>
+</resources>

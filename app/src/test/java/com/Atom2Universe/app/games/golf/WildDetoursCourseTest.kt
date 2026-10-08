@@ -77,12 +77,12 @@ class WildDetoursCourseTest {
 
     @Test fun forkReallyHasTwoMownSidesAndAnUnmownWoodedCentre() {
         val h = WildDetoursCourse.holes.first()
-        assertEquals(GolfLie.FAIRWAY, h.lieAt(-62f, 205f))
-        assertEquals(GolfLie.FAIRWAY, h.lieAt(56f, 220f))
+        assertEquals(GolfLie.FAIRWAY, h.lieAt(-110f, 175f))
+        assertEquals(GolfLie.FAIRWAY, h.lieAt(56f, 225f))
         assertEquals(GolfLie.ROUGH, h.lieAt(0f, 190f))
         val withoutBranch = h.copy(alternateRoutes=emptyList())
-        assertEquals(GolfLie.ROUGH, withoutBranch.lieAt(56f, 220f))
-        assertTrue(h.heightAt(0f, 190f) > h.heightAt(-62f, 205f) + 7f)
+        assertEquals(GolfLie.ROUGH, withoutBranch.lieAt(56f, 225f))
+        assertTrue(h.heightAt(0f, 190f) > h.heightAt(-110f, 175f) + 7f)
         // Branches must not change the geometry of the two existing courses.
         for (old in ClassicCourse.holes + HeatherCourse.holes) {
             assertTrue(old.alternateRoutes.isEmpty())
@@ -101,7 +101,7 @@ class WildDetoursCourseTest {
         val islands = WildDetoursCourse.holes[5]
         assertEquals(GolfLie.FAIRWAY, islands.lieAt(-45f, 215f))
         assertEquals(GolfLie.WATER, islands.lieAt(-46f, 268f))
-        assertEquals(GolfLie.FAIRWAY, islands.lieAt(-48f, 331f))
+        assertEquals(GolfLie.FAIRWAY, islands.lieAt(-65f, 425f))
     }
 
     @Test fun realClubsCanLandSafeOpeningShotsOnEveryLongHole() {
@@ -120,6 +120,66 @@ class WildDetoursCourseTest {
                 }
             }
             assertTrue("No safe opening on ${h.number}", found)
+        }
+    }
+
+    @Test fun outsideRouteNeedsAnExtraApproachWhileAttackCanReachTheGreen() {
+        val shortcuts = mutableListOf<String>()
+        for (h in WildDetoursCourse.holes.filter { it.par > 3 }) {
+            // Even the longest club plus generous rollout cannot cover the outside approach.
+            // For par 5s this is the second broad shelf, after two conservative shots.
+            val safe = if (h.par == 4) h.openingTarget else h.route.filter { it.z in 300f..380f }.single()
+                .let { GolfPoint(it.x, h.heightAt(it.x, it.z), it.z) }
+            val remaining = hypot(h.cup.x - safe.x, h.cup.z - safe.z) - h.greenRadius
+            assertTrue("Outside route skips the extra shot on ${h.number}: $remaining",
+                remaining > GolfClub.DRIVER.carry + 15f)
+            val setup = h.recommendedLanding(safe)
+            assertTrue("Caddie skips the detour ${h.number}", setup != h.cup)
+            assertEquals("Caddie setup ${h.number}", GolfLie.FAIRWAY, h.lieAt(setup.x, setup.z))
+            val direct = ClassicGame(h).apply {
+                restore(safe, 1); windX = 0f; windZ = 0f; club = GolfClub.DRIVER
+                aimAngle = atan2(h.cup.x - ball.x, h.cup.z - ball.z)
+            }
+            for (percent in 85..100) {
+                val preview = direct.preview(percent / 100f)
+                val end = preview.roll.lastOrNull() ?: preview.landing ?: continue
+                if (h.greenSignedDistance(end.x, end.z) <= 0f) shortcuts += "${h.number}/$percent"
+            }
+
+            for (a in h.attackLandings.filter { h.par == 4 || it.fromZ > 0f }) {
+                assertTrue("Attack still too far from green ${h.number}",
+                    hypot(h.cup.x - a.x, h.cup.z - a.z) < GolfClub.DRIVER.carry)
+                var reaches = false
+                search@ for (club in GolfClub.entries.filter { it != GolfClub.PUTTER }) {
+                    val distance = hypot(h.cup.x - a.x, h.cup.z - a.z)
+                    if (club.carry < distance * .8f || club.carry > distance * 1.5f) continue
+                    for (percent in 65..100 step 2) {
+                        val g = ClassicGame(h).apply {
+                            restore(GolfPoint(a.x, 0f, a.z), 1)
+                            windX = 0f; windZ = 0f; this.club = club
+                            aimAngle = atan2(h.cup.x - ball.x, h.cup.z - ball.z)
+                            hit(percent / 100f)
+                        }
+                        var steps = 0
+                        while (g.state in listOf(GolfState.FLYING, GolfState.ROLLING) && steps++ < 2400)
+                            g.update(1f / 60f)
+                        if (g.lastPenalty == 0 && (g.lie == GolfLie.GREEN || g.state == GolfState.HOLED)) {
+                            reaches = true; break@search
+                        }
+                    }
+                }
+                assertTrue("No real approach from attack shelf ${h.number}: ${a.x}/${a.z}", reaches)
+            }
+        }
+        assertTrue("Outside routes reach green in one approach: $shortcuts", shortcuts.isEmpty())
+    }
+
+    @Test fun shortHolesHaveBroadDryBailoutsThatLeaveAChip() {
+        for (h in WildDetoursCourse.holes.filter { it.par == 3 }) {
+            val apron = h.route.first { it.width >= 40f }
+            assertEquals(GolfLie.FAIRWAY, h.lieAt(apron.x, apron.z))
+            assertTrue(h.hazards.all { it.signedDistance(apron.x, apron.z) > 5f })
+            assertTrue(hypot(h.cup.x - apron.x, h.cup.z - apron.z) in 55f..90f)
         }
     }
 }

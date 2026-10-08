@@ -52,58 +52,50 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
         val step = 2.5f
         val nx = ceil((hole.width + 80f) / step).toInt()
         val nz = ceil((hole.length + 110f) / step).toInt()
+        // One contour/hazard evaluation supplies both colour and shader weights at each vertex.
         // Base colours only: mowing, tufts and grain are drawn per pixel by GroundShader.
-        fun colourAt(x:Float,z:Float,dx:Float,dz:Float): C {
-            val lie=hole.lieAt(x,z)
-            val fair=hole.fairwaySignedDistance(x,z)
+        fun sampleAt(x:Float,z:Float): GroundSample {
+            val archipelago=hole.islands.isNotEmpty()
+            val shore=if(archipelago)hole.islandSignedDistance(x,z) else Float.NEGATIVE_INFINITY
+            val fair=if(archipelago)shore+ClassicHole.ISLAND_ROUGH_WIDTH else hole.fairwaySignedDistance(x,z)
             val greenDistance=hole.greenSignedDistance(x,z)
+            val tee=abs(x)<4.5f && abs(z)<5.5f && greenDistance>0f
             var colour=palette.rough
-            colour=colour.mix(palette.fairway, ((1.15f-fair)/2.3f).coerceIn(0f,1f))
+            val fairBlend=((1.15f-fair)/2.3f).coerceIn(0f,1f)
+            var green=((.40f-greenDistance)/.8f).coerceIn(0f,1f)
+            var fairway=if(tee)1f else fairBlend
+            var sand=0f; var water=0f
+            colour=colour.mix(palette.fairway,fairBlend)
             if(greenDistance<2.2f) {
                 colour=colour.mix(palette.fringe,((2.2f-greenDistance)/1.1f).coerceIn(0f,1f))
                 colour=colour.mix(palette.green,((.40f-greenDistance)/.8f).coerceIn(0f,1f))
             }
-            if(lie==GolfLie.TEE) colour=palette.fairway
+            if(tee) colour=palette.fairway
+            if(archipelago) {
+                water=((shore+.2f)/.6f).coerceIn(0f,1f)
+                colour=colour.mix(palette.water,((shore+1.4f)/1.4f).coerceIn(0f,1f))
+            }
             for(hazard in hole.hazards) {
                 val d=hazard.signedDistance(x,z)
                 if(d<1.4f && greenDistance>0f) {
                     if(hazard.lie==GolfLie.BUNKER) {
                         colour=colour.mix(C(.54f,.57f,.25f),((1.4f-d)/1.4f).coerceIn(0f,1f))
                         colour=colour.mix(palette.sand,((.2f-d)/.7f).coerceIn(0f,1f))
+                        sand=max(sand,((.2f-d)/.7f).coerceIn(0f,1f))
                     } else {
                         colour=colour.mix(C(.50f,.62f,.36f),((1.4f-d)/1.4f).coerceIn(0f,1f))
                         colour=colour.mix(palette.water,((.2f-d)/.6f).coerceIn(0f,1f))
+                        water=max(water,((.2f-d)/.6f).coerceIn(0f,1f))
                     }
-                }
-            }
-            val light=(.77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f))
-            return colour.shade(light*treeShade(x,z))
-        }
-        // The same blends as the colours, so that texture and colour change together at each edge.
-        fun turfAt(x:Float,z:Float): Turf {
-            val greenDistance=hole.greenSignedDistance(x,z)
-            var green=((.40f-greenDistance)/.8f).coerceIn(0f,1f)
-            var fairway=if(hole.lieAt(x,z)==GolfLie.TEE) 1f else ((1.15f-hole.fairwaySignedDistance(x,z))/2.3f).coerceIn(0f,1f)
-            var sand=0f; var water=0f
-            for(hazard in hole.hazards) {
-                val d=hazard.signedDistance(x,z)
-                if(d<1.4f && greenDistance>0f) {
-                    if(hazard.lie==GolfLie.BUNKER) sand=max(sand,((.2f-d)/.7f).coerceIn(0f,1f))
-                    else water=max(water,((.2f-d)/.6f).coerceIn(0f,1f))
                 }
             }
             val hazards=min(1f,sand+water)
             green*=1f-hazards
             fairway=min(fairway*(1f-hazards),1f-hazards-green).coerceAtLeast(0f)
-            return Turf(fairway,green,sand,water)
-        }
-        fun sampleAt(x:Float,z:Float): GroundSample {
-            val dx=(hole.heightAt(x+.4f,z)-hole.heightAt(x-.4f,z))/.8f
-            val dz=(hole.heightAt(x,z+.4f)-hole.heightAt(x,z-.4f))/.8f
+            val dx=if(shore>1f)0f else (hole.heightAt(x+.4f,z)-hole.heightAt(x-.4f,z))/.8f
+            val dz=if(shore>1f)0f else (hole.heightAt(x,z+.4f)-hole.heightAt(x,z-.4f))/.8f
             val light=(.77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f))*treeShade(x,z)
-            return GroundSample(colourAt(x,z,dx,dz),turfAt(x,z),
-                hole.fairwaySignedDistance(x,z),
-                hole.greenSignedDistance(x,z),light,1f)
+            return GroundSample(colour.shade(light),Turf(fairway,green,sand,water),fair,greenDistance,light,1f)
         }
         // Shared lattice vertices are evaluated once, including expensive slope / contour samples.
         // Bands on different threads may both fill a vertex they share: the same value, written
@@ -148,6 +140,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
                 val nearGreen=hole.greenSignedDistance(x+step*.5f,z+step*.5f)<step*2f
                 val fairDistance=hole.fairwaySignedDistance(x+step*.5f,z+step*.5f)
                 refined[iz*nx+ix]=nearGreen || fairDistance in -step..(ClassicHole.SEMI_ROUGH_WIDTH+step) ||
+                    (hole.islands.isNotEmpty() && abs(hole.islandSignedDistance(x+step*.5f,z+step*.5f))<step*2f) ||
                     hole.hazards.any { abs(it.signedDistance(x+step*.5f,z+step*.5f))<step*2f }
             }
         }
@@ -191,11 +184,12 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
         fun distantPoint(x:Float,z:Float)=distantPoints.getOrPut(x to z) { P(x,backdrop.heightAt(x,z),z) }
         fun distantSample(x:Float,z:Float):GroundSample = distantSamples.getOrPut(x to z) {
             if(backdrop.outward(x,z)==0f) return@getOrPut sampleAt(x,z)
+            if(hole.islands.isNotEmpty()) return@getOrPut GroundSample(palette.water,Turf(water=1f))
             val dx=(backdrop.heightAt(x+.4f,z)-backdrop.heightAt(x-.4f,z))/.8f
             val dz=(backdrop.heightAt(x,z+.4f)-backdrop.heightAt(x,z-.4f))/.8f
             val light=.77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f)
             val variation=.5f+.5f*sin(x*.019f+sin(z*.013f)*2f)*cos(z*.021f)
-            val colour=palette.rough.mix(if(hole.highlands) C(.57f,.48f,.31f) else C(.36f,.49f,.25f),variation*.55f)
+            val colour=palette.rough.mix(if(hole.snowy) C(.62f,.69f,.77f) else if(hole.highlands) C(.57f,.48f,.31f) else C(.36f,.49f,.25f),variation*.55f)
             GroundSample(colour.shade(light),Turf.ROUGH,light=light)
         }
         for(j in 0 until backdrop.zs.size-1) for(i in 0 until backdrop.xs.size-1) {
@@ -242,7 +236,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
         // A winding sandy cart path follows the right edge without crossing the playing line.
         val gravel=Turf(sand=.55f)
         var z=-15f
-        while(z<hole.length+40f) {
+        while(hole.islands.isEmpty() && z<hole.length+40f) {
             val next=z+1.5f
             val x=pathX(z); val xx=pathX(next)
             // Never paint a dry-looking path on a water penalty area.
@@ -315,20 +309,23 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
     fun scenery(): List<ClassicMesh> {
         val b=MeshBuilder()
         val homeX=-hole.width*.34f; val homeZ=10f
-        if(hole.highlands) highlandLodge(b,homeX,homeZ) else {
-            cottage(b,homeX,homeZ); mill(b)
+        if(hole.islands.isEmpty()) {
+            if(hole.highlands) highlandLodge(b,homeX,homeZ) else {
+                cottage(b,homeX,homeZ); mill(b)
+            }
+            cart(b,pathX(35f)+2.5f,35f)
+            cart(b,pathX(hole.length*.76f)+2.5f,hole.length*.76f)
+            golfBag(b,hole.tee.x+4f,hole.tee.z-1f)
+            // White stakes make the playable boundary legible before a costly out-of-bounds shot.
+            val stake=C(.97f,.96f,.88f)
+            for(side in listOf(-1f,1f)) for(z in -20..(hole.length+55f).toInt() step 32) {
+                val x=side*hole.width*.5f
+                b.cone(x,hole.heightAt(x,z.toFloat()),z.toFloat(),.11f,1.35f,stake,5,.11f)
+            }
+            for(z in listOf(-20f,hole.length+55f)) for(x in (-hole.width*.5f).toInt()..(hole.width*.5f).toInt() step 32)
+                b.cone(x.toFloat(),hole.heightAt(x.toFloat(),z),z,.11f,1.35f,stake,5,.11f)
         }
-        cart(b,pathX(35f)+2.5f,35f)
-        cart(b,pathX(hole.length*.76f)+2.5f,hole.length*.76f)
-        golfBag(b,hole.tee.x+4f,hole.tee.z-1f)
-        // White stakes make the playable boundary legible before a costly out-of-bounds shot.
-        val stake=C(.97f,.96f,.88f)
-        for(side in listOf(-1f,1f)) for(z in -20..(hole.length+55f).toInt() step 32) {
-            val x=side*hole.width*.5f
-            b.cone(x,hole.heightAt(x,z.toFloat()),z.toFloat(),.11f,1.35f,stake,5,.11f)
-        }
-        for(z in listOf(-20f,hole.length+55f)) for(x in (-hole.width*.5f).toInt()..(hole.width*.5f).toInt() step 32)
-            b.cone(x.toFloat(),hole.heightAt(x.toFloat(),z),z,.11f,1.35f,stake,5,.11f)
+        if(hole.islands.isNotEmpty()) golfBag(b,hole.tee.x+4f,hole.tee.z-1f)
         // Tee markers and the real hole; the flagstick is drawn live.
         for(side in listOf(-1f,1f)) {
             val x=hole.tee.x+side*2.2f
@@ -351,7 +348,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
     private fun highlandLodge(b:MeshBuilder,x:Float,z:Float) {
         val y=hole.heightAt(x,z)
         b.box(x,y,z,8f,3.4f,6f,C(.49f,.48f,.43f))
-        val roof=C(.23f,.28f,.30f)
+        val roof=if(hole.snowy) C(.87f,.91f,.95f) else C(.23f,.28f,.30f)
         b.quad(P(x-4.6f,y+3.4f,z-3.6f),P(x+4.6f,y+3.4f,z-3.6f),P(x+4.6f,y+5.4f,z),P(x-4.6f,y+5.4f,z),roof)
         b.quad(P(x-4.6f,y+5.4f,z),P(x+4.6f,y+5.4f,z),P(x+4.6f,y+3.4f,z+3.6f),P(x-4.6f,y+3.4f,z+3.6f),roof)
         b.box(x,y,z-3.05f,1.5f,2.4f,.15f,C(.27f,.22f,.18f))

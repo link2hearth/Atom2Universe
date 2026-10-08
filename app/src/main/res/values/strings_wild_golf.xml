@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="classic_wild_course">Wild Highlands</string>
-    <string name="classic_wild_description">Course 3 · Advanced. 18 holes in the autumn highlands: golden grass, pines, rocks and cold lakes. Narrow landing shelves reward driver and wood carries, then precise hops between banks. The broad route remains the conservative choice.</string>
+    <string name="classic_wild_description">Course 3 · Advanced. 18 holes in the autumn highlands: golden grass, pines, rocks and cold lakes. Greens lie beyond narrow attack routes: successful driver and wood carries can save a shot. Broad detours offer safer landings but need an extra shot. On par 3s, short bailouts allow a two-shot route to the green.</string>
     <string-array name="classic_wild_holes">
         <item>The Amber Clearing</item><item>The Cold Twin Lakes</item><item>The Grey Peninsula</item>
-        <item>The Giant’s Saddle</item><item>The Golden Cape</item><item>The Three Stones</item>
+        <item>The Giant’s Saddle</item><item>The Golden Cape</item><item>The River Stones</item>
         <item>The Wind Redan</item><item>The Pale Quarry</item><item>The Pine S</item>
         <item>The Autumn Cirque</item><item>The Divided Forest</item><item>The Cold Mirror</item>
         <item>The Stone Trident</item><item>The Giant’s Balconies</item><item>The Twin Capes</item>
         <item>The Last Long Iron</item><item>The Shore Choice</item><item>The Highland Lake Crossing</item>
     </string-array>
     <string-array name="classic_wild_tips">
-        <item>The broad left fairway is safe. A driver to the right clearing, about 232 m from the tee, leaves a shorter approach. Avoid the central ridge.</item>
-        <item>Follow the broad right bank, or carry a driver to the 225 m landing beyond the first lake. A wood 3 then jumps about 205 m across the second lake to the final shelf.</item>
-        <item>Water guards the entrance. An iron 5 covers the theoretical 155 m; the right apron is a bailout, while rear sand punishes excess distance.</item>
-        <item>The broad left elbow is safe. A driver can reach the small right saddle at about 227 m, opening the uphill approach. The ridge blocks the centre shortcut.</item>
-        <item>A driver carry of about 229 m clears the diagonal lake to the left cape and leaves a wedge. The right shelf builds the hole without that long crossing.</item>
-        <item>Three left landings: driver to the first at 220 m, iron 8 for the next 116 m hop, then pitching wedge for about 97 m. The right fairway avoids these small targets.</item>
-        <item>A wood 5 covers the theoretical 186 m. The high right apron opens a diagonal entrance; the bunker guards a short left landing.</item>
-        <item>The left fairway skirts the quarry. A driver of about 227 m reaches the small right tongue beyond the sand and shortens the approach.</item>
-        <item>The broad right S is conservative. A driver of about 226 m to the left landing cuts the detour; central pines block the direct line.</item>
-        <item>The descent adds carry. The small left landing is about 228 m from the tee: use the preview to control the driver. The broad right bank gives more margin.</item>
-        <item>The left detour is broad. A driver to the right clearing at about 232 m leaves less distance to the green, provided you stay beside the forest.</item>
-        <item>A hybrid covers the theoretical 170 m. Carry the front lake without rolling into rear sand; the right apron offers more depth.</item>
-        <item>Go broad left, aim a driver at the right tongue at 229 m, or use a wood 3 to the central 210 m pocket between bunkers. Sand beyond the centre then demands a change of angle.</item>
-        <item>A driver of about 229 m reaches the right balcony and cuts the detour. The left bank is broader; the final shot still climbs to the green.</item>
-        <item>Driver to the left cape at about 230 m, then wood 3 to the second cape at 202 m. Those landings leave an iron to the green; the broad right bank allows three conservative shots.</item>
-        <item>A wood 3 covers the theoretical 205 m. Right water and left sand frame the green; the front-left apron preserves a chip option.</item>
-        <item>The left shelf is broad. A driver of about 224 m reaches the small right landing between ridge and lake and opens a more direct approach.</item>
-        <item>Driver to the 220 m pocket beyond the first lake, then wood 3 for 210 m to the final landing. The broad right crescent avoids those two precise crossings.</item>
+        <item>The green lies beyond the narrow clearing. A precise driver to the 232 m landing leaves about 150 m. The broad outside fairway leaves over 280 m and needs an extra setup shot.</item>
+        <item>Driver to the 225 m pocket, then wood 3 for 205 m to the final bank: about 117 m remain. The broad outside shelves skirt the lakes in four shots before putting.</item>
+        <item>Attack the small green beyond the lake to arrive in one shot. The broad short bailout on the dry bank avoids the direct crossing but leaves a chip of about 68 m. Watch the rear sand.</item>
+        <item>The green sits just beyond the narrow left passage when viewed from the tee. A precise driver to the 227 m landing leaves about 193 m. The broad right detour leaves over 310 m: play a setup shot, then approach.</item>
+        <item>The green extends the narrow cape. A driver to the 229 m landing beyond the lake leaves about 154 m. The broad opposite shelf leaves about 299 m and needs an extra approach shot.</item>
+        <item>Driver to the first stone at 220 m, then wood 3 for 211 m to the second bank: about 125 m remain. The broad outside bank avoids the small targets but needs four shots to the green.</item>
+        <item>Attack the small green directly with a long club beyond the bunker. The broad short apron is an easier target but leaves about 87 m. Read the climb in the preview.</item>
+        <item>Carry the quarry to the narrow tongue at 227 m: the green lies about 183 m further along that side. The broad outside fairway leaves over 310 m and needs an extra shot.</item>
+        <item>The narrow 226 m landing cuts the pine S and leaves about 209 m to the green. The broad opposite shelf leaves about 329 m: play a setup shot before approaching.</item>
+        <item>The descent adds carry: control the driver to the small 228 m landing. The green lies on the same side, about 141 m away. The broad opposite bank leaves about 287 m and needs an extra shot.</item>
+        <item>A precise driver to the 232 m clearing opens about 212 m to the green beyond the narrow route. The broad detour across the woodland leaves over 335 m and needs an extra approach shot.</item>
+        <item>The narrow green lies beyond the lake with rear sand. Attack directly to arrive in one, or choose the broad dry-bank bailout, leaving about 76 m to play.</item>
+        <item>Driver to the narrow tongue at 229 m leaves about 139 m. Wood 3 to the central 210 m pocket leaves about 178 m with sand to negotiate. The broad outside route leaves about 287 m and needs an extra shot.</item>
+        <item>The green extends the narrow balcony: a precise driver to the 229 m landing leaves about 215 m uphill. The broad opposite balcony leaves over 335 m: play a setup shot first.</item>
+        <item>Driver to the first cape at 230 m, then wood 3 for 202 m to the second: about 142 m remain. The broad opposite shelves allow four conservative shots before putting.</item>
+        <item>A long club can reach the green directly between lake and bunker. The broad short apron on the dry bank is an easier reception but leaves a chip of about 74 m.</item>
+        <item>Driver to the small 224 m landing between ridge and lake leaves about 187 m to the green. The broad opposite shelf leaves over 307 m and needs an extra setup shot.</item>
+        <item>Driver to the 220 m pocket, then wood 3 for 210 m to the final reception: about 128 m remain. The broad outside bank avoids both precise crossings but needs four shots before putting.</item>
     </string-array>
 </resources>

@@ -19,14 +19,15 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     @Volatile var frame = ClassicFrame(hole.tee, 0f, false, ShotPreview.NONE)
     private val landscape=ClassicLandscape(hole)
     private val terrain by lazy { landscape.terrain() }
-    private val groundShader=GroundShader(hole.highlands)
+    private val groundShader=GroundShader(hole.highlands,hole.snowy)
     private val grass=ClassicGrass(hole)
     private val lightShader=BoardLightShader()
     private var boardLights=FloatArray(0)
     private var lightsKey:List<Any>?=null
     private val scenery by lazy { landscape.scenery() }
     private val blades by lazy { landscape.blades() }
-    private val ball by lazy { MeshBuilder().apply { sphere(0f,0f,0f,1f,C(1f,.99f,.92f),14,8) }.build() }
+    private val ball by lazy { MeshBuilder().apply { sphere(0f,0f,0f,1f,
+        if(hole.snowy)C(1f,.36f,.06f) else C(1f,.99f,.92f),14,8) }.build() }
     private val shadow by lazy { MeshBuilder().apply { disc(0f,0f,0f,1f,1f,C(.22f,.39f,.18f)) }.build() }
     private val ring by lazy { MeshBuilder().apply { ring(0f,0f,0f,1f,.055f,C(1f,.92f,.55f),48) }.build() }
     private val bird by lazy { MeshBuilder().apply {
@@ -81,6 +82,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     private var detailLoc=0; private var skyLoc=0; private var timeLoc=0; private var overviewLoc=0
     private var skyRayLoc=0
     private var highlandsLoc=0
+    private var snowLoc=0
     private var screenHeight=1
     private val skyRays=FloatArray(9)
     private var dynamicBuffer=0
@@ -119,6 +121,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         overviewLoc=GL.glGetUniformLocation(program,"uOverview")
         skyRayLoc=GL.glGetUniformLocation(program,"uSkyRays")
         highlandsLoc=GL.glGetUniformLocation(program,"uHighlands")
+        snowLoc=GL.glGetUniformLocation(program,"uSnow")
         meshes.forEach { it.upload() }
         terrain.upload(); groundShader.create(); lightShader.create()
         grass.create()
@@ -164,6 +167,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         GL.glUniform1f(overviewLoc,if(f.overview!=null) 1f else 0f)
         GL.glUniform1f(skyLoc,0f)
         GL.glUniform1f(highlandsLoc,if(hole.highlands)1f else 0f)
+        GL.glUniform1f(snowLoc,if(hole.snowy)1f else 0f)
         // Slope board, only while a shot is being prepared (gone during the stroke and the ball's run):
         // from above, around what the camera looks at, for any shot; otherwise from the ball to the hole for a putt.
         val putting=f.club==GolfClub.PUTTER
@@ -183,13 +187,13 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         GL.glUseProgram(program)
         identity(); scenery.forEach { if(it.visible(viewProjection)) draw(it,.12f) }
         identity()
-        if(!hole.highlands) {
+        if(!hole.highlands && hole.islands.isEmpty()) {
             Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-2.2f)
             Matrix.rotateM(model,0,time*12f,0f,0f,1f)
             draw(blades,.05f)
         }
         wildlife()
-        if(f.overview==null) drawLeaves(f,dt)
+        if(f.overview==null && !hole.snowy) drawLeaves(f,dt)
         grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
         GL.glUseProgram(program)
         val ground=hole.heightAt(f.ball.x,f.ball.z)
@@ -314,6 +318,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             Matrix.scaleM(model,0,1.2f,.7f+abs(sin(time*3.4f+i)),1f)
             draw(bird,0f)
         }
+        if(hole.islands.isNotEmpty()) return
         val z=hole.tee.z+13f
         val x=hole.fairwayCenter(z)-hole.fairwayWidth(z)*.5f-4f
         val cycle=(time%13f)
@@ -553,6 +558,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             varying vec3 vWorld;
             uniform mat3 uSkyRays;
             uniform float uHighlands;
+            uniform float uSnow;
             float skyHash(vec2 p) {
                 vec3 q=fract(vec3(p.xyx)*.1031);
                 q+=dot(q,q.yzx+33.33);
@@ -569,6 +575,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
                     float up=max(ray.y,0.0);
                     vec3 colour=mix(mix(vec3(.79,.84,.79),vec3(.75,.72,.67),uHighlands),
                         mix(vec3(.22,.47,.68),vec3(.32,.42,.55),uHighlands),pow(up,.48));
+                    colour=mix(colour,mix(vec3(.83,.89,.95),vec3(.27,.46,.66),pow(up,.48)),uSnow);
                     vec3 sun=normalize(vec3(-.35,.86,-.36));
                     float glow=max(0.0,dot(ray,sun));
                     colour+=vec3(.26,.20,.10)*pow(glow,24.0);

@@ -21,7 +21,7 @@ class ClassicCoursesTest {
         // generated IDs used by the catalogue. Android's resource compiler checks the references.
         fun resourceName(type: Class<*>, id: Int) = type.fields.first { it.getInt(null) == id }.name
         for (directory in listOf("values", "values-fr")) {
-            val documents = listOf("strings_classic_golf.xml", "strings_wild_golf.xml").map {
+            val documents = listOf("strings_classic_golf.xml", "strings_wild_golf.xml", "strings_vertigo_golf.xml", "strings_archipelago_golf.xml", "strings_snow_golf.xml").map {
                 DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(File("src/main/res/$directory/$it"))
             }
             fun element(tag: String, name: String): Element {

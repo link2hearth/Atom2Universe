@@ -44,8 +44,8 @@ internal object GrassGeometry {
         fun blade(root:P,height:Float,width:Float,angle:Float,tint:Float) {
             val dx=cos(angle)*width;val dz=sin(angle)*width
             val bendX=sin(angle)*height*.27f;val bendZ=-cos(angle)*height*.27f
-            val base=(if(hole.highlands)C(.37f,.34f,.20f) else C(.22f,.35f,.12f)).shade(tint)
-            val tip=(if(hole.highlands)C(.64f,.56f,.33f) else C(.49f,.59f,.25f)).shade(tint)
+            val base=(if(hole.snowy)C(.20f,.35f,.30f) else if(hole.highlands)C(.37f,.34f,.20f) else C(.22f,.35f,.12f)).shade(tint)
+            val tip=(if(hole.snowy)C(.37f,.51f,.46f) else if(hole.highlands)C(.64f,.56f,.33f) else C(.49f,.59f,.25f)).shade(tint)
             fun p(i:Int) {
                 when(i) {
                     0->vertex(root.x,root.y,root.z,base,root,0f)
@@ -65,6 +65,7 @@ internal object GrassGeometry {
             val x=(tx+(cell%16+.15f+random.nextFloat()*.7f)/16f)*TILE
             val z=(tz+(cell/16+.15f+random.nextFloat()*.7f)/16f)*TILE
             val lie=hole.lieAt(x,z)
+            if(hole.snowy && lie==GolfLie.ROUGH)continue
             if(lie!=GolfLie.ROUGH&&lie!=GolfLie.SEMI_ROUGH&&lie!=GolfLie.FAIRWAY&&lie!=GolfLie.TEE)continue
             if(hole.greenSignedDistance(x,z)<.85f || abs(x-hole.pathX(z))<1.65f)continue
             if(hole.hazards.any{it.signedDistance(x,z)<.40f})continue

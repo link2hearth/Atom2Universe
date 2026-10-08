@@ -21,6 +21,7 @@ internal class ClassicDecor(private val hole:ClassicHole) {
         hole.hazards.none{it.signedDistance(x,z)<margin} && hypot(x-hole.tee.x,z-hole.tee.z)>7f
 
     fun build():List<ClassicMesh> {
+        if(hole.islands.isNotEmpty()) return emptyList()
         val random=Random(hole.number*9719)
         hole.trees.forEachIndexed { i,t ->
             at(t.x,t.z) { b ->
@@ -63,7 +64,7 @@ internal class ClassicDecor(private val hole:ClassicHole) {
             val z=12f+i*(hole.length-15f)/6f;val x=hole.pathX(z)+3.9f
             if(dry(x,z)) at(x,z) { b ->
                 when(i%3) {
-                    0 -> { bench(b,x,z);bin(b,x+2.2f,z+.3f);flowers(b,x-1.7f,z+.9f,1.2f,i) }
+                    0 -> { bench(b,x,z);bin(b,x+2.2f,z+.3f);if(!hole.snowy)flowers(b,x-1.7f,z+.9f,1.2f,i) }
                     1 -> { rocks(b,x,z,1.0f+i*.08f);shrub(b,x+1.5f,z+1f,1.2f,i%3) }
                     else -> { planter(b,x,z);sign(b,x,z+2.2f) }
                 }
@@ -103,7 +104,7 @@ internal class ClassicDecor(private val hole:ClassicHole) {
             val side=if(i%2==0)-1f else 1f
             val x=hole.fairwayCenter(z)+side*(hole.fairwayWidth(z)*.5f+6f+random.nextFloat()*16f)
             if(dry(x,z,4f)&&abs(x-hole.pathX(z))>3f) at(x,z) { b ->
-                if(hole.highlands && i%3==0) rocks(b,x,z,1.1f+random.nextFloat()*.9f)
+                if(hole.snowy || hole.highlands && i%3==0) rocks(b,x,z,1.1f+random.nextFloat()*.9f)
                 else if(i%3==0)flowers(b,x,z,1.7f,i) else shrub(b,x,z,.45f+random.nextFloat()*.65f,i%3)
             }
         }
@@ -119,7 +120,7 @@ internal class ClassicDecor(private val hole:ClassicHole) {
                 b.beam(P(x,y+r*(.8f+i*.12f),z),P(x+cos(a)*r*.52f,y+r*1.6f,z+sin(a)*r*.52f),r*.04f,wood,5,r*.016f)
             }
         } else b.cone(x,y,z,r*.06f,r*1.4f,wood,5,r*.025f)
-        when(kind) {
+        when(if(hole.snowy)1 else kind) {
             1 -> {
                 // Irregular tiered conifer, with skirt shadows and warm tips.
                 val levels=if(distant)3 else 5
@@ -127,7 +128,8 @@ internal class ClassicDecor(private val hole:ClassicHole) {
                     val t=level.toFloat()/levels
                     val cy=y+r*(.62f+t*1.48f);val radius=r*(1f-t*.75f)
                     val count=if(distant)7 else 10
-                    val shade=C(.18f+t*.12f,.34f+t*.14f,.24f+t*.06f)
+                    val shade=if(hole.snowy && level%2==0) C(.86f,.90f,.94f)
+                        else C(.18f+t*.12f,.34f+t*.14f,.24f+t*.06f)
                     for(i in 0 until count) {
                         val a=i*2f*PI.toFloat()/count;val aa=(i+1)*2f*PI.toFloat()/count
                         fun skirt(v:Float)=P(x+cos(v)*radius*(1f+.13f*sin(v*3f+seed+level)),

@@ -102,13 +102,14 @@ internal class GroundMesh(private val vertices: FloatArray) {
  * The slope board ([SlopeBoard]) is drawn here too: continuous, anti-aliased lines of constant
  * screen width that follow the turf exactly, tinted progressively by height.
  */
-internal class GroundShader(private val highlands:Boolean=false) {
+internal class GroundShader(private val highlands:Boolean=false, private val snowy:Boolean=false) {
     private var program = 0
     private var mvpLoc = 0; private var eyeLoc = 0; private var timeLoc = 0; private var overviewLoc = 0
     private var boardLoc = 0; private var boardSizeLoc = 0; private var boardCellLoc = 0
     private var holeLoc = 0; private var pixelLoc = 0; private var lineScaleLoc = 0
     private var cutWidthsLoc = 0
     private var highlandsLoc = 0
+    private var snowLoc = 0
 
     fun create() {
         program = link(VERTEX, FRAGMENT)
@@ -124,6 +125,7 @@ internal class GroundShader(private val highlands:Boolean=false) {
         lineScaleLoc = GL.glGetUniformLocation(program, "uLineScale")
         cutWidthsLoc = GL.glGetUniformLocation(program, "uCutWidths")
         highlandsLoc = GL.glGetUniformLocation(program, "uHighlands")
+        snowLoc = GL.glGetUniformLocation(program, "uSnow")
     }
 
     /**
@@ -136,6 +138,7 @@ internal class GroundShader(private val highlands:Boolean=false) {
              board: SlopeBoard?, cell: Float, fineWeight: Float, holeX: Float, holeZ: Float, pixel: Float, lineScale: Float) {
         GL.glUseProgram(program)
         GL.glUniform1f(highlandsLoc,if(highlands)1f else 0f)
+        GL.glUniform1f(snowLoc,if(snowy)1f else 0f)
         GL.glUniformMatrix4fv(mvpLoc, 1, false, viewProjection, 0)
         GL.glUniform3f(eyeLoc, eyeX, eyeY, eyeZ)
         GL.glUniform1f(timeLoc, time)
@@ -207,6 +210,7 @@ uniform vec3 uEye;
 uniform float uTime;
 uniform float uOverview;
 uniform float uHighlands;
+uniform float uSnow;
 uniform vec2 uCutWidths;
 // Slope board: squares fixed on the ground, lines along the world axes through the hole (uHole).
 // Window: the squares whose centre lies within radius of the segment uBoard (from xz, to xz);
@@ -284,6 +288,10 @@ void main() {
             +mix(vec3(.40,.50,.23),vec3(.46,.46,.29),uHighlands)*semi
             +mix(vec3(.32,.52,.24),vec3(.35,.47,.30),uHighlands)*fringe
             +mix(vec3(.46,.65,.32),vec3(.49,.61,.40),uHighlands)*green;
+        vec3 winter=vec3(.86,.90,.94)*(1.0-green-fringe-fairway-semi)
+            +vec3(.37,.51,.48)*fairway+vec3(.69,.77,.79)*semi
+            +vec3(.52,.65,.61)*fringe+vec3(.40,.58,.49)*green;
+        grass=mix(grass,winter,uSnow);
         float dry=1.0-clamp(sand+water,0.0,1.0);
         base=mix(vColour,grass*vCuts.z,dry);
         green*=dry; fringe*=dry; fairway*=dry; semi*=dry;
@@ -297,7 +305,7 @@ void main() {
         float tufts=noise(p*2.3)*.60+noise(p*7.9)*.40;
         shade+=rough*(tufts-.48)*.27*near;
         float straw=smoothstep(.58,.79,meadow);
-        tint=mix(tint,vec3(1.13,1.03,.86),rough*straw*.48);
+        tint=mix(tint,vec3(1.13,1.03,.86),rough*straw*.48*(1.0-uSnow));
     }
     if(fairway>.01) {
         float soft=clamp(dist*.004,.08,1.0);
