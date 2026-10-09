@@ -247,7 +247,7 @@ class InfernaleView @JvmOverloads constructor(
     private val billeP = Paint().apply { color = 0xFFD8DEEC.toInt(); isAntiAlias = true }
     private val billeReflet = Paint().apply { color = 0xFFFFFFFF.toInt(); isAntiAlias = true }
 
-    private val traineeP = Paint().apply {
+    private val traceP = Paint().apply {
         color = 0x5588C8FF.toInt(); strokeWidth = 3f; isAntiAlias = true
         strokeCap = Paint.Cap.ROUND
     }
@@ -279,14 +279,32 @@ class InfernaleView @JvmOverloads constructor(
     private val trace = Path()
     private val segments = FloatArray(4 * 64)
 
-    // La traine de la bille : un anneau de positions, dessine en trois tronçons de plus
-    // en plus pales. Trois `drawLines` et pas un `Path` — voir les notes du trebuchet :
+    // Les traces des billes : le chemin complet de chaque bille depuis le lancement, garde apres
+    // l'arret pour qu'on puisse comparer l'essai a ce qu'on vient de modifier. Une ligne par
+    // bille, dessinee en trois troncons de plus en plus nets — trois `drawLines` et pas un `Path` :
     // un chemin ferme force un masque logiciel, une ligne ne coute rien.
-    private val traineeX = FloatArray(TRAINEE)
-    private val traineeY = FloatArray(TRAINEE)
-    private var traineeTete = 0
-    private var traineeNombre = 0
-    private val traineeSegs = FloatArray(4 * TRAINEE)
+    private class Trace {
+        var xs = FloatArray(128)
+        var ys = FloatArray(128)
+        var n = 0
+
+        fun ajouter(x: Float, y: Float) {
+            if (n >= MAX_TRACE) return
+            if (n == xs.size) {
+                xs = xs.copyOf(n * 2)
+                ys = ys.copyOf(n * 2)
+            }
+            // Une bille immobile ne doit pas remplir la trace de points identiques.
+            if (n > 0 && hypot(x - xs[n - 1], y - ys[n - 1]) < 0.02f) return
+            xs[n] = x
+            ys[n] = y
+            n++
+        }
+    }
+
+    private val traces = HashMap<Int, Trace>()
+    private var pasEchantillon = 0
+    private val traceSegs = FloatArray(4 * MAX_TRACE)
 
     // Le decor, tire une fois par tableau : sa graine est celle du tableau, donc la meme
     // caverne revient quand on rejoue.
@@ -312,8 +330,7 @@ class InfernaleView @JvmOverloads constructor(
             viser(null)
             selection = -1
             modeLien = false
-            traineeNombre = 0
-            traineeTete = 0
+            traces.clear()
             decorPret = false
         }
         // **Recadrer ici aussi**, et pas seulement quand la surface change de taille :
@@ -329,11 +346,14 @@ class InfernaleView @JvmOverloads constructor(
         partie?.let(action)
     }
 
-    /** Oublie la traine : a faire quand on remonte le tableau. */
-    fun effacerTrainee() = synchronized(verrou) {
-        traineeNombre = 0
-        traineeTete = 0
+    /** Efface les traces des billes : le bouton « effacer les traces », ou un nouveau lancement. */
+    fun effacerTraces() = synchronized(verrou) {
+        traces.clear()
+        pasEchantillon = 0
     }
+
+    /** Y a-t-il des traces a effacer ? Le bouton ne s'affiche que s'il y en a. */
+    fun aDesTraces(): Boolean = synchronized(verrou) { traces.isNotEmpty() }
 
     // ── Boucle ───────────────────────────────────────────────────────────────
 
@@ -420,13 +440,19 @@ class InfernaleView @JvmOverloads constructor(
         null
     }
 
-    /** La traine suit la premiere bille posee : une seule, pour ne rien payer de plus. */
+    /**
+     * Note la position de **chaque** bille, une fois tous les quatre pas (trente fois par
+     * seconde) : assez fin pour une courbe lisse, assez rare pour que deux minutes d'essai
+     * tiennent dans quelques milliers de points.
+     */
     private fun noterTrainee(p: Partie) {
-        val b = p.plateau.pieces.firstOrNull { it.type == TypePiece.BILLE }?.principal ?: return
-        traineeX[traineeTete] = b.x
-        traineeY[traineeTete] = b.y
-        traineeTete = (traineeTete + 1) % TRAINEE
-        if (traineeNombre < TRAINEE) traineeNombre++
+        if (++pasEchantillon % 4 != 0) return
+        for ((i, piece) in p.plateau.pieces.withIndex()) {
+            for ((j, corps) in piece.corps.withIndex()) {
+                if (corps.tag != Element.BILLE || !corps.inWorld) continue
+                traces.getOrPut(i * 16 + j) { Trace() }.ajouter(corps.x, corps.y)
+            }
+        }
     }
 
     // ── Cadrage ──────────────────────────────────────────────────────────────
@@ -561,12 +587,13 @@ class InfernaleView @JvmOverloads constructor(
         if (!decorPret) preparerDecor(p.graine)
 
         peindreSol(c)
+        // Les traces passent derriere les pieces : elles montrent un chemin, elles ne cachent rien.
+        peindreTrainee(c, p.lancee)
         for (piece in p.plateau.pieces) peindrePiece(c, piece)
         for (piece in p.plateau.pieces) if (!piece.eteint) piece.souffle?.let { peindreVent(c, it) }
         for (piece in p.plateau.pieces) piece.attraction?.let { peindreChamp(c, it) }
         peindreLiens(c, p)
 
-        peindreTrainee(c)
 
         // La piece designee, en dernier : elle doit se voir par-dessus ses voisines.
         if (selection >= 0) {
@@ -1098,27 +1125,31 @@ class InfernaleView @JvmOverloads constructor(
         if (n > 0) c.drawLines(segments, 0, n, vent)
     }
 
-    private fun peindreTrainee(c: Canvas) {
-        if (traineeNombre < 4) return
-        // Trois tronçons du plus vieux au plus recent, de plus en plus opaques.
-        val parTroncon = traineeNombre / 3
-        var index = (traineeTete - traineeNombre + TRAINEE) % TRAINEE
-        for (troncon in 0 until 3) {
-            var n = 0
-            val combien = if (troncon == 2) traineeNombre - 2 * parTroncon else parTroncon
-            for (k in 0 until combien - 1) {
-                if (n + 4 > traineeSegs.size) break
-                val j = (index + k) % TRAINEE
-                val j2 = (index + k + 1) % TRAINEE
-                traineeSegs[n] = ex(traineeX[j])
-                traineeSegs[n + 1] = ey(traineeY[j])
-                traineeSegs[n + 2] = ex(traineeX[j2])
-                traineeSegs[n + 3] = ey(traineeY[j2])
-                n += 4
+    private fun peindreTrainee(c: Canvas, enCours: Boolean) {
+        // Pendant l'essai la trace est franche ; apres l'arret elle devient un fantome, assez
+        // pale pour ne pas gener ce qu'on corrige, assez visible pour qu'on la compare.
+        val base = if (enCours) 70 else 38
+        val pas = if (enCours) 45 else 28
+        traceP.strokeWidth = if (enCours) 3f else 2.5f
+        for (t in traces.values) {
+            if (t.n < 4) continue
+            val parTroncon = t.n / 3
+            var debut = 0
+            for (troncon in 0 until 3) {
+                val fin = if (troncon == 2) t.n else debut + parTroncon + 1
+                var n = 0
+                for (k in debut until minOf(fin, t.n) - 1) {
+                    if (n + 4 > traceSegs.size) break
+                    traceSegs[n] = ex(t.xs[k])
+                    traceSegs[n + 1] = ey(t.ys[k])
+                    traceSegs[n + 2] = ex(t.xs[k + 1])
+                    traceSegs[n + 3] = ey(t.ys[k + 1])
+                    n += 4
+                }
+                traceP.alpha = base + troncon * pas
+                if (n > 0) c.drawLines(traceSegs, 0, n, traceP)
+                debut += parTroncon
             }
-            traineeP.alpha = 30 + troncon * 45
-            if (n > 0) c.drawLines(traineeSegs, 0, n, traineeP)
-            index = (index + combien) % TRAINEE
         }
     }
 
@@ -1221,6 +1252,12 @@ class InfernaleView @JvmOverloads constructor(
     private var dernierY = 0f
     private var aBouge = false
 
+    // Pendant qu'on deplace une piece : l'ecart entre le doigt et son centre, pris au moment ou
+    // le glissement commence, pour qu'elle suive le doigt sans sauter vers lui.
+    private var deplacementActif = false
+    private var decalageX = 0f
+    private var decalageY = 0f
+
     // La camera a deux doigts. `pince` reste vrai jusqu'a ce que tous les doigts soient
     // partis : sans ce verrou, lever un doigt sur deux reprendrait le geste precedent la ou
     // le pincement l'avait laisse, et poserait une piece sans que personne l'ait demande.
@@ -1312,6 +1349,7 @@ class InfernaleView @JvmOverloads constructor(
         if (index >= 0) {
             doigtIndex = index
             selection = index
+            deplacementActif = false
             geste = Geste.DEPLACER
             return
         }
@@ -1330,11 +1368,29 @@ class InfernaleView @JvmOverloads constructor(
                 p.deplacer(selection, vise)
             }
 
+            // La piece suit le doigt pour de bon : elle bouge dans le monde a chaque cran de la
+            // grille. Si l'endroit vise est occupe, elle reste sur le dernier endroit valide et
+            // un fantome rouge montre ou le doigt la voudrait.
             Geste.DEPLACER -> {
                 if (!aBouge) return
                 val pose = p.placees().getOrNull(doigtIndex) ?: return
-                val vise = deplacee(pose, mx, my)
-                viser(vise, p.verifier(vise, sauf = doigtIndex))
+                if (!deplacementActif) {
+                    deplacementActif = true
+                    decalageX = pose.x - mx
+                    decalageY = pose.y - my
+                }
+                val vise = deplacee(pose, mx + decalageX, my + decalageY)
+                if (vise == pose) {
+                    viser(null)
+                } else {
+                    val verdict = p.verifier(vise, sauf = doigtIndex)
+                    if (verdict == Refus.OK) {
+                        p.deplacer(doigtIndex, vise)
+                        viser(null)
+                    } else {
+                        viser(vise, verdict)
+                    }
+                }
             }
 
             // Un doigt sur le vide fait glisser la camera. C'est le geste le plus courant
@@ -1363,11 +1419,8 @@ class InfernaleView @JvmOverloads constructor(
             // devoir la rechoisir a chaque fois serait insupportable.
             Geste.POSER -> typeChoisi?.let { p?.poser(poseA(it, mx, my)) }
 
-            Geste.DEPLACER -> {
-                val pose = p?.placees()?.getOrNull(doigtIndex)
-                // Sans mouvement, l'appui a seulement designe la piece — c'est deja fait.
-                if (pose != null && aBouge) p.deplacer(doigtIndex, deplacee(pose, mx, my))
-            }
+            // La piece a deja bouge pendant le geste : relacher ne fait que la laisser la.
+            Geste.DEPLACER -> Unit
 
             // Un appui sur le vide deselectionne : c'est la facon la plus naturelle de
             // ranger les poignees quand on a fini de regler.
@@ -1526,8 +1579,8 @@ class InfernaleView @JvmOverloads constructor(
         /** Pas de simulation, fixe : c'est ce qui rend une partie reproductible. */
         const val PAS = 1f / 120f
 
-        /** Nombre de positions gardees pour la traine de la bille. */
-        const val TRAINEE = 96
+        /** Nombre maximal de points gardes par bille : environ une minute et demie d'essai. */
+        const val MAX_TRACE = 2400
 
         /** Duree de l'eclat d'un ballon creve, en secondes. */
         const val EXPLOSION_DUREE = 0.45f

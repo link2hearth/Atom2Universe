@@ -70,4 +70,5 @@
     <string name="infernale_role_plate">Un interrupteur : chaque appui le bascule, et son voyant dit s\'il est allumé. Retournée (⇄), c\'est un bouton continu, actif seulement tant qu\'on appuie. Sélectionnez-la, touchez le bouton de lien, puis glissez vers un canon ou un ventilateur.</string>
     <string name="infernale_link">Relier</string>
     <string name="infernale_link_hint">Glissez d\'un objet à l\'autre pour les relier : plaque vers canon ou ventilateur. Refaites-le pour délier.</string>
+    <string name="infernale_clear_traces">Effacer les traces</string>
 </resources>

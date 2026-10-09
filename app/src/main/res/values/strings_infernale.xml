@@ -70,4 +70,5 @@
     <string name="infernale_role_plate">A switch: each press toggles it, and its lamp shows whether it is on. Flip it (⇄) for a push button, on only while pressed. Select it, tap the link button, then drag to a cannon or a fan.</string>
     <string name="infernale_link">Link</string>
     <string name="infernale_link_hint">Drag from one item to another to link them: plate to cannon or fan. Do it again to unlink.</string>
+    <string name="infernale_clear_traces">Clear trails</string>
 </resources>

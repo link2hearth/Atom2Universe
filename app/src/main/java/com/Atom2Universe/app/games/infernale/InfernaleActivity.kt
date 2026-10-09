@@ -43,6 +43,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private lateinit var boutonMiroir: TextView
     private lateinit var boutonSupprimer: TextView
     private lateinit var boutonLien: TextView
+    private lateinit var boutonTraces: TextView
     private lateinit var boutonLancer: TextView
 
     private val sauvegardes by lazy { sauvegardesInfernale() }
@@ -75,6 +76,11 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         boutonSupprimer = findViewById(R.id.infernale_btn_delete)
         boutonLancer = findViewById(R.id.infernale_btn_launch)
         boutonLien = findViewById(R.id.infernale_btn_link)
+        boutonTraces = findViewById(R.id.infernale_btn_ghost)
+        boutonTraces.setOnClickListener {
+            vue.effacerTraces()
+            rafraichir()
+        }
         vue.listener = this
         titre.text = t.nom
 
@@ -95,7 +101,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         }
         findViewById<TextView>(R.id.infernale_btn_clear).setOnClickListener {
             vue.surPartie { it.vider() }
-            vue.effacerTrainee()
+            vue.effacerTraces()
             vue.typeChoisi = null
             surChangement()
         }
@@ -141,9 +147,10 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         val partie = vue.partieCourante() ?: return
         vue.typeChoisi = null
         if (partie.lancee) {
+            // Les traces restent : on les compare a l'essai suivant, jusqu'a ce qu'on les efface.
             vue.surPartie { it.arreter() }
-            vue.effacerTrainee()
         } else {
+            vue.effacerTraces()
             vue.surPartie { it.lancer() }
         }
         rafraichir()
@@ -181,6 +188,7 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         boutonLancer.text = getString(
             if (partie.lancee) R.string.infernale_stop else R.string.infernale_launch
         )
+        boutonTraces.visibility = if (!partie.lancee && vue.aDesTraces()) View.VISIBLE else View.GONE
         construireReserve(partie)
     }
 

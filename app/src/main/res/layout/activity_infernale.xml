@@ -170,6 +170,19 @@
             android:background="#1B2540" />
 
         <TextView
+            android:id="@+id/infernale_btn_ghost"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:text="@string/infernale_clear_traces"
+            android:textColor="#88C8FF"
+            android:textSize="13sp"
+            android:background="#1B2540"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/infernale_btn_launch"
             android:layout_width="0dp"
             android:layout_height="46dp"
