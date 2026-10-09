@@ -19,7 +19,7 @@ import kotlin.math.*
 
 /** Tiny vector controls: no drawable or bitmap assets, with real accessible click targets. */
 internal class GolfIcon(context: Context, private val kind: Kind, description: String, action: () -> Unit) : View(context) {
-    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD, GRID }
+    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD, GRID, CAMERA }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     var highlighted = false; set(value) { field = value; invalidate() }
@@ -38,6 +38,11 @@ internal class GolfIcon(context: Context, private val kind: Kind, description: S
         paint.style = Paint.Style.STROKE
         path.reset()
         when(kind) {
+            Kind.CAMERA -> {
+                path.moveTo(12f,19f);path.lineTo(18f,19f);path.lineTo(21f,14f);path.lineTo(28f,14f)
+                path.lineTo(31f,19f);path.lineTo(36f,19f);path.lineTo(36f,34f);path.lineTo(12f,34f);path.close()
+                c.drawCircle(24f,26f,5f,paint)
+            }
             Kind.BACK, Kind.LEFT -> { path.moveTo(27f,16f); path.lineTo(19f,24f); path.lineTo(27f,32f) }
             Kind.RIGHT -> { path.moveTo(21f,16f); path.lineTo(29f,24f); path.lineTo(21f,32f) }
             Kind.UP -> { path.moveTo(16f,29f); path.lineTo(24f,21f); path.lineTo(32f,29f) }

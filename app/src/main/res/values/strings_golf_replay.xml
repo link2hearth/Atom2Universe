@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="golf_live_fast_forward">Speed ×3 · Double-tap to return to normal</string>
+    <string name="golf_live_normal_speed">Normal speed</string>
+    <string name="golf_live_camera">Change shot camera</string>
+    <string name="golf_live_camera_current">Camera: %1$s · Tap to change</string>
+    <string name="golf_replay_title">Replay</string>
+    <string name="golf_replay_last">Watch last shot</string>
+    <string name="golf_replay_library">Saved shots</string>
+    <string name="golf_replay_empty">Your favourite shots will appear here. After a shot, open Replay and choose Save.</string>
+    <string name="golf_replay_unavailable">Finish a shot to watch its replay.</string>
+    <string name="golf_replay_save">Save</string>
+    <string name="golf_replay_saved">Shot saved</string>
+    <string name="golf_replay_name">Name this shot</string>
+    <string name="golf_replay_default_name">%1$s · Hole %2$d · Shot %3$d</string>
+    <string name="golf_replay_entry">%1$s\n%2$s · Hole %3$d · %4$s</string>
+    <string name="golf_replay_error">This shot could not be read or saved. Please try again.</string>
+    <string name="golf_replay_delete">Delete shot</string>
+    <string name="golf_replay_delete_confirm">Delete “%1$s” from your saved shots?</string>
+    <string name="golf_replay_pause">Pause</string>
+    <string name="golf_replay_play">Play</string>
+    <string name="golf_replay_back">−2 s</string>
+    <string name="golf_replay_forward">+2 s</string>
+    <string name="golf_replay_camera">Replay camera</string>
+    <string name="golf_replay_speed">Playback speed (negative values play backwards)</string>
+    <string name="golf_replay_timeline">Replay timeline</string>
+    <string name="golf_replay_time">%1$.1f / %2$.1f s</string>
+    <string name="golf_replay_follow">Follow ball</string>
+    <string name="golf_replay_recenter">Recenter</string>
+    <string name="golf_replay_gestures">Drag to rotate · Pinch to move closer/further\nFree camera: drag with two fingers to move sideways or up/down</string>
+    <string-array name="golf_replay_cameras">
+        <item>Automatic</item><item>Side view</item><item>Aerial</item><item>Arrival</item><item>Behind the ball</item><item>Orbit · follow ball</item><item>Free camera</item>
+    </string-array>
+    <string-array name="golf_replay_speeds">
+        <item>−4×</item><item>−2×</item><item>−1×</item><item>−0.5×</item><item>0.25×</item><item>0.5×</item><item>1×</item><item>2×</item><item>4×</item>
+    </string-array>
+</resources>

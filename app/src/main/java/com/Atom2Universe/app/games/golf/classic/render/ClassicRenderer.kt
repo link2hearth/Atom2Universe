@@ -101,6 +101,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     private var eyeX=0f; private var eyeY=0f; private var eyeZ=0f
     private var lookX=0f; private var lookY=0f; private var lookZ=0f
     private var initializedCamera=false
+    private var cameraCut: Int? = null
     private var wasTargetView=false; private var wasSliding=false
     private var previousTime=0L
     private var time=0f
@@ -149,6 +150,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         val dt=if(previousTime==0L) 1f/60 else ((now-previousTime)*1e-9f).coerceIn(.001f,.05f)
         previousTime=now; time+=dt
         val f=frame
+        f.replayTime?.let { time=it }
         if(!f.flying && f.swingProgress<GolferPose.IMPACT) {
             golferAddress=f.ball;golferAim=f.aimAngle;golferClub=f.club
         }
@@ -199,7 +201,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         }
         miniScene?.let { drawObstacles(it,f.clock) }
         if(hole.mini==null) wildlife()
-        if(f.overview==null && hole.highlands && !hole.snowy) drawLeaves(f,dt)
+        if(f.overview==null && hole.highlands && !hole.snowy && f.replayTime==null) drawLeaves(f,dt)
         if(hole.mini==null) grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
         GL.glUseProgram(program)
         val ground=hole.heightAt(f.ball.x,f.ball.z)
@@ -319,9 +321,15 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             val eye=aerial.eye(hole); val look=aerial.look(hole)
             ex=eye.x; ey=eye.y; ez=eye.z; lx=look.x; ly=look.y; lz=look.z
         }
+        f.shotCamera?.let { shot ->
+            ex=shot.eye.x;ey=shot.eye.y;ez=shot.eye.z
+            lx=shot.target.x;ly=shot.target.y;lz=shot.target.z
+        }
+        if(cameraCut!=f.shotCamera?.cut) initializedCamera=false
+        cameraCut=f.shotCamera?.cut
         // The free aerial camera follows the fingers closely; the others glide.
         val rate=if(f.overview!=null) 14f else if(f.flying) 6f else 4.7f
-        val blend=if(initializedCamera) 1f-exp(-dt*rate) else 1f
+        val blend=if(initializedCamera && f.replayTime==null) 1f-exp(-dt*rate) else 1f
         eyeX+=(ex-eyeX)*blend; eyeY+=(ey-eyeY)*blend; eyeZ+=(ez-eyeZ)*blend
         lookX+=(lx-lookX)*blend; lookY+=(ly-lookY)*blend; lookZ+=(lz-lookZ)*blend
         initializedCamera=true
@@ -462,6 +470,13 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     }
 
     private fun updateTrail(f:ClassicFrame) {
+        f.replayTrail?.let { points ->
+            trailSize=points.size.coerceAtMost(180);trailCursor=trailSize%180
+            points.takeLast(trailSize).forEachIndexed { i,p ->
+                trail[i*3]=p.x;trail[i*3+1]=p.y;trail[i*3+2]=p.z
+            }
+            return
+        }
         if(f.flying && !previousFlying) { trailSize=0; trailCursor=0 }
         if(f.flying && (hypot(f.ball.x-previousBall.x,f.ball.z-previousBall.z)>.6f || abs(f.ball.y-previousBall.y)>.6f)) {
             trail[trailCursor*3]=f.ball.x; trail[trailCursor*3+1]=f.ball.y; trail[trailCursor*3+2]=f.ball.z

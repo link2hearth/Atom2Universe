@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="golf_live_fast_forward">Vitesse ×3 · Double appui pour revenir à la normale</string>
+    <string name="golf_live_normal_speed">Vitesse normale</string>
+    <string name="golf_live_camera">Changer la caméra du tir</string>
+    <string name="golf_live_camera_current">Caméra : %1$s · Appuie pour changer</string>
+    <string name="golf_replay_title">Replay</string>
+    <string name="golf_replay_last">Revoir le dernier coup</string>
+    <string name="golf_replay_library">Coups sauvegardés</string>
+    <string name="golf_replay_empty">Tes coups favoris apparaîtront ici. Après un coup, ouvre Replay puis choisis Sauvegarder.</string>
+    <string name="golf_replay_unavailable">Termine un coup pour voir son replay.</string>
+    <string name="golf_replay_save">Sauvegarder</string>
+    <string name="golf_replay_saved">Coup sauvegardé</string>
+    <string name="golf_replay_name">Nommer ce coup</string>
+    <string name="golf_replay_default_name">%1$s · Trou %2$d · Coup %3$d</string>
+    <string name="golf_replay_entry">%1$s\n%2$s · Trou %3$d · %4$s</string>
+    <string name="golf_replay_error">Impossible de lire ou sauvegarder ce coup. Réessaie.</string>
+    <string name="golf_replay_delete">Supprimer le coup</string>
+    <string name="golf_replay_delete_confirm">Supprimer « %1$s » des coups sauvegardés ?</string>
+    <string name="golf_replay_pause">Pause</string>
+    <string name="golf_replay_play">Lecture</string>
+    <string name="golf_replay_back">−2 s</string>
+    <string name="golf_replay_forward">+2 s</string>
+    <string name="golf_replay_camera">Caméra du replay</string>
+    <string name="golf_replay_speed">Vitesse de lecture (valeurs négatives : lecture arrière)</string>
+    <string name="golf_replay_timeline">Chronologie du replay</string>
+    <string name="golf_replay_time">%1$.1f / %2$.1f s</string>
+    <string name="golf_replay_follow">Suivre la balle</string>
+    <string name="golf_replay_recenter">Recentrer</string>
+    <string name="golf_replay_gestures">Glisse pour tourner · Pince pour avancer/reculer\nCaméra libre : glisse à deux doigts pour te déplacer sur le côté ou en hauteur</string>
+    <string-array name="golf_replay_cameras">
+        <item>Automatique</item><item>Vue de côté</item><item>Vue aérienne</item><item>Arrivée</item><item>Derrière la balle</item><item>Orbite · suivi de balle</item><item>Caméra libre</item>
+    </string-array>
+    <string-array name="golf_replay_speeds">
+        <item>−4×</item><item>−2×</item><item>−1×</item><item>−0,5×</item><item>0,25×</item><item>0,5×</item><item>1×</item><item>2×</item><item>4×</item>
+    </string-array>
+</resources>

@@ -64,6 +64,10 @@ data class ClassicFrame(
     val windZ: Float = 0f,
     /** Seconds on the clock of a mini-golf hole's moving obstacles; zero when nothing moves. */
     val clock: Float = 0f,
+    val shotCamera: GolfCameraPose? = null,
+    /** Recorded scene time and trail make pause, reverse and seeking independent of GL history. */
+    val replayTime: Float? = null,
+    val replayTrail: List<GolfPoint>? = null,
 )
 
 @SuppressLint("ViewConstructor")
