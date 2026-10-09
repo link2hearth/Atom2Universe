@@ -8,6 +8,8 @@ import com.Atom2Universe.app.games.golf.classic.core.WildDetoursCourse
 import com.Atom2Universe.app.games.golf.classic.core.VertigoCourse
 import com.Atom2Universe.app.games.golf.classic.core.ArchipelagoCourse
 import com.Atom2Universe.app.games.golf.classic.core.SnowPeaksCourse
+import com.Atom2Universe.app.games.golf.classic.core.MiniGolfCourse
+import com.Atom2Universe.app.games.golf.classic.core.MiniGolfCrazyCourse
 
 /** Stable IDs keep saved rounds separate when more courses are added or reordered. */
 data class ClassicCourseDefinition(
@@ -20,7 +22,9 @@ data class ClassicCourseDefinition(
     val holes: List<ClassicHole>
 ) {
     val par: Int get() = holes.sumOf { it.par }
-    val length: Int get() = holes.sumOf { it.length.toInt() }
+    val length: Int get() = holes.sumOf { it.displayLength.toInt() }
+    /** Mini-golf: one putter, lanes with rails, no clubs, caddie or wind. */
+    val mini: Boolean get() = holes.first().mini != null
 }
 
 object ClassicCourses {
@@ -42,7 +46,13 @@ object ClassicCourses {
             "classic_golf_v2_archipelago", ArchipelagoCourse.holes),
         ClassicCourseDefinition("snow_peaks", R.string.classic_snow_course, R.string.classic_snow_description,
             R.array.classic_snow_holes, R.array.classic_snow_tips,
-            "classic_golf_v2_snow_peaks", SnowPeaksCourse.holes)
+            "classic_golf_v2_snow_peaks", SnowPeaksCourse.holes),
+        ClassicCourseDefinition("minigolf", R.string.minigolf_course, R.string.minigolf_description,
+            R.array.minigolf_holes, R.array.minigolf_tips,
+            "classic_golf_v2_minigolf", MiniGolfCourse.holes),
+        ClassicCourseDefinition("minigolf_crazy", R.string.minigolf_crazy_course, R.string.minigolf_crazy_description,
+            R.array.minigolf_crazy_holes, R.array.minigolf_crazy_tips,
+            "classic_golf_v2_minigolf_crazy", MiniGolfCrazyCourse.holes)
     )
 
     fun find(id: String?): ClassicCourseDefinition = all.firstOrNull { it.id == id } ?: all.first()

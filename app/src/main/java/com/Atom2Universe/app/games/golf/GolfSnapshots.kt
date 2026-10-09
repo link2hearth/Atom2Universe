@@ -88,13 +88,16 @@ internal object GolfSnapshots {
             check(surface != EGL.EGL_NO_SURFACE)
             check(EGL.eglMakeCurrent(display, surface, surface, glContext))
             val course = ClassicCourses.find(key)
-            val hole = course.holes[if (course.id == "heather") 4 else 2]
-            val z = hole.cup.z - 24f
-            val x = hole.fairwayCenter(z)
+            val hole = course.holes[when (course.id) { "heather" -> 4; "minigolf" -> 5; "minigolf_crazy" -> 14; else -> 2 }]
+            // Mini-golf: the putter at the tee, looking down the lane the caddie would pick.
+            val mini = hole.mini != null
+            val z = if (mini) hole.tee.z else hole.cup.z - 24f
+            val x = if (mini) hole.tee.x else hole.fairwayCenter(z)
             val ball = GolfPoint(x, hole.heightAt(x, z) + .022f, z)
+            val target = if (mini) hole.recommendedLanding(ball) else hole.cup
             val renderer = ClassicRenderer(hole)
-            renderer.frame = ClassicFrame(ball, atan2(hole.cup.x - x, hole.cup.z - z), false,
-                ShotPreview.NONE, club = GolfClub.SW)
+            renderer.frame = ClassicFrame(ball, atan2(target.x - x, target.z - z), false,
+                ShotPreview.NONE, club = if (mini) GolfClub.PUTTER else GolfClub.SW)
             renderer.onSurfaceCreated(null, null)
             renderer.onSurfaceChanged(null, WIDTH, HEIGHT)
             renderer.onDrawFrame(null)

@@ -149,21 +149,21 @@ object GolfBallPhysics {
     }
 
     /** Downhill pull on a rolling solid sphere (5/7 g sin θ) from the terrain gradient. */
-    fun rollingStep(b: BallState, gradientX: Float, gradientZ: Float, lie: GolfLie, dt: Float = STEP) {
+    fun rollingStep(b: BallState, gradientX: Float, gradientZ: Float, lie: GolfLie, dt: Float = STEP, drag: Float = 1f) {
         val slope = sqrt(1f + gradientX * gradientX + gradientZ * gradientZ)
         val pull = 5f / 7f * GRAVITY / slope
         b.vx -= pull * gradientX * dt
         b.vz -= pull * gradientZ * dt
         val speed = hypot(b.vx, b.vz)
-        val retention = if (speed > 0f) max(0f, 1f - rolling(lie) * dt / speed) else 0f
+        val retention = if (speed > 0f) max(0f, 1f - rolling(lie) * drag * dt / speed) else 0f
         b.vx *= retention; b.vz *= retention
         b.px += b.vx * dt; b.pz += b.vz * dt
     }
 
     /** True when the turf can hold the ball still on this slope. */
-    fun canRest(gradientX: Float, gradientZ: Float, lie: GolfLie): Boolean {
+    fun canRest(gradientX: Float, gradientZ: Float, lie: GolfLie, drag: Float = 1f, push: Float = 0f): Boolean {
         val g2 = gradientX * gradientX + gradientZ * gradientZ
-        return 5f / 7f * GRAVITY * sqrt(g2 / (1f + g2)) < rolling(lie) * .9f
+        return 5f / 7f * GRAVITY * sqrt(g2 / (1f + g2)) + push < rolling(lie) * drag * .9f
     }
 
     /** Launch from (0, R, 0) along +z on flat ground with no wind; returns the carry in metres. */

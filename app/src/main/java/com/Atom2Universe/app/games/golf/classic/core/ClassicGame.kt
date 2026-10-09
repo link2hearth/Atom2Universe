@@ -38,8 +38,12 @@ class ClassicGame(val hole: ClassicHole) {
         val seed = sin(hole.number * 12.9898f) * 43758.547f
         .6f + 3.4f * (seed - floor(seed))
     }
-    var windX: Float = sin(hole.number * 2.4f) * windSpeed
-    var windZ: Float = cos(hole.number * 2.4f) * windSpeed
+    // Mini-golf is played indoors, as it were: no wind.
+    var windX: Float = if (hole.mini != null) 0f else sin(hole.number * 2.4f) * windSpeed
+    var windZ: Float = if (hole.mini != null) 0f else cos(hole.number * 2.4f) * windSpeed
+    /** Seconds the obstacles of a mini-golf hole have been moving: the renderer draws them at this time. */
+    var clock: Float = 0f
+        private set
     var lastPenalty: Int = 0
         private set
     val lie: GolfLie get() = hole.lieAt(ball.x, ball.z)
@@ -58,6 +62,8 @@ class ClassicGame(val hole: ClassicHole) {
     private val b = BallState()
     private val sim = BallState()
     private val cup = GolfCup(hole)
+    private val motion = MiniMotion()
+    private val simMotion = MiniMotion()
     /** The turf no longer carries the ball: it is over the opening or inside the cup. */
     private var inCup = false
     /** As on a real course, the flagstick is taken out for putts and left in for every other shot. */
@@ -108,6 +114,7 @@ class ClassicGame(val hole: ClassicHole) {
         strokes++
         shotSeconds = 0f
         accumulator = 0.0
+        motion.reset()
         val miss = GolfSwing.deviation(error)
         flagIn = club != GolfClub.PUTTER
         landed = false
@@ -126,8 +133,15 @@ class ClassicGame(val hole: ClassicHole) {
     }
 
     fun update(dt: Float) {
-        if (state != GolfState.FLYING && state != GolfState.ROLLING) return
         if (!dt.isFinite() || dt <= 0f) return
+        if (state != GolfState.FLYING && state != GolfState.ROLLING) {
+            // The obstacles keep moving while the player takes aim; a ball they sweep into is carried aside.
+            val layout = hole.mini ?: return
+            if (!layout.hasMovers) return
+            clock += dt.coerceAtMost(.25f)
+            if (state == GolfState.READY) nudgeResting(layout)
+            return
+        }
         // Ignore suspend gaps; regular frame grouping still produces exactly the same integration.
         accumulator += dt.coerceAtMost(.25f).toDouble()
         while (accumulator + 1e-9 >= STEP && (state == GolfState.FLYING || state == GolfState.ROLLING)) {
@@ -149,7 +163,7 @@ class ClassicGame(val hole: ClassicHole) {
 
     /** With the slope grid on, the putt is a plain line of the right length: the player reads the slopes. */
     private fun puttLine(power: Float): ShotPreview {
-        val range = power * club.carry
+        val range = power * hole.puttRange
         val points = ArrayList<GolfPoint>(25)
         for (i in 0..24) {
             val distance = range * i / 24f
@@ -167,8 +181,9 @@ class ClassicGame(val hole: ClassicHole) {
         sim.px = ball.x; sim.py = ball.y; sim.pz = ball.z
         sim.stopMotion()
         sim.vx = sin(aimAngle) * speed; sim.vz = cos(aimAngle) * speed
+        simMotion.reset()
         val (points, hazard) = runOut(Contact.ROLL)
-        return ShotPreview(points, points.last(), emptyList(), hazard, power * club.carry)
+        return ShotPreview(points, points.last(), emptyList(), hazard, power * hole.puttRange)
     }
 
     private fun flightPreview(power: Float): ShotPreview {
@@ -249,7 +264,17 @@ class ClassicGame(val hole: ClassicHole) {
             } else {
                 val gx = gradientX(sim.px, sim.pz); val gz = gradientZ(sim.px, sim.pz)
                 val surface = hole.lieAt(sim.px, sim.pz)
-                GolfBallPhysics.rollingStep(sim, gx, gz, surface)
+                val drag = dragAt(sim.px, sim.pz, surface)
+                GolfBallPhysics.rollingStep(sim, gx, gz, surface, GolfBallPhysics.STEP, drag)
+                // The guide shows the fixed rules only (rails, posts, pushes); the moving parts are for the player to time.
+                hole.mini?.let { layout ->
+                    when (layout.advance(sim, GolfBallPhysics.STEP, 0f, simMotion, dynamic = false)) {
+                        MiniEvent.SWALLOWED -> { mark(); return points to true }
+                        // The line stops at the pipe mouth: drawing it across the rails to the exit would mislead.
+                        MiniEvent.TELEPORTED -> { sim.px = fromX; sim.pz = fromZ; mark(); return points to false }
+                        MiniEvent.NONE -> Unit
+                    }
+                }
                 val entry = cup.entry(fromX, fromZ, sim.px, sim.pz)
                 if (entry >= 0f) {
                     sim.px = fromX + (sim.px - fromX) * entry; sim.pz = fromZ + (sim.pz - fromZ) * entry
@@ -257,7 +282,7 @@ class ClassicGame(val hole: ClassicHole) {
                 }
                 sim.py = hole.heightAt(sim.px, sim.pz) + RADIUS; sim.vy = 0f
                 if (isHazard(sim.px, sim.pz)) { mark(); return points to true }
-                if (hypot(sim.vx, sim.vz) < .03f && GolfBallPhysics.canRest(gx, gz, surface)) break
+                if (hypot(sim.vx, sim.vz) < .03f && GolfBallPhysics.canRest(gx, gz, surface, drag, pushAt(sim.px, sim.pz))) break
             }
             if (steps % 6 == 0) mark()
         }
@@ -288,11 +313,22 @@ class ClassicGame(val hole: ClassicHole) {
         } else {
             val surface = hole.lieAt(b.px, b.pz)
             if (surface == GolfLie.WATER || surface == GolfLie.OUT) { penalty(); return }
-            GolfBallPhysics.rollingStep(b, gradientX(b.px, b.pz), gradientZ(b.px, b.pz), surface, dt)
+            val drag = dragAt(b.px, b.pz, surface)
+            GolfBallPhysics.rollingStep(b, gradientX(b.px, b.pz), gradientZ(b.px, b.pz), surface, dt, drag)
+            var sweepX = fromX; var sweepZ = fromZ
+            hole.mini?.let { layout ->
+                clock += dt
+                when (layout.advance(b, dt, clock, motion)) {
+                    MiniEvent.SWALLOWED -> { penalty(); return }
+                    // Out of the pipe: the segment from the mouth to the exit is not a move.
+                    MiniEvent.TELEPORTED -> { sweepX = b.px; sweepZ = b.pz }
+                    MiniEvent.NONE -> Unit
+                }
+            }
             // Swept test: the moment the centre passes over the opening, the turf stops carrying it.
-            val entry = cup.entry(fromX, fromZ, b.px, b.pz)
+            val entry = cup.entry(sweepX, sweepZ, b.px, b.pz)
             if (entry >= 0f) {
-                b.px = fromX + (b.px - fromX) * entry; b.pz = fromZ + (b.pz - fromZ) * entry
+                b.px = sweepX + (b.px - sweepX) * entry; b.pz = sweepZ + (b.pz - sweepZ) * entry
                 b.py = hole.heightAt(b.px, b.pz) + RADIUS; b.vy = 0f
                 ball = GolfPoint(b.px, b.py, b.pz)
                 enterCup()
@@ -304,7 +340,9 @@ class ClassicGame(val hole: ClassicHole) {
             ball = GolfPoint(b.px, b.py, b.pz)
             if (isHazard(b.px, b.pz)) { penalty(); return }
             val speed = hypot(b.vx, b.vz)
-            if (speed < .03f && GolfBallPhysics.canRest(gradientX(b.px, b.pz), gradientZ(b.px, b.pz), hole.lieAt(b.px, b.pz))) {
+            val resting = hole.lieAt(b.px, b.pz)
+            if (speed < .03f && GolfBallPhysics.canRest(gradientX(b.px, b.pz), gradientZ(b.px, b.pz), resting,
+                    dragAt(b.px, b.pz, resting), pushAt(b.px, b.pz))) {
                 stop(GolfState.READY); prepareNextShot(); return
             }
         }
@@ -383,6 +421,12 @@ class ClassicGame(val hole: ClassicHole) {
         b.wx *= .3f; b.wy *= .3f; b.wz *= .3f
     }
 
+    /** The hardest knock of the ball against a rail, post or arm since this was last called, in m/s. */
+    fun takeBounce(): Float { val v = motion.impact; motion.impact = 0f; return v }
+
+    /** Test hook: moves the obstacles of a mini-golf hole to [seconds], to replay a shot at the same moment. */
+    internal fun seekClock(seconds: Float) { clock = seconds }
+
     /** Test hook: the ball leaves [position] in free flight at [velocity], without spin. */
     internal fun throwBall(position: GolfPoint, velocity: GolfPoint) {
         ball = position; shotStart = position
@@ -409,7 +453,8 @@ class ClassicGame(val hole: ClassicHole) {
     private fun prepareNextShot() {
         val target = hole.recommendedLanding(ball)
         aimAngle = atan2(target.x - ball.x, target.z - ball.z)
-        club = suggestedClub(hypot(target.x - ball.x, target.z - ball.z))
+        // Mini-golf has one club.
+        club = if (hole.mini != null) GolfClub.PUTTER else suggestedClub(hypot(target.x - ball.x, target.z - ball.z))
         spinX = 0f; spinY = 0f
     }
 
@@ -421,8 +466,25 @@ class ClassicGame(val hole: ClassicHole) {
         return bag.lastOrNull { it.carry * lieEfficiency(lie, it) >= distance } ?: bag.first()
     }
 
+    /** Launch speed that rolls [power] × the hole's putting range on flat turf of its resistance. */
     private fun puttSpeed(power: Float): Float =
-        sqrt(2f * GolfBallPhysics.rolling(GolfLie.GREEN) * power * GolfClub.PUTTER.carry)
+        sqrt(2f * GolfBallPhysics.rolling(GolfLie.GREEN) * hole.rollScale * power * hole.puttRange)
+
+    /** Friction multiplier under (x, z): the carpet's own on the green, then mud or ice patches. */
+    private fun dragAt(x: Float, z: Float, lie: GolfLie): Float {
+        val layout = hole.mini ?: return 1f
+        val zones = layout.dragAt(x, z)
+        return if (lie == GolfLie.GREEN) hole.rollScale * zones else zones
+    }
+
+    private fun pushAt(x: Float, z: Float): Float = hole.mini?.pushAt(x, z) ?: 0f
+
+    /** An arm swept over the resting ball: it is carried out of the way. */
+    private fun nudgeResting(layout: MiniLayout) {
+        if (!layout.nudgeResting(b, clock)) return
+        ball = GolfPoint(b.px, hole.heightAt(b.px, b.pz) + RADIUS, b.pz)
+        b.py = ball.y
+    }
 
     /** Terrain gradient over a stride around the ball, seen along or across the aim. */
     private fun lieSlope(along: Boolean): Float {

@@ -8,6 +8,7 @@ import com.Atom2Universe.app.games.golf.classic.core.*
 import com.Atom2Universe.app.games.golf.classic.render.C
 import com.Atom2Universe.app.games.golf.classic.render.ClassicLandscape
 import com.Atom2Universe.app.games.golf.classic.render.ClassicMesh
+import com.Atom2Universe.app.games.golf.classic.render.GroundBuilder
 import com.Atom2Universe.app.games.golf.classic.render.GroundMesh
 import com.Atom2Universe.app.games.golf.classic.render.MeshBuilder
 import com.Atom2Universe.app.games.golf.classic.render.OverviewView
@@ -277,7 +278,7 @@ class ClassicGolfApercuTest {
      * Small perspective rasteriser with the game's projection (50°, image raised by 0.12) and smooth
      * colours. Ground fragments go through [shade], a simplified copy of GroundShader.
      */
-    private class Raster(val width: Int, val height: Int) {
+    internal class Raster(val width: Int, val height: Int) {
         private val colour = IntArray(width * height) { 0xFFA3D9ED.toInt() }
         private val depth = FloatArray(width * height) { Float.MAX_VALUE }
         private val view = FloatArray(12)
@@ -302,7 +303,7 @@ class ClassicGolfApercuTest {
         }
 
         fun plain(v: FloatArray) = triangles(v, 6, false)
-        fun ground(v: FloatArray) = triangles(v, 10, true)
+        fun ground(v: FloatArray) = triangles(v, GroundBuilder.STRIDE, true)
 
         private fun triangles(v: FloatArray, stride: Int, textured: Boolean) {
             var i = 0

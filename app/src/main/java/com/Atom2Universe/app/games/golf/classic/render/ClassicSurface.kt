@@ -62,6 +62,8 @@ data class ClassicFrame(
     /** Where the wind pushes the ball, m/s: it carries the leaves. */
     val windX: Float = 0f,
     val windZ: Float = 0f,
+    /** Seconds on the clock of a mini-golf hole's moving obstacles; zero when nothing moves. */
+    val clock: Float = 0f,
 )
 
 @SuppressLint("ViewConstructor")

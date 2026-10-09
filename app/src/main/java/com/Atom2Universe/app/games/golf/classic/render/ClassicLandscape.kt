@@ -48,6 +48,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
     val millY = hole.heightAt(millX,millZ) + 7.5f
 
     fun terrain(): GroundMesh {
+        if(hole.mini!=null) return MiniLandscape(hole,this).terrain()
         val b = GroundBuilder()
         val step = 2.5f
         val nx = ceil((hole.width + 80f) / step).toInt()
@@ -252,7 +253,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
      * Turf of the cells around the hole, from the rectangle edge in to the lip: a fan of quads
      * between the rectangle (its corners included, so neighbours meet it exactly) and the circle.
      */
-    private fun cupPatch(b:GroundBuilder,x0:Float,z0:Float,x1:Float,z1:Float,sampleAt:(Float,Float)->GroundSample) {
+    internal fun cupPatch(b:GroundBuilder,x0:Float,z0:Float,x1:Float,z1:Float,sampleAt:(Float,Float)->GroundSample) {
         val cx=hole.cup.x; val cz=hole.cup.z
         val two=2f*PI.toFloat()
         fun wrap(a:Float)=((a%two)+two)%two
@@ -280,7 +281,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
      * The hole itself: a 2.5 cm band of soil under the lip, then the white liner, darker with depth,
      * and the bottom. A real-size ball can drop into it and be seen inside.
      */
-    private fun cup(b:MeshBuilder) {
+    internal fun cup(b:MeshBuilder) {
         val cx=hole.cup.x; val cz=hole.cup.z
         val floor=hole.cup.y-ClassicHole.CUP_DEPTH
         val radius=hole.cupRadius
@@ -307,6 +308,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
     private fun pathX(z: Float) = hole.pathX(z)
 
     fun scenery(): List<ClassicMesh> {
+        if(hole.mini!=null) return MiniLandscape(hole,this).scenery()
         val b=MeshBuilder()
         val homeX=-hole.width*.34f; val homeZ=10f
         if(hole.islands.isEmpty()) {

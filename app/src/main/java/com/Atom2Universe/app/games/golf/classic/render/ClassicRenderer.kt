@@ -66,8 +66,10 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             quad(a,b,c,d,colour); quad(d,c,b,a,colour)
         }.build()
     } }
+    /** Mini-golf: the obstacles that move are drawn from the game's clock. */
+    private val miniScene by lazy { if(hole.mini!=null) MiniScene(hole) else null }
     private val meshes get() = scenery+festive.scenery+festive.animatedMeshes+
-        listOf(blades,ball,shadow,ring,bird,sky,flag,pin,hazardPin,cupMarker)+rabbit.meshes+leaves
+        listOf(blades,ball,shadow,ring,bird,sky,flag,pin,hazardPin,cupMarker)+rabbit.meshes+leaves+(miniScene?.meshes?:emptyList())
     // A few leaves carried by the wind a couple of metres above the turf; each waits a while before the next one.
     private val leafX=FloatArray(LEAVES); private val leafY=FloatArray(LEAVES); private val leafZ=FloatArray(LEAVES)
     private val leafWait=FloatArray(LEAVES) { 1f+it*2.5f }
@@ -190,14 +192,15 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             draw(mesh,0f)
         }
         identity()
-        if(!hole.highlands && hole.islands.isEmpty()) {
+        if(!hole.highlands && hole.islands.isEmpty() && hole.mini==null) {
             Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-2.2f)
             Matrix.rotateM(model,0,time*12f,0f,0f,1f)
             draw(blades,.05f)
         }
-        wildlife()
+        miniScene?.let { drawObstacles(it,f.clock) }
+        if(hole.mini==null) wildlife()
         if(f.overview==null && hole.highlands && !hole.snowy) drawLeaves(f,dt)
-        grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
+        if(hole.mini==null) grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
         GL.glUseProgram(program)
         val ground=hole.heightAt(f.ball.x,f.ball.z)
         val altitude=(f.ball.y-ClassicHole.BALL_RADIUS-ground).coerceAtLeast(0f)
@@ -271,9 +274,11 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         // little: the strength reads on the green, as the landing view does for long shots.
         val slide=if(putting&&f.aiming&&f.overview==null&&!f.flying) max(0f,reach-2.5f) else 0f
         // Address view from just behind the player, looking down the line; a chase view in flight.
-        val behind=if(putting) 3.4f+slide*.15f else if(f.flying) 15f else 7.5f
-        val high=if(putting) 1.45f+slide*.2f else if(f.flying) 5.5f else 3.6f
-        val ahead=if(putting) 2.5f+slide else if(f.flying) 8f else (f.club.carry*.3f).coerceIn(6f,60f)
+        // Mini-golf looks down from higher up and further ahead: the lanes, rails and obstacles must be readable.
+        val mini=hole.mini!=null
+        val behind=if(putting) (if(mini) 2.7f else 3.4f)+slide*.15f else if(f.flying) 15f else 7.5f
+        val high=if(putting) (if(mini) 2.8f else 1.45f)+slide*.2f else if(f.flying) 5.5f else 3.6f
+        val ahead=if(putting) (if(mini) 3.2f else 2.5f)+slide else if(f.flying) 8f else (f.club.carry*.3f).coerceIn(6f,60f)
         var ex=f.ball.x+sx*(slide-behind*zoom)
         var ez=f.ball.z+sz*(slide-behind*zoom)
         var ey=max(f.ball.y+high*zoom,hole.heightAt(ex,ez)+1f)
@@ -294,6 +299,19 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             if(nearCup) { lx=(landing.x+hole.cup.x)*.5f; lz=(landing.z+hole.cup.z)*.5f }
             ly=hole.heightAt(lx,lz)
         }
+        // Mini-golf: the path bounces off the rails, so the view frames the whole path instead of sliding straight ahead.
+        if(mini&&putting&&f.aiming&&f.overview==null&&!f.flying&&f.preview.flight.size>1) {
+            var minX=f.ball.x; var maxX=f.ball.x; var minZ=f.ball.z; var maxZ=f.ball.z
+            for(p in f.preview.flight) { minX=min(minX,p.x); maxX=max(maxX,p.x); minZ=min(minZ,p.z); maxZ=max(maxZ,p.z) }
+            val span=max(maxX-minX,maxZ-minZ)
+            if(span>2.5f) {
+                val mx=(minX+maxX)*.5f; val mz=(minZ+maxZ)*.5f
+                val d=(span*.8f+2.5f)*zoom
+                ex=mx-sx*d*.55f; ez=mz-sz*d*.55f
+                ey=max(f.ball.y+d*.85f,hole.heightAt(ex,ez)+1f)
+                lx=mx; lz=mz; ly=hole.heightAt(lx,lz)
+            }
+        }
         // Leaving the landing view, or playing a putt from far down its line, is a cut back to the player, as on television.
         if((wasTargetView&&!targetView)||(wasSliding&&!f.aiming)) initializedCamera=false
         wasTargetView=targetView; wasSliding=slide>1f
@@ -309,6 +327,26 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         initializedCamera=true
         Matrix.setLookAtM(view,0,eyeX,eyeY,eyeZ,lookX,lookY,lookZ,0f,1f,0f)
         Matrix.multiplyMM(viewProjection,0,projection,0,view,0)
+    }
+
+    /** Arms, sliding blocks and the turning arms of wells, at the time the game says. */
+    private fun drawObstacles(scene:MiniScene,clock:Float) {
+        for((rotor,mesh) in scene.rotors) {
+            identity(); Matrix.translateM(model,0,rotor.x,hole.heightAt(rotor.x,rotor.z),rotor.z)
+            // The game turns arms from +x towards +z; a rotation about +y goes the other way.
+            Matrix.rotateM(model,0,-rotor.angle(clock)*180f/PI.toFloat(),0f,1f,0f)
+            draw(mesh,0f)
+        }
+        for((slider,mesh) in scene.sliders) {
+            val x=slider.centreX(clock); val z=slider.centreZ(clock)
+            identity(); Matrix.translateM(model,0,x,hole.heightAt(x,z),z)
+            draw(mesh,0f)
+        }
+        for((well,mesh) in scene.wells) {
+            identity(); Matrix.translateM(model,0,well.x,hole.heightAt(well.x,well.z),well.z)
+            Matrix.rotateM(model,0,time*(if(well.strength>0f) 70f else -70f),0f,1f,0f)
+            draw(mesh,0f)
+        }
     }
 
     private fun wildlife() {
@@ -465,16 +503,16 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         val putting=f.club==GolfClub.PUTTER
         val bright=if(f.aiming) 1f else .82f
         dynamic.clear()
-        drawDynamic(dashes(shot.flight,if(putting) .25f else if(shot.carry<40f) .9f else 2.5f,.03f,bright,.95f*bright,.67f*bright),GL.GL_LINES)
+        drawDynamic(dashes(shot.flight,if(putting) (if(hole.mini!=null) .16f else .25f) else if(shot.carry<40f) .9f else 2.5f,.03f,bright,.95f*bright,.67f*bright),GL.GL_LINES)
         // Ground track of the arc: the line the shot follows on the turf, readable from any view.
         val track=shot.flight.map { GolfPoint(it.x,hole.heightAt(it.x,it.z),it.z) }
         dynamic.clear()
-        drawDynamic(dashes(track,if(putting) .25f else 1.2f,.05f,1f*bright,1f*bright,1f*bright),GL.GL_LINES)
+        drawDynamic(dashes(track,if(putting) (if(hole.mini!=null) .16f else .25f) else 1.2f,.05f,1f*bright,1f*bright,1f*bright),GL.GL_LINES)
         if(shot.roll.size>1) {
             dynamic.clear()
             drawDynamic(dashes(shot.roll,.45f,.04f,.80f,.92f,.98f),GL.GL_LINES)
         }
-        val r=if(putting) .22f else (shot.carry*.02f).coerceIn(.8f,4.5f)
+        val r=if(putting) (if(hole.mini!=null) .1f else .22f) else (shot.carry*.02f).coerceIn(.8f,4.5f)
         dynamic.clear()
         val red=shot.hazard
         for(i in 0..48) {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="minigolf_course">Classic Mini-golf</string>
+    <string name="minigolf_description">Course 7 · The seaside classics: straight lanes, bends, a windmill, a bridge and a sliding gate. One putter, rails that bounce the ball and a 15 cm cup. Bank the ball off the rails, time the moving parts and keep out of the water. 18 short holes.</string>
+    <string name="minigolf_crazy_course">Crazy Mini-golf</string>
+    <string name="minigolf_crazy_description">Course 8 · Nothing here is normal: pipes that swap rooms, black holes, conveyor belts, ice, pinball bumpers, snapping jaws, a spiral and a maze. The same putter and the same rails, on much stranger lanes. 18 holes.</string>
+    <string name="minigolf_help_body">Swipe sideways to aim and pinch to zoom. Draw down anywhere to load the putt: the further you pull, the harder the ball rolls; let go with the needle near the middle. The dashed line shows the path, rails included. Moving obstacles are not in it: time them yourself. The map opens a free aerial view of the whole hole. Water costs a stroke and puts the ball back where you putted from; sand holds it back.</string>
+    <string name="minigolf_lie_distance">%1$s · %2$d m</string>
+    <string name="minigolf_distance">%1$d m</string>
+    <string-array name="minigolf_holes">
+        <item>The Straight</item><item>The Corner</item><item>The Dogleg</item>
+        <item>The Zigzag</item><item>The Hairpin</item><item>The Windmill</item>
+        <item>The Hump</item><item>The Plateau</item><item>The Bunkers</item>
+        <item>The Little Bridge</item><item>The Posts</item><item>The Gate</item>
+        <item>The Tunnel</item><item>The Billiard Table</item><item>The Fork</item>
+        <item>The Ring</item><item>The Steps</item><item>The Castle</item>
+    </string-array>
+    <string-array name="minigolf_tips">
+        <item>A straight lane and a clear line: the best hole to feel how far the putter goes. Aim at the cup and pull until the dashed line reaches it.</item>
+        <item>Play it in two strokes round the corner, or bank the ball off the far rail: the dashed line shows where it bounces.</item>
+        <item>The lane bends halfway. Aim at the corner and let the rail send the ball on, or take it in two easy putts.</item>
+        <item>Two tight turns. Short, controlled putts keep the ball from rebounding off the end of each leg.</item>
+        <item>Up, across and back down beside the tee. The cup is close to where you started but the way round is long: take it one leg at a time.</item>
+        <item>Three arms sweep the lane. Wait until a gap opens and roll through it. A soft putt makes you wait longer: a firm one crosses faster.</item>
+        <item>A hump in the middle: too gentle and the ball rolls back, too hard and it flies past the cup. Look at the dashed line to judge.</item>
+        <item>A ramp leads to a raised platform. Put enough speed into the putt to climb it, then let the ball run to the cup.</item>
+        <item>Two bunkers hold the ball back. Go round them through the wide gaps; from sand only a firm putt gets out.</item>
+        <item>A narrow plank crosses the water. Aim carefully: a ball that falls in costs a stroke and goes back to where you putted from.</item>
+        <item>Four posts to slalom between. The ball bounces off them: use that to turn the corner of the line.</item>
+        <item>A gate slides across the lane. Time your putt for when it has opened on one side.</item>
+        <item>Roll into the pipe and the ball comes out on the far side. You only need to hit the mouth, not to see the cup.</item>
+        <item>A block stands in the middle of the table. Go round either side or bank the ball off the rails like a billiard shot.</item>
+        <item>Two ways round the island: the left one is longer but smooth, the right one is short but has a bunker.</item>
+        <item>A ring round a garden island. A hump on one side, a bunker on the other: choose your side.</item>
+        <item>Two steps up. Each one slows the ball: give it enough speed for the second step, but not so much that it overshoots the cup.</item>
+        <item>The grand finish: a gate, a bend, a hump and a moat. Cross the plank, then the cup is just beyond.</item>
+    </string-array>
+    <string-array name="minigolf_crazy_holes">
+        <item>Two Pipes</item><item>The Black Hole</item><item>Conveyor Belts</item>
+        <item>Pinball</item><item>Twin Windmills</item><item>The Pistons</item>
+        <item>The Ice Rink</item><item>Mud and Turbo</item><item>The Snail</item>
+        <item>Roller Coaster</item><item>The Jaws</item><item>The Rapids</item>
+        <item>Two Planets</item><item>The Camber</item><item>Propellers</item>
+        <item>The Slide</item><item>The Maze</item><item>Grand Finale</item>
+    </string-array>
+    <string-array name="minigolf_crazy_tips">
+        <item>Two pipes in the wall of the first room. One leads to the room with the cup, the other sends the ball back to the tee. Choose the right one.</item>
+        <item>A black hole bends the ball towards it and swallows it if it gets too close. Aim away from it and let it curve your putt in.</item>
+        <item>Two conveyor belts push the ball sideways, first one way and then the other. Aim so that the second belt brings it back to the middle.</item>
+        <item>Pinball: bumpers throw the ball back with extra speed. A gentle putt keeps the game under control.</item>
+        <item>Two windmills turn in opposite directions. Cross the first, then wait for the second.</item>
+        <item>Three pistons slide at their own pace. Read their rhythm and cross the gaps one at a time.</item>
+        <item>The whole room is ice: the ball keeps sliding. A gentle push goes a very long way. Bank it off the rails towards the cup.</item>
+        <item>Mud slows the ball to a crawl; a boost strip throws it forward. Cross the mud with a firm putt and let the strip do the rest.</item>
+        <item>A spiral lane winds in to the cup at its heart. Cut the corners with the rails and take it in a few strokes.</item>
+        <item>Three humps, then a funnel round the cup. Keep your speed for the humps: the funnel will guide a slow ball home.</item>
+        <item>Jaws open and close in front of the cup. Wait for the mouth to open and roll straight through.</item>
+        <item>A current carries the ball towards a waterfall on the right. Aim to the left and let the stream bring you back.</item>
+        <item>One planet pulls the ball in, the other pushes it away. Let them bend your putt, and keep clear of the one that swallows.</item>
+        <item>The floor tilts: the ball drifts sideways. Aim uphill and let the slope bring it back to the cup.</item>
+        <item>Propellers fill the room. Slip past them one at a time.</item>
+        <item>The tee stands high: the ball picks up speed on the slide by itself. A very gentle push is enough, and sand waits behind the cup.</item>
+        <item>A small maze with dead ends. Find the way through, and use the rails to turn the corners.</item>
+        <item>Everything at once: a windmill, a belt and a pipe, then a black hole, a bunker and the cup. Take your time.</item>
+    </string-array>
+</resources>

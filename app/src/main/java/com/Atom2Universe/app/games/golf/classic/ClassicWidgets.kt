@@ -120,11 +120,11 @@ internal class ClassicMap(context: Context, val hole: ClassicHole) : View(contex
         set(value) { if (field != value) { field = value; invalidate() } }
     private var scale = 1f
     // +x is on the left of a player looking down +z, so the map runs the other way to match the 3D view.
-    private fun sx(x:Float) = width/2f-x*scale
-    private fun sy(z:Float) = height*.5f+(hole.length*.5f-z)*scale
+    private fun sx(x:Float) = width/2f-(x-hole.mapCentreX)*scale
+    private fun sy(z:Float) = height*.5f+(hole.mapCentreZ-z)*scale
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int) {
         super.onSizeChanged(w,h,oldw,oldh)
-        scale=min((w-16f)/hole.width, (h-20f)/(hole.length+35f))
+        scale=min((w-16f)/hole.mapWidth, (h-20f)/hole.mapDepth)
         if(w<1 || h<1) return
         val request=++rasterRequest
         val density=resources.displayMetrics.density
@@ -139,8 +139,8 @@ internal class ClassicMap(context: Context, val hole: ClassicHole) : View(contex
             val ready=rasters.get(key) ?: run {
                 val pixels=IntArray(bw*bh)
                 for(j in 0 until bh) for(i in 0 until bw) {
-                    val x=-(i.toFloat()/bw*w-w*.5f)/worldScale
-                    val z=hole.length*.5f-(j.toFloat()/bh*h-h*.5f)/worldScale
+                    val x=hole.mapCentreX-(i.toFloat()/bw*w-w*.5f)/worldScale
+                    val z=hole.mapCentreZ-(j.toFloat()/bh*h-h*.5f)/worldScale
                     val colour=when(hole.lieAt(x,z)) {
                         GolfLie.GREEN -> 0xFFBDE58B.toInt()
                         GolfLie.FRINGE -> 0xFF689947.toInt()
@@ -181,6 +181,11 @@ internal class ClassicMap(context: Context, val hole: ClassicHole) : View(contex
         p.style=Paint.Style.FILL
         c.drawCircle(sx(hole.tee.x),sy(hole.tee.z),3f,p)
         p.color=0xFFFF7E62.toInt(); c.drawCircle(sx(hole.cup.x),sy(hole.cup.z),4f,p)
+        hole.mini?.let { mini ->
+            // Pipes and wells, where the plan would otherwise show an empty lane.
+            p.color=0xFFFFA726.toInt(); for(portal in mini.portals) c.drawCircle(sx(portal.x),sy(portal.z),3f,p)
+            p.color=0xFF7E57C2.toInt(); for(well in mini.wells) c.drawCircle(sx(well.x),sy(well.z),4.5f,p)
+        }
         ball?.let { p.color=0xFF16453F.toInt(); c.drawCircle(sx(it.x),sy(it.z),5.5f,p)
             p.color=Color.WHITE; c.drawCircle(sx(it.x),sy(it.z),4f,p) }
         c.restore()

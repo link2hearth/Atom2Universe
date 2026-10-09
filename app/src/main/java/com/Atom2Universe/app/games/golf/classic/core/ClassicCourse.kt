@@ -127,7 +127,13 @@ data class ClassicHole(
     /** An archipelago replaces continuous land: everything outside these contours is water. */
     val islands: List<GolfHazard> = emptyList(),
     val islandWaterLevel: Float = 0f,
-    val decorTheme: GolfDecorTheme = GolfDecorTheme.GARDEN
+    val decorTheme: GolfDecorTheme = GolfDecorTheme.GARDEN,
+    /** A mini-golf hole: lanes, rails and obstacles replace the routed fairway, and only the putter is played. */
+    val mini: MiniLayout? = null,
+    /** Metres a full putt rolls on flat turf (the putter's carry, unless the hole shortens it). */
+    val puttRange: Float = GolfClub.PUTTER.carry,
+    /** The turf's rolling resistance relative to a green: carpet holds the ball back more. */
+    val rollScale: Float = 1f
 ) {
     private val greenCos = cos(greenShape.rotation)
     private val greenSin = sin(greenShape.rotation)
@@ -180,7 +186,17 @@ data class ClassicHole(
     val cup: GolfPoint = GolfPoint(finishX, heightAt(finishX, length), length)
     val openingTarget: GolfPoint get() = recommendedLanding(tee)
 
+    /** The plan of the hole (menus, map): its middle and size in metres. A mini-golf plan frames the lanes. */
+    val mapCentreX: Float get() = mini?.let { (it.bounds[0] + it.bounds[2]) * .5f } ?: 0f
+    val mapCentreZ: Float get() = mini?.let { (it.bounds[1] + it.bounds[3]) * .5f } ?: (length * .5f)
+    val mapWidth: Float get() = mini?.let { it.bounds[2] - it.bounds[0] + 1.2f } ?: width
+    val mapDepth: Float get() = mini?.let { it.bounds[3] - it.bounds[1] + 1.2f } ?: (length + 35f)
+
+    /** Length shown in the menus: the caddie's route for a mini-golf hole, whose lanes may turn back. */
+    val displayLength: Float get() = mini?.pathLength ?: length
+
     val trees: List<GolfTree> by lazy {
+        if (mini != null) return@lazy emptyList()
         if (islands.isNotEmpty()) return@lazy plantedTrees
         val random = Random(number * 7349)
         buildList {
@@ -290,7 +306,7 @@ data class ClassicHole(
             max(-5f - z, z - length - 9f))
     }
 
-    fun greenSignedDistance(x: Float, z: Float): Float = organicDistance(
+    fun greenSignedDistance(x: Float, z: Float): Float = mini?.sdf(x, z) ?: organicDistance(
         x - finishX - greenShape.offsetX, z - length - greenShape.offsetZ,
         greenRadius * greenShape.aspect, greenRadius / greenShape.aspect,
         greenCos, greenSin, greenShape.shape, greenShape.phase
@@ -347,6 +363,7 @@ data class ClassicHole(
     fun waterHeight(hazard: GolfHazard): Float = waterLevels[hazard] ?: (terrainHeight(hazard.x, hazard.z) - 1.2f)
 
     fun heightAt(x: Float, z: Float): Float {
+        mini?.let { return it.heightAt(x, z) }
         val greenDistance = greenSignedDistance(x, z)
         val dx = x - finishX; val dz = z - length
         val greenHeight = elevation + greenShape.slopeX * dx + greenShape.slopeZ * dz +
@@ -407,6 +424,7 @@ data class ClassicHole(
     }
 
     fun lieAt(x: Float, z: Float): GolfLie {
+        mini?.let { return it.lieAt(x, z) }
         if (abs(x) > width * .5f || z < -20f || z > length + 55f) return GolfLie.OUT
         val greenDistance = greenSignedDistance(x, z)
         if (greenDistance <= 0f) return GolfLie.GREEN
@@ -422,6 +440,7 @@ data class ClassicHole(
 
     /** Caddie orientation only: does not choose power, correct a swing or play a stroke. */
     fun recommendedLanding(ball: GolfPoint): GolfPoint {
+        mini?.let { return it.aim(ball, cup) }
         if (islands.isNotEmpty()) {
             val reach = if (lieAt(ball.x, ball.z) == GolfLie.TEE) 225f else 205f
             if (hypot(cup.x - ball.x, cup.z - ball.z) <= reach) return cup
