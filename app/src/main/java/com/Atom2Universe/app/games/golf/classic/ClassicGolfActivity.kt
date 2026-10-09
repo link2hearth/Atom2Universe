@@ -401,7 +401,10 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         override fun aim(radians:Float){val g=game?:return;if(canSetShot()){g.aimAngle+=radians;previewDirty=true}}
         override fun zoom(factor:Float){
             val aerial=overview
-            if(aerial!=null)overview=aerial.copy(distance=(aerial.distance*factor).coerceIn(OverviewView.MIN_DISTANCE,OverviewView.MAX_DISTANCE))
+            if(aerial!=null) {
+                val hole=game?.hole?:return
+                overview=aerial.copy(distance=(aerial.distance*factor).coerceIn(OverviewView.MIN_DISTANCE,OverviewView.maxDistance(hole)))
+            }
             else zoom=(zoom*factor).coerceIn(.6f,1.8f)
         }
         override fun overview()=overview!=null
@@ -470,7 +473,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         val end=preview.landing?:g.ball
         val span=hypot(end.x-g.ball.x,end.z-g.ball.z)
         overview=OverviewView((g.ball.x+end.x)*.5f,(g.ball.z+end.z)*.5f,
-            (span*1.3f+10f).coerceIn(OverviewView.MIN_DISTANCE*2f,OverviewView.MAX_DISTANCE),g.aimAngle)
+            (span*1.3f+10f).coerceIn(OverviewView.MIN_DISTANCE*2f,OverviewView.maxDistance(g.hole)),g.aimAngle)
         previewDirty=true
     }
 

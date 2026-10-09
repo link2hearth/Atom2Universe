@@ -104,6 +104,8 @@ class ArchipelagoCourseTest {
         var landVertices = 0
         for (i in data.indices step GroundBuilder.STRIDE) {
             assertTrue(data[i + 1].isFinite())
+            assertEquals("Shore distance must also continue across the distant apron",
+                h.islandSignedDistance(data[i],data[i+2])+ClassicHole.ISLAND_ROUGH_WIDTH,data[i+10],.001f)
             if (h.islandSignedDistance(data[i], data[i + 2]) > 2f) {
                 assertEquals("Lake height", h.islandWaterLevel, data[i + 1], .001f)
                 assertEquals("Water texture", 1f, data[i + 9], .001f)

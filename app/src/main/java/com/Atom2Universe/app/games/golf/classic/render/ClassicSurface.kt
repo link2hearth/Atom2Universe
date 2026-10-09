@@ -37,6 +37,9 @@ data class OverviewView(val x: Float, val z: Float, val distance: Float, val yaw
     companion object {
         const val MIN_DISTANCE = 6f
         const val MAX_DISTANCE = 900f
+
+        /** Keep short holes legible instead of letting them shrink into an empty ocean. */
+        fun maxDistance(hole: ClassicHole) = (hole.length*1.65f).coerceIn(180f,MAX_DISTANCE)
     }
 }
 

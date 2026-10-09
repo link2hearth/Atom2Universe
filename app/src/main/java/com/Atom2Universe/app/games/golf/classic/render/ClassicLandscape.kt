@@ -54,6 +54,32 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
         val step = 2.5f
         val nx = ceil((hole.width + 80f) / step).toInt()
         val nz = ceil((hole.length + 110f) / step).toInt()
+        val left=-(hole.width+80f)/2f
+        // Lighting needs the broad slope, not four new physics queries for every fine
+        // vertex. Share a 2.5 m height lattice, including one neighbour beyond each edge.
+        // Islands keep their cheap flat-sea shortcut; the cup keeps its precise normals.
+        val coarseWidth=nx+3
+        val coarseHeights=if(hole.islands.isEmpty()) FloatArray(coarseWidth*(nz+3)).also { heights ->
+            inBands(nz+3) { start,end ->
+                for(z in start until end) for(x in 0 until coarseWidth)
+                    heights[z*coarseWidth+x]=hole.heightAt(left+(x-1)*step,-40f+(z-1)*step)
+            }
+        } else null
+        val coarseLight=coarseHeights?.let { heights -> FloatArray((nx+1)*(nz+1)) { i ->
+            val j=(i/(nx+1)+1)*coarseWidth+i%(nx+1)+1
+            val dx=(heights[j+1]-heights[j-1])/(2f*step)
+            val dz=(heights[j+coarseWidth]-heights[j-coarseWidth])/(2f*step)
+            .77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f)
+        } }
+        fun slopeLight(x:Float,z:Float):Float {
+            val gx=((x-left)/step).coerceIn(0f,nx.toFloat())
+            val gz=((z+40f)/step).coerceIn(0f,nz.toFloat())
+            val ix=gx.toInt().coerceAtMost(nx-1); val iz=gz.toInt().coerceAtMost(nz-1)
+            val u=gx-ix; val v=gz-iz; val i=iz*(nx+1)+ix; val row=nx+1
+            val lights=coarseLight!!
+            return (lights[i]*(1f-u)+lights[i+1]*u)*(1f-v)+
+                (lights[i+row]*(1f-u)+lights[i+row+1]*u)*v
+        }
         // One contour/hazard evaluation supplies both colour and shader weights at each vertex.
         // Base colours only: mowing, tufts and grain are drawn per pixel by GroundShader.
         fun sampleAt(x:Float,z:Float): GroundSample {
@@ -66,7 +92,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
             val fairBlend=((1.15f-fair)/2.3f).coerceIn(0f,1f)
             var green=((.40f-greenDistance)/.8f).coerceIn(0f,1f)
             var fairway=if(tee)1f else fairBlend
-            var sand=0f; var water=0f
+            var sand=0f; var water=0f; var lakeDistance=1000f
             colour=colour.mix(palette.fairway,fairBlend)
             if(greenDistance<2.2f) {
                 colour=colour.mix(palette.fringe,((2.2f-greenDistance)/1.1f).coerceIn(0f,1f))
@@ -78,12 +104,12 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
                 val beach=((shore+4.6f)/3.8f).coerceIn(0f,1f).let { it*it*(3f-2f*it) }
                 sand=beach*(1f-water)
                 colour=colour.mix(C(.86f,.79f,.59f),sand)
-                val depth=(shore/32f).coerceIn(0f,1f).let { it*it*(3f-2f*it) }
-                val sea=C(.16f,.66f,.61f).mix(palette.water,depth)
+                val sea=palette.waterAtDepth(shore)
                 colour=colour.mix(sea,water)
             }
             for(hazard in hole.hazards) {
                 val d=hazard.signedDistance(x,z)
+                if(hazard.lie==GolfLie.WATER) lakeDistance=min(lakeDistance,d)
                 if(d<1.4f && greenDistance>0f) {
                     if(hazard.lie==GolfLie.BUNKER) {
                         colour=colour.mix(C(.54f,.57f,.25f),((1.4f-d)/1.4f).coerceIn(0f,1f))
@@ -91,7 +117,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
                         sand=max(sand,((.2f-d)/.7f).coerceIn(0f,1f))
                     } else {
                         colour=colour.mix(C(.50f,.62f,.36f),((1.4f-d)/1.4f).coerceIn(0f,1f))
-                        colour=colour.mix(palette.water,((.2f-d)/.6f).coerceIn(0f,1f))
+                        colour=colour.mix(palette.waterAtDepth(-d),((.2f-d)/.6f).coerceIn(0f,1f))
                         water=max(water,((.2f-d)/.6f).coerceIn(0f,1f))
                     }
                 }
@@ -99,10 +125,13 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
             val hazards=min(1f,sand+water)
             green*=1f-hazards
             fairway=min(fairway*(1f-hazards),1f-hazards-green).coerceAtLeast(0f)
-            val dx=if(shore>1f)0f else (hole.heightAt(x+.4f,z)-hole.heightAt(x-.4f,z))/.8f
-            val dz=if(shore>1f)0f else (hole.heightAt(x,z+.4f)-hole.heightAt(x,z-.4f))/.8f
-            val light=(.77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f))*treeShade(x,z)
-            return GroundSample(colour.shade(light),Turf(fairway,green,sand,water),fair,greenDistance,light,1f)
+            val slope=if(shore>1f) .9678f else if(coarseLight!=null && greenDistance>3f) slopeLight(x,z) else {
+                val dx=(hole.heightAt(x+.4f,z)-hole.heightAt(x-.4f,z))/.8f
+                val dz=(hole.heightAt(x,z+.4f)-hole.heightAt(x,z-.4f))/.8f
+                .77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f)
+            }
+            val light=slope*treeShade(x,z)
+            return GroundSample(colour.shade(light),Turf(fairway,green,sand,water),fair,greenDistance,light,1f,lakeDistance)
         }
         // Shared lattice vertices are evaluated once, including expensive slope / contour samples.
         // Bands on different threads may both fill a vertex they share: the same value, written
@@ -114,7 +143,11 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
             ((x+(hole.width+80f)/2)*3f/step).roundToInt().coerceIn(0,nx*3)
         fun point(x:Float,z:Float):P {
             val i=index(x,z)
-            if(cachedHeight[i].isNaN()) cachedHeight[i]=hole.heightAt(x,z)
+            if(cachedHeight[i].isNaN()) {
+                val ix=i%latticeWidth; val iz=i/latticeWidth
+                cachedHeight[i]=if(coarseHeights!=null && ix%3==0 && iz%3==0)
+                    coarseHeights[(iz/3+1)*coarseWidth+ix/3+1] else hole.heightAt(x,z)
+            }
             return P(x,cachedHeight[i],z)
         }
         fun sample(x:Float,z:Float):GroundSample {
@@ -191,7 +224,13 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
         fun distantPoint(x:Float,z:Float)=distantPoints.getOrPut(x to z) { P(x,backdrop.heightAt(x,z),z) }
         fun distantSample(x:Float,z:Float):GroundSample = distantSamples.getOrPut(x to z) {
             if(backdrop.outward(x,z)==0f) return@getOrPut sampleAt(x,z)
-            if(hole.islands.isNotEmpty()) return@getOrPut GroundSample(palette.water,Turf(water=1f))
+            if(hole.islands.isNotEmpty()) {
+                // Continue the actual shore distance across the apron: a default 1000 m value
+                // made the shallow water abruptly turn blue along the rectangular mesh seam.
+                val shore=hole.islandSignedDistance(x,z)
+                return@getOrPut GroundSample(palette.waterAtDepth(shore),Turf(water=1f),
+                    fairwayDistance=shore+ClassicHole.ISLAND_ROUGH_WIDTH)
+            }
             val dx=(backdrop.heightAt(x+.4f,z)-backdrop.heightAt(x-.4f,z))/.8f
             val dz=(backdrop.heightAt(x,z+.4f)-backdrop.heightAt(x,z-.4f))/.8f
             val light=.77f+.23f*((dx*.35f+.86f+dz*.36f)/sqrt(1f+dx*dx+dz*dz)).coerceIn(0f,1f)

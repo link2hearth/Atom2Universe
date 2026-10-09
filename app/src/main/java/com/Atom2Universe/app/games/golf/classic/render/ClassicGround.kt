@@ -13,12 +13,12 @@ internal data class Turf(val fairway: Float = 0f, val green: Float = 0f, val san
     companion object { val ROUGH = Turf() }
 }
 
-/** Lit hazard colour, turf weights and signed mowing contours with their local lighting. */
+/** Lit hazard colour, turf weights, mowing contours and an unclamped inland shore distance. */
 internal class GroundSample(val colour: C, val turf: Turf,
     val fairwayDistance: Float = 1000f, val greenDistance: Float = 1000f,
-    val light: Float = 1f, val cuts: Float = 0f)
+    val light: Float = 1f, val cuts: Float = 0f, val lakeDistance: Float = 1000f)
 
-/** Position, lit colour, turf weights, then fairway / green distances, lighting and cut mask. */
+/** Position, colour, turf, fairway / green distances, lighting, cut mask, inland shore distance. */
 internal class GroundBuilder(capacity: Int = 1 shl 16) {
     private var data = FloatArray(capacity)
     private var size = 0
@@ -30,6 +30,7 @@ internal class GroundBuilder(capacity: Int = 1 shl 16) {
         data[size++] = s.turf.fairway; data[size++] = s.turf.green; data[size++] = s.turf.sand; data[size++] = s.turf.water
         data[size++] = s.fairwayDistance; data[size++] = s.greenDistance
         data[size++] = s.light; data[size++] = s.cuts
+        data[size++] = s.lakeDistance
     }
 
     fun triangle(a: P, b: P, c: P, sa: GroundSample, sb: GroundSample, sc: GroundSample) {
@@ -57,7 +58,7 @@ internal class GroundBuilder(capacity: Int = 1 shl 16) {
 
     fun build() = GroundMesh(data.copyOf(size))
 
-    companion object { const val STRIDE = 14 }
+    companion object { const val STRIDE = 15 }
 }
 
 internal class GroundMesh(private val vertices: FloatArray) {
@@ -79,14 +80,17 @@ internal class GroundMesh(private val vertices: FloatArray) {
         GL.glBindBuffer(GL.GL_ARRAY_BUFFER, buffer)
         GL.glEnableVertexAttribArray(0); GL.glEnableVertexAttribArray(1); GL.glEnableVertexAttribArray(2)
         GL.glEnableVertexAttribArray(3)
+        GL.glEnableVertexAttribArray(4)
         GL.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, stride, 0)
         GL.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, stride, 12)
         GL.glVertexAttribPointer(2, 4, GL.GL_FLOAT, false, stride, 24)
         GL.glVertexAttribPointer(3, 4, GL.GL_FLOAT, false, stride, 40)
+        GL.glVertexAttribPointer(4, 1, GL.GL_FLOAT, false, stride, 56)
         GL.glDrawArrays(GL.GL_TRIANGLES, 0, count)
         // The scene's other program only reads two attributes.
         GL.glDisableVertexAttribArray(2)
         GL.glDisableVertexAttribArray(3)
+        GL.glDisableVertexAttribArray(4)
     }
 
     fun delete() {
@@ -178,6 +182,7 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
         GL.glAttachShader(id, vertex); GL.glAttachShader(id, fragment)
         GL.glBindAttribLocation(id, 0, "aPosition"); GL.glBindAttribLocation(id, 1, "aColour"); GL.glBindAttribLocation(id, 2, "aTurf")
         GL.glBindAttribLocation(id, 3, "aCuts")
+        GL.glBindAttribLocation(id, 4, "aLakeDistance")
         GL.glLinkProgram(id)
         GL.glDeleteShader(vertex); GL.glDeleteShader(fragment)
         val result = IntArray(1); GL.glGetProgramiv(id, GL.GL_LINK_STATUS, result, 0)
@@ -192,15 +197,18 @@ attribute vec3 aPosition;
 attribute vec3 aColour;
 attribute vec4 aTurf;
 attribute vec4 aCuts;
+attribute float aLakeDistance;
 varying vec3 vColour;
 varying vec3 vWorld;
 varying vec4 vTurf;
 varying vec4 vCuts;
+varying float vLakeDistance;
 void main() {
     vColour = aColour;
     vWorld = aPosition;
     vTurf = aTurf;
     vCuts = aCuts;
+    vLakeDistance = aLakeDistance;
     gl_Position = uMvp * vec4(aPosition, 1.0);
 }
 """
@@ -231,6 +239,7 @@ varying vec3 vColour;
 varying vec3 vWorld;
 varying vec4 vTurf;
 varying vec4 vCuts;
+varying float vLakeDistance;
 // Lines keep a constant width on screen: a light core inside a soft dark border that lifts them off the turf.
 vec2 lineCore(vec2 pixels) { return 1.0 - smoothstep(.55, 1.25, pixels); }
 vec2 lineHalo(vec2 pixels) { return 1.0 - smoothstep(1.0, 2.6, pixels); }
@@ -272,9 +281,19 @@ void main() {
     float near=1.0-smoothstep(9.0,55.0,dist);
     float mid=1.0-smoothstep(100.0,430.0,dist);
     float grazing=clamp(abs(toEye.y)/max(dist,.01),.12,1.0);
+    // World metres covered by a pixel; evaluate derivatives before any shoreline branch.
+#ifdef GL_OES_standard_derivatives
+    float waterPixel=max(length(dFdx(p)),length(dFdy(p)));
+#else
+    float waterPixel=dist*uPixel/grazing;
+#endif
     float fine=1.0-smoothstep(4.0*grazing,24.0*grazing,dist);
     float fairway=vTurf.x, green=vTurf.y, sand=vTurf.z, water=vTurf.w;
     float semi=0.0, fringe=0.0;
+    // Interpolate the distance, then threshold it. Interpolating clamped water weights
+    // was exposing every triangle along inland banks as a row of little teeth.
+    bool inlandLake=uArchipelago<.5 && vLakeDistance<900.0;
+    if(inlandLake) water=(1.0-smoothstep(-.20,.25,vLakeDistance))*smoothstep(0.0,.4,vCuts.y);
     vec3 base=vColour;
     if(vCuts.w>.5) {
         float beach=0.0;
@@ -296,7 +315,7 @@ void main() {
         float tee=1.0-smoothstep(-edge,edge,max(abs(p.x)-4.5,abs(p.y)-5.5));
         fairway=remaining*max(tee,1.0-smoothstep(-edge,edge,vCuts.x));
         semi=max(0.0,remaining-fairway)*(1.0-smoothstep(uCutWidths.x-edge,uCutWidths.x+edge,vCuts.x));
-        vec3 grass=mix(vec3(.30,.46,.21),vec3(.48,.43,.26),uHighlands)*(1.0-green-fringe-fairway-semi)
+        vec3 grass=mix(vec3(.30,.46,.21),vec3(.38,.45,.25),uHighlands)*(1.0-green-fringe-fairway-semi)
             +mix(vec3(.39,.58,.25),vec3(.40,.51,.32),uHighlands)*fairway
             +mix(vec3(.40,.50,.23),vec3(.46,.46,.29),uHighlands)*semi
             +mix(vec3(.32,.52,.24),vec3(.35,.47,.30),uHighlands)*fringe
@@ -315,15 +334,26 @@ void main() {
         green*=dry; fringe*=dry; fairway*=dry; semi*=dry;
     }
     float rough=clamp(1.0-fairway-green-semi-fringe-sand-water,0.0,1.0);
-    float meadow=noise(p*.065)*.65+noise(p*.19)*.35;
+    // Fully wet fragments do not need the grass texture work underneath the water.
+    float meadow=.5, cover=.5;
+    if(water<.999) {
+        meadow=noise(p*.075);
+        cover=noise(vec2(p.x*1.15+p.y*.41,-p.x*.32+p.y*.95));
+    }
     float cloudShade=smoothstep(.48,.76,noise(p*.009+vec2(uTime*.008,0.0)));
     float shade=1.0+(meadow-.5)*.17*mid-cloudShade*.075;
     vec3 tint=vec3(1.0);
     if(rough>.01) {
-        float tufts=noise(p*2.3)*.60+noise(p*7.9)*.40;
-        shade+=rough*(tufts-.48)*.27*near;
-        float straw=smoothstep(.58,.79,meadow);
-        tint=mix(tint,vec3(1.13,1.03,.86),rough*straw*.48*(1.0-uSnow));
+        if(near>.001) {
+            float tufts=noise(p*2.3)*.60+noise(p*7.9)*.40;
+            shade+=rough*(tufts-.48)*.27*near;
+        }
+        // Meadow clumps remain readable from the aerial camera, unlike tiny blades.
+        // Filter only when their size falls below a few pixels, not at a fixed distance.
+        float clumps=1.0-smoothstep(.18,.65,waterPixel);
+        shade+=rough*(cover-.5)*.22*clumps;
+        float straw=smoothstep(.38,.80,meadow);
+        tint=mix(tint,vec3(1.17,1.06,.83),rough*straw*.36*(1.0-uSnow));
     }
     if(fairway>.01) {
         float soft=clamp(dist*.004,.08,1.0);
@@ -336,8 +366,8 @@ void main() {
         float bands=smoothstep(-soft,soft,sin((p.x*.42+p.y*.91)*1.35));
         shade+=green*((bands-.5)*.032*mid+(noise(p*13.0)-.5)*.035*near);
     }
-    shade+=semi*(noise(p*4.0)-.5)*.12*near;
-    shade+=fringe*(noise(p*10.0)-.5)*.045*near;
+    if(semi>.001) shade+=semi*(noise(p*4.0)-.5)*.12*near;
+    if(fringe>.001) shade+=fringe*(noise(p*10.0)-.5)*.045*near;
     // Fine cut fibres are filtered out at distance AND at grazing angles (no crawling moire).
     if(fine>.001 && rough+fairway>.01) {
         vec2 cell=p*vec2(48.0,19.0);
@@ -352,32 +382,46 @@ void main() {
         tint=mix(tint,vec3(1.04,1.015,.94),sand);
     }
     vec3 colour=base*shade*tint;
+    if(inlandLake && vLakeDistance<10.0) {
+        // Damp mineral edge, fresh bankside grass, then the seasonal meadow.
+        // Keep the golf cuts readable and use existing meadow noise for an irregular width.
+        float bank=(1.0-smoothstep(1.2,6.0+3.0*meadow,vLakeDistance))*rough;
+        vec3 margin=mix(vec3(.46,.45,.32),vec3(.29,.43,.24),smoothstep(.2,2.8,vLakeDistance));
+        margin=mix(margin,vec3(.71,.76,.76),uSnow*.75);
+        colour=mix(colour,margin*vCuts.z*(.94+.12*cover)*(1.0-cloudShade*.075),bank);
+    }
     if(water>.01) {
-        float phase=p.x*.65+p.y*.93+uTime*.85;
-        vec3 normal=normalize(vec3(.045*cos(phase)+.018*sin(p.y*2.2-uTime),1.0,
-            .05*sin(phase*.83)+.015*cos(p.x*2.7+uTime*1.3)));
+        // Broad, gently warped ripples. Fade frequencies before they become subpixel:
+        // offshore water must not turn into diagonal moire when the camera pulls back.
+        float broad=1.0-smoothstep(.6,2.8,waterPixel);
+        float detail=1.0-smoothstep(.15,.65,waterPixel);
+        vec2 ripple=vec2(p.x*.20+p.y*.13,-p.x*.055+p.y*.08);
+        vec2 drift=vec2(uTime*.055,-uTime*.035);
+        float waveA=noise(ripple+drift);
+        float waveB=noise(ripple+vec2(17.3,8.1)-drift*.7);
+        vec3 normal=normalize(vec3((waveA-.5)*.12*broad,1.0,(waveB-.5)*.12*broad));
         vec3 view=normalize(toEye);
         float fresnel=.12+.68*pow(1.0-max(0.0,dot(normal,view)),4.0);
         vec3 reflection=mix(vec3(.43,.61,.67),vec3(.79,.84,.78),fresnel);
-        vec3 waterBase=vColour;
+        // Flat water has one lighting level, including the distant apron. Terrain slope
+        // lighting is removed from the baked lake colour before applying the shared surface.
+        vec3 waterBase=vColour/max(vCuts.z,.01)*.9678;
         if(uArchipelago>.5) waterBase=mix(vec3(.16,.66,.61),vec3(.045,.29,.43),
-            smoothstep(0.0,32.0,vCuts.x-6.0))*vCuts.z;
-        vec3 lake=mix(waterBase*shade,reflection,fresnel);
+            smoothstep(0.0,32.0,vCuts.x-6.0))*.9678;
+        else if(inlandLake) waterBase=mix(vec3(.16,.66,.61),vec3(.045,.29,.43),
+            smoothstep(0.0,32.0,-vLakeDistance))*.9678;
+        vec3 lake=mix(waterBase*(1.0-cloudShade*.075),reflection,fresnel);
         vec3 sun=normalize(vec3(-.35,.86,-.36));
-        float sparkle=pow(max(0.0,dot(normal,normalize(view+sun))),96.0);
+        float sparkle=pow(max(0.0,dot(normal,normalize(view+sun))),64.0);
         lake+=vec3(1.0,.88,.61)*sparkle*.65;
         float edge=(1.0-smoothstep(.35,.98,water))*water;
-        lake+=vec3(.28,.30,.18)*edge*(.7+.3*sin(phase*3.0));
+        lake+=vec3(.28,.30,.18)*edge*(.7+.3*(waveA-.5)*detail);
         if(uArchipelago>.5) {
             // The baked fairway distance is the true island shore plus its six-metre rough belt.
-            // Broad turquoise shallows, small caustics and a moving wash follow every cove.
+            // Broad turquoise shallows and a moving wash follow every cove.
             float shore=max(0.0,vCuts.x-6.0);
-            float shallow=1.0-smoothstep(1.5,24.0,shore);
-            float caustic=pow(.5+.5*sin(p.x*1.8+p.y*.7+uTime*.55)
-                *sin(p.y*2.1-p.x*.6-uTime*.43),8.0);
-            lake+=vec3(.12,.22,.15)*caustic*shallow*(1.0-fresnel);
             float wash=.5+.5*sin(shore*3.2-uTime*1.5+noise(p*.35)*1.4);
-            float foam=(1.0-smoothstep(.2,2.5,shore))*smoothstep(.68,.96,wash);
+            float foam=(1.0-smoothstep(.2,2.5,shore))*smoothstep(.68,.96,wash)*detail;
             lake=mix(lake,vec3(.81,.93,.85),foam*.48);
         }
         colour=mix(colour,lake,water);

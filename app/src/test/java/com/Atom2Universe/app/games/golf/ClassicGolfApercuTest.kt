@@ -159,7 +159,7 @@ class ClassicGolfApercuTest {
             val end = game.preview(power(game)).landing ?: game.ball
             val span = hypot(end.x - game.ball.x, end.z - game.ball.z)
             val view = OverviewView((game.ball.x + end.x) * .5f, (game.ball.z + end.z) * .5f,
-                (span * 1.3f + 10f).coerceIn(OverviewView.MIN_DISTANCE * 2f, OverviewView.MAX_DISTANCE), game.aimAngle)
+                (span * 1.3f + 10f).coerceIn(OverviewView.MIN_DISTANCE * 2f, OverviewView.maxDistance(hole)), game.aimAngle)
             val e = view.eye(hole); val l = view.look(hole)
             return Vec(e.x, e.y, e.z) to Vec(l.x, l.y, l.z)
         }
