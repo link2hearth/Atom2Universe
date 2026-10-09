@@ -9,7 +9,8 @@ import android.graphics.RectF
 import android.graphics.Typeface
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewConfiguration
+import android.view.GestureDetector
+import android.os.SystemClock
 import com.Atom2Universe.app.games.golf.classic.core.GolfSwing
 import kotlin.math.*
 
@@ -37,7 +38,7 @@ internal class ClassicShotOverlay(context: Context, private val swing: GolfSwing
         fun manualFlightCamera(): Boolean
         fun cameraRotate(dx: Float, dy: Float)
         fun cameraMove(dx: Float, dy: Float, zoom: Float)
-        fun cameraDoubleTap()
+        fun cameraFastForward(held: Boolean)
     }
 
     private enum class Mode { NONE, PENDING, AIM, PULL, PINCH }
@@ -51,14 +52,15 @@ internal class ClassicShotOverlay(context: Context, private val swing: GolfSwing
     private var pinch = 0f
     private var cameraGesture=false
     private var cameraFingers=0
-    private val touchConfig=ViewConfiguration.get(context)
-    private var cameraTap=false
-    private var cameraTapX=0f
-    private var cameraTapY=0f
-    private var previousTapTime=0L
-    private var previousTapX=0f
-    private var previousTapY=0f
-    private var secondCameraTap=false
+    private var fastForwardHeld=false
+    private val cameraTaps=GestureDetector(context,object:GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(e:MotionEvent)=true
+        override fun onDoubleTap(e:MotionEvent):Boolean {
+            if(!listener.manualFlightCamera())return false
+            setCameraFastForward(true)
+            return true
+        }
+    }).apply{setIsLongpressEnabled(false)}
     var pullFraction = 0f
         private set
     val pulling get() = mode == Mode.PULL
@@ -126,29 +128,15 @@ internal class ClassicShotOverlay(context: Context, private val swing: GolfSwing
     }
 
     private fun cameraTouch(e:MotionEvent) {
+        cameraTaps.onTouchEvent(e)
+        // Release, interruption or a pinch ends the hold immediately; a tap never latches speed.
+        if(fastForwardHeld && e.actionMasked in intArrayOf(MotionEvent.ACTION_UP,MotionEvent.ACTION_CANCEL,
+                MotionEvent.ACTION_POINTER_DOWN,MotionEvent.ACTION_POINTER_UP))resetCameraTaps()
         val count=e.pointerCount
         val x=if(count>=2)(e.getX(0)+e.getX(1))*.5f else e.x
         val y=if(count>=2)(e.getY(0)+e.getY(1))*.5f else e.y
         val d=if(count>=2)spread(e) else 0f
-        when(e.actionMasked) {
-            MotionEvent.ACTION_DOWN -> {
-                cameraTap=true;cameraTapX=x;cameraTapY=y
-                secondCameraTap=previousTapTime!=0L &&
-                    e.eventTime-previousTapTime in 0..ViewConfiguration.getDoubleTapTimeout().toLong() &&
-                    hypot(x-previousTapX,y-previousTapY)<=touchConfig.scaledDoubleTapSlop
-                previousTapTime=0L
-            }
-            MotionEvent.ACTION_MOVE -> if(hypot(x-cameraTapX,y-cameraTapY)>touchConfig.scaledTouchSlop)resetCameraTaps()
-            MotionEvent.ACTION_POINTER_DOWN,MotionEvent.ACTION_CANCEL -> resetCameraTaps()
-            MotionEvent.ACTION_UP -> {
-                if(cameraTap && e.eventTime-e.downTime<=ViewConfiguration.getDoubleTapTimeout() && listener.manualFlightCamera()) {
-                    if(secondCameraTap){listener.cameraDoubleTap();resetCameraTaps()}
-                    else {previousTapTime=e.eventTime;previousTapX=cameraTapX;previousTapY=cameraTapY}
-                } else resetCameraTaps()
-                cameraTap=false;secondCameraTap=false
-            }
-        }
-        if(e.actionMasked==MotionEvent.ACTION_MOVE && cameraFingers==count && listener.manualFlightCamera()) {
+        if(!fastForwardHeld && e.actionMasked==MotionEvent.ACTION_MOVE && cameraFingers==count && listener.manualFlightCamera()) {
             if(count==1)listener.cameraRotate(x-lastX,y-lastY)
             else if(pinch>0f && d>0f)listener.cameraMove(x-lastX,y-lastY,pinch/d)
         }
@@ -160,7 +148,24 @@ internal class ClassicShotOverlay(context: Context, private val swing: GolfSwing
     }
 
     /** A new shot, a camera change or a suspend cannot complete an older double tap. */
-    fun resetCameraTaps() { cameraTap=false;secondCameraTap=false;previousTapTime=0L }
+    fun resetCameraTaps() {
+        setCameraFastForward(false)
+        val now=SystemClock.uptimeMillis()
+        val cancel=MotionEvent.obtain(now,now,MotionEvent.ACTION_CANCEL,0f,0f,0)
+        cameraTaps.onTouchEvent(cancel)
+        cancel.recycle()
+    }
+
+    private fun setCameraFastForward(held:Boolean) {
+        if(fastForwardHeld==held)return
+        fastForwardHeld=held
+        listener.cameraFastForward(held)
+    }
+
+    override fun onDetachedFromWindow() {
+        resetCameraTaps()
+        super.onDetachedFromWindow()
+    }
 
     /** Pinch zooms everywhere; in the aerial view the pair also drags and turns the camera. */
     private fun twoFingers(e: MotionEvent) {

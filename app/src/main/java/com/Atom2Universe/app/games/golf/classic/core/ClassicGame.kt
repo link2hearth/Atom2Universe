@@ -316,10 +316,15 @@ class ClassicGame(val hole: ClassicHole, val easy: Boolean = false) {
                         MiniEvent.NONE -> Unit
                     }
                 }
-                val entry = cup.entry(fromX, fromZ, sim.px, sim.pz)
+                val entry = cup.entry(fromX, fromZ, sim.px, sim.pz, hypot(sim.vx, sim.vz))
                 if (entry >= 0f) {
                     sim.px = fromX + (sim.px - fromX) * entry; sim.pz = fromZ + (sim.pz - fromZ) * entry
-                    mark(); return points to false
+                    mark()
+                    if (cup.canFunnel(hypot(sim.vx, sim.vz))) {
+                        // The assisted roll finishes in the opening, not on the outer bevel.
+                        sim.px = hole.cup.x; sim.pz = hole.cup.z; mark()
+                    }
+                    return points to false
                 }
                 sim.py = hole.heightAt(sim.px, sim.pz) + RADIUS; sim.vy = 0f
                 if (isHazard(sim.px, sim.pz)) { mark(); return points to true }
@@ -367,13 +372,14 @@ class ClassicGame(val hole: ClassicHole, val easy: Boolean = false) {
                     MiniEvent.NONE -> Unit
                 }
             }
-            // Swept test: the moment the centre passes over the opening, the turf stops carrying it.
-            val entry = cup.entry(sweepX, sweepZ, b.px, b.pz)
+            // Catch gentle edge contacts too; fast shots still have to cross the actual opening.
+            val speedAtCup = hypot(b.vx, b.vz)
+            val entry = cup.entry(sweepX, sweepZ, b.px, b.pz, speedAtCup)
             if (entry >= 0f) {
                 b.px = sweepX + (b.px - sweepX) * entry; b.pz = sweepZ + (b.pz - sweepZ) * entry
                 b.py = hole.heightAt(b.px, b.pz) + RADIUS; b.vy = 0f
                 ball = GolfPoint(b.px, b.py, b.pz)
-                enterCup()
+                enterCup(funnel = cup.canFunnel(speedAtCup))
                 return
             }
             b.py = hole.heightAt(b.px, b.pz) + RADIUS
@@ -447,7 +453,7 @@ class ClassicGame(val hole: ClassicHole, val easy: Boolean = false) {
         return true
     }
 
-    private fun enterCup() { inCup = true; cup.reset() }
+    private fun enterCup(funnel: Boolean = false) { inCup = true; cup.reset(funnel) }
 
     /**
      * A flying ball that meets the flagstick loses most of its pace and often drops. In easy mode

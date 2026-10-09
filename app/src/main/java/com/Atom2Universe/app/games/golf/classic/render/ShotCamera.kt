@@ -3,7 +3,7 @@ package com.Atom2Universe.app.games.golf.classic.render
 import com.Atom2Universe.app.games.golf.classic.core.*
 import kotlin.math.*
 
-enum class ShotCameraMode { AUTO, SIDE, AERIAL, ARRIVAL, CHASE, ORBIT, FREE }
+enum class ShotCameraMode { AUTO, SIDE, AERIAL, ARRIVAL, CHASE, ORBIT }
 
 data class GolfCameraPose(val eye: GolfPoint, val target: GolfPoint, val cut: Int)
 

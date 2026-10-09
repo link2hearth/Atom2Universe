@@ -26,8 +26,6 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
     private var yaw=replay.aim+.8f
     private var pitch=.4f
     private var distance=if(replay.club==GolfClub.PUTTER)8f else 30f
-    private var freeEye=replay.samples.first().ball
-    private var currentPose: GolfCameraPose?=null
     private val play=ui.secondary(context.getString(R.string.golf_replay_pause)) { togglePlayback() }
     private val timeLabel=ui.text("",13f)
     private val seek=SeekBar(context).apply { max=10000;contentDescription=context.getString(R.string.golf_replay_timeline) }
@@ -37,7 +35,6 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
     private var dragX=0f
     private var dragY=0f
     private var dragSpan=0f
-    private var updatingFollow=false
 
     init {
         setBackgroundColor(ui.palette.surface)
@@ -66,11 +63,6 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
         hint.text=context.getString(R.string.golf_replay_gestures)
         dock.addView(hint,LinearLayout.LayoutParams(-1,-2))
         manual.addView(button(R.string.golf_replay_recenter) { resetCamera() })
-        val follow=Switch(context).apply {
-            text=context.getString(R.string.golf_replay_follow);setTextColor(ui.palette.text);isChecked=true
-            setOnCheckedChangeListener { _,checked -> if(!updatingFollow)cameras.setSelection(if(checked)ShotCameraMode.ORBIT.ordinal else ShotCameraMode.FREE.ordinal) }
-        }
-        manual.addView(follow)
         dock.addView(manual)
         dock.addView(timeLabel)
         dock.addView(seek,LinearLayout.LayoutParams(-1,ui.dp(36)))
@@ -112,37 +104,24 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
     }
 
     private fun selectCamera(next:ShotCameraMode) {
-        if(next==ShotCameraMode.FREE && mode!=next) {
-            val pose=currentPose ?: ShotCamera.pose(hole,replay.sample(position).ball,replay.samples.first().ball,replay.aim,replay.club,position,replay.stroke,ShotCameraMode.SIDE)
-            freeEye=pose.eye
-            val dx=pose.target.x-freeEye.x;val dy=pose.target.y-freeEye.y;val dz=pose.target.z-freeEye.z
-            yaw=atan2(dx,dz);pitch=atan2(-dy,hypot(dx,dz))
-        }
         mode=next
-        val custom=mode==ShotCameraMode.ORBIT || mode==ShotCameraMode.FREE
+        val custom=mode==ShotCameraMode.ORBIT
         hint.visibility=if(custom && resources.configuration.orientation!=android.content.res.Configuration.ORIENTATION_LANDSCAPE)VISIBLE else GONE
         manual.visibility=if(custom)VISIBLE else GONE
-        val follow=manual.getChildAt(1) as Switch
-        val shouldFollow=mode!=ShotCameraMode.FREE
-        updatingFollow=true
-        if(follow.isChecked!=shouldFollow)follow.isChecked=shouldFollow
-        updatingFollow=false
     }
 
     private fun resetCamera() {
         yaw=replay.aim+.8f;pitch=.4f;distance=if(replay.club==GolfClub.PUTTER)8f else 30f
-        val ball=replay.sample(position).ball
-        freeEye=GolfPoint(ball.x-sin(yaw)*distance*cos(pitch),ball.y+distance*sin(pitch),ball.z-cos(yaw)*distance*cos(pitch))
     }
 
     override fun onConfigurationChanged(newConfig:android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
-        val custom=mode==ShotCameraMode.ORBIT || mode==ShotCameraMode.FREE
+        val custom=mode==ShotCameraMode.ORBIT
         hint.visibility=if(custom && newConfig.orientation!=android.content.res.Configuration.ORIENTATION_LANDSCAPE)VISIBLE else GONE
     }
 
     private fun touch(event:MotionEvent):Boolean {
-        if(mode!=ShotCameraMode.ORBIT && mode!=ShotCameraMode.FREE)return true
+        if(mode!=ShotCameraMode.ORBIT)return true
         val count=event.pointerCount
         val x=if(count>1)(event.getX(0)+event.getX(1))*.5f else event.x
         val y=if(count>1)(event.getY(0)+event.getY(1))*.5f else event.y
@@ -153,14 +132,7 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
                 yaw-=dx/width.coerceAtLeast(1)*5f
                 pitch=(pitch+dy/height.coerceAtLeast(1)*3f).coerceIn(-1.35f,1.45f)
             } else if(dragSpan>0f && span>0f) {
-                if(mode==ShotCameraMode.ORBIT)distance=(distance*dragSpan/span).coerceIn(.8f,600f)
-                else {
-                    val scale=distance/height.coerceAtLeast(1)
-                    val forward=(span-dragSpan)*scale*2f
-                    freeEye=GolfPoint(freeEye.x-cos(yaw)*dx*scale+sin(yaw)*cos(pitch)*forward,
-                        freeEye.y+dy*scale-sin(pitch)*forward,
-                        freeEye.z+sin(yaw)*dx*scale+cos(yaw)*cos(pitch)*forward)
-                }
+                distance=(distance*dragSpan/span).coerceIn(.8f,600f)
             }
         }
         dragCount=if(event.actionMasked==MotionEvent.ACTION_POINTER_UP || event.actionMasked==MotionEvent.ACTION_UP)0 else count
@@ -187,14 +159,8 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
                 val x=b.x-sin(yaw)*distance*cos(pitch);val z=b.z-cos(yaw)*distance*cos(pitch)
                 GolfCameraPose(GolfPoint(x,max(b.y+distance*sin(pitch),hole.heightAt(x,z)+.3f),z),b,mode.ordinal)
             }
-            ShotCameraMode.FREE -> {
-                freeEye=freeEye.copy(x=freeEye.x.coerceIn(-1200f,1200f),z=freeEye.z.coerceIn(-1200f,hole.length+1200f),y=freeEye.y.coerceIn(-200f,1200f))
-                freeEye=freeEye.copy(y=max(freeEye.y,hole.heightAt(freeEye.x,freeEye.z)+.3f))
-                GolfCameraPose(freeEye,GolfPoint(freeEye.x+sin(yaw)*cos(pitch),freeEye.y-sin(pitch),freeEye.z+cos(yaw)*cos(pitch)),mode.ordinal)
-            }
             else -> ShotCamera.pose(hole,sample.ball,replay.samples.first().ball,replay.aim,replay.club,position,replay.stroke,mode)
         }
-        currentPose=pose
         val trail=List(45) { i -> replay.sample((position-(44-i)*.025f).coerceAtLeast(0f)).ball }
         scene.submit(ClassicFrame(sample.ball,replay.aim,true,ShotPreview.NONE,club=replay.club,grid=false,
             clock=sample.clock,shotCamera=pose,replayTime=position,replayTrail=trail),false,frameTimeNanos)

@@ -90,6 +90,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private var gridButton: GolfIcon? = null
     private var recording: GolfReplayRecorder? = null
     private var lastReplay: GolfReplay? = null
+    private var shotChoices: View? = null
     private var replayView: GolfReplayView? = null
     private var hiddenGameViews = emptyList<Pair<View,Int>>()
     private val replayStore by lazy { GolfReplayStore(java.io.File(filesDir,"golf_replays")) }
@@ -99,8 +100,9 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private var cameraButton:GolfIcon?=null
     private var cameraToast:Toast?=null
     private var liveFastForward=false
+    private var speedBadge:TextView?=null
     private val liveCameraModes=listOf(ShotCameraMode.ORBIT,ShotCameraMode.SIDE,ShotCameraMode.AERIAL,
-        ShotCameraMode.ARRIVAL,ShotCameraMode.CHASE,ShotCameraMode.AUTO,ShotCameraMode.FREE)
+        ShotCameraMode.ARRIVAL,ShotCameraMode.CHASE,ShotCameraMode.AUTO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +110,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         ui=GolfUi(this); audio=GolfAudio(this); muted=prefs.getBoolean("muted",false);easy=prefs.getBoolean("easy",false)
         liveCamera.select(ShotCameraMode.entries.firstOrNull{it.name==prefs.getString("live_camera",null)}?:ShotCameraMode.ORBIT)
+        prefs.edit().putString("live_camera",liveCamera.mode.name).apply()
         course=ClassicCourses.find(prefs.getString("selected_course",null))
         golfer=GolferAppearance(prefs.getBoolean("golfer_female",false),
             prefs.getInt("golfer_outfit",0).coerceIn(0,2),prefs.getInt("golfer_skin",0).coerceIn(0,2))
@@ -135,7 +138,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     }
 
     private fun showMenu() {
-        screenGeneration++;recording=null
+        screenGeneration++;recording=null;lastReplay=null;shotChoices=null
         save(); closeSurface(); game=null; completed=false; practiceMenu=null; root.removeAllViews(); result=null
         val col=ui.column().apply{setPadding(ui.dp(16),ui.dp(12),ui.dp(16),ui.dp(20))}
         val head=ui.row()
@@ -280,7 +283,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     }
 
     private fun play(index:Int,restore:Boolean=false) {
-        screenGeneration++;recording=null
+        screenGeneration++;recording=null;lastReplay=null;shotChoices=null
         closeSurface(); root.removeAllViews(); result=null; completed=false; practiceMenu=null; overview=null; zoom=1f
         swing.cancel(); pendingStrike=null; swingTime=-1f; sceneReady=false; pullFraction=0f
         golfer=GolferAppearance(prefs.getBoolean("golfer_female",false),
@@ -315,10 +318,6 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         top.addView(row)
         lieLabel=ui.pill().apply{textSize=12f;setPadding(ui.dp(12),ui.dp(6),ui.dp(12),ui.dp(6));minHeight=ui.dp(32)}
         top.addView(lieLabel,LinearLayout.LayoutParams(-2,-2).apply{gravity=Gravity.CENTER;topMargin=ui.dp(6)})
-        top.addView(ui.pill().apply {
-            text=getString(R.string.golf_replay_title);textSize=13f
-            setOnClickListener{replayMenu()};isFocusable=true
-        },LinearLayout.LayoutParams(-2,ui.dp(44)).apply{gravity=Gravity.CENTER;topMargin=ui.dp(4)})
         root.addView(top,FrameLayout.LayoutParams(-1,-2,Gravity.TOP))
         miniMap=ClassicMap(this,h).also { it.ball=g.ball;it.contentDescription=getString(R.string.classic_overview);it.setOnClickListener{toggleOverview()} }
         root.addView(miniMap,FrameLayout.LayoutParams(ui.dp(88),ui.dp(138),Gravity.END or Gravity.TOP).apply{topMargin=ui.dp(112);rightMargin=ui.dp(12)})
@@ -353,6 +352,11 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         }
         cameraButton=icon(GolfIcon.Kind.CAMERA,R.string.golf_live_camera){cycleLiveCamera()}.apply{alpha=.72f}
         root.addView(cameraButton,FrameLayout.LayoutParams(ui.dp(48),ui.dp(48),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=ui.dp(16)})
+        speedBadge=ui.pill().apply {
+            text=getString(R.string.golf_live_speed_badge);textSize=13f;visibility=View.GONE
+            minHeight=0;setPadding(ui.dp(8),ui.dp(4),ui.dp(8),ui.dp(4))
+        }
+        root.addView(speedBadge,FrameLayout.LayoutParams(-2,ui.dp(32),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=ui.dp(72)})
         updateCameraButton()
         root.post { layoutGame() }
         refreshHud();save();if(resumed)s.onResume();startFrames()
@@ -373,22 +377,25 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             if(lp.topMargin!=top||lp.leftMargin!=left||lp.gravity!=(side or Gravity.TOP)){lp.topMargin=top;lp.leftMargin=left;lp.gravity=side or Gravity.TOP;p.layoutParams=lp}}
     }
 
-    private fun canSetShot()=replayView==null&&game?.state==GolfState.READY&&!swing.active&&pendingStrike==null&&swingTime<0f&&sceneReady&&!completed
+    private fun canSetShot()=replayView==null&&lastReplay==null&&game?.state==GolfState.READY&&!swing.active&&pendingStrike==null&&swingTime<0f&&sceneReady&&!completed
 
     private val shotListener=object:ClassicShotOverlay.Listener {
-        override fun manualFlightCamera()=recording!=null&&replayView==null&&liveCamera.manual
+        override fun manualFlightCamera()=replayView==null&&liveCamera.manual&&!completed&&
+            (pendingStrike!=null||swingTime>=0f||game?.state==GolfState.FLYING||game?.state==GolfState.ROLLING)
         override fun cameraRotate(dx:Float,dy:Float) {
             if(manualFlightCamera())liveCamera.rotate(dx,dy,overlay?.width?:root.width,overlay?.height?:root.height)
         }
         override fun cameraMove(dx:Float,dy:Float,zoom:Float) {
-            if(manualFlightCamera())liveCamera.move(dx,dy,zoom,overlay?.height?:root.height)
+            if(manualFlightCamera())liveCamera.zoom(zoom)
         }
-        override fun cameraDoubleTap() {
-            if(!manualFlightCamera())return
-            liveFastForward=!liveFastForward
+        override fun cameraFastForward(held:Boolean) {
+            val accelerate=held&&manualFlightCamera()
+            if(liveFastForward==accelerate)return
+            liveFastForward=accelerate
+            refreshHud()
             cameraToast?.cancel()
-            cameraToast=Toast.makeText(this@ClassicGolfActivity,
-                if(liveFastForward)R.string.golf_live_fast_forward else R.string.golf_live_normal_speed,Toast.LENGTH_SHORT).also{it.show()}
+            if(accelerate)cameraToast=Toast.makeText(this@ClassicGolfActivity,
+                R.string.golf_live_fast_forward,Toast.LENGTH_SHORT).also{it.show()}
         }
         override fun canShoot()=canSetShot()
         override fun aim(radians:Float){val g=game?:return;if(canSetShot()){g.aimAngle+=radians;previewDirty=true}}
@@ -430,8 +437,10 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         override fun release(fraction:Float,needle:Float){
             val g=game?:return
             pullFraction=0f
-            if(g.state!=GolfState.READY||completed){previewDirty=true;return}
+            if(g.state!=GolfState.READY||completed||lastReplay!=null){previewDirty=true;return}
             strikePower=GolfSwing.power(fraction,g.club)
+            liveFastForward=false;overlay?.resetCameraTaps()
+            liveCamera.begin(g.aimAngle,g.club)
             pendingStrike=strikePower to needle;swingTime=0f
             val off=abs(needle)
             val message=getString(when {
@@ -488,15 +497,13 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         if(replayView!=null)return
         val g=game?:return
         val dt=if(lastFrame==0L)0f else ((time-lastFrame)/1e9f).coerceIn(0f,.05f);lastFrame=time
-        if(dialog?.isShowing!=true&&!completed){
+        if(dialog?.isShowing!=true&&!completed&&lastReplay==null){
             if(swing.active)swing.update(dt,GolfSwing.period(g.club,GolfSwing.power(pullFraction,g.club),g.lie,easy))
             if(swingTime>=0f){
-                swingTime+=dt
+                swingTime+=if(liveFastForward)dt*3f else dt
                 if(swingTime>=GolferPose.STRIKE_SECONDS)pendingStrike?.let { (power,needle) ->
                     pendingStrike=null
                     if(g.hit(power,needle)){
-                        liveFastForward=false;overlay?.resetCameraTaps()
-                        liveCamera.begin(g.ball,g.aimAngle,g.club)
                         recording=GolfReplayRecorder(GolfReplay(course=course.id,hole=g.hole.number,club=g.club,
                             aim=g.aimAngle,stroke=g.strokes,easy=easy,samples=listOf(GolfReplaySample(0f,g.ball,g.clock))))
                         lastState=g.state
@@ -508,12 +515,13 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             }
             val moving=g.state==GolfState.FLYING||g.state==GolfState.ROLLING
             val accelerate=if(liveCamera.manual)liveFastForward else overlay?.holding==true
-            val simulationDt=if(moving&&!g.celebrating&&accelerate)dt*3f else dt
+            val simulationDt=if(moving&&accelerate)dt*3f else dt
             g.update(simulationDt)
             recording?.let { capture ->
                 capture.append(simulationDt,g.ball,g.clock)
                 if(g.state==GolfState.READY||g.state==GolfState.HOLED) {
                     lastReplay=capture.finish(g.state==GolfState.HOLED);recording=null;liveFastForward=false;overlay?.resetCameraTaps()
+                    if(g.state==GolfState.READY&&lastReplay!=null)showShotChoices()
                 }
             }
             if(g.hole.mini!=null) {
@@ -530,7 +538,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         }
         if(g.lastPenalty!=previousPenalty){previousPenalty=g.lastPenalty;audio.outOfBounds();Toast.makeText(this,R.string.classic_penalty,Toast.LENGTH_SHORT).show();save()}
         if(g.state==GolfState.HOLED&&!completed){completed=true;audio.holed();root.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);finishHole()}
-        if(previewDirty&&g.state==GolfState.READY&&pendingStrike==null&&time-lastPreview>33_000_000L){
+        if(previewDirty&&lastReplay==null&&g.state==GolfState.READY&&pendingStrike==null&&time-lastPreview>33_000_000L){
             lastPreview=time;previewDirty=false
             preview=g.preview(guidePower(g),simulatePutt=!gridShown)
             miniMap?.preview=preview.flight+preview.roll
@@ -544,10 +552,12 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             else -> -1f
         }
         val power=if(swingTime>=0f)strikePower else if(pulling)GolfSwing.power(pullFraction,g.club) else 1f
-        val shown=if(g.state==GolfState.READY&&pendingStrike==null&&swingTime<0f)preview else ShotPreview.NONE
+        val shown=if(lastReplay==null&&g.state==GolfState.READY&&pendingStrike==null&&swingTime<0f)preview else ShotPreview.NONE
         val shotCamera=recording?.let { capture ->
             val shot=capture.template
             liveCamera.pose(g.hole,g.ball,shot.samples.first().ball,shot.aim,shot.club,capture.seconds,shot.stroke)
+        }?:lastReplay?.let { shot ->
+            liveCamera.pose(g.hole,g.ball,shot.samples.first().ball,shot.aim,shot.club,shot.duration,shot.stroke)
         }
         val frame=ClassicFrame(g.ball,g.aimAngle,g.state==GolfState.FLYING||g.state==GolfState.ROLLING,shown,overview,zoom,g.club,pose,power,pulling,golfer,gridShown,g.windX,g.windZ,
             if(g.hole.mini?.hasMovers==true)g.clock else 0f,shotCamera=shotCamera)
@@ -567,6 +577,11 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
 
     private fun refreshHud(){
         val g=game?:return
+        speedBadge?.visibility=if(liveFastForward&&!completed)View.VISIBLE else View.GONE
+        val choosing=lastReplay!=null
+        bottom?.visibility=if(choosing)View.GONE else View.VISIBLE
+        clubPicker?.visibility=if(choosing)View.GONE else View.VISIBLE
+        cameraButton?.visibility=if(choosing)View.GONE else View.VISIBLE
         val h=g.hole
         val total=relative(scores.sum()-roundHoles.take(scores.size).sumOf{it.par})
         label?.show(getString(if(round&&roundLength.startIndex>0)R.string.golf_hud_section else R.string.classic_hud,h.number,h.par,g.strokes,total,if(round)roundLength.count else course.holes.size,if(round)h.number-roundLength.startIndex else h.number),
@@ -617,12 +632,11 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         val diff=g.strokes-g.hole.par
         val title=when{g.strokes==1->R.string.golf_result_hole_in_one;diff<=-3->R.string.golf_result_albatross;diff == -2->R.string.golf_result_eagle;diff == -1->R.string.golf_result_birdie;diff==0->R.string.golf_result_par;diff==1->R.string.golf_result_bogey;else->R.string.golf_result_double_bogey}
         val text=if(diff>2)getString(R.string.golf_result_over,diff) else getString(title)
-        val buttons=if(round&&roundLength.finished(scores))listOf(ui.primary(getString(R.string.golf_scorecard)){closeResult();scorecard(true)})
+        val buttons=(if(round&&roundLength.finished(scores))listOf(ui.primary(getString(R.string.golf_scorecard)){lastReplay=null;closeResult();scorecard(true)})
             else listOf(ui.primary(getString(if(round)R.string.golf_next else R.string.golf_retry)){play(if(round)roundLength.nextIndex(scores.size) else g.hole.number-1)},
-                ui.secondary(getString(R.string.golf_menu)){showMenu()})
+                ui.secondary(getString(R.string.golf_menu)){showMenu()})).toMutableList()
+        if(lastReplay!=null)buttons.add(1,ui.secondary(getString(R.string.golf_replay_title)){lastReplay?.let{openReplay(it)}})
         val view=ClassicResultView(this,ui,ClassicResultView.Kind.of(g.strokes,g.hole.par),text,buttons)
-        if(lastReplay!=null)view.addView(ui.secondary(getString(R.string.golf_replay_last)){lastReplay?.let{openReplay(it)}},
-            FrameLayout.LayoutParams(-2,-2,Gravity.TOP or Gravity.END).apply{setMargins(ui.dp(12),ui.dp(12),ui.dp(12),0)})
         result=view;root.addView(view,FrameLayout.LayoutParams(-1,-1))
     }
 
@@ -682,16 +696,28 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         cameraToast=Toast.makeText(this,getString(R.string.golf_live_camera_current,name),Toast.LENGTH_SHORT).also{it.show()}
     }
 
-    private fun replayMenu() {
-        val col=ui.column().apply{setPadding(ui.dp(16),ui.dp(12),ui.dp(16),ui.dp(12))}
-        col.addView(ui.primary(getString(R.string.golf_replay_last)){
-            val shot=lastReplay
-            if(shot==null)Toast.makeText(this,R.string.golf_replay_unavailable,Toast.LENGTH_SHORT).show()
-            else {dialog?.dismiss();openReplay(shot)}
-        })
-        col.addView(ui.secondary(getString(R.string.golf_replay_library)){showReplayLibrary()})
-        showDialog(AlertDialog.Builder(this).setTitle(R.string.golf_replay_title).setView(col)
-            .setNegativeButton(android.R.string.cancel,null).create())
+    private fun showShotChoices() {
+        shotChoices?.let{root.removeView(it)}
+        feedback?.visibility=View.GONE
+        feedbackTime=0f
+        val row=ui.row().apply {
+            background=ui.shape(GolfUi.SCENE_PLATE,20f,null)
+            setPadding(ui.dp(8),ui.dp(8),ui.dp(8),ui.dp(8))
+        }
+        row.addView(ui.primary(getString(R.string.golf_shot_next)){nextShot()},LinearLayout.LayoutParams(ui.dp(120),ui.dp(48)))
+        row.addView(ui.secondary(getString(R.string.golf_replay_title)){lastReplay?.let{openReplay(it)}},
+            LinearLayout.LayoutParams(ui.dp(120),ui.dp(48)).apply{leftMargin=ui.dp(8)})
+        shotChoices=row
+        root.addView(row,FrameLayout.LayoutParams(-2,-2,Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=ui.dp(16)})
+        refreshHud()
+    }
+
+    private fun nextShot() {
+        lastReplay=null
+        shotChoices?.let{root.removeView(it)};shotChoices=null
+        overlay?.resetCameraTaps()
+        previewDirty=true
+        refreshHud()
     }
 
     private fun openReplay(shot:GolfReplay) {

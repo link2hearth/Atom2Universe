@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="golf_live_fast_forward">Vitesse ×3 · Double appui pour revenir à la normale</string>
-    <string name="golf_live_normal_speed">Vitesse normale</string>
+    <string name="golf_shot_next">Suivant</string>
+    <string name="golf_live_speed_badge">×3</string>
+    <string name="golf_live_fast_forward">Vitesse ×3 · Relâche pour revenir à la normale</string>
     <string name="golf_live_camera">Changer la caméra du tir</string>
     <string name="golf_live_camera_current">Caméra : %1$s · Appuie pour changer</string>
     <string name="golf_replay_title">Replay</string>
@@ -25,11 +26,10 @@
     <string name="golf_replay_speed">Vitesse de lecture (valeurs négatives : lecture arrière)</string>
     <string name="golf_replay_timeline">Chronologie du replay</string>
     <string name="golf_replay_time">%1$.1f / %2$.1f s</string>
-    <string name="golf_replay_follow">Suivre la balle</string>
     <string name="golf_replay_recenter">Recentrer</string>
-    <string name="golf_replay_gestures">Glisse pour tourner · Pince pour avancer/reculer\nCaméra libre : glisse à deux doigts pour te déplacer sur le côté ou en hauteur</string>
+    <string name="golf_replay_gestures">Glisse pour tourner autour de la balle · Pince pour zoomer</string>
     <string-array name="golf_replay_cameras">
-        <item>Automatique</item><item>Vue de côté</item><item>Vue aérienne</item><item>Arrivée</item><item>Derrière la balle</item><item>Orbite · suivi de balle</item><item>Caméra libre</item>
+        <item>Automatique</item><item>Vue de côté</item><item>Vue aérienne</item><item>Arrivée</item><item>Derrière la balle</item><item>Orbite · suivi de balle</item>
     </string-array>
     <string-array name="golf_replay_speeds">
         <item>−4×</item><item>−2×</item><item>−1×</item><item>−0,5×</item><item>0,25×</item><item>0,5×</item><item>1×</item><item>2×</item><item>4×</item>

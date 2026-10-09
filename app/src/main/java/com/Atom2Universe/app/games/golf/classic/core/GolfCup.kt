@@ -5,7 +5,7 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 /**
- * The hole: a course-sized cylinder cut 10 cm into the green, with a sharp lip, a liner wall, a flat
+ * The hole: a course-sized cylinder cut 10 cm into the green, with a forgiving lip, a liner wall, a flat
  * bottom and the flagstick on its axis. The turf stops carrying a ball as soon as its centre is over
  * the opening: it pivots on the lip and falls. Too fast, it meets the far lip while still high and
  * hops out; slow enough, it drops, knocks the liner and settles on the bottom.
@@ -20,15 +20,21 @@ internal class GolfCup(private val hole: ClassicHole) {
     private val bottom = top - ClassicHole.CUP_DEPTH + R
     private var captured = false
     private var inside = 0f
+    private var funnelling = false
+    // Only the ball-sized strip immediately around the visible opening assists a grazing putt.
+    private val funnelRadius = OPENING + R
 
-    fun reset() { captured = false; inside = 0f }
+    fun reset(funnel: Boolean = false) { captured = false; inside = 0f; funnelling = funnel }
 
-    /** First fraction of the move from (ax, az) to (bx, bz) whose centre is over the opening, or -1. */
-    fun entry(ax: Float, az: Float, bx: Float, bz: Float): Float {
+    fun canFunnel(speed: Float) = speed <= FUNNEL_MAX_SPEED
+
+    /** Swept entry: moderate rolling shots also catch the narrow bevel around the opening. */
+    fun entry(ax: Float, az: Float, bx: Float, bz: Float, speed: Float = Float.POSITIVE_INFINITY): Float {
         val dx = bx - ax; val dz = bz - az
         val fx = ax - cx; val fz = az - cz
         val a = dx * dx + dz * dz
-        val c = fx * fx + fz * fz - OPENING * OPENING
+        val radius = if (canFunnel(speed)) funnelRadius else OPENING
+        val c = fx * fx + fz * fz - radius * radius
         if (c <= 0f) return 0f
         if (a < 1e-12f) return -1f
         val b = fx * dx + fz * dz
@@ -53,6 +59,12 @@ internal class GolfCup(private val hole: ClassicHole) {
     }
 
     private fun sub(b: BallState, h: Float, flagIn: Boolean): Result {
+        if (funnelling && !captured) {
+            // A damped bowl: keep the incoming tangent so the ball visibly curls inward,
+            // then dissipate it instead of letting a soft edge contact escape over the far lip.
+            b.vx += (-(b.px - cx) * 160f - b.vx * 26f) * h
+            b.vz += (-(b.pz - cz) * 160f - b.vz * 26f) * h
+        }
         b.vy -= GolfBallPhysics.GRAVITY * h
         b.px += b.vx * h; b.py += b.vy * h; b.pz += b.vz * h
         var dx = b.px - cx; var dz = b.pz - cz
@@ -61,6 +73,14 @@ internal class GolfCup(private val hole: ClassicHole) {
         val uz = if (d > 1e-6f) dz / d else 0f
         val rimX = cx + ux * OPENING; val rimZ = cz + uz * OPENING
         val rimY = hole.heightAt(rimX, rimZ)
+
+        if (funnelling && !captured && d > OPENING - R) {
+            // Follow the rounded lip continuously until the whole ball clears it; only then fall.
+            b.py = if (d >= OPENING) hole.heightAt(b.px, b.pz) + R
+                else rimY + sqrt(max(0f, R * R - (OPENING - d) * (OPENING - d)))
+            b.vy = 0f
+            return Result.INSIDE
+        }
 
         if (d >= OPENING) {
             // Over the turf: the green carries the ball again, or it is on its way out.
@@ -130,5 +150,6 @@ internal class GolfCup(private val hole: ClassicHole) {
     companion object {
         private const val R = ClassicHole.BALL_RADIUS
         private const val LIP_RESTITUTION = .35f
+        private const val FUNNEL_MAX_SPEED = 1.8f
     }
 }

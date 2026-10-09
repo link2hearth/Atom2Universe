@@ -135,7 +135,7 @@ class GardensScoringTest {
             val hole = ClassicHole(1, 4, 300f, cupRadius = radius,
                 greenShape = GolfGreenShape(slopeX = 0f, slopeZ = 0f))
             return ClassicGame(hole).apply {
-                restore(GolfPoint(.075f, 0f, 299f), 0)
+                restore(GolfPoint(.10f, 0f, 299f), 0)
                 club = GolfClub.PUTTER; aimAngle = 0f
                 hit((2f * GolfBallPhysics.rolling(GolfLie.GREEN) + .25f) /
                     (2f * GolfBallPhysics.rolling(GolfLie.GREEN) * GolfClub.PUTTER.carry))

@@ -501,12 +501,14 @@ class ClassicGolfTest {
         }
     }
 
-    @Test fun aFastBallJumpsTheHoleAndOneWhoseCentreMissesTheOpeningRollsPast() {
+    @Test fun aFastBallJumpsTheHoleButASoftEdgeContactFunnelsIn() {
         val fast = putt(3.5f)
         assertNotEquals(GolfState.HOLED, fast.state)
         assertTrue("It carried on past the cup", fast.ball.z > flatGreen.cup.z + .3f)
-        val outside = putt(.5f, ClassicHole.CUP_RADIUS + .004f)
-        assertNotEquals("The turf still carries a ball whose centre stays off the opening", GolfState.HOLED, outside.state)
+        val edge = putt(.5f, ClassicHole.CUP_RADIUS + .004f)
+        assertEquals("A soft putt touching the edge curls into the hole", GolfState.HOLED, edge.state)
+        val outside = putt(.5f, ClassicHole.CUP_RADIUS + ClassicHole.BALL_RADIUS + .015f)
+        assertNotEquals("A putt clear of the bevel still misses", GolfState.HOLED, outside.state)
         assertTrue(outside.ball.z > flatGreen.cup.z)
     }
 
