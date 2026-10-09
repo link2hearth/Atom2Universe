@@ -20,6 +20,7 @@ import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.timeline.*
 import com.Atom2Universe.app.util.followImmersiveMode
@@ -73,7 +74,13 @@ class GeologyActivity:ThemedActivity() {
     private fun buildUi() {
         val root=column().apply { setBackgroundColor(palette.background) }
         val toolbar=row()
-        toolbar.addView(icon(R.drawable.ic_arrow_back_24,R.string.geo_back) { finish() },LinearLayout.LayoutParams(dp(48),dp(48)))
+        toolbar.addView(icon(R.drawable.ic_arrow_back_24,R.string.geo_back) { finish() }.apply {
+            ScienceNavigation.bindHomeAction(this) {
+                openSheet?.dismiss()
+                navigate(EarthScene.GLOBE)
+                announceForAccessibility(getString(R.string.science_return_to_module_start))
+            }
+        },LinearLayout.LayoutParams(dp(48),dp(48)))
         toolbar.addView(label(getString(R.string.geo_title),20f,true),LinearLayout.LayoutParams(0,-2,1f))
         toolbar.addView(icon(R.drawable.ic_search,R.string.geo_catalog) { catalog() },LinearLayout.LayoutParams(dp(48),dp(48)))
         toolbar.addView(icon(R.drawable.ic_more_vert_24,R.string.geo_about) { about() },LinearLayout.LayoutParams(dp(48),dp(48)))
@@ -347,7 +354,7 @@ class GeologyActivity:ThemedActivity() {
         val chapter=TimelineChapters.get(id) ?: return
         body.addView(button(R.string.geo_timeline_link) {
             startActivity(Intent(this,CosmicTimelineActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
                 .putExtra(CosmicTimelineActivity.EXTRA_CHAPTER_ID,id))
         }.apply { text=getString(R.string.geo_timeline_link,getString(chapter.title)) },full())
     }
@@ -355,7 +362,7 @@ class GeologyActivity:ThemedActivity() {
         val date=LifeTimeline.get(id) ?: return
         body.addView(button(R.string.geo_tree_link) {
             startActivity(Intent(this,ParentesActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
                 .putExtra(ParentesActivity.EXTRA_NODE_ID,date.nodeId))
         }.apply { text=getString(R.string.geo_tree_link,getString(date.title)) },full())
     }
@@ -411,6 +418,7 @@ class GeologyActivity:ThemedActivity() {
         val body=column()
         body.addView(label(getString(R.string.geo_about),22f,true),full())
         body.addView(label(getString(R.string.geo_about_body),15f),full())
+        body.addView(label(getString(R.string.science_navigation_help),15f),full())
         body.addView(label(getString(R.string.geo_sources),16f,true),full())
         EarthSource.entries.forEach { addSource(body,it) }
         EarthPeriods.all.flatMap { it.sources }.distinctBy { it.url }

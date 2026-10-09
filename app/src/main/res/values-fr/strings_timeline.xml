@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ct_exit_module">Quitter le module de chronologie</string>
-    <string name="ct_exit_hint">Un appui sur Retour remonte au niveau précédent. Un appui long quitte directement le module de chronologie.</string>
     <string name="ct_title">Chronologie</string>
     <string name="ct_hub">Explorer le temps, du Big Bang à la Terre</string>
     <string name="ct_back">Retour aux sciences</string>

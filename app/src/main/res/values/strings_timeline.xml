@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ct_exit_module">Exit the timeline module</string>
-    <string name="ct_exit_hint">Tap Back to return to the previous level. Hold Back to exit the timeline module directly.</string>
     <string name="ct_title">Chronology</string>
     <string name="ct_hub">Explore time, from the Big Bang to Earth</string>
     <string name="ct_back">Back to Science</string>

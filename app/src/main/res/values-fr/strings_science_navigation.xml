@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="science_back_to_previous_module">Revenir au module précédent</string>
+    <string name="science_return_to_module_start">Revenir au début du module</string>
+    <string name="science_navigation_help">Après avoir suivi un lien depuis un autre module, touche la flèche retour pour y revenir directement. Un appui long sur la flèche ramène au début du module actuel.</string>
+</resources>

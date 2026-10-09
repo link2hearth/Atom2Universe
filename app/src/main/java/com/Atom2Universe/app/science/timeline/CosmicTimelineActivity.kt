@@ -12,10 +12,10 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.solarsystem.SolarSystemActivity
 import com.Atom2Universe.app.util.followImmersiveMode
@@ -92,10 +92,7 @@ class CosmicTimelineActivity : ThemedActivity() {
         val root = column().apply { setBackgroundColor(palette.background) }
         val toolbar = row()
         back = icon(R.drawable.ic_arrow_back_24, R.string.ct_back) { returnToParent() }
-        back.tooltipText = null
-        back.setOnLongClickListener { finish(); true }
-        ViewCompat.replaceAccessibilityAction(back, AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_LONG_CLICK,
-            getString(R.string.ct_exit_module)) { _, _ -> finish(); true }
+        ScienceNavigation.bindHomeAction(back) { navigate("universe") }
         toolbar.addView(back, square())
         toolbar.addView(label(getString(R.string.ct_title), 20f, true), LinearLayout.LayoutParams(0, -2, 1f))
         toolbar.addView(icon(R.drawable.ic_search, R.string.ct_catalog) { catalog() }, square())
@@ -125,11 +122,16 @@ class CosmicTimelineActivity : ThemedActivity() {
     }
 
     private fun render() {
+        historyExplorer?.timeline?.stopMotion()
         historyExplorer = null
         content.removeAllViews()
         val chapters = path.map { requireNotNull(TimelineChapters.get(it)) }
         val current = chapters.last()
-        back.contentDescription = if (path.size > 1) getString(R.string.ct_geo_parent, getString(chapters[chapters.lastIndex - 1].title)) else getString(R.string.ct_back)
+        back.contentDescription = when {
+            ScienceNavigation.isModuleLink(intent) -> getString(R.string.science_back_to_previous_module)
+            path.size > 1 -> getString(R.string.ct_geo_parent, getString(chapters[chapters.lastIndex - 1].title))
+            else -> getString(R.string.ct_back)
+        }
         back.tooltipText = null
         if (current.human != null) {
             historyExplorer = HumanHistoryExplorer(this, historyWindow, historyRegion, historyTopic, locatedHistoryId,
@@ -155,7 +157,7 @@ class CosmicTimelineActivity : ThemedActivity() {
             content.addView(paragraph(date.note))
             content.addView(button(R.string.ct_open_life_tree) {
                 val target = Intent(this, ParentesActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
                     .putExtra(ParentesActivity.EXTRA_NODE_ID, date.nodeId)
                     .putExtra(EXTRA_LIFE_ID, date.id)
                 if (intent.getStringExtra(EXTRA_LIFE_ID) == date.id) {
@@ -246,7 +248,11 @@ class CosmicTimelineActivity : ThemedActivity() {
     }
 
     private fun returnToParent() {
-        if (path.size > 1) navigate(path[path.lastIndex - 1]) else finish()
+        when {
+            ScienceNavigation.isModuleLink(intent) -> finish()
+            path.size > 1 -> navigate(path[path.lastIndex - 1])
+            else -> finish()
+        }
     }
 
     private fun catalog() {
@@ -326,7 +332,7 @@ class CosmicTimelineActivity : ThemedActivity() {
         body.addView(paragraph(R.string.ct_geo_schematic))
         body.addView(paragraph(R.string.ct_scope, false, HumanHistory.periods.size, HumanHistory.entries.size))
         body.addView(paragraph(R.string.ct_history_navigation_help))
-        body.addView(paragraph(R.string.ct_exit_hint))
+        body.addView(paragraph(R.string.science_navigation_help))
         body.addView(paragraph(R.string.ct_history_dates_key))
         body.addView(paragraph(R.string.ct_history_method))
         body.addView(paragraph(R.string.ct_science_method))
@@ -394,7 +400,8 @@ class CosmicTimelineActivity : ThemedActivity() {
             openSheet?.dismiss(); historyExplorer?.focus(period); scroll.scrollTo(0, 0)
         }, fullRow())
         body.addView(button(R.string.ct_history_open_species) {
-            startActivity(Intent(this, ParentesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(Intent(this, ParentesActivity::class.java)
+                .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
                 .putExtra(ParentesActivity.EXTRA_NODE_ID, "ott770315"))
         }, fullRow())
         sheet(body)

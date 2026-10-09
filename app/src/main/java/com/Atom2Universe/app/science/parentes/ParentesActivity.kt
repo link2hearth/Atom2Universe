@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.timeline.CosmicTimelineActivity
 import com.Atom2Universe.app.science.timeline.LifeDate
 import com.Atom2Universe.app.science.timeline.LifeTimeline
@@ -41,6 +42,7 @@ class ParentesActivity : ThemedActivity() {
     private var pendingDate: String? = null
     private var scene: TreeScene? = null
     private lateinit var root: LinearLayout
+    private lateinit var back: ImageButton
     private lateinit var controls: LinearLayout
     private lateinit var breadcrumb: LinearLayout
     private lateinit var selectors: LinearLayout
@@ -112,6 +114,7 @@ class ParentesActivity : ThemedActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent); setIntent(intent)
+        updateBackDescription()
         receiveLink(intent)
         if (repository != null) applyPendingLink()
     }
@@ -142,7 +145,10 @@ class ParentesActivity : ThemedActivity() {
     private fun buildUi() {
         root = column().apply { setBackgroundColor(palette.background) }
         val heading = row()
-        heading.addView(icon(R.drawable.ic_arrow_back_24, R.string.pt_back) { navigateBack() })
+        back = icon(R.drawable.ic_arrow_back_24, R.string.pt_back) { navigateBack() }
+        ScienceNavigation.bindHomeAction(back, ::returnToStart)
+        updateBackDescription()
+        heading.addView(back)
         val titles = column().apply { setPadding(dp(4),0,0,0) }
         titles.addView(label(getString(R.string.pt_short_title),24f,true))
         titles.addView(label(getString(R.string.pt_tree_subtitle),12f).apply { setTextColor(palette.secondary) })
@@ -284,11 +290,30 @@ class ParentesActivity : ThemedActivity() {
     private fun select(id:String) { selected=id; chart.selected=id; showSummary() }
     private fun navigateBack() {
         when {
+            ScienceNavigation.isModuleLink(intent) -> finish()
             repository==null -> finish()
             comparing -> explore(repo.tree.root)
             selected!=focus -> select(focus)
             focus!=repo.tree.root -> explore(repo.tree.displayParent(focus) ?: repo.tree.root)
             else -> finish()
+        }
+    }
+
+    private fun updateBackDescription() {
+        back.contentDescription = getString(if (ScienceNavigation.isModuleLink(intent))
+            R.string.science_back_to_previous_module else R.string.pt_back)
+    }
+
+    private fun returnToStart() {
+        activeDialog?.dismiss()
+        pendingNode = null; pendingFirst = null; pendingSecond = null; pendingDate = null
+        comparing = false
+        // Also cancel a pending deep link if the atlas is still loading.
+        if (repository == null) {
+            focus = ""; selected = ""
+        } else {
+            explore(repo.tree.root)
+            back.announceForAccessibility(getString(R.string.science_return_to_module_start))
         }
     }
 
@@ -320,6 +345,7 @@ class ParentesActivity : ThemedActivity() {
 
     private fun showReading() {
         val body = column().apply { setPadding(dp(16), dp(8), dp(16), dp(16)) }
+        body.addView(label(getString(R.string.science_navigation_help), 15f))
         ParentesReading.sections.forEach { section ->
             body.addView(label(getString(section.title), 18f, true))
             body.addView(label(getString(section.body), 15f).apply { setTextIsSelectable(true) })
@@ -428,7 +454,7 @@ class ParentesActivity : ThemedActivity() {
 
     private fun openTimeline(date: LifeDate) {
         val target = Intent(this, CosmicTimelineActivity::class.java)
-            .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
             .putExtra(CosmicTimelineActivity.EXTRA_LIFE_ID, date.id)
         if (comparing && first != second && repo.tree.lca(first, second) == date.nodeId) {
             target.putExtra(EXTRA_FIRST_ID, first).putExtra(EXTRA_SECOND_ID, second)
