@@ -66,9 +66,28 @@ class BilliardCamera {
     }
 
     private fun fitDistance(): Float {
-        val horizontal=abs(cos(yaw))*length+abs(sin(yaw))*width+.50f
-        val depth=abs(sin(yaw))*length+abs(cos(yaw))*width+.50f
-        return max(horizontal/aspect.coerceAtLeast(.2f),depth*sin(pitch)+.3f)/(.76f*available)
+        // Frame the cloth, allowing its edges to leave the viewport. Keeping the
+        // central 90% of each dimension visible guarantees at least 81% of the
+        // playing surface, without reserving space for the wood or the room.
+        // Use the same fit in FREE before, during and after a stroke (and restore).
+        val verticalSlope=tan(Math.toRadians(23.0))*available*.98
+        val horizontalSlope=verticalSlope*aspect.coerceAtLeast(.2f)
+        val sy=sin(yaw.toDouble()); val cy=cos(yaw.toDouble())
+        val sp=sin(pitch.toDouble()); val cp=cos(pitch.toDouble())
+        var distance=0.0
+        for(px in listOf(-length*.45,length*.45)) {
+            for(pz in listOf(-width*.45,width*.45)) {
+                val along=sy*px+cy*pz
+                val across=cy*px-sy*pz
+                // Include ball centers above the cloth.
+                for(py in listOf(0.0,.04)) {
+                    val depth=cp*along+sp*py
+                    val up=cp*py-sp*along
+                    distance=max(distance,depth+max(abs(across)/horizontalSlope,abs(up)/verticalSlope))
+                }
+            }
+        }
+        return distance.toFloat()
     }
     private fun detachFromCue() {
         if(!behindCue) return
@@ -110,9 +129,9 @@ class BilliardCamera {
         var halfHeight: Float?=null
         var up=V3(0.0,1.0,0.0)
         if(mode==BilliardCameraMode.TOP) {
-            val horizontal=abs(cos(yaw))*length+abs(sin(yaw))*width+.32f
-            val depth=abs(sin(yaw))*length+abs(cos(yaw))*width+.32f
-            halfHeight=max(horizontal/aspect.coerceAtLeast(.2f),depth)/(2*available*zoom)
+            val horizontal=(abs(cos(yaw))*length+abs(sin(yaw))*width)*.90f
+            val depth=(abs(sin(yaw))*length+abs(cos(yaw))*width)*.90f
+            halfHeight=max(horizontal/aspect.coerceAtLeast(.2f),depth)/(2*available*.98f*zoom)
             desiredTarget=V3(x.toDouble(),.78,z.toDouble())
             desiredEye=desiredTarget+V3(0.0,6.0,0.0)
             up=V3(-sin(yaw.toDouble()),0.0,-cos(yaw.toDouble()))

@@ -4,6 +4,7 @@ import com.Atom2Universe.app.games.billiards.core.*
 import com.Atom2Universe.app.games.billiards.render.*
 import org.junit.Assert.*
 import org.junit.Test
+import kotlin.math.*
 
 class BilliardCameraTest {
     private val table=BilliardTable(TableFamily.POOL)
@@ -63,5 +64,44 @@ class BilliardCameraTest {
         assertEquals(state.zoom,restored.zoom,0f); assertEquals(state.x,restored.x,0f)
         val direction=pose(restored).up
         assertTrue(direction.x<-.99); assertTrue(kotlin.math.abs(direction.z)<.001)
+    }
+
+    @Test fun shotFramesTheTableTightlyAcrossOrientationsAndViewportSizes() {
+        for(aspect in listOf(.5f,1f,2f)) for(available in listOf(.5f,1f)) {
+            for(angle in 0 until 16) for(length in listOf(2.1f,3.57f)) {
+                val width=length/2
+                val camera=BilliardCamera().apply { aim(); watchShot(angle*PI/8) }
+                val pose=camera.pose(null,length,width,aspect,available)
+                val back=(pose.eye-pose.target).unit()
+                val right=V3(back.z,0.0,-back.x).unit()
+                val up=V3(back.y*right.z,back.z*right.x-back.x*right.z,-back.y*right.x)
+                val projected=buildList {
+                    // At least 81% of the cloth must remain visible; the outer
+                    // edges can be cropped to keep the balls large on screen.
+                    for(x in listOf(-length*.45,length*.45)) {
+                        for(z in listOf(-width*.45,width*.45)) {
+                            for(y in listOf(0.0,.04)) {
+                                val point=V3(x,y,z)
+                                val depth=(pose.eye-pose.target).length()-point.dot(back)
+                                val vertical=depth*tan(Math.toRadians(23.0))*available
+                                add(point.dot(right)/(vertical*aspect) to point.dot(up)/vertical)
+                            }
+                        }
+                    }
+                }
+                assertTrue(projected.all { abs(it.first)<=.981 && abs(it.second)<=.981 })
+                val extent=projected.maxOf { max(abs(it.first),abs(it.second)) }
+                assertEquals("The cloth must reach the viewport margin",.98,extent,.001)
+            }
+        }
+    }
+
+    @Test fun restoringFreeViewKeepsTheSameFramingAsTheShot() {
+        val camera=BilliardCamera().apply { aim(); watchShot(.37) }
+        val during=pose(camera)
+        val restored=BilliardCamera().apply { restore(camera.state(),true) }
+        val after=pose(restored)
+        assertEquals(during.eye,after.eye)
+        assertEquals(during.target,after.target)
     }
 }
