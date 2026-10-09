@@ -503,7 +503,7 @@ object ClassicCourse {
             mounds=listOf(hill(-47,106,6,34,55),hill(42,221,5,32,47)),
             hazards=listOf(sand(52f,184f,7f,12f,.45f),sand(-54f,283f,7f,11f,.6f)),
             // Gentle drainage, a calm cup and a shallow version of the original contour.
-            greenShape=GolfGreenShape(1.04f,-.3f,.12f,0.0f,0f,0f,.003f,.014f,
+            greenShape=GolfGreenShape(1.04f,-.3f,.06f,0.0f,0f,0f,.003f,.014f,
                 relief=GolfGreenRelief(GolfGreenForm.PLANE, 0f, 0f, run=18f)),
             fairwayRelief=GolfFairwayRelief(.006f,.10f),landingZ=165f,fairwayStart=65f),
         // 2. Gentle dogleg with a broad outside shelf; the corner bunker stays beyond the safe landing.
@@ -668,7 +668,7 @@ object ClassicCourse {
                 relief=GolfGreenRelief(GolfGreenForm.TIER, .7f, .07f, run=18f)),
             fairwayRelief=GolfFairwayRelief(.006f,.10f),landingZ=179f,fairwayStart=65f),
         // 18. Reachable lakeside finishing par 5, two broad landing shelves and an open collecting green.
-        ClassicHole(18,5,435f,finishX=-8f,elevation=4f,width=320f,greenRadius=21f,
+        ClassicHole(18,5,435f,finishX=-8f,elevation=4f,width=320f,greenRadius=24f,
             route=route(n(0,0,13),n(10,58,30),n(27,130,60),n(37,186,78),n(41,233,52),n(37,285,60),n(22,335,82),n(1,381,54),n(-8,435,46)),
             elevationProfile=relief(0 to 9,72 to 7,158 to 2,226 to 3,300 to 1,360 to 2,435 to 4),
             mounds=listOf(hill(99,242,9,34,75),hill(-57,412,7,36,39)),

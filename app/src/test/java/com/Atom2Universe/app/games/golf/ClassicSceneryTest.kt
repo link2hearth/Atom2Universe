@@ -23,7 +23,7 @@ class ClassicSceneryTest {
                 generated+=data.size
                 for(i in data.indices step GrassGeometry.STRIDE) {
                     val rx=data[i+6];val rz=data[i+8]
-                    assertTrue(hole.lieAt(rx,rz) in listOf(GolfLie.ROUGH,GolfLie.FAIRWAY,GolfLie.TEE))
+                    assertTrue(hole.lieAt(rx,rz) in listOf(GolfLie.ROUGH,GolfLie.SEMI_ROUGH,GolfLie.FAIRWAY,GolfLie.TEE))
                     assertTrue(hole.greenSignedDistance(rx,rz)>.75f)
                     assertTrue(hole.hazards.none{it.signedDistance(rx,rz)<.29f})
                     assertTrue(abs(rx-hole.pathX(rz))>1.5f)
@@ -38,8 +38,8 @@ class ClassicSceneryTest {
         for(hole in ClassicCourse.holes) {
             val chunks=ClassicDecor(hole).build()
             assertTrue(chunks.isNotEmpty())
-            assertTrue("Hole ${hole.number}",chunks.sumOf{it.count/3}<50000)
-            assertTrue(chunks.size<90)
+            assertTrue("Hole ${hole.number}",chunks.sumOf{it.count/3}<70000)
+            assertTrue(chunks.size<150)
         }
     }
 

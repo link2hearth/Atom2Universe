@@ -95,7 +95,7 @@ class GardensScoringTest {
             for(z in 100..h.length.toInt() step 5) {
                 assertTrue(h.fairwayWidth(z.toFloat())>=45f)
                 assertTrue("Continuous dry centre ${h.number}",h.lieAt(h.fairwayCenter(z.toFloat()),z.toFloat()) in
-                    listOf(GolfLie.FAIRWAY,GolfLie.GREEN))
+                    listOf(GolfLie.FAIRWAY,GolfLie.FRINGE,GolfLie.GREEN))
             }
         }
     }

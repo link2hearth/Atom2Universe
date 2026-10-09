@@ -67,7 +67,7 @@ internal object GrassGeometry {
             val lie=hole.lieAt(x,z)
             if(hole.snowy && lie==GolfLie.ROUGH)continue
             if(lie!=GolfLie.ROUGH&&lie!=GolfLie.SEMI_ROUGH&&lie!=GolfLie.FAIRWAY&&lie!=GolfLie.TEE)continue
-            if(hole.greenSignedDistance(x,z)<.85f || abs(x-hole.pathX(z))<1.65f)continue
+            if(hole.greenSignedDistance(x,z)<ClassicHole.FRINGE_WIDTH+.15f || abs(x-hole.pathX(z))<1.65f)continue
             if(hole.hazards.any{it.signedDistance(x,z)<.40f})continue
             if(trees.any{hypot(x-it.x,z-it.z)<.50f})continue
             val rough=lie==GolfLie.ROUGH
