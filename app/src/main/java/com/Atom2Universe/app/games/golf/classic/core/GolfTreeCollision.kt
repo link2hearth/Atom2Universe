@@ -27,7 +27,7 @@ internal object GolfTreeCollision {
             val px = from.x + (to.x - from.x) * t
             val py = from.y + (to.y - from.y) * t
             val pz = from.z + (to.z - from.z) * t
-            if (trunk && (py < ground - .12f || py > ground + r * 1.5f)) return
+            if (trunk && (py < ground - .12f || py > ground + r * if (tree.kind == 3) 2.35f else 1.5f)) return
             var nx = (px - cx) / (rx * rx)
             var ny = if (trunk) 0f else (py - cy) / (ry * ry)
             var nz = (pz - cz) / (rz * rz)
@@ -54,6 +54,7 @@ internal object GolfTreeCollision {
                 shape(tree.x, ground + r * 1.35f, tree.z, r * .73f + radius, r * .65f + radius, r * .73f + radius)
                 shape(tree.x, ground + r * 1.97f, tree.z, r * .57f + radius, r * .57f + radius, r * .57f + radius)
             }
+            3 -> shape(tree.x, ground + r * 2.35f, tree.z, r + radius, r * .4f + radius, r + radius)
             else -> {
                 shape(tree.x, ground + r * 1.7f, tree.z, r * .68f + radius, r * .68f * 1.8f + radius, r * .68f + radius)
                 shape(tree.x + .5f, ground + r, tree.z - .3f, r * .58f + radius, r * .58f + radius, r * .58f + radius)

@@ -5,13 +5,15 @@ import kotlin.math.hypot
 /** A lake with actual disconnected land contours, rather than narrow fairways around hazards. */
 object ArchipelagoCourse {
     private fun island(x: Int, z: Int, rx: Int, rz: Int, rotation: Float = 0f) =
-        GolfHazard(x.toFloat(), z.toFloat(), rx.toFloat(), rz.toFloat(), GolfLie.FAIRWAY,
-            rotation, .08f, x * .031f + z * .017f)
+        // Extra headland area compensates for the bays; the centre remains the landing target.
+        GolfHazard(x.toFloat(), z.toFloat(), rx * 1.18f, rz * 1.18f, GolfLie.FAIRWAY,
+            rotation, .08f, x * .031f + z * .017f, GolfShoreline.at(x.toFloat(), z.toFloat()))
 
     private fun hole(number: Int, par: Int, length: Int, finish: Int, radius: Int,
         first: List<GolfHazard> = emptyList(), second: List<GolfHazard> = emptyList()): ClassicHole {
-        val greenIsland = island(finish, length, radius + 14, radius + 17, number * .2f)
-        val teeIsland = island(0, 0, 17, 22)
+        // A complete apron must fit behind the deepest bay, including the green's 8 m bank.
+        val greenIsland = island(finish, length, radius + 23, radius + 26, number * .2f)
+        val teeIsland = island(0, 0, 17, 22, number * .37f)
         val attacks = buildList {
             if (par == 3) {
                 val distance = hypot(finish.toFloat(), length.toFloat())

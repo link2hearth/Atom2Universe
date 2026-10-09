@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import com.Atom2Universe.app.games.golf.classic.core.*
 import com.Atom2Universe.app.games.golf.classic.render.C
+import com.Atom2Universe.app.games.golf.classic.render.ArchipelagoScenery
 import com.Atom2Universe.app.games.golf.classic.render.ClassicLandscape
 import com.Atom2Universe.app.games.golf.classic.render.ClassicMesh
 import com.Atom2Universe.app.games.golf.classic.render.GroundBuilder
@@ -56,6 +57,59 @@ class ClassicGolfApercuTest {
     }
 
     @Test
+    fun archipel() {
+        for (number in listOf(2, 3, 18)) vues(ArchipelagoCourse.holes[number - 1], "archipel-")
+    }
+
+    @Test
+    fun lacsSinueux() {
+        vues(WildDetoursCourse.holes[1], "detours-")
+        vues(VertigoCourse.holes[1], "vertige-")
+    }
+
+    @Test
+    fun collineVertige() {
+        val hole = VertigoCourse.holes[1]
+        val landscape = ClassicLandscape(hole)
+        val ground = groundVertices(landscape.terrain())
+        val plain = landscape.scenery().map { vertices(it) }
+        val game = ClassicGame(hole)
+        fun eye(x: Float, z: Float) = Vec(x, hole.heightAt(x, z) + 3f, z)
+        val views = listOf(
+            "colline boisée — vue d'ensemble" to (Vec(290f, 270f, 85f) to Vec(60f, 9f, 320f)),
+            "depuis le fairway" to (eye(239f, 245f) to Vec(80f, 25f, 335f)),
+            "depuis le bord du lac" to (eye(-50f, 195f) to Vec(85f, 25f, 335f)),
+            "clairières et crête" to (Vec(48f, 87f, 240f) to Vec(77f, 22f, 363f)))
+        sheet("vertige-colline", views.map { (label, camera) ->
+            label to render(hole, ground, plain, game, camera, showGuide = false)
+        })
+    }
+
+    @Test
+    fun archipelLittoral() {
+        val hole = ArchipelagoCourse.holes[2]
+        val landscape = ClassicLandscape(hole)
+        val ground = groundVertices(landscape.terrain())
+        val plain = landscape.scenery().map { vertices(it) }
+        val m = landscape.archipelago!!.moorings.last()
+        val dx = sin(m.yaw); val dz = cos(m.yaw)
+        val game = ClassicGame(hole).apply { restore(GolfPoint(hole.cup.x,0f,hole.cup.z-5f),1) }
+        val views = listOf(
+            "rivage et navette" to (Vec(m.boat.x+dx*13f+dz*10f,8f,m.boat.z+dz*13f-dx*10f) to
+                Vec(m.shore.x-dx*7f,2f,m.shore.z-dz*7f)),
+            "petit bateau" to (Vec(m.boat.x+dx*7f+dz*6f,3.8f,m.boat.z+dz*7f-dx*6f) to
+                Vec(m.boat.x,1f,m.boat.z)),
+            "palmiers et plage" to (Vec(hole.cup.x-dx*12f,5f,hole.cup.z-dz*12f) to
+                Vec(m.shore.x,2f,m.shore.z)),
+            "île du green" to (Vec(hole.cup.x+40f,75f,hole.cup.z-55f) to
+                Vec(hole.cup.x,0f,hole.cup.z))
+        )
+        sheet("archipel-littoral",views.map { (label,camera) ->
+            label to render(hole,ground,plain,game,camera,showGuide=false)
+        })
+    }
+
+    @Test
     fun green() {
         val hole = ClassicCourse.holes[0]
         val landscape = ClassicLandscape(hole)
@@ -98,7 +152,9 @@ class ClassicGolfApercuTest {
         val putt = ClassicGame(hole).apply { restore(GolfPoint(hole.cup.x - 2f, 0f, hole.cup.z - 6f), 2) }
         val flight = ClassicGame(hole).apply { hit(.9f); repeat(150) { update(1f / 60f) } }
         val approachZ = if (hole.par == 3) hole.length - 35f else min(220f, hole.length - 45f)
-        val approach = ClassicGame(hole).apply { restore(GolfPoint(hole.fairwayCenter(approachZ), 0f, approachZ), 1) }
+        val approachPoint = hole.islands.drop(1).firstOrNull()?.let { GolfPoint(it.x,0f,it.z) }
+            ?: GolfPoint(hole.fairwayCenter(approachZ),0f,approachZ)
+        val approach = ClassicGame(hole).apply { restore(approachPoint, 1) }
         fun aerial(game: ClassicGame): Pair<Vec, Vec> {
             val end = game.preview(power(game)).landing ?: game.ball
             val span = hypot(end.x - game.ball.x, end.z - game.ball.z)
@@ -135,6 +191,7 @@ class ClassicGolfApercuTest {
     private fun render(hole: ClassicHole, ground: FloatArray, plain: List<FloatArray>, game: ClassicGame,
                        camera: Pair<Vec, Vec>, showGuide: Boolean, aiming: Boolean = false, aerial: Boolean = false): Bitmap {
         val r = Raster(w, h)
+        r.archipelago = hole.islands.isNotEmpty()
         r.camera(camera.first, camera.second)
         // The slope board, as in ClassicRenderer: only while the shot is prepared; from above around
         // the point looked at, else for a putt.
@@ -162,6 +219,11 @@ class ClassicGolfApercuTest {
         r.plain(vertices(lights.build()))
         plain.forEach { r.plain(it) }
         val extras = MeshBuilder()
+        if (hole.islands.isNotEmpty()) {
+            val scene = ArchipelagoScenery(hole)
+            val m = scene.mooringFor(if (game.state == GolfState.FLYING) hole.tee else game.ball)
+            extras.append(ArchipelagoScenery.boat(false), P(m.boat.x,m.boat.y,m.boat.z),m.yaw)
+        }
         if (showGuide && game.state == GolfState.READY) guide(extras, hole, game.preview(if (aiming) gauge(game) else power(game)), eye)
         val ball = game.ball
         val distance = sqrt((ball.x - eye.x).pow(2) + (ball.y - eye.y).pow(2) + (ball.z - eye.z).pow(2))
@@ -287,6 +349,7 @@ class ClassicGolfApercuTest {
         private val near = .03f
         var board: SlopeBoard? = null
         var cell = 1f; var fineWeight = 1f; var holeX = 0f; var holeZ = 0f
+        var archipelago = false
         private val slopeOnScreen = FloatArray(4)
 
         fun camera(from: Vec, to: Vec) {
@@ -395,7 +458,34 @@ class ClassicGolfApercuTest {
             val dist = sqrt((wx - eye.x).pow(2) + (wy - eye.y).pow(2) + (wz - eye.z).pow(2))
             val near = 1f - smooth(10f, 70f, dist)
             val mid = 1f - smooth(80f, 420f, dist)
-            val fairway = v[9]; val green = v[10]; val sand = v[11]; val water = v[12]
+            var fairway = v[9]; var green = v[10]; var sand = v[11]; var water = v[12]
+            var coastal: FloatArray? = null
+            if (archipelago && v[16] > .5f) {
+                // Same per-pixel beach fade as GroundShader, using interpolated contour distance.
+                val shore=v[13]-6f
+                val beach=smooth(-4.6f,-.8f,shore)
+                water=smooth(-.12f,.30f,shore);sand=beach*(1f-water)
+                green=1f-smooth(-.035f,.035f,v[14])
+                val fringe=(1f-green)*(1f-smooth(ClassicHole.FRINGE_WIDTH-.035f,ClassicHole.FRINGE_WIDTH+.035f,v[14]))
+                val tee=1f-smooth(-.035f,.035f,max(abs(wx)-4.5f,abs(wz)-5.5f))
+                fairway=(1f-green-fringe)*max(tee,1f-smooth(-.035f,.035f,v[13]))
+                val semi=max(0f,1f-green-fringe-fairway)*(1f-smooth(3f-.035f,3f+.035f,v[13]))
+                val rough=(1f-green-fringe-fairway-semi).coerceAtLeast(0f)
+                val grass=floatArrayOf(.30f,.46f,.21f).map { it*rough }.toFloatArray()
+                for((rgb,weight) in listOf(floatArrayOf(.39f,.58f,.25f) to fairway,
+                    floatArrayOf(.40f,.50f,.23f) to semi,floatArrayOf(.32f,.52f,.24f) to fringe,
+                    floatArrayOf(.46f,.65f,.32f) to green)) for(k in 0..2) grass[k]+=rgb[k]*weight
+                val wet=smooth(-1.3f,.15f,shore);val depth=smooth(0f,32f,shore)
+                val drySand=floatArrayOf(.86f,.79f,.59f);val wetSand=floatArrayOf(.65f,.62f,.44f)
+                val shallow=floatArrayOf(.16f,.66f,.61f);val deep=floatArrayOf(.045f,.29f,.43f)
+                coastal=FloatArray(3) { k ->
+                    val sandColour=drySand[k]+(wetSand[k]-drySand[k])*wet
+                    val land=grass[k]+(sandColour-grass[k])*beach
+                    val sea=shallow[k]+(deep[k]-shallow[k])*depth
+                    (land+(sea-land)*water)*v[15]
+                }
+                fairway*=(1f-beach)*(1f-water);green*=(1f-beach)*(1f-water)
+            }
             val rough = (1f - fairway - green - sand - water).coerceIn(0f, 1f)
             var shade = 1f + (noise(wx * .045f, wz * .045f) * .6f + noise(wx * .13f, wz * .13f) * .4f - .5f) * .10f * mid
             val tufts = noise(wx * 2.3f, wz * 2.3f) * .55f + noise(wx * 7.9f, wz * 7.9f) * .45f
@@ -408,7 +498,7 @@ class ClassicGolfApercuTest {
             shade += green * ((bandsGreen - .5f) * .032f * mid + (noise(wx * 13f, wz * 13f) - .5f) * .035f * near)
             val rake = sin(wx * 6f + noise(wx * .7f, wz * .7f) * 3f) * .5f + .5f
             shade += sand * ((noise(wx * 17f, wz * 17f) - .5f) * .13f * near + (rake - .5f) * .05f * near)
-            val colour = FloatArray(3) { k -> v[6 + k] * shade }
+            val colour = FloatArray(3) { k -> (coastal?.get(k) ?: v[6 + k]) * shade }
             board?.let { board(it, v, water, colour) }
             val fog = smooth(180f, 850f, dist) * .62f
             val sky = floatArrayOf(.70f, .85f, .86f)

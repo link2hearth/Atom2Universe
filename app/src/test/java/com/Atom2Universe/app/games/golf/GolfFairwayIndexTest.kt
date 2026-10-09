@@ -78,9 +78,12 @@ class GolfFairwayIndexTest {
             val tee = terrain.invoke(h, 0f, 0f) as Float
             assertEquals(tee + ClassicHole.BALL_RADIUS, h.tee.y, 0f)
             for (lake in h.hazards.filter { it.lie == GolfLie.WATER }) {
-                assertEquals((terrain.invoke(h, lake.x, lake.z) as Float) - 1.2f, h.waterHeight(lake), 0f)
+                fun level(w:GolfHazard) = (w.watercourse?.nodes?.minOf {
+                    terrain.invoke(h,w.x+it.x,w.z+it.z) as Float
+                } ?: (terrain.invoke(h,w.x,w.z) as Float)) - 1.2f
+                assertEquals(level(lake), h.waterHeight(lake), 0f)
                 val other = lake.copy(x = lake.x + 1f)
-                assertEquals((terrain.invoke(h, other.x, other.z) as Float) - 1.2f, h.waterHeight(other), 0f)
+                assertEquals(level(other), h.waterHeight(other), 0f)
             }
         }
     }

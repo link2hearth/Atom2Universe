@@ -102,7 +102,8 @@ internal class GroundMesh(private val vertices: FloatArray) {
  * The slope board ([SlopeBoard]) is drawn here too: continuous, anti-aliased lines of constant
  * screen width that follow the turf exactly, tinted progressively by height.
  */
-internal class GroundShader(private val highlands:Boolean=false, private val snowy:Boolean=false) {
+internal class GroundShader(private val highlands:Boolean=false, private val snowy:Boolean=false,
+    private val archipelago:Boolean=false) {
     private var program = 0
     private var mvpLoc = 0; private var eyeLoc = 0; private var timeLoc = 0; private var overviewLoc = 0
     private var boardLoc = 0; private var boardSizeLoc = 0; private var boardCellLoc = 0
@@ -110,6 +111,7 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
     private var cutWidthsLoc = 0
     private var highlandsLoc = 0
     private var snowLoc = 0
+    private var archipelagoLoc = 0
 
     fun create() {
         program = link(VERTEX, FRAGMENT)
@@ -126,6 +128,7 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
         cutWidthsLoc = GL.glGetUniformLocation(program, "uCutWidths")
         highlandsLoc = GL.glGetUniformLocation(program, "uHighlands")
         snowLoc = GL.glGetUniformLocation(program, "uSnow")
+        archipelagoLoc = GL.glGetUniformLocation(program, "uArchipelago")
     }
 
     /**
@@ -139,6 +142,7 @@ internal class GroundShader(private val highlands:Boolean=false, private val sno
         GL.glUseProgram(program)
         GL.glUniform1f(highlandsLoc,if(highlands)1f else 0f)
         GL.glUniform1f(snowLoc,if(snowy)1f else 0f)
+        GL.glUniform1f(archipelagoLoc,if(archipelago)1f else 0f)
         GL.glUniformMatrix4fv(mvpLoc, 1, false, viewProjection, 0)
         GL.glUniform3f(eyeLoc, eyeX, eyeY, eyeZ)
         GL.glUniform1f(timeLoc, time)
@@ -211,6 +215,7 @@ uniform float uTime;
 uniform float uOverview;
 uniform float uHighlands;
 uniform float uSnow;
+uniform float uArchipelago;
 uniform vec2 uCutWidths;
 // Slope board: squares fixed on the ground, lines along the world axes through the hole (uHole).
 // Window: the squares whose centre lies within radius of the segment uBoard (from xz, to xz);
@@ -272,6 +277,14 @@ void main() {
     float semi=0.0, fringe=0.0;
     vec3 base=vColour;
     if(vCuts.w>.5) {
+        float beach=0.0;
+        float shore=vCuts.x-6.0;
+        if(uArchipelago>.5) {
+            // Evaluate the broad grass/sand fade per fragment, not along triangle edges.
+            beach=smoothstep(-4.6,-.8,shore);
+            water=smoothstep(-.12,.30,shore);
+            sand=beach*(1.0-water);
+        }
         // Threshold interpolated contour distances per pixel: narrow, crisp mowing edges.
         float edge=.035;
 #ifdef GL_OES_standard_derivatives
@@ -294,6 +307,11 @@ void main() {
         grass=mix(grass,winter,uSnow);
         float dry=1.0-clamp(sand+water,0.0,1.0);
         base=mix(vColour,grass*vCuts.z,dry);
+        if(uArchipelago>.5) {
+            vec3 beachColour=mix(vec3(.86,.79,.59),vec3(.65,.62,.44),smoothstep(-1.3,.15,shore));
+            vec3 sea=mix(vec3(.16,.66,.61),vec3(.045,.29,.43),smoothstep(0.0,32.0,shore));
+            base=mix(mix(grass,beachColour,beach)*vCuts.z,sea*vCuts.z,water);
+        }
         green*=dry; fringe*=dry; fairway*=dry; semi*=dry;
     }
     float rough=clamp(1.0-fairway-green-semi-fringe-sand-water,0.0,1.0);
@@ -341,12 +359,27 @@ void main() {
         vec3 view=normalize(toEye);
         float fresnel=.12+.68*pow(1.0-max(0.0,dot(normal,view)),4.0);
         vec3 reflection=mix(vec3(.43,.61,.67),vec3(.79,.84,.78),fresnel);
-        vec3 lake=mix(vColour*shade,reflection,fresnel);
+        vec3 waterBase=vColour;
+        if(uArchipelago>.5) waterBase=mix(vec3(.16,.66,.61),vec3(.045,.29,.43),
+            smoothstep(0.0,32.0,vCuts.x-6.0))*vCuts.z;
+        vec3 lake=mix(waterBase*shade,reflection,fresnel);
         vec3 sun=normalize(vec3(-.35,.86,-.36));
         float sparkle=pow(max(0.0,dot(normal,normalize(view+sun))),96.0);
         lake+=vec3(1.0,.88,.61)*sparkle*.65;
         float edge=(1.0-smoothstep(.35,.98,water))*water;
         lake+=vec3(.28,.30,.18)*edge*(.7+.3*sin(phase*3.0));
+        if(uArchipelago>.5) {
+            // The baked fairway distance is the true island shore plus its six-metre rough belt.
+            // Broad turquoise shallows, small caustics and a moving wash follow every cove.
+            float shore=max(0.0,vCuts.x-6.0);
+            float shallow=1.0-smoothstep(1.5,24.0,shore);
+            float caustic=pow(.5+.5*sin(p.x*1.8+p.y*.7+uTime*.55)
+                *sin(p.y*2.1-p.x*.6-uTime*.43),8.0);
+            lake+=vec3(.12,.22,.15)*caustic*shallow*(1.0-fresnel);
+            float wash=.5+.5*sin(shore*3.2-uTime*1.5+noise(p*.35)*1.4);
+            float foam=(1.0-smoothstep(.2,2.5,shore))*smoothstep(.68,.96,wash);
+            lake=mix(lake,vec3(.81,.93,.85),foam*.48);
+        }
         colour=mix(colour,lake,water);
     }
     // Slope board, over the turf only.

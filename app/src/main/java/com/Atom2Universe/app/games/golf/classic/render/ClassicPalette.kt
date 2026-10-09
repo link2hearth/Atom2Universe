@@ -13,5 +13,5 @@ internal class ClassicPalette(hole: ClassicHole) {
     val green=if(hole.snowy) C(.40f,.58f,.49f) else if(hole.highlands) C(.49f,.61f,.40f) else C(.46f,.65f,.32f)
     val fringe=if(hole.snowy) C(.52f,.65f,.61f) else if(hole.highlands) C(.35f,.47f,.30f) else C(.32f,.52f,.24f)
     val sand=if(hole.snowy) C(.68f,.70f,.75f) else if(hole.highlands) C(.69f,.66f,.56f) else C(.83f,.76f,.58f)
-    val water=if(hole.highlands) C(.13f,.32f,.39f) else C(.15f,.40f,.43f)
+    val water=if(hole.islands.isNotEmpty()) C(.045f,.29f,.43f) else if(hole.highlands) C(.13f,.32f,.39f) else C(.15f,.40f,.43f)
 }

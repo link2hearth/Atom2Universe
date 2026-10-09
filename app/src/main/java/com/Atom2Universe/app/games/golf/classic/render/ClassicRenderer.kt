@@ -19,7 +19,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     @Volatile var frame = ClassicFrame(hole.tee, 0f, false, ShotPreview.NONE)
     private val landscape=ClassicLandscape(hole)
     private val terrain by lazy { landscape.terrain() }
-    private val groundShader=GroundShader(hole.highlands,hole.snowy)
+    private val groundShader=GroundShader(hole.highlands,hole.snowy,hole.islands.isNotEmpty())
     private val grass=ClassicGrass(hole)
     private val lightShader=BoardLightShader()
     private var boardLights=FloatArray(0)
@@ -69,7 +69,8 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     /** Mini-golf: the obstacles that move are drawn from the game's clock. */
     private val miniScene by lazy { if(hole.mini!=null) MiniScene(hole) else null }
     private val meshes get() = scenery+festive.scenery+festive.animatedMeshes+
-        listOf(blades,ball,shadow,ring,bird,sky,flag,pin,hazardPin,cupMarker)+rabbit.meshes+leaves+(miniScene?.meshes?:emptyList())
+        listOf(blades,ball,shadow,ring,bird,sky,flag,pin,hazardPin,cupMarker)+rabbit.meshes+leaves+
+        listOfNotNull(landscape.archipelago?.launch)+(miniScene?.meshes?:emptyList())
     // A few leaves carried by the wind a couple of metres above the turf; each waits a while before the next one.
     private val leafX=FloatArray(LEAVES); private val leafY=FloatArray(LEAVES); private val leafZ=FloatArray(LEAVES)
     private val leafWait=FloatArray(LEAVES) { 1f+it*2.5f }
@@ -186,6 +187,15 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             hole.cup.x,hole.cup.z,2f*tan(Math.toRadians(25.0).toFloat())/screenHeight,screenHeight/900f)
         GL.glUseProgram(program)
         identity(); scenery.forEach { if(it.visible(viewProjection)) draw(it,.12f) }
+        landscape.archipelago?.let { coast ->
+            val berth=coast.mooringFor(if(f.flying) golferAddress else playerFrame.ball)
+            identity()
+            Matrix.translateM(model,0,berth.boat.x,berth.boat.y+.06f*sin(time*1.7f),berth.boat.z)
+            Matrix.rotateM(model,0,berth.yaw*180f/PI.toFloat(),0f,1f,0f)
+            Matrix.rotateM(model,0,1.4f*sin(time*1.3f),0f,0f,1f)
+            draw(coast.launch,.04f)
+        }
+        identity()
         festive.scenery.forEach { if(it.visible(viewProjection)) draw(it,.04f) }
         festive.animate(time,P(eyeX,eyeY,eyeZ)) { mesh,position,yaw,scale ->
             identity(); Matrix.translateM(model,0,position.x,position.y,position.z)

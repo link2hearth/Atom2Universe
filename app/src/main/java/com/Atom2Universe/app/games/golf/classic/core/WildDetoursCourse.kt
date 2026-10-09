@@ -19,7 +19,8 @@ object WildDetoursCourse {
     private fun sand(x: Int, z: Int, rx: Int = 9, rz: Int = 14, angle: Float = 0f) =
         GolfHazard(x.toFloat(), z.toFloat(), rx.toFloat(), rz.toFloat(), GolfLie.BUNKER, angle, .12f)
     private fun lake(x: Int, z: Int, rx: Int, rz: Int, angle: Float = 0f) =
-        GolfHazard(x.toFloat(), z.toFloat(), rx.toFloat(), rz.toFloat(), GolfLie.WATER, angle, .06f)
+        GolfWatercourse.meander(x.toFloat(),z.toFloat(),rx.toFloat(),rz.toFloat(),angle)
+    private fun w(x:Int,z:Int,r:Int)=GolfWaterNode(x.toFloat(),z.toFloat(),r.toFloat())
     private fun grove(x: Int, z: Int) = listOf(
         GolfTree(x.toFloat(), z.toFloat(), 4.8f, 1),
         GolfTree(x - 8f, z - 12f, 4.1f, 0), GolfTree(x + 8f, z + 12f, 4.3f, 2),
@@ -53,7 +54,8 @@ object WildDetoursCourse {
         hole(2,5,505,-100,5,
             r(n(0,0,12),n(45,80,32),n(110,175,50),n(130,270,44),n(150,300,48),n(45,435,42),n(-100,505,24)),
             e(0 to 14,110 to 6,210 to 2,355 to 2,505 to 5),
-            listOf(lake(-47,290,25,66),lake(27,290,27,66),lake(-8,150,33,40),lake(-10,385,29,19),sand(-47,450)),
+            listOf(GolfWatercourse.lake(w(-8,150,26),w(-42,205,20),w(-47,290,20),w(-43,352,18),
+                w(-10,385,14),w(26,345,16),w(27,280,21),w(26,225,18)),sand(-47,450)),
             branches=listOf(r(n(0,65,20),n(-10,170,0),n(-10,203,0),n(-10,225,28),n(-10,235,17),n(-10,335,17),n(-10,358,0),n(-10,407,0),n(-10,430,24),n(-100,505,24))),
             form=GolfGreenForm.TIER, landing=175f),
         // Peninsula: direct water carry or a broad short reception leaving a separate chip.
@@ -80,7 +82,8 @@ object WildDetoursCourse {
         hole(6,5,545,-100,8,
             r(n(0,0,12),n(45,80,32),n(110,175,50),n(130,270,44),n(125,350,48),n(35,455,42),n(-100,545,24)),
             e(0 to 8,150 to 3,280 to 2,410 to 4,545 to 8),
-            listOf(lake(-30,268,36,43),lake(-14,390,36,28),sand(-50,490)),
+            listOf(GolfWatercourse.lake(w(-30,248,21),w(-30,278,26),w(12,318,18),w(10,355,16),
+                w(-14,390,24)),sand(-50,490)),
             branches=listOf(r(n(0,65,22),n(-38,178,28),n(-45,215,24),n(-46,253,0),n(-46,285,0),
                 n(-65,331,18),n(-65,355,18),n(-65,392,0),n(-65,425,24),n(-100,545,24))),
             form=GolfGreenForm.RIDGE, landing=175f),
@@ -139,7 +142,8 @@ object WildDetoursCourse {
         hole(15,5,560,-100,6,
             r(n(0,0,12),n(45,80,32),n(110,175,50),n(130,270,44),n(125,355,48),n(35,465,42),n(-100,560,24)),
             e(0 to 14,120 to 7,250 to 2,380 to 3,560 to 6),
-            listOf(lake(-13,250,49,48),lake(-26,400,33,40),sand(-76,521)),
+            listOf(GolfWatercourse.lake(w(-13,250,33),w(8,294,24),w(11,330,18),w(-17,359,23),
+                w(-26,400,25)),sand(-76,521)),
             branches=listOf(r(n(0,65,22),n(-44,150,0),n(-71,193,0),n(-71,219,28),n(-74,238,20),n(-74,297,22),
                 n(-74,365,21),n(-73,421,23),n(-20,490,25),n(-100,560,24))),
             form=GolfGreenForm.SWALE, landing=175f),
@@ -159,7 +163,8 @@ object WildDetoursCourse {
         hole(18,5,535,-80,7,
             r(n(0,0,12),n(45,80,32),n(110,175,50),n(135,270,44),n(140,350,48),n(45,450,42),n(-80,535,24)),
             e(0 to 20,120 to 10,240 to 2,380 to 2,535 to 7),
-            listOf(lake(-45,310,26,81),lake(31,310,26,81),lake(-7,151,31,39),lake(-7,402,24,12),sand(-108,526)),
+            listOf(GolfWatercourse.lake(w(-7,151,25),w(-42,187,16),w(-43,222,18),w(-45,310,20),w(-38,373,16),
+                w(-7,402,11),w(30,363,17),w(31,291,20),w(29,234,17)),sand(-108,526)),
             branches=listOf(r(n(0,65,22),n(-7,171,0),n(-7,196,0),n(-7,220,28),n(-7,236,18),n(-7,375,18),n(-7,391,0),n(-7,414,0),n(-7,430,24),n(0,460,24),n(-80,535,24))),
             form=GolfGreenForm.RIDGE,landing=175f,radius=15f)
     ).map { h ->

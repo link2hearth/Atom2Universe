@@ -83,13 +83,24 @@ internal class ClassicDecor(private val hole:ClassicHole) {
                 if(hole.lieAt(x,z)!=GolfLie.WATER) at(x,z){fence(it,x,z,x,z+4.5f)}
             }
         }
-        // Reeds and weathered rocks follow the true scalloped banks, never the interior of a lake.
+        // Reeds and rocks follow both banks of winding lakes, including their inner coves.
         hole.hazards.filter{it.lie==GolfLie.WATER}.forEachIndexed { index,h ->
             repeat(26) { i ->
                 val a=i*2f*PI.toFloat()/26f
                 var radius=1f
                 var x=h.x;var z=h.z
-                repeat(14) {
+                val course=h.watercourse
+                if(course!=null) {
+                    val samples=course.samples
+                    val k=1+(i/2)*(samples.size-3)/12
+                    val p=samples[k];val before=samples[k-1];val after=samples[k+1]
+                    val length=hypot(after.x-before.x,after.z-before.z)
+                    val side=if(i%2==0)1f else -1f
+                    val dx=(after.z-before.z)/length*side;val dz=(before.x-after.x)/length*side
+                    val limit=max(h.rx,h.rz)*3f
+                    while(radius<limit && course.signedDistance(p.x+dx*radius,p.z+dz*radius)<.8f) radius+=.8f
+                    x=h.x+p.x+dx*radius;z=h.z+p.z+dz*radius
+                } else repeat(14) {
                     x=h.x+cos(a)*h.rx*radius;z=h.z+sin(a)*h.rz*radius
                     if(h.signedDistance(x,z)<.5f)radius+=.045f
                 }

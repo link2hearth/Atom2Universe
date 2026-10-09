@@ -78,7 +78,9 @@ class CourseArchitectureTest {
             assertEquals(hazard.signedDistance(x.toFloat(),z.toFloat())<=0f,hazard.contains(x.toFloat(),z.toFloat()))
         }
         assertTrue(ClassicCourse.holes.flatMap { it.hazards }.count { abs(it.rotation)>.2f }>=25)
-        assertTrue(ClassicCourse.holes.all { it.greenShape.shape>.1f })
+        // The beginner redesign deliberately softened the first green to .06; the others
+        // retain their .12 contours. Check visible shaping without rejecting that easy opener.
+        assertTrue(ClassicCourse.holes.all { it.greenShape.shape >= .06f })
         ClassicCourse.holes.forEach { hole ->
             hole.hazards.filter { it.lie==GolfLie.WATER }.forEach { lake ->
                 assertEquals(hole.heightAt(lake.x,lake.z),hole.heightAt(lake.x+1f,lake.z+1f),.001f)

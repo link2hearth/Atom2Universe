@@ -1,5 +1,8 @@
 package com.Atom2Universe.app.games.golf.classic.core
 
+import kotlin.math.*
+import kotlin.random.Random
+
 /**
  * Expert course: broad outside loops versus detached, 18–22 m wide carry receptions.
  * Carries stay around 180–210 m, so precision and club choice, rather than extra power, matter.
@@ -9,7 +12,8 @@ package com.Atom2Universe.app.games.golf.classic.core
 object VertigoCourse {
     private fun n(x: Int, z: Int, width: Int) = GolfRouteNode(x.toFloat(), z.toFloat(), width.toFloat())
     private fun obstacle(x: Int, z: Int, rx: Int, rz: Int, lie: GolfLie) =
-        GolfHazard(x.toFloat(), z.toFloat(), rx.toFloat(), rz.toFloat(), lie, shape = .06f)
+        GolfHazard(x.toFloat(), z.toFloat(), rx.toFloat(), rz.toFloat(), lie, shape = .06f,
+            shoreline = if (lie == GolfLie.WATER) GolfShoreline.at(x.toFloat(), z.toFloat()) else null)
 
     /** A small elongated reception, with fully unmown gaps before and after it. */
     private fun pocket(x: Int, z: Int, width: Int) = listOf(
@@ -37,13 +41,27 @@ object VertigoCourse {
         // No continuous ribbon to the green: leave a real rough carry after the last island.
         val branch = islands + n(endX, length - 30, 0) + n(endX, length, 22)
         val hazards = buildList {
-            add(obstacle(x, firstZ - 66, 38, 22, lie))
-            add(obstacle(x + side * 33, firstZ, 12, 33, lie))
-            if (par == 4) add(obstacle(x, firstZ + 67, 38, 22, lie))
-            else {
-                add(obstacle((x + second) / 2, (firstZ + secondZ) / 2, 42, 40, lie))
-                add(obstacle(second + side * 32, secondZ, 11, 31, lie))
-                add(obstacle(second, secondZ + 65, 32, 20, lie))
+            if (lie == GolfLie.WATER) {
+                fun w(px:Int,pz:Int,r:Int)=GolfWaterNode(px.toFloat(),pz.toFloat(),r.toFloat())
+                val spine=mutableListOf(w(x,firstZ-66,20),w(x+side*40,firstZ-38,17),
+                    w(x+side*36,firstZ,13),w(x+side*43,firstZ+36,16))
+                if(par==4) spine+=w(x,firstZ+67,21) else {
+                    spine+=w((x+second)/2,(firstZ+secondZ)/2,27)
+                    spine+=w(second+side*39,secondZ-38,16)
+                    spine+=w(second+side*36,secondZ,12)
+                    spine+=w(second+side*38,secondZ+37,15)
+                    spine+=w(second,secondZ+65,19)
+                }
+                add(GolfWatercourse.lake(*spine.toTypedArray()))
+            } else {
+                add(obstacle(x, firstZ - 66, 38, 22, lie))
+                add(obstacle(x + side * 33, firstZ, 12, 33, lie))
+                if (par == 4) add(obstacle(x, firstZ + 67, 38, 22, lie))
+                else {
+                    add(obstacle((x + second) / 2, (firstZ + secondZ) / 2, 42, 40, lie))
+                    add(obstacle(second + side * 32, secondZ, 11, 31, lie))
+                    add(obstacle(second, secondZ + 65, 32, 20, lie))
+                }
             }
             add(obstacle(endX + side * 27, length - 8, 8, 13, GolfLie.BUNKER))
         }
@@ -85,13 +103,68 @@ object VertigoCourse {
             fairwayStart = 50f,
             elevationProfile = listOf(GolfElevationNode(0f, 10f),
                 GolfElevationNode((length - 65).toFloat(), 4f), GolfElevationNode(length.toFloat(), height.toFloat())),
-            hazards = listOf(obstacle(x, length - 65, 37, 23, lie),
-                obstacle(x + side * 28, length - 6, 10, 20, lie),
-                obstacle(x, length + 26, 14, 7, GolfLie.BUNKER)),
+            hazards = (if(lie==GolfLie.WATER) listOf(GolfWatercourse.lake(
+                GolfWaterNode(x.toFloat(),length-65f,20f),GolfWaterNode(x+side*30f,length-40f,15f),
+                GolfWaterNode(x+side*32f,length-8f,10f))) else
+                listOf(obstacle(x,length-65,37,23,lie),obstacle(x+side*28,length-6,10,20,lie))) +
+                obstacle(x,length+26,14,7,GolfLie.BUNKER),
             greenShape = shape(number, form), fairwayRelief = GolfFairwayRelief(side * .003f, .06f),
             landscapeStyle = GolfLandscapeStyle.AUTUMN_HIGHLANDS,
             attackLandings = clubs.map { GolfAttackLanding(x.toFloat(), length.toFloat(), it) },
             attackTreeClearance = 5f)
+    }
+
+    /** Broad outside fairways wind around wooded ridges; the detached attack pockets stay narrow.
+     * Overlapping shoulders avoid a single cone; clearings retain views of the lake.
+     */
+    private fun woodedRidge(hole: ClassicHole): ClassicHole {
+        val route = hole.route.mapIndexed { i, node ->
+            if (i in 1 until hole.route.lastIndex && node.width >= 28f) node.copy(width = node.width * 1.45f)
+            else node
+        }
+        val attacks = hole.attackLandings.distinctBy { it.z }
+        val middleZ = if (hole.par == 3) hole.length * .62f else attacks.map { it.z }.average().toFloat() + 20f
+        val attackX = if (hole.par == 3) hole.finishX else attacks.map { it.x }.average().toFloat()
+        val middleX = (hole.fairwayCenter(middleZ) + attackX) * .5f
+        val rx = if (hole.par == 3) 30f else 68f
+        val rz = if (hole.par == 5) 108f else if (hole.par == 4) 76f else 40f
+        val side = if (middleX >= 0f) 1f else -1f
+        val ridge = if (hole.number == 2) listOf(
+            GolfMound(85f, 335f, 22f, 75f, 103f),
+            GolfMound(90f, 260f, 10f, 60f, 74f),
+            GolfMound(42f, 410f, 9f, 45f, 64f)) else listOf(
+            GolfMound(middleX, middleZ, if (hole.par == 3) 9f else 18f + hole.number % 4, rx, rz),
+            GolfMound(middleX + side * rx * .20f, middleZ - rz * .66f, 7f, rx * .8f, rz * .72f),
+            GolfMound(middleX - side * rx * .34f, middleZ + rz * .64f, 8f, rx * .7f, rz * .62f))
+        val terrain = hole.copy(route = route, mounds = ridge)
+        val random = Random(6200 + hole.number)
+        val main = ridge.first()
+        val groves = listOf(-.42f to -.86f, .34f to -.55f, -.28f to -.12f,
+            .60f to .10f, .05f to .53f, -.62f to .84f).map { (x, z) ->
+                main.x + x * main.rx to main.z + z * main.rz
+            }
+        val trees = buildList<GolfTree> {
+            for ((cx, cz) in groves) repeat(20) {
+                val angle = random.nextFloat() * 2f * PI.toFloat()
+                val reach = sqrt(random.nextFloat())
+                val x = cx + cos(angle) * reach * min(27f, main.rx * .4f)
+                val z = cz + sin(angle) * reach * min(31f, main.rz * .4f)
+                val radius = 4.1f + random.nextFloat() * 2.1f
+                if (terrain.lieAt(x, z) != GolfLie.ROUGH ||
+                    terrain.fairwaySignedDistance(x, z) < radius + 10f ||
+                    terrain.hazards.any { it.signedDistance(x, z) < radius + 6f } ||
+                    any { hypot(x - it.x, z - it.z) < (radius + it.radius) * .85f }) return@repeat
+                // Keep both the tee carry and the lake-bank attack corridor open.
+                if (terrain.attackLandings.any { a ->
+                    val dx = a.x - a.fromX; val dz = a.z - a.fromZ
+                    val t = (((x - a.fromX) * dx + (z - a.fromZ) * dz) /
+                        (dx * dx + dz * dz).coerceAtLeast(1f)).coerceIn(0f, 1f)
+                    hypot(x - a.fromX - dx * t, z - a.fromZ - dz * t) < radius + 12f
+                }) return@repeat
+                add(GolfTree(x, z, radius, if (random.nextInt(5) < 3) 1 else 2))
+            }
+        }
+        return terrain.copy(plantedTrees = hole.plantedTrees + trees)
     }
 
     val holes = listOf(
@@ -121,5 +194,5 @@ object VertigoCourse {
             listOf(GolfClub.WOOD3, GolfClub.DRIVER)),
         longHole(17, 4, 395, 1, 60, 195, 125, 10, 250, GolfLie.WATER, GolfGreenForm.FALSE_FRONT, reception = 18),
         longHole(18, 5, 580, 1, 45, 190, 100, 10, 260, GolfLie.WATER, GolfGreenForm.RIDGE, 70, 390)
-    ).map { it.copy(decorTheme = GolfDecorTheme.HALLOWEEN) }
+    ).map { woodedRidge(it).copy(decorTheme = GolfDecorTheme.HALLOWEEN) }
 }

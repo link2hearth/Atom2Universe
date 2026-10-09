@@ -19,7 +19,7 @@ object HeatherCourse {
     private fun sand(x: Int, z: Int, rx: Int = 7, rz: Int = 11, angle: Float = 0f) =
         GolfHazard(x.toFloat(), z.toFloat(), rx.toFloat(), rz.toFloat(), GolfLie.BUNKER, angle, .18f, x * .07f)
     private fun lake(x: Int, z: Int, rx: Int, rz: Int, angle: Float = 0f) =
-        GolfHazard(x.toFloat(), z.toFloat(), rx.toFloat(), rz.toFloat(), GolfLie.WATER, angle, .12f, z * .05f)
+        GolfWatercourse.meander(x.toFloat(),z.toFloat(),rx.toFloat(),rz.toFloat(),angle)
     private fun green(sx: Float, sz: Float, form: GolfGreenForm = GolfGreenForm.PLANE,
         direction: Float = 0f, height: Float = 0f, run: Float = 14f,
         aspect: Float = 1f, rotation: Float = 0f) = GolfGreenShape(

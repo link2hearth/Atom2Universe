@@ -9,6 +9,7 @@ import kotlin.math.*
 /** The ground (with the hole cut out), vegetation and buildings are baked into immutable batches. */
 internal class ClassicLandscape(private val hole: ClassicHole) {
     private val palette=ClassicPalette(hole)
+    val archipelago by lazy { if(hole.islands.isNotEmpty()) ArchipelagoScenery(hole) else null }
     // Local canopy queries bake soft tree shade into the terrain colours, with no shadow-map pass.
     private val shadeTrees by lazy {
         val cells=HashMap<Pair<Int,Int>,MutableList<com.Atom2Universe.app.games.golf.classic.core.GolfTree>>()
@@ -74,7 +75,12 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
             if(tee) colour=palette.fairway
             if(archipelago) {
                 water=((shore+.2f)/.6f).coerceIn(0f,1f)
-                colour=colour.mix(palette.water,((shore+1.4f)/1.4f).coerceIn(0f,1f))
+                val beach=((shore+4.6f)/3.8f).coerceIn(0f,1f).let { it*it*(3f-2f*it) }
+                sand=beach*(1f-water)
+                colour=colour.mix(C(.86f,.79f,.59f),sand)
+                val depth=(shore/32f).coerceIn(0f,1f).let { it*it*(3f-2f*it) }
+                val sea=C(.16f,.66f,.61f).mix(palette.water,depth)
+                colour=colour.mix(sea,water)
             }
             for(hazard in hole.hazards) {
                 val d=hazard.signedDistance(x,z)
@@ -334,7 +340,7 @@ internal class ClassicLandscape(private val hole: ClassicHole) {
             b.sphere(x,hole.heightAt(x,hole.tee.z)+.12f,hole.tee.z,.13f,C(.92f,.91f,.82f),8,4)
         }
         cup(b)
-        return ClassicDecor(hole).build()+b.build()
+        return (archipelago?.scenery ?: ClassicDecor(hole).build())+b.build()
     }
 
     private fun bush(b: MeshBuilder,x: Float,z: Float) {

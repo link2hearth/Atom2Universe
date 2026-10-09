@@ -112,6 +112,6 @@ class ArchipelagoCourseTest {
         }
         assertTrue(waterVertices > 1000)
         assertTrue(landVertices > 100)
-        assertEquals(1, landscape.scenery().size) // Tee markers, bag and cup; no offshore estate.
+        assertTrue("Coastal scenery is batched by island", landscape.scenery().size >= h.islands.size + 1)
     }
 }

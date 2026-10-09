@@ -74,22 +74,25 @@ data class GolfGreenShape(
 /** Rotated, scalloped contours shared by rendering and collision, in world metres. */
 data class GolfHazard(
     val x: Float, val z: Float, val rx: Float, val rz: Float, val lie: GolfLie,
-    val rotation: Float = 0f, val shape: Float = .15f, val phase: Float = 0f
+    val rotation: Float = 0f, val shape: Float = .15f, val phase: Float = 0f,
+    val shoreline: GolfShoreline? = null,
+    val watercourse: GolfWatercourse? = null
 ) {
     private val cosine = cos(rotation)
     private val sine = sin(rotation)
-    fun signedDistance(px: Float, pz: Float): Float = organicDistance(
-        px - x, pz - z, rx, rz, cosine, sine, shape, phase
+    fun signedDistance(px: Float, pz: Float): Float = watercourse?.signedDistance(px-x,pz-z) ?: organicDistance(
+        px - x, pz - z, rx, rz, cosine, sine, shape, phase, shoreline
     )
     fun contains(px: Float, pz: Float): Boolean = signedDistance(px, pz) <= 0f
 }
 
 private fun organicDistance(dx: Float, dz: Float, rx: Float, rz: Float,
-    cosine: Float, sine: Float, shape: Float, phase: Float): Float {
+    cosine: Float, sine: Float, shape: Float, phase: Float, shoreline: GolfShoreline? = null): Float {
     val u = (dx * cosine + dz * sine) / rx
     val v = (-dx * sine + dz * cosine) / rz
     val angle = atan2(v, u)
-    val edge = 1f + shape * (.66f * cos(3f * angle + phase) + .34f * sin(2f * angle - phase))
+    val scallop = 1f + shape * (.66f * cos(3f * angle + phase) + .34f * sin(2f * angle - phase))
+    val edge = scallop * (shoreline?.radius(angle + phase) ?: 1f)
     return (hypot(u, v) - edge) * min(rx, rz)
 }
 
@@ -179,7 +182,7 @@ data class ClassicHole(
     private val alternateFairwayIndexes by lazy { alternateSamples.map { GolfFairwayIndex(it, SEMI_ROUGH_WIDTH) } }
     private val teeTerrainHeight by lazy { terrainHeight(0f, 0f) }
     private val waterLevels by lazy {
-        hazards.filter { it.lie == GolfLie.WATER }.associateWith { terrainHeight(it.x, it.z) - 1.2f }
+        hazards.filter { it.lie == GolfLie.WATER }.associateWith { waterLevel(it) }
     }
 
     val tee: GolfPoint = GolfPoint(0f, heightAt(0f, 0f) + BALL_RADIUS, 0f)
@@ -197,7 +200,7 @@ data class ClassicHole(
 
     val trees: List<GolfTree> by lazy {
         if (mini != null) return@lazy emptyList()
-        if (islands.isNotEmpty()) return@lazy plantedTrees
+        if (islands.isNotEmpty()) return@lazy plantedTrees + ArchipelagoLayout.palms(this)
         val random = Random(number * 7349)
         buildList {
             addAll(plantedTrees)
@@ -267,7 +270,18 @@ data class ClassicHole(
         val slopeB = (after.x - a.x) / (after.z - a.z)
         val t2 = t * t; val t3 = t2 * t
         return (2f*t3 - 3f*t2 + 1f)*a.x + (t3 - 2f*t2 + t)*span*slopeA +
-            (-2f*t3 + 3f*t2)*b.x + (t3 - t2)*span*slopeB
+            (-2f*t3 + 3f*t2)*b.x + (t3 - t2)*span*slopeB +
+            routeContour(a, b, t) * 2.2f * sin(z * .035f + number * 1.31f)
+    }
+
+    /** Broad, asymmetric shoulders between authored targets. Zero at each node, with zero
+     * derivative there: landing shelves, approach axes and intentional carry gaps stay fixed.
+     * Narrow corridors and short spans receive proportionally less variation.
+     */
+    private fun routeContour(a: GolfRouteNode, b: GolfRouteNode, t: Float): Float {
+        val envelope = 16f * t * t * (1f - t) * (1f - t)
+        return envelope * (min(a.width, b.width) / 45f).coerceIn(0f, 1f) *
+            ((b.z - a.z) / 65f).coerceIn(0f, 1f)
     }
 
     fun fairwayWidth(z: Float): Float {
@@ -276,7 +290,11 @@ data class ClassicHole(
         if (z >= route.last().z) return route.last().width
         val i = routeSegment(z)
         val a = route[i]; val b = route[i + 1]
-        val width = a.width + (b.width - a.width) * smooth((z - a.z) / (b.z - a.z))
+        val t = ((z - a.z) / (b.z - a.z)).coerceIn(0f, 1f)
+        val designedWidth = a.width + (b.width - a.width) * smooth(t)
+        // Preserve the authored minimum, especially the beginner course's broad approaches.
+        val shoulder = smooth((designedWidth - min(a.width,b.width)) / 10f)
+        val width = designedWidth + routeContour(a, b, t) * shoulder * 5f * sin(z * .047f + number * 2.17f)
         val entrance = if (par > 3) {
             val d = (z - fairwayStart - 22f) / 31f
             (9f + number % 3 * 2f) * exp(-d * d)
@@ -360,7 +378,11 @@ data class ClassicHole(
         return h
     }
 
-    fun waterHeight(hazard: GolfHazard): Float = waterLevels[hazard] ?: (terrainHeight(hazard.x, hazard.z) - 1.2f)
+    private fun waterLevel(hazard: GolfHazard): Float = (hazard.watercourse?.nodes?.minOf {
+        terrainHeight(hazard.x+it.x,hazard.z+it.z)
+    } ?: terrainHeight(hazard.x,hazard.z)) - 1.2f
+
+    fun waterHeight(hazard: GolfHazard): Float = waterLevels[hazard] ?: waterLevel(hazard)
 
     fun heightAt(x: Float, z: Float): Float {
         mini?.let { return it.heightAt(x, z) }
@@ -428,7 +450,11 @@ data class ClassicHole(
         if (abs(x) > width * .5f || z < -20f || z > length + 55f) return GolfLie.OUT
         val greenDistance = greenSignedDistance(x, z)
         if (greenDistance <= 0f) return GolfLie.GREEN
-        if (islands.isNotEmpty() && islandSignedDistance(x, z) >= 0f) return GolfLie.WATER
+        if (islands.isNotEmpty()) {
+            val shore = islandSignedDistance(x, z)
+            if (shore >= 0f) return GolfLie.WATER
+            if (shore > -ISLAND_BEACH_WIDTH) return GolfLie.BUNKER
+        }
         if (abs(x) < 4.5f && abs(z) < 5.5f) return GolfLie.TEE
         hazards.firstOrNull { it.contains(x, z) }?.let { return it.lie }
         if (greenDistance <= FRINGE_WIDTH) return GolfLie.FRINGE
@@ -465,6 +491,7 @@ data class ClassicHole(
         const val SEMI_ROUGH_WIDTH = 3f
         const val FRINGE_WIDTH = 2f
         const val ISLAND_ROUGH_WIDTH = 6f
+        const val ISLAND_BEACH_WIDTH = 1.8f
         const val BALL_RADIUS = GolfBallPhysics.RADIUS
         /** The regulation hole: 108 mm across, at least 4 inches deep, with a 2.4 m flagstick. */
         const val CUP_RADIUS = .054f
@@ -489,7 +516,7 @@ object ClassicCourse {
     private fun sand(x: Float, z: Float, rx: Float = 7f, rz: Float = 11f,
         angle: Float = 0f, shape: Float = .23f) = GolfHazard(x,z,rx,rz,GolfLie.BUNKER,angle,shape,x*.11f)
     private fun lake(x: Float, z: Float, rx: Float, rz: Float, angle: Float = 0f) =
-        GolfHazard(x,z,rx,rz,GolfLie.WATER,angle,.16f,z*.07f)
+        GolfWatercourse.meander(x,z,rx,rz,angle)
     private fun route(vararg nodes: Triple<Int, Int, Int>) = nodes.map { GolfRouteNode(it.first.toFloat(),it.second.toFloat(),it.third.toFloat()) }
     private fun n(x: Int,z: Int,w: Int) = Triple(x,z,w)
     private fun relief(vararg nodes: Pair<Int, Int>) = nodes.map { GolfElevationNode(it.first.toFloat(),it.second.toFloat()) }
