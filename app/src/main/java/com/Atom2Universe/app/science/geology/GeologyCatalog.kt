@@ -15,7 +15,7 @@ enum class EarthChapter(@param:StringRes val title: Int, @param:StringRes val in
 enum class EarthScene(@param:StringRes val title: Int, val chapter: EarthChapter, val ids: List<String>) {
     GLOBE(R.string.geo_globe, EarthChapter.INTERIOR, listOf("crust", "upper_mantle", "lower_mantle", "outer_core", "inner_core")),
     SHELL(R.string.geo_shell, EarthChapter.INTERIOR, listOf("ocean_crust", "continent_crust", "moho", "lithosphere", "asthenosphere")),
-    RIDGE(R.string.geo_ridge, EarthChapter.PLATES, listOf("ridge", "rift", "plate_motion", "ocean_age")),
+    RIDGE(R.string.geo_ridge, EarthChapter.PLATES, listOf("ridge", "basalt", "plate_motion", "ocean_age")),
     SUBDUCTION(R.string.geo_subduction, EarthChapter.PLATES, listOf("subduction", "trench", "arc", "earthquake", "andes")),
     COLLISION(R.string.geo_collision, EarthChapter.PLATES, listOf("collision", "fold", "root", "himalaya")),
     TRANSFORM(R.string.geo_transform, EarthChapter.PLATES, listOf("transform", "earthquake", "plates_world")),
