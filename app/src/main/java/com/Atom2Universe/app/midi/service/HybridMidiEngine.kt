@@ -189,7 +189,8 @@ class HybridMidiEngine(
             MidiEventDispatcher.prepareForNewFile()
 
             // Parse MIDI file
-            midiFile = MidiFile(file)
+            // MidiFile(File) n'en ferme jamais le flux : on l'ouvre nous-mêmes.
+            midiFile = file.inputStream().use { MidiFile(it) }
 
             // Build timeline
             buildMidiTimeline()

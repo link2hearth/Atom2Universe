@@ -283,8 +283,11 @@ class MidiPlayerActivity : AudioThemedActivity() {
         // Sync ViewPager changes avec tabs
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                updateTabStyles(position)
-                updatePlaybackBarVisibility()
+                // Posté : changer la graisse du texte redemande une mise en page, interdit pendant celle-ci.
+                viewPager.post {
+                    updateTabStyles(position)
+                    updatePlaybackBarVisibility()
+                }
             }
         })
 

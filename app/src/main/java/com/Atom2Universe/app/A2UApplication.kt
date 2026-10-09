@@ -2,12 +2,13 @@ package com.Atom2Universe.app
 
 import android.app.Application
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
+import android.os.StrictMode
 import com.Atom2Universe.app.stats.StatsTracker
 import com.Atom2Universe.app.crypto.sync.GamesSyncManager
 import com.Atom2Universe.app.readingprogress.sync.ReadingProgressSyncManager
 import com.Atom2Universe.app.stats.sync.StatsSyncManager
-import com.Atom2Universe.app.util.LogcatNoiseReducer
 
 class A2UApplication : Application() {
     override fun onCreate() {
@@ -20,7 +21,15 @@ class A2UApplication : Application() {
         StatsSyncManager.init(this)
         ReadingProgressSyncManager.init(this)
         GamesSyncManager.init(this)
-        LogcatNoiseReducer.reducePopupMenuLogs()
+        if (applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0) {
+            // Debug seulement : le logcat indique la ligne qui a ouvert un flux sans le fermer.
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .build()
+            )
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

@@ -822,7 +822,7 @@ class FluidSynthEngine(private val context: Context) : MidiEngine, MidiEventDisp
      */
     private fun computeMidiDuration(filePath: String): Long {
         return try {
-            val midiFile = MidiFile(FileInputStream(File(filePath)))
+            val midiFile = FileInputStream(File(filePath)).use { MidiFile(it) }
             val resolution = midiFile.resolution.toLong()
             if (resolution <= 0) return 0L
 

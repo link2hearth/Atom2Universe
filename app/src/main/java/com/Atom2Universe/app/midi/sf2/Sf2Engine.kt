@@ -236,7 +236,8 @@ class Sf2Engine(private val context: Context) : MidiEngine, MidiEventDispatcher.
 
             MidiEventDispatcher.prepareForNewFile()
 
-            midiFile = MidiFile(file)
+            // MidiFile(File) n'en ferme jamais le flux : on l'ouvre nous-mêmes.
+            midiFile = file.inputStream().use { MidiFile(it) }
 
             buildMidiTimeline()
 

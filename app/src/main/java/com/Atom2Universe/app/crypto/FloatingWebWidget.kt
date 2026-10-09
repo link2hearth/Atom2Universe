@@ -243,7 +243,10 @@ class FloatingWebWidget @JvmOverloads constructor(
 
     fun onPause()   { webView.onPause() }
     fun onResume()  { webView.onResume() }
-    fun onDestroy() { webView.destroy() }
+    fun onDestroy() {
+        (webView.parent as? ViewGroup)?.removeView(webView)
+        webView.destroy()
+    }
 
     fun canGoBack(): Boolean = webView.canGoBack()
     fun goBack() { webView.goBack() }
