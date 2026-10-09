@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.games.infernale
 
+import com.Atom2Universe.app.games.physics.DistanceJoint
 import com.Atom2Universe.app.games.physics.Joint
 import com.Atom2Universe.app.games.physics.PhysBody
 import com.Atom2Universe.app.games.physics.PhysWorld
@@ -91,7 +92,31 @@ enum class Element {
     TAPIS,
 
     /** Applique d'une torche. */
-    TORCHE
+    TORCHE,
+
+    /** Boulet du pendule : une grosse boule de fonte. */
+    BOULET,
+
+    /** Enveloppe d'un ballon de baudruche. */
+    BALLON,
+
+    /** Panier suspendu sous un ballon. */
+    PANIER,
+
+    /** Aimant : un fer a cheval qui attire (ou repousse) le metal. */
+    AIMANT,
+
+    /** Pic acere : il creve les ballons. */
+    PIC,
+
+    /** Bouton de tir d'un canon : une zone que le moindre objet mobile declenche. */
+    GACHETTE,
+
+    /** Plaque de pression : le socle, peint avec son bouton qui s'enfonce. */
+    PLAQUE,
+
+    /** Zone de detection invisible : elle se voit par ce qu'elle declenche, pas par son dessin. */
+    ZONE
 }
 
 /**
@@ -150,6 +175,68 @@ class Souffle(
         val part = 1f - 0.65f * (le / portee)
         val f = poussee * part
         corps.applyForce(f * dx, f * dy)
+    }
+}
+
+/**
+ * Une attraction : la zone d'un aimant, qui tire le **metal** vers lui.
+ *
+ * Comme le souffle et la portance, c'est une force posee avant chaque pas. Elle decroit avec
+ * la distance, en carre : un aimant attrape fort de pres et a peine au bord de sa portee,
+ * donc sa position compte. [force] est signee : negative, l'aimant **repousse**.
+ *
+ * Seul ce qui est en fer reagit — billes, boulets, contrepoids. Un domino d'ivoire ou une
+ * planche de bois ne sentent rien, ce qui fait de l'aimant une piece selective, et pas un
+ * second ventilateur.
+ */
+class Attraction(
+    val x: Float,
+    val y: Float,
+    /** Force au contact, en newtons. Negative : repousse. */
+    val force: Float,
+    /** Rayon d'action, en metres. */
+    val portee: Float
+) {
+    fun appliquer(corps: PhysBody) {
+        if (corps.immovable || !estMetal(corps)) return
+        val dx = x - corps.x
+        val dy = y - corps.y
+        val d = kotlin.math.hypot(dx, dy)
+        if (d > portee) return
+        val proche = maxOf(d, 0.2f)
+        val reste = 1f - proche / portee
+        if (reste <= 0f) return
+        val f = force * reste * reste
+        corps.applyForce(f * dx / proche, f * dy / proche)
+    }
+
+    private fun estMetal(corps: PhysBody): Boolean = when (corps.tag as? Element) {
+        Element.BILLE, Element.BOULET, Element.CONTREPOIDS -> true
+        else -> false
+    }
+}
+
+/** Une vitesse donnee a un corps au moment du lancement : c'est ce qui fait tirer un canon. */
+class Lancement(val corps: PhysBody, val vx: Float, val vy: Float)
+
+/**
+ * Une portance : ce qui fait monter un ballon.
+ *
+ * Comme le souffle, c'est une **force** posee avant chaque pas, pas une vitesse imposee : un
+ * ballon charge monte lentement, un ballon vide s'envole, et un ventilateur le pousse bien
+ * plus loin qu'une bille. S'y ajoute une **trainee** — l'air freine ce qui le traverse —
+ * sans laquelle un ballon leger accelererait sans fin sous un souffle de huit newtons.
+ */
+class Portance(
+    val corps: PhysBody,
+    /** Poussee vers le haut, en newtons. */
+    val levage: Float,
+    /** Coefficient de trainee, en newtons par metre par seconde. */
+    val trainee: Float
+) {
+    fun appliquer() {
+        if (!corps.inWorld) return
+        corps.applyForce(-trainee * corps.vx, levage - trainee * corps.vy)
     }
 }
 
@@ -219,6 +306,41 @@ enum class TypePiece(val ancrage: Ancrage) {
     TAPIS(Ancrage.SCELLE),
 
     /**
+     * Ballon de baudruche et son panier : la portance fait monter, la corde retient le
+     * panier. Un ventilateur le pousse, une bille lachee dans le panier le fait redescendre.
+     */
+    BALLON(Ancrage.LIBRE),
+
+    /** Pendule : un pivot scelle, une barre, un lourd boulet qui se balance. */
+    PENDULE(Ancrage.MIXTE),
+
+    /**
+     * Aimant : attire les billes et le fer, de plus en plus fort en s'approchant. Retourne
+     * (⇄), il **repousse**. Sa force se regle d'une poignee.
+     */
+    AIMANT(Ancrage.SCELLE),
+
+    /**
+     * Canon : un tube scelle et une bille chargee. Il tire quand **quelque chose touche son bouton
+     * rouge**, a l'arriere — une bille qui roule dessus, un domino qui tombe, un ballon qui
+     * redescend. Retourne (⇄), il n'a plus de bouton et tire des le lancement.
+     */
+    CANON(Ancrage.MIXTE),
+
+    /**
+     * Pic : une pointe scellee, qui creve tout ballon qui la touche. Le ballon disparait, sa
+     * portance avec lui, et le panier retombe — avec ce qu'il portait.
+     */
+    PIC(Ancrage.SCELLE),
+
+    /**
+     * Plaque de pression : un socle plat, scelle, et un bouton que tout objet mobile enfonce.
+     * Reliee a un ou plusieurs canons, elle les fait tirer — c'est le seul declencheur a
+     * distance du jeu.
+     */
+    PLAQUE(Ancrage.SCELLE),
+
+    /**
      * Une torche, pour y voir.
      *
      * ## Pourquoi c'est une piece et pas du decor
@@ -246,7 +368,8 @@ enum class TypePiece(val ancrage: Ancrage) {
      * lequel des deux plateaux d'une poulie porte le godet.
      */
     val miroitable: Boolean
-        get() = this == TAPIS || this == TREMPLIN || this == POULIE
+        get() = this == TAPIS || this == TREMPLIN || this == POULIE || this == AIMANT || this == CANON ||
+            this == PLAQUE
 }
 
 /**
@@ -261,7 +384,22 @@ class Piece internal constructor(
     val corps: List<PhysBody>,
     val liaisons: List<Joint>,
     /** Le jet d'air de la pièce, quand elle en a un. Seul le ventilateur en a un. */
-    val souffle: Souffle? = null
+    val souffle: Souffle? = null,
+    /** Ce qui la fait monter, quand elle en a. Seul le ballon en a. */
+    val portances: List<Portance> = emptyList(),
+    /** La zone d'attraction de la piece, quand elle en a une. Seul l'aimant en a une. */
+    val attraction: Attraction? = null,
+    /** Les corps a lancer quand le canon tire. Seul le canon en a. */
+    val lancements: List<Lancement> = emptyList(),
+    /** La zone de tir du canon, ou `null` s'il tire des le lancement. */
+    val declencheur: PhysBody? = null,
+    /** Vrai pour un canon qui tire des que la machine part, sans bouton. */
+    val tireAuDepart: Boolean = false,
+    /**
+     * Pour une plaque : bouton **continu** (actif tant qu'on appuie) plutot qu'interrupteur
+     * (chaque appui bascule l'etat).
+     */
+    val continu: Boolean = false
 ) {
     init {
         for (c in corps) {
@@ -283,6 +421,54 @@ class Piece internal constructor(
 
     /** Le corps principal, celui qu'on désigne quand on parle de la pièce. */
     val principal: PhysBody get() = corps.first()
+
+    /** Vrai une fois le ballon creve : son enveloppe et son panier ont quitte le monde. */
+    var creve = false
+
+    /**
+     * Les eclats a dessiner : un par morceau detruit, `[x, y, genre]` avec le genre 0 pour
+     * l'enveloppe et 1 pour le panier. [eclatAge] compte les secondes depuis l'eclatement.
+     */
+    val eclats = ArrayList<FloatArray>()
+    var eclatAge = -1f
+
+    /** Pour une plaque : est-elle allumee en ce moment ? Les pieces liees la lisent. */
+    var actif = false
+
+    /** Pour un interrupteur : le moment du dernier basculement, pour ignorer les rebonds. */
+    var dernierBascule = -10f
+
+    /**
+     * Vrai pour un ventilateur commande par une plaque tant qu'aucune de ses plaques n'est
+     * allumee : il est a l'arret. Remis a jour a chaque image par le plateau.
+     */
+    var eteint = false
+
+    /** Combien d'objets touchent en ce moment la zone de detection de la piece (plaque, canon). */
+    var contacts = 0
+
+    /** Vrai une fois que le canon a tire : il ne tire qu'une fois par lancement. */
+    var parti = false
+        private set
+
+    /** Declenche la piece, une seule fois : un canon tire, une plaque s'enfonce. */
+    fun tirer() {
+        if (parti) return
+        parti = true
+        for (l in lancements) {
+            l.corps.wake()
+            l.corps.vx = l.vx
+            l.corps.vy = l.vy
+        }
+    }
+
+    /** Appele quand la machine part : un canon sans bouton tire tout de suite. */
+    fun demarrer() {
+        if (tireAuDepart) tirer()
+    }
+
+    /** Les cordes et barres de la piece : le dessin les trace entre leurs ancrages. */
+    val tringles: List<DistanceJoint> get() = liaisons.filterIsInstance<DistanceJoint>()
 
     /** La poulie de la pièce, quand elle en a une : le dessin y accroche sa corde. */
     val poulie: PulleyJoint? get() = liaisons.firstOrNull { it is PulleyJoint } as? PulleyJoint
@@ -322,6 +508,48 @@ object Pieces {
     const val BILLE_RAYON = 0.11f
     const val TAPIS_LONGUEUR = 1.3f
     const val POULIE_HAUTEUR = 1.8f
+    const val BALLON_RAYON = 0.35f
+    const val PENDULE_LONGUEUR = 1.2f
+    const val PENDULE_ANGLE = 45f
+    const val AIMANT_COTE = 0.34f
+    const val PIC_DEMI_LARGEUR = 0.05f
+    const val PIC_DEMI_HAUTEUR = 0.18f
+    const val CANON_DEMI_LONGUEUR = 0.35f
+    const val GACHETTE_RAYON = 0.1f
+    const val PLAQUE_LARGEUR = 0.5f
+    const val PLAQUE_DEMI_HAUTEUR = 0.03f
+    const val GACHETTE_DISTANCE = 0.52f
+
+    /**
+     * Force reglable par defaut selon le type : un aimant doit pouvoir soulever une bille
+     * (vingt newtons), un canon tire a dix metres par seconde, un ventilateur reste doux.
+     */
+    fun forceParDefaut(type: TypePiece): Float = when (type) {
+        TypePiece.AIMANT -> 25f
+        TypePiece.CANON -> 20f
+        else -> SOUFFLE_POUSSEE
+    }
+
+    /** Vitesse de sortie d'un canon pour une force reglee : un demi-metre par seconde par newton. */
+    fun canonVitesse(force: Float): Float = force * 0.5f
+
+    /** Portee d'un aimant : plus fort, il porte plus loin, en racine. */
+    fun aimantPortee(force: Float): Float =
+        (1.2f * kotlin.math.sqrt(force / 10f)).coerceIn(0.8f, 4f)
+
+    /** Rayons extremes d'un ballon : en dessous de 0,33 m il ne sait plus lever son panier. */
+    const val BALLON_RAYON_MIN = 0.33f
+    const val BALLON_RAYON_MAX = 0.7f
+
+    /** Hauteur des bords du panier. */
+    const val PANIER_HAUT = 0.2f
+
+    /** Longueur de corde entre le bas du ballon et le haut du panier. */
+    const val BALLON_CORDE = 0.9f
+
+
+    /** Hauteur du centre d'un ballon pose sur un panier dont le bas est a [bas]. */
+    fun ballonCentre(bas: Float, rayon: Float): Float = bas + PANIER_HAUT + BALLON_CORDE + rayon
 
     // ── Le ventilateur ───────────────────────────────────────────────────────
 
@@ -334,14 +562,26 @@ object Pieces {
     /**
      * Poussée à la bouche, en newtons.
      *
-     * Elle est **volontairement plus faible que le poids de la bille** (deux kilos, donc
-     * presque vingt newtons). Un ventilateur qui pourrait la soulever ferait de chaque
+     * Valeur par defaut, reglable de [SOUFFLE_POUSSEE_MIN] a [SOUFFLE_POUSSEE_MAX]. Elle est
+     * **volontairement plus faible que le poids de la bille** (deux kilos, donc presque vingt
+     * newtons). Un ventilateur qui pourrait la soulever ferait de chaque
      * tableau un problème de vol stationnaire, où la position exacte de la bille dans le
      * jet déciderait de tout : injouable et impossible à viser. À huit newtons il dévie,
      * il ralentit, il pousse une bille qui roule et il renverse un domino — ce qui est
      * une panoplie de verbes largement suffisante.
      */
     const val SOUFFLE_POUSSEE = 8f
+
+    /** Poussee extremes que le joueur peut regler, en newtons. */
+    const val SOUFFLE_POUSSEE_MIN = 1f
+    const val SOUFFLE_POUSSEE_MAX = 40f
+
+    /**
+     * Longueur du jet pour une poussee donnee : un ventilateur plus puissant porte plus loin,
+     * mais en racine — doubler la force ne double pas la portee.
+     */
+    fun porteePour(poussee: Float): Float =
+        (SOUFFLE_PORTEE * kotlin.math.sqrt(poussee / SOUFFLE_POUSSEE)).coerceIn(0.9f, 5f)
 
     // ── La poulie ────────────────────────────────────────────────────────────
 
@@ -486,15 +726,25 @@ object Pieces {
      *
      * [bas] est le bas du pied.
      */
-    fun bascule(x: Float, bas: Float, longueur: Float = BASCULE_LONGUEUR, hauteurPied: Float = 0.3f): Piece {
+    fun bascule(
+        x: Float,
+        bas: Float,
+        longueur: Float = BASCULE_LONGUEUR,
+        decalage: Float = 0f,
+        hauteurPied: Float = 0.3f
+    ): Piece {
+        val sommet = bas + hauteurPied
         val pied = scelle(PhysBody(0.07f, hauteurPied / 2f, 0f).apply {
             this.x = x
             this.y = bas + hauteurPied / 2f
             friction = FROTTEMENT
         }.marquer(Element.BATI))
-        val sommet = bas + hauteurPied
+        // [decalage] : de combien le centre de la planche est decale du pied, en metres. A zero
+        // la planche est equilibree ; decalee, le cote long est plus lourd et penche — c'est un
+        // levier, et c'est le joueur qui place le pivot. Aucune butee : la planche tourne
+        // librement, et seul le sol (ou son propre pied) l'arrete.
         val planche = PhysBody(longueur / 2f, 0.04f, 1.2f).apply {
-            this.x = x
+            this.x = x + decalage
             this.y = sommet + 0.04f
             friction = FROTTEMENT
             restitution = 0.05f
@@ -597,8 +847,8 @@ object Pieces {
         y: Float,
         direction: Float = 0f,
         cote: Float = VENTILATEUR_COTE,
-        portee: Float = SOUFFLE_PORTEE,
-        poussee: Float = SOUFFLE_POUSSEE
+        poussee: Float = SOUFFLE_POUSSEE,
+        portee: Float = porteePour(poussee)
     ): Piece {
         val rad = Math.toRadians(direction.toDouble()).toFloat()
         val carter = PhysBody(cote / 2f, cote / 2f, 0f).apply {
@@ -867,6 +1117,219 @@ object Pieces {
             surfaceSpeed = if (sens < 0f) -vitesse else vitesse
         }.marquer(Element.TAPIS)
         return Piece(TypePiece.TAPIS, listOf(scelle(bande)), emptyList())
+    }
+
+    /**
+     * Ballon de baudruche : une enveloppe legere qui monte, un panier ouvert qui pend dessous,
+     * et deux cordes qui les tiennent. [bas] est le dessous du panier.
+     *
+     * ## La portance est une force, et le panier est ouvert
+     *
+     * Le ballon monte parce qu'une force l'y pousse ([Portance]), pas parce qu'on lui impose
+     * une vitesse : charge, il monte lentement ; un ventilateur le deporte ; une bille lachee
+     * dans le panier le fait redescendre, et un gros ballon la remonte. Le panier est un godet
+     * large de trente-quatre centimetres, assez pour une bille.
+     *
+     * Les cordes sont de vraies cordes : elles retiennent et ne poussent jamais, donc un panier
+     * pose au sol laisse le ballon se balancer au-dessus sans rien casser. Elles forment un V
+     * depuis le bas du ballon, pour que le panier reste droit.
+     */
+    fun ballon(x: Float, bas: Float, rayon: Float = BALLON_RAYON): Piece {
+        val demiLargeur = 0.17f
+        val panier = PhysBody.compound(0.3f) {
+            box(demiLargeur, 0.02f, 0f, 0f)
+            box(0.02f, PANIER_HAUT / 2f, -demiLargeur, PANIER_HAUT / 2f - 0.02f)
+            box(0.02f, PANIER_HAUT / 2f, demiLargeur, PANIER_HAUT / 2f - 0.02f)
+        }.parPremiereForme(x, bas + 0.02f).apply {
+            friction = FROTTEMENT
+            restitution = 0.05f
+        }.marquer(Element.PANIER)
+
+        val centre = ballonCentre(bas, rayon)
+        val enveloppe = PhysBody.circle(rayon, 0.06f).apply {
+            this.x = x
+            this.y = centre
+            friction = 0.3f
+            restitution = 0.4f
+        }.marquer(Element.BALLON)
+
+        val basBallon = centre - rayon
+        val bordHaut = bas + PANIER_HAUT
+        val cordes = listOf(-demiLargeur, demiLargeur).map { dx ->
+            DistanceJoint.between(
+                enveloppe, x, basBallon,
+                panier, x + dx, bordHaut,
+                rope = true
+            )
+        }
+        val facteur = rayon / BALLON_RAYON
+        val levage = 5f * facteur * facteur * facteur
+        val trainee = 0.8f * facteur * facteur
+        return Piece(
+            TypePiece.BALLON, listOf(panier, enveloppe), cordes,
+            portances = listOf(Portance(enveloppe, levage, trainee))
+        )
+    }
+
+    /**
+     * Pendule : un pivot scelle en ([x], [y]), une barre de [longueur], et un boulet de six
+     * kilos au bout. [angle] est l'ecart de depart en degres : 0 pend droit, positif envoie le
+     * boulet a droite.
+     *
+     * Le boulet part sans vitesse : on le pose en l'air, on lance, il tombe et balaie ce qui
+     * est sur sa route. C'est la seule piece qui frappe **de cote avec de l'elan**, ce que ni
+     * une bille ni un domino ne savent faire.
+     *
+     * La barre est rigide (une liaison de distance, pas une corde) : une corde molle ferait
+     * s'affaisser le pendule des qu'il est sous le pivot.
+     */
+    fun pendule(x: Float, y: Float, longueur: Float = PENDULE_LONGUEUR, angle: Float = PENDULE_ANGLE): Piece {
+        val pivot = scelle(PhysBody(0.06f, 0.06f, 0f).apply {
+            this.x = x
+            this.y = y
+            friction = FROTTEMENT
+        }.marquer(Element.BATI))
+        val rad = Math.toRadians(angle.toDouble()).toFloat()
+        val bx = x + sin(rad) * longueur
+        val by = y - cos(rad) * longueur
+        val boulet = PhysBody.circle(0.17f, 6f).apply {
+            this.x = bx
+            this.y = by
+            friction = 0.3f
+            restitution = 0.2f
+        }.marquer(Element.BOULET)
+        val barre = DistanceJoint.between(pivot, x, y, boulet, bx, by, rope = false)
+        return Piece(TypePiece.PENDULE, listOf(pivot, boulet), listOf(barre))
+    }
+
+    /**
+     * Aimant en fer a cheval, centre en ([x], [y]). [force] est la traction au contact, en
+     * newtons ; [repousse] inverse le signe. Le corps est scelle : l'aimant ne bouge pas, il
+     * agit a distance — voir [Attraction].
+     *
+     * Retourne, il tourne d'un demi-tour : c'est ce qui fait lire la polarite sur le dessin,
+     * et ce qui distingue deux aimants au meme endroit sans rien ecrire.
+     */
+    fun aimant(x: Float, y: Float, force: Float, repousse: Boolean = false): Piece {
+        val corps = PhysBody(AIMANT_COTE / 2f, AIMANT_COTE / 2f, 0f).apply {
+            this.x = x
+            this.y = y
+            angle = if (repousse) Math.PI.toFloat() else 0f
+            friction = 0.4f
+            restitution = 0.1f
+        }.marquer(Element.AIMANT)
+        val signee = if (repousse) -force else force
+        return Piece(
+            TypePiece.AIMANT, listOf(scelle(corps)), emptyList(),
+            attraction = Attraction(x, y, signee, aimantPortee(force))
+        )
+    }
+
+    /**
+     * Canon : un tube ouvert (deux plaques et une culasse), scelle, et une bille chargee dedans.
+     * ([x], [y]) est le centre du tube, [direction] en degres comme un ventilateur, et la
+     * bille part a [vitesse] metres par seconde **au lancement** ([Piece.lancer]).
+     *
+     * Le tube est un U couche : la bille repose sur la plaque basse et ne peut pas reculer. Elle
+     * sort donc dans l'axe, et son poids joue des qu'elle a quitte le tube — c'est ce qui fait
+     * une vraie parabole, et c'est pourquoi la vitesse seule regle la portee.
+     */
+    fun canon(
+        x: Float,
+        y: Float,
+        direction: Float = 0f,
+        vitesse: Float = canonVitesse(20f),
+        auDepart: Boolean = false
+    ): Piece {
+        val rad = Math.toRadians(direction.toDouble()).toFloat()
+        val c = cos(rad)
+        val sn = sin(rad)
+        val plaque = 0.12f
+        val tube = PhysBody.compound(0f) {
+            box(CANON_DEMI_LONGUEUR, 0.02f, 0f, plaque)
+            box(CANON_DEMI_LONGUEUR, 0.02f, 0f, -plaque)
+            box(0.02f, plaque + 0.02f, -CANON_DEMI_LONGUEUR, 0f)
+        }
+        // L'origine du croquis n'est pas celle du corps : on retrouve ou elle est dans le
+        // repere du corps pour que le centre du tube tombe bien en (x, y) apres rotation.
+        val ox = tube.localOffsetX(0)
+        val oy = tube.localOffsetY(0) - plaque
+        tube.angle = rad
+        tube.x = x - (c * ox - sn * oy)
+        tube.y = y - (sn * ox + c * oy)
+        tube.friction = 0.3f
+        tube.restitution = 0.1f
+        tube.marquer(Element.BATI)
+
+        val rayon = 0.09f
+        val charge = PhysBody.circle(rayon, 1.2f).apply {
+            this.x = x - c * 0.18f
+            this.y = y - sn * 0.18f
+            friction = 0.25f
+            restitution = 0.1f
+        }.marquer(Element.BILLE)
+        val lancement = Lancement(charge, c * vitesse, sn * vitesse)
+
+        // Le bouton de tir : une zone ronde juste derriere la culasse, hors de portee de la
+        // bille chargee (qui est a l'interieur). Tout ce qui bouge et l'effleure declenche.
+        val gachette = if (auDepart) null else PhysBody.circle(GACHETTE_RAYON, 0f).apply {
+            this.x = x - c * GACHETTE_DISTANCE
+            this.y = y - sn * GACHETTE_DISTANCE
+            isSensor = true
+            collidesWith = Plateau.MOBILE
+        }.marquer(Element.GACHETTE)
+        val corps = listOfNotNull(scelle(tube), charge, gachette?.let { scelle(it) })
+        return Piece(
+            TypePiece.CANON, corps, emptyList(),
+            lancements = listOf(lancement),
+            declencheur = gachette,
+            tireAuDepart = auDepart
+        )
+    }
+
+    /**
+     * Pic : une pointe de [direction] degres (comme un ventilateur : 0 vers la droite, 90 vers
+     * le haut), centree en ([x], [y]). Etroit exprès : une bille ne doit pas pouvoir se percher
+     * sur sa pointe plus qu'un instant, et un ballon doit la sentir du premier contact.
+     */
+    fun pic(x: Float, y: Float, direction: Float = 90f): Piece {
+        val corps = PhysBody(PIC_DEMI_LARGEUR, PIC_DEMI_HAUTEUR, 0f).apply {
+            this.x = x
+            this.y = y
+            // Le corps est haut dans son propre repere, pointe vers +y : tourner de
+            // (direction - 90) degres l'oriente.
+            angle = Math.toRadians((direction - 90f).toDouble()).toFloat()
+            friction = 0.3f
+            restitution = 0.1f
+        }.marquer(Element.PIC)
+        return Piece(TypePiece.PIC, listOf(scelle(corps)), emptyList())
+    }
+
+    /**
+     * Plaque de pression centree en ([x], [y]) : un socle de [largeur] et, juste dessus, une
+     * zone de detection qui sent tout objet mobile. Par defaut un **interrupteur** : chaque
+     * appui bascule son etat, et un voyant dit s'il est allume. [continu] en fait un bouton :
+     * allume tant qu'on appuie dessus, eteint des qu'on la quitte. Elle n'agit que par ses **liens** : voir
+     * [Plateau.liens]. Seule, elle n'est qu'un bouton qui s'enfonce.
+     *
+     * La zone est un capteur, pas un corps : une bille y roule sans etre arretee, et le socle
+     * scelle ne bouge pas. Elle est un peu plus etroite que le socle pour qu'un objet pose de
+     * travers sur le bord ne declenche rien.
+     */
+    fun plaque(x: Float, y: Float, largeur: Float = PLAQUE_LARGEUR, continu: Boolean = false): Piece {
+        val socle = scelle(PhysBody(largeur / 2f, PLAQUE_DEMI_HAUTEUR, 0f).apply {
+            this.x = x
+            this.y = y
+            friction = 0.6f
+            restitution = 0.05f
+        }.marquer(Element.PLAQUE))
+        val zone = scelle(PhysBody(largeur / 2f - 0.03f, 0.04f, 0f).apply {
+            this.x = x
+            this.y = y + PLAQUE_DEMI_HAUTEUR + 0.04f
+            isSensor = true
+            collidesWith = Plateau.MOBILE
+        }.marquer(Element.ZONE))
+        return Piece(TypePiece.PLAQUE, listOf(socle, zone), emptyList(), declencheur = zone, continu = continu)
     }
 
     /** Une torche murale. [y] est le bas de son applique. */

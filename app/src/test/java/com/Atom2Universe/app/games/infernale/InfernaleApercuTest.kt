@@ -39,14 +39,7 @@ class InfernaleApercuTest {
         val instants: List<Float>,
         val minX: Float,
         val maxX: Float,
-        val hauteur: Float = 3.2f,
-        val victoire: Boolean = false,
-        val boutonX: Float = 7.5f,
-        val temoinX: Float = 0f,
-        val temoinHaut: Float = 0f,
-        val anneaux: List<Point> = emptyList(),
-        val tenir: Float = 0f,
-        val limite: Float = 0f
+        val hauteur: Float = 3.2f
     )
 
     private val dossier = File("build/apercu/infernale").also { it.mkdirs() }
@@ -73,15 +66,15 @@ class InfernaleApercuTest {
         val w = 560
         val h = 360
         view.layout(0, 0, w, h)
-        val tableau = Tableau(1L, scene.billeX, scene.billeY, scene.boutonX, 0f, 0f, scene.temoinX, scene.temoinHaut,
-            scene.anneaux, scene.tenir, scene.limite)
-        val partie = Partie(tableau)
+        val partie = Partie(1L)
         view.jouer(partie)
         champ(view, "largeurVue").setInt(view, w)
         champ(view, "hauteurVue").setInt(view, h)
-        for (p in scene.poses) check(partie.poser(p) == Refus.OK) { "${scene.nom} : $p refusee" }
+        // La bille de la scene est une piece comme une autre, posee en premier.
+        val bille = pose(TypePiece.BILLE, scene.billeX, scene.billeY - Pieces.BILLE_RAYON)
+        for (p in listOf(bille) + scene.poses) check(partie.poser(p) == Refus.OK) { "${scene.nom} : $p refusee" }
         // Les ombres de fond et le halo dependent de l'echelle : on les prepare une fois cadre.
-        val prep = view.javaClass.getDeclaredMethod("preparerDecor", Tableau::class.java)
+        val prep = view.javaClass.getDeclaredMethod("preparerDecor", Long::class.javaPrimitiveType)
         prep.isAccessible = true
 
         val feuille = Bitmap.createBitmap(w * scene.instants.size, h + 34, Bitmap.Config.ARGB_8888)
@@ -97,11 +90,8 @@ class InfernaleApercuTest {
                 partie.avancer(1f / 120f)
                 t += 1f / 120f
             }
-            if (scene.victoire && i == scene.instants.lastIndex && partie.gagne) {
-                champ(view, "ouverture").setFloat(view, 1f)
-            }
             champ(view, "echelle").setFloat(view, h / (scene.hauteur + 0.45f))
-            prep.invoke(view, tableau)
+            prep.invoke(view, partie.graine)
             val image = peindre(view, w, h, scene, t)
             c.drawBitmap(image, (i * w).toFloat(), 34f, null)
             val etiquette = Paint().apply {
@@ -197,50 +187,46 @@ class InfernaleApercuTest {
                 instants = listOf(0f, 0.4f, 0.8f, 1.4f), minX = -2.2f, maxX = 2.2f
             ),
             Scene(
-                "12_torche_portail", "TORCHE et PORTAIL : la victoire ouvre la porte",
+                "12_torche", "TORCHE : elle eclaire, et c'est tout",
                 listOf(pose(TypePiece.TORCHE, -1.3f, 1.0f)),
                 billeX = 0f, billeY = 1.5f,
-                instants = listOf(0f, 0.3f, 0.6f), minX = -2.2f, maxX = 2.2f, victoire = true, boutonX = 0f
+                instants = listOf(0f, 0.3f, 0.6f), minX = -2.2f, maxX = 2.2f
             ),
             Scene(
-                "13_temoin", "BILLE DOREE : la bille de depart la libere, elle seule ouvre le portail",
+                "13_ballon", "BALLON : monte avec son panier, un ventilateur le pousse",
                 listOf(
-                    pose(TypePiece.RAMPE, -2.2f, 3.7f, 20f),
-                    pose(TypePiece.RAMPE, -0.2f, 2.4f, 20f),
-                    pose(TypePiece.RAMPE, 1.5f, 1.2f, 20f)
+                    pose(TypePiece.BALLON, 0f, 0f, taille = 0.45f),
+                    pose(TypePiece.VENTILATEUR, -1.5f, 1.6f, 0f)
                 ),
-                billeX = -2.6f, billeY = 5f,
-                instants = listOf(0f, 1.3f, 1.9f, 2.9f, 4.4f), minX = -3.2f, maxX = 5.2f,
-                hauteur = 5.4f, boutonX = 4.5f, temoinX = -1.2f, temoinHaut = 3.4f, victoire = true
+                billeX = 1.8f, billeY = 0.4f,
+                instants = listOf(0f, 0.8f, 1.6f, 2.6f), minX = -2.2f, maxX = 2.8f, hauteur = 4.2f
             ),
             Scene(
-                "14_anneau", "ANNEAU : il faut passer par le cercle, puis le bouton compte",
+                "14_pendule", "PENDULE : un boulet de fonte qui balaie de cote",
                 listOf(
-                    pose(TypePiece.RAMPE, -2.2f, 3.9f, 20f),
-                    pose(TypePiece.RAMPE, -0.3f, 2.7f, 20f),
-                    pose(TypePiece.RAMPE, 1.6f, 1.3f, 20f)
+                    pose(TypePiece.PENDULE, 0f, 1.9f, 60f, taille = 1.5f),
+                    pose(TypePiece.DOMINO, 0.6f, 0f), pose(TypePiece.DOMINO, 0.95f, 0f)
                 ),
-                billeX = -2.6f, billeY = 5f,
-                instants = listOf(0f, 1.3f, 2.0f, 2.6f, 4.4f), minX = -3.2f, maxX = 5.2f,
-                hauteur = 5.4f, boutonX = 4.5f, victoire = true, anneaux = listOf(Point(0.3f, 2.3f))
+                billeX = -2f, billeY = 0.4f,
+                instants = listOf(0f, 0.6f, 1.0f, 1.6f), minX = -2.4f, maxX = 2.4f, hauteur = 3.2f
             ),
             Scene(
-                "15_tenir", "TENIR : la bille doit rester dans la cuvette, la jauge se remplit",
-                emptyList(),
-                billeX = 1.55f, billeY = 3.4f,
-                instants = listOf(0f, 1.2f, 2.0f, 2.8f, 4.2f), minX = -0.4f, maxX = 3.6f,
-                hauteur = 4.0f, boutonX = 1.6f, tenir = 2.5f, victoire = true
-            ),
-            Scene(
-                "16_chrono", "CHRONO : le compte a rebours court des le lancement",
+                "15_pic", "PIC : le ballon creve, le panier retombe avec sa bille",
                 listOf(
-                    pose(TypePiece.RAMPE, -2.2f, 3.9f, 20f),
-                    pose(TypePiece.RAMPE, -0.3f, 2.7f, 20f),
-                    pose(TypePiece.RAMPE, 1.6f, 1.3f, 20f)
+                    pose(TypePiece.BALLON, 0f, 0f, taille = 0.7f),
+                    pose(TypePiece.PIC, 0f, 4.8f, 270f)
                 ),
-                billeX = -2.6f, billeY = 5f,
-                instants = listOf(0f, 1.5f, 3.0f, 4.5f), minX = -3.2f, maxX = 5.2f,
-                hauteur = 5.4f, boutonX = 4.5f, limite = 6.5f
+                billeX = 0f, billeY = 0.6f,
+                instants = listOf(0f, 1.5f, 2.4f, 2.7f, 4.2f), minX = -2.2f, maxX = 2.2f, hauteur = 5.6f
+            ),
+            Scene(
+                "16_aimant_canon", "AIMANT et CANON : le canon tire, l'aimant devie la bille",
+                listOf(
+                    pose(TypePiece.CANON, -2.2f, 0.6f, 35f, miroir = true),
+                    pose(TypePiece.AIMANT, 1.2f, 2.2f)
+                ),
+                billeX = 2.2f, billeY = 0.4f,
+                instants = listOf(0f, 0.5f, 1.0f, 1.6f), minX = -3f, maxX = 3f, hauteur = 3.6f
             )
         )
         for (s in scenes) {

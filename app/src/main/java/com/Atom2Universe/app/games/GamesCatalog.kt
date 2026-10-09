@@ -85,7 +85,7 @@ object GamesCatalog {
             descriptionRes = R.string.infernale_description,
             iconRes = android.R.drawable.ic_menu_manage,
             defaultColorRes = R.color.game_tile_caves,
-            activityClass = com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java
+            activityClass = com.Atom2Universe.app.games.infernale.InfernaleMenuActivity::class.java
         ),
         HubTile(
             id = "balance",

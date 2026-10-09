@@ -1,9 +1,6 @@
 package com.Atom2Universe.app.games.infernale
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
@@ -48,13 +45,13 @@ class InfernaleAncrageTest {
         // chargée d'un côté, tourne autour de lui.
         val p = plateau()
         val bascule = p.poser(Pieces.bascule(x = 0f, bas = 0f))
-        val pied = bascule.scelles.single()
+        val pied = bascule.scelles.first()
         val planche = bascule.mobiles.single()
         val piedDepart = pied.x to pied.y
         val plancheDepart = planche.angle
 
         // On laisse tomber un poids sur l'extrémité droite.
-        val poids = p.poserBille(x = 0.45f, y = 1.4f, masse = 3f)
+        val poids = p.lacher(x = 0.45f, y = 1.4f, masse = 3f)
         p.derouler(3f)
 
         assertEquals("le pied de la bascule a bougé en x", piedDepart.first, pied.x, 0f)
@@ -85,7 +82,7 @@ class InfernaleAncrageTest {
         assertEquals("un tremplin a deux points scellés", 2, tremplin.scelles.size)
         assertEquals("un tremplin n'a qu'un volet mobile", 1, tremplin.mobiles.size)
 
-        val bille = p.poserBille(x = 0.2f, y = 1.5f)
+        val bille = p.lacher(x = 0.2f, y = 1.5f)
         var plusHaut = 0f
         var t = 0f
         while (t < 4f) {
@@ -116,68 +113,5 @@ class InfernaleAncrageTest {
         assertTrue("le pivot de la bascule a été emporté", p.monde.joints.isNotEmpty())
         // Et le monde continue de tourner sans elle.
         p.derouler(2f)
-    }
-
-    @Test
-    fun `le bouton ne se declenche pas tout seul`() {
-        val p = plateau()
-        val bouton = p.poserBouton(x = 0f, bas = 0f)
-        p.derouler(6f)
-        assertFalse("le bouton s'est declenche sans rien", bouton.declenche)
-    }
-
-    @Test
-    fun `le bouton ignore le decor et les pieces scellees`() {
-        // Le piege de la zone de detection : posee a meme le sol, elle le touche. Et une
-        // rampe scellee peut tres bien la traverser sans que ca veuille rien dire.
-        val p = plateau()
-        val bouton = p.poserBouton(x = 0f, bas = 0f)
-        p.poser(Pieces.bloc(x = 0f, y = 0.1f))
-        p.poser(Pieces.rampe(x = 0f, y = 0.15f, longueur = 1f))
-        p.derouler(4f)
-        assertFalse("le decor a declenche le bouton", bouton.declenche)
-    }
-
-    @Test
-    fun `le bouton se declenche des que quelque chose entre, et le reste`() {
-        val p = plateau()
-        val bouton = p.poserBouton(x = 0f, bas = 0f)
-        val bille = p.poserBille(x = 0f, y = 1.6f)
-        p.derouler(5f)
-        assertTrue("la bille tombee dedans n'a pas declenche le bouton", bouton.declenche)
-        assertSame("le bouton ne dit pas qui l'a declenche", bille, bouton.declencheur)
-
-        // Le verrou : la bille peut repartir, le bouton reste gagne.
-        p.derouler(3f)
-        assertTrue("le bouton s'est degagne", bouton.declenche)
-    }
-
-    @Test
-    fun `un domino qui tombe dans la zone suffit`() {
-        // Le cas qui a coute trois versions d'un bouton a ressort : un domino couche ne
-        // pese que deux newtons et demi, bien trop peu pour enfoncer quoi que ce soit.
-        // Une zone, elle, n'a besoin d'aucune force.
-        val p = plateau()
-        val bouton = p.poserBouton(x = 0.45f, bas = 0f)
-        // On le penche au-dela de son point d'equilibre : un domino bascule quand son
-        // centre passe au-dela de son arete, soit ici 10 degres. Lui donner une vitesse
-        // de rotation ne suffit pas — pose a plat, il se contente de vaciller et se
-        // remet droit, ce qu'on a verifie a ses depens.
-        val domino = p.poser(Pieces.domino(x = 0f, bas = 0f))
-        domino.principal.angle = -0.30f
-        p.derouler(5f)
-        assertTrue("le domino tombe n'a pas atteint la zone", bouton.declenche)
-    }
-
-    @Test
-    fun `le bouton se rearme`() {
-        val p = plateau()
-        val bouton = p.poserBouton(x = 0f, bas = 0f)
-        p.poserBille(x = 0f, y = 1.2f)
-        p.derouler(4f)
-        assertTrue(bouton.declenche)
-        bouton.rearmer()
-        assertFalse("le rearmement n'a pas remis le bouton a zero", bouton.declenche)
-        assertNull("le rearmement a garde l'ancien declencheur", bouton.declencheur)
     }
 }

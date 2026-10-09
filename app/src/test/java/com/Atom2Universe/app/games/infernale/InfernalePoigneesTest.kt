@@ -143,9 +143,7 @@ class InfernalePoigneesTest {
     fun `une poignee tiree donne une piece que la partie accepte`() {
         // La geometrie a beau etre juste, elle ne sert a rien si la partie refuse le
         // resultat. On passe donc par les vrais gestes : poser, puis regler.
-        val p = Partie(
-            Tableau(graine = 0L, billeX = -4f, billeY = 4.5f, boutonX = 3f, boutonBas = 0f)
-        )
+        val p = Partie()
         val depart = Pose(TypePiece.RAMPE, x = 0f, y = 2f, reglage = 10f, taille = 1.5f)
         assertEquals(Refus.OK, p.poser(depart))
 
@@ -153,5 +151,74 @@ class InfernalePoigneesTest {
         assertEquals("la partie refuse une planche pourtant reglee au doigt",
             Refus.OK, p.deplacer(0, tiree))
         assertEquals("le reglage n'a pas ete garde", tiree, p.placees()[0])
+    }
+
+    @Test
+    fun `les poignees sont repoussees hors de la piece`() {
+        // Sans ecart, la poignee d'un petit plot recouvrait le plot : on ne savait jamais si
+        // le doigt deplacait ou reglait.
+        val plot = Pose(TypePiece.PLOT, x = 0f, y = 1f)
+        val collee = Poignees.pour(plot).single()
+        val ecartee = Poignees.pour(plot, ecart = 0.8f).single()
+        assertEquals(0.8f, ecartee.x - collee.x, 1e-4f)
+    }
+
+    @Test
+    fun `tirer avec l ecart donne le meme resultat que la poignee dessinee`() {
+        // Poser le doigt sur la poignee ecartee ne doit rien changer a la piece.
+        val ecart = 0.8f
+        for (pose in listOf(
+            Pose(TypePiece.PLOT, 0f, 1f, taille = 0.3f),
+            Pose(TypePiece.BLOC, 0f, 1f, taille = 0.6f, taille2 = 0.9f),
+            Pose(TypePiece.DOMINO, 0f, 0f, taille = 0.7f),
+            Pose(TypePiece.RAMPE, 0f, 2f, reglage = 20f, taille = 1.5f),
+            Pose(TypePiece.BASCULE, 0f, 0f, taille = 1.4f),
+            Pose(TypePiece.TREMPLIN, 0f, 0f, taille = 0.9f)
+        )) {
+            for (p in Poignees.pour(pose, ecart)) {
+                val tiree = Poignees.tirer(pose, p.prise, p.x, p.y, ecart)
+                assertEquals("${pose.type} ${p.prise} : taille", Poignees.longueur(pose), Poignees.longueur(tiree), 0.02f)
+                assertEquals("${pose.type} ${p.prise} : x", pose.x, tiree.x, 0.02f)
+            }
+        }
+    }
+
+    @Test
+    fun `la puissance du ventilateur se tire le long du jet`() {
+        val pose = Pose(TypePiece.VENTILATEUR, x = 0f, y = 1f, reglage = 0f)
+        assertEquals(Pieces.SOUFFLE_POUSSEE, Poignees.force(pose), 0f)
+        val poignee = Poignees.pour(pose).first { it.prise == Prise.PUISSANCE }
+        // Tirer la poignee deux fois plus loin augmente la force, de travers ou pas.
+        val plusFort = Poignees.tirer(pose, Prise.PUISSANCE, poignee.x + 0.5f, poignee.y + 2f)
+        assertTrue("la puissance n'a pas augmente : ${plusFort.force}", plusFort.force > 15f)
+        assertEquals("tirer de travers a tourne le jet", 0f, plusFort.reglage, 0f)
+        val plusFaible = Poignees.tirer(pose, Prise.PUISSANCE, 0f, 1f)
+        assertEquals(Pieces.SOUFFLE_POUSSEE_MIN, plusFaible.force, 0f)
+        val enorme = Poignees.tirer(pose, Prise.PUISSANCE, 50f, 1f)
+        assertEquals(Pieces.SOUFFLE_POUSSEE_MAX, enorme.force, 0f)
+        // Lue puis relue : la poignee dessinee est la ou la force dit qu'elle est.
+        val relue = Poignees.tirer(plusFort, Prise.PUISSANCE,
+            Poignees.pour(plusFort).first { it.prise == Prise.PUISSANCE }.x, 1f)
+        assertEquals(plusFort.force, relue.force, 0.01f)
+    }
+
+    @Test
+    fun `tirer un bout de bascule decale le pivot sans bouger l autre bout`() {
+        val pose = Pose(TypePiece.BASCULE, x = 0f, y = 0f, taille = 1.2f)
+        val droiteAvant = pose.x + pose.taille2 + Poignees.longueur(pose) / 2f
+        val tiree = Poignees.tirer(pose, Prise.BOUT_DEBUT, -1.4f, 0.3f)
+        val droiteApres = tiree.x + tiree.taille2 + Poignees.longueur(tiree) / 2f
+        assertEquals("l'autre bout a bouge", droiteAvant, droiteApres, 1e-3f)
+        assertEquals("le bout tire n'a pas suivi", -1.4f,
+            tiree.x + tiree.taille2 - Poignees.longueur(tiree) / 2f, 1e-3f)
+        assertTrue("le centre ne s'est pas decale vers le bout allonge", tiree.taille2 < -0.3f)
+    }
+
+    @Test
+    fun `un bout de bascule ne passe pas de l autre cote du pied`() {
+        val pose = Pose(TypePiece.BASCULE, x = 0f, y = 0f, taille = 1.2f)
+        val tiree = Poignees.tirer(pose, Prise.BOUT_DEBUT, 0.8f, 0.3f)
+        val gauche = tiree.x + tiree.taille2 - Poignees.longueur(tiree) / 2f
+        assertTrue("le bout est passe de l'autre cote du pied : $gauche", gauche <= -Poignees.PIVOT_MARGE + 1e-3f)
     }
 }

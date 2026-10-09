@@ -13,16 +13,10 @@
     <string name="infernale_art_ball">Bille</string>
     <string name="infernale_art_button">Bouton</string>
     <string name="infernale_title">Machine infernale</string>
-    <string name="infernale_description">Montez une réaction en chaîne pour que la bille ouvre le portail</string>
+    <string name="infernale_description">Un bac à sable : posez des pièces où vous voulez, lancez et regardez tout réagir</string>
     <string name="infernale_back">Retour</string>
     <string name="infernale_launch">Lancer</string>
-    <string name="infernale_replay">Rejouer</string>
     <string name="infernale_clear">Tout enlever</string>
-    <string name="infernale_won">Le portail s\'ouvre !  %1$s   chaîne %2$d / %3$d</string>
-    <string name="infernale_timer">%1$.1f s</string>
-    <string name="infernale_timeout">Temps écoulé. Réessayez plus vite.</string>
-    <string name="infernale_failed">La machine s\'est arrêtée. Corrigez et réessayez.</string>
-    <string name="infernale_board">Tableau %1$d</string>
     <string name="infernale_hint">Un doigt pour se déplacer, deux pour zoomer. Choisissez une pièce, touchez le tableau pour la poser.</string>
     <string name="infernale_piece_ramp">Rampe</string>
     <string name="infernale_piece_plot">Plot</string>
@@ -30,8 +24,6 @@
     <string name="infernale_piece_domino">Domino</string>
     <string name="infernale_piece_seesaw">Bascule</string>
     <string name="infernale_piece_trampoline">Tremplin</string>
-    <string name="infernale_loading">Construction du tableau…</string>
-    <string name="infernale_next">Suivant</string>
     <string name="infernale_piece_fan">Ventilateur</string>
     <string name="infernale_piece_drum">Tambour</string>
     <string name="infernale_piece_pulley">Poulie</string>
@@ -40,9 +32,9 @@
     <string name="infernale_role_plot">Plot rebondissant, scellé. La bille repart de biais.</string>
     <string name="infernale_role_block">Mur scellé. Il barre le passage, ou il renvoie.</string>
     <string name="infernale_role_domino">Tombe quand on le pousse, et pousse le suivant.</string>
-    <string name="infernale_role_seesaw">Pied scellé, planche libre. Ce qui tombe d\'un côté soulève l\'autre.</string>
+    <string name="infernale_role_seesaw">Pied scellé, planche libre. Tirez l\'un ou l\'autre bout : le pied devient le pivot d\'un levier.</string>
     <string name="infernale_role_trampoline">Volet sur ressort. Ce qui tombe dessus repart en avant.</string>
-    <string name="infernale_role_fan">Souffle un jet d\'air. Il pousse ce qui est léger, jamais assez pour soulever la bille.</string>
+    <string name="infernale_role_fan">Souffle un jet d\'air. Tirez la poignée du bout pour régler sa puissance. Relié à une plaque, il ne souffle que tant qu\'elle est allumée.</string>
     <string name="infernale_role_drum">Peau tendue. Ce qui tombe dessus repart presque aussi haut.</string>
     <string name="infernale_role_pulley">Godet et contrepoids. La bille qui tombe dedans fait monter le contrepoids.</string>
     <string name="infernale_piece_named">%1$s — %2$s</string>
@@ -55,4 +47,27 @@
     <string name="infernale_piece_torch">Torche</string>
     <string name="infernale_role_torch">Une torche murale. Elle éclaire, et c\'est tout ce qu\'on lui demande.</string>
     <string name="infernale_delete">Retirer</string>
+    <string name="infernale_new">Nouveau tableau</string>
+    <string name="infernale_rename">Renommer</string>
+    <string name="infernale_stop">Arrêter</string>
+    <string name="infernale_default_name">Tableau %1$d</string>
+    <string name="infernale_confirm_delete">Supprimer \"%1$s\" ?</string>
+    <plurals name="infernale_piece_count">
+        <item quantity="one">%1$d pièce</item>
+        <item quantity="other">%1$d pièces</item>
+    </plurals>
+    <string name="infernale_piece_balloon">Ballon</string>
+    <string name="infernale_role_balloon">Monte avec son panier. Les ventilateurs le poussent, une bille dans le panier l\'alourdit. Sa taille règle sa portance.</string>
+    <string name="infernale_piece_pendulum">Pendule</string>
+    <string name="infernale_role_pendulum">Un lourd boulet de fonte au bout d\'une barre. Tirez le boulet pour régler longueur et angle : il balaie de côté.</string>
+    <string name="infernale_piece_magnet">Aimant</string>
+    <string name="infernale_role_magnet">Attire le fer : billes, boulet du pendule. Retournez-le pour repousser. Tirez la poignée pour régler sa force.</string>
+    <string name="infernale_piece_cannon">Canon</string>
+    <string name="infernale_role_cannon">Tire sa bille quand quelque chose touche son bouton rouge, à l\'arrière, ou quand une plaque reliée s\'enfonce. Retourné (⇄), il tire dès le lancement. Orientez-le avec la poignée proche, réglez la puissance avec la lointaine.</string>
+    <string name="infernale_piece_spike">Pic</string>
+    <string name="infernale_role_spike">Une pointe acérée. Un ballon qui la touche éclate, panier compris : seul ce qu\'il portait retombe. Tirez la poignée pour l\'orienter.</string>
+    <string name="infernale_piece_plate">Plaque de pression</string>
+    <string name="infernale_role_plate">Un interrupteur : chaque appui le bascule, et son voyant dit s\'il est allumé. Retournée (⇄), c\'est un bouton continu, actif seulement tant qu\'on appuie. Sélectionnez-la, touchez le bouton de lien, puis glissez vers un canon ou un ventilateur.</string>
+    <string name="infernale_link">Relier</string>
+    <string name="infernale_link_hint">Glissez d\'un objet à l\'autre pour les relier : plaque vers canon ou ventilateur. Refaites-le pour délier.</string>
 </resources>

@@ -48,8 +48,7 @@ class InfernaleView @JvmOverloads constructor(
 ) : SurfaceView(ctx, attrs), SurfaceHolder.Callback, Runnable {
 
     interface Listener {
-        fun surVictoire()
-        fun surEchec()
+        /** Le montage a change (pose, deplacement, retrait, reglage) : a sauvegarder. */
         fun surChangement()
     }
 
@@ -70,6 +69,7 @@ class InfernaleView @JvmOverloads constructor(
                 field = value
                 viser(null)
                 selection = -1
+                modeLien = false
             }
         }
 
@@ -96,6 +96,7 @@ class InfernaleView @JvmOverloads constructor(
             if (selection < 0) return@synchronized
             p.reprendre(selection)
             selection = -1
+            modeLien = false
             viser(null)
         }
     }
@@ -130,6 +131,28 @@ class InfernaleView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Vrai quand le prochain glissement trace un lien : de la plaque ou du canon designe vers
+     * son complementaire. Il retombe tout seul des que le lien est trace, ou des qu'on
+     * deselectionne.
+     */
+    var modeLien = false
+        private set
+
+    /** Entre et sort du mode lien. Sans effet si la piece designee n'est ni plaque ni canon. */
+    fun basculerLien() {
+        synchronized(verrou) {
+            val type = partie?.placees()?.getOrNull(selection)?.type
+            modeLien = !modeLien && type != null && Liens.liable(type)
+        }
+    }
+
+    // Le lien en cours de trace : d'ou il part, ou est le doigt, et ce qu'il vise.
+    private var lienSource = -1
+    private var lienX = 0f
+    private var lienY = 0f
+    private var lienCible = -1
+
     /** La piece posee que le doigt a designee, ou -1. Elle se dessine en surbrillance. */
     var selection = -1
         private set
@@ -163,21 +186,14 @@ class InfernaleView @JvmOverloads constructor(
     @Volatile private var tourne = false
     private var dernier = 0L
     private var reste = 0f
-    private var victoireAnnoncee = false
-    private var echecAnnonce = false
 
     /** Horloge d'animation, en secondes. Elle tourne meme machine a l'arret. */
     private var horloge = 0f
-
-    /** Avancement de l'ouverture du portail, de 0 a 1. */
-    private var ouverture = 0f
 
     // ── Peintures ────────────────────────────────────────────────────────────
 
     private val fond = Paint()
     private val brume = Paint().apply { isAntiAlias = true }
-    private val roche = Paint().apply { color = 0xFF171D30.toInt(); isAntiAlias = true }
-    private val rocheClaire = Paint().apply { color = 0xFF222A42.toInt(); isAntiAlias = true }
     private val terre = Paint().apply { color = 0xFF2E2620.toInt() }
     private val terreHaut = Paint().apply { color = 0xFF4A3A28.toInt() }
     private val herbe = Paint().apply {
@@ -205,6 +221,25 @@ class InfernaleView @JvmOverloads constructor(
         color = 0xFFCBA76A.toInt(); strokeWidth = 3f; isAntiAlias = true
         style = Paint.Style.STROKE
     }
+    private val barre = Paint().apply {
+        color = 0xFF9AA3B8.toInt(); strokeWidth = 4f; isAntiAlias = true
+        style = Paint.Style.STROKE
+    }
+    private val aimantRouge = Paint().apply { color = 0xFFC03A4E.toInt(); isAntiAlias = true }
+    private val aimantBleu = Paint().apply { color = 0xFF3A6FC0.toInt(); isAntiAlias = true }
+    private val fondAimant = Paint().apply { color = 0xFF1B2133.toInt(); isAntiAlias = true }
+    private val champ = Paint().apply {
+        style = Paint.Style.STROKE; strokeWidth = 2f; isAntiAlias = true
+    }
+    private val lienTrait = Paint().apply {
+        color = 0xFFFFC65A.toInt(); strokeWidth = 5f; isAntiAlias = true
+        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND
+    }
+    private val lienPoint = Paint().apply { color = 0xFFFFC65A.toInt(); isAntiAlias = true }
+    private val cibleTrait = Paint().apply {
+        color = 0xFFFFC65A.toInt(); strokeWidth = 4f; isAntiAlias = true
+        style = Paint.Style.STROKE
+    }
     private val contour = Paint().apply {
         color = 0xCC0A0E1C.toInt(); style = Paint.Style.STROKE
         strokeWidth = 2f; isAntiAlias = true
@@ -212,10 +247,6 @@ class InfernaleView @JvmOverloads constructor(
     private val billeP = Paint().apply { color = 0xFFD8DEEC.toInt(); isAntiAlias = true }
     private val billeReflet = Paint().apply { color = 0xFFFFFFFF.toInt(); isAntiAlias = true }
 
-    /** La bille temoin : de l'or, pour qu'on la distingue de celle du depart au premier regard. */
-    private val billeOr = Paint().apply { color = 0xFFF2C14E.toInt(); isAntiAlias = true }
-    private val billeOrReflet = Paint().apply { color = 0xFFFFF1B8.toInt(); isAntiAlias = true }
-    private val billeOmbre = Paint().apply { color = 0x66000000; isAntiAlias = true }
     private val traineeP = Paint().apply {
         color = 0x5588C8FF.toInt(); strokeWidth = 3f; isAntiAlias = true
         strokeCap = Paint.Cap.ROUND
@@ -225,7 +256,6 @@ class InfernaleView @JvmOverloads constructor(
         strokeCap = Paint.Cap.ROUND
     }
     private val or = Paint().apply { color = 0xFFFFC65A.toInt(); isAntiAlias = true }
-    private val orPale = Paint().apply { color = 0x66FFC65A; isAntiAlias = true }
     private val torcheP = Paint().apply { color = 0xFFFFB33C.toInt(); isAntiAlias = true }
     private val halo = Paint().apply { color = 0x22FF9A2E; isAntiAlias = true }
     private val apercuOk = Paint().apply { color = 0x9955E08A.toInt(); isAntiAlias = true }
@@ -245,20 +275,6 @@ class InfernaleView @JvmOverloads constructor(
     // plantait des la premiere image.
     private val centre = FloatArray(3)
 
-    /** Le modele du compte a rebours, avec un `%1$.1f` : le texte vient de l'activite, traduit. */
-    var formatChrono: String = "%1\$.1f"
-
-    private val anneauTrait = Paint().apply {
-        style = Paint.Style.STROKE; isAntiAlias = true
-    }
-    private val tenueTrait = Paint().apply {
-        style = Paint.Style.STROKE; strokeCap = Paint.Cap.ROUND; isAntiAlias = true
-        color = 0xFF7DF0B0.toInt()
-    }
-    private val chronoTexte = Paint().apply {
-        isAntiAlias = true; textAlign = Paint.Align.CENTER; typeface = android.graphics.Typeface.DEFAULT_BOLD
-    }
-    private val arc = RectF()
     private val ancre = FloatArray(3)
     private val trace = Path()
     private val segments = FloatArray(4 * 64)
@@ -293,20 +309,16 @@ class InfernaleView @JvmOverloads constructor(
     fun jouer(nouvelle: Partie) {
         synchronized(verrou) {
             partie = nouvelle
-            victoireAnnoncee = false
-            echecAnnonce = false
-            ouverture = 0f
             viser(null)
             selection = -1
+            modeLien = false
             traineeNombre = 0
             traineeTete = 0
             decorPret = false
         }
-        // **Recadrer ici aussi**, et pas seulement quand la surface change de taille.
-        // Le tableau est tire sur un fil a part, donc il arrive presque toujours apres
-        // que la surface a pris ses mesures : sans ce rappel, le cadrage garde son
-        // echelle par defaut et le monde s'affiche a la mauvaise taille jusqu'a ce que
-        // l'ecran tourne.
+        // **Recadrer ici aussi**, et pas seulement quand la surface change de taille :
+        // la partie peut arriver apres que la surface a pris ses mesures, et sans ce rappel
+        // le cadrage garde son echelle par defaut jusqu'a ce que l'ecran tourne.
         if (largeurVue > 0 && hauteurVue > 0) cadrer(largeurVue, hauteurVue)
     }
 
@@ -321,9 +333,6 @@ class InfernaleView @JvmOverloads constructor(
     fun effacerTrainee() = synchronized(verrou) {
         traineeNombre = 0
         traineeTete = 0
-        victoireAnnoncee = false
-        echecAnnonce = false
-        ouverture = 0f
     }
 
     // ── Boucle ───────────────────────────────────────────────────────────────
@@ -331,9 +340,24 @@ class InfernaleView @JvmOverloads constructor(
     override fun surfaceCreated(h: SurfaceHolder) = reprendre()
     override fun surfaceDestroyed(h: SurfaceHolder) = suspendre()
     override fun surfaceChanged(h: SurfaceHolder, f: Int, w: Int, ht: Int) {
+        val avantL = largeurVue
+        val avantH = hauteurVue
         largeurVue = w
         hauteurVue = ht
-        cadrer(w, ht)
+        if (avantL <= 0 || avantH <= 0) {
+            cadrer(w, ht)
+            return
+        }
+        // **Un simple changement de taille ne recadre pas.** La vue change de hauteur a chaque
+        // fois que la barre d'etat passe a deux lignes ou que la barre de reglage apparait :
+        // recadrer alors ramenait la camera au depart a chaque geste. On garde le zoom et on
+        // garde le sol et le centre ou ils etaient.
+        synchronized(verrou) {
+            origineX += (w - avantL) / 2f
+            basY += (ht - avantH).toFloat()
+            decorPret = false
+            borner()
+        }
     }
 
     fun reprendre() {
@@ -360,8 +384,6 @@ class InfernaleView @JvmOverloads constructor(
             dernier = maintenant
             horloge += ecoule
 
-            var gagneMaintenant = false
-            var echoueMaintenant = false
             synchronized(verrou) {
                 val p = partie
                 if (p != null && p.lancee) {
@@ -371,23 +393,10 @@ class InfernaleView @JvmOverloads constructor(
                         reste -= PAS
                         noterTrainee(p)
                     }
-                    if (p.gagne && !victoireAnnoncee) {
-                        victoireAnnoncee = true
-                        gagneMaintenant = true
-                    }
-                    if (!p.gagne && p.echoue && !echecAnnonce) {
-                        echecAnnonce = true
-                        echoueMaintenant = true
-                    }
                 } else {
                     reste = 0f
                 }
-                if (victoireAnnoncee && ouverture < 1f) {
-                    ouverture = (ouverture + ecoule / 0.55f).coerceAtMost(1f)
-                }
             }
-            if (gagneMaintenant) post { listener?.surVictoire() }
-            if (echoueMaintenant) post { listener?.surEchec() }
 
             val canevas = verrouillerCanevas()
             if (canevas == null) {
@@ -411,8 +420,9 @@ class InfernaleView @JvmOverloads constructor(
         null
     }
 
+    /** La traine suit la premiere bille posee : une seule, pour ne rien payer de plus. */
     private fun noterTrainee(p: Partie) {
-        val b = p.plateau.bille ?: return
+        val b = p.plateau.pieces.firstOrNull { it.type == TypePiece.BILLE }?.principal ?: return
         traineeX[traineeTete] = b.x
         traineeY[traineeTete] = b.y
         traineeTete = (traineeTete + 1) % TRAINEE
@@ -422,20 +432,20 @@ class InfernaleView @JvmOverloads constructor(
     // ── Cadrage ──────────────────────────────────────────────────────────────
 
     /**
-     * Ouvre la camera sur ce qui compte : la bille, le bouton, et de la place autour.
+     * Ouvre la camera sur un coin confortable du plateau, avec de la place au-dessus pour
+     * poser les premieres pieces.
      *
      * Le plateau fait seize metres ; on n'en montre que la fenetre utile, et le joueur
-     * ecarte les doigts pour voir le reste. Tenter de tout montrer d'un coup rendrait la
-     * bille grosse comme une tete d'epingle.
+     * ecarte les doigts pour voir le reste. Tenter de tout montrer d'un coup rendrait les
+     * pieces minuscules.
      */
     private fun cadrer(w: Int, h: Int) {
         val p = synchronized(verrou) { partie } ?: return
         if (w <= 0 || h <= 0) return
-        val t = p.tableau
-        val largeurMonde = (t.vueMaxX - t.vueMinX).coerceAtLeast(1f)
-        val hauteurMonde = (t.vueMaxY + SOL_VISIBLE).coerceAtLeast(1f)
+        val largeurMonde = Plateau.VUE_MAX_X - Plateau.VUE_MIN_X
+        val hauteurMonde = Plateau.VUE_MAX_Y + SOL_VISIBLE
         echelle = minOf(w / largeurMonde, h / hauteurMonde)
-        origineX = w / 2f - (t.vueMinX + t.vueMaxX) / 2f * echelle
+        origineX = w / 2f - (Plateau.VUE_MIN_X + Plateau.VUE_MAX_X) / 2f * echelle
         // Tout le mou vertical passe **au-dessus**, et pas moitie-moitie. Centrer laissait
         // un quart de l'ecran de terre sous les pieds pour rien, alors que la place utile
         // est en haut : c'est la qu'on pose les premieres rampes.
@@ -445,7 +455,7 @@ class InfernaleView @JvmOverloads constructor(
         // donnait une course differente a chaque tableau, et souvent trop courte.
         echelleMin = w / (Plateau.LARGEUR + 1f)
         echelleMax = maxOf(echelleMin * 6f, 260f)
-        preparerDecor(t)
+        preparerDecor(p.graine)
     }
 
     /** Echelles extremes, en pixels par metre. Posees au cadrage, absolues ensuite. */
@@ -515,18 +525,18 @@ class InfernaleView @JvmOverloads constructor(
     private fun ey(y: Float) = basY - y * echelle
 
     /**
-     * Tire la caverne. Le hasard est celui du tableau, donc elle ne bouge pas d'un essai
-     * a l'autre — un decor qui change a chaque relance donne l'impression que le jeu
+     * Tire la caverne. Le hasard est celui du tableau, donc elle ne change pas d'une
+     * ouverture a l'autre — un decor qui change a chaque relance donne l'impression que le jeu
      * n'est pas le meme, et rend impossible de comparer deux tentatives a l'oeil.
      */
-    private fun preparerDecor(t: Tableau) {
-        var graine = t.graine * 6364136223846793005L + 1442695040888963407L
+    private fun preparerDecor(seed: Long) {
+        var graine = seed * 6364136223846793005L + 1442695040888963407L
         fun suivant(): Float {
             graine = graine * 6364136223846793005L + 1442695040888963407L
             return ((graine ushr 40).toInt() and 0xFFFFFF) / 16777216f
         }
-        val l = t.vueMinX
-        val r = t.vueMaxX
+        val l = Plateau.VUE_MIN_X
+        val r = Plateau.VUE_MAX_X
         for (i in 0 until DECOR) {
             rocherX[i] = l + suivant() * (r - l)
             rocherY[i] = -0.05f - suivant() * 0.35f
@@ -548,22 +558,15 @@ class InfernaleView @JvmOverloads constructor(
     private fun peindre(c: Canvas) {
         c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), fond)
         val p = partie ?: return
-        if (!decorPret) preparerDecor(p.tableau)
+        if (!decorPret) preparerDecor(p.graine)
 
-        peindreParois(c, p)
         peindreSol(c)
-        p.plateau.socle?.let { boite(c, it, 0, pierre, pierreClaire) }
-        p.plateau.perchoir?.let { boite(c, it, 0, pierre, pierreClaire) }
-        for (muret in p.plateau.cuvette) boite(c, muret, 0, pierre, pierreClaire)
-        peindrePortail(c, p)
-        peindreAnneaux(c, p)
-
         for (piece in p.plateau.pieces) peindrePiece(c, piece)
-        for (piece in p.plateau.pieces) piece.souffle?.let { peindreVent(c, it) }
+        for (piece in p.plateau.pieces) if (!piece.eteint) piece.souffle?.let { peindreVent(c, it) }
+        for (piece in p.plateau.pieces) piece.attraction?.let { peindreChamp(c, it) }
+        peindreLiens(c, p)
 
         peindreTrainee(c)
-        p.plateau.bille?.let { peindreBille(c, it) }
-        p.plateau.temoin?.let { peindreBille(c, it, billeOr, billeOrReflet) }
 
         // La piece designee, en dernier : elle doit se voir par-dessus ses voisines.
         if (selection >= 0) {
@@ -571,38 +574,10 @@ class InfernaleView @JvmOverloads constructor(
             p.placees().getOrNull(selection)?.let { peindrePoignees(c, it) }
         }
 
-        peindreChrono(c, p)
-
         apercuPiece?.let { fantome ->
             val teinte = if (apercuRefus == Refus.OK) apercuOk else apercuNon
             for (corps in fantome.corps) silhouette(c, corps, teinte)
             fantome.souffle?.let { peindreVent(c, it) }
-        }
-    }
-
-    /**
-     * Les parois du plateau, dessinees **la ou elles sont**.
-     *
-     * Il y avait deux bandes plates peintes sur les cotes de l'ecran, qui n'existaient
-     * nulle part dans le monde : elles suivaient la fenetre et pas le plateau, si bien
-     * qu'en se deplacant on voyait deux rectangles bleus glisser sur rien. Le moteur a
-     * deux murs, a une position connue ; on dessine ceux-la, et ce qu'on voit redevient ce
-     * qui existe.
-     */
-    private fun peindreParois(c: Canvas, p: Partie) {
-        for (mur in p.plateau.murs) {
-            mur.updateAabb()
-            val gauche = ex(mur.aabbMinX)
-            val droite = ex(mur.aabbMaxX)
-            if (droite < 0f || gauche > width) continue
-            c.drawRect(gauche, 0f, droite, height.toFloat(), roche)
-            // Un liseret plus clair du cote du tableau : c'est ce qui donne l'epaisseur.
-            val versLInterieur = if (mur.x < 0f) droite else gauche
-            val liseret = echelle * 0.07f
-            c.drawRect(
-                minOf(versLInterieur, versLInterieur - liseret), 0f,
-                maxOf(versLInterieur, versLInterieur - liseret), height.toFloat(), rocheClaire
-            )
         }
     }
 
@@ -629,133 +604,6 @@ class InfernaleView @JvmOverloads constructor(
         if (n > 0) c.drawLines(segments, 0, n, herbe)
     }
 
-    /**
-     * Le portail : une porte de pierre qui s'ouvre quand la machine a gagne.
-     *
-     * Le bouton du moteur n'est qu'une zone de detection — un booleen. Tout ce qui suit
-     * est du dessin, et c'est deliberement la que vit la recompense : une porte qui se
-     * leve sur une lueur doree se lit en un quart de seconde, la ou un rectangle qui
-     * change de couleur ne dit rien a personne.
-     */
-    private fun peindrePortail(c: Canvas, p: Partie) {
-        val b = p.plateau.bouton ?: return
-        val z = b.zone
-        val demiL = z.halfW * echelle * 1.9f
-        val demiH = z.halfH * echelle
-        val cx = ex(z.x)
-        val cy = ey(z.y)
-        val hauteur = demiH * 3.4f
-
-        // L'encadrement de pierre. Les y sont des y d'ecran : `haut` est plus petit que
-        // `bas`, ce qui est l'inverse du monde et la source de toutes les erreurs de
-        // cadre — d'ou les deux noms explicites plutot qu'un rectangle.
-        val gauche = cx - demiL - echelle * 0.07f
-        val droite = cx + demiL + echelle * 0.07f
-        val haut = cy - hauteur
-        val bas = cy + demiH
-        c.drawRect(gauche, haut, droite, bas, pierre)
-        c.drawRect(gauche + echelle * 0.05f, haut, droite - echelle * 0.05f, bas - echelle * 0.05f, roche)
-
-        // La lueur au fond, d'autant plus forte que la porte est levee
-        if (ouverture > 0f) {
-            orPale.alpha = (110 * ouverture).toInt().coerceIn(0, 255)
-            c.drawCircle(cx, cy - hauteur * 0.3f, hauteur * (0.5f + ouverture * 0.9f), orPale)
-        }
-
-        // La porte, qui glisse vers le haut
-        val course = hauteur * 0.92f * ouverture
-        val hautPorte = cy - hauteur + echelle * 0.05f - course
-        val basPorte = cy + demiH - echelle * 0.02f - course
-        c.drawRect(cx - demiL + echelle * 0.05f, hautPorte, cx + demiL - echelle * 0.05f, basPorte, pierreClaire)
-        // Le crane de la clef de voute : c'est lui qui dit « ne touchez pas a ca ».
-        val crane = cy - hauteur * 0.62f - course
-        c.drawCircle(cx, crane, demiL * 0.34f, ivoire)
-        c.drawCircle(cx - demiL * 0.13f, crane - demiL * 0.03f, demiL * 0.08f, pointDomino)
-        c.drawCircle(cx + demiL * 0.13f, crane - demiL * 0.03f, demiL * 0.08f, pointDomino)
-        c.drawRect(
-            cx - demiL * 0.09f, crane + demiL * 0.14f,
-            cx + demiL * 0.09f, crane + demiL * 0.3f, ivoireOmbre
-        )
-
-        // Tenir : un anneau de jauge autour de la zone, qui se remplit tant que la bille y reste
-        // et retombe quand elle en sort.
-        if (b.duree > 0f && !b.declenche) {
-            val rj = demiH * 2.1f
-            arc.set(cx - rj, cy - rj, cx + rj, cy + rj)
-            tenueTrait.strokeWidth = echelle * 0.06f
-            tenueTrait.alpha = 70
-            c.drawArc(arc, 0f, 360f, false, tenueTrait)
-            tenueTrait.alpha = 255
-            if (b.progression > 0f) c.drawArc(arc, -90f, 360f * b.progression, false, tenueTrait)
-        }
-
-        // La zone sensible elle-meme, discrete mais visible : le joueur doit savoir ou
-        // viser, et une porte fermee ne le dit pas.
-        if (ouverture < 1f) {
-            orPale.alpha = (60 + 40 * sin(horloge * 3f)).toInt().coerceIn(20, 120)
-            c.drawCircle(cx, cy, demiH * 1.3f, orPale)
-        } else {
-            for (k in 0 until 5) {
-                val a = horloge * 1.6f + k * 1.257f
-                val r = hauteur * 0.35f * (0.5f + 0.5f * sin(horloge * 2f + k))
-                c.drawCircle(cx + cos(a) * r, cy - hauteur * 0.35f + sin(a) * r * 0.6f, echelle * 0.05f, or)
-            }
-        }
-    }
-
-    /**
-     * Les anneaux : un cercle lumineux en plein air. Le **prochain a passer** pulse et brille,
-     * ceux d'apres restent ternes, ceux deja franchis passent a l'or fixe — l'ordre se lit
-     * sans un mot.
-     */
-    private fun peindreAnneaux(c: Canvas, p: Partie) {
-        val anneaux = p.plateau.anneaux
-        if (anneaux.isEmpty()) return
-        val prochain = anneaux.indexOfFirst { !it.franchi }
-        for ((i, a) in anneaux.withIndex()) {
-            val z = a.zone
-            val r = z.parts[0].radius * echelle
-            val cx = ex(z.x)
-            val cy = ey(z.y)
-            val epaisseur = echelle * 0.07f
-            when {
-                a.franchi -> {
-                    anneauTrait.color = 0xFFFFC65A.toInt()
-                    anneauTrait.alpha = 150
-                }
-                i == prochain -> {
-                    anneauTrait.color = 0xFF6FE3FF.toInt()
-                    anneauTrait.alpha = (170 + 70 * sin(horloge * 4f)).toInt().coerceIn(90, 255)
-                    orPale.alpha = 40
-                    c.drawCircle(cx, cy, r * 1.15f, halo)
-                }
-                else -> {
-                    anneauTrait.color = 0xFF6FE3FF.toInt()
-                    anneauTrait.alpha = 70
-                }
-            }
-            anneauTrait.strokeWidth = epaisseur
-            c.drawCircle(cx, cy, r, anneauTrait)
-            if (a.franchi) {
-                anneauTrait.strokeWidth = epaisseur * 0.5f
-                anneauTrait.alpha = 90
-                c.drawCircle(cx, cy, r * 0.82f, anneauTrait)
-            }
-        }
-    }
-
-    /** Le compte a rebours, en haut, en gros : seule chose que le joueur doit regarder en jouant. */
-    private fun peindreChrono(c: Canvas, p: Partie) {
-        val reste = p.tempsRestant ?: return
-        chronoTexte.textSize = height * 0.075f
-        chronoTexte.color = when {
-            reste <= 0f -> 0xFFFF6A5A.toInt()
-            reste < 2f && p.lancee -> 0xFFFFA24A.toInt()
-            else -> 0xCCE8ECF8.toInt()
-        }
-        c.drawText(String.format(formatChrono, reste), width / 2f, height * 0.11f, chronoTexte)
-    }
-
     private fun peindrePiece(c: Canvas, piece: Piece) {
         // La corde d'abord : elle passe derriere le godet et le contrepoids.
         piece.poulie?.let { poulie ->
@@ -770,7 +618,213 @@ class InfernaleView @JvmOverloads constructor(
                 roue(c, poulie.groundBX, poulie.groundBY)
             }
         }
-        for (corps in piece.corps) peindreCorps(c, corps)
+        // Les cordes et barres, derriere les corps qu'elles relient : un ballon doit sembler
+        // tenir son panier, et un boulet pendre a sa barre.
+        for (t in piece.tringles) {
+            if (!t.a.inWorld || !t.b.inWorld) continue
+            t.anchorAWorld(ancre)
+            val ax = ex(ancre[0])
+            val ay = ey(ancre[1])
+            t.anchorBWorld(ancre)
+            c.drawLine(ax, ay, ex(ancre[0]), ey(ancre[1]), if (t.rope) corde else barre)
+        }
+        for (corps in piece.corps) if (corps.inWorld) peindreCorps(c, corps)
+        if (piece.eclatAge in 0f..EXPLOSION_DUREE) peindreEclat(c, piece)
+    }
+
+    /** Le pic : un triangle de fer, la pointe vers le haut du repere de la piece. */
+    private fun pic(c: Canvas, corps: PhysBody) {
+        surForme(c, corps, 0) { hw, hh ->
+            trace.rewind()
+            trace.moveTo(0f, -hh)
+            trace.lineTo(hw * 1.6f, hh)
+            trace.lineTo(-hw * 1.6f, hh)
+            trace.close()
+            c.drawPath(trace, ferClair)
+            trace.rewind()
+            trace.moveTo(0f, -hh)
+            trace.lineTo(hw * 1.6f, hh)
+            trace.lineTo(0f, hh)
+            trace.close()
+            c.drawPath(trace, fer)
+            c.drawRect(-hw * 2f, hh - hh * 0.12f, hw * 2f, hh, boisSombre)
+        }
+    }
+
+    /** L'eclat d'un ballon creve : un anneau qui grandit et des lambeaux qui s'ecartent. */
+    private fun peindreEclat(c: Canvas, piece: Piece) {
+        val t = piece.eclatAge / EXPLOSION_DUREE
+        for (e in piece.eclats) {
+            val x = ex(e[0])
+            val y = ey(e[1])
+            val ballon = e[2] == 0f
+            val peinture = if (ballon) caoutchouc else boisSombre
+            if (ballon) {
+                champ.color = 0xFFFF8676.toInt()
+                champ.alpha = (230 * (1f - t)).toInt().coerceIn(0, 255)
+                c.drawCircle(x, y, echelle * (0.3f + 0.7f * t), champ)
+            }
+            peinture.alpha = (255 * (1f - t)).toInt().coerceIn(0, 255)
+            for (k in 0 until 7) {
+                val a = k * 0.9f + 0.4f + e[2]
+                val d = echelle * (0.15f + 0.9f * t)
+                c.drawCircle(x + cos(a) * d, y + sin(a) * d, echelle * 0.05f * (1f - 0.5f * t), peinture)
+            }
+            peinture.alpha = 255
+        }
+    }
+
+    /** Le bouton de tir d'un canon : rouge, et enfonce une fois que le canon a tire. */
+    private fun gachette(c: Canvas, corps: PhysBody) {
+        val parti = (corps.owner as? Piece)?.parti == true
+        corps.partWorld(0, centre)
+        val r = corps.parts[0].radius * echelle
+        val x = ex(centre[0])
+        val y = ey(centre[1])
+        c.drawCircle(x, y, r * 1.1f, fer)
+        c.drawCircle(x, y, if (parti) r * 0.55f else r * 0.8f, if (parti) aimantBleu else caoutchouc)
+        if (!parti) c.drawCircle(x - r * 0.2f, y - r * 0.2f, r * 0.25f, caoutchoucClair)
+    }
+
+    /**
+     * Le champ d'un aimant : un cercle discret a la limite de sa portee, et un anneau qui
+     * glisse vers le centre quand il attire, vers l'exterieur quand il repousse. La direction
+     * du mouvement dit la polarite, sans un mot.
+     */
+    private fun peindreChamp(c: Canvas, a: Attraction) {
+        val cx = ex(a.x)
+        val cy = ey(a.y)
+        val r = a.portee * echelle
+        champ.color = if (a.force >= 0f) 0xFFE0707A.toInt() else 0xFF70A8E0.toInt()
+        champ.alpha = 40
+        c.drawCircle(cx, cy, r, champ)
+        val phase = (horloge * 0.7f) % 1f
+        val k = if (a.force >= 0f) 1f - phase else phase
+        champ.alpha = (110 * (1f - phase)).toInt().coerceIn(0, 255)
+        c.drawCircle(cx, cy, r * k, champ)
+    }
+
+    /** L'aimant : un fer a cheval, rouge quand il attire, bleu quand il repousse. */
+    private fun aimant(c: Canvas, corps: PhysBody) {
+        val repousse = ((corps.owner as? Piece)?.attraction?.force ?: 0f) < 0f
+        val corpsPeint = if (repousse) aimantBleu else aimantRouge
+        surForme(c, corps, 0) { hw, hh ->
+            val jambe = hw * 0.6f
+            // L'arche en haut, puis deux jambes, et les poles clairs au bout.
+            c.drawRect(-hw, -hh, hw, -hh + hh * 0.7f, corpsPeint)
+            c.drawRect(-hw, -hh, -hw + jambe, hh, corpsPeint)
+            c.drawRect(hw - jambe, -hh, hw, hh, corpsPeint)
+            c.drawRect(-hw, hh * 0.45f, -hw + jambe, hh, ferClair)
+            c.drawRect(hw - jambe, hh * 0.45f, hw, hh, ferClair)
+            c.drawRect(-hw + jambe, -hh + hh * 0.7f, hw - jambe, hh, fondAimant)
+            c.drawRect(-hw, -hh, hw, hh, contour)
+        }
+    }
+
+    /**
+     * Les liens plaque -> canon : un trait pointille discret entre les deux, plus vif quand
+     * l'une des deux pieces est designee. Pendant un glissement, le trait suit le doigt, et la
+     * piece qu'il vise s'encadre.
+     */
+    private fun peindreLiens(c: Canvas, p: Partie) {
+        val pieces = p.plateau.pieces
+        // Un lien est une vraie ligne pleine entre les deux pieces, avec un point a chaque bout :
+        // tres transparente au repos (on la voit sans qu'elle gene), franche quand on designe
+        // l'une des deux.
+        for (l in p.plateau.liens) {
+            val a = pieces.getOrNull(l.plaque)?.principal ?: continue
+            val b = pieces.getOrNull(l.cible)?.principal ?: continue
+            val actif = selection == l.plaque || selection == l.cible
+            tracerLien(c, ex(a.x), ey(a.y), ex(b.x), ey(b.y), if (actif) 235 else 75)
+        }
+        if (modeLien) mettreEnValeurLesCibles(c, p)
+        if (lienSource >= 0) {
+            val a = pieces.getOrNull(lienSource)?.principal ?: return
+            tracerLien(c, ex(a.x), ey(a.y), ex(lienX), ey(lienY), 255)
+            if (lienCible >= 0) pieces.getOrNull(lienCible)?.let { encadrer(c, it) }
+        }
+    }
+
+    private fun tracerLien(c: Canvas, x0: Float, y0: Float, x1: Float, y1: Float, alpha: Int) {
+        lienTrait.alpha = alpha
+        lienPoint.alpha = alpha
+        c.drawLine(x0, y0, x1, y1, lienTrait)
+        c.drawCircle(x0, y0, 8f, lienPoint)
+        c.drawCircle(x1, y1, 8f, lienPoint)
+    }
+
+    /**
+     * En mode lien, les pieces qu'on peut relier a celle qu'on tient pulsent : on voit d'un
+     * coup d'oeil ou glisser. Avant le premier appui c'est la piece designee qui fait
+     * reference ; pendant le glissement, c'est celle dont on est parti.
+     */
+    private fun mettreEnValeurLesCibles(c: Canvas, p: Partie) {
+        val poses = p.placees()
+        val reference = poses.getOrNull(if (lienSource >= 0) lienSource else selection)?.type ?: return
+        cibleTrait.alpha = (150 + 90 * sin(horloge * 5f)).toInt().coerceIn(60, 255)
+        for ((i, pose) in poses.withIndex()) {
+            if (i == lienSource || i == selection) continue
+            if (!Liens.complementaires(reference, pose.type)) continue
+            p.plateau.pieces.getOrNull(i)?.let { piece -> encadrerPulse(c, piece) }
+        }
+    }
+
+    /** Le cadre pulsant d'une cible possible : plus large et plus franc que celui d'une selection. */
+    private fun encadrerPulse(c: Canvas, piece: Piece) {
+        var loX = Float.MAX_VALUE
+        var hiX = -Float.MAX_VALUE
+        var loY = Float.MAX_VALUE
+        var hiY = -Float.MAX_VALUE
+        for (corps in piece.corps) {
+            if (!corps.inWorld) continue
+            corps.updateAabb()
+            if (corps.aabbMinX < loX) loX = corps.aabbMinX
+            if (corps.aabbMaxX > hiX) hiX = corps.aabbMaxX
+            if (corps.aabbMinY < loY) loY = corps.aabbMinY
+            if (corps.aabbMaxY > hiY) hiY = corps.aabbMaxY
+        }
+        c.drawRoundRect(ex(loX) - 10f, ey(hiY) - 10f, ex(hiX) + 10f, ey(loY) + 10f, 12f, 12f, cibleTrait)
+    }
+
+    /** La plaque de pression : un socle, et un bouton qui s'enfonce sous ce qui la touche. */
+    private fun plaque(c: Canvas, corps: PhysBody) {
+        val enfoncee = ((corps.owner as? Piece)?.contacts ?: 0) > 0
+        surForme(c, corps, 0) { hw, hh ->
+            c.drawRect(-hw, -hh, hw, hh, fer)
+            val haut = if (enfoncee) echelle * 0.015f else echelle * 0.05f
+            c.drawRect(-hw * 0.9f, -hh - haut, hw * 0.9f, -hh, if (enfoncee) aimantBleu else caoutchouc)
+            if (!enfoncee) c.drawRect(-hw * 0.9f, -hh - haut, hw * 0.9f, -hh - haut * 0.6f, caoutchoucClair)
+            // Un interrupteur a un voyant : allume (jaune) quand il est en marche. Le bouton
+            // continu n'en a pas, puisque son etat se lit sur le bouton lui-meme.
+            val piece = corps.owner as? Piece
+            if (piece != null && !piece.continu) {
+                c.drawCircle(-hw * 0.72f, 0f, hh * 0.55f, if (piece.actif) or else ferClair)
+            }
+            c.drawRect(-hw, -hh, hw, hh, contour)
+        }
+    }
+
+    /** Le boulet du pendule : une boule de fonte, plus sombre et plus terne que la bille. */
+    private fun boulet(c: Canvas, corps: PhysBody) {
+        corps.partWorld(0, centre)
+        val r = corps.parts[0].radius * echelle
+        val x = ex(centre[0])
+        val y = ey(centre[1])
+        c.drawCircle(x, y, r, fer)
+        c.drawCircle(x - r * 0.28f, y - r * 0.3f, r * 0.34f, ferClair)
+        c.drawCircle(x, y, r, contour)
+    }
+
+    /** L'enveloppe d'un ballon : rouge, avec un reflet, et un petit noeud en bas. */
+    private fun ballon(c: Canvas, corps: PhysBody) {
+        corps.partWorld(0, centre)
+        val r = corps.parts[0].radius * echelle
+        val x = ex(centre[0])
+        val y = ey(centre[1])
+        c.drawCircle(x, y, r, caoutchouc)
+        c.drawCircle(x - r * 0.3f, y - r * 0.32f, r * 0.3f, caoutchoucClair)
+        c.drawRect(x - r * 0.08f, y + r * 0.92f, x + r * 0.08f, y + r * 1.08f, caoutchouc)
+        c.drawCircle(x, y, r, contour)
     }
 
     private fun roue(c: Canvas, x: Float, y: Float) {
@@ -792,6 +846,14 @@ class InfernaleView @JvmOverloads constructor(
             Element.BILLE -> bille(c, corps)
             Element.TAPIS -> tapis(c, corps)
             Element.TORCHE -> torche(c, corps)
+            Element.BOULET -> boulet(c, corps)
+            Element.AIMANT -> aimant(c, corps)
+            Element.PIC -> pic(c, corps)
+            Element.GACHETTE -> gachette(c, corps)
+            Element.PLAQUE -> plaque(c, corps)
+            Element.ZONE -> Unit
+            Element.BALLON -> ballon(c, corps)
+            Element.PANIER -> for (i in corps.parts.indices) boite(c, corps, i, boisSombre, bois)
             null -> for (i in corps.parts.indices) boite(c, corps, i, pierre, pierreClaire)
         }
     }
@@ -904,7 +966,7 @@ class InfernaleView @JvmOverloads constructor(
         c.drawCircle(x, haut - echelle * 0.04f, echelle * 0.045f * vif, or)
     }
 
-    /** Une bille posee par le joueur : la meme que celle du tableau, sans la traine. */
+    /** Une bille posee par le joueur. */
     private fun bille(c: Canvas, corps: PhysBody) {
         corps.partWorld(0, centre)
         val r = corps.parts[0].radius * echelle
@@ -999,7 +1061,8 @@ class InfernaleView @JvmOverloads constructor(
                 k++
             }
             if (n > 0) c.drawLines(segments, 0, n, grain)
-            c.rotate(-horloge * 900f)
+            // Une helice a l'arret ne tourne pas : c'est ce qui dit qu'une plaque la commande.
+            if ((corps.owner as? Piece)?.eteint != true) c.rotate(-horloge * 900f)
             for (pale in 0 until 3) {
                 c.save()
                 c.rotate(pale * 120f)
@@ -1059,26 +1122,6 @@ class InfernaleView @JvmOverloads constructor(
         }
     }
 
-    private fun peindreBille(
-        c: Canvas,
-        b: PhysBody,
-        corps: Paint = billeP,
-        reflet: Paint = billeReflet
-    ) {
-        b.partWorld(0, centre)
-        val r = b.parts[0].radius * echelle
-        val x = ex(centre[0])
-        val y = ey(centre[1])
-        // L'ombre au sol : elle donne la hauteur, ce qu'aucune autre indication ne fait
-        // sur une image fixe.
-        val h = (centre[1] / 2.5f).coerceIn(0f, 1f)
-        billeOmbre.alpha = (70 * (1f - h)).toInt().coerceIn(0, 90)
-        c.drawOval(x - r * (1f + h), ey(0f) - r * 0.2f, x + r * (1f + h), ey(0f) + r * 0.3f, billeOmbre)
-        c.drawCircle(x, y, r, corps)
-        c.drawCircle(x - r * 0.3f, y - r * 0.32f, r * 0.32f, reflet)
-        c.drawCircle(x, y, r, contour)
-    }
-
     private fun silhouette(c: Canvas, corps: PhysBody, peinture: Paint) {
         for (i in corps.parts.indices) {
             if (corps.parts[i].shape == Shape.CIRCLE) {
@@ -1122,14 +1165,23 @@ class InfernaleView @JvmOverloads constructor(
      * depend pas du zoom.
      */
     private fun peindrePoignees(c: Canvas, pose: Pose) {
-        for (poignee in Poignees.pour(pose)) {
+        val poignees = Poignees.pour(pose, ecartPrise())
+        // Un trait du ventilateur jusqu'a sa poignee de puissance : c'est l'echelle sur
+        // laquelle on la tire, et il dit que cette poignee-la ne tourne pas, elle glisse.
+        poignees.firstOrNull { it.prise == Prise.PUISSANCE }?.let { p ->
+            c.drawLine(ex(pose.x), ey(pose.y), ex(p.x), ey(p.y), marqueur)
+        }
+        for (poignee in poignees) {
             val x = ex(poignee.x)
             val y = ey(poignee.y)
-            c.drawCircle(x, y, 17f, priseFond)
-            c.drawCircle(x, y, 17f, marqueur)
-            c.drawCircle(x, y, 5f, priseCoeur)
+            c.drawCircle(x, y, RAYON_POIGNEE, priseFond)
+            c.drawCircle(x, y, RAYON_POIGNEE, marqueur)
+            c.drawCircle(x, y, 5f, if (poignee.prise == Prise.PUISSANCE) or else priseCoeur)
         }
     }
+
+    /** L'ecart entre une piece et ses poignees, en metres : constant a l'ecran, pas dans le monde. */
+    private fun ecartPrise(): Float = ECART_POIGNEE / echelle
 
     private fun dessinerCoins(c: Canvas, pts: FloatArray, peinture: Paint) {
         trace.rewind()
@@ -1158,7 +1210,7 @@ class InfernaleView @JvmOverloads constructor(
     // La suppression a maintenant son propre bouton, ce qui est aussi plus sur.
 
     /** Ce que le doigt est en train de faire. */
-    private enum class Geste { RIEN, POSER, DEPLACER, POIGNEE, CAMERA }
+    private enum class Geste { RIEN, POSER, DEPLACER, POIGNEE, CAMERA, LIEN }
 
     private var geste = Geste.RIEN
     private var doigtIndex = -1
@@ -1226,6 +1278,22 @@ class InfernaleView @JvmOverloads constructor(
             geste = Geste.CAMERA
             return
         }
+        // En mode lien, un appui sur une plaque ou un canon commence un lien ; ailleurs, la
+        // camera. Les poignees et la pose sont laissees de cote le temps du geste.
+        if (modeLien) {
+            val i = pieceSous(p, mx, my)
+            val type = p.placees().getOrNull(i)?.type
+            if (type != null && Liens.liable(type)) {
+                lienSource = i
+                lienX = mx
+                lienY = my
+                lienCible = -1
+                geste = Geste.LIEN
+            } else {
+                geste = Geste.CAMERA
+            }
+            return
+        }
         // Les poignees d'abord : elles sont petites et se superposent a la piece, donc les
         // tester apres reviendrait a ne jamais les atteindre.
         val prise = priseSous(p, mx, my)
@@ -1258,7 +1326,7 @@ class InfernaleView @JvmOverloads constructor(
             Geste.POIGNEE -> {
                 val prise = priseActive ?: return
                 val pose = p.placees().getOrNull(selection) ?: return
-                val vise = Poignees.tirer(pose, prise, accrocher(mx), accrocher(my))
+                val vise = Poignees.tirer(pose, prise, accrocher(mx), accrocher(my), ecartPrise())
                 p.deplacer(selection, vise)
             }
 
@@ -1272,6 +1340,17 @@ class InfernaleView @JvmOverloads constructor(
             // Un doigt sur le vide fait glisser la camera. C'est le geste le plus courant
             // sur un terrain de seize metres, et lui demander deux doigts serait une taxe.
             Geste.CAMERA -> glisserCamera(event.x - dernierX, event.y - dernierY)
+
+            Geste.LIEN -> {
+                lienX = mx
+                lienY = my
+                val j = pieceSous(p, mx, my)
+                val source = p.placees().getOrNull(lienSource)?.type
+                val vise = p.placees().getOrNull(j)?.type
+                lienCible = if (j >= 0 && j != lienSource && source != null && vise != null &&
+                    Liens.complementaires(source, vise)
+                ) j else -1
+            }
 
             Geste.RIEN -> Unit
         }
@@ -1292,7 +1371,19 @@ class InfernaleView @JvmOverloads constructor(
 
             // Un appui sur le vide deselectionne : c'est la facon la plus naturelle de
             // ranger les poignees quand on a fini de regler.
-            Geste.CAMERA -> if (!aBouge) selection = -1
+            Geste.CAMERA -> if (!aBouge) {
+                selection = -1
+                modeLien = false
+            }
+
+            // Le lien se trace en relachant sur la piece complementaire. Relacher ailleurs
+            // annule, et refaire le meme lien le defait.
+            Geste.LIEN -> {
+                if (lienCible >= 0) p?.lier(lienSource, lienCible)
+                lienSource = -1
+                lienCible = -1
+                modeLien = false
+            }
 
             else -> Unit
         }
@@ -1385,7 +1476,7 @@ class InfernaleView @JvmOverloads constructor(
         val portee = RAYON_PRISE / echelle
         var meilleure: Prise? = null
         var plusProche = portee
-        for (poignee in Poignees.pour(pose)) {
+        for (poignee in Poignees.pour(pose, ecartPrise())) {
             val d = hypot(poignee.x - x, poignee.y - y)
             if (d <= plusProche) {
                 plusProche = d
@@ -1395,22 +1486,39 @@ class InfernaleView @JvmOverloads constructor(
         return meilleure
     }
 
+    /**
+     * La piece posee la plus proche du doigt, ou -1.
+     *
+     * La tolerance est en **pixels** : un plot de quinze centimetres ne fait que six pixels de
+     * rayon au zoom de depart, et le toucher pile demandait une precision qu'aucun doigt n'a.
+     * Quand plusieurs pieces sont a portee, la plus proche gagne ; a distance egale (le doigt
+     * est dedans), la derniere posee, qui est celle qu'on voit par-dessus.
+     */
     private fun pieceSous(p: Partie, x: Float, y: Float): Int {
-        val placees = p.placees()
-        for (i in placees.indices.reversed()) {
+        val portee = TOLERANCE_PIECE / echelle
+        var meilleur = -1
+        var plusProche = portee
+        for (i in p.placees().indices) {
             val piece = p.plateau.pieces.getOrNull(i) ?: continue
             for (corps in piece.corps) {
+                if (!corps.inWorld) continue
                 corps.updateAabb()
-                if (x >= corps.aabbMinX - TOUCHE && x <= corps.aabbMaxX + TOUCHE &&
-                    y >= corps.aabbMinY - TOUCHE && y <= corps.aabbMaxY + TOUCHE
-                ) return i
+                val dx = maxOf(corps.aabbMinX - x, 0f, x - corps.aabbMaxX)
+                val dy = maxOf(corps.aabbMinY - y, 0f, y - corps.aabbMaxY)
+                val d = hypot(dx, dy)
+                if (d <= plusProche) {
+                    plusProche = d
+                    meilleur = i
+                }
             }
         }
-        return -1
+        return meilleur
     }
 
     private fun reglageParDefaut(type: TypePiece): Float = when (type) {
         TypePiece.RAMPE -> 20f
+        TypePiece.PENDULE -> Pieces.PENDULE_ANGLE
+        TypePiece.PIC -> 90f
         else -> 0f
     }
 
@@ -1421,6 +1529,9 @@ class InfernaleView @JvmOverloads constructor(
         /** Nombre de positions gardees pour la traine de la bille. */
         const val TRAINEE = 96
 
+        /** Duree de l'eclat d'un ballon creve, en secondes. */
+        const val EXPLOSION_DUREE = 0.45f
+
         /** Nombre de cailloux et de brins du decor. */
         const val DECOR = 26
 
@@ -1430,13 +1541,19 @@ class InfernaleView @JvmOverloads constructor(
         /** Pas de la grille d'accrochage, en metres. */
         const val GRILLE = 0.05f
 
-        /** Tolerance de designation au doigt, en metres. */
-        const val TOUCHE = 0.06f
+        /** Tolerance de designation au doigt, en pixels. */
+        const val TOLERANCE_PIECE = 18f
+
+        /** Distance entre une piece et ses poignees, en pixels. */
+        const val ECART_POIGNEE = 32f
+
+        /** Rayon dessine d'une poignee, en pixels. */
+        const val RAYON_POIGNEE = 15f
 
         /** Deplacement au-dela duquel un appui devient un glissement, en pixels. */
         const val SEUIL_GLISSE = 18f
 
-        /** Rayon de saisie d'une poignee, en pixels. Genereux : un doigt est large. */
-        const val RAYON_PRISE = 46f
+        /** Rayon de saisie d'une poignee, en pixels. Plus petit que l'ecart a la piece : on ne la confond pas avec elle. */
+        const val RAYON_PRISE = 24f
     }
 }

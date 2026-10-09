@@ -1,33 +1,37 @@
 package com.Atom2Universe.app.games.infernale
 
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.edit
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
-import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 
 /**
- * La machine infernale : poser des pieces pour qu'une bille finisse par ouvrir le portail.
+ * L'editeur de la machine infernale : un tableau ouvert depuis [InfernaleMenuActivity], un
+ * plateau vide, et toutes les pieces a portee du doigt.
  *
- * L'activite ne fait que quatre choses — tirer un tableau, montrer la reserve, transmettre
- * les boutons, et retenir ce qui a ete gagne. Tout le jeu est dans [Partie] et [Tableaux],
- * qui se testent sans elle et sans ecran.
+ * C'est un bac a sable : on pose ce qu'on veut ou on veut, on lance, on regarde. Chaque
+ * changement est sauvegarde tout seul — le montage, jamais l'etat d'une machine en marche.
+ *
+ * L'activite ne fait que trois choses — montrer la reserve, transmettre les boutons, et
+ * ranger le montage. Tout le reste est dans [Partie] et [InfernaleView], qui se testent
+ * sans elle.
  */
 class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
 
-    private companion object {
-        const val PREFS = "infernale"
-        const val CLE_NIVEAU = "niveau"
-        const val CLE_ETOILES = "etoiles_"
+    companion object {
+        /** L'identifiant du tableau a ouvrir, passe par le menu. */
+        const val EXTRA_ID = "tableau_id"
+
+        /** Delai avant d'ecrire sur le disque : un geste en rafale ne fait qu'une ecriture. */
+        private const val DELAI_SAUVEGARDE = 500L
     }
 
     private lateinit var vue: InfernaleView
@@ -38,23 +42,30 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
     private lateinit var libelleReglage: TextView
     private lateinit var boutonMiroir: TextView
     private lateinit var boutonSupprimer: TextView
+    private lateinit var boutonLien: TextView
     private lateinit var boutonLancer: TextView
-    private lateinit var prefs: SharedPreferences
 
-    private var niveau = 1
-    private var gagneAnnonce = false
+    private val sauvegardes by lazy { sauvegardesInfernale() }
+    private val main = Handler(Looper.getMainLooper())
+    private val ecrire = Runnable { sauver() }
+    private var tableau: TableauSauve? = null
+
+    /** Ce qui est deja sur le disque : on n'ecrit que si le montage a vraiment change. */
+    private var derniereSauvegarde: Pair<List<Pose>, List<Lien>> = emptyList<Pose>() to emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val t = intent.getStringExtra(EXTRA_ID)?.let { sauvegardes.charger(it) }
+        if (t == null) {
+            finish()
+            return
+        }
+        tableau = t
         setContentView(R.layout.activity_infernale)
         enableImmersiveMode()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        prefs = getSharedPreferences(PREFS, MODE_PRIVATE)
-        niveau = prefs.getInt(CLE_NIVEAU, 1)
-
         vue = findViewById(R.id.infernale_view)
-        vue.formatChrono = getString(R.string.infernale_timer)
         etat = findViewById(R.id.infernale_status)
         titre = findViewById(R.id.infernale_board)
         reserve = findViewById(R.id.infernale_stock)
@@ -63,175 +74,114 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         boutonMiroir = findViewById(R.id.infernale_btn_mirror)
         boutonSupprimer = findViewById(R.id.infernale_btn_delete)
         boutonLancer = findViewById(R.id.infernale_btn_launch)
+        boutonLien = findViewById(R.id.infernale_btn_link)
         vue.listener = this
+        titre.text = t.nom
 
         findViewById<ImageButton>(R.id.infernale_btn_back).setOnClickListener { finish() }
         findViewById<TextView>(R.id.infernale_btn_frame).setOnClickListener { vue.recadrer() }
         boutonMiroir.setOnClickListener {
             val type = typeEnMain() ?: return@setOnClickListener
             vue.basculerMiroir(type)
+            surChangement()
+        }
+        boutonLien.setOnClickListener {
+            vue.basculerLien()
             rafraichir()
         }
         boutonSupprimer.setOnClickListener {
             vue.supprimerDesignee()
-            rafraichir()
+            surChangement()
         }
-        findViewById<TextView>(R.id.infernale_btn_prev).setOnClickListener { allerAu(niveau - 1) }
-        findViewById<TextView>(R.id.infernale_btn_next).setOnClickListener { allerAu(niveau + 1) }
         findViewById<TextView>(R.id.infernale_btn_clear).setOnClickListener {
-            vue.surPartie { it.tableauRase() }
+            vue.surPartie { it.vider() }
             vue.effacerTrainee()
             vue.typeChoisi = null
-            rafraichir()
+            surChangement()
         }
-        findViewById<TextView>(R.id.infernale_btn_replay).setOnClickListener {
-            vue.surPartie { it.rejouer() }
-            vue.effacerTrainee()
-            rafraichir()
-        }
-        boutonLancer.setOnClickListener { lancerOuSuivant() }
+        boutonLancer.setOnClickListener { lancerOuArreter() }
 
-        charger(niveau)
+        val partie = Partie(t.graine).also { it.charger(t.poses, t.liens) }
+        derniereSauvegarde = partie.placees() to partie.liens()
+        vue.jouer(partie)
+        rafraichir()
     }
 
     override fun onResume() {
         super.onResume()
-        vue.reprendre()
+        if (tableau != null) vue.reprendre()
     }
 
     override fun onPause() {
-        vue.suspendre()
+        if (tableau != null) {
+            vue.suspendre()
+            // Rien ne doit se perdre parce qu'on a quitte l'ecran dans la demi-seconde.
+            main.removeCallbacks(ecrire)
+            sauver()
+        }
         super.onPause()
     }
 
-    // ── Niveaux ──────────────────────────────────────────────────────────────
+    // ── Sauvegarde ───────────────────────────────────────────────────────────
 
-    private fun allerAu(n: Int) {
-        // **Aucun verrou.** Les tableaux etaient deverrouilles un a un en gagnant le
-        // precedent, ce qui a du sens dans un jeu a progression. Ce qu'on fait ici est un
-        // terrain d'experimentation : y interdire un tableau parce qu'on n'a pas fini le
-        // precedent n'apporte rien et empeche d'aller chercher la configuration qu'on
-        // voulait essayer.
-        val vise = n.coerceAtLeast(1)
-        if (vise == niveau) return
-        niveau = vise
-        prefs.edit { putInt(CLE_NIVEAU, niveau) }
-        charger(niveau)
+    private fun sauver() {
+        val t = tableau ?: return
+        val etat = vue.surPartie { it.placees() to it.liens() } ?: return
+        if (etat == derniereSauvegarde) return
+        sauvegardes.enregistrer(
+            TableauSauve(t.id, t.nom, t.graine, etat.first, System.currentTimeMillis(), etat.second)
+        )
+        derniereSauvegarde = etat
     }
 
-    private fun charger(n: Int) {
-        gagneAnnonce = false
-        etat.text = getString(R.string.infernale_loading)
-        etat.setTextColor(0xFF94A3B8.toInt())
-        titre.text = getString(R.string.infernale_board, n)
-        reserve.removeAllViews()
-        // Le tirage ne fait plus qu'une chose couteuse : lacher la bille sur le tableau
-        // vide pour verifier qu'il ne se gagne pas tout seul. C'est quelques dizaines de
-        // millisecondes, ce qui ne se voit pas mais n'a rien a faire sur le fil principal.
-        Thread {
-            val tableau = Tableaux.pourNiveau(n)
-            runOnUiThread {
-                if (isFinishing || isDestroyed) return@runOnUiThread
-                vue.jouer(Partie(tableau))
-                vue.typeChoisi = null
-                rafraichir()
-            }
-        }.start()
-    }
+    // ── Lancement ────────────────────────────────────────────────────────────
 
-    private fun lancerOuSuivant() {
+    /** Lance la machine, ou l'arrete et remet le montage comme il etait. */
+    private fun lancerOuArreter() {
         val partie = vue.partieCourante() ?: return
-        if (partie.gagne) {
-            allerAu(niveau + 1)
-            return
-        }
-        vue.surPartie { it.lancer() }
         vue.typeChoisi = null
+        if (partie.lancee) {
+            vue.surPartie { it.arreter() }
+            vue.effacerTrainee()
+        } else {
+            vue.surPartie { it.lancer() }
+        }
         rafraichir()
     }
 
     // ── Retours de la vue ────────────────────────────────────────────────────
 
-    override fun surVictoire() {
-        val partie = vue.partieCourante() ?: return
-        if (gagneAnnonce) return
-        gagneAnnonce = true
-
-        // **Le bareme porte sur la machine, pas sur la patience, ni sur l'economie.** Le
-        // joueur a toutes les pieces et peut relancer autant qu'il veut. Ce qu'on note, c'est
-        // la chaine : combien des pieces posees ont vraiment servi. Trois etoiles, c'est une
-        // machine ou rien n'est la pour faire joli.
-        val etoiles = partie.etoiles
-        val avant = prefs.getInt(CLE_ETOILES + niveau, 0)
-        if (etoiles > avant) {
-            prefs.edit { putInt(CLE_ETOILES + niveau, etoiles) }
-            // Les neutrinos ne sont verses que sur le **progres** : rejouer un tableau
-            // deja fini ne rapporte rien, sinon le meilleur rendement du jeu serait de
-            // refaire vingt fois le niveau un.
-            val gain = NeutrinoRewards.infernale(etoiles) - NeutrinoRewards.infernale(avant)
-            if (gain > 0) NeutrinoRepository(this).addBalance(gain)
-        }
-        etat.setTextColor(0xFF55E08A.toInt())
-        etat.text = getString(
-            R.string.infernale_won,
-            "★".repeat(etoiles) + "☆".repeat(3 - etoiles),
-            partie.chaine,
-            partie.posees
-        )
-        majCommandes()
+    /** Le montage a bouge : on rafraichit l'ecran et on programme l'ecriture. */
+    override fun surChangement() {
+        rafraichir()
+        main.removeCallbacks(ecrire)
+        main.postDelayed(ecrire, DELAI_SAUVEGARDE)
     }
-
-    override fun surEchec() {
-        val partie = vue.partieCourante() ?: return
-        if (partie.gagne) return
-        etat.setTextColor(0xFFE0A055.toInt())
-        etat.text = getString(
-            if (partie.tempsEcoule) R.string.infernale_timeout else R.string.infernale_failed
-        )
-        majCommandes()
-    }
-
-    override fun surChangement() = rafraichir()
 
     // ── Interface ────────────────────────────────────────────────────────────
 
     private fun rafraichir() {
         val partie = vue.partieCourante() ?: return
-        if (!partie.gagne && !partie.lancee) {
-            etat.setTextColor(0xFF94A3B8.toInt())
-            val type = typeEnMain()
-            etat.text = when {
-                // **La piece en main s'explique elle-meme.** Neuf pieces dont plusieurs ne
-                // ressemblent a rien de connu — un tambour, une poulie a godet — et une
-                // vignette de soixante pixels n'a jamais dit a quoi une piece sert. Tant
-                // qu'on en tient une, la ligne d'etat la nomme et dit ce qu'elle fait ; le
-                // compteur reprend sa place des qu'on la lache.
-                type != null -> getString(
-                    R.string.infernale_piece_named, getString(nom(type)), getString(role(type))
-                )
-                partie.posees == 0 -> getString(R.string.infernale_hint)
-                else -> getString(R.string.infernale_placed, partie.posees)
-            }
+        val type = typeEnMain()
+        etat.text = when {
+            // Le mode lien dit tout de suite quoi faire : c'est le geste le moins evident du jeu.
+            vue.modeLien -> getString(R.string.infernale_link_hint)
+            // **La piece en main s'explique elle-meme.** Plusieurs pieces ne ressemblent a
+            // rien de connu — un tambour, une poulie a godet — et une vignette de soixante
+            // pixels n'a jamais dit a quoi une piece sert. Tant qu'on en tient une, la ligne
+            // d'etat la nomme et dit ce qu'elle fait ; le compteur reprend sa place des
+            // qu'on la lache.
+            type != null -> getString(
+                R.string.infernale_piece_named, getString(nom(type)), getString(role(type))
+            )
+            partie.posees == 0 -> getString(R.string.infernale_hint)
+            else -> getString(R.string.infernale_placed, partie.posees)
         }
         majReglage()
-        majCommandes()
-        construireReserve(partie)
-    }
-
-    private fun majCommandes() {
-        val partie = vue.partieCourante()
-        val gagne = partie?.gagne == true
         boutonLancer.text = getString(
-            if (gagne) R.string.infernale_next else R.string.infernale_launch
+            if (partie.lancee) R.string.infernale_stop else R.string.infernale_launch
         )
-        boutonLancer.isEnabled = gagne || partie?.lancee == false
-        boutonLancer.alpha = if (boutonLancer.isEnabled) 1f else 0.45f
-        titre.text = getString(R.string.infernale_board, niveau) + etoilesDuNiveau()
-    }
-
-    private fun etoilesDuNiveau(): String {
-        val e = prefs.getInt(CLE_ETOILES + niveau, 0)
-        return if (e <= 0) "" else "  " + "★".repeat(e)
+        construireReserve(partie)
     }
 
     /**
@@ -257,6 +207,12 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         TypePiece.POULIE -> R.string.infernale_piece_pulley
         TypePiece.BILLE -> R.string.infernale_piece_ball
         TypePiece.TAPIS -> R.string.infernale_piece_belt
+        TypePiece.BALLON -> R.string.infernale_piece_balloon
+        TypePiece.PENDULE -> R.string.infernale_piece_pendulum
+        TypePiece.AIMANT -> R.string.infernale_piece_magnet
+        TypePiece.CANON -> R.string.infernale_piece_cannon
+        TypePiece.PIC -> R.string.infernale_piece_spike
+        TypePiece.PLAQUE -> R.string.infernale_piece_plate
         TypePiece.TORCHE -> R.string.infernale_piece_torch
     }
 
@@ -272,6 +228,12 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         TypePiece.POULIE -> R.string.infernale_role_pulley
         TypePiece.BILLE -> R.string.infernale_role_ball
         TypePiece.TAPIS -> R.string.infernale_role_belt
+        TypePiece.BALLON -> R.string.infernale_role_balloon
+        TypePiece.PENDULE -> R.string.infernale_role_pendulum
+        TypePiece.AIMANT -> R.string.infernale_role_magnet
+        TypePiece.CANON -> R.string.infernale_role_cannon
+        TypePiece.PIC -> R.string.infernale_role_spike
+        TypePiece.PLAQUE -> R.string.infernale_role_plate
         TypePiece.TORCHE -> R.string.infernale_role_torch
     }
 
@@ -307,25 +269,26 @@ class InfernaleActivity : ThemedActivity(), InfernaleView.Listener {
         // La corbeille ne s'ouvre que sur une piece posee : c'est elle qui a remplace
         // l'appui-qui-supprime, lequel rendait tout reglage inatteignable.
         boutonSupprimer.visibility = if (designee) View.VISIBLE else View.GONE
+        // Le bouton de lien n'apparait que sur une plaque ou un canon pose : c'est lui qu'on
+        // relie. Il s'allume tant que le prochain glissement trace un lien.
+        val liable = designee && Liens.liable(type)
+        boutonLien.visibility = if (liable) View.VISIBLE else View.GONE
+        boutonLien.setTextColor(if (vue.modeLien) 0xFF0B1020.toInt() else 0xFFFFC65A.toInt())
+        boutonLien.setBackgroundColor(if (vue.modeLien) 0xFFFFC65A.toInt() else 0xFF2A2414.toInt())
     }
 
     /**
-     * Reconstruit la reserve : une case par type qu'il reste a poser.
+     * Reconstruit la reserve : une case par type de piece.
      *
      * Elle se refait entierement a chaque changement plutot que de se mettre a jour
      * case par case. C'est quelques vues recreees par pose, ce qui n'est rien a
      * l'echelle d'un geste de doigt, et ca supprime toute une classe de bugs ou
-     * l'affichage et le stock finissent par ne plus dire la meme chose.
+     * l'affichage et l'etat finissent par ne plus dire la meme chose.
      */
     private fun construireReserve(partie: Partie) {
         reserve.removeAllViews()
         if (partie.lancee) return
-        for (type in TypePiece.entries) {
-            // Un tableau a bille temoin ne propose pas de bille : on n'y contourne pas la
-            // bille de depart, et une case qui ne ferait rien serait un piege.
-            if (type == TypePiece.BILLE && partie.tableau.avecTemoin) continue
-            reserve.addView(caseReserve(type))
-        }
+        for (type in TypePiece.entries) reserve.addView(caseReserve(type))
     }
 
     private fun caseReserve(type: TypePiece): View =

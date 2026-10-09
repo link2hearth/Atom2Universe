@@ -175,6 +175,68 @@ class InfernaleVignette(ctx: Context) : View(ctx) {
                 c.drawCircle(cx - u * 0.3f, cy - u * 0.32f, u * 0.3f, fondClair)
             }
 
+            TypePiece.BALLON -> {
+                // Le ballon, ses deux cordes en V, et le panier dessous.
+                c.drawLine(cx, cy + u * 0.3f, cx - u * 0.4f, cy + u * 0.95f, corde)
+                c.drawLine(cx, cy + u * 0.3f, cx + u * 0.4f, cy + u * 0.95f, corde)
+                c.drawCircle(cx, cy - u * 0.55f, u * 0.85f, caoutchouc)
+                c.drawCircle(cx - u * 0.28f, cy - u * 0.85f, u * 0.25f, caoutchoucClair)
+                c.drawRect(cx - u * 0.5f, cy + u * 0.95f, cx + u * 0.5f, cy + u * 1.3f, boisSombre)
+            }
+
+            TypePiece.PENDULE -> {
+                // Un pivot en haut a gauche, la barre, et le boulet qui se balance.
+                c.drawLine(cx - u * 1.0f, cy - u * 1.2f, cx + u * 0.7f, cy + u * 0.7f, ferClair)
+                c.drawRect(cx - u * 1.25f, cy - u * 1.45f, cx - u * 0.75f, cy - u * 0.95f, fer)
+                c.drawCircle(cx + u * 0.8f, cy + u * 0.8f, u * 0.55f, fer)
+                c.drawCircle(cx + u * 0.62f, cy + u * 0.62f, u * 0.2f, ferClair)
+            }
+
+            TypePiece.AIMANT -> {
+                // Un fer a cheval, les poles vers le bas, et deux traits de champ.
+                c.drawRect(cx - u * 1.0f, cy - u * 1.1f, cx + u * 1.0f, cy - u * 0.3f, caoutchouc)
+                c.drawRect(cx - u * 1.0f, cy - u * 1.1f, cx - u * 0.35f, cy + u * 0.9f, caoutchouc)
+                c.drawRect(cx + u * 0.35f, cy - u * 1.1f, cx + u * 1.0f, cy + u * 0.9f, caoutchouc)
+                c.drawRect(cx - u * 1.0f, cy + u * 0.4f, cx - u * 0.35f, cy + u * 0.9f, ferClair)
+                c.drawRect(cx + u * 0.35f, cy + u * 0.4f, cx + u * 1.0f, cy + u * 0.9f, ferClair)
+                c.drawLine(cx - u * 0.7f, cy + u * 1.15f, cx - u * 0.7f, cy + u * 1.5f, souffle)
+                c.drawLine(cx + u * 0.7f, cy + u * 1.15f, cx + u * 0.7f, cy + u * 1.5f, souffle)
+            }
+
+            TypePiece.CANON -> {
+                c.save()
+                c.rotate(-30f, cx, cy)
+                c.drawRect(cx - u * 1.3f, cy - u * 0.5f, cx + u * 0.7f, cy - u * 0.3f, fer)
+                c.drawRect(cx - u * 1.3f, cy + u * 0.3f, cx + u * 0.7f, cy + u * 0.5f, fer)
+                c.drawRect(cx - u * 1.3f, cy - u * 0.5f, cx - u * 1.15f, cy + u * 0.5f, ferClair)
+                c.drawCircle(cx - u * 0.6f, cy, u * 0.3f, ivoire)
+                c.drawCircle(cx - u * 1.7f, cy, u * 0.28f, caoutchouc)
+                c.restore()
+                c.drawCircle(cx + u * 1.3f, cy - u * 0.9f, u * 0.2f, ivoire)
+                c.drawCircle(cx + u * 0.95f, cy - u * 0.55f, u * 0.1f, souffle)
+            }
+
+            TypePiece.PIC -> {
+                c.drawRect(cx - u * 1.0f, cy + u * 0.9f, cx + u * 1.0f, cy + u * 1.2f, boisSombre)
+                val tri = android.graphics.Path().apply {
+                    moveTo(cx, cy - u * 1.3f)
+                    lineTo(cx + u * 0.75f, cy + u * 0.9f)
+                    lineTo(cx - u * 0.75f, cy + u * 0.9f)
+                    close()
+                }
+                c.drawPath(tri, ferClair)
+                c.drawLine(cx, cy - u * 1.3f, cx + u * 0.75f, cy + u * 0.9f, fer)
+            }
+
+            TypePiece.PLAQUE -> {
+                c.drawRect(cx - u * 1.3f, cy + u * 0.3f, cx + u * 1.3f, cy + u * 0.7f, fer)
+                c.drawRect(cx - u * 1.1f, cy - u * 0.05f, cx + u * 1.1f, cy + u * 0.3f, caoutchouc)
+                c.drawRect(cx - u * 1.1f, cy - u * 0.05f, cx + u * 1.1f, cy + u * 0.1f, caoutchoucClair)
+                c.drawLine(cx, cy - u * 0.5f, cx, cy - u * 1.2f, souffle)
+                c.drawLine(cx - u * 0.3f, cy - u * 0.9f, cx, cy - u * 1.2f, souffle)
+                c.drawLine(cx + u * 0.3f, cy - u * 0.9f, cx, cy - u * 1.2f, souffle)
+            }
+
             TypePiece.TORCHE -> {
                 c.drawRect(cx - u * 0.14f, cy - u * 0.4f, cx + u * 0.14f, cy + u * 1.1f, fer)
                 c.drawCircle(cx, cy - u * 0.55f, u * 0.42f, flamme)

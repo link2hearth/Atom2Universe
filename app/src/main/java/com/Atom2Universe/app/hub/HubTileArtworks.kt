@@ -118,7 +118,7 @@ object HubTileArtworks {
             com.Atom2Universe.app.games.theline.TheLineHubTileDrawable::class,
         com.Atom2Universe.app.games.link.LinkActivity::class.java.name to
             com.Atom2Universe.app.games.link.LinkHubTileDrawable::class,
-        com.Atom2Universe.app.games.infernale.InfernaleActivity::class.java.name to
+        com.Atom2Universe.app.games.infernale.InfernaleMenuActivity::class.java.name to
             com.Atom2Universe.app.games.infernale.InfernaleHubTileDrawable::class,
         // Hub Audio (également retrouvées par les raccourcis du hub principal).
         com.Atom2Universe.app.music.MusicPlayerActivity::class.java.name to

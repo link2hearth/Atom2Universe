@@ -9,66 +9,31 @@ enum class Refus {
     /** La piece sortirait du tableau. */
     HORS_TABLEAU,
 
-    /** La piece en chevaucherait une autre, ou la bille, ou le bouton. */
+    /** La piece en chevaucherait une autre. */
     OCCUPE,
 
     /** On ne pose plus rien une fois la machine lancee. */
-    DEJA_LANCEE,
-
-    /**
-     * Cette piece n'existe pas dans ce tableau.
-     *
-     * La bille posee y est retiree : avec une bille a soi, on contournerait la bille de
-     * depart, et le tableau perdrait sa seule question.
-     */
-    INTERDIT
+    DEJA_LANCEE
 }
 
 /**
- * Ce que vaut une machine : sa **chaine**, c'est-a-dire combien de pieces posees ont
- * vraiment servi.
+ * Un tableau en cours d'edition : ce qu'on y a pose, et le monde qui en decoule.
  *
- * Elle remplace le « par » — le nombre de pieces qu'on attendait — qui recompensait la
- * machine la plus avare. Une machine infernale se juge a l'inverse : plus il se passe de
- * choses, mieux c'est, a condition que rien ne soit la pour faire joli.
+ * C'est un **bac a sable**. Il n'y a ni objectif, ni victoire, ni stock : on pose ce qu'on
+ * veut ou on veut, puis on lance et on regarde.
+ *
+ * Elle a **deux temps**. Pendant la pose, rien ne bouge : on place, on reprend, on
+ * reflechit, le monde est fige. Puis on lance, et la machine part. Les poses ne changent
+ * jamais pendant le lancement — c'est ce qui permet de tout remettre exactement comme
+ * c'etait avec [arreter], et de sauvegarder le montage plutot que son etat en cours de route.
  */
-object Notation {
-
-    /** Taille de chaine a partir de laquelle on parle d'une vraie machine. */
-    const val CHAINE_BELLE = 5
-
-    /** Taille de chaine a partir de laquelle la machine fait mieux qu'un toboggan. */
-    const val CHAINE_HONNETE = 3
-
-    /**
-     * 0 tant que le portail est ferme. Une etoile pour l'ouvrir ; deux si la chaine
-     * compte au moins [CHAINE_HONNETE] pieces ; trois si elle en compte [CHAINE_BELLE] et
-     * qu'**aucune** piece posee n'est restee en dehors.
-     */
-    fun etoiles(gagne: Boolean, atteintes: Int, comptees: Int): Int = when {
-        !gagne -> 0
-        atteintes >= CHAINE_BELLE && atteintes >= comptees -> 3
-        atteintes >= CHAINE_HONNETE -> 2
-        else -> 1
-    }
-}
-
-/**
- * Une partie : un tableau, ce qu'on y a pose, et ce qu'il reste en stock.
- *
- * Elle a **deux temps**, et la separation est ce qui fait le jeu. Pendant la pose, rien
- * ne bouge : on place, on reprend, on reflechit, le monde est fige. Puis on lance, et la
- * machine part sans qu'on puisse plus rien toucher — on ne peut que regarder, et
- * recommencer.
- *
- * C'est ce qui distingue un casse-tete d'un bac a sable. Pouvoir corriger en cours de
- * route retirerait tout son poids a la decision de placement, qui est precisement le
- * seul geste du jeu.
- */
-class Partie(val tableau: Tableau) {
+class Partie(
+    /** Graine du decor (cailloux du sol) : la meme caverne revient a chaque ouverture. */
+    val graine: Long = 0L
+) {
 
     /** Le monde. Il existe des le debut : on voit le decor avant de poser. */
-    var plateau: Plateau = Tableaux.monter(tableau)
+    var plateau: Plateau = Plateau()
         private set
 
     private val placements = ArrayList<Pose>()
@@ -82,47 +47,27 @@ class Partie(val tableau: Tableau) {
     var chrono = 0f
         private set
 
-    /** Nombre de lancements depuis le debut du tableau, pour information. */
-    var essais = 0
-        private set
-
-    val gagne: Boolean get() = plateau.gagne
-
-    /** Les pieces posees que la chaine a atteintes. Voir [Plateau.chaine]. */
-    val chaine: Int get() = plateau.chaine()
-
-    /** Les etoiles que vaut la machine telle qu'elle est. */
-    val etoiles: Int get() = Notation.etoiles(gagne, chaine, plateau.comptees())
+    /** Les liens plaque -> canon, par rang de pose. */
+    fun liens(): List<Lien> = plateau.liens.toList()
 
     /**
-     * Vrai quand la machine s'est arretee sans gagner : c'est un echec, pas une attente.
-     *
-     * On le mesure sur le moteur plutot que sur un chronometre. Une machine lente qui
-     * fait encore tomber son dernier domino n'a pas echoue ; une machine ou plus rien ne
-     * bouge, si — et le joueur n'a aucune raison d'attendre dix secondes pour
-     * l'apprendre.
+     * Relie une plaque et un canon, ou delie s'ils l'etaient deja. [a] et [b] sont des rangs de
+     * pose, dans n'importe quel ordre. Rend vrai si quelque chose a change.
      */
-    val echoue: Boolean
-        get() = lancee && !gagne && (tempsEcoule ||
-            (chrono > 1.2f && (plateau.billePerdue() || plateau.immobile()) && !plateau.enTenue()))
-
-    /**
-     * Vrai quand le temps accorde est passe. Une machine encore en train de rouler a perdu :
-     * c'est le seul echec qui n'attend pas que tout se soit arrete.
-     */
-    val tempsEcoule: Boolean get() = lancee && !gagne && tableau.limite > 0f && chrono >= tableau.limite
-
-    /** Temps qu'il reste a la machine pour ouvrir le portail, ou `null` s'il n'y a pas de limite. */
-    val tempsRestant: Float?
-        get() = if (tableau.limite > 0f) (tableau.limite - chrono).coerceAtLeast(0f) else null
+    fun lier(a: Int, b: Int): Boolean {
+        if (lancee) return false
+        val pa = placements.getOrNull(a)?.type ?: return false
+        val pb = placements.getOrNull(b)?.type ?: return false
+        if (!Liens.complementaires(pa, pb)) return false
+        val lien = if (pa == TypePiece.PLAQUE) Lien(a, b) else Lien(b, a)
+        if (!plateau.liens.remove(lien)) plateau.liens.add(lien)
+        return true
+    }
 
     /** Les poses du joueur, dans l'ordre. */
     fun placees(): List<Pose> = placements.toList()
 
-    /**
-     * Nombre de pieces posees, pour l'affichage. La note, elle, se lit sur [chaine] : ce
-     * qui compte n'est pas combien on en a posees mais combien ont servi.
-     */
+    /** Nombre de pieces posees, pour l'affichage. */
     val posees: Int get() = placements.size
 
     /**
@@ -136,31 +81,18 @@ class Partie(val tableau: Tableau) {
      */
     fun verifier(pose: Pose, sauf: Int = -1): Refus {
         if (lancee) return Refus.DEJA_LANCEE
-        if (pose.type == TypePiece.BILLE && tableau.avecTemoin) return Refus.INTERDIT
         val essai = pose.creer()
-        if (!Placement.dansLeCadre(essai, tableau.cadreMinX, tableau.cadreMaxX, tableau.cadreMaxY)) {
+        if (!Placement.dansLeCadre(
+                essai, -Plateau.LARGEUR / 2f, Plateau.LARGEUR / 2f, Plateau.HAUTEUR
+            )
+        ) {
             return Refus.HORS_TABLEAU
         }
         if (Placement.heurte(essai, occupants(sauf))) return Refus.OCCUPE
-        // La zone du bouton n'arrete que ce qui bouge. Une rampe scellee posee par-dessus
-        // ne la declenchera jamais — sa categorie est celle du decor — alors qu'un domino
-        // pose dedans gagnerait la partie avant meme le premier pas. Le distinguo est donc
-        // la seule facon d'avoir a la fois un placement libre et un jeu non triche.
-        plateau.bouton?.let { b ->
-            b.zone.updateAabb()
-            for (c in essai.corps) {
-                if (c.immovable) continue
-                c.updateAabb()
-                if (Placement.seChevauchent(c, b.zone)) return Refus.OCCUPE
-            }
-        }
         return Refus.OK
     }
 
-    /**
-     * Pose une piece. Rend [Refus.OK] et la decompte du stock si elle passe, sinon ne
-     * touche a rien.
-     */
+    /** Pose une piece. Rend [Refus.OK] si elle passe, sinon ne touche a rien. */
     fun poser(pose: Pose): Refus {
         val verdict = verifier(pose)
         if (verdict != Refus.OK) return verdict
@@ -170,7 +102,32 @@ class Partie(val tableau: Tableau) {
     }
 
     /**
-     * Deplace la piece [index] a un nouvel endroit, sans passer par le stock.
+     * Pose une liste de pieces d'un coup, par exemple a l'ouverture d'un tableau
+     * sauvegarde. Celles qui ne passent plus sont ignorees.
+     */
+    fun poserTout(poses: List<Pose>) {
+        for (p in poses) poser(p)
+    }
+
+    /**
+     * Rejoue une sauvegarde : les poses, puis les liens. Si une pose ne passe plus, les rangs
+     * suivants se decalent ; les liens sont renumerotes en consequence, et ceux qui visaient
+     * une pose perdue sont abandonnes.
+     */
+    fun charger(poses: List<Pose>, liens: List<Lien>) {
+        val rang = IntArray(poses.size) { -1 }
+        for ((i, p) in poses.withIndex()) {
+            if (poser(p) == Refus.OK) rang[i] = placements.lastIndex
+        }
+        for (l in liens) {
+            val a = rang.getOrNull(l.plaque) ?: continue
+            val b = rang.getOrNull(l.cible) ?: continue
+            if (a >= 0 && b >= 0) lier(a, b)
+        }
+    }
+
+    /**
+     * Deplace la piece [index] a un nouvel endroit.
      *
      * C'est le geste qu'on fait vingt fois par tableau : la rampe est presque bonne, il
      * lui manque dix centimetres. Reprendre puis reposer marcherait, mais la piece
@@ -187,7 +144,7 @@ class Partie(val tableau: Tableau) {
         return Refus.OK
     }
 
-    /** Reprend la derniere piece posee et la remet au stock. */
+    /** Reprend la derniere piece posee. */
     fun reprendre(): Boolean {
         if (lancee || placements.isEmpty()) return false
         return reprendre(placements.lastIndex)
@@ -198,6 +155,12 @@ class Partie(val tableau: Tableau) {
         if (lancee || index !in placements.indices) return false
         placements.removeAt(index)
         plateau.retirer(corps.removeAt(index))
+        // Les liens de la piece retiree disparaissent, et les rangs suivants reculent d'un.
+        val gardes = plateau.liens.filter { it.plaque != index && it.cible != index }.map {
+            Lien(if (it.plaque > index) it.plaque - 1 else it.plaque, if (it.cible > index) it.cible - 1 else it.cible)
+        }
+        plateau.liens.clear()
+        plateau.liens.addAll(gardes)
         return true
     }
 
@@ -205,58 +168,45 @@ class Partie(val tableau: Tableau) {
     fun lancer() {
         if (lancee) return
         lancee = true
-        essais++
+        for (p in plateau.pieces) p.demarrer()
     }
 
     /** Une image, et seulement si la machine est lancee. */
     fun avancer(dt: Float) {
         if (!lancee) return
         plateau.avancer(dt)
-        // Le temps s'arrete a la victoire : le portail qui s'ouvre se regarde pendant que la
-        // physique continue, et un compte a rebours qui descendrait a zero sur une machine
-        // gagnee ferait croire qu'on a perdu.
-        if (!gagne) chrono += dt
+        chrono += dt
     }
 
     /**
-     * Remonte le tableau a neuf en gardant les pieces posees : le geste qu'on fait
-     * apres un essai rate, quand on veut juste corriger un domino.
+     * Arrete la machine et remet le montage exactement comme il etait avant le lancement :
+     * les pieces reprennent leur place de depart, prêtes a etre modifiees ou relancees.
      */
-    fun rejouer() {
+    fun arreter() {
         val garde = placements.toList()
-        val comptes = essais
+        val liensGardes = plateau.liens.toList()
         remonter()
-        essais = comptes
-        for (p in garde) poser(p)
+        charger(garde, liensGardes)
     }
 
-    /** Vide le tableau et rend tout au stock. */
-    fun tableauRase() {
-        val comptes = essais
-        remonter()
-        essais = comptes
-    }
+    /** Vide le tableau. */
+    fun vider() = remonter()
 
     private fun remonter() {
-        plateau = Tableaux.monter(tableau)
+        plateau = Plateau()
         corps.clear()
         placements.clear()
         lancee = false
         chrono = 0f
-        essais = 0
     }
 
-    /** Tout ce qui occupe deja de la place : les pieces posees et la bille. */
+    /** Tout ce qui occupe deja de la place : les pieces posees. */
     private fun occupants(sauf: Int): List<PhysBody> {
         val out = ArrayList<PhysBody>()
         for (i in corps.indices) {
             if (i == sauf) continue
             out.addAll(corps[i].corps)
         }
-        plateau.bille?.let { out.add(it) }
-        plateau.temoin?.let { out.add(it) }
-        plateau.perchoir?.let { out.add(it) }
-        out.addAll(plateau.cuvette)
         for (c in out) c.updateAabb()
         return out
     }

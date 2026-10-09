@@ -13,16 +13,10 @@
     <string name="infernale_art_ball">Ball</string>
     <string name="infernale_art_button">Button</string>
     <string name="infernale_title">Infernal Machine</string>
-    <string name="infernale_description">Build a chain reaction so the ball opens the portal</string>
+    <string name="infernale_description">A sandbox: place pieces anywhere, press play and watch everything react</string>
     <string name="infernale_back">Back</string>
     <string name="infernale_launch">Launch</string>
-    <string name="infernale_replay">Replay</string>
     <string name="infernale_clear">Clear</string>
-    <string name="infernale_won">The portal opens!  %1$s   chain %2$d / %3$d</string>
-    <string name="infernale_timer">%1$.1f s</string>
-    <string name="infernale_timeout">Time\'s up. Try again, faster.</string>
-    <string name="infernale_failed">The machine stopped. Adjust and try again.</string>
-    <string name="infernale_board">Board %1$d</string>
     <string name="infernale_hint">Drag with one finger to move around, two to zoom. Pick a piece, tap the board to place it.</string>
     <string name="infernale_piece_ramp">Ramp</string>
     <string name="infernale_piece_plot">Bumper</string>
@@ -30,8 +24,6 @@
     <string name="infernale_piece_domino">Domino</string>
     <string name="infernale_piece_seesaw">Seesaw</string>
     <string name="infernale_piece_trampoline">Springboard</string>
-    <string name="infernale_loading">Building the board…</string>
-    <string name="infernale_next">Next</string>
     <string name="infernale_piece_fan">Fan</string>
     <string name="infernale_piece_drum">Drum</string>
     <string name="infernale_piece_pulley">Pulley</string>
@@ -40,9 +32,9 @@
     <string name="infernale_role_plot">Fixed bouncy peg. The ball leaves at an angle.</string>
     <string name="infernale_role_block">Fixed wall. It blocks, or sends back.</string>
     <string name="infernale_role_domino">Falls when pushed, and pushes the next one.</string>
-    <string name="infernale_role_seesaw">Fixed foot, free plank. What drops on one side lifts the other.</string>
+    <string name="infernale_role_seesaw">Fixed foot, free plank. Drag either end: the foot becomes the pivot of a lever.</string>
     <string name="infernale_role_trampoline">Spring-loaded flap. What lands on it is thrown forward.</string>
-    <string name="infernale_role_fan">Blows a jet of air. It pushes light things; it cannot lift the ball.</string>
+    <string name="infernale_role_fan">Blows a jet of air. Drag the far handle to set its power. Linked to a plate, it only blows while the plate is on.</string>
     <string name="infernale_role_drum">Taut skin. What falls on it comes back up almost as high.</string>
     <string name="infernale_role_pulley">Bucket and counterweight. The ball falling in raises the counterweight.</string>
     <string name="infernale_piece_named">%1$s — %2$s</string>
@@ -55,4 +47,27 @@
     <string name="infernale_piece_torch">Torch</string>
     <string name="infernale_role_torch">A wall torch. It lights up, and that is all it is asked to do.</string>
     <string name="infernale_delete">Remove</string>
+    <string name="infernale_new">New board</string>
+    <string name="infernale_rename">Rename</string>
+    <string name="infernale_stop">Stop</string>
+    <string name="infernale_default_name">Board %1$d</string>
+    <string name="infernale_confirm_delete">Delete \"%1$s\"?</string>
+    <plurals name="infernale_piece_count">
+        <item quantity="one">%1$d piece</item>
+        <item quantity="other">%1$d pieces</item>
+    </plurals>
+    <string name="infernale_piece_balloon">Balloon</string>
+    <string name="infernale_role_balloon">Rises with its basket. Fans push it; a ball in the basket weighs it down. Resize it to change its lift.</string>
+    <string name="infernale_piece_pendulum">Pendulum</string>
+    <string name="infernale_role_pendulum">A heavy iron ball on a rod. Drag the ball to set length and angle: it swings and strikes sideways.</string>
+    <string name="infernale_piece_magnet">Magnet</string>
+    <string name="infernale_role_magnet">Pulls iron: balls, the pendulum ball. Flip it to push instead. Drag the handle to set its strength.</string>
+    <string name="infernale_piece_cannon">Cannon</string>
+    <string name="infernale_role_cannon">Fires its ball when something touches its red button, at the back, or when a linked plate is pressed. Flip it (⇄) and it fires as soon as the machine starts. Turn it with the near handle, set its power with the far one.</string>
+    <string name="infernale_piece_spike">Spike</string>
+    <string name="infernale_role_spike">A sharp point. A balloon that touches it bursts, basket included: only what it carried falls. Drag the handle to turn it.</string>
+    <string name="infernale_piece_plate">Pressure plate</string>
+    <string name="infernale_role_plate">A switch: each press toggles it, and its lamp shows whether it is on. Flip it (⇄) for a push button, on only while pressed. Select it, tap the link button, then drag to a cannon or a fan.</string>
+    <string name="infernale_link">Link</string>
+    <string name="infernale_link_hint">Drag from one item to another to link them: plate to cannon or fan. Do it again to unlink.</string>
 </resources>
