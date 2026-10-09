@@ -57,7 +57,7 @@
     <string name="classic_course_summary">%1$d holes · Par %2$d · %3$d m</string>
     <string name="classic_gardens_description">Course 1 · Easy to master. Very wide fairways, gentle greens and birdie or eagle opportunities.</string>
     <string name="classic_heather_course">Heather Heights</string>
-    <string name="classic_heather_description">Course 2 · A small step up. Sloping fairways, angled greens and placement choices, with a safe side for cautious play.</string>
+    <string name="classic_heather_description">Course 2 · A spring fairy garden with blossom trees, little houses, mushrooms and animated fairies. A small step up: sloping fairways, angled greens and placement choices, with a safe side for cautious play.</string>
     <string name="classic_hole_choice_tip">%1$d · %2$s\nPar %3$d · %4$d m\n%5$s</string>
     <string-array name="classic_heather_holes">
         <item>Woodland Edge</item>

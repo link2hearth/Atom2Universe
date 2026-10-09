@@ -26,6 +26,8 @@ enum class GolfClub(val carry: Float, val loft: Float, val launch: Float, val sp
 data class GolfRouteNode(val x: Float, val z: Float, val width: Float)
 data class GolfElevationNode(val z: Float, val height: Float)
 enum class GolfLandscapeStyle { PARKLAND, AUTUMN_HIGHLANDS, SNOW_MOUNTAINS }
+/** Scenery only: course physics and turf palettes are independent of seasonal decorations. */
+enum class GolfDecorTheme { GARDEN, FAIRY, HALLOWEEN, CHRISTMAS }
 
 /** A designed carry and reception, used to validate risk/reward routes against real equipment. */
 data class GolfAttackLanding(val x: Float, val z: Float, val club: GolfClub,
@@ -124,7 +126,8 @@ data class ClassicHole(
     val attackTreeClearance: Float = 0f,
     /** An archipelago replaces continuous land: everything outside these contours is water. */
     val islands: List<GolfHazard> = emptyList(),
-    val islandWaterLevel: Float = 0f
+    val islandWaterLevel: Float = 0f,
+    val decorTheme: GolfDecorTheme = GolfDecorTheme.GARDEN
 ) {
     private val greenCos = cos(greenShape.rotation)
     private val greenSin = sin(greenShape.rotation)

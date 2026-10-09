@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="classic_vertigo_course">Les Hauts Défis</string>
-    <string name="classic_vertigo_description">Parcours 4 · Expert. 18 trous entre lacs et carrières. Les grands fairways extérieurs offrent un détour sûr et nettement plus long. Les raccourcis passent par de petites réceptions isolées : un bois 3 ou un driver dosé permet de gagner des coups, à condition de maîtriser la portée et la roule. Les petits greens demandent ensuite une approche précise.</string>
+    <string name="classic_vertigo_description">Parcours 4 · Expert. Un automne Halloween : citrouilles, lanternes, arbres dénudés et fantômes flottants. 18 trous entre lacs et carrières. Les grands fairways extérieurs offrent un détour sûr et nettement plus long. Les raccourcis passent par de petites réceptions isolées : un bois 3 ou un driver dosé permet de gagner des coups, à condition de maîtriser la portée et la roule. Les petits greens demandent ensuite une approche précise.</string>
     <string-array name="classic_vertigo_holes">
         <item>La clairière suspendue</item><item>Les deux îlots</item><item>La coupe du lac</item>
         <item>Les dents de la carrière</item><item>Le cap solitaire</item><item>Les berges décalées</item>

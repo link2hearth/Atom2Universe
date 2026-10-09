@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="classic_snow_course">Les Cimes Blanches</string>
-    <string name="classic_snow_description">Parcours 6 · 18 trous dans les montagnes enneigées. Longues descentes vers des plateaux, cols, remontées et par 3 en hauteur ou en contrebas. Les réceptions offrent des terrasses jouables, les greens restent doux, et les fairways sont dégagés. Lis la trajectoire et la roule dans le guide : le dénivelé change la portée. Une balle orange reste visible sur la neige.</string>
+    <string name="classic_snow_description">Parcours 6 · Noël dans les montagnes enneigées : chalets, sapins décorés, lumières scintillantes, cadeaux et bonshommes de neige. 18 trous avec de longues descentes vers des plateaux, des cols, des remontées et des par 3 en hauteur ou en contrebas. Les réceptions offrent des terrasses jouables, les greens restent doux, et les fairways sont dégagés. Lis la trajectoire et la roule dans le guide : le dénivelé change la portée. Une balle orange reste visible sur la neige.</string>
     <string-array name="classic_snow_holes">
         <item>La première descente</item><item>Les quatre cents mètres</item><item>Le balcon blanc</item>
         <item>Le premier col</item><item>La montée des sapins</item><item>Le plateau d’altitude</item>

@@ -25,6 +25,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
     private var boardLights=FloatArray(0)
     private var lightsKey:List<Any>?=null
     private val scenery by lazy { landscape.scenery() }
+    private val festive by lazy { ClassicFestiveDecor(hole) }
     private val blades by lazy { landscape.blades() }
     private val ball by lazy { MeshBuilder().apply { sphere(0f,0f,0f,1f,
         if(hole.snowy)C(1f,.36f,.06f) else C(1f,.99f,.92f),14,8) }.build() }
@@ -34,13 +35,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         tri(P(-1f,0f,0f),P(0f,0f,.2f),P(-.25f,.18f,.3f),C(.97f,.97f,.88f))
         tri(P(1f,0f,0f),P(0f,0f,.2f),P(.25f,.18f,.3f),C(.97f,.97f,.88f))
     }.build() }
-    private val rabbit by lazy { MeshBuilder().apply {
-        sphere(0f,.36f,0f,.38f,C(.87f,.81f,.69f),7,4,.85f)
-        sphere(0f,.57f,-.25f,.24f,C(.94f,.88f,.76f),7,4)
-        sphere(-.1f,.89f,-.24f,.075f,C(.94f,.88f,.76f),6,4,3f)
-        sphere(.1f,.89f,-.24f,.075f,C(.94f,.88f,.76f),6,4,3f)
-        sphere(0f,.40f,.37f,.14f,C(.97f,.95f,.89f),6,4)
-    }.build() }
+    private val rabbit by lazy { GolfRabbit(hole.snowy) }
     private val sky by lazy { MeshBuilder().apply {
         quad(P(-1f,-1f,0f),P(1f,-1f,0f),P(1f,1f,0f),P(-1f,1f,0f),C(1f,1f,1f),false)
     }.build() }
@@ -71,7 +66,8 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             quad(a,b,c,d,colour); quad(d,c,b,a,colour)
         }.build()
     } }
-    private val meshes get() = scenery+listOf(blades,ball,shadow,ring,bird,rabbit,sky,flag,pin,hazardPin,cupMarker)+leaves
+    private val meshes get() = scenery+festive.scenery+festive.animatedMeshes+
+        listOf(blades,ball,shadow,ring,bird,sky,flag,pin,hazardPin,cupMarker)+rabbit.meshes+leaves
     // A few leaves carried by the wind a couple of metres above the turf; each waits a while before the next one.
     private val leafX=FloatArray(LEAVES); private val leafY=FloatArray(LEAVES); private val leafZ=FloatArray(LEAVES)
     private val leafWait=FloatArray(LEAVES) { 1f+it*2.5f }
@@ -186,6 +182,13 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             hole.cup.x,hole.cup.z,2f*tan(Math.toRadians(25.0).toFloat())/screenHeight,screenHeight/900f)
         GL.glUseProgram(program)
         identity(); scenery.forEach { if(it.visible(viewProjection)) draw(it,.12f) }
+        festive.scenery.forEach { if(it.visible(viewProjection)) draw(it,.04f) }
+        festive.animate(time,P(eyeX,eyeY,eyeZ)) { mesh,position,yaw,scale ->
+            identity(); Matrix.translateM(model,0,position.x,position.y,position.z)
+            Matrix.rotateM(model,0,yaw*180f/PI.toFloat(),0f,1f,0f)
+            Matrix.scaleM(model,0,scale,scale,scale)
+            draw(mesh,0f)
+        }
         identity()
         if(!hole.highlands && hole.islands.isEmpty()) {
             Matrix.translateM(model,0,landscape.millX,landscape.millY,landscape.millZ-2.2f)
@@ -193,7 +196,7 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
             draw(blades,.05f)
         }
         wildlife()
-        if(f.overview==null && !hole.snowy) drawLeaves(f,dt)
+        if(f.overview==null && hole.highlands && !hole.snowy) drawLeaves(f,dt)
         grass.draw(viewProjection,eyeX,eyeY,eyeZ,f.ball.x,f.ball.z,time)
         GL.glUseProgram(program)
         val ground=hole.heightAt(f.ball.x,f.ball.z)
@@ -321,11 +324,20 @@ internal class ClassicRenderer(private val hole: ClassicHole) : GLSurfaceView.Re
         if(hole.islands.isNotEmpty()) return
         val z=hole.tee.z+13f
         val x=hole.fairwayCenter(z)-hole.fairwayWidth(z)*.5f-4f
+        if(hole.lieAt(x,z)!=GolfLie.ROUGH || hole.hazards.any { it.signedDistance(x,z)<1f }) return
         val cycle=(time%13f)
         val hop=if(cycle<1.6f) abs(sin(cycle*PI.toFloat()*2.5f))*.32f else 0f
         identity(); Matrix.translateM(model,0,x,hole.heightAt(x,z)+hop,z)
         Matrix.rotateM(model,0,35f,0f,1f,0f)
-        draw(rabbit,0f)
+        Matrix.scaleM(model,0,1f,1f+.018f*sin(time*2.5f),1f)
+        draw(rabbit.body,0f)
+        for(s in intArrayOf(-1,1)) {
+            identity(); Matrix.translateM(model,0,x,hole.heightAt(x,z)+hop,z)
+            Matrix.rotateM(model,0,35f,0f,1f,0f)
+            Matrix.translateM(model,0,s*.085f,.69f,-.25f)
+            Matrix.rotateM(model,0,s*12f+sin(time*1.7f+s)*6f,0f,0f,1f)
+            draw(rabbit.ear,0f)
+        }
     }
 
     /** Rare dead leaves drifting with the wind: they come in upwind of the view, cross it and are gone. */

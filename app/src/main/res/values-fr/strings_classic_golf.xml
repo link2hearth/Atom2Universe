@@ -57,7 +57,7 @@
     <string name="classic_course_summary">%1$d trous · Par %2$d · %3$d m</string>
     <string name="classic_gardens_description">Parcours 1 · Facile à maîtriser. Fairways très larges, greens doux et occasions de birdie ou d’eagle.</string>
     <string name="classic_heather_course">Les Hauts de Bruyère</string>
-    <string name="classic_heather_description">Parcours 2 · Un cran au-dessus. Dévers, greens en diagonale et choix de placement, avec un côté sûr pour jouer prudemment.</string>
+    <string name="classic_heather_description">Parcours 2 · Un jardin printanier féerique : arbres en fleurs, petites maisons, champignons et fées animées. Un cran au-dessus : dévers, greens en diagonale et choix de placement, avec un côté sûr pour jouer prudemment.</string>
     <string name="classic_hole_choice_tip">%1$d · %2$s\nPar %3$d · %4$d m\n%5$s</string>
     <string-array name="classic_heather_holes">
         <item>La lisière</item>

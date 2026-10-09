@@ -26,7 +26,7 @@ object SnowPeaksCourse {
             greenShape=GolfGreenShape(aspect=1.03f,rotation=number*.21f,shape=.08f,
                 slopeX=side*.006f,slopeZ=.009f),
             fairwayRelief=GolfFairwayRelief(side*.004f,.05f),
-            landscapeStyle=GolfLandscapeStyle.SNOW_MOUNTAINS,
+            landscapeStyle=GolfLandscapeStyle.SNOW_MOUNTAINS, decorTheme=GolfDecorTheme.CHRISTMAS,
             attackTreeClearance=6f,
             attackLandings=if(par==3) listOf(GolfAttackLanding(end,len,GolfClub.WOOD3)) else buildList {
                 add(GolfAttackLanding(side*16f,first.toFloat(),GolfClub.DRIVER))

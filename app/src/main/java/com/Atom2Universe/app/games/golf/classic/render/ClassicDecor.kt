@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.golf.classic.render
 
 import com.Atom2Universe.app.games.golf.classic.core.ClassicHole
 import com.Atom2Universe.app.games.golf.classic.core.GolfLie
+import com.Atom2Universe.app.games.golf.classic.core.GolfDecorTheme
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -150,7 +151,9 @@ internal class ClassicDecor(private val hole:ClassicHole) {
                 }
             }
             else -> {
-                val leaf=if(hole.highlands) {
+                val leaf=if(hole.decorTheme==GolfDecorTheme.FAIRY && seed.toInt()%4==0) {
+                    if(seed.toInt()%8==0)C(.90f,.65f,.76f) else C(.74f,.65f,.87f)
+                } else if(hole.highlands) {
                     if(seed.toInt()%3==0)C(.66f,.39f,.18f) else C(.53f,.47f,.23f)
                 } else if(seed.toInt()%4==0)C(.38f,.54f,.22f) else C(.24f,.45f,.24f)
                 b.organic(x,y+r*1.73f,z,r*.86f,r*.83f,r*.86f,leaf,seed,9,4)

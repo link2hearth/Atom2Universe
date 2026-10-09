@@ -169,5 +169,5 @@ object HeatherCourse {
             hazards=listOf(lake(57,336,29,65,.2f),sand(-16,225,8,15,-.4f),sand(-43,397,8,13,.5f),sand(-61,515,8,12,-.3f)),
             greenShape=green(.008f,.014f,GolfGreenForm.TIER,1.5707964f,.25f),
             fairwayRelief=GolfFairwayRelief(.014f,-.20f),landingZ=204f)
-    )
+    ).map { it.copy(decorTheme = GolfDecorTheme.FAIRY) }
 }

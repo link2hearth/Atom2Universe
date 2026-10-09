@@ -61,6 +61,20 @@ internal class MeshBuilder {
     private var data = FloatArray(8192)
     private var size = 0
     val vertexCount get()=size/6
+    /** Bake a local model into a scenery batch; no extra GPU object per ornament. */
+    fun append(other:MeshBuilder, origin:P, yaw:Float=0f, scale:Float=1f, mirrorX:Float=1f,
+        groundHeight:((Float,Float)->Float)?=null) {
+        val cs=cos(yaw); val sn=sin(yaw)
+        for(i in 0 until other.size step 6) {
+            val x=other.data[i]*scale*mirrorX; val z=other.data[i+2]*scale
+            val wx=origin.x+x*cs+z*sn; val wz=origin.z-x*sn+z*cs
+            vertex(P(wx,(groundHeight?.invoke(wx,wz) ?: origin.y)+other.data[i+1]*scale,wz),
+                C(other.data[i+3],other.data[i+4],other.data[i+5]))
+        }
+    }
+    fun ellipsoid(x:Float,y:Float,z:Float,rx:Float,ry:Float,rz:Float,c:C) =
+        organic(x,y,z,rx,ry,rz,c,0f,if(maxOf(rx,ry,rz)<.14f)12 else 20,
+            if(maxOf(rx,ry,rz)<.14f)8 else 12,0f)
     private fun vertex(p: P, c: C) {
         if (size + 6 > data.size) data = data.copyOf(data.size * 2)
         data[size++] = p.x; data[size++] = p.y; data[size++] = p.z

@@ -23,6 +23,12 @@ import kotlin.math.atan2
 /** Still frames from the game's renderers, made once off the UI thread. No live scene in menus. */
 internal object GolfSnapshots {
     private const val VERSION = 1
+    // Invalidate only changed scenery; retain the other course tiles on disk.
+    private fun snapshotVersion(key: String) = when(key) {
+        "heather", "vertigo", "snow_peaks", "wild_detours" -> 3
+        "gardens" -> 2 // New rabbit model.
+        else -> VERSION
+    }
     private const val WIDTH = 640
     private const val HEIGHT = 480
     private val cache = LruCache<String, Bitmap>(4)
@@ -45,7 +51,7 @@ internal object GolfSnapshots {
     /** Also called by the hub's background worker; concurrent requests share the same frame. */
     @Synchronized fun load(context: Context, key: String): Bitmap {
         cache.get(key)?.let { return it }
-        val file = File(context.cacheDir, "golf-views/v$VERSION-$key.png")
+        val file = File(context.cacheDir, "golf-views/v${snapshotVersion(key)}-$key.png")
         BitmapFactory.decodeFile(file.path)?.let { cache.put(key, it); return it }
         val bitmap = capture(context, key)
         cache.put(key, bitmap)

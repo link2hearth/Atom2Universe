@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="classic_vertigo_course">Highland Challenges</string>
-    <string name="classic_vertigo_description">Course 4 · Expert. 18 holes among lakes and quarries. Broad outside fairways provide a safe, considerably longer detour. Shortcuts use small isolated receptions: a wood 3 or controlled driver can save shots, provided you manage carry and rollout. Small greens then demand an accurate approach.</string>
+    <string name="classic_vertigo_description">Course 4 · Expert. Halloween in autumn: pumpkins, lanterns, bare trees and floating ghosts. 18 holes among lakes and quarries. Broad outside fairways provide a safe, considerably longer detour. Shortcuts use small isolated receptions: a wood 3 or controlled driver can save shots, provided you manage carry and rollout. Small greens then demand an accurate approach.</string>
     <string-array name="classic_vertigo_holes">
         <item>The Hanging Clearing</item><item>The Twin Islets</item><item>The Lake Cup</item>
         <item>The Quarry Teeth</item><item>The Lonely Cape</item><item>The Offset Banks</item>

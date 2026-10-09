@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="classic_snow_course">White Peaks</string>
-    <string name="classic_snow_description">Course 6 · 18 holes in snowy mountains. Long descents to plateaus, mountain passes, climbs and elevated or downhill par 3s. Receptions provide playable terraces, greens stay gentle, and fairways are cleared. Read flight and rollout in the preview: elevation changes carry. An orange ball remains visible against snow.</string>
+    <string name="classic_snow_description">Course 6 · Christmas in snowy mountains: chalets, decorated firs, twinkling lights, presents and snowmen. 18 holes with long descents to plateaus, mountain passes, climbs and elevated or downhill par 3s. Receptions provide playable terraces, greens stay gentle, and fairways are cleared. Read flight and rollout in the preview: elevation changes carry. An orange ball remains visible against snow.</string>
     <string-array name="classic_snow_holes">
         <item>The First Descent</item><item>The Four Hundred Metres</item><item>The White Balcony</item>
         <item>The First Pass</item><item>The Pine Climb</item><item>The High Plateau</item>

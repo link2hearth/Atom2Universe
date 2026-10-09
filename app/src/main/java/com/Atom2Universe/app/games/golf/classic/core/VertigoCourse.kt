@@ -121,5 +121,5 @@ object VertigoCourse {
             listOf(GolfClub.WOOD3, GolfClub.DRIVER)),
         longHole(17, 4, 395, 1, 60, 195, 125, 10, 250, GolfLie.WATER, GolfGreenForm.FALSE_FRONT, reception = 18),
         longHole(18, 5, 580, 1, 45, 190, 100, 10, 260, GolfLie.WATER, GolfGreenForm.RIDGE, 70, 390)
-    )
+    ).map { it.copy(decorTheme = GolfDecorTheme.HALLOWEEN) }
 }
