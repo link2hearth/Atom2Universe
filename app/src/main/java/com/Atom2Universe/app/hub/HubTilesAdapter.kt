@@ -55,11 +55,11 @@ class HubTilesAdapter(
     private var squareTiles: Boolean = false
     private var illustratedListMode: Boolean = false
     private var recyclerView: RecyclerView? = null
-    private val artworkCache = mutableMapOf<String, Drawable>()
-    /** Dernière taille de décor pour laquelle toute la grille a été mise en cuisson. */
-    private var prefetchedSize = 0L
+    /** Tailles normalisées déjà préchargées pour ce catalogue. */
+    private val prefetchedSizes = mutableSetOf<Pair<Int, Int>>()
 
     fun setTiles(newTiles: List<HubTile>) {
+        prefetchedSizes.clear()
         tiles.clear()
         tiles.addAll(newTiles)
         notifyDataSetChanged()
@@ -271,9 +271,11 @@ class HubTilesAdapter(
      * sans cela chaque décor attendait d'entrer à l'écran, et le défilement les montrait un à un.
      */
     private fun prefetchArtworks(width: Int, height: Int) {
-        val packed = (width.toLong() shl 32) or height.toLong()
-        if (width <= 0 || height <= 0 || packed == prefetchedSize) return
-        prefetchedSize = packed
+        // Le premier layout précède la correction des hauteurs par le hub. Ne pas cuire
+        // tout le catalogue aux dimensions provisoires de cette frame annulée.
+        if (recyclerViewWidth <= 0 || recyclerViewHeight <= 0) return
+        if (width <= 0 || height <= 0) return
+        if (!prefetchedSizes.add(HubArtworkSize.forBounds(width, height))) return
         tiles.forEach { tile ->
             tile.artworkClass?.let { CachedHubArtworkDrawable.prefetch(context, it.java, width, height) }
         }
@@ -283,6 +285,7 @@ class HubTilesAdapter(
         super.onViewRecycled(holder)
         holder.stopWobble()
         holder.stopAnimation()
+        holder.releaseArtworks()
     }
 
     override fun getItemCount(): Int = tiles.size
@@ -361,9 +364,8 @@ class HubTilesAdapter(
             }
 
             val customArtwork = tile.artworkClass?.let { artworkClass ->
-                artworkCache.getOrPut("${tile.id}:${artworkClass.qualifiedName}") {
-                    createArtwork(artworkClass.java)
-                }
+                artwork?.drawable?.takeIf { it.javaClass == artworkClass.java }
+                    ?: createArtwork(artworkClass.java)
             }
             artwork?.setImageDrawable(customArtwork)
             artwork?.visibility = if (customArtwork != null) View.VISIBLE else if (artworkRow) View.INVISIBLE else View.GONE
@@ -514,9 +516,8 @@ class HubTilesAdapter(
                         // Un raccourci vers un jeu illustre reprend le dessin de sa tuile : la couleur
                         // enregistree avec lui est celle cachee sous le dessin, souvent presque noire.
                         val badgeArtwork = HubTileArtworks.forActivity(item.activityClassName)?.let { art ->
-                            artworkCache.getOrPut("quick:${tile.id}:$index:${art.qualifiedName}") {
-                                createArtwork(art.java)
-                            }
+                            badge.background?.takeIf { it.javaClass == art.java }
+                                ?: createArtwork(art.java)
                         }
                         if (badgeArtwork != null) applyBadgeArtwork(badge, badgeArtwork,
                             HubTileArtworks.textStyleFor(item.activityClassName))
@@ -623,6 +624,15 @@ class HubTilesAdapter(
 
         fun stopAnimation() {
             (icon.drawable as? AnimatedVectorDrawable)?.stop()
+        }
+
+        // Les bitmaps sont partagés, les Drawable (bornes et callback) appartiennent à une vue.
+        // Recycler une vue libère sa référence forte ; le cache global reste borné.
+        fun releaseArtworks() {
+            artwork?.setImageDrawable(null)
+            listOf(badge1, badge2, badge3).filterNotNull().forEach {
+                if (it.background is CachedHubArtworkDrawable) it.background = null
+            }
         }
 
         private fun calculateTextColor(bgColor: Int, textColorMode: String): Int {

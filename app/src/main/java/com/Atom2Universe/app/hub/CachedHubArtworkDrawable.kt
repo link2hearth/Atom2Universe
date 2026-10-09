@@ -11,9 +11,11 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Process
 import android.util.LruCache
-import java.util.concurrent.Executors
-import kotlin.math.min
-import kotlin.math.roundToInt
+import android.util.Log
+import java.util.concurrent.PriorityBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Décors fixes : cache commun borné, réutilisé après recréation du hub, sans activité retenue.
@@ -27,10 +29,8 @@ abstract class CachedHubArtworkDrawable : Drawable() {
     private data class Key(val type: Class<*>, val width: Int, val height: Int)
     companion object {
         /**
-         * De quoi garder toute la grille des jeux : une cinquantaine de tuiles carrées d'environ
-         * 1 Mio chacune (512 px plafonné). Trop petit, le cache évince les dernières tuiles qui
-         * se recuisent à chaque défilement : elles apparaissent puis disparaissent. Les pixels
-         * d'un Bitmap vivent hors du tas Java : le plafond suit donc le quart du tas, pas moins.
+         * Cache partagé borné. À 384 px, cent carrés ARGB occupent au plus 56,25 Mio,
+         * contre 100 Mio à 512 px. Les vues gardent aussi leur image tant qu'elles l'affichent.
          */
         private val images = object : LruCache<Key, Bitmap>(
             minOf(96L * 1024 * 1024, Runtime.getRuntime().maxMemory() / 4).toInt()
@@ -38,8 +38,10 @@ abstract class CachedHubArtworkDrawable : Drawable() {
             override fun sizeOf(key: Key, value: Bitmap): Int = value.allocationByteCount
         }
 
-        /** Quelques ouvriers en basse priorité, servis dans l'ordre d'arrivée (tuiles visibles d'abord). */
-        private val worker = Executors.newFixedThreadPool(3) { task ->
+        private val sequence = AtomicLong()
+        /** Les demandes visibles passent devant le préchargement, même déjà en file. */
+        private val worker = ThreadPoolExecutor(3, 3, 0L, TimeUnit.MILLISECONDS,
+            PriorityBlockingQueue<Runnable>()) { task ->
             Thread({
                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND)
                 task.run()
@@ -51,14 +53,13 @@ abstract class CachedHubArtworkDrawable : Drawable() {
          * Décors en cuisson (clé → tuiles qui attendent l'image), pour ne jamais lancer deux fois
          * le même et prévenir chaque tuile à l'arrivée. Protégé par son propre verrou.
          */
-        private val pending = HashMap<Key, MutableSet<CachedHubArtworkDrawable>>()
+        private val pending = HashMap<Key, BakeTask>()
         /** Décors dont la cuisson a échoué : on n'insiste pas à chaque image. */
         private val failed = HashSet<Key>()
 
         private fun keyFor(type: Class<*>, width: Int, height: Int): Key {
-            val scale = min(1f, 512f / maxOf(width, height))
-            return Key(type, (width * scale).roundToInt().coerceAtLeast(1),
-                (height * scale).roundToInt().coerceAtLeast(1))
+            val size = HubArtworkSize.forBounds(width, height)
+            return Key(type, size.first, size.second)
         }
 
         /**
@@ -70,7 +71,8 @@ abstract class CachedHubArtworkDrawable : Drawable() {
             if (width <= 0 || height <= 0 || !CachedHubArtworkDrawable::class.java.isAssignableFrom(type)) return
             val key = keyFor(type, width, height)
             if (images.get(key) != null) return
-            bakeAsync(key, null) { type.getConstructor(Context::class.java).newInstance(context) as CachedHubArtworkDrawable }
+            val appContext = context.applicationContext
+            bakeAsync(key, null) { type.getConstructor(Context::class.java).newInstance(appContext) as CachedHubArtworkDrawable }
         }
 
         private fun bakeAsync(key: Key, waiter: CachedHubArtworkDrawable?, source: () -> CachedHubArtworkDrawable) {
@@ -78,41 +80,81 @@ abstract class CachedHubArtworkDrawable : Drawable() {
                 if (key in failed) return
                 val waiting = pending[key]
                 if (waiting != null) {
-                    if (waiter != null) waiting.add(waiter)
+                    if (waiter != null) {
+                        waiting.waiters.add(waiter)
+                        if (waiting.priority != 0 && worker.remove(waiting)) {
+                            waiting.priority = 0
+                            worker.execute(waiting)
+                        }
+                    }
                     return
                 }
-                pending[key] = LinkedHashSet<CachedHubArtworkDrawable>().also { if (waiter != null) it.add(waiter) }
+                val task = BakeTask(key, source, if (waiter == null) 1 else 0)
+                if (waiter != null) task.waiters.add(waiter)
+                pending[key] = task
+                worker.execute(task)
             }
-            worker.execute {
-                var ok = false
+        }
+
+        private class BakeTask(
+            private val key: Key,
+            private val source: () -> CachedHubArtworkDrawable,
+            var priority: Int
+        ) : Runnable, Comparable<BakeTask> {
+            private val order = sequence.getAndIncrement()
+            val waiters = LinkedHashSet<CachedHubArtworkDrawable>()
+
+            override fun compareTo(other: BakeTask): Int =
+                compareValues(priority, other.priority).takeIf { it != 0 } ?: order.compareTo(other.order)
+
+            override fun run() {
+                var result: Bitmap? = null
                 try {
-                    if (images.get(key) == null) {
+                    result = images.get(key) ?: run {
                         val bitmap = Bitmap.createBitmap(key.width, key.height, Bitmap.Config.ARGB_8888)
                         source().render(Canvas(bitmap), key.width.toFloat(), key.height.toFloat())
                         images.put(key, bitmap)
+                        bitmap
                     }
-                    ok = true
-                } catch (_: Throwable) {
+                } catch (error: Throwable) {
                     // Un décor raté laisse la tuile sur son fond plutôt que de faire tomber l'appli.
+                    Log.w("HubArtwork", "Cannot render ${key.type.simpleName} (${key.width}x${key.height})", error)
                 }
                 val waiting = synchronized(pending) {
-                    if (!ok) failed.add(key)
-                    pending.remove(key).orEmpty()
+                    if (result == null) failed.add(key)
+                    pending.remove(key)
+                    waiters.toList()
                 }
-                if (waiting.isNotEmpty()) main.post { waiting.forEach { it.invalidateSelf() } }
+                val bitmap = result
+                if (waiting.isNotEmpty()) main.post {
+                    waiting.forEach {
+                        if (!it.bounds.isEmpty && keyFor(it.javaClass, it.bounds.width(), it.bounds.height()) == key) {
+                            it.displayedKey = key
+                            it.displayedBitmap = bitmap
+                            it.invalidateSelf()
+                        }
+                    }
+                }
             }
         }
     }
     private val paint = Paint(Paint.FILTER_BITMAP_FLAG)
+    private var displayedKey: Key? = null
+    private var displayedBitmap: Bitmap? = null
 
     final override fun draw(canvas: Canvas) {
         if (bounds.isEmpty) return
         val key = keyFor(javaClass, bounds.width(), bounds.height())
-        val bitmap = images.get(key)
+        if (displayedKey != key) {
+            displayedKey = key
+            displayedBitmap = null
+        }
+        val bitmap = displayedBitmap ?: images.get(key)
         if (bitmap == null) {
             bakeAsync(key, this) { this }
             return
         }
+        displayedBitmap = bitmap
         canvas.drawBitmap(bitmap, null, bounds, paint)
     }
 
