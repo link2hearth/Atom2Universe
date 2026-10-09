@@ -25,6 +25,8 @@ import kotlin.reflect.KClass
  */
 object HubTileArtworks {
     private val byActivity: Map<String, KClass<out Drawable>> = mapOf(
+        com.Atom2Universe.app.science.geology.GeologyActivity::class.java.name to
+            com.Atom2Universe.app.science.geology.GeologyHubTileDrawable::class,
         com.Atom2Universe.app.games.golf.classic.ClassicGolfActivity::class.java.name to
             com.Atom2Universe.app.games.golf.GolfHubTileDrawable::class,
         com.Atom2Universe.app.science.timeline.CosmicTimelineActivity::class.java.name to

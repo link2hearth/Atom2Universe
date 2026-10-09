@@ -77,6 +77,9 @@ class CosmicTimelineActivity : ThemedActivity() {
     }
 
     private fun openLinkedContent(intent: Intent) {
+        TimelineChapters.get(intent.getStringExtra(EXTRA_CHAPTER_ID))?.let {
+            navigate(it.id); return
+        }
         LifeTimeline.get(intent.getStringExtra(EXTRA_LIFE_ID))?.let {
             navigate(it.periodId); return
         }
@@ -467,6 +470,7 @@ class CosmicTimelineActivity : ThemedActivity() {
     companion object {
         /** Stable internal links to verified, dated tree nodes. */
         const val EXTRA_EVENT_ID = "cosmic_event_id"
+        const val EXTRA_CHAPTER_ID = "cosmic_chapter_id"
         const val EXTRA_LIFE_ID = "dated_life_id"
     }
 }

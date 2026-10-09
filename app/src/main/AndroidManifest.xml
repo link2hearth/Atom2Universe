@@ -851,6 +851,10 @@
             android:theme="@style/Theme.A2U" />
         <!-- Hub Science (Tableau périodique, Game of Life…) -->
         <activity
+            android:name=".science.geology.GeologyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".science.timeline.CosmicTimelineActivity"
             android:exported="false"
             android:theme="@style/Theme.A2U" />

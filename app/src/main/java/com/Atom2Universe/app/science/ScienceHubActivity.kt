@@ -34,6 +34,14 @@ class ScienceHubActivity : BaseHubActivity() {
 
     override fun getDefaultTiles(): List<HubTile> = listOf(
         HubTile(
+            id = "living_earth",
+            titleRes = R.string.geo_title,
+            descriptionRes = R.string.geo_hub,
+            iconRes = R.drawable.ic_science,
+            defaultColorRes = R.color.science_tile_cosmic,
+            activityClass = com.Atom2Universe.app.science.geology.GeologyActivity::class.java
+        ),
+        HubTile(
             id = "cosmic_timeline",
             titleRes = R.string.ct_title,
             descriptionRes = R.string.ct_hub,
