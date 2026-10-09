@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pt_read_title">Comprendre l’arbre du vivant</string>
+    <string name="pt_read_source">Université de Californie, Berkeley · Understanding Evolution</string>
+    <string name="pt_read_source_method">Guide de lecture : reformulations originales vérifiées le 9 octobre 2026. Les références suivantes expliquent chaque notion ; elles ne sont pas la source de la topologie de cet atlas, documentée séparément.</string>
+    <string name="pt_read_ancestor_title">Que représente un embranchement ?</string>
+    <string name="pt_read_ancestor_body">Un arbre évolutif représente des relations d’ascendance. Les extrémités correspondent aux espèces ou groupes présentés ; un embranchement relie des lignées issues d’une ascendance commune. Pour comparer deux espèces, remontez leurs chemins jusqu’à leur jonction commune la plus récente. Deux groupes issus directement d’un même nœud sont des groupes frères. Dans cet atlas, les nœuds conservent l’identité de la source ; ils ne désignent pas des individus fossiles identifiés.</string>
+    <string name="pt_read_clade_title">Des groupes emboîtés</string>
+    <string name="pt_read_clade_body">Un clade comprend un ancêtre commun et tous ses descendants, vivants ou éteints. Les clades sont emboîtés : appartenir à un petit groupe n’efface pas l’appartenance aux groupes qui le contiennent. Explorer un groupe de cet atlas révèle seulement les représentants retenus dans le catalogue, pas l’ensemble de ses espèces ni de ses fossiles.</string>
+    <string name="pt_read_order_title">La position sur le dessin</string>
+    <string name="pt_read_order_body">Placer une branche à gauche, à droite ou plus haut ne classe pas ses espèces selon leur perfection. Faire pivoter les branches autour d’un nœud conserve les mêmes relations. Cherchez les jonctions et les chemins partagés ; la proximité des noms à l’écran ne suffit pas à établir une parenté plus proche.</string>
+    <string name="pt_read_cousin_title">Une cousine actuelle n’est pas un ancêtre</string>
+    <string name="pt_read_cousin_body">Deux espèces actuelles poursuivent chacune leur histoire depuis leur divergence. Une branche qui se sépare tôt sur le dessin n’a pas cessé d’évoluer. Les humains ne descendent pas des chimpanzés actuels ; les deux lignées partagent une ascendance plus ancienne. Dans les parcours, l’espèce latérale illustre une parenté et non une étape vivante à travers laquelle l’espèce finale serait passée.</string>
+    <string name="pt_read_uncertain_title">Quand une jonction a plusieurs branches</string>
+    <string name="pt_read_uncertain_body">Une polytomie est un nœud qui donne plus de deux lignées. Elle indique souvent que les données ne permettent pas de résoudre l’ordre des divergences ; dans certains cas, une diversification très rapide intervient. On ne peut pas choisir entre ces interprétations à partir du dessin seul. Une nouvelle étude peut préciser certaines relations sans rendre tous les embranchements définitifs.</string>
+    <string name="pt_read_length_title">Parenté, durée et ressemblance</string>
+    <string name="pt_read_length_body">Selon les arbres, une longueur de branche peut exprimer le temps, une quantité de changements ou aucun de ces deux éléments. Ici, les distances sont choisies pour la lisibilité : elles ne mesurent ni années ni différences génétiques. Les âges disponibles viennent d’études séparées et sont présentés dans la frise avec leurs incertitudes. Une apparence similaire ne remplace pas la lecture des relations de l’arbre.</string>
+</resources>

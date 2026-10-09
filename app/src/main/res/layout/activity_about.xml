@@ -613,6 +613,15 @@
                     android:textAllCaps="false" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/about_biology_journeys"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:text="@string/bio_j_sources"
+                    android:textAllCaps="false" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/about_organ_reference"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"

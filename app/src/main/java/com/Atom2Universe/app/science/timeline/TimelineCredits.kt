@@ -33,6 +33,7 @@ object TimelineCredits {
         paragraph(getString(R.string.ct_credits_body))
         paragraph(getString(R.string.ct_illustrations))
         paragraph(getString(R.string.ct_geo_source_note))
+        paragraph(getString(R.string.ct_read_source_method))
         body.addView(AppCompatButton(this).apply {
             setText(R.string.ct_history_sources); isAllCaps = false
             setOnClickListener { HumanHistoryCredits.show(activity) }
@@ -48,7 +49,9 @@ object TimelineCredits {
                 }
             })
             val titles = CosmicTimeline.events.filter { source in it.sources }.map { it.title } +
-                TimelineChapters.all.filter { source in it.sources || source in TimelineReading.sources(it.id) }.map { it.title }
+                TimelineChapters.all.filter { source in it.sources || source in TimelineReading.sources(it.id) }.map { it.title } +
+                TimelineChapters.all.flatMap { TimelineReading.supplements(it.id) }
+                    .filter { it.source == source }.map { it.title }
             paragraph(titles.distinct().joinToString(getString(R.string.ct_credit_separator)) { getString(it) })
         }
         val dialog = AlertDialog.Builder(this).setTitle(R.string.ct_credits_title)

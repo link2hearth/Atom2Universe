@@ -105,7 +105,8 @@
       "key": "pt_group_tetrapods",
       "sources": [
         "opentree",
-        "vertebrates"
+        "vertebrates",
+        "chordates"
       ]
     },
     {
@@ -121,7 +122,8 @@
       "key": "pt_group_mammals",
       "sources": [
         "opentree",
-        "hair"
+        "hair",
+        "mammals"
       ]
     },
     {
@@ -185,7 +187,8 @@
       "key": "pt_group_vascular",
       "sources": [
         "opentree",
-        "plants"
+        "plants",
+        "vascular"
       ]
     },
     {
@@ -193,7 +196,8 @@
       "key": "pt_group_seeds",
       "sources": [
         "opentree",
-        "plants"
+        "plants",
+        "flowers"
       ]
     },
     {
@@ -515,6 +519,34 @@
       "citation": "Clark M. A., Douglas M. & Choi J. (2018). Biology 2e. OpenStax, Rice University.",
       "url": "https://openstax.org/books/biology-2e/pages/29-introduction",
       "license": "CC BY-NC-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "mammals",
+      "citation": "OpenStax, Biology 2e — 29-6-mammals",
+      "url": "https://openstax.org/books/biology-2e/pages/29-6-mammals",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "flowers",
+      "citation": "OpenStax, Biology 2e — 26-3-angiosperms",
+      "url": "https://openstax.org/books/biology-2e/pages/26-3-angiosperms",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "chordates",
+      "citation": "OpenStax, Biology 2e — 29-1-chordates",
+      "url": "https://openstax.org/books/biology-2e/pages/29-1-chordates",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+    },
+    {
+      "id": "vascular",
+      "citation": "OpenStax, Biology 2e — 25-4-seedless-vascular-plants",
+      "url": "https://openstax.org/books/biology-2e/pages/25-4-seedless-vascular-plants",
+      "license": "CC BY-NC-SA 4.0 (reference only; no figure reproduced)",
       "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
     }
   ]

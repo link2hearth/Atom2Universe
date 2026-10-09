@@ -147,6 +147,7 @@ class ParentesActivity : ThemedActivity() {
         titles.addView(label(getString(R.string.pt_short_title),24f,true))
         titles.addView(label(getString(R.string.pt_tree_subtitle),12f).apply { setTextColor(palette.secondary) })
         heading.addView(titles,LinearLayout.LayoutParams(0,-2,1f))
+        heading.addView(icon(R.drawable.ic_pt_trail, R.string.pt_read_title) { showReading() })
         heading.addView(icon(R.drawable.ic_view_list,R.string.pt_list) { if(repository!=null) accessibleList() })
         root.addView(heading)
         val mapColumn = if(wide) column().apply { setPadding(0,0,dp(8),0) } else root
@@ -315,6 +316,17 @@ class ParentesActivity : ThemedActivity() {
             card.addView(label(if(repo.tree.nodes.getValue(selected).species) repo.tree.nodes.getValue(selected).scientific else article(selected),14f))
         }
         cardScroll.post { cardScroll.scrollTo(0,0) }
+    }
+
+    private fun showReading() {
+        val body = column().apply { setPadding(dp(16), dp(8), dp(16), dp(16)) }
+        ParentesReading.sections.forEach { section ->
+            body.addView(label(getString(section.title), 18f, true))
+            body.addView(label(getString(section.body), 15f).apply { setTextIsSelectable(true) })
+        }
+        activeDialog?.dismiss()
+        activeDialog = AlertDialog.Builder(this).setTitle(R.string.pt_read_title)
+            .setView(ScrollView(this).apply { addView(body) }).setPositiveButton(R.string.pt_close, null).show()
     }
 
     private fun accessibleList() {

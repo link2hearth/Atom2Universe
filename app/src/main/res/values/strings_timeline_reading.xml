@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ct_read_source_method">Enriched supplementary reading: original explanations checked on 9 October 2026. Section titles appear under their reference. Numerical geological boundaries continue to follow the ICS chart; older articles do not replace them.</string>
+    <string name="ct_read_source_fossilization">NPS — fossil formation and preservation</string>
+    <string name="ct_read_source_dating">USGS — methods for dating rocks</string>
+    <string name="ct_read_light_title">Why can we see the oldest light?</string>
+    <string name="ct_read_light_body">Before atoms formed, free electrons strongly scattered light. Around 380,000 years after the Big Bang, cooling allowed nuclei to capture electrons and the Universe became transparent over great distances. The cosmic microwave background preserves an observable record of that epoch. This signal predates stars: light did not begin to exist with them.</string>
+    <string name="ct_read_first_stars_title">From atoms to the first stars</string>
+    <string name="ct_read_first_stars_body">Matter was not perfectly uniform. Gravity gathers more gas in denser regions; contraction heats their centers until nuclear fusion can begin. The appearance of stars and then galaxies is gradual. Timeline landmarks summarize a history distributed through space, rather than all stars switching on simultaneously.</string>
+    <string name="ct_read_disk_title">The disk where planets form</string>
+    <string name="ct_read_disk_body">The Solar System formed about 4.6 billion years ago from gas and dust. The collapsing cloud produced a rotating disk. At the center, matter fed the young Sun; within the disk, clumps collided and grew. Some became planets or small bodies. Formation combines many events rather than a single instant shared by every object.</string>
+    <string name="ct_read_planets_title">Several families of planets</string>
+    <string name="ct_read_planets_body">Mercury, Venus, Earth and Mars are rocky planets. Jupiter and Saturn are gas giants; Uranus and Neptune are ice giants. Available materials and conditions within the disk varied with distance from the Sun. These differences in composition help explain present diversity without making the planets successive stages of a single object.</string>
+    <string name="ct_read_plates_title">A changing surface</string>
+    <string name="ct_read_plates_body">The lithosphere, comprising the crust and uppermost mantle, is divided into moving plates. Their interactions build relief and are associated with many earthquakes. Familiar continents therefore were not a fixed setting throughout the history of life. Understanding a period also requires placing its landscapes in their ancient geography.</string>
+    <string name="ct_read_oxygen_title">The atmosphere has a history too</string>
+    <string name="ct_read_oxygen_body">During the Proterozoic, oxygen produced by life became an important atmospheric component. This transformation accompanied profound changes in environments and organisms. Records of this long epoch include microbial structures, microfossils and, later, multicellular organisms. The present atmosphere should not be projected onto every earlier period.</string>
+    <string name="ct_read_fossils_title">How an organism leaves a record</string>
+    <string name="ct_read_fossils_body">Rapid burial and durable parts such as shells, teeth or bones favor fossilization. A footprint or burrow may preserve activity without preserving a body. Environments where sediment accumulates are better represented than some uplands. The fossil record is therefore rich but incomplete: it is not a census of every organism that ever lived.</string>
+    <string name="ct_read_dating_title">How do we obtain an age in years?</string>
+    <string name="ct_read_dating_body">Radiometric dating measures proportions of radioactive isotopes and their decay products in suitable material. Methods differ according to the mineral, event being investigated and age. Carbon-14 is mainly useful for organic material a few tens of thousands of years old; it does not directly date volcanic rocks or Mesozoic dinosaurs. A measured age must be interpreted in its geological context.</string>
+    <string name="ct_read_extinction_title">The Cretaceous–Paleogene boundary</string>
+    <string name="ct_read_extinction_body">About 66 million years ago, a large asteroid struck near present-day Yucatán. An iridium-enriched layer in boundary records and the impact structure provide evidence of this event. This crisis marks the end of the Cretaceous and Mesozoic. Non-avian dinosaurs disappeared while the bird lineage survived. A major extinction reshapes diversity; it does not eliminate all life.</string>
+    <string name="ct_read_dinosaurs_title">Dinosaurs with very different forms</string>
+    <string name="ct_read_dinosaurs_body">The Jurassic included large herbivorous sauropods such as Diplodocus and carnivorous theropods such as Allosaurus. The word “dinosaur” therefore describes neither a single species nor a shared diet. Birds belong to the theropod branch. Comparing skeletons and fossils helps distinguish these relationships from simple similarities of size or lifestyle.</string>
+</resources>

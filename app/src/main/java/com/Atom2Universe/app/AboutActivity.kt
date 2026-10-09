@@ -32,6 +32,9 @@ class AboutActivity : ThemedActivity() {
         setupBackButton()
         displayVersion()
         setupBiologyCredits()
+        findViewById<View>(R.id.about_biology_journeys).setOnClickListener {
+            com.Atom2Universe.app.science.biology.AnatomyJourneyCredits.show(this)
+        }
         setupBilliardCredits()
         setupFontCredits()
         findViewById<View>(R.id.about_timeline_sources).setOnClickListener {

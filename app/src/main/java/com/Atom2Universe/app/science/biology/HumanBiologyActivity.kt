@@ -53,6 +53,10 @@ class HumanBiologyActivity : ThemedActivity() {
     private var showExternalGenitals = false
     private var loading: Job? = null
     private var openPanel: BottomSheetDialog? = null
+    private var journey: AnatomyJourney? = null
+    private var journeyStep = 0
+    private var beforeJourney: Bundle? = null
+    private var journeyPanelVisible = false
     private lateinit var surface: SurfaceView
     private lateinit var status: TextView
     private lateinit var selectionCard: LinearLayout
@@ -64,6 +68,7 @@ class HumanBiologyActivity : ThemedActivity() {
     private lateinit var undoButton: ImageButton
     private lateinit var redoButton: ImageButton
     private lateinit var searchButton: ImageButton
+    private lateinit var journeyControls: LinearLayout
     private val ink = Color.rgb(231, 238, 239)
     private val muted = Color.rgb(158, 180, 187)
     private val accent = Color.rgb(94, 221, 199)
@@ -71,6 +76,10 @@ class HumanBiologyActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        journey = AnatomyJourneys.find(savedInstanceState?.getString("bio_journey"))
+        journeyStep = savedInstanceState?.getInt("bio_journey_step", 0) ?: 0
+        beforeJourney = savedInstanceState?.getBundle("bio_before_journey")
+        journeyPanelVisible = savedInstanceState?.getBoolean("bio_journey_panel", false) ?: false
         showExternalGenitals = savedInstanceState?.getBoolean("bio_external_genitals_visible", false) ?: false
         atlasStates = savedInstanceState?.getBundle("bio_atlas_states") ?: Bundle()
         activeAtlas = AnatomyAtlas.fromId(intent.getStringExtra("bio_atlas")
@@ -142,6 +151,14 @@ class HumanBiologyActivity : ThemedActivity() {
         root.addView(toolbar, FrameLayout.LayoutParams(-1, -2, Gravity.TOP).apply {
             setMargins(dp(8), dp(8), dp(8), 0)
         })
+        journeyControls = row().apply {
+            background = rounded(0xe812232c.toInt())
+            visibility = View.GONE
+            isClickable = true
+        }
+        root.addView(journeyControls, FrameLayout.LayoutParams(-1, -2, Gravity.TOP).apply {
+            setMargins(dp(8), dp(68), dp(8), 0)
+        })
 
         selectionCard = column().apply {
             setPadding(dp(14), dp(8), dp(8), dp(8))
@@ -212,6 +229,9 @@ class HumanBiologyActivity : ThemedActivity() {
                     setRenderingEnabled(true)
                     updateSelection(renderer.selected)
                     if (resumed) renderer.resume()
+                    journey?.takeIf { journeyPanelVisible && activeAtlas == AnatomyAtlas.MALE }?.let {
+                        showJourney(it, journeyStep, applyView = false)
+                    }
                 } catch (error: Exception) {
                     renderFailed(error)
                 } catch (error: LinkageError) {
@@ -265,6 +285,26 @@ class HumanBiologyActivity : ThemedActivity() {
         }
         layersButton.contentDescription = getString(if (filtered) R.string.bio_ui_visibility_filtered else R.string.bio_ui_visibility)
         layersButton.tooltipText = layersButton.contentDescription
+        updateJourneyControls()
+    }
+
+    private fun updateJourneyControls() {
+        if (!::journeyControls.isInitialized) return
+        journeyControls.removeAllViews()
+        val current = journey
+        journeyControls.visibility = if (current != null && scene != null) View.VISIBLE else View.GONE
+        if (current == null) return
+        journeyControls.addView(button(R.string.bio_j_resume) { showJourney(current, journeyStep) }.apply {
+            text = getString(R.string.bio_j_progress, getString(current.title), journeyStep + 1, current.steps.size)
+            maxLines = 2
+            ellipsize = TextUtils.TruncateAt.END
+            contentDescription = getString(R.string.bio_j_resume_progress, text)
+        }, LinearLayout.LayoutParams(0, -2, 1f))
+        journeyControls.addView(icon(R.drawable.ic_chevron_right,
+            if (journeyStep == current.steps.lastIndex) R.string.bio_j_finish else R.string.bio_j_next) {
+            if (journeyStep == current.steps.lastIndex) finishJourney()
+            else showJourney(current, journeyStep + 1)
+        }, square())
     }
 
     private fun showVisibility(layer: AnatomyLayer? = null) {
@@ -425,6 +465,13 @@ class HumanBiologyActivity : ThemedActivity() {
             openPanel?.dismiss()
         }.apply { isEnabled = renderer != null; alpha = if (isEnabled) 1f else .4f }, LinearLayout.LayoutParams(-1, -2))
         content.addView(section(R.string.bio_ui_explore))
+        content.addView(button(R.string.bio_j_title) { showJourneys() }, LinearLayout.LayoutParams(-1, -2))
+        journey?.let { current ->
+            content.addView(button(R.string.bio_j_resume) {
+                showJourney(current, journeyStep)
+            }, LinearLayout.LayoutParams(-1, -2))
+            content.addView(button(R.string.bio_j_finish) { finishJourney() }, LinearLayout.LayoutParams(-1, -2))
+        }
         content.addView(button(R.string.bio_ui_gestures) { openPanel?.dismiss(); showGestures() }, LinearLayout.LayoutParams(-1, -2))
         content.addView(button(R.string.bio_about) { openPanel?.dismiss(); showCoverage() }, LinearLayout.LayoutParams(-1, -2))
         showPanel(getString(R.string.bio_ui_tools), content)
@@ -442,7 +489,11 @@ class HumanBiologyActivity : ThemedActivity() {
     private fun switchAtlas(atlas: AnatomyAtlas) {
         openPanel?.dismiss()
         if (atlas == activeAtlas || switchingAtlas) return
+        if (journey != null) finishJourney()
         saveAtlasState()
+        journey = null
+        beforeJourney = null
+        journeyPanelVisible = false
         switchingAtlas = true
         loading?.cancel()
         scene?.releaseOwnedResources()
@@ -478,8 +529,10 @@ class HumanBiologyActivity : ThemedActivity() {
         showDocument(getString(R.string.bio_ui_gestures), content)
     }
 
-    private fun showPanel(title: String, content: LinearLayout, pinnedControls: View? = null, onBack: (() -> Unit)? = null) {
+    private fun showPanel(title: String, content: LinearLayout, pinnedControls: View? = null,
+        onBack: (() -> Unit)? = null, heightFraction: Float = .72f, onDismiss: (() -> Unit)? = null) {
         openPanel?.dismiss()
+        journeyPanelVisible = false
         val dialog = BottomSheetDialog(this)
         val body = column().apply {
             setPadding(dp(16), dp(8), dp(16), dp(16))
@@ -500,7 +553,7 @@ class HumanBiologyActivity : ThemedActivity() {
         pinnedControls?.let { body.addView(it) }
         // Un panneau court laisse le modèle visible ; un long reste défilable en paysage.
         // Le plafond est réévalué quand on passe des couches à la liste des régions.
-        val maximumHeight = (resources.displayMetrics.heightPixels * .72f).toInt()
+        val maximumHeight = (resources.displayMetrics.heightPixels * heightFraction).toInt()
         val maximumWidth = minOf(resources.displayMetrics.widthPixels, dp(560))
         val scroll = object : NestedScrollView(this) {
             override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -517,10 +570,83 @@ class HumanBiologyActivity : ThemedActivity() {
         dialog.behavior.skipCollapsed = true
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.window?.setDimAmount(.22f)
-        dialog.setOnDismissListener { if (openPanel === dialog) openPanel = null }
+        dialog.setOnDismissListener {
+            // Dismiss callbacks are posted: an old panel must not close the state of its replacement.
+            if (openPanel === dialog) {
+                openPanel = null
+                onDismiss?.invoke()
+            }
+        }
         dialog.followImmersiveMode()
         openPanel = dialog
         dialog.show()
+    }
+
+    private fun showJourneys() {
+        val content = column()
+        if (activeAtlas != AnatomyAtlas.MALE) {
+            content.addView(paragraph(getString(R.string.bio_j_atlas)))
+            content.addView(button(AnatomyAtlas.MALE.label) { switchAtlas(AnatomyAtlas.MALE) })
+        } else {
+            content.addView(paragraph(getString(R.string.bio_j_intro)))
+            AnatomyJourneys.all.forEach { current ->
+                content.addView(button(current.title) {
+                    if (scene == null) return@button
+                    if (beforeJourney == null) beforeJourney = Bundle().also { scene?.save(it) }
+                    showJourney(current, 0)
+                }.apply { isEnabled = scene != null }, LinearLayout.LayoutParams(-1, -2))
+                content.addView(paragraph(getString(current.intro), muted))
+            }
+        }
+        showPanel(getString(R.string.bio_j_title), content)
+    }
+
+    private fun showJourney(current: AnatomyJourney, index: Int, applyView: Boolean = true) {
+        val data = catalog ?: return
+        if (activeAtlas != AnatomyAtlas.MALE || scene == null) return
+        journey = current
+        journeyStep = index.coerceIn(current.steps.indices)
+        val step = current.steps[journeyStep]
+        val structures = step.structures(data)
+        if (applyView) scene?.showJourneyStructures(structures.map { it.id }.toSet())
+        updateJourneyControls()
+        val content = column()
+        content.addView(label(step.title, 18f).apply { setTypeface(typeface, Typeface.BOLD) })
+        content.addView(paragraph(getString(step.body)))
+        content.addView(button(R.string.bio_j_view) { openPanel?.dismiss() })
+        content.addView(paragraph(getString(R.string.bio_j_view_note), muted))
+        content.addView(section(R.string.bio_j_organs))
+        if (structures.isEmpty()) content.addView(paragraph(getString(R.string.bio_j_unavailable)))
+        structures.sortedWith(compareBy(Collator.getInstance(resources.configuration.locales[0])) {
+            getString(it.name)
+        }).forEach { item ->
+            content.addView(button(item.name) {
+                scene?.select(item)
+                scene?.focus(item)
+                openPanel?.dismiss()
+            }, LinearLayout.LayoutParams(-1, -2))
+        }
+        val navigation = row()
+        navigation.addView(button(R.string.bio_j_previous) {
+            showJourney(current, journeyStep - 1)
+        }.apply { isEnabled = journeyStep > 0 }, LinearLayout.LayoutParams(0, -2, 1f))
+        navigation.addView(button(if (journeyStep == current.steps.lastIndex) R.string.bio_j_finish else R.string.bio_j_next) {
+            if (journeyStep == current.steps.lastIndex) finishJourney()
+            else showJourney(current, journeyStep + 1)
+        }, LinearLayout.LayoutParams(0, -2, 1f))
+        showPanel(getString(R.string.bio_j_progress, getString(current.title), journeyStep + 1, current.steps.size),
+            content, pinnedControls = navigation, onBack = { showJourneys() }, heightFraction = .52f,
+            onDismiss = { journeyPanelVisible = false })
+        journeyPanelVisible = true
+    }
+
+    private fun finishJourney() {
+        openPanel?.dismiss()
+        beforeJourney?.let { scene?.restore(it) }
+        beforeJourney = null
+        journey = null
+        journeyPanelVisible = false
+        updateDisplayState()
     }
 
     private fun showCatalog() {
@@ -628,6 +754,7 @@ class HumanBiologyActivity : ThemedActivity() {
 
     private fun showCoverage() {
         val content = dialogColumn()
+        content.addView(button(R.string.bio_j_sources) { AnatomyJourneyCredits.show(this) })
         if (activeAtlas != AnatomyAtlas.MALE) {
             content.addView(paragraph(getString(activeAtlas.coverage)))
             catalog?.let { data ->
@@ -730,6 +857,10 @@ class HumanBiologyActivity : ThemedActivity() {
         outState.putBundle("bio_atlas_states", atlasStates)
         outState.putString("bio_atlas", activeAtlas.id)
         outState.putBoolean("bio_external_genitals_visible", showExternalGenitals)
+        outState.putString("bio_journey", journey?.id)
+        outState.putInt("bio_journey_step", journeyStep)
+        outState.putBundle("bio_before_journey", beforeJourney)
+        outState.putBoolean("bio_journey_panel", journeyPanelVisible)
         super.onSaveInstanceState(outState)
     }
     override fun onDestroy() {

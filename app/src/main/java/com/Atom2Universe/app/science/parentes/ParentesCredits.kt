@@ -44,6 +44,13 @@ object ParentesCredits {
                 }
             })
         }
+        fun readingCredits() {
+            paragraph(getString(R.string.pt_read_source_method))
+            ParentesReading.sections.forEach { section ->
+                paragraph(getString(section.title), true)
+                link(getString(R.string.pt_read_source), section.url)
+            }
+        }
         paragraph(getString(R.string.pt_loading))
         val dialog = AlertDialog.Builder(this).setTitle(R.string.pt_about_title)
             .setView(ScrollView(this).apply { addView(body) })
@@ -57,6 +64,7 @@ object ParentesCredits {
             if (!dialog.isShowing) return@launch
             body.removeAllViews()
             result.onSuccess { (repo, stories) ->
+                readingCredits()
                 paragraph(getString(R.string.pt_version, repo.version, repo.taxonomy, repo.retrieved,
                     repo.tree.species.size, repo.groups.size, repo.tree.nodes.size), true)
                 paragraph(getString(R.string.pt_method))
@@ -130,7 +138,7 @@ object ParentesCredits {
                             }.setNegativeButton(R.string.pt_close,null).show()
                     }
                 })
-            }.onFailure { paragraph(getString(R.string.pt_error)) }
+            }.onFailure { readingCredits(); paragraph(getString(R.string.pt_error)) }
         }
         dialog.setOnDismissListener { job.cancel() }
     }

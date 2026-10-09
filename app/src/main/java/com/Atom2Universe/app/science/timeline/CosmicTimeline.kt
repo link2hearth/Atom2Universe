@@ -44,6 +44,8 @@ enum class CosmicSource(@StringRes val label: Int, val url: String) {
     PRECAMBRIAN(R.string.ct_source_precambrian, "https://www.nps.gov/articles/000/the-precambrian.htm"),
     PROTEROZOIC(R.string.ct_source_proterozoic, "https://www.nps.gov/articles/000/proterozoic-eon.htm"),
     FOSSILS(R.string.ct_source_fossils, "https://www.nps.gov/subjects/fossils/fossils-through-geologic-time.htm"),
+    FOSSILIZATION(R.string.ct_read_source_fossilization, "https://home.nps.gov/subjects/fossils/how-fossils-form.htm"),
+    ROCK_DATING(R.string.ct_read_source_dating, "https://www.usgs.gov/observatories/yvo/news/a-beginners-guide-dating-rocks"),
     PALEOZOIC(R.string.ct_source_paleozoic, "https://www.nps.gov/articles/000/paleozoic-era.htm"),
     MESOZOIC(R.string.ct_source_mesozoic, "https://www.nps.gov/articles/000/mesozoic-era.htm"),
     CENOZOIC(R.string.ct_source_cenozoic, "https://www.nps.gov/articles/000/cenozoic-era.htm"),

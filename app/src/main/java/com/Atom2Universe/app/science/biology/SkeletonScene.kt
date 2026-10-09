@@ -343,6 +343,23 @@ class SkeletonScene(
         yaw = 0.0; pitch = 0.0; frameVisible()
     }
 
+    /** One undoable view change, restricted to real meshes in the current atlas. */
+    fun showJourneyStructures(ids: Set<String>) {
+        val items = catalog.structures.filter { it.id in ids && it.hasMesh &&
+            (externalGenitalsVisible || it.id !in catalog.externalGenitalIds) }
+        if (items.isEmpty()) return
+        change {
+            isolated = null
+            hidden.clear()
+            hidden.addAll(catalog.structures.map { it.id }.toSet() - items.map { it.id }.toSet())
+            visibleLayers = items.map { it.layer }.toSet()
+            visibleGroups = items.map { it.groupId }.toSet()
+            selected = null
+            yaw = 0.0; pitch = 0.0
+            frame(items)
+        }
+    }
+
     fun setColored(layer: AnatomyLayer, value: Boolean) = change {
         coloredLayers = if (value) coloredLayers + layer else coloredLayers - layer
     }
