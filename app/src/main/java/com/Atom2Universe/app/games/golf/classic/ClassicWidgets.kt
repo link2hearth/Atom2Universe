@@ -18,8 +18,9 @@ import com.Atom2Universe.app.games.golf.classic.core.GolfPoint
 import kotlin.math.*
 
 /** Tiny vector controls: no drawable or bitmap assets, with real accessible click targets. */
-internal class GolfIcon(context: Context, private val kind: Kind, description: String, action: () -> Unit) : View(context) {
-    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD, GRID, CAMERA }
+internal class GolfIcon(context: Context, kind: Kind, description: String, action: () -> Unit) : View(context) {
+    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD, GRID, CAMERA, PLAY, PAUSE, SAVE, REPLAY }
+    var kind=kind; set(value) { if(field!=value){field=value;invalidate()} }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
     var highlighted = false; set(value) { field = value; invalidate() }
@@ -38,6 +39,17 @@ internal class GolfIcon(context: Context, private val kind: Kind, description: S
         paint.style = Paint.Style.STROKE
         path.reset()
         when(kind) {
+            Kind.REPLAY -> {
+                c.drawArc(13f,13f,35f,35f,-90f,-300f,false,paint)
+                path.moveTo(25f,19f);path.lineTo(34f,18f);path.lineTo(35f,27f)
+            }
+            Kind.PLAY -> { path.moveTo(19f,14f);path.lineTo(34f,24f);path.lineTo(19f,34f);path.close() }
+            Kind.PAUSE -> { c.drawLine(19f,15f,19f,33f,paint);c.drawLine(29f,15f,29f,33f,paint) }
+            Kind.SAVE -> {
+                path.moveTo(14f,12f);path.lineTo(31f,12f);path.lineTo(36f,17f);path.lineTo(36f,36f)
+                path.lineTo(12f,36f);path.lineTo(12f,12f);path.close()
+                c.drawRect(18f,12f,29f,21f,paint);c.drawRect(18f,27f,30f,36f,paint)
+            }
             Kind.CAMERA -> {
                 path.moveTo(12f,19f);path.lineTo(18f,19f);path.lineTo(21f,14f);path.lineTo(28f,14f)
                 path.lineTo(31f,19f);path.lineTo(36f,19f);path.lineTo(36f,34f);path.lineTo(12f,34f);path.close()

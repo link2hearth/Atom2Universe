@@ -20,6 +20,11 @@ internal class LiveShotCamera {
         mode=next
     }
 
+    /** A replay starts with the same angle without changing the live shot's camera. */
+    fun copy()=LiveShotCamera().also {
+        it.mode=mode;it.yaw=yaw;it.pitch=pitch;it.distance=distance
+    }
+
     fun rotate(dx:Float,dy:Float,width:Int,height:Int) {
         yaw=(yaw-dx/width.coerceAtLeast(1)*5f)%(2f*PI.toFloat())
         pitch=(pitch+dy/height.coerceAtLeast(1)*3f).coerceIn(-1.35f,1.45f)

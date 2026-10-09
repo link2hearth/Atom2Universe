@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="golf_shot_next">Suivant</string>
+    <string name="golf_shot_continue">Appuie n’importe où pour jouer le coup suivant</string>
+    <string name="golf_replay_restart">Rejouer depuis le début</string>
+    <string name="golf_replay_hud">Replay · Trou %1$d · Coup %2$d</string>
+    <string name="golf_replay_camera_options">Maintiens pour choisir une vue ou recentrer</string>
     <string name="golf_live_speed_badge">×3</string>
     <string name="golf_live_fast_forward">Vitesse ×3 · Relâche pour revenir à la normale</string>
     <string name="golf_live_camera">Changer la caméra du tir</string>

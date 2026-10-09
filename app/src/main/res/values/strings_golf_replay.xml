@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="golf_shot_next">Next</string>
+    <string name="golf_shot_continue">Tap anywhere to play the next shot</string>
+    <string name="golf_replay_restart">Replay from the start</string>
+    <string name="golf_replay_hud">Replay · Hole %1$d · Shot %2$d</string>
+    <string name="golf_replay_camera_options">Hold for camera angles and recentering</string>
     <string name="golf_live_speed_badge">×3</string>
     <string name="golf_live_fast_forward">Speed ×3 · Release to return to normal</string>
     <string name="golf_live_camera">Change shot camera</string>
