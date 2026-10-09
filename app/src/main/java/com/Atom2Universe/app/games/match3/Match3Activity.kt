@@ -73,8 +73,12 @@ class Match3Activity : ThemedActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { if (screen == "menu") finish() else showMenu() }
         })
-        val saved = savedInstanceState?.getString("forge")
-        if (saved != null) showForge(readGame(saved) ?: newGame()) else showMenu()
+        val saved = savedInstanceState?.getString("forge")?.let { readGame(it) }
+            ?: (listOfNotNull(prefs.getString("last_run", null)) + listOf("run", "endless_run", "slag_run"))
+                .distinct().firstNotNullOfOrNull { key ->
+                    prefs.getString(key, null)?.let { readGame(it) }?.takeUnless { it.expeditionComplete }
+                }
+        if (saved != null) showForge(saved) else showMenu()
     }
 
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
@@ -103,9 +107,9 @@ class Match3Activity : ThemedActivity() {
         orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(12), dp(16), dp(12))
         background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xff10212a.toInt(), 0xff10191d.toInt(), 0xff352820.toInt()))
     }
-    private fun store() { forge?.let { prefs.edit().putString(when {
+    private fun store() { forge?.let { val key = when {
         it.game.slagEndless -> "slag_run"; it.game.endless -> "endless_run"; else -> "run"
-    }, it.stableSave()).apply() } }
+    }; prefs.edit().putString(key, it.stableSave()).putString("last_run", key).apply() } }
     private fun leave() { timerHandler.removeCallbacks(timerTick); store(); forge?.pause(); forge = null; sensor.disable() }
     private fun readGame(value: String): ForgeGame? = runCatching {
         val json = JSONObject(value)

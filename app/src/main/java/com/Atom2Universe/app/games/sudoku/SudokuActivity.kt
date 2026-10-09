@@ -160,25 +160,11 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
             }
 
             if (save != null && !save.isSolved) {
-                showResumeDialog(save)
+                restoreGame(save)
             } else {
                 showNewGameDialog()
             }
         }
-    }
-
-    private fun showResumeDialog(save: SudokuSaveEntity) {
-        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
-            .setTitle(R.string.sudoku_dialog_confirm_new_title)
-            .setMessage(R.string.sudoku_dialog_confirm_new_message)
-            .setPositiveButton(R.string.sudoku_resume_game) { _, _ ->
-                restoreGame(save)
-            }
-            .setNegativeButton(R.string.sudoku_start_new) { _, _ ->
-                showNewGameDialog()
-            }
-            .setCancelable(false)
-            .show()
     }
 
     private fun restoreGame(save: SudokuSaveEntity) {
@@ -276,12 +262,14 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
     }
 
     private fun startTimer() {
+        if (isTimerRunning) return
         startTimeMs = System.currentTimeMillis() - elapsedTimeMs
         isTimerRunning = true
         timerHandler.post(timerRunnable)
     }
 
     private fun stopTimer() {
+        if (isTimerRunning) elapsedTimeMs = System.currentTimeMillis() - startTimeMs
         isTimerRunning = false
         timerHandler.removeCallbacks(timerRunnable)
     }
@@ -576,17 +564,14 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         // Tant qu'aucune grille n'est générée (choix de difficulté ouvert), il n'y a rien à
         // reprendre : sauvegarder la grille vide proposerait plus tard de « reprendre » du vide.
         if (board.fixed.none { row -> row.any { it } }) return
-        val notes = gridView.getNotesMasks()
-        val difficulty = currentDifficulty
-        val elapsed = elapsedTimeMs
+        val save = SudokuSaveEntity.fromBoard(
+            board = board,
+            difficulty = currentDifficulty,
+            elapsedTimeMs = elapsedTimeMs,
+            isSolved = false,
+            notes = gridView.getNotesMasks()
+        )
         lifecycleScope.launch(Dispatchers.IO) {
-            val save = SudokuSaveEntity.fromBoard(
-                board = board,
-                difficulty = difficulty,
-                elapsedTimeMs = elapsed,
-                isSolved = false,
-                notes = notes
-            )
             database.sudokuDao().saveSave(save)
         }
     }

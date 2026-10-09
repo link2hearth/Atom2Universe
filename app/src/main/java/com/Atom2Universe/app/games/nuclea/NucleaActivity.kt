@@ -49,6 +49,7 @@ class NucleaActivity : ThemedActivity() {
         val game = gameView.game
         game.meta.load(prefs)
         game.loadRun(prefs)          // partie laissée en plan lors de la dernière session
+        gameView.requestSavedRun()
         game.sound = sfx
         game.onMetaChanged = { game.meta.save(prefs) }
         game.onRunEnded = { game.clearSavedRun(prefs) }

@@ -294,6 +294,7 @@ class NucleaView @JvmOverloads constructor(
     }
 
     fun requestMenu() { pendingPhase = NucleaPhase.MENU }
+    fun requestSavedRun() { if (game.hasResumableRun()) pendingResume = true }
     fun requestPause() { if (game.phase == NucleaPhase.PLAYING) pendingPhase = NucleaPhase.PAUSED }
 
     // ─── Manette ──────────────────────────────────────────────────────────────

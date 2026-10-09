@@ -154,7 +154,9 @@ class JigsawActivity : ThemedActivity() {
             }
         })
         showSetup()
-        savedInstanceState?.getString("pendingPath")?.let { selectImage(it) }
+        val pending = savedInstanceState?.getString("pendingPath")
+        if (pending != null) selectImage(pending)
+        else game?.takeUnless { it.solved }?.let { openGame(it) }
     }
 
     private fun applyInsets(root: View, header: View, insets: WindowInsetsCompat) {

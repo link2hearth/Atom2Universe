@@ -103,6 +103,8 @@ class ChessActivity : AppCompatActivity(),
 
         difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (currentDifficulty == difficulties[position]) return
+                ai?.cancel()
                 currentDifficulty = difficulties[position]
                 ai = if (currentDifficulty.hasAI()) {
                     ChessAI(game, currentDifficulty, this@ChessActivity)
@@ -111,6 +113,7 @@ class ChessActivity : AppCompatActivity(),
                 }
                 // Activer le flip des pièces noires en mode 2 joueurs
                 chessView.isTwoPlayerMode = (currentDifficulty == ChessDifficulty.TWO_PLAYER)
+                if (!game.isGameOver() && game.currentTurn == PieceColor.BLACK && ai != null) requestAIMove()
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -171,6 +174,7 @@ class ChessActivity : AppCompatActivity(),
      * Démarre le timer
      */
     private fun startTimer() {
+        if (isTimerRunning) return
         startTimeMs = System.currentTimeMillis() - elapsedTimeMs
         isTimerRunning = true
         timerHandler.post(timerRunnable)
@@ -410,8 +414,6 @@ class ChessActivity : AppCompatActivity(),
      * Sauvegarde la partie en cours
      */
     private fun saveGame() {
-        if (game.moveHistory.isEmpty()) return // Pas de partie à sauvegarder
-
         val prefs = getSharedPreferences("chess_save", MODE_PRIVATE)
         prefs.edit {
             putString("fen", game.toFEN())
@@ -439,62 +441,50 @@ class ChessActivity : AppCompatActivity(),
             return
         }
 
-        // Demander confirmation
-        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
-            .setTitle(R.string.chess_resume_title)
-            .setMessage(R.string.chess_resume_message)
-            .setPositiveButton(R.string.confirm) { _, _ ->
-                // Restaurer la partie
-                val difficultyName = prefs.getString("difficulty", ChessDifficulty.STANDARD.name)
-                val savedDifficulty = ChessDifficulty.values().find { it.name == difficultyName }
-                    ?: ChessDifficulty.STANDARD
+        // Restaurer la partie
+        val difficultyName = prefs.getString("difficulty", ChessDifficulty.STANDARD.name)
+        val savedDifficulty = ChessDifficulty.values().find { it.name == difficultyName }
+            ?: ChessDifficulty.STANDARD
 
-                currentDifficulty = savedDifficulty
-                difficultySpinner.setSelection(ChessDifficulty.values().indexOf(currentDifficulty))
+        currentDifficulty = savedDifficulty
+        difficultySpinner.setSelection(ChessDifficulty.values().indexOf(currentDifficulty))
 
-                game.fromFEN(fen)
-                elapsedTimeMs = prefs.getLong("elapsed_time", 0)
+        game.fromFEN(fen)
+        elapsedTimeMs = prefs.getLong("elapsed_time", 0)
 
-                // Restaurer les pièces capturées
-                val capturedPiecesJson = prefs.getString("captured_pieces", "")
-                if (!capturedPiecesJson.isNullOrEmpty()) {
-                    game.capturedPieces.clear()
-                    capturedPiecesJson.split(",").forEach { pieceStr ->
-                        if (pieceStr.isNotEmpty()) {
-                            val notation = pieceStr.substring(0, 1)
-                            val colorName = pieceStr.substring(1)
-                            val type = PieceType.values().find { it.notation == notation }
-                            val color = PieceColor.values().find { it.name == colorName }
-                            if (type != null && color != null) {
-                                game.capturedPieces.add(Piece(type, color))
-                            }
-                        }
+        // Restaurer les pièces capturées
+        val capturedPiecesJson = prefs.getString("captured_pieces", "")
+        if (!capturedPiecesJson.isNullOrEmpty()) {
+            game.capturedPieces.clear()
+            capturedPiecesJson.split(",").forEach { pieceStr ->
+                if (pieceStr.isNotEmpty()) {
+                    val notation = pieceStr.substring(0, 1)
+                    val colorName = pieceStr.substring(1)
+                    val type = PieceType.values().find { it.notation == notation }
+                    val color = PieceColor.values().find { it.name == colorName }
+                    if (type != null && color != null) {
+                        game.capturedPieces.add(Piece(type, color))
                     }
                 }
-
-                ai = if (currentDifficulty.hasAI()) {
-                    ChessAI(game, currentDifficulty, this@ChessActivity)
-                } else {
-                    null
-                }
-
-                chessView.isTwoPlayerMode = (currentDifficulty == ChessDifficulty.TWO_PLAYER)
-                chessView.setSelectedSquare(null)
-                chessView.setLastMove(null, null)
-                chessView.refresh()
-
-                if (!game.isGameOver()) {
-                    startTimer()
-                }
-                updateStatus()
-                updateCapturedPieces()
             }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-                deleteSave()
-                startNewGame()
-            }
-            .setCancelable(false)
-            .show()
+        }
+
+        ai = if (currentDifficulty.hasAI()) {
+            ChessAI(game, currentDifficulty, this@ChessActivity)
+        } else {
+            null
+        }
+
+        chessView.isTwoPlayerMode = (currentDifficulty == ChessDifficulty.TWO_PLAYER)
+        chessView.setSelectedSquare(null)
+        chessView.setLastMove(null, null)
+        chessView.refresh()
+
+        if (!game.isGameOver()) {
+            startTimer()
+        }
+        updateStatus()
+        updateCapturedPieces()
     }
 
     /**
@@ -510,13 +500,15 @@ class ChessActivity : AppCompatActivity(),
         super.onPause()
         stopTimer()
         ai?.cancel()
+        timerHandler.removeCallbacksAndMessages(null)
         saveGame()
     }
 
     override fun onResume() {
         super.onResume()
-        if (!game.isGameOver() && game.moveHistory.isNotEmpty()) {
+        if (!game.isGameOver()) {
             startTimer()
+            if (game.currentTurn == PieceColor.BLACK && ai != null) requestAIMove()
         }
     }
 

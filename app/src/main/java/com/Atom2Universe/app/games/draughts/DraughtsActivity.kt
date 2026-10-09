@@ -363,6 +363,7 @@ class DraughtsActivity : ThemedActivity(),
     // ── Timer ──────────────────────────────────────────────────────────────────
 
     private fun startTimer() {
+        if (timerRunning) return
         startTimeMs = System.currentTimeMillis()
         timerRunning = true
         timerHandler.post(timerRunnable)
@@ -381,7 +382,6 @@ class DraughtsActivity : ThemedActivity(),
     // ── Persistance ────────────────────────────────────────────────────────────
 
     private fun saveGame() {
-        if (game.moveCount == 0) return
         getSharedPreferences("draughts_save", MODE_PRIVATE).edit {
             putString("state", game.serialize())
             putString("difficulty", currentDifficulty.name)
@@ -398,35 +398,28 @@ class DraughtsActivity : ThemedActivity(),
         val state = prefs.getString("state", null)
         if (state == null) { startNewGame(); return }
 
-        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
-            .setTitle(R.string.draughts_resume_title)
-            .setMessage(R.string.draughts_resume_message)
-            .setPositiveButton(R.string.confirm) { _, _ ->
-                val diffName = prefs.getString("difficulty", DraughtsDifficulty.STANDARD.name)
-                currentDifficulty = try {
-                    DraughtsDifficulty.valueOf(diffName ?: DraughtsDifficulty.STANDARD.name)
-                } catch (e: Exception) { DraughtsDifficulty.STANDARD }
-                difficultySpinner.setSelection(difficulties.indexOf(currentDifficulty))
-                game.deserialize(state)
-                elapsedTimeMs = prefs.getLong("elapsed_time", 0)
-                timerText.text = formatTime(elapsedTimeMs)
-                ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
-                draughtsView.isTwoPlayerMode = (currentDifficulty == DraughtsDifficulty.TWO_PLAYER)
-                draughtsView.game = game
-                draughtsView.refresh()
-                refreshMustCaptureHighlight()
-                if (!game.isGameOver) startTimer()
-                updateStatus()
-            }
-            .setNegativeButton(R.string.cancel) { _, _ -> clearSave(); startNewGame() }
-            .setCancelable(false)
-            .show()
+        val diffName = prefs.getString("difficulty", DraughtsDifficulty.STANDARD.name)
+        currentDifficulty = try {
+            DraughtsDifficulty.valueOf(diffName ?: DraughtsDifficulty.STANDARD.name)
+        } catch (e: Exception) { DraughtsDifficulty.STANDARD }
+        difficultySpinner.setSelection(difficulties.indexOf(currentDifficulty))
+        game.deserialize(state)
+        elapsedTimeMs = prefs.getLong("elapsed_time", 0)
+        timerText.text = formatTime(elapsedTimeMs)
+        ai = if (currentDifficulty.hasAI()) DraughtsAI(currentDifficulty) else null
+        draughtsView.isTwoPlayerMode = (currentDifficulty == DraughtsDifficulty.TWO_PLAYER)
+        draughtsView.game = game
+        draughtsView.refresh()
+        refreshMustCaptureHighlight()
+        if (!game.isGameOver) startTimer()
+        updateStatus()
     }
 
     // ── Lifecycle ──────────────────────────────────────────────────────────────
 
     override fun onPause() {
         super.onPause()
+        ai?.cancel()
         if (timerRunning) {
             elapsedTimeMs += System.currentTimeMillis() - startTimeMs
             timerRunning = false
@@ -438,10 +431,9 @@ class DraughtsActivity : ThemedActivity(),
 
     override fun onResume() {
         super.onResume()
-        if (!game.isGameOver && game.moveCount > 0) {
-            startTimeMs = System.currentTimeMillis()
-            timerRunning = true
-            timerHandler.post(timerRunnable)
+        if (!game.isGameOver) {
+            startTimer()
+            if (game.currentTurn == DraughtsPieceColor.BLACK && ai != null) requestAIMove()
         }
     }
 

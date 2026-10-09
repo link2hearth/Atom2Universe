@@ -360,11 +360,12 @@ class SurvivorView @JvmOverloads constructor(
         }
     }
 
-    /** Ouvre le jeu sur son menu d'accueil. Appelé avant le démarrage de la boucle. */
+    /** Reprend la partie disponible avant le démarrage de la boucle. */
     fun showHome() {
         SurvivorSave.loadBest(context, game)
         savedRun = SurvivorSave.peekRun(context)
         game.phase = GamePhase.MENU
+        if (savedRun != null && SurvivorSave.loadRun(context, game)) game.resumePlaying()
         prevPhase = GamePhase.MENU
     }
 
