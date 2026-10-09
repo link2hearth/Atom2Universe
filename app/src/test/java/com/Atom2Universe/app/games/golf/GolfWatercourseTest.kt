@@ -4,9 +4,33 @@ import com.Atom2Universe.app.games.golf.classic.core.*
 import org.junit.Assert.*
 import org.junit.Test
 import kotlin.math.*
+import kotlin.random.Random
 
 class GolfWatercourseTest {
     private val holes=ClassicCourse.holes+HeatherCourse.holes+WildDetoursCourse.holes+VertigoCourse.holes
+
+    @Test fun indexedQueriesMatchTheFullCurveIncludingCovesAndDistantPoints() {
+        val random = Random(73591)
+        for (hole in holes) for (lake in hole.hazards) {
+            val curve = lake.watercourse ?: continue
+            repeat(1200) {
+                val x = (random.nextFloat() * 2f - 1f) * (curve.halfWidth + 25f)
+                val z = (random.nextFloat() * 2f - 1f) * (curve.halfDepth + 25f)
+                val outside = max(abs(x) - curve.halfWidth, abs(z) - curve.halfDepth)
+                val expected = if (outside > 12f) outside else {
+                    var best = Float.POSITIVE_INFINITY
+                    for (i in 0 until curve.samples.lastIndex) {
+                        val a = curve.samples[i]; val b = curve.samples[i + 1]
+                        val dx = b.x - a.x; val dz = b.z - a.z
+                        val t = (((x - a.x) * dx + (z - a.z) * dz) / (dx * dx + dz * dz)).coerceIn(0f, 1f)
+                        best = min(best, hypot(x - a.x - dx * t, z - a.z - dz * t) - (a.radius + (b.radius - a.radius) * t))
+                    }
+                    best
+                }
+                assertEquals("Curve ${hole.number} at $x/$z", expected, curve.signedDistance(x, z), .0001f)
+            }
+        }
+    }
 
     @Test fun designedLakesAreOneConnectedBodyWithOneFlatWaterLevel() {
         for(hole in holes) {

@@ -39,20 +39,76 @@ class GolfWatercourse(val nodes: List<GolfWaterNode>) {
     val halfWidth = samples.maxOf { abs(it.x)+it.radius }
     val halfDepth = samples.maxOf { abs(it.z)+it.radius }
 
+    private class Segment(val a: GolfWaterNode, val b: GolfWaterNode) {
+        val dx = b.x - a.x
+        val dz = b.z - a.z
+        val lengthSquared = dx * dx + dz * dz
+        val radiusDelta = b.radius - a.radius
+        val left = min(a.x - a.radius, b.x - b.radius)
+        val right = max(a.x + a.radius, b.x + b.radius)
+        val front = min(a.z - a.radius, b.z - b.radius)
+        val back = max(a.z + a.radius, b.z + b.radius)
+
+        fun distance(x: Float, z: Float): Float {
+            val t = (((x - a.x) * dx + (z - a.z) * dz) / lengthSquared).coerceIn(0f, 1f)
+            return hypot(x - a.x - dx * t, z - a.z - dz * t) - (a.radius + radiusDelta * t)
+        }
+    }
+
+    /** Immutable spatial tree: exact shore queries visit nearby reaches, not the entire lake.
+     * Bounds include the varying radius; their signed L-infinity distance is a lower bound
+     * even inside water, so pruning preserves the original projected-segment calculation.
+     */
+    private class Branch(segments: List<Segment>) {
+        val left = segments.minOf { it.left }
+        val right = segments.maxOf { it.right }
+        val front = segments.minOf { it.front }
+        val back = segments.maxOf { it.back }
+        val leaf: Array<Segment>?
+        val first: Branch?
+        val second: Branch?
+        init {
+            if (segments.size <= 4) {
+                leaf = segments.toTypedArray(); first = null; second = null
+            } else {
+                val ordered = if (right - left > back - front) segments.sortedBy { it.a.x + it.b.x }
+                    else segments.sortedBy { it.a.z + it.b.z }
+                val middle = ordered.size / 2
+                leaf = null
+                first = Branch(ordered.subList(0, middle))
+                second = Branch(ordered.subList(middle, ordered.size))
+            }
+        }
+
+        fun lowerBound(x: Float, z: Float) = max(max(left - x, x - right), max(front - z, z - back))
+
+        fun nearest(x: Float, z: Float, limit: Float): Float {
+            var best = limit
+            val segments = leaf
+            if (segments != null) {
+                for (segment in segments) best = min(best, segment.distance(x, z))
+            } else {
+                val a = first!!; val b = second!!
+                val da = a.lowerBound(x, z); val db = b.lowerBound(x, z)
+                if (da <= db) {
+                    if (da <= best) best = a.nearest(x, z, best)
+                    if (db <= best) best = b.nearest(x, z, best)
+                } else {
+                    if (db <= best) best = b.nearest(x, z, best)
+                    if (da <= best) best = a.nearest(x, z, best)
+                }
+            }
+            return best
+        }
+    }
+
+    private val index = Branch(samples.zipWithNext { a, b -> Segment(a, b) })
+
     fun signedDistance(x:Float,z:Float):Float {
         val outside=max(abs(x)-halfWidth,abs(z)-halfDepth)
         // Nothing beyond the 12 m bank can affect grading, lies or shore rendering.
         if(outside>12f) return outside
-        var best=Float.POSITIVE_INFINITY
-        for(i in 0 until samples.lastIndex) {
-            val a=samples[i]; val b=samples[i+1]
-            val r=max(a.radius,b.radius)
-            if(max(max(min(a.x,b.x)-x,x-max(a.x,b.x)),max(min(a.z,b.z)-z,z-max(a.z,b.z)))-r>best) continue
-            val dx=b.x-a.x; val dz=b.z-a.z
-            val t=(((x-a.x)*dx+(z-a.z)*dz)/(dx*dx+dz*dz)).coerceIn(0f,1f)
-            best=min(best,hypot(x-a.x-dx*t,z-a.z-dz*t)-(a.radius+(b.radius-a.radius)*t))
-        }
-        return best
+        return index.nearest(x, z, Float.POSITIVE_INFINITY)
     }
 
     companion object {

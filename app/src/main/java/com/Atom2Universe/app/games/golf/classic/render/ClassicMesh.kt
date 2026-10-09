@@ -65,10 +65,17 @@ internal class MeshBuilder {
     fun append(other:MeshBuilder, origin:P, yaw:Float=0f, scale:Float=1f, mirrorX:Float=1f,
         groundHeight:((Float,Float)->Float)?=null) {
         val cs=cos(yaw); val sn=sin(yaw)
+        // Triangle lists repeat corners and stack many vertices at identical x/z.
+        // Preserve exact terrain heights but only evaluate each position once per model.
+        val heights = if (groundHeight != null) HashMap<Long, Float>() else null
         for(i in 0 until other.size step 6) {
             val x=other.data[i]*scale*mirrorX; val z=other.data[i+2]*scale
             val wx=origin.x+x*cs+z*sn; val wz=origin.z-x*sn+z*cs
-            vertex(P(wx,(groundHeight?.invoke(wx,wz) ?: origin.y)+other.data[i+1]*scale,wz),
+            val ground = if (heights != null) {
+                val key = (wx.toRawBits().toLong() shl 32) or (wz.toRawBits().toLong() and 0xffffffffL)
+                heights.getOrPut(key) { groundHeight!!(wx, wz) }
+            } else origin.y
+            vertex(P(wx,ground+other.data[i+1]*scale,wz),
                 C(other.data[i+3],other.data[i+4],other.data[i+5]))
         }
     }

@@ -181,6 +181,7 @@ data class ClassicHole(
     private val primaryFairwayIndex by lazy { GolfFairwayIndex(fairwaySamples, 15f) }
     private val alternateFairwayIndexes by lazy { alternateSamples.map { GolfFairwayIndex(it, SEMI_ROUGH_WIDTH) } }
     private val teeTerrainHeight by lazy { terrainHeight(0f, 0f) }
+    private val singleWater = hazards.filter { it.lie == GolfLie.WATER }.singleOrNull()
     private val waterLevels by lazy {
         hazards.filter { it.lie == GolfLie.WATER }.associateWith { waterLevel(it) }
     }
@@ -355,11 +356,12 @@ data class ClassicHole(
         // One crossfall and one broad crown/swale, following the routing instead of oscillating.
         h += fairwayRelief.crossfall * lateral +
             fairwayRelief.crown * exp(-lateral * lateral / 900f)
-        for (mound in mounds) {
+        // Every mound shares the same mowing clearance. Query the routed corridors once.
+        val moundBlend = if (mounds.isEmpty()) 0f else smooth((if (alternateRoutes.isEmpty())
+            abs(lateral) - fairwayWidth(z) * .5f else fairwaySignedDistance(x, z)) / 24f)
+        if (moundBlend > 0f) for (mound in mounds) {
             val dx = (x - mound.x) / mound.rx; val dz = (z - mound.z) / mound.rz
-            h += mound.height * exp(-1.6f * (dx*dx + dz*dz)) *
-                smooth((if (alternateRoutes.isEmpty()) abs(lateral) - fairwayWidth(z) * .5f
-                    else fairwaySignedDistance(x, z)) / 24f)
+            h += mound.height * exp(-1.6f * (dx*dx + dz*dz)) * moundBlend
         }
         return h
     }
@@ -401,8 +403,10 @@ data class ClassicHole(
             return greenHeight * (1f - blend) + land * blend
         }
         var height = terrainHeight(x, z)
+        // The same shore is used before and after green grading, and for retaining banks.
+        val singleWaterDistance = singleWater?.signedDistance(x, z) ?: Float.POSITIVE_INFINITY
         for (hazard in hazards) if (hazard.lie == GolfLie.WATER) {
-            val d = hazard.signedDistance(x, z)
+            val d = if (hazard === singleWater) singleWaterDistance else hazard.signedDistance(x, z)
             if (d < 9f) {
                 val blend = smooth(d / 9f)
                 height = waterHeight(hazard) * (1f - blend) + height * blend
@@ -423,7 +427,7 @@ data class ClassicHole(
         // after its inner edge has been made horizontal (which creates a jagged cliff).
         if (greenDistance > 2f) {
             for (hazard in hazards) if (hazard.lie == GolfLie.WATER) {
-                val d = hazard.signedDistance(x, z)
+                val d = if (hazard === singleWater) singleWaterDistance else hazard.signedDistance(x, z)
                 if (d < 9f) {
                     // Shore grading still runs last, outside the protected putting terrace/collar.
                     val influence = (1f - smooth(d / 9f)) * smooth((greenDistance - 2f) / 5f)
@@ -438,7 +442,8 @@ data class ClassicHole(
             val bank = smooth(distance / 8f) * (1f - smooth((distance - 10f) / 14f))
             var dry = 1f
             for (hazard in hazards) if (hazard.lie == GolfLie.WATER) {
-                dry = min(dry, smooth(hazard.signedDistance(x, z) / 5f))
+                val d = if (hazard === singleWater) singleWaterDistance else hazard.signedDistance(x, z)
+                dry = min(dry, smooth(d / 5f))
             }
             height += retainingBankHeight * bank * dry * teeBlend
         }

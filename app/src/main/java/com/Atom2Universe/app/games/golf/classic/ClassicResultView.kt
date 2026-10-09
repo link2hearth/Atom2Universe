@@ -30,7 +30,14 @@ internal class ClassicResultView(context: Context, private val ui: GolfUi, priva
         isClickable = true; isFocusable = true
         addView(Scene(context), LayoutParams(-1, -1))
         val column = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER_HORIZONTAL; visibility = INVISIBLE; alpha = 0f }
-        buttons.forEachIndexed { i, b -> column.addView(b, LinearLayout.LayoutParams(ui.dp(240), -2).apply { if (i > 0) topMargin = ui.dp(10) }) }
+        buttons.forEachIndexed { i, b ->
+            // A plain icon View has no intrinsic wrap-content height: constrain it so
+            // it cannot consume the panel and push navigation outside the screen.
+            val params = if (b is GolfIcon) LinearLayout.LayoutParams(ui.dp(48), ui.dp(48))
+                else LinearLayout.LayoutParams(ui.dp(240), -2)
+            if (i > 0) params.topMargin = ui.dp(10)
+            column.addView(b, params)
+        }
         addView(column, LayoutParams(-2, -2, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply { bottomMargin = ui.dp(48) })
         column.animate().alpha(1f).setStartDelay(if (kind == Kind.ACE) 1800L else 900L).setDuration(400).withStartAction { column.visibility = VISIBLE }.start()
     }

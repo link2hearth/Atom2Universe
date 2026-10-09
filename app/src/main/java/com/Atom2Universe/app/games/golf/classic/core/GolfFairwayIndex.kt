@@ -8,6 +8,11 @@ internal class GolfFairwayIndex(private val samples: List<GolfRouteNode>, privat
         val radius = max(a.width, b.width) * .5f
         val low = a.z - radius - padding
         val high = b.z + radius + padding
+        val dx = b.x - a.x
+        val dz = b.z - a.z
+        val lengthSquared = dx * dx + dz * dz
+        val left = min(a.x, b.x)
+        val right = max(a.x, b.x)
     }
     private val segments = samples.zipWithNext().map { (a, b) -> Segment(a, b, padding) }
         .filter { it.radius >= 2f }
@@ -30,9 +35,10 @@ internal class GolfFairwayIndex(private val samples: List<GolfRouteNode>, privat
             val s = segments[i]
             if (z < s.low || z > s.high) continue
             val a = s.a; val b = s.b
+            if (max(max(s.left - x, x - s.right), max(a.z - z, z - b.z)) - s.radius > best + .0001f) continue
             // Keep the original arithmetic and segment order: only the search changes.
-            val dx = b.x - a.x; val dz = b.z - a.z
-            val t = (((x - a.x) * dx + (z - a.z) * dz) / (dx * dx + dz * dz)).coerceIn(0f, 1f)
+            val dx = s.dx; val dz = s.dz
+            val t = (((x - a.x) * dx + (z - a.z) * dz) / s.lengthSquared).coerceIn(0f, 1f)
             val radius = (a.width + (b.width - a.width) * t) * .5f
             best = min(best, hypot(x - a.x - dx * t, z - a.z - dz * t) - radius)
         }
