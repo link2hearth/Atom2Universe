@@ -140,7 +140,7 @@ internal class ClassicShotOverlay(context: Context, private val swing: GolfSwing
     override fun onDraw(c: Canvas) {
         if (mode != Mode.PULL) return
         val d = density
-        val radius = 64f * d
+        val radius = (if (swing.easy) 84f else 64f) * d
         val ax = startX.coerceIn(radius + 12f * d, width - radius - 12f * d)
         val ay = startY.coerceIn(radius + 52f * d, height - 12f * d)
         // Pull cord from the anchor to the finger.
@@ -159,10 +159,10 @@ internal class ClassicShotOverlay(context: Context, private val swing: GolfSwing
             c.drawArc(bounds, 270f + from * SWEEP, (to - from) * SWEEP, false, p)
         }
         band(-1f, 1f, 0xC8142D38.toInt())
-        band(-1f, -GolfSwing.MISS, 0xFFD9574A.toInt())
-        band(GolfSwing.MISS, 1f, 0xFFD9574A.toInt())
-        band(-GolfSwing.GOOD, GolfSwing.GOOD, 0xFF6FBF73.toInt())
-        band(-GolfSwing.PERFECT, GolfSwing.PERFECT, 0xFFFFD25C.toInt())
+        band(-1f, -swing.miss, 0xFFD9574A.toInt())
+        band(swing.miss, 1f, 0xFFD9574A.toInt())
+        band(-swing.good, swing.good, 0xFF6FBF73.toInt())
+        band(-swing.perfect, swing.perfect, 0xFFFFD25C.toInt())
         // Needle.
         val angle = Math.toRadians((270f + swing.position * SWEEP).toDouble()).toFloat()
         val tipX = ax + cos(angle) * (radius + 11f * d)

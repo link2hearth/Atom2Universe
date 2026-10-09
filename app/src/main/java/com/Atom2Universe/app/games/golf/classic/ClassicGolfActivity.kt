@@ -24,6 +24,9 @@ import kotlin.math.*
 /** How long the frame must stay unchanged before drawing at half rate: the camera glides settle well within it. */
 private const val CALM_NANOS = 1_500_000_000L
 
+/** Easy mode: the cup is this much wider. */
+private const val EASY_CUP = 1.5f
+
 /** Stroke play with an immutable bag. Simulation and UI share the main thread; GL gets snapshots. */
 class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private lateinit var root: FrameLayout
@@ -80,6 +83,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private val lieNames by lazy { resources.getStringArray(R.array.classic_lies) }
     private var windRose: ClassicWindRose? = null
     private var gridShown = true
+    private var easy = false
     private var lieView: ClassicLieView? = null
     private var gridButton: GolfIcon? = null
 
@@ -87,7 +91,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        ui=GolfUi(this); audio=GolfAudio(this); muted=prefs.getBoolean("muted",false)
+        ui=GolfUi(this); audio=GolfAudio(this); muted=prefs.getBoolean("muted",false);easy=prefs.getBoolean("easy",false)
         course=ClassicCourses.find(prefs.getString("selected_course",null))
         golfer=GolferAppearance(prefs.getBoolean("golfer_female",false),
             prefs.getInt("golfer_outfit",0).coerceIn(0,2),prefs.getInt("golfer_skin",0).coerceIn(0,2))
@@ -123,6 +127,11 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         head.addView(icon(GolfIcon.Kind.PERSON,R.string.classic_golfer_title){GolfMenus.wardrobe(this)},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)))
         head.addView(icon(GolfIcon.Kind.HELP,R.string.golf_info){help()},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)))
         col.addView(head)
+        col.addView(Switch(this).apply{
+            text=getString(R.string.classic_easy_mode);textSize=16f;setTextColor(ui.palette.text);isChecked=easy
+            setPadding(ui.dp(8),ui.dp(6),ui.dp(8),ui.dp(6))
+            setOnCheckedChangeListener{_,on->easy=on;prefs.edit().putBoolean("easy",on).apply()}
+        },LinearLayout.LayoutParams(-1,-2).apply{topMargin=ui.dp(6)})
         val wide=resources.configuration.screenWidthDp>=600
         val cards=ui.column()
         ClassicCourses.all.chunked(if(wide)2 else 1).forEach { definitions ->
@@ -256,9 +265,11 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         swing.cancel(); pendingStrike=null; swingTime=-1f; sceneReady=false; pullFraction=0f
         golfer=GolferAppearance(prefs.getBoolean("golfer_female",false),
             prefs.getInt("golfer_outfit",0).coerceIn(0,2),prefs.getInt("golfer_skin",0).coerceIn(0,2))
-        val h=course.holes[index]
+        // Easy mode: a cup half as wide again, and a gauge that forgives.
+        val h=course.holes[index].let{if(easy)it.copy(cupRadius=it.cupRadius*EASY_CUP)else it}
         val mini=h.mini!=null
-        val g=ClassicGame(h); game=g
+        swing.easy=easy
+        val g=ClassicGame(h,easy); game=g
         if(restore&&progress.contains("ball_x")) {
             val x=progress.getFloat("ball_x",h.tee.x);val z=progress.getFloat("ball_z",h.tee.z)
             if(x.isFinite()&&z.isFinite())g.restore(GolfPoint(x,h.heightAt(x,z)+ClassicHole.BALL_RADIUS,z),progress.getInt("strokes",0).coerceAtLeast(0))
@@ -383,9 +394,9 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             pendingStrike=strikePower to needle;swingTime=0f
             val off=abs(needle)
             val message=getString(when {
-                off<=GolfSwing.PERFECT->R.string.classic_swing_perfect
-                off<=GolfSwing.GOOD->R.string.classic_swing_good
-                off>=GolfSwing.MISS->R.string.classic_swing_miss
+                off<=swing.perfect->R.string.classic_swing_perfect
+                off<=swing.good->R.string.classic_swing_good
+                off>=swing.miss->R.string.classic_swing_miss
                 needle<0f->R.string.classic_swing_left
                 else->R.string.classic_swing_right
             })
@@ -436,7 +447,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         val g=game?:return
         val dt=if(lastFrame==0L)0f else ((time-lastFrame)/1e9f).coerceIn(0f,.05f);lastFrame=time
         if(dialog?.isShowing!=true&&!completed){
-            if(swing.active)swing.update(dt,GolfSwing.period(g.club,GolfSwing.power(pullFraction,g.club),g.lie))
+            if(swing.active)swing.update(dt,GolfSwing.period(g.club,GolfSwing.power(pullFraction,g.club),g.lie,easy))
             if(swingTime>=0f){
                 swingTime+=dt
                 if(swingTime>=GolferPose.STRIKE_SECONDS)pendingStrike?.let { (power,needle) ->
@@ -450,7 +461,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
                 if(swingTime>=GolferPose.RELEASE_SECONDS)swingTime=-1f
             }
             val moving=g.state==GolfState.FLYING||g.state==GolfState.ROLLING
-            g.update(if(moving&&overlay?.holding==true)dt*3f else dt)
+            g.update(if(moving&&!g.celebrating&&overlay?.holding==true)dt*3f else dt)
             if(g.hole.mini!=null) {
                 // The knock of the ball on the rails, at most ten times a second.
                 val knock=g.takeBounce()

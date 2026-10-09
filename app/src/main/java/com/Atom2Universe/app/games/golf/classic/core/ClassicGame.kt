@@ -19,7 +19,7 @@ data class ShotPreview(
 }
 
 /** Pure deterministic golf simulation, owned by the UI thread. Rendering never advances physics. */
-class ClassicGame(val hole: ClassicHole) {
+class ClassicGame(val hole: ClassicHole, val easy: Boolean = false) {
     var ball: GolfPoint = hole.tee
         private set
     var strokes: Int = 0
@@ -71,6 +71,16 @@ class ClassicGame(val hole: ClassicHole) {
     /** The ball has touched the ground since the strike: later contacts are hops, not the landing. */
     private var landed = false
     private var accumulator = 0.0
+    /** Share of the club's carry of the shot being played: a short swing skids back less. */
+    private var skidPower = 1f
+    /** Easy mode: the ball touched the flagstick and winds round it; seconds since it started. */
+    private var spiralling = false
+    private var spiralTime = 0f
+    private var spiralFrom = ball
+    private var spiralAngle = 0f
+    private var spiralRadius = 0f
+    /** The ball is winding round the flagstick: the hole is won, only the show remains. */
+    val celebrating: Boolean get() = spiralling
     private var shotSeconds = 0f
     private var previewKey: List<Any>? = null
     private var previewValue = ShotPreview.NONE
@@ -115,7 +125,8 @@ class ClassicGame(val hole: ClassicHole) {
         shotSeconds = 0f
         accumulator = 0.0
         motion.reset()
-        val miss = GolfSwing.deviation(error)
+        val miss = GolfSwing.deviation(error, easy)
+        skidPower = p
         flagIn = club != GolfClub.PUTTER
         landed = false
         if (club == GolfClub.PUTTER) {
@@ -187,6 +198,7 @@ class ClassicGame(val hole: ClassicHole) {
     }
 
     private fun flightPreview(power: Float): ShotPreview {
+        skidPower = power
         launch(sim, power, 0f)
         val points = ArrayList<GolfPoint>(64)
         points.add(ball)
@@ -215,6 +227,33 @@ class ClassicGame(val hole: ClassicHole) {
 
     private enum class Contact { HOP, ROLL, LOST, CUP }
 
+    /** Metres the ball skids back after landing: the drag-back of an arcade golf game, only on good turf. */
+    private fun skidMetres(surface: GolfLie): Float {
+        if (!easy || club == GolfClub.PUTTER || spinY > -SKID_FROM) return 0f
+        val grip = when (surface) {
+            GolfLie.GREEN -> 1f
+            GolfLie.FRINGE, GolfLie.FAIRWAY, GolfLie.TEE -> .8f
+            GolfLie.SEMI_ROUGH -> .4f
+            else -> 0f
+        }
+        return SKID_METRES * -spinY * (.4f + .6f * skidPower) * grip
+    }
+
+    /**
+     * Easy mode, low contact: after its first landing the ball runs back along the line it came by
+     * and stops after [skidMetres] on flat turf. True when the ball was given that skid.
+     */
+    private fun skid(into: BallState, inX: Float, inZ: Float, surface: GolfLie, landing: Boolean): Boolean {
+        if (!landing) return false
+        val metres = skidMetres(surface)
+        val travel = hypot(inX, inZ)
+        if (metres <= 0f || travel < 1e-3f) return false
+        val speed = sqrt(2f * GolfBallPhysics.rolling(surface) * metres)
+        into.vx = -inX / travel * speed; into.vz = -inZ / travel * speed; into.vy = 0f
+        into.wx = 0f; into.wy = 0f; into.wz = 0f
+        return true
+    }
+
     /** [touchDown] for the guide ball: where the [sim] ball meets the ground, and what it does next. */
     private fun simContact(fromX: Float, fromY: Float, fromZ: Float, landing: Boolean): Contact {
         val t = contactFraction(sim, fromX, fromY, fromZ)
@@ -228,7 +267,9 @@ class ClassicGame(val hole: ClassicHole) {
         val surface = hole.lieAt(sim.px, sim.pz)
         if (surface == GolfLie.WATER || surface == GolfLie.OUT) return Contact.LOST
         if (cup.over(sim.px, sim.pz)) return Contact.CUP
+        val inX = sim.vx; val inZ = sim.vz
         GolfBallPhysics.bounce(sim, nx, ny, nz, surface, landing)
+        if (skid(sim, inX, inZ, surface, landing)) return Contact.ROLL
         if (sim.vx * nx + sim.vy * ny + sim.vz * nz < GolfBallPhysics.ROLL_THRESHOLD) {
             GolfBallPhysics.startRolling(sim, nx, ny, nz, surface)
             return Contact.ROLL
@@ -294,8 +335,9 @@ class ClassicGame(val hole: ClassicHole) {
         shotSeconds += dt
         val fromX = b.px; val fromY = b.py; val fromZ = b.pz
         if (state == GolfState.FLYING) {
+            if (spiralling) { stepSpiral(dt); return }
             GolfBallPhysics.flightStep(b, windX, windZ, dt)
-            hitFlagstick()
+            if (hitFlagstick()) return
             if (!collideWithTrees(fromX, fromY, fromZ)) {
                 val floor = hole.heightAt(b.px, b.pz) + RADIUS
                 if (b.py <= floor) touchDown(fromX, fromY, fromZ) else ball = GolfPoint(b.px, b.py, b.pz)
@@ -369,7 +411,9 @@ class ClassicGame(val hole: ClassicHole) {
         if (surface == GolfLie.WATER || surface == GolfLie.OUT) { penalty(); return }
         // Landing over the opening: nothing to bounce on, the ball goes on into the cup.
         if (cup.over(b.px, b.pz)) { state = GolfState.ROLLING; enterCup(); return }
+        val inX = b.vx; val inZ = b.vz
         GolfBallPhysics.bounce(b, nx, ny, nz, surface, landing)
+        if (skid(b, inX, inZ, surface, landing)) { state = GolfState.ROLLING; return }
         if (b.vx * nx + b.vy * ny + b.vz * nz < GolfBallPhysics.ROLL_THRESHOLD) {
             GolfBallPhysics.startRolling(b, nx, ny, nz, surface)
             state = GolfState.ROLLING
@@ -405,13 +449,26 @@ class ClassicGame(val hole: ClassicHole) {
 
     private fun enterCup() { inCup = true; cup.reset() }
 
-    /** A flying ball that meets the flagstick loses most of its pace and often drops. */
-    private fun hitFlagstick() {
-        if (!flagIn) return
+    /**
+     * A flying ball that meets the flagstick loses most of its pace and often drops. In easy mode
+     * any touch, a hand's breadth wide, wins the hole: the ball winds round the stick ([stepSpiral]).
+     * True when the ball is no longer in free flight.
+     */
+    private fun hitFlagstick(): Boolean {
+        if (!flagIn) return false
         val dx = b.px - hole.cup.x; val dz = b.pz - hole.cup.z
         val d = hypot(dx, dz)
-        val reach = ClassicHole.PIN_RADIUS + RADIUS
-        if (d >= reach || d < 1e-6f || b.py < hole.cup.y + RADIUS || b.py > hole.cup.y + ClassicHole.PIN_HEIGHT) return
+        val reach = if (easy) EASY_PIN_REACH else ClassicHole.PIN_RADIUS + RADIUS
+        if (d >= reach || b.py < hole.cup.y + RADIUS || b.py > hole.cup.y + ClassicHole.PIN_HEIGHT) return false
+        if (easy) {
+            spiralling = true; spiralTime = 0f
+            spiralFrom = GolfPoint(b.px, b.py, b.pz)
+            spiralAngle = if (d > 1e-6f) atan2(dz, dx) else 0f
+            spiralRadius = d
+            b.stopMotion()
+            return true
+        }
+        if (d < 1e-6f) return false
         val ux = dx / d; val uz = dz / d
         b.px = hole.cup.x + ux * reach; b.pz = hole.cup.z + uz * reach
         val radial = b.vx * ux + b.vz * uz
@@ -419,6 +476,39 @@ class ClassicGame(val hole: ClassicHole) {
         if (radial < 0f) { b.vx -= 1.1f * radial * ux; b.vz -= 1.1f * radial * uz }
         b.vx *= .4f; b.vz *= .4f
         b.wx *= .3f; b.wy *= .3f; b.wz *= .3f
+        return false
+    }
+
+    /**
+     * The victory dance: the ball climbs the stick in tight turns, hangs at the top, winds back
+     * down and drops into the cup. The path is scripted, the stroke is already counted.
+     */
+    private fun stepSpiral(dt: Float) {
+        spiralTime += dt
+        val t = (spiralTime / SPIRAL_SECONDS).coerceAtMost(1f)
+        val cx = hole.cup.x; val cz = hole.cup.z
+        val top = hole.cup.y + SPIRAL_TOP
+        val rest = hole.cup.y + RADIUS
+        val bottom = hole.cup.y - ClassicHole.CUP_DEPTH + RADIUS
+        fun ease(x: Float) = x.coerceIn(0f, 1f).let { it * it * (3f - 2f * it) }
+        val y = when {
+            t < .4f -> spiralFrom.y + (top - spiralFrom.y) * ease(t / .4f)
+            t < .55f -> top
+            t < .88f -> top + (rest - top) * ease((t - .55f) / .33f)
+            else -> rest + (bottom - rest) * ease((t - .88f) / .12f)
+        }
+        // Hugs the stick from the first instant, then closes on the axis for the final drop.
+        val orbit = spiralRadius + (SPIRAL_ORBIT - spiralRadius) * ease(t / .1f)
+        val radius = if (t < .88f) orbit else orbit * (1f - ease((t - .88f) / .12f))
+        val angle = spiralAngle + 2f * PI.toFloat() * SPIRAL_TURNS * t
+        b.px = cx + cos(angle) * radius; b.pz = cz + sin(angle) * radius; b.py = y
+        b.stopMotion()
+        ball = GolfPoint(b.px, b.py, b.pz)
+        if (t >= 1f) {
+            spiralling = false
+            ball = GolfPoint(cx, bottom, cz)
+            stop(GolfState.HOLED)
+        }
     }
 
     /** The hardest knock of the ball against a rail, post or arm since this was last called, in m/s. */
@@ -517,6 +607,14 @@ class ClassicGame(val hole: ClassicHole) {
     companion object {
         private const val RADIUS = ClassicHole.BALL_RADIUS
         private const val STEP = 1.0 / 120.0
+        /** Easy mode: how far from the stick a touch counts, metres. */
+        private const val EASY_PIN_REACH = .14f
+        private const val SKID_FROM = .25f
+        private const val SKID_METRES = 7f
+        private const val SPIRAL_SECONDS = 3.4f
+        private const val SPIRAL_TOP = 1.9f
+        private const val SPIRAL_ORBIT = .045f
+        private const val SPIRAL_TURNS = 7f
         private fun lieEfficiency(lie: GolfLie, club: GolfClub): Float = when {
             club == GolfClub.PUTTER -> 1f
             lie == GolfLie.ROUGH -> if (club.ordinal < GolfClub.IRON5.ordinal) .79f else .89f

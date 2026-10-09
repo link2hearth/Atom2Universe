@@ -16,6 +16,11 @@ class GolfSwing {
         private set
     private var direction = 1f
     private var starts = 0
+    /** Easy mode: wider bands and a slower needle (see the constants below). */
+    var easy = false
+    val perfect get() = if (easy) EASY_PERFECT else PERFECT
+    val good get() = if (easy) EASY_GOOD else GOOD
+    val miss get() = if (easy) EASY_MISS else MISS
 
     /** Starts from an edge, alternating sides, so an instant release is never a clean strike. */
     fun start() {
@@ -42,6 +47,12 @@ class GolfSwing {
         const val PERFECT = .07f
         const val GOOD = .3f
         const val MISS = .8f
+        const val EASY_PERFECT = .22f
+        const val EASY_GOOD = .55f
+        const val EASY_MISS = .95f
+        /** Share of the miss the ball really feels in easy mode: a poor release still flies nearly straight. */
+        private const val EASY_FEEL = .4f
+        private const val EASY_SLOWER = 1.6f
 
         /** Pull fraction → power. Putts start finer so that short distances are easy to dose. */
         fun power(pull: Float, club: GolfClub): Float {
@@ -50,16 +61,19 @@ class GolfSwing {
         }
 
         /** Seconds for a left-right-left sweep: faster with a long swing and from a bad lie. */
-        fun period(club: GolfClub, power: Float, lie: GolfLie): Float {
+        fun period(club: GolfClub, power: Float, lie: GolfLie, easy: Boolean = false): Float {
             val base = (if (club == GolfClub.PUTTER) 2.2f else 1.9f) - .5f * power.coerceIn(0f, 1f)
-            return base * when (lie) { GolfLie.ROUGH -> .85f; GolfLie.SEMI_ROUGH -> .94f; GolfLie.BUNKER -> .8f; else -> 1f }
+            return base * (if (easy) EASY_SLOWER else 1f) *
+                when (lie) { GolfLie.ROUGH -> .85f; GolfLie.SEMI_ROUGH -> .94f; GolfLie.BUNKER -> .8f; else -> 1f }
         }
 
         /** Signed miss felt by the ball: none inside the perfect band, then up to ±1 at the edges. */
-        fun deviation(position: Float): Float {
-            if (!position.isFinite()) return 1f
+        fun deviation(position: Float, easy: Boolean = false): Float {
+            if (!position.isFinite()) return if (easy) EASY_FEEL else 1f
             val off = abs(position).coerceAtMost(1f)
-            return if (off <= PERFECT) 0f else sign(position) * (off - PERFECT) / (1f - PERFECT)
+            val perfect = if (easy) EASY_PERFECT else PERFECT
+            val raw = if (off <= perfect) 0f else sign(position) * (off - perfect) / (1f - perfect)
+            return if (easy) raw * EASY_FEEL else raw
         }
     }
 }

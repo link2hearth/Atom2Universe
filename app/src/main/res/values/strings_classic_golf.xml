@@ -133,4 +133,5 @@
     <string name="golf_resume_section">↻ %1$s</string>
     <string name="golf_section_title">%1$s · %2$s</string>
     <string name="golf_hud_section">%1$d · %6$d/%5$d · P%2$d · %3$d · %4$s</string>
+    <string name="classic_easy_mode">Easy mode</string>
 </resources>
