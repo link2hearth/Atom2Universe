@@ -38,6 +38,33 @@ object CueReach {
         return ball.p+(across*side+up*top+dir*sqrt(1-side*side-top*top))*ball.radius+dir*gap
     }
 
+    /**
+     * A cue pointing into a pocket mouth has no cushion behind it: the wood only starts past
+     * the hole. Returns how far back along the table that wood begins, or null when the cue
+     * leaves the cloth through a cushion.
+     */
+    private fun throughPocket(table: BilliardTable,origin: V3,back: V3): Double? {
+        for(pocket in table.pockets) {
+            val a=table.cushionPaths[(pocket.id+5)%6][2]; val b=table.cushionPaths[pocket.id][1]
+            val half=(a-b).planar().length()/2
+            val mid=table.opening(pocket)
+            // Where the cue's line crosses the line of the mouth.
+            val along=(b-a).planar(); val u=along*(1/along.length())
+            val normal=V3(-u.y,u.x)
+            val facing=back.dot(normal)
+            if(abs(facing)<1e-9) continue
+            val t=(mid-origin).planar().dot(normal)/facing
+            if(t<0) continue
+            val hit=V3(origin.x+back.x*t,origin.y+back.y*t)
+            if((hit-mid).planar().length()>=half) continue
+            // The cue is over the hole until it leaves the pocket's circle.
+            val q=(origin-pocket.center).planar()
+            val bq=q.dot(back); val disc=bq*bq-(q.dot(q)-pocket.radius*pocket.radius)
+            return if(disc>=0) max(t,-bq+sqrt(disc)) else t+table.mouth
+        }
+        return null
+    }
+
     /** Lowest whole degree at which the cue clears the rail and every ball or pin behind the cue ball. */
     fun minimum(world: BilliardWorld,cue: Ball,shot: Shot): Int {
         val table=world.table
@@ -55,7 +82,7 @@ object CueReach {
                 else -> Double.POSITIVE_INFINITY
             }
             min(exit(origin.x,back.x,table.length),exit(origin.y,back.y,table.width)) to height
-        }
+        }.let { layers -> throughPocket(table,origin,back)?.let { listOf(it to table.railTop) } ?: layers }
         val balls=world.balls.filter { it.id!=cue.id && it.motion!=Motion.POCKETED }
         val pins=world.pins.filter { !it.down }
         val reach=sqrt(1-side*side-top*top)*r
