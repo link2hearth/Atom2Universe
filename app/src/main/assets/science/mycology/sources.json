@@ -48,7 +48,7 @@
       "id": "be", "kind": "official",
       "citation": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf",
-      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades"]
+      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta"]
     },
     {
       "id": "toxinfo", "kind": "official",
@@ -84,7 +84,43 @@
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta"]
+    },
+    {
+      "id": "toxinfo2025", "kind": "official",
+      "citation": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
+      "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms",
+      "species": ["badia", "erythropus", "rubescens", "nebularis", "mellea"]
+    },
+    {
+      "id": "bs2022", "kind": "official",
+      "citation": "Kanton Basel-Stadt, Kantonales Laboratorium (2022). Pilzkontrolle findet immer wieder Giftpilze. Communiqué du 21 décembre 2022.",
+      "url": "https://www.bs.ch/news/2022-pilzkontrolle-findet-immer-wieder-giftpilze",
+      "species": ["edulis", "badia", "erythropus", "phalloides", "virosa", "orellanus"]
+    },
+    {
+      "id": "bs2024", "kind": "official",
+      "citation": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
+      "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf",
+      "species": ["edulis", "cibarius", "procera", "morchella", "gambosa", "craterellus", "hydnum", "prunulus", "phalloides"]
+    },
+    {
+      "id": "bs2025", "kind": "official",
+      "citation": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2025 durch das Kantonale Laboratorium Basel-Stadt. 11 décembre 2025.",
+      "url": "https://media.bs.ch/original_file/3b21f43ba564dd2745141309ffd3df6fd3027319/2025-pilze.pdf",
+      "species": ["edulis", "craterellus", "chrysenteron"]
+    },
+    {
+      "id": "zh2023", "kind": "official",
+      "citation": "Kanton Zürich, Kantonales Labor (2024). Pilzkontrollen im Kanton Zürich 2023.",
+      "url": "https://www.zh.ch/de/news-uebersicht/mitteilungen/2024/gesundheit/lebensmittel/pilzkontrollen-im-kanton-zuerich-2023.html",
+      "species": ["satanas", "felleus"]
+    },
+    {
+      "id": "horn1997", "kind": "journal",
+      "citation": "Horn S., Horina J.H., Krejs G.J., Holzer H., Ratschek M. (1997). End-stage renal failure from mushroom poisoning with Cortinarius orellanus: report of four cases and review of the literature. Am J Kidney Dis 30(2) : 282-286.",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9261043/",
+      "species": ["orellanus"]
     },
     { "id": "wp-fr-phalloides", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite phalloïde", "url": "https://fr.wikipedia.org/wiki/Amanite_phallo%C3%AFde", "species": ["phalloides"] },
     { "id": "wp-fr-virosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite vireuse", "url": "https://fr.wikipedia.org/wiki/Amanite_vireuse", "species": ["virosa"] },
@@ -137,6 +173,24 @@
     { "id": "wp-fr-fasciculare", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hypholome en touffe", "url": "https://fr.wikipedia.org/wiki/Hypholome_en_touffe", "species": ["fasciculare"] },
     { "id": "wp-en-fasciculare", "kind": "encyclopedia", "citation": "Wikipedia (en): Hypholoma fasciculare", "url": "https://en.wikipedia.org/wiki/Hypholoma_fasciculare", "species": ["fasciculare"] },
     { "id": "wp-fr-mellea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Armillaire couleur de miel", "url": "https://fr.wikipedia.org/wiki/Armillaire_couleur_de_miel", "species": ["mellea"] },
-    { "id": "wp-en-mellea", "kind": "encyclopedia", "citation": "Wikipedia (en): Armillaria mellea", "url": "https://en.wikipedia.org/wiki/Armillaria_mellea", "species": ["mellea"] }
+    { "id": "wp-en-mellea", "kind": "encyclopedia", "citation": "Wikipedia (en): Armillaria mellea", "url": "https://en.wikipedia.org/wiki/Armillaria_mellea", "species": ["mellea"] },
+    { "id": "wp-fr-craterellus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Trompette de la mort", "url": "https://fr.wikipedia.org/wiki/Trompette_de_la_mort", "species": ["craterellus"] },
+    { "id": "wp-fr-hydnum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hydnum repandum", "url": "https://fr.wikipedia.org/wiki/Hydnum_repandum", "species": ["hydnum"] },
+    { "id": "wp-fr-badia", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet bai", "url": "https://fr.wikipedia.org/wiki/Bolet_bai", "species": ["badia"] },
+    { "id": "wp-fr-chrysenteron", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet à chair jaune", "url": "https://fr.wikipedia.org/wiki/Bolet_%C3%A0_chair_jaune", "species": ["chrysenteron"] },
+    { "id": "wp-fr-erythropus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet à pied rouge", "url": "https://fr.wikipedia.org/wiki/Bolet_%C3%A0_pied_rouge", "species": ["erythropus"] },
+    { "id": "wp-fr-prunulus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Clitopilus prunulus", "url": "https://fr.wikipedia.org/wiki/Clitopilus_prunulus", "species": ["prunulus"] },
+    { "id": "wp-en-prunulus", "kind": "encyclopedia", "citation": "Wikipedia (en): Clitopilus prunulus", "url": "https://en.wikipedia.org/wiki/Clitopilus_prunulus", "species": ["prunulus"] },
+    { "id": "wp-fr-deliciosus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactaire délicieux", "url": "https://fr.wikipedia.org/wiki/Lactaire_d%C3%A9licieux", "species": ["deliciosus"] },
+    { "id": "wp-fr-torminosus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactarius torminosus", "url": "https://fr.wikipedia.org/wiki/Lactarius_torminosus", "species": ["torminosus"] },
+    { "id": "wp-en-torminosus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius torminosus", "url": "https://en.wikipedia.org/wiki/Lactarius_torminosus", "species": ["torminosus"] },
+    { "id": "wp-fr-nuda", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Pied bleu", "url": "https://fr.wikipedia.org/wiki/Pied_bleu", "species": ["nuda"] },
+    { "id": "wp-en-nuda", "kind": "encyclopedia", "citation": "Wikipedia (en): Lepista nuda", "url": "https://en.wikipedia.org/wiki/Lepista_nuda", "species": ["nuda"] },
+    { "id": "wp-fr-orellanus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Cortinaire des montagnes", "url": "https://fr.wikipedia.org/wiki/Cortinaire_des_montagnes", "species": ["orellanus"] },
+    { "id": "wp-en-orellanus", "kind": "encyclopedia", "citation": "Wikipedia (en): Cortinarius orellanus", "url": "https://en.wikipedia.org/wiki/Cortinarius_orellanus", "species": ["orellanus"] },
+    { "id": "wp-fr-virescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russule verdoyante", "url": "https://fr.wikipedia.org/wiki/Russule_verdoyante", "species": ["virescens"] },
+    { "id": "wp-en-virescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula virescens", "url": "https://en.wikipedia.org/wiki/Russula_virescens", "species": ["virescens"] },
+    { "id": "wp-fr-columbetta", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholome colombette", "url": "https://fr.wikipedia.org/wiki/Tricholome_colombette", "species": ["columbetta"] },
+    { "id": "wp-en-columbetta", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma columbetta", "url": "https://en.wikipedia.org/wiki/Tricholoma_columbetta", "species": ["columbetta"] }
   ]
 }

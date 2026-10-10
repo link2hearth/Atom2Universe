@@ -45,7 +45,8 @@ enum class Tone(@param:StringRes val label: Int) {
             if (h < 15f || h >= 340f) { if (vivid) return if (v >= 0.4f) RED else BROWN }
             else if (h < 38f) { if (vivid && ((s >= 0.75f && v >= 0.75f) || v >= 0.85f)) return ORANGE }
             else if (s >= 0.55f && v >= 0.75f) return YELLOW
-            if (h >= 340f) return PINK
+            // rose, saumon : une teinte rouge ou orangée ternie mais claire (sinon, ce sont des bruns et des beiges)
+            if (h >= 340f || (h < 22f && s < 0.6f && v >= 0.6f)) return PINK
             return if (v < 0.7f) BROWN else BEIGE
         }
     }
@@ -119,6 +120,7 @@ object FungusCriteria {
         add(Criterion("u_gills", CriterionGroup.UNDER, R.string.myco_c_gills) { it.hymenium == Hymenium.GILLS })
         add(Criterion("u_pores", CriterionGroup.UNDER, R.string.myco_c_pores) { it.hymenium == Hymenium.PORES })
         add(Criterion("u_ridges", CriterionGroup.UNDER, R.string.myco_c_ridges) { it.hymenium == Hymenium.RIDGES })
+        add(Criterion("u_teeth", CriterionGroup.UNDER, R.string.myco_c_teeth) { it.hymenium == Hymenium.TEETH })
         add(Criterion("u_none", CriterionGroup.UNDER, R.string.myco_c_none_under) { it.hymenium == Hymenium.NONE })
         add(Criterion("c_funnel", CriterionGroup.CAP, R.string.myco_c_funnel) { it.capShape == CapShape.FUNNEL || it.capShape == CapShape.DEPRESSED })
         add(Criterion("c_wrinkled", CriterionGroup.CAP, R.string.myco_c_wrinkled) { it.capShape == CapShape.MOREL || it.capShape == CapShape.BRAIN })
@@ -128,6 +130,7 @@ object FungusCriteria {
         add(Criterion("s_volva", CriterionGroup.STIPE, R.string.myco_c_volva) { it.volva != VolvaKind.NONE })
         add(Criterion("s_no_volva", CriterionGroup.STIPE, R.string.myco_c_no_volva) { it.volva == VolvaKind.NONE })
         add(Criterion("m_cluster", CriterionGroup.MORE, R.string.myco_c_cluster) { it.cluster > 1 })
+        add(Criterion("m_latex", CriterionGroup.MORE, R.string.myco_c_latex) { it.latex != 0 })
         add(Criterion("m_stains", CriterionGroup.MORE, R.string.myco_c_stains) { look -> look.stains.any { it.strength >= 0.5f } })
         add(Criterion("sp_white", CriterionGroup.SPORE, R.string.myco_c_spore_white) { sporeTone(it) == Tone.WHITE })
         add(Criterion("sp_pink", CriterionGroup.SPORE, R.string.myco_c_spore_pink) { sporeTone(it) == Tone.PINK })

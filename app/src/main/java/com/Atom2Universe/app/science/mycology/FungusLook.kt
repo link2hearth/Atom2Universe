@@ -21,7 +21,7 @@ enum class PlateMode(@param:StringRes val label: Int) {
 }
 
 enum class CapShape { CONVEX, BELL, DEPRESSED, FUNNEL, MOREL, BRAIN }
-enum class Hymenium { GILLS, PORES, RIDGES, NONE }
+enum class Hymenium { GILLS, PORES, RIDGES, TEETH, NONE }
 enum class GillAttach { FREE, ADNATE, DECURRENT }
 enum class Interior { SOLID, STUFFED, HOLLOW, CHAMBERED }
 enum class StipeForm { CYLINDER, CLUB, BULB, MARGINATE, TAPER_DOWN, FLARED, BARREL }
@@ -40,6 +40,10 @@ sealed class CapDeco {
     class Flakes(val color: Int, val count: Int, val size: Float) : CapDeco()
     /** Mèches retroussées étagées sur un chapeau haut (coprin chevelu) : [rows] étages, [size] en cm. */
     class Shaggy(val color: Int, val rows: Int, val size: Float) : CapDeco()
+    /** Cercles concentriques plus foncés sur le chapeau (lactaires) : [count] zones. */
+    class Zones(val color: Int, val count: Int, val alpha: Int = 110) : CapDeco()
+    /** Craquelures en pavage (russule verdoyante, bolet à chair jaune) : [cell] = taille d'une plaque, en cm. */
+    class Cracks(val color: Int, val cell: Float, val alpha: Int = 190) : CapDeco()
     /** Fines stries sur la marge (amanite panthère). */
     class Striate(val alpha: Int = 120) : CapDeco()
     /** Surface visqueuse et brillante. */
@@ -60,9 +64,12 @@ sealed class StipeDeco {
     class Scales(val color: Int, val from: Float) : StipeDeco()
     /** Sillons verticaux (gyromitre). */
     class Furrows(val color: Int) : StipeDeco()
+    /** Petits points ou fossettes régulièrement répartis (bolet à pied rouge, lactaires) ; [spacing] et [size] en cm. */
+    class Dots(val color: Int, val spacing: Float, val size: Float, val alpha: Int = 220) : StipeDeco()
 }
 
-enum class StainZone { CAP_SKIN, ABOVE_TUBES, STIPE_BASE, STIPE_ALL, STIPE_TOP, CAP_EDGE, HYMENIUM }
+/** [STIPE_CUT] : la chair du pied, visible seulement à la coupe (le pied entier ne change pas de couleur de l'extérieur). */
+enum class StainZone { CAP_SKIN, ABOVE_TUBES, STIPE_BASE, STIPE_ALL, STIPE_TOP, STIPE_CUT, CAP_EDGE, HYMENIUM }
 
 /** Changement de couleur de la chair ou des lames à la blessure. */
 class Stain(val zone: StainZone, val color: Int, val strength: Float)
@@ -130,6 +137,8 @@ class FungusLook(
     val stipeFlesh: Int = flesh,
     val stains: List<Stain> = emptyList(),
     val spore: Int,
+    /** Couleur du lait qui perle à la coupe (lactaires) ; 0 = pas de lait. */
+    val latex: Int = 0,
     val cluster: Int = 1,
     val seed: Int = 1,
     // Repères

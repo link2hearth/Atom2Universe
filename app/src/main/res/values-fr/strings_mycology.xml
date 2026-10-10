@@ -45,6 +45,7 @@
     <string name="myco_c_gills">Lames</string>
     <string name="myco_c_pores">Pores (tubes)</string>
     <string name="myco_c_ridges">Plis</string>
+    <string name="myco_c_teeth">Aiguillons (piquants)</string>
     <string name="myco_c_none_under">Ni lames ni pores</string>
     <string name="myco_c_funnel">Creux ou en entonnoir</string>
     <string name="myco_c_wrinkled">Alvéolé ou plissé</string>
@@ -54,6 +55,7 @@
     <string name="myco_c_volva">Volve (sac à la base)</string>
     <string name="myco_c_no_volva">Sans volve</string>
     <string name="myco_c_cluster">En touffe</string>
+    <string name="myco_c_latex">Lait à la coupe</string>
     <string name="myco_c_stains">Change de couleur à la coupe</string>
     <string name="myco_c_spore_white">Blanche ou crème</string>
     <string name="myco_c_spore_pink">Rose</string>
@@ -96,7 +98,7 @@
     <!-- À propos -->
     <string name="myco_about_title">À propos de l’atlas</string>
     <string name="myco_about_intro">Un atlas pour apprendre à comparer, pas pour identifier : l’ANSES déconseille les applications de reconnaissance, qui se trompent trop souvent.</string>
-    <string name="myco_about_lookalikes">Les sosies sont choisis surtout d’après les confusions réellement observées en France par les centres antipoison (ANSES), pas d’après l’intuition.</string>
+    <string name="myco_about_lookalikes">Les sosies sont choisis surtout d’après les confusions réellement observées en France par les centres antipoison (ANSES), pas d’après l’intuition. Pour les comestibles, on a aussi ajouté des espèces que les cueilleurs apportent souvent au contrôle (laboratoire cantonal de Bâle-Ville, rapports de 2022, 2024 et 2025).</string>
     <string name="myco_about_method">Chaque statut est recoupé entre autorités sanitaires, textes officiels, revues médicales et encyclopédies. Quand les sources divergent, le statut le plus prudent l’emporte. Dernière vérification : octobre 2026.</string>
     <string name="myco_about_drawings">Les dessins sont des schémas originaux, faits d’après les descriptions publiées. Couleurs et proportions sont typiques ; dans la nature, elles varient beaucoup. Les mesures sont approximatives.</string>
     <string name="myco_about_rules_title">Rappels de l’ANSES</string>
@@ -216,6 +218,46 @@
         <item>Hypholome en touffe : jaune soufre, lames jaunes puis vertes, très amer. Toxique.</item>
         <item>Armillaire : aussi en touffe sur souches et racines ; l’ANSES lui prête des troubles digestifs, même après cuisson.</item>
     </string-array>
+    <string name="myco_g_greenforms_title">Phalloïde verte, ou pas ?</string>
+    <string name="myco_g_greenforms_evidence">Centre antipoison belge</string>
+    <string-array name="myco_g_greenforms_points">
+        <item>Phalloïde : anneau et volve en sac, chapeau lisse, lames blanches libres. Russule verdoyante : ni anneau ni volve, chapeau craquelé en plaques.</item>
+        <item>Russule : lames et chair cassantes comme de la craie. Phalloïde : chair fibreuse, qui ne se casse pas.</item>
+        <item>Tricholome équestre : lames et pied jaunes, sans anneau ni volve ; il ne se mange plus.</item>
+        <item>La forme verte de la phalloïde est prise pour une russule ou un tricholome vert.</item>
+    </string-array>
+    <string name="myco_g_whiteforms_title">Tout blanc, mais lequel ?</string>
+    <string name="myco_g_whiteforms_evidence">Centre antipoison belge</string>
+    <string-array name="myco_g_whiteforms_points">
+        <item>Amanite vireuse : anneau fragile et volve en sac, lames blanches. Colombette : ni anneau ni volve, chair à odeur de farine.</item>
+        <item>Entolome livide : chapeau gris clair très fibrilleux, lames jaunes puis roses, sporée rose. Colombette : lames blanches, sporée blanche.</item>
+        <item>La volve est sous terre : on ne cueille que des champignons entiers.</item>
+        <item>L’odeur de farine se retrouve chez la colombette et chez l’entolome livide : elle ne suffit pas.</item>
+    </string-array>
+    <string name="myco_g_clitopilus_title">Clitopile, ou clitocybe blanc ?</string>
+    <string name="myco_g_clitopilus_evidence">Centre antipoison belge</string>
+    <string-array name="myco_g_clitopilus_points">
+        <item>Clitopile : lames décurrentes, blanches puis roses, sporée rose. Clitocybe blanchi : lames blanchâtres à crème, sporée blanche.</item>
+        <item>Clitopile : forte odeur de farine fraîche. Clitocybe blanchi : odeur moins farineuse.</item>
+        <item>Les clitocybes blancs contiennent de la muscarine : sueurs et salivation de quelques minutes à 2 heures après le repas.</item>
+        <item>La sporée tranche : on laisse tomber les spores sur une feuille avant de conclure.</item>
+    </string-array>
+    <string name="myco_g_redpore_title">Pores rouges : lequel est-ce ?</string>
+    <string name="myco_g_redpore_evidence">Contrôles suisses</string>
+    <string-array name="myco_g_redpore_points">
+        <item>Bolet à pied rouge : pied jaune couvert de points rouges, sans réseau. Bolet de Satan : pied à fin réseau.</item>
+        <item>Pied rouge : chapeau brun foncé, velouté. Satan : chapeau blanchâtre, crayeux, très gros.</item>
+        <item>Les deux bleuissent : bleu marine intense chez le pied rouge, bleu pâle chez Satan.</item>
+        <item>Pied rouge : à cuire au moins 20 minutes. Satan : toxique, troubles digestifs.</item>
+    </string-array>
+    <string name="myco_g_milkcap_title">Lactaire délicieux, ou pas ?</string>
+    <string name="myco_g_milkcap_evidence">Centre antipoison belge</string>
+    <string-array name="myco_g_milkcap_points">
+        <item>Délicieux : lait orange. Toison : lait blanc, âcre.</item>
+        <item>Délicieux : chapeau orange, zones concentriques, pied à fossettes. Toison : chapeau rose et ocre, marge velue.</item>
+        <item>On coupe le champignon pour voir le lait avant de conclure : une fois la couleur du lait notée, la confusion n’est plus possible.</item>
+        <item>Le lactaire à toison irrite le tube digestif : nausées, vomissements, diarrhée.</item>
+    </string-array>
 
     <!-- Repères sur les dessins -->
     <string name="myco_l_olive_cap">Chapeau vert olive</string>
@@ -326,6 +368,43 @@
     <string name="myco_l_flesh_sulphur">Chair jaune soufre</string>
     <string name="myco_l_honey_cap">Chapeau miel, mèches sombres</string>
     <string name="myco_l_ring_white">Anneau blanc</string>
+    <string name="myco_l_wavy_edge">Bord ondulé</string>
+    <string name="myco_l_dark_inside">Intérieur sombre</string>
+    <string name="myco_l_smooth_grey_face">Face externe lisse, grise</string>
+    <string name="myco_l_hollow_all">Creux d’un bout à l’autre</string>
+    <string name="myco_l_thin_flesh">Chair mince</string>
+    <string name="myco_l_smooth_grey_under">Dessous lisse, gris</string>
+    <string name="myco_l_matt_cap">Chapeau mat, bord enroulé</string>
+    <string name="myco_l_cream_spines">Aiguillons crème</string>
+    <string name="myco_l_spines">Aiguillons</string>
+    <string name="myco_l_spines_no_gills">Aiguillons, pas de lames</string>
+    <string name="myco_l_turns_orange">Vire à l’orange</string>
+    <string name="myco_l_chestnut_cap">Chapeau châtain</string>
+    <string name="myco_l_pores_olive_yellow">Pores jaune olive</string>
+    <string name="myco_l_pores_yellow">Pores jaunes</string>
+    <string name="myco_l_smooth_stem">Pied lisse, sans réseau</string>
+    <string name="myco_l_cracked_cap">Chapeau craquelé</string>
+    <string name="myco_l_red_spotted_stem">Pied ponctué de rouge</string>
+    <string name="myco_l_dark_velvet_cap">Chapeau brun foncé, velouté</string>
+    <string name="myco_l_red_dots_stem">Pied à points rouges</string>
+    <string name="myco_l_flesh_yellow">Chair jaune vif</string>
+    <string name="myco_l_flared_stem">Pied court, évasé</string>
+    <string name="myco_l_zoned_cap">Zones concentriques</string>
+    <string name="myco_l_orange_gills">Lames orange</string>
+    <string name="myco_l_pitted_stem">Pied à fossettes</string>
+    <string name="myco_l_orange_milk">Lait orange</string>
+    <string name="myco_l_hairy_margin">Marge velue</string>
+    <string name="myco_l_white_milk">Lait blanc</string>
+    <string name="myco_l_lilac_cap">Chapeau lilas</string>
+    <string name="myco_l_violet_gills">Lames violettes</string>
+    <string name="myco_l_lilac_stem">Pied lilas, fibrilleux</string>
+    <string name="myco_l_orange_brown_cap">Chapeau orange brun</string>
+    <string name="myco_l_rust_far_gills">Lames rouille, espacées</string>
+    <string name="myco_l_tapering_stem">Pied qui s’effile</string>
+    <string name="myco_l_flesh_ochre">Chair ocre pâle</string>
+    <string name="myco_l_green_cracked_cap">Chapeau vert, craquelé</string>
+    <string name="myco_l_white_silky_cap">Chapeau blanc, soyeux</string>
+    <string name="myco_l_white_wide_gills">Lames blanches, larges</string>
 
     <!-- Amanite phalloïde -->
     <string name="myco_phalloides_name">Amanite phalloïde</string>
@@ -743,4 +822,160 @@
     </string-array>
     <string name="myco_mellea_note">Non recommandé : l’ANSES estime qu’il peut donner des troubles digestifs (diarrhée, vomissements, douleurs), quelques heures après le repas, et rien ne prouve qu’une cuisson prolongée ou la mise en conserve écarte le risque. Entre 1999 et 2015, 83 cas ont été enregistrés en France par les centres antipoison. Certains auteurs le disent comestible jeune et bien cuit. Il pousse en touffe comme des sosies toxiques, la galère marginée et l’hypholome.</string>
     <string name="myco_mellea_history">Longtemps cité comme un comestible moyen, parfois seulement jeune, il est jugé indigeste et parfois allergisant. En Italie, où on le mange beaucoup, il a causé 25 % des intoxications par champignons enregistrées par le centre antipoison de Milan entre 1994 et 1999. En 2015, l’ANSES estime qu’il peut provoquer des intoxications, y compris après mise en conserve. Un arrêté du 5 août 2016 suspend pour un an la vente d’armillaire frais non accompagné d’une information sur la cuisson complète.</string>
+
+    <!-- Trompette de la mort -->
+    <string name="myco_craterellus_name">Trompette de la mort</string>
+    <string name="myco_craterellus_alt">Horn of plenty</string>
+    <string-array name="myco_craterellus_traits">
+        <item>Cornet entièrement creux, très mince, rarement plus de 10 cm, au bord largement ondulé et festonné</item>
+        <item>Intérieur couvert d’écailles, gris noir à brun foncé selon l’humidité</item>
+        <item>Face externe presque lisse, gris clair à gris foncé : ni lames ni pores</item>
+        <item>Pied creux, de la couleur du chapeau, qui s’effile vers la base</item>
+        <item>Odeur agréable, fruitée (mirabelle) · sporée blanche</item>
+        <item>Feuillus (hêtre, chêne, châtaignier), en groupes, sols lourds et humides · août à novembre</item>
+    </string-array>
+    <string name="myco_craterellus_note">La face externe est lisse : pas de lames. Une très vieille russule noircie a un chapeau convexe et de larges lames ; la fausse chanterelle des charbonnières, sans valeur, a des lames fourchues et ne pousse que sur sol brûlé. Les champignons sauvages se préparent dans les 24 heures.</string>
+
+    <!-- Pied-de-mouton -->
+    <string name="myco_hydnum_name">Pied-de-mouton</string>
+    <string name="myco_hydnum_alt">Hedgehog mushroom</string>
+    <string-array name="myco_hydnum_traits">
+        <item>Chapeau mat, plus ou moins feutré, blanchâtre à brun ocre, parfois abricot, 3 à 10 cm ; marge longtemps enroulée, puis ondulée</item>
+        <item>Dessous garni d’aiguillons de 3 à 6 mm, crème, serrés et fragiles, un peu décurrents : pas de lames</item>
+        <item>Pied trapu, de la couleur des aiguillons, qui brunit par endroits</item>
+        <item>Chair ferme mais cassante, blanche, qui vire à l’orange · odeur fruitée, saveur douce, parfois poivrée ou amère chez les vieux</item>
+        <item>Sporée crème</item>
+        <item>Feuillus et conifères, en groupes, souvent en lignes ou en demi-cercles · fin d’été à novembre</item>
+    </string-array>
+    <string name="myco_hydnum_note">Des aiguillons à la place des lames ou des pores : le critère se voit tout de suite en retournant le chapeau. Les vieux exemplaires deviennent amers.</string>
+
+    <!-- Bolet bai -->
+    <string name="myco_badia_name">Bolet bai</string>
+    <string name="myco_badia_alt">Bay bolete</string>
+    <string-array name="myco_badia_traits">
+        <item>Chapeau brun châtain à brun bai, assez uniforme, 5 à 15 cm, un peu visqueux jeune puis sec ; marge enroulée chez le jeune</item>
+        <item>Tubes blanchâtres puis jaune verdâtre ; pores fins, de la même couleur, qui bleuissent nettement au toucher ou à la coupe</item>
+        <item>Pied cylindrique, 5 à 12 cm, lisse, sans réseau, brun clair à ocre, coriace en vieillissant</item>
+        <item>Chair blanchâtre, ferme, qui bleuit un peu au-dessus des tubes · odeur faible, saveur douce</item>
+        <item>Sporée brun olive</item>
+        <item>Surtout sous les conifères, sur mousse ou humus, sol non calcaire · été à automne</item>
+    </string-array>
+    <string name="myco_badia_note">À manger bien cuit : Tox Info Suisse demande au moins 20 minutes de cuisson. Le bleuissement n’est pas un signe de poison. Pas de réseau sur le pied, pas de pores rouges : sinon, ce n’est pas un bolet bai.</string>
+
+    <!-- Bolet à chair jaune -->
+    <string name="myco_chrysenteron_name">Bolet à chair jaune</string>
+    <string name="myco_chrysenteron_alt">Red-cracking bolete</string>
+    <string-array name="myco_chrysenteron_traits">
+        <item>Chapeau brun gris à brun olive, 3 à 8 cm, sec, qui se craquelle vite et laisse voir une chair rose rouge dans les fentes</item>
+        <item>Tubes jaunes puis jaune olive ; pores larges, anguleux, qui bleuissent à peine</item>
+        <item>Pied mince, 4 à 8 cm, jaune, strié ou ponctué de rouge grenat, plus pourpre vers la base</item>
+        <item>À la coupe, la moitié basse du pied devient rouge betterave ; chair jaunâtre dans le pied, blanchâtre dans le chapeau</item>
+        <item>Sporée brun olive</item>
+        <item>Tous les bois, de l’été à novembre</item>
+    </string-array>
+    <string name="myco_chrysenteron_note">Comestible de qualité moyenne, seulement cuit : on le choisit jeune et ferme et on retire le pied. Ses nombreux sosies du même groupe se distinguent à la coupe (couleur de la chair du pied), pas à l’œil nu.</string>
+
+    <!-- Bolet à pied rouge -->
+    <string name="myco_erythropus_name">Bolet à pied rouge</string>
+    <string name="myco_erythropus_alt">Dotted-stem bolete</string>
+    <string-array name="myco_erythropus_traits">
+        <item>Chapeau brun foncé à brun chocolat, 5 à 20 cm, sec, velouté</item>
+        <item>Tubes jaunes ; pores fins, rouge sang à rouge orangé, qui bleuissent fortement à la pression</item>
+        <item>Pied épais, 5 à 15 cm, jaune sous de fins points rouge vif : des points, pas de réseau</item>
+        <item>Chair jaune vif, ferme, qui bleuit fortement à la coupe (le bleu s’efface en une à quelques heures) · saveur douce</item>
+        <item>Sporée brun olive</item>
+        <item>Bois de feuillus et de conifères, sols non calcaires · juin à novembre</item>
+    </string-array>
+    <string name="myco_erythropus_note">À manger seulement bien cuit : cru ou insuffisamment cuit, il donne une gastro-entérite, et Tox Info Suisse demande au moins 20 minutes de cuisson. Un pied à points rouges et sans réseau est le critère principal qui le sépare du bolet de Satan et de plusieurs autres bolets rouges toxiques, dont le pied est en réseau.</string>
+
+    <!-- Clitopile petite prune -->
+    <string name="myco_prunulus_name">Clitopile petite prune</string>
+    <string name="myco_prunulus_alt">The miller</string>
+    <string-array name="myco_prunulus_traits">
+        <item>Chapeau blanc à gris pâle, mat, comme givré, 3 à 13 cm, creusé au centre avec l’âge ; marge enroulée et ondulée</item>
+        <item>Lames décurrentes, blanches puis roses à maturité</item>
+        <item>Pied court, 2 à 5 cm, souvent excentré et évasé en haut</item>
+        <item>Chair blanche et molle, à forte odeur de farine fraîche qui disparaît à la cuisson</item>
+        <item>Sporée rose à rose saumon</item>
+        <item>Herbe et lisières, sous feuillus ou conifères · été à automne, quelques semaines avant les cèpes</item>
+    </string-array>
+    <string name="myco_prunulus_note">Les clitocybes blancs toxiques (muscarine) sont parfois pris pour lui : leurs lames restent blanches ou crème et leur sporée est blanche, la sienne est rose. L’odeur de farine ne suffit pas : l’entolome livide l’a aussi.</string>
+
+    <!-- Lactaire délicieux -->
+    <string name="myco_deliciosus_name">Lactaire délicieux</string>
+    <string name="myco_deliciosus_alt">Saffron milk cap</string>
+    <string-array name="myco_deliciosus_traits">
+        <item>Chapeau orange, 5 à 12 cm, à zones concentriques plus foncées, creusé au centre puis en entonnoir ; marge d’abord enroulée</item>
+        <item>Lames serrées, orange pâle à jaune orangé</item>
+        <item>Lait orange vif, peu abondant, doux, qui rougit très lentement et ne verdit presque pas</item>
+        <item>Pied court, 2 à 4 cm, creusé de fossettes orange foncé</item>
+        <item>Chair orange carotte, qui fonce ; cœur du pied blanc · odeur fruitée</item>
+        <item>Sporée crème jaune pâle · avec les pins, bois secs et chauds · automne</item>
+    </string-array>
+    <string name="myco_deliciosus_note">Le lait orange est le critère décisif : on coupe pour le voir. Le lactaire à toison lui ressemble vu d’en haut, mais son lait est blanc et il irrite le tube digestif. Si la couleur du lait n’a pas été regardée, on ne conclut pas.</string>
+
+    <!-- Lactaire à toison -->
+    <string name="myco_torminosus_name">Lactaire à toison</string>
+    <string name="myco_torminosus_alt">Woolly milkcap</string>
+    <string-array name="myco_torminosus_traits">
+        <item>Chapeau rose et ocre, jusqu’à 10 cm, creusé au centre, avec des zones plus foncées ; marge enroulée, velue chez le jeune</item>
+        <item>Lames étroites, serrées, couleur chair</item>
+        <item>Lait blanc, âcre, poivré, qui ne change pas à l’air</item>
+        <item>Pied cylindrique, couleur chair pâle, finement duveteux, jusqu’à 8 cm</item>
+        <item>Sporée crème à jaune pâle</item>
+        <item>Surtout avec les bouleaux, en bois mixtes</item>
+    </string-array>
+    <string name="myco_torminosus_note">Toxique : nausées, vomissements et diarrhée moins de 3 heures après le repas, pendant moins de 12 heures environ (syndrome résinoïdien léger, d’après le centre antipoison belge). Son lait âcre irrite fortement le tube digestif. Le lait blanc le distingue du lactaire délicieux.</string>
+
+    <!-- Pied bleu -->
+    <string name="myco_nuda_name">Pied bleu</string>
+    <string name="myco_nuda_alt">Wood blewit</string>
+    <string-array name="myco_nuda_traits">
+        <item>Chapeau bleu violet à gris violet, souvent brunâtre au centre, 4 à 15 cm, lisse et humide ; marge enroulée</item>
+        <item>Lames violet foncé, serrées, qui passent au brun terne avec l’âge</item>
+        <item>Pied trapu, 2 à 10 cm, lilas à gris violet, un peu renflé à la base, strié de fibrilles argentées</item>
+        <item>Chair blanche teintée de violet en haut du pied · odeur agréable, fruitée, un peu anisée</item>
+        <item>Sporée rose pâle</item>
+        <item>Feuillus et conifères, sur litière, souvent en rond · arrière-saison, après les premières gelées</item>
+    </string-array>
+    <string name="myco_nuda_note">Certains cortinaires violets lui ressemblent et sont très toxiques : leur sporée est brun rouille (la sienne est rose pâle), ils gardent souvent des restes de cortine et leur odeur est désagréable. On se méfie de tous les cortinaires rouges, pourpres ou orangés.</string>
+
+    <!-- Cortinaire des montagnes -->
+    <string name="myco_orellanus_name">Cortinaire des montagnes</string>
+    <string name="myco_orellanus_alt">Fool’s webcap</string>
+    <string-array name="myco_orellanus_traits">
+        <item>Chapeau orange brun à roux (couleur de rocou), 2 à 8 cm, feutré à fines fibrilles ; marge souvent enroulée</item>
+        <item>Lames espacées, ocre à rougeâtre, puis rouille</item>
+        <item>Pied 4 à 9 cm, de la couleur du chapeau ou un peu plus pâle, jaunâtre en haut, qui s’effile vers la base ; cortine jaune pâle fugace, souvent absente</item>
+        <item>Chair ocre pâle, légère odeur de radis à la coupe</item>
+        <item>Sporée brun rouille</item>
+        <item>Bois de feuillus, des plaines à la montagne, assez rare · juillet à décembre</item>
+    </string-array>
+    <string name="myco_orellanus_note">Mortel pour le rein, sans signe immédiat. Des troubles digestifs peuvent apparaître 24 à 36 heures après le repas, ou manquer ; la soif intense, les vomissements, les douleurs lombaires et la rareté des urines viennent 2 à 20 jours plus tard. Il faut une dialyse ; la guérison survient dans 50 à 70 % des cas, et l’atteinte du rein est parfois définitive. Il ressemble à de nombreux cortinaires bruns de petite taille : on se méfie de tous les cortinaires rouges, pourpres ou orangés.</string>
+
+    <!-- Russule verdoyante -->
+    <string name="myco_virescens_name">Russule verdoyante</string>
+    <string name="myco_virescens_alt">Green-cracking russula</string>
+    <string-array name="myco_virescens_traits">
+        <item>Chapeau vert pâle à vert-de-gris sur fond crème, 5 à 12 cm, sec, qui se craquelle en petites plaques polygonales</item>
+        <item>Lames blanc crème, cassantes, parfois tachées de brun rouille</item>
+        <item>Pied blanc, 4 à 8 cm, épais, cassant, sans anneau ni volve</item>
+        <item>Chair blanche, épaisse, cassante · saveur douce, de noisette</item>
+        <item>Sporée blanche</item>
+        <item>Feuillus, bois chauds, lisières · juillet à octobre</item>
+    </string-array>
+    <string name="myco_virescens_note">Le chapeau craquelé en plaques, la chair qui se brise comme de la craie, l’absence d’anneau et de volve la distinguent de l’amanite phalloïde, qui est lisse, a un anneau et une volve, et dont la chair ne se casse pas. La forme verte de la phalloïde est parfois prise pour une russule (centre antipoison belge).</string>
+
+    <!-- Tricholome colombette -->
+    <string name="myco_columbetta_name">Tricholome colombette</string>
+    <string name="myco_columbetta_alt">Dove-coloured tricholoma</string>
+    <string-array name="myco_columbetta_traits">
+        <item>Chapeau blanc pur, parfois crème au centre, 4 à 10 cm, soyeux et brillant, un peu visqueux par temps humide ; conique puis convexe, marge ondulée</item>
+        <item>Lames blanches, larges</item>
+        <item>Pied blanc, 6 à 14 cm, cylindrique, duveteux, sans anneau ni volve</item>
+        <item>Chair blanche et ferme, odeur et saveur de farine</item>
+        <item>Sporée blanche</item>
+        <item>Chênes, hêtres, sols pauvres et acides · août à novembre</item>
+    </string-array>
+    <string name="myco_columbetta_note">Tout est blanc, comme chez l’amanite vireuse et chez la forme blanche de la phalloïde, mortelles : l’anneau et la volve, absents ici, les distinguent, et la volve est sous terre. L’entolome livide pâle lui ressemble aussi : chapeau très fibrilleux, lames jaunes ou roses. Assez rare en France.</string>
 </resources>

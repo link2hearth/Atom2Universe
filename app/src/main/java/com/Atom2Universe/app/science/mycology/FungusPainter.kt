@@ -270,6 +270,7 @@ internal class SpecimenPainter(
             Hymenium.GILLS -> faceGills(rx)
             Hymenium.PORES -> facePores(rx)
             Hymenium.RIDGES -> faceGills(rx)
+            Hymenium.TEETH -> facePores(rx)
             Hymenium.NONE -> {}
         }
         c.restore()
@@ -429,6 +430,23 @@ internal class SpecimenPainter(
                         x += w * 1.8f
                     }
                     y += 0.17f
+                }
+            }
+            is StipeDeco.Dots -> {
+                val g = Random(look.seed + 7)
+                fill(withAlpha(d.color, d.alpha))
+                var y = 0.2f
+                var line = 0
+                while (y < y0) {
+                    val half = stipeHalf(y)
+                    var x = axisAt(y) - half + (if (line % 2 == 0) 0f else d.spacing * 0.5f)
+                    while (x < axisAt(y) + half) {
+                        val w = d.size * (0.7f + g.nextFloat() * 0.6f)
+                        c.drawOval(RectF(px(x), py(y + w * 0.6f), px(x + w), py(y - w * 0.4f)), p)
+                        x += d.spacing * (0.8f + g.nextFloat() * 0.4f)
+                    }
+                    y += d.spacing * 0.8f
+                    line++
                 }
             }
             is StipeDeco.Furrows -> {
@@ -760,6 +778,43 @@ internal class SpecimenPainter(
                     flake.close(); c.drawPath(flake, p)
                 }
             }
+            is CapDeco.Cracks -> {
+                val g = Random(look.seed + 31)
+                stroke(withAlpha(d.color, d.alpha), max(hair * 1.1f, r * s * 0.014f))
+                val rings = max(3, (r / d.cell).roundToInt())
+                fun rhoOf(k: Int) = 0.97f * k / rings
+                // des couronnes irrégulières, reliées par de courts traits : un pavage de plaques
+                for (k in 1..rings) {
+                    val ring = Path()
+                    for (j in 0..40) {
+                        val pt = ringPoint(rhoOf(k) + (g.nextFloat() - 0.5f) * 0.03f, PI.toFloat() * j / 40f)
+                        if (j == 0) ring.moveTo(pt.x, pt.y) else ring.lineTo(pt.x, pt.y)
+                    }
+                    c.drawPath(ring, p)
+                }
+                for (k in 0 until rings) {
+                    val n = max(5, (PI.toFloat() * max(rhoOf(k + 1), 0.2f) * r / d.cell).roundToInt())
+                    for (j in 0 until n) {
+                        val t = PI.toFloat() * (j + 0.5f + (g.nextFloat() - 0.5f) * 0.7f) / n
+                        val a = ringPoint(rhoOf(k).coerceAtLeast(0.05f), t)
+                        val b = ringPoint(rhoOf(k + 1), t + (g.nextFloat() - 0.5f) * 0.12f)
+                        c.drawLine(a.x, a.y, b.x, b.y, p)
+                    }
+                }
+            }
+            is CapDeco.Zones -> {
+                val band = max(hair * 2.4f, r * s * 0.035f)
+                for (k in 1..d.count) {
+                    val rho = 0.12f + 0.84f * k / (d.count + 0.5f)
+                    stroke(withAlpha(d.color, d.alpha), band * (0.8f + 0.4f * k / d.count))
+                    val ring = Path()
+                    for (j in 0..40) {
+                        val pt = ringPoint(rho, PI.toFloat() * j / 40f)
+                        if (j == 0) ring.moveTo(pt.x, pt.y) else ring.lineTo(pt.x, pt.y)
+                    }
+                    c.drawPath(ring, p)
+                }
+            }
             is CapDeco.Striate -> {
                 stroke(withAlpha(darken(look.capEdge, 0.5f), d.alpha), hair * 0.8f)
                 val n = 46
@@ -870,9 +925,9 @@ internal class SpecimenPainter(
         // arête avant de la marge (en ∪), ondulée
         val m = 36
         for (k in 0..m) {
-            val b = PI.toFloat() * k / m
-            val rr = rimR(b)
-            body.lineTo(px(cx - rr * cos(b)), py(rimTop - rimRy * sin(b) * (1f + 0.12f * sin(b * 7f + look.seed))))
+            val a = PI.toFloat() * (1f + k.toFloat() / m)
+            val rr = rimR(a)
+            body.lineTo(px(cx + rr * cos(a)), py(rimTop + rimRy * sin(a) * (1f + 0.12f * sin(a * 7f + look.seed))))
         }
         for (i in steps downTo 0) {
             val y = neckY + look.capRise * i / steps
@@ -883,7 +938,7 @@ internal class SpecimenPainter(
         p.shader = LinearGradient(0f, py(rimTop), 0f, py(neckY), look.capEdge, look.hymColor, Shader.TileMode.CLAMP)
         c.drawPath(body, p)
         c.save(); c.clipPath(body)
-        funnelRidges(neckY, rimTop, rimRy, ::bodyHalf)
+        if (look.hymenium != Hymenium.NONE) funnelRidges(neckY, rimTop, rimRy, ::bodyHalf)
         p.reset(); p.isAntiAlias = true
         p.shader = LinearGradient(px(-r), 0f, px(r), 0f,
             intArrayOf(withAlpha(Color.BLACK, 70), 0, withAlpha(Color.WHITE, 40), 0, withAlpha(Color.BLACK, 90)),
@@ -915,9 +970,9 @@ internal class SpecimenPainter(
         stroke(withAlpha(lighten(look.capEdge, 0.4f), 120), hair * 2f)
         val lip = Path()
         for (k in 0..m) {
-            val b = PI.toFloat() * k / m
-            val rr = rimR(b)
-            val x = px(cx - rr * cos(b)); val y = py(rimTop - rimRy * sin(b) * (1f + 0.12f * sin(b * 7f + look.seed)) + 0.04f)
+            val a = PI.toFloat() * (1f + k.toFloat() / m)
+            val rr = rimR(a)
+            val x = px(cx + rr * cos(a)); val y = py(rimTop + rimRy * sin(a) * (1f + 0.12f * sin(a * 7f + look.seed)) + 0.04f)
             if (k == 0) lip.moveTo(x, y) else lip.lineTo(x, y)
         }
         c.drawPath(lip, p)
@@ -1207,7 +1262,25 @@ internal class SpecimenPainter(
         c.drawPath(stipePath(yTopStipe, arc = false), p)
         stroke(stipeOutline, hair); c.drawPath(stem, p)
 
-        if (hymOn) {
+        if (hymOn && look.hymenium == Hymenium.TEETH) {
+            // des aiguillons : de petits cônes qui pendent sous la chair
+            val step = 0.14f
+            var tx = -r + step
+            while (tx < r) {
+                if (abs(tx) >= gap) {
+                    val yb = fleshBottom(tx)
+                    val yt = hymBottom(tx)
+                    val w = step * 0.55f
+                    val tooth = Path().apply {
+                        moveTo(px(cx + tx - w), py(yb + 0.02f)); lineTo(px(cx + tx), py(yt)); lineTo(px(cx + tx + w), py(yb + 0.02f)); close()
+                    }
+                    fill(withAlpha(look.hymInner, 245)); c.drawPath(tooth, p)
+                    stroke(withAlpha(darken(look.hymInner, 0.5f), 200), hair * 0.7f); c.drawPath(tooth, p)
+                }
+                tx += step
+            }
+        }
+        if (hymOn && look.hymenium != Hymenium.TEETH) {
             p.reset(); p.isAntiAlias = true
             p.shader = LinearGradient(0f, py(y0 + 0.5f), 0f, py(y0 - look.hymDepth - 0.3f),
                 lighten(look.hymInner, 0.15f), darken(look.hymInner, 0.1f), Shader.TileMode.CLAMP)
@@ -1260,6 +1333,7 @@ internal class SpecimenPainter(
         }
         sectionRing()
         sectionVolva()
+        if (look.latex != 0) latexDrops(::hymBottom, gap)
         // repères
         anchor(Anchor.S_FLESH, cx + r * 0.45f, (top(r * 0.45f) + fleshBottom(r * 0.45f)) * 0.5f)
         if (hymOn) anchor(Anchor.S_HYM, cx + r * 0.55f, (fleshBottom(r * 0.55f) + hymBottom(r * 0.55f)) * 0.5f)
@@ -1269,6 +1343,28 @@ internal class SpecimenPainter(
         anchor(Anchor.S_CAVITY, 0f, y0 * 0.5f)
         if (look.ring != RingKind.NONE) anchor(Anchor.S_RING, stipeHalf(look.ringAt * y0) + 0.2f, look.ringAt * y0 - 0.1f)
         if (look.volva != VolvaKind.NONE) anchor(Anchor.S_VOLVA, stipeHalf(0.5f) + 0.3f, look.volvaH.coerceAtLeast(look.bulbH) * 0.5f)
+    }
+
+    /** Des gouttes de lait qui perlent sous les lames, de part et d'autre du pied. */
+    private fun latexDrops(hymBottom: (Float) -> Float, gap: Float) {
+        val dd = max(hair * 2.2f, 0.085f * s)
+        val g = Random(look.seed + 61)
+        for (sgn in intArrayOf(-1, 1)) for (k in 0 until 4) {
+            val x = sgn * (gap + (r - gap) * (0.16f + 0.2f * k + 0.05f * g.nextFloat()))
+            val bx = px(cx + x)
+            val by = py(hymBottom(x)) + hair * 0.5f
+            val len = dd * (2.0f + 0.7f * g.nextFloat())
+            val drop = Path().apply {
+                moveTo(bx, by)
+                cubicTo(bx + dd * 0.95f, by + len * 0.55f, bx + dd * 0.95f, by + len * 0.95f, bx, by + len)
+                cubicTo(bx - dd * 0.95f, by + len * 0.95f, bx - dd * 0.95f, by + len * 0.55f, bx, by)
+                close()
+            }
+            fill(withAlpha(look.latex, 240)); c.drawPath(drop, p)
+            stroke(withAlpha(darken(look.latex, 0.4f), 190), hair * 0.6f); c.drawPath(drop, p)
+            fill(withAlpha(Color.WHITE, 150)); c.drawOval(RectF(bx - dd * 0.35f, by + len * 0.45f, bx - dd * 0.05f, by + len * 0.7f), p)
+            if (sgn == 1 && k == 1) anchors[Anchor.S_STAIN] = PointF(bx, by + len * 0.6f)
+        }
     }
 
     private fun stainsSection(fleshBottom: (Float) -> Float, top: (Float) -> Float, thick: (Float) -> Float) {
@@ -1309,7 +1405,7 @@ internal class SpecimenPainter(
             val (a, b) = when (st.zone) {
                 StainZone.STIPE_BASE -> 0f to yTop * 0.5f
                 StainZone.STIPE_TOP -> yTop * 0.65f to yTop
-                StainZone.STIPE_ALL -> 0f to yTop
+                StainZone.STIPE_ALL, StainZone.STIPE_CUT -> 0f to yTop
                 else -> continue
             }
             p.reset(); p.isAntiAlias = true
@@ -1318,6 +1414,7 @@ internal class SpecimenPainter(
             else LinearGradient(0f, py(a), 0f, py(b), withAlpha(st.color, (st.strength * 160).roundToInt()), withAlpha(st.color, (st.strength * 160).roundToInt()), Shader.TileMode.CLAMP)
             c.drawRect(px(-3f), py(b), px(3f), py(a), p)
             if (st.zone == StainZone.STIPE_BASE) anchor(Anchor.S_STAIN, 0f, yTop * 0.14f)
+            else if (st.zone == StainZone.STIPE_CUT) anchor(Anchor.S_STAIN, 0f, yTop * 0.5f)
         }
     }
 
@@ -1464,6 +1561,36 @@ internal class SpecimenPainter(
             c.drawRect(px(-r - 1f), py(rimTop + 1f), px(r + 1f), py(-0.1f), p)
             anchor(Anchor.S_STAIN, 0f, neckY * 0.6f)
         }
+        if (look.interior == Interior.HOLLOW) {
+            // creux d'un bout à l'autre : le canal du pied débouche dans la coupe, entre deux parois minces
+            val wall = max(0.1f, hw0 * 0.2f)
+            val yTopChannel = max(rimTop - (look.capRise * 0.34f + look.dip), 0.5f) + 0.05f
+            fun half(y: Float) = max(0.08f, (if (y <= neckY) stipeHalf(y) else outerHalf(y)) - wall)
+            val channel = Path()
+            val m = 24
+            for (i in 0..m) {
+                val y = 0.3f + (yTopChannel - 0.3f) * i / m
+                if (i == 0) channel.moveTo(px(-half(y)), py(y)) else channel.lineTo(px(-half(y)), py(y))
+            }
+            for (i in m downTo 0) {
+                val y = 0.3f + (yTopChannel - 0.3f) * i / m
+                channel.lineTo(px(half(y)), py(y))
+            }
+            channel.close()
+            p.reset(); p.isAntiAlias = true
+            p.shader = LinearGradient(px(-hw0), 0f, px(hw0), 0f,
+                intArrayOf(darken(look.flesh, 0.45f), darken(look.flesh, 0.2f), lighten(look.flesh, 0.08f)), floatArrayOf(0f, 0.55f, 1f), Shader.TileMode.CLAMP)
+            c.drawPath(channel, p)
+            // le contour ne ferme pas le haut : le canal débouche dans la coupe
+            val edge = Path()
+            for (i in m downTo 0) {
+                val y = 0.3f + (yTopChannel - 0.3f) * i / m
+                if (i == m) edge.moveTo(px(-half(y)), py(y)) else edge.lineTo(px(-half(y)), py(y))
+            }
+            for (i in 0..m) edge.lineTo(px(half(0.3f + (yTopChannel - 0.3f) * i / m)), py(0.3f + (yTopChannel - 0.3f) * i / m))
+            stroke(withAlpha(darken(look.flesh, 0.62f), 200), hair); c.drawPath(edge, p)
+            anchor(Anchor.S_CAVITY, 0f, neckY * 0.55f)
+        }
         c.restore()
         // plis sous le chapeau (petites bosses émoussées) le long de la face externe
         if (look.hymenium != Hymenium.NONE) {
@@ -1489,6 +1616,14 @@ internal class SpecimenPainter(
         }
         c.drawPath(skin, p)
         stroke(outline, hair); c.drawPath(body, p)
+        if (look.interior == Interior.HOLLOW) {
+            // la bouche du canal : le trait du fond de la coupe ne traverse pas l'ouverture
+            val mouth = max(0.08f, hw0 - max(0.1f, hw0 * 0.2f))
+            val yMouth = rimTop - (look.capRise * 0.34f + look.dip)
+            p.reset(); p.isAntiAlias = true
+            p.color = darken(look.flesh, 0.22f)
+            c.drawRect(px(-mouth + 0.03f), py(yMouth + 0.07f), px(mouth - 0.03f), py(yMouth - 0.09f), p)
+        }
         anchor(Anchor.S_FLESH, r * 0.45f, rimTop - look.capRise * 0.18f)
         anchor(Anchor.S_HYM, outerHalf(neckY + look.capRise * 0.6f), neckY + look.capRise * 0.6f)
         anchor(Anchor.S_STIPE, 0f, neckY * 0.6f)
@@ -1720,7 +1855,35 @@ internal class SpecimenPainter(
                     drawLine(main, light, thin); drawLine(branchEnd, light, thin * 0.9f)
                 }
             }
+            Hymenium.TEETH -> {
+                val sp = max(ur * 0.03f, hair * 2.2f)
+                var rr = ur * 0.18f
+                while (rr < ur * rim) {
+                    val count = max(10, (2f * PI.toFloat() * rr / sp).roundToInt())
+                    for (j in 0 until count) {
+                        val a = 2f * PI.toFloat() * (j + (rr * 0.23f) % 1f) / count
+                        val tx = ucx + rr * cos(a); val ty = ucy + rr * sin(a)
+                        fill(withAlpha(darken(look.hymColor, 0.45f), 150)); c.drawCircle(tx + sp * 0.12f, ty + sp * 0.12f, max(hair * 0.8f, sp * 0.3f), p)
+                        fill(lighten(look.hymColor, 0.18f)); c.drawCircle(tx, ty, max(hair * 0.7f, sp * 0.24f), p)
+                    }
+                    rr += sp * 0.8f
+                }
+                p.reset(); p.isAntiAlias = true; p.color = withAlpha(darken(look.hymColor, 0.25f), 200)
+                c.drawCircle(ucx, ucy, hwPx * 1.2f, p)
+            }
             Hymenium.NONE -> {}
+        }
+        if (look.latex != 0) {
+            val g = Random(look.seed + 67)
+            repeat(9) {
+                val a = 2f * PI.toFloat() * g.nextFloat()
+                val rr = ur * (0.3f + 0.6f * g.nextFloat())
+                val dx = ucx + rr * cos(a); val dy = ucy + rr * sin(a)
+                val rad = max(hair * 1.4f, ur * 0.03f)
+                fill(withAlpha(look.latex, 235)); c.drawCircle(dx, dy, rad, p)
+                stroke(withAlpha(darken(look.latex, 0.4f), 190), hair * 0.6f); c.drawCircle(dx, dy, rad, p)
+                fill(withAlpha(Color.WHITE, 160)); c.drawCircle(dx - rad * 0.3f, dy - rad * 0.3f, rad * 0.28f, p)
+            }
         }
         c.restore()
         stroke(outline, hair * 1.2f); c.drawPath(shape, p)
@@ -1809,6 +1972,6 @@ internal fun FungusLook.asSingle(): FungusLook = this.let {
         hymInner = it.hymInner, attach = it.attach, hymDepth = it.hymDepth, forked = it.forked, crowd = it.crowd,
         ring = it.ring, ringAt = it.ringAt, ringColor = it.ringColor, volva = it.volva, volvaH = it.volvaH,
         volvaColor = it.volvaColor, flesh = it.flesh, stipeFlesh = it.stipeFlesh, stains = it.stains,
-        spore = it.spore, cluster = 1, seed = it.seed + 5
+        spore = it.spore, latex = it.latex, cluster = 1, seed = it.seed + 5
     )
 }

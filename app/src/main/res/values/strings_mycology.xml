@@ -45,6 +45,7 @@
     <string name="myco_c_gills">Gills</string>
     <string name="myco_c_pores">Pores (tubes)</string>
     <string name="myco_c_ridges">Ridges</string>
+    <string name="myco_c_teeth">Spines (teeth)</string>
     <string name="myco_c_none_under">Neither gills nor pores</string>
     <string name="myco_c_funnel">Hollow or funnel-shaped</string>
     <string name="myco_c_wrinkled">Pitted or folded</string>
@@ -54,6 +55,7 @@
     <string name="myco_c_volva">Volva (sac at the base)</string>
     <string name="myco_c_no_volva">No volva</string>
     <string name="myco_c_cluster">In a cluster</string>
+    <string name="myco_c_latex">Milk when cut</string>
     <string name="myco_c_stains">Changes colour when cut</string>
     <string name="myco_c_spore_white">White or cream</string>
     <string name="myco_c_spore_pink">Pink</string>
@@ -101,7 +103,7 @@
     <!-- About -->
     <string name="myco_about_title">About the atlas</string>
     <string name="myco_about_intro">An atlas for learning to compare, not to identify: ANSES, the French food-safety agency, advises against recognition apps, which are wrong too often.</string>
-    <string name="myco_about_lookalikes">Look-alikes are chosen mostly from the confusions actually seen in France by the poison centres (ANSES), not from intuition.</string>
+    <string name="myco_about_lookalikes">Look-alikes are chosen mostly from the confusions actually seen in France by poison centres (ANSES), not from intuition. Among the edible species, some were added because pickers often bring them to be checked (Basel-Stadt cantonal laboratory, reports for 2022, 2024 and 2025).</string>
     <string name="myco_about_method">Each status is cross-checked between health authorities, official texts, medical journals and encyclopedias. When sources disagree, the most cautious status wins. Last check: October 2026.</string>
     <string name="myco_about_drawings">Drawings are original diagrams made from published descriptions. Colours and proportions are typical; in nature they vary a lot. Sizes are approximate.</string>
     <string name="myco_about_rules_title">Reminders from ANSES</string>
@@ -221,6 +223,46 @@
         <item>Sulphur tuft: sulphur yellow, gills yellow then green, very bitter. Toxic.</item>
         <item>Honey fungus: also in tufts on stumps and roots; ANSES links it to digestive trouble, even after cooking.</item>
     </string-array>
+    <string name="myco_g_greenforms_title">Green death cap, or not?</string>
+    <string name="myco_g_greenforms_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_greenforms_points">
+        <item>Death cap: ring and sac-like volva, smooth cap, free white gills. Green-cracking russula: no ring, no volva, cap cracked into patches.</item>
+        <item>Russula: gills and flesh snap like chalk. Death cap: fibrous flesh that does not snap.</item>
+        <item>Yellow knight: yellow gills and stem, no ring, no volva; it is no longer eaten.</item>
+        <item>The green form of the death cap is mistaken for a russula or a green tricholoma.</item>
+    </string-array>
+    <string name="myco_g_whiteforms_title">All white, but which one?</string>
+    <string name="myco_g_whiteforms_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_whiteforms_points">
+        <item>Destroying angel: fragile ring and sac-like volva, white gills. Dove-coloured tricholoma: no ring, no volva, floury-smelling flesh.</item>
+        <item>Livid pinkgill: pale grey, very fibrous cap, yellow then pink gills, pink spores. Dove-coloured tricholoma: white gills, white spores.</item>
+        <item>The volva is underground: only whole mushrooms are picked.</item>
+        <item>The floury smell is found in both the dove-coloured tricholoma and the livid pinkgill: it is not enough.</item>
+    </string-array>
+    <string name="myco_g_clitopilus_title">Miller, or white clitocybe?</string>
+    <string name="myco_g_clitopilus_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_clitopilus_points">
+        <item>Miller: decurrent gills, white then pink, pink spores. Fool’s funnel: whitish to cream gills, white spores.</item>
+        <item>Miller: strong smell of fresh flour. Fool’s funnel: a less floury smell.</item>
+        <item>White clitocybes contain muscarine: sweating and salivation from a few minutes to 2 hours after the meal.</item>
+        <item>The spore print settles it: let the spores fall on a sheet of paper before concluding.</item>
+    </string-array>
+    <string name="myco_g_redpore_title">Red pores: which one?</string>
+    <string name="myco_g_redpore_evidence">Swiss mushroom checks</string>
+    <string-array name="myco_g_redpore_points">
+        <item>Dotted-stem bolete: yellow stem covered in red dots, no net. Satan’s bolete: stem with a fine net.</item>
+        <item>Dotted-stem: dark brown, velvety cap. Satan: whitish, chalky, very large cap.</item>
+        <item>Both turn blue: deep navy for the dotted-stem, pale blue for Satan’s.</item>
+        <item>Dotted-stem: cook at least 20 minutes. Satan’s: toxic, digestive upset.</item>
+    </string-array>
+    <string name="myco_g_milkcap_title">Saffron milk cap, or not?</string>
+    <string name="myco_g_milkcap_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_milkcap_points">
+        <item>Saffron milk cap: orange milk. Woolly milkcap: white, acrid milk.</item>
+        <item>Saffron milk cap: orange cap, concentric zones, pitted stem. Woolly milkcap: pink and ochre cap, hairy margin.</item>
+        <item>Cut the mushroom to see the milk before concluding: once the colour of the milk is noted, the confusion is no longer possible.</item>
+        <item>The woolly milkcap irritates the gut: nausea, vomiting, diarrhoea.</item>
+    </string-array>
 
     <!-- Plate labels -->
     <string name="myco_l_olive_cap">Olive-green cap</string>
@@ -331,6 +373,43 @@
     <string name="myco_l_flesh_sulphur">Sulphur-yellow flesh</string>
     <string name="myco_l_honey_cap">Honey cap, dark fibres</string>
     <string name="myco_l_ring_white">White ring</string>
+    <string name="myco_l_wavy_edge">Wavy margin</string>
+    <string name="myco_l_dark_inside">Dark inside</string>
+    <string name="myco_l_smooth_grey_face">Smooth grey outer face</string>
+    <string name="myco_l_hollow_all">Hollow throughout</string>
+    <string name="myco_l_thin_flesh">Thin flesh</string>
+    <string name="myco_l_smooth_grey_under">Smooth grey underside</string>
+    <string name="myco_l_matt_cap">Matt cap, rolled margin</string>
+    <string name="myco_l_cream_spines">Cream spines</string>
+    <string name="myco_l_spines">Spines</string>
+    <string name="myco_l_spines_no_gills">Spines, no gills</string>
+    <string name="myco_l_turns_orange">Turns orange</string>
+    <string name="myco_l_chestnut_cap">Chestnut cap</string>
+    <string name="myco_l_pores_olive_yellow">Olive-yellow pores</string>
+    <string name="myco_l_pores_yellow">Yellow pores</string>
+    <string name="myco_l_smooth_stem">Smooth stem, no net</string>
+    <string name="myco_l_cracked_cap">Cracked cap</string>
+    <string name="myco_l_red_spotted_stem">Stem spotted with red</string>
+    <string name="myco_l_dark_velvet_cap">Dark brown, velvety cap</string>
+    <string name="myco_l_red_dots_stem">Stem with red dots</string>
+    <string name="myco_l_flesh_yellow">Bright yellow flesh</string>
+    <string name="myco_l_flared_stem">Short, flared stem</string>
+    <string name="myco_l_zoned_cap">Concentric zones</string>
+    <string name="myco_l_orange_gills">Orange gills</string>
+    <string name="myco_l_pitted_stem">Pitted stem</string>
+    <string name="myco_l_orange_milk">Orange milk</string>
+    <string name="myco_l_hairy_margin">Hairy margin</string>
+    <string name="myco_l_white_milk">White milk</string>
+    <string name="myco_l_lilac_cap">Lilac cap</string>
+    <string name="myco_l_violet_gills">Violet gills</string>
+    <string name="myco_l_lilac_stem">Lilac, fibrous stem</string>
+    <string name="myco_l_orange_brown_cap">Orange-brown cap</string>
+    <string name="myco_l_rust_far_gills">Rust, widely spaced gills</string>
+    <string name="myco_l_tapering_stem">Tapering stem</string>
+    <string name="myco_l_flesh_ochre">Pale ochre flesh</string>
+    <string name="myco_l_green_cracked_cap">Green, cracked cap</string>
+    <string name="myco_l_white_silky_cap">White, silky cap</string>
+    <string name="myco_l_white_wide_gills">Wide white gills</string>
 
     <!-- Death cap -->
     <string name="myco_phalloides_name">Death cap</string>
@@ -780,4 +859,172 @@
     </string-array>
     <string name="myco_mellea_note">Not recommended: ANSES considers it can cause digestive trouble (diarrhoea, vomiting, pain) a few hours after the meal, and nothing shows that long cooking or canning removes the risk. Between 1999 and 2015, French poison centres recorded 83 cases. Some authors call it edible when young and well cooked. It grows in tufts like toxic look-alikes, the funeral bell and the sulphur tuft.</string>
     <string name="myco_mellea_history">Long cited as a middling edible, sometimes only when young, it is judged indigestible and sometimes allergenic. In Italy, where it is widely eaten, it caused 25% of the mushroom poisonings recorded by the Milan poison centre between 1994 and 1999. In 2015 ANSES judged it can cause poisonings, even after canning. An order of 5 August 2016 suspended for one year the sale of fresh honey fungus without a notice about full cooking.</string>
+
+    <!-- Horn of plenty -->
+    <string name="myco_craterellus_name">Horn of plenty</string>
+    <string name="myco_craterellus_alt">Trompette de la mort</string>
+    <string name="myco_craterellus_latin" translatable="false">Craterellus cornucopioides</string>
+    <string-array name="myco_craterellus_traits">
+        <item>Entirely hollow, very thin trumpet, rarely over 10 cm, with a widely wavy, scalloped margin</item>
+        <item>Inside covered in scales, grey-black to dark brown depending on moisture</item>
+        <item>Outer face almost smooth, light to dark grey: no gills, no pores</item>
+        <item>Hollow stem, the colour of the cap, tapering to the base</item>
+        <item>Pleasant fruity smell (mirabelle plum) · white spores</item>
+        <item>Broadleaf woods (beech, oak, chestnut), in groups, heavy damp soils · August to November</item>
+    </string-array>
+    <string name="myco_craterellus_note">The outer face is smooth: no gills. A very old, blackened russula has a convex cap and broad gills; the worthless charcoal-burner’s false chanterelle has forked gills and grows only on burnt ground. Wild mushrooms are prepared within 24 hours.</string>
+
+    <!-- Hedgehog mushroom -->
+    <string name="myco_hydnum_name">Hedgehog mushroom</string>
+    <string name="myco_hydnum_alt">Pied-de-mouton</string>
+    <string name="myco_hydnum_latin" translatable="false">Hydnum repandum</string>
+    <string-array name="myco_hydnum_traits">
+        <item>Matt, more or less felted cap, whitish to ochre-brown, sometimes apricot, 3 to 10 cm; margin long rolled, then wavy</item>
+        <item>Underside covered in 3 to 6 mm spines, cream, crowded and fragile, slightly decurrent: no gills</item>
+        <item>Stocky stem, the colour of the spines, browning in places</item>
+        <item>Firm but brittle white flesh that turns orange · fruity smell, mild taste, sometimes peppery or bitter in old ones</item>
+        <item>Cream spores</item>
+        <item>Broadleaf and conifer woods, in groups, often in lines or half-circles · late summer to November</item>
+    </string-array>
+    <string name="myco_hydnum_note">Spines instead of gills or pores: the feature shows at once when the cap is turned over. Old specimens turn bitter.</string>
+
+    <!-- Bay bolete -->
+    <string name="myco_badia_name">Bay bolete</string>
+    <string name="myco_badia_alt">Bolet bai</string>
+    <string name="myco_badia_latin" translatable="false">Imleria badia</string>
+    <string-array name="myco_badia_traits">
+        <item>Chestnut to bay-brown cap, fairly uniform, 5 to 15 cm, slightly sticky when young then dry; margin rolled in young ones</item>
+        <item>Tubes whitish then greenish yellow; fine pores of the same colour that turn clearly blue when pressed or cut</item>
+        <item>Cylindrical stem, 5 to 12 cm, smooth, no net, light brown to ochre, tough with age</item>
+        <item>Whitish, firm flesh that turns a little blue above the tubes · faint smell, mild taste</item>
+        <item>Olive-brown spores</item>
+        <item>Mostly under conifers, on moss or humus, non-chalky soil · summer to autumn</item>
+    </string-array>
+    <string name="myco_badia_note">Eat only well cooked: Tox Info Suisse asks for at least 20 minutes of cooking. The bluing is not a sign of poison. No net on the stem, no red pores: otherwise it is not a bay bolete.</string>
+
+    <!-- Red-cracking bolete -->
+    <string name="myco_chrysenteron_name">Red-cracking bolete</string>
+    <string name="myco_chrysenteron_alt">Bolet à chair jaune</string>
+    <string name="myco_chrysenteron_latin" translatable="false">Xerocomellus chrysenteron</string>
+    <string-array name="myco_chrysenteron_traits">
+        <item>Grey-brown to olive-brown cap, 3 to 8 cm, dry, quickly cracking to show pink-red flesh in the cracks</item>
+        <item>Yellow then olive-yellow tubes; wide, angular pores that hardly turn blue</item>
+        <item>Slender stem, 4 to 8 cm, yellow, ribbed or spotted with garnet red, more purplish towards the base</item>
+        <item>When cut, the lower half of the stem turns beetroot red; yellowish flesh in the stem, whitish in the cap</item>
+        <item>Olive-brown spores</item>
+        <item>All woods, summer to November</item>
+    </string-array>
+    <string name="myco_chrysenteron_note">An edible of middling quality, only cooked: pick young, firm ones and remove the stem. Its many look-alikes in the same group are told apart when cut (colour of the stem flesh), not by eye.</string>
+
+    <!-- Dotted-stem bolete -->
+    <string name="myco_erythropus_name">Dotted-stem bolete</string>
+    <string name="myco_erythropus_alt">Bolet à pied rouge</string>
+    <string name="myco_erythropus_latin" translatable="false">Neoboletus erythropus</string>
+    <string-array name="myco_erythropus_traits">
+        <item>Dark brown to chocolate-brown cap, 5 to 20 cm, dry, velvety</item>
+        <item>Yellow tubes; fine blood-red to orange-red pores that turn strongly blue when pressed</item>
+        <item>Thick stem, 5 to 15 cm, yellow under fine bright red dots: dots, not a net</item>
+        <item>Bright yellow, firm flesh that turns strongly blue when cut (the blue fades within an hour or a few) · mild taste</item>
+        <item>Olive-brown spores</item>
+        <item>Broadleaf and conifer woods, non-chalky soil · June to November</item>
+    </string-array>
+    <string name="myco_erythropus_note">Eat only well cooked: raw or undercooked it causes gastroenteritis, and Tox Info Suisse asks for at least 20 minutes of cooking. A stem with red dots and no net is the main feature that sets it apart from Satan’s bolete and several other toxic red boletes, whose stem has a net.</string>
+
+    <!-- The miller -->
+    <string name="myco_prunulus_name">The miller</string>
+    <string name="myco_prunulus_alt">Clitopile petite prune</string>
+    <string name="myco_prunulus_latin" translatable="false">Clitopilus prunulus</string>
+    <string-array name="myco_prunulus_traits">
+        <item>White to pale grey cap, matt, as if frosted, 3 to 13 cm, dished in the centre with age; margin rolled and wavy</item>
+        <item>Decurrent gills, white then pink when ripe</item>
+        <item>Short stem, 2 to 5 cm, often off-centre and flared at the top</item>
+        <item>Soft white flesh with a strong smell of fresh flour that disappears when cooked</item>
+        <item>Pink to salmon-pink spores</item>
+        <item>Grass and woodland edges, under broadleaves or conifers · summer to autumn, a few weeks before porcini</item>
+    </string-array>
+    <string name="myco_prunulus_note">Toxic white clitocybes (muscarine) are sometimes mistaken for it: their gills stay white or cream and their spores are white, whereas its spores are pink. The floury smell is not enough: the livid pinkgill has it too.</string>
+
+    <!-- Saffron milk cap -->
+    <string name="myco_deliciosus_name">Saffron milk cap</string>
+    <string name="myco_deliciosus_alt">Lactaire délicieux</string>
+    <string name="myco_deliciosus_latin" translatable="false">Lactarius deliciosus</string>
+    <string-array name="myco_deliciosus_traits">
+        <item>Orange cap, 5 to 12 cm, with darker concentric zones, dished in the centre then funnel-shaped; margin rolled at first</item>
+        <item>Close, pale orange to yellow-orange gills</item>
+        <item>Bright orange milk, not abundant, mild, turning red very slowly and barely turning green</item>
+        <item>Short stem, 2 to 4 cm, pitted with dark orange hollows</item>
+        <item>Carrot-orange flesh that darkens; white core in the stem · fruity smell</item>
+        <item>Pale cream-yellow spores · with pines, dry warm woods · autumn</item>
+    </string-array>
+    <string name="myco_deliciosus_note">The orange milk is the deciding feature: cut it to see it. The woolly milkcap looks like it from above, but its milk is white and it irritates the gut. If the colour of the milk has not been checked, do not conclude.</string>
+
+    <!-- Woolly milkcap -->
+    <string name="myco_torminosus_name">Woolly milkcap</string>
+    <string name="myco_torminosus_alt">Lactaire à toison</string>
+    <string name="myco_torminosus_latin" translatable="false">Lactarius torminosus</string>
+    <string-array name="myco_torminosus_traits">
+        <item>Pink and ochre cap, up to 10 cm, dished in the centre, with darker zones; margin rolled, hairy in young ones</item>
+        <item>Narrow, close, flesh-coloured gills</item>
+        <item>White milk, acrid, peppery, not changing in air</item>
+        <item>Cylindrical stem, pale flesh colour, finely downy, up to 8 cm</item>
+        <item>Cream to pale yellow spores</item>
+        <item>Mostly with birches, in mixed woods</item>
+    </string-array>
+    <string name="myco_torminosus_note">Toxic: nausea, vomiting and diarrhoea less than 3 hours after the meal, lasting under about 12 hours (mild resinoid syndrome, per the Belgian poison centre). Its acrid milk strongly irritates the gut. The white milk sets it apart from the saffron milk cap.</string>
+
+    <!-- Wood blewit -->
+    <string name="myco_nuda_name">Wood blewit</string>
+    <string name="myco_nuda_alt">Pied bleu</string>
+    <string name="myco_nuda_latin" translatable="false">Lepista nuda</string>
+    <string-array name="myco_nuda_traits">
+        <item>Blue-violet to grey-violet cap, often brownish in the centre, 4 to 15 cm, smooth and moist; margin rolled</item>
+        <item>Deep violet, close gills turning dull brown with age</item>
+        <item>Stocky stem, 2 to 10 cm, lilac to grey-violet, slightly swollen at the base, with silvery fibrils</item>
+        <item>White flesh tinged violet at the top of the stem · pleasant, fruity, slightly aniseed smell</item>
+        <item>Pale pink spores</item>
+        <item>Broadleaf and conifer woods, on litter, often in rings · late season, after the first frosts</item>
+    </string-array>
+    <string name="myco_nuda_note">Some violet webcaps look like it and are very toxic: their spores are rusty brown (its spores are pale pink), they often keep remnants of a cortina and their smell is unpleasant. All red, purple or orange webcaps are to be distrusted.</string>
+
+    <!-- Fool’s webcap -->
+    <string name="myco_orellanus_name">Fool’s webcap</string>
+    <string name="myco_orellanus_alt">Cortinaire des montagnes</string>
+    <string name="myco_orellanus_latin" translatable="false">Cortinarius orellanus</string>
+    <string-array name="myco_orellanus_traits">
+        <item>Orange-brown to tawny cap (annatto colour), 2 to 8 cm, felted with fine fibres; margin often rolled</item>
+        <item>Widely spaced gills, ochre to reddish, then rust</item>
+        <item>Stem 4 to 9 cm, the colour of the cap or slightly paler, yellowish at the top, tapering to the base; fleeting pale yellow cortina, often absent</item>
+        <item>Pale ochre flesh, faint smell of radish when cut</item>
+        <item>Rusty brown spores</item>
+        <item>Broadleaf woods, from lowlands to mountains, fairly rare · July to December</item>
+    </string-array>
+    <string name="myco_orellanus_note">Deadly for the kidney, with no early warning. Digestive upset may appear 24 to 36 hours after the meal, or be missing; intense thirst, vomiting, back pain and scant urine come 2 to 20 days later. Dialysis is needed; recovery happens in 50 to 70% of cases, and kidney damage is sometimes permanent. It looks like many small brown webcaps: all red, purple or orange webcaps are to be distrusted.</string>
+
+    <!-- Green-cracking russula -->
+    <string name="myco_virescens_name">Green-cracking russula</string>
+    <string name="myco_virescens_alt">Russule verdoyante</string>
+    <string name="myco_virescens_latin" translatable="false">Russula virescens</string>
+    <string-array name="myco_virescens_traits">
+        <item>Pale green to verdigris cap on a cream background, 5 to 12 cm, dry, cracking into small polygonal patches</item>
+        <item>Cream-white, brittle gills, sometimes spotted rusty brown</item>
+        <item>White stem, 4 to 8 cm, thick, brittle, no ring and no volva</item>
+        <item>Thick, brittle white flesh · mild, nutty taste</item>
+        <item>White spores</item>
+        <item>Broadleaf woods, warm places, edges · July to October</item>
+    </string-array>
+    <string name="myco_virescens_note">The cracked, patchy cap, the flesh that snaps like chalk, and the absence of ring and volva set it apart from the death cap, which is smooth, has a ring and a volva, and whose flesh does not snap. The green form of the death cap is sometimes mistaken for a russula (Belgian poison centre).</string>
+
+    <!-- Dove-coloured tricholoma -->
+    <string name="myco_columbetta_name">Dove-coloured tricholoma</string>
+    <string name="myco_columbetta_alt">Tricholome colombette</string>
+    <string name="myco_columbetta_latin" translatable="false">Tricholoma columbetta</string>
+    <string-array name="myco_columbetta_traits">
+        <item>Pure white cap, sometimes cream in the centre, 4 to 10 cm, silky and shiny, slightly sticky in damp weather; conical then convex, wavy margin</item>
+        <item>Broad white gills</item>
+        <item>White stem, 6 to 14 cm, cylindrical, downy, no ring and no volva</item>
+        <item>Firm white flesh, floury smell and taste</item>
+        <item>White spores</item>
+        <item>Oaks, beeches, poor acid soils · August to November</item>
+    </string-array>
+    <string name="myco_columbetta_note">Everything is white, as in the destroying angel and the white form of the death cap, which are deadly: the ring and the volva, both absent here, set them apart, and the volva is underground. A pale livid pinkgill looks like it too: very fibrous cap, yellow or pink gills. Fairly rare in France.</string>
 </resources>

@@ -37,6 +37,27 @@ class FungusCriteriaTest {
     }
 
     @Test
+    fun leLotTroisSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("hydnum"), setOf("u_teeth", "s_no_ring", "m_stains")))
+        assertTrue(FungusCriteria.matches(look("craterellus"), setOf("u_none", "c_funnel", "cap_BLACK", "stipe_GREY")))
+        assertTrue(FungusCriteria.matches(look("erythropus"), setOf("u_pores", "cap_BROWN", "stipe_YELLOW", "m_stains", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("chrysenteron"), setOf("u_pores", "w_small", "stipe_RED", "m_stains")))
+        assertTrue(FungusCriteria.matches(look("deliciosus"), setOf("m_latex", "cap_ORANGE", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("torminosus"), setOf("m_latex", "cap_PINK")))
+        assertTrue(FungusCriteria.matches(look("nuda"), setOf("sp_pink", "cap_PINK", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("prunulus"), setOf("sp_pink", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("orellanus"), setOf("sp_brown", "w_small")))
+        assertTrue(FungusCriteria.matches(look("virescens"), setOf("cap_GREEN", "s_no_ring", "s_no_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("columbetta"), setOf("cap_WHITE", "stipe_WHITE", "s_no_ring", "s_no_volva")))
+        // les lactaires seuls laissent couler un lait
+        assertEquals(setOf("deliciosus", "torminosus"), ids("m_latex"))
+        // ce que le dessin ne montre pas ne s'invente pas : pas d'aiguillons ailleurs, pas de volve chez le lot trois
+        assertEquals(setOf("hydnum"), ids("u_teeth"))
+        for (id in listOf("hydnum", "craterellus", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "torminosus", "nuda", "orellanus", "virescens", "columbetta"))
+            assertTrue("$id a une volve", look(id).volva == VolvaKind.NONE)
+    }
+
+    @Test
     fun ouDansUneLigneEtEntreLesLignes() {
         val brown = ids("cap_BROWN")
         val yellow = ids("cap_YELLOW")
