@@ -1,0 +1,142 @@
+{
+  "version": "2026-10",
+  "checked": "2026-10-10",
+  "sources": [
+    {
+      "id": "anses2023", "kind": "official",
+      "citation": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
+      "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf",
+      "species": ["phalloides", "pantherina", "muscaria", "satanas", "olearius", "cibarius", "edulis", "procera", "campestris", "xanthodermus", "virosa", "paxillus", "rubescens", "caesarea", "sinuatum", "oreades", "gambosa", "erubescens", "rivulosa"]
+    },
+    {
+      "id": "anses2025", "kind": "official",
+      "citation": "ANSES (2025). Intoxications liées à la cueillette de champignons : restez vigilants. 4 septembre 2025.",
+      "url": "https://www.anses.fr/fr/content/intoxications-liees-la-cueillette-de-champignons-restez-vigilants",
+      "species": ["*"]
+    },
+    {
+      "id": "anses2025en", "kind": "official",
+      "citation": "ANSES (2025). Mushroom picking: beware of the risks of poisoning. 25 September 2025.",
+      "url": "https://www.anses.fr/en/content/mushroom-picking-beware-of-the-risks-of-poisoning?lang=en",
+      "species": ["cibarius", "olearius", "phalloides", "procera"]
+    },
+    {
+      "id": "arr2004", "kind": "official",
+      "citation": "Arrêté du 16 juin 2004 portant suspension d’importation et de mise sur le marché du tricholome équestre et ordonnant son retrait (texte du Journal officiel, via FAOLEX).",
+      "url": "https://faolex.fao.org/docs/pdf/fra47242.pdf",
+      "species": ["equestre"]
+    },
+    {
+      "id": "arr2004b", "kind": "official",
+      "citation": "Arrêté du 18 novembre 2004 modifiant l’arrêté du 16 juin 2004 portant suspension d’importation et de mise sur le marché du tricholome équestre (texte du Journal officiel, via FAOLEX).",
+      "url": "https://faolex.fao.org/docs/pdf/fra48491.pdf",
+      "species": ["equestre"]
+    },
+    {
+      "id": "afssa2005", "kind": "official",
+      "citation": "Afssa (2005). Avis n° 2005-SA-0095 du 13 mai 2005 sur un projet de décret relatif aux interdictions concernant le champignon tricholome équestre.",
+      "url": "https://www.anses.fr/system/files/AUT2005sa0095.pdf",
+      "species": ["equestre"]
+    },
+    {
+      "id": "decret1991", "kind": "official",
+      "citation": "Décret n° 91-1039 du 7 octobre 1991 (Journal officiel du 11 octobre 1991) interdisant la vente des gyromitres : réponse du ministre de l’Économie à la question écrite n° 355, Assemblée nationale, 26 juillet 1993.",
+      "url": "https://questions.assemblee-nationale.fr/dyn/10/questions/QANR5L10QE355.pdf",
+      "species": ["gyromitra", "morchella"]
+    },
+    {
+      "id": "be", "kind": "official",
+      "citation": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
+      "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf",
+      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades"]
+    },
+    {
+      "id": "toxinfo", "kind": "official",
+      "citation": "Tox Info Suisse : numéro d’urgence 145, 24 heures sur 24.",
+      "url": "https://www.toxinfo.ch/",
+      "species": ["*"]
+    },
+    {
+      "id": "bedry2001", "kind": "journal",
+      "citation": "Bedry R., Baudrimont I., Deffieux G. et al. (2001). Wild-mushroom intoxication as a cause of rhabdomyolysis. N Engl J Med 345(11) : 798-802.",
+      "url": "https://doi.org/10.1056/nejmoa010581",
+      "species": ["equestre"]
+    },
+    {
+      "id": "stover2019", "kind": "journal",
+      "citation": "Stöver A., Haberl B., Helmreich C. et al. (2019). Fatal immunohaemolysis after the consumption of the poison pax mushroom: a focus on the diagnosis of the Paxillus syndrome with the aid of two case reports. Diagnostics 9(4) : 130.",
+      "url": "https://doi.org/10.3390/diagnostics9040130",
+      "species": ["paxillus"]
+    },
+    {
+      "id": "anses2015", "kind": "official",
+      "citation": "ANSES (2015). Avis relatif à l’évaluation des risques liés à la consommation des champignons dénommés Suillus granulatus, Russula olivacea et Armillaria mellea. Saisine n° 2014-SA-0256, 29 juillet 2015.",
+      "url": "https://www.anses.fr/fr/system/files/ERCA2014sa0256.pdf",
+      "species": ["mellea", "equestre", "gyromitra"]
+    },
+    {
+      "id": "arr2016", "kind": "official",
+      "citation": "Arrêté du 5 août 2016 relatif à la suspension de la mise sur le marché des champignons des espèces Suillus granulatus, Russula olivacea, Armillaria mellea et Lentinula edodes (JORF n° 0191 du 18 août 2016, NOR EINC1622686A).",
+      "url": "https://nouvelle-aquitaine.dreets.gouv.fr/sites/nouvelle-aquitaine.dreets.gouv.fr/IMG/pdf/arrete_du_5_aout_2016suspensionchampignons.pdf",
+      "species": ["mellea"]
+    },
+    {
+      "id": "dgfm2026", "kind": "society",
+      "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens"]
+    },
+    { "id": "wp-fr-phalloides", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite phalloïde", "url": "https://fr.wikipedia.org/wiki/Amanite_phallo%C3%AFde", "species": ["phalloides"] },
+    { "id": "wp-fr-virosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite vireuse", "url": "https://fr.wikipedia.org/wiki/Amanite_vireuse", "species": ["virosa"] },
+    { "id": "wp-fr-muscaria", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite tue-mouches", "url": "https://fr.wikipedia.org/wiki/Amanite_tue-mouches", "species": ["muscaria"] },
+    { "id": "wp-fr-pantherina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite panthère", "url": "https://fr.wikipedia.org/wiki/Amanite_panth%C3%A8re", "species": ["pantherina"] },
+    { "id": "wp-en-pantherina", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita pantherina", "url": "https://en.wikipedia.org/wiki/Amanita_pantherina", "species": ["pantherina"] },
+    { "id": "wp-fr-rubescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite rougissante", "url": "https://fr.wikipedia.org/wiki/Amanite_rougissante", "species": ["rubescens"] },
+    { "id": "wp-en-rubescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita rubescens", "url": "https://en.wikipedia.org/wiki/Amanita_rubescens", "species": ["rubescens"] },
+    { "id": "wp-fr-edulis", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Cèpe de Bordeaux", "url": "https://fr.wikipedia.org/wiki/C%C3%A8pe_de_Bordeaux", "species": ["edulis"] },
+    { "id": "wp-fr-felleus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet amer", "url": "https://fr.wikipedia.org/wiki/Bolet_amer", "species": ["felleus"] },
+    { "id": "wp-fr-satanas", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet de Satan", "url": "https://fr.wikipedia.org/wiki/Bolet_de_Satan", "species": ["satanas"] },
+    { "id": "wp-en-satanas", "kind": "encyclopedia", "citation": "Wikipedia (en): Rubroboletus satanas", "url": "https://en.wikipedia.org/wiki/Rubroboletus_satanas", "species": ["satanas"] },
+    { "id": "wp-fr-cibarius", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Cantharellus cibarius", "url": "https://fr.wikipedia.org/wiki/Cantharellus_cibarius", "species": ["cibarius"] },
+    { "id": "wp-fr-olearius", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Omphalotus olearius", "url": "https://fr.wikipedia.org/wiki/Omphalotus_olearius", "species": ["olearius"] },
+    { "id": "wp-en-olearius", "kind": "encyclopedia", "citation": "Wikipedia (en): Omphalotus olearius", "url": "https://en.wikipedia.org/wiki/Omphalotus_olearius", "species": ["olearius"] },
+    { "id": "wp-fr-aurantiaca", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hygrophoropsis aurantiaca", "url": "https://fr.wikipedia.org/wiki/Hygrophoropsis_aurantiaca", "species": ["aurantiaca"] },
+    { "id": "wp-en-aurantiaca", "kind": "encyclopedia", "citation": "Wikipedia (en): Hygrophoropsis aurantiaca", "url": "https://en.wikipedia.org/wiki/Hygrophoropsis_aurantiaca", "species": ["aurantiaca"] },
+    { "id": "wp-fr-procera", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Macrolepiota procera", "url": "https://fr.wikipedia.org/wiki/Macrolepiota_procera", "species": ["procera"] },
+    { "id": "wp-en-brunneoincarnata", "kind": "encyclopedia", "citation": "Wikipedia (en): Lepiota brunneoincarnata", "url": "https://en.wikipedia.org/wiki/Lepiota_brunneoincarnata", "species": ["brunneoincarnata"] },
+    { "id": "wp-fr-campestris", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Agaric champêtre", "url": "https://fr.wikipedia.org/wiki/Agaric_champ%C3%AAtre", "species": ["campestris"] },
+    { "id": "wp-fr-xanthodermus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Agaricus xanthodermus", "url": "https://fr.wikipedia.org/wiki/Agaricus_xanthodermus", "species": ["xanthodermus"] },
+    { "id": "wp-fr-morchella", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Morchella esculenta", "url": "https://fr.wikipedia.org/wiki/Morchella_esculenta", "species": ["morchella"] },
+    { "id": "wp-en-morchella", "kind": "encyclopedia", "citation": "Wikipedia (en): Morchella esculenta", "url": "https://en.wikipedia.org/wiki/Morchella_esculenta", "species": ["morchella"] },
+    { "id": "wp-fr-gyromitra", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Gyromitra esculenta", "url": "https://fr.wikipedia.org/wiki/Gyromitra_esculenta", "species": ["gyromitra"] },
+    { "id": "wp-en-gyromitra", "kind": "encyclopedia", "citation": "Wikipedia (en): Gyromitra esculenta", "url": "https://en.wikipedia.org/wiki/Gyromitra_esculenta", "species": ["gyromitra"] },
+    { "id": "wp-en-paxillus", "kind": "encyclopedia", "citation": "Wikipedia (en): Paxillus involutus", "url": "https://en.wikipedia.org/wiki/Paxillus_involutus", "species": ["paxillus"] },
+    { "id": "wp-fr-equestre", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholome équestre", "url": "https://fr.wikipedia.org/wiki/Tricholome_%C3%A9questre", "species": ["equestre"] },
+    { "id": "wp-en-equestre", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma equestre", "url": "https://en.wikipedia.org/wiki/Tricholoma_equestre", "species": ["equestre"] },
+    { "id": "wp-fr-caesarea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite des Césars", "url": "https://fr.wikipedia.org/wiki/Amanite_des_C%C3%A9sars", "species": ["caesarea"] },
+    { "id": "wp-en-caesarea", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita caesarea", "url": "https://en.wikipedia.org/wiki/Amanita_caesarea", "species": ["caesarea"] },
+    { "id": "wp-fr-sinuatum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Entolome livide", "url": "https://fr.wikipedia.org/wiki/Entolome_livide", "species": ["sinuatum"] },
+    { "id": "wp-en-sinuatum", "kind": "encyclopedia", "citation": "Wikipedia (en): Entoloma sinuatum", "url": "https://en.wikipedia.org/wiki/Entoloma_sinuatum", "species": ["sinuatum"] },
+    { "id": "wp-en-nebularis", "kind": "encyclopedia", "citation": "Wikipedia (en): Clitocybe nebularis", "url": "https://en.wikipedia.org/wiki/Clitocybe_nebularis", "species": ["nebularis"] },
+    { "id": "wp-fr-gambosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholome de la Saint-Georges", "url": "https://fr.wikipedia.org/wiki/Tricholome_de_la_Saint-Georges", "species": ["gambosa"] },
+    { "id": "wp-en-gambosa", "kind": "encyclopedia", "citation": "Wikipedia (en): Calocybe gambosa", "url": "https://en.wikipedia.org/wiki/Calocybe_gambosa", "species": ["gambosa"] },
+    { "id": "wp-fr-erubescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Inocybe de Patouillard", "url": "https://fr.wikipedia.org/wiki/Inocybe_de_Patouillard", "species": ["erubescens"] },
+    { "id": "wp-en-erubescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Inosperma erubescens", "url": "https://en.wikipedia.org/wiki/Inosperma_erubescens", "species": ["erubescens"] },
+    { "id": "wp-fr-oreades", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Marasme des Oréades", "url": "https://fr.wikipedia.org/wiki/Marasme_des_Or%C3%A9ades", "species": ["oreades"] },
+    { "id": "wp-en-oreades", "kind": "encyclopedia", "citation": "Wikipedia (en): Marasmius oreades", "url": "https://en.wikipedia.org/wiki/Marasmius_oreades", "species": ["oreades"] },
+    { "id": "wp-fr-rivulosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Clitocybe rivulosa", "url": "https://fr.wikipedia.org/wiki/Clitocybe_rivulosa", "species": ["rivulosa"] },
+    { "id": "wp-en-rivulosa", "kind": "encyclopedia", "citation": "Wikipedia (en): Clitocybe rivulosa", "url": "https://en.wikipedia.org/wiki/Clitocybe_rivulosa", "species": ["rivulosa"] },
+    { "id": "wp-fr-atramentaria", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Coprin noir d’encre", "url": "https://fr.wikipedia.org/wiki/Coprin_noir_d%27encre", "species": ["atramentaria"] },
+    { "id": "wp-en-atramentaria", "kind": "encyclopedia", "citation": "Wikipedia (en): Coprinopsis atramentaria", "url": "https://en.wikipedia.org/wiki/Coprinopsis_atramentaria", "species": ["atramentaria"] },
+    { "id": "wp-fr-comatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Coprin chevelu", "url": "https://fr.wikipedia.org/wiki/Coprin_chevelu", "species": ["comatus"] },
+    { "id": "wp-en-comatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Coprinus comatus", "url": "https://en.wikipedia.org/wiki/Coprinus_comatus", "species": ["comatus"] },
+    { "id": "wp-fr-galerina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Galère marginée", "url": "https://fr.wikipedia.org/wiki/Gal%C3%A8re_margin%C3%A9e", "species": ["galerina"] },
+    { "id": "wp-en-galerina", "kind": "encyclopedia", "citation": "Wikipedia (en): Galerina marginata", "url": "https://en.wikipedia.org/wiki/Galerina_marginata", "species": ["galerina"] },
+    { "id": "wp-fr-mutabilis", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Pholiote changeante", "url": "https://fr.wikipedia.org/wiki/Pholiote_changeante", "species": ["mutabilis"] },
+    { "id": "wp-en-mutabilis", "kind": "encyclopedia", "citation": "Wikipedia (en): Kuehneromyces mutabilis", "url": "https://en.wikipedia.org/wiki/Kuehneromyces_mutabilis", "species": ["mutabilis"] },
+    { "id": "wp-fr-fasciculare", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hypholome en touffe", "url": "https://fr.wikipedia.org/wiki/Hypholome_en_touffe", "species": ["fasciculare"] },
+    { "id": "wp-en-fasciculare", "kind": "encyclopedia", "citation": "Wikipedia (en): Hypholoma fasciculare", "url": "https://en.wikipedia.org/wiki/Hypholoma_fasciculare", "species": ["fasciculare"] },
+    { "id": "wp-fr-mellea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Armillaire couleur de miel", "url": "https://fr.wikipedia.org/wiki/Armillaire_couleur_de_miel", "species": ["mellea"] },
+    { "id": "wp-en-mellea", "kind": "encyclopedia", "citation": "Wikipedia (en): Armillaria mellea", "url": "https://en.wikipedia.org/wiki/Armillaria_mellea", "species": ["mellea"] }
+  ]
+}

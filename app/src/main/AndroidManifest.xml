@@ -863,6 +863,10 @@
             android:exported="false"
             android:theme="@style/Theme.A2U" />
         <activity
+            android:name=".science.mycology.MycologyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.A2U" />
+        <activity
             android:name=".science.ScienceHubActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"

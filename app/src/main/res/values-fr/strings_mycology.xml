@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Hub et écran principal -->
+    <string name="myco_title">Atlas des champignons</string>
+    <string name="myco_hub">Comestibles, toxiques et leurs sosies, côte à côte</string>
+    <string name="myco_back">Retour</string>
+    <string name="myco_about">À propos</string>
+    <string name="myco_close">Fermer</string>
+    <string name="myco_tab_lookalikes">Sosies</string>
+    <string name="myco_tab_species">Espèces</string>
+    <string name="myco_tab_changed">Autrefois</string>
+    <string name="myco_filter_all">Tous</string>
+    <string name="myco_warning">Ne jamais manger un champignon identifié avec cet atlas : fais vérifier ta récolte par un pharmacien ou une société de mycologie.</string>
+    <string name="myco_urgent">Urgence</string>
+    <plurals name="myco_species_count">
+        <item quantity="one">%1$d espèce</item>
+        <item quantity="other">%1$d espèces</item>
+    </plurals>
+
+    <!-- Critères de tri (écran Espèces) -->
+    <string name="myco_criteria">Critères</string>
+    <string name="myco_criteria_count">Critères · %1$d</string>
+    <string name="myco_criteria_clear">Effacer</string>
+    <string name="myco_cg_cap_width">Largeur du chapeau</string>
+    <string name="myco_cg_cap_color">Couleur du chapeau</string>
+    <string name="myco_cg_stipe_color">Couleur du pied</string>
+    <string name="myco_cg_under">Dessous du chapeau</string>
+    <string name="myco_cg_cap">Chapeau</string>
+    <string name="myco_cg_stipe">Anneau et base</string>
+    <string name="myco_cg_more">Autres traits</string>
+    <string name="myco_cg_spore">Sporée</string>
+    <string name="myco_tone_white">Blanc ou crème</string>
+    <string name="myco_tone_grey">Gris</string>
+    <string name="myco_tone_black">Noir</string>
+    <string name="myco_tone_beige">Beige ou ocre</string>
+    <string name="myco_tone_brown">Marron</string>
+    <string name="myco_tone_yellow">Jaune</string>
+    <string name="myco_tone_orange">Orange</string>
+    <string name="myco_tone_red">Rouge</string>
+    <string name="myco_tone_green">Vert ou olive</string>
+    <string name="myco_tone_pink">Rose ou violet</string>
+    <string name="myco_c_small">Moins de %1$d cm</string>
+    <string name="myco_c_medium">%1$d à %2$d cm</string>
+    <string name="myco_c_large">Plus de %1$d cm</string>
+    <string name="myco_c_gills">Lames</string>
+    <string name="myco_c_pores">Pores (tubes)</string>
+    <string name="myco_c_ridges">Plis</string>
+    <string name="myco_c_none_under">Ni lames ni pores</string>
+    <string name="myco_c_funnel">Creux ou en entonnoir</string>
+    <string name="myco_c_wrinkled">Alvéolé ou plissé</string>
+    <string name="myco_c_scaly">Verrues ou écailles</string>
+    <string name="myco_c_ring">Avec anneau</string>
+    <string name="myco_c_no_ring">Sans anneau</string>
+    <string name="myco_c_volva">Volve (sac à la base)</string>
+    <string name="myco_c_no_volva">Sans volve</string>
+    <string name="myco_c_cluster">En touffe</string>
+    <string name="myco_c_stains">Change de couleur à la coupe</string>
+    <string name="myco_c_spore_white">Blanche ou crème</string>
+    <string name="myco_c_spore_pink">Rose</string>
+    <string name="myco_c_spore_brown">Brune ou ocre</string>
+    <string name="myco_c_spore_black">Noire ou pourpre</string>
+
+    <!-- Statuts -->
+    <string name="myco_status_edible">Comestible</string>
+    <string name="myco_status_cooked">Comestible cuit</string>
+    <string name="myco_status_inedible">Non recommandé</string>
+    <string name="myco_status_toxic">Toxique</string>
+    <string name="myco_status_deadly">Mortel</string>
+    <string name="myco_sale_banned">Vente interdite en France</string>
+
+    <!-- Planche -->
+    <string name="myco_view_side">Vue</string>
+    <string name="myco_view_section">Coupe</string>
+    <string name="myco_view_under">Dessous</string>
+    <string name="myco_view_top">Dessus</string>
+    <string name="myco_marks">Repères</string>
+    <string name="myco_spores">Sporée</string>
+    <string name="myco_scale_cm">%1$d cm</string>
+
+    <!-- Fiche -->
+    <string name="myco_sec_traits">Reconnaître</string>
+    <string name="myco_sec_danger">À savoir</string>
+    <string name="myco_sec_lookalikes">À ne pas confondre avec</string>
+    <string name="myco_sec_history">Le classement a changé</string>
+    <string name="myco_sec_differences">Les différences</string>
+
+    <!-- Urgence -->
+    <string name="myco_urgent_title">Après un repas de champignons</string>
+    <string name="myco_urgent_hint">Garde un échantillon et une photo de ce qui a été mangé.</string>
+    <string name="myco_urgent_fr">France · centres antipoison</string>
+    <string name="myco_urgent_fr_vital">France · détresse vitale</string>
+    <string name="myco_urgent_be">Belgique · Centre Antipoisons</string>
+    <string name="myco_urgent_ch">Suisse · Tox Info Suisse</string>
+    <string name="myco_urgent_eu">Europe · urgences</string>
+
+    <!-- À propos -->
+    <string name="myco_about_title">À propos de l’atlas</string>
+    <string name="myco_about_intro">Un atlas pour apprendre à comparer, pas pour identifier : l’ANSES déconseille les applications de reconnaissance, qui se trompent trop souvent.</string>
+    <string name="myco_about_lookalikes">Les sosies sont choisis surtout d’après les confusions réellement observées en France par les centres antipoison (ANSES), pas d’après l’intuition.</string>
+    <string name="myco_about_method">Chaque statut est recoupé entre autorités sanitaires, textes officiels, revues médicales et encyclopédies. Quand les sources divergent, le statut le plus prudent l’emporte. Dernière vérification : octobre 2026.</string>
+    <string name="myco_about_drawings">Les dessins sont des schémas originaux, faits d’après les descriptions publiées. Couleurs et proportions sont typiques ; dans la nature, elles varient beaucoup. Les mesures sont approximatives.</string>
+    <string name="myco_about_rules_title">Rappels de l’ANSES</string>
+    <string name="myco_about_rules">• Ne cueillir que des champignons parfaitement connus, entiers, ni trop jeunes ni trop vieux.\n• Photographier la récolte avant de la cuire.\n• Ne jamais les manger crus : 20 à 30 minutes à la poêle, ou 15 minutes à l’eau bouillante (eau jetée).\n• Les garder au frais et les manger dans les deux jours.\n• Un panier plutôt qu’un sac plastique.\n• Ne pas en donner aux jeunes enfants.\n• Symptômes après un repas : appeler un centre antipoison en précisant le repas, parfois plus de 12 heures après.</string>
+    <string name="myco_about_sources">Sources</string>
+    <string name="myco_sources_official">Autorités et textes officiels</string>
+    <string name="myco_sources_journals">Revues médicales</string>
+    <string name="myco_sources_encyclopedia">Encyclopédie (CC BY-SA 4.0)</string>
+    <string name="myco_sources_society">Sociétés de mycologie</string>
+    <string name="myco_sources_by_species">Références par espèce</string>
+    <string name="myco_sources_open">Ouvrir</string>
+    <string name="myco_sources_error">Les sources n’ont pas pu être chargées.</string>
+    <string name="myco_sources_no_browser">Aucun navigateur disponible.</string>
+    <string name="myco_sources_secondary">Les ouvrages cités par ces articles (Bresinsky et Besl, Michelot et Toth, Flammer, Eyssartier et Roux, Clowez et Moreau…) ne sont connus que par eux.</string>
+
+    <!-- Statut passé -->
+    <string name="myco_change_paxillus">Autrefois mangé couramment, jusqu’à la Seconde Guerre mondiale. Un mycologue en meurt en 1944 ; le mécanisme immunitaire est décrit en 1985.</string>
+    <string name="myco_change_equestre">Autrefois vendu sur les marchés et réputé bon. Douze cas de destruction des muscles publiés en 2001, dont trois mortels. Vente suspendue en France en 2004, puis interdite : il ne se mange plus.</string>
+    <string name="myco_change_gyromitra">Autrefois mangé après ébouillantage. Vente interdite en France depuis 1991 ; classé mortel.</string>
+    <string name="myco_change_aurantiaca">Jugée vénéneuse en 1821, parfois donnée pour comestible avant 1999. Aujourd’hui : sans intérêt plutôt que dangereuse.</string>
+    <string name="myco_change_mellea">Longtemps cité comme un comestible moyen. L’ANSES estime en 2015 qu’il peut donner des troubles digestifs, même après une longue cuisson ; un arrêté de 2016 suspend la vente d’armillaire frais sans mention de cuisson complète.</string>
+
+    <!-- Groupes de sosies -->
+    <string name="myco_g_chanterelle_title">Girolle, ou pas ?</string>
+    <string name="myco_g_chanterelle_evidence">ANSES 2024</string>
+    <string-array name="myco_g_chanterelle_points">
+        <item>Girolle : des plis épais et fourchus, comme des veines. Clitocybe de l’olivier : de vraies lames fines et serrées.</item>
+        <item>La girolle sort de terre. Le clitocybe de l’olivier pousse en touffe sur du bois, une souche ou des racines.</item>
+        <item>Girolle : odeur d’abricot, chair blanc crème. Clitocybe de l’olivier : odeur d’huile, pied orange à l’intérieur.</item>
+        <item>Fausse girolle : lames fines, serrées, régulièrement fourchues, qui se détachent à l’ongle. Pas d’abricot.</item>
+    </string-array>
+    <string name="myco_g_boletus_title">Cèpe, ou pas ?</string>
+    <string name="myco_g_boletus_evidence">ANSES 2022</string>
+    <string-array name="myco_g_boletus_points">
+        <item>Cèpe : fin réseau blanc en haut du pied. Bolet amer : réseau brun foncé, épais.</item>
+        <item>Cèpe : pores blancs puis jaune-vert. Bolet amer : pores roses. Bolet de Satan : pores rouges.</item>
+        <item>Cèpe : chair blanche qui ne change pas. Bolet de Satan : chair qui bleuit.</item>
+        <item>Le bolet amer n’est pas toxique, mais son amertume gâche tout. Le bolet de Satan rend malade.</item>
+    </string-array>
+    <string name="myco_g_parasol_title">Coulemelle, ou pas ?</string>
+    <string name="myco_g_parasol_evidence">ANSES 2022</string>
+    <string-array name="myco_g_parasol_points">
+        <item>Coulemelle : grande (plus de 10 cm), pied zébré de brun, anneau double qui coulisse, pas de volve.</item>
+        <item>Amanite phalloïde : volve en sac à la base, anneau tombant, pied chiné d’olive, chapeau vert olive.</item>
+        <item>Amanite panthère : verrues blanches sur chapeau brun, bulbe à bord net, anneau lisse.</item>
+        <item>Petites lépiotes (moins de 10 cm) : mortelles, à ne jamais cueillir.</item>
+    </string-array>
+    <string name="myco_g_field_title">Rosé des prés, ou pas ?</string>
+    <string name="myco_g_field_evidence">ANSES 2022</string>
+    <string-array name="myco_g_field_points">
+        <item>Rosé des prés : lames roses puis brun chocolat. Amanites blanches : lames toujours blanches, volve en sac.</item>
+        <item>Agaric jaunissant : jaunit au frottement, bulbe à la base, odeur d’encre ou de phénol, anneau large.</item>
+        <item>Rosé des prés : pied en fuseau sans bulbe, anneau mince et fugace.</item>
+        <item>En 2022, deux décès après une amanite mortelle prise pour un rosé des prés ou un agaric des jachères.</item>
+    </string-array>
+    <string name="myco_g_morel_title">Morille, ou fausse morille ?</string>
+    <string name="myco_g_morel_evidence">Décret de 1991</string>
+    <string-array name="myco_g_morel_points">
+        <item>Morille : chapeau en nid d’abeilles. Gyromitre : plis arrondis comme un cerveau.</item>
+        <item>Coupe en long : la morille est creuse d’une seule cavité, chapeau soudé au pied par sa base.</item>
+        <item>Gyromitre : intérieur chambré, chapeau soudé au pied en plusieurs points.</item>
+        <item>La morille se mange toujours cuite. Le gyromitre est interdit à la vente en France.</item>
+    </string-array>
+    <string name="myco_g_amanita_title">Amanite rougissante, ou pas ?</string>
+    <string name="myco_g_amanita_evidence">Confusion classique</string>
+    <string-array name="myco_g_amanita_points">
+        <item>Rougissante : la chair et les lames rougissent à la blessure. Panthère : chair blanche, immuable.</item>
+        <item>Rougissante : anneau strié sur le dessus. Panthère : anneau lisse.</item>
+        <item>Panthère : bulbe à bord net, surmonté de bracelets ; verrues blanc pur sur brun foncé, marge striée.</item>
+        <item>Tue-mouches : chapeau rouge, lames et pied blancs. Lavée par la pluie, elle ressemble à l’oronge, dont les lames et le pied sont jaunes.</item>
+    </string-array>
+    <string name="myco_g_oronge_title">Oronge, ou pas ?</string>
+    <string name="myco_g_oronge_evidence">ANSES 2022</string>
+    <string-array name="myco_g_oronge_points">
+        <item>Oronge : lames et pied jaunes. Tue-mouches : lames et pied blancs.</item>
+        <item>Oronge : grande volve blanche en sac, toujours présente. Tue-mouches : base bulbeuse à bourrelets, sans sac.</item>
+        <item>Oronge : chapeau lisse, marge striée. Tue-mouches : verrues blanches, qui partent à la pluie et laissent un chapeau pâli.</item>
+        <item>Au stade œuf, l’oronge n’a aucun de ces repères : on ne la cueille pas.</item>
+    </string-array>
+    <string name="myco_g_stgeorge_title">Mousseron de la Saint-Georges, ou pas ?</string>
+    <string name="myco_g_stgeorge_evidence">ANSES 2022</string>
+    <string-array name="myco_g_stgeorge_points">
+        <item>Saint-Georges : lames blanches, sporée blanche. Inocybe de Patouillard : chapeau conique qui rougit, lames qui brunissent, sporée brun tabac.</item>
+        <item>Entolome livide : lames jaunâtres puis roses, sporée rose, et une odeur de farine aussi : l’odeur ne suffit pas.</item>
+        <item>Saint-Georges : sort au printemps. Entolome : surtout en automne, mais parfois dès l’été.</item>
+        <item>L’inocybe donne des sueurs et de la salivation ; l’entolome, des vomissements et une diarrhée importante.</item>
+    </string-array>
+    <string name="myco_g_fairyring_title">Faux mousseron, ou pas ?</string>
+    <string name="myco_g_fairyring_evidence">ANSES 2022</string>
+    <string-array name="myco_g_fairyring_points">
+        <item>Faux mousseron : lames très espacées, chapeau à mamelon. Clitocybe blanchi : lames serrées, chapeau givré, souvent creusé.</item>
+        <item>Tous deux poussent dans les pelouses, parfois en ronds de sorcières.</item>
+        <item>Faux mousseron : odeur de foin coupé, parfois de cyanure. Clitocybe : odeur de farine.</item>
+        <item>Le paxille enroulé, mortel, est aussi pris pour lui : marge très enroulée, lames décurrentes qui brunissent.</item>
+    </string-array>
+    <string name="myco_g_entoloma_title">Entolome livide, ou clitocybe nébuleux ?</string>
+    <string name="myco_g_entoloma_evidence">Centre antipoisons belge</string>
+    <string-array name="myco_g_entoloma_points">
+        <item>Entolome livide : lames échancrées, jaune beurre puis roses. Clitocybe nébuleux : lames pâles, serrées.</item>
+        <item>Clitocybe nébuleux : pied massif, gris clair, chapeau gris voilé de blanc. Entolome : pied blanc à crème, souvent en massue.</item>
+        <item>Les deux sentent la farine : l’odeur ne suffit pas.</item>
+        <item>Le clitocybe nébuleux peut donner des troubles digestifs ; l’entolome livide, une gastro-entérite sévère.</item>
+    </string-array>
+    <string name="myco_g_inkcap_title">Coprin chevelu, ou coprin noir d’encre ?</string>
+    <string name="myco_g_inkcap_evidence">Centre antipoisons belge</string>
+    <string-array name="myco_g_inkcap_points">
+        <item>Chevelu : chapeau cylindrique, blanc, couvert de mèches retroussées. Noir d’encre : chapeau ovoïde, gris, plissé.</item>
+        <item>Les deux se liquéfient en encre noire, à partir des lames.</item>
+        <item>Noir d’encre : jamais d’alcool pendant le repas ni dans les 72 heures qui suivent.</item>
+        <item>Chevelu : sans danger avec de l’alcool, mais à manger jeune et vite, blanc à la coupe.</item>
+    </string-array>
+    <string name="myco_g_woodtuft_title">Pholiote changeante, ou galère marginée ?</string>
+    <string name="myco_g_woodtuft_evidence">Centre antipoisons belge</string>
+    <string-array name="myco_g_woodtuft_points">
+        <item>Pholiote : le chapeau sèche du centre vers le bord, odeur douce. Galère marginée, mortelle : du bord vers le centre, odeur de farine.</item>
+        <item>Les écailles sous l’anneau ne suffisent pas : la galère peut en avoir aussi.</item>
+        <item>Hypholome en touffe : jaune soufre, lames jaunes puis vertes, très amer. Toxique.</item>
+        <item>Armillaire : aussi en touffe sur souches et racines ; l’ANSES lui prête des troubles digestifs, même après cuisson.</item>
+    </string-array>
+
+    <!-- Repères sur les dessins -->
+    <string name="myco_l_olive_cap">Chapeau vert olive</string>
+    <string name="myco_l_white_free_gills">Lames blanches libres</string>
+    <string name="myco_l_ring">Anneau</string>
+    <string name="myco_l_volva_sac">Volve en sac</string>
+    <string name="myco_l_free_gills">Lames libres</string>
+    <string name="myco_l_white_gills">Lames blanches</string>
+    <string name="myco_l_all_white">Tout blanc</string>
+    <string name="myco_l_ring_fragile">Anneau fragile</string>
+    <string name="myco_l_white_warts">Verrues blanches</string>
+    <string name="myco_l_rims">Bourrelets</string>
+    <string name="myco_l_flesh_white">Chair blanche</string>
+    <string name="myco_l_striate_margin">Marge striée</string>
+    <string name="myco_l_ring_smooth">Anneau lisse</string>
+    <string name="myco_l_bulb_edge">Bulbe à bord net</string>
+    <string name="myco_l_flesh_unchanging">Chair immuable</string>
+    <string name="myco_l_flakes">Flocons gris</string>
+    <string name="myco_l_ring_striate">Anneau strié</string>
+    <string name="myco_l_bulb_no_volva">Base sans volve</string>
+    <string name="myco_l_turns_red">Rougit</string>
+    <string name="myco_l_pores_white_yellow">Pores blancs, puis jaunes</string>
+    <string name="myco_l_net_white">Réseau blanc</string>
+    <string name="myco_l_tubes">Tubes</string>
+    <string name="myco_l_pores">Pores</string>
+    <string name="myco_l_pink_pores">Pores roses</string>
+    <string name="myco_l_net_dark">Réseau brun</string>
+    <string name="myco_l_flesh_bitter">Chair amère</string>
+    <string name="myco_l_tubes_pink">Tubes roses</string>
+    <string name="myco_l_red_pores">Pores rouges</string>
+    <string name="myco_l_net_red">Réseau rouge</string>
+    <string name="myco_l_pale_cap">Chapeau pâle</string>
+    <string name="myco_l_turns_blue">Bleuit</string>
+    <string name="myco_l_tubes_yellow">Tubes jaunes</string>
+    <string name="myco_l_folds">Plis, pas de lames</string>
+    <string name="myco_l_egg_yellow">Jaune d’œuf</string>
+    <string name="myco_l_flesh_cream">Chair blanc crème</string>
+    <string name="myco_l_forked_folds">Plis fourchus</string>
+    <string name="myco_l_true_gills">Vraies lames</string>
+    <string name="myco_l_cluster">En touffe</string>
+    <string name="myco_l_flesh_orange">Chair orange</string>
+    <string name="myco_l_fine_forked_gills">Lames fines fourchues</string>
+    <string name="myco_l_stem_darkens">Pied brunissant</string>
+    <string name="myco_l_flesh_soft">Chair molle</string>
+    <string name="myco_l_umbo">Mamelon brun</string>
+    <string name="myco_l_scales">Écailles</string>
+    <string name="myco_l_ring_sliding">Anneau double, mobile</string>
+    <string name="myco_l_banded_stem">Pied zébré</string>
+    <string name="myco_l_ring_zone">Zone annulaire</string>
+    <string name="myco_l_scaly_stem">Pied écailleux</string>
+    <string name="myco_l_pink_gills">Lames roses</string>
+    <string name="myco_l_ring_fugacious">Anneau fugace</string>
+    <string name="myco_l_no_bulb">Ni bulbe ni volve</string>
+    <string name="myco_l_pink_to_brown">Roses puis brunes</string>
+    <string name="myco_l_turns_yellow">Jaunit</string>
+    <string name="myco_l_ring_large">Anneau large</string>
+    <string name="myco_l_bulb">Bulbe</string>
+    <string name="myco_l_chrome_yellow">Jaune chrome</string>
+    <string name="myco_l_pits">Alvéoles</string>
+    <string name="myco_l_stem_granular">Pied granuleux</string>
+    <string name="myco_l_one_cavity">Une seule cavité</string>
+    <string name="myco_l_fused_base">Soudé par la base</string>
+    <string name="myco_l_brain">Plis de cerveau</string>
+    <string name="myco_l_furrowed">Pied sillonné</string>
+    <string name="myco_l_chambered">Chair chambrée</string>
+    <string name="myco_l_fused_points">Soudé en plusieurs points</string>
+    <string name="myco_l_inrolled">Marge enroulée</string>
+    <string name="myco_l_decurrent_gills">Lames décurrentes</string>
+    <string name="myco_l_no_ring">Pas d’anneau</string>
+    <string name="myco_l_flesh_yellowish">Chair jaunâtre</string>
+    <string name="myco_l_forked_gills">Lames fourchues</string>
+    <string name="myco_l_brown_sticky">Centre brun, visqueux</string>
+    <string name="myco_l_sulphur_gills">Lames jaune soufre</string>
+    <string name="myco_l_flesh_white_yellow">Chair blanche, jaune sous la peau</string>
+    <string name="myco_l_yellow_gills">Lames jaunes</string>
+    <string name="myco_l_ring_yellow">Anneau jaune, large</string>
+    <string name="myco_l_grey_beige_cap">Chapeau gris beige</string>
+    <string name="myco_l_gills_pink_ripe">Lames roses à maturité</string>
+    <string name="myco_l_flesh_mealy">Chair blanche, odeur de farine</string>
+    <string name="myco_l_grey_bloom_cap">Chapeau gris, voilé</string>
+    <string name="myco_l_cream_close_gills">Lames crème, serrées</string>
+    <string name="myco_l_stout_stem">Pied massif</string>
+    <string name="myco_l_flesh_thick_white">Chair blanche, épaisse</string>
+    <string name="myco_l_cream_cap">Chapeau crème</string>
+    <string name="myco_l_white_close_gills">Lames blanches, serrées</string>
+    <string name="myco_l_stubby_stem">Pied court, trapu</string>
+    <string name="myco_l_umbo_plain">Mamelon</string>
+    <string name="myco_l_far_gills">Lames très espacées</string>
+    <string name="myco_l_thin_tough_stem">Pied grêle, coriace</string>
+    <string name="myco_l_stem_hollow">Pied creux</string>
+    <string name="myco_l_white_frosted_cap">Chapeau blanc, givré</string>
+    <string name="myco_l_close_gills">Lames serrées</string>
+    <string name="myco_l_short_stem">Pied court</string>
+    <string name="myco_l_conical_cap">Chapeau conique, à fibres</string>
+    <string name="myco_l_gills_ochre_ripe">Lames ocre à maturité</string>
+    <string name="myco_l_egg_cap">Chapeau ovoïde, plissé</string>
+    <string name="myco_l_gills_to_ink">Lames qui noircissent</string>
+    <string name="myco_l_shaggy_cap">Chapeau cylindrique, à mèches</string>
+    <string name="myco_l_gills_pink_black">Lames roses, puis noires</string>
+    <string name="myco_l_tawny_cap">Chapeau fauve, pâlit en séchant</string>
+    <string name="myco_l_silky_below_ring">Soyeux sous l’anneau</string>
+    <string name="myco_l_tawny_gills">Lames fauves</string>
+    <string name="myco_l_pale_centre_cap">Centre pâle, bord foncé</string>
+    <string name="myco_l_scaly_below_ring">Écailles sous l’anneau</string>
+    <string name="myco_l_cinnamon_gills">Lames cannelle</string>
+    <string name="myco_l_sulphur_cap">Chapeau jaune soufre</string>
+    <string name="myco_l_gills_green_ripe">Lames verdâtres à maturité</string>
+    <string name="myco_l_flesh_sulphur">Chair jaune soufre</string>
+    <string name="myco_l_honey_cap">Chapeau miel, mèches sombres</string>
+    <string name="myco_l_ring_white">Anneau blanc</string>
+
+    <!-- Amanite phalloïde -->
+    <string name="myco_phalloides_name">Amanite phalloïde</string>
+    <string name="myco_phalloides_alt">Death cap</string>
+    <string-array name="myco_phalloides_traits">
+        <item>Chapeau vert olive à jaunâtre, 5 à 15 cm, plus pâle vers les bords</item>
+        <item>Lames blanches, qui restent blanches</item>
+        <item>Anneau en jupe sous le chapeau</item>
+        <item>Volve blanche en sac à la base, cachée dans le sol : elle peut manquer si des limaces l’ont mangée</item>
+        <item>Pied blanc, finement chiné d’olive</item>
+        <item>Odeur douce au début, puis écœurante · sporée blanche</item>
+        <item>Sous chênes, hêtres, châtaigniers… de la fin de l’été à l’automne</item>
+    </string-array>
+    <string name="myco_phalloides_note">Mortelle. Les signes arrivent tard, plus de 6 heures après le repas, quand le foie est déjà touché. Ni la cuisson, ni le séchage, ni la congélation ne détruisent la toxine, et un jeune exemplaire est déjà toxique. Une trentaine de grammes, soit la moitié d’un chapeau, peut suffire.</string>
+
+    <!-- Amanite vireuse -->
+    <string name="myco_virosa_name">Amanite vireuse</string>
+    <string name="myco_virosa_alt">Destroying angel</string>
+    <string-array name="myco_virosa_traits">
+        <item>Entièrement blanche, lames comprises</item>
+        <item>Chapeau conique à bombé, souvent irrégulier, jusqu’à 8–10 cm</item>
+        <item>Pied élancé, floconneux ou pelucheux, 10 à 15 cm</item>
+        <item>Anneau blanc fragile, souvent déchiré</item>
+        <item>Volve en sac à la base</item>
+        <item>Surtout sous conifères, parfois sous bouleaux · été à fin d’automne</item>
+    </string-array>
+    <string name="myco_virosa_note">Mortelle : même toxine que l’amanite phalloïde. Un seul exemplaire de taille moyenne peut suffire. Un champignon blanc n’est jamais « sûr ».</string>
+
+    <!-- Amanite tue-mouches -->
+    <string name="myco_muscaria_name">Amanite tue-mouches</string>
+    <string name="myco_muscaria_alt">Fly agaric</string>
+    <string-array name="myco_muscaria_traits">
+        <item>Chapeau rouge vif, 8 à 20 cm, couvert de verrues blanches</item>
+        <item>Après la pluie, les verrues partent et le rouge pâlit</item>
+        <item>Lames et pied blancs</item>
+        <item>Anneau blanc en jupe</item>
+        <item>Base bulbeuse ornée d’un ou deux anneaux de bourrelets, sans volve en sac</item>
+        <item>Sous bouleaux et conifères · automne</item>
+    </string-array>
+    <string name="myco_muscaria_note">Toxique : confusion, hallucinations, nausées, 30 à 90 minutes après le repas, parfois convulsions. Rarement mortelle, mais une hospitalisation peut être nécessaire. Lavée par la pluie, elle ressemble à l’oronge (amanite des Césars), dont les lames et le pied sont jaunes.</string>
+
+    <!-- Amanite panthère -->
+    <string name="myco_pantherina_name">Amanite panthère</string>
+    <string name="myco_pantherina_alt">Panther cap</string>
+    <string-array name="myco_pantherina_traits">
+        <item>Chapeau brun à brun noir, 4 à 15 cm, petites verrues blanc pur</item>
+        <item>Marge du chapeau striée</item>
+        <item>Lames blanches</item>
+        <item>Anneau blanc, lisse (sans stries)</item>
+        <item>Bulbe à bord net, surmonté d’un ou deux bracelets</item>
+        <item>Chair blanche qui ne change pas de couleur</item>
+        <item>Sous hêtres et autres feuillus, ou conifères · fin d’été à automne</item>
+    </string-array>
+    <string name="myco_pantherina_note">Toxique, plus que la tue-mouches : mêmes toxines, plus concentrées. Troubles digestifs violents, confusion, convulsions surtout chez l’enfant. En 2022, ce type d’intoxication représentait 21,6 % des cas graves en France (ANSES). Elle est parfois prise pour la coulemelle ou pour l’amanite rougissante.</string>
+
+    <!-- Amanite rougissante -->
+    <string name="myco_rubescens_name">Amanite rougissante</string>
+    <string name="myco_rubescens_alt">Blusher</string>
+    <string-array name="myco_rubescens_traits">
+        <item>Chapeau brun rosé à vineux, 4 à 15 cm, couvert de flocons gris sales</item>
+        <item>Chair et lames rougissent à la blessure (parfois peu par temps sec)</item>
+        <item>Anneau blanc, strié sur le dessus</item>
+        <item>Base renflée sans volve, souvent rongée par les larves</item>
+        <item>Lames blanches · sporée blanche</item>
+    </string-array>
+    <string name="myco_rubescens_note">Comestible seulement bien cuite : crue, elle est toxique (une hémolysine détruite par la chaleur). Facile à confondre avec l’amanite panthère, toxique.</string>
+
+    <!-- Cèpe de Bordeaux -->
+    <string name="myco_edulis_name">Cèpe de Bordeaux</string>
+    <string name="myco_edulis_alt">Porcini</string>
+    <string-array name="myco_edulis_traits">
+        <item>Chapeau brun, 4 à 20 cm, lisse, plus pâle sur la marge</item>
+        <item>Pores blancs, puis jaunes, puis vert olive</item>
+        <item>Pied massif et bulbeux, avec un fin réseau blanc surtout dans la moitié haute</item>
+        <item>Chair blanche qui ne change pas de couleur à la coupe, saveur douce</item>
+        <item>Sporée brun olive</item>
+        <item>Sous feuillus et conifères · été à automne</item>
+    </string-array>
+    <string name="myco_edulis_note">Réseau absent, chair qui bleuit ou grisonne, pores rouges : ce n’est pas un cèpe. Jeunes sujets fermes seulement, toujours cuits.</string>
+
+    <!-- Bolet amer -->
+    <string name="myco_felleus_name">Bolet amer</string>
+    <string name="myco_felleus_alt">Bitter bolete</string>
+    <string-array name="myco_felleus_traits">
+        <item>Chapeau brun clair à foncé, 4 à 15 cm</item>
+        <item>Pores d’abord blancs, puis rose sale, qui brunissent au toucher</item>
+        <item>Pied marqué d’un réseau brun foncé, épais et saillant</item>
+        <item>Chair blanche qui ne change pas, très amère</item>
+        <item>Sporée rose brun</item>
+        <item>Surtout sous chênes et hêtres</item>
+    </string-array>
+    <string name="myco_felleus_note">Immangeable : l’amertume, renforcée par la cuisson, gâche un plat entier. Peut provoquer des vomissements. Il contient un peu de muscarine, à des doses jugées trop faibles pour être dangereuses.</string>
+
+    <!-- Bolet de Satan -->
+    <string name="myco_satanas_name">Bolet de Satan</string>
+    <string name="myco_satanas_alt">Satan’s bolete</string>
+    <string-array name="myco_satanas_traits">
+        <item>Chapeau blanchâtre à gris, jusqu’à 25 cm</item>
+        <item>Pores jaune orangé puis rouge sang, qui bleuissent au toucher</item>
+        <item>Pied obèse, jaune en haut, rouge vif en bas, avec un fin réseau</item>
+        <item>Chair blanchâtre qui bleuit lentement à la coupe</item>
+        <item>Odeur faible chez les jeunes, de viande avariée chez les vieux</item>
+        <item>Chênes, hêtres, sols calcaires, régions chaudes · été</item>
+    </string-array>
+    <string name="myco_satanas_note">Toxique : vomissements, diarrhée parfois sanglante, surtout cru ou mal cuit. Rarement mortel chez l’adulte en bonne santé, mais violent. En 2022, c’était la deuxième espèce toxique la plus souvent retrouvée dans les cueillettes en France (ANSES).</string>
+
+    <!-- Girolle -->
+    <string name="myco_cibarius_name">Girolle</string>
+    <string name="myco_cibarius_alt">Chanterelle</string>
+    <string-array name="myco_cibarius_traits">
+        <item>Jaune d’œuf, 4 à 10 cm, en entonnoir, marge ondulée</item>
+        <item>Dessous à plis épais et fourchus, très décurrents : pas de vraies lames</item>
+        <item>Odeur fruitée d’abricot</item>
+        <item>Chair blanc crème, ferme</item>
+        <item>Pousse au sol, sous feuillus ou résineux, jamais sur le bois</item>
+        <item>Sporée jaune pâle · été à fin d’automne</item>
+    </string-array>
+    <string name="myco_cibarius_note">Plusieurs espèces voisines, comme la girolle pruineuse, sont aussi comestibles. Confusion fréquente avec le clitocybe de l’olivier, toxique : c’était l’une des plus courantes en 2024 (ANSES).</string>
+
+    <!-- Clitocybe de l'olivier -->
+    <string name="myco_olearius_name">Clitocybe de l’olivier</string>
+    <string name="myco_olearius_alt">Jack-o’-lantern</string>
+    <string-array name="myco_olearius_traits">
+        <item>Orange vif à cuivré, 6 à 14 cm, en entonnoir</item>
+        <item>Dessous à vraies lames fines et serrées, décurrentes, non fourchues</item>
+        <item>Pousse en touffes sur le bois, les souches ou les racines de feuillus</item>
+        <item>Chair orange, même à l’intérieur du pied</item>
+        <item>Odeur d’huile · lames faiblement lumineuses dans le noir</item>
+        <item>Midi de la France et pourtour méditerranéen, il remonte vers le nord</item>
+    </string-array>
+    <string name="myco_olearius_note">Toxique : nausées, vomissements, diarrhées importantes, crampes, risque de déshydratation. Parmi les cueillettes toxiques identifiées en 2022, 8,5 % en contenaient (ANSES).</string>
+
+    <!-- Fausse girolle -->
+    <string name="myco_aurantiaca_name">Fausse girolle</string>
+    <string name="myco_aurantiaca_alt">False chanterelle</string>
+    <string-array name="myco_aurantiaca_traits">
+        <item>Orange, 3 à 8 cm, chapeau velouté, centre plus foncé</item>
+        <item>Lames fines, serrées, fourchues à intervalles réguliers, qui se détachent à l’ongle</item>
+        <item>Pied grêle, brunissant jusqu’au noirâtre vers la base</item>
+        <item>Chair molle, jaune orangé, sans odeur d’abricot</item>
+        <item>Sous conifères, sur bois pourri ou humus</item>
+    </string-array>
+    <string name="myco_aurantiaca_note">Sans intérêt à table : chair molle, parfois mal tolérée. Les intoxications qu’on lui prêtait venaient le plus souvent de confusions, notamment avec le clitocybe de l’olivier.</string>
+    <string name="myco_aurantiaca_history">Le mycologue suédois Elias Fries la disait « vénéneuse » en 1821 ; avant 1999, des guides la donnaient parfois pour comestible. Aujourd’hui, on la juge sans intérêt plutôt que dangereuse.</string>
+
+    <!-- Coulemelle -->
+    <string name="myco_procera_name">Coulemelle</string>
+    <string name="myco_procera_alt">Parasol mushroom</string>
+    <string-array name="myco_procera_traits">
+        <item>Grande : chapeau jusqu’à 25 cm en parasol, avec un mamelon brun lisse au centre</item>
+        <item>Écailles brunes en mèches sur fond clair</item>
+        <item>Pied de 10 à 30 cm, zébré de bandes brunes sur fond crème, bulbeux</item>
+        <item>Anneau double, épais, qui coulisse le long du pied</item>
+        <item>Pas de volve · lames blanches libres · sporée blanche</item>
+        <item>Prairies, clairières, bois clairs · juillet à octobre</item>
+    </string-array>
+    <string name="myco_procera_note">Seul le chapeau se mange : le pied est coriace. Jamais de lépiote de moins de 10 cm. En France, elle est confondue avec l’amanite phalloïde, l’amanite panthère, l’entolome livide et des lépiotes vénéneuses (ANSES).</string>
+
+    <!-- Lépiote brun-incarnat -->
+    <string name="myco_brunneoincarnata_name">Lépiote brun-incarnat</string>
+    <string name="myco_brunneoincarnata_alt">Deadly parasol</string>
+    <string-array name="myco_brunneoincarnata_traits">
+        <item>Petite : chapeau de 3 à 4 cm seulement, écailles brun rosé sur fond clair</item>
+        <item>Une grande écaille centrale, plus foncée</item>
+        <item>Pied de 2 à 3,5 cm : haut rosé, bas couvert d’écailles brunes, séparés par une zone annulaire sombre</item>
+        <item>Lames blanches, libres · chair qui rougit à la coupe</item>
+        <item>Pelouses, parcs, jardins · régions chaudes</item>
+    </string-array>
+    <string name="myco_brunneoincarnata_note">Mortelle : mêmes toxines que l’amanite phalloïde. Environ 100 g peuvent atteindre gravement le foie. Elle pousse dans les pelouses, où on la prend pour un petit parasol ; les signes arrivent tard, plus de 6 heures après le repas.</string>
+
+    <!-- Rosé des prés -->
+    <string name="myco_campestris_name">Rosé des prés</string>
+    <string name="myco_campestris_alt">Field mushroom</string>
+    <string-array name="myco_campestris_traits">
+        <item>Chapeau blanc, 4 à 10 cm, fibrilleux</item>
+        <item>Lames roses, puis brun chocolat : jamais blanches</item>
+        <item>Anneau mince et fugace, souvent disparu</item>
+        <item>Pied court en fuseau, sans bulbe ni volve</item>
+        <item>Chair blanche qui rosit à peine, sans jaunir · odeur agréable de champignon de Paris</item>
+        <item>Prairies et pâtures · fin d’été à automne</item>
+    </string-array>
+    <string name="myco_campestris_note">Comestible, à condition de ne pas se tromper : en 2022, deux personnes sont mortes après avoir pris une amanite mortelle pour un rosé des prés ou un agaric des jachères (ANSES). Les lames de chaque exemplaire doivent être roses ou brunes, jamais blanches.</string>
+
+    <!-- Agaric jaunissant -->
+    <string name="myco_xanthodermus_name">Agaric jaunissant</string>
+    <string name="myco_xanthodermus_alt">Yellow stainer</string>
+    <string-array name="myco_xanthodermus_traits">
+        <item>Chapeau blanc, d’abord en cube ou en timbale, puis étalé, 6 à 15 cm</item>
+        <item>Jaunit vivement au frottement, surtout au bord du chapeau et au pied</item>
+        <item>Base du pied bulbeuse, chair jaune chrome à la coupe</item>
+        <item>Anneau large et persistant, floconneux en dessous</item>
+        <item>Odeur d’encre, d’iode ou de phénol, plus forte à la cuisson</item>
+        <item>Lames roses puis brun noirâtre, comme le rosé des prés</item>
+        <item>Prairies, lisières, parcs, jardins · juillet à novembre</item>
+    </string-array>
+    <string name="myco_xanthodermus_note">Toxique : vomissements et troubles digestifs. En 2022, c’était l’espèce toxique la plus souvent retrouvée dans les cueillettes en France (25,7 %, ANSES). Le jaunissement peut être faible ou absent.</string>
+
+    <!-- Morille -->
+    <string name="myco_morchella_name">Morille jaune</string>
+    <string name="myco_morchella_alt">Yellow morel</string>
+    <string-array name="myco_morchella_traits">
+        <item>Chapeau ovoïde de 4 à 10 cm, en nid d’abeilles, jaune paille à brun miel</item>
+        <item>Creuse d’une seule cavité, du sommet du chapeau jusqu’au pied</item>
+        <item>Chapeau soudé au pied par sa base</item>
+        <item>Pied blanchâtre, creux, granuleux, parfois évasé</item>
+        <item>Printemps (mars à mai) : vergers, frênes, lisières</item>
+    </string-array>
+    <string name="myco_morchella_note">Toxique crue ou mal cuite : toujours bien la cuire. Coupée en deux dans la longueur, elle est creuse d’une seule cavité ; sinon, c’est peut-être un gyromitre.</string>
+
+    <!-- Gyromitre -->
+    <string name="myco_gyromitra_name">Gyromitre</string>
+    <string name="myco_gyromitra_alt">False morel</string>
+    <string-array name="myco_gyromitra_traits">
+        <item>Chapeau en lobes plissés comme un cerveau, brun rouge à châtain, 3 à 11 cm</item>
+        <item>Coupe en long : intérieur chambré, chapeau soudé au pied en plusieurs points</item>
+        <item>Pied court et trapu, blanc à crème, sillonné</item>
+        <item>Chair cassante, odeur forte</item>
+        <item>Sous conifères, sols acides ou sableux · mars à juin</item>
+    </string-array>
+    <string name="myco_gyromitra_note">Mortel : la gyromitrine se transforme en méthylhydrazine, qui attaque le foie et le système nerveux. Vente interdite en France depuis 1991. Les vapeurs de cuisson sont aussi dangereuses, et l’ébouillantage n’enlève pas tout.</string>
+    <string name="myco_gyromitra_history">Longtemps mangé après ébouillantage (son nom, esculenta, veut dire « comestible »). Des intoxications imprévisibles, plus d’une centaine de cas mortels dans la littérature, puis une toxicité cumulative suspectée l’ont fait classer comme mortel. Sa vente est interdite en France depuis 1991, ainsi qu’en Allemagne et en Suisse ; elle reste permise en Finlande, avec avertissements.</string>
+
+    <!-- Paxille enroulé -->
+    <string name="myco_paxillus_name">Paxille enroulé</string>
+    <string name="myco_paxillus_alt">Brown roll-rim</string>
+    <string-array name="myco_paxillus_traits">
+        <item>Chapeau brun olive à jaune brun, 4 à 12 cm, feutré, creusé en entonnoir</item>
+        <item>Marge fortement enroulée, qui le reste longtemps</item>
+        <item>Lames jaune brun, décurrentes, fourchues, qui se détachent facilement et brunissent au toucher</item>
+        <item>Pied court, effilé vers la base, sans anneau</item>
+        <item>Chair jaunâtre, sans lait (à la différence des lactaires)</item>
+        <item>Sous bouleaux, pelouses, terrains humides · fin d’été à automne · sporée brune</item>
+    </string-array>
+    <string name="myco_paxillus_note">Mortel, sans prévenir : après des repas répétés, parfois pendant des années sans le moindre problème, le corps fabrique des anticorps qui détruisent ses propres globules rouges. Anémie, insuffisance rénale, parfois décès. Aucun antidote. En France, on le cueille par erreur à la place du faux mousseron (ANSES).</string>
+    <string name="myco_paxillus_history">On le mangeait couramment en Europe centrale et orientale jusqu’à la Seconde Guerre mondiale. En 1944, le mycologue allemand Julius Schäffer meurt d’en avoir mangé. En 1985, le médecin suisse René Flammer en décrit le mécanisme immunitaire. Les guides n’ont clairement déconseillé de le manger que vers 1990 ; on en mange encore en Pologne, en Russie et en Ukraine, où des gens en meurent chaque année.</string>
+
+    <!-- Tricholome équestre -->
+    <string name="myco_equestre_name">Tricholome équestre</string>
+    <string name="myco_equestre_alt">Man on horseback</string>
+    <string-array name="myco_equestre_traits">
+        <item>Chapeau jaune vif à jaune olive, 5 à 10 cm, centre brun orangé écailleux, un peu visqueux</item>
+        <item>Lames jaune citron à soufre, serrées</item>
+        <item>Pied jaune, trapu, sans anneau ni volve</item>
+        <item>Chair blanche, jaune sous la peau, odeur faible, saveur douce</item>
+        <item>Pinèdes sableuses (Landes), automne à hiver · sporée blanchâtre</item>
+    </string-array>
+    <string name="myco_equestre_note">Toxique : il détruit les fibres des muscles (rhabdomyolyse). Fatigue anormale, douleurs aux hanches et aux épaules, sueurs, urines foncées, 1 à 3 jours après plusieurs repas. Douze cas en France entre 1992 et 2000, dont trois mortels. Vente interdite en France.</string>
+    <string name="myco_equestre_history">Autrefois très apprécié, vendu sur les marchés et cuisiné en salmis dans les Landes. En 2001, des médecins publient douze cas de destruction des muscles après des repas répétés, dont trois décès. En 2004, la France suspend sa vente puis la pérennise en 2005, pour tout le groupe T. equestre, T. auratum et T. flavovirens. La toxine n’est toujours pas identifiée.</string>
+
+    <!-- Oronge -->
+    <string name="myco_caesarea_name">Oronge</string>
+    <string name="myco_caesarea_alt">Caesar’s mushroom</string>
+    <string-array name="myco_caesarea_traits">
+        <item>Chapeau rouge orangé vif, 8 à 20 cm, lisse, sans verrues ; marge nettement striée, jaune d’or</item>
+        <item>Lames jaune doré, libres, serrées</item>
+        <item>Pied jaune, plein, avec un anneau large, pendant, strié sur le dessus</item>
+        <item>Volve blanche, épaisse, en grand sac à la base : elle est toujours présente</item>
+        <item>Chair blanche, jaune sous la peau du chapeau · odeur et saveur douces · sporée blanche</item>
+        <item>Sous chênes, châtaigniers, hêtres, en lieux chauds · juillet à novembre</item>
+    </string-array>
+    <string name="myco_caesarea_note">Comestible très recherché, mais seulement bien identifiée. Au stade œuf, aucun de ses critères n’est visible et elle ressemble à d’autres amanites, dont la phalloïde, mortelle : des intoxications graves ont suivi la cueillette d’amanites à ce stade. Lavée par la pluie, la tue-mouches lui ressemble. Protégée dans plusieurs pays d’Europe.</string>
+
+    <!-- Entolome livide -->
+    <string name="myco_sinuatum_name">Entolome livide</string>
+    <string name="myco_sinuatum_alt">Livid pinkgill</string>
+    <string-array name="myco_sinuatum_traits">
+        <item>Chapeau gris clair à beige jaunâtre, 3 à 20 cm, convexe puis étalé, sans stries</item>
+        <item>Lames jaune beurre (rarement blanches), puis rosées avec l’âge, échancrées autour du pied</item>
+        <item>Pied blanc à crème, charnu, souvent en massue, sans anneau</item>
+        <item>Chair blanche, odeur et saveur de farine, souvent désagréables</item>
+        <item>Sporée rose</item>
+        <item>Lisières et bois clairs de feuillus, surtout sur sol calcaire · milieu de l’été à fin d’automne</item>
+    </string-array>
+    <string name="myco_sinuatum_note">Toxique : nausées, vomissements et diarrhée importante, avec une atteinte modérée du foie. Le centre antipoisons belge donne 3 à 8 heures après le repas, d’autres sources dès 30 minutes ; la guérison prend 5 à 6 jours et l’hôpital est parfois nécessaire. La toxine n’est pas identifiée. Les premiers signes ressemblent à ceux de l’amanite phalloïde : sans reste de champignon, le diagnostic est difficile. En 2022, 8,5 % des cueillettes toxiques en France en contenaient (ANSES).</string>
+
+    <!-- Clitocybe nébuleux -->
+    <string name="myco_nebularis_name">Clitocybe nébuleux</string>
+    <string name="myco_nebularis_alt">Clouded agaric</string>
+    <string-array name="myco_nebularis_traits">
+        <item>Chapeau gris à brun gris, 5 à 25 cm, souvent voilé de blanc chez le jeune, marge enroulée</item>
+        <item>Lames pâles, serrées, souvent fourchues, jusqu’à légèrement décurrentes</item>
+        <item>Pied gris clair, massif, renflé à la base</item>
+        <item>Chair blanche, très épaisse · odeur forte, farineuse à rance</item>
+        <item>Sporée jaune pâle</item>
+        <item>Sous feuillus et conifères · automne</item>
+    </string-array>
+    <string name="myco_nebularis_note">Non recommandé : même une petite portion peut donner des troubles digestifs à certaines personnes. On le confond avec l’entolome livide, toxique, dont les lames deviennent roses.</string>
+
+    <!-- Tricholome de la Saint-Georges -->
+    <string name="myco_gambosa_name">Tricholome de la Saint-Georges</string>
+    <string name="myco_gambosa_alt">St George’s mushroom</string>
+    <string-array name="myco_gambosa_traits">
+        <item>Chapeau blanc beige à abricot pâle, 5 à 10 cm, mat et un peu velouté, marge enroulée</item>
+        <item>Lames blanches à crème, très serrées</item>
+        <item>Pied court et trapu, blanchâtre, légèrement strié</item>
+        <item>Chair blanche, épaisse · forte odeur et saveur de farine fraîche</item>
+        <item>Sporée blanche</item>
+        <item>Prairies, haies, vergers, souvent en ronds · fin avril à juin</item>
+    </string-array>
+    <string name="myco_gambosa_note">Comestible, champignon de printemps. Deux sosies toxiques sortent à la même saison : l’inocybe de Patouillard, dont le chapeau est conique et rougit, et parfois l’entolome livide, aux lames d’abord jaunâtres puis roses. La sporée est blanche ; brun tabac chez l’inocybe, rose chez l’entolome. L’odeur de farine ne suffit pas : l’entolome l’a aussi.</string>
+
+    <!-- Inocybe de Patouillard -->
+    <string name="myco_erubescens_name">Inocybe de Patouillard</string>
+    <string name="myco_erubescens_alt">Red-staining inocybe</string>
+    <string-array name="myco_erubescens_traits">
+        <item>Chapeau conique à campanulé, mamelonné, 3 à 7 cm, fibrilleux, marge souvent fendillée</item>
+        <item>Chapeau blanc à jaune paille, puis brun vermillon</item>
+        <item>Lames serrées, blanches puis ocre, qui se tachent de rouge</item>
+        <item>Pied cylindrique, strié, blanc, qui se tache de rouge · pas d’anneau</item>
+        <item>Sporée brun tabac</item>
+        <item>Sous feuillus, surtout hêtres · printemps et été</item>
+    </string-array>
+    <string name="myco_erubescens_note">Toxique : il contient de la muscarine, qui donne en quelques minutes à 2 heures sueurs, salivation, larmoiement, nez qui coule, gêne respiratoire et ralentissement du cœur. La guérison vient en général en moins de 24 heures ; de l’atropine est parfois nécessaire (centre antipoisons belge). Sorti au printemps, on le prend pour le tricholome de la Saint-Georges : lui rougit, l’autre non.</string>
+
+    <!-- Faux mousseron -->
+    <string name="myco_oreades_name">Faux mousseron</string>
+    <string name="myco_oreades_alt">Fairy ring champignon</string>
+    <string-array name="myco_oreades_traits">
+        <item>Chapeau 2 à 6 cm, chamois à brun roux, qui pâlit en séchant ; d’abord en cloche, puis étalé, avec un mamelon qui dure ; marge sillonnée</item>
+        <item>Lames blanc crème, épaisses, très espacées</item>
+        <item>Pied grêle, plus pâle que le chapeau, creux, élastique et très coriace : il se tord en séchant</item>
+        <item>Chair mince · odeur de foin coupé, parfois légèrement de cyanure</item>
+        <item>Sporée blanche</item>
+        <item>Pelouses, prés, bords de chemins, en arcs ou en ronds de sorcières · printemps à automne</item>
+    </string-array>
+    <string name="myco_oreades_note">Comestible apprécié ; le pied coriace se jette (le centre antipoisons belge le conseille aussi). Sur les mêmes pelouses poussent des clitocybes blancs toxiques, parfois en ronds eux aussi : leurs lames sont serrées, celles du faux mousseron très espacées. Le paxille enroulé, mortel, est lui aussi cueilli par erreur à sa place en France (ANSES).</string>
+
+    <!-- Clitocybe blanchi -->
+    <string name="myco_rivulosa_name">Clitocybe blanchi</string>
+    <string name="myco_rivulosa_alt">Fool’s funnel</string>
+    <string-array name="myco_rivulosa_traits">
+        <item>Chapeau blanc à crème, 2 à 6 cm, givré, souvent creusé, parfois craquelé en cercles ; marge enroulée</item>
+        <item>Lames serrées, blanchâtres puis crème</item>
+        <item>Pied court, fibreux, soyeux, blanc, sans anneau</item>
+        <item>Odeur farineuse</item>
+        <item>Prés, pelouses, parcs, bords de chemins, parfois en ronds de sorcières · été à automne</item>
+    </string-array>
+    <string name="myco_rivulosa_note">Toxique : la muscarine donne sueurs, salivation, larmoiement, vomissements et ralentissement du cœur, de quelques minutes à 2 heures après le repas. La guérison vient en général en moins de 24 heures ; l’atropine est parfois nécessaire. Il peut être mortel pour une personne fragile. Il pousse dans les gazons, où jouent enfants et animaux.</string>
+
+    <!-- Coprin noir d’encre -->
+    <string name="myco_atramentaria_name">Coprin noir d’encre</string>
+    <string name="myco_atramentaria_alt">Common ink cap</string>
+    <string-array name="myco_atramentaria_traits">
+        <item>Chapeau ovoïde, 3 à 7 cm, gris à gris brun, plissé, qui s’ouvre peu</item>
+        <item>Lames très serrées, libres : blanches, puis grises, puis noires</item>
+        <item>Le chapeau se liquéfie en encre noire à partir des lames</item>
+        <item>Pied blanc à gris, long, lisse, creux ; anneau absent ou invisible</item>
+        <item>Sporée noirâtre</item>
+        <item>Jardins, bords de chemins, souches enterrées, en touffes · été à fin d’automne</item>
+    </string-array>
+    <string name="myco_atramentaria_note">Comestible, mais jamais avec de l’alcool : la coprine bloque la dégradation de l’alcool. Un verre de vin ou de bière pendant le repas, ou jusqu’à 72 heures après, donne rougeur du visage et du cou, maux de tête, vertiges, sueurs, vomissements et chute de tension. Les troubles passent en quelques heures (centre antipoisons belge).</string>
+
+    <!-- Coprin chevelu -->
+    <string name="myco_comatus_name">Coprin chevelu</string>
+    <string name="myco_comatus_alt">Shaggy ink cap</string>
+    <string-array name="myco_comatus_traits">
+        <item>Chapeau en cylindre blanc, 6 à 12 cm de haut, couvert de mèches retroussées, brunâtres au sommet</item>
+        <item>Lames libres, blanches, puis roses, puis noires</item>
+        <item>Le chapeau se liquéfie en encre noire, moins que le coprin noir d’encre</item>
+        <item>Pied blanc, cylindrique, renflé à la base, avec un anneau mobile</item>
+        <item>Sporée noirâtre</item>
+        <item>Pelouses, prairies, bords de chemins, sols riches, en groupes</item>
+    </string-array>
+    <string name="myco_comatus_note">Comestible jeune, tant que les lames sont blanches : on le mange vite, et on jette tout ce qui rosit ou noircit. Contrairement au coprin noir d’encre, il se prend sans danger avec de l’alcool.</string>
+
+    <!-- Galère marginée -->
+    <string name="myco_galerina_name">Galère marginée</string>
+    <string name="myco_galerina_alt">Funeral bell</string>
+    <string-array name="myco_galerina_traits">
+        <item>Petit chapeau convexe, 3 à 5 cm, brun à fauve, qui pâlit en séchant</item>
+        <item>Lames brunâtres, puis fauves · sporée brun rouille</item>
+        <item>Pied de 2 à 6 cm avec un petit anneau fragile, net chez le jeune, souvent disparu ensuite</item>
+        <item>Pied blanc poudré au-dessus de l’anneau, brun et soyeux au-dessous</item>
+        <item>Odeur farineuse</item>
+        <item>Sur bois pourri, surtout de conifères, seule ou en petits groupes · été à automne</item>
+    </string-array>
+    <string name="myco_galerina_note">Mortelle : mêmes amatoxines que l’amanite phalloïde. Les premiers signes arrivent en moyenne une douzaine d’heures après le repas, jusqu’à 48 heures, comme une gastro-entérite ; puis le foie est atteint. Réanimation, parfois greffe du foie. Elle ressemble à la pholiote changeante et à l’hypholome en touffe (centre antipoisons belge).</string>
+
+    <!-- Pholiote changeante -->
+    <string name="myco_mutabilis_name">Pholiote changeante</string>
+    <string name="myco_mutabilis_alt">Sheathed woodtuft</string>
+    <string-array name="myco_mutabilis_traits">
+        <item>Chapeau 3 à 8 cm, brillant : miel à roux-brun quand il est humide, avec un centre plus pâle ; cannelle en séchant</item>
+        <item>Lames jaunâtres ou cannelle, puis brun ocre</item>
+        <item>Pied jusqu’à 8 cm, lisse au-dessus de l’anneau, écailleux et plus foncé dessous</item>
+        <item>Anneau léger, affaissé, qui disparaît souvent</item>
+        <item>Sporée rouille · odeur agréable, saveur douce</item>
+        <item>En touffes de pieds parfois soudés, sur souches de feuillus · fin du printemps à l’automne</item>
+    </string-array>
+    <string name="myco_mutabilis_note">Bon comestible, sauf le pied, fibreux. Mais la galère marginée, mortelle, peut tromper même des cueilleurs expérimentés. La pholiote sèche du centre vers le bord, la galère du bord vers le centre ; l’une a une odeur douce, l’autre farineuse. Les écailles sous l’anneau ne suffisent pas : la galère peut en avoir aussi.</string>
+
+    <!-- Hypholome en touffe -->
+    <string name="myco_fasciculare_name">Hypholome en touffe</string>
+    <string name="myco_fasciculare_alt">Sulphur tuft</string>
+    <string-array name="myco_fasciculare_traits">
+        <item>Chapeau 3 à 7 cm, jaune soufre, centre plus foncé, orange brun</item>
+        <item>Lames serrées, jaunâtres puis verdâtres, brunes à maturité</item>
+        <item>Pied courbé, jaune soufre ; pas d’anneau, seulement un fugace reste du voile</item>
+        <item>Chair mince, jaune soufre · saveur très amère</item>
+        <item>Sporée brun pourpre</item>
+        <item>En touffes soudées à la base, sur souches et bois de feuillus ou de conifères · printemps à automne</item>
+    </string-array>
+    <string name="myco_fasciculare_note">Toxique : nausées, vomissements, diarrhée, parfois seulement 5 à 10 heures après le repas ; en général, ça passe en quelques jours. Un décès par hépatite fulgurante est cité, mais le plat contenait d’autres champignons. Il ressemble à la galère marginée et à la pholiote changeante (centre antipoisons belge).</string>
+
+    <!-- Armillaire couleur de miel -->
+    <string name="myco_mellea_name">Armillaire couleur de miel</string>
+    <string name="myco_mellea_alt">Honey fungus</string>
+    <string-array name="myco_mellea_traits">
+        <item>Chapeau 1 à 15 cm, jaune clair, moutarde ou brun olive, avec de fines mèches sombres surtout au centre</item>
+        <item>Lames blanches puis jaunâtres, parfois tachées de brun</item>
+        <item>Pied élancé, strié au-dessus d’un anneau blanc, moucheté de blanc dessous ; fibreux et coriace avec l’âge</item>
+        <item>Chair blanche, saveur un peu amère · sporée blanche</item>
+        <item>En touffes, parfois de dizaines de pieds, sur souches, racines et troncs, surtout de feuillus</item>
+        <item>Très commun à l’automne</item>
+    </string-array>
+    <string name="myco_mellea_note">Non recommandé : l’ANSES estime qu’il peut donner des troubles digestifs (diarrhée, vomissements, douleurs), quelques heures après le repas, et rien ne prouve qu’une cuisson prolongée ou la mise en conserve écarte le risque. Entre 1999 et 2015, 83 cas ont été enregistrés en France par les centres antipoison. Certains auteurs le disent comestible jeune et bien cuit. Il pousse en touffe comme des sosies toxiques, la galère marginée et l’hypholome.</string>
+    <string name="myco_mellea_history">Longtemps cité comme un comestible moyen, parfois seulement jeune, il est jugé indigeste et parfois allergisant. En Italie, où on le mange beaucoup, il a causé 25 % des intoxications par champignons enregistrées par le centre antipoison de Milan entre 1994 et 1999. En 2015, l’ANSES estime qu’il peut provoquer des intoxications, y compris après mise en conserve. Un arrêté du 5 août 2016 suspend pour un an la vente d’armillaire frais non accompagné d’une information sur la cuisson complète.</string>
+</resources>

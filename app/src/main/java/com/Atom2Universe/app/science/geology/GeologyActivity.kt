@@ -24,6 +24,7 @@ import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.timeline.*
 import com.Atom2Universe.app.util.followImmersiveMode
+import com.Atom2Universe.app.util.paintSheetFrame
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.Normalizer
 import java.util.Locale
@@ -438,6 +439,7 @@ class GeologyActivity:ThemedActivity() {
         container.addView(close)
         container.addView(wrapper,LinearLayout.LayoutParams(-1,0,1f))
         dialog.setContentView(container)
+        dialog.paintSheetFrame(palette.surface)
         openSheet=dialog;sheetTopic=topic
         dialog.setOnDismissListener {
             if(openSheet===dialog) { openSheet=null;sheetTopic=null;syncAnimation() }

@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Hub and main screen -->
+    <string name="myco_title">Mushroom atlas</string>
+    <string name="myco_hub">Edible, toxic and their look-alikes, side by side</string>
+    <string name="myco_back">Back</string>
+    <string name="myco_about">About</string>
+    <string name="myco_close">Close</string>
+    <string name="myco_tab_lookalikes">Look-alikes</string>
+    <string name="myco_tab_species">Species</string>
+    <string name="myco_tab_changed">Formerly</string>
+    <string name="myco_filter_all">All</string>
+    <string name="myco_warning">Never eat a mushroom identified with this atlas: have your harvest checked by a pharmacist or a mycological society.</string>
+    <string name="myco_urgent">Emergency</string>
+    <plurals name="myco_species_count">
+        <item quantity="one">%1$d species</item>
+        <item quantity="other">%1$d species</item>
+    </plurals>
+
+    <!-- Sorting criteria (Species screen) -->
+    <string name="myco_criteria">Criteria</string>
+    <string name="myco_criteria_count">Criteria · %1$d</string>
+    <string name="myco_criteria_clear">Clear</string>
+    <string name="myco_cg_cap_width">Cap width</string>
+    <string name="myco_cg_cap_color">Cap colour</string>
+    <string name="myco_cg_stipe_color">Stem colour</string>
+    <string name="myco_cg_under">Under the cap</string>
+    <string name="myco_cg_cap">Cap</string>
+    <string name="myco_cg_stipe">Ring and base</string>
+    <string name="myco_cg_more">Other traits</string>
+    <string name="myco_cg_spore">Spore print</string>
+    <string name="myco_tone_white">White or cream</string>
+    <string name="myco_tone_grey">Grey</string>
+    <string name="myco_tone_black">Black</string>
+    <string name="myco_tone_beige">Beige or ochre</string>
+    <string name="myco_tone_brown">Brown</string>
+    <string name="myco_tone_yellow">Yellow</string>
+    <string name="myco_tone_orange">Orange</string>
+    <string name="myco_tone_red">Red</string>
+    <string name="myco_tone_green">Green or olive</string>
+    <string name="myco_tone_pink">Pink or violet</string>
+    <string name="myco_c_small">Under %1$d cm</string>
+    <string name="myco_c_medium">%1$d to %2$d cm</string>
+    <string name="myco_c_large">Over %1$d cm</string>
+    <string name="myco_c_gills">Gills</string>
+    <string name="myco_c_pores">Pores (tubes)</string>
+    <string name="myco_c_ridges">Ridges</string>
+    <string name="myco_c_none_under">Neither gills nor pores</string>
+    <string name="myco_c_funnel">Hollow or funnel-shaped</string>
+    <string name="myco_c_wrinkled">Pitted or folded</string>
+    <string name="myco_c_scaly">Warts or scales</string>
+    <string name="myco_c_ring">With a ring</string>
+    <string name="myco_c_no_ring">No ring</string>
+    <string name="myco_c_volva">Volva (sac at the base)</string>
+    <string name="myco_c_no_volva">No volva</string>
+    <string name="myco_c_cluster">In a cluster</string>
+    <string name="myco_c_stains">Changes colour when cut</string>
+    <string name="myco_c_spore_white">White or cream</string>
+    <string name="myco_c_spore_pink">Pink</string>
+    <string name="myco_c_spore_brown">Brown or ochre</string>
+    <string name="myco_c_spore_black">Black or purple</string>
+
+    <!-- Statuses -->
+    <string name="myco_status_edible">Edible</string>
+    <string name="myco_status_cooked">Edible cooked</string>
+    <string name="myco_status_inedible">Not recommended</string>
+    <string name="myco_status_toxic">Toxic</string>
+    <string name="myco_status_deadly">Deadly</string>
+    <string name="myco_sale_banned">Sale banned in France</string>
+
+    <!-- Plate -->
+    <string name="myco_view_side">Side</string>
+    <string name="myco_view_section">Section</string>
+    <string name="myco_view_under">Underside</string>
+    <string name="myco_view_top">Top</string>
+    <string name="myco_marks">Labels</string>
+    <string name="myco_spores">Spores</string>
+    <string name="myco_scale_cm">%1$d cm</string>
+
+    <!-- Species page -->
+    <string name="myco_sec_traits">Key features</string>
+    <string name="myco_sec_danger">Good to know</string>
+    <string name="myco_sec_lookalikes">Don’t mix up with</string>
+    <string name="myco_sec_history">Its status changed</string>
+    <string name="myco_sec_differences">The differences</string>
+
+    <!-- Emergency -->
+    <string name="myco_urgent_title">After a mushroom meal</string>
+    <string name="myco_urgent_hint">Keep a sample and a photo of what was eaten.</string>
+    <string name="myco_urgent_fr">France · poison centres</string>
+    <string name="myco_urgent_fr_vital">France · life-threatening</string>
+    <string name="myco_urgent_be">Belgium · Poison Centre</string>
+    <string name="myco_urgent_ch">Switzerland · Tox Info Suisse</string>
+    <string name="myco_urgent_eu">Europe · emergency</string>
+    <string name="myco_tel_fr" translatable="false">01 45 42 59 59</string>
+    <string name="myco_tel_fr_vital" translatable="false">15</string>
+    <string name="myco_tel_be" translatable="false">070 245 245</string>
+    <string name="myco_tel_ch" translatable="false">145</string>
+    <string name="myco_tel_eu" translatable="false">112</string>
+
+    <!-- About -->
+    <string name="myco_about_title">About the atlas</string>
+    <string name="myco_about_intro">An atlas for learning to compare, not to identify: ANSES, the French food-safety agency, advises against recognition apps, which are wrong too often.</string>
+    <string name="myco_about_lookalikes">Look-alikes are chosen mostly from the confusions actually seen in France by the poison centres (ANSES), not from intuition.</string>
+    <string name="myco_about_method">Each status is cross-checked between health authorities, official texts, medical journals and encyclopedias. When sources disagree, the most cautious status wins. Last check: October 2026.</string>
+    <string name="myco_about_drawings">Drawings are original diagrams made from published descriptions. Colours and proportions are typical; in nature they vary a lot. Sizes are approximate.</string>
+    <string name="myco_about_rules_title">Reminders from ANSES</string>
+    <string name="myco_about_rules">• Pick only mushrooms you know perfectly, whole, neither too young nor too old.\n• Photograph the harvest before cooking it.\n• Never eat them raw: 20 to 30 minutes in a pan, or 15 minutes in boiling water (water discarded).\n• Keep them cold and eat them within two days.\n• Use a basket rather than a plastic bag.\n• Do not give them to young children.\n• Symptoms after a meal: call a poison centre and mention the meal, even after more than 12 hours.</string>
+    <string name="myco_about_sources">Sources</string>
+    <string name="myco_sources_official">Authorities and official texts</string>
+    <string name="myco_sources_journals">Medical journals</string>
+    <string name="myco_sources_encyclopedia">Encyclopedia (CC BY-SA 4.0)</string>
+    <string name="myco_sources_society">Mycological societies</string>
+    <string name="myco_sources_by_species">References by species</string>
+    <string name="myco_sources_open">Open</string>
+    <string name="myco_sources_error">The sources could not be loaded.</string>
+    <string name="myco_sources_no_browser">No browser available.</string>
+    <string name="myco_sources_secondary">The works cited by these articles (Bresinsky and Besl, Michelot and Toth, Flammer, Eyssartier and Roux, Clowez and Moreau…) are known only through them.</string>
+
+    <!-- Past status -->
+    <string name="myco_change_paxillus">Once commonly eaten, until the Second World War. A mycologist dies of it in 1944; the immune mechanism is described in 1985.</string>
+    <string name="myco_change_equestre">Once sold in markets and thought good. Twelve cases of muscle breakdown published in 2001, three of them fatal. Sale suspended in France in 2004, then banned: it is no longer eaten.</string>
+    <string name="myco_change_gyromitra">Once eaten after boiling. Sale banned in France since 1991; now ranked deadly.</string>
+    <string name="myco_change_aurantiaca">Judged poisonous in 1821, sometimes given as edible before 1999. Today: not worth eating rather than dangerous.</string>
+    <string name="myco_change_mellea">Long cited as a middling edible. In 2015 ANSES judged it can cause digestive trouble, even after long cooking; a 2016 order suspended the sale of fresh honey fungus without a notice about full cooking.</string>
+
+    <!-- Look-alike groups -->
+    <string name="myco_g_chanterelle_title">Chanterelle, or not?</string>
+    <string name="myco_g_chanterelle_evidence">ANSES 2024</string>
+    <string-array name="myco_g_chanterelle_points">
+        <item>Chanterelle: thick, forked ridges like veins. Jack-o’-lantern: real, thin, crowded gills.</item>
+        <item>The chanterelle comes out of the ground. The jack-o’-lantern grows in a clump on wood, a stump or roots.</item>
+        <item>Chanterelle: apricot smell, cream-white flesh. Jack-o’-lantern: oily smell, orange inside the stem.</item>
+        <item>False chanterelle: thin, crowded, regularly forked gills that peel off with a fingernail. No apricot.</item>
+    </string-array>
+    <string name="myco_g_boletus_title">Porcini, or not?</string>
+    <string name="myco_g_boletus_evidence">ANSES 2022</string>
+    <string-array name="myco_g_boletus_points">
+        <item>Porcini: fine white net at the top of the stem. Bitter bolete: coarse, dark brown net.</item>
+        <item>Porcini: pores white, then yellow-green. Bitter bolete: pink pores. Satan’s bolete: red pores.</item>
+        <item>Porcini: white flesh that does not change. Satan’s bolete: flesh that turns blue.</item>
+        <item>The bitter bolete is not toxic, but its bitterness ruins everything. Satan’s bolete makes you ill.</item>
+    </string-array>
+    <string name="myco_g_parasol_title">Parasol, or not?</string>
+    <string name="myco_g_parasol_evidence">ANSES 2022</string>
+    <string-array name="myco_g_parasol_points">
+        <item>Parasol: large (over 10 cm), stem banded with brown, double ring that slides, no volva.</item>
+        <item>Death cap: sac-like volva at the base, hanging ring, olive-streaked stem, olive-green cap.</item>
+        <item>Panther cap: white warts on a brown cap, sharp-edged bulb, smooth ring.</item>
+        <item>Small lepiotas (under 10 cm): deadly, never to be picked.</item>
+    </string-array>
+    <string name="myco_g_field_title">Field mushroom, or not?</string>
+    <string name="myco_g_field_evidence">ANSES 2022</string>
+    <string-array name="myco_g_field_points">
+        <item>Field mushroom: gills pink, then chocolate brown. White amanitas: gills always white, sac-like volva.</item>
+        <item>Yellow stainer: yellows when rubbed, bulb at the base, ink or phenol smell, wide ring.</item>
+        <item>Field mushroom: spindle-shaped stem with no bulb, thin fleeting ring.</item>
+        <item>In 2022, two deaths after a deadly amanita was taken for a field mushroom or a fallow-field agaric.</item>
+    </string-array>
+    <string name="myco_g_morel_title">Morel, or false morel?</string>
+    <string name="myco_g_morel_evidence">1991 decree</string>
+    <string-array name="myco_g_morel_points">
+        <item>Morel: honeycomb cap. False morel: rounded folds like a brain.</item>
+        <item>Cut lengthwise: the morel is hollow in a single cavity, cap joined to the stem at its base.</item>
+        <item>False morel: chambered inside, cap joined to the stem at several points.</item>
+        <item>The morel is always eaten cooked. The false morel may not be sold in France.</item>
+    </string-array>
+    <string name="myco_g_amanita_title">Blusher, or not?</string>
+    <string name="myco_g_amanita_evidence">Classic confusion</string>
+    <string-array name="myco_g_amanita_points">
+        <item>Blusher: flesh and gills turn red when damaged. Panther cap: white flesh that never changes.</item>
+        <item>Blusher: ring striate on top. Panther cap: smooth ring.</item>
+        <item>Panther cap: sharp-edged bulb topped with rings; pure white warts on dark brown, striate margin.</item>
+        <item>Fly agaric: red cap, white gills and stem. Washed by rain, it resembles the Caesar’s mushroom, whose gills and stem are yellow.</item>
+    </string-array>
+    <string name="myco_g_oronge_title">Caesar’s mushroom, or not?</string>
+    <string name="myco_g_oronge_evidence">ANSES 2022</string>
+    <string-array name="myco_g_oronge_points">
+        <item>Caesar’s mushroom: yellow gills and stem. Fly agaric: white gills and stem.</item>
+        <item>Caesar’s mushroom: large white sac-like volva, always present. Fly agaric: bulbous base with rims, no sac.</item>
+        <item>Caesar’s mushroom: smooth cap, striate margin. Fly agaric: white warts, washed off by rain, leaving a paler cap.</item>
+        <item>At the egg stage Caesar’s mushroom has none of these marks: do not pick it.</item>
+    </string-array>
+    <string name="myco_g_stgeorge_title">St George’s mushroom, or not?</string>
+    <string name="myco_g_stgeorge_evidence">ANSES 2022</string>
+    <string-array name="myco_g_stgeorge_points">
+        <item>St George’s: white gills, white spores. Red-staining inocybe: conical cap that turns red, gills that brown, tobacco-brown spores.</item>
+        <item>Livid pinkgill: gills yellowish then pink, pink spores, and a floury smell too: the smell is not enough.</item>
+        <item>St George’s: appears in spring. Pinkgill: mostly autumn, but sometimes from summer.</item>
+        <item>The inocybe causes sweating and salivation; the pinkgill, vomiting and heavy diarrhoea.</item>
+    </string-array>
+    <string name="myco_g_fairyring_title">Fairy ring champignon, or not?</string>
+    <string name="myco_g_fairyring_evidence">ANSES 2022</string>
+    <string-array name="myco_g_fairyring_points">
+        <item>Fairy ring champignon: widely spaced gills, cap with an umbo. Fool’s funnel: close gills, frosted cap, often dished.</item>
+        <item>Both grow on lawns, sometimes in fairy rings.</item>
+        <item>Fairy ring champignon: smell of cut hay, sometimes cyanide. Fool’s funnel: floury smell.</item>
+        <item>The deadly brown roll-rim is also mistaken for it: strongly rolled margin, decurrent gills that brown.</item>
+    </string-array>
+    <string name="myco_g_entoloma_title">Livid pinkgill, or clouded agaric?</string>
+    <string name="myco_g_entoloma_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_entoloma_points">
+        <item>Livid pinkgill: notched gills, butter-yellow then pink. Clouded agaric: pale, close gills.</item>
+        <item>Clouded agaric: stout, light grey stem, grey cap with a white bloom. Pinkgill: white to cream stem, often club-shaped.</item>
+        <item>Both smell floury: the smell is not enough.</item>
+        <item>The clouded agaric can upset the digestion; the livid pinkgill causes severe gastroenteritis.</item>
+    </string-array>
+    <string name="myco_g_inkcap_title">Shaggy ink cap, or common ink cap?</string>
+    <string name="myco_g_inkcap_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_inkcap_points">
+        <item>Shaggy: cylindrical white cap covered in upturned fibres. Common: egg-shaped, grey, pleated cap.</item>
+        <item>Both melt into black ink, starting from the gills.</item>
+        <item>Common ink cap: no alcohol during the meal or in the 72 hours after.</item>
+        <item>Shaggy: safe with alcohol, but eat it young and fast, white when cut.</item>
+    </string-array>
+    <string name="myco_g_woodtuft_title">Sheathed woodtuft, or funeral bell?</string>
+    <string name="myco_g_woodtuft_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_woodtuft_points">
+        <item>Woodtuft: the cap dries from the centre outward, pleasant smell. Funeral bell, deadly: from the rim inward, floury smell.</item>
+        <item>Scales below the ring are not enough: the funeral bell can have some too.</item>
+        <item>Sulphur tuft: sulphur yellow, gills yellow then green, very bitter. Toxic.</item>
+        <item>Honey fungus: also in tufts on stumps and roots; ANSES links it to digestive trouble, even after cooking.</item>
+    </string-array>
+
+    <!-- Plate labels -->
+    <string name="myco_l_olive_cap">Olive-green cap</string>
+    <string name="myco_l_white_free_gills">White free gills</string>
+    <string name="myco_l_ring">Ring</string>
+    <string name="myco_l_volva_sac">Sac-like volva</string>
+    <string name="myco_l_free_gills">Free gills</string>
+    <string name="myco_l_white_gills">White gills</string>
+    <string name="myco_l_all_white">All white</string>
+    <string name="myco_l_ring_fragile">Fragile ring</string>
+    <string name="myco_l_white_warts">White warts</string>
+    <string name="myco_l_rims">Rims</string>
+    <string name="myco_l_flesh_white">White flesh</string>
+    <string name="myco_l_striate_margin">Striate margin</string>
+    <string name="myco_l_ring_smooth">Smooth ring</string>
+    <string name="myco_l_bulb_edge">Sharp-edged bulb</string>
+    <string name="myco_l_flesh_unchanging">Unchanging flesh</string>
+    <string name="myco_l_flakes">Grey flakes</string>
+    <string name="myco_l_ring_striate">Striate ring</string>
+    <string name="myco_l_bulb_no_volva">No volva</string>
+    <string name="myco_l_turns_red">Turns red</string>
+    <string name="myco_l_pores_white_yellow">Pores white, then yellow</string>
+    <string name="myco_l_net_white">White net</string>
+    <string name="myco_l_tubes">Tubes</string>
+    <string name="myco_l_pores">Pores</string>
+    <string name="myco_l_pink_pores">Pink pores</string>
+    <string name="myco_l_net_dark">Dark net</string>
+    <string name="myco_l_flesh_bitter">Bitter flesh</string>
+    <string name="myco_l_tubes_pink">Pink tubes</string>
+    <string name="myco_l_red_pores">Red pores</string>
+    <string name="myco_l_net_red">Red net</string>
+    <string name="myco_l_pale_cap">Pale cap</string>
+    <string name="myco_l_turns_blue">Turns blue</string>
+    <string name="myco_l_tubes_yellow">Yellow tubes</string>
+    <string name="myco_l_folds">Ridges, no gills</string>
+    <string name="myco_l_egg_yellow">Egg yellow</string>
+    <string name="myco_l_flesh_cream">Cream-white flesh</string>
+    <string name="myco_l_forked_folds">Forked ridges</string>
+    <string name="myco_l_true_gills">True gills</string>
+    <string name="myco_l_cluster">In a clump</string>
+    <string name="myco_l_flesh_orange">Orange flesh</string>
+    <string name="myco_l_fine_forked_gills">Fine forked gills</string>
+    <string name="myco_l_stem_darkens">Darkening stem</string>
+    <string name="myco_l_flesh_soft">Soft flesh</string>
+    <string name="myco_l_umbo">Brown umbo</string>
+    <string name="myco_l_scales">Scales</string>
+    <string name="myco_l_ring_sliding">Double sliding ring</string>
+    <string name="myco_l_banded_stem">Banded stem</string>
+    <string name="myco_l_ring_zone">Ring zone</string>
+    <string name="myco_l_scaly_stem">Scaly stem</string>
+    <string name="myco_l_pink_gills">Pink gills</string>
+    <string name="myco_l_ring_fugacious">Fleeting ring</string>
+    <string name="myco_l_no_bulb">No bulb, no volva</string>
+    <string name="myco_l_pink_to_brown">Pink, then brown</string>
+    <string name="myco_l_turns_yellow">Turns yellow</string>
+    <string name="myco_l_ring_large">Wide ring</string>
+    <string name="myco_l_bulb">Bulb</string>
+    <string name="myco_l_chrome_yellow">Chrome yellow</string>
+    <string name="myco_l_pits">Pits</string>
+    <string name="myco_l_stem_granular">Granular stem</string>
+    <string name="myco_l_one_cavity">A single cavity</string>
+    <string name="myco_l_fused_base">Joined at the base</string>
+    <string name="myco_l_brain">Brain-like folds</string>
+    <string name="myco_l_furrowed">Furrowed stem</string>
+    <string name="myco_l_chambered">Chambered flesh</string>
+    <string name="myco_l_fused_points">Joined at several points</string>
+    <string name="myco_l_inrolled">Rolled margin</string>
+    <string name="myco_l_decurrent_gills">Decurrent gills</string>
+    <string name="myco_l_no_ring">No ring</string>
+    <string name="myco_l_flesh_yellowish">Yellowish flesh</string>
+    <string name="myco_l_forked_gills">Forked gills</string>
+    <string name="myco_l_brown_sticky">Brown, sticky centre</string>
+    <string name="myco_l_sulphur_gills">Sulphur-yellow gills</string>
+    <string name="myco_l_flesh_white_yellow">White flesh, yellow under the skin</string>
+    <string name="myco_l_yellow_gills">Yellow gills</string>
+    <string name="myco_l_ring_yellow">Wide yellow ring</string>
+    <string name="myco_l_grey_beige_cap">Grey-beige cap</string>
+    <string name="myco_l_gills_pink_ripe">Gills pink when ripe</string>
+    <string name="myco_l_flesh_mealy">White flesh, floury smell</string>
+    <string name="myco_l_grey_bloom_cap">Grey cap, bloomy</string>
+    <string name="myco_l_cream_close_gills">Cream, close gills</string>
+    <string name="myco_l_stout_stem">Stout stem</string>
+    <string name="myco_l_flesh_thick_white">Thick white flesh</string>
+    <string name="myco_l_cream_cap">Cream cap</string>
+    <string name="myco_l_white_close_gills">White, close gills</string>
+    <string name="myco_l_stubby_stem">Short, stocky stem</string>
+    <string name="myco_l_umbo_plain">Umbo</string>
+    <string name="myco_l_far_gills">Widely spaced gills</string>
+    <string name="myco_l_thin_tough_stem">Slender, tough stem</string>
+    <string name="myco_l_stem_hollow">Hollow stem</string>
+    <string name="myco_l_white_frosted_cap">White, frosted cap</string>
+    <string name="myco_l_close_gills">Close gills</string>
+    <string name="myco_l_short_stem">Short stem</string>
+    <string name="myco_l_conical_cap">Conical, fibrous cap</string>
+    <string name="myco_l_gills_ochre_ripe">Gills ochre when ripe</string>
+    <string name="myco_l_egg_cap">Egg-shaped, pleated cap</string>
+    <string name="myco_l_gills_to_ink">Gills turning black</string>
+    <string name="myco_l_shaggy_cap">Cylindrical, shaggy cap</string>
+    <string name="myco_l_gills_pink_black">Gills pink, then black</string>
+    <string name="myco_l_tawny_cap">Tawny cap, paling as it dries</string>
+    <string name="myco_l_silky_below_ring">Silky below the ring</string>
+    <string name="myco_l_tawny_gills">Tawny gills</string>
+    <string name="myco_l_pale_centre_cap">Pale centre, dark rim</string>
+    <string name="myco_l_scaly_below_ring">Scales below the ring</string>
+    <string name="myco_l_cinnamon_gills">Cinnamon gills</string>
+    <string name="myco_l_sulphur_cap">Sulphur-yellow cap</string>
+    <string name="myco_l_gills_green_ripe">Gills greenish when ripe</string>
+    <string name="myco_l_flesh_sulphur">Sulphur-yellow flesh</string>
+    <string name="myco_l_honey_cap">Honey cap, dark fibres</string>
+    <string name="myco_l_ring_white">White ring</string>
+
+    <!-- Death cap -->
+    <string name="myco_phalloides_name">Death cap</string>
+    <string name="myco_phalloides_alt">Amanite phalloïde</string>
+    <string name="myco_phalloides_latin" translatable="false">Amanita phalloides</string>
+    <string-array name="myco_phalloides_traits">
+        <item>Olive-green to yellowish cap, 5 to 15 cm, paler toward the edge</item>
+        <item>White gills that stay white</item>
+        <item>Skirt-like ring under the cap</item>
+        <item>White sac-like volva at the base, hidden in the soil: it can be missing if slugs ate it</item>
+        <item>White stem, finely streaked with olive</item>
+        <item>Smell sweet at first, then sickly · white spores</item>
+        <item>Under oaks, beeches, chestnuts… from late summer to autumn</item>
+    </string-array>
+    <string name="myco_phalloides_note">Deadly. Signs come late, more than 6 hours after the meal, when the liver is already hit. Neither cooking, drying nor freezing destroys the toxin, and a young one is already toxic. About 30 g, half a cap, can be enough.</string>
+
+    <!-- Destroying angel -->
+    <string name="myco_virosa_name">Destroying angel</string>
+    <string name="myco_virosa_alt">Amanite vireuse</string>
+    <string name="myco_virosa_latin" translatable="false">Amanita virosa</string>
+    <string-array name="myco_virosa_traits">
+        <item>Entirely white, gills included</item>
+        <item>Conical to domed cap, often irregular, up to 8–10 cm</item>
+        <item>Slender, shaggy or downy stem, 10 to 15 cm</item>
+        <item>Fragile white ring, often torn</item>
+        <item>Sac-like volva at the base</item>
+        <item>Mostly under conifers, sometimes birches · summer to late autumn</item>
+    </string-array>
+    <string name="myco_virosa_note">Deadly: same toxin as the death cap. A single medium specimen can be enough. A white mushroom is never “safe”.</string>
+
+    <!-- Fly agaric -->
+    <string name="myco_muscaria_name">Fly agaric</string>
+    <string name="myco_muscaria_alt">Amanite tue-mouches</string>
+    <string name="myco_muscaria_latin" translatable="false">Amanita muscaria</string>
+    <string-array name="myco_muscaria_traits">
+        <item>Bright red cap, 8 to 20 cm, covered with white warts</item>
+        <item>After rain the warts wash off and the red fades</item>
+        <item>White gills and stem</item>
+        <item>White skirt-like ring</item>
+        <item>Bulbous base with one or two rings of rims, no sac-like volva</item>
+        <item>Under birches and conifers · autumn</item>
+    </string-array>
+    <string name="myco_muscaria_note">Toxic: confusion, hallucinations, nausea, 30 to 90 minutes after the meal, sometimes convulsions. Rarely fatal, but hospital care may be needed. Washed by rain, it resembles the Caesar’s mushroom, whose gills and stem are yellow.</string>
+
+    <!-- Panther cap -->
+    <string name="myco_pantherina_name">Panther cap</string>
+    <string name="myco_pantherina_alt">Amanite panthère</string>
+    <string name="myco_pantherina_latin" translatable="false">Amanita pantherina</string>
+    <string-array name="myco_pantherina_traits">
+        <item>Brown to blackish-brown cap, 4 to 15 cm, small pure white warts</item>
+        <item>Striate cap margin</item>
+        <item>White gills</item>
+        <item>White ring, smooth (no streaks)</item>
+        <item>Sharp-edged bulb topped with one or two rings</item>
+        <item>White flesh that does not change colour</item>
+        <item>Under beeches and other broadleaves, or conifers · late summer to autumn</item>
+    </string-array>
+    <string name="myco_pantherina_note">Toxic, more than the fly agaric: same toxins, more concentrated. Violent digestive upset, confusion, convulsions especially in children. In 2022 this kind of poisoning made up 21.6% of severe cases in France (ANSES). It is sometimes taken for the parasol or the blusher.</string>
+
+    <!-- Blusher -->
+    <string name="myco_rubescens_name">Blusher</string>
+    <string name="myco_rubescens_alt">Amanite rougissante</string>
+    <string name="myco_rubescens_latin" translatable="false">Amanita rubescens</string>
+    <string-array name="myco_rubescens_traits">
+        <item>Pinkish-brown to wine-coloured cap, 4 to 15 cm, covered with dirty grey flakes</item>
+        <item>Flesh and gills turn red when damaged (sometimes little in dry weather)</item>
+        <item>White ring, striate on top</item>
+        <item>Swollen base without a volva, often eaten by larvae</item>
+        <item>White gills · white spores</item>
+    </string-array>
+    <string name="myco_rubescens_note">Edible only when well cooked: raw, it is toxic (a haemolysin destroyed by heat). Easily confused with the panther cap, which is toxic.</string>
+
+    <!-- Porcini -->
+    <string name="myco_edulis_name">Porcini</string>
+    <string name="myco_edulis_alt">Cèpe de Bordeaux</string>
+    <string name="myco_edulis_latin" translatable="false">Boletus edulis</string>
+    <string-array name="myco_edulis_traits">
+        <item>Brown cap, 4 to 20 cm, smooth, paler at the margin</item>
+        <item>Pores white, then yellow, then olive green</item>
+        <item>Massive, bulbous stem with a fine white net, mostly on the upper half</item>
+        <item>White flesh that does not change colour when cut, mild taste</item>
+        <item>Olive-brown spores</item>
+        <item>Under broadleaves and conifers · summer to autumn</item>
+    </string-array>
+    <string name="myco_edulis_note">No net, flesh that turns blue or grey, red pores: it is not a porcini. Firm young ones only, always cooked.</string>
+
+    <!-- Bitter bolete -->
+    <string name="myco_felleus_name">Bitter bolete</string>
+    <string name="myco_felleus_alt">Bolet amer</string>
+    <string name="myco_felleus_latin" translatable="false">Tylopilus felleus</string>
+    <string-array name="myco_felleus_traits">
+        <item>Light to dark brown cap, 4 to 15 cm</item>
+        <item>Pores white at first, then dirty pink, browning when pressed</item>
+        <item>Stem marked with a dark brown, thick, raised net</item>
+        <item>White flesh that does not change, very bitter</item>
+        <item>Pink-brown spores</item>
+        <item>Mostly under oaks and beeches</item>
+    </string-array>
+    <string name="myco_felleus_note">Inedible: the bitterness, made worse by cooking, ruins a whole dish. May cause vomiting. It contains a little muscarine, at doses judged too low to be dangerous.</string>
+
+    <!-- Satan's bolete -->
+    <string name="myco_satanas_name">Satan’s bolete</string>
+    <string name="myco_satanas_alt">Bolet de Satan</string>
+    <string name="myco_satanas_latin" translatable="false">Rubroboletus satanas</string>
+    <string-array name="myco_satanas_traits">
+        <item>Whitish to grey cap, up to 25 cm</item>
+        <item>Pores yellow-orange then blood red, turning blue when touched</item>
+        <item>Obese stem, yellow at the top, bright red below, with a fine net</item>
+        <item>Whitish flesh that slowly turns blue when cut</item>
+        <item>Weak smell when young, rotten meat in old ones</item>
+        <item>Oaks, beeches, chalky soils, warm regions · summer</item>
+    </string-array>
+    <string name="myco_satanas_note">Toxic: vomiting, sometimes bloody diarrhoea, especially raw or undercooked. Rarely fatal in a healthy adult, but violent. In 2022 it was the second most frequent toxic species found in French harvests (ANSES).</string>
+
+    <!-- Chanterelle -->
+    <string name="myco_cibarius_name">Chanterelle</string>
+    <string name="myco_cibarius_alt">Girolle</string>
+    <string name="myco_cibarius_latin" translatable="false">Cantharellus cibarius</string>
+    <string-array name="myco_cibarius_traits">
+        <item>Egg yellow, 4 to 10 cm, funnel-shaped, wavy margin</item>
+        <item>Underside with thick, forked, strongly decurrent ridges: no real gills</item>
+        <item>Fruity apricot smell</item>
+        <item>Cream-white, firm flesh</item>
+        <item>Grows from the ground under broadleaves or conifers, never on wood</item>
+        <item>Pale yellow spores · summer to late autumn</item>
+    </string-array>
+    <string name="myco_cibarius_note">Several close species, such as the pale chanterelle, are also edible. Frequent confusion with the toxic jack-o’-lantern: it was one of the most common in 2024 (ANSES).</string>
+
+    <!-- Jack-o'-lantern -->
+    <string name="myco_olearius_name">Jack-o’-lantern</string>
+    <string name="myco_olearius_alt">Clitocybe de l’olivier</string>
+    <string name="myco_olearius_latin" translatable="false">Omphalotus olearius</string>
+    <string-array name="myco_olearius_traits">
+        <item>Bright orange to coppery, 6 to 14 cm, funnel-shaped</item>
+        <item>Underside with real, thin, crowded, decurrent, unforked gills</item>
+        <item>Grows in clumps on wood, stumps or roots of broadleaves</item>
+        <item>Orange flesh, even inside the stem</item>
+        <item>Oily smell · gills faintly glow in the dark</item>
+        <item>Southern France and the Mediterranean, moving north</item>
+    </string-array>
+    <string name="myco_olearius_note">Toxic: nausea, vomiting, heavy diarrhoea, cramps, risk of dehydration. Among toxic harvests identified in 2022, 8.5% contained it (ANSES).</string>
+
+    <!-- False chanterelle -->
+    <string name="myco_aurantiaca_name">False chanterelle</string>
+    <string name="myco_aurantiaca_alt">Fausse girolle</string>
+    <string name="myco_aurantiaca_latin" translatable="false">Hygrophoropsis aurantiaca</string>
+    <string-array name="myco_aurantiaca_traits">
+        <item>Orange, 3 to 8 cm, velvety cap, darker centre</item>
+        <item>Thin, crowded gills, regularly forked, that peel off with a fingernail</item>
+        <item>Slender stem, darkening to blackish toward the base</item>
+        <item>Soft, orange-yellow flesh, no apricot smell</item>
+        <item>Under conifers, on rotting wood or humus</item>
+    </string-array>
+    <string name="myco_aurantiaca_note">Not worth eating: soft flesh, sometimes poorly tolerated. The poisonings once blamed on it mostly came from confusion, notably with the jack-o’-lantern.</string>
+    <string name="myco_aurantiaca_history">The Swedish mycologist Elias Fries called it “poisonous” in 1821; before 1999, guides sometimes gave it as edible. Today it is judged not worth eating rather than dangerous.</string>
+
+    <!-- Parasol -->
+    <string name="myco_procera_name">Parasol</string>
+    <string name="myco_procera_alt">Coulemelle</string>
+    <string name="myco_procera_latin" translatable="false">Macrolepiota procera</string>
+    <string-array name="myco_procera_traits">
+        <item>Large: parasol-shaped cap up to 25 cm with a smooth brown umbo at the centre</item>
+        <item>Brown shaggy scales on a pale ground</item>
+        <item>Stem 10 to 30 cm, banded with brown on a cream ground, bulbous</item>
+        <item>Thick double ring that slides along the stem</item>
+        <item>No volva · white free gills · white spores</item>
+        <item>Meadows, clearings, open woods · July to October</item>
+    </string-array>
+    <string name="myco_procera_note">Only the cap is eaten: the stem is tough. Never a lepiota under 10 cm. In France it is confused with the death cap, the panther cap, the livid entoloma and poisonous lepiotas (ANSES).</string>
+
+    <!-- Deadly parasol -->
+    <string name="myco_brunneoincarnata_name">Deadly parasol</string>
+    <string name="myco_brunneoincarnata_alt">Lépiote brun-incarnat</string>
+    <string name="myco_brunneoincarnata_latin" translatable="false">Lepiota brunneoincarnata</string>
+    <string-array name="myco_brunneoincarnata_traits">
+        <item>Small: cap only 3 to 4 cm, pinkish-brown scales on a pale ground</item>
+        <item>One large, darker scale at the centre</item>
+        <item>Stem 2 to 3.5 cm: pink above, covered with brown scales below, split by a dark ring zone</item>
+        <item>White free gills · flesh reddens when cut</item>
+        <item>Lawns, parks, gardens · warm regions</item>
+    </string-array>
+    <string name="myco_brunneoincarnata_note">Deadly: same toxins as the death cap. About 100 g can severely damage the liver. It grows on lawns, where it is taken for a small parasol; signs come late, more than 6 hours after the meal.</string>
+
+    <!-- Field mushroom -->
+    <string name="myco_campestris_name">Field mushroom</string>
+    <string name="myco_campestris_alt">Rosé des prés</string>
+    <string name="myco_campestris_latin" translatable="false">Agaricus campestris</string>
+    <string-array name="myco_campestris_traits">
+        <item>White cap, 4 to 10 cm, finely fibrous</item>
+        <item>Gills pink, then chocolate brown: never white</item>
+        <item>Thin, fleeting ring, often gone</item>
+        <item>Short spindle-shaped stem, no bulb or volva</item>
+        <item>White flesh that barely pinkens, does not yellow · pleasant button-mushroom smell</item>
+        <item>Meadows and pastures · late summer to autumn</item>
+    </string-array>
+    <string name="myco_campestris_note">Edible, provided you do not make a mistake: in 2022 two people died after taking a deadly amanita for a field mushroom or a fallow-field agaric (ANSES). The gills of every specimen must be pink or brown, never white.</string>
+
+    <!-- Yellow stainer -->
+    <string name="myco_xanthodermus_name">Yellow stainer</string>
+    <string name="myco_xanthodermus_alt">Agaric jaunissant</string>
+    <string name="myco_xanthodermus_latin" translatable="false">Agaricus xanthodermus</string>
+    <string-array name="myco_xanthodermus_traits">
+        <item>White cap, cube- or cup-shaped at first, then flat, 6 to 15 cm</item>
+        <item>Yellows quickly when rubbed, especially at the cap edge and stem</item>
+        <item>Bulbous stem base, chrome-yellow flesh when cut</item>
+        <item>Wide, persistent ring, woolly underneath</item>
+        <item>Smell of ink, iodine or phenol, stronger when cooked</item>
+        <item>Gills pink then blackish brown, like the field mushroom</item>
+        <item>Meadows, edges, parks, gardens · July to November</item>
+    </string-array>
+    <string name="myco_xanthodermus_note">Toxic: vomiting and digestive upset. In 2022 it was the toxic species most often found in French harvests (25.7%, ANSES). The yellowing can be weak or absent.</string>
+
+    <!-- Morel -->
+    <string name="myco_morchella_name">Yellow morel</string>
+    <string name="myco_morchella_alt">Morille jaune</string>
+    <string name="myco_morchella_latin" translatable="false">Morchella esculenta</string>
+    <string-array name="myco_morchella_traits">
+        <item>Egg-shaped honeycomb cap of 4 to 10 cm, straw yellow to honey brown</item>
+        <item>Hollow in a single cavity, from the top of the cap to the foot</item>
+        <item>Cap joined to the stem at its base</item>
+        <item>Whitish, hollow, granular stem, sometimes flared</item>
+        <item>Spring (March to May): orchards, ash trees, woodland edges</item>
+    </string-array>
+    <string name="myco_morchella_note">Toxic raw or undercooked: always cook it well. Cut in half lengthwise, it is hollow in a single cavity; if not, it may be a false morel.</string>
+
+    <!-- False morel -->
+    <string name="myco_gyromitra_name">False morel</string>
+    <string name="myco_gyromitra_alt">Gyromitre</string>
+    <string name="myco_gyromitra_latin" translatable="false">Gyromitra esculenta</string>
+    <string-array name="myco_gyromitra_traits">
+        <item>Cap in folded lobes like a brain, reddish brown to chestnut, 3 to 11 cm</item>
+        <item>Cut lengthwise: chambered inside, cap joined to the stem at several points</item>
+        <item>Short, stocky stem, white to cream, furrowed</item>
+        <item>Brittle flesh, strong smell</item>
+        <item>Under conifers, acid or sandy soils · March to June</item>
+    </string-array>
+    <string name="myco_gyromitra_note">Deadly: gyromitrin turns into methylhydrazine, which attacks the liver and the nervous system. Sale banned in France since 1991. Cooking fumes are also dangerous, and boiling does not remove everything.</string>
+    <string name="myco_gyromitra_history">Long eaten after boiling (its name, esculenta, means “edible”). Unpredictable poisonings, over a hundred fatal cases in the literature, then a suspected cumulative toxicity got it ranked as deadly. Its sale has been banned in France since 1991, as well as in Germany and Switzerland; it is still allowed in Finland, with warnings.</string>
+
+    <!-- Brown roll-rim -->
+    <string name="myco_paxillus_name">Brown roll-rim</string>
+    <string name="myco_paxillus_alt">Paxille enroulé</string>
+    <string name="myco_paxillus_latin" translatable="false">Paxillus involutus</string>
+    <string-array name="myco_paxillus_traits">
+        <item>Olive-brown to yellow-brown cap, 4 to 12 cm, felty, dipped into a funnel</item>
+        <item>Strongly rolled margin that stays rolled for a long time</item>
+        <item>Yellow-brown, decurrent, forked gills that peel off easily and brown when touched</item>
+        <item>Short stem, tapering toward the base, no ring</item>
+        <item>Yellowish flesh, no milk (unlike milk caps)</item>
+        <item>Under birches, lawns, damp ground · late summer to autumn · brown spores</item>
+    </string-array>
+    <string name="myco_paxillus_note">Deadly, without warning: after repeated meals, sometimes over years with no problem at all, the body makes antibodies that destroy its own red blood cells. Anaemia, kidney failure, sometimes death. No antidote. In France it is picked by mistake instead of the fairy-ring mushroom (ANSES).</string>
+    <string name="myco_paxillus_history">It was commonly eaten in central and eastern Europe until the Second World War. In 1944 the German mycologist Julius Schäffer died after eating it. In 1985 the Swiss physician René Flammer described the immune mechanism. Guides only clearly warned against eating it around 1990; it is still eaten in Poland, Russia and Ukraine, where people die of it every year.</string>
+
+    <!-- Man on horseback -->
+    <string name="myco_equestre_name">Man on horseback</string>
+    <string name="myco_equestre_alt">Tricholome équestre</string>
+    <string name="myco_equestre_latin" translatable="false">Tricholoma equestre</string>
+    <string-array name="myco_equestre_traits">
+        <item>Bright yellow to olive-yellow cap, 5 to 10 cm, scaly orange-brown centre, a little sticky</item>
+        <item>Lemon to sulphur-yellow gills, crowded</item>
+        <item>Yellow, stocky stem with no ring or volva</item>
+        <item>White flesh, yellow under the skin, weak smell, mild taste</item>
+        <item>Sandy pine woods (Landes), autumn to winter · whitish spores</item>
+    </string-array>
+    <string name="myco_equestre_note">Toxic: it breaks down muscle fibres (rhabdomyolysis). Unusual tiredness, hip and shoulder pain, sweating, dark urine, 1 to 3 days after several meals. Twelve cases in France between 1992 and 2000, three of them fatal. Sale banned in France.</string>
+    <string name="myco_equestre_history">Once highly prized, sold in markets and cooked as a salmis in the Landes. In 2001 doctors published twelve cases of muscle breakdown after repeated meals, three of them deaths. In 2004 France suspended its sale, then made the ban permanent in 2005, for the whole group T. equestre, T. auratum and T. flavovirens. The toxin is still unidentified.</string>
+
+    <!-- Caesar’s mushroom -->
+    <string name="myco_caesarea_name">Caesar’s mushroom</string>
+    <string name="myco_caesarea_alt">Oronge</string>
+    <string name="myco_caesarea_latin" translatable="false">Amanita caesarea</string>
+    <string-array name="myco_caesarea_traits">
+        <item>Bright orange-red cap, 8 to 20 cm, smooth, no warts; clearly striate margin, golden yellow</item>
+        <item>Golden-yellow gills, free, close</item>
+        <item>Yellow, solid stem with a wide, hanging ring, striate on top</item>
+        <item>Thick white volva, a large sac at the base: it is always present</item>
+        <item>White flesh, yellow under the cap skin · mild smell and taste · white spores</item>
+        <item>Under oaks, chestnuts, beeches, in warm places · July to November</item>
+    </string-array>
+    <string name="myco_caesarea_note">A prized edible, but only when identified with certainty. At the egg stage none of its features show and it looks like other amanitas, including the deadly death cap: serious poisonings have followed the picking of amanitas at that stage. Washed by rain, the fly agaric looks like it. Protected in several European countries.</string>
+
+    <!-- Livid pinkgill -->
+    <string name="myco_sinuatum_name">Livid pinkgill</string>
+    <string name="myco_sinuatum_alt">Entolome livide</string>
+    <string name="myco_sinuatum_latin" translatable="false">Entoloma sinuatum</string>
+    <string-array name="myco_sinuatum_traits">
+        <item>Pale grey to yellowish-beige cap, 3 to 20 cm, convex then flat, not striate</item>
+        <item>Butter-yellow gills (rarely white), turning pinkish with age, notched around the stem</item>
+        <item>White to cream stem, fleshy, often club-shaped, no ring</item>
+        <item>White flesh, floury smell and taste, often unpleasant</item>
+        <item>Pink spores</item>
+        <item>Edges and open deciduous woods, mostly on chalky soil · mid-summer to late autumn</item>
+    </string-array>
+    <string name="myco_sinuatum_note">Toxic: nausea, vomiting and heavy diarrhoea, with moderate liver damage. The Belgian poison centre gives 3 to 8 hours after the meal, other sources as early as 30 minutes; recovery takes 5 to 6 days and hospital is sometimes needed. The toxin is unidentified. The first signs look like death cap poisoning: without leftovers, diagnosis is difficult. In 2022, 8.5% of toxic pickings in France contained it (ANSES).</string>
+
+    <!-- Clouded agaric -->
+    <string name="myco_nebularis_name">Clouded agaric</string>
+    <string name="myco_nebularis_alt">Clitocybe nébuleux</string>
+    <string name="myco_nebularis_latin" translatable="false">Clitocybe nebularis</string>
+    <string-array name="myco_nebularis_traits">
+        <item>Grey to grey-brown cap, 5 to 25 cm, often with a white bloom when young, rolled margin</item>
+        <item>Pale, close gills, often forked, up to slightly decurrent</item>
+        <item>Light grey stem, stout, swollen at the base</item>
+        <item>White, very thick flesh · strong smell, from floury to rancid</item>
+        <item>Pale yellow spores</item>
+        <item>Under broadleaves and conifers · autumn</item>
+    </string-array>
+    <string name="myco_nebularis_note">Not recommended: even a small portion can upset the digestion of some people. It is mistaken for the livid pinkgill, which is toxic, and whose gills turn pink.</string>
+
+    <!-- St George’s mushroom -->
+    <string name="myco_gambosa_name">St George’s mushroom</string>
+    <string name="myco_gambosa_alt">Tricholome de la Saint-Georges</string>
+    <string name="myco_gambosa_latin" translatable="false">Calocybe gambosa</string>
+    <string-array name="myco_gambosa_traits">
+        <item>White-beige to pale apricot cap, 5 to 10 cm, matt and slightly velvety, rolled margin</item>
+        <item>White to cream gills, very close</item>
+        <item>Short, stocky stem, whitish, faintly striate</item>
+        <item>Thick white flesh · strong smell and taste of fresh flour</item>
+        <item>White spores</item>
+        <item>Meadows, hedges, orchards, often in rings · late April to June</item>
+    </string-array>
+    <string name="myco_gambosa_note">Edible, a spring mushroom. Two toxic look-alikes appear in the same season: the red-staining inocybe, with a conical cap that turns red, and sometimes the livid pinkgill, with gills yellowish at first then pink. The spore print is white; tobacco-brown for the inocybe, pink for the pinkgill. The floury smell is not enough: the pinkgill has it too.</string>
+
+    <!-- Red-staining inocybe -->
+    <string name="myco_erubescens_name">Red-staining inocybe</string>
+    <string name="myco_erubescens_alt">Inocybe de Patouillard</string>
+    <string name="myco_erubescens_latin" translatable="false">Inosperma erubescens</string>
+    <string-array name="myco_erubescens_traits">
+        <item>Conical to bell-shaped cap with an umbo, 3 to 7 cm, fibrous, margin often split</item>
+        <item>White to straw-yellow cap, then vermilion-brown</item>
+        <item>Close gills, white then ochre, staining red</item>
+        <item>Cylindrical, striate white stem that stains red · no ring</item>
+        <item>Tobacco-brown spores</item>
+        <item>Under broadleaves, mostly beeches · spring and summer</item>
+    </string-array>
+    <string name="myco_erubescens_note">Toxic: it contains muscarine, which causes, within minutes to 2 hours, sweating, salivation, tears, runny nose, breathing difficulty and a slow heart. Recovery usually comes in under 24 hours; atropine is sometimes needed (Belgian poison centre). Out in spring, it is mistaken for St George’s mushroom: this one turns red, the other does not.</string>
+
+    <!-- Fairy ring champignon -->
+    <string name="myco_oreades_name">Fairy ring champignon</string>
+    <string name="myco_oreades_alt">Faux mousseron</string>
+    <string name="myco_oreades_latin" translatable="false">Marasmius oreades</string>
+    <string-array name="myco_oreades_traits">
+        <item>Cap 2 to 6 cm, buff to reddish tan, paling as it dries; bell-shaped at first, then flat with a lasting umbo; grooved margin</item>
+        <item>Cream-white gills, thick, widely spaced</item>
+        <item>Slender stem, paler than the cap, hollow, elastic and very tough: it twists as it dries</item>
+        <item>Thin flesh · smell of cut hay, sometimes faintly of cyanide</item>
+        <item>White spores</item>
+        <item>Lawns, meadows, path edges, in arcs or fairy rings · spring to autumn</item>
+    </string-array>
+    <string name="myco_oreades_note">A well-liked edible; the tough stem is thrown away (the Belgian poison centre advises it too). Toxic white clitocybes grow on the same lawns, sometimes in rings too: their gills are close, those of the fairy ring champignon widely spaced. The deadly brown roll-rim is also picked by mistake in its place in France (ANSES).</string>
+
+    <!-- Fool’s funnel -->
+    <string name="myco_rivulosa_name">Fool’s funnel</string>
+    <string name="myco_rivulosa_alt">Clitocybe blanchi</string>
+    <string name="myco_rivulosa_latin" translatable="false">Clitocybe rivulosa</string>
+    <string-array name="myco_rivulosa_traits">
+        <item>White to cream cap, 2 to 6 cm, frosted, often dished, sometimes cracked in circles; rolled margin</item>
+        <item>Close gills, whitish then cream</item>
+        <item>Short, fibrous, silky white stem, no ring</item>
+        <item>Floury smell</item>
+        <item>Meadows, lawns, parks, path edges, sometimes in fairy rings · summer to autumn</item>
+    </string-array>
+    <string name="myco_rivulosa_note">Toxic: muscarine causes sweating, salivation, tears, vomiting and a slow heart, from a few minutes to 2 hours after the meal. Recovery usually comes in under 24 hours; atropine is sometimes needed. It can be fatal for a frail person. It grows on lawns, where children and pets play.</string>
+
+    <!-- Common ink cap -->
+    <string name="myco_atramentaria_name">Common ink cap</string>
+    <string name="myco_atramentaria_alt">Coprin noir d’encre</string>
+    <string name="myco_atramentaria_latin" translatable="false">Coprinopsis atramentaria</string>
+    <string-array name="myco_atramentaria_traits">
+        <item>Egg-shaped cap, 3 to 7 cm, grey to grey-brown, pleated, opening little</item>
+        <item>Very close, free gills: white, then grey, then black</item>
+        <item>The cap melts into black ink starting from the gills</item>
+        <item>White to grey stem, long, smooth, hollow; ring absent or invisible</item>
+        <item>Blackish spores</item>
+        <item>Gardens, path edges, buried stumps, in tufts · summer to late autumn</item>
+    </string-array>
+    <string name="myco_atramentaria_note">Edible, but never with alcohol: coprine blocks the breakdown of alcohol. A glass of wine or beer during the meal, or up to 72 hours after, causes flushing of the face and neck, headache, dizziness, sweating, vomiting and a drop in blood pressure. The effects pass within a few hours (Belgian poison centre).</string>
+
+    <!-- Shaggy ink cap -->
+    <string name="myco_comatus_name">Shaggy ink cap</string>
+    <string name="myco_comatus_alt">Coprin chevelu</string>
+    <string name="myco_comatus_latin" translatable="false">Coprinus comatus</string>
+    <string-array name="myco_comatus_traits">
+        <item>White cylindrical cap, 6 to 12 cm tall, covered in upturned fibres, brownish at the top</item>
+        <item>Free gills, white, then pink, then black</item>
+        <item>The cap melts into black ink, less than the common ink cap</item>
+        <item>White cylindrical stem, swollen at the base, with a movable ring</item>
+        <item>Blackish spores</item>
+        <item>Lawns, grassland, path edges, rich soil, in groups</item>
+    </string-array>
+    <string name="myco_comatus_note">Edible when young, while the gills are still white: eat it quickly, and throw away anything turning pink or black. Unlike the common ink cap, it is safe to eat with alcohol.</string>
+
+    <!-- Funeral bell -->
+    <string name="myco_galerina_name">Funeral bell</string>
+    <string name="myco_galerina_alt">Galère marginée</string>
+    <string name="myco_galerina_latin" translatable="false">Galerina marginata</string>
+    <string-array name="myco_galerina_traits">
+        <item>Small convex cap, 3 to 5 cm, brown to tawny, paling as it dries</item>
+        <item>Brownish gills, then tawny · rusty-brown spores</item>
+        <item>Stem 2 to 6 cm with a small fragile ring, clear on young ones, often gone later</item>
+        <item>Stem white and powdery above the ring, brown and silky below</item>
+        <item>Floury smell</item>
+        <item>On rotting wood, mostly conifer, alone or in small groups · summer to autumn</item>
+    </string-array>
+    <string name="myco_galerina_note">Deadly: the same amatoxins as the death cap. The first signs come about twelve hours after the meal on average, up to 48 hours, like gastroenteritis; then the liver is hit. Intensive care, sometimes a liver transplant. It looks like the sheathed woodtuft and the sulphur tuft (Belgian poison centre).</string>
+
+    <!-- Sheathed woodtuft -->
+    <string name="myco_mutabilis_name">Sheathed woodtuft</string>
+    <string name="myco_mutabilis_alt">Pholiote changeante</string>
+    <string name="myco_mutabilis_latin" translatable="false">Kuehneromyces mutabilis</string>
+    <string-array name="myco_mutabilis_traits">
+        <item>Cap 3 to 8 cm, shiny: honey to reddish-brown when damp, with a paler centre; cinnamon when dry</item>
+        <item>Yellowish or cinnamon gills, then ochre-brown</item>
+        <item>Stem up to 8 cm, smooth above the ring, scaly and darker below</item>
+        <item>Light, sagging ring that often disappears</item>
+        <item>Rusty spores · pleasant smell, mild taste</item>
+        <item>In tufts of sometimes fused stems, on broadleaf stumps · late spring to autumn</item>
+    </string-array>
+    <string name="myco_mutabilis_note">A good edible, except the fibrous stem. But the deadly funeral bell can fool even experienced pickers. The woodtuft dries from the centre outward, the funeral bell from the rim inward; one smells pleasant, the other floury. The scales below the ring are not enough: the funeral bell can have some too.</string>
+
+    <!-- Sulphur tuft -->
+    <string name="myco_fasciculare_name">Sulphur tuft</string>
+    <string name="myco_fasciculare_alt">Hypholome en touffe</string>
+    <string name="myco_fasciculare_latin" translatable="false">Hypholoma fasciculare</string>
+    <string-array name="myco_fasciculare_traits">
+        <item>Cap 3 to 7 cm, sulphur yellow, darker orange-brown centre</item>
+        <item>Close gills, yellowish then greenish, brown when ripe</item>
+        <item>Curved, sulphur-yellow stem; no ring, only a fleeting veil remnant</item>
+        <item>Thin, sulphur-yellow flesh · very bitter taste</item>
+        <item>Purple-brown spores</item>
+        <item>In tufts fused at the base, on stumps and wood of broadleaves or conifers · spring to autumn</item>
+    </string-array>
+    <string name="myco_fasciculare_note">Toxic: nausea, vomiting, diarrhoea, sometimes only 5 to 10 hours after the meal; it usually passes in a few days. One death from fulminant hepatitis is cited, but the dish contained other mushrooms. It resembles the funeral bell and the sheathed woodtuft (Belgian poison centre).</string>
+
+    <!-- Honey fungus -->
+    <string name="myco_mellea_name">Honey fungus</string>
+    <string name="myco_mellea_alt">Armillaire couleur de miel</string>
+    <string name="myco_mellea_latin" translatable="false">Armillaria mellea</string>
+    <string-array name="myco_mellea_traits">
+        <item>Cap 1 to 15 cm, light yellow, mustard or olive-brown, with fine dark fibres mostly at the centre</item>
+        <item>Gills white then yellowish, sometimes stained brown</item>
+        <item>Slender stem, striate above a white ring, flecked white below; fibrous and tough with age</item>
+        <item>White flesh, slightly bitter taste · white spores</item>
+        <item>In tufts, sometimes dozens of stems, on stumps, roots and trunks, mostly of broadleaves</item>
+        <item>Very common in autumn</item>
+    </string-array>
+    <string name="myco_mellea_note">Not recommended: ANSES considers it can cause digestive trouble (diarrhoea, vomiting, pain) a few hours after the meal, and nothing shows that long cooking or canning removes the risk. Between 1999 and 2015, French poison centres recorded 83 cases. Some authors call it edible when young and well cooked. It grows in tufts like toxic look-alikes, the funeral bell and the sulphur tuft.</string>
+    <string name="myco_mellea_history">Long cited as a middling edible, sometimes only when young, it is judged indigestible and sometimes allergenic. In Italy, where it is widely eaten, it caused 25% of the mushroom poisonings recorded by the Milan poison centre between 1994 and 1999. In 2015 ANSES judged it can cause poisonings, even after canning. An order of 5 August 2016 suspended for one year the sale of fresh honey fungus without a notice about full cooking.</string>
+</resources>

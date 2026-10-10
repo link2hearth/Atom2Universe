@@ -235,6 +235,7 @@
     <color name="science_tile_cosmic">#311B92</color>
     <color name="science_tile_boids">#BF360C</color>
     <color name="science_tile_biology">#102A32</color>
+    <color name="science_tile_mycology">#0F2018</color>
 
     <!-- Nuclide decay types -->
     <color name="nuclide_stable">#000000</color>

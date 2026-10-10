@@ -153,6 +153,7 @@ val bancsDeMesure = listOf(
     "*.golf.MiniGolfApercuTest",
     "*.golf.GardensScoringCalibrationTest",
     "*.golf.GardensPuttingBenchmarkTest",
+    "*.mycology.FungusPlateApercuTest",
 )
 if (!providers.gradleProperty("bancsMesure").isPresent) {
     tasks.withType<Test>().configureEach {
