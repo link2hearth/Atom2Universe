@@ -136,7 +136,7 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
     }
 
     private fun cameraMenu() {
-        PopupMenu(context,cameraButton).apply {
+        com.Atom2Universe.app.util.ImmersivePopupMenu(context,cameraButton).apply {
             val names=resources.getStringArray(R.array.golf_replay_cameras)
             cameraModes.forEachIndexed{index,mode->menu.add(0,index,0,names[mode.ordinal])}
             menu.add(0,cameraModes.size,0,R.string.golf_replay_recenter)
@@ -150,7 +150,7 @@ internal class GolfReplayView(context: Context, val replay: GolfReplay, private 
     }
 
     private fun chooseSpeed() {
-        PopupMenu(context,speedButton).apply {
+        com.Atom2Universe.app.util.ImmersivePopupMenu(context,speedButton).apply {
             resources.getStringArray(R.array.golf_replay_speeds).forEachIndexed{index,label->menu.add(0,index,0,label)}
             setOnMenuItemClickListener{speed=speeds[it.itemId];updateLabels();true}
             show()

@@ -205,10 +205,10 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private fun chooseRound(definition:ClassicCourseDefinition,length:ClassicRoundLength){
         selectCourse(definition,length)
         if(!progress.getBoolean("active",false)){startRound(false);return}
-        showDialog(AlertDialog.Builder(this).setTitle(getString(R.string.golf_section_title,getString(course.titleRes),getString(length.labelRes)))
+        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(getString(R.string.golf_section_title,getString(course.titleRes),getString(length.labelRes)))
             .setPositiveButton(R.string.golf_continue){_,_->startRound(true)}
             .setNeutralButton(R.string.golf_new_course){_,_->
-                showDialog(AlertDialog.Builder(this).setMessage(R.string.classic_replace)
+                showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setMessage(R.string.classic_replace)
                     .setNegativeButton(android.R.string.cancel,null).setPositiveButton(R.string.golf_play){_,_->startRound(false)}.create())
             }.setNegativeButton(android.R.string.cancel,null).create())
     }
@@ -226,7 +226,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
                 dialog?.dismiss();selectCourse(definition,length);round=true;scores.clear();scores+=stored;scorecard(false)
             },LinearLayout.LayoutParams(-1,-2).apply{topMargin=ui.dp(8)})
         }
-        showDialog(AlertDialog.Builder(this).setTitle(getString(definition.titleRes))
+        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(getString(definition.titleRes))
             .setView(ScrollView(this).apply{addView(col)}).setPositiveButton(R.string.golf_done,null).create())
     }
 
@@ -623,7 +623,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private fun chooseClub(){
         val g=game?:return;if(!canSetShot())return
         val entries=GolfClub.entries.map{getString(R.string.classic_club_choice,clubNames[it.ordinal],it.carry.roundToInt(),it.loft.roundToInt())}.toTypedArray()
-        showDialog(AlertDialog.Builder(this).setTitle(R.string.classic_choose_club).setSingleChoiceItems(entries,g.club.ordinal){d,n->g.club=GolfClub.entries[n];previewDirty=true;refreshHud();d.dismiss()}.setNegativeButton(android.R.string.cancel,null).create())
+        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(R.string.classic_choose_club).setSingleChoiceItems(entries,g.club.ordinal){d,n->g.club=GolfClub.entries[n];previewDirty=true;refreshHud();d.dismiss()}.setNegativeButton(android.R.string.cancel,null).create())
     }
 
     private fun save(){
@@ -666,7 +666,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             col.addView(ui.text(getString(R.string.classic_score_row,h.number,h.par,displayScores[i]?.toString()?:getString(R.string.classic_unplayed)),16f).apply{setPadding(0,ui.dp(5),0,ui.dp(5))})
         }
         col.addView(ui.text(getString(R.string.golf_total,displayScores.filterNotNull().sum(),roundHoles.filterIndexed{i,_->displayScores[i]!=null}.sumOf{it.par}),20f,bold=true).apply{setPadding(0,ui.dp(12),0,0)})
-        val b=AlertDialog.Builder(this).setTitle(R.string.golf_scorecard).setView(ScrollView(this).apply{addView(col)})
+        val b=com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(R.string.golf_scorecard).setView(ScrollView(this).apply{addView(col)})
         if(finished)b.setPositiveButton(R.string.golf_menu){_,_->showMenu()}.setCancelable(false) else b.setPositiveButton(android.R.string.ok,null)
         showDialog(b.create())
     }
@@ -686,7 +686,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             }
             tips
         })
-        val b=AlertDialog.Builder(this).setTitle(R.string.golf_info)
+        val b=com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(R.string.golf_info)
             .setView(ScrollView(this).apply{addView(col)}).setPositiveButton(R.string.golf_done,null)
         b.setNeutralButton(if(muted)R.string.classic_sound_on else R.string.classic_sound_off){_,_->muted=!muted;prefs.edit().putBoolean("muted",muted).apply();if(muted)audio.pause()else if(resumed)audio.resume()}
         showDialog(b.create())
@@ -775,7 +775,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             setText(shot.name.ifBlank{getString(R.string.golf_replay_default_name,getString(definition.titleRes),shot.hole,shot.stroke)})
             selectAll()
         }
-        showDialog(AlertDialog.Builder(this).setTitle(R.string.golf_replay_name).setView(name)
+        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(R.string.golf_replay_name).setView(name)
             .setNegativeButton(android.R.string.cancel,null).setPositiveButton(R.string.golf_replay_save){_,_->
                 val named=shot.copy(name=name.text.toString().trim().ifBlank{getString(R.string.golf_replay_default_name,getString(definition.titleRes),shot.hole,shot.stroke)})
                 replayIo.execute {
@@ -792,7 +792,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             runOnUiThread {
                 if(isDestroyed||generation!=screenGeneration)return@runOnUiThread
                 val entries=result.getOrElse{replayError();return@runOnUiThread}
-                val builder=AlertDialog.Builder(this).setTitle(R.string.golf_replay_library)
+                val builder=com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(R.string.golf_replay_library)
                     .setNegativeButton(R.string.golf_done,null)
                 if(entries.isEmpty())builder.setMessage(R.string.golf_replay_empty)
                 else builder.setItems(entries.map{entry->
@@ -806,7 +806,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     }
 
     private fun chooseSavedReplay(entry:GolfReplayStore.Entry) {
-        showDialog(AlertDialog.Builder(this).setTitle(entry.name)
+        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(entry.name)
             .setPositiveButton(R.string.golf_replay_play){_,_->
                 val generation=screenGeneration
                 replayIo.execute {
@@ -814,7 +814,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
                     runOnUiThread{if(!isDestroyed&&generation==screenGeneration)loaded.fold({openReplay(it)},{replayError()})}
                 }
             }.setNeutralButton(R.string.golf_replay_delete){_,_->
-                showDialog(AlertDialog.Builder(this).setMessage(getString(R.string.golf_replay_delete_confirm,entry.name))
+                showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setMessage(getString(R.string.golf_replay_delete_confirm,entry.name))
                     .setNegativeButton(android.R.string.cancel,null).setPositiveButton(R.string.golf_replay_delete){_,_->
                         replayIo.execute {
                             val deleted=runCatching{replayStore.delete(entry.id)}

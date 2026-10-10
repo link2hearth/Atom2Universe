@@ -122,7 +122,7 @@ internal class CaveStackPopup(private val a: CaveActivity) {
         val x=(at[0]+anchor.width/2-width/2).coerceIn(dp(8),(metrics.widthPixels-width-dp(8)).coerceAtLeast(dp(8)))
         val y=(if(at[1]+anchor.height+height<metrics.heightPixels-dp(8)) at[1]+anchor.height else at[1]-height)
             .coerceIn(dp(8),(metrics.heightPixels-height-dp(8)).coerceAtLeast(dp(8)))
-        popup=PopupWindow(content,width,height,true).apply {
+        popup=com.Atom2Universe.app.util.ImmersivePopupWindow(content,width,height,true).apply {
             setBackgroundDrawable(CaveUiStyle.bubble(a));elevation=dp(10).toFloat()
             isOutsideTouchable=true;inputMethodMode=PopupWindow.INPUT_METHOD_NEEDED
             setOnDismissListener { popup=null }

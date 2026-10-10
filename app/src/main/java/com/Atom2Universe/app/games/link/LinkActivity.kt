@@ -122,7 +122,7 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
 
     /** Recommencer l'étage (ça coûte des points) ou abandonner toute la partie. */
     private fun showRestartMenu() {
-        val menu = PopupMenu(this, btnRestart)
+        val menu = com.Atom2Universe.app.util.ImmersivePopupMenu(this, btnRestart)
         val canRestartFloor = !game.floorScored && game.placements.isNotEmpty()
         if (canRestartFloor) menu.menu.add(0, 1, 0, R.string.link_restart_floor)
         menu.menu.add(0, 2, 1, R.string.link_new_run)
@@ -139,7 +139,7 @@ class LinkActivity : ThemedActivity(), LinkBoardView.Listener {
     private fun confirmNewRun() {
         // Une partie finie ou à peine commencée n'a rien à perdre : pas de question.
         if (game.isRunOver || (game.floor == 1 && game.placements.isEmpty())) { newRun(); return }
-        AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setMessage(R.string.link_new_run_confirm)
             .setPositiveButton(R.string.link_new_run) { _, _ -> newRun() }
             .setNegativeButton(android.R.string.cancel, null)

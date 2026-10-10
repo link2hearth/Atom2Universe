@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
@@ -25,7 +25,7 @@ import org.json.JSONObject
  * - Compteur d'univers parallèles (incrémenté à chaque victoire ou défaite)
  * - Mode Quantique 🐱 : objectifs impures + coups joker (fusion de n'importe quelle paire)
  */
-class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
+class Game2048Activity : ThemedActivity(), Game2048View.SwipeListener {
 
     private val GRID_SIZES = listOf(3, 4, 5, 6)
 
@@ -73,7 +73,6 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_game2048)
@@ -124,9 +123,9 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
     }
 
     private fun setupSizeSpinner() {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item,
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected,
             GRID_SIZES.map { "${it}×${it}" })
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         sizeSpinner.adapter = adapter
         sizeSpinner.setSelection(GRID_SIZES.indexOf(game.size).coerceAtLeast(0))
 
@@ -161,9 +160,9 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
 
     private fun updateTargetSpinner(size: Int) {
         val pool = currentPool(size)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item,
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected,
             pool.map { it.toString() })
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         ignoreSpinnerChange = true
         targetSpinner.adapter = adapter
         val currentTarget = if (quantumMode) game.quantumTarget else game.target
@@ -231,9 +230,9 @@ class Game2048Activity : AppCompatActivity(), Game2048View.SwipeListener {
 
     private fun updateTargetSpinnerSelection(size: Int, target: Int) {
         val pool = currentPool(size)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item,
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected,
             pool.map { it.toString() })
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         targetSpinner.adapter = adapter
         val idx = pool.indexOf(target).coerceAtLeast(0)
         targetSpinner.setSelection(idx)

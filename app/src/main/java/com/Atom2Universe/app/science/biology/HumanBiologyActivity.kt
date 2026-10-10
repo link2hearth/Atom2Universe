@@ -41,7 +41,7 @@ import java.text.Collator
 import kotlin.math.PI
 
 class HumanBiologyActivity : ThemedActivity() {
-    override val themeBrightness = AppBrightness.DARK
+    private val palette by lazy { com.Atom2Universe.app.science.SciencePalette(this) }
     private var scene: SkeletonScene? = null
     private var catalog: AnatomyCatalog? = null
     private var selected: AnatomicalStructure? = null
@@ -69,10 +69,10 @@ class HumanBiologyActivity : ThemedActivity() {
     private lateinit var redoButton: ImageButton
     private lateinit var searchButton: ImageButton
     private lateinit var journeyControls: LinearLayout
-    private val ink = Color.rgb(231, 238, 239)
-    private val muted = Color.rgb(158, 180, 187)
-    private val accent = Color.rgb(94, 221, 199)
-    private val panel = Color.rgb(18, 35, 44)
+    private val ink get() = palette.text
+    private val muted get() = palette.secondary
+    private val accent get() = palette.accent
+    private val panel get() = palette.surface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +103,7 @@ class HumanBiologyActivity : ThemedActivity() {
 
     private fun buildUi() {
         // Le modèle garde toute la surface, y compris quand une fiche est ouverte.
-        val root = FrameLayout(this).apply { setBackgroundColor(Color.rgb(8, 20, 29)) }
+        val root = FrameLayout(this).apply { setBackgroundColor(palette.background) }
         surface = SurfaceView(this).apply {
             contentDescription = getString(R.string.bio_ui_surface)
             isClickable = true
@@ -112,7 +112,7 @@ class HumanBiologyActivity : ThemedActivity() {
         status = label(R.string.bio_ui_loading, 15f).apply {
             gravity = Gravity.CENTER
             setPadding(dp(28), dp(80), dp(28), dp(32))
-            setBackgroundColor(Color.rgb(8, 20, 29))
+            setBackgroundColor(palette.background)
         }
         root.addView(status, FrameLayout.LayoutParams(-1, -1))
 
@@ -436,7 +436,7 @@ class HumanBiologyActivity : ThemedActivity() {
                 setCompoundDrawablesRelativeWithIntrinsicBounds(
                     if (showExternalGenitals) R.drawable.ic_px_eye else R.drawable.ic_px_eye_off, 0, 0, 0)
                 compoundDrawableTintList = ColorStateList.valueOf(
-                    if (showExternalGenitals) Color.rgb(6, 31, 31) else ink)
+                    if (showExternalGenitals) palette.onAccent else ink)
             }, LinearLayout.LayoutParams(-1, -2))
         }
         content.addView(section(R.string.bio_ui_viewpoints))
@@ -685,7 +685,7 @@ class HumanBiologyActivity : ThemedActivity() {
         }
         list.adapter = adapter
         content.addView(list, LinearLayout.LayoutParams(-1, minOf(dp(380), (resources.displayMetrics.heightPixels * .46f).toInt())))
-        val dialog = AlertDialog.Builder(this).setTitle(R.string.bio_catalog).setView(content)
+        val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.bio_catalog).setView(content)
             .setNegativeButton(R.string.bio_close, null).create()
         list.setOnItemClickListener { _, _, position, _ ->
             val item = filtered[position]
@@ -777,7 +777,7 @@ class HumanBiologyActivity : ThemedActivity() {
     }
 
     private fun showDocument(title: String, content: LinearLayout) {
-        val dialog = AlertDialog.Builder(this).setTitle(title)
+        val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(title)
             .setView(ScrollView(this).apply { addView(content) }).setPositiveButton(R.string.bio_close, null).create()
         dialog.followImmersiveMode()
         dialog.show()
@@ -833,11 +833,11 @@ class HumanBiologyActivity : ThemedActivity() {
     }
     private fun styleButton(view: TextView, active: Boolean) {
         view.isSelected = active
-        view.setTextColor(if (active) Color.rgb(6, 31, 31) else ink)
+        view.setTextColor(if (active) palette.onAccent else ink)
         view.background = RippleDrawable(ColorStateList.valueOf(0x335eddb7),
-            rounded(if (active) accent else Color.rgb(29, 48, 58)), rounded(Color.WHITE))
+            rounded(if (active) accent else palette.raised), rounded(Color.WHITE))
     }
-    private fun rounded(color: Int) = GradientDrawable().apply { cornerRadius = dp(16).toFloat(); setColor(color) }
+    private fun rounded(color: Int) = GradientDrawable().apply { cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(this@HumanBiologyActivity, 16f); setColor(color) }
     private fun square() = LinearLayout.LayoutParams(dp(48), dp(48))
     private fun cardWidth(maximumDp: Int) = minOf(dp(maximumDp), resources.displayMetrics.widthPixels - dp(24))
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()

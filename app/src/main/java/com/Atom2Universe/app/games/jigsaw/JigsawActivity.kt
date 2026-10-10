@@ -33,7 +33,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.games.kit.KitPalette
 import com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder
 import com.Atom2Universe.app.util.SystemBarsManager
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.Atom2Universe.app.util.ImmersiveBottomSheetDialog as BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.Dispatchers
@@ -463,7 +463,7 @@ class JigsawActivity : ThemedActivity() {
     }
     private fun showToolsMenu(anchor: View) {
         val current = game ?: return
-        PopupMenu(this, anchor).apply {
+        com.Atom2Universe.app.util.ImmersivePopupMenu(this, anchor).apply {
             if (!current.solved) {
                 menu.add(0, 1, 0, R.string.jigsaw_edges).apply { isCheckable = true; isChecked = board?.filteringEdges == true }
                 menu.add(0, 2, 1, if (current.layout == JigsawLayout.TABLE) R.string.jigsaw_spread else R.string.jigsaw_tidy)

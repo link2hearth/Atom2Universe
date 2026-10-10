@@ -41,10 +41,11 @@ class CosmoRunActivity : ThemedActivity() {
     private var focus: CosmoRunMissions.Mission? = null
     private val game get() = runView.game
     private enum class Panel { HANGAR, RUN, PAUSE, RESULTS }
-    private val white = 0xFFE9F6FF.toInt()
-    private val muted = 0xFFAABFD2.toInt()
-    private val mint = 0xFF54E5E0.toInt()
-    private val ink = 0xFF091124.toInt()
+    private val palette by lazy { com.Atom2Universe.app.games.kit.KitPalette.from(this) }
+    private val white get() = palette.text
+    private val muted get() = palette.secondary
+    private val mint get() = palette.accent
+    private val ink get() = palette.onAccent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +95,7 @@ class CosmoRunActivity : ThemedActivity() {
 
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
     private fun rounded(color: Int, stroke: Int = Color.TRANSPARENT) = GradientDrawable().apply {
-        setColor(color); cornerRadius = dp(22).toFloat(); setStroke(dp(1), stroke)
+        setColor(color); cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(this@CosmoRunActivity, 22f); setStroke(dp(1), stroke)
     }
     private fun label(text: String, size: Float, color: Int = white, bold: Boolean = false) = TextView(this).apply {
         this.text = text; textSize = size; setTextColor(color)
@@ -106,7 +107,7 @@ class CosmoRunActivity : ThemedActivity() {
         this.text = text; isAllCaps = false; textSize = 15f
         minHeight = dp(48); minimumHeight = dp(48)
         setTextColor(if (primary) ink else white)
-        background = rounded(if (primary) mint else 0xFF23354B.toInt())
+        background = rounded(if (primary) mint else palette.raised)
         setPadding(dp(14), dp(10), dp(14), dp(10))
         setOnClickListener { action() }
     }
@@ -117,7 +118,7 @@ class CosmoRunActivity : ThemedActivity() {
     private fun buildInterface() {
         hud = column().apply {
             setPadding(dp(18), dp(12), dp(18), dp(12))
-            background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(0xED091124.toInt(), Color.TRANSPARENT))
+            background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(androidx.core.graphics.ColorUtils.setAlphaComponent(palette.background, 237), Color.TRANSPARENT))
         }
         val top = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
         val scoreColumn = column()
@@ -128,7 +129,7 @@ class CosmoRunActivity : ThemedActivity() {
         top.addView(button(getString(R.string.cosmo_pause)) { showPanel(Panel.PAUSE) }, LinearLayout.LayoutParams(-2, dp(48)))
         hud.addView(top)
         chainBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
-            max = 1000; progressBackgroundTintList = android.content.res.ColorStateList.valueOf(0xFF34445A.toInt())
+            max = 1000; progressBackgroundTintList = android.content.res.ColorStateList.valueOf(palette.raised)
         }
         hud.addView(chainBar, LinearLayout.LayoutParams(-1, dp(4)).apply { topMargin = dp(4); bottomMargin = dp(4) })
         bonusText = label("", 12f, muted)
@@ -139,13 +140,13 @@ class CosmoRunActivity : ThemedActivity() {
 
         bottom = column().apply {
             setPadding(dp(16), dp(12), dp(16), dp(10))
-            background = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(0xF5091124.toInt(), Color.TRANSPARENT))
+            background = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(androidx.core.graphics.ColorUtils.setAlphaComponent(palette.background, 245), Color.TRANSPARENT))
         }
         missionText = label("", 12f, white, true)
         bottom.addView(missionText)
         missionBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 1000; progressTintList = android.content.res.ColorStateList.valueOf(mint)
-            progressBackgroundTintList = android.content.res.ColorStateList.valueOf(0xFF34445A.toInt())
+            progressBackgroundTintList = android.content.res.ColorStateList.valueOf(palette.raised)
         }
         bottom.addView(missionBar, LinearLayout.LayoutParams(-1, dp(5)).apply { topMargin = dp(6); bottomMargin = dp(10) })
         val controls = LinearLayout(this)
@@ -230,7 +231,7 @@ class CosmoRunActivity : ThemedActivity() {
         if (next == Panel.RUN) { updateHud(); return }
         overlay.removeAllViews()
         val card = column().apply {
-            background = rounded(0xF20D1B30.toInt(), 0xFF36506A.toInt())
+            background = rounded(palette.surface, palette.outline)
             setPadding(dp(24), dp(22), dp(24), dp(22))
         }
         val scroll = object : ScrollView(this) {
@@ -319,7 +320,7 @@ class CosmoRunActivity : ThemedActivity() {
             if (i < unlockedSuits()) suitName(i)
             else getString(R.string.cosmo_suit_locked, suitName(i), CosmoRunMissions.suitRank(i))
         }
-        androidx.appcompat.app.AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.cosmo_suits_title)
             .setSingleChoiceItems(names, selectedSuit) { dialog, which ->
                 if (which < unlockedSuits()) {
@@ -331,7 +332,7 @@ class CosmoRunActivity : ThemedActivity() {
             }.setNegativeButton(R.string.cosmo_close, null).show()
     }
     private fun showGuide() {
-        androidx.appcompat.app.AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.cosmo_guide)
             .setMessage(R.string.cosmo_run_instructions)
             .setPositiveButton(R.string.cosmo_close, null)

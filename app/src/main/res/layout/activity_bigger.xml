@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#05060F">
+    android:background="?attr/a2uScreenBackground">
 
     <!-- Bannière : retour et score à gauche, titre au centre, astre suivant et
          recommencer à droite. Le score y vit pour laisser toute la hauteur au bocal. -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="#05060F">
+        android:background="?attr/a2uScreenBackground">
 
         <TextView
             android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:text="@string/bigger_title"
             android:textSize="14sp"
-            android:textColor="#EEEEEE"
+            android:textColor="?attr/a2uTextColor"
             android:fontFamily="sans-serif-light"
             android:letterSpacing="0.15" />
 
@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/a2uTextColor"
                     android:fontFamily="sans-serif-light"
                     android:includeFontPadding="false" />
 
@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="11sp"
-                    android:textColor="#8A8FB8"
+                    android:textColor="?attr/a2uSecondaryTextColor"
                     android:includeFontPadding="false" />
             </LinearLayout>
         </LinearLayout>

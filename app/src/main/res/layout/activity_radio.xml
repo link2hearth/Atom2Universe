@@ -277,13 +277,13 @@
                 android:textColor="@color/audio_text_primary"
                 android:textColorHint="@color/audio_text_secondary" />
 
-            <Spinner
+            <com.Atom2Universe.app.util.ImmersiveSpinner
                 android:id="@+id/radio_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp" />
 
-            <Spinner
+            <com.Atom2Universe.app.util.ImmersiveSpinner
                 android:id="@+id/radio_language"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

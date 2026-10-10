@@ -45,7 +45,7 @@ class HumanHistoryExplorer(
         addView(panel, LayoutParams(-1, -2).apply { topMargin = dp(10) })
         val options = line()
         filter = button(R.string.ct_history_all_regions) { anchor ->
-            PopupMenu(context, anchor).apply {
+            com.Atom2Universe.app.util.ImmersivePopupMenu(context, anchor).apply {
                 HistoryTopic.entries.forEachIndexed { index, candidate ->
                     menu.add(0, index, index, candidate.label).apply {
                         isCheckable = true; isChecked = candidate == topic

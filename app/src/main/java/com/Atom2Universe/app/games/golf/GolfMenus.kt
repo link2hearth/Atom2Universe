@@ -86,10 +86,10 @@ internal object GolfMenus {
         col.addView(model, LinearLayout.LayoutParams(-1, ui.dp(220)))
         fun choose(label: Int, choices: Int, selected: Int, change: (Int) -> Unit) {
             val caption = ui.text(activity.getString(label), 14f, bold = true).apply { setPadding(0, ui.dp(12), 0, 0) }
-            val picker = Spinner(activity).apply {
+            val picker = com.Atom2Universe.app.util.ImmersiveSpinner(activity).apply {
                 id = View.generateViewId(); contentDescription = activity.getString(label)
-                adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_item, activity.resources.getStringArray(choices)).apply {
-                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                adapter = ArrayAdapter(activity, com.Atom2Universe.app.R.layout.item_spinner_selected, activity.resources.getStringArray(choices)).apply {
+                    setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
                 }
                 setSelection(selected)
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -105,7 +105,7 @@ internal object GolfMenus {
         choose(R.string.classic_golfer_model, R.array.classic_golfer_models, if (look.female) 1 else 0) { look = look.copy(female = it == 1) }
         choose(R.string.classic_golfer_outfit, R.array.classic_golfer_outfits, look.outfit) { look = look.copy(outfit = it) }
         choose(R.string.classic_golfer_skin, R.array.classic_golfer_skins, look.skin) { look = look.copy(skin = it) }
-        val dialog = AlertDialog.Builder(activity).setTitle(R.string.classic_golfer_title)
+        val dialog = com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(activity).setTitle(R.string.classic_golfer_title)
             .setView(ScrollView(activity).apply { addView(col) }).setPositiveButton(R.string.golf_done, null).create()
         var running = false
         val observer = object : DefaultLifecycleObserver {

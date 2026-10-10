@@ -32,7 +32,7 @@
         android:textColor="@color/audio_text_secondary"
         android:textSize="12sp" />
 
-    <Spinner
+    <com.Atom2Universe.app.util.ImmersiveSpinner
         android:id="@+id/program_spinner"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -48,7 +48,7 @@
         android:textColor="@color/audio_text_secondary"
         android:textSize="12sp" />
 
-    <Spinner
+    <com.Atom2Universe.app.util.ImmersiveSpinner
         android:id="@+id/bank_spinner"
         android:layout_width="match_parent"
         android:layout_height="48dp"

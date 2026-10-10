@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#111B27">
+    android:background="?attr/a2uBackgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_arrow_back"
-            app:tint="#EBF2F2"
+            app:tint="?attr/a2uTextColor"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/back" />
 
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="14sp"
-            android:textColor="#65E1C2"
+            android:textColor="?attr/a2uMusicAccent"
             android:gravity="center"
             android:maxLines="1"
             android:fontFamily="sans-serif-medium" />
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="4dp"
             android:textSize="12sp"
-            android:textColor="#EBF2F2"
+            android:textColor="?attr/a2uTextColor"
             android:gravity="center" />
 
         <ImageButton
@@ -46,7 +46,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_refresh"
-            app:tint="#65E1C2"
+            app:tint="?attr/a2uMusicAccent"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/motocross_checkpoint_retry" />
 
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="11sp"
-            android:textColor="#EBF2F2" />
+            android:textColor="?attr/a2uTextColor" />
     </LinearLayout>
 
     <com.Atom2Universe.app.games.motocross.MotocrossView
@@ -115,7 +115,7 @@
             android:id="@+id/motocross_throttle"
             style="@style/MotocrossControl"
             android:text="@string/motocross_throttle"
-            android:textColor="#65E1C2"
+            android:textColor="?attr/a2uMusicAccent"
             android:contentDescription="@string/motocross_throttle_accessibility" />
     </LinearLayout>
 </LinearLayout>

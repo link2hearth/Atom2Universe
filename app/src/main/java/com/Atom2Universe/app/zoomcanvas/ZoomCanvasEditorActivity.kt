@@ -20,7 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.appcompat.widget.TooltipCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -83,7 +83,7 @@ import java.util.UUID
  * montre le zoom en pourcent plutôt que le niveau, et un appui dessus ouvre le menu de la vue
  * (zoom à 100 %, ajuster au dessin, grille, exporter l'image) à la place de la liste des couches.
  */
-class ZoomCanvasEditorActivity : AppCompatActivity() {
+class ZoomCanvasEditorActivity : ThemedActivity() {
 
     companion object {
         private const val EXTRA_ID = "zoom_canvas_id"
@@ -166,7 +166,6 @@ class ZoomCanvasEditorActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_zoom_canvas_editor)

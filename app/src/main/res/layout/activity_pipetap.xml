@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09171E">
+    android:background="?attr/a2uScreenBackground">
 
     <!-- Header -->
     <LinearLayout
         android:id="@+id/pipetap_header"
         android:layout_width="0dp"
         android:layout_height="52dp"
-        android:background="#142831"
+        android:background="?attr/a2uSurfaceColor"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="4dp"
@@ -26,7 +26,7 @@
             android:contentDescription="@string/color_stack_back"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back_24"
-            app:tint="#ABC2C6" />
+            app:tint="?attr/a2uSecondaryTextColor" />
 
         <TextView
             android:layout_width="0dp"
@@ -34,7 +34,7 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/pipetap_title"
-            android:textColor="#E2E8F0"
+            android:textColor="?attr/a2uTextColor"
             android:fontFamily="sans-serif-black"
             android:letterSpacing="0.06"
             android:textSize="20sp"
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:textColor="#ABC2C6"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="13sp" />
 
         <TextView
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:textColor="#ABC2C6"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="13sp" />
 
     </LinearLayout>
@@ -87,7 +87,7 @@
         android:layout_marginHorizontal="16dp"
         android:paddingHorizontal="16dp"
         android:paddingVertical="10dp"
-        android:background="@drawable/pipetap_console_panel"
+        android:background="?attr/a2uPanelBackground"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/pipetap_diff_scroll"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#D9EEEB"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="13sp" />
         <ProgressBar
             android:id="@+id/pipetap_flow_progress"
@@ -113,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="4dp"
             android:layout_marginTop="8dp"
-            android:progressTint="#37DACB"
+            android:progressTint="?attr/a2uMusicAccent"
             android:progressBackgroundTint="#35515A" />
     </LinearLayout>
     <!-- Game view -->
@@ -131,7 +131,7 @@
         android:id="@+id/pipetap_win_overlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#BB09171E"
+        android:background="?attr/a2uBackgroundColor"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -143,7 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:background="@drawable/pipetap_console_panel"
+            android:background="?attr/a2uPanelBackground"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="32dp">
@@ -152,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pipetap_solved"
-                android:textColor="#37DACB"
+                android:textColor="?attr/a2uMusicAccent"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -162,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:textColor="#CBD5E1"
+                android:textColor="?attr/a2uTextColor"
                 android:textSize="14sp" />
 
             <LinearLayout
@@ -178,15 +178,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="12dp"
                     android:text="@string/pipetap_btn_again"
-                    android:textColor="#ABC2C6" />
+                    android:textColor="?attr/a2uSecondaryTextColor" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/pipetap_btn_next"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/pipetap_btn_next"
-                    android:textColor="#09171E"
-                    android:backgroundTint="#37DACB" />
+                    android:textColor="?attr/a2uOnAccentColor"
+                    android:backgroundTint="?attr/a2uMusicAccent" />
 
             </LinearLayout>
 

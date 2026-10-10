@@ -25,11 +25,12 @@ class ForgePanel(
 ) {
     private val ctx: Context = root.context
     private val density = ctx.resources.displayMetrics.density
-    private val ink = 0xFFE5EAF2.toInt()
-    private val muted = 0xFFADB9CD.toInt()
-    private val green = 0xFF80D6A0.toInt()
-    private val red = 0xFFFF9393.toInt()
-    private val accent = 0xFFE8BF78.toInt()
+    private val palette = com.Atom2Universe.app.games.kit.KitPalette.from(ctx)
+    private val ink = palette.text
+    private val muted = palette.secondary
+    private val green = palette.success
+    private val red = palette.error
+    private val accent = palette.accent
     private val number = NumberFormat.getNumberInstance(ctx.resources.configuration.locales[0])
     private var game: RoguelikeGame? = null
     private var slot: EquipSlot? = null
@@ -63,7 +64,7 @@ class ForgePanel(
     init {
         val container = root as LinearLayout
         container.removeAllViews()
-        container.setBackgroundColor(0xFF0B101B.toInt())
+        container.setBackgroundColor(palette.background)
         container.setPadding(dp(12), dp(10), dp(12), dp(8))
         val head = row()
         head.addView(title, LinearLayout.LayoutParams(0, -2, 1f))
@@ -208,7 +209,7 @@ class ForgePanel(
     private fun column() = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
     private fun row() = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
     private fun text(value: String, size: Float, color: Int, bold: Boolean = false) = TextView(ctx).apply {
-        text = value; textSize = size; setTextColor(color)
+        text = value; textSize = size; setTextColor(com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(color, palette.surface, 4.5))
         if (bold) setTypeface(typeface, Typeface.BOLD)
         setPadding(0, dp(3), 0, dp(3))
     }
@@ -216,10 +217,10 @@ class ForgePanel(
         gravity = Gravity.CENTER
         minimumHeight = dp(48)
         setPadding(dp(10), dp(6), dp(10), dp(6))
-        background = frame(if (active) accent else 0xFF303C52.toInt())
+        background = frame(if (active) accent else palette.outline)
         setOnClickListener { action() }
     }
     private fun frame(color: Int) = GradientDrawable().apply {
-        cornerRadius = dp(10).toFloat(); setColor(0xFF151F30.toInt()); setStroke(dp(1).coerceAtLeast(1), color)
+        cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(ctx, 10f); setColor(palette.surface); setStroke(dp(1).coerceAtLeast(1), color)
     }
 }

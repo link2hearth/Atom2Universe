@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Atom2Universe.app.R
-import com.Atom2Universe.app.util.SystemBarsManager
+import com.Atom2Universe.app.util.followImmersiveMode
 import java.text.NumberFormat
 
 /** Separate character, paginated equipment and relic pages. */
@@ -35,11 +35,12 @@ class InventoryPanel(
     private var page = Page.CHARACTER
     private val ctx: Context = root.context
     private val density = ctx.resources.displayMetrics.density
-    private val ink = 0xFFE5EAF2.toInt()
-    private val muted = 0xFFADB9CD.toInt()
-    private val green = 0xFF80D6A0.toInt()
-    private val red = 0xFFFF9393.toInt()
-    private val accent = 0xFFE8BF78.toInt()
+    private val palette = com.Atom2Universe.app.games.kit.KitPalette.from(ctx)
+    private val ink = palette.text
+    private val muted = palette.secondary
+    private val green = palette.success
+    private val red = palette.error
+    private val accent = palette.accent
     private var game: RoguelikeGame? = null
     private var slot: EquipSlot? = null
     private var filterClass: Archetype? = null
@@ -98,7 +99,7 @@ class InventoryPanel(
                 isSelected = selected || expanded
             }
             val card = row().apply {
-                if (selected) setBackgroundColor(0xFF2B3543.toInt())
+                if (selected) setBackgroundColor(palette.raised)
                 isSelected = selected
                 setPadding(dp(10), dp(10), dp(10), dp(10))
                 minimumHeight = dp(84)
@@ -135,7 +136,7 @@ class InventoryPanel(
     init {
         val container = root as LinearLayout
         container.removeAllViews()
-        container.setBackgroundColor(0xFF0B101B.toInt())
+        container.setBackgroundColor(palette.background)
         container.setPadding(dp(12), dp(10), dp(12), dp(8))
         val navigation = row()
         Page.entries.forEach { target ->
@@ -235,7 +236,7 @@ class InventoryPanel(
         val g = game ?: return
         if (!g.isExploring || selectedEquipment.isEmpty()) return
         val confirmedItems = selectedEquipment.toSet()
-        val confirmation = android.app.AlertDialog.Builder(ctx, R.style.Theme_Dungeon_Dialog)
+        val confirmation = com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(ctx, R.style.Theme_Dungeon_Dialog)
             .setTitle(R.string.inv_sell_selection_title)
             .setMessage(ctx.getString(R.string.inv_sell_selection_confirm, confirmedItems.size, number.format(selectedSaleValue)))
             .setNegativeButton(android.R.string.cancel, null)
@@ -260,7 +261,7 @@ class InventoryPanel(
         characterArea = null
         header.removeAllViews()
         tabs.forEach { (target, tab) ->
-            tab.background = frame(if (target == page) accent else 0xFF303C52.toInt())
+            tab.background = frame(if (target == page) accent else palette.outline)
             tab.setTextColor(if (target == page) ink else muted)
             tab.isSelected = target == page
         }
@@ -376,7 +377,7 @@ class InventoryPanel(
     private fun slotCard(hero: Hero, slot: EquipSlot): View {
         val item = hero.equipped[slot]
         return column().apply {
-            background = frame(item?.inventoryColor ?: 0xFF354058.toInt())
+            background = frame(item?.inventoryColor ?: palette.outline)
             if (page == Page.EQUIPMENT && this@InventoryPanel.slot == slot) {
                 (background as GradientDrawable).setStroke(dp(3), accent)
                 isSelected = true
@@ -432,7 +433,7 @@ class InventoryPanel(
         header.addView(buttons)
         if (!expandedStats) return
         header.addView(text(ctx.getString(R.string.inv_floor_stats, hero.floor), 12f, muted))
-        val stats = column().apply { background = frame(0xFF29354B.toInt()); setPadding(dp(10), dp(8), dp(10), dp(8)) }
+        val stats = column().apply { background = frame(palette.outline); setPadding(dp(10), dp(8), dp(10), dp(8)) }
         InventoryStats.values(hero).forEach { stat ->
             val line = row()
             line.addView(text(label(stat), 13f, muted), LinearLayout.LayoutParams(0, -2, 1f))
@@ -452,7 +453,7 @@ class InventoryPanel(
                 val relic = hero.relicSlots[index]
                 val unlocked = index < hero.unlockedRelicSlots
                 val card = column().apply {
-                    background = frame(if (relic != null) accent else 0xFF354058.toInt())
+                    background = frame(if (relic != null) accent else palette.outline)
                     setPadding(dp(10), dp(8), dp(10), dp(8))
                 }
                 card.addView(text(ctx.getString(R.string.inv_relic_slot_number, index + 1), 12f, muted))
@@ -480,7 +481,7 @@ class InventoryPanel(
         known.forEach { resonance ->
             val active = resonance in hero.resonances
             val bonus = column().apply {
-                background = frame(if (active) accent else 0xFF354058.toInt())
+                background = frame(if (active) accent else palette.outline)
                 setPadding(dp(10), dp(8), dp(10), dp(8))
             }
             bonus.addView(text(ctx.getString(R.string.inv_relic_bonus_state, ctx.getString(resonance.labelRes),
@@ -519,7 +520,7 @@ class InventoryPanel(
     }
 
     private fun relicCard(hero: Hero, relic: Relic): View = column().apply {
-        background = frame(0xFF354058.toInt())
+        background = frame(palette.outline)
         setPadding(dp(12), dp(10), dp(12), dp(10))
         layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = dp(10) }
         val title = row()
@@ -576,7 +577,7 @@ class InventoryPanel(
 
     private fun filterButton(parent: LinearLayout, label: Int, choices: List<String>, selected: Int, change: (Int) -> Unit) {
         parent.addView(button(ctx.getString(R.string.inv_filter_value, ctx.getString(label), choices.getOrElse(selected) { choices.first() }), selected != 0) {
-            android.app.AlertDialog.Builder(ctx, R.style.Theme_Dungeon_Dialog).setTitle(label).setSingleChoiceItems(choices.toTypedArray(), selected) { d, index ->
+            com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(ctx, R.style.Theme_Dungeon_Dialog).setTitle(label).setSingleChoiceItems(choices.toTypedArray(), selected) { d, index ->
                 d.dismiss(); change(index)
             }.setNegativeButton(android.R.string.cancel, null).show().also { applyWindowMode(it) }
         }, LinearLayout.LayoutParams(0, -2, 1f).apply { marginEnd = dp(4) })
@@ -595,7 +596,7 @@ class InventoryPanel(
         if (g.hero.equipped[item.slot] != item) return
         if (!inline && (area.width == 0 || area.height == 0)) return
         equipmentPopup?.dismiss()
-        val popup = PopupWindow(ctx)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupWindow(ctx)
         fun close() {
             if (inline) closeInventoryDetail() else popup.dismiss()
         }
@@ -692,7 +693,7 @@ class InventoryPanel(
             current.addView(scoreLabel(worn, hero.archetype, scoreColor(wornScore, candidateScore)))
         } else current.addView(text(ctx.getString(R.string.roguelike_loot_nothing_equipped), 13f, muted))
         content.addView(candidate, LinearLayout.LayoutParams(0, -2, 1f))
-        content.addView(View(ctx).apply { setBackgroundColor(0xFF354058.toInt()) },
+        content.addView(View(ctx).apply { setBackgroundColor(palette.outline) },
             LinearLayout.LayoutParams(dp(1), -1))
         content.addView(current, LinearLayout.LayoutParams(0, -2, 1f))
         body.addView(content)
@@ -712,16 +713,7 @@ class InventoryPanel(
     private fun scoreLabel(item: Equipment, archetype: Archetype?, color: Int = muted) =
         text(ctx.getString(R.string.inv_rating, number.format(LootSystem.rating(item, archetype))), 13f, color, true)
     private fun applyWindowMode(modal: Dialog) {
-        val window = modal.window ?: return
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-        val controller = WindowCompat.getInsetsController(window, window.decorView)
-        controller.isAppearanceLightStatusBars = false
-        controller.isAppearanceLightNavigationBars = false
-        if (SystemBarsManager.shouldShowSystemBars(ctx)) controller.show(WindowInsetsCompat.Type.systemBars())
-        else {
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-        }
+        modal.followImmersiveMode()
     }
 
     private fun itemDescription(parent: LinearLayout, item: Equipment, archetype: Archetype?) {
@@ -751,7 +743,7 @@ class InventoryPanel(
     private fun column() = LinearLayout(ctx).apply { orientation = LinearLayout.VERTICAL }
     private fun row() = LinearLayout(ctx).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
     private fun text(value: String, size: Float, color: Int, bold: Boolean = false) = TextView(ctx).apply {
-        text = value; textSize = size; setTextColor(color)
+        text = value; textSize = size; setTextColor(com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(color, palette.surface, 4.5))
         if (bold) setTypeface(typeface, Typeface.BOLD)
         setPadding(0, dp(3), 0, dp(3))
     }
@@ -760,11 +752,11 @@ class InventoryPanel(
         gravity = Gravity.CENTER
         minimumHeight = dp(48)
         setPadding(dp(10), dp(6), dp(10), dp(6))
-        background = frame(if (active) accent else 0xFF303C52.toInt())
+        background = frame(if (active) accent else palette.outline)
         setOnClickListener { action() }
     }
     private fun horizontal(parent: LinearLayout, child: View) { parent.addView(HorizontalScrollView(ctx).apply { isHorizontalScrollBarEnabled = false; addView(child) }) }
     private fun frame(color: Int) = GradientDrawable().apply {
-        cornerRadius = dp(10).toFloat(); setColor(0xFF151F30.toInt()); setStroke(dp(1).coerceAtLeast(1), color)
+        cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(ctx, 10f); setColor(palette.surface); setStroke(dp(1).coerceAtLeast(1), color)
     }
 }

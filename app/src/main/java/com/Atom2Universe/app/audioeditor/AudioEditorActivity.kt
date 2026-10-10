@@ -22,7 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -71,7 +71,7 @@ import kotlin.math.roundToInt
  * [EditorViewModel] (la rotation recrée l'écran sans rien perdre, même en pleine lecture) ; cet écran
  * ne fait que le montrer et lui transmettre les actions.
  */
-class AudioEditorActivity : AppCompatActivity() {
+class AudioEditorActivity : ThemedActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -158,7 +158,6 @@ class AudioEditorActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_audio_editor)

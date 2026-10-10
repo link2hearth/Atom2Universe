@@ -68,7 +68,7 @@ internal class CaveGamepadEditor(
         val list = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(8), dp(16), dp(8))
         }
-        val dialog = MaterialAlertDialogBuilder(context, R.style.Theme_A2U_AlertDialog_Dark)
+        val dialog = com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(context, R.style.Theme_A2U_AlertDialog_Dark)
             .setTitle(action.label)
             .setMessage(R.string.cave_pad_swap_hint)
             .setView(ScrollView(context).apply { addView(list) })

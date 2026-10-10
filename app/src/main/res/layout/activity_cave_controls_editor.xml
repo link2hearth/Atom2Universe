@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_gravity="top"
-        android:background="#EE000000"
+        android:background="?attr/a2uSurfaceColor"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="12dp">
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cave_controls_editor_title"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -72,7 +72,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="44dp"
         android:orientation="horizontal"
-        android:background="#EE101C22">
+        android:background="?attr/a2uSurfaceColor">
         <RadioButton
             android:id="@+id/cave_editor_tab_touch"
             android:layout_width="0dp"

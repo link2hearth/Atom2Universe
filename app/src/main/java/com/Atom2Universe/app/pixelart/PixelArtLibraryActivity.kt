@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.Atom2Universe.app.ThemedActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -52,7 +53,7 @@ import kotlinx.coroutines.withContext
  * dessin, on ouvre un projet, ou on ouvre une image de l'appareil pour la retoucher puis
  * l'enregistrer par-dessus.
  */
-class PixelArtLibraryActivity : AppCompatActivity() {
+class PixelArtLibraryActivity : ThemedActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -77,7 +78,6 @@ class PixelArtLibraryActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_pixel_art_library)

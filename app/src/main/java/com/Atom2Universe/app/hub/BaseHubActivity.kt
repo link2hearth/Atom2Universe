@@ -13,7 +13,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +33,7 @@ import androidx.core.content.edit
  *   dont chaque tuile porte son illustration
  * - Long-press sur une tuile pour l'ajouter en raccourci dans le hub parent
  */
-abstract class BaseHubActivity : AppCompatActivity() {
+abstract class BaseHubActivity : ThemedActivity() {
 
     companion object {
         private const val KEY_VIEW_MODE = "view_mode"
@@ -64,7 +64,6 @@ abstract class BaseHubActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LocaleHelper.ensureLocale(this)
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         LocaleHelper.ensureLocale(this)
         enableImmersiveMode()

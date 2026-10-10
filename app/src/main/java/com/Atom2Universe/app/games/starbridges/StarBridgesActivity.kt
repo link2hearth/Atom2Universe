@@ -129,9 +129,7 @@ class StarBridgesActivity : ThemedActivity(), StarBridgesBoardView.Listener {
     }
 
     private fun updateSizeChips() {
-        val active   = android.content.res.ColorStateList.valueOf(Color.parseColor("#3A2F6E"))
-        val inactive = android.content.res.ColorStateList.valueOf(Color.parseColor("#141433"))
-        for ((s, chip) in sizeChips) chip.backgroundTintList = if (s == game.size) active else inactive
+        for ((s, chip) in sizeChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, s == game.size)
     }
 
     // ── Déroulé ───────────────────────────────────────────────────────────────────

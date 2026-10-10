@@ -19,14 +19,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/crypto_widget_opacity_label"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/popup_crypto_opacity_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E2E8F0"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="8dp"
-        android:background="#334155" />
+        android:background="?attr/a2uOutlineColor" />
 
     <!-- Fréquence des prix -->
     <LinearLayout
@@ -59,14 +59,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/crypto_refresh_interval_section"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/popup_crypto_refresh_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E2E8F0"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -85,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="8dp"
-        android:background="#334155" />
+        android:background="?attr/a2uOutlineColor" />
 
     <!-- Fenêtre de comparaison couleur -->
     <LinearLayout
@@ -99,14 +99,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/crypto_comparison_label"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/popup_crypto_comparison_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E2E8F0"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -125,7 +125,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginVertical="8dp"
-        android:background="#334155" />
+        android:background="?attr/a2uOutlineColor" />
 
     <!-- Mode minimal -->
     <LinearLayout
@@ -139,7 +139,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/crypto_widget_minimal_label"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -161,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/crypto_widget_eurusd_toggle_label"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -183,7 +183,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/crypto_widget_eur_label"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.SwitchCompat

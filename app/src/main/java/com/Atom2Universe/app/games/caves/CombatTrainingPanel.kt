@@ -32,7 +32,7 @@ internal class CombatTrainingPanel(
             text=activity.getString(R.string.cave_training_choose,names[0])
             textSize=12f
             setOnClickListener {
-                AlertDialog.Builder(activity).setTitle(R.string.cave_training_map)
+                com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(activity).setTitle(R.string.cave_training_map)
                     .setSingleChoiceItems(names,selected) { dialog,index -> enter(index); dialog.dismiss() }
                     .setNegativeButton(android.R.string.cancel,null).show()
             }

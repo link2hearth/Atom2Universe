@@ -153,7 +153,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
             setPadding(dp(16), dp(8), dp(16), dp(12))
         }
         val header = LinearLayout(this).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
-        selectedNameTv = TextView(this).apply { setTextColor(Color.WHITE); textSize = 15f }
+        selectedNameTv = TextView(this).apply { setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uTextColor)); textSize = 15f }
         header.addView(selectedNameTv, LinearLayout.LayoutParams(0, -2, 1f))
         header.addView(Button(this).apply {
             setText(R.string.cave_controls_close)
@@ -163,19 +163,19 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         content.addView(header)
         val sizeRow = LinearLayout(this).apply { gravity = android.view.Gravity.CENTER_VERTICAL }
         sizeRow.addView(TextView(this).apply {
-            setText(R.string.cave_controls_size); setTextColor(Color.LTGRAY)
+            setText(R.string.cave_controls_size); setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uSecondaryTextColor))
         }, LinearLayout.LayoutParams(0, -2, 1f))
-        sizeValueTv = TextView(this).apply { setTextColor(Color.WHITE) }
+        sizeValueTv = TextView(this).apply { setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uTextColor)) }
         sizeRow.addView(sizeValueTv)
         content.addView(sizeRow)
         seekBar = SeekBar(this)
         content.addView(seekBar, LinearLayout.LayoutParams(-1, dp(48)))
         crouchChoices = RadioGroup(this).apply { orientation = RadioGroup.VERTICAL }
         holdChoice = RadioButton(this).apply {
-            id = View.generateViewId(); setText(R.string.cave_controls_hold); setTextColor(Color.WHITE)
+            id = View.generateViewId(); setText(R.string.cave_controls_hold); setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uTextColor))
         }
         toggleChoice = RadioButton(this).apply {
-            id = View.generateViewId(); setText(R.string.cave_controls_toggle); setTextColor(Color.WHITE)
+            id = View.generateViewId(); setText(R.string.cave_controls_toggle); setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uTextColor))
         }
         crouchChoices.addView(holdChoice, RadioGroup.LayoutParams(-1, dp(48)))
         crouchChoices.addView(toggleChoice, RadioGroup.LayoutParams(-1, dp(48)))
@@ -191,11 +191,11 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
         content.addView(crouchChoices)
         placementChoices = RadioGroup(this).apply { orientation = RadioGroup.VERTICAL }
         touchPlacementChoice = RadioButton(this).apply {
-            id = View.generateViewId(); setText(R.string.cave_controls_place_touch); setTextColor(Color.WHITE)
+            id = View.generateViewId(); setText(R.string.cave_controls_place_touch); setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uTextColor))
             minHeight = dp(64)
         }
         crosshairPlacementChoice = RadioButton(this).apply {
-            id = View.generateViewId(); setText(R.string.cave_controls_place_crosshair); setTextColor(Color.WHITE)
+            id = View.generateViewId(); setText(R.string.cave_controls_place_crosshair); setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uTextColor))
             minHeight = dp(64)
         }
         placementChoices.addView(touchPlacementChoice, RadioGroup.LayoutParams(-1, -2))
@@ -208,8 +208,8 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
             visibility = View.GONE
             elevation = dp(12).toFloat()
             background = GradientDrawable().apply {
-                setColor(0xFA21343E.toInt()); cornerRadius = dp(20).toFloat()
-                setStroke(dp(1), 0xFF7398AA.toInt())
+                setColor(com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uSurfaceColor)); cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(this@CaveControlsEditorActivity, 20f)
+                setStroke(dp(1), com.Atom2Universe.app.AppearanceStyle.color(this@CaveControlsEditorActivity, R.attr.a2uOutlineColor))
             }
             addView(content)
         }
@@ -326,7 +326,7 @@ internal class CaveControlsEditorActivity : ThemedActivity() {
     }
 
     private fun confirmReset() {
-        MaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
+        com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
             .setTitle(R.string.cave_controls_reset)
             .setMessage(if (gamepadTab) R.string.cave_pad_reset_confirm else R.string.cave_controls_reset_confirm)
             .setPositiveButton(android.R.string.ok) { _, _ ->

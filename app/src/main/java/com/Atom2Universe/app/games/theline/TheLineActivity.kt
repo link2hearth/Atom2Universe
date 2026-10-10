@@ -126,10 +126,8 @@ class TheLineActivity : ThemedActivity() {
     }
 
     private fun updateChips() {
-        val active = ColorStateList.valueOf(0xFF8A5326.toInt())
-        val inactive = ColorStateList.valueOf(0xFF0C4230.toInt())
-        for ((m, chip) in modeChips) chip.backgroundTintList = if (m == game.mode) active else inactive
-        for ((d, chip) in diffChips) chip.backgroundTintList = if (d == game.difficulty) active else inactive
+        for ((m, chip) in modeChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, m == game.mode)
+        for ((d, chip) in diffChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, d == game.difficulty)
     }
 
     private fun setMode(mode: TheLineMode) {

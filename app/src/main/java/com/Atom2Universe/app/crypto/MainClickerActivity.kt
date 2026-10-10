@@ -33,7 +33,8 @@ import com.Atom2Universe.app.crypto.data.MainClickerDatabase
 import com.Atom2Universe.app.news.NewsFetchInterval
 import com.Atom2Universe.app.news.NewsWidgetView
 import com.Atom2Universe.app.crypto.data.MainClickerRepository
-import com.Atom2Universe.app.util.applySystemBarsVisibility
+import com.Atom2Universe.app.util.enableImmersiveMode
+import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -58,7 +59,7 @@ import kotlin.math.max
 import android.provider.DocumentsContract
 import androidx.appcompat.app.AlertDialog
 import androidx.documentfile.provider.DocumentFile
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.Atom2Universe.app.util.ImmersiveBottomSheetDialog as BottomSheetDialog
 import com.google.android.material.switchmaterial.SwitchMaterial
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -77,7 +78,10 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import androidx.core.content.edit
 import androidx.core.view.isVisible
 
-class MainClickerActivity : ThemedActivity() {
+class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemBarsPreferenceOwner {
+    private val uiPalette by lazy { com.Atom2Universe.app.games.kit.KitPalette.from(this) }
+    override val showStatusBar: Boolean get() = MainClickerPreferences.isStatusBarVisible(this)
+    override val showNavigationBar: Boolean get() = MainClickerPreferences.isNavBarVisible(this)
 
     companion object {
         private val SLIDESHOW_STEPS = intArrayOf(0, 1, 2, 3, 4, 5, 10, 15, 30, 45, 60)
@@ -435,6 +439,7 @@ class MainClickerActivity : ThemedActivity() {
         refreshInterval = MainClickerPreferences.getRefreshInterval(this)
         applySystemBarsPreference()
         setContentView(R.layout.activity_main_clicker)
+        enableImmersiveMode()
 
         cryptoWidgetView = findViewById(R.id.crypto_widget)
         cryptoWidgetView.onDoubleTap = { openCryptoChart(CryptoChartActivity.ASSET_BTC) }
@@ -826,13 +831,13 @@ class MainClickerActivity : ThemedActivity() {
             }
             left.addView(TextView(this).apply {
                 text = getString(entry.titleRes)
-                setTextColor(0xFFE2E8F0.toInt())
+                setTextColor(uiPalette.text)
                 textSize = 14f
                 typeface = mono
             })
             left.addView(TextView(this).apply {
                 text = getString(entry.noteRes)
-                setTextColor(0xFF64748B.toInt())
+                setTextColor(uiPalette.tertiary)
                 textSize = 11f
                 typeface = mono
             })
@@ -851,7 +856,7 @@ class MainClickerActivity : ThemedActivity() {
 
         val scroll = ScrollView(this).apply { addView(container) }
 
-        AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.neutrino_info_title)
             .setView(scroll)
             .setPositiveButton(android.R.string.ok, null)
@@ -981,7 +986,7 @@ class MainClickerActivity : ThemedActivity() {
         shopFermiBuyBtn?.setOnClickListener  { clickerViewModel.buyCritDamage() }
         updateShopViews(clickerViewModel.state.value)
 
-        val dialog = Dialog(this)
+        val dialog = com.Atom2Universe.app.util.ImmersiveDialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.window?.setGravity(Gravity.CENTER)
@@ -1272,14 +1277,14 @@ class MainClickerActivity : ThemedActivity() {
 
             val nameView = TextView(this)
             nameView.text     = getString(factoryNameRes(type))
-            nameView.setTextColor(0xFFE2E8F0.toInt())
+            nameView.setTextColor(uiPalette.text)
             nameView.textSize = 16f
             nameView.typeface = android.graphics.Typeface.MONOSPACE
             nameRow.addView(nameView)
 
             val countView = TextView(this)
             countView.text     = "×0"
-            countView.setTextColor(0xFF94A3B8.toInt())
+            countView.setTextColor(uiPalette.secondary)
             countView.textSize = 13f
             countView.typeface = android.graphics.Typeface.MONOSPACE
             countView.setPadding(dp8, 0, 0, 0)
@@ -1290,7 +1295,7 @@ class MainClickerActivity : ThemedActivity() {
 
             val effectView = TextView(this)
             effectView.text     = ""
-            effectView.setTextColor(0xFF94A3B8.toInt())
+            effectView.setTextColor(uiPalette.secondary)
             effectView.textSize = 12f
             effectView.typeface = android.graphics.Typeface.MONOSPACE
             shopFactoryEffectViews[type] = effectView
@@ -1314,7 +1319,7 @@ class MainClickerActivity : ThemedActivity() {
 
             val priceView = TextView(this)
             priceView.text     = "—"
-            priceView.setTextColor(0xFF94A3B8.toInt())
+            priceView.setTextColor(uiPalette.secondary)
             priceView.textSize = 15f
             priceView.typeface = android.graphics.Typeface.MONOSPACE
             priceView.setPadding(0, 0, dp6, 0)
@@ -1324,10 +1329,10 @@ class MainClickerActivity : ThemedActivity() {
             val buyBtn = Button(this)
             buyBtn.text     = getString(R.string.clicker_shop_buy)
             buyBtn.textSize = 13f
-            buyBtn.setTextColor(0xFFFFFFFF.toInt())
+            buyBtn.setTextColor(uiPalette.onAccent)
             buyBtn.setPadding(dp14, 0, dp14, 0)
             buyBtn.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp36)
-            buyBtn.backgroundTintList = android.content.res.ColorStateList.valueOf(factoryButtonColor(type))
+            buyBtn.backgroundTintList = android.content.res.ColorStateList.valueOf(uiPalette.accent)
             buyBtn.setOnClickListener { clickerViewModel.buyFactory(type) }
             shopFactoryBuyBtns[type] = buyBtn
             row.addView(buyBtn)
@@ -1406,7 +1411,7 @@ class MainClickerActivity : ThemedActivity() {
 
             // Séparateur
             val divider = View(this)
-            divider.setBackgroundColor(0x1A_FFFFFF)
+            divider.setBackgroundColor(uiPalette.outline)
             val divParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp1)
             divParams.topMargin    = dp8
             divParams.bottomMargin = dp8
@@ -1432,7 +1437,7 @@ class MainClickerActivity : ThemedActivity() {
             val nameView = TextView(this)
             nameView.text      = getString(rarity.nameRes)
             nameView.textSize  = 13f
-            nameView.setTextColor(if (isLocked) 0xFF475569.toInt() else rarity.color)
+            nameView.setTextColor(if (isLocked) uiPalette.tertiary else rarity.color)
             nameView.typeface  = android.graphics.Typeface.MONOSPACE
             textBlock.addView(nameView)
 
@@ -1444,7 +1449,7 @@ class MainClickerActivity : ThemedActivity() {
                 else -> getString(R.string.clicker_collection_frenzy_chance, index + 1)
             }
             bonusView.textSize = 11f
-            bonusView.setTextColor(if (isLocked) 0xFF334155.toInt() else 0xFF94A3B8.toInt())
+            bonusView.setTextColor(if (isLocked) uiPalette.outline else uiPalette.secondary)
             bonusView.typeface = android.graphics.Typeface.MONOSPACE
             textBlock.addView(bonusView)
 
@@ -1455,9 +1460,9 @@ class MainClickerActivity : ThemedActivity() {
             progressView.text = "$owned/$total"
             progressView.textSize = 11f
             progressView.setTextColor(when {
-                isLocked   -> 0xFF334155.toInt()
+                isLocked   -> uiPalette.outline
                 isComplete -> 0xFF22C55E.toInt()
-                else       -> 0xFF94A3B8.toInt()
+                else       -> uiPalette.secondary
             })
             progressView.typeface = android.graphics.Typeface.MONOSPACE
             progressView.setPadding(dp8, 0, 0, 0)
@@ -1489,7 +1494,7 @@ class MainClickerActivity : ThemedActivity() {
 
             // Séparateur
             val divider = View(this)
-            divider.setBackgroundColor(0x1A_FFFFFF)
+            divider.setBackgroundColor(uiPalette.outline)
             val divParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp1)
             divParams.topMargin = dp8
             divParams.bottomMargin = dp8
@@ -1514,14 +1519,14 @@ class MainClickerActivity : ThemedActivity() {
             val nameView = TextView(this)
             nameView.text = getString(achievement.nameRes)
             nameView.textSize = 13f
-            nameView.setTextColor(if (unlocked) 0xFFE2E8F0.toInt() else 0xFF64748B.toInt())
+            nameView.setTextColor(if (unlocked) uiPalette.text else uiPalette.tertiary)
             nameView.typeface = android.graphics.Typeface.MONOSPACE
             textBlock.addView(nameView)
 
             val flavorView = TextView(this)
             flavorView.text = getString(achievement.flavorRes)
             flavorView.textSize = 11f
-            flavorView.setTextColor(if (unlocked) 0xFF94A3B8.toInt() else 0xFF475569.toInt())
+            flavorView.setTextColor(if (unlocked) uiPalette.secondary else uiPalette.tertiary)
             flavorView.typeface = android.graphics.Typeface.MONOSPACE
             textBlock.addView(flavorView)
 
@@ -1530,7 +1535,7 @@ class MainClickerActivity : ThemedActivity() {
             val targetView = TextView(this)
             targetView.text = achievement.targetText
             targetView.textSize = 11f
-            targetView.setTextColor(if (unlocked) 0xFFF59E0B.toInt() else 0xFF475569.toInt())
+            targetView.setTextColor(if (unlocked) 0xFFF59E0B.toInt() else uiPalette.tertiary)
             targetView.typeface = android.graphics.Typeface.MONOSPACE
             targetView.setPadding(dp8, 0, 0, 0)
             row.addView(targetView)
@@ -1555,7 +1560,7 @@ class MainClickerActivity : ThemedActivity() {
     }
 
     private fun applyShopPlusToggleColor(toggle: TextView, enabled: Boolean) {
-        toggle.setTextColor(if (enabled) 0xFF22C55E.toInt() else 0xFF475569.toInt())
+        toggle.setTextColor(if (enabled) 0xFF22C55E.toInt() else uiPalette.tertiary)
         toggle.alpha = if (enabled) 1f else 0.5f
     }
 
@@ -1580,46 +1585,40 @@ class MainClickerActivity : ThemedActivity() {
         return false
     }
 
+    private fun styleShopPurchase(button: Button?, affordable: Boolean) {
+        button?.backgroundTintList = android.content.res.ColorStateList.valueOf(if (affordable) uiPalette.accent else uiPalette.raised)
+        button?.setTextColor(if (affordable) uiPalette.onAccent else uiPalette.secondary)
+    }
     private fun updateShopViews(state: ClickerGameState) {
         val fmt = java.text.NumberFormat.getNumberInstance(java.util.Locale.FRENCH)
 
         val godFingerCost = clickerViewModel.shopCost("godFinger", shopGodFingerMult)
         shopGodFingerLevelView?.text = getString(R.string.clicker_shop_level, state.godFingerLevel)
         shopGodFingerPriceView?.text = godFingerCost.toString()
-        shopGodFingerBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (!godFingerCost.greaterThan(state.atoms)) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-        )
+        styleShopPurchase(shopGodFingerBuyBtn, !godFingerCost.greaterThan(state.atoms))
 
         val starCoreCost = clickerViewModel.shopCost("starCore", shopStarCoreMult)
         shopStarCoreLevelView?.text  = getString(R.string.clicker_shop_level, state.starCoreLevel)
         shopStarCorePriceView?.text  = starCoreCost.toString()
-        shopStarCoreBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (!starCoreCost.greaterThan(state.atoms)) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-        )
+        styleShopPurchase(shopStarCoreBuyBtn, !starCoreCost.greaterThan(state.atoms))
 
         val neutrinoTicketCost = clickerViewModel.neutrinoTicketCost()
         shopNeutrinoTicketEffectView?.text = "$neutrinoTicketCost ⚛ → 1 🎟"
         shopNeutrinoTicketCostView?.text   = "$neutrinoTicketCost ⚛"
-        shopNeutrinoTicketBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (state.neutrinos >= neutrinoTicketCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-        )
+        styleShopPurchase(shopNeutrinoTicketBuyBtn, state.neutrinos >= neutrinoTicketCost)
 
         val apcToApsCost = clickerViewModel.apcToApsCost()
         shopNeutrinoBalance?.text    = state.neutrinos.toString()
         shopApcToApsLevelView?.text  = getString(R.string.clicker_shop_level, state.apcToApsLevel)
         shopApcToApsEffectView?.text = getString(R.string.clicker_shop_apc_to_aps_effect, state.apcToApsLevel)
         shopApcToApsCostView?.text   = "$apcToApsCost ⚛"
-        shopApcToApsBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (state.neutrinos >= apcToApsCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-        )
+        styleShopPurchase(shopApcToApsBuyBtn, state.neutrinos >= apcToApsCost)
 
         val apsToApcCost = clickerViewModel.apsToApcCost()
         shopApsToApcLevelView?.text  = getString(R.string.clicker_shop_level, state.apsToApcLevel)
         shopApsToApcEffectView?.text = getString(R.string.clicker_shop_aps_to_apc_effect, state.apsToApcLevel)
         shopApsToApcCostView?.text   = "$apsToApcCost ⚛"
-        shopApsToApcBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            if (state.neutrinos >= apsToApcCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-        )
+        styleShopPurchase(shopApsToApcBuyBtn, state.neutrinos >= apsToApcCost)
 
         shopCritSection?.visibility = if (state.critUnlocked) View.VISIBLE else View.GONE
         if (state.critUnlocked) {
@@ -1633,17 +1632,13 @@ class MainClickerActivity : ThemedActivity() {
             shopGamowEffectView?.text = getString(R.string.clicker_crit_chance_effect, critChancePct)
             shopGamowCostView?.text   = if (critChanceMaxed) getString(R.string.clicker_shop_max) else "$gamowCost ☢"
             shopGamowBuyBtn?.isEnabled = !critChanceMaxed
-            shopGamowBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-                if (!critChanceMaxed && state.quarks >= gamowCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-            )
+            styleShopPurchase(shopGamowBuyBtn, !critChanceMaxed && state.quarks >= gamowCost)
             val critDamageMaxed = clickerViewModel.critDamageMaxed()
             shopFermiLevelView?.text  = getString(R.string.clicker_shop_level, state.critDamageLevel)
             shopFermiEffectView?.text = getString(R.string.clicker_crit_damage_effect, critMultVal)
             shopFermiCostView?.text   = if (critDamageMaxed) getString(R.string.clicker_shop_max) else "$fermiCost ☢"
             shopFermiBuyBtn?.isEnabled = !critDamageMaxed
-            shopFermiBuyBtn?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-                if (!critDamageMaxed && state.quarks >= fermiCost) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-            )
+            styleShopPurchase(shopFermiBuyBtn, !critDamageMaxed && state.quarks >= fermiCost)
         }
 
         shopStatLifetime?.text    = state.lifetime.toString()
@@ -1672,9 +1667,7 @@ class MainClickerActivity : ThemedActivity() {
             shopFactoryCountViews[type]?.text  = "×$count"
             shopFactoryEffectViews[type]?.text = factoryEffectText(type, state.factoryCounts)
             shopFactoryPriceViews[type]?.text  = clickerViewModel.factoryCost(type).toString()
-            shopFactoryBuyBtns[type]?.backgroundTintList = android.content.res.ColorStateList.valueOf(
-                if (affordable) 0xFF16A34A.toInt() else 0xFF475569.toInt()
-            )
+            styleShopPurchase(shopFactoryBuyBtns[type], affordable)
         }
     }
 
@@ -2021,7 +2014,7 @@ class MainClickerActivity : ThemedActivity() {
     }
 
     private fun applySystemBarsPreference() {
-        applySystemBarsVisibility(showStatusBar = statusBarVisible, showNavBar = navBarVisible)
+        updateSystemBarsVisibility()
     }
 
     private fun reloadBackground(force: Boolean) {
@@ -2783,7 +2776,7 @@ class MainClickerActivity : ThemedActivity() {
             folderResetBtn.visibility = View.GONE
         }
 
-        val popup = PopupWindow(
+        val popup = com.Atom2Universe.app.util.ImmersivePopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -2928,7 +2921,7 @@ class MainClickerActivity : ThemedActivity() {
 
         btnDelete.setOnClickListener {
             dialog.dismiss()
-            AlertDialog.Builder(this)
+            com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
                 .setTitle(R.string.crypto_image_delete_confirm_title)
                 .setMessage(R.string.crypto_image_delete_confirm_msg)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -3090,7 +3083,7 @@ class MainClickerActivity : ThemedActivity() {
             backgroundImageView.setAlignCenter(isChecked)
         }
 
-        val popup = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
         popup.isOutsideTouchable = true
         popup.elevation = 16f
         popup.showAsDropDown(anchor, 0, 4)
@@ -3184,7 +3177,7 @@ class MainClickerActivity : ThemedActivity() {
             }
         }
 
-        val popup = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
         popup.isOutsideTouchable = true
         popup.elevation = 16f
         popup.showAsDropDown(anchor, 0, 4)
@@ -3256,7 +3249,7 @@ class MainClickerActivity : ThemedActivity() {
             earthMoonWidgetView.setShowTerminator(isChecked)
         }
 
-        val popup = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
         popup.isOutsideTouchable = true
         popup.elevation = 16f
         popup.showAsDropDown(anchor, 0, 4)
@@ -3344,7 +3337,7 @@ class MainClickerActivity : ThemedActivity() {
             }
         }
 
-        val popup = PopupWindow(
+        val popup = com.Atom2Universe.app.util.ImmersivePopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,

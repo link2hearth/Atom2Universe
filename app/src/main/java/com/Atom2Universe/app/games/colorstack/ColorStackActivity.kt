@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.GameStatsRepository
@@ -18,7 +18,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
 
-class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
+class ColorStackActivity : ThemedActivity(), ColorStackView.OnMoveListener {
 
     companion object {
         private const val PREFS_NAME = "color_stack_save"
@@ -58,7 +58,6 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_color_stack)
@@ -107,8 +106,8 @@ class ColorStackActivity : AppCompatActivity(), ColorStackView.OnMoveListener {
             getString(R.string.color_stack_difficulty_medium),
             getString(R.string.color_stack_difficulty_hard)
         )
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected, labels)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         difficultySpinner.adapter = adapter
 
         difficultySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

@@ -31,7 +31,7 @@ import kotlin.math.pow
  */
 class CosmicScaleActivity : ThemedActivity() {
 
-    override val themeBrightness = com.Atom2Universe.app.AppBrightness.DARK
+    private val palette by lazy { com.Atom2Universe.app.science.SciencePalette(this) }
 
     private lateinit var glView: CosmicScaleGLView
     private lateinit var btnLeft: TextView
@@ -91,11 +91,11 @@ class CosmicScaleActivity : ThemedActivity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dp(8), dp(4), dp(8), dp(4))
-            setBackgroundColor(0xAA000000.toInt())
+            setBackgroundColor(palette.surface)
         }
         val btnBack = ImageButton(this).apply {
             setImageResource(R.drawable.ic_app_back)
-            setColorFilter(Color.WHITE)
+            setColorFilter(palette.text)
             background = null
             contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
@@ -104,7 +104,7 @@ class CosmicScaleActivity : ThemedActivity() {
         btnRight = selectorChip().apply { setOnClickListener { showSelector(this, isLeft = false) } }
         btnSwap = ImageButton(this).apply {
             setImageResource(R.drawable.ic_restart)
-            setColorFilter(Color.WHITE)
+            setColorFilter(palette.text)
             background = null
             contentDescription = getString(R.string.cosmic_swap)
             setOnClickListener { swap() }
@@ -124,10 +124,10 @@ class CosmicScaleActivity : ThemedActivity() {
         // ── Ruban central : ratio de taille ─────────────────────────
         tvRatio = TextView(this).apply {
             textSize = 13f
-            setTextColor(0xFFFFE9B0.toInt())
+            setTextColor(palette.accent)
             gravity = Gravity.CENTER
             setPadding(dp(14), dp(6), dp(14), dp(6))
-            setBackgroundColor(0x66000000)
+            setBackgroundColor(palette.surface)
             setOnLongClickListener {
                 Toast.makeText(this@CosmicScaleActivity, R.string.cosmic_credits, Toast.LENGTH_LONG).show()
                 true
@@ -155,14 +155,14 @@ class CosmicScaleActivity : ThemedActivity() {
         tvHint = TextView(this).apply {
             text = getString(R.string.cosmic_hint_swipe)
             textSize = 11f
-            setTextColor(0xFF99A6BF.toInt())
+            setTextColor(palette.secondary)
             gravity = Gravity.CENTER
             setPadding(dp(12), dp(4), dp(12), dp(4))
-            setBackgroundColor(0x66000000)
+            setBackgroundColor(palette.surface)
         }
         val modeRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
-            setBackgroundColor(0x88000000.toInt())
+            setBackgroundColor(palette.surface)
             setPadding(dp(4), dp(4), dp(4), dp(4))
         }
         btnModeScroll = modeChip(getString(R.string.cosmic_mode_scroll)) { setMode(scroll = true) }
@@ -184,32 +184,32 @@ class CosmicScaleActivity : ThemedActivity() {
     private fun modeChip(text: String, onClick: () -> Unit): TextView = TextView(this).apply {
         this.text = text
         textSize = 12f
-        setTextColor(Color.WHITE)
+        setTextColor(palette.text)
         gravity = Gravity.CENTER
         setOnClickListener { onClick() }
     }
 
     private fun buildInfoCard(isLeft: Boolean): CardView {
         val card = CardView(this).apply {
-            radius = dp(12).toFloat()
+            radius = com.Atom2Universe.app.AppearanceStyle.corner(this@CosmicScaleActivity, 12f)
             cardElevation = dp(6).toFloat()
-            setCardBackgroundColor(0xCC0E0E22.toInt())
+            setCardBackgroundColor(palette.surface)
         }
         val content = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(14), dp(10), dp(14), dp(10))
         }
-        val name = TextView(this).apply { textSize = 18f; setTextColor(Color.WHITE) }
-        val type = TextView(this).apply { textSize = 12f; setTextColor(0xFF8FA8C8.toInt()) }
+        val name = TextView(this).apply { textSize = 18f; setTextColor(palette.text) }
+        val type = TextView(this).apply { textSize = 12f; setTextColor(palette.secondary) }
         val radius = TextView(this).apply {
-            textSize = 12f; setTextColor(0xFFE6E6E6.toInt()); setPadding(0, dp(6), 0, 0)
+            textSize = 12f; setTextColor(palette.text); setPadding(0, dp(6), 0, 0)
         }
-        val fact = TextView(this).apply { textSize = 12f; setTextColor(0xFFB9B9B9.toInt()) }
+        val fact = TextView(this).apply { textSize = 12f; setTextColor(palette.secondary) }
         content.addView(name); content.addView(type); content.addView(radius); content.addView(fact)
         content.addView(TextView(this).apply {
             text = getString(R.string.cosmic_details_hint)
             textSize = 11f
-            setTextColor(0xFF9CCFFF.toInt())
+            setTextColor(palette.accent)
             setPadding(0, dp(6), 0, 0)
         })
         card.setOnClickListener { showScientificDetails(if (isLeft) left else right) }
@@ -275,9 +275,11 @@ class CosmicScaleActivity : ThemedActivity() {
         btnSwap.visibility = if (scrollMode) View.GONE else View.VISIBLE
         tvHint.visibility = if (scrollMode) View.VISIBLE else View.GONE
 
-        val on = 0xFF1565C0.toInt(); val off = 0xFF333333.toInt()
+        val on = palette.accent; val off = palette.raised
         btnModeScroll.setBackgroundColor(if (scrollMode) on else off)
         btnModeFree.setBackgroundColor(if (scrollMode) off else on)
+        btnModeScroll.setTextColor(if (scrollMode) palette.onAccent else palette.text)
+        btnModeFree.setTextColor(if (scrollMode) palette.text else palette.onAccent)
 
         fillCard(l, leftName, leftType, leftRadius, leftFact)
         fillCard(r, rightName, rightType, rightRadius, rightFact)
@@ -378,10 +380,10 @@ class CosmicScaleActivity : ThemedActivity() {
     // ── Helpers UI ──────────────────────────────────────────────────
     private fun selectorChip(): TextView = TextView(this).apply {
         textSize = 13f
-        setTextColor(0xFFFFDD88.toInt())
+        setTextColor(palette.accent)
         gravity = Gravity.CENTER
         setPadding(dp(10), dp(4), dp(10), dp(4))
-        setBackgroundColor(0x33FFFFFF)
+        setBackgroundColor(palette.raised)
     }
 
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()

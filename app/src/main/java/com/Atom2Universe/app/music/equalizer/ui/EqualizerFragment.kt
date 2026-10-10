@@ -250,10 +250,10 @@ class EqualizerFragment : BottomSheetDialogFragment(), MusicEqualizerManager.Equ
     private fun setupPresetSpinner() {
         presetAdapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_item,
+            com.Atom2Universe.app.R.layout.item_spinner_selected,
             mutableListOf<String>()
         ).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         }
         spinnerPreset.adapter = presetAdapter
 

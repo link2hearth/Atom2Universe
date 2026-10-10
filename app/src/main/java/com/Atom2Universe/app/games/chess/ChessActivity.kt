@@ -9,7 +9,7 @@ import android.view.View
 import com.Atom2Universe.app.LocaleHelper
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.crypto.clicker.NeutrinoRepository
@@ -22,7 +22,7 @@ import androidx.core.content.edit
  * Activité principale du jeu d'échecs
  * Gère l'orchestration entre la logique, l'IA, l'UI et la persistence
  */
-class ChessActivity : AppCompatActivity(),
+class ChessActivity : ThemedActivity(),
     ChessView.ChessViewListener,
     ChessAI.AIListener {
 
@@ -60,7 +60,6 @@ class ChessActivity : AppCompatActivity(),
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_chess)
@@ -96,8 +95,8 @@ class ChessActivity : AppCompatActivity(),
         val difficulties = ChessDifficulty.values()
         val labels = difficulties.map { getString(it.labelResId) }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected, labels)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         difficultySpinner.adapter = adapter
         difficultySpinner.setSelection(difficulties.indexOf(currentDifficulty))
 

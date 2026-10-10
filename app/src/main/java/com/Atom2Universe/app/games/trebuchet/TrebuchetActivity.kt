@@ -438,7 +438,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      * rien à faire sur la barre du bas à côté du bouton de tir.
      */
     private fun showSettingsMenu(anchor: View) {
-        val popup = PopupMenu(this, anchor)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, anchor)
         val menu = popup.menu
         // **Une seule entrée pour les fantômes**, qui ouvre leur boîte.
         //
@@ -508,7 +508,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             addView(titre)
             addView(curseur)
         }
-        val boite = AlertDialog.Builder(this)
+        val boite = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.trebuchet_ghosts_menu)
             .setView(corps)
             .setNeutralButton(getString(R.string.trebuchet_clean_ghosts, fantomesAffiches()), null)
@@ -580,7 +580,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      * qu'on avait trouvée bonne.
      */
     private fun showMachinesMenu() {
-        val popup = PopupMenu(this, machinesButton)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, machinesButton)
         val menu = popup.menu
         val trebuchets = menu.addSubMenu(
             0, ID_GROUP_TREBUCHET, 0, getString(R.string.trebuchet_machine_group_trebuchet)
@@ -656,7 +656,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             showGearPartsMenu()
             return
         }
-        val popup = PopupMenu(this, partsButton)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, partsButton)
         for ((i, p) in PARTS.withIndex()) popup.menu.add(0, i, i, getString(p.second))
         popup.setOnMenuItemClickListener { item ->
             PARTS.getOrNull(item.itemId)?.let { (part, _) ->
@@ -683,7 +683,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
      * chemin de plus a apprendre.
      */
     private fun showGearPartsMenu() {
-        val popup = PopupMenu(this, partsButton)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, partsButton)
         val sizes = popup.menu.addSubMenu(
             0, ID_GROUP_GEAR_SIZES, 0, getString(R.string.trebuchet_gear_add)
         )
@@ -815,7 +815,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
             setSelection(text.length)
             setSingleLine()
         }
-        AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.trebuchet_machine_name)
             .setView(field)
             .setPositiveButton(R.string.trebuchet_machine_save) { _, _ ->
@@ -845,7 +845,7 @@ class TrebuchetActivity : ThemedActivity(), TrebuchetView.Listener, GearMachineV
 
     /** Le second menu : celui dont on ne sort rien, on y jette. */
     private fun showDeleteMenu(mode: MachineMode) {
-        val popup = PopupMenu(this, machinesButton)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, machinesButton)
         val names = if (mode == MachineMode.TREBUCHET) machines.map { it.name } else gearMachines.map { it.name }
         for ((i, name) in names.withIndex()) popup.menu.add(0, i, i, name)
         popup.setOnMenuItemClickListener { item ->

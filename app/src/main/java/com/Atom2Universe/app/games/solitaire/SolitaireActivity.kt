@@ -219,7 +219,7 @@ class SolitaireActivity : ThemedActivity(), SolitaireView.OnGameActionListener {
 
     private fun onNewGameClicked() {
         if (moves > 0 && !isGameWon) {
-            AlertDialog.Builder(this)
+            com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
                 .setTitle(R.string.solitaire_dialog_new_title)
                 .setMessage(R.string.solitaire_dialog_new_message)
                 .setPositiveButton(R.string.confirm) { _, _ -> startNewGame() }

@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
  * Les Notes : une seule activité. La bibliothèque est la racine ; l'éditeur, les tags et la
  * corbeille s'empilent par-dessus (le retour arrière y revient).
  */
-class NotesActivity : AppCompatActivity() {
+class NotesActivity : ThemedActivity() {
 
     lateinit var viewModel: NotesViewModel
 
@@ -39,7 +39,6 @@ class NotesActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
         enableImmersiveMode()

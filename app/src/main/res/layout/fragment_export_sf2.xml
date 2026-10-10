@@ -75,14 +75,14 @@
             android:textColor="@color/audio_text_secondary"
             android:textSize="12sp" />
 
-        <Spinner
+        <com.Atom2Universe.app.util.ImmersiveSpinner
             android:id="@+id/program_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:background="?attr/a2uPanelBackground"
             android:padding="8dp"
-            android:popupBackground="@color/startup_background" />
+            android:popupBackground="?attr/a2uPopupBackground" />
 
         <!-- Root note & Key Range -->
         <LinearLayout

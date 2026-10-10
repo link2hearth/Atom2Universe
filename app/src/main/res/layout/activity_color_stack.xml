@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0A0F1E">
+    android:background="?attr/a2uScreenBackground">
 
     <!-- Bouton retour -->
     <ImageButton
@@ -14,7 +14,7 @@
         android:contentDescription="@string/color_stack_back"
         android:padding="10dp"
         android:src="@drawable/ic_arrow_back_24"
-        app:tint="#94A3B8"
+        app:tint="?attr/a2uSecondaryTextColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/color_stack_difficulty_label"
-        android:textColor="#94A3B8"
+        android:textColor="?attr/a2uSecondaryTextColor"
         android:textSize="13sp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@id/color_stack_back_button"
@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="@id/color_stack_back_button" />
 
     <!-- Spinner difficulté -->
-    <Spinner
+    <com.Atom2Universe.app.util.ImmersiveSpinner
         android:id="@+id/color_stack_difficulty_spinner"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/color_stack_moves_zero"
-        android:textColor="#64748B"
+        android:textColor="?attr/a2uTertiaryTextColor"
         android:textSize="13sp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +101,7 @@
             android:layout_marginEnd="6dp"
             android:gravity="center"
             android:text="@string/color_stack_btn_new"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="13sp"
             android:background="@drawable/bg_widget_arrow"
             android:clickable="true"
@@ -115,7 +115,7 @@
             android:layout_marginEnd="6dp"
             android:gravity="center"
             android:text="@string/color_stack_btn_restart"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="13sp"
             android:background="@drawable/bg_widget_arrow"
             android:clickable="true"
@@ -128,7 +128,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/color_stack_btn_undo"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="13sp"
             android:background="@drawable/bg_widget_arrow"
             android:clickable="true"

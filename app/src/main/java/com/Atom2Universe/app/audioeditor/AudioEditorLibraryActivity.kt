@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.Atom2Universe.app.ThemedActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -61,7 +62,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * Pas de recréation à la rotation (voir le manifeste) : un import ou une migration en cours garde sa
  * boîte de progression.
  */
-class AudioEditorLibraryActivity : AppCompatActivity() {
+class AudioEditorLibraryActivity : ThemedActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -88,7 +89,6 @@ class AudioEditorLibraryActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_audio_editor_library)

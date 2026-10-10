@@ -29,7 +29,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.util.followImmersiveMode
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.Atom2Universe.app.util.ImmersiveBottomSheetDialog as BottomSheetDialog
 import com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder as MaterialAlertDialogBuilder
 
 /** Petits outils de construction d'interface en code (les feuilles et options sont trop dynamiques pour du XML). */

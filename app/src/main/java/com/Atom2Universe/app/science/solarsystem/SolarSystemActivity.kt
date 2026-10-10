@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.science.solarsystem
 
-import android.app.DatePickerDialog
+import com.Atom2Universe.app.util.ImmersiveDatePickerDialog as DatePickerDialog
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
@@ -26,7 +26,7 @@ import java.time.temporal.ChronoUnit
 
 class SolarSystemActivity : ThemedActivity() {
 
-    override val themeBrightness = com.Atom2Universe.app.AppBrightness.DARK
+    private val palette by lazy { com.Atom2Universe.app.science.SciencePalette(this) }
 
     private lateinit var glView: SolarSystemGLView
     private lateinit var btnPlayPause: ImageButton
@@ -127,11 +127,11 @@ class SolarSystemActivity : ThemedActivity() {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(dp(8), dp(4), dp(8), dp(4))
-            setBackgroundColor(0xAA000000.toInt())
+            setBackgroundColor(palette.surface)
         }
         val btnBack = ImageButton(this).apply {
             setImageResource(R.drawable.ic_app_back)
-            setColorFilter(Color.WHITE)
+            setColorFilter(palette.text)
             background = null
             contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
@@ -139,10 +139,10 @@ class SolarSystemActivity : ThemedActivity() {
         // Bouton date (centre, remplace le titre)
         tvDate = TextView(this).apply {
             textSize = 13f
-            setTextColor(0xFFDDEEFF.toInt())
+            setTextColor(palette.text)
             gravity = Gravity.CENTER
             setPadding(dp(8), dp(4), dp(8), dp(4))
-            setBackgroundColor(0x33FFFFFF)
+            setBackgroundColor(palette.raised)
             contentDescription = getString(R.string.solar_change_date)
             setOnClickListener { showDatePicker() }
         }
@@ -162,10 +162,10 @@ class SolarSystemActivity : ThemedActivity() {
         // Dropdown sélection de l'astre en focus
         btnBodySelector = TextView(this).apply {
             textSize = 12f
-            setTextColor(0xFFFFDD88.toInt())
+            setTextColor(palette.accent)
             gravity = Gravity.CENTER
             setPadding(dp(8), dp(4), dp(8), dp(4))
-            setBackgroundColor(0x33FFFFFF)
+            setBackgroundColor(palette.raised)
             contentDescription = getString(R.string.solar_choose_body)
             setOnClickListener { showBodySelector() }
         }
@@ -188,9 +188,9 @@ class SolarSystemActivity : ThemedActivity() {
 
         // ── Carte info planète ────────────────────────────────────
         cardPlanetInfo = CardView(this).apply {
-            radius = dp(12).toFloat()
-            cardElevation = dp(8).toFloat()
-            setCardBackgroundColor(0xCC101025.toInt())
+            radius = com.Atom2Universe.app.AppearanceStyle.corner(this@SolarSystemActivity, 12f)
+            cardElevation = com.Atom2Universe.app.AppearanceStyle.elevation(this@SolarSystemActivity, 8f)
+            setCardBackgroundColor(palette.surface)
             visibility = View.GONE
         }
         val cardContent = LinearLayout(this).apply {
@@ -203,12 +203,12 @@ class SolarSystemActivity : ThemedActivity() {
         }
         tvPlanetName = TextView(this).apply {
             textSize = 20f
-            setTextColor(Color.WHITE)
+            setTextColor(palette.text)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         val btnCloseCard = ImageButton(this).apply {
             setImageResource(R.drawable.ic_close)
-            setColorFilter(0xFFAAAAAA.toInt())
+            setColorFilter(palette.secondary)
             background = null
             contentDescription = getString(R.string.solar_close_card)
             setOnClickListener { cardPlanetInfo.visibility = View.GONE }
@@ -243,7 +243,7 @@ class SolarSystemActivity : ThemedActivity() {
         val bottomPanel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(12), dp(8), dp(12), dp(12))
-            setBackgroundColor(0xBB000000.toInt())
+            setBackgroundColor(palette.surface)
         }
 
         // Sélecteur de mode
@@ -268,7 +268,7 @@ class SolarSystemActivity : ThemedActivity() {
         }
         btnPlayPause = ImageButton(this).apply {
             setImageResource(R.drawable.ic_pause)
-            setColorFilter(Color.WHITE)
+            setColorFilter(palette.text)
             background = null
             contentDescription = getString(R.string.solar_play_pause)
         }
@@ -280,7 +280,7 @@ class SolarSystemActivity : ThemedActivity() {
         }
         tvSpeed = TextView(this).apply {
             textSize = 11f
-            setTextColor(Color.WHITE)
+            setTextColor(palette.text)
             gravity = Gravity.END
             minWidth = dp(80)
         }
@@ -436,20 +436,23 @@ class SolarSystemActivity : ThemedActivity() {
     }
 
     private fun updateModeButtons() {
-        val activeColor  = 0xFF1565C0.toInt()
-        val inactiveColor = 0xFF333333.toInt()
+        val activeColor  = palette.accent
+        val inactiveColor = palette.raised
         btnModeClose.setBackgroundColor(if (currentMode == ProportionMode.CLOSE)      activeColor else inactiveColor)
         btnModeLog.setBackgroundColor(  if (currentMode == ProportionMode.COMPRESSED) activeColor else inactiveColor)
         btnModeReal.setBackgroundColor( if (currentMode == ProportionMode.REALISTIC)  activeColor else inactiveColor)
+        btnModeClose.setTextColor(if (currentMode == ProportionMode.CLOSE) palette.onAccent else palette.text)
+        btnModeLog.setTextColor(if (currentMode == ProportionMode.COMPRESSED) palette.onAccent else palette.text)
+        btnModeReal.setTextColor(if (currentMode == ProportionMode.REALISTIC) palette.onAccent else palette.text)
     }
 
     private fun modeChip(text: String, selected: Boolean): TextView = TextView(this).apply {
         this.text = text
         textSize = 11f
-        setTextColor(Color.WHITE)
+        setTextColor(if (selected) palette.onAccent else palette.text)
         gravity = Gravity.CENTER
         setPadding(dp(4), dp(4), dp(4), dp(4))
-        setBackgroundColor(if (selected) 0xFF1565C0.toInt() else 0xFF333333.toInt())
+        setBackgroundColor(if (selected) palette.accent else palette.raised)
     }
 
     private fun addInfoRow(parent: LinearLayout, label: String, value: String): TextView {
@@ -460,13 +463,13 @@ class SolarSystemActivity : ThemedActivity() {
         val tvLabel = TextView(this).apply {
             text = label
             textSize = 12f
-            setTextColor(0xFF888888.toInt())
+            setTextColor(palette.secondary)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         val tvValue = TextView(this).apply {
             text = value
             textSize = 12f
-            setTextColor(Color.WHITE)
+            setTextColor(palette.text)
             gravity = Gravity.END
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }

@@ -127,7 +127,7 @@
             android:textSize="12sp"
             android:layout_marginEnd="4dp" />
 
-        <Spinner
+        <com.Atom2Universe.app.util.ImmersiveSpinner
             android:id="@+id/game2048_size_spinner"
             android:layout_width="72dp"
             android:layout_height="40dp"
@@ -141,7 +141,7 @@
             android:textSize="12sp"
             android:layout_marginEnd="4dp" />
 
-        <Spinner
+        <com.Atom2Universe.app.util.ImmersiveSpinner
             android:id="@+id/game2048_target_spinner"
             android:layout_width="0dp"
             android:layout_height="40dp"

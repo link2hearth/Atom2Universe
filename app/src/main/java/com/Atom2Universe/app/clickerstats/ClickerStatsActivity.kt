@@ -100,7 +100,7 @@ class ClickerStatsActivity : ThemedActivity() {
             val cancelBtn      = dialogView.findViewById<Button>(R.id.reset_cancel_btn)
             val confirmBtn     = dialogView.findViewById<Button>(R.id.reset_confirm_btn)
 
-            val dialog = AlertDialog.Builder(this)
+            val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
                 .setTitle(getString(R.string.stats_reset_confirm_title))
                 .setMessage(getString(R.string.stats_reset_confirm_message))
                 .setView(dialogView)
@@ -464,7 +464,7 @@ class ClickerStatsActivity : ThemedActivity() {
      */
     private fun onLongPressDelete(row: View, stats: List<SyncedStat>) {
         row.setOnLongClickListener {
-            val popup = PopupMenu(this, row, Gravity.END)
+            val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, row, Gravity.END)
             val counters = stats.filter { it.isCounter }
             val fmt = NumberFormat.getNumberInstance(resources.configuration.locales[0])
 
@@ -485,7 +485,7 @@ class ClickerStatsActivity : ThemedActivity() {
     }
 
     private fun confirmDelete(stats: List<SyncedStat>) {
-        AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.stat_delete_confirm_title)
             .setMessage(R.string.stat_delete_confirm_message)
             .setNegativeButton(R.string.stat_delete_cancel, null)

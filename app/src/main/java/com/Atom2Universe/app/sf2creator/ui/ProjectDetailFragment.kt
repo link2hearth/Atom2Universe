@@ -849,7 +849,7 @@ class ProjectDetailFragment : Fragment() {
         val instruments = resources.getStringArray(R.array.gm_instruments)
         programSpinner.adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
+            com.Atom2Universe.app.R.layout.item_spinner_dropdown,
             instruments
         )
         programSpinner.setSelection(program.programNumber.coerceIn(0, 127))
@@ -858,7 +858,7 @@ class ProjectDetailFragment : Fragment() {
         val banks = (0..127).map { "Bank $it" }
         bankSpinner.adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
+            com.Atom2Universe.app.R.layout.item_spinner_dropdown,
             banks
         )
         bankSpinner.setSelection(program.bankNumber.coerceIn(0, 127))
@@ -946,7 +946,7 @@ class ProjectDetailFragment : Fragment() {
             val instruments = resources.getStringArray(R.array.gm_instruments)
             programSpinner.adapter = ArrayAdapter(
                 requireContext(),
-                android.R.layout.simple_spinner_dropdown_item,
+                com.Atom2Universe.app.R.layout.item_spinner_dropdown,
                 instruments
             )
 
@@ -954,7 +954,7 @@ class ProjectDetailFragment : Fragment() {
             val banks = (0..127).map { "Bank $it" }
             bankSpinner.adapter = ArrayAdapter(
                 requireContext(),
-                android.R.layout.simple_spinner_dropdown_item,
+                com.Atom2Universe.app.R.layout.item_spinner_dropdown,
                 banks
             )
 
@@ -1026,7 +1026,7 @@ class ProjectDetailFragment : Fragment() {
         val instruments = resources.getStringArray(R.array.gm_instruments)
         programSpinner.adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
+            com.Atom2Universe.app.R.layout.item_spinner_dropdown,
             instruments
         )
         programSpinner.setSelection(preset.programNumber.coerceIn(0, 127))
@@ -1035,7 +1035,7 @@ class ProjectDetailFragment : Fragment() {
         val banks = (0..127).map { "Bank $it" }
         bankSpinner.adapter = ArrayAdapter(
             requireContext(),
-            android.R.layout.simple_spinner_dropdown_item,
+            com.Atom2Universe.app.R.layout.item_spinner_dropdown,
             banks
         )
         bankSpinner.setSelection(preset.bankNumber.coerceIn(0, 127))

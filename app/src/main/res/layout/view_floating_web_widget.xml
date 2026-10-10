@@ -5,7 +5,7 @@
     android:id="@+id/floating_web_card"
     android:layout_width="340dp"
     android:layout_height="480dp"
-    app:cardBackgroundColor="#0F172A"
+    app:cardBackgroundColor="?attr/a2uSurfaceColor"
     app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
@@ -20,7 +20,7 @@
             android:id="@+id/floating_web_header"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:background="#111827"
+            android:background="?attr/a2uSurfaceColor"
             android:clickable="true"
             android:focusable="true">
 
@@ -33,7 +33,7 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:textColor="#94A3B8"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -45,7 +45,7 @@
                 android:layout_marginEnd="40dp"
                 android:gravity="center"
                 android:text="⤢"
-                android:textColor="#64748B"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="14sp"
                 android:clickable="true"
                 android:focusable="true"
@@ -70,7 +70,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:background="#0D1117"
+            android:background="?attr/a2uSurfaceColor"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingStart="2dp"
@@ -82,7 +82,7 @@
                 android:layout_height="34dp"
                 android:gravity="center"
                 android:text="←"
-                android:textColor="#64748B"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="17sp"
                 android:alpha="0.4"
                 android:clickable="true"
@@ -95,7 +95,7 @@
                 android:layout_height="34dp"
                 android:gravity="center"
                 android:text="↻"
-                android:textColor="#64748B"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="17sp"
                 android:clickable="true"
                 android:focusable="true"
@@ -107,9 +107,9 @@
                 android:layout_height="26dp"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
-                android:background="#1E293B"
+                android:background="?attr/a2uSurfaceColor"
                 android:hint="@string/floating_web_url_hint"
-                android:textColor="#F1F5F9"
+                android:textColor="?attr/a2uTextColor"
                 android:textColorHint="#475569"
                 android:textSize="10sp"
                 android:paddingStart="8dp"
@@ -125,7 +125,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#1F2937" />
+            android:background="?attr/a2uSurfaceColor" />
 
         <!-- Indicateur de chargement -->
         <ProgressBar

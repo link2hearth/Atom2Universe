@@ -836,8 +836,8 @@ class ExportFragment : Fragment() {
     // ==================== Keyboard & Preview ====================
     private fun setupProgramSpinner() {
         val instruments = resources.getStringArray(R.array.gm_instruments)
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, instruments)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(requireContext(), com.Atom2Universe.app.R.layout.item_spinner_selected, instruments)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         programSpinner.adapter = adapter
 
         programSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

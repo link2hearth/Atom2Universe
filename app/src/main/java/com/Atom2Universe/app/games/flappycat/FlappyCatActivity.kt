@@ -4,12 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.util.enableImmersiveMode
 
-class FlappyCatActivity : AppCompatActivity() {
+class FlappyCatActivity : ThemedActivity() {
 
     private lateinit var gameView: FlappyCatView
 
@@ -18,7 +18,6 @@ class FlappyCatActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_flappy_cat)

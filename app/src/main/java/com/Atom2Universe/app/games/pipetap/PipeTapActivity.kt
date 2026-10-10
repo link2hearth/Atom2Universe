@@ -13,7 +13,7 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import com.google.android.material.button.MaterialButton
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
@@ -23,7 +23,7 @@ import com.Atom2Universe.app.crypto.clicker.NeutrinoRewards
 import com.Atom2Universe.app.util.enableImmersiveMode
 import androidx.core.content.edit
 
-class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
+class PipeTapActivity : ThemedActivity(), PipeTapView.OnTileRotatedListener {
 
     companion object {
         private const val PREFS_NAME = "pipetap_save"
@@ -59,7 +59,6 @@ class PipeTapActivity : AppCompatActivity(), PipeTapView.OnTileRotatedListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_pipetap)

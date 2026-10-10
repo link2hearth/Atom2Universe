@@ -49,7 +49,7 @@ class SolitaireWidgetView @JvmOverloads constructor(
     private lateinit var resultOverlay: FrameLayout
     private lateinit var resultText: TextView
     private lateinit var resetOverlay: FrameLayout
-    private val baseCardColor = Color.parseColor("#0F172A")
+    private val baseCardColor = com.Atom2Universe.app.AppearanceStyle.color(context, R.attr.a2uSurfaceColor)
 
     private val game = SolitaireGame()
     private var moves = 0

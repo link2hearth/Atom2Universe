@@ -71,7 +71,7 @@ object HumanHistoryCredits {
             override fun afterTextChanged(s: Editable?) = Unit
         })
         update("")
-        val dialog = AlertDialog.Builder(this).setTitle(R.string.ct_history_sources)
+        val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.ct_history_sources)
             .setView(ScrollView(this).apply { addView(body) }).setPositiveButton(R.string.ct_close, null).create()
         dialog.followImmersiveMode(); dialog.show()
     }

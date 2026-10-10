@@ -57,7 +57,7 @@ import com.Atom2Universe.app.AudioHubActivity
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.HoldToExit
 import com.Atom2Universe.app.util.followImmersiveMode
-import com.Atom2Universe.app.util.applySystemBarsVisibility
+import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import com.Atom2Universe.app.music.equalizer.MusicEqualizerManager
 import com.Atom2Universe.app.music.equalizer.ui.EqualizerFragment
 import java.util.Locale
@@ -2197,8 +2197,8 @@ class FullPlayerActivity : AudioThemedActivity(), MusicPlaybackHolder.PlayerList
         // Mettre à jour l'état du bouton play/pause
         updateFullscreenPlayPauseButton(MusicPlaybackHolder.isPlaying())
 
-        // Hide system bars for true immersive experience
-        applySystemBarsVisibility(showStatusBar = false, showNavBar = false)
+        // Respect the app preference in the fullscreen visualizer too.
+        updateSystemBarsVisibility()
 
         // Masquer le bouton fullscreen (on est déjà en fullscreen)
         btnFullscreen.visibility = View.GONE

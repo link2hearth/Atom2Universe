@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 /**
  * Activité Particules – casse-briques avec rogue-like (reliques, méta-progression Room).
  */
-class ParticulesActivity : AppCompatActivity() {
+class ParticulesActivity : ThemedActivity() {
 
     private lateinit var gameView: ParticulesView
     private lateinit var pauseButton: ImageButton
@@ -30,7 +30,6 @@ class ParticulesActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_particules)

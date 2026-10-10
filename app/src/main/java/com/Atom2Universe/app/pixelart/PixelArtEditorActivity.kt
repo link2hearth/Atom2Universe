@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.appcompat.widget.TooltipCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -84,7 +84,7 @@ import kotlin.math.roundToInt
  * (outils, couleurs, calques, images). Le projet et l'historique vivent dans un [EditorViewModel],
  * si bien qu'une rotation d'écran ne perd rien.
  */
-class PixelArtEditorActivity : AppCompatActivity(), PixelEditorView.Host {
+class PixelArtEditorActivity : ThemedActivity(), PixelEditorView.Host {
 
     companion object {
         private const val EXTRA_PROJECT_ID = "project_id"
@@ -164,7 +164,6 @@ class PixelArtEditorActivity : AppCompatActivity(), PixelEditorView.Host {
     // ==== Cycle de vie ============================================================================
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_pixel_art_editor)

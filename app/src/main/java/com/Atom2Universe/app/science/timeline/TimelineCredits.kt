@@ -54,7 +54,7 @@ object TimelineCredits {
                     .filter { it.source == source }.map { it.title }
             paragraph(titles.distinct().joinToString(getString(R.string.ct_credit_separator)) { getString(it) })
         }
-        val dialog = AlertDialog.Builder(this).setTitle(R.string.ct_credits_title)
+        val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.ct_credits_title)
             .setView(ScrollView(this).apply { addView(body) })
             .setPositiveButton(R.string.ct_close, null).create()
         dialog.followImmersiveMode(); dialog.show()

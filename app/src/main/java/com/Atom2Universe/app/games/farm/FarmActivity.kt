@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.util.applySystemBarsVisibility
+import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.launch
 
 class FarmActivity : ThemedActivity() {
@@ -76,10 +76,11 @@ class FarmActivity : ThemedActivity() {
     private var stepRepeatStarted = false
     private val handler = Handler(Looper.getMainLooper())
     private val hideStatus = Runnable { status.visibility = View.GONE }
-    private val ink = Color.rgb(76, 73, 48)
-    private val cream = Color.rgb(255, 248, 225)
-    private val sage = Color.rgb(220, 232, 195)
-    private val border = Color.rgb(183, 164, 119)
+    private val palette by lazy { com.Atom2Universe.app.games.kit.KitPalette.from(this) }
+    private val ink get() = palette.text
+    private val cream get() = palette.surface
+    private val sage get() = palette.raised
+    private val border get() = palette.outline
     private val tick = object : Runnable {
         override fun run() { refresh(); handler.postDelayed(this, 1000) }
     }
@@ -108,7 +109,7 @@ class FarmActivity : ThemedActivity() {
         fieldPanel = column().apply { visibility = View.GONE; setBackgroundColor(sage) }
         fieldInfo = text("", 14, true).apply { gravity = Gravity.CENTER; setPadding(dp(8), dp(8), dp(8), dp(4)) }
         fieldPanel.addView(fieldInfo)
-        fuelTrack = FrameLayout(this).apply { background = rounded(Color.rgb(210, 199, 165), 8, border) }
+        fuelTrack = FrameLayout(this).apply { background = rounded(palette.raised, 8, border) }
         fuelFill = View(this).apply { background = fuelDrawable; pivotX = 0f }
         fuelTrack.addView(fuelFill, FrameLayout.LayoutParams(-1, dp(10)))
         fieldPanel.addView(fuelTrack, LinearLayout.LayoutParams(-1, dp(10)).apply {
@@ -176,7 +177,7 @@ class FarmActivity : ThemedActivity() {
         }
         seedGroup.addView(icon(FarmArtView.Kind.SEEDS, R.string.farm_inventory) { inventory() }, LinearLayout.LayoutParams(dp(44), dp(44)))
         selection = icon(FarmArtView.Kind.CROP, R.string.farm_inventory) { inventory() }.apply {
-            background = RippleDrawable(ColorStateList.valueOf(0x337D9966), rounded(Color.rgb(255, 238, 196), 14, Color.rgb(224, 167, 63)), null)
+            background = RippleDrawable(ColorStateList.valueOf(0x337D9966), rounded(palette.raised, 14, palette.accent), null)
         }
         seedGroup.addView(selection, LinearLayout.LayoutParams(dp(44), dp(44)).apply { leftMargin = dp(2) })
         // Wrapped rather than a fixed 92dp: the selected-seed icon beside the bag disappears once
@@ -219,13 +220,7 @@ class FarmActivity : ThemedActivity() {
         actionEffects = FarmActionEffectsView(this)
         root.addView(actionEffects, FrameLayout.LayoutParams(-1, -1))
         setContentView(root)
-        // Hide system bars only for this game, retaining safe space for camera cutouts.
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { view, insets ->
-            val cutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            view.setPadding(cutout.left, cutout.top, cutout.right, cutout.bottom)
-            insets
-        }
-        applySystemBarsVisibility(false, false)
+        enableImmersiveMode()
         ViewCompat.requestApplyInsets(root)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { if (bubble != null) closeBubble() else finish() }
@@ -423,7 +418,7 @@ class FarmActivity : ThemedActivity() {
     }
 
     private fun rounded(color: Int, radius: Int = 14, stroke: Int? = null) = GradientDrawable().apply {
-        setColor(color); cornerRadius = dp(radius).toFloat(); stroke?.let { setStroke(dp(2), it) }
+        setColor(color); cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(this@FarmActivity, radius.toFloat()); stroke?.let { setStroke(dp(2), it) }
     }
     private fun text(value: String, size: Int = 14, bold: Boolean = false) = TextView(this).apply {
         this.text = value; textSize = size.toFloat(); setTextColor(ink)
@@ -488,7 +483,7 @@ class FarmActivity : ThemedActivity() {
     }
     private fun preview(crop: FarmCrop) = FarmArtView(this, FarmArtView.Kind.CROP, sprites).apply {
         this.crop = crop; importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-        background = rounded(Color.rgb(235, 239, 205), 16)
+        background = rounded(palette.surface, 16)
     }
     private fun duration(seconds: Int): String {
         if (seconds < 60) return getString(R.string.farm_duration_seconds, seconds.coerceAtLeast(0))
@@ -719,7 +714,7 @@ class FarmActivity : ThemedActivity() {
     private fun villageOrderCard(order: FarmVillageOrder): View {
         val person = order.villager
         val card = column().apply {
-            background = rounded(Color.rgb(247, 238, 211), 16, border)
+            background = rounded(palette.surface, 16, border)
             setPadding(dp(10), dp(10), dp(10), dp(10))
         }
         val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -739,7 +734,7 @@ class FarmActivity : ThemedActivity() {
             else -> R.string.farm_village_relation_new
         }
         card.addView(text(getString(relation), 13, true).apply {
-            setTextColor(Color.rgb(93, 134, 81)); setPadding(0, dp(8), 0, 0)
+            setTextColor(palette.success); setPadding(0, dp(8), 0, 0)
         })
         val next = when { friendship < 3 -> 3; friendship < 8 -> 8; friendship < 15 -> 15; else -> null }
         val relationProgress = if (next == null) getString(R.string.farm_village_relation_full, friendship)
@@ -774,7 +769,7 @@ class FarmActivity : ThemedActivity() {
             villageUi += {
                 val stock = state.cropProduceTotal(item.crop)
                 amount.text = getString(R.string.farm_village_item, getString(item.crop.label), stock, item.count)
-                amount.setTextColor(if (stock >= item.count) Color.rgb(93, 134, 81) else ink)
+                amount.setTextColor(if (stock >= item.count) palette.success else ink)
                 prepare.visibility = if (stock >= item.count) View.GONE else View.VISIBLE
             }
             row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
@@ -910,7 +905,7 @@ class FarmActivity : ThemedActivity() {
     }
     private fun recipeCard(recipe: FarmRecipe, inBook: Boolean = false): View {
         val card = column().apply {
-            background = rounded(Color.rgb(247, 238, 211), 16, border)
+            background = rounded(palette.surface, 16, border)
             setPadding(dp(12), dp(10), dp(12), dp(10))
         }
         val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -1098,7 +1093,7 @@ class FarmActivity : ThemedActivity() {
             val ordered = FarmProject.entries.sortedBy { if (it == first) 0 else 1 }
             for (project in ordered) {
                 val card = column().apply {
-                    background = rounded(Color.rgb(247, 238, 211), 16, border)
+                    background = rounded(palette.surface, 16, border)
                     setPadding(dp(12), dp(12), dp(12), dp(12))
                 }
                 val header = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -1156,7 +1151,7 @@ class FarmActivity : ThemedActivity() {
             }
             for (gift in FarmGift.entries) {
                 val card = column().apply {
-                    background = rounded(Color.rgb(247, 238, 211), 16, border)
+                    background = rounded(palette.surface, 16, border)
                     setPadding(dp(12), dp(10), dp(12), dp(10))
                 }
                 val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -1290,7 +1285,7 @@ class FarmActivity : ThemedActivity() {
 
     private fun flowerCard(flower: FarmFlower, slot: Int?): View {
         val card = column().apply {
-            background = rounded(Color.rgb(247, 238, 211), 16, border); setPadding(dp(12), dp(10), dp(12), dp(10))
+            background = rounded(palette.surface, 16, border); setPadding(dp(12), dp(10), dp(12), dp(10))
         }
         val known = state.greenhouse.knows(flower)
         val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -1678,7 +1673,7 @@ class FarmActivity : ThemedActivity() {
             for (meat in FarmMeat.entries.filter { kind == null || it.kind == kind }) {
                 if (!state.livestock.available(meat.kind) && state.livestock.stock(meat) == 0) continue
                 val card = column().apply {
-                    background = rounded(Color.rgb(247, 238, 211), 16, border)
+                    background = rounded(palette.surface, 16, border)
                     setPadding(dp(12), dp(10), dp(12), dp(10))
                 }
                 val row = LinearLayout(this).apply { gravity = Gravity.CENTER_VERTICAL }
@@ -1886,7 +1881,7 @@ class FarmActivity : ThemedActivity() {
     /** One shop line. Only unlocked seeds reach the shop; the next one is announced on its parcel sign. */
     private fun seedRow(crop: FarmCrop): LinearLayout {
         val row = LinearLayout(this).apply {
-            gravity = Gravity.CENTER_VERTICAL; background = rounded(Color.rgb(247, 238, 211), 16)
+            gravity = Gravity.CENTER_VERTICAL; background = rounded(palette.surface, 16)
             setPadding(dp(6), dp(8), dp(8), dp(8))
         }
         row.addView(preview(crop), LinearLayout.LayoutParams(dp(66), dp(80)))
@@ -1929,7 +1924,7 @@ class FarmActivity : ThemedActivity() {
                 val current = crop == state.selected
                 val row = LinearLayout(this).apply {
                     gravity = Gravity.CENTER_VERTICAL
-                    background = if (current) rounded(Color.rgb(255, 238, 196), 14, Color.rgb(224, 167, 63)) else rounded(sage, 14)
+                    background = if (current) rounded(palette.raised, 14, palette.accent) else rounded(sage, 14)
                     isFocusable = true
                     setOnClickListener { state.selected = crop; state.save(); closeBubble(); refresh() }
                 }
@@ -1938,7 +1933,7 @@ class FarmActivity : ThemedActivity() {
                 details.addView(text(getString(crop.label), 16, current))
                 details.addView(text(getString(R.string.farm_stock_count, state.seeds[crop.ordinal]), 12))
                 if (current) details.addView(text(getString(R.string.farm_currently_selected), 12, true).apply {
-                    setTextColor(Color.rgb(150, 108, 30))
+                    setTextColor(palette.accent)
                 })
                 row.addView(details, LinearLayout.LayoutParams(0, -2, 1f))
                 // Fills every free cell of the farm with this seed, parcel 1 first. The count is what
@@ -2039,7 +2034,7 @@ class FarmActivity : ThemedActivity() {
             crops.forEach { crop ->
                 val group = LinearLayout(this).apply {
                     gravity = Gravity.CENTER_VERTICAL
-                    background = rounded(Color.rgb(247, 238, 211), 16, border)
+                    background = rounded(palette.surface, 16, border)
                     setPadding(dp(6), dp(6), dp(6), dp(6))
                 }
                 val cropBadge = column().apply {
@@ -2054,7 +2049,7 @@ class FarmActivity : ThemedActivity() {
                 }, LinearLayout.LayoutParams(dp(58), -2))
                 cropBadge.addView(text("×${state.cropProduceTotal(crop)}", 12, true).apply {
                     gravity = Gravity.CENTER
-                    setTextColor(Color.rgb(116, 78, 48))
+                    setTextColor(palette.secondary)
                 }, LinearLayout.LayoutParams(dp(58), -2))
                 if (state.requestedProduce(crop) > 0) cropBadge.addView(
                     text(getString(R.string.farm_village_stock_hint, state.requestedProduce(crop)), 11).apply {
@@ -2251,18 +2246,8 @@ class FarmActivity : ThemedActivity() {
         FarmCropQuality.EPIC -> Color.rgb(139, 73, 184)
         FarmCropQuality.LEGENDARY -> Color.rgb(218, 137, 25)
     }
-    private fun qualityTint(quality: FarmCropQuality) = when (quality) {
-        FarmCropQuality.COMMON -> Color.rgb(232, 239, 215)
-        FarmCropQuality.RARE -> Color.rgb(218, 238, 250)
-        FarmCropQuality.EPIC -> Color.rgb(237, 222, 248)
-        FarmCropQuality.LEGENDARY -> Color.rgb(255, 238, 196)
-    }
-    private fun qualityTextColor(quality: FarmCropQuality) = when (quality) {
-        FarmCropQuality.COMMON -> Color.rgb(67, 91, 47)
-        FarmCropQuality.RARE -> Color.rgb(32, 93, 142)
-        FarmCropQuality.EPIC -> Color.rgb(91, 49, 132)
-        FarmCropQuality.LEGENDARY -> Color.rgb(139, 83, 20)
-    }
+    private fun qualityTint(quality: FarmCropQuality) = palette.blend(palette.surface, qualityColor(quality), if (palette.isLight) 0.12f else 0.18f)
+    private fun qualityTextColor(quality: FarmCropQuality) = com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(qualityColor(quality), qualityTint(quality), 4.5)
     private fun parcelMenu(index: Int) {
         val land = state.parcels[index]
         showBubble(getString(R.string.farm_parcel_label, index + 1), index) { body ->
@@ -2502,9 +2487,9 @@ class FarmActivity : ThemedActivity() {
     }
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) applySystemBarsVisibility(false, false)
+        if (hasFocus) enableImmersiveMode()
     }
-    override fun onResume() { super.onResume(); applySystemBarsVisibility(false, false); handler.post(tick) }
+    override fun onResume() { super.onResume(); enableImmersiveMode(); handler.post(tick) }
     override fun onPause() {
         handler.removeCallbacks(tick); handler.removeCallbacks(hideStatus)
         fieldView.stop(); closeBubble()

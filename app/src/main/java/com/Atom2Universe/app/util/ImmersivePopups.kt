@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inspector.WindowInspector
+import android.util.AttributeSet
 import android.widget.PopupWindow
 import androidx.core.view.ViewCompat
 
@@ -41,7 +42,7 @@ internal fun focusedContentRoot(activity: Activity): View? {
     return null
 }
 
-private fun Context.findActivity(): Activity? {
+internal fun Context.findActivity(): Activity? {
     var current = this
     while (current is ContextWrapper && current !is Activity) {
         val base = current.baseContext
@@ -61,8 +62,10 @@ private fun applyPopupBars(root: View, context: Context) {
         val visibilityFlags = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
             View.SYSTEM_UI_FLAG_IMMERSIVE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         val appearanceFlags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        val hiddenFlags = if (SystemBarsManager.shouldShowSystemBars(context)) 0 else
-            View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        val hiddenFlags = (if (SystemBarsManager.showStatusBar(context)) 0 else View.SYSTEM_UI_FLAG_FULLSCREEN) or
+            (if (SystemBarsManager.showNavigationBar(context)) 0 else View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) or
+            (if (SystemBarsManager.showStatusBar(context) && SystemBarsManager.showNavigationBar(context)) 0
+                else View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         val lightFlags = if (com.Atom2Universe.app.AppearanceStyle.isLight(context)) appearanceFlags else 0
         root.systemUiVisibility = (root.systemUiVisibility and (visibilityFlags or appearanceFlags).inv()) or
             hiddenFlags or lightFlags
@@ -70,9 +73,8 @@ private fun applyPopupBars(root: View, context: Context) {
 }
 
 /** Retains outside taps, dismiss listeners, keyboard navigation and all existing popup content. */
-class ImmersivePopupWindow(content: View, width: Int, height: Int, focusable: Boolean = false) :
-    PopupWindow(PopupBarsContext(content.context)) {
-    init {
+class ImmersivePopupWindow(context: Context) : PopupWindow(PopupBarsContext(context)) {
+    constructor(content: View, width: Int, height: Int, focusable: Boolean = false) : this(content.context) {
         contentView = content
         this.width = width
         this.height = height
@@ -103,7 +105,7 @@ class ImmersiveSupportPopupMenu(context: Context, anchor: View, gravity: Int = G
  * service so even Android 8/9 and cascading submenus can inherit immersion before taking focus.
  * The real manager retains the activity's window token, placement and removal behaviour.
  */
-private class PopupBarsContext(context: Context) : ContextWrapper(context) {
+internal class PopupBarsContext(context: Context) : ContextWrapper(context) {
     private val popupManager by lazy {
         val actual = baseContext.getSystemService(WINDOW_SERVICE) as WindowManager
         object : WindowManager by actual {
@@ -118,7 +120,8 @@ private class PopupBarsContext(context: Context) : ContextWrapper(context) {
             override fun addView(view: View, params: ViewGroup.LayoutParams) {
                 val windowParams = params as? WindowManager.LayoutParams
                 val borrowedFocus = windowParams != null &&
-                    !SystemBarsManager.shouldShowSystemBars(this@PopupBarsContext) &&
+                    (!SystemBarsManager.showStatusBar(this@PopupBarsContext) ||
+                        !SystemBarsManager.showNavigationBar(this@PopupBarsContext)) &&
                     windowParams.flags and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE == 0
                 if (borrowedFocus) windowParams!!.flags = windowParams.flags or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 
@@ -152,3 +155,10 @@ private class PopupBarsContext(context: Context) : ContextWrapper(context) {
     override fun getSystemService(name: String): Any? =
         if (name == WINDOW_SERVICE) popupManager else super.getSystemService(name)
 }
+
+/** Spinner dropdowns also own a private window, including on Android 8 and 9. */
+class ImmersiveSpinner @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = androidx.appcompat.R.attr.spinnerStyle
+) : androidx.appcompat.widget.AppCompatSpinner(PopupBarsContext(context), attrs, defStyleAttr)

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#060A1C">
+    android:background="?attr/a2uBackgroundColor">
 
     <!-- Bannière -->
     <LinearLayout
@@ -25,7 +25,7 @@
             android:contentDescription="@string/back"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back_24"
-            app:tint="#C8C4E8" />
+            app:tint="?attr/a2uTextColor" />
 
         <TextView
             android:layout_width="0dp"
@@ -33,7 +33,7 @@
             android:layout_marginStart="4dp"
             android:layout_weight="1"
             android:text="@string/starbridges_title"
-            android:textColor="#FFD27A"
+            android:textColor="?attr/a2uMusicAccent"
             android:textSize="18sp"
             android:fontFamily="serif"
             android:textStyle="italic" />
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:textColor="#9A9CC0"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="13sp" />
 
         <ImageButton
@@ -54,7 +54,7 @@
             android:contentDescription="@string/starbridges_atlas_title"
             android:padding="8dp"
             android:src="@drawable/ic_constellation_atlas"
-            app:tint="#FFD27A" />
+            app:tint="?attr/a2uMusicAccent" />
 
         <ImageButton
             android:id="@+id/sb_restart_button"
@@ -64,7 +64,7 @@
             android:contentDescription="@string/starbridges_restart_desc"
             android:padding="8dp"
             android:src="@drawable/ic_restart"
-            app:tint="#C8C4E8" />
+            app:tint="?attr/a2uTextColor" />
 
     </LinearLayout>
 
@@ -104,7 +104,7 @@
         android:id="@+id/sb_win_overlay"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#D8060A1C"
+        android:background="?attr/a2uSurfaceColor"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingHorizontal="24dp"
@@ -122,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#FFD27A"
+            android:textColor="?attr/a2uMusicAccent"
             android:textSize="26sp"
             android:fontFamily="serif"
             android:textStyle="italic" />
@@ -133,7 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:textColor="#9A9CC0"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="14sp" />
 
         <LinearLayout
@@ -149,14 +149,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:text="@string/starbridges_btn_atlas"
-                android:textColor="#FFD27A"
-                app:strokeColor="#80FFD27A" />
+                android:textColor="?attr/a2uMusicAccent"
+                app:strokeColor="?attr/a2uOutlineColor" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sb_btn_again"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#3A2F6E"
+                android:backgroundTint="?attr/a2uMusicAccent"
                 android:text="@string/starbridges_btn_again" />
 
         </LinearLayout>

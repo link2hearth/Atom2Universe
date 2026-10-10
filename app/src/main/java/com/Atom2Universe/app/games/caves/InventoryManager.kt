@@ -261,7 +261,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
         ui.craftMax.setOnClickListener { selectedRecipe?.let { doCraft(it,minOf(64,it.maxCraftable(renderer.inventory,renderer.nearbyStations, renderer.player.bossStages))) } }
         pageIndicatorTv?.setOnClickListener {
             val field=android.widget.EditText(activity).apply { inputType=android.text.InputType.TYPE_CLASS_NUMBER;setText((currentPage+1).toString());selectAll() }
-            AlertDialog.Builder(activity).setTitle(R.string.cave_catalog_jump).setView(field).setNegativeButton(android.R.string.cancel,null)
+            com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(R.string.cave_catalog_jump).setView(field).setNegativeButton(android.R.string.cancel,null)
                 .setPositiveButton(android.R.string.ok) { _,_ -> val page=field.text.toString().toIntOrNull() ?: 1;changePage(page.coerceIn(1,pageCount())-1-currentPage) }.show()
         }
         ui.related.setOnClickListener {
@@ -665,7 +665,7 @@ internal class InventoryManager(private val activity: CaveActivity) {
                 if(foodRecipes.isNotEmpty()) ui.ingredients.addView(Button(activity).apply {
                     text=activity.getString(R.string.cave_kitchen_recipes)
                     setOnClickListener {
-                        AlertDialog.Builder(activity).setTitle(R.string.cave_kitchen_recipes)
+                        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(R.string.cave_kitchen_recipes)
                             .setMessage(activity.getString(R.string.cave_kitchen_recipe_help)+"\n\n"+foodRecipes.joinToString("\n\n"))
                             .setPositiveButton(android.R.string.ok,null).show()
                     }
@@ -833,9 +833,9 @@ internal class InventoryManager(private val activity: CaveActivity) {
                     setOnClickListener {
                         val recipes=CraftRegistry.all().filter { it.result in (group?.ids ?: listOf(id)) && it.unlocked(renderer.player.bossStages) }
                         if(recipes.isEmpty()) {
-                            AlertDialog.Builder(activity).setTitle(activity.blockName(id)).setMessage(contentDescription)
+                            com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(activity.blockName(id)).setMessage(contentDescription)
                                 .setPositiveButton(android.R.string.ok,null).show()
-                        } else AlertDialog.Builder(activity).setTitle(R.string.cave_catalog_make_ingredient)
+                        } else com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(R.string.cave_catalog_make_ingredient)
                             .setItems(recipes.map { recipeName(it) }.toTypedArray()) { _,index ->
                                 selectedRecipe?.let { recipeHistory.addLast(it) };selectedRecipe=recipes[index];updateInfoPanel();craftingAdapter?.notifyDataSetChanged()
                             }.setNegativeButton(android.R.string.cancel,null).show()

@@ -494,8 +494,8 @@ class RadioActivity : AudioThemedActivity(), RadioPlaybackHolder.PlayerListener 
     }
 
     private fun setupSpinner(spinner: Spinner, entries: List<String>) {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, entries)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected, entries)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         spinner.adapter = adapter
 
     }

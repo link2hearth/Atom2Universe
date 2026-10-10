@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.Atom2Universe.app.ThemedActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -50,7 +51,7 @@ import kotlinx.coroutines.withContext
  * même galerie pour le « Canvas » (une seule couche) : un autre point d'entrée, les mêmes projets
  * dans la même base, séparés par leur type.
  */
-open class ZoomCanvasLibraryActivity : AppCompatActivity() {
+open class ZoomCanvasLibraryActivity : ThemedActivity() {
 
     /** Les projets à une seule couche (le « Canvas ») plutôt que ceux à couches. */
     protected open val single: Boolean = false
@@ -66,7 +67,6 @@ open class ZoomCanvasLibraryActivity : AppCompatActivity() {
     private lateinit var adapter: ZoomProjectsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_zoom_canvas_library)

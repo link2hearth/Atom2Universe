@@ -89,8 +89,8 @@ class BalanceActivity : ThemedActivity(), BalanceView.Listener {
             getString(R.string.balance_difficulty_expert),
             getString(R.string.balance_difficulty_extreme)
         )
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected, labels)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         difficultySpinner.adapter = adapter
 
         ignoreSpinnerChange = true

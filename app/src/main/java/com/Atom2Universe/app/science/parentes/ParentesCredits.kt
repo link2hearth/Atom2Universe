@@ -52,7 +52,7 @@ object ParentesCredits {
             }
         }
         paragraph(getString(R.string.pt_loading))
-        val dialog = AlertDialog.Builder(this).setTitle(R.string.pt_about_title)
+        val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.pt_about_title)
             .setView(ScrollView(this).apply { addView(body) })
             .setPositiveButton(R.string.pt_close, null).create()
         dialog.show()
@@ -81,7 +81,7 @@ object ParentesCredits {
                 body.addView(androidx.appcompat.widget.AppCompatButton(activity).apply {
                     text=getString(R.string.pt_story_credits); isAllCaps=false
                     setOnClickListener {
-                        AlertDialog.Builder(activity).setTitle(R.string.pt_story_credits)
+                        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(R.string.pt_story_credits)
                             .setItems(stories.stories.map { repo.text(activity,it.title) }.toTypedArray()) { _,index ->
                                 val story=stories.stories[index]
                                 val refs=LinearLayout(activity).apply {
@@ -99,7 +99,7 @@ object ParentesCredits {
                                     link(getString(R.string.pt_node_id,chapter.fork),
                                         "https://tree.opentreeoflife.org/opentree/${repo.version}@${chapter.fork}",refs)
                                 }
-                                AlertDialog.Builder(activity).setTitle(repo.text(activity,story.title))
+                                com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(repo.text(activity,story.title))
                                     .setView(ScrollView(activity).apply { addView(refs) })
                                     .setPositiveButton(R.string.pt_close,null).show()
                             }.setNegativeButton(R.string.pt_close,null).show()
@@ -110,7 +110,7 @@ object ParentesCredits {
                     setOnClickListener {
                         val entries=repo.tree.nodes.values.filter { it.species || repo.tree.isBrowsable(it.id) }
                             .sortedWith(compareBy(java.text.Collator.getInstance(resources.configuration.locales[0])) { repo.name(activity,it.id) })
-                        AlertDialog.Builder(activity).setTitle(R.string.pt_species_references)
+                        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(R.string.pt_species_references)
                             .setItems(entries.map { repo.name(activity,it.id) }.toTypedArray()) { _,index ->
                                 val node=entries[index]
                                 val refs=LinearLayout(activity).apply {
@@ -133,7 +133,7 @@ object ParentesCredits {
                                     val source=repo.sources.first { it.id==sourceId }
                                     link(source.citation,source.url,refs)
                                 }
-                                AlertDialog.Builder(activity).setTitle(repo.name(activity,node.id))
+                                com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(activity).setTitle(repo.name(activity,node.id))
                                     .setView(ScrollView(activity).apply { addView(refs) }).setPositiveButton(R.string.pt_close,null).show()
                             }.setNegativeButton(R.string.pt_close,null).show()
                     }

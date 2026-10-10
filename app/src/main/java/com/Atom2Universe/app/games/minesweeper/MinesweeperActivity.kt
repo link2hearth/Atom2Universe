@@ -212,19 +212,19 @@ class MinesweeperActivity : ThemedActivity(), MinesweeperGridView.GameEventListe
             time.text = if (best >= 0) formatTime(best) else getString(R.string.minesweeper_score_none)
             // Highlight current difficulty
             if (diff == difficulty) {
-                lbl.setTextColor(0xFF65E3CD.toInt())
-                time.setTextColor(0xFF65E3CD.toInt())
+                lbl.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uMusicAccent))
+                time.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uMusicAccent))
             }
         }
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setView(view)
             .setPositiveButton(R.string.minesweeper_new_game_btn) { _, _ -> startNewGame() }
             .setNegativeButton(android.R.string.ok, null)
             .show()
         dialog.window?.setBackgroundDrawableResource(R.drawable.minesweeper_panel)
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(0xFF65E3CD.toInt())
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(0xFFB4D7DE.toInt())
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uMusicAccent))
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uSecondaryTextColor))
     }
 
     private fun startTimer() {

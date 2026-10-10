@@ -126,6 +126,7 @@ object AppThemeManager {
         applyVisualStyle(themed)
         if (dialog) themed.theme.applyStyle(R.style.ThemeOverlay_A2U_Audio_Dialog, true)
         context.theme.setTo(themed.theme)
+        (context as? ThemedActivity)?.rememberThemeSelection()
     }
 
     internal fun bindEffects(activity: Activity) {

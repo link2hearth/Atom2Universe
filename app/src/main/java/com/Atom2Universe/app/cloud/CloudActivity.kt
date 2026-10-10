@@ -29,7 +29,7 @@ import com.Atom2Universe.app.music.sync.DriveFileInfo
 import com.Atom2Universe.app.music.sync.GoogleSignInManager
 import com.Atom2Universe.app.music.sync.SyncResult
 import com.Atom2Universe.app.util.enableImmersiveMode
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.Atom2Universe.app.util.ImmersiveBottomSheetDialog as BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.CoroutineScope

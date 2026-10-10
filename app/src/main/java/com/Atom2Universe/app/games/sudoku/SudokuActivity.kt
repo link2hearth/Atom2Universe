@@ -14,7 +14,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.Atom2Universe.app.util.enableImmersiveMode
 
-class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListener {
+class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.applyLocale(newBase))
@@ -75,7 +75,6 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
     private val database by lazy { SudokuDatabase.getInstance(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
         setContentView(R.layout.activity_sudoku)
@@ -119,8 +118,8 @@ class SudokuActivity : AppCompatActivity(), SudokuGridView.OnCellSelectedListene
         val difficulties = SudokuDifficulty.entries.toTypedArray()
         val labels = difficulties.map { getString(it.labelResId) }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected, labels)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         difficultySpinner.adapter = adapter
         difficultySpinner.setSelection(difficulties.indexOf(currentDifficulty))
 

@@ -57,7 +57,7 @@ class TheLineWidgetView @JvmOverloads constructor(
 
     private val game = TheLineGame()
     private val mainHandler = Handler(Looper.getMainLooper())
-    private val baseCardColor = CircuitPainter.MASK_BOTTOM
+    private val baseCardColor = com.Atom2Universe.app.AppearanceStyle.color(context, R.attr.a2uSurfaceColor)
 
     // Mode sélectionné dans l'overlay (pas encore appliqué)
     private var pendingMode = TheLineMode.SINGLE

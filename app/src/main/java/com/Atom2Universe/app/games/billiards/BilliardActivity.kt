@@ -31,6 +31,7 @@ import kotlin.math.*
 
 /** All match mutations happen on the main thread. Workers receive private copies. */
 class BilliardActivity : ThemedActivity() {
+    private val uiPalette by lazy { com.Atom2Universe.app.games.kit.KitPalette.from(this) }
     private lateinit var store: BilliardStore
     private lateinit var audio: BilliardAudio
     private lateinit var progress: BilliardProgress
@@ -158,7 +159,7 @@ class BilliardActivity : ThemedActivity() {
             if(run?.stage?.let { it!=JourneyStage.PLAYING }==true && !resultPresented && modalCount==0) showRunResult()
             else if(run==null && s.match.winner>=0 && winnerShown!=s.match.winner && modalCount==0) {
                 winnerShown=s.match.winner
-                showDialog(AlertDialog.Builder(this@BilliardActivity).setTitle(getString(R.string.billiard_winner,s.match.winner+1))
+                showDialog(com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this@BilliardActivity).setTitle(getString(R.string.billiard_winner,s.match.winner+1))
                     .setMessage(getString(R.string.billiard_score,s.match.winner+1,s.match.score0,s.match.score1))
                     .setPositiveButton(R.string.billiard_close,null).create())
             }
@@ -182,20 +183,20 @@ class BilliardActivity : ThemedActivity() {
         if(savedInstanceState?.getBoolean("table")==true && store.exists) resumeTable() else showLounge()
     }
     private fun dp(n: Int)=(n*resources.displayMetrics.density).roundToInt()
-    private fun plate(color: Int=0x900C2524.toInt(),radius: Int=18,border: Boolean=true)=GradientDrawable().apply {
-        setColor(color); cornerRadius=dp(radius).toFloat()
-        if(border) setStroke(dp(1),0x507AAE9B)
+    private fun plate(color: Int=uiPalette.surface,radius: Int=18,border: Boolean=true)=GradientDrawable().apply {
+        setColor(color); cornerRadius=com.Atom2Universe.app.AppearanceStyle.corner(this@BilliardActivity,radius.toFloat())
+        if(border) setStroke(dp(1),uiPalette.outline)
     }
     private fun text(res: Int,size: Float=15f)=TextView(this).apply {
-        setText(res); textSize=size; setTextColor(0xFFF1EBDD.toInt()); typeface=Typeface.create("sans-serif",0)
-        setPadding(dp(8),dp(6),dp(8),dp(4)); setShadowLayer(dp(2).toFloat(),0f,dp(1).toFloat(),0xB0000000.toInt())
+        setText(res); textSize=size; setTextColor(uiPalette.text); typeface=Typeface.create("sans-serif",0)
+        setPadding(dp(8),dp(6),dp(8),dp(4)); setShadowLayer(if(uiPalette.isLight) 0f else dp(2).toFloat(),0f,dp(1).toFloat(),0xB0000000.toInt())
     }
     private fun button(res: Int,action: ()->Unit)=text(res,14f).apply {
         gravity=Gravity.CENTER; typeface=Typeface.create("sans-serif-medium",0)
         background=plate(); minHeight=dp(48); setPadding(dp(16),dp(10),dp(16),dp(10))
         isClickable=true; isFocusable=true; foreground=RippleDrawable(ColorStateList.valueOf(0x304FB3A5),null,plate(Color.WHITE)); setOnClickListener { action() }
     }
-    private fun accent(view: TextView) { view.background=plate(0xB55B5030.toInt()); view.setTextColor(0xFFFFDEA2.toInt()) }
+    private fun accent(view: TextView) { view.background=plate(uiPalette.accent); view.setTextColor(uiPalette.onAccent) }
     private fun precisionToggle(label: Int,checked: Boolean,changed: (Boolean)->Unit)=BilliardTapToggle(this).apply {
         setText(label); textSize=12f; isAllCaps=false; minWidth=dp(104); minHeight=dp(48)
         setPadding(dp(12),dp(6),dp(12),dp(6)); isChecked=checked
@@ -205,7 +206,7 @@ class BilliardActivity : ThemedActivity() {
     private fun column()=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; isMotionEventSplittingEnabled=false }
     private fun row()=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL; gravity=Gravity.CENTER_VERTICAL; isMotionEventSplittingEnabled=false }
     private fun overlayRoot()=FrameLayout(this).apply {
-        setBackgroundColor(0xFF101820.toInt())
+        setBackgroundColor(uiPalette.background)
         // Keep all fingers with the initial control; a second finger must not toggle its neighbour.
         isMotionEventSplittingEnabled=false
         setOnApplyWindowInsetsListener { v,insets ->
@@ -225,7 +226,7 @@ class BilliardActivity : ThemedActivity() {
                 text=name; if(i==selected) accent(this)
             },LinearLayout.LayoutParams(-1,dp(48)).apply { bottomMargin=dp(6) })
         }
-        dialog=AlertDialog.Builder(this).setTitle(label).setView(ScrollView(this).apply { addView(list) }).create()
+        dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(label).setView(ScrollView(this).apply { addView(list) }).create()
         showDialog(dialog)
     }
     private fun chooseDiscipline() {
@@ -253,7 +254,7 @@ class BilliardActivity : ThemedActivity() {
                 card.addView(BilliardTableBadge(this,family),LinearLayout.LayoutParams(dp(84),dp(64)))
                 val description=column()
                 description.addView(text(d.titleRes(),16f).apply { typeface=Typeface.create("sans-serif-medium",0) })
-                description.addView(text(d.rulesRes(),11f).apply { maxLines=2; setTextColor(0xFF9EB5B7.toInt()) })
+                description.addView(text(d.rulesRes(),11f).apply { maxLines=2; setTextColor(uiPalette.secondary) })
                 card.addView(description,LinearLayout.LayoutParams(0,-2,1f))
                 choices.addView(card,LinearLayout.LayoutParams(-1,-2).apply { bottomMargin=dp(8) })
             }
@@ -261,7 +262,7 @@ class BilliardActivity : ThemedActivity() {
         content.addView(HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled=false; addView(tabs) },LinearLayout.LayoutParams(-1,dp(54)))
         content.addView(ScrollView(this).apply { isVerticalScrollBarEnabled=false; addView(choices) },LinearLayout.LayoutParams(-1,dp(280)))
         display()
-        dialog=AlertDialog.Builder(this).setTitle(R.string.billiard_discipline).setView(content).setNegativeButton(R.string.billiard_close,null).create()
+        dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.billiard_discipline).setView(content).setNegativeButton(R.string.billiard_close,null).create()
         showDialog(dialog)
     }
     private fun rememberedTableSize(family: TableFamily)=BilliardTableSize.restore(
@@ -299,12 +300,12 @@ class BilliardActivity : ThemedActivity() {
                     showMenu()
                 }
             }
-            card.addView(text(R.string.billiard_table_size,17f).apply { text=title; if(card.isSelected) setTextColor(0xFFE4C488.toInt()) })
+            card.addView(text(R.string.billiard_table_size,17f).apply { text=title; if(card.isSelected) setTextColor(uiPalette.accent) })
             card.addView(text(R.string.billiard_size_dimensions,13f).apply { text=dimensions })
-            card.addView(text(R.string.billiard_size_reference,11f).apply { text=category; setTextColor(0xFFB2C5C4.toInt()) })
+            card.addView(text(R.string.billiard_size_reference,11f).apply { text=category; setTextColor(uiPalette.secondary) })
             content.addView(card,LinearLayout.LayoutParams(-1,-2).apply { topMargin=dp(8) })
         }
-        dialog=AlertDialog.Builder(this).setTitle(R.string.billiard_table_size)
+        dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.billiard_table_size)
             .setView(ScrollView(this).apply { addView(content) }).setNegativeButton(R.string.billiard_close,null).create()
         showDialog(dialog)
     }
@@ -426,7 +427,7 @@ class BilliardActivity : ThemedActivity() {
         heading.addView(peek,LinearLayout.LayoutParams(dp(82),-2))
         val form=column().apply { setPadding(dp(12),dp(12),dp(12),dp(12)) }
         form.addView(text(R.string.billiard_your_table,21f))
-        form.addView(text(R.string.billiard_table_specs,12f).apply { text=tableSpecs(preview.table); setTextColor(0xFFB2C5C4.toInt()) })
+        form.addView(text(R.string.billiard_table_specs,12f).apply { text=tableSpecs(preview.table); setTextColor(uiPalette.secondary) })
         val modes=listOf(R.string.billiard_mode_solo,R.string.billiard_mode_duo,R.string.billiard_mode_ai)
         val modeRow=row()
         modes.forEachIndexed { i,id -> modeRow.addView(button(id) { config=config.copy(mode=PlayMode.entries[i]); showMenu() }.apply {
@@ -437,7 +438,7 @@ class BilliardActivity : ThemedActivity() {
             quickRace=quickRace%3+1; showMenu()
         }.apply { text=getString(R.string.billiard_race_to,quickRace) })
         if(config.mode==PlayMode.COMPUTER) {
-            form.addView(text(R.string.billiard_difficulty,12f).apply { setTextColor(0xFFE4C488.toInt()) })
+            form.addView(text(R.string.billiard_difficulty,12f).apply { setTextColor(uiPalette.accent) })
             val levels=row()
             difficultyLevels.forEachIndexed { i,id -> levels.addView(button(id) { setDifficulty(i) }.apply {
                 textSize=12f; setPadding(dp(4),dp(4),dp(4),dp(4)); isSelected=i==config.difficulty; if(isSelected) accent(this)
@@ -446,10 +447,10 @@ class BilliardActivity : ThemedActivity() {
         }
         fun selection(label: Int,value: String,action: ()->Unit) {
             val choice=column().apply {
-                background=plate(0x55182E29,12); setPadding(dp(8),dp(3),dp(8),dp(5)); isClickable=true; isFocusable=true
+                background=plate(uiPalette.raised,12); setPadding(dp(8),dp(3),dp(8),dp(5)); isClickable=true; isFocusable=true
                 setOnClickListener { action() }; contentDescription=getString(R.string.billiard_selection,getString(label),value)
             }
-            choice.addView(text(label,10f).apply { setTextColor(0xFF8FA8AA.toInt()); letterSpacing=.08f })
+            choice.addView(text(label,10f).apply { setTextColor(uiPalette.tertiary); letterSpacing=.08f })
             choice.addView(text(label,16f).apply { text=value; typeface=Typeface.create("sans-serif-medium",0); setPadding(dp(8),0,dp(8),dp(3)) })
             form.addView(choice,LinearLayout.LayoutParams(-1,-2).apply { topMargin=dp(7) })
         }
@@ -480,7 +481,7 @@ class BilliardActivity : ThemedActivity() {
         }.apply { accent(this) },LinearLayout.LayoutParams(-1,dp(52)).apply { topMargin=dp(12) })
         if(store.exists) form.addView(button(R.string.billiard_resume) { resumeTable() },LinearLayout.LayoutParams(-1,dp(48)).apply { topMargin=dp(8) })
         form.addView(button(R.string.billiard_rules) { showRules(config.discipline) },LinearLayout.LayoutParams(-1,dp(44)).apply { topMargin=dp(4) })
-        val body=column().apply { background=plate(0x80091C1B.toInt(),24); isClickable=true; setPadding(dp(6),dp(6),dp(6),dp(6)) }
+        val body=column().apply { background=plate(uiPalette.surface,24); isClickable=true; setPadding(dp(6),dp(6),dp(6),dp(6)) }
         body.addView(ScrollView(this).apply { isVerticalScrollBarEnabled=true; addView(form) },LinearLayout.LayoutParams(-1,0,1f))
         setupMenu=menu; menu.content(heading,body); menuContent(menu)
     }
@@ -492,7 +493,7 @@ class BilliardActivity : ThemedActivity() {
     }
     private fun settingSwitch(form: LinearLayout,label: Int,checked: Boolean,changed: (Boolean)->Unit) {
         form.addView(SwitchCompat(this).apply {
-            setText(label); setTextColor(0xFFF1EBDD.toInt()); isChecked=checked; minHeight=dp(48)
+            setText(label); setTextColor(uiPalette.text); isChecked=checked; minHeight=dp(48)
             setOnCheckedChangeListener { _,v -> changed(v) }
         })
     }
@@ -509,7 +510,7 @@ class BilliardActivity : ThemedActivity() {
         option(R.string.billiard_look,BilliardLook.entries.map { it.title },config.look.ordinal) { setLook(BilliardLook.entries[it]) }
         settingSwitch(form,R.string.billiard_rotation_stripes,config.rotationStripes,::setRotationStripes)
         settingSwitch(form,R.string.billiard_sound,config.sound) { config=config.copy(sound=it) }
-        dialog=AlertDialog.Builder(this).setTitle(R.string.billiard_preferences)
+        dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.billiard_preferences)
             .setView(ScrollView(this).apply { addView(form) }).setPositiveButton(R.string.billiard_close,null).create()
         showDialog(dialog)
     }
@@ -569,10 +570,10 @@ class BilliardActivity : ThemedActivity() {
         val header=row().apply { setPadding(dp(10),dp(8),dp(10),dp(8)) }
         header.addView(icon(BilliardIconView.Icon.MENU,R.string.billiard_menu) { gameMenu() },LinearLayout.LayoutParams(dp(48),dp(48)))
         val score=column()
-        disciplineLabel=text(c.discipline.titleRes(),11f).apply { text=tableTitle(); setTextColor(0xFFDCC28A.toInt()) }
+        disciplineLabel=text(c.discipline.titleRes(),11f).apply { text=tableTitle(); setTextColor(uiPalette.accent) }
         score.addView(disciplineLabel)
         journeyLabel=if(run!=null) text(R.string.billiard_objective,12f).also {
-            it.setTextColor(0xFFE4C488.toInt()); it.maxLines=2; it.minHeight=dp(48); score.addView(it)
+            it.setTextColor(uiPalette.accent); it.maxLines=2; it.minHeight=dp(48); score.addView(it)
             it.isClickable=true; it.setOnClickListener { showJourneyInfo() }
         } else null
         scoreboard=BilliardScoreboard(this,::ballName).also { score.addView(it); it.visibility=if(run?.solo==true) View.GONE else View.VISIBLE }
@@ -648,11 +649,11 @@ class BilliardActivity : ThemedActivity() {
             rightMargin=dp(if(landscape) sideWidth+16 else 8)
         })
         val dock=column().apply {
-            background=plate(0xED101B22.toInt(),22); setPadding(dp(10),dp(4),dp(10),dp(8))
+            background=plate(uiPalette.surface,22); setPadding(dp(10),dp(4),dp(10),dp(8))
             // Children keep their controls; padding, labels and gaps consume stray touches.
             isClickable=true; isFocusable=false; importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO
         }
-        targetLabel=text(R.string.billiard_target,12f).also { it.setTextColor(0xFFE4C488.toInt()); it.maxLines=2; dock.addView(it) }
+        targetLabel=text(R.string.billiard_target,12f).also { it.setTextColor(uiPalette.accent); it.maxLines=2; dock.addView(it) }
         val actions=row()
         callButton=button(R.string.billiard_nominate_short) { nominate() }.also { actions.addView(it) }
         callBackButton=button(R.string.billiard_change_ball) { previousCallStep() }.also { actions.addView(it) }
@@ -667,7 +668,7 @@ class BilliardActivity : ThemedActivity() {
             decisionRebreak=button(R.string.billiard_opponent_rebreak) { decideShot(false,true) }.also { choices.addView(it) }
             dock.addView(choices)
         }
-        hint=text(R.string.billiard_aim_hint,11f).also { it.text=""; it.visibility=View.GONE; it.maxLines=2; it.setTextColor(0xFFB2C5C4.toInt()); dock.addView(it) }
+        hint=text(R.string.billiard_aim_hint,11f).also { it.text=""; it.visibility=View.GONE; it.maxLines=2; it.setTextColor(uiPalette.secondary); dock.addView(it) }
         val aimingRow=row().apply { gravity=Gravity.CENTER_VERTICAL }
         fineAimRow=aimingRow
         val dialPrefs=getSharedPreferences("billiards",MODE_PRIVATE)
@@ -819,7 +820,7 @@ class BilliardActivity : ThemedActivity() {
         settingSwitch(form,R.string.billiard_sound,config.sound) {
             config=config.copy(sound=it); prefs.edit().putBoolean("sound",it).apply()
         }
-        dialog=AlertDialog.Builder(this).setTitle(R.string.billiard_preferences)
+        dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.billiard_preferences)
             .setView(ScrollView(this).apply { addView(form) }).setPositiveButton(R.string.billiard_close,null).create()
         showDialog(dialog)
     }
@@ -890,7 +891,7 @@ class BilliardActivity : ThemedActivity() {
             content.addView(avatar,LinearLayout.LayoutParams(dp(64),dp(64)).apply { gravity=Gravity.CENTER_HORIZONTAL })
         }
         content.addView(text(R.string.billiard_objective,15f).apply { text=detail })
-        showDialog(AlertDialog.Builder(this).setTitle(BilliardLounge.modeName(event.mode)).setView(ScrollView(this).apply { addView(content) })
+        showDialog(com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(BilliardLounge.modeName(event.mode)).setView(ScrollView(this).apply { addView(content) })
             .setPositiveButton(R.string.billiard_close,null).create())
     }
     private fun handleJourneyShot(s: BilliardSession) {
@@ -1007,7 +1008,7 @@ class BilliardActivity : ThemedActivity() {
         } else getString(R.string.billiard_racks_score,playerName(0),event.racks0,event.racks1,playerName(event.displayedOpponent))+"\n\n"+standings(event)
         val message=detail+(if(reward>0) "\n\n"+getString(R.string.billiard_result_reward,reward) else "")+
             if(event.mode==BilliardActivityMode.CAREER && event.champion && event.careerStep%4==3) "\n\n"+getString(R.string.billiard_badge_unlock,getString(config.room.title)) else ""
-        val dialog=AlertDialog.Builder(this).setTitle(title).setMessage(message)
+        val dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(title).setMessage(message)
             .setNegativeButton(if(event.mode==BilliardActivityMode.CHALLENGE) R.string.billiard_challenges else R.string.billiard_back) { _,_ -> save(); showLounge(event) }
         if(event.stage!=JourneyStage.FINISHED) {
             dialog.setPositiveButton(if(event.stage==JourneyStage.RACK_RESULT) R.string.billiard_next_rack else R.string.billiard_next_match) { _,_ ->
@@ -1072,7 +1073,7 @@ class BilliardActivity : ThemedActivity() {
     private fun selectedControl(view: TextView?,selected: Boolean) {
         if(view==null || view.tag==selected) return
         view.tag=selected; view.isSelected=selected
-        if(selected) accent(view) else { view.background=plate(); view.setTextColor(0xFFF1EBDD.toInt()) }
+        if(selected) accent(view) else { view.background=plate(); view.setTextColor(uiPalette.text) }
     }
     private fun refreshCameraControls() {
         val mode=cameraViewState()?.mode ?: return
@@ -1109,7 +1110,7 @@ class BilliardActivity : ThemedActivity() {
     private fun seek(parent: LinearLayout,max: Int,progress: Int,changed: (Int)->Unit): SeekBar {
         return SeekBar(this).apply {
             this.max=max; this.progress=progress.coerceIn(0,max)
-            progressTintList=ColorStateList.valueOf(0xFFE4C488.toInt()); thumbTintList=progressTintList
+            progressTintList=ColorStateList.valueOf(uiPalette.accent); thumbTintList=progressTintList
             setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(b: SeekBar?,p: Int,user: Boolean) { if(user && !settingControls) changed(p) }
                 override fun onStartTrackingTouch(b: SeekBar?) { b?.parent?.requestDisallowInterceptTouchEvent(true) }
@@ -1332,7 +1333,7 @@ class BilliardActivity : ThemedActivity() {
             // A new background drawable at every frame would redraw the button for nothing.
             if(it.tag==selected) return@let
             it.tag=selected
-            if(selected) accent(it) else { it.background=plate(); it.setTextColor(0xFFF1EBDD.toInt()) }
+            if(selected) accent(it) else { it.background=plate(); it.setTextColor(uiPalette.text) }
         }
         decisions?.visibility=if(s.match.decision!=ShotDecision.NONE && !s.replaying && !(s.mode==PlayMode.COMPUTER && s.match.player==1)) View.VISIBLE else View.GONE
         decisionAlternative?.show(when(s.match.decision) {
@@ -1591,7 +1592,7 @@ class BilliardActivity : ThemedActivity() {
             }
             else -> return
         }
-        val dialog=AlertDialog.Builder(this).setTitle(title).setItems(names.toTypedArray()) { _,i ->
+        val dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(title).setItems(names.toTypedArray()) { _,i ->
             when(draft.step) {
                 BilliardCallStep.BALL -> selectCallBall(ids[i])
                 BilliardCallStep.POCKET -> selectCallPocket(ids[i])
@@ -1615,7 +1616,7 @@ class BilliardActivity : ThemedActivity() {
     }
     private fun chooseCue() {
         val s=session ?: return; val balls=s.world.balls.filter { it.motion!=Motion.POCKETED }
-        showDialog(AlertDialog.Builder(this).setTitle(R.string.billiard_choose_cue_ball)
+        showDialog(com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.billiard_choose_cue_ball)
             .setItems(balls.map { ballName(it.id) }.toTypedArray()) { _,i -> if(s.chooseCue(balls[i].id)) { publish(); schedulePrediction() } }.create())
     }
     private fun ballName(id: Int): String {
@@ -1640,7 +1641,7 @@ class BilliardActivity : ThemedActivity() {
         options+=R.string.billiard_rotation_stripes to { chooseRotationStripes() }
         options+=(if(slow) R.string.billiard_normal_motion else R.string.billiard_slow_motion) to { slow=!slow }
         options+=(if(audio.enabled) R.string.billiard_mute else R.string.billiard_unmute) to { audio.enabled=!audio.enabled; config=config.copy(sound=audio.enabled); save() }
-        showDialog(AlertDialog.Builder(this).setTitle(R.string.billiard_menu_settings).setItems(options.map {
+        showDialog(com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.billiard_menu_settings).setItems(options.map {
             when(it.first) {
                 R.string.billiard_difficulty -> getString(R.string.billiard_selection,getString(it.first),getString(difficultyLevels[config.difficulty]))
                 R.string.billiard_rotation_stripes -> getString(R.string.billiard_selection,getString(it.first),
@@ -1671,7 +1672,7 @@ class BilliardActivity : ThemedActivity() {
         options+=R.string.billiard_rules to { showRules(s.discipline) }
         options+=R.string.billiard_menu_settings to { settingsMenu() }
         options+=R.string.billiard_change_mode to { save(); showLounge() }
-        showDialog(AlertDialog.Builder(this).setTitle(config.discipline.titleRes())
+        showDialog(com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(config.discipline.titleRes())
             .setItems(options.map { getString(it.first) }.toTypedArray()) { _,i -> options[i].second() }.create())
     }
     private fun showRules(d: Discipline) {
@@ -1685,7 +1686,7 @@ class BilliardActivity : ThemedActivity() {
             text=sizeInfo+"\n"+tableSpecs(table)+adaptation+cadre+"\n\n"+getString(d.rulesRes())+"\n\n"+getString(R.string.billiard_controls)+"\n\n"+getString(R.string.billiard_arcade_help)+"\n\n"+getString(R.string.billiard_guide_help)+"\n\n"+getString(R.string.billiard_club_rules)+"\n\n"+getString(R.string.billiard_rule_sources)
             autoLinkMask=android.text.util.Linkify.WEB_URLS; setTextIsSelectable(true); setPadding(dp(20),dp(10),dp(20),dp(10))
         }
-        showDialog(AlertDialog.Builder(this).setTitle(d.titleRes()).setView(ScrollView(this).apply { addView(content) }).setPositiveButton(R.string.billiard_close,null).create())
+        showDialog(com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(d.titleRes()).setView(ScrollView(this).apply { addView(content) }).setPositiveButton(R.string.billiard_close,null).create())
     }
     private fun tableSpecs(t: BilliardTable)=getString(R.string.billiard_table_specs,t.length,t.width,t.radius*2000)
     private fun showDialog(dialog: AlertDialog) {
@@ -1699,7 +1700,7 @@ class BilliardActivity : ThemedActivity() {
         dialog.followImmersiveMode(); dialog.show()
         // All billiards dialogs share the same glass treatment, including rules and results.
         dialog.window?.let { window ->
-            window.setBackgroundDrawable(plate(0xBC0A2421.toInt(),24))
+            window.setBackgroundDrawable(plate(uiPalette.surface,24))
             window.setDimAmount(.18f)
             // Keep outside dismissal modal: the gesture must never reach the cue or camera.
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL)
@@ -1707,10 +1708,10 @@ class BilliardActivity : ThemedActivity() {
         listOf(androidx.appcompat.R.id.parentPanel,androidx.appcompat.R.id.topPanel,androidx.appcompat.R.id.contentPanel,
             androidx.appcompat.R.id.buttonPanel,androidx.appcompat.R.id.customPanel).forEach { id -> dialog.findViewById<View>(id)?.setBackgroundColor(Color.TRANSPARENT) }
         fun styleDialogText(view: View) {
-            if(view is TextView) { view.setTextColor(0xFFF3EBDD.toInt()); view.setShadowLayer(dp(2).toFloat(),0f,dp(1).toFloat(),0xB0000000.toInt()) }
+            if(view is TextView) { view.setTextColor(uiPalette.text); view.setShadowLayer(if(uiPalette.isLight) 0f else dp(2).toFloat(),0f,dp(1).toFloat(),0xB0000000.toInt()) }
         }
         dialog.findViewById<TextView>(android.R.id.message)?.let(::styleDialogText)
-        dialog.findViewById<TextView>(androidx.appcompat.R.id.alertTitle)?.apply { setTextColor(0xFFFFDEA2.toInt()) }
+        dialog.findViewById<TextView>(androidx.appcompat.R.id.alertTitle)?.apply { setTextColor(uiPalette.accent) }
         dialog.listView?.let { list ->
             list.setBackgroundColor(Color.TRANSPARENT); list.cacheColorHint=Color.TRANSPARENT
             val original=list.adapter
@@ -1726,7 +1727,7 @@ class BilliardActivity : ThemedActivity() {
             }
         }
         for(which in listOf(AlertDialog.BUTTON_POSITIVE,AlertDialog.BUTTON_NEGATIVE,AlertDialog.BUTTON_NEUTRAL)) {
-            dialog.getButton(which)?.apply { setTextColor(0xFFFFDEA2.toInt()); background=plate(0x55445532,14) }
+            dialog.getButton(which)?.apply { setTextColor(uiPalette.accent); background=plate(uiPalette.raised,14) }
         }
     }
     private fun save() {

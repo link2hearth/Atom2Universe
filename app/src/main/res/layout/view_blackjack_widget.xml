@@ -4,10 +4,10 @@
     android:id="@+id/bj_widget_card"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="#0F172A"
-    app:cardCornerRadius="18dp"
+    app:cardBackgroundColor="?attr/a2uSurfaceColor"
+    app:cardCornerRadius="?attr/a2uCorner18"
     app:cardElevation="0dp"
-    app:strokeColor="#1F2937"
+    app:strokeColor="?attr/a2uOutlineColor"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -29,7 +29,7 @@
                 android:layout_gravity="start|center_vertical"
                 android:paddingStart="10dp"
                 android:text="♠ BlackJack"
-                android:textColor="#64748B"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="11sp" />
 
             <!-- Solde neutrinos -->
@@ -50,7 +50,7 @@
                 android:layout_gravity="end"
                 android:gravity="center"
                 android:text="↺"
-                android:textColor="#64748B"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="14sp"
                 android:clickable="true"
                 android:focusable="true" />
@@ -74,7 +74,7 @@
                 android:layout_gravity="bottom"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="#CC0B2E10"
+                android:background="?attr/a2uSurfaceColor"
                 android:visibility="visible">
 
                 <TextView
@@ -113,7 +113,7 @@
                 android:layout_height="36dp"
                 android:layout_gravity="bottom"
                 android:orientation="horizontal"
-                android:background="#CC0B2E10"
+                android:background="?attr/a2uSurfaceColor"
                 android:visibility="gone">
 
                 <TextView
@@ -150,7 +150,7 @@
                 android:id="@+id/bj_widget_result_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#CC0F172A"
+                android:background="?attr/a2uSurfaceColor"
                 android:visibility="gone"
                 android:clickable="true"
                 android:focusable="true">
@@ -171,7 +171,7 @@
                 android:id="@+id/bj_widget_reset_overlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#CC0F172A"
+                android:background="?attr/a2uSurfaceColor"
                 android:visibility="gone"
                 android:clickable="true"
                 android:focusable="true">
@@ -189,7 +189,7 @@
                         android:layout_height="32dp"
                         android:gravity="center"
                         android:text="@string/blackjack_new_game_confirm"
-                        android:textColor="#CBD5E1"
+                        android:textColor="?attr/a2uTextColor"
                         android:textSize="12sp"
                         android:layout_marginBottom="8dp" />
 
@@ -212,7 +212,7 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="@string/blackjack_cancel"
-                        android:textColor="#64748B"
+                        android:textColor="?attr/a2uSecondaryTextColor"
                         android:textSize="13sp"
                         android:background="@drawable/bg_widget_arrow"
                         android:clickable="true"

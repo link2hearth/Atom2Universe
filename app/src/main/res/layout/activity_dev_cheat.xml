@@ -112,7 +112,7 @@
                 android:orientation="vertical"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="4dp"
-                android:background="#111111"
+                android:background="?attr/a2uSurfaceColor"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="6dp"
                 android:minHeight="36dp" />
@@ -121,7 +121,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#221111"
+                android:background="?attr/a2uSurfaceColor"
                 android:layout_marginVertical="14dp" />
 
             <!-- ── ATOMES ─────────────────────────────────── -->
@@ -170,7 +170,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/a2uTextColor"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:fontFamily="monospace"
@@ -204,7 +204,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#221111"
+                android:background="?attr/a2uSurfaceColor"
                 android:layout_marginVertical="14dp" />
 
             <!-- ── NEUTRINOS ──────────────────────────────── -->
@@ -252,7 +252,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/a2uTextColor"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:fontFamily="monospace"
@@ -286,7 +286,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#221111"
+                android:background="?attr/a2uSurfaceColor"
                 android:layout_marginVertical="14dp" />
 
             <!-- ── TICKETS ────────────────────────────────── -->
@@ -343,7 +343,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#221111"
+                android:background="?attr/a2uSurfaceColor"
                 android:layout_marginVertical="14dp" />
 
             <!-- ── ÉLÉMENTS ───────────────────────────────── -->
@@ -381,7 +381,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:hint="@string/dev_element_input_hint"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/a2uTextColor"
                     android:textColorHint="@color/audio_text_tertiary"
                     android:textSize="12sp"
                     android:fontFamily="monospace"

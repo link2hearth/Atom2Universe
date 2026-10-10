@@ -72,7 +72,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/audio_text_secondary"/>
 
-            <Spinner
+            <com.Atom2Universe.app.util.ImmersiveSpinner
                 android:id="@+id/spinnerPreset"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -80,7 +80,7 @@
                 android:layout_marginStart="12dp"
                 android:background="?attr/a2uPanelBackground"
                 android:paddingHorizontal="12dp"
-                android:popupBackground="@color/music_surface"/>
+                android:popupBackground="?attr/a2uPopupBackground"/>
 
             <ImageButton
                 android:id="@+id/btnSavePreset"

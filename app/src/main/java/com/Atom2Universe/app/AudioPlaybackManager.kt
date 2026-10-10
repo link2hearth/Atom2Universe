@@ -107,7 +107,7 @@ object AudioPlaybackManager {
             AudioSource.MUSIC -> context.getString(R.string.audio_source_music)
         }
 
-        AlertDialog.Builder(context)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(context)
             .setTitle(R.string.audio_conflict_title)
             .setMessage(context.getString(R.string.audio_conflict_message, currentSourceName))
             .setPositiveButton(requestingSourceName) { _, _ ->

@@ -280,7 +280,7 @@ class CosmicTimelineActivity : ThemedActivity() {
     }
 
     private fun periodMenu(anchor: View, periods: List<CosmicPeriod>) {
-        PopupMenu(this, anchor).apply {
+        com.Atom2Universe.app.util.ImmersivePopupMenu(this, anchor).apply {
             periods.forEachIndexed { index, period ->
                 menu.add(0, index, index, periodMenuLabel(period))
             }
@@ -297,7 +297,7 @@ class CosmicTimelineActivity : ThemedActivity() {
 
     private fun chooseScale(anchor: View) {
         val current = requireNotNull(TimelineChapters.get(path.last()))
-        PopupMenu(this, anchor).apply {
+        com.Atom2Universe.app.util.ImmersivePopupMenu(this, anchor).apply {
             val choices = mutableListOf<CosmicPeriod>()
             if (current.human != null) {
                 menu.add(1, 0, 0, R.string.ct_history_zoom_in).isEnabled = historyWindow.span > HumanTimeWindow.MIN_SPAN

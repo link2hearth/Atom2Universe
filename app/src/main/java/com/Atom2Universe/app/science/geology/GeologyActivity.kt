@@ -148,7 +148,7 @@ class GeologyActivity:ThemedActivity() {
         controls.addView(diagramNote,LinearLayout.LayoutParams(0,-2,1f))
         val settings=icon(R.drawable.ic_px_tune,R.string.geo_display_options) {}
         settings.setOnClickListener {
-            PopupMenu(this,settings).apply {
+            com.Atom2Universe.app.util.ImmersivePopupMenu(this,settings).apply {
                 menu.add(R.string.geo_labels).apply {
                     isCheckable=true;isChecked=labels
                     setOnMenuItemClickListener { labels=!labels;section?.labels=labels;true }

@@ -82,8 +82,8 @@ class DraughtsActivity : ThemedActivity(),
 
     private fun setupDifficultySpinner() {
         val labels = difficulties.map { getString(it.labelResId) }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, com.Atom2Universe.app.R.layout.item_spinner_selected, labels)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         difficultySpinner.adapter = adapter
         difficultySpinner.setSelection(difficulties.indexOf(DraughtsDifficulty.STANDARD))
 

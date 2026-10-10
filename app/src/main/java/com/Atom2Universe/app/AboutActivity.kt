@@ -65,7 +65,7 @@ class AboutActivity : ThemedActivity() {
             }
             val padding=(20*resources.displayMetrics.density).toInt()
             val content=TextView(this).apply { text=license; textSize=14f; setTextIsSelectable(true); setPadding(padding,padding,padding,padding) }
-            val dialog=AlertDialog.Builder(this).setTitle(R.string.billiard_license)
+            val dialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.billiard_license)
                 .setView(ScrollView(this).apply { addView(content) }).setPositiveButton(R.string.billiard_close,null).create()
             dialog.followImmersiveMode(); dialog.show()
         }
@@ -84,7 +84,7 @@ class AboutActivity : ThemedActivity() {
         )
         button.setOnClickListener {
             val names = files.map { it.removeSuffix("-LICENSE.txt") }.toTypedArray()
-            val picker = AlertDialog.Builder(this)
+            val picker = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
                 .setTitle(R.string.about_font_licenses)
                 .setItems(names) { _, index ->
                     val license = runCatching {
@@ -101,7 +101,7 @@ class AboutActivity : ThemedActivity() {
                         setPadding(padding, padding, padding, padding)
                         android.text.util.Linkify.addLinks(this, android.text.util.Linkify.WEB_URLS)
                     }
-                    val dialog = AlertDialog.Builder(this)
+                    val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
                         .setTitle(names[index])
                         .setView(ScrollView(this).apply { addView(content) })
                         .setPositiveButton(R.string.about_font_close, null).create()
@@ -166,7 +166,7 @@ class AboutActivity : ThemedActivity() {
             android.text.util.Linkify.addLinks(this, android.text.util.Linkify.WEB_URLS)
             setPadding(padding, padding, padding, padding)
         }
-        val dialog = AlertDialog.Builder(this)
+        val dialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(title)
             .setView(ScrollView(this).apply { addView(content) })
             .setPositiveButton(R.string.bio_close, null)

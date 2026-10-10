@@ -164,7 +164,7 @@ class BlackjackActivity : ThemedActivity() {
         val options = Array(5) { i -> "$i ${getString(R.string.blackjack_ia_short)}" }
         options[0] = "0 ${getString(R.string.blackjack_ia_short)}"
 
-        AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(getString(R.string.blackjack_settings_title))
             .setSingleChoiceItems(options, selectedAI) { _, which -> selectedAI = which }
             .setPositiveButton(android.R.string.ok) { _, _ ->

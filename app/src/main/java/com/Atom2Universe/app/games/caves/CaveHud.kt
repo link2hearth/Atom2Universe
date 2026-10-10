@@ -505,7 +505,7 @@ internal class CaveHud(private val activity: CaveActivity) {
         val b = activity.renderer.structCornerB ?: return
 
         if (!com.Atom2Universe.app.games.caves.world.A2MapStorage.hasStorageAccess()) {
-            android.app.AlertDialog.Builder(activity)
+            com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(activity)
                 .setTitle(com.Atom2Universe.app.R.string.cave_storage_access_title)
                 .setMessage(com.Atom2Universe.app.R.string.cave_storage_access_message)
                 .setPositiveButton(com.Atom2Universe.app.R.string.cave_storage_open_settings) { _, _ ->
@@ -532,7 +532,7 @@ internal class CaveHud(private val activity: CaveActivity) {
         val input = android.widget.EditText(activity).apply {
             setHint(com.Atom2Universe.app.R.string.cave_map_export_hint); setSingleLine(true)
         }
-        android.app.AlertDialog.Builder(activity)
+        com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(activity)
             .setTitle(com.Atom2Universe.app.R.string.cave_map_export_title)
             .setView(input)
             .setPositiveButton(com.Atom2Universe.app.R.string.cave_map_export_confirm) { _, _ ->

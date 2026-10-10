@@ -37,7 +37,7 @@
             app:cardBackgroundColor="@color/audio_surface"
             app:cardCornerRadius="?attr/a2uCorner20"
             app:cardElevation="?attr/a2uElevation2"
-            app:strokeColor="#3A3A5C"
+            app:strokeColor="?attr/a2uOutlineColor"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/sync_conflict_local_label"
-                        android:textColor="#64B5F6"
+                        android:textColor="?attr/a2uMusicAccent"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -178,10 +178,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="#1E2E1E"
+            app:cardBackgroundColor="?attr/a2uSurfaceColor"
             app:cardCornerRadius="?attr/a2uCorner20"
             app:cardElevation="?attr/a2uElevation2"
-            app:strokeColor="#3A5C3A"
+            app:strokeColor="?attr/a2uOutlineColor"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -203,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/sync_conflict_remote_label"
-                        android:textColor="#81C784"
+                        android:textColor="?attr/a2uMusicAccent"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 

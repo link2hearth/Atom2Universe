@@ -27,7 +27,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/balance_back" />
 
-        <Spinner
+        <com.Atom2Universe.app.util.ImmersiveSpinner
             android:id="@+id/mobile_difficulty_spinner"
             android:layout_width="wrap_content"
             android:layout_height="40dp"

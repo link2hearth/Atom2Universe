@@ -82,10 +82,10 @@
                 android:layout_height="36dp"
                 android:text="@string/clicker_shop_buy"
                 android:textSize="13sp"
-                android:textColor="#FFFFFF"
+                android:textColor="?attr/a2uOnAccentColor"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:backgroundTint="#1D4ED8" />
+                android:backgroundTint="?attr/a2uMusicAccent" />
 
         </LinearLayout>
 
@@ -162,10 +162,10 @@
                 android:layout_height="36dp"
                 android:text="@string/clicker_shop_buy"
                 android:textSize="13sp"
-                android:textColor="#FFFFFF"
+                android:textColor="?attr/a2uOnAccentColor"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:backgroundTint="#1D4ED8" />
+                android:backgroundTint="?attr/a2uMusicAccent" />
 
         </LinearLayout>
 
@@ -173,7 +173,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#2D3748"
+            android:background="?attr/a2uOutlineColor"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp" />
 
@@ -198,7 +198,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#2D3748"
+            android:background="?attr/a2uOutlineColor"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp" />
 
@@ -295,10 +295,10 @@
                 android:layout_height="36dp"
                 android:text="@string/clicker_shop_buy"
                 android:textSize="13sp"
-                android:textColor="#FFFFFF"
+                android:textColor="?attr/a2uOnAccentColor"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:backgroundTint="#7C3AED" />
+                android:backgroundTint="?attr/a2uMusicAccent" />
 
         </LinearLayout>
 
@@ -363,10 +363,10 @@
                 android:layout_height="36dp"
                 android:text="@string/clicker_shop_buy"
                 android:textSize="13sp"
-                android:textColor="#FFFFFF"
+                android:textColor="?attr/a2uOnAccentColor"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:backgroundTint="#7C3AED" />
+                android:backgroundTint="?attr/a2uMusicAccent" />
 
         </LinearLayout>
 
@@ -431,10 +431,10 @@
                 android:layout_height="36dp"
                 android:text="@string/clicker_shop_buy"
                 android:textSize="13sp"
-                android:textColor="#FFFFFF"
+                android:textColor="?attr/a2uOnAccentColor"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:backgroundTint="#7C3AED" />
+                android:backgroundTint="?attr/a2uMusicAccent" />
 
         </LinearLayout>
 
@@ -449,7 +449,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#2D3748"
+                android:background="?attr/a2uOutlineColor"
                 android:layout_marginTop="18dp"
                 android:layout_marginBottom="12dp" />
 
@@ -528,10 +528,10 @@
                     android:layout_height="36dp"
                     android:text="@string/clicker_shop_buy"
                     android:textSize="13sp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/a2uOnAccentColor"
                     android:paddingStart="14dp"
                     android:paddingEnd="14dp"
-                    android:backgroundTint="#D97706" />
+                    android:backgroundTint="?attr/a2uMusicAccent" />
 
             </LinearLayout>
 
@@ -593,10 +593,10 @@
                     android:layout_height="36dp"
                     android:text="@string/clicker_shop_buy"
                     android:textSize="13sp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="?attr/a2uOnAccentColor"
                     android:paddingStart="14dp"
                     android:paddingEnd="14dp"
-                    android:backgroundTint="#DC2626" />
+                    android:backgroundTint="?attr/a2uMusicAccent" />
 
             </LinearLayout>
 
@@ -606,7 +606,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#2D3748"
+            android:background="?attr/a2uOutlineColor"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp" />
 
@@ -803,7 +803,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#2D3748"
+            android:background="?attr/a2uOutlineColor"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp" />
 
@@ -846,7 +846,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#2D3748"
+            android:background="?attr/a2uOutlineColor"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="12dp" />
 

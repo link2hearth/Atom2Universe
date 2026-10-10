@@ -18,7 +18,7 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
-import com.Atom2Universe.app.util.applySystemBarsVisibility
+import com.Atom2Universe.app.util.updateSystemBarsVisibility
 import com.Atom2Universe.app.util.enableImmersiveMode
 import org.json.JSONObject
 import org.json.JSONArray
@@ -69,7 +69,7 @@ class Match3Activity : ThemedActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveMode()
-        applySystemBarsVisibility(showStatusBar = false, showNavBar = false)
+        updateSystemBarsVisibility()
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() { if (screen == "menu") finish() else showMenu() }
         })
@@ -223,7 +223,7 @@ class Match3Activity : ThemedActivity() {
         choices.addFull(overheat)
         val links = LinearLayout(this)
         links.addView(button(getString(R.string.forge_rules)) {
-            androidx.appcompat.app.AlertDialog.Builder(this)
+            com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
                 .setTitle(R.string.forge_rules)
                 .setMessage(getString(R.string.forge_rules_body, getString(R.string.forge_how), getString(R.string.forge_bonuses_help)))
                 .setPositiveButton(android.R.string.ok, null).show()
@@ -368,6 +368,6 @@ class Match3Activity : ThemedActivity() {
     }
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        applySystemBarsVisibility(showStatusBar = false, showNavBar = false)
+        updateSystemBarsVisibility()
     }
 }

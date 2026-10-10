@@ -115,8 +115,8 @@ class MidiKeyboardSettingsDialog : DialogFragment() {
         // Setup LED channel spinner (1-16)
         val spinnerLedChannel = view.findViewById<Spinner>(R.id.spinner_led_channel)
         val channels = (1..16).map { it.toString() }
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, channels)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(requireContext(), com.Atom2Universe.app.R.layout.item_spinner_selected, channels)
+        adapter.setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
         spinnerLedChannel.adapter = adapter
         // Use post to ensure selection is set after adapter is fully loaded
         android.util.Log.d("MidiKeyboardSettings", "Setting spinner to channel index=$currentLedChannel")

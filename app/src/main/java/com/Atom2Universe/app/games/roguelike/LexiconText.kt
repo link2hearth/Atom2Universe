@@ -30,7 +30,7 @@ object LexiconText {
     fun strip(markup: String): String = MARKUP.replace(markup) { it.groupValues[2] }
 
     /** Le texte lu, avec un [ClickableSpan] (couleur + soulignement) sur chaque mot marqué. */
-    fun render(markup: String, onLink: (String) -> Unit): CharSequence {
+    fun render(markup: String, linkColor: Int = LINK_COLOR, onLink: (String) -> Unit): CharSequence {
         val out = SpannableStringBuilder()
         var last = 0
         for (m in MARKUP.findAll(markup)) {
@@ -41,7 +41,7 @@ object LexiconText {
             out.setSpan(object : ClickableSpan() {
                 override fun onClick(widget: View) = onLink(id)
                 override fun updateDrawState(ds: TextPaint) {
-                    ds.color = LINK_COLOR
+                    ds.color = linkColor
                     ds.isUnderlineText = true
                 }
             }, start, out.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -53,7 +53,8 @@ object LexiconText {
 
     /** Affiche [markup] dans [tv], ses mots marqués ouvrant le lexique. */
     fun TextView.setLexiconText(markup: String, onLink: (String) -> Unit) {
-        text = render(markup, onLink)
+        val palette = com.Atom2Universe.app.games.kit.KitPalette.from(context)
+        text = render(markup, com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(palette.accent, palette.surface, 4.5), onLink)
         movementMethod = LinkMovementMethod.getInstance()
         highlightColor = Color.TRANSPARENT
     }

@@ -297,7 +297,7 @@ class CryptoChartActivity : ThemedActivity() {
     }
 
     private fun showTimeframeMenu() {
-        val popup = PopupMenu(this, timeframeButton)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, timeframeButton)
         CryptoCandleInterval.entries.forEachIndexed { index, entry ->
             popup.menu.add(0, index, index, getString(entry.labelRes))
         }
@@ -329,7 +329,7 @@ class CryptoChartActivity : ThemedActivity() {
     }
 
     private fun showMaMenu() {
-        val popup = PopupMenu(this, maButton)
+        val popup = com.Atom2Universe.app.util.ImmersivePopupMenu(this, maButton)
         popup.menu.add(0, 0, 0, getString(R.string.crypto_chart_ma_off))
         MA_PERIOD_OPTIONS.forEachIndexed { index, period ->
             popup.menu.add(0, period, index + 1, "MA $period")
@@ -415,7 +415,7 @@ class CryptoChartActivity : ThemedActivity() {
 
     private fun promptRemoveAsset(entry: String) {
         if (watchlist.size <= 1) return
-        MaterialAlertDialogBuilder(this)
+        com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this)
             .setMessage(getString(R.string.crypto_chart_remove_asset, entry))
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 watchlist.remove(entry)
@@ -454,7 +454,7 @@ class CryptoChartActivity : ThemedActivity() {
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1)
         list.adapter = adapter
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this)
             .setTitle(R.string.crypto_chart_search_title)
             .setView(view)
             .setNegativeButton(android.R.string.cancel, null)

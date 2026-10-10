@@ -136,12 +136,7 @@ class SokobanActivity : ThemedActivity() {
     }
 
     private fun updateDiffButtons() {
-        val active = getColor(R.color.sokoban_active)
-        val inactive = getColor(R.color.sokoban_inactive)
-        for ((diff, btn) in diffButtons) {
-            btn.backgroundTintList = ColorStateList.valueOf(if (diff == game.difficulty) active else inactive)
-            btn.strokeColor = ColorStateList.valueOf(if (diff == game.difficulty) 0xFF9EE3BC.toInt() else 0xFF3F6268.toInt())
-        }
+        for ((diff, btn) in diffButtons) com.Atom2Universe.app.games.kit.GameControlStyle.choice(btn, diff == game.difficulty)
     }
 
     private fun startNewPuzzle() {

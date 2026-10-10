@@ -37,7 +37,7 @@ class BlackjackWidgetView @JvmOverloads constructor(
     private lateinit var neutrinoText: TextView
     private lateinit var btnBetCycle: TextView
 
-    private val baseCardColor = Color.parseColor("#0F172A")
+    private val baseCardColor = com.Atom2Universe.app.AppearanceStyle.color(context, R.attr.a2uSurfaceColor)
     private val game = BlackjackGame()
     private val handler = Handler(Looper.getMainLooper())
     private val neutrinoRepo by lazy { NeutrinoRepository(context) }

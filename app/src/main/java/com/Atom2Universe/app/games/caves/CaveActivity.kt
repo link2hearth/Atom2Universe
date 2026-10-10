@@ -719,7 +719,7 @@ class CaveActivity : ThemedActivity() {
             isFillViewport = false
             addView(panel)
         }
-        val dialog = AlertDialog.Builder(this)
+        val dialog = com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this)
             .setCancelable(false)
             .create()
         dialog.setView(scroll, 0, 0, 0, 0)
@@ -784,7 +784,7 @@ class CaveActivity : ThemedActivity() {
                 View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST))
             w.setLayout(dialogWidth, minOf(scroll.measuredHeight, maxHeight))
             w.setDimAmount(0.65f)
-            WindowInsetsControllerCompat(w, w.decorView).hide(WindowInsetsCompat.Type.systemBars())
+            com.Atom2Universe.app.util.applySystemBarsPreference(WindowInsetsControllerCompat(w, w.decorView), this)
         }
     }
 

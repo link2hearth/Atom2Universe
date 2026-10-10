@@ -56,22 +56,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/select_note_label">
 
-        <Spinner
+        <com.Atom2Universe.app.util.ImmersiveSpinner
             android:id="@+id/note_spinner"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="?attr/a2uChipBackground"
-            android:popupBackground="@color/startup_background" />
+            android:popupBackground="?attr/a2uPopupBackground" />
 
-        <Spinner
+        <com.Atom2Universe.app.util.ImmersiveSpinner
             android:id="@+id/octave_spinner"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:background="?attr/a2uChipBackground"
-            android:popupBackground="@color/startup_background" />
+            android:popupBackground="?attr/a2uPopupBackground" />
 
     </LinearLayout>
 

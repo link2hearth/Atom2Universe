@@ -120,17 +120,7 @@ class CirclesActivity : ThemedActivity() {
     }
 
     private fun updateDiffChips() {
-        val active   = ColorStateList.valueOf(Color.parseColor("#7C3AED"))
-        val inactive = ColorStateList.valueOf(Color.parseColor("#4D1E1B4B"))
-        val line     = ColorStateList.valueOf(Color.parseColor("#667C3AED"))
-        val textOn   = Color.parseColor("#FFFFFF")
-        val textOff  = Color.parseColor("#C4B5FD")
-        for ((diff, chip) in diffChips) {
-            val on = diff == game.difficulty
-            chip.backgroundTintList = if (on) active else inactive
-            chip.strokeColor = line
-            chip.setTextColor(if (on) textOn else textOff)
-        }
+        for ((diff, chip) in diffChips) com.Atom2Universe.app.games.kit.GameControlStyle.choice(chip, diff == game.difficulty)
     }
 
     private fun diffLabel(diff: CirclesDifficulty) = when (diff) {

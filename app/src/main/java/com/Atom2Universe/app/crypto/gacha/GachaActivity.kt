@@ -19,7 +19,7 @@ import android.content.Intent
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.Atom2Universe.app.ThemedActivity
 import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.LocaleHelper
 import com.Atom2Universe.app.R
@@ -37,12 +37,13 @@ import com.Atom2Universe.app.periodic.PeriodicCollectionStore
 import com.Atom2Universe.app.periodic.PeriodicTableActivity
 import com.Atom2Universe.app.periodic.PeriodicElement
 import com.Atom2Universe.app.periodic.localizedName
-import com.Atom2Universe.app.util.applySystemBarsVisibility
+import com.Atom2Universe.app.util.updateSystemBarsVisibility
+import com.Atom2Universe.app.util.enableImmersiveMode
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-class GachaActivity : AppCompatActivity() {
+class GachaActivity : ThemedActivity() {
 
     companion object {
         const val PREFS_NAME = "gacha_prefs"
@@ -123,10 +124,10 @@ class GachaActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        com.Atom2Universe.app.AppThemeManager.applyAppStyle(this)
         super.onCreate(savedInstanceState)
-        applySystemBarsVisibility(showStatusBar = false, showNavBar = false)
+        updateSystemBarsVisibility()
         setContentView(R.layout.activity_gacha)
+        enableImmersiveMode()
 
         root          = findViewById(R.id.gacha_root)
         sunBtn        = findViewById(R.id.gacha_sun_btn)

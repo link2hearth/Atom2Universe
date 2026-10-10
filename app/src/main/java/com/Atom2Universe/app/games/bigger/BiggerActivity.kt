@@ -85,16 +85,16 @@ class BiggerActivity : ThemedActivity() {
         val dp = resources.displayMetrics.density
         val label = TextView(this).apply {
             text = getString(R.string.bigger_restart_confirm)
-            setTextColor(Color.WHITE)
+            setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this@BiggerActivity, R.attr.a2uTextColor))
             textSize = 15f
             setTypeface(typeface, Typeface.BOLD)
             gravity = Gravity.CENTER
             setPadding((18 * dp).toInt(), (12 * dp).toInt(), (18 * dp).toInt(), (12 * dp).toInt())
-            setBackgroundResource(R.drawable.bg_popup_dark)
+            background = com.Atom2Universe.app.AppearanceStyle.drawable(this@BiggerActivity, R.attr.a2uPopupBackground)
             setCompoundDrawablesRelativeWithIntrinsicBounds(android.R.drawable.ic_menu_rotate, 0, 0, 0)
             compoundDrawablePadding = (8 * dp).toInt()
         }
-        val bubble = PopupWindow(label, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).apply {
+        val bubble = com.Atom2Universe.app.util.ImmersivePopupWindow(label, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true).apply {
             isOutsideTouchable = true
             elevation = 8 * dp
         }

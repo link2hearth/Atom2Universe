@@ -42,7 +42,7 @@ class CardBackGalleryDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        Dialog(requireContext()).apply {
+        com.Atom2Universe.app.util.ImmersiveDialog(requireContext()).apply {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
             setCanceledOnTouchOutside(false)

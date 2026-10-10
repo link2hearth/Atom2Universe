@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="horizontal" android:background="#101C26">
+    android:orientation="horizontal" android:background="?attr/a2uBackgroundColor">
     <LinearLayout android:id="@+id/cave_menu_sidebar"
         android:layout_width="190dp" android:layout_height="match_parent"
-        android:orientation="vertical" android:background="#152530" android:padding="12dp">
+        android:orientation="vertical" android:background="?attr/a2uSurfaceColor" android:padding="12dp">
         <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
             android:layout_weight="1" android:fillViewport="true" android:scrollbars="none">
             <LinearLayout android:id="@+id/cave_menu_navigation"

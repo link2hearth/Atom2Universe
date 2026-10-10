@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:clipToPadding="false"
     app:cardBackgroundColor="@color/crypto_widget_background"
-    app:cardCornerRadius="18dp"
+    app:cardCornerRadius="?attr/a2uCorner18"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
 

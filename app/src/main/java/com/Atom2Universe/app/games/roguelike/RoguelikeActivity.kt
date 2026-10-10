@@ -214,7 +214,7 @@ open class RoguelikeActivity : ThemedActivity() {
                 addView(label)
                 addView(picker)
             }
-            AlertDialog.Builder(this, R.style.Theme_Dungeon_Dialog)
+            com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this, R.style.Theme_Dungeon_Dialog)
                 .setTitle(R.string.roguelike_camp_menu_title)
                 .setView(content)
                 .setPositiveButton(R.string.roguelike_camp_menu_travel) { _, _ ->

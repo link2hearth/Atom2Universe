@@ -1,6 +1,6 @@
 package com.Atom2Universe.app.science.solarsystem
 
-import android.app.DatePickerDialog
+import com.Atom2Universe.app.util.ImmersiveDatePickerDialog as DatePickerDialog
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
@@ -25,7 +25,7 @@ import kotlin.math.roundToInt
 
 class EarthMoonActivity : ThemedActivity() {
 
-    override val themeBrightness = com.Atom2Universe.app.AppBrightness.DARK
+    private val palette by lazy { com.Atom2Universe.app.science.SciencePalette(this) }
 
     companion object {
         const val EXTRA_ELAPSED_DAYS = "extra_elapsed_days_j2000"
@@ -98,16 +98,16 @@ class EarthMoonActivity : ThemedActivity() {
         // ── Barre supérieure ─────────────────────────────────────
         val topBar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(0xAA000000.toInt())
+            setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(palette.surface)
         }
         val btnBack = ImageButton(this).apply {
-            setImageResource(R.drawable.ic_app_back); setColorFilter(Color.WHITE); background = null
+            setImageResource(R.drawable.ic_app_back); setColorFilter(palette.text); background = null
             contentDescription = getString(R.string.back)
             setOnClickListener { finish() }
         }
         tvDate = TextView(this).apply {
-            textSize = 13f; setTextColor(0xFFDDEEFF.toInt()); gravity = Gravity.CENTER
-            setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(0x33FFFFFF)
+            textSize = 13f; setTextColor(palette.text); gravity = Gravity.CENTER
+            setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(palette.raised)
             contentDescription = getString(R.string.solar_change_date)
             setOnClickListener { showDatePicker() }
         }
@@ -121,8 +121,8 @@ class EarthMoonActivity : ThemedActivity() {
             setOnClickListener { finish() }
         }
         btnBodySelector = TextView(this).apply {
-            textSize = 12f; setTextColor(0xFFFFDD88.toInt()); gravity = Gravity.CENTER
-            setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(0x33FFFFFF)
+            textSize = 12f; setTextColor(palette.accent); gravity = Gravity.CENTER
+            setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(palette.raised)
             contentDescription = getString(R.string.solar_choose_body)
             setOnClickListener { showBodyDropdown() }
         }
@@ -141,8 +141,8 @@ class EarthMoonActivity : ThemedActivity() {
 
         // ── Carte info ───────────────────────────────────────────
         cardInfo = CardView(this).apply {
-            radius = dp(12).toFloat(); cardElevation = dp(8).toFloat()
-            setCardBackgroundColor(0xCC101025.toInt()); visibility = View.GONE
+            radius = com.Atom2Universe.app.AppearanceStyle.corner(this@EarthMoonActivity, 12f); cardElevation = com.Atom2Universe.app.AppearanceStyle.elevation(this@EarthMoonActivity, 8f)
+            setCardBackgroundColor(palette.surface); visibility = View.GONE
         }
         val cardContent = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; setPadding(dp(16), dp(12), dp(16), dp(12))
@@ -151,11 +151,11 @@ class EarthMoonActivity : ThemedActivity() {
             orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
         }
         tvBodyName = TextView(this).apply {
-            textSize = 20f; setTextColor(Color.WHITE)
+            textSize = 20f; setTextColor(palette.text)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         val btnCloseCard = ImageButton(this).apply {
-            setImageResource(R.drawable.ic_close); setColorFilter(0xFFAAAAAA.toInt()); background = null
+            setImageResource(R.drawable.ic_close); setColorFilter(palette.secondary); background = null
             contentDescription = getString(R.string.solar_close_card)
             setOnClickListener { cardInfo.visibility = View.GONE }
         }
@@ -169,11 +169,11 @@ class EarthMoonActivity : ThemedActivity() {
                 orientation = LinearLayout.HORIZONTAL; setPadding(0, dp(3), 0, dp(3))
             }
             infoLabels[i] = TextView(this).apply {
-                textSize = 12f; setTextColor(0xFF888888.toInt())
+                textSize = 12f; setTextColor(palette.secondary)
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
             }
             infoValues[i] = TextView(this).apply {
-                textSize = 12f; setTextColor(0xFFDDEEFF.toInt())
+                textSize = 12f; setTextColor(palette.text)
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.2f)
             }
             row.addView(infoLabels[i]); row.addView(infoValues[i]); grid.addView(row)
@@ -187,7 +187,7 @@ class EarthMoonActivity : ThemedActivity() {
         val bottomPanel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(12), dp(8), dp(12), dp(12))
-            setBackgroundColor(0xBB000000.toInt())
+            setBackgroundColor(palette.surface)
         }
 
         val modeRow = LinearLayout(this).apply {
@@ -204,11 +204,11 @@ class EarthMoonActivity : ThemedActivity() {
             orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
         }
         btnPlayPause = ImageButton(this).apply {
-            setImageResource(android.R.drawable.ic_media_pause); setColorFilter(Color.WHITE); background = null
+            setImageResource(android.R.drawable.ic_media_pause); setColorFilter(palette.text); background = null
             contentDescription = getString(R.string.solar_play_pause)
         }
         tvSpeed = TextView(this).apply {
-            textSize = 11f; setTextColor(0xFFCCCCCC.toInt()); gravity = Gravity.END
+            textSize = 11f; setTextColor(palette.secondary); gravity = Gravity.END
             minWidth = dp(80)
         }
         speedSlider = StepSpeedSlider(this).apply {
@@ -257,9 +257,11 @@ class EarthMoonActivity : ThemedActivity() {
 
     // ─────────────────────────────────────────────────────────────
     private fun updateModeButtons() {
-        val on = 0xFF4466AA.toInt(); val off = 0x33FFFFFF
+        val on = palette.accent; val off = palette.raised
         btnModeClose.setBackgroundColor(if (glView.renderer.targetBlend < 0.5f) on else off)
         btnModeReal.setBackgroundColor( if (glView.renderer.targetBlend >= 0.5f) on else off)
+        btnModeClose.setTextColor(if (glView.renderer.targetBlend < 0.5f) palette.onAccent else palette.text)
+        btnModeReal.setTextColor(if (glView.renderer.targetBlend >= 0.5f) palette.onAccent else palette.text)
     }
 
     private fun updateDateLabel() {
@@ -351,8 +353,8 @@ class EarthMoonActivity : ThemedActivity() {
         getString(if (idx == 1) R.string.solar_moon_name else R.string.solar_planet_earth)
 
     private fun modeBtn(text: String) = TextView(this).apply {
-        this.text = text; textSize = 13f; setTextColor(Color.WHITE); gravity = Gravity.CENTER
-        setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(0x33FFFFFF)
+        this.text = text; textSize = 13f; setTextColor(palette.text); gravity = Gravity.CENTER
+        setPadding(dp(8), dp(4), dp(8), dp(4)); setBackgroundColor(palette.raised)
     }
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()

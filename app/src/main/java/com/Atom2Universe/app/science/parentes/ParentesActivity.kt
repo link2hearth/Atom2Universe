@@ -351,7 +351,7 @@ class ParentesActivity : ThemedActivity() {
             body.addView(label(getString(section.body), 15f).apply { setTextIsSelectable(true) })
         }
         activeDialog?.dismiss()
-        activeDialog = AlertDialog.Builder(this).setTitle(R.string.pt_read_title)
+        activeDialog = com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.pt_read_title)
             .setView(ScrollView(this).apply { addView(body) }).setPositiveButton(R.string.pt_close, null).show()
     }
 
@@ -377,7 +377,7 @@ class ParentesActivity : ThemedActivity() {
         }
         body.addView(list,LinearLayout.LayoutParams(-1,dp(minOf(360,resources.configuration.screenHeightDp/2))))
         activeDialog?.dismiss()
-        activeDialog=AlertDialog.Builder(this).setTitle(R.string.pt_list).setView(body).setPositiveButton(R.string.pt_close,null).show()
+        activeDialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.pt_list).setView(body).setPositiveButton(R.string.pt_close,null).show()
     }
 
     private fun article(id: String): String {
@@ -510,7 +510,7 @@ class ParentesActivity : ThemedActivity() {
         list.setOnItemClickListener { _,_,position,_ -> activeDialog?.dismiss(); chosen(results[position].id) }
         update("")
         activeDialog?.dismiss()
-        activeDialog=AlertDialog.Builder(this).setTitle(if(speciesOnly) R.string.pt_choose else R.string.pt_search)
+        activeDialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(if(speciesOnly) R.string.pt_choose else R.string.pt_search)
             .setView(body).setNegativeButton(R.string.pt_close,null).create().also {
                 it.setOnDismissListener { searchJob?.cancel() }; it.show()
             }
@@ -519,7 +519,7 @@ class ParentesActivity : ThemedActivity() {
     private fun dialog(title:String,body:LinearLayout) {
         activeDialog?.dismiss()
         val scroll=ScrollView(this).apply { addView(body) }
-        activeDialog=AlertDialog.Builder(this).setTitle(title).setView(scroll).setPositiveButton(R.string.pt_close,null).create().also { it.show() }
+        activeDialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(title).setView(scroll).setPositiveButton(R.string.pt_close,null).create().also { it.show() }
     }
     private fun column()=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; setPadding(dp(8),dp(6),dp(8),dp(6)) }
     private fun row()=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL; gravity=Gravity.CENTER_VERTICAL }

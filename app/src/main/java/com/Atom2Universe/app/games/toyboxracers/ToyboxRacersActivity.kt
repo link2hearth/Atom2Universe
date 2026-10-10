@@ -1062,7 +1062,7 @@ class ToyboxRacersActivity : ThemedActivity() {
         CircuitKind.NEON_BOULEVARD -> R.string.toybox_circuit_neon_boulevard
     })
 
-    private fun dialogBuilder() = AlertDialog.Builder(this, R.style.Theme_Toybox_Dialog)
+    private fun dialogBuilder() = com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this, R.style.Theme_Toybox_Dialog)
 
     private fun changeScene(scene: SceneChoice) {
         releaseControls.forEach { it() }

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/reset_option_stats"
-            android:textColor="#DDDDDD"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="15sp" />
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/toggle_stats"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/reset_option_periodic"
-            android:textColor="#DDDDDD"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="15sp" />
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/toggle_periodic"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/reset_option_clicker"
-            android:textColor="#DDDDDD"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="15sp" />
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/toggle_clicker"
@@ -70,14 +70,14 @@
         android:layout_height="1dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
-        android:background="#44FFFFFF" />
+        android:background="?attr/a2uOutlineColor" />
 
     <EditText
         android:id="@+id/reset_word_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/stats_reset_word_hint"
-        android:textColor="#DDDDDD"
+        android:textColor="?attr/a2uTextColor"
         android:textColorHint="@color/audio_text_secondary"
         android:textSize="14sp"
         android:inputType="text"

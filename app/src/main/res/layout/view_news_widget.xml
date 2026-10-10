@@ -5,8 +5,8 @@
     android:id="@+id/news_widget_card"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="#0F172A"
-    app:cardCornerRadius="18dp"
+    app:cardBackgroundColor="?attr/a2uSurfaceColor"
+    app:cardCornerRadius="?attr/a2uCorner18"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
 
@@ -30,7 +30,7 @@
                 android:paddingStart="8dp"
                 android:gravity="center_vertical"
                 android:text="@string/news_widget_label"
-                android:textColor="#94A3B8"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -86,7 +86,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#1F2937" />
+            android:background="?attr/a2uSurfaceColor" />
 
         <!-- Corps : titre + meta -->
         <LinearLayout
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="4"
                 android:ellipsize="end"
-                android:textColor="#F1F5F9"
+                android:textColor="?attr/a2uTextColor"
                 android:textSize="11sp"
                 android:lineSpacingExtra="2dp"
                 android:visibility="gone" />
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="#64748B"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="10sp"
                 android:visibility="gone" />
 
@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="#64748B"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="11sp"
                 android:text="@string/news_widget_loading" />
 

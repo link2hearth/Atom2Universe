@@ -120,7 +120,7 @@
         android:id="@+id/memory_win_overlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#99000000"
+        android:background="?attr/a2uSurfaceColor"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -149,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:textColor="#CBD5E1"
+                android:textColor="?attr/a2uTextColor"
                 android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton

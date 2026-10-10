@@ -100,7 +100,7 @@ internal class CaveInventoryPanel(private val activity: CaveActivity) {
         val below=location[1]+anchor.height+dp(4)
         val y=(if(below+height<metrics.heightPixels-dp(68)) below else location[1]-height-dp(4))
             .coerceIn(dp(8),(metrics.heightPixels-height-dp(8)).coerceAtLeast(dp(8)))
-        bubble=PopupWindow(detailScroll,width,height,true).apply {
+        bubble=com.Atom2Universe.app.util.ImmersivePopupWindow(detailScroll,width,height,true).apply {
             setBackgroundDrawable(CaveUiStyle.bubble(activity))
             elevation=dp(10).toFloat();isOutsideTouchable=true
             inputMethodMode=PopupWindow.INPUT_METHOD_NOT_NEEDED

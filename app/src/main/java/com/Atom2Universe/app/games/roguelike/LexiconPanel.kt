@@ -22,6 +22,7 @@ import com.Atom2Universe.app.games.roguelike.LexiconText.setLexiconText
 class LexiconPanel(private val root: View, private val game: () -> RoguelikeGame?) {
 
     private val ctx = root.context
+    private val palette = com.Atom2Universe.app.games.kit.KitPalette.from(ctx)
     private val density = ctx.resources.displayMetrics.density
 
     private val search  = root.findViewById<EditText>(R.id.lex_search)
@@ -92,8 +93,8 @@ class LexiconPanel(private val root: View, private val game: () -> RoguelikeGame
 
         if (query.isNotEmpty()) {
             val found = Lexicon.entries.filter { it.visible(hero) && it.title(env).lowercase().contains(query) }
-            if (found.isEmpty()) content.addView(row(ctx.getString(R.string.lex_empty), 14f, 0xFF607D8B.toInt()) {})
-            for (e in found) content.addView(row(e.title(env), 15f, LexiconText.LINK_COLOR) { open(e.id) })
+            if (found.isEmpty()) content.addView(row(ctx.getString(R.string.lex_empty), 14f, palette.tertiary) {})
+            for (e in found) content.addView(row(e.title(env), 15f, palette.accent) { open(e.id) })
             scroll.scrollTo(0, 0)
             return
         }
@@ -106,11 +107,11 @@ class LexiconPanel(private val root: View, private val game: () -> RoguelikeGame
             val header = if (secrets.isEmpty()) label
                 else ctx.getString(R.string.lex_category_count, label, secrets.count { it.visible(hero) }, secrets.size)
             val open = cat in expanded
-            content.addView(row(header, 16f, if (open) 0xFFFFFFFF.toInt() else 0xFFB0BEC5.toInt(), bold = true) {
+            content.addView(row(header, 16f, if (open) palette.text else palette.secondary, bold = true) {
                 if (open) expanded -= cat else expanded += cat
                 renderList()
             })
-            if (open) for (e in shown) content.addView(row(e.title(env), 15f, LexiconText.LINK_COLOR, indent = 16) { open(e.id) })
+            if (open) for (e in shown) content.addView(row(e.title(env), 15f, palette.accent, indent = 16) { open(e.id) })
         }
     }
 
@@ -124,19 +125,19 @@ class LexiconPanel(private val root: View, private val game: () -> RoguelikeGame
 
         content.addView(TextView(ctx).apply {
             text = entry.title(env)
-            setTextColor(0xFFFFFFFF.toInt())
+            setTextColor(palette.text)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
             setTypeface(typeface, android.graphics.Typeface.BOLD)
         })
         content.addView(TextView(ctx).apply {
             text = ctx.getString(entry.category.labelRes)
-            setTextColor(0xFF78909C.toInt())
+            setTextColor(palette.tertiary)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
         })
         for ((i, line) in entry.lines(env).withIndex()) {
             content.addView(TextView(ctx).apply {
                 setLexiconText(line.text) { open(it) }
-                setTextColor(when { line.personal -> 0xFFFFD54F.toInt(); i == 0 -> 0xFFECEFF1.toInt(); else -> 0xFFB0BEC5.toInt() })
+                setTextColor(when { line.personal -> palette.accent; i == 0 -> palette.text; else -> palette.secondary })
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, if (i == 0) 15f else 14f)
                 setLineSpacing(2 * density, 1f)
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)

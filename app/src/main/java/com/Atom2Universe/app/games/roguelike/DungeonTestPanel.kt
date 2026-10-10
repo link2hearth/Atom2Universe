@@ -38,14 +38,14 @@ internal class DungeonTestPanel(
     }
     private fun LinearLayout.choose(res: Int, labels: List<String>): Spinner {
         label(res)
-        val input = Spinner(activity).apply {
-            adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, labels)
+        val input = com.Atom2Universe.app.util.ImmersiveSpinner(activity).apply {
+            adapter = ArrayAdapter(activity, com.Atom2Universe.app.R.layout.item_spinner_dropdown, labels)
         }
         addView(input)
         return input
     }
     private fun dialog(title: Int, form: LinearLayout, action: () -> Boolean) {
-        val dialog = AlertDialog.Builder(activity, R.style.Theme_Dungeon_Dialog)
+        val dialog = com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(activity, R.style.Theme_Dungeon_Dialog)
             .setTitle(title).setView(ScrollView(activity).apply { addView(form) })
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(android.R.string.ok, null).create()
@@ -66,7 +66,7 @@ internal class DungeonTestPanel(
         val actions = intArrayOf(R.string.dungeon_test_floor, R.string.dungeon_test_gear,
             R.string.dungeon_test_item, R.string.dungeon_test_restore, R.string.dungeon_test_gold,
             R.string.dungeon_test_reveal, R.string.dungeon_test_forge)
-        AlertDialog.Builder(activity, R.style.Theme_Dungeon_Dialog)
+        com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(activity, R.style.Theme_Dungeon_Dialog)
             .setTitle(R.string.dungeon_test_tools)
             .setItems(actions.map { activity.getString(it) }.toTypedArray()) { _, index ->
                 when (index) {

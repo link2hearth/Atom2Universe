@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0D0D0D">
+    android:background="?attr/a2uScreenBackground">
 
     <!-- Banner : back | music | floor+level | character -->
     <LinearLayout
@@ -16,7 +16,7 @@
         android:paddingStart="4dp"
         android:paddingEnd="12dp"
         android:gravity="center_vertical"
-        android:background="#1A1A1A">
+        android:background="?attr/a2uPanelBackground">
 
         <ImageButton
             android:id="@+id/roguelike_btn_back"
@@ -32,7 +32,7 @@
             android:layout_height="48dp"
             android:padding="12dp"
             android:src="@drawable/ic_volume_up_24"
-            android:tint="#EEEEEE"
+            android:tint="?attr/a2uTextColor"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/roguelike_music_mute" />
 
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="12sp"
-            android:textColor="#EEEEEE"
+            android:textColor="?attr/a2uTextColor"
             android:gravity="center"
             android:fontFamily="monospace"
             android:textStyle="bold"
@@ -51,11 +51,11 @@
         <androidx.appcompat.widget.AppCompatButton android:id="@+id/roguelike_btn_inventory" android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:minWidth="48dp" android:minHeight="48dp"
             android:paddingHorizontal="8dp" android:textSize="11sp" android:textAllCaps="false"
-            android:background="@drawable/bg_roguelike_character_button"
+            android:background="?attr/a2uChipBackground"
             android:backgroundTint="@null"
             app:backgroundTint="@null"
             android:fontFamily="monospace"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/a2uTextColor"
             tools:text="Warrior\n45/50" />
     </LinearLayout>
 

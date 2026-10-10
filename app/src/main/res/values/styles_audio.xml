@@ -39,6 +39,10 @@
         <item name="popupWindowStyle">@style/Widget.A2U.Audio.PopupWindow</item>
         <item name="android:popupMenuStyle">@style/Widget.A2U.Audio.PopupMenu</item>
         <item name="android:popupWindowStyle">@style/Widget.A2U.Audio.PopupWindow</item>
+        <item name="spinnerStyle">@style/Widget.A2U.Spinner</item>
+        <item name="android:spinnerStyle">@style/Widget.A2U.Spinner</item>
+        <item name="dropDownListViewStyle">@style/Widget.A2U.DropDownList</item>
+        <item name="android:dropDownListViewStyle">@style/Widget.A2U.DropDownList</item>
         <item name="materialButtonStyle">?attr/a2uMaterialButtonStyle</item>
         <item name="floatingActionButtonStyle">@style/Widget.A2U.Fab</item>
         <item name="android:buttonStyle">?attr/a2uPlatformButtonStyle</item>
@@ -54,6 +58,7 @@
 
     <style name="ThemeOverlay.A2U.Audio.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:windowBackground">?attr/a2uDialogBackground</item>
+        <item name="android:colorBackground">?attr/a2uSurfaceColor</item>
         <item name="colorSurface">@color/audio_surface</item>
         <item name="colorPrimary">?attr/a2uMusicAccent</item>
         <item name="colorAccent">?attr/a2uMusicAccent</item>
@@ -63,6 +68,10 @@
         <item name="buttonBarPositiveButtonStyle">@style/Widget.A2U.Audio.DialogButton</item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.A2U.Audio.DialogButton</item>
         <item name="buttonBarNeutralButtonStyle">@style/Widget.A2U.Audio.DialogButton</item>
+        <item name="android:buttonBarButtonStyle">@style/Widget.A2U.PlatformDialogButton</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/Widget.A2U.PlatformDialogButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/Widget.A2U.PlatformDialogButton</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/Widget.A2U.PlatformDialogButton</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.A2U.Audio.Medium</item>
     </style>
 
@@ -126,6 +135,10 @@
         <item name="android:textAllCaps">false</item>
         <item name="cornerRadius">?attr/a2uCorner14</item>
     </style>
+    <style name="Widget.A2U.PlatformDialogButton" parent="android:style/Widget.Material.Button.Borderless">
+        <item name="android:textColor">?attr/a2uMusicAccent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
     <style name="Widget.A2U.Audio.PopupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:popupBackground">?attr/a2uPopupBackground</item>
         <item name="android:popupElevation">?attr/a2uElevation12</item>
@@ -133,6 +146,14 @@
     <style name="Widget.A2U.Audio.PopupWindow" parent="Widget.AppCompat.PopupWindow">
         <item name="android:popupBackground">?attr/a2uPopupBackground</item>
         <item name="android:popupElevation">?attr/a2uElevation12</item>
+    </style>
+    <style name="Widget.A2U.Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:popupBackground">?attr/a2uPopupBackground</item>
+        <item name="android:popupElevation">?attr/a2uElevation12</item>
+    </style>
+    <style name="Widget.A2U.DropDownList" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">?attr/a2uPopupBackground</item>
+        <item name="android:listSelector">?attr/selectableItemBackground</item>
     </style>
     <style name="Widget.A2U.Audio.Snackbar" parent="Widget.MaterialComponents.Snackbar">
         <item name="backgroundTint">@color/audio_surface_raised</item>

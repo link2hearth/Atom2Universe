@@ -50,8 +50,8 @@ class ElementCardStudioDialog(context: Context) : com.Atom2Universe.app.util.Imm
         val description = label(R.string.card_studio_hint, 12f)
         val caption = ElementCardCaption(context)
         card = ProceduralElementCardView(context)
-        val raritySelector = Spinner(context).apply {
-            adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item,
+        val raritySelector = com.Atom2Universe.app.util.ImmersiveSpinner(context).apply {
+            adapter = ArrayAdapter(context, com.Atom2Universe.app.R.layout.item_spinner_dropdown,
                 listOf(context.getString(R.string.card_studio_all_rarities)) + GachaRarity.entries.map { context.getString(it.nameRes) })
         }
         root.addView(raritySelector)
@@ -62,9 +62,9 @@ class ElementCardStudioDialog(context: Context) : com.Atom2Universe.app.util.Imm
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         val provider = PeriodicElementDescriptionProvider(context)
         var visibleElements = elements
-        val selector = Spinner(context)
+        val selector = com.Atom2Universe.app.util.ImmersiveSpinner(context)
         fun populate() {
-            selector.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item,
+            selector.adapter = ArrayAdapter(context, com.Atom2Universe.app.R.layout.item_spinner_dropdown,
                 visibleElements.map { context.getString(R.string.card_studio_element, it.atomicNumber, it.symbol, provider.getName(it)) })
         }
         populate()

@@ -12,7 +12,7 @@
         android:layout_height="4dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
-        android:background="#475569" />
+        android:background="?attr/a2uOutlineColor" />
 
     <TextView
         android:id="@+id/image_options_path"

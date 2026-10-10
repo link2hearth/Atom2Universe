@@ -86,7 +86,7 @@ class InfernaleMenuActivity : ThemedActivity() {
                 FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             )
         }
-        AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setTitle(R.string.infernale_rename)
             .setView(cadre)
             .setPositiveButton(android.R.string.ok) { _, _ ->
@@ -101,7 +101,7 @@ class InfernaleMenuActivity : ThemedActivity() {
     }
 
     private fun supprimer(t: TableauSauve) {
-        AlertDialog.Builder(this)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this)
             .setMessage(getString(R.string.infernale_confirm_delete, t.nom))
             .setPositiveButton(R.string.infernale_delete) { _, _ ->
                 sauvegardes.supprimer(t.id)

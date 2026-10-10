@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?attr/a2uBackgroundColor">
 
     <!-- Même ciel que le clicker -->
     <com.Atom2Universe.app.crypto.StarfieldView
@@ -34,7 +34,7 @@
             android:contentDescription="@string/circles_back"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back_24"
-            app:tint="#C4B5FD" />
+            app:tint="?attr/a2uMusicAccent" />
 
         <TextView
             android:layout_width="0dp"
@@ -44,7 +44,7 @@
             android:letterSpacing="0.18"
             android:text="@string/circles_title"
             android:textAllCaps="true"
-            android:textColor="#EDE9FE"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_circles_pill"
+            android:background="?attr/a2uChipBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/circles_label_moves"
-                android:textColor="#A89BD6"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="12sp" />
 
             <TextView
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:textColor="#EDE9FE"
+                android:textColor="?attr/a2uTextColor"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -118,10 +118,10 @@
             android:id="@+id/circles_tv_reward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_circles_pill"
+            android:background="?attr/a2uChipBackground"
             android:paddingHorizontal="16dp"
             android:paddingVertical="5dp"
-            android:textColor="#C4B5FD"
+            android:textColor="?attr/a2uMusicAccent"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -140,7 +140,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:text="@string/circles_btn_new"
-                android:textColor="#C4B5FD"
+                android:textColor="?attr/a2uMusicAccent"
                 android:textSize="12sp"
                 app:cornerRadius="24dp"
                 app:strokeColor="#667C3AED" />
@@ -154,7 +154,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:text="@string/circles_btn_restart"
-                android:textColor="#C4B5FD"
+                android:textColor="?attr/a2uMusicAccent"
                 android:textSize="12sp"
                 app:cornerRadius="24dp"
                 app:strokeColor="#667C3AED" />
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_weight="1"
-                android:backgroundTint="#7C3AED"
+                android:backgroundTint="?attr/a2uMusicAccent"
                 android:text="@string/circles_btn_hint"
                 android:textSize="12sp"
                 app:cornerRadius="24dp" />
@@ -191,7 +191,7 @@
         android:id="@+id/circles_win_overlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#8C03030C"
+        android:background="?attr/a2uSurfaceColor"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/circles_bottom_section"
         app:layout_constraintEnd_toEndOf="parent"
@@ -211,7 +211,7 @@
                 android:layout_height="wrap_content"
                 android:letterSpacing="0.1"
                 android:text="@string/circles_win_title"
-                android:textColor="#EDE9FE"
+                android:textColor="?attr/a2uTextColor"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:textColor="#C4B5FD"
+                android:textColor="?attr/a2uMusicAccent"
                 android:textSize="14sp" />
 
             <LinearLayout
@@ -237,7 +237,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="12dp"
                     android:text="@string/circles_btn_again"
-                    android:textColor="#C4B5FD"
+                    android:textColor="?attr/a2uMusicAccent"
                     app:cornerRadius="24dp"
                     app:strokeColor="#667C3AED" />
 
@@ -245,7 +245,7 @@
                     android:id="@+id/circles_btn_next"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#7C3AED"
+                    android:backgroundTint="?attr/a2uMusicAccent"
                     android:text="@string/circles_btn_next"
                     app:cornerRadius="24dp" />
 

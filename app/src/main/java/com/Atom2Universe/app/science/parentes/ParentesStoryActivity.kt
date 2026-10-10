@@ -219,7 +219,7 @@ class ParentesStoryActivity : ThemedActivity() {
 
     private fun chooseChapter(story:LineageStory) {
         pause()
-        chapterDialog=AlertDialog.Builder(this).setTitle(R.string.pt_story_choose)
+        chapterDialog=com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.pt_story_choose)
             .setSingleChoiceItems(story.chapters.mapIndexed { index,c ->
                 getString(R.string.pt_trail_step,repo.text(this,c.title),index+1,story.chapters.size)
             }.toTypedArray(),chapterIndex) { dialog,index ->

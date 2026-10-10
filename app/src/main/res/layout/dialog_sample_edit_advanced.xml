@@ -124,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginVertical="12dp"
-            android:background="#33FFFFFF" />
+            android:background="?attr/a2uOutlineColor" />
 
         <!-- ==================== VOLUME ENVELOPE ==================== -->
         <com.Atom2Universe.app.sf2creator.ui.components.ExpandableSectionView

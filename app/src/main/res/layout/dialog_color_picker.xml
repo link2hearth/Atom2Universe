@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pixel_art_color_hue"
-        android:textColor="#ffffff"
+        android:textColor="?attr/a2uTextColor"
         android:textSize="14sp" />
 
     <SeekBar
@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pixel_art_color_saturation"
-        android:textColor="#ffffff"
+        android:textColor="?attr/a2uTextColor"
         android:textSize="14sp"
         android:layout_marginTop="8dp" />
 
@@ -79,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pixel_art_color_brightness"
-        android:textColor="#ffffff"
+        android:textColor="?attr/a2uTextColor"
         android:textSize="14sp"
         android:layout_marginTop="8dp" />
 
@@ -97,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pixel_art_color_alpha"
-        android:textColor="#ffffff"
+        android:textColor="?attr/a2uTextColor"
         android:textSize="14sp"
         android:layout_marginTop="8dp" />
 
@@ -132,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pixel_art_color_presets"
-        android:textColor="#ffffff"
+        android:textColor="?attr/a2uTextColor"
         android:textSize="14sp"
         android:layout_marginTop="16dp" />
 

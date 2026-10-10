@@ -469,13 +469,13 @@ class MycologyActivity : ThemedActivity() {
 
     private fun showSpeciesSources() {
         val list = sortedSpecies()
-        AlertDialog.Builder(this).setTitle(R.string.myco_sources_by_species)
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.myco_sources_by_species)
             .setItems(list.map { getString(it.name) }.toTypedArray()) { _, index ->
                 val sp = list[index]
                 val body = column().apply { setPadding(dp(20), dp(8), dp(20), dp(8)) }
                 body.addView(label(getString(sp.latin), 14f).apply { setTypeface(typeface, Typeface.ITALIC) })
                 MycologySources.forSpecies(this, sp.id).forEach { body.addView(sourceLink(it), full(8)) }
-                AlertDialog.Builder(this).setTitle(sp.name).setView(ScrollView(this).apply { addView(body) })
+                com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(sp.name).setView(ScrollView(this).apply { addView(body) })
                     .setPositiveButton(R.string.myco_close, null).show()
             }.setNegativeButton(R.string.myco_close, null).show()
     }
@@ -500,7 +500,7 @@ class MycologyActivity : ThemedActivity() {
             line.addView(label(number, 19f, true).apply { setTextColor(palette.ink(palette.accent)) })
             body.addView(line, full(2))
         }
-        AlertDialog.Builder(this).setTitle(R.string.myco_urgent_title).setView(ScrollView(this).apply { addView(body) })
+        com.Atom2Universe.app.util.ImmersiveAlertDialogBuilder(this).setTitle(R.string.myco_urgent_title).setView(ScrollView(this).apply { addView(body) })
             .setPositiveButton(R.string.myco_close, null).show()
     }
 

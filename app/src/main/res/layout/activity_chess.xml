@@ -115,7 +115,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <Spinner
+            <com.Atom2Universe.app.util.ImmersiveSpinner
                 android:id="@+id/difficulty_spinner"
                 android:layout_width="0dp"
                 android:layout_height="48dp"

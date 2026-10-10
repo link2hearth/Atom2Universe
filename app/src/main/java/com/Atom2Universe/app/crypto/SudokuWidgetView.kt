@@ -56,7 +56,7 @@ class SudokuWidgetView @JvmOverloads constructor(
     private lateinit var difficultyOverlay: FrameLayout
     private lateinit var resultOverlay: FrameLayout
     private lateinit var resultText: TextView
-    private val baseCardColor = Color.parseColor("#0F172A")
+    private val baseCardColor = com.Atom2Universe.app.AppearanceStyle.color(context, R.attr.a2uSurfaceColor)
     private var currentDifficulty = SudokuDifficulty.MEDIUM
     private val ioScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 

@@ -4,11 +4,29 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.SystemBarStyle
 import androidx.appcompat.app.AppCompatActivity
 import com.Atom2Universe.app.util.followSystemBarsPreference
 import com.Atom2Universe.app.util.followWindowFocus
 
 open class ThemedActivity : AppCompatActivity() {
+    private data class ThemeSelection(
+        val color: Int,
+        val appearance: AppAppearance,
+        val brightness: AppBrightness,
+        val tinted: Boolean
+    )
+
+    private var appliedSelection: ThemeSelection? = null
+
+    private fun selectedAppearance() = ThemeSelection(
+        AppThemeManager.selectedStyleRes(this), AppThemeManager.getSelectedAppearance(this),
+        AppThemeManager.getSelectedBrightness(this), AppThemeManager.hasTintedSurfaces(this)
+    )
+
+    internal fun rememberThemeSelection() {
+        appliedSelection = selectedAppearance()
+    }
 
     /**
      * Posé après le thème choisi par l'utilisateur : le style commun de l'appli par défaut,
@@ -25,14 +43,20 @@ open class ThemedActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LocaleHelper.ensureLocale(this)
-        // Active l'affichage de bord à bord (edge-to-edge) pour Android 15+
-        // Assure la rétrocompatibilité sur les versions antérieures
-        enableEdgeToEdge()
-
         AppThemeManager.applyTheme(this)
         if (moduleThemeOverlay != 0) theme.applyStyle(moduleThemeOverlay, true)
         AppThemeManager.applyVisualStyle(this,
             brightness = themeBrightness ?: AppThemeManager.getSelectedBrightness(this))
+        rememberThemeSelection()
+        // Les couleurs des barres suivent le choix de l'app, même si Android utilise l'autre
+        // mode clair/sombre. Sur Android 8/9, le fond de navigation est encore une vraie couleur.
+        val barSurface = AppearanceStyle.color(this, R.attr.a2uSurfaceColor)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) {
+                !AppearanceStyle.isLight(this)
+            },
+            navigationBarStyle = SystemBarStyle.auto(barSurface, barSurface) { !AppearanceStyle.isLight(this) }
+        )
         super.onCreate(savedInstanceState)
         androidx.core.view.WindowCompat.getInsetsController(window, window.decorView).apply {
             isAppearanceLightStatusBars = AppearanceStyle.isLight(this@ThemedActivity)
@@ -45,6 +69,11 @@ open class ThemedActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        // Un écran resté derrière les réglages garde sinon ses vues et couleurs mises en cache.
+        if (appliedSelection != selectedAppearance()) {
+            recreate()
+            return
+        }
         window.followSystemBarsPreference(this)
         followWindowFocus(window.decorView) { window.followSystemBarsPreference(this) }
     }

@@ -280,7 +280,7 @@ internal class CaveEquipmentPanel(private val activity: CaveActivity) : LinearLa
         val preferredY = if (fitsBeside) location[1] else if (location[1] >= height + dp(8)) location[1] - height - dp(4)
             else location[1] + anchor.height + dp(4)
         val y = preferredY.coerceIn(dp(8), (metrics.heightPixels - height - dp(8)).coerceAtLeast(dp(8)))
-        val popup = PopupWindow(scroll, width, height, false).apply {
+        val popup = com.Atom2Universe.app.util.ImmersivePopupWindow(scroll, width, height, false).apply {
             setBackgroundDrawable(CaveUiStyle.bubble(activity)); elevation = dp(10).toFloat()
             isOutsideTouchable = false; inputMethodMode = PopupWindow.INPUT_METHOD_NOT_NEEDED
             showAtLocation(activity.invOverlay, Gravity.TOP or Gravity.LEFT, x, y)

@@ -45,12 +45,13 @@ class CaveWorldMenuActivity : ThemedActivity() {
     private lateinit var recycler: RecyclerView
     private lateinit var navigation: LinearLayout
     private val menuAdapter = MenuAdapter()
-    private val ink = Color.rgb(239, 245, 242)
-    private val muted = Color.rgb(176, 195, 201)
+    private val palette by lazy { com.Atom2Universe.app.games.kit.KitPalette.from(this) }
+    private val ink get() = palette.text
+    private val muted get() = palette.secondary
     private val green = Color.rgb(166, 221, 172)
     private val blue = Color.rgb(163, 200, 249)
     private val orange = Color.rgb(255, 190, 143)
-    private val accent get() = if (assault) orange else green
+    private val accent get() = palette.accent
 
     private var exportingPack = false
     private var importingPack = false
@@ -68,7 +69,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
         val installed = packName()
         val labels = mutableListOf(getString(R.string.cave_pack_import), getString(R.string.cave_menu_export_pack))
         if (installed != null) labels += getString(R.string.cave_pack_remove)
-        MaterialAlertDialogBuilder(this)
+        com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.cave_pack_dialog_title, installed ?: getString(R.string.cave_pack_none)))
             .setItems(labels.toTypedArray()) { _, which ->
                 when (which) {
@@ -147,7 +148,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
                     android.text.util.Linkify.addLinks(this, android.text.util.Linkify.WEB_URLS)
                     movementMethod = android.text.method.LinkMovementMethod.getInstance()
                 }
-                MaterialAlertDialogBuilder(this@CaveWorldMenuActivity)
+                com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this@CaveWorldMenuActivity)
                     .setTitle(R.string.cave_audio_credits_title)
                     .setView(android.widget.ScrollView(this@CaveWorldMenuActivity).apply { addView(credits) })
                     .setPositiveButton(android.R.string.ok, null).show()
@@ -175,7 +176,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
 
     private fun surface(color: Int, border: Int? = null) = GradientDrawable().apply {
         setColor(color)
-        cornerRadius = dp(16).toFloat()
+        cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(this@CaveWorldMenuActivity, 16f)
         border?.let { setStroke(dp(1), it) }
     }
 
@@ -184,7 +185,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
     private fun label(value: CharSequence, size: Float, color: Int = ink, bold: Boolean = false) = TextView(this).apply {
         text = value
         textSize = size
-        setTextColor(color)
+        setTextColor(if (color == Color.WHITE) color else com.Atom2Universe.app.games.kit.KitPalette.ensureContrast(color, palette.surface, 4.5))
         if (bold) setTypeface(typeface, Typeface.BOLD)
     }
 
@@ -202,9 +203,9 @@ class CaveWorldMenuActivity : ThemedActivity() {
         minimumHeight = dp(48)
         insetTop = dp(2)
         insetBottom = dp(2)
-        cornerRadius = dp(12)
-        backgroundTintList = ColorStateList.valueOf(if (primary) accent else Color.rgb(35, 54, 66))
-        setTextColor(if (primary) Color.rgb(21, 38, 43) else ink)
+        cornerRadius = com.Atom2Universe.app.AppearanceStyle.corner(this@CaveWorldMenuActivity, 12f).toInt()
+        backgroundTintList = ColorStateList.valueOf(if (primary) accent else palette.raised)
+        setTextColor(if (primary) palette.onAccent else ink)
         setPadding(dp(12), dp(8), dp(12), dp(8))
         setOnClickListener { action() }
     }
@@ -222,7 +223,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
         val tint = if (isAssault) orange else green
         setPadding(dp(14), dp(14), dp(14), dp(14))
         background = RippleDrawable(ColorStateList.valueOf(0x24FFFFFF),
-            surface(if (selected) Color.rgb(43, 65, 73) else Color.rgb(26, 43, 55), if (selected) tint else null), null)
+            surface(if (selected) palette.raised else palette.surface, if (selected) tint else null), null)
         isSelected = selected
         isFocusable = true
         val title = getString(if (isAssault) R.string.cave_menu_assault else R.string.cave_menu_infinite)
@@ -280,8 +281,8 @@ class CaveWorldMenuActivity : ThemedActivity() {
         val palette = MaterialButton(this@CaveWorldMenuActivity).apply {
             setText(CaveVisualStyle.current(context).label)
             contentDescription = getString(R.string.cave_palette_change, text)
-            setTextColor(Color.WHITE)
-            backgroundTintList = ColorStateList.valueOf(0xDD20252B.toInt())
+            setTextColor(this@CaveWorldMenuActivity.palette.text)
+            backgroundTintList = ColorStateList.valueOf(this@CaveWorldMenuActivity.palette.raised)
             setOnClickListener {
                 CaveVisualStyle.cycle(context)
                 menuAdapter.notifyDataSetChanged()
@@ -292,8 +293,8 @@ class CaveWorldMenuActivity : ThemedActivity() {
             maxLines = 1
             ellipsize = android.text.TextUtils.TruncateAt.END
             maxWidth = dp(180)
-            setTextColor(Color.WHITE)
-            backgroundTintList = ColorStateList.valueOf(0xDD20252B.toInt())
+            setTextColor(this@CaveWorldMenuActivity.palette.text)
+            backgroundTintList = ColorStateList.valueOf(this@CaveWorldMenuActivity.palette.raised)
             setOnClickListener { showPackDialog() }
         }
         val bannerButtons = LinearLayout(this@CaveWorldMenuActivity).apply {
@@ -344,7 +345,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
     }
 
     private fun card() = column().apply {
-        background = surface(Color.rgb(27, 44, 56), Color.rgb(46, 65, 76))
+        background = surface(palette.surface, palette.outline)
         setPadding(dp(16), dp(14), dp(16), dp(12))
     }
 
@@ -377,7 +378,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
         val etName = view.findViewById<TextInputEditText>(R.id.cave_dialog_name)
         val etSeed = view.findViewById<TextInputEditText>(R.id.cave_dialog_seed)
         val modes = view.findViewById<RadioGroup>(R.id.cave_dialog_mode)
-        val dialog = MaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
+        val dialog = com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
             .setTitle(R.string.cave_menu_new_world)
             .setView(view)
             .setPositiveButton(R.string.cave_menu_create, null)
@@ -414,7 +415,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
             getString(if (save.isCreative) R.string.cave_menu_switch_survival else R.string.cave_menu_switch_creative),
             getString(R.string.cave_menu_delete_world)
         )
-        MaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
+        com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
             .setTitle(save.name)
             .setItems(options) { _, which ->
                 if (which == 1) showDeleteDialog(save) else lifecycleScope.launch {
@@ -425,7 +426,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
                 }
             }
             .setNeutralButton(R.string.cave_menu_details) { _, _ ->
-                MaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
+                com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
                     .setTitle(save.name)
                     .setMessage(getString(R.string.cave_menu_seed_label, save.seed))
                     .setPositiveButton(android.R.string.ok, null).show()
@@ -435,7 +436,7 @@ class CaveWorldMenuActivity : ThemedActivity() {
     }
 
     private fun showDeleteDialog(save: CaveWorldSave) {
-        MaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
+        com.Atom2Universe.app.util.ImmersiveMaterialAlertDialogBuilder(this, R.style.Theme_A2U_AlertDialog_Dark)
             .setTitle(R.string.cave_menu_delete_confirm_title)
             .setMessage(getString(R.string.cave_menu_delete_confirm_msg, save.name))
             .setPositiveButton(R.string.cave_menu_delete_world) { _, _ ->

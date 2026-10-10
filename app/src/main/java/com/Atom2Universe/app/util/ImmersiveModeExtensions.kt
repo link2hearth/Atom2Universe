@@ -3,6 +3,7 @@ package com.Atom2Universe.app.util
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.Window
@@ -16,10 +17,13 @@ import androidx.core.content.edit
 import com.Atom2Universe.app.AppearanceStyle
 import com.Atom2Universe.app.R
 
-/**
- * Gestionnaire du mode d'affichage des barres système.
- * Permet de basculer entre barres visibles et mode immersif (barres cachées).
- */
+/** Screens with separate status/navigation switches share them with their child windows. */
+interface SystemBarsPreferenceOwner {
+    val showStatusBar: Boolean
+    val showNavigationBar: Boolean
+}
+
+/** Préférence globale, ou choix de l'écran hôte pour toutes ses fenêtres. */
 object SystemBarsManager {
     private const val PREFS_NAME = "audio_hub_prefs"
     private const val KEY_SHOW_SYSTEM_BARS = "show_system_bars"
@@ -32,6 +36,23 @@ object SystemBarsManager {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return prefs.getBoolean(KEY_SHOW_SYSTEM_BARS, true)
     }
+
+    private fun owner(context: Context): SystemBarsPreferenceOwner? {
+        var current = context
+        while (current is ContextWrapper) {
+            if (current is SystemBarsPreferenceOwner) return current
+            val base = current.baseContext
+            if (base === current) break
+            current = base
+        }
+        return current as? SystemBarsPreferenceOwner
+    }
+
+    fun showStatusBar(context: Context): Boolean = owner(context)?.showStatusBar ?: shouldShowSystemBars(context)
+    fun showNavigationBar(context: Context): Boolean = owner(context)?.showNavigationBar ?: shouldShowSystemBars(context)
+    internal fun visibleTypes(context: Context): Int =
+        (if (showStatusBar(context)) WindowInsetsCompat.Type.statusBars() else 0) or
+        (if (showNavigationBar(context)) WindowInsetsCompat.Type.navigationBars() else 0)
 
     /**
      * Définit si les barres système doivent être affichées.
@@ -76,14 +97,15 @@ internal fun Window.followSystemBarsPreference(context: Context) {
 }
 
 internal fun applySystemBarsPreference(controller: WindowInsetsControllerCompat, context: Context) {
-    val show = SystemBarsManager.shouldShowSystemBars(context)
+    val visible = SystemBarsManager.visibleTypes(context)
+    val hidden = (WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.navigationBars()) and visible.inv()
     val light = AppearanceStyle.isLight(context)
     controller.isAppearanceLightStatusBars = light
     controller.isAppearanceLightNavigationBars = light
-    controller.systemBarsBehavior = if (show) WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+    controller.systemBarsBehavior = if (hidden == 0) WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
         else WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-    if (show) controller.show(WindowInsetsCompat.Type.systemBars())
-    else controller.hide(WindowInsetsCompat.Type.systemBars())
+    if (visible != 0) controller.show(visible)
+    if (hidden != 0) controller.hide(hidden)
 }
 
 /** Focus changes, not a polling loop: a deliberate swipe can still reveal transient bars. */
@@ -110,6 +132,10 @@ internal fun followWindowFocus(view: View, apply: () -> Unit) {
     if (view.isAttachedToWindow) listener.onViewAttachedToWindow(view)
 }
 
+private val attachedDialogs = java.util.Collections.newSetFromMap(
+    java.util.WeakHashMap<DialogBarsBinding, Boolean>()
+)
+
 /** Does not replace the dialog's onShow/onDismiss handlers or its keyboard configuration. */
 private class DialogBarsBinding(private val window: Window, private val context: Context) : View.OnAttachStateChangeListener {
     private val decor = window.decorView
@@ -126,7 +152,8 @@ private class DialogBarsBinding(private val window: Window, private val context:
     }
 
     fun prepare() {
-        if (!decor.isAttachedToWindow && !SystemBarsManager.shouldShowSystemBars(context) &&
+        if (!decor.isAttachedToWindow &&
+            (!SystemBarsManager.showStatusBar(context) || !SystemBarsManager.showNavigationBar(context)) &&
             window.attributes.flags and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE == 0) {
             borrowedFocus = true
             window.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
@@ -142,13 +169,19 @@ private class DialogBarsBinding(private val window: Window, private val context:
     }
 
     override fun onViewAttachedToWindow(v: View) {
+        attachedDialogs.add(this)
         window.followSystemBarsPreference(context)
         decor.post(restoreFocus)
     }
 
     override fun onViewDetachedFromWindow(v: View) {
+        attachedDialogs.remove(this)
         decor.removeCallbacks(restoreFocus)
         releaseFocusFlag()
+    }
+
+    fun refreshFor(activity: Activity) {
+        if (context.findActivity() === activity) window.followSystemBarsPreference(context)
     }
 }
 
@@ -158,24 +191,12 @@ private class DialogBarsBinding(private val window: Window, private val context:
  */
 fun Activity.updateSystemBarsVisibility() {
     window.followSystemBarsPreference(this)
+    attachedDialogs.toList().forEach { it.refreshFor(this) }
+    refreshOwnedPopupWindows(this)
 
     // Recalcule les insets
     val rootView = findViewById<View>(android.R.id.content)
     ViewCompat.requestApplyInsets(rootView)
-}
-
-/**
- * Applique la visibilité des barres système de façon indépendante (migré depuis Atom2Universe).
- */
-fun Activity.applySystemBarsVisibility(showStatusBar: Boolean, showNavBar: Boolean) {
-    WindowCompat.setDecorFitsSystemWindows(window, showStatusBar || showNavBar)
-    val controller = WindowCompat.getInsetsController(window, window.decorView)
-    controller.systemBarsBehavior =
-        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-    if (showStatusBar) controller.show(WindowInsetsCompat.Type.statusBars())
-    else controller.hide(WindowInsetsCompat.Type.statusBars())
-    if (showNavBar) controller.show(WindowInsetsCompat.Type.navigationBars())
-    else controller.hide(WindowInsetsCompat.Type.navigationBars())
 }
 
 // Tag used to track if insets have been applied to avoid double-application
@@ -200,11 +221,11 @@ private fun Activity.applySystemBarInsets() {
     rootView.tag = INSETS_APPLIED_TAG
 
     ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, windowInsets ->
-        val showBarsNow = SystemBarsManager.shouldShowSystemBars(this)
+        val visibleTypes = SystemBarsManager.visibleTypes(this)
 
-        if (showBarsNow) {
+        if (visibleTypes != 0) {
             // Mode barres visibles: applique les insets complets
-            val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val systemBars = windowInsets.getInsets(visibleTypes or WindowInsetsCompat.Type.displayCutout())
             view.updatePadding(
                 left = systemBars.left,
                 top = systemBars.top,

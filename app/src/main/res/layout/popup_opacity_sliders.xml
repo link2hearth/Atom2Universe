@@ -20,14 +20,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/popup_value_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E2E8F0"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -56,14 +56,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/popup_value_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E2E8F0"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -93,14 +93,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/popup_value_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E2E8F0"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -130,7 +130,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -155,7 +155,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -180,7 +180,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -205,7 +205,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#94A3B8"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="12sp" />
 
         <androidx.appcompat.widget.SwitchCompat
