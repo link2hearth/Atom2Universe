@@ -6,7 +6,7 @@
       "id": "anses2023", "kind": "official",
       "citation": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
       "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf",
-      "species": ["phalloides", "pantherina", "muscaria", "satanas", "olearius", "cibarius", "edulis", "procera", "campestris", "xanthodermus", "virosa", "paxillus", "rubescens", "caesarea", "sinuatum", "oreades", "gambosa", "erubescens", "rivulosa", "ovoidea", "geotropa", "amethystina", "pura", "calopus", "brunneum", "cyanoxantha", "terreum", "rhacodes"]
+      "species": ["phalloides", "pantherina", "muscaria", "satanas", "olearius", "cibarius", "edulis", "procera", "campestris", "xanthodermus", "virosa", "paxillus", "rubescens", "caesarea", "sinuatum", "oreades", "gambosa", "erubescens", "rivulosa", "ovoidea", "geotropa", "amethystina", "pura", "calopus", "brunneum", "cyanoxantha", "terreum", "rhacodes", "proxima"]
     },
     {
       "id": "anses2025", "kind": "official",
@@ -48,7 +48,7 @@
       "id": "be", "kind": "official",
       "citation": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf",
-      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum", "hebeloma", "emetica"]
+      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum", "hebeloma", "emetica", "formosa"]
     },
     {
       "id": "toxinfo", "kind": "official",
@@ -84,7 +84,7 @@
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus"]
     },
     {
       "id": "toxinfo2025", "kind": "official",
@@ -150,13 +150,31 @@
       "id": "vapko2023", "kind": "society",
       "citation": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf",
-      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea"]
+      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus"]
     },
     {
       "id": "dgfm2026tox", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf",
-      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica"]
+      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima"]
+    },
+    {
+      "id": "mdc-velvetfoot", "kind": "official",
+      "citation": "Missouri Department of Conservation. Field Guide : Velvet Foot (Flammulina velutipes). Consulté le 10 octobre 2026.",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/velvet-foot",
+      "species": ["flammulina"]
+    },
+    {
+      "id": "mdc-galerina", "kind": "official",
+      "citation": "Missouri Department of Conservation. Field Guide : Deadly Galerina (Galerina marginata). Consulté le 10 octobre 2026.",
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/deadly-galerina",
+      "species": ["flammulina", "galerina"]
+    },
+    {
+      "id": "mycocharentes-proxima", "kind": "encyclopedia",
+      "citation": "MycoCharentes (P. Tanchaud). Amanita proxima Dumée, fiche d\u2019espèce, décembre 2024.",
+      "url": "https://www.mycocharentes.fr/pdf1/235.pdf",
+      "species": ["proxima", "ovoidea"]
     },
     { "id": "wp-fr-phalloides", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite phalloïde", "url": "https://fr.wikipedia.org/wiki/Amanite_phallo%C3%AFde", "species": ["phalloides", "egg"] },
     { "id": "wp-fr-virosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite vireuse", "url": "https://fr.wikipedia.org/wiki/Amanite_vireuse", "species": ["virosa"] },
@@ -267,6 +285,27 @@
     { "id": "wp-fr-tubaeformis", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Craterellus tubaeformis", "url": "https://fr.wikipedia.org/wiki/Craterellus_tubaeformis", "species": ["tubaeformis"] },
     { "id": "wp-en-tubaeformis", "kind": "encyclopedia", "citation": "Wikipedia (en): Craterellus tubaeformis", "url": "https://en.wikipedia.org/wiki/Craterellus_tubaeformis", "species": ["tubaeformis"] },
     { "id": "wp-fr-gigantea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Vesse-de-loup géante", "url": "https://fr.wikipedia.org/wiki/Calvatia_gigantea", "species": ["gigantea"] },
-    { "id": "wp-en-gigantea", "kind": "encyclopedia", "citation": "Wikipedia (en): Calvatia gigantea", "url": "https://en.wikipedia.org/wiki/Calvatia_gigantea", "species": ["gigantea"] }
+    { "id": "wp-en-gigantea", "kind": "encyclopedia", "citation": "Wikipedia (en): Calvatia gigantea", "url": "https://en.wikipedia.org/wiki/Calvatia_gigantea", "species": ["gigantea"] },
+    { "id": "wp-fr-flammulina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Flammulina velutipes", "url": "https://fr.wikipedia.org/wiki/Flammulina_velutipes", "species": ["flammulina"] },
+    { "id": "wp-en-flammulina", "kind": "encyclopedia", "citation": "Wikipedia (en): Flammulina velutipes", "url": "https://en.wikipedia.org/wiki/Flammulina_velutipes", "species": ["flammulina"] },
+    { "id": "wp-fr-capnoides", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hypholoma capnoides", "url": "https://fr.wikipedia.org/wiki/Hypholoma_capnoides", "species": ["capnoides"] },
+    { "id": "wp-en-capnoides", "kind": "encyclopedia", "citation": "Wikipedia (en): Hypholoma capnoides", "url": "https://en.wikipedia.org/wiki/Hypholoma_capnoides", "species": ["capnoides"] },
+    { "id": "wp-fr-gymnopilus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Gymnopilus junonius", "url": "https://fr.wikipedia.org/wiki/Gymnopilus_junonius", "species": ["gymnopilus"] },
+    { "id": "wp-en-gymnopilus", "kind": "encyclopedia", "citation": "Wikipedia (en): Gymnopilus junonius", "url": "https://en.wikipedia.org/wiki/Gymnopilus_junonius", "species": ["gymnopilus"] },
+    { "id": "wp-fr-pleurocybella", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Pleurocybella porrigens", "url": "https://fr.wikipedia.org/wiki/Pleurocybella_porrigens", "species": ["pleurocybella"] },
+    { "id": "wp-en-pleurocybella", "kind": "encyclopedia", "citation": "Wikipedia (en): Pleurocybella porrigens", "url": "https://en.wikipedia.org/wiki/Pleurocybella_porrigens", "species": ["pleurocybella"] },
+    { "id": "wp-fr-laetiporus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Laetiporus sulphureus", "url": "https://fr.wikipedia.org/wiki/Laetiporus_sulphureus", "species": ["laetiporus"] },
+    { "id": "wp-en-laetiporus", "kind": "encyclopedia", "citation": "Wikipedia (en): Laetiporus sulphureus", "url": "https://en.wikipedia.org/wiki/Laetiporus_sulphureus", "species": ["laetiporus"] },
+    { "id": "wp-fr-fistulina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Fistulina hepatica", "url": "https://fr.wikipedia.org/wiki/Fistulina_hepatica", "species": ["fistulina"] },
+    { "id": "wp-en-fistulina", "kind": "encyclopedia", "citation": "Wikipedia (en): Fistulina hepatica", "url": "https://en.wikipedia.org/wiki/Fistulina_hepatica", "species": ["fistulina"] },
+    { "id": "wp-fr-sparassis", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Sparassis crispa", "url": "https://fr.wikipedia.org/wiki/Sparassis_crispa", "species": ["sparassis"] },
+    { "id": "wp-en-sparassis", "kind": "encyclopedia", "citation": "Wikipedia (en): Sparassis crispa", "url": "https://en.wikipedia.org/wiki/Sparassis_crispa", "species": ["sparassis"] },
+    { "id": "wp-fr-formosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Ramaria formosa", "url": "https://fr.wikipedia.org/wiki/Ramaria_formosa", "species": ["formosa"] },
+    { "id": "wp-en-formosa", "kind": "encyclopedia", "citation": "Wikipedia (en): Ramaria formosa", "url": "https://en.wikipedia.org/wiki/Ramaria_formosa", "species": ["formosa"] },
+    { "id": "wp-fr-pinophilus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Boletus pinophilus", "url": "https://fr.wikipedia.org/wiki/Boletus_pinophilus", "species": ["pinophilus"] },
+    { "id": "wp-en-pinophilus", "kind": "encyclopedia", "citation": "Wikipedia (en): Boletus pinophilus", "url": "https://en.wikipedia.org/wiki/Boletus_pinophilus", "species": ["pinophilus"] },
+    { "id": "wp-fr-reticulatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Boletus reticulatus", "url": "https://fr.wikipedia.org/wiki/Boletus_reticulatus", "species": ["reticulatus"] },
+    { "id": "wp-en-reticulatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Boletus reticulatus", "url": "https://en.wikipedia.org/wiki/Boletus_reticulatus", "species": ["reticulatus"] },
+    { "id": "wp-en-proxima", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita proxima", "url": "https://en.wikipedia.org/wiki/Amanita_proxima", "species": ["proxima"] }
   ]
 }

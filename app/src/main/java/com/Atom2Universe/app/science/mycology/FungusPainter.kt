@@ -198,8 +198,10 @@ internal class SpecimenPainter(
 
     fun side() {
         if (look.capShape == CapShape.BRACKET) { BracketPainter(c, look, ox, oy, s, hair, anchors).side(); return }
+        if (look.onWood) { TuftPainter(c, look, ox, oy, s, hair, anchors).side(); return }
         drawGround()
         if (look.capShape == CapShape.BALL) { BallPainter(c, look, ox, oy, s, hair, anchors).side(); return }
+        if (look.capShape == CapShape.CORAL) { CoralPainter(c, look, ox, oy, s, hair, anchors).side(); return }
         if (look.capShape == CapShape.FUNNEL) { funnelSide(); return }
         if (look.capShape == CapShape.MOREL) { morelSide(); return }
         if (look.capShape == CapShape.BRAIN) { brainSide(); return }
@@ -210,6 +212,11 @@ internal class SpecimenPainter(
         drawVolva()
         drawDome()
         sideAnchors()
+    }
+
+    /** Le champignon seul, sans sol ni voisins, repères compris : ce que le bouquet sur le tronc dessine pour chacun de ses membres. */
+    internal fun drawMember(funnel: Boolean) {
+        if (funnel) funnelOne() else { single(); sideAnchors() }
     }
 
     private fun clusterBehind() {
@@ -1192,9 +1199,16 @@ internal class SpecimenPainter(
 
     fun section() {
         if (look.capShape == CapShape.BRACKET) { BracketPainter(c, look, ox, oy, s, hair, anchors).section(); return }
+        if (look.onWood) { TuftPainter(c, look, ox, oy, s, hair, anchors).section(); return }
         drawGround()
+        sectionBody()
+    }
+
+    /** La coupe, sans le sol : ce que le bouquet sur le tronc dessine pour son champignon principal. */
+    internal fun sectionBody() {
         when (look.capShape) {
             CapShape.BALL -> { BallPainter(c, look, ox, oy, s, hair, anchors).section(); return }
+            CapShape.CORAL -> { CoralPainter(c, look, ox, oy, s, hair, anchors).section(); return }
             CapShape.FUNNEL -> { funnelSection(); return }
             CapShape.MOREL -> { morelSection(); return }
             CapShape.BRAIN -> { brainSection(); return }
@@ -1770,6 +1784,7 @@ internal class SpecimenPainter(
         if (look.capShape == CapShape.MOREL || look.capShape == CapShape.BRAIN) { top(ucx, ucy, ur); return }
         if (look.capShape == CapShape.BALL) { BallPainter(c, look, ox, oy, s, hair, anchors).top(ucx, ucy, ur); return }
         if (look.capShape == CapShape.BRACKET) { BracketPainter(c, look, ox, oy, s, hair, anchors).under(ucx, ucy, ur); return }
+        if (look.capShape == CapShape.CORAL) { CoralPainter(c, look, ox, oy, s, hair, anchors).under(ucx, ucy, ur); return }
         val shape = Path()
         val n = 72
         for (i in 0..n) {
@@ -1966,18 +1981,18 @@ internal class SpecimenPainter(
     }
 }
 
-/** Un seul exemplaire (utile pour dessiner les voisins d'une touffe). */
-internal fun FungusLook.asSingle(): FungusLook = this.let {
+/** Un seul exemplaire (utile pour dessiner les voisins d'une touffe) ; [seedDelta] le distingue, [straight] redresse sa tige. */
+internal fun FungusLook.asSingle(seedDelta: Int = 5, straight: Boolean = false): FungusLook = this.let {
     FungusLook(
         capDiam = it.capDiam, capRise = it.capRise, capShape = it.capShape, capN = it.capN, edgeDrop = it.edgeDrop,
         umbo = it.umbo, dip = it.dip, inrolled = it.inrolled, capCenter = it.capCenter, capMid = it.capMid,
         capEdge = it.capEdge, capDecos = it.capDecos, fleshThick = it.fleshThick, stipeH = it.stipeH,
         stipeW = it.stipeW, stipeBaseW = it.stipeBaseW, stipeForm = it.stipeForm, bulbW = it.bulbW,
-        bulbH = it.bulbH, lean = it.lean, stipeTop = it.stipeTop, stipeBottom = it.stipeBottom,
+        bulbH = it.bulbH, lean = if (straight) 0f else it.lean, stipeTop = it.stipeTop, stipeBottom = it.stipeBottom,
         stipeDecos = it.stipeDecos, interior = it.interior, hymenium = it.hymenium, hymColor = it.hymColor,
         hymInner = it.hymInner, attach = it.attach, hymDepth = it.hymDepth, forked = it.forked, crowd = it.crowd,
         ring = it.ring, ringAt = it.ringAt, ringColor = it.ringColor, volva = it.volva, volvaH = it.volvaH,
         volvaColor = it.volvaColor, flesh = it.flesh, stipeFlesh = it.stipeFlesh, stains = it.stains,
-        spore = it.spore, latex = it.latex, ball = it.ball, cluster = 1, seed = it.seed + 5
+        spore = it.spore, latex = it.latex, ball = it.ball, coral = it.coral, cluster = 1, onWood = it.onWood, seed = it.seed + seedDelta
     )
 }

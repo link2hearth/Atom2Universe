@@ -3,7 +3,7 @@ package com.Atom2Universe.app.science.mycology
 import com.Atom2Universe.app.R
 
 /**
- * Le catalogue : 66 espèces d'Europe (19 au premier lot, 13 au second, 12 au troisième, 9 au quatrième, 13 au cinquième), rangées en groupes de sosies d'après les confusions
+ * Le catalogue : 77 espèces d'Europe (19 au premier lot, 13 au second, 12 au troisième, 9 au quatrième, 13 au cinquième, 11 au sixième), rangées en groupes de sosies d'après les confusions
  * réellement observées en France (ANSES). Les mesures sont typiques, jamais exactes.
  * Faits et sources : « CHAMPIGNONS.md » (hors dépôt) et la page À propos du module.
  */
@@ -206,7 +206,7 @@ object FungusCatalog {
             stipeH = 7f, stipeW = 2f, stipeBaseW = 1.2f, stipeForm = StipeForm.TAPER_DOWN,
             stipeTop = c(0xD66F23), stipeBottom = c(0x7B3E1C),
             hymenium = Hymenium.GILLS, hymColor = c(0xF3A331), hymInner = c(0xF3A331), attach = GillAttach.DECURRENT, crowd = 1f,
-            flesh = c(0xF2AE45), stipeFlesh = c(0xE58B2E), spore = c(0xF4E9CD), cluster = 3, seed = 10,
+            flesh = c(0xF2AE45), stipeFlesh = c(0xE58B2E), spore = c(0xF4E9CD), cluster = 4, onWood = true, seed = 10,
             marksSide = listOf(m(Anchor.FACE, R.string.myco_l_true_gills), m(Anchor.CAP, R.string.myco_l_cluster)),
             marksSection = listOf(m(Anchor.S_STIPE, R.string.myco_l_flesh_orange), m(Anchor.S_HYM, R.string.myco_l_true_gills)),
             marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_true_gills))
@@ -576,7 +576,7 @@ object FungusCatalog {
             stipeDecos = listOf(StipeDeco.Fibrils(c(0x6B4A2A), 90)), interior = Interior.STUFFED,
             hymColor = c(0xB98550), attach = GillAttach.ADNATE, crowd = 0.85f,
             ring = RingKind.SKIRT, ringAt = 0.74f, ringColor = c(0xC9A878),
-            flesh = c(0xD9C09A), spore = c(0x8B5A2B), cluster = 2, seed = 29,
+            flesh = c(0xD9C09A), spore = c(0x8B5A2B), cluster = 4, onWood = true, seed = 29,
             marksSide = listOf(m(Anchor.CAP, R.string.myco_l_tawny_cap), m(Anchor.RING, R.string.myco_l_ring_fragile),
                 m(Anchor.STIPE_M, R.string.myco_l_silky_below_ring)),
             marksSection = listOf(m(Anchor.S_HYM, R.string.myco_l_tawny_gills)),
@@ -596,7 +596,7 @@ object FungusCatalog {
             stipeDecos = listOf(StipeDeco.Scales(c(0x6E4524), 0.5f)), interior = Interior.STUFFED,
             hymColor = c(0xC28A52), attach = GillAttach.ADNATE, crowd = 0.85f,
             ring = RingKind.SKIRT, ringAt = 0.62f, ringColor = c(0xA9763F),
-            flesh = c(0xE8D2A8), spore = c(0x8B5A2B), cluster = 3, seed = 30,
+            flesh = c(0xE8D2A8), spore = c(0x8B5A2B), cluster = 5, onWood = true, seed = 30,
             marksSide = listOf(m(Anchor.CAP, R.string.myco_l_pale_centre_cap), m(Anchor.RING, R.string.myco_l_ring_fragile),
                 m(Anchor.STIPE_M, R.string.myco_l_scaly_below_ring)),
             marksSection = listOf(m(Anchor.S_HYM, R.string.myco_l_cinnamon_gills)),
@@ -615,7 +615,7 @@ object FungusCatalog {
             stipeTop = c(0xEDD94C), stipeBottom = c(0xC98B2E), interior = Interior.STUFFED,
             hymColor = c(0x8D9A45), attach = GillAttach.ADNATE, crowd = 1f,
             ring = RingKind.ZONE, ringAt = 0.8f, ringColor = c(0x6A5A4A),
-            flesh = c(0xF0E27A), spore = c(0x4A3040), cluster = 3, seed = 31,
+            flesh = c(0xF0E27A), spore = c(0x4A3040), cluster = 6, onWood = true, seed = 31,
             marksSide = listOf(m(Anchor.CAP, R.string.myco_l_sulphur_cap), m(Anchor.FACE, R.string.myco_l_gills_green_ripe),
                 m(Anchor.RING, R.string.myco_l_ring_zone)),
             marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_flesh_sulphur)),
@@ -635,7 +635,7 @@ object FungusCatalog {
             stipeTop = c(0xE9DDB0), stipeBottom = c(0xC4A55A), interior = Interior.STUFFED,
             hymColor = c(0xF0E8C4), attach = GillAttach.ADNATE, crowd = 0.8f,
             ring = RingKind.SKIRT, ringAt = 0.8f, ringColor = c(0xF2EBCB),
-            flesh = c(0xF3EEDC), spore = SPORE_WHITE, cluster = 3, seed = 32,
+            flesh = c(0xF3EEDC), spore = SPORE_WHITE, cluster = 5, onWood = true, seed = 32,
             marksSide = listOf(m(Anchor.CAP, R.string.myco_l_honey_cap), m(Anchor.RING, R.string.myco_l_ring_white)),
             marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_flesh_white)),
             marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_white_gills))
@@ -1260,7 +1260,7 @@ object FungusCatalog {
             stipeTop = c(0xEFE6D2), stipeBottom = c(0xB58A5A),
             hymColor = c(0xCFB07F), attach = GillAttach.ADNATE, crowd = 0.85f,
             ring = RingKind.SKIRT, ringAt = 0.76f, ringColor = c(0xEADFC8),
-            flesh = c(0xF3EDE0), spore = c(0x6B4A2E), cluster = 3, seed = 71,
+            flesh = c(0xF3EDE0), spore = c(0x6B4A2E), cluster = 4, onWood = true, seed = 71,
             marksSide = listOf(m(Anchor.CAP, R.string.myco_l_pale_cracked_cap), m(Anchor.RING, R.string.myco_l_ring_ample),
                 m(Anchor.BASE, R.string.myco_l_cluster)),
             marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_flesh_white)),
@@ -1305,6 +1305,215 @@ object FungusCatalog {
         traits = R.array.myco_gigantea_traits, note = R.string.myco_gigantea_note
     )
 
+    // ------------------------------------------------------------------ lot 6 : touffes sur le bois, polypores, coraux, cèpes
+
+    private val flammulina = FungusSpecies(
+        id = "flammulina", name = R.string.myco_flammulina_name, altNames = R.string.myco_flammulina_alt,
+        latin = R.string.myco_flammulina_latin, status = FungusStatus.INEDIBLE,
+        look = FungusLook(
+            capDiam = 6f, capRise = 1.8f, capN = 2.4f, edgeDrop = 0.2f,
+            capCenter = c(0xB5611B), capMid = c(0xDC942A), capEdge = c(0xEDB752),
+            capDecos = listOf(CapDeco.Sticky),
+            stipeH = 5.5f, stipeW = 0.55f, stipeBaseW = 0.5f,
+            stipeTop = c(0xE9D9A0), stipeBottom = c(0x3F2A1A),
+            stipeDecos = listOf(StipeDeco.Fibrils(c(0x2A1A10), 80)), interior = Interior.STUFFED,
+            hymColor = c(0xE7DAB2), attach = GillAttach.ADNATE, crowd = 0.45f,
+            flesh = c(0xEFE2B4), stipeFlesh = c(0x8A6A3E), spore = SPORE_WHITE, cluster = 5, onWood = true, seed = 80,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_orange_sticky_cap), m(Anchor.STIPE_M, R.string.myco_l_velvet_dark_stem),
+                m(Anchor.BASE, R.string.myco_l_on_wood)),
+            marksSection = listOf(m(Anchor.S_STIPE, R.string.myco_l_velvet_dark_stem)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_cream_far_gills))
+        ),
+        traits = R.array.myco_flammulina_traits, note = R.string.myco_flammulina_note
+    )
+
+    private val capnoides = FungusSpecies(
+        id = "capnoides", name = R.string.myco_capnoides_name, altNames = R.string.myco_capnoides_alt,
+        latin = R.string.myco_capnoides_latin, status = FungusStatus.EDIBLE,
+        look = FungusLook(
+            capDiam = 5f, capRise = 2f, capN = 2.3f, edgeDrop = 0.3f,
+            capCenter = c(0xC08A4A), capMid = c(0xE2C068), capEdge = c(0xEBD58A),
+            stipeH = 6f, stipeW = 0.45f, stipeBaseW = 0.5f,
+            stipeTop = c(0xEFE08A), stipeBottom = c(0xB5702E), interior = Interior.STUFFED,
+            hymColor = c(0x958A9C), attach = GillAttach.ADNATE, crowd = 0.9f,
+            flesh = c(0xEFE9C0), spore = c(0x5A3340), cluster = 5, onWood = true, seed = 81,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_yellow_centre_brown_cap), m(Anchor.FACE, R.string.myco_l_grey_gills_ripe),
+                m(Anchor.BASE, R.string.myco_l_on_wood)),
+            marksSection = listOf(m(Anchor.S_HYM, R.string.myco_l_grey_gills_ripe)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_grey_gills_ripe))
+        ),
+        traits = R.array.myco_capnoides_traits, note = R.string.myco_capnoides_note
+    )
+
+    private val gymnopilus = FungusSpecies(
+        id = "gymnopilus", name = R.string.myco_gymnopilus_name, altNames = R.string.myco_gymnopilus_alt,
+        latin = R.string.myco_gymnopilus_latin, status = FungusStatus.TOXIC,
+        look = FungusLook(
+            capDiam = 10f, capRise = 4f, capN = 2.1f, edgeDrop = 0.4f,
+            capCenter = c(0xC0621A), capMid = c(0xE48C24), capEdge = c(0xF2AE3E),
+            capDecos = listOf(CapDeco.Fibrils(c(0xA14F14), 70, 80)),
+            stipeH = 12f, stipeW = 1.9f, stipeBaseW = 2.3f,
+            stipeTop = c(0xE6A640), stipeBottom = c(0xC98A2E), interior = Interior.STUFFED,
+            hymColor = c(0xC88A2A), attach = GillAttach.ADNATE, crowd = 0.85f,
+            ring = RingKind.SKIRT, ringAt = 0.78f, ringColor = c(0xC9863A),
+            flesh = c(0xF0D56E), spore = c(0x9A4F1C), cluster = 4, onWood = true, seed = 82,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_orange_fibrous_cap), m(Anchor.RING, R.string.myco_l_ring_fragile),
+                m(Anchor.BASE, R.string.myco_l_on_wood)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_flesh_plain_yellow)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_rust_yellow_gills))
+        ),
+        traits = R.array.myco_gymnopilus_traits, note = R.string.myco_gymnopilus_note
+    )
+
+    private val pleurocybella = FungusSpecies(
+        id = "pleurocybella", name = R.string.myco_pleurocybella_name, altNames = R.string.myco_pleurocybella_alt,
+        latin = R.string.myco_pleurocybella_latin, status = FungusStatus.TOXIC,
+        look = FungusLook(
+            capDiam = 6f, capRise = 1f, capShape = CapShape.BRACKET, cluster = 3,
+            capCenter = c(0xF2EFE4), capMid = c(0xF8F6EE), capEdge = c(0xFFFFFF),
+            stipeH = 0.5f, stipeW = 0.6f, stipeTop = c(0xF3F0E6), stipeBottom = c(0xEDE8DA),
+            hymColor = c(0xF6F3E8), hymInner = c(0xF1EDDF), attach = GillAttach.DECURRENT, crowd = 1f,
+            flesh = c(0xF8F6EE), spore = SPORE_WHITE, seed = 83,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_white_thin_shelf), m(Anchor.FACE, R.string.myco_l_white_crowded_gills),
+                m(Anchor.STIPE_M, R.string.myco_l_lateral_stub), m(Anchor.BASE, R.string.myco_l_on_wood)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_thin_fragile_flesh), m(Anchor.S_HYM, R.string.myco_l_decurrent_gills)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_gills_from_stub))
+        ),
+        traits = R.array.myco_pleurocybella_traits, note = R.string.myco_pleurocybella_note
+    )
+
+    private val laetiporus = FungusSpecies(
+        id = "laetiporus", name = R.string.myco_laetiporus_name, altNames = R.string.myco_laetiporus_alt,
+        latin = R.string.myco_laetiporus_latin, status = FungusStatus.COOKED,
+        look = FungusLook(
+            capDiam = 18f, capRise = 3f, capShape = CapShape.BRACKET, cluster = 3,
+            capCenter = c(0xE8892A), capMid = c(0xF1B52F), capEdge = c(0xF6DA5C),
+            stipeH = 1f, stipeW = 1.4f, stipeTop = c(0xF3D86A), stipeBottom = c(0xEAC85A),
+            hymenium = Hymenium.PORES, hymColor = c(0xF4E25C), hymInner = c(0xF0DE58), attach = GillAttach.DECURRENT, crowd = 1f,
+            flesh = c(0xF6EFD6), spore = c(0xF3EFE0), seed = 84,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_sulphur_orange_shelf), m(Anchor.FACE, R.string.myco_l_lemon_pores),
+                m(Anchor.BASE, R.string.myco_l_on_wood)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_thick_pale_flesh), m(Anchor.S_HYM, R.string.myco_l_fine_tubes)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_lemon_pores))
+        ),
+        traits = R.array.myco_laetiporus_traits, note = R.string.myco_laetiporus_note
+    )
+
+    private val fistulina = FungusSpecies(
+        id = "fistulina", name = R.string.myco_fistulina_name, altNames = R.string.myco_fistulina_alt,
+        latin = R.string.myco_fistulina_latin, status = FungusStatus.EDIBLE,
+        look = FungusLook(
+            capDiam = 14f, capRise = 3.6f, capShape = CapShape.BRACKET, cluster = 1,
+            capCenter = c(0x7E2A22), capMid = c(0xA03A2C), capEdge = c(0xC0584A),
+            stipeH = 1f, stipeW = 1.6f, stipeTop = c(0xC9847A), stipeBottom = c(0xB8665C),
+            hymenium = Hymenium.PORES, hymColor = c(0xE6D2BC), hymInner = c(0xEBDD9E), attach = GillAttach.DECURRENT, crowd = 1f,
+            flesh = c(0xB2434B), spore = c(0xE3C5A8), seed = 85,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_garnet_tongue), m(Anchor.FACE, R.string.myco_l_cream_pink_pores),
+                m(Anchor.BASE, R.string.myco_l_on_wood)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_red_flesh), m(Anchor.S_HYM, R.string.myco_l_pale_yellow_tubes)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_cream_pink_pores))
+        ),
+        traits = R.array.myco_fistulina_traits, note = R.string.myco_fistulina_note
+    )
+
+    private val sparassis = FungusSpecies(
+        id = "sparassis", name = R.string.myco_sparassis_name, altNames = R.string.myco_sparassis_alt,
+        latin = R.string.myco_sparassis_latin, status = FungusStatus.EDIBLE,
+        look = FungusLook(
+            capDiam = 24f, capRise = 14f, capShape = CapShape.CORAL,
+            capCenter = c(0xE3D29A), capMid = c(0xEFE4B8), capEdge = c(0xF8F1D9),
+            stipeH = 3.5f, stipeW = 4f, stipeBaseW = 3f,
+            stipeTop = c(0xEADFB8), stipeBottom = c(0xD8CBA0),
+            hymenium = Hymenium.NONE, hymColor = c(0xF1E7C2),
+            flesh = c(0xF3EAD0), spore = c(0xF0E8CC), seed = 86,
+            coral = CoralSpec(CoralKind.LOBES, c(0xB98A4E), 90),
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_flat_wavy_lobes), m(Anchor.EDGE, R.string.myco_l_browning_edges),
+                m(Anchor.BASE, R.string.myco_l_thick_base)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_tender_cream_flesh), m(Anchor.S_BASE, R.string.myco_l_thick_base)),
+            marksUnder = listOf(m(Anchor.U_CENTER, R.string.myco_l_thick_base))
+        ),
+        traits = R.array.myco_sparassis_traits, note = R.string.myco_sparassis_note
+    )
+
+    private val formosa = FungusSpecies(
+        id = "formosa", name = R.string.myco_formosa_name, altNames = R.string.myco_formosa_alt,
+        latin = R.string.myco_formosa_latin, status = FungusStatus.TOXIC,
+        look = FungusLook(
+            capDiam = 12f, capRise = 15f, capShape = CapShape.CORAL,
+            capCenter = c(0xE8A688), capMid = c(0xEFB79A), capEdge = c(0xF4C8AE),
+            stipeH = 3f, stipeW = 2.6f, stipeBaseW = 2.1f,
+            stipeTop = c(0xF1E2D6), stipeBottom = c(0xE9D6C8),
+            hymenium = Hymenium.NONE, hymColor = c(0xEFB79A),
+            flesh = c(0xF4E6DC), stipeFlesh = c(0xF0B8B0), spore = c(0xE6C45A), seed = 87,
+            coral = CoralSpec(CoralKind.BRANCHES, c(0xE9CC4A), 5),
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_pink_yellow_tips), m(Anchor.BASE, R.string.myco_l_thick_base)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_white_pink_flesh)),
+            marksUnder = listOf(m(Anchor.U_CENTER, R.string.myco_l_thick_base))
+        ),
+        traits = R.array.myco_formosa_traits, note = R.string.myco_formosa_note
+    )
+
+    private val pinophilus = FungusSpecies(
+        id = "pinophilus", name = R.string.myco_pinophilus_name, altNames = R.string.myco_pinophilus_alt,
+        latin = R.string.myco_pinophilus_latin, status = FungusStatus.EDIBLE,
+        look = FungusLook(
+            capDiam = 14f, capRise = 5.2f, capN = 2f, edgeDrop = 0.7f,
+            capCenter = c(0x5A2A20), capMid = c(0x7B3A2A), capEdge = c(0xA4593B),
+            stipeH = 9f, stipeW = 3.8f, stipeForm = StipeForm.BARREL, bulbW = 6.4f,
+            fleshThick = 3.2f,
+            stipeTop = c(0xE8D2C2), stipeBottom = c(0xB77A55),
+            stipeDecos = listOf(StipeDeco.Net(c(0xFFF8EC), 0.67f, 0.5f, 220)),
+            hymenium = Hymenium.PORES, hymColor = c(0xE6DCA4), hymInner = c(0xE4DA9C), attach = GillAttach.ADNATE, hymDepth = 1.9f,
+            flesh = c(0xF7F2E4), spore = c(0x6F6A2C), seed = 88,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_mahogany_cap), m(Anchor.FACE, R.string.myco_l_pores_white_yellow),
+                m(Anchor.STIPE_U, R.string.myco_l_net_upper_two_thirds)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_flesh_unchanging), m(Anchor.S_HYM, R.string.myco_l_tubes)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_pores))
+        ),
+        traits = R.array.myco_pinophilus_traits, note = R.string.myco_pinophilus_note
+    )
+
+    private val reticulatus = FungusSpecies(
+        id = "reticulatus", name = R.string.myco_reticulatus_name, altNames = R.string.myco_reticulatus_alt,
+        latin = R.string.myco_reticulatus_latin, status = FungusStatus.EDIBLE,
+        look = FungusLook(
+            capDiam = 12f, capRise = 4.4f, capN = 2.1f, edgeDrop = 0.5f,
+            capCenter = c(0x7B5C3C), capMid = c(0x9B7648), capEdge = c(0xBE9F72),
+            capDecos = listOf(CapDeco.Cracks(c(0xF2E7D0), 1.6f, 170)),
+            stipeH = 9f, stipeW = 3f, stipeForm = StipeForm.BARREL, bulbW = 5.2f,
+            fleshThick = 2.8f,
+            stipeTop = c(0xD9C3A0), stipeBottom = c(0xBFA27A),
+            stipeDecos = listOf(StipeDeco.Net(c(0xFFF6E2), 0.95f, 0.38f, 210)),
+            hymenium = Hymenium.PORES, hymColor = c(0xE4DAA0), hymInner = c(0xE2D89A), attach = GillAttach.ADNATE, hymDepth = 1.7f,
+            flesh = c(0xF7F2E4), spore = c(0x6F6A2C), seed = 89,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_uniform_brown_cracked_cap), m(Anchor.FACE, R.string.myco_l_pores_white_yellow),
+                m(Anchor.STIPE_U, R.string.myco_l_net_to_base)),
+            marksSection = listOf(m(Anchor.S_FLESH, R.string.myco_l_flesh_unchanging), m(Anchor.S_HYM, R.string.myco_l_tubes)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_pores))
+        ),
+        traits = R.array.myco_reticulatus_traits, note = R.string.myco_reticulatus_note
+    )
+
+    private val proxima = FungusSpecies(
+        id = "proxima", name = R.string.myco_proxima_name, altNames = R.string.myco_proxima_alt,
+        latin = R.string.myco_proxima_latin, status = FungusStatus.TOXIC,
+        look = FungusLook(
+            capDiam = 10f, capRise = 3.8f, capN = 2.1f, edgeDrop = 0.4f,
+            capCenter = c(0xE2D6B4), capMid = c(0xF0EADA), capEdge = c(0xF8F5EC),
+            stipeH = 12f, stipeW = 2f, stipeBaseW = 2.4f, interior = Interior.STUFFED,
+            stipeTop = c(0xF3F0E4), stipeBottom = c(0xEBE4D0),
+            hymColor = c(0xF3F0E4), attach = GillAttach.FREE, crowd = 0.85f,
+            ring = RingKind.SKIRT, ringAt = 0.78f, ringColor = c(0xF2EBD6),
+            volva = VolvaKind.SAC, volvaH = 4.5f, volvaColor = c(0xC98F52),
+            flesh = c(0xF6F3E8), spore = SPORE_WHITE, seed = 90,
+            marksSide = listOf(m(Anchor.CAP, R.string.myco_l_white_ochre_cap), m(Anchor.RING, R.string.myco_l_ring_membranous),
+                m(Anchor.VOLVA, R.string.myco_l_volva_rust_ochre)),
+            marksSection = listOf(m(Anchor.S_VOLVA, R.string.myco_l_volva_rust_ochre), m(Anchor.S_HYM, R.string.myco_l_free_gills)),
+            marksUnder = listOf(m(Anchor.U_HYM, R.string.myco_l_white_gills))
+        ),
+        traits = R.array.myco_proxima_traits, note = R.string.myco_proxima_note
+    )
+
     val species: List<FungusSpecies> = listOf(
         phalloides, virosa, muscaria, pantherina, rubescens,
         edulis, felleus, satanas,
@@ -1319,7 +1528,9 @@ object FungusCatalog {
         prunulus, deliciosus, torminosus, nuda, orellanus, virescens, columbetta,
         ostreatus, perlatum, egg, citrinum, pardinum, terreum, silvicola, granulatus, olivacea,
         ovoidea, geotropa, amethystina, pura, calopus, brunneum, rhacodes, emetica, cyanoxantha,
-        hebeloma, aegerita, tubaeformis, gigantea
+        hebeloma, aegerita, tubaeformis, gigantea,
+        flammulina, capnoides, gymnopilus, pleurocybella, laetiporus, fistulina, sparassis, formosa,
+        pinophilus, reticulatus, proxima
     )
 
     private val byId = species.associateBy { it.id }
@@ -1332,7 +1543,7 @@ object FungusCatalog {
             R.array.myco_g_boletus_points, R.string.myco_g_boletus_evidence),
         FungusGroup("parasol", R.string.myco_g_parasol_title, listOf("procera", "phalloides", "pantherina", "brunneoincarnata"),
             R.array.myco_g_parasol_points, R.string.myco_g_parasol_evidence),
-        FungusGroup("field", R.string.myco_g_field_title, listOf("campestris", "xanthodermus", "virosa"),
+        FungusGroup("field", R.string.myco_g_field_title, listOf("campestris", "xanthodermus", "virosa", "silvicola"),
             R.array.myco_g_field_points, R.string.myco_g_field_evidence),
         FungusGroup("morel", R.string.myco_g_morel_title, listOf("morchella", "gyromitra"),
             R.array.myco_g_morel_points, R.string.myco_g_morel_evidence),
@@ -1369,7 +1580,19 @@ object FungusCatalog {
         FungusGroup("shaggy", R.string.myco_g_shaggy_title, listOf("procera", "rhacodes", "brunneum"),
             R.array.myco_g_shaggy_points, R.string.myco_g_shaggy_evidence),
         FungusGroup("monkhead", R.string.myco_g_monkhead_title, listOf("geotropa", "sinuatum"),
-            R.array.myco_g_monkhead_points, R.string.myco_g_monkhead_evidence)
+            R.array.myco_g_monkhead_points, R.string.myco_g_monkhead_evidence),
+        FungusGroup("velvetfoot", R.string.myco_g_velvetfoot_title, listOf("flammulina", "galerina"),
+            R.array.myco_g_velvetfoot_points, R.string.myco_g_velvetfoot_evidence),
+        FungusGroup("sulphurtuft", R.string.myco_g_sulphurtuft_title, listOf("fasciculare", "capnoides"),
+            R.array.myco_g_sulphurtuft_points, R.string.myco_g_sulphurtuft_evidence),
+        FungusGroup("oyster", R.string.myco_g_oyster_title, listOf("ostreatus", "pleurocybella"),
+            R.array.myco_g_oyster_points, R.string.myco_g_oyster_evidence),
+        FungusGroup("summercep", R.string.myco_g_summercep_title, listOf("reticulatus", "pinophilus", "felleus"),
+            R.array.myco_g_summercep_points, R.string.myco_g_summercep_evidence),
+        FungusGroup("ovoidpair", R.string.myco_g_ovoidpair_title, listOf("ovoidea", "proxima"),
+            R.array.myco_g_ovoidpair_points, R.string.myco_g_ovoidpair_evidence),
+        FungusGroup("coral", R.string.myco_g_coral_title, listOf("sparassis", "formosa"),
+            R.array.myco_g_coral_points, R.string.myco_g_coral_evidence)
     )
 
     fun groupsOf(id: String): List<FungusGroup> = groups.filter { id in it.members }

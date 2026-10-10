@@ -61,7 +61,7 @@ class FungusCriteriaTest {
     fun leLotQuatreSeLitDansLeDessin() {
         // les deux formes nouvelles ne se trouvent que par leur forme
         assertEquals(setOf("perlatum", "egg", "citrinum", "gigantea"), ids("c_ball"))
-        assertEquals(setOf("ostreatus"), ids("c_bracket"))
+        assertEquals(setOf("ostreatus", "pleurocybella", "laetiporus", "fistulina"), ids("c_bracket"))
         assertTrue(FungusCriteria.matches(look("ostreatus"), setOf("c_bracket", "m_cluster", "u_gills", "sp_white", "s_no_ring")))
         assertTrue(FungusCriteria.matches(look("perlatum"), setOf("c_ball", "u_none", "cap_WHITE", "s_no_ring", "s_no_volva")))
         assertTrue(FungusCriteria.matches(look("citrinum"), setOf("c_ball", "u_none", "cap_YELLOW", "c_scaly")))
@@ -92,6 +92,32 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("gigantea"), setOf("c_ball", "u_none", "cap_WHITE", "w_large", "s_no_ring")))
         // seul l'amanite ovoïde du lot a une volve : rien d'autre ne sort sur « Volve » parmi les nouveaux
         for (id in listOf("geotropa", "amethystina", "pura", "calopus", "brunneum", "rhacodes", "emetica", "cyanoxantha", "hebeloma", "aegerita", "tubaeformis", "gigantea"))
+            assertFalse("$id a une volve", FungusCriteria.matches(look(id), setOf("s_volva")))
+    }
+
+    @Test
+    fun leLotSixSeLitDansLeDessin() {
+        // les coraux ne se trouvent que par leur forme, et n'ont ni lames ni pores
+        assertEquals(setOf("sparassis", "formosa"), ids("c_coral"))
+        assertTrue(FungusCriteria.matches(look("sparassis"), setOf("c_coral", "u_none", "w_large", "cap_BEIGE", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("formosa"), setOf("c_coral", "u_none", "w_medium", "cap_PINK")))
+        // « sur le bois » = les touffes en bouquet sur un tronc, et les étagères
+        assertEquals(
+            setOf("olearius", "galerina", "mutabilis", "fasciculare", "mellea", "aegerita", "flammulina", "capnoides", "gymnopilus",
+                "ostreatus", "pleurocybella", "laetiporus", "fistulina"),
+            ids("m_wood")
+        )
+        assertTrue(FungusCriteria.matches(look("flammulina"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_white", "cap_ORANGE", "u_gills", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("capnoides"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_brown", "u_gills", "w_small")))
+        assertTrue(FungusCriteria.matches(look("gymnopilus"), setOf("m_wood", "m_cluster", "s_ring", "sp_brown", "cap_ORANGE", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("pleurocybella"), setOf("c_bracket", "m_wood", "u_gills", "sp_white", "cap_WHITE", "w_medium")))
+        assertTrue(FungusCriteria.matches(look("laetiporus"), setOf("c_bracket", "u_pores", "cap_ORANGE", "w_large")))
+        assertTrue(FungusCriteria.matches(look("fistulina"), setOf("c_bracket", "u_pores", "cap_RED", "w_large")))
+        assertTrue(FungusCriteria.matches(look("pinophilus"), setOf("u_pores", "cap_BROWN", "w_large", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("reticulatus"), setOf("u_pores", "cap_BROWN", "w_medium", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("proxima"), setOf("s_volva", "s_ring", "cap_WHITE", "u_gills", "sp_white", "w_medium")))
+        // seule l'amanite à volve rousse du lot a une volve
+        for (id in listOf("flammulina", "capnoides", "gymnopilus", "pleurocybella", "laetiporus", "fistulina", "sparassis", "formosa", "pinophilus", "reticulatus"))
             assertFalse("$id a une volve", FungusCriteria.matches(look(id), setOf("s_volva")))
     }
 

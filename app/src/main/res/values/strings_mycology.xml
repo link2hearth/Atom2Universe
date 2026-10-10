@@ -57,6 +57,8 @@
     <string name="myco_c_cluster">In a cluster</string>
     <string name="myco_c_ball">Ball- or egg-shaped</string>
     <string name="myco_c_bracket">Shelf on wood</string>
+    <string name="myco_c_wood">On wood</string>
+    <string name="myco_c_coral">Coral- or cauliflower-like</string>
     <string name="myco_c_latex">Milk when cut</string>
     <string name="myco_c_stains">Changes colour when cut</string>
     <string name="myco_c_spore_white">White or cream</string>
@@ -156,11 +158,12 @@
         <item>Small lepiotas (under 10 cm): deadly, never to be picked.</item>
     </string-array>
     <string name="myco_g_field_title">Field mushroom, or not?</string>
-    <string name="myco_g_field_evidence">ANSES 2022</string>
+    <string name="myco_g_field_evidence">ANSES 2022, Swiss controllers</string>
     <string-array name="myco_g_field_points">
         <item>Field mushroom: gills pink, then chocolate brown. White amanitas: gills always white, sac-like volva.</item>
         <item>Yellow stainer: yellows when rubbed, bulb at the base, ink or phenol smell, wide ring.</item>
         <item>Field mushroom: spindle-shaped stem with no bulb, thin fleeting ring.</item>
+        <item>Agaricus sylvicola, edible: the Swiss controllers point out that it is confused with the yellow stainer.</item>
         <item>In 2022, two deaths after a deadly amanita was taken for a field mushroom or a fallow-field agaric.</item>
     </string-array>
     <string name="myco_g_morel_title">Morel, or false morel?</string>
@@ -312,6 +315,53 @@
         <item>Livid entoloma: notched gills that turn pink, floury smell, pink spores.</item>
         <item>The miller is also edible, but its spores are pink.</item>
         <item>ANSES records livid entolomas picked instead of trooping funnels.</item>
+    </string-array>
+    <string name="myco_g_velvetfoot_title">Velvet foot, or funeral bell?</string>
+    <string name="myco_g_velvetfoot_evidence">Missouri Department of Conservation</string>
+    <string-array name="myco_g_velvetfoot_points">
+        <item>Velvet foot: white spores, whitish to yellowish gills, stem yellowish above and blackish-brown and velvety below, no ring.</item>
+        <item>Funeral bell, deadly: rusty spores, yellowish then rusty gills, a ring on the stem that may disappear with age.</item>
+        <item>Both grow in clumps on wood; the funeral bell also on buried wood, so it can look as if it grew from the soil.</item>
+        <item>The Missouri Department of Conservation calls the velvet foot edible but easily confused, and advises against eating it.</item>
+    </string-array>
+    <string name="myco_g_sulphurtuft_title">Tuft: green gills or grey?</string>
+    <string name="myco_g_sulphurtuft_evidence">Swiss controllers 2023, DGfM</string>
+    <string-array name="myco_g_sulphurtuft_points">
+        <item>Sulphur tuft: gills yellow then greenish, bitter taste. Toxic.</item>
+        <item>Conifer tuft: gills whitish then lilac-grey, mild taste; on conifers.</item>
+        <item>The Swiss controllers point out that the conifer tuft is confused with the sulphur tuft and with Hypholoma sublateritium.</item>
+        <item>The funeral bell, which is deadly, also grows in tufts on wood (Belgian poison centre).</item>
+    </string-array>
+    <string name="myco_g_oyster_title">Oyster mushroom, or angel wing?</string>
+    <string name="myco_g_oyster_evidence">DGfM, Wikipedia</string>
+    <string-array name="myco_g_oyster_points">
+        <item>Oyster mushroom: grey to brown, thick flesh, a short lateral stub. Angel wing: white or cream, thin and fragile, almost no stem.</item>
+        <item>The angel wing caused an epidemic of brain damage in Japan in 2004, fatal for some of the patients, mostly people with kidney failure; the cause is not established.</item>
+        <item>The German mycological society lists it among the toxic mushrooms (Pleurocybella syndrome).</item>
+        <item>Wikipedia (fr): it is sometimes mistaken for the oyster mushroom; it is whiter.</item>
+    </string-array>
+    <string name="myco_g_summercep_title">Summer bolete, pine bolete, or bitter bolete?</string>
+    <string name="myco_g_summercep_evidence">Wikipedia entries</string>
+    <string-array name="myco_g_summercep_points">
+        <item>Summer bolete: dry, velvety, fairly uniform brown cap, often cracked; fine net that often runs down to the base; under broadleaves, mostly oaks.</item>
+        <item>Pine bolete: maroon to mahogany, slightly wrinkled cap; white net on the upper two thirds of the stem; under pines.</item>
+        <item>Bitter bolete, inedible: pores that turn pink with age, coarser and darker net, bitter taste.</item>
+        <item>The summer bolete lacks the pinkish flesh under the cap skin that is seen in the porcino.</item>
+    </string-array>
+    <string name="myco_g_ovoidpair_title">Bearded amanita, or Amanita proxima?</string>
+    <string name="myco_g_ovoidpair_evidence">DGfM, ANSES 2022, MycoCharentes</string>
+    <string-array name="myco_g_ovoidpair_points">
+        <item>Bearded amanita: volva little or not coloured, cream and fragile ring, stockier build. Amanita proxima: ample rusty-ochre volva, membranous ring that stays, more slender build.</item>
+        <item>Amanita proxima damages the kidneys (« proxima syndrome », German mycological society).</item>
+        <item>ANSES records bearded amanitas picked instead of puffballs or boletes (2022); the bearded amanita is on neither of the two lists of edible species.</item>
+    </string-array>
+    <string name="myco_g_coral_title">Cauliflower fungus, or coral fungus?</string>
+    <string name="myco_g_coral_evidence">DGfM, Belgian poison centre, Wikipedia</string>
+    <string-array name="myco_g_coral_points">
+        <item>Cauliflower fungus: one large mass of flat, wavy lobes like lasagna sheets, cream to pale yellow, at the base of conifers.</item>
+        <item>Beautiful clavaria: a bush of round, upright branches, salmon pink with yellow tips, on the woodland floor.</item>
+        <item>The beautiful clavaria is toxic (gastrointestinal syndrome, German mycological society); the Belgian poison centre names the clavarias among the causes of digestive trouble.</item>
+        <item>Wikipedia (fr): many Ramaria are toxic or purgative; a beginner should be wary of any branched fungus.</item>
     </string-array>
 
     <!-- Plate labels -->
@@ -526,6 +576,38 @@
     <string name="myco_l_yellow_hollow_stem">Bright yellow, hollow stem</string>
     <string name="myco_l_white_ball">White ball</string>
     <string name="myco_l_no_stalk">No stem</string>
+    <string name="myco_l_orange_sticky_cap">Orange, sticky cap</string>
+    <string name="myco_l_velvet_dark_stem">Velvety stem, dark below</string>
+    <string name="myco_l_cream_far_gills">Cream, distant gills</string>
+    <string name="myco_l_yellow_centre_brown_cap">Yellow cap, orange-brown centre</string>
+    <string name="myco_l_grey_gills_ripe">Gills grey when ripe</string>
+    <string name="myco_l_orange_fibrous_cap">Yellow-orange, fibrous cap</string>
+    <string name="myco_l_flesh_plain_yellow">Yellow flesh</string>
+    <string name="myco_l_rust_yellow_gills">Rusty-yellow gills</string>
+    <string name="myco_l_white_thin_shelf">White, thin shelf</string>
+    <string name="myco_l_white_crowded_gills">White, crowded gills</string>
+    <string name="myco_l_thin_fragile_flesh">Thin, fragile flesh</string>
+    <string name="myco_l_sulphur_orange_shelf">Sulphur-yellow to orange upper side</string>
+    <string name="myco_l_lemon_pores">Lemon-yellow pores</string>
+    <string name="myco_l_thick_pale_flesh">Thick, whitish flesh</string>
+    <string name="myco_l_fine_tubes">Very fine tubes</string>
+    <string name="myco_l_garnet_tongue">Garnet-red, sticky upper side</string>
+    <string name="myco_l_cream_pink_pores">Pinkish-cream pores</string>
+    <string name="myco_l_red_flesh">Meat-red flesh</string>
+    <string name="myco_l_pale_yellow_tubes">Pale yellow tubes</string>
+    <string name="myco_l_flat_wavy_lobes">Flat, wavy lobes</string>
+    <string name="myco_l_browning_edges">Edges browning with age</string>
+    <string name="myco_l_thick_base">Thick base</string>
+    <string name="myco_l_tender_cream_flesh">Tender, cream flesh</string>
+    <string name="myco_l_pink_yellow_tips">Pink branches, yellow tips</string>
+    <string name="myco_l_white_pink_flesh">White flesh, pink in the middle</string>
+    <string name="myco_l_mahogany_cap">Maroon to mahogany cap</string>
+    <string name="myco_l_net_upper_two_thirds">White net on the upper two thirds</string>
+    <string name="myco_l_uniform_brown_cracked_cap">Brown cap, often cracked</string>
+    <string name="myco_l_net_to_base">Fine net down to the base</string>
+    <string name="myco_l_white_ochre_cap">White cap, ochre centre</string>
+    <string name="myco_l_ring_membranous">Membranous ring</string>
+    <string name="myco_l_volva_rust_ochre">Ample, rusty-ochre volva</string>
 
     <!-- Death cap -->
     <string name="myco_phalloides_name">Death cap</string>
@@ -1454,4 +1536,148 @@
         <item>Meadows rich in droppings of ruminants or birds, sometimes in groups, broadleaf woods · late summer and autumn</item>
     </string-array>
     <string name="myco_gigantea_note">Only when young, with pure white, even flesh inside: yellowish or greenish brown, it can cause digestive upset (Wikipedia EN), and it rots within weeks. It is on the German mycological society list and on the Swiss controllers’ list. Wikipedia FR says it can fix heavy metals such as mercury: not in large quantities. Cut it in two: a young amanita egg already shows the future cap and stem; throw it away and wash the knife.</string>
+
+    <!-- Velvet foot -->
+    <string name="myco_flammulina_name">Velvet foot</string>
+    <string name="myco_flammulina_alt">Collybie à pied velouté</string>
+    <string name="myco_flammulina_latin" translatable="false">Flammulina velutipes</string>
+    <string-array name="myco_flammulina_traits">
+        <item>Cap 5 to 10 cm, flat, yellow-orange to tawny, sticky, darker at the centre</item>
+        <item>Broad, fairly distant gills, whitish to yellowish · white spores</item>
+        <item>Stem about 5 cm, yellowish above, blackish-brown and velvety towards the base; no ring</item>
+        <item>Pale flesh, faint smell</item>
+        <item>On dead broadleaf wood (willow, beech, alder), sometimes on weakened living trees; in bunches, from autumn to winter</item>
+    </string-array>
+    <string name="myco_flammulina_note">Not recommended: the German mycological society (2026) and the Swiss controllers (2023) list it among the edible species, but the Missouri Department of Conservation advises against eating it, because it is easily mistaken for the funeral bell, which is deadly and also grows in clumps on wood. To tell them apart: the velvet foot has white spores and a velvety stem with no ring; the funeral bell has rusty spores and a ring, which may disappear with age.</string>
+
+    <!-- Conifer tuft -->
+    <string name="myco_capnoides_name">Conifer tuft</string>
+    <string name="myco_capnoides_alt">Hypholome à lames enfumées</string>
+    <string name="myco_capnoides_latin" translatable="false">Hypholoma capnoides</string>
+    <string-array name="myco_capnoides_traits">
+        <item>Cap 3 to 6 cm, yellowish to brownish yellow, dirty orange-brown centre, dry and smooth; convex then almost flat</item>
+        <item>Close gills: whitish, then lilac-grey, finally violet-brown · purple-brown spores</item>
+        <item>Stem 3 to 8 cm, pale yellow above, rusty towards the base</item>
+        <item>Whitish to pale olive-yellow flesh, mild taste, not bitter</item>
+        <item>In tufts on old stumps and dead wood of conifers</item>
+    </string-array>
+    <string name="myco_capnoides_note">Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023), who warn that it is confused with the sulphur tuft and with Hypholoma sublateritium. Wikipedia (en) rates it « not recommended » because of these confusions and adds that it could also be taken for the funeral bell, which is deadly. The sulphur tuft, which is toxic, has greenish gills and a bitter taste; this one has grey gills and a mild taste.</string>
+
+    <!-- Spectacular rustgill -->
+    <string name="myco_gymnopilus_name">Spectacular rustgill</string>
+    <string name="myco_gymnopilus_alt">Gymnopile remarquable</string>
+    <string name="myco_gymnopilus_latin" translatable="false">Gymnopilus junonius</string>
+    <string-array name="myco_gymnopilus_traits">
+        <item>Cap 5 to 15 cm (sometimes up to 30), bright yellow-orange then orange-brown, dry, fibrous or scaly; bun-shaped then spreading</item>
+        <item>Close gills, adnate to slightly decurrent, rusty yellow then brown · rusty-brown spores</item>
+        <item>Stem 5 to 20 cm, yellow-orange, fibrous, with a frail ring dusted with rusty spores</item>
+        <item>Thick yellow flesh, faint smell, bitter taste</item>
+        <item>In clumps of a few to several dozen, on stumps, logs and tree bases, mostly of broadleaves; summer and autumn</item>
+    </string-array>
+    <string name="myco_gymnopilus_note">Toxic: the German mycological society (2026) lists it among the psilocybin mushrooms and notes that it contains gymnopilin; Wikipedia (fr) calls it poisonous and hallucinogenic, Wikipedia (en) says it has no psilocybin but neurotoxins, among them gymnopilin. Its bitterness makes it inedible anyway. Wikipedia (en) says it resembles the honey fungus (white spores), Wikipedia (fr) several scalycaps; the rusty spores and the bitter taste tell it apart.</string>
+
+    <!-- Angel wing -->
+    <string name="myco_pleurocybella_name">Angel wing</string>
+    <string name="myco_pleurocybella_alt">Pleurote en oreille</string>
+    <string name="myco_pleurocybella_latin" translatable="false">Pleurocybella porrigens</string>
+    <string-array name="myco_pleurocybella_traits">
+        <item>Shelves 4 to 9 cm, petal- or fan-shaped, pure white then yellowing with age, thin and fragile</item>
+        <item>White to cream, crowded gills running down to the point of attachment</item>
+        <item>Almost no stem · white spores</item>
+        <item>Thin flesh, faint, pleasant smell</item>
+        <item>In groups on dead conifer wood; from late summer to autumn</item>
+    </string-array>
+    <string name="myco_pleurocybella_note">Toxic: the German mycological society (2026) lists it among the mushrooms with a « Pleurocybella syndrome ». It was long eaten; in 2004 in Japan, dozens of people fell ill after eating it and several died, mostly people with kidney failure: brain damage, two to three weeks after the meal. The cause is not established. It is mistaken for the oyster mushroom, which is edible: this one is whiter, thinner, with almost no stem.</string>
+
+    <!-- Sulphur polypore -->
+    <string name="myco_laetiporus_name">Sulphur polypore</string>
+    <string name="myco_laetiporus_alt">Polypore soufré</string>
+    <string name="myco_laetiporus_latin" translatable="false">Laetiporus sulphureus</string>
+    <string-array name="myco_laetiporus_traits">
+        <item>Overlapping shelves without a stem, 10 to 30 cm wide (sometimes 50) and 1 to 3 cm thick, in fans that overlap</item>
+        <item>Sulphur-yellow to orange upper side, suede-like, fading with age</item>
+        <item>Very small, lemon-yellow pores · white to cream spores</item>
+        <item>Whitish flesh, soft and oozing yellow juice when young, then dry and crumbly; strong fungal smell</item>
+        <item>On the trunks of many broadleaves (cherry, pear, black locust, poplar, oak), more rarely conifers; from spring to autumn</item>
+    </string-array>
+    <string name="myco_laetiporus_note">To be cooked, and only when young: the Swiss controllers (2023) call it « edible when young »; it is not on the German mycological society list. Wikipedia (fr) cites ANSES, the FAO and the Belgian public health service to call it good when young and not parasitised, but some people had intestinal trouble and dizziness; Wikipedia (en) adds that it should not be eaten raw. The cinnabar polypore, entirely orange to blood red, is small and tough.</string>
+
+    <!-- Beefsteak fungus -->
+    <string name="myco_fistulina_name">Beefsteak fungus</string>
+    <string name="myco_fistulina_alt">Langue de bœuf</string>
+    <string name="myco_fistulina_latin" translatable="false">Fistulina hepatica</string>
+    <string-array name="myco_fistulina_traits">
+        <item>Tongue- or half-circle-shaped bracket, 10 to 20 cm (up to 40) and 2 to 6 cm thick, almost no stem</item>
+        <item>Garnet-red to reddish-brown upper side, shiny and sticky in wet weather, darkening with age</item>
+        <item>Underside: pale yellow tubes, separate from one another, with pinkish-cream pores that turn brown when touched</item>
+        <item>Meat-red flesh veined with white, oozing a blood-red juice; sourish taste</item>
+        <item>Pinkish to ochre spores, depending on the source</item>
+        <item>On old oaks and sweet chestnuts, at the base of the trunk or on stumps; in autumn</item>
+    </string-array>
+    <string name="myco_fistulina_note">Edible when young: it is on the German mycological society list (2026), where it is classed « endangered », and on the Swiss controllers’ list (2023), who call it « edible when young ». Old specimens are tough; Wikipedia (en) advises soaking them overnight because their juice can upset the stomach. Wikipedia (fr) says it is sometimes confused with a toxic polypore (polypore rutilant).</string>
+
+    <!-- Cauliflower fungus -->
+    <string name="myco_sparassis_name">Cauliflower fungus</string>
+    <string name="myco_sparassis_alt">Sparassis crépu</string>
+    <string name="myco_sparassis_latin" translatable="false">Sparassis crispa</string>
+    <string-array name="myco_sparassis_traits">
+        <item>A large mass 10 to 40 cm wide and 8 to 20 cm high, made of flat, wavy, crimped lobes like lasagna sheets, growing from a thick base</item>
+        <item>Cream white to pale yellow, sometimes pinkish, browning at the edge of the lobes with age</item>
+        <item>No gills or pores · cream spores</item>
+        <item>Tender, crunchy flesh, pleasant smell, walnut-like taste</item>
+        <item>At the base and on the roots of conifers, mostly pines; from late summer to autumn</item>
+    </string-array>
+    <string name="myco_sparassis_note">Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023). The lobes trap soil, needles and grubs: it has to be cleaned at length (Wikipedia en). Too big or too old, it becomes tough and hard to digest (Wikipedia fr). Sparassis brevipes, smaller, yellower, under broadleaves, smelling of bleach, is to be avoided (Wikipedia fr). The beautiful clavaria, which is toxic, has round branches.</string>
+
+    <!-- Beautiful clavaria -->
+    <string name="myco_formosa_name">Beautiful clavaria</string>
+    <string name="myco_formosa_alt">Clavaire jolie</string>
+    <string name="myco_formosa_latin" translatable="false">Ramaria formosa</string>
+    <string-array name="myco_formosa_traits">
+        <item>Coral-like bush 7 to 30 cm high and 6 to 15 cm wide, on a thick base</item>
+        <item>Salmon-pink to whitish branches with yellow tips; the last twigs are under 5 mm</item>
+        <item>No gills or pores · yellow spores</item>
+        <item>White flesh, pink in the middle, which may turn wine-coloured or blackish when bruised; unpleasant smell, bitter taste</item>
+        <item>On the ground in woods, notably under beeches; in autumn</item>
+    </string-array>
+    <string name="myco_formosa_note">Toxic: the German mycological society (2026) lists it among the gastrointestinal-syndrome mushrooms, and the Belgian poison centre names the clavarias (Clavaria formosa among them) as a cause of a mild digestive syndrome: nausea, vomiting, diarrhoea. Wikipedia (en) says it is sometimes eaten with its acrid tips removed; the atlas does not count it among the edible species.</string>
+
+    <!-- Pine bolete -->
+    <string name="myco_pinophilus_name">Pine bolete</string>
+    <string name="myco_pinophilus_alt">Cèpe des pins</string>
+    <string name="myco_pinophilus_latin" translatable="false">Boletus pinophilus</string>
+    <string-array name="myco_pinophilus_traits">
+        <item>Cap 4 to 25 cm, firm, maroon, reddish-brown to mahogany, matt and slightly wrinkled; the margin of young ones sometimes has a white bloom</item>
+        <item>Fine pores: white, then yellow, finally olive · olive spores</item>
+        <item>Stem 5 to 15 cm by 3 to 8, stout, whitish to pinkish above, ochre to reddish-brown below, with a white net on the upper two thirds</item>
+        <item>White, firm flesh that does not change when cut · smell of walnut, mild taste</item>
+        <item>Mostly under pines, also under spruces and firs, on acid, sandy soil; from June to November</item>
+    </string-array>
+    <string name="myco_pinophilus_note">Edible: it is on the German mycological society list (2026), which marks it « protected without exception » in Germany, and on the Swiss controllers’ list (2023). The bitter bolete, which is inedible, looks like it (Wikipedia fr): its pores turn pink with age, its net is coarser and darker, and its taste is bitter.</string>
+
+    <!-- Summer bolete -->
+    <string name="myco_reticulatus_name">Summer bolete</string>
+    <string name="myco_reticulatus_alt">Cèpe d’été</string>
+    <string name="myco_reticulatus_latin" translatable="false">Boletus reticulatus</string>
+    <string-array name="myco_reticulatus_traits">
+        <item>Cap 4 to 20 cm, dry, velvety, fairly uniform brown, often cracked in dry weather: the white flesh shows in the cracks</item>
+        <item>White pores, then yellow, finally olive · olive spores</item>
+        <item>Stem 5 to 15 cm, beige to brown, swollen, covered with a fine net that often runs down to the base</item>
+        <item>Thick white flesh, a little less firm than in the other ceps, yellowing with age; pleasant smell</item>
+        <item>In broadleaf woods, mostly under oaks; from May to November, after hot, damp weather</item>
+    </string-array>
+    <string name="myco_reticulatus_note">Edible: it is on the German mycological society list (2026) and on the Swiss controllers’ list (2023). It lacks the pinkish flesh under the cap skin seen in the porcino, and its net runs further down (Wikipedia fr). The bitter bolete, which is inedible, has a coarser, darker net.</string>
+
+    <!-- Amanita proxima -->
+    <string name="myco_proxima_name">Amanita proxima</string>
+    <string name="myco_proxima_alt">Amanite à volve rousse</string>
+    <string name="myco_proxima_latin" translatable="false">Amanita proxima</string>
+    <string-array name="myco_proxima_traits">
+        <item>White cap, slightly ochre at the centre; more slender than the bearded amanita</item>
+        <item>White gills · white spores</item>
+        <item>White stem, with a membranous ring that stays</item>
+        <item>Large sac-like volva, rusty ochre: this is what sets it apart from the bearded amanita, whose volva is little or not coloured</item>
+        <item>In woods and at their edges, mostly under oaks on limy soil; in autumn; mostly around the Mediterranean</item>
+    </string-array>
+    <string name="myco_proxima_note">Toxic: the German mycological society (2026) lists it among the amanitas that damage the kidneys (« proxima syndrome »); it notes that the suspected toxin, allenic norleucine, has not been found in it yet. It looks very much like the bearded amanita, which has sometimes been eaten: see that entry.</string>
 </resources>

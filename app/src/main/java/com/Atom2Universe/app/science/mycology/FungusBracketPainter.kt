@@ -38,6 +38,7 @@ internal class BracketPainter(
     private val xa = -width / 2f + BARK
     private val spacing = look.capRise * 1.9f + 0.6f
     private val outline = withAlpha(darken(look.capMid, 0.62f), 240)
+    private val pores = look.hymenium == Hymenium.PORES
 
     private fun px(x: Float) = ox + x * s
     private fun py(y: Float) = oy - y * s
@@ -135,11 +136,22 @@ internal class BracketPainter(
             p.shader = LinearGradient(0f, py(flesh(i, 0.2f)), 0f, py(gillBottom(i, 0.1f)), darken(look.hymColor, 0.18f), look.hymColor, Shader.TileMode.CLAMP)
             c.drawPath(gills, p)
             c.save(); c.clipPath(gills)
-            stroke(withAlpha(darken(look.hymColor, 0.45f), 160), hair * 0.7f)
-            val ax = px(xa); val ay = py(flesh(i, 0f) - thick(i) * 0.3f)
-            for (k in 0..26) {
-                val u = 0.04f + 0.96f * k / 26f
-                c.drawLine(ax, ay, px(xAt(i, u)), py(gillBottom(i, u) + (flesh(i, u) - gillBottom(i, u)) * 0.45f), p)
+            if (pores) {
+                // des tubes, vus par la tranche : de fines lignes verticales, très serrées
+                stroke(withAlpha(darken(look.hymColor, 0.4f), 120), hair * 0.5f)
+                var x = xa + 0.04f
+                while (x < xAt(i, 1f)) {
+                    val u = (x - xa) / len(i)
+                    c.drawLine(px(x), py(flesh(i, u)), px(x), py(gillBottom(i, u)), p)
+                    x += 0.07f
+                }
+            } else {
+                stroke(withAlpha(darken(look.hymColor, 0.45f), 160), hair * 0.7f)
+                val ax = px(xa); val ay = py(flesh(i, 0f) - thick(i) * 0.3f)
+                for (k in 0..26) {
+                    val u = 0.04f + 0.96f * k / 26f
+                    c.drawLine(ax, ay, px(xAt(i, u)), py(gillBottom(i, u) + (flesh(i, u) - gillBottom(i, u)) * 0.45f), p)
+                }
             }
             c.restore()
             stroke(withAlpha(darken(look.hymColor, 0.55f), 210), hair); c.drawPath(gills, p)
@@ -182,12 +194,12 @@ internal class BracketPainter(
             p.shader = LinearGradient(0f, py(flesh(i, 0.2f)), 0f, py(gillBottom(i, 0.1f)), lighten(look.hymInner, 0.12f), darken(look.hymInner, 0.1f), Shader.TileMode.CLAMP)
             c.drawPath(gills, p)
             c.save(); c.clipPath(gills)
-            stroke(withAlpha(darken(look.hymInner, 0.4f), 140), hair * 0.6f)
+            stroke(withAlpha(darken(look.hymInner, 0.4f), 140), hair * (if (pores) 0.45f else 0.6f))
             var x = xa + 0.05f
             while (x < xAt(i, 1f)) {
                 val u = (x - xa) / len(i)
                 c.drawLine(px(x), py(flesh(i, u) + 0.02f), px(x), py(gillBottom(i, u) - 0.02f), p)
-                x += 0.1f
+                x += if (pores) 0.05f else 0.1f
             }
             c.restore()
             stroke(withAlpha(darken(look.hymInner, 0.55f), 210), hair); c.drawPath(gills, p)
@@ -243,7 +255,22 @@ internal class BracketPainter(
         val line = withAlpha(darken(look.hymColor, 0.42f), 175)
         val edge = withAlpha(lighten(look.hymColor, 0.4f), 130)
         val g = Random(look.seed + 113)
-        for (k in 0..46) {
+        if (pores) {
+            // les pores : une grille serrée de petits points, un rang sur deux décalé
+            val d = max(hair * 3.2f, ur * 0.04f)
+            val dots = fill(withAlpha(darken(look.hymColor, 0.45f), 200))
+            var row = 0
+            var y = ay - reach
+            while (y <= ay + reach) {
+                var x = ax + (if (row % 2 == 0) 0f else d / 2f)
+                while (x <= ax + reach * 1.05f) {
+                    c.drawCircle(x + (g.nextFloat() - 0.5f) * d * 0.15f, y, d * 0.28f, dots)
+                    x += d
+                }
+                y += d * 0.87f
+                row++
+            }
+        } else for (k in 0..46) {
             val a = -half + 2f * half * k / 46f + (g.nextFloat() - 0.5f) * 0.02f
             val short = k % 2 == 1
             val x1 = ax + (if (short) 0.4f else 0.05f) * reach * cos(a)

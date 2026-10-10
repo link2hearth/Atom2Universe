@@ -19,18 +19,25 @@ import kotlin.math.min
 /** Compose une planche : le champignon à l'échelle, ses repères, la réglette et la sporée. */
 object FungusPlate {
 
-    /** Étendue du dessin en cm (largeur, hauteur, avec 0,9 cm sous le sol). */
-    private fun extent(look: FungusLook): Pair<Float, Float> {
-        if (look.capShape == CapShape.BRACKET) return (look.capDiam + BracketPainter.BARK) * 1.04f to (BracketPainter.totalHeight(look) + 0.9f)
-        val widthCm = when (look.capShape) {
-            CapShape.FUNNEL -> look.capDiam * 1.12f
-            else -> max(look.capDiam * 1.06f, look.bulbW * 1.3f)
-        } * (if (look.cluster > 1) 1.55f else 1f) + look.lean * 2f
-        val topCm = when (look.capShape) {
-            CapShape.FUNNEL -> look.stipeH + look.capRise + look.capDiam * 0.36f
-            else -> look.stipeH + look.capRise + look.umbo + 0.5f
+    /**
+     * Étendue du dessin en cm : largeur, hauteur totale, part de cette hauteur sous le sol (0,9 cm, ou le bas du tronc)
+     * et distance du bord gauche à l'axe du pied (la face du tronc pour un bouquet).
+     */
+    private class Extent(val w: Float, val h: Float, val below: Float, val originX: Float)
+
+    private fun extent(look: FungusLook, mode: PlateMode): Extent {
+        if (look.capShape == CapShape.BRACKET) {
+            val w = (look.capDiam + BracketPainter.BARK) * 1.04f
+            return Extent(w, BracketPainter.totalHeight(look) + 0.9f, 0.9f, w / 2f)
         }
-        return widthCm to (topCm + 0.9f)
+        if (look.onWood) {
+            val f = TuftPainter.frame(look, section = mode == PlateMode.SECTION)
+            return Extent(f.width, f.height, f.below, f.originX)
+        }
+        val widthCm = (if (look.capShape == CapShape.FUNNEL) look.capDiam * 1.12f else max(look.capDiam * 1.06f, look.bulbW * 1.3f)) *
+            (if (look.cluster > 1) 1.55f else 1f) + look.lean * 2f
+        val topCm = if (look.capShape == CapShape.FUNNEL) look.stipeH + look.capRise + look.capDiam * 0.36f else look.stipeH + look.capRise + look.umbo + 0.5f
+        return Extent(widthCm, topCm + 0.9f, 0.9f, (widthCm - look.lean) / 2f)
     }
 
     private fun box(w: Float, h: Float, d: Float, compact: Boolean): RectF {
@@ -43,8 +50,8 @@ object FungusPlate {
     fun fitScale(look: FungusLook, w: Float, h: Float, d: Float, compact: Boolean, mode: PlateMode = PlateMode.SIDE): Float {
         val b = box(w, h, d, compact)
         if (mode == PlateMode.UNDER) return min(b.width(), b.height()) / 2f * 0.9f / (look.capDiam / 2f)
-        val (wc, hc) = extent(look)
-        return min(b.width() * 0.96f / wc, b.height() * 0.98f / hc)
+        val e = extent(look, mode)
+        return min(b.width() * 0.96f / e.w, b.height() * 0.98f / e.h)
     }
 
     /** Dessine la planche et renvoie l'échelle utilisée (px par cm). */
@@ -67,12 +74,12 @@ object FungusPlate {
                 marks = look.marksUnder
             }
             else -> {
-                val (wc, hc) = extent(look)
-                val s = fixedScale ?: fitScale(look, w, h, d, compact)
+                val e = extent(look, mode)
+                val s = fixedScale ?: fitScale(look, w, h, d, compact, mode)
                 used = s
-                val top = b.top + (b.height() - hc * s) / 2f
-                val oy = top + (hc - 0.9f) * s
-                val ox = b.centerX() - look.lean * s / 2f
+                val top = b.top + (b.height() - e.h * s) / 2f
+                val oy = top + (e.h - e.below) * s
+                val ox = b.centerX() - (e.w / 2f - e.originX) * s
                 painter = SpecimenPainter(canvas, look, ox, oy, s, hair)
                 if (mode == PlateMode.SIDE) painter.side() else painter.section()
                 marks = if (mode == PlateMode.SIDE) look.marksSide else look.marksSection

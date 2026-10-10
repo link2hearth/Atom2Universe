@@ -20,8 +20,11 @@ enum class PlateMode(@param:StringRes val label: Int) {
     UNDER(R.string.myco_view_under)
 }
 
-/** [BALL] : vesse-de-loup, scléroderme, œuf d'amanite (voir [BallSpec]) ; [BRACKET] : console sur le bois, pied latéral (pleurote). */
-enum class CapShape { CONVEX, BELL, DEPRESSED, FUNNEL, MOREL, BRAIN, BALL, BRACKET }
+/**
+ * [BALL] : vesse-de-loup, scléroderme, œuf d'amanite (voir [BallSpec]) ; [BRACKET] : console sur le bois, pied latéral (pleurote) ;
+ * [CORAL] : ni chapeau ni lames, un bloc de lobes ou un buisson de branches (voir [CoralSpec]).
+ */
+enum class CapShape { CONVEX, BELL, DEPRESSED, FUNNEL, MOREL, BRAIN, BALL, BRACKET, CORAL }
 enum class Hymenium { GILLS, PORES, RIDGES, TEETH, NONE }
 enum class GillAttach { FREE, ADNATE, DECURRENT }
 enum class Interior { SOLID, STUFFED, HOLLOW, CHAMBERED }
@@ -102,6 +105,15 @@ enum class BallInside {
  */
 class BallSpec(val inside: BallInside, val skin: Float, val skinColor: Int, val gleba: Int, val accent: Int, val cords: Boolean = false)
 
+/** Les champignons ramifiés : [LOBES] = un bloc de lobes plats et crépus (sparassis), [BRANCHES] = un buisson de branches dressées (clavaire). */
+enum class CoralKind { LOBES, BRANCHES }
+
+/**
+ * Le détail d'un corail : [kind], [tip] = couleur du bord des lobes ou des pointes des branches, [density] = nombre de lobes
+ * (LOBES) ou de branches à la base (BRANCHES). Largeur = capDiam, hauteur de la couronne = capRise, base = stipeH, stipeW.
+ */
+class CoralSpec(val kind: CoralKind, val tip: Int, val density: Int)
+
 /**
  * Tout ce qu'il faut pour dessiner un champignon : mesures en centimètres (typiques, pas exactes),
  * couleurs et caractères d'identification. L'axe du pied est x = 0, le sol y = 0.
@@ -159,7 +171,12 @@ class FungusLook(
     val latex: Int = 0,
     /** Pour [CapShape.BALL] : le détail de la boule (capDiam = largeur, capRise = hauteur, stipeH = hauteur du pied conique). */
     val ball: BallSpec? = null,
+    /** Pour [CapShape.CORAL] : le détail du corail. */
+    val coral: CoralSpec? = null,
+    /** Nombre de champignons de la touffe (le principal compris). */
     val cluster: Int = 1,
+    /** Pousse en touffe sur le bois : le bouquet sort du flanc d'un tronc debout, tiges à l'horizontale puis redressées (voir [TuftPainter]). */
+    val onWood: Boolean = false,
     val seed: Int = 1,
     // Repères
     val marksSide: List<Mark> = emptyList(),
