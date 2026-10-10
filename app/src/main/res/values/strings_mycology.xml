@@ -55,6 +55,8 @@
     <string name="myco_c_volva">Volva (sac at the base)</string>
     <string name="myco_c_no_volva">No volva</string>
     <string name="myco_c_cluster">In a cluster</string>
+    <string name="myco_c_ball">Ball- or egg-shaped</string>
+    <string name="myco_c_bracket">Shelf on wood</string>
     <string name="myco_c_latex">Milk when cut</string>
     <string name="myco_c_stains">Changes colour when cut</string>
     <string name="myco_c_spore_white">White or cream</string>
@@ -110,7 +112,7 @@
     <string name="myco_about_rules">• Pick only mushrooms you know perfectly, whole, neither too young nor too old.\n• Photograph the harvest before cooking it.\n• Never eat them raw: 20 to 30 minutes in a pan, or 15 minutes in boiling water (water discarded).\n• Keep them cold and eat them within two days.\n• Use a basket rather than a plastic bag.\n• Do not give them to young children.\n• Symptoms after a meal: call a poison centre and mention the meal, even after more than 12 hours.</string>
     <string name="myco_about_sources">Sources</string>
     <string name="myco_sources_official">Authorities and official texts</string>
-    <string name="myco_sources_journals">Medical journals</string>
+    <string name="myco_sources_journals">Medical journals and theses</string>
     <string name="myco_sources_encyclopedia">Encyclopedia (CC BY-SA 4.0)</string>
     <string name="myco_sources_society">Mycological societies</string>
     <string name="myco_sources_by_species">References by species</string>
@@ -125,6 +127,8 @@
     <string name="myco_change_gyromitra">Once eaten after boiling. Sale banned in France since 1991; now ranked deadly.</string>
     <string name="myco_change_aurantiaca">Judged poisonous in 1821, sometimes given as edible before 1999. Today: not worth eating rather than dangerous.</string>
     <string name="myco_change_mellea">Long cited as a middling edible. In 2015 ANSES judged it can cause digestive trouble, even after long cooking; a 2016 order suspended the sale of fresh honey fungus without a notice about full cooking.</string>
+    <string name="myco_change_granulatus">Listed in several guides as a mediocre edible. In 2015 ANSES judged that it can cause digestive upset, even after cooking; a 2016 decree suspends the sale of fresh granulated bolete without a note on thorough cooking.</string>
+    <string name="myco_change_olivacea">Sometimes eaten, and even judged edible in Eastern Europe. In 2015 ANSES judged that the risk cannot be ruled out, even after cooking; a 2016 decree suspends the sale of fresh olive brittlegill without a note on thorough cooking.</string>
 
     <!-- Look-alike groups -->
     <string name="myco_g_chanterelle_title">Chanterelle, or not?</string>
@@ -236,6 +240,7 @@
     <string-array name="myco_g_whiteforms_points">
         <item>Destroying angel: fragile ring and sac-like volva, white gills. Dove-coloured tricholoma: no ring, no volva, floury-smelling flesh.</item>
         <item>Livid pinkgill: pale grey, very fibrous cap, yellow then pink gills, pink spores. Dove-coloured tricholoma: white gills, white spores.</item>
+        <item>Wood mushroom: pale cream then pink then chocolate-brown gills, aniseed smell, very wide ring. Amanitas have always-white gills and a volva.</item>
         <item>The volva is underground: only whole mushrooms are picked.</item>
         <item>The floury smell is found in both the dove-coloured tricholoma and the livid pinkgill: it is not enough.</item>
     </string-array>
@@ -262,6 +267,22 @@
         <item>Saffron milk cap: orange cap, concentric zones, pitted stem. Woolly milkcap: pink and ochre cap, hairy margin.</item>
         <item>Cut the mushroom to see the milk before concluding: once the colour of the milk is noted, the confusion is no longer possible.</item>
         <item>The woolly milkcap irritates the gut: nausea, vomiting, diarrhoea.</item>
+    </string-array>
+    <string name="myco_g_puffball_title">Puffball, or not?</string>
+    <string name="myco_g_puffball_evidence">Belgian poison centre</string>
+    <string-array name="myco_g_puffball_points">
+        <item>Puffball: pure white, solid and even inside, with pearly spines. Amanita egg: smooth, with a cap and a stem already inside.</item>
+        <item>Earthball: thick skin, inside grey then violet-black marbled with white, sour smell.</item>
+        <item>Cut it in two lengthwise: it is the only way to see what is inside.</item>
+        <item>The young, egg-shaped forms of the death cap are mistaken for puffballs.</item>
+    </string-array>
+    <string name="myco_g_greyknights_title">Grey tricholoma: which one?</string>
+    <string name="myco_g_greyknights_evidence">Wikipedia entries</string>
+    <string-array name="myco_g_greyknights_points">
+        <item>Tiger: silvery cap covered in scales in circles, thick stem, floury smell. Grey knight: mouse-grey, fibrous cap, smaller, no floury smell.</item>
+        <item>Tiger: chalky soil, at altitude, mostly summer and autumn. Grey knight: mostly under pines.</item>
+        <item>The tiger is toxic, even in small amounts: violent vomiting, 24 to 48 hours.</item>
+        <item>The grey knight is debated: not recommended.</item>
     </string-array>
 
     <!-- Plate labels -->
@@ -410,6 +431,40 @@
     <string name="myco_l_green_cracked_cap">Green, cracked cap</string>
     <string name="myco_l_white_silky_cap">White, silky cap</string>
     <string name="myco_l_white_wide_gills">Wide white gills</string>
+    <string name="myco_l_oyster_cap">Oyster-shell cap</string>
+    <string name="myco_l_lateral_stub">Lateral, almost no stem</string>
+    <string name="myco_l_on_wood">On wood</string>
+    <string name="myco_l_flesh_thick_at_wood">Flesh thick near the wood</string>
+    <string name="myco_l_gills_from_stub">Gills starting from the stem</string>
+    <string name="myco_l_white_spines">White spines</string>
+    <string name="myco_l_conical_base">Sterile conical stem</string>
+    <string name="myco_l_solid_pure_white">Solid, pure white</string>
+    <string name="myco_l_thin_skin">Thin skin</string>
+    <string name="myco_l_sterile_base">Sterile base</string>
+    <string name="myco_l_spines_closed">Spines, no opening</string>
+    <string name="myco_l_smooth_white_egg">Smooth white egg</string>
+    <string name="myco_l_thick_sac">Thick sac</string>
+    <string name="myco_l_formed_cap">Cap already formed</string>
+    <string name="myco_l_formed_stem">Stem already formed</string>
+    <string name="myco_l_smooth_top">Smooth top</string>
+    <string name="myco_l_yellow_scaly_skin">Yellow skin, brown scales</string>
+    <string name="myco_l_no_stalk_cords">No stem, cords</string>
+    <string name="myco_l_thick_skin">Thick skin</string>
+    <string name="myco_l_dark_inside_purple">Violet-black inside</string>
+    <string name="myco_l_white_veins">White veins</string>
+    <string name="myco_l_warty_plates">Warty plates</string>
+    <string name="myco_l_grey_ringed_scales">Grey scales in circles</string>
+    <string name="myco_l_mouse_grey_cap">Mouse-grey cap</string>
+    <string name="myco_l_pearl_gills">Pearl-grey gills</string>
+    <string name="myco_l_whitish_stem">Whitish stem</string>
+    <string name="myco_l_flesh_white_grey">White to light grey flesh</string>
+    <string name="myco_l_white_yellowing_cap">White cap, yellowing</string>
+    <string name="myco_l_ring_very_wide">Very wide, fragile ring</string>
+    <string name="myco_l_sticky_shiny_cap">Sticky, shiny cap</string>
+    <string name="myco_l_brown_granules_top">Brown granules at the top</string>
+    <string name="myco_l_matt_green_red_cap">Matt cap, green and red</string>
+    <string name="myco_l_cream_ochre_gills">Cream to ochre gills</string>
+    <string name="myco_l_dotted_pink_stem">Dotted, pinkish stem</string>
 
     <!-- Death cap -->
     <string name="myco_phalloides_name">Death cap</string>
@@ -1027,4 +1082,130 @@
         <item>Oaks, beeches, poor acid soils · August to November</item>
     </string-array>
     <string name="myco_columbetta_note">Everything is white, as in the destroying angel and the white form of the death cap, which are deadly: the ring and the volva, both absent here, set them apart, and the volva is underground. A pale livid pinkgill looks like it too: very fibrous cap, yellow or pink gills. Fairly rare in France.</string>
+
+    <!-- Oyster mushroom -->
+    <string name="myco_ostreatus_name">Oyster mushroom</string>
+    <string name="myco_ostreatus_alt">Pleurote en huître</string>
+    <string name="myco_ostreatus_latin" translatable="false">Pleurotus ostreatus</string>
+    <string-array name="myco_ostreatus_traits">
+        <item>Oyster-shell then fan-shaped cap, 7 to 14 cm, grey-brown to almost black, often much paler; thin margin, rolled at first, then scalloped</item>
+        <item>White, fairly close, forked gills that run down the stem (decurrent)</item>
+        <item>Short stem (1 to 2 cm) or almost none, lateral, white, firm</item>
+        <item>White flesh, thin except at the base of the stem, quickly elastic · mild taste</item>
+        <item>Pale spores (cream to white)</item>
+        <item>In overlapping clusters on living or dead broadleaf trees, from autumn into winter</item>
+    </string-array>
+    <string name="myco_ostreatus_note">It grows on wood, in overlapping clusters: that is the first feature. The related oyster mushrooms (horn of plenty oyster, lung oyster) are edible too, so the confusion is harmless. The spores are allergenic for people who breathe a lot of them, such as growers.</string>
+
+    <!-- Common puffball -->
+    <string name="myco_perlatum_name">Common puffball</string>
+    <string name="myco_perlatum_alt">Vesse-de-loup perlée</string>
+    <string name="myco_perlatum_latin" translatable="false">Lycoperdon perlatum</string>
+    <string-array name="myco_perlatum_traits">
+        <item>Pear-shaped, whitish body: a ball up to 6 cm wide on a sterile conical stem that makes up two thirds of the height</item>
+        <item>Surface covered in small spines and large conical warts that fall off gradually, leaving small round scars</item>
+        <item>Pure white, even, soft inside when young; yellowish, then olive-brown and powdery with age</item>
+        <item>When ripe, a round pore opens at the top to release the brown spores</item>
+        <item>Under conifers and in mixed woods, alone or in groups · summer and autumn</item>
+    </string-array>
+    <string name="myco_perlatum_note">Only when young, with pure white, even, soft flesh inside. Cut it in two lengthwise: a mushroom already formed inside gives away an amanita egg, which is deadly. Amanita eggs usually have no spines or warts. Spores breathed in can badly irritate the lungs.</string>
+
+    <!-- Death cap, egg stage -->
+    <string name="myco_egg_name">Death cap, egg stage</string>
+    <string name="myco_egg_alt">Œuf d’amanite phalloïde</string>
+    <string name="myco_egg_latin" translatable="false">Amanita phalloides</string>
+    <string-array name="myco_egg_traits">
+        <item>When young, a white egg wrapped in the universal veil</item>
+        <item>Smooth surface, no spines or warts</item>
+        <item>Cut in two lengthwise: the cap and stem are already formed, enclosed in a thick sac</item>
+        <item>Later: pale green, yellow-green or olive-green cap, ring, sac-like volva</item>
+        <item>The young, egg-shaped forms can be mistaken for puffballs</item>
+    </string-array>
+    <string name="myco_egg_note">A single mushroom is enough to cause serious poisoning: the amatoxins destroy the liver, and the signs come late, over 6 hours after the meal. Cut the egg in two lengthwise before concluding anything: a puffball is white and solid all through, an amanita egg already shows the mushroom.</string>
+
+    <!-- Common earthball -->
+    <string name="myco_citrinum_name">Common earthball</string>
+    <string name="myco_citrinum_alt">Scléroderme commun</string>
+    <string name="myco_citrinum_latin" translatable="false">Scleroderma citrinum</string>
+    <string-array name="myco_citrinum_traits">
+        <item>Irregular ball, often flattened at the poles, 2 to 12 cm, almost no stem, fixed to the ground by mycelial cords</item>
+        <item>Very thick skin (1 to 5 mm), ochre yellow with brown scales, cracking into pyramidal warts</item>
+        <item>Dense inside, pale grey at first, then violet-black marbled with white, powdery at the end</item>
+        <item>Unpleasant, sour smell (old onions, rubber)</item>
+        <item>No clear opening at the top: the skin tears at maturity</item>
+        <item>Dark olive-brown spores · acid soils, under broadleaves or conifers · late summer and autumn</item>
+    </string-array>
+    <string name="myco_citrinum_note">Toxic: a pharmacy thesis from Angers on 134 cases recorded by the French poison centres between 2000 and 2022 reports digestive upset and, sometimes severely, unusual heart and nervous-system signs. It is mistaken for a puffball: a puffball is pure white and even inside, not grey then black. It tears open at maturity instead of opening by a pore.</string>
+
+    <!-- Tiger tricholoma -->
+    <string name="myco_pardinum_name">Tiger tricholoma</string>
+    <string name="myco_pardinum_alt">Tricholome tigré</string>
+    <string name="myco_pardinum_latin" translatable="false">Tricholoma pardinum</string>
+    <string-array name="myco_pardinum_traits">
+        <item>Silvery grey cap, 6 to 10 cm (up to 20), covered in dark scales in circles, grey to blackish towards the centre; margin rolled at first</item>
+        <item>Almost free, close, thick gills, cream-white or greyish, sometimes yellowish; they may weep</item>
+        <item>Thick stem, 3 to 8 cm, white to pale grey or brownish, thicker at the base, no ring and no volva; the base browns or yellows when pressed</item>
+        <item>Firm, whitish flesh, floury smell and taste</item>
+        <item>White spores</item>
+        <item>Chalky soil, often near beeches or firs, at altitude, often alone · summer and autumn</item>
+    </string-array>
+    <string name="myco_pardinum_note">Toxic, even in small amounts: nausea, violent vomiting and diarrhoea within three hours, lasting 24 to 48 hours, sometimes with a bitter mouth, salivation or a dry mouth (severe resinoid syndrome, per the Belgian poison centre). The grey knight, smaller, darker and without scales, looks like it.</string>
+
+    <!-- Grey knight -->
+    <string name="myco_terreum_name">Grey knight</string>
+    <string name="myco_terreum_alt">Tricholome terreux</string>
+    <string name="myco_terreum_latin" translatable="false">Tricholoma terreum</string>
+    <string-array name="myco_terreum_traits">
+        <item>Mouse-grey to dark grey cap, 4 to 8 cm, felted, with radial fibres that show the white flesh with age; pale, wavy margin</item>
+        <item>Notched, fragile, rather distant gills, whitish to pearl grey</item>
+        <item>Whitish stem, 3 to 8 cm, no ring</item>
+        <item>White to light grey flesh</item>
+        <item>White spores</item>
+        <item>Open conifer woods, mostly under pines · autumn, into winter</item>
+    </string-array>
+    <string name="myco_terreum_note">Opinions differ. The German mycological society list (2026) and French Wikipedia call it edible. A 2014 Chinese study found substances that damage muscle in mice, as in the yellow knight; a 2024 Italian study finds none and concludes it is edible. The most cautious status is kept: not recommended. It looks like the toxic tiger tricholoma: smaller, darker, no scales.</string>
+
+    <!-- Wood mushroom -->
+    <string name="myco_silvicola_name">Wood mushroom</string>
+    <string name="myco_silvicola_alt">Agaric des bois</string>
+    <string name="myco_silvicola_latin" translatable="false">Agaricus silvicola</string>
+    <string-array name="myco_silvicola_traits">
+        <item>White to cream cap, 6 to 9 cm (sometimes 12), globular then spreading, turning yellow with age or when touched</item>
+        <item>Close gills, pale cream, then pink, then gradually chocolate brown</item>
+        <item>Slender stem, 6 to 12 cm, whitish grey, with a bulb at the base</item>
+        <item>A single ring, very wide, descending, fragile, turning yellowish</item>
+        <item>Thin whitish flesh that yellows in the stem · mild taste, strong smell of aniseed or almond</item>
+        <item>Dark brown spores · in small groups in woods · summer and autumn</item>
+    </string-array>
+    <string name="myco_silvicola_note">Its gills, pale cream at first, make it mistaken for the deadly white amanitas, including the white form of the death cap. Amanitas have a volva at the base of the stem, always white gills and no aniseed smell. The German mycological society points out that yellowing agarics can concentrate a lot of cadmium.</string>
+
+    <!-- Granulated bolete -->
+    <string name="myco_granulatus_name">Granulated bolete</string>
+    <string name="myco_granulatus_alt">Bolet granulé</string>
+    <string name="myco_granulatus_latin" translatable="false">Suillus granulatus</string>
+    <string-array name="myco_granulatus_traits">
+        <item>Sticky, shiny, smooth cap, up to 12 cm, yellowish beige to reddish brown, often evenly coloured</item>
+        <item>Adnate tubes, pale yellow then olive-yellow; evenly coloured pores that weep milky drops at first</item>
+        <item>Stem about 10 × 2 cm, yellowish with opalescent droplets, then yellower and dotted at the top with brown or russet granules; no ring</item>
+        <item>Yellowish-white flesh, slightly sour · spicy smell</item>
+        <item>Orange-brown spores with an olive sheen</item>
+        <item>Under pines</item>
+    </string-array>
+    <string name="myco_granulatus_note">Its sticky skin is laxative. ANSES attributes digestive upset to it, often with trembling, headaches and anxiety, a few hours after the meal: 25 cases recorded in France between 1999 and 2015. No cooking is shown to be effective. Skin contact can also cause dermatitis.</string>
+    <string name="myco_granulatus_history">Listed in several guides as a mediocre edible, although its sticky skin contains laxative substances. Its toxic power has been known since 1923. In 2015, ANSES judged that it can cause poisoning, even after canning. A decree of 5 August 2016 suspends for one year the sale of fresh granulated bolete not accompanied by information on thorough cooking.</string>
+
+    <!-- Olive brittlegill -->
+    <string name="myco_olivacea_name">Olive brittlegill</string>
+    <string name="myco_olivacea_alt">Russule olivacée</string>
+    <string name="myco_olivacea_latin" translatable="false">Russula olivacea</string>
+    <string-array name="myco_olivacea_traits">
+        <item>Matt, finely wrinkled cap, up to 20 cm, variable in colour, often mottled green and red</item>
+        <item>Cream gills, then ochre-yellow with glaucous reflections, then orange; edge lined with red towards the margin</item>
+        <item>Stem about 12 × 4 cm, dotted, lilac pink at least under the gills, more or less yellowing</item>
+        <item>Mild flesh · slightly fruity smell</item>
+        <item>Yellow spores</item>
+        <item>Under broadleaves, mostly beeches, in lowlands but mainly in mountains, up to 1,800 m · July to November</item>
+    </string-array>
+    <string name="myco_olivacea_note">Digestive poisonings are reported mostly when it is eaten raw or lightly cooked, on a barbecue for instance: in Italy, a few dozen cases a year; in the Basque Country, over 40 cases in twenty years; in France, 3 grouped cases in 2012, with vomiting 2 hours later. ANSES judged in 2015 that the risk cannot be ruled out, even after cooking; Tox Info Suisse asks for at least 20 minutes of cooking.</string>
+    <string name="myco_olivacea_history">Sometimes eaten, and even judged edible in Eastern Europe. In 2015, ANSES judged that the risk of poisoning cannot be ruled out, even after cooking, for lack of data proving it harmless. A decree of 5 August 2016 suspends for one year the sale of fresh olive brittlegill not accompanied by information on thorough cooking.</string>
 </resources>

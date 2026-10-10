@@ -353,7 +353,7 @@ class MycologyActivity : ThemedActivity() {
 
     // ------------------------------------------------------------------ une espèce
 
-    private fun topView(look: FungusLook) = look.capShape == CapShape.MOREL || look.capShape == CapShape.BRAIN
+    private fun topView(look: FungusLook) = look.capShape == CapShape.MOREL || look.capShape == CapShape.BRAIN || look.capShape == CapShape.BALL
 
     private fun speciesBody(sp: FungusSpecies): LinearLayout {
         val body = column()

@@ -197,7 +197,9 @@ internal class SpecimenPainter(
     // ------------------------------------------------------------------ vue de côté
 
     fun side() {
+        if (look.capShape == CapShape.BRACKET) { BracketPainter(c, look, ox, oy, s, hair, anchors).side(); return }
         drawGround()
+        if (look.capShape == CapShape.BALL) { BallPainter(c, look, ox, oy, s, hair, anchors).side(); return }
         if (look.capShape == CapShape.FUNNEL) { funnelSide(); return }
         if (look.capShape == CapShape.MOREL) { morelSide(); return }
         if (look.capShape == CapShape.BRAIN) { brainSide(); return }
@@ -435,7 +437,7 @@ internal class SpecimenPainter(
             is StipeDeco.Dots -> {
                 val g = Random(look.seed + 7)
                 fill(withAlpha(d.color, d.alpha))
-                var y = 0.2f
+                var y = if (d.top < 1f) y0 * (1f - d.top) else 0.2f
                 var line = 0
                 while (y < y0) {
                     val half = stipeHalf(y)
@@ -1189,8 +1191,10 @@ internal class SpecimenPainter(
     // ------------------------------------------------------------------ vue en coupe
 
     fun section() {
+        if (look.capShape == CapShape.BRACKET) { BracketPainter(c, look, ox, oy, s, hair, anchors).section(); return }
         drawGround()
         when (look.capShape) {
+            CapShape.BALL -> { BallPainter(c, look, ox, oy, s, hair, anchors).section(); return }
             CapShape.FUNNEL -> { funnelSection(); return }
             CapShape.MOREL -> { morelSection(); return }
             CapShape.BRAIN -> { brainSection(); return }
@@ -1764,6 +1768,8 @@ internal class SpecimenPainter(
     fun under(ucx: Float, ucy: Float, ur: Float) {
         val seedRnd = Random(look.seed + 53)
         if (look.capShape == CapShape.MOREL || look.capShape == CapShape.BRAIN) { top(ucx, ucy, ur); return }
+        if (look.capShape == CapShape.BALL) { BallPainter(c, look, ox, oy, s, hair, anchors).top(ucx, ucy, ur); return }
+        if (look.capShape == CapShape.BRACKET) { BracketPainter(c, look, ox, oy, s, hair, anchors).under(ucx, ucy, ur); return }
         val shape = Path()
         val n = 72
         for (i in 0..n) {
@@ -1972,6 +1978,6 @@ internal fun FungusLook.asSingle(): FungusLook = this.let {
         hymInner = it.hymInner, attach = it.attach, hymDepth = it.hymDepth, forked = it.forked, crowd = it.crowd,
         ring = it.ring, ringAt = it.ringAt, ringColor = it.ringColor, volva = it.volva, volvaH = it.volvaH,
         volvaColor = it.volvaColor, flesh = it.flesh, stipeFlesh = it.stipeFlesh, stains = it.stains,
-        spore = it.spore, latex = it.latex, cluster = 1, seed = it.seed + 5
+        spore = it.spore, latex = it.latex, ball = it.ball, cluster = 1, seed = it.seed + 5
     )
 }

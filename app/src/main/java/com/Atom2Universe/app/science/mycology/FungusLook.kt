@@ -20,7 +20,8 @@ enum class PlateMode(@param:StringRes val label: Int) {
     UNDER(R.string.myco_view_under)
 }
 
-enum class CapShape { CONVEX, BELL, DEPRESSED, FUNNEL, MOREL, BRAIN }
+/** [BALL] : vesse-de-loup, scléroderme, œuf d'amanite (voir [BallSpec]) ; [BRACKET] : console sur le bois, pied latéral (pleurote). */
+enum class CapShape { CONVEX, BELL, DEPRESSED, FUNNEL, MOREL, BRAIN, BALL, BRACKET }
 enum class Hymenium { GILLS, PORES, RIDGES, TEETH, NONE }
 enum class GillAttach { FREE, ADNATE, DECURRENT }
 enum class Interior { SOLID, STUFFED, HOLLOW, CHAMBERED }
@@ -64,8 +65,8 @@ sealed class StipeDeco {
     class Scales(val color: Int, val from: Float) : StipeDeco()
     /** Sillons verticaux (gyromitre). */
     class Furrows(val color: Int) : StipeDeco()
-    /** Petits points ou fossettes régulièrement répartis (bolet à pied rouge, lactaires) ; [spacing] et [size] en cm. */
-    class Dots(val color: Int, val spacing: Float, val size: Float, val alpha: Int = 220) : StipeDeco()
+    /** Petits points ou fossettes régulièrement répartis (bolet à pied rouge, lactaires) ; [spacing] et [size] en cm, [top] = part de la hauteur couverte en partant du haut. */
+    class Dots(val color: Int, val spacing: Float, val size: Float, val alpha: Int = 220, val top: Float = 1f) : StipeDeco()
 }
 
 /** [STIPE_CUT] : la chair du pied, visible seulement à la coupe (le pied entier ne change pas de couleur de l'extérieur). */
@@ -83,6 +84,23 @@ enum class Anchor {
 
 /** Un repère : un mot posé sur un point du dessin. */
 class Mark(val at: Anchor, @param:StringRes val label: Int)
+
+/** Ce que l'on voit à l'intérieur d'une boule coupée en deux. */
+enum class BallInside {
+    /** Chair pleine et blanche, sur un pied conique stérile (vesse-de-loup jeune). */
+    SOLID,
+    /** Peau épaisse, intérieur sombre veiné de blanc (scléroderme). */
+    SPORE_MASS,
+    /** Un jeune champignon déjà formé dans son sac : chapeau, lames, pied (œuf d'amanite). */
+    YOUNG_AMANITA
+}
+
+/**
+ * Les boules : [skin] = épaisseur de la peau ou du sac en cm, [skinColor] sa couleur, [gleba] la couleur de l'intérieur ;
+ * [accent] = base stérile (SOLID), veines (SPORE_MASS) ou chapeau du jeune champignon (YOUNG_AMANITA) ;
+ * [cords] = cordons de mycélium sous la boule.
+ */
+class BallSpec(val inside: BallInside, val skin: Float, val skinColor: Int, val gleba: Int, val accent: Int, val cords: Boolean = false)
 
 /**
  * Tout ce qu'il faut pour dessiner un champignon : mesures en centimètres (typiques, pas exactes),
@@ -139,6 +157,8 @@ class FungusLook(
     val spore: Int,
     /** Couleur du lait qui perle à la coupe (lactaires) ; 0 = pas de lait. */
     val latex: Int = 0,
+    /** Pour [CapShape.BALL] : le détail de la boule (capDiam = largeur, capRise = hauteur, stipeH = hauteur du pied conique). */
+    val ball: BallSpec? = null,
     val cluster: Int = 1,
     val seed: Int = 1,
     // Repères

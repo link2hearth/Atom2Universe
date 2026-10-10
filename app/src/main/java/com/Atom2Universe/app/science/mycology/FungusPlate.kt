@@ -21,6 +21,7 @@ object FungusPlate {
 
     /** Étendue du dessin en cm (largeur, hauteur, avec 0,9 cm sous le sol). */
     private fun extent(look: FungusLook): Pair<Float, Float> {
+        if (look.capShape == CapShape.BRACKET) return (look.capDiam + BracketPainter.BARK) * 1.04f to (BracketPainter.totalHeight(look) + 0.9f)
         val widthCm = when (look.capShape) {
             CapShape.FUNNEL -> look.capDiam * 1.12f
             else -> max(look.capDiam * 1.06f, look.bulbW * 1.3f)

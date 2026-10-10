@@ -58,6 +58,24 @@ class FungusCriteriaTest {
     }
 
     @Test
+    fun leLotQuatreSeLitDansLeDessin() {
+        // les deux formes nouvelles ne se trouvent que par leur forme
+        assertEquals(setOf("perlatum", "egg", "citrinum"), ids("c_ball"))
+        assertEquals(setOf("ostreatus"), ids("c_bracket"))
+        assertTrue(FungusCriteria.matches(look("ostreatus"), setOf("c_bracket", "m_cluster", "u_gills", "sp_white", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("perlatum"), setOf("c_ball", "u_none", "cap_WHITE", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("citrinum"), setOf("c_ball", "u_none", "cap_YELLOW", "c_scaly")))
+        // l'œuf d'amanite est enfermé dans sa volve : sur « sans volve » il ne doit jamais sortir
+        assertTrue(FungusCriteria.matches(look("egg"), setOf("c_ball", "s_volva", "sp_white")))
+        assertFalse(FungusCriteria.matches(look("egg"), setOf("s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("pardinum"), setOf("c_scaly", "cap_GREY", "u_gills", "sp_white", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("terreum"), setOf("cap_GREY", "u_gills", "sp_white", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("silvicola"), setOf("cap_WHITE", "s_ring", "s_no_volva", "sp_brown", "m_stains")))
+        assertTrue(FungusCriteria.matches(look("granulatus"), setOf("u_pores", "s_no_ring", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("olivacea"), setOf("u_gills", "s_no_ring", "s_no_volva", "w_medium")))
+    }
+
+    @Test
     fun ouDansUneLigneEtEntreLesLignes() {
         val brown = ids("cap_BROWN")
         val yellow = ids("cap_YELLOW")

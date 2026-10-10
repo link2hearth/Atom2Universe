@@ -48,7 +48,7 @@
       "id": "be", "kind": "official",
       "citation": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf",
-      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta"]
+      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum"]
     },
     {
       "id": "toxinfo", "kind": "official",
@@ -72,25 +72,25 @@
       "id": "anses2015", "kind": "official",
       "citation": "ANSES (2015). Avis relatif à l’évaluation des risques liés à la consommation des champignons dénommés Suillus granulatus, Russula olivacea et Armillaria mellea. Saisine n° 2014-SA-0256, 29 juillet 2015.",
       "url": "https://www.anses.fr/fr/system/files/ERCA2014sa0256.pdf",
-      "species": ["mellea", "equestre", "gyromitra"]
+      "species": ["mellea", "equestre", "gyromitra", "granulatus", "olivacea"]
     },
     {
       "id": "arr2016", "kind": "official",
       "citation": "Arrêté du 5 août 2016 relatif à la suspension de la mise sur le marché des champignons des espèces Suillus granulatus, Russula olivacea, Armillaria mellea et Lentinula edodes (JORF n° 0191 du 18 août 2016, NOR EINC1622686A).",
       "url": "https://nouvelle-aquitaine.dreets.gouv.fr/sites/nouvelle-aquitaine.dreets.gouv.fr/IMG/pdf/arrete_du_5_aout_2016suspensionchampignons.pdf",
-      "species": ["mellea"]
+      "species": ["mellea", "granulatus", "olivacea"]
     },
     {
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola"]
     },
     {
       "id": "toxinfo2025", "kind": "official",
       "citation": "Tox Info Suisse (2025). Edible mushrooms: unpleasant gastrointestinal symptoms. Dernière mise à jour : mai 2025.",
       "url": "https://toxinfo.ch/edible_mushrooms_unpleasant_gastrointestinal_symptoms",
-      "species": ["badia", "erythropus", "rubescens", "nebularis", "mellea"]
+      "species": ["badia", "erythropus", "rubescens", "nebularis", "mellea", "olivacea"]
     },
     {
       "id": "bs2022", "kind": "official",
@@ -102,7 +102,7 @@
       "id": "bs2024", "kind": "official",
       "citation": "Kanton Basel-Stadt, Kantonales Laboratorium (2025). Pilzkontrollen 2024 durch das Kantonale Laboratorium Basel-Stadt. 16 janvier 2025.",
       "url": "https://media.bs.ch/original_file/51e1d6b315312707b136dffb8f09d5688c27447f/2024-pilze-0.pdf",
-      "species": ["edulis", "cibarius", "procera", "morchella", "gambosa", "craterellus", "hydnum", "prunulus", "phalloides"]
+      "species": ["edulis", "cibarius", "procera", "morchella", "gambosa", "craterellus", "hydnum", "prunulus", "phalloides", "ostreatus"]
     },
     {
       "id": "bs2025", "kind": "official",
@@ -122,7 +122,31 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/9261043/",
       "species": ["orellanus"]
     },
-    { "id": "wp-fr-phalloides", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite phalloïde", "url": "https://fr.wikipedia.org/wiki/Amanite_phallo%C3%AFde", "species": ["phalloides"] },
+    {
+      "id": "angers2024", "kind": "journal",
+      "citation": "Arnaud E. (2024). Étude rétrospective des cas d’intoxication après ingestion de champignons du genre Scleroderma. Thèse d’exercice de pharmacie, Université d’Angers.",
+      "url": "https://dune.univ-angers.fr/documents/dune20320",
+      "species": ["citrinum"]
+    },
+    {
+      "id": "yin2014", "kind": "journal",
+      "citation": "Yin X., Feng T., Shang J.-H. et al. (2014). Chemical and toxicological investigations of a previously unknown poisonous European mushroom Tricholoma terreum. Chem Eur J 20 : 7001-7009.",
+      "url": "https://doi.org/10.1002/chem.201400226",
+      "species": ["terreum"]
+    },
+    {
+      "id": "davoli2016", "kind": "journal",
+      "citation": "Davoli P., Floriani M., Assisi F., Kob K., Sitta N. (2016). Comment on « Chemical and toxicological investigations of a previously unknown poisonous European mushroom Tricholoma terreum ». Chem Eur J 22 : 5786-5788.",
+      "url": "https://doi.org/10.1002/chem.201406655",
+      "species": ["terreum"]
+    },
+    {
+      "id": "clericuzio2024", "kind": "journal",
+      "citation": "Clericuzio M., Serra S., Vidari G. (2024). No evidence was found for the presence of terreolides, terreumols or saponaceolides H-S in the fruiting bodies of Tricholoma terreum (Basidiomycota, Agaricales). Molecules 29(8) : 1794.",
+      "url": "https://doi.org/10.3390/molecules29081794",
+      "species": ["terreum"]
+    },
+    { "id": "wp-fr-phalloides", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite phalloïde", "url": "https://fr.wikipedia.org/wiki/Amanite_phallo%C3%AFde", "species": ["phalloides", "egg"] },
     { "id": "wp-fr-virosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite vireuse", "url": "https://fr.wikipedia.org/wiki/Amanite_vireuse", "species": ["virosa"] },
     { "id": "wp-fr-muscaria", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite tue-mouches", "url": "https://fr.wikipedia.org/wiki/Amanite_tue-mouches", "species": ["muscaria"] },
     { "id": "wp-fr-pantherina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite panthère", "url": "https://fr.wikipedia.org/wiki/Amanite_panth%C3%A8re", "species": ["pantherina"] },
@@ -191,6 +215,20 @@
     { "id": "wp-fr-virescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russule verdoyante", "url": "https://fr.wikipedia.org/wiki/Russule_verdoyante", "species": ["virescens"] },
     { "id": "wp-en-virescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula virescens", "url": "https://en.wikipedia.org/wiki/Russula_virescens", "species": ["virescens"] },
     { "id": "wp-fr-columbetta", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholome colombette", "url": "https://fr.wikipedia.org/wiki/Tricholome_colombette", "species": ["columbetta"] },
-    { "id": "wp-en-columbetta", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma columbetta", "url": "https://en.wikipedia.org/wiki/Tricholoma_columbetta", "species": ["columbetta"] }
+    { "id": "wp-en-columbetta", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma columbetta", "url": "https://en.wikipedia.org/wiki/Tricholoma_columbetta", "species": ["columbetta"] },
+    { "id": "wp-fr-ostreatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Pleurotus ostreatus", "url": "https://fr.wikipedia.org/wiki/Pleurotus_ostreatus", "species": ["ostreatus"] },
+    { "id": "wp-en-ostreatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Pleurotus ostreatus", "url": "https://en.wikipedia.org/wiki/Pleurotus_ostreatus", "species": ["ostreatus"] },
+    { "id": "wp-fr-perlatum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lycoperdon perlatum", "url": "https://fr.wikipedia.org/wiki/Lycoperdon_perlatum", "species": ["perlatum"] },
+    { "id": "wp-en-perlatum", "kind": "encyclopedia", "citation": "Wikipedia (en): Lycoperdon perlatum", "url": "https://en.wikipedia.org/wiki/Lycoperdon_perlatum", "species": ["perlatum"] },
+    { "id": "wp-fr-citrinum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Scleroderma citrinum", "url": "https://fr.wikipedia.org/wiki/Scleroderma_citrinum", "species": ["citrinum"] },
+    { "id": "wp-en-citrinum", "kind": "encyclopedia", "citation": "Wikipedia (en): Scleroderma citrinum", "url": "https://en.wikipedia.org/wiki/Scleroderma_citrinum", "species": ["citrinum"] },
+    { "id": "wp-fr-pardinum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholome tigré", "url": "https://fr.wikipedia.org/wiki/Tricholome_tigr%C3%A9", "species": ["pardinum"] },
+    { "id": "wp-en-pardinum", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma pardinum", "url": "https://en.wikipedia.org/wiki/Tricholoma_pardinum", "species": ["pardinum"] },
+    { "id": "wp-fr-terreum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholoma terreum", "url": "https://fr.wikipedia.org/wiki/Tricholoma_terreum", "species": ["terreum"] },
+    { "id": "wp-en-terreum", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma terreum", "url": "https://en.wikipedia.org/wiki/Tricholoma_terreum", "species": ["terreum"] },
+    { "id": "wp-fr-silvicola", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Agaricus silvicola", "url": "https://fr.wikipedia.org/wiki/Agaricus_silvicola", "species": ["silvicola"] },
+    { "id": "wp-fr-granulatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Suillus granulatus", "url": "https://fr.wikipedia.org/wiki/Suillus_granulatus", "species": ["granulatus"] },
+    { "id": "wp-fr-olivacea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russula olivacea", "url": "https://fr.wikipedia.org/wiki/Russula_olivacea", "species": ["olivacea"] },
+    { "id": "wp-en-olivacea", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula olivacea", "url": "https://en.wikipedia.org/wiki/Russula_olivacea", "species": ["olivacea"] }
   ]
 }

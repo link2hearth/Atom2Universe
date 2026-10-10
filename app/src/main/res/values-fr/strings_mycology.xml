@@ -55,6 +55,8 @@
     <string name="myco_c_volva">Volve (sac à la base)</string>
     <string name="myco_c_no_volva">Sans volve</string>
     <string name="myco_c_cluster">En touffe</string>
+    <string name="myco_c_ball">En boule ou en œuf</string>
+    <string name="myco_c_bracket">En console sur le bois</string>
     <string name="myco_c_latex">Lait à la coupe</string>
     <string name="myco_c_stains">Change de couleur à la coupe</string>
     <string name="myco_c_spore_white">Blanche ou crème</string>
@@ -105,7 +107,7 @@
     <string name="myco_about_rules">• Ne cueillir que des champignons parfaitement connus, entiers, ni trop jeunes ni trop vieux.\n• Photographier la récolte avant de la cuire.\n• Ne jamais les manger crus : 20 à 30 minutes à la poêle, ou 15 minutes à l’eau bouillante (eau jetée).\n• Les garder au frais et les manger dans les deux jours.\n• Un panier plutôt qu’un sac plastique.\n• Ne pas en donner aux jeunes enfants.\n• Symptômes après un repas : appeler un centre antipoison en précisant le repas, parfois plus de 12 heures après.</string>
     <string name="myco_about_sources">Sources</string>
     <string name="myco_sources_official">Autorités et textes officiels</string>
-    <string name="myco_sources_journals">Revues médicales</string>
+    <string name="myco_sources_journals">Revues et thèses médicales</string>
     <string name="myco_sources_encyclopedia">Encyclopédie (CC BY-SA 4.0)</string>
     <string name="myco_sources_society">Sociétés de mycologie</string>
     <string name="myco_sources_by_species">Références par espèce</string>
@@ -120,6 +122,8 @@
     <string name="myco_change_gyromitra">Autrefois mangé après ébouillantage. Vente interdite en France depuis 1991 ; classé mortel.</string>
     <string name="myco_change_aurantiaca">Jugée vénéneuse en 1821, parfois donnée pour comestible avant 1999. Aujourd’hui : sans intérêt plutôt que dangereuse.</string>
     <string name="myco_change_mellea">Longtemps cité comme un comestible moyen. L’ANSES estime en 2015 qu’il peut donner des troubles digestifs, même après une longue cuisson ; un arrêté de 2016 suspend la vente d’armillaire frais sans mention de cuisson complète.</string>
+    <string name="myco_change_granulatus">Cité dans plusieurs guides comme un comestible médiocre. L’ANSES estime en 2015 qu’il peut donner des troubles digestifs, même après cuisson ; un arrêté de 2016 suspend la vente de bolet granulé frais sans mention de cuisson complète.</string>
+    <string name="myco_change_olivacea">Parfois mangée, et même jugée comestible en Europe de l’Est. L’ANSES estime en 2015 que le risque ne peut être exclu, même après cuisson ; un arrêté de 2016 suspend la vente de russule olivacée fraîche sans mention de cuisson complète.</string>
 
     <!-- Groupes de sosies -->
     <string name="myco_g_chanterelle_title">Girolle, ou pas ?</string>
@@ -231,6 +235,7 @@
     <string-array name="myco_g_whiteforms_points">
         <item>Amanite vireuse : anneau fragile et volve en sac, lames blanches. Colombette : ni anneau ni volve, chair à odeur de farine.</item>
         <item>Entolome livide : chapeau gris clair très fibrilleux, lames jaunes puis roses, sporée rose. Colombette : lames blanches, sporée blanche.</item>
+        <item>Agaric des bois : lames crème pâle puis roses puis brun chocolat, odeur d’anis, anneau très large. Les amanites ont des lames toujours blanches et une volve.</item>
         <item>La volve est sous terre : on ne cueille que des champignons entiers.</item>
         <item>L’odeur de farine se retrouve chez la colombette et chez l’entolome livide : elle ne suffit pas.</item>
     </string-array>
@@ -257,6 +262,22 @@
         <item>Délicieux : chapeau orange, zones concentriques, pied à fossettes. Toison : chapeau rose et ocre, marge velue.</item>
         <item>On coupe le champignon pour voir le lait avant de conclure : une fois la couleur du lait notée, la confusion n’est plus possible.</item>
         <item>Le lactaire à toison irrite le tube digestif : nausées, vomissements, diarrhée.</item>
+    </string-array>
+    <string name="myco_g_puffball_title">Vesse-de-loup, ou pas ?</string>
+    <string name="myco_g_puffball_evidence">Centre antipoison belge</string>
+    <string-array name="myco_g_puffball_points">
+        <item>Vesse-de-loup : blanc pur, plein et uniforme à l’intérieur, avec des pointes en perles. Œuf d’amanite : lisse, et déjà un chapeau et un pied dedans.</item>
+        <item>Scléroderme : peau épaisse, intérieur gris puis noir violacé veiné de blanc, odeur aigre.</item>
+        <item>On coupe en deux dans la hauteur : c’est le seul moyen de voir ce qu’il y a dedans.</item>
+        <item>Les formes jeunes de la phalloïde, en œuf, sont prises pour des vesses-de-loup.</item>
+    </string-array>
+    <string name="myco_g_greyknights_title">Tricholome gris : lequel ?</string>
+    <string name="myco_g_greyknights_evidence">Fiches Wikipédia</string>
+    <string-array name="myco_g_greyknights_points">
+        <item>Tigré : chapeau argenté couvert d’écailles en cercles, pied épais, odeur de farine. Terreux : chapeau gris souris fibrilleux, plus petit, sans odeur de farine.</item>
+        <item>Tigré : sol calcaire, en altitude, plutôt en été et automne. Terreux : surtout sous les pins.</item>
+        <item>Le tigré est toxique, même en petite quantité : vomissements violents, 24 à 48 heures.</item>
+        <item>Le terreux est discuté : non recommandé.</item>
     </string-array>
 
     <!-- Repères sur les dessins -->
@@ -405,6 +426,40 @@
     <string name="myco_l_green_cracked_cap">Chapeau vert, craquelé</string>
     <string name="myco_l_white_silky_cap">Chapeau blanc, soyeux</string>
     <string name="myco_l_white_wide_gills">Lames blanches, larges</string>
+    <string name="myco_l_oyster_cap">Chapeau en coquille d’huître</string>
+    <string name="myco_l_lateral_stub">Pied latéral, presque nul</string>
+    <string name="myco_l_on_wood">Sur le bois</string>
+    <string name="myco_l_flesh_thick_at_wood">Chair épaisse près du bois</string>
+    <string name="myco_l_gills_from_stub">Lames qui partent du pied</string>
+    <string name="myco_l_white_spines">Pointes blanches</string>
+    <string name="myco_l_conical_base">Pied conique, stérile</string>
+    <string name="myco_l_solid_pure_white">Pleine, blanc pur</string>
+    <string name="myco_l_thin_skin">Peau mince</string>
+    <string name="myco_l_sterile_base">Base stérile</string>
+    <string name="myco_l_spines_closed">Pointes, pas d’ouverture</string>
+    <string name="myco_l_smooth_white_egg">Œuf blanc, lisse</string>
+    <string name="myco_l_thick_sac">Sac épais</string>
+    <string name="myco_l_formed_cap">Chapeau déjà formé</string>
+    <string name="myco_l_formed_stem">Pied déjà formé</string>
+    <string name="myco_l_smooth_top">Dessus lisse</string>
+    <string name="myco_l_yellow_scaly_skin">Peau jaune, écailles brunes</string>
+    <string name="myco_l_no_stalk_cords">Pas de pied, des cordons</string>
+    <string name="myco_l_thick_skin">Peau épaisse</string>
+    <string name="myco_l_dark_inside_purple">Intérieur noir violacé</string>
+    <string name="myco_l_white_veins">Veines blanches</string>
+    <string name="myco_l_warty_plates">Plaques en verrues</string>
+    <string name="myco_l_grey_ringed_scales">Écailles grises en cercles</string>
+    <string name="myco_l_mouse_grey_cap">Chapeau gris souris</string>
+    <string name="myco_l_pearl_gills">Lames gris perle</string>
+    <string name="myco_l_whitish_stem">Pied blanchâtre</string>
+    <string name="myco_l_flesh_white_grey">Chair blanche à gris clair</string>
+    <string name="myco_l_white_yellowing_cap">Chapeau blanc, jaunit</string>
+    <string name="myco_l_ring_very_wide">Anneau très large, fragile</string>
+    <string name="myco_l_sticky_shiny_cap">Chapeau visqueux, brillant</string>
+    <string name="myco_l_brown_granules_top">Granulations brunes en haut</string>
+    <string name="myco_l_matt_green_red_cap">Chapeau mat, vert et rouge</string>
+    <string name="myco_l_cream_ochre_gills">Lames crème à ocre</string>
+    <string name="myco_l_dotted_pink_stem">Pied pointillé, rosé</string>
 
     <!-- Amanite phalloïde -->
     <string name="myco_phalloides_name">Amanite phalloïde</string>
@@ -978,4 +1033,121 @@
         <item>Chênes, hêtres, sols pauvres et acides · août à novembre</item>
     </string-array>
     <string name="myco_columbetta_note">Tout est blanc, comme chez l’amanite vireuse et chez la forme blanche de la phalloïde, mortelles : l’anneau et la volve, absents ici, les distinguent, et la volve est sous terre. L’entolome livide pâle lui ressemble aussi : chapeau très fibrilleux, lames jaunes ou roses. Assez rare en France.</string>
+
+    <!-- Pleurote en huître -->
+    <string name="myco_ostreatus_name">Pleurote en huître</string>
+    <string name="myco_ostreatus_alt">Oyster mushroom</string>
+    <string-array name="myco_ostreatus_traits">
+        <item>Chapeau en coquille d’huître puis en éventail, 7 à 14 cm, gris brun à presque noir, souvent bien plus pâle ; marge mince, d’abord enroulée, puis festonnée</item>
+        <item>Lames blanches, assez serrées, fourchues, qui descendent le long du pied (décurrentes)</item>
+        <item>Pied court (1 à 2 cm) ou presque nul, latéral, blanc, ferme</item>
+        <item>Chair blanche, mince sauf à la base du pied, vite élastique · saveur douce</item>
+        <item>Sporée pâle (crème à blanche)</item>
+        <item>En touffes superposées sur des feuillus vivants ou morts, de l’automne à l’hiver</item>
+    </string-array>
+    <string name="myco_ostreatus_note">Il pousse sur le bois, en touffes superposées : c’est le premier critère. Les pleurotes voisins (pleurote en corne d’abondance, pleurote pulmonaire) sont comestibles aussi, la confusion est sans conséquence. Les spores sont allergisantes pour qui en respire beaucoup, comme les producteurs.</string>
+
+    <!-- Vesse-de-loup perlée -->
+    <string name="myco_perlatum_name">Vesse-de-loup perlée</string>
+    <string name="myco_perlatum_alt">Common puffball</string>
+    <string-array name="myco_perlatum_traits">
+        <item>Corps en poire, blanchâtre : une boule jusqu’à 6 cm de large sur un pied conique stérile, qui fait les deux tiers de la hauteur</item>
+        <item>Surface couverte de petites pointes et de grosses verrues coniques, qui s’en vont peu à peu en laissant de petites cicatrices rondes</item>
+        <item>Intérieur d’un blanc pur, uniforme et mou quand elle est jeune ; jaunâtre, puis brun olive et poudreux en vieillissant</item>
+        <item>À maturité, un pore rond s’ouvre au sommet pour libérer les spores brunes</item>
+        <item>Sous les conifères et en bois mélangés, seule ou en groupes · été et automne</item>
+    </string-array>
+    <string name="myco_perlatum_note">Seulement jeune, quand l’intérieur est blanc pur, uniforme et mou. On la coupe en deux dans la hauteur : un champignon déjà formé à l’intérieur trahit un œuf d’amanite, mortel. Les œufs d’amanite n’ont généralement ni pointes ni verrues. Les spores respirées peuvent irriter gravement les poumons.</string>
+
+    <!-- Œuf d’amanite phalloïde -->
+    <string name="myco_egg_name">Œuf d’amanite phalloïde</string>
+    <string name="myco_egg_alt">Death cap, egg stage</string>
+    <string-array name="myco_egg_traits">
+        <item>Au stade jeune, un œuf blanc, enveloppé du voile universel</item>
+        <item>Surface lisse, sans pointes ni verrues</item>
+        <item>Coupé en deux dans la hauteur : le chapeau et le pied sont déjà formés, enfermés dans un sac épais</item>
+        <item>Plus tard : chapeau vert pâle, vert jaune ou vert olive, anneau, volve en sac</item>
+        <item>Les formes jeunes, en forme d’œuf, peuvent être confondues avec des vesses-de-loup</item>
+    </string-array>
+    <string name="myco_egg_note">Un seul champignon suffit à provoquer une intoxication grave : les amanitines détruisent le foie, et les signes arrivent tard, plus de 6 heures après le repas. On coupe l’œuf en deux, dans la hauteur, avant de rien conclure : une vesse-de-loup est blanche et pleine de part en part, un œuf d’amanite montre déjà le champignon.</string>
+
+    <!-- Scléroderme commun -->
+    <string name="myco_citrinum_name">Scléroderme commun</string>
+    <string name="myco_citrinum_alt">Common earthball</string>
+    <string-array name="myco_citrinum_traits">
+        <item>Boule irrégulière, souvent aplatie aux pôles, 2 à 12 cm, presque sans pied, fixée au sol par des cordons de mycélium</item>
+        <item>Peau très épaisse (1 à 5 mm), jaune ocre à écailles brunes, qui se craquelle en verrues pyramidales</item>
+        <item>Intérieur dense, d’abord gris pâle, puis noir violacé veiné de blanc, poudreux à la fin</item>
+        <item>Odeur désagréable, aigre (vieux oignons, caoutchouc)</item>
+        <item>Pas d’ouverture nette au sommet : la peau se déchire à maturité</item>
+        <item>Sporée brun olive foncé · sols acides, sous feuillus ou conifères · fin d’été et automne</item>
+    </string-array>
+    <string name="myco_citrinum_note">Toxique : une thèse de pharmacie d’Angers sur 134 cas notés par les centres antipoison français entre 2000 et 2022 relève des troubles digestifs et, parfois sévères, des signes cardiaques et neurologiques inhabituels. On le prend pour une vesse-de-loup : celle-ci est d’un blanc pur et uniforme à l’intérieur, pas gris puis noir. Il se déchire à maturité au lieu de s’ouvrir par un pore.</string>
+
+    <!-- Tricholome tigré -->
+    <string name="myco_pardinum_name">Tricholome tigré</string>
+    <string name="myco_pardinum_alt">Tiger tricholoma</string>
+    <string-array name="myco_pardinum_traits">
+        <item>Chapeau gris argenté, 6 à 10 cm (jusqu’à 20), couvert d’écailles foncées en cercles, grises à noirâtres vers le centre ; marge d’abord enroulée</item>
+        <item>Lames presque libres, serrées, épaisses, blanc crème ou grisâtres, parfois jaunâtres ; elles peuvent suinter</item>
+        <item>Pied épais, 3 à 8 cm, blanc à gris pâle ou brunâtre, plus épais à la base, sans anneau ni volve ; la base brunit ou jaunit quand on la presse</item>
+        <item>Chair ferme, blanchâtre, odeur et saveur de farine</item>
+        <item>Sporée blanche</item>
+        <item>Sol calcaire, souvent près de hêtres ou de sapins, en altitude, souvent seul · été et automne</item>
+    </string-array>
+    <string name="myco_pardinum_note">Toxique, même en petite quantité : nausées, vomissements violents et diarrhée dans les trois heures, qui durent 24 à 48 heures, avec parfois une bouche amère, de la salivation ou une bouche sèche (syndrome résinoïdien grave, d’après le centre antipoison belge). Le tricholome terreux, plus petit, plus sombre et sans écailles, lui ressemble.</string>
+
+    <!-- Tricholome terreux -->
+    <string name="myco_terreum_name">Tricholome terreux</string>
+    <string name="myco_terreum_alt">Grey knight</string>
+    <string-array name="myco_terreum_traits">
+        <item>Chapeau gris souris à gris foncé, 4 à 8 cm, feutré, à fibrilles rayonnantes qui montrent la chair blanche en vieillissant ; marge pâle, ondulée</item>
+        <item>Lames échancrées, fragiles, peu serrées, blanchâtres à gris perle</item>
+        <item>Pied blanchâtre, 3 à 8 cm, sans anneau</item>
+        <item>Chair blanche à gris clair</item>
+        <item>Sporée blanche</item>
+        <item>Conifères clairsemés, surtout sous les pins · automne, jusqu’en hiver</item>
+    </string-array>
+    <string name="myco_terreum_note">Les avis divergent. La liste de la société mycologique allemande (2026) et Wikipédia FR le disent comestible. Une étude chinoise de 2014 y a trouvé des substances qui abîment les muscles chez la souris, comme chez le tricholome équestre ; une étude italienne de 2024 n’en retrouve aucune et conclut qu’il est comestible. Statut le plus prudent retenu : non recommandé. Il ressemble au tricholome tigré, toxique : plus petit, plus sombre, sans écailles.</string>
+
+    <!-- Agaric des bois -->
+    <string name="myco_silvicola_name">Agaric des bois</string>
+    <string name="myco_silvicola_alt">Wood mushroom</string>
+    <string-array name="myco_silvicola_traits">
+        <item>Chapeau blanc à crème, 6 à 9 cm (parfois 12), globuleux puis étalé, qui jaunit en vieillissant ou au toucher</item>
+        <item>Lames serrées, crème pâle, puis roses, puis peu à peu brun chocolat</item>
+        <item>Pied mince, 6 à 12 cm, gris blanchâtre, avec un bulbe à la base</item>
+        <item>Un seul anneau, très large, descendant, fragile, qui jaunit</item>
+        <item>Chair mince et blanchâtre, qui jaunit dans le pied · saveur douce, forte odeur d’anis ou d’amande</item>
+        <item>Sporée brun foncé · en petits groupes dans les bois · été et automne</item>
+    </string-array>
+    <string name="myco_silvicola_note">Ses lames, d’abord crème pâle, le font confondre avec les amanites blanches mortelles, dont la forme blanche de la phalloïde. Les amanites ont une volve à la base du pied, des lames toujours blanches et pas d’odeur d’anis. La société mycologique allemande signale que les agarics qui jaunissent peuvent concentrer beaucoup de cadmium.</string>
+
+    <!-- Bolet granulé -->
+    <string name="myco_granulatus_name">Bolet granulé</string>
+    <string name="myco_granulatus_alt">Granulated bolete</string>
+    <string-array name="myco_granulatus_traits">
+        <item>Chapeau visqueux, brillant, lisse, jusqu’à 12 cm, beige jaunâtre à brun rougeâtre, souvent d’une couleur uniforme</item>
+        <item>Tubes adnés, jaune pâle puis jaune olivâtre ; pores de couleur uniforme, qui pleurent au début des gouttes laiteuses</item>
+        <item>Pied d’environ 10 × 2 cm, jaunâtre à gouttelettes opalescentes, puis plus jaune et ponctué en haut de granulations brunes ou rousses ; pas d’anneau</item>
+        <item>Chair blanc jaunâtre, subacidulée · odeur épicée</item>
+        <item>Sporée brun orangé à reflet olive</item>
+        <item>Sous les pins</item>
+    </string-array>
+    <string name="myco_granulatus_note">Sa peau visqueuse est laxative. L’ANSES lui attribue des troubles digestifs, souvent avec tremblements, maux de tête et angoisse, quelques heures après le repas : 25 cas notés en France entre 1999 et 2015. Aucune cuisson n’est prouvée efficace. Le contact avec la peau peut aussi donner une dermite.</string>
+    <string name="myco_granulatus_history">Cité dans plusieurs guides comme un comestible médiocre, alors que sa peau visqueuse contient des substances laxatives. Son pouvoir toxique est connu depuis 1923. En 2015, l’ANSES estime qu’il peut provoquer des intoxications, y compris après mise en conserve. Un arrêté du 5 août 2016 suspend pour un an la vente de bolet granulé frais non accompagné d’une information sur la cuisson complète.</string>
+
+    <!-- Russule olivacée -->
+    <string name="myco_olivacea_name">Russule olivacée</string>
+    <string name="myco_olivacea_alt">Olive brittlegill</string>
+    <string-array name="myco_olivacea_traits">
+        <item>Chapeau mat, ridulé, jusqu’à 20 cm, de couleur variable, souvent panaché de vert et de rouge</item>
+        <item>Lames crème, puis jaune ocracé à reflets glauques, puis orangés ; arête soulignée de rouge vers la marge</item>
+        <item>Pied d’environ 12 × 4 cm, pointillé, rosé lilas au moins sous les lames, plus ou moins jaunissant</item>
+        <item>Chair douce · odeur un peu fruitée</item>
+        <item>Sporée jaune</item>
+        <item>Sous les feuillus, surtout les hêtres, en plaine mais surtout en montagne, jusqu’à 1 800 m · juillet à novembre</item>
+    </string-array>
+    <string name="myco_olivacea_note">Des intoxications digestives sont signalées surtout quand elle est mangée crue ou peu cuite, au barbecue notamment : en Italie, quelques dizaines de cas par an ; au Pays basque, plus de 40 cas en vingt ans ; en France, 3 cas groupés en 2012, avec des vomissements 2 heures après. L’ANSES juge en 2015 que le risque ne peut être exclu, même après cuisson ; Tox Info Suisse demande au moins 20 minutes de cuisson.</string>
+    <string name="myco_olivacea_history">Parfois consommée, et même jugée comestible en Europe de l’Est. En 2015, l’ANSES estime que le risque d’intoxication ne peut être exclu, y compris après cuisson, faute de données prouvant son innocuité. Un arrêté du 5 août 2016 suspend pour un an la vente de russule olivacée fraîche non accompagnée d’une information sur la cuisson complète.</string>
 </resources>
