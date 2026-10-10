@@ -14,12 +14,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.science.ScienceFiche
 import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.solarsystem.SolarSystemActivity
-import com.Atom2Universe.app.util.followImmersiveMode
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.Normalizer
 import java.util.Locale
 
@@ -29,9 +28,11 @@ class CosmicTimelineActivity : ThemedActivity() {
     private lateinit var content: LinearLayout
     private lateinit var scroll: ScrollView
     private lateinit var back: ImageButton
+    private lateinit var navigator: TimelineNavigator
     private var path = listOf("universe")
     private val expanded = mutableSetOf<String>()
-    private var openSheet: BottomSheetDialog? = null
+    // La fiche ouverte : une seule fenêtre plein écran. Pas de retour entre fiches ici : la flèche ferme.
+    private val fiche by lazy { ScienceFiche(this, palette, R.string.ct_close, R.string.ct_close) {} }
     private var historyRegion: HumanRegion? = null
     private var historyTopic = HistoryTopic.ALL
     private var locatedHistoryId: String? = null
@@ -50,14 +51,20 @@ class CosmicTimelineActivity : ThemedActivity() {
         historyTopic = HistoryTopic.entries.firstOrNull { it.name == topicName } ?: HistoryTopic.ALL
         locatedHistoryId = if (savedInstanceState != null) savedInstanceState.getString("located_history") else prefs.getString("located_history", null)
         val oldHuman = TimelineChapters.get(path.last())?.takeIf { it.human != null }
-        val initial = (oldHuman?.takeUnless { it.id == "human" } ?: TimelineChapters.get("human_recent"))!!.human!!
-        historyWindow = HumanTimeWindow(initial.first.year.toDouble(), (initial.last.year - initial.first.year).toDouble())
+        historyWindow = HumanTimeWindow()
+        oldHuman?.takeUnless { it.id == "human" }?.human?.let {
+            historyWindow.focus(it.first.year.toDouble(), it.last.year.toDouble())
+        }
         if (savedInstanceState?.containsKey("history_start") == true) {
             historyWindow.set(savedInstanceState.getDouble("history_start"), savedInstanceState.getDouble("history_span"))
         } else if (prefs.contains("history_start")) {
             historyWindow.set(Double.fromBits(prefs.getLong("history_start", 0)), Double.fromBits(prefs.getLong("history_span", 0)))
         }
-        if (oldHuman != null) path = path.takeWhile { TimelineChapters.get(it)?.human == null } + "human"
+        if (savedInstanceState == null && !prefs.getBoolean("history_recent_entry_v1", false) &&
+            oldHuman?.id == "human" && locatedHistoryId == null && !historyWindow.isRecent) {
+            historyWindow.recentOverview()
+        }
+        if (oldHuman != null) path = TimelineChapters.navigate(path, TimelineChapters.humanWindow(historyWindow).id)
         buildUi()
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() = returnToParent()
@@ -98,24 +105,22 @@ class CosmicTimelineActivity : ThemedActivity() {
         toolbar.addView(icon(R.drawable.ic_search, R.string.ct_catalog) { catalog() }, square())
         toolbar.addView(icon(R.drawable.ic_more_vert_24, R.string.ct_about) { about() }, square())
         root.addView(toolbar)
+        navigator = TimelineNavigator(this, ::navigate, ::chooseScale, ::zoomOut, ::zoomIn,
+            { direction -> changeHumanWindow { pan(span * direction) } },
+            { changeHumanWindow { recentOverview() } }, { changeHumanWindow { century() } },
+            { fraction -> changeHumanWindow { seekRecent(fraction) } })
         content = column().apply { setPadding(dp(12), dp(6), dp(12), dp(20)) }
-        scroll = ScrollView(this).apply { isFillViewport = true; addView(content); clipToPadding = false }
-        // A readable column in portrait and landscape. The human chart owns horizontal gestures.
-        val centered = FrameLayout(this).apply {
-            val maxWidth = minOf(resources.configuration.screenWidthDp, 680)
-            addView(scroll, FrameLayout.LayoutParams(dp(maxWidth), -1, Gravity.CENTER_HORIZONTAL))
+        scroll = ScrollView(this).apply {
+            isFillViewport = true; clipToPadding = false
+            addView(content, FrameLayout.LayoutParams(-1, -2))
         }
-        root.addView(centered, LinearLayout.LayoutParams(-1, 0, 1f))
+        // Both orientations use the full available width, with navigation above the timeline.
+        root.addView(navigator, LinearLayout.LayoutParams(-1, -2))
+        root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         setContentView(root)
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val safe = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             view.setPadding(safe.left, safe.top, safe.right, safe.bottom)
-            // Account for landscape cutouts and split-screen windows, not just display width.
-            centered.post {
-                scroll.layoutParams = (scroll.layoutParams as FrameLayout.LayoutParams).apply {
-                    width = minOf(centered.width, dp(680))
-                }
-            }
             insets
         }
         ViewCompat.requestApplyInsets(root)
@@ -127,27 +132,19 @@ class CosmicTimelineActivity : ThemedActivity() {
         content.removeAllViews()
         val chapters = path.map { requireNotNull(TimelineChapters.get(it)) }
         val current = chapters.last()
-        back.contentDescription = when {
-            ScienceNavigation.isModuleLink(intent) -> getString(R.string.science_back_to_previous_module)
-            path.size > 1 -> getString(R.string.ct_geo_parent, getString(chapters[chapters.lastIndex - 1].title))
-            else -> getString(R.string.ct_back)
-        }
+        updateNavigation()
         back.tooltipText = null
         if (current.human != null) {
             historyExplorer = HumanHistoryExplorer(this, historyWindow, historyRegion, historyTopic, locatedHistoryId,
-                { region, topic, selected -> historyRegion = region; historyTopic = topic; locatedHistoryId = selected },
-                ::showHumanEntries, ::showHumanPeriod).also { content.addView(it) }
+                { region, topic, selected ->
+                    historyRegion = region; historyTopic = topic; locatedHistoryId = selected
+                    path = TimelineChapters.navigate(path, TimelineChapters.humanWindow(historyWindow).id)
+                    updateNavigation()
+                }, ::navigate, ::showHumanPeriod).also { content.addView(it) }
             return
         }
-        chapters.forEachIndexed { i, chapter ->
-            content.addView(CosmicTimelineView(this, chapter, chapters.getOrNull(i + 1), ::navigate),
-                LinearLayout.LayoutParams(-1, -2).apply { if (i > 0) topMargin = dp(4) })
-        }
-        val (previous, next) = TimelineChapters.neighbours(current)
-        if (previous != null || next != null) {
-            content.addView(navigationRow(previous?.title, next?.title,
-                { previous?.let { navigate(it.id) } }, { next?.let { navigate(it.id) } }), fullRow())
-        }
+        content.addView(CosmicTimelineView(this, current, null, ::navigate), LinearLayout.LayoutParams(-1, -2))
+        if (TimelineChapters.zoomTargets(current).isNotEmpty()) content.addView(paragraph(R.string.ct_explorer_hint))
         content.addView(label(getString(R.string.ct_dates_key), 11f).apply {
             setTextColor(palette.secondary); setPadding(dp(4), dp(12), dp(4), dp(4))
         })
@@ -231,18 +228,21 @@ class CosmicTimelineActivity : ThemedActivity() {
     }
 
     private fun navigate(id: String) {
+        navigateExact(if (id == "human") TimelineChapters.recentHistory.id else id)
+    }
+
+    private fun navigateExact(id: String) {
         locatedHistoryId = null
         applyNavigation(id)
     }
 
     private fun applyNavigation(id: String) {
-        openSheet?.dismiss()
+        fiche.dismiss()
         val human = TimelineChapters.get(id)?.human
         if (human != null) {
-            if (id != "human") historyWindow.focus(human.first.year.toDouble(), human.last.year.toDouble())
-            // Human periods are shortcuts to a date range, not additional navigation layers.
-            path = TimelineChapters.navigate(path.takeWhile { TimelineChapters.get(it)?.human == null }, "human")
-        } else path = TimelineChapters.navigate(path, id)
+            historyWindow.focus(human.first.year.toDouble(), human.last.year.toDouble())
+        }
+        path = TimelineChapters.navigate(path, id)
         render(); scroll.scrollTo(0, 0)
         content.announceForAccessibility(getString(requireNotNull(TimelineChapters.get(path.last())).title))
     }
@@ -250,14 +250,78 @@ class CosmicTimelineActivity : ThemedActivity() {
     private fun returnToParent() {
         when {
             ScienceNavigation.isModuleLink(intent) -> finish()
-            path.size > 1 -> navigate(path[path.lastIndex - 1])
+            path.size > 1 -> zoomOut()
             else -> finish()
+        }
+    }
+
+    private fun updateNavigation() {
+        val current = requireNotNull(TimelineChapters.get(path.last()))
+        navigator.bind(path, historyWindow.takeIf { current.human != null })
+        back.contentDescription = if (ScienceNavigation.isModuleLink(intent)) getString(R.string.science_back_to_previous_module)
+            else if (path.size > 1) getString(R.string.ct_history_zoom_out) else getString(R.string.ct_back)
+    }
+
+    private fun zoomOut() {
+        TimelineChapters.wider(path, historyWindow)?.let { navigateExact(it.id) }
+    }
+
+    private fun changeHumanWindow(change: HumanTimeWindow.() -> Unit) {
+        historyExplorer?.changeWindow(change)
+        scroll.scrollTo(0, 0)
+    }
+
+    private fun zoomIn(anchor: View) {
+        val current = requireNotNull(TimelineChapters.get(path.last()))
+        val targets = TimelineChapters.zoomTargets(current)
+        when {
+            targets.size == 1 -> navigate(targets.single().id)
+            targets.isNotEmpty() -> periodMenu(anchor, targets)
+            current.human != null -> { historyExplorer?.zoomIn(); scroll.scrollTo(0, 0) }
+        }
+    }
+
+    private fun periodMenu(anchor: View, periods: List<CosmicPeriod>) {
+        PopupMenu(this, anchor).apply {
+            periods.forEachIndexed { index, period ->
+                menu.add(0, index, index, periodMenuLabel(period))
+            }
+            setOnMenuItemClickListener { navigateExact(periods[it.itemId].id); true }
+            show()
+        }
+    }
+
+    private fun periodMenuLabel(period: CosmicPeriod): String {
+        val dates = TimelineDates(this)
+        return getString(R.string.ct_catalog_entry, getString(period.title),
+            getString(R.string.ct_range, dates.edge(period, true), dates.edge(period, false)))
+    }
+
+    private fun chooseScale(anchor: View) {
+        val current = requireNotNull(TimelineChapters.get(path.last()))
+        PopupMenu(this, anchor).apply {
+            val choices = mutableListOf<CosmicPeriod>()
+            fun group(title: Int, periods: List<CosmicPeriod>) {
+                if (periods.isEmpty()) return
+                val submenu = menu.addSubMenu(title)
+                periods.forEach { period ->
+                    val index = choices.size; choices.add(period)
+                    submenu.add(0, index, index, periodMenuLabel(period))
+                }
+            }
+            group(R.string.ct_explorer_wider, path.dropLast(1).reversed().mapNotNull(TimelineChapters::get))
+            val (before, after) = TimelineChapters.neighbours(current, historyWindow.takeIf { current.human != null })
+            group(R.string.ct_explorer_neighbours, listOfNotNull(before, current, after))
+            group(R.string.ct_explorer_closer, TimelineChapters.zoomTargets(current))
+            setOnMenuItemClickListener { item ->
+                if (item.hasSubMenu()) false else { navigateExact(choices[item.itemId].id); true }
+            }
+            show()
         }
     }
 
     private fun catalog() {
         val body = column()
-        body.addView(label(getString(R.string.ct_catalog), 23f, true))
         val input = EditText(this).apply {
             setHint(R.string.ct_search_hint); setSingleLine(true); textSize = 16f
             setTextColor(palette.text); setHintTextColor(palette.secondary)
@@ -285,7 +349,7 @@ class CosmicTimelineActivity : ThemedActivity() {
             if (events.isNotEmpty()) list.addView(paragraph(R.string.ct_events, true))
             events.forEach { list.addView(eventButton(it), fullRow()) }
             if (history.isNotEmpty()) list.addView(paragraph(R.string.ct_history_landmarks, true))
-            history.forEach { entry -> list.addView(button(entry.title) { showHumanLandmark(entry) }.apply {
+            history.forEach { entry -> list.addView(button(entry.title) { focusHumanEntries(listOf(entry)) }.apply {
                 text = getString(R.string.ct_catalog_entry, getString(entry.title), entry.dateLabel(this@CosmicTimelineActivity))
                 gravity = Gravity.START or Gravity.CENTER_VERTICAL
             }, fullRow()) }
@@ -295,7 +359,7 @@ class CosmicTimelineActivity : ThemedActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { results(s.toString()) }
             override fun afterTextChanged(s: Editable?) = Unit
         })
-        results(""); sheet(body)
+        results(""); sheet(getString(R.string.ct_catalog), body)
     }
 
     private fun eventButton(event: CosmicEvent) = button(event.title) { showEvent(event) }.apply {
@@ -309,7 +373,6 @@ class CosmicTimelineActivity : ThemedActivity() {
         body.addView(label(getString(event.date), 12f).apply {
             setTextColor(palette.secondary); setPadding(0, dp(16), 0, dp(6))
         })
-        body.addView(label(getString(event.title), 24f, true))
         body.addView(paragraph(event.summary, true)); body.addView(paragraph(event.detail))
         body.addView(paragraph(R.string.ct_precision, true))
         body.addView(paragraph(event.precision).apply { setTextColor(palette.secondary) })
@@ -322,12 +385,11 @@ class CosmicTimelineActivity : ThemedActivity() {
         val next = CosmicTimeline.events.getOrNull(index + 1)
         body.addView(navigationRow(previous?.title, next?.title,
             { previous?.let(::showEvent) }, { next?.let(::showEvent) }), fullRow())
-        sheet(body)
+        sheet(getString(event.title), body)
     }
 
     private fun about() {
         val body = column()
-        body.addView(label(getString(R.string.ct_about), 23f, true))
         body.addView(paragraph(R.string.ct_about_text)); body.addView(paragraph(R.string.ct_units_explanation))
         body.addView(paragraph(R.string.ct_geo_schematic))
         body.addView(paragraph(R.string.ct_scope, false, HumanHistory.periods.size, HumanHistory.entries.size))
@@ -336,58 +398,21 @@ class CosmicTimelineActivity : ThemedActivity() {
         body.addView(paragraph(R.string.ct_history_dates_key))
         body.addView(paragraph(R.string.ct_history_method))
         body.addView(paragraph(R.string.ct_science_method))
-        sheet(body)
+        sheet(getString(R.string.ct_about), body)
     }
 
-    private fun showHumanLandmark(entry: HumanLandmark) {
-        historyExplorer?.timeline?.stopMotion()
-        val body = column()
-        body.addView(label(entry.dateLabel(this), 13f).apply { setPadding(0, dp(12), 0, dp(6)); setTextColor(palette.secondary) })
-        if (entry.uncertainRange) body.addView(paragraph(R.string.ct_history_estimate, true))
-        body.addView(label(getString(entry.title), 23f, true))
-        val metadata = listOfNotNull(entry.science?.let { getString(it.label) }) + entry.regions.map { getString(it.label) }
-        body.addView(label(metadata.joinToString(getString(R.string.ct_credit_separator)), 12f).apply {
-            setTextColor(palette.secondary)
-        })
-        body.addView(paragraph(entry.body))
-        body.addView(paragraph(R.string.ct_precision, true)); body.addView(paragraph(entry.precision))
-        body.addView(button(R.string.ct_locate) {
-            focusHumanEntries(listOf(entry))
-        }, fullRow())
-        val visible = historyExplorer?.timeline?.visibleEntries().orEmpty()
-        val sequence = if (entry in visible) visible else HumanHistory.entries
-        val index = sequence.indexOf(entry)
-        val previous = sequence.getOrNull(index - 1); val next = sequence.getOrNull(index + 1)
-        body.addView(navigationRow(previous?.title, next?.title,
-            { previous?.let(::showHumanLandmark) }, { next?.let(::showHumanLandmark) }), fullRow())
-        sheet(body)
-    }
-
+    /** Depuis le catalogue : la frise se place sur le repère, dont la fiche s'affiche dessous. */
     private fun focusHumanEntries(entries: List<HumanLandmark>) {
-        openSheet?.dismiss()
+        fiche.dismiss()
         locatedHistoryId = entries.singleOrNull()?.id
         if (historyExplorer == null) applyNavigation("human")
         historyExplorer?.focus(entries)
         scroll.scrollTo(0, 0)
     }
 
-    private fun showHumanEntries(entries: List<HumanLandmark>) {
-        if (entries.size == 1) { showHumanLandmark(entries.first()); return }
-        if (entries.isEmpty()) return
-        val body = column()
-        body.addView(label(getString(R.string.ct_history_cluster, entries.size), 23f, true))
-        body.addView(button(R.string.ct_history_zoom_here) { focusHumanEntries(entries) }, fullRow())
-        entries.forEach { entry -> body.addView(button(entry.title) { showHumanLandmark(entry) }.apply {
-            text = getString(R.string.ct_catalog_entry, getString(entry.title), entry.dateLabel(this@CosmicTimelineActivity))
-            gravity = Gravity.START or Gravity.CENTER_VERTICAL
-        }, fullRow()) }
-        sheet(body)
-    }
-
     private fun showHumanPeriod(period: CosmicPeriod) {
         historyExplorer?.timeline?.stopMotion()
         val body = column()
-        body.addView(label(getString(period.title), 23f, true))
         body.addView(label(requireNotNull(period.human).label(this), 13f).apply { setTextColor(palette.secondary) })
         body.addView(object : View(this) {
             private val art = HumanTimelineArt()
@@ -397,35 +422,19 @@ class CosmicTimelineActivity : ThemedActivity() {
         }, LinearLayout.LayoutParams(-1, dp(100)))
         body.addView(paragraph(period.description))
         body.addView(button(R.string.ct_locate) {
-            openSheet?.dismiss(); historyExplorer?.focus(period); scroll.scrollTo(0, 0)
+            fiche.dismiss(); historyExplorer?.focus(period); scroll.scrollTo(0, 0)
         }, fullRow())
         body.addView(button(R.string.ct_history_open_species) {
             startActivity(Intent(this, ParentesActivity::class.java)
                 .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
                 .putExtra(ParentesActivity.EXTRA_NODE_ID, "ott770315"))
         }, fullRow())
-        sheet(body)
+        sheet(getString(period.title), body)
     }
 
-    private fun sheet(body: LinearLayout) {
+    private fun sheet(title: String, body: LinearLayout) {
         historyExplorer?.timeline?.stopMotion()
-        openSheet?.dismiss()
-        val dialog = BottomSheetDialog(this); openSheet = dialog
-        val wrap = column().apply { setBackgroundColor(palette.surface) }
-        val header = row().apply { gravity = Gravity.END }
-        header.addView(icon(R.drawable.ic_close, R.string.ct_close) { dialog.dismiss() }, square())
-        wrap.addView(header)
-        body.setPadding(dp(20), 0, dp(20), dp(24))
-        wrap.addView(androidx.core.widget.NestedScrollView(this).apply { isFillViewport = true; addView(body) }, LinearLayout.LayoutParams(-1, 0, 1f))
-        val sheetHeight = (resources.displayMetrics.heightPixels * .9f).toInt()
-        dialog.setContentView(wrap, android.view.ViewGroup.LayoutParams(-1, sheetHeight))
-        dialog.behavior.maxHeight = sheetHeight
-        dialog.behavior.maxWidth = minOf(resources.displayMetrics.widthPixels, dp(600))
-        dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        dialog.behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-        dialog.followImmersiveMode()
-        dialog.setOnDismissListener { if (openSheet === dialog) openSheet = null }
-        dialog.show()
+        fiche.show(title, null, null, body)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -440,12 +449,13 @@ class CosmicTimelineActivity : ThemedActivity() {
     override fun onStop() {
         historyExplorer?.timeline?.stopMotion()
         prefs.edit().putString("path_v2", path.joinToString("|")).putStringSet("expanded_v2", expanded.toSet())
+            .putBoolean("history_recent_entry_v1", true)
             .putString("history_region", historyRegion?.name).putString("located_history", locatedHistoryId)
             .putString("history_topic", historyTopic.name)
             .putLong("history_start", historyWindow.start.toBits()).putLong("history_span", historyWindow.span.toBits()).apply()
         super.onStop()
     }
-    override fun onDestroy() { openSheet?.dismiss(); openSheet = null; super.onDestroy() }
+    override fun onDestroy() { fiche.dismiss(); super.onDestroy() }
 
     private fun column() = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
     private fun row() = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }

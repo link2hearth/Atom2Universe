@@ -38,7 +38,6 @@ class HumanHistoryTimelineView(
     private var flingX = 0
     private var dragging = false
     private var pinched = false
-    private var overview = false
     private var verticalGesture = false
     private var touching = false
     private var axisY = 0f
@@ -72,7 +71,7 @@ class HumanHistoryTimelineView(
     private val scale = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
             pinched = true; dragging = true; parent?.requestDisallowInterceptTouchEvent(true)
-            return !overview
+            return true
         }
         override fun onScale(detector: ScaleGestureDetector): Boolean {
             window.zoom(detector.scaleFactor.toDouble(), ((detector.focusX - inset) / plotWidth).toDouble())
@@ -183,17 +182,11 @@ class HumanHistoryTimelineView(
         if (width <= 0) return
         paint.style = Paint.Style.FILL; paint.strokeWidth = dp(1).toFloat()
         paint.textSize = 10f * resources.displayMetrics.scaledDensity
-        // Overview always covers the same 300,000 years; a minimum-width grip stays visible.
-        text(canvas, HumanHistory.ago(300_000).label(context), inset, dp(19).toFloat())
-        text(canvas, HumanDate(HumanHistory.END_YEAR).label(context), width - inset, dp(19).toFloat(), Paint.Align.RIGHT)
-        paint.color = palette.outline
-        canvas.drawRoundRect(inset, dp(30).toFloat(), width - inset, dp(35).toFloat(), dp(2).toFloat(), dp(2).toFloat(), paint)
-        val domain = HumanTimeWindow.MAX - HumanTimeWindow.MIN
-        val gripWidth = maxOf(dp(5).toFloat(), (window.span / domain * plotWidth).toFloat())
-        val gripCenter = (inset + (window.center - HumanTimeWindow.MIN) / domain * plotWidth).toFloat()
-        val gripLeft = (gripCenter - gripWidth / 2).coerceIn(inset, maxOf(inset, width - inset - gripWidth))
+        // The parent-scale locator lives in the shared navigator; these dates describe this chart.
+        text(canvas, HumanDate(window.start.roundToInt()).label(context), inset, dp(19).toFloat())
+        text(canvas, HumanDate(window.end.roundToInt()).label(context), width - inset, dp(19).toFloat(), Paint.Align.RIGHT)
         paint.color = palette.accent
-        canvas.drawRoundRect(gripLeft, dp(27).toFloat(), gripLeft + gripWidth, dp(38).toFloat(), dp(3).toFloat(), dp(3).toFloat(), paint)
+        canvas.drawRoundRect(inset, dp(30).toFloat(), width - inset, dp(35).toFloat(), dp(2).toFloat(), dp(2).toFloat(), paint)
 
         val saved = canvas.save(); canvas.clipRect(inset, dp(48).toFloat(), width - inset, axisY)
         // Low-contrast period colour and code-drawn motifs supply context without more navigation layers.
@@ -272,7 +265,7 @@ class HumanHistoryTimelineView(
             touching = true
             stopMotion(); velocity?.recycle(); velocity = VelocityTracker.obtain()
             downX = event.x; downY = event.y; lastX = event.x
-            dragging = false; pinched = false; verticalGesture = false; overview = event.y < dp(46)
+            dragging = false; pinched = false; verticalGesture = false
             // Decide the direction before the surrounding ScrollView can steal a horizontal drag.
             parent?.requestDisallowInterceptTouchEvent(true)
         }
@@ -289,14 +282,13 @@ class HumanHistoryTimelineView(
                 dragging = true; parent?.requestDisallowInterceptTouchEvent(true)
             }
             if (dragging) {
-                if (overview) seekOverview(event.x) else window.pan((lastX - event.x) / plotWidth * window.span)
+                window.pan((lastX - event.x) / plotWidth * window.span)
                 refresh()
             }
             lastX = event.x
         }
         if (event.actionMasked == MotionEvent.ACTION_UP) {
-            if (overview && !dragging && !pinched && !verticalGesture) { seekOverview(event.x); refresh(); performClick() }
-            if (dragging && !pinched && !overview) {
+            if (dragging && !pinched) {
                 velocity?.computeCurrentVelocity(1000, ViewConfiguration.get(context).scaledMaximumFlingVelocity.toFloat())
                 val speed = -(velocity?.xVelocity ?: 0f).roundToInt()
                 if (abs(speed) > ViewConfiguration.get(context).scaledMinimumFlingVelocity) {
@@ -314,12 +306,7 @@ class HumanHistoryTimelineView(
         return handled
     }
 
-    private fun seekOverview(px: Float) {
-        val center = HumanTimeWindow.MIN + ((px - inset) / plotWidth).coerceIn(0f, 1f) * (HumanTimeWindow.MAX - HumanTimeWindow.MIN)
-        window.set(center - window.span / 2, window.span)
-    }
-
-    override fun onInterceptTouchEvent(event: MotionEvent) = overview || dragging || pinched
+    override fun onInterceptTouchEvent(event: MotionEvent) = dragging || pinched
     override fun onTouchEvent(event: MotionEvent): Boolean = true
     override fun performClick(): Boolean { super.performClick(); return true }
 

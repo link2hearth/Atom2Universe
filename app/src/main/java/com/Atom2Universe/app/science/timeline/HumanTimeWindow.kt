@@ -6,13 +6,15 @@ import kotlin.math.log10
 import kotlin.math.pow
 
 /** Continuous civil-time viewport. Calculations stay in years, away from cosmic rounding. */
-class HumanTimeWindow(start: Double = -2999.0, span: Double = 5025.0) {
-    var start = -2999.0
+class HumanTimeWindow(start: Double = RECENT_MIN, span: Double = RECENT_SPAN) {
+    var start = RECENT_MIN
         private set
-    var span = 5025.0
+    var span = RECENT_SPAN
         private set
     val end get() = start + span
     val center get() = start + span / 2
+    val isRecent get() = start >= RECENT_MIN && span <= RECENT_SPAN
+    val navigationMin get() = if (isRecent) RECENT_MIN else MIN
 
     init { set(start, span) }
 
@@ -22,14 +24,30 @@ class HumanTimeWindow(start: Double = -2999.0, span: Double = 5025.0) {
         start = first.coerceIn(MIN, MAX - span)
     }
 
-    fun pan(years: Double) = set(start + years, span)
+    fun pan(years: Double) = set((start + years).coerceIn(navigationMin, MAX - span), span)
+
+    fun recentOverview() = set(RECENT_MIN, RECENT_SPAN)
+
+    fun century() {
+        val first = if (!isRecent || span >= RECENT_SPAN - .001) MAX - CENTURY
+            else (center - CENTURY / 2).coerceIn(RECENT_MIN, MAX - CENTURY)
+        set(first, CENTURY)
+    }
+
+    /** The scrubber moves the window across recent history without changing its duration. */
+    fun seekRecent(fraction: Double) {
+        if (!fraction.isFinite()) return
+        val duration = minOf(span, RECENT_SPAN)
+        set(RECENT_MIN + fraction.coerceIn(0.0, 1.0) * (RECENT_SPAN - duration), duration)
+    }
 
     /** Anchor remains under the same finger unless a domain boundary is reached. */
     fun zoom(factor: Double, fraction: Double = .5) {
         if (!factor.isFinite() || factor <= 0) return
         val anchor = fraction.coerceIn(0.0, 1.0)
-        val duration = (span / factor).coerceIn(MIN_SPAN, MAX - MIN)
-        set(start + anchor * (span - duration), duration)
+        val minimum = navigationMin
+        val duration = (span / factor).coerceIn(MIN_SPAN, MAX - minimum)
+        set((start + anchor * (span - duration)).coerceIn(minimum, MAX - duration), duration)
     }
 
     fun focus(first: Double, last: Double, padding: Boolean = false) {
@@ -62,5 +80,8 @@ class HumanTimeWindow(start: Double = -2999.0, span: Double = 5025.0) {
         const val MIN = -297974.0 // 300,000 years before the fixed editorial endpoint.
         const val MAX = 2026.0
         const val MIN_SPAN = 2.0
+        const val RECENT_MIN = -3999.0 // 4000 BCE in astronomical year numbering.
+        const val RECENT_SPAN = MAX - RECENT_MIN
+        const val CENTURY = 100.0
     }
 }

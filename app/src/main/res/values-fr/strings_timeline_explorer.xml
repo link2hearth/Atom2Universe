@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ct_explorer_recent_title">Histoire humaine · derniers millénaires</string>
+    <string name="ct_explorer_recent">De 4000 avant notre ère à aujourd’hui</string>
+    <string name="ct_explorer_recent_short">−4000 → présent</string>
+    <string name="ct_explorer_recent_body">Cette fenêtre sert à parcourir les derniers millénaires. Elle commence à 4000 avant notre ère pour faciliter la lecture ; ce n’est pas une limite historique universelle. Les repères préhistoriques restent accessibles en dézoomant ou par la recherche.</string>
+    <string name="ct_explorer_century">100 ans</string>
+    <string name="ct_explorer_century_description">Afficher une tranche de 100 ans, puis glisser pour parcourir les dates</string>
+    <string name="ct_explorer_scrub_hint">100 ans pour zoomer · curseur pour se déplacer</string>
+    <string name="ct_explorer_scrub_description">Parcourir de 4000 avant notre ère à aujourd’hui. Fenêtre affichée : %1$s</string>
+    <string name="ct_explorer_choose">%1$s. Choisir une période ou une échelle.</string>
+    <string name="ct_explorer_context">Dans %1$s · toucher pour dézoomer</string>
+    <string name="ct_explorer_overview">Vue d’ensemble · %1$s</string>
+    <string name="ct_explorer_position">Position dans %1$s. Intervalle surligné : %2$s.</string>
+    <string name="ct_explorer_wider">Échelles plus larges</string>
+    <string name="ct_explorer_neighbours">Périodes voisines</string>
+    <string name="ct_explorer_closer">Explorer en détail</string>
+    <string name="ct_explorer_enter">%1$s ›</string>
+    <string name="ct_explorer_hint">Touche une période pour zoomer. La zone surlignée au-dessus la situe dans la frise plus large. Précédent et Suivant permettent de passer d’une période à l’autre.</string>
+</resources>

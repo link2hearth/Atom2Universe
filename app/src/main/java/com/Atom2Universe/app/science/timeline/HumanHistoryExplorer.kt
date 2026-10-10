@@ -1,11 +1,10 @@
 package com.Atom2Universe.app.science.timeline
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Typeface
+import android.text.TextUtils
 import android.view.Gravity
 import android.widget.Button
-import android.widget.ImageButton
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -13,7 +12,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.science.SciencePalette
 import kotlin.math.roundToInt
 
-/** Human history has one continuous navigation surface, independent of geological chapter layers. */
+/** Human detail chart within the same hierarchy and navigation as the cosmic chapters. */
 class HumanHistoryExplorer(
     context: Context,
     val window: HumanTimeWindow,
@@ -21,17 +20,16 @@ class HumanHistoryExplorer(
     initialTopic: HistoryTopic,
     selectedId: String?,
     private val stateChanged: (HumanRegion?, HistoryTopic, String?) -> Unit,
-    openEntries: (List<HumanLandmark>) -> Unit,
+    private val navigate: (String) -> Unit,
     private val readPeriod: (CosmicPeriod) -> Unit
 ) : LinearLayout(context) {
     private val palette = SciencePalette(context)
-    private val dates = TextView(context).apply { textSize = 13f; setTextColor(palette.secondary) }
     private val status = TextView(context).apply { textSize = 12f; setTextColor(palette.secondary) }
     val timeline: HumanHistoryTimelineView
-    private val earlier: ImageButton
-    private val later: ImageButton
-    private val minus: Button
-    private val plus: Button
+    // Le repère touché s'affiche ici, sous la frise, plutôt que dans une fenêtre en plus.
+    private val panel = HumanLandmarkPanel(context, { entries -> focus(entries) }, { entry -> timeline.selectedId = entry?.id })
+    private val periods = line()
+    private var visibleChapterId: String? = null
     private val filter: Button
     var region = initialRegion
         private set
@@ -40,46 +38,12 @@ class HumanHistoryExplorer(
 
     init {
         orientation = VERTICAL
-        val heading = line()
-        heading.addView(TextView(context).apply {
-            setText(R.string.ct_history_human_title); textSize = 21f; setTextColor(palette.text)
-            typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
-        }, LayoutParams(0, -2, 1f))
-        heading.addView(button(R.string.ct_history_period_menu) { anchor ->
-            PopupMenu(context, anchor).apply {
-                HumanHistory.periods.forEachIndexed { index, period ->
-                    menu.add(0, index, index, context.getString(R.string.ct_catalog_entry,
-                        context.getString(period.title), requireNotNull(period.human).label(context)))
-                }
-                setOnMenuItemClickListener { item -> focus(HumanHistory.periods[item.itemId]); true }
-                show()
-            }
-        }, LayoutParams(-2, dp(48)))
-        addView(heading)
-        addView(dates, LayoutParams(-1, -2).apply { topMargin = dp(6); bottomMargin = dp(10) })
-        timeline = HumanHistoryTimelineView(context, window, ::update, openEntries)
+        addView(HorizontalScrollView(context).apply {
+            isHorizontalScrollBarEnabled = true; addView(periods)
+        }, LayoutParams(-1, dp((56 * resources.configuration.fontScale.coerceAtLeast(1f)).roundToInt())))
+        timeline = HumanHistoryTimelineView(context, window, ::update, ::openMark)
         addView(timeline, LayoutParams(-1, -2))
-        val controls = line()
-        earlier = arrow(R.drawable.ic_chevron_left, R.string.ct_history_earlier) { move(-.75) }
-        later = arrow(R.drawable.ic_chevron_right, R.string.ct_history_later) { move(.75) }
-        minus = button(R.string.ct_history_minus) { zoom(.5) }.apply {
-            contentDescription = context.getString(R.string.ct_history_zoom_out); textSize = 22f
-        }
-        plus = button(R.string.ct_history_plus) { zoom(2.0) }.apply {
-            contentDescription = context.getString(R.string.ct_history_zoom_in); textSize = 22f
-        }
-        controls.addView(earlier, LayoutParams(dp(48), dp(48)))
-        controls.addView(minus, LayoutParams(dp(48), dp(48)))
-        controls.addView(button(R.string.ct_history_overview) {
-            timeline.stopMotion(); window.set(HumanTimeWindow.MIN, HumanTimeWindow.MAX - HumanTimeWindow.MIN); timeline.refresh()
-        }, LayoutParams(0, dp(48), 1f).apply { marginStart = dp(4); marginEnd = dp(4) })
-        controls.addView(plus, LayoutParams(dp(48), dp(48)))
-        controls.addView(later, LayoutParams(dp(48), dp(48)))
-        addView(controls, LayoutParams(-1, -2).apply { topMargin = dp(6) })
-        addView(TextView(context).apply {
-            setText(R.string.ct_history_gesture_hint); textSize = 12f; setTextColor(palette.secondary)
-            setPadding(dp(2), dp(8), dp(2), dp(8))
-        })
+        addView(panel, LayoutParams(-1, -2).apply { topMargin = dp(10) })
         val options = line()
         filter = button(R.string.ct_history_all_regions) { anchor ->
             PopupMenu(context, anchor).apply {
@@ -111,17 +75,13 @@ class HumanHistoryExplorer(
         }
         options.addView(filter, LayoutParams(0, -2, 1f))
         options.addView(button(R.string.ct_history_read_window) {
-            val period = HumanHistory.periods.filter {
-                val bounds = requireNotNull(it.human)
-                bounds.first.year <= window.center && bounds.last.year >= window.center &&
-                    bounds.last.year - bounds.first.year >= window.span * .65
-            }.minByOrNull { it.end - it.start } ?: HumanHistory.periods.first()
-            readPeriod(period)
+            readPeriod(TimelineChapters.humanWindow(window))
         }, LayoutParams(0, -2, 1f).apply { marginStart = dp(6) })
         addView(options)
         addView(status, LayoutParams(-1, -2).apply { topMargin = dp(10) })
         // Assign after controls exist because these setters notify the containing screen.
         timeline.region = region; timeline.topic = topic; timeline.selectedId = selectedId
+        HumanHistory.entries.firstOrNull { it.id == selectedId }?.let { panel.showEntry(it) }
         update()
     }
 
@@ -129,6 +89,7 @@ class HumanHistoryExplorer(
         val range = requireNotNull(period.human)
         timeline.stopMotion(); window.focus(range.first.year.toDouble(), range.last.year.toDouble())
         timeline.selectedId = null
+        panel.hide()
     }
 
     fun focus(entries: List<HumanLandmark>) {
@@ -140,19 +101,44 @@ class HumanHistoryExplorer(
         timeline.region = region; timeline.topic = topic
         window.focus(entries.minOf { it.range.first.year }.toDouble(), entries.maxOf { it.range.last.year }.toDouble(), true)
         timeline.selectedId = entries.singleOrNull()?.id
+        panel.hide()
+        entries.singleOrNull()?.let { panel.showEntry(it); panel.reveal() }
     }
 
-    private fun zoom(factor: Double) { timeline.stopMotion(); window.zoom(factor); timeline.refresh() }
-    private fun move(fraction: Double) { timeline.stopMotion(); window.pan(window.span * fraction); timeline.refresh() }
+    private fun openMark(entries: List<HumanLandmark>) {
+        val only = entries.singleOrNull()
+        if (only != null) panel.showEntry(only) else if (entries.isNotEmpty()) panel.showCluster(entries) else return
+        panel.reveal()
+    }
+
+    fun zoomIn() { timeline.stopMotion(); window.zoom(2.0); timeline.refresh() }
+
+    fun changeWindow(change: HumanTimeWindow.() -> Unit) {
+        timeline.stopMotion()
+        window.change()
+        panel.hide()
+        timeline.selectedId = null
+    }
 
     private fun update() {
-        dates.text = context.getString(R.string.ct_range, HumanDate(window.start.roundToInt()).label(context),
-            HumanDate(window.end.roundToInt()).label(context))
-        earlier.isEnabled = window.start > HumanTimeWindow.MIN
-        later.isEnabled = window.end < HumanTimeWindow.MAX
-        minus.isEnabled = window.span < HumanTimeWindow.MAX - HumanTimeWindow.MIN
-        plus.isEnabled = window.span > HumanTimeWindow.MIN_SPAN
-        listOf(earlier, later, minus, plus).forEach { it.alpha = if (it.isEnabled) 1f else .35f }
+        val chapter = TimelineChapters.humanWindow(window)
+        if (visibleChapterId != chapter.id) {
+            visibleChapterId = chapter.id
+            periods.removeAllViews()
+            TimelineChapters.children(chapter).forEach { child ->
+                periods.addView(button(child.title) { navigate(child.id) }.apply {
+                    text = context.getString(R.string.ct_explorer_enter, context.getString(child.title))
+                    maxLines = 2; ellipsize = TextUtils.TruncateAt.END
+                    contentDescription = context.getString(R.string.ct_zone_description,
+                        context.getString(child.title), child.dateLabel(context))
+                }, LayoutParams(-2, -2).apply { marginEnd = dp(6); bottomMargin = dp(8) })
+            }
+            if (periods.childCount == 0) periods.addView(TextView(context).apply {
+                setText(R.string.ct_history_gesture_hint); textSize = 12f; setTextColor(palette.secondary)
+                maxWidth = dp(290); setPadding(dp(4), dp(4), dp(4), dp(4))
+                maxLines = 2; ellipsize = TextUtils.TruncateAt.END
+            })
+        }
         filter.text = if (region == null) context.getString(topic.label)
             else context.getString(R.string.ct_history_filter_summary, context.getString(topic.label), context.getString(region!!.label))
         status.setText(if (timeline.visibleEntries().isEmpty()) R.string.ct_history_window_empty else R.string.ct_history_window_note)
@@ -164,11 +150,6 @@ class HumanHistoryExplorer(
         setText(label); isAllCaps = false; textSize = 13f; minHeight = dp(48); minimumWidth = 0; minWidth = 0
         setTextColor(palette.text); background = palette.shape(palette.raised, 8f)
         setPadding(dp(8), dp(6), dp(8), dp(6)); setOnClickListener { action(this) }
-    }
-    private fun arrow(icon: Int, description: Int, action: () -> Unit) = ImageButton(context).apply {
-        setImageResource(icon); imageTintList = ColorStateList.valueOf(palette.text)
-        contentDescription = context.getString(description); tooltipText = contentDescription
-        background = palette.shape(palette.raised, 8f); setOnClickListener { action() }
     }
     private fun dp(value: Int) = (value * resources.displayMetrics.density).roundToInt()
 }

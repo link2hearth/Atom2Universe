@@ -4,7 +4,7 @@ import android.content.Context
 import com.Atom2Universe.app.R
 import java.text.NumberFormat
 
-/** Explicit navigation: changing the visible chapter never depends on a zoom threshold. */
+/** Shared hierarchy for cosmic, geological and human exploration. */
 object TimelineChapters {
     val universe = CosmicPeriod("universe", 0.0, CosmicTimeline.PRESENT,
         R.string.ct_chapter_universe, R.string.ct_big_bang_date, R.string.ct_universe_intro,
@@ -12,10 +12,16 @@ object TimelineChapters {
     val minutes = CosmicPeriod("minutes", 0.0, 1500.0 / CosmicTimeline.YEAR_SECONDS,
         R.string.ct_chapter_minutes, R.string.ct_minutes_dates, R.string.ct_minutes_intro,
         CosmicArt.Kind.ATOM, listOf("big_bang", "inflation", "particles", "nuclei"), "primordial")
-    val all = listOf(universe) + CosmicPeriods.all + minutes + LifeTimeline.periods + HumanHistory.periods
+    // A navigation window, not a new historical division or a change to the dated records.
+    val recentHistory = CosmicPeriod("human_history", HumanHistory.bce(4000).position, CosmicTimeline.PRESENT,
+        R.string.ct_explorer_recent_title, R.string.ct_explorer_recent, R.string.ct_explorer_recent_body,
+        CosmicArt.Kind.STRATA, emptyList(), "human", human = HumanRange(HumanHistory.bce(4000), HumanHistory.ce(HumanHistory.END_YEAR)),
+        thematic = true)
+    val all = listOf(universe) + CosmicPeriods.all + minutes + LifeTimeline.periods + HumanHistory.periods + recentHistory
     fun get(id: String?) = all.find { it.id == id }
     fun children(chapter: CosmicPeriod): List<CosmicPeriod> = when (chapter.id) {
         "universe" -> listOfNotNull(get("origins"), get("galaxies"))
+        "human_history" -> listOfNotNull(get("human_recent"))
         else -> all.filter { it.parentId == chapter.id && it.datedAncestorId == null && !it.thematic }
     }
     fun related(chapter: CosmicPeriod): List<CosmicPeriod> = when (chapter.id) {
@@ -25,16 +31,43 @@ object TimelineChapters {
         else -> emptyList()
     }
 
+    fun zoomTargets(chapter: CosmicPeriod) = (children(chapter) + related(chapter)).distinctBy { it.id }
+
+    /** Use civil years, including when a gesture crosses a chapter boundary. */
+    fun humanWindow(window: HumanTimeWindow): CosmicPeriod {
+        val period = HumanHistory.periods.filter {
+            val range = requireNotNull(it.human)
+            range.first.year <= window.start + .0001 && range.last.year >= window.end - .0001
+        }.minByOrNull { it.end - it.start } ?: requireNotNull(get("human"))
+        // The browsing shortcut must not hide the reading chapter for 4000–3000 BCE.
+        return if (period.id == "human" && window.isRecent) recentHistory else period
+    }
+
+    /** This is both the upper strip and the destination of the zoom-out control. */
+    fun wider(path: List<String>, window: HumanTimeWindow? = null): CosmicPeriod? {
+        val chapter = get(path.lastOrNull()) ?: return null
+        val range = chapter.human
+        if (window != null && range != null && window.span < range.last.year - range.first.year - .001) return chapter
+        return get(path.getOrNull(path.lastIndex - 1))
+    }
+
     /** Adjacent periods remain reachable across era boundaries; parallel histories are not siblings. */
-    fun neighbours(chapter: CosmicPeriod): Pair<CosmicPeriod?, CosmicPeriod?> {
-        val rank = chapter.geology?.rank
+    fun neighbours(chapter: CosmicPeriod, window: HumanTimeWindow? = null): Pair<CosmicPeriod?, CosmicPeriod?> {
+        // A drag across 1945 must not suddenly offer Antiquity as the previous period.
+        // Keep neighbouring periods at the scale of the window, centred on what is being read.
+        val focus = if (chapter.human != null && window != null) HumanHistory.periods.filter {
+            val range = requireNotNull(it.human)
+            range.first.year <= window.center && range.last.year > window.center &&
+                range.last.year - range.first.year >= window.span - .0001
+        }.minByOrNull { it.end - it.start } ?: chapter else chapter
+        val rank = focus.geology?.rank
         val sequence = when {
-            chapter.datedAncestorId != null -> LifeTimeline.periods.sortedBy { it.start }
-            chapter.human != null -> HumanHistory.periods.filter { it.human?.rank == chapter.human.rank }.sortedBy { it.start }
+            focus.datedAncestorId != null -> LifeTimeline.periods.sortedBy { it.start }
+            focus.human != null -> HumanHistory.periods.filter { it.human?.rank == focus.human.rank }.sortedBy { it.start }
             rank != null -> all.filter { it.geology?.rank == rank }.sortedBy { it.start }
-            else -> children(get(chapter.parentId) ?: universe).sortedBy { it.start }
+            else -> children(get(focus.parentId) ?: universe).sortedBy { it.start }
         }
-        val index = sequence.indexOfFirst { it.id == chapter.id }
+        val index = sequence.indexOfFirst { it.id == focus.id }
         return if (index < 0) null to null else sequence.getOrNull(index - 1) to sequence.getOrNull(index + 1)
     }
     fun contains(parent: CosmicPeriod, child: CosmicPeriod) =
