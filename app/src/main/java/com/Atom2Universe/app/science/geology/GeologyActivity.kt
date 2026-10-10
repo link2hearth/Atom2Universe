@@ -20,12 +20,10 @@ import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.ScienceFiche
 import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.parentes.ParentesActivity
 import com.Atom2Universe.app.science.timeline.*
-import com.Atom2Universe.app.util.followImmersiveMode
-import com.Atom2Universe.app.util.paintSheetFrame
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.Normalizer
 import java.util.Locale
 
@@ -44,7 +42,8 @@ class GeologyActivity:ThemedActivity() {
     private var playing=true
     private var resumed=false
     private var animator:ValueAnimator?=null
-    private var openSheet:BottomSheetDialog?=null
+    // La fiche ouverte : une seule fenêtre plein écran, dont le contenu change d'une fiche à l'autre.
+    private val fiche by lazy { ScienceFiche(this,palette,R.string.geo_back,R.string.geo_close) { sheetTopic=null;syncAnimation() } }
     private var sheetTopic:String?=null
     private var timeRank=GeologicalRank.EON
     private val savedTopics by lazy { prefs.getStringSet("saved_topics", emptySet()).orEmpty().toMutableSet() }
@@ -77,7 +76,7 @@ class GeologyActivity:ThemedActivity() {
         val toolbar=row()
         toolbar.addView(icon(R.drawable.ic_arrow_back_24,R.string.geo_back) { finish() }.apply {
             ScienceNavigation.bindHomeAction(this) {
-                openSheet?.dismiss()
+                fiche.dismiss()
                 navigate(EarthScene.GLOBE)
                 announceForAccessibility(getString(R.string.science_return_to_module_start))
             }
@@ -229,14 +228,13 @@ class GeologyActivity:ThemedActivity() {
     }
     private fun sceneAtlas() {
         val body=column()
-        body.addView(label(getString(R.string.geo_atlas),24f,true),full())
         EarthChapter.entries.forEach { chapter ->
             body.addView(label(getString(chapter.title),14f,true).apply { setTextColor(palette.ink(chapter.color)) },full())
             EarthScene.entries.filter { it.chapter==chapter }.forEach { target ->
                 val card=row().apply {
                     background=palette.shape(if(target==scene) ColorUtils.blendARGB(palette.raised,chapter.color,.18f) else palette.raised)
                     setPadding(dp(8),dp(8),dp(12),dp(8));minimumHeight=dp(80)
-                    setOnClickListener { openSheet?.dismiss();navigate(target) }
+                    setOnClickListener { fiche.dismiss();navigate(target) }
                     isFocusable=true;contentDescription=getString(target.title);isSelected=target==scene
                 }
                 card.addView(EarthPreviewView(this,target),LinearLayout.LayoutParams(dp(94),dp(68)))
@@ -244,12 +242,11 @@ class GeologyActivity:ThemedActivity() {
                 body.addView(card,full())
             }
         }
-        showSheet(body)
+        showSheet(getString(R.string.geo_atlas),body)
     }
     private fun showLesson() {
         val lesson=scene.lesson
         val body=column()
-        body.addView(label(getString(scene.title),24f,true),full())
         body.addView(label(getString(lesson.summary),16f),full())
         body.addView(infoCard(R.string.geo_observe,lesson.observation),full())
         val question=infoCard(R.string.geo_wonder,lesson.question)
@@ -271,15 +268,14 @@ class GeologyActivity:ThemedActivity() {
             realScale -> R.string.geo_scale_real_note
             else -> R.string.geo_scale_expanded_note
         }),12f).apply { setTextColor(palette.secondary) },full())
-        showSheet(body)
+        showSheet(getString(scene.title),body)
     }
     private fun showTimeHelp() {
         val body=column()
-        body.addView(label(getString(R.string.geo_time_help),24f,true),full())
         body.addView(label(getString(R.string.geo_time_intro),16f),full())
         body.addView(infoCard(R.string.geo_observe,R.string.geo_date_key),full())
         body.addView(label(getString(R.string.geo_period_note),16f),full())
-        showSheet(body)
+        showSheet(getString(R.string.geo_time_help),body)
     }
     private fun infoCard(title:Int,body:Int)=column().apply {
         background=palette.shape(ColorUtils.blendARGB(palette.surface,scene.chapter.color,.07f))
@@ -312,7 +308,6 @@ class GeologyActivity:ThemedActivity() {
         val period=EarthPeriods.all.firstOrNull { it.id==id }
         if(topic==null && period==null) return
         val body=column()
-        body.addView(label(getString(topic?.title ?: period!!.title),22f,true),full())
         val save=button(if(id in savedTopics) R.string.geo_saved else R.string.geo_save,id in savedTopics) {}
         save.setOnClickListener {
             if(!savedTopics.add(id)) savedTopics.remove(id)
@@ -335,7 +330,7 @@ class GeologyActivity:ThemedActivity() {
             topic.periodId?.let { addTimeline(body,it) }
             topic.lifeId?.let { addLife(body,it) }
             GeologyCatalog.scene(id)?.takeIf { it!=scene }?.let { target ->
-                body.addView(button(R.string.geo_related) { openSheet?.dismiss();navigate(target) },full())
+                body.addView(button(R.string.geo_related) { fiche.dismiss();navigate(target) },full())
             }
             body.addView(label(getString(R.string.geo_sources),14f,true),full())
             addSource(body,topic.source)
@@ -349,7 +344,7 @@ class GeologyActivity:ThemedActivity() {
             GeologyCatalog.lifeByPeriod[id]?.let { addLife(body,it) }
             period.sources.forEach { source -> body.addView(button(source.label) { openUrl(source.url) },full()) }
         }
-        showSheet(body,id)
+        showSheet(getString(topic?.title ?: period!!.title),body,id)
     }
     private fun addTimeline(body:LinearLayout,id:String) {
         val chapter=TimelineChapters.get(id) ?: return
@@ -376,7 +371,6 @@ class GeologyActivity:ThemedActivity() {
     }
     private fun catalog() {
         val body=column()
-        body.addView(label(getString(R.string.geo_catalog),20f,true),full())
         val search=EditText(this).apply { setHint(R.string.geo_search_hint);setTextColor(palette.text);setHintTextColor(palette.secondary);isSingleLine=true }
         body.addView(search,full())
         var savedOnly=false
@@ -413,11 +407,10 @@ class GeologyActivity:ThemedActivity() {
             override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int) { filter(s?.toString().orEmpty()) }
             override fun afterTextChanged(s:Editable?)=Unit
         })
-        showSheet(body)
+        showSheet(getString(R.string.geo_catalog),body)
     }
     private fun about() {
         val body=column()
-        body.addView(label(getString(R.string.geo_about),22f,true),full())
         body.addView(label(getString(R.string.geo_about_body),15f),full())
         body.addView(label(getString(R.string.science_navigation_help),15f),full())
         body.addView(label(getString(R.string.geo_sources),16f,true),full())
@@ -425,29 +418,11 @@ class GeologyActivity:ThemedActivity() {
         EarthPeriods.all.flatMap { it.sources }.distinctBy { it.url }
             .filter { source -> EarthSource.entries.none { it.url==source.url } }
             .forEach { source -> body.addView(button(source.label) { openUrl(source.url) },full()) }
-        showSheet(body)
+        showSheet(getString(R.string.geo_about),body)
     }
-    private fun showSheet(body:LinearLayout,topic:String?=null) {
-        openSheet?.dismiss()
-        val dialog=BottomSheetDialog(this)
-        body.setPadding(dp(20),dp(12),dp(20),dp(24))
-        dialog.setCanceledOnTouchOutside(true)
-        val wrapper=ScrollView(this).apply { setBackgroundColor(palette.surface);addView(body) }
-        val container=column().apply { setBackgroundColor(palette.surface) }
-        val close=row().apply { gravity=Gravity.END;setPadding(dp(12),0,dp(12),0) }
-        close.addView(button(R.string.geo_close) { dialog.dismiss() })
-        container.addView(close)
-        container.addView(wrapper,LinearLayout.LayoutParams(-1,0,1f))
-        dialog.setContentView(container)
-        dialog.paintSheetFrame(palette.surface)
-        openSheet=dialog;sheetTopic=topic
-        dialog.setOnDismissListener {
-            if(openSheet===dialog) { openSheet=null;sheetTopic=null;syncAnimation() }
-        }
-        dialog.show();dialog.followImmersiveMode()
-        dialog.behavior.maxHeight=(resources.displayMetrics.heightPixels*.90f).toInt()
-        container.layoutParams=container.layoutParams.apply { height=dialog.behavior.maxHeight }
-        dialog.behavior.state=com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+    private fun showSheet(title:String,body:LinearLayout,topic:String?=null) {
+        sheetTopic=topic
+        fiche.show(title,null,null,body)
         animator?.cancel()
     }
     private fun syncAnimation() {
@@ -455,7 +430,7 @@ class GeologyActivity:ThemedActivity() {
         playbackButton?.setImageResource(if(playing) R.drawable.ic_pause else R.drawable.ic_play)
         playbackButton?.contentDescription=getString(if(playing) R.string.geo_pause else R.string.geo_play)
         val target=section ?: return
-        if(!resumed || !playing || openSheet!=null || !ValueAnimator.areAnimatorsEnabled()) return
+        if(!resumed || !playing || fiche.isShowing || !ValueAnimator.areAnimatorsEnabled()) return
         var previous=0f
         animator=ValueAnimator.ofFloat(0f,1f).apply {
             duration=18_000;repeatCount=ValueAnimator.INFINITE;interpolator=LinearInterpolator()
@@ -480,7 +455,7 @@ class GeologyActivity:ThemedActivity() {
             .putBoolean("scale",realScale).putBoolean("playing",playing).putString("rank",timeRank.name).apply()
         super.onPause()
     }
-    override fun onDestroy() { animator?.cancel();openSheet?.dismiss();super.onDestroy() }
+    override fun onDestroy() { animator?.cancel();fiche.dismiss();super.onDestroy() }
     override fun onSaveInstanceState(outState:Bundle) {
         outState.putString("scene",scene.name);outState.putFloat("stage",stage);outState.putBoolean("labels",labels)
         outState.putBoolean("scale",realScale);outState.putBoolean("playing",playing);outState.putString("rank",timeRank.name)

@@ -26,12 +26,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.science.FitFrame
+import com.Atom2Universe.app.science.ScienceFiche
 import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.SciencePalette
-import com.Atom2Universe.app.util.followImmersiveMode
-import com.Atom2Universe.app.util.paintSheetFrame
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.ChipGroup
 import java.text.Collator
 import kotlin.math.min
@@ -64,7 +62,10 @@ class MycologyActivity : ThemedActivity() {
     private var mode = PlateMode.SIDE
     private var marks = true
 
-    private var dialog: BottomSheetDialog? = null
+    // La fiche ouverte : une seule fenêtre plein écran pour toute la navigation entre fiches.
+    private val fiche by lazy {
+        ScienceFiche(this, palette, R.string.myco_back, R.string.myco_close) { current = null; history.clear() }
+    }
     private var current: Sheet? = null
     private val history = ArrayList<Sheet>()
 
@@ -90,7 +91,7 @@ class MycologyActivity : ThemedActivity() {
         val toolbar = row()
         toolbar.addView(icon(R.drawable.ic_arrow_back_24, R.string.myco_back) { finish() }.apply {
             ScienceNavigation.bindHomeAction(this) {
-                dialog?.dismiss()
+                fiche.dismiss()
                 tab = Tab.LOOKALIKES
                 render()
                 scroll.scrollTo(0, 0)
@@ -308,32 +309,13 @@ class MycologyActivity : ThemedActivity() {
         if (previous != null && push && previous != sheet) history.add(previous)
         if (previous == null) history.clear()
         current = sheet
-        val body = when (sheet) {
-            is Sheet.Species -> FungusCatalog.get(sheet.id)?.let { speciesBody(it) }
-            is Sheet.Group -> FungusCatalog.groups.firstOrNull { it.id == sheet.id }?.let { groupBody(it) }
-            Sheet.About -> aboutBody()
-        } ?: run { current = previous; return }
-        val d = BottomSheetDialog(this)
-        body.setPadding(dp(20), dp(4), dp(20), dp(28))
-        val wrapper = ScrollView(this).apply { setBackgroundColor(palette.surface); addView(body) }
-        val container = column().apply { setBackgroundColor(palette.surface) }
-        val bar = row().apply { setPadding(dp(8), 0, dp(12), 0) }
-        if (history.isNotEmpty()) bar.addView(icon(R.drawable.ic_arrow_back_24, R.string.myco_back) { back() }, LinearLayout.LayoutParams(dp(48), dp(48)))
-        bar.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f))
-        bar.addView(button(R.string.myco_close) { d.dismiss() })
-        container.addView(bar)
-        container.addView(wrapper, LinearLayout.LayoutParams(-1, 0, 1f))
-        d.setContentView(container)
-        d.paintSheetFrame(palette.surface)
-        val old = dialog
-        dialog = d
-        old?.dismiss()
-        d.setOnDismissListener { if (dialog === d) { dialog = null; current = null; history.clear() } }
-        d.show()
-        d.followImmersiveMode()
-        d.behavior.maxHeight = (resources.displayMetrics.heightPixels * 0.92f).toInt()
-        container.layoutParams = container.layoutParams.apply { height = d.behavior.maxHeight }
-        d.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        val onBack: (() -> Unit)? = if (history.isNotEmpty()) ::back else null
+        val found = when (sheet) {
+            is Sheet.Species -> FungusCatalog.get(sheet.id)?.also { showSpecies(it, onBack) } != null
+            is Sheet.Group -> FungusCatalog.groups.firstOrNull { it.id == sheet.id }?.also { fiche.show(getString(it.title), null, null, groupBody(it), onBack) } != null
+            Sheet.About -> { fiche.show(getString(R.string.myco_about_title), null, null, aboutBody(), onBack); true }
+        }
+        if (!found) current = previous
     }
 
     private fun back() {
@@ -355,23 +337,29 @@ class MycologyActivity : ThemedActivity() {
 
     private fun topView(look: FungusLook) = look.capShape == CapShape.MOREL || look.capShape == CapShape.BRAIN || look.capShape == CapShape.BALL
 
-    private fun speciesBody(sp: FungusSpecies): LinearLayout {
-        val body = column()
-        body.addView(label(getString(sp.name), 24f, true))
-        body.addView(label(getString(sp.latin), 14.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
-        body.addView(label(getString(sp.altNames), 13f).apply { setTextColor(palette.secondary) })
+    /**
+     * Une espèce en trois morceaux : le titre, le dessin avec ses boutons, le texte. Sur un écran large le dessin
+     * a toute la hauteur à gauche et ne bouge pas ; sinon les trois se suivent dans une colonne qui défile.
+     */
+    private fun showSpecies(sp: FungusSpecies, onBack: (() -> Unit)?) {
+        val top = column()
+        top.addView(label(getString(sp.latin), 14.5f).apply { setTypeface(typeface, Typeface.ITALIC); setTextColor(palette.secondary) })
+        top.addView(label(getString(sp.altNames), 13f).apply { setTextColor(palette.secondary) })
         val badges = row().apply { setPadding(0, dp(8), 0, dp(4)) }
         badges.addView(statusChip(sp.status, big = true))
         if (sp.saleBanned) badges.addView(pill(getString(R.string.myco_sale_banned), 0xFF5B5B5B.toInt()), LinearLayout.LayoutParams(-2, -2).apply { marginStart = dp(8) })
-        body.addView(badges)
+        top.addView(badges)
 
         val plateView = plate(sp.look, mode, compact = false)
         plateView.showMarks = marks
-        val size = min(resources.displayMetrics.widthPixels, dp(520)) - dp(40)
-        body.addView(modeBar(listOf(plateView), if (topView(sp.look)) R.string.myco_view_top else R.string.myco_view_under), full())
-        body.addView(plateView, LinearLayout.LayoutParams(size, (size * 1.1f).toInt()).apply { topMargin = dp(8); gravity = Gravity.CENTER_HORIZONTAL })
+        val media = column()
+        media.addView(modeBar(listOf(plateView), if (topView(sp.look)) R.string.myco_view_top else R.string.myco_view_under), full(0))
+        val frame = FitFrame(this, 1.1f, dp(480)).apply { addView(plateView, FrameLayout.LayoutParams(-2, -2, Gravity.CENTER)) }
+        media.addView(frame, if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = dp(8) }
+            else LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
 
-        body.addView(label(getString(R.string.myco_sec_traits), 16f, true), full(16))
+        val body = column()
+        body.addView(label(getString(R.string.myco_sec_traits), 16f, true), full(8))
         resources.getStringArray(sp.traits).forEach { body.addView(bullet(it), full(4)) }
 
         val note = row().apply { setPadding(0, dp(2), 0, dp(2)) }
@@ -409,18 +397,17 @@ class MycologyActivity : ThemedActivity() {
                 body.addView(button(group.title) { open(Sheet.Group(group.id)) }, full(6))
             }
         }
-        return body
+        fiche.show(getString(sp.name), top, media, body, onBack)
     }
 
     // ------------------------------------------------------------------ un groupe de sosies
 
     private fun groupBody(group: FungusGroup): LinearLayout {
         val body = column()
-        body.addView(label(getString(group.title), 22f, true))
-        body.addView(pill(getString(group.evidence), palette.outline, small = true), LinearLayout.LayoutParams(-2, -2).apply { topMargin = dp(6) })
+        body.addView(pill(getString(group.evidence), palette.outline, small = true), LinearLayout.LayoutParams(-2, -2))
         val members = group.members.mapNotNull { FungusCatalog.get(it) }
         val looks = members.map { it.look }
-        val avail = min(resources.displayMetrics.widthPixels, dp(840)) - dp(40)
+        val avail = min(resources.displayMetrics.widthPixels, dp(680)) - dp(40)
         val cellW = (avail / members.size).coerceIn(dp(150), dp(300))
         val plates = ArrayList<FungusPlateView>()
         val row = row().apply { gravity = Gravity.TOP }
@@ -445,9 +432,8 @@ class MycologyActivity : ThemedActivity() {
 
     private fun aboutBody(): LinearLayout {
         val body = column()
-        body.addView(label(getString(R.string.myco_about_title), 22f, true))
         listOf(R.string.myco_about_intro, R.string.myco_about_lookalikes, R.string.myco_about_method, R.string.myco_about_drawings)
-            .forEach { body.addView(label(getString(it), 15f), full(10)) }
+            .forEachIndexed { index, text -> body.addView(label(getString(text), 15f), full(if (index == 0) 0 else 10)) }
         body.addView(label(getString(R.string.myco_about_rules_title), 16f, true), full(16))
         body.addView(label(getString(R.string.myco_about_rules), 14.5f), full(6))
         body.addView(button(R.string.myco_urgent) { showUrgent() }, full(14))
@@ -625,7 +611,7 @@ class MycologyActivity : ThemedActivity() {
         super.onPause()
     }
 
-    override fun onDestroy() { dialog?.dismiss(); super.onDestroy() }
+    override fun onDestroy() { fiche.dismiss(); super.onDestroy() }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("tab", tab.name)
