@@ -10,13 +10,15 @@ enum class FarmRegion(val label: Int, val description: Int) {
     GREENHOUSE(R.string.farm_region_greenhouse, R.string.farm_region_greenhouse_info)
 }
 
-/** Separate landscape previews. Their future economies never mutate the main farm save. */
+/** Native landscapes. Greenhouse art and hit testing share the same planter rectangles. */
 class FarmRegionScenery(private val sprites: FarmSprites) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val greenhouseDecor = FarmGreenhouseDecor()
     private val fields = listOf(RectF(110f, 210f, 785f, 710f), RectF(815f, 210f, 1490f, 710f),
         RectF(110f, 750f, 785f, 1250f), RectF(815f, 750f, 1490f, 1250f))
-    fun draw(canvas: Canvas, region: FarmRegion, visible: RectF) {
+    private val flowers = FarmFlowerArt()
+    private val visitors = FarmVisitorArt()
+    fun draw(canvas: Canvas, region: FarmRegion, visible: RectF, greenhouse: FarmGreenhouseState? = null, now: Long = System.currentTimeMillis()) {
         if (region == FarmRegion.FIELDS) {
             paint.color = Color.rgb(191, 169, 113)
             canvas.drawRoundRect(75f, 175f, 1525f, 1285f, 30f, 30f, paint)
@@ -35,7 +37,7 @@ class FarmRegionScenery(private val sprites: FarmSprites) {
                 canvas.restore()
             }
         } else if (region == FarmRegion.GREENHOUSE) {
-            drawGreenhouse(canvas, visible)
+            drawGreenhouse(canvas, visible, greenhouse, now)
         } else {
             paint.color = Color.rgb(190, 168, 112)
             canvas.drawPath(Path().apply {
@@ -72,25 +74,51 @@ class FarmRegionScenery(private val sprites: FarmSprites) {
             sprites.environment(canvas, 2, 3, RectF(x, 1350f + i % 3 * 20, x + 70, 1410f + i % 3 * 20))
         }
     }
-    // The flowers were the last sprite sheets of the greenhouse. They are gone until the flowers
-    // get drawn natively like the crops; the planters stay in place, empty, waiting for them.
     private val bands = listOf(RectF(95f, 120f, 805f, 310f), RectF(95f, 1320f, 805f, 1510f))
-    private val beds = listOf(
-        RectF(95f, 390f, 365f, 620f), RectF(535f, 390f, 805f, 620f),
-        RectF(95f, 690f, 365f, 920f), RectF(535f, 690f, 805f, 920f),
-        RectF(95f, 990f, 365f, 1220f), RectF(535f, 990f, 805f, 1220f)
-    )
-    private fun drawGreenhouse(canvas: Canvas, visible: RectF) {
+    fun greenhouseSlot(x: Float, y: Float): Int? = FarmGreenhouseLayout.beds.indexOfFirst { it.contains(x, y) }.takeIf { it >= 0 }
+    private fun drawGreenhouse(canvas: Canvas, visible: RectF, state: FarmGreenhouseState?, now: Long) {
+        val time = if (android.animation.ValueAnimator.areAnimatorsEnabled()) (now % 120_000) / 1000f else 0f
         greenhouseDecor.draw(canvas)
         bands.forEach { greenhouseDecor.drawPlanter(canvas, it) }
-        beds.forEach { bed ->
-            if (!RectF.intersects(bed, visible)) return@forEach
+        FarmGreenhouseLayout.beds.forEachIndexed { slot, bed ->
+            if (!RectF.intersects(bed, visible)) return@forEachIndexed
             greenhouseDecor.drawPlanter(canvas, bed)
             paint.color = Color.rgb(80, 55, 36)
             paint.alpha = 90
             canvas.drawRoundRect(bed.left + 28f, bed.bottom - 28f, bed.right - 28f, bed.bottom - 17f, 6f, 6f, paint)
             paint.alpha = 255
+            state?.at(slot)?.let { culture ->
+                for (i in 0..2) {
+                    val x = bed.left + 35f + i * 68f
+                    flowers.draw(canvas, culture.flower, RectF(x, bed.top + 25f, x + 66f, bed.bottom - 26f), culture.progress(now),
+                        sway = kotlin.math.sin(time * 1.5f + i + slot) * 2.5f)
+                }
+                if (culture.readyAt <= now) {
+                    paint.color = Color.rgb(247, 210, 106)
+                    canvas.drawCircle(bed.right - 22f, bed.top + 22f, 9f + kotlin.math.sin(time * 2 + slot), paint)
+                }
+            }
         }
+        state?.let { greenhouse -> bands.forEach { bed ->
+            for (i in 0..6) {
+                val x = bed.left + 34f + i * 94f
+                flowers.draw(canvas, greenhouse.displayFlower, RectF(x, bed.top + 24f, x + 60f, bed.bottom - 22f),
+                    sway = kotlin.math.sin(time * 1.5f + i) * 2.5f)
+            }
+        } }
         greenhouseDecor.drawEntrance(canvas)
+        for (i in 0..1) {
+            val x = 430f + kotlin.math.sin(time * .35f + i * 2) * 85f
+            val y = 400f + i * 470f + kotlin.math.cos(time * .4f + i) * 95f
+            visitors.draw(canvas, FarmVisitor.BUTTERFLY, RectF(x - 22f, y - 22f, x + 22f, y + 22f), time + i)
+        }
     }
+}
+
+object FarmGreenhouseLayout {
+    val beds = listOf(
+        RectF(95f, 390f, 365f, 620f), RectF(535f, 390f, 805f, 620f),
+        RectF(95f, 690f, 365f, 920f), RectF(535f, 690f, 805f, 920f),
+        RectF(95f, 990f, 365f, 1220f), RectF(535f, 990f, 805f, 1220f)
+    )
 }

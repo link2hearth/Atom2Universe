@@ -126,7 +126,9 @@ class FarmVillageTest {
         val keys = en.keys.filter { key ->
             listOf("farm_village_", "farm_villager_", "farm_lucie_", "farm_malo_", "farm_iris_", "farm_visit_", "farm_duration_seconds",
                 "farm_project", "farm_gift", "farm_product_", "farm_companion_", "farm_produce_empty", "farm_confirm_sale_all_body",
-                "farm_workshop_", "farm_recipe_")
+                "farm_workshop_", "farm_recipe_", "farm_orchard_", "farm_tree_cycle", "farm_greenhouse_", "farm_flower_",
+                "farm_action_", "farm_encounter_", "farm_visitor_", "farm_robin_", "farm_butterfly_", "farm_squirrel_", "farm_rabbit_",
+                "farm_butcher_", "farm_meat_", "farm_kitchen_", "farm_cookbook_")
                 .any { key.startsWith(it) }
         }
         val formats = Regex("%\\d+\\$[ds]|%%")

@@ -190,7 +190,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             }
             MotionEvent.ACTION_MOVE -> {
                 val game = harvestGame ?: return false
-                if (!game.done && game.tryPull(game.downY - y, now)) {
+                if (!game.done && game.cropAtStart?.tree != true && game.tryPull(game.downY - y, now)) {
                     // One pull reaps whatever the basket reaches: this cell, its row, or the parcel.
                     val result = state.harvestMany(state.harvestTargets(game.cell), now)
                     onHarvested(game.cell, result)
@@ -200,11 +200,12 @@ class FarmWorldView(context: Context, private val state: FarmState,
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 val game = harvestGame ?: return true
                 val quickTap = event.actionMasked == MotionEvent.ACTION_UP &&
-                    event.eventTime - event.downTime < HarvestGauge.GRIP_DELAY &&
+                    (game.cropAtStart?.tree == true || event.eventTime - event.downTime < HarvestGauge.GRIP_DELAY) &&
                     kotlin.math.hypot(x - game.downX, y - game.downY) * zoom < touchSlop
                 if (!game.done && quickTap) {
                     game.done = true; game.doneAt = now
                     val result = state.harvestMany(state.harvestTargets(game.cell), now)
+                    if (result.count == 0) harvestGame = null
                     onHarvested(game.cell, result)
                     ensureHarvestTicking()
                 } else if (!game.done) harvestGame = null
@@ -477,6 +478,9 @@ class FarmWorldView(context: Context, private val state: FarmState,
     var region = FarmRegion.HOME
         private set
     var onRegionTap: (() -> Unit)? = null
+    var onGreenhouseTap: ((Int?) -> Unit)? = null
+    var onVisitorTap: (() -> Unit)? = null
+    private val visitorArt = FarmVisitorArt()
     var onProjectTap: ((FarmProject) -> Unit)? = null
     var onDecorationTap: ((FarmProject) -> Unit)? = null
     var onWorkshopTap: (() -> Unit)? = null
@@ -586,11 +590,16 @@ class FarmWorldView(context: Context, private val state: FarmState,
 
     /** What a single tap does at the world point ([x], [y]), once it is sure not to be a double tap. */
     private fun tap(x: Float, y: Float) {
+        if (region == FarmRegion.GREENHOUSE) { onGreenhouseTap?.invoke(regionScenery.greenhouseSlot(x, y)); return }
         if (region == FarmRegion.LIVESTOCK) {
             LivestockScene.hit(x, y)?.let { onLivestockPen?.invoke(it, false) }
             return
         }
         if (region != FarmRegion.HOME) { onRegionTap?.invoke(); return }
+        val visitor = FarmVisitorLayout.area
+        if (state.encounters.pending != null && x in visitor.left..visitor.right && y in visitor.top..visitor.bottom) {
+            onVisitorTap?.invoke(); return
+        }
         if (state.bushBonusReady() && treasureBush.contains(x, y)) {
             val gained = state.claimBushBonus()
             if (gained > 0) { onBushBonus?.invoke(gained); invalidate() }
@@ -743,6 +752,14 @@ class FarmWorldView(context: Context, private val state: FarmState,
         cameraY = height / 2f + 20 * density - (area.top + area.bottom) / 2 * zoom
         constrain(); invalidate()
     }
+    fun focusVisitor() {
+        cancelMiniGames(); cameraAnimator?.cancel()
+        val area = FarmVisitorLayout.area
+        zoom = minOf(width / 350f, height / 400f).coerceIn(minimumZoom(), maximumZoom())
+        cameraX = width / 2f - area.centerX * zoom
+        cameraY = height / 2f - (area.top + area.bottom) / 2 * zoom
+        constrain(); invalidate()
+    }
     private fun drawProjects(canvas: Canvas, visible: RectF) {
         for (project in FarmProject.entries) {
             val area = projectAreas.getValue(project)
@@ -765,7 +782,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             val slot = giftAreas.getValue(project)
             if (RectF.intersects(slot, visible)) {
                 val gift = state.projects.decoration(project)
-                if (gift != null) projectArt.gift(canvas, gift, slot)
+                if (gift != null) projectArt.gift(canvas, gift, slot, state.greenhouse.displayFlower)
                 else {
                     projectLabelPaint.color = Color.argb(110, 255, 248, 225)
                     canvas.drawOval(slot.left + 10, slot.bottom - 14, slot.right - 10, slot.bottom, projectLabelPaint)
@@ -778,6 +795,16 @@ class FarmWorldView(context: Context, private val state: FarmState,
     }
     private fun drawWorkshopSign(canvas: Canvas, visible: RectF) {
         val yard = FarmLayout.yard
+        if (state.workshop.jobs.isNotEmpty() && RectF.intersects(RectF(yard.left, yard.top - 90, yard.right, yard.bottom), visible)) {
+            val time = if (ValueAnimator.areAnimatorsEnabled()) windTime else 0f
+            for (i in 0..2) {
+                val phase = (time * .35f + i / 3f) % 1f
+                projectLabelPaint.color = Color.argb(((1 - phase) * 110).toInt(), 255, 246, 217)
+                canvas.drawOval(yard.left + 110 + kotlin.math.sin(time + i) * 8 - phase * 12,
+                    yard.top - phase * 65 - 12, yard.left + 126 + phase * 14,
+                    yard.top - phase * 65 + 8, projectLabelPaint)
+            }
+        }
         val sign = RectF(yard.left, yard.bottom + 4, yard.left + 210, yard.bottom + 38)
         if (!RectF.intersects(sign, visible)) return
         projectLabelPaint.color = Color.rgb(255, 248, 225)
@@ -981,7 +1008,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
         drawMeadow(canvas, visible)
         if (region != FarmRegion.HOME) {
             if (region == FarmRegion.LIVESTOCK) livestockScene.draw(canvas, visible)
-            else regionScenery.draw(canvas, region, visible)
+            else regionScenery.draw(canvas, region, visible, state.greenhouse)
             canvas.restore(); return
         }
         // Trails and scattered decorations, live rather than cached: the trail network is already a
@@ -991,6 +1018,17 @@ class FarmWorldView(context: Context, private val state: FarmState,
         scenery.objects(canvas, visible, windTime)
         drawProjects(canvas, visible)
         drawWorkshopSign(canvas, visible)
+        state.encounters.pending?.let { meeting ->
+            val site = FarmVisitorLayout.area
+            val target = RectF(site.left, site.top, site.right, site.bottom)
+            if (RectF.intersects(target, visible)) {
+                visitorArt.draw(canvas, meeting.visitor, target, windTime)
+                projectLabelPaint.color = Color.rgb(255, 248, 225)
+                canvas.drawCircle(target.right - 7, target.top + 5, 14f, projectLabelPaint)
+                projectLabelPaint.color = Color.rgb(216, 125, 115)
+                canvas.drawCircle(target.right - 7, target.top + 5, 6f, projectLabelPaint)
+            }
+        }
 
         val now = System.currentTimeMillis()
         lands.forEachIndexed { index, land ->
@@ -1023,7 +1061,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
                     paint.color = if (p.rich) Color.rgb(76, 47, 26) else Color.rgb(112, 70, 43)
                     for (r in 0..2) canvas.drawRect(cell.left + 5, cell.top + 40 + r * 9, cell.right - 5, cell.top + 42 + r * 9, paint)
                     val crop = p.crop
-                    val grip = harvestGame?.takeIf { it.cell == i && !it.done && now - it.startTime >= HarvestGauge.GRIP_DELAY }
+                    val grip = harvestGame?.takeIf { it.cell == i && !it.done && it.cropAtStart?.tree != true && now - it.startTime >= HarvestGauge.GRIP_DELAY }
                     if (crop != null) {
                         val shakeX = grip?.let { (kotlin.math.sin((now - it.startTime) / 28.0) * 4).toFloat() } ?: 0f
                         canvas.save(); canvas.translate(shakeX, 0f)
@@ -1293,7 +1331,16 @@ class FarmWorldView(context: Context, private val state: FarmState,
             game.cropAtStart?.let { crop ->
                 paint.alpha = alpha
                 val rect = RectF(centerX - w / 2f, centerY - h / 2f, centerX + w / 2f, centerY + h / 2f)
-                sprites.crop(canvas, crop, game.variant, 4, rect)
+                if (crop.tree) {
+                    // Fruit travels to the basket; a permanent tree never flies out of the ground.
+                    paint.color = when (crop) {
+                        FarmCrop.APPLE -> Color.rgb(211, 91, 69)
+                        FarmCrop.PEAR -> Color.rgb(184, 190, 83)
+                        else -> Color.rgb(161, 51, 72)
+                    }
+                    for (offset in listOf(-.2f, .2f)) canvas.drawOval(rect.centerX() + offset * w - w * .15f,
+                        rect.centerY() - h * .12f, rect.centerX() + offset * w + w * .15f, rect.centerY() + h * .15f, paint)
+                } else sprites.crop(canvas, crop, game.variant, 4, rect)
                 paint.alpha = 255
             }
             paint.color = if (game.critical) Color.rgb(255, 150, 60) else Color.rgb(255, 224, 91)
@@ -1307,7 +1354,7 @@ class FarmWorldView(context: Context, private val state: FarmState,
             paint.alpha = 255
             return
         }
-        if (now - game.startTime < HarvestGauge.GRIP_DELAY) return
+        if (game.cropAtStart?.tree == true || now - game.startTime < HarvestGauge.GRIP_DELAY) return
         val barLeft = cell.right + 4f; val barRight = cell.right + 11f
         val barTop = cell.top - 2f; val barBottom = cell.bottom - 12f
         paint.color = Color.argb(170, 35, 70, 100)

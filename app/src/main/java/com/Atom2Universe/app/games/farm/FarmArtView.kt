@@ -6,7 +6,9 @@ import android.view.View
 
 /** Small native illustrations remain crisp at any density; crop previews reuse the game art. */
 class FarmArtView(context: Context, private val kind: Kind, private val sprites: FarmSprites? = null) : View(context) {
-    enum class Kind { SHOP, SEEDS, MAP, BACK, CLOSE, COIN, CROP, WATER, MANURE, CRATE, VILLAGE, VILLAGER, ANIMAL_PRODUCT, PREPARATION }
+    enum class Kind { SHOP, SEEDS, MAP, BACK, CLOSE, COIN, CROP, WATER, MANURE, CRATE, VILLAGE, VILLAGER, ANIMAL_PRODUCT, PREPARATION, MEAT, BOOK }
+    var meat: FarmMeat = FarmMeat.POULTRY
+        set(value) { field = value; invalidate() }
     var recipe: FarmRecipe = FarmRecipe.PICKLES
         set(value) { field = value; invalidate() }
     var product: FarmAnimalProduct = FarmAnimalProduct.EGG
@@ -38,26 +40,76 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
         val green = Color.rgb(93, 134, 81)
         val rose = Color.rgb(206, 114, 91)
         when (kind) {
+            Kind.BOOK -> {
+                rect(canvas, 3f, 7f, 45f, 43f, brown, 5f)
+                rect(canvas, 5f, 9f, 23f, 40f, cream, 3f)
+                rect(canvas, 25f, 9f, 43f, 40f, Color.rgb(248, 231, 190), 3f)
+                line(canvas, 24f, 9f, 24f, 42f, green, 2f)
+                for (y in listOf(16f, 22f, 28f, 34f)) {
+                    line(canvas, 9f, y, 19f, y, Color.rgb(188, 163, 111), 1.5f)
+                    line(canvas, 29f, y, 39f, y, Color.rgb(188, 163, 111), 1.5f)
+                }
+                rect(canvas, 32f, 7f, 37f, 18f, rose, 1f)
+                paint.color = green; canvas.drawCircle(15f, 32f, 5f, paint)
+                line(canvas, 12f, 32f, 14f, 34f, cream, 1.5f); line(canvas, 14f, 34f, 18f, 30f, cream, 1.5f)
+            }
+            Kind.MEAT -> {
+                rect(canvas, 5f, 12f, 43f, 41f, brown, 7f)
+                rect(canvas, 7f, 14f, 41f, 39f, cream, 6f)
+                val foodColor = when (meat) {
+                    FarmMeat.POULTRY -> Color.rgb(221, 189, 137)
+                    FarmMeat.MUTTON -> Color.rgb(180, 143, 109)
+                    FarmMeat.PORK -> Color.rgb(213, 167, 142)
+                    FarmMeat.BEEF -> Color.rgb(151, 111, 85)
+                }
+                for (i in 0..2) {
+                    rect(canvas, 10f + i * 10, 18f, 18f + i * 10, 32f, foodColor, 4f)
+                    line(canvas, 12f + i * 10, 20f, 16f + i * 10, 23f, cream, 1.5f)
+                }
+                rect(canvas, 16f, 32f, 32f, 38f, Color.rgb(158, 186, 139), 2f)
+                line(canvas, 19f, 35f, 29f, 35f, green, 1.2f)
+                line(canvas, 8f, 16f, 39f, 34f, Color.argb(110, 255, 255, 255), 2f)
+            }
             Kind.PREPARATION -> when (recipe) {
-                FarmRecipe.PICKLES -> {
+                FarmRecipe.GARDEN_BOUQUET -> {
+                    rect(canvas, 21f, 26f, 27f, 44f, green)
+                    val art = FarmFlowerArt()
+                    for ((index, flower) in listOf(FarmFlower.DAISY_WHITE, FarmFlower.TULIP_RED, FarmFlower.IRIS_BLUE).withIndex()) {
+                        art.draw(canvas, flower, RectF(5f + index * 10, 2f, 25f + index * 10, 39f))
+                    }
+                    rect(canvas, 18f, 30f, 31f, 34f, rose)
+                }
+                FarmRecipe.PICKLES, FarmRecipe.APPLE_COMPOTE, FarmRecipe.PEAR_SYRUP, FarmRecipe.CHERRY_JAM, FarmRecipe.STRAWBERRY_JAM -> {
                     rect(canvas, 12f, 9f, 36f, 43f, brown, 7f)
                     rect(canvas, 14f, 12f, 34f, 40f, Color.rgb(182, 211, 174), 5f)
                     rect(canvas, 11f, 6f, 37f, 13f, green, 2f)
                     for (x in listOf(19f, 28f)) {
-                        paint.color = rose; canvas.drawOval(x - 4, 22f, x + 4, 33f, paint)
+                        paint.color = when (recipe) {
+                            FarmRecipe.APPLE_COMPOTE -> Color.rgb(218, 180, 96)
+                            FarmRecipe.PEAR_SYRUP -> Color.rgb(221, 205, 123)
+                            FarmRecipe.CHERRY_JAM -> Color.rgb(167, 58, 77)
+                            FarmRecipe.STRAWBERRY_JAM -> Color.rgb(195, 99, 87)
+                            else -> rose
+                        }; canvas.drawOval(x - 4, 22f, x + 4, 33f, paint)
                         line(canvas, x, 22f, x - 2, 17f, green, 2f)
                     }
                 }
-                FarmRecipe.SOUP, FarmRecipe.EGG_SALAD -> {
+                FarmRecipe.SOUP, FarmRecipe.EGG_SALAD, FarmRecipe.PUMPKIN_SOUP, FarmRecipe.MUTTON_STEW, FarmRecipe.POULTRY_PEAS, FarmRecipe.TOMATO_SOUP -> {
                     paint.color = brown; canvas.drawOval(5f, 24f, 43f, 43f, paint)
                     rect(canvas, 6f, 24f, 42f, 34f, green, 4f)
-                    paint.color = if (recipe == FarmRecipe.SOUP) Color.rgb(207, 164, 83) else Color.rgb(151, 190, 105)
+                    paint.color = when (recipe) {
+                        FarmRecipe.PUMPKIN_SOUP -> Color.rgb(225, 159, 74)
+                        FarmRecipe.MUTTON_STEW -> Color.rgb(164, 125, 88)
+                        FarmRecipe.TOMATO_SOUP -> Color.rgb(204, 117, 81)
+                        FarmRecipe.SOUP -> Color.rgb(207, 164, 83)
+                        else -> Color.rgb(151, 190, 105)
+                    }
                     canvas.drawOval(7f, 20f, 41f, 32f, paint)
                     for (x in listOf(15f, 23f, 32f)) {
-                        paint.color = if (recipe == FarmRecipe.SOUP) green else cream
+                        paint.color = if (recipe == FarmRecipe.SOUP || recipe == FarmRecipe.MUTTON_STEW) green else cream
                         canvas.drawCircle(x, 26f, 3f, paint)
                     }
-                    if (recipe == FarmRecipe.SOUP) {
+                    if (recipe != FarmRecipe.EGG_SALAD) {
                         line(canvas, 17f, 15f, 20f, 9f, brown, 2f)
                         line(canvas, 28f, 15f, 31f, 7f, brown, 2f)
                     }
@@ -85,6 +137,66 @@ class FarmArtView(context: Context, private val kind: Kind, private val sprites:
                     rect(canvas, 29f, 14f, 39f, 34f, Color.rgb(166, 93, 85), 3f)
                     for (y in listOf(14f, 23f, 32f)) line(canvas, 11f, y, 22f, y, cream, 2f)
                     for (x in listOf(13f, 17f, 21f)) line(canvas, x, 39f, x, 44f, rose, 2f)
+                }
+                FarmRecipe.CORNBREAD -> {
+                    rect(canvas, 5f, 37f, 43f, 42f, brown, 3f)
+                    rect(canvas, 8f, 17f, 40f, 37f, Color.rgb(195, 146, 72), 10f)
+                    rect(canvas, 11f, 19f, 37f, 33f, Color.rgb(238, 199, 115), 8f)
+                    for (x in listOf(17f, 24f, 31f)) line(canvas, x, 20f, x - 2, 27f, cream, 2f)
+                }
+                FarmRecipe.EGG_SANDWICH, FarmRecipe.CHEESE_SANDWICH -> {
+                    paint.color = brown; canvas.drawOval(3f, 33f, 45f, 43f, paint)
+                    rect(canvas, 8f, 29f, 40f, 36f, Color.rgb(219, 176, 94), 5f)
+                    rect(canvas, 9f, 24f, 39f, 30f, green, 3f)
+                    rect(canvas, 10f, 19f, 38f, 25f, if (recipe == FarmRecipe.EGG_SANDWICH) cream else Color.rgb(245, 208, 97), 3f)
+                    rect(canvas, 8f, 10f, 40f, 20f, Color.rgb(224, 183, 102), 8f)
+                    for (x in listOf(16f, 24f, 32f)) line(canvas, x, 13f, x + 2, 13f, cream, 1.5f)
+                }
+                FarmRecipe.BERRY_PANCAKES -> {
+                    paint.color = brown; canvas.drawOval(3f, 32f, 45f, 43f, paint)
+                    for (y in listOf(31f, 26f, 21f)) {
+                        rect(canvas, 10f, y, 38f, y + 5, Color.rgb(195, 144, 74), 5f)
+                        paint.color = Color.rgb(240, 201, 120); canvas.drawOval(10f, y - 3, 38f, y + 4, paint)
+                    }
+                    for (x in listOf(17f, 24f, 31f)) {
+                        paint.color = rose; canvas.drawCircle(x, 20f, 3f, paint)
+                        line(canvas, x, 17f, x + 2, 15f, green, 1f)
+                    }
+                }
+                FarmRecipe.CAULIFLOWER_GRATIN -> {
+                    rect(canvas, 3f, 21f, 45f, 37f, green, 6f)
+                    rect(canvas, 6f, 19f, 42f, 31f, Color.rgb(222, 183, 109), 5f)
+                    for (x in listOf(14f, 24f, 34f)) {
+                        paint.color = cream; canvas.drawCircle(x, 23f, 4f, paint)
+                        paint.color = brown; canvas.drawCircle(x + 2, 24f, 1f, paint)
+                    }
+                    line(canvas, 16f, 14f, 19f, 7f, brown, 2f)
+                    line(canvas, 28f, 14f, 31f, 8f, brown, 2f)
+                }
+                FarmRecipe.PORK_SKEWERS, FarmRecipe.BEEF_ROAST, FarmRecipe.CORN_FRITTERS, FarmRecipe.STUFFED_ZUCCHINI -> {
+                    paint.color = brown; canvas.drawOval(3f, 17f, 45f, 42f, paint)
+                    paint.color = cream; canvas.drawOval(5f, 18f, 43f, 39f, paint)
+                    when (recipe) {
+                        FarmRecipe.PORK_SKEWERS -> for (y in listOf(23f, 31f)) {
+                            line(canvas, 9f, y, 40f, y, brown, 2f)
+                            for (i in 0..3) rect(canvas, 12f + i * 6, y - 3, 17f + i * 6, y + 3,
+                                if (i % 2 == 0) Color.rgb(184, 136, 100) else green, 2f)
+                        }
+                        FarmRecipe.BEEF_ROAST -> {
+                            rect(canvas, 11f, 21f, 34f, 34f, Color.rgb(154, 111, 77), 7f)
+                            for (x in listOf(17f, 23f, 29f)) line(canvas, x, 23f, x - 2, 31f, cream, 1.5f)
+                        }
+                        FarmRecipe.CORN_FRITTERS -> for (x in listOf(15f, 25f, 34f)) {
+                            paint.color = Color.rgb(218, 173, 80); canvas.drawOval(x - 6, 22f, x + 5, 33f, paint)
+                            paint.color = green; canvas.drawCircle(x, 27f, 1.5f, paint)
+                        }
+                        else -> for (y in listOf(24f, 32f)) {
+                            rect(canvas, 12f, y - 3, 37f, y + 3, green, 4f)
+                            rect(canvas, 16f, y - 2, 33f, y + 2, Color.rgb(211, 168, 103), 3f)
+                        }
+                    }
+                    line(canvas, 17f, 14f, 20f, 7f, brown, 1.5f)
+                    line(canvas, 29f, 14f, 32f, 6f, brown, 1.5f)
                 }
             }
             Kind.ANIMAL_PRODUCT -> when (product) {

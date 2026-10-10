@@ -32,6 +32,7 @@ class FarmScenery(private val sprites: FarmSprites) {
         RectF(site.left - 12, site.top - 12, gift.right + 12, gift.bottom + 12)
     }
     private val treasure = FarmLayout.treasure.let { RectF(it.left, it.top, it.right, it.bottom) }
+    private val visitor = FarmVisitorLayout.area.let { RectF(it.left - 12, it.top - 12, it.right + 12, it.bottom + 12) }
     private val plots = FarmLayout.lands.map { RectF(it.x - 45, it.y - 50, it.x + it.width + 45, it.y + it.height + 50) }
 
     private fun trail(x: Float, y: Float, vararg curves: Float) {
@@ -99,6 +100,7 @@ class FarmScenery(private val sprites: FarmSprites) {
                 !RectF.intersects(shed, rect) && !RectF.intersects(well, rect) &&
                 projectClearings.none { RectF.intersects(it, rect) } &&
                 !RectF.intersects(treasure, rect) &&
+                !RectF.intersects(visitor, rect) &&
                 decorations.none { RectF.intersects(it.rect, rect) } &&
                 pathSamples.none { rect.left - 38 < it.x && rect.right + 38 > it.x && rect.top - 38 < it.y && rect.bottom + 38 > it.y }) {
                 decorations.add(Decoration(kind, rect))

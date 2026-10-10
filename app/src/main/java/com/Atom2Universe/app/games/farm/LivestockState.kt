@@ -74,6 +74,7 @@ class LivestockState {
     private var lastTime = 0L
     private val herd = mutableListOf<FarmAnimal>()
     private val products = IntArray(FarmAnimalProduct.entries.size)
+    private val meats = IntArray(FarmMeat.entries.size)
     private var firstEggStarted = false
     val firstEggAvailable get() = !firstEggStarted
     val animals: List<FarmAnimal> get() = herd
@@ -83,6 +84,13 @@ class LivestockState {
     fun stock(product: FarmAnimalProduct) = products[product.ordinal]
     fun productCount() = products.sum()
     fun productValue() = FarmAnimalProduct.entries.sumOf { stock(it).toLong() * it.sale }
+    fun stock(meat: FarmMeat) = meats[meat.ordinal]
+    fun meatCount() = meats.sum()
+    fun meatValue() = FarmMeat.entries.sumOf { stock(it).toLong() * it.sale }
+    fun takeMeat(meat: FarmMeat, quantity: Int): Int {
+        val taken = quantity.coerceIn(0, stock(meat))
+        meats[meat.ordinal] -= taken; return taken
+    }
     fun readyProducts(kind: LivestockKind? = null, clock: Long = System.currentTimeMillis()): Int =
         herd.count { (kind == null || it.kind == kind) && it.product != null && it.productAt >= 0 && it.productAt <= maxOf(clock, lastTime) }
     fun nextProductAt(kind: LivestockKind? = null): Long? = herd.filter {
@@ -151,6 +159,21 @@ class LivestockState {
         lastTime = maxOf(now, lastTime)
         if (animal.product != null && animal.productAt in 0..lastTime && !collectOne(animal, lastTime)) return 0
         herd.remove(animal); schedule(lastTime); return animal.kind.sale
+    }
+    /** Explicit individual choice. Preflight both stocks before collecting or removing anything. */
+    fun butcher(id: Long, clock: Long): Int {
+        if (clock < 0) return 0
+        val animal = herd.firstOrNull { it.id == id && it.adult } ?: return 0
+        val meat = FarmMeat.forKind(animal.kind)
+        val now = maxOf(clock, lastTime)
+        if (stock(meat) > PRODUCT_CAPACITY - meat.portions) return 0
+        if (animal.product != null && animal.productAt in 0..now && stock(animal.product!!) >= PRODUCT_CAPACITY) return 0
+        // Account for the original herd before its manure rate or breeding pairs change.
+        advance(now)
+        if (animal.product != null && animal.productAt in 0..now) collectOne(animal, now)
+        meats[meat.ordinal] += meat.portions
+        herd.remove(animal); lastTime = now; schedule(now)
+        return meat.portions
     }
     private fun schedule(now: Long) {
         for (kind in LivestockKind.entries) {
@@ -223,7 +246,7 @@ class LivestockState {
     /** Back to no pen, no animal - part of the dev reset, which must leave nothing behind. */
     fun reset() {
         unlocked = 0; nextId = 1L; lastTime = 0L; manure = 0L; manureTime = -1L; herd.clear()
-        products.fill(0); firstEggStarted = false
+        products.fill(0); meats.fill(0); firstEggStarted = false
     }
     /**
      * Dev-only: pulls every deadline closer. A young animal keeps a deadline of at least 1 ms so it
@@ -257,6 +280,7 @@ class LivestockState {
             .put("lastTime", lastTime).put("manure", manure).put("manureTime", manureTime).put("animals", animals)
             .put("productionVersion", 1).put("firstEggStarted", firstEggStarted)
             .put("products", JSONObject().apply { FarmAnimalProduct.entries.forEach { put(it.name, stock(it)) } })
+            .put("meats", JSONObject().apply { FarmMeat.entries.forEach { put(it.name, stock(it)) } })
     }
     fun restore(json: JSONObject?, clock: Long = System.currentTimeMillis()) {
         if (json == null) return
@@ -292,6 +316,8 @@ class LivestockState {
         manureTime = pitTime; manure = pit.coerceAtMost(manureCapacity())
         val stocks = json.optJSONObject("products")
         FarmAnimalProduct.entries.forEach { products[it.ordinal] = (stocks?.optInt(it.name) ?: 0).coerceIn(0, PRODUCT_CAPACITY) }
+        val meatStocks = json.optJSONObject("meats")
+        FarmMeat.entries.forEach { meats[it.ordinal] = (meatStocks?.optInt(it.name) ?: 0).coerceIn(0, PRODUCT_CAPACITY) }
         firstEggStarted = json.optBoolean("firstEggStarted", restored.any { it.kind == LivestockKind.CHICKENS && it.adult && !it.male })
         // Existing adults start a normal cycle at migration; their previous birthdays stay intact.
         herd.forEach { animal ->

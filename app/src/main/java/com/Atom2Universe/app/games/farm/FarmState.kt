@@ -26,8 +26,8 @@ import org.json.JSONObject
  * would have been the one seed both the longest and the best per hour, the very thing the table
  * exists to prevent.
  *
- * Rank 0 means "not for sale". Trees keep it because the orchard is parked until its own
- * balancing pass, and wheat keeps it because the large fields already grow wheat by the hectare -
+ * Rank 0 means "outside the vegetable ladder". Trees have their own permanent orchard economy,
+ * and wheat keeps it because the large fields already grow wheat by the hectare -
  * selling it again by the seed made the same plant mean two different things. The chilli took over
  * wheat's rung with wheat's exact numbers, so the ladder's curve is unchanged. The sprite stays in
  * use: [FieldArcadeView] and [FarmRegion] still draw wheat for the large fields.
@@ -50,9 +50,9 @@ enum class FarmCrop(val label: Int, val rank: Int, val cost: Int, val sale: Int,
     PEPPER(R.string.farm_pepper, 9, 42, 243, 6 * 3600),
     PEAS(R.string.farm_peas, 3, 5, 27, 3 * 3600),
     CAULIFLOWER(R.string.farm_cauliflower, 10, 68, 396, 16 * 3600),
-    APPLE(R.string.farm_apple, 0, 20, 12, 48 * 3600, true),
-    PEAR(R.string.farm_pear, 0, 25, 15, 72 * 3600, true),
-    CHERRY(R.string.farm_cherry, 0, 30, 18, 96 * 3600, true),
+    APPLE(R.string.farm_apple, 0, 120, 12, 12 * 3600, true),
+    PEAR(R.string.farm_pear, 0, 240, 20, 18 * 3600, true),
+    CHERRY(R.string.farm_cherry, 0, 420, 32, 24 * 3600, true),
     CHILI(R.string.farm_chili, 4, 8, 45, 8 * 3600),
     CARROT(R.string.farm_carrot, 13, 182, 1072, 10 * 3600),
     POTATO(R.string.farm_potato, 14, 284, 1665, 24 * 3600),
@@ -79,9 +79,13 @@ enum class FarmCrop(val label: Int, val rank: Int, val cost: Int, val sale: Int,
      * single planting once four herds are full, turning the bonus into a permanent doubling.
      */
     val manureCost: Int get() = rank
+    val orchardParcelRequirement: Int get() = when (this) { APPLE -> 2; PEAR -> 3; CHERRY -> 4; else -> Int.MAX_VALUE }
+    val fruitCount: Int get() = if (tree) 3 else 1
+    val regrowthSeconds: Int get() = when (this) { APPLE -> 24 * 3600; PEAR -> 36 * 3600; CHERRY -> 48 * 3600; else -> seconds }
     companion object {
         /** Every crop for sale, in unlock order: rung N comes with parcel N. */
         val ladder = entries.filter { it.rank > 0 }.sortedBy { it.rank }
+        val trees = entries.filter { it.tree }
     }
 }
 
@@ -100,12 +104,18 @@ data class FarmPlot(var crop: FarmCrop? = null, var planted: Long = 0, var water
                     var variant: Int = 0, var established: Boolean = false, var debris: Int = 0,
                     var critical: Boolean = false, var rich: Boolean = false, var welcome: Boolean = false) {
     fun duration(): Int = when {
-        welcome && crop == FarmCrop.RADISH -> FarmState.WELCOME_GROWTH_SECONDS
-        established -> 24 * 3600
+        welcome -> FarmState.WELCOME_GROWTH_SECONDS
+        established -> crop?.regrowthSeconds ?: 0
         else -> crop?.seconds ?: 0
     }
-    fun progress(now: Long): Float = if (crop == null || !watered) 0f else
-        ((now - planted).coerceAtLeast(0).toDouble() / (duration() * 1000L)).toFloat().coerceIn(0f, 1f)
+    fun progress(now: Long): Float {
+        if (crop == null || !watered) return 0f
+        val elapsed = (now - planted).coerceAtLeast(0)
+        val millis = duration() * 1000L
+        if (elapsed >= millis) return 1f
+        // Float rounding near a long deadline must never authorize an early harvest.
+        return (elapsed.toDouble() / millis).toFloat().coerceIn(0f, 0.99999994f)
+    }
     fun stage(now: Long): Int = if (established) { if (progress(now) >= 1f) 4 else 3 }
         else (progress(now) * 4).toInt().coerceAtMost(4)
     fun remaining(now: Long): Int = kotlin.math.ceil((1.0 - progress(now)) * duration()).toInt()
@@ -161,6 +171,15 @@ class FarmState(private val prefs: SharedPreferences) {
         private set
     var workshop = FarmWorkshopState()
         private set
+    private val discoveredTrees = mutableSetOf<FarmCrop>()
+    val orchardSpecies: Set<FarmCrop> get() = discoveredTrees.toSet()
+    var orchardIntroUsed = false
+        private set
+    var greenhouse = FarmGreenhouseState()
+        private set
+    var encounters = FarmEncountersState()
+        private set
+    private var encountersNeedSave = false
 
     init {
         // Parse into temporary objects: invalid saves must never partially overwrite the farm.
@@ -184,7 +203,7 @@ class FarmState(private val prefs: SharedPreferences) {
                     p.optInt("variant").coerceIn(0, (crop?.visualVariantCount ?: 2) - 1), p.optBoolean("established") && crop?.tree == true,
                     if (crop == null) p.optInt("debris").coerceIn(0, 3) else 0,
                     p.optBoolean("critical") && crop != null, p.optBoolean("rich") && crop != null,
-                    version >= 9 && p.optBoolean("welcome") && crop == FarmCrop.RADISH)
+                    version >= 9 && p.optBoolean("welcome") && (crop == FarmCrop.RADISH || (version >= 13 && crop?.tree == true)))
             }
             val selection = FarmCrop.valueOf(json.getString("selected"))
             val restoredCoins = json.getLong("coins").coerceAtLeast(0)
@@ -259,13 +278,34 @@ class FarmState(private val prefs: SharedPreferences) {
             village = restoredVillage
             projects = FarmProjectsState.fromJson(json.optJSONObject("projects"), village.deliveries)
             workshop = FarmWorkshopState.fromJson(json.optJSONObject("workshop"))
+            greenhouse = FarmGreenhouseState.fromJson(json.optJSONObject("greenhouse"))
+            encounters = FarmEncountersState.fromJson(json.optJSONObject("encounters"))
+            val orchard = json.optJSONObject("orchard")
+            FarmCrop.trees.filter { orchard?.optBoolean(it.name) == true }.forEach { discoveredTrees += it }
+            orchardIntroUsed = orchard?.optBoolean("introUsed") == true
+            // Preserve the fractional progress of inherited trees under the new growth durations.
+            if (version in 2..12) {
+                val now = System.currentTimeMillis()
+                plots.filter { it.crop?.tree == true }.forEach { p ->
+                    val oldSeconds = if (p.established) 24 * 3600 else when (p.crop) {
+                        FarmCrop.APPLE -> 48 * 3600; FarmCrop.PEAR -> 72 * 3600; else -> 96 * 3600
+                    }
+                    val fraction = if (p.watered) ((now - p.planted).coerceAtLeast(0).toDouble() / (oldSeconds * 1000L)).coerceAtMost(1.0) else 0.0
+                    p.watered = true; p.planted = now - (fraction * p.duration() * 1000L).toLong()
+                }
+            }
             runCatching { largeFields.restore(json.optJSONObject("largeFields")) }
             bushBonusDay = json.optLong("bushBonusDay", -1)
             if (version < 5) migrateToRebalancedEconomy()
             if (version < 6) migrateWheatOffTheLadder()
         }
+        FarmCrop.trees.filter { crop -> cropProduceTotal(crop) > 0 || plots.any { it.crop == crop } }
+            .forEach { discoveredTrees += it }
+        if (discoveredTrees.isNotEmpty()) orchardIntroUsed = true
         discoverRecipes()
-        village.ensureOrders(unlockedParcels, workshop.recipes)
+        village.ensureOrders(unlockedParcels, workshop.recipes, orchardSpecies)
+        // Hub previews construct FarmState too: leave persistence to the active visit.
+        encountersNeedSave = encounters.ensure(availableVisitors(), FarmCrop.ladder.last { cropUnlocked(it) }, System.currentTimeMillis())
     }
     /**
      * Version 6 took wheat out of the shop and put the chilli on its rung. Wheat already in the
@@ -296,7 +336,27 @@ class FarmState(private val prefs: SharedPreferences) {
 
     /** Crops are sold parcel by parcel: owning N parcels puts the first N rungs of the ladder on sale. */
     val unlockedParcels get() = parcels.count { it.unlocked }
-    fun cropUnlocked(crop: FarmCrop) = crop.rank in 1..unlockedParcels
+    fun cropUnlocked(crop: FarmCrop) = if (crop.tree) unlockedParcels >= crop.orchardParcelRequirement || crop in discoveredTrees
+        else crop.rank in 1..unlockedParcels
+    fun availableVisitors() = buildSet {
+        add(FarmVisitor.ROBIN)
+        if (greenhouse.introUsed) add(FarmVisitor.BUTTERFLY)
+        if (orchardSpecies.isNotEmpty()) add(FarmVisitor.SQUIRREL)
+        if (livestockUnlocked()) add(FarmVisitor.RABBIT)
+    }
+    fun advanceEncounters(now: Long = System.currentTimeMillis()) {
+        val crop = FarmCrop.ladder.last { cropUnlocked(it) }
+        if (encounters.ensure(availableVisitors(), crop, now) || encountersNeedSave) save()
+    }
+    fun greetVisitor(id: Long, withSeeds: Boolean, now: Long = System.currentTimeMillis()): FarmVisitorReward? {
+        val meeting = encounters.pending?.takeIf { it.id == id } ?: return null
+        if (withSeeds && seeds[meeting.crop.ordinal] > 9999 - meeting.seeds) return null
+        if (encounters.greet(id, now) == null) return null
+        val value = if (withSeeds) meeting.coins else meeting.coinAlternative
+        if (withSeeds) seeds[meeting.crop.ordinal] += meeting.seeds
+        coins += value; save()
+        return FarmVisitorReward(meeting.visitor, value, if (withSeeds) meeting.seeds else 0)
+    }
     /** Separate milestones: tractor cycles are never required to meet the animals. */
     fun fieldsUnlocked() = harvests >= FIELDS_HARVESTS
     fun livestockUnlocked() = livestock.unlocked > 0 || harvests >= LIVESTOCK_HARVESTS
@@ -353,23 +413,44 @@ class FarmState(private val prefs: SharedPreferences) {
         val changed = livestock.advance(now)
         if (discoverRecipes() || changed) save()
     }
+    fun butcherAnimal(id: Long, now: Long = System.currentTimeMillis()): Int {
+        val count = livestock.butcher(id, now)
+        if (count > 0) { discoverRecipes(); save() }
+        return count
+    }
+    fun sellMeat(meat: FarmMeat, quantity: Int): Long {
+        val value = livestock.takeMeat(meat, quantity).toLong() * meat.sale
+        if (value > 0) { coins += value; save() }
+        return value
+    }
     fun discoverRecipes(): Boolean = workshop.discover(unlockedParcels, FarmAnimalProduct.entries.filter { product ->
         livestock.stock(product) > 0 || livestock.animals.any { it.futureProduct == product }
-    }.toSet())
+    }.toSet(), orchardSpecies, greenhouse.recipeFlowers,
+        FarmMeat.entries.filter { livestock.available(it.kind) || livestock.stock(it) > 0 }.toSet())
     fun canPrepare(recipe: FarmRecipe): Boolean = workshop.knows(recipe) && workshop.jobs.size < FarmWorkshopState.SLOTS &&
         recipe.crops.all { produce[it.crop.ordinal][FarmCropQuality.COMMON.ordinal] >= it.count } &&
-        recipe.products.all { livestock.stock(it.product) >= it.count }
-    fun startPreparation(recipe: FarmRecipe, expectedRevision: Long, now: Long = System.currentTimeMillis()): Boolean {
+        recipe.products.all { livestock.stock(it.product) >= it.count } &&
+        recipe.flowers.all { greenhouse.count(it.flower) >= it.count } &&
+        recipe.meats.all { livestock.stock(it.meat) >= it.count } &&
+        recipe.preparations.all { workshop.count(it.recipe) >= it.count }
+    fun startPreparation(recipe: FarmRecipe, expectedRevision: Long, now: Long = System.currentTimeMillis(), handsOn: Boolean = false): Boolean {
         discoverRecipes()
-        if (!canPrepare(recipe) || !workshop.start(recipe, now, expectedRevision)) return false
+        if (!canPrepare(recipe) || !workshop.start(recipe, now, expectedRevision, handsOn)) return false
         recipe.crops.forEach { produce[it.crop.ordinal][FarmCropQuality.COMMON.ordinal] -= it.count }
         recipe.products.forEach { livestock.takeProduct(it.product, it.count) }
+        recipe.flowers.forEach { greenhouse.take(it.flower, it.count) }
+        recipe.meats.forEach { livestock.takeMeat(it.meat, it.count) }
+        recipe.preparations.forEach { workshop.take(it.recipe, it.count) }
         save(); return true
     }
     fun collectPreparations(now: Long = System.currentTimeMillis()): Int {
         val count = workshop.collect(now)
-        if (count > 0) save()
+        if (count > 0) { discoverRecipes(); save() }
         return count
+    }
+    fun toggleFavoriteRecipe(recipe: FarmRecipe): Boolean {
+        if (!workshop.toggleFavorite(recipe)) return false
+        save(); return true
     }
     fun sellPreparation(recipe: FarmRecipe, quantity: Int): Long {
         val value = workshop.take(recipe, quantity).toLong() * recipe.sale
@@ -377,6 +458,24 @@ class FarmState(private val prefs: SharedPreferences) {
         return value
     }
     fun requestedPreparation(recipe: FarmRecipe) = village.orders.count { it.preparation == recipe }
+    fun startFlower(flower: FarmFlower, crossed: Boolean, expectedRevision: Long, now: Long = System.currentTimeMillis(), slot: Int? = null): Boolean {
+        if (!greenhouse.start(flower, crossed, expectedRevision, now, slot)) return false
+        discoverRecipes(); save(); return true
+    }
+    fun collectFlowers(now: Long = System.currentTimeMillis()): Int {
+        val count = greenhouse.collect(now)
+        if (count > 0) { discoverRecipes(); save() }
+        return count
+    }
+    fun sellFlower(flower: FarmFlower, quantity: Int): Long {
+        val value = greenhouse.take(flower, quantity).toLong() * flower.sale
+        if (value > 0) { coins += value; save() }
+        return value
+    }
+    fun displayFlower(flower: FarmFlower): Boolean {
+        if (!greenhouse.display(flower)) return false
+        save(); return true
+    }
     fun renameAnimal(id: Long, name: String): Boolean {
         if (!livestock.rename(id, name)) return false
         save(); return true
@@ -484,11 +583,13 @@ class FarmState(private val prefs: SharedPreferences) {
         coins -= unlockCost(index); parcels[index].unlocked = true; save(); return true
     }
     fun changeUse(index: Int, use: FarmLandUse): Boolean {
-        // The orchard is parked until the fruit trees get their own balancing pass.
-        if (use == FarmLandUse.ORCHARD && parcels[index].use != FarmLandUse.ORCHARD) return false
-        if (!parcels[index].unlocked || FarmLayout.cells(index).any { plots[it].crop != null }) return false
+        if (!canChangeUse(index, use)) return false
         parcels[index].use = use; save(); return true
     }
+    fun canChangeUse(index: Int, use: FarmLandUse): Boolean = index in parcels.indices && parcels[index].unlocked &&
+        parcels[index].use != use && FarmLayout.cells(index).none { plots[it].crop != null } &&
+        (use != FarmLandUse.ORCHARD || (unlockedParcels >= 2 && parcels.count { it.unlocked && it.use == FarmLandUse.CROPS } >= 2))
+    fun orchardCells() = visitCells().filter { parcels[FarmLayout.parcelOf(it)].use == FarmLandUse.ORCHARD }
     fun buy(crop: FarmCrop, quantity: Int): Boolean {
         if (!cropUnlocked(crop)) return false
         if (quantity !in 1..MAX_SEED_BATCH || seeds[crop.ordinal] + quantity > 9999 ||
@@ -584,12 +685,13 @@ class FarmState(private val prefs: SharedPreferences) {
         if (!land.unlocked || p.debris != 0 || p.crop != null || seeds[crop.ordinal] == 0 ||
             crop.tree != (land.use == FarmLandUse.ORCHARD)) return false
         seeds[crop.ordinal]--
-        p.crop = crop; p.planted = now; p.watered = false; p.established = false; p.critical = false
-        p.welcome = crop == FarmCrop.RADISH && welcomePlantings > 0
-        if (p.welcome) welcomePlantings--
+        p.crop = crop; p.planted = now; p.watered = crop.tree; p.established = false; p.critical = false
+        p.welcome = if (crop.tree) !orchardIntroUsed else crop == FarmCrop.RADISH && welcomePlantings > 0
+        if (crop.tree) { orchardIntroUsed = true; discoveredTrees += crop; discoverRecipes() }
+        else if (p.welcome) welcomePlantings--
         p.variant = kotlin.random.Random.nextInt(crop.visualVariantCount)
         // Enrich from the pit automatically; village requests also make older crops useful.
-        p.rich = livestock.spendManure(crop.manureCost)
+        p.rich = !crop.tree && livestock.spendManure(crop.manureCost)
         return true
     }
     private fun waterOne(index: Int, now: Long, careful: Boolean): Boolean {
@@ -636,12 +738,14 @@ class FarmState(private val prefs: SharedPreferences) {
         val crop = p.crop ?: return null
         if (!parcels[FarmLayout.parcelOf(index)].unlocked || p.progress(now) < 1f) return null
         val quality = p.quality()
-        produce[crop.ordinal][quality.ordinal] = (produce[crop.ordinal][quality.ordinal] + 1).coerceAtMost(999999)
+        val count = crop.fruitCount
+        if (produce[crop.ordinal][quality.ordinal] > 999999 - count) return null
+        produce[crop.ordinal][quality.ordinal] += count
         harvests++
         if (crop.tree) { p.established = true; p.planted = now }
         else { p.crop = null; p.established = false }
-        p.watered = false; p.critical = false; p.rich = false; p.welcome = false
-        return FarmHarvestStack(crop, quality, 1)
+        p.watered = crop.tree; p.critical = false; p.rich = false; p.welcome = false
+        return FarmHarvestStack(crop, quality, count)
     }
     fun harvest(index: Int, now: Long): FarmHarvestResult {
         val stack = harvestOne(index, now)
@@ -662,7 +766,7 @@ class FarmState(private val prefs: SharedPreferences) {
         val value = grouped.sumOf { it.crop.sale * it.quality.multiplier * it.count }
         return FarmHarvestResult(value, grouped.sumOf { it.count }, grouped)
     }
-    fun produceCount(): Int = produce.sumOf { row -> row.sum() } + livestock.productCount() + workshop.totalStock()
+    fun produceCount(): Int = produce.sumOf { row -> row.sum() } + livestock.productCount() + livestock.meatCount() + workshop.totalStock() + greenhouse.totalStock()
     fun cropProduceTotal(crop: FarmCrop): Int = produce[crop.ordinal].sum()
     fun orderReward(id: Long): Long? = village.find(id)?.let { FarmOrderWithdrawal.plan(it, produce, workshop)?.reward }
     fun readyOrders(): Int = village.orders.count { orderReward(it.id) != null }
@@ -672,7 +776,7 @@ class FarmState(private val prefs: SharedPreferences) {
         val order = village.find(id) ?: return null
         val withdrawal = FarmOrderWithdrawal.plan(order, produce, workshop) ?: return null
         discoverRecipes()
-        val friendship = village.complete(id, unlockedParcels, workshop.recipes) ?: return null
+        val friendship = village.complete(id, unlockedParcels, workshop.recipes, orchardSpecies) ?: return null
         withdrawal.stacks.forEach { produce[it.crop.ordinal][it.quality.ordinal] -= it.count }
         withdrawal.preparation?.let { workshop.take(it, 1) }
         coins += withdrawal.reward
@@ -683,7 +787,7 @@ class FarmState(private val prefs: SharedPreferences) {
 
     fun replaceOrder(id: Long): Boolean {
         discoverRecipes()
-        if (!village.replace(id, unlockedParcels, workshop.recipes)) return false
+        if (!village.replace(id, unlockedParcels, workshop.recipes, orchardSpecies)) return false
         save(); return true
     }
 
@@ -715,7 +819,7 @@ class FarmState(private val prefs: SharedPreferences) {
                 total += produce[item.ordinal][quality.ordinal].toLong() * item.sale * quality.multiplier
             }
         }
-        return total + if (crop == null) livestock.productValue() + workshop.stockValue() else 0
+        return total + if (crop == null) livestock.productValue() + livestock.meatValue() + workshop.stockValue() + greenhouse.stockValue() else 0
     }
     fun sellProduce(crop: FarmCrop? = null): Long {
         var total = 0L
@@ -732,8 +836,14 @@ class FarmState(private val prefs: SharedPreferences) {
         if (crop == null) FarmAnimalProduct.entries.forEach { product ->
             total += livestock.takeProduct(product, livestock.stock(product)).toLong() * product.sale
         }
+        if (crop == null) FarmMeat.entries.forEach { meat ->
+            total += livestock.takeMeat(meat, livestock.stock(meat)).toLong() * meat.sale
+        }
         if (crop == null) FarmRecipe.entries.forEach { recipe ->
             total += workshop.take(recipe, workshop.count(recipe)).toLong() * recipe.sale
+        }
+        if (crop == null) FarmFlower.entries.forEach { flower ->
+            total += greenhouse.take(flower, greenhouse.count(flower)).toLong() * flower.sale
         }
         if (total > 0) { coins += total; save() }
         return total
@@ -777,6 +887,10 @@ class FarmState(private val prefs: SharedPreferences) {
         village.reset(unlockedParcels)
         projects = FarmProjectsState()
         workshop = FarmWorkshopState()
+        discoveredTrees.clear(); orchardIntroUsed = false
+        greenhouse = FarmGreenhouseState()
+        encounters = FarmEncountersState()
+        advanceEncounters()
         discoverRecipes()
         save()
     }
@@ -787,6 +901,7 @@ class FarmState(private val prefs: SharedPreferences) {
         // The herd is on the same clock: skipping time must move births and growth too.
         livestock.cheatSkip(millis)
         workshop.cheatSkip(millis)
+        greenhouse.cheatSkip(millis)
         advanceLivestock(); advanceFields(); save()
     }
     fun cheatCompleteGrowth() {
@@ -794,6 +909,7 @@ class FarmState(private val prefs: SharedPreferences) {
         plots.forEach { if (it.watered) it.planted = now - it.duration() * 1000L - 1000L }
         largeFields.fields.forEach { if (it.phase == 2) it.readyAt = now }
         livestock.cheatRush(now)
+        greenhouse.cheatSkip(30 * 86_400_000L)
         advanceLivestock(now); advanceFields()
         save()
     }
@@ -801,6 +917,7 @@ class FarmState(private val prefs: SharedPreferences) {
     /** Waters every thirsty plant across every unlocked parcel at once. */
     fun cheatWaterAll() { waterMany(plots.indices.toList(), System.currentTimeMillis()) }
     fun save() {
+        encountersNeedSave = false
         val array = JSONArray()
         plots.forEach { p -> array.put(JSONObject().put("crop", p.crop?.name ?: "").put("planted", p.planted)
             .put("watered", p.watered).put("variant", p.variant).put("established", p.established).put("debris", p.debris)
@@ -822,6 +939,9 @@ class FarmState(private val prefs: SharedPreferences) {
             .put("village", village.toJson())
             .put("projects", projects.toJson())
             .put("workshop", workshop.toJson())
+            .put("orchard", JSONObject().put("introUsed", orchardIntroUsed).apply { orchardSpecies.forEach { put(it.name, true) } })
+            .put("greenhouse", greenhouse.toJson())
+            .put("encounters", encounters.toJson())
             .put("welcomePlantings", welcomePlantings)
             .put("harvestLevel", harvestLevel).put("fertilizerLevel", fertilizerLevel).put("aimLevel", aimLevel)
             .put("largeFields", largeFields.json()).put("livestock", livestock.toJson())
@@ -850,7 +970,7 @@ class FarmState(private val prefs: SharedPreferences) {
          * format from a later build must be refused before it reaches the parser above, which
          * would reject it and hand the player a brand new farm instead of their own.
          */
-        const val MAX_SAVE_VERSION = 12
+        const val MAX_SAVE_VERSION = 17
         /**
          * Reads the save and counts the ready harvests without opening the game. It goes through
          * [FarmState] on purpose: a second, lighter reader of the same JSON would have to know about

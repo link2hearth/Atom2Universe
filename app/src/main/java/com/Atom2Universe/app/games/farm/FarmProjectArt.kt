@@ -106,14 +106,17 @@ class FarmProjectArt {
             }
         }
     }
-    fun gift(canvas: Canvas, gift: FarmGift, target: RectF) {
-        sprite(gift.name, target, canvas) { c ->
+    fun gift(canvas: Canvas, gift: FarmGift, target: RectF, flower: FarmFlower? = null) {
+        sprite(gift.name + if (gift == FarmGift.FLOWERS) flower?.name.orEmpty() else "", target, canvas) { c ->
             paint.color = Color.argb(70, 51, 79, 44); c.drawOval(9f, 36f, 56f, 43f, paint)
             when (gift) {
                 FarmGift.FLOWERS -> {
                     rect(c, 13f, 31f, 39f, 9f, wood)
                     rect(c, 11f, 29f, 43f, 3f, lightWood)
-                    for ((i, x) in listOf(18f, 28f, 39f, 47f).withIndex()) {
+                    if (flower != null) {
+                        val art = FarmFlowerArt()
+                        for (x in listOf(13f, 25f, 37f)) art.draw(c, flower, RectF(x, 3f, x + 15f, 34f))
+                    } else for ((i, x) in listOf(18f, 28f, 39f, 47f).withIndex()) {
                         rect(c, x, 21f, 2f, 9f, leaf)
                         rect(c, x - 4f, 24f, 5f, 2f, leaf)
                         val color = if (i % 2 == 0) Color.rgb(240, 169, 154) else Color.rgb(247, 215, 115)
@@ -148,7 +151,8 @@ class FarmProjectArt {
 }
 
 class FarmProjectPreview(context: Context, private val state: FarmProjectsState,
-                         private val project: FarmProject? = null, private val gift: FarmGift? = null) : View(context) {
+                         private val project: FarmProject? = null, private val gift: FarmGift? = null,
+                         private val flower: FarmFlower? = null) : View(context) {
     private val art = FarmProjectArt()
     init { importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO }
     override fun onDraw(canvas: Canvas) {
@@ -157,6 +161,6 @@ class FarmProjectPreview(context: Context, private val state: FarmProjectsState,
         val h = w * 3 / 4
         val target = RectF((width - w) / 2, (height - h) / 2, (width + w) / 2, (height + h) / 2)
         project?.let { art.project(canvas, it, it.stage(state.progress(it)), target) }
-        gift?.let { art.gift(canvas, it, target) }
+        gift?.let { art.gift(canvas, it, target, flower) }
     }
 }

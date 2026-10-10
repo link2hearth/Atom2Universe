@@ -48,8 +48,8 @@ class FarmVillageState {
     fun find(id: Long): FarmVillageOrder? = board.firstOrNull { it?.id == id }
 
     /** Fill a new/legacy board; a valid existing request is never refreshed on opening the game. */
-    fun ensureOrders(unlockedParcels: Int, recipes: List<FarmRecipe> = emptyList()) {
-        val available = availableCrops(unlockedParcels)
+    fun ensureOrders(unlockedParcels: Int, recipes: List<FarmRecipe> = emptyList(), trees: Set<FarmCrop> = emptySet()) {
+        val available = availableCrops(unlockedParcels) + FarmCrop.trees.filter { it in trees }
         FarmVillager.entries.forEach { villager ->
             val old = board[villager.ordinal]
             if (old == null || old.items.any { it.crop !in available })
@@ -58,17 +58,17 @@ class FarmVillageState {
     }
 
     /** Stale button callbacks cannot replace or complete a newer request. */
-    fun replace(id: Long, unlockedParcels: Int, recipes: List<FarmRecipe> = emptyList()): Boolean {
+    fun replace(id: Long, unlockedParcels: Int, recipes: List<FarmRecipe> = emptyList(), trees: Set<FarmCrop> = emptySet()): Boolean {
         val old = find(id) ?: return false
-        board[old.villager.ordinal] = generate(old.villager, availableCrops(unlockedParcels), old, recipes)
+        board[old.villager.ordinal] = generate(old.villager, availableCrops(unlockedParcels) + FarmCrop.trees.filter { it in trees }, old, recipes)
         return true
     }
 
-    internal fun complete(id: Long, unlockedParcels: Int, recipes: List<FarmRecipe> = emptyList()): Int? {
+    internal fun complete(id: Long, unlockedParcels: Int, recipes: List<FarmRecipe> = emptyList(), trees: Set<FarmCrop> = emptySet()): Int? {
         val old = find(id) ?: return null
         val index = old.villager.ordinal
         delivered[index] = (delivered[index] + 1).coerceAtMost(MAX_DELIVERIES)
-        board[index] = generate(old.villager, availableCrops(unlockedParcels), old, recipes)
+        board[index] = generate(old.villager, availableCrops(unlockedParcels) + FarmCrop.trees.filter { it in trees }, old, recipes)
         return delivered[index]
     }
 
@@ -84,12 +84,17 @@ class FarmVillageState {
             val recipe = recipes[(turn / 4 + villager.ordinal) % recipes.size]
             return FarmVillageOrder(id, villager, story, emptyList(), recipe)
         }
-        var index = ((id - 1) % available.size).toInt()
-        if (available.size > 1 && available[index] == old?.items?.firstOrNull()?.crop)
-            index = (index + 1) % available.size
-        val mixed = available.size >= 3 && id % 3 == 0L
-        val items = mutableListOf(FarmOrderItem(available[index], 3 + (id % 4).toInt()))
-        if (mixed) items += FarmOrderItem(available[(index + maxOf(1, available.size / 2)) % available.size], 2)
+        val fruits = available.filter { it.tree }
+        if (fruits.isNotEmpty() && turn % 4 == 0 && turn > 0 &&
+            board.none { it?.villager != villager && it?.items?.any { item -> item.crop.tree } == true })
+            return FarmVillageOrder(id, villager, story, listOf(FarmOrderItem(fruits[(turn / 4 + villager.ordinal) % fruits.size], 3)))
+        val vegetables = available.filterNot { it.tree }
+        var index = ((id - 1) % vegetables.size).toInt()
+        if (vegetables.size > 1 && vegetables[index] == old?.items?.firstOrNull()?.crop)
+            index = (index + 1) % vegetables.size
+        val mixed = vegetables.size >= 3 && id % 3 == 0L
+        val items = mutableListOf(FarmOrderItem(vegetables[index], 3 + (id % 4).toInt()))
+        if (mixed) items += FarmOrderItem(vegetables[(index + maxOf(1, vegetables.size / 2)) % vegetables.size], 2)
         return FarmVillageOrder(id, villager, story, items)
     }
 
@@ -145,7 +150,7 @@ class FarmVillageState {
                         val item = rawItems.getJSONObject(j)
                         val crop = FarmCrop.valueOf(item.getString("crop"))
                         val count = item.getInt("count")
-                        require(crop.rank > 0 && count in 1..6)
+                        require((crop.rank > 0 || crop.tree) && count in 1..6)
                         FarmOrderItem(crop, count)
                     }
                     require(items.map { it.crop }.distinct().size == items.size)
@@ -154,6 +159,7 @@ class FarmVillageState {
                 result.nextId = json.getLong("nextId")
                 require(result.nextId > ids.max() && result.nextId <= 1_000_000_000_001L)
                 require(result.orders.count { it.preparation != null } <= 1)
+                require(result.orders.count { it.items.any { item -> item.crop.tree } } <= 1)
                 result
             }.getOrElse { FarmVillageState() }
         }

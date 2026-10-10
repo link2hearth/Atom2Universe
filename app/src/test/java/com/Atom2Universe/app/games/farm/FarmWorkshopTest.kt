@@ -14,9 +14,9 @@ class FarmWorkshopTest {
     }
 
     @Test fun `chaque recette paie au moins un tiers de plus que ses ingredients ordinaires`() {
-        assertEquals(6, FarmRecipe.entries.size)
+        assertEquals(24, FarmRecipe.entries.size)
         FarmRecipe.entries.forEach {
-            assertTrue(it.crops.isNotEmpty() || it.products.isNotEmpty())
+            assertTrue(it.crops.isNotEmpty() || it.products.isNotEmpty() || it.flowers.isNotEmpty() || it.meats.isNotEmpty())
             assertTrue(it.minutes > 0)
             assertTrue(it.sale.toLong() * 3 >= it.ingredientValue.toLong() * 4)
         }
@@ -28,10 +28,11 @@ class FarmWorkshopTest {
         assertTrue(state.discover(3, setOf(FarmAnimalProduct.EGG)))
         assertEquals(listOf(FarmRecipe.PICKLES, FarmRecipe.SOUP, FarmRecipe.EGG_SALAD), state.recipes)
         assertFalse(state.knows(FarmRecipe.TRUFFLE_PAN))
-        assertTrue(state.discover(5, setOf(FarmAnimalProduct.TRUFFLE, FarmAnimalProduct.MILK, FarmAnimalProduct.WOOL)))
-        assertEquals(FarmRecipe.entries.toList(), state.recipes)
+        assertTrue(state.discover(5, FarmAnimalProduct.entries.toSet()))
+        assertEquals(FarmRecipe.entries.filter { recipe -> recipe.crops.all { it.crop.rank in 1..5 } &&
+            recipe.flowers.isEmpty() && recipe.meats.isEmpty() && recipe.dishesNeeded == 0 }, state.recipes)
         assertFalse(state.discover(1, emptySet()))
-        assertEquals(6, state.recipes.size)
+        assertEquals(7, state.recipes.size)
     }
     @Test fun `trois plans paralleles puis refus sans mutation`() {
         val state = workshop()
