@@ -105,16 +105,13 @@ class CosmicTimelineActivity : ThemedActivity() {
         toolbar.addView(icon(R.drawable.ic_search, R.string.ct_catalog) { catalog() }, square())
         toolbar.addView(icon(R.drawable.ic_more_vert_24, R.string.ct_about) { about() }, square())
         root.addView(toolbar)
-        navigator = TimelineNavigator(this, ::navigate, ::chooseScale, ::zoomOut, ::zoomIn,
-            { direction -> changeHumanWindow { pan(span * direction) } },
-            { changeHumanWindow { recentOverview() } }, { changeHumanWindow { century() } },
-            { fraction -> changeHumanWindow { seekRecent(fraction) } })
+        navigator = TimelineNavigator(this, ::navigate, ::chooseScale, ::zoomOut, ::zoomIn)
         content = column().apply { setPadding(dp(12), dp(6), dp(12), dp(20)) }
         scroll = ScrollView(this).apply {
             isFillViewport = true; clipToPadding = false
             addView(content, FrameLayout.LayoutParams(-1, -2))
         }
-        // Both orientations use the full available width, with navigation above the timeline.
+        // Human navigation lives inside its chart; cosmic chapters retain their wider-scale navigator.
         root.addView(navigator, LinearLayout.LayoutParams(-1, -2))
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         setContentView(root)
@@ -140,7 +137,7 @@ class CosmicTimelineActivity : ThemedActivity() {
                     historyRegion = region; historyTopic = topic; locatedHistoryId = selected
                     path = TimelineChapters.navigate(path, TimelineChapters.humanWindow(historyWindow).id)
                     updateNavigation()
-                }, ::navigate, ::showHumanPeriod).also { content.addView(it) }
+                }, ::chooseScale, ::showHumanPeriod).also { content.addView(it) }
             return
         }
         content.addView(CosmicTimelineView(this, current, null, ::navigate), LinearLayout.LayoutParams(-1, -2))
@@ -257,7 +254,8 @@ class CosmicTimelineActivity : ThemedActivity() {
 
     private fun updateNavigation() {
         val current = requireNotNull(TimelineChapters.get(path.last()))
-        navigator.bind(path, historyWindow.takeIf { current.human != null })
+        navigator.visibility = if (current.human == null) View.VISIBLE else View.GONE
+        if (current.human == null) navigator.bind(path)
         back.contentDescription = if (ScienceNavigation.isModuleLink(intent)) getString(R.string.science_back_to_previous_module)
             else if (path.size > 1) getString(R.string.ct_history_zoom_out) else getString(R.string.ct_back)
     }
@@ -301,6 +299,11 @@ class CosmicTimelineActivity : ThemedActivity() {
         val current = requireNotNull(TimelineChapters.get(path.last()))
         PopupMenu(this, anchor).apply {
             val choices = mutableListOf<CosmicPeriod>()
+            if (current.human != null) {
+                menu.add(1, 0, 0, R.string.ct_history_zoom_in).isEnabled = historyWindow.span > HumanTimeWindow.MIN_SPAN
+                menu.add(1, 1, 0, R.string.ct_history_zoom_out).isEnabled = TimelineChapters.wider(path, historyWindow) != null
+                menu.add(1, 2, 0, R.string.ct_explorer_recent)
+            }
             fun group(title: Int, periods: List<CosmicPeriod>) {
                 if (periods.isEmpty()) return
                 val submenu = menu.addSubMenu(title)
@@ -314,7 +317,18 @@ class CosmicTimelineActivity : ThemedActivity() {
             group(R.string.ct_explorer_neighbours, listOfNotNull(before, current, after))
             group(R.string.ct_explorer_closer, TimelineChapters.zoomTargets(current))
             setOnMenuItemClickListener { item ->
-                if (item.hasSubMenu()) false else { navigateExact(choices[item.itemId].id); true }
+                when {
+                    item.hasSubMenu() -> false
+                    item.groupId == 1 -> {
+                        when (item.itemId) {
+                            0 -> changeHumanWindow { zoom(2.0) }
+                            1 -> zoomOut()
+                            2 -> changeHumanWindow { recentOverview() }
+                        }
+                        true
+                    }
+                    else -> { navigateExact(choices[item.itemId].id); true }
+                }
             }
             show()
         }

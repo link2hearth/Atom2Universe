@@ -1,6 +1,7 @@
 package com.Atom2Universe.app.science
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -99,24 +100,7 @@ class ScienceFiche(
 
     private fun create(): FicheDialog {
         val d = FicheDialog(activity)
-        val window = d.window ?: return d
-        // Fenêtre transparente : chaque zone de la page a son propre fond (plus ou moins translucide).
-        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        window.setFormat(PixelFormat.TRANSLUCENT)
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        @Suppress("DEPRECATION") run {
-            window.statusBarColor = Color.TRANSPARENT
-            window.navigationBarColor = Color.TRANSPARENT
-        }
-        if (Build.VERSION.SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
-        if (Build.VERSION.SDK_INT >= 28) {
-            window.attributes = window.attributes.apply {
-                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            }
-        }
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
+        d.useFullScreenWindow()
         val content = FrameLayout(activity)
         d.setContentView(content, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         holder = content
@@ -244,6 +228,29 @@ class ScienceFiche(
     }
 
     private fun dp(value: Int) = (value * density).toInt()
+}
+
+/**
+ * Une fenêtre qui prend tout l'écran, bords compris : son [background] (transparent ou translucide) va jusque sous les
+ * barres système, qui sont transparentes, et c'est le contenu qui se tient hors de leur zone (voir `fitInsets`).
+ */
+internal fun Dialog.useFullScreenWindow(background: Int = Color.TRANSPARENT) {
+    val window = window ?: return
+    window.setBackgroundDrawable(ColorDrawable(background))
+    window.setFormat(PixelFormat.TRANSLUCENT)
+    window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+    WindowCompat.setDecorFitsSystemWindows(window, false)
+    @Suppress("DEPRECATION") run {
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
+    }
+    if (Build.VERSION.SDK_INT >= 29) window.isNavigationBarContrastEnforced = false
+    if (Build.VERSION.SDK_INT >= 28) {
+        window.attributes = window.attributes.apply {
+            layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
+    }
+    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 }
 
 /**

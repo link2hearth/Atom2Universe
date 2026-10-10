@@ -1,5 +1,6 @@
 package com.Atom2Universe.app.science.biology
 
+import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -27,10 +28,9 @@ import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.AppBrightness
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
+import com.Atom2Universe.app.science.bottomPanelDialog
 import com.Atom2Universe.app.util.enableImmersiveMode
 import com.Atom2Universe.app.util.followImmersiveMode
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,7 +52,7 @@ class HumanBiologyActivity : ThemedActivity() {
     private var switchingAtlas = false
     private var showExternalGenitals = false
     private var loading: Job? = null
-    private var openPanel: BottomSheetDialog? = null
+    private var openPanel: Dialog? = null
     private var journey: AnatomyJourney? = null
     private var journeyStep = 0
     private var beforeJourney: Bundle? = null
@@ -533,11 +533,8 @@ class HumanBiologyActivity : ThemedActivity() {
         onBack: (() -> Unit)? = null, heightFraction: Float = .72f, onDismiss: (() -> Unit)? = null) {
         openPanel?.dismiss()
         journeyPanelVisible = false
-        val dialog = BottomSheetDialog(this)
-        val body = column().apply {
-            setPadding(dp(16), dp(8), dp(16), dp(16))
-            background = rounded(panel)
-        }
+        lateinit var dialog: Dialog
+        val body = column().apply { setPadding(dp(16), dp(8), dp(16), dp(16)) }
         val header = row()
         if (onBack != null) header.addView(icon(R.drawable.ic_arrow_back_24, R.string.bio_ui_layers, onBack), square())
         header.addView(TextView(this).apply {
@@ -554,7 +551,6 @@ class HumanBiologyActivity : ThemedActivity() {
         // Un panneau court laisse le modèle visible ; un long reste défilable en paysage.
         // Le plafond est réévalué quand on passe des couches à la liste des régions.
         val maximumHeight = (resources.displayMetrics.heightPixels * heightFraction).toInt()
-        val maximumWidth = minOf(resources.displayMetrics.widthPixels, dp(560))
         val scroll = object : NestedScrollView(this) {
             override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
                 val available = (maximumHeight - header.measuredHeight - (pinnedControls?.measuredHeight ?: 0) -
@@ -565,11 +561,8 @@ class HumanBiologyActivity : ThemedActivity() {
             }
         }.apply { isFillViewport = false; addView(content) }
         body.addView(scroll, LinearLayout.LayoutParams(-1, -2))
-        dialog.setContentView(body)
-        dialog.behavior.maxWidth = maximumWidth
-        dialog.behavior.skipCollapsed = true
-        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        dialog.window?.setDimAmount(.22f)
+        // Une fenêtre posée en bas, sans la feuille Material : la couleur du panneau passe sous la barre de navigation.
+        dialog = bottomPanelDialog(this, body, panel, dp(560))
         dialog.setOnDismissListener {
             // Dismiss callbacks are posted: an old panel must not close the state of its replacement.
             if (openPanel === dialog) {
@@ -577,7 +570,6 @@ class HumanBiologyActivity : ThemedActivity() {
                 onDismiss?.invoke()
             }
         }
-        dialog.followImmersiveMode()
         openPanel = dialog
         dialog.show()
     }

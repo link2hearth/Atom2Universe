@@ -41,6 +41,8 @@ class HumanHistoryTimelineView(
     private var verticalGesture = false
     private var touching = false
     private var axisY = 0f
+    private val plotTop get() = dp(8).toFloat()
+    private var recordsTop = 0
     private var rowHeight = 0
     private var rowCount = 1
     private val inset get() = dp(12).toFloat()
@@ -81,7 +83,6 @@ class HumanHistoryTimelineView(
 
     init {
         setWillNotDraw(false)
-        background = palette.shape(palette.surface, 10f)
         layoutDirection = LAYOUT_DIRECTION_LTR
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
         // Each record owns its native target, including when it represents a group on its track.
@@ -116,7 +117,8 @@ class HumanHistoryTimelineView(
         // Only trim unused tracks at the bottom: compacting holes would move surviving records.
         // Defer shrinking until a gesture/fling ends so the chart cannot slip under the finger.
         rowCount = if (touching || !scroller.isFinished) maxOf(rowCount, neededRows) else neededRows
-        axisY = (dp(78) + rowHeight * rowCount).toFloat()
+        recordsTop = dp(8) + dp((24 * fontScale).roundToInt())
+        axisY = (recordsTop + dp(4) + rowHeight * rowCount).toFloat()
         val h = axisY.roundToInt() + dp((45 * fontScale).roundToInt())
         setMeasuredDimension(w, resolveSize(h, heightMeasureSpec))
         val labelWidth = minOf(dp(158), (available * .58f).roundToInt()).coerceAtLeast(1)
@@ -158,7 +160,7 @@ class HumanHistoryTimelineView(
                     HumanDate(group.entries.last().range.last.year).label(context))
             target.button.background = palette.shape(if (group.entries.any { it.id == selectedId })
                 ColorUtils.blendARGB(palette.raised, palette.accent, .22f) else palette.raised, 6f)
-            val top = (dp(74) + group.lane * rowHeight).toFloat()
+            val top = (recordsTop + group.lane * rowHeight).toFloat()
             target.bounds.set(group.left, top, group.left + labelWidth, top + rowHeight - dp(10))
             target.anchor = group.anchor
             target.button.measure(MeasureSpec.makeMeasureSpec(labelWidth, MeasureSpec.EXACTLY),
@@ -181,14 +183,9 @@ class HumanHistoryTimelineView(
         super.onDraw(canvas)
         if (width <= 0) return
         paint.style = Paint.Style.FILL; paint.strokeWidth = dp(1).toFloat()
-        paint.textSize = 10f * resources.displayMetrics.scaledDensity
-        // The parent-scale locator lives in the shared navigator; these dates describe this chart.
-        text(canvas, HumanDate(window.start.roundToInt()).label(context), inset, dp(19).toFloat())
-        text(canvas, HumanDate(window.end.roundToInt()).label(context), width - inset, dp(19).toFloat(), Paint.Align.RIGHT)
-        paint.color = palette.accent
-        canvas.drawRoundRect(inset, dp(30).toFloat(), width - inset, dp(35).toFloat(), dp(2).toFloat(), dp(2).toFloat(), paint)
-
-        val saved = canvas.save(); canvas.clipRect(inset, dp(48).toFloat(), width - inset, axisY)
+        paint.textSize = 12f * resources.displayMetrics.scaledDensity
+        // The dates and scrubber share this card's native header; do not repeat them on the canvas.
+        val saved = canvas.save(); canvas.clipRect(inset, plotTop, width - inset, axisY)
         // Low-contrast period colour and code-drawn motifs supply context without more navigation layers.
         val leaves = HumanHistory.periods.filter { TimelineChapters.children(it).isEmpty() }
         leaves.forEach { period ->
@@ -197,28 +194,28 @@ class HumanHistoryTimelineView(
             val right = x(range.last.year.toDouble()).coerceAtMost(width - inset)
             if (right > left) {
                 paint.color = ColorUtils.blendARGB(palette.surface, period.color, .09f)
-                canvas.drawRect(left, dp(49).toFloat(), right, axisY, paint)
+                canvas.drawRect(left, plotTop, right, axisY, paint)
                 paint.color = palette.mark(period.color)
-                canvas.drawRect(left, dp(49).toFloat(), right, dp(52).toFloat(), paint)
+                canvas.drawRect(left, plotTop, right, plotTop + dp(3), paint)
                 if (right - left > dp(90)) {
                     val alpha = canvas.saveLayerAlpha(left, axisY - dp(62), right, axisY, 38)
                     art.draw(canvas, RectF(left, axisY - dp(62), right, axisY), period, palette)
                     canvas.restoreToCount(alpha)
                     val caption = TextUtils.ellipsize(context.getString(period.title), paint,
                         right - left - dp(8), TextUtils.TruncateAt.END).toString()
-                    text(canvas, caption, left + dp(4), dp(65).toFloat())
+                    text(canvas, caption, left + dp(4), plotTop + dp(7) - paint.fontMetrics.top)
                 }
             }
         }
-        val labels = (plotWidth / (110 * resources.displayMetrics.scaledDensity)).toInt().coerceAtLeast(2)
+        val labels = (plotWidth / (130 * resources.displayMetrics.scaledDensity)).toInt().coerceAtLeast(2)
         val ticks = window.ticks(labels)
         ticks.forEach { year ->
             paint.color = palette.outline
-            canvas.drawLine(x(year.toDouble()), dp(52).toFloat(), x(year.toDouble()), axisY, paint)
+            canvas.drawLine(x(year.toDouble()), plotTop + dp(3), x(year.toDouble()), axisY, paint)
         }
         paint.color = ColorUtils.setAlphaComponent(palette.outline, 100)
         for (lane in 1 until rowCount) {
-            val y = (dp(71) + lane * rowHeight).toFloat()
+            val y = (recordsTop - dp(3) + lane * rowHeight).toFloat()
             canvas.drawLine(inset, y, width - inset, y, paint)
         }
         targets.values.filter { it.entries.isNotEmpty() }.forEach { target ->
@@ -245,7 +242,7 @@ class HumanHistoryTimelineView(
         // Dates stay at the base of the chart while the content moves horizontally.
         paint.color = palette.secondary
         canvas.drawLine(inset, axisY, width - inset, axisY, paint)
-        paint.textSize = 11f * resources.displayMetrics.scaledDensity
+        paint.textSize = 13f * resources.displayMetrics.scaledDensity
         var lastLabelRight = -1f
         ticks.forEach { year ->
             val px = x(year.toDouble())

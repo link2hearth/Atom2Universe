@@ -8,14 +8,14 @@
     <string name="ct_history_minus">−</string>
     <string name="ct_history_plus">+</string>
     <string name="ct_history_overview">Overview</string>
-    <string name="ct_history_gesture_hint">Drag to travel through time · Pinch or use + / − to zoom</string>
+    <string name="ct_history_gesture_hint">Drag to travel through time · Pinch to zoom · Tap the dates for more options</string>
     <string name="ct_history_read_window">About this period</string>
     <string name="ct_history_window_empty">No records in this window with these filters. Move along the timeline or change the topic or region.</string>
     <string name="ct_history_window_note">Tap a record to read more. Nearby records are grouped when space is limited. This selection is being expanded.</string>
     <string name="ct_history_cluster">%1$d records</string>
     <string name="ct_history_cluster_description">Open %1$d records, from %2$s to %3$s</string>
     <string name="ct_history_zoom_here">Zoom to these records</string>
-    <string name="ct_history_navigation_help">Human history opens between 4000 BCE and the present. Tap “100 years” to frame a century in one step: the overview opens the most recent 100 years; otherwise, the zoom keeps the centre of the window. Drag the timeline to explore dates without changing that duration. The arrows shift by one window width, or 100 years at this scale.\n\nThe slider jumps quickly to another date between 4000 BCE and the present. “4000 BCE → now” restores the overview. Dragging and pinching within this range stay within its bounds; use −, the scale menu or search to reach prehistoric landmarks. Nearby records are grouped when their labels would overlap; open a group to read its records or zoom closer.</string>
+    <string name="ct_history_navigation_help">Human history opens between 4000 BCE and the present. Navigation is built into the top of the timeline: the larger dates show the visible window; the dates beneath the slider show its browsing limits. The small “100 years” button frames a century: the overview opens the most recent 100 years; otherwise, it keeps the centre of the window.\n\nDrag the slider or timeline to explore dates. The arrows shift by one window width, or 100 years at this scale. Pinch to zoom. Tap the visible dates to choose a period, zoom in or out, or restore the overview from 4000 BCE to the present. Dragging and pinching within recent history stay within its bounds; use the dates menu or search to reach prehistoric landmarks. Nearby records are grouped when their labels would overlap; open a group to read its records or zoom closer.</string>
     <string name="ct_history_source_sapiens">Smithsonian · Homo sapiens</string>
     <string name="ct_history_sapiens_title">Homo sapiens in Africa</string>
     <string name="ct_history_sapiens_body">Fossils place the emergence of our species in Africa around 300,000 years ago. This begins the human-history overview here. Human evolution is much older, and other human species also lived during part of this long period.</string>

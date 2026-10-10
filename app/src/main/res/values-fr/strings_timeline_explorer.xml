@@ -8,6 +8,7 @@
     <string name="ct_explorer_century_description">Afficher une tranche de 100 ans, puis glisser pour parcourir les dates</string>
     <string name="ct_explorer_scrub_hint">100 ans pour zoomer · curseur pour se déplacer</string>
     <string name="ct_explorer_scrub_description">Parcourir de 4000 avant notre ère à aujourd’hui. Fenêtre affichée : %1$s</string>
+    <string name="ct_explorer_scrub_range">Parcourir %1$s. Fenêtre affichée : %2$s</string>
     <string name="ct_explorer_choose">%1$s. Choisir une période ou une échelle.</string>
     <string name="ct_explorer_context">Dans %1$s · toucher pour dézoomer</string>
     <string name="ct_explorer_overview">Vue d’ensemble · %1$s</string>

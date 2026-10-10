@@ -10,24 +10,19 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.graphics.ColorUtils
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.science.SciencePalette
 import kotlin.math.roundToInt
 
-/** Stays above the reading area at every scale. Only the nearest useful context is drawn. */
+/** Wider-scale navigation for cosmic and geological chapters. */
 class TimelineNavigator(
     context: Context,
     private val navigate: (String) -> Unit,
     private val chooseScale: (View) -> Unit,
     private val zoomOut: () -> Unit,
-    private val zoomIn: (View) -> Unit,
-    private val moveWindow: (Double) -> Unit,
-    private val showRecent: () -> Unit,
-    private val showCentury: () -> Unit,
-    private val seekRecent: (Double) -> Unit
+    private val zoomIn: (View) -> Unit
 ) : LinearLayout(context) {
     private val palette = SciencePalette(context)
     private val dates = TimelineDates(context)
@@ -38,11 +33,6 @@ class TimelineNavigator(
     private val previous: Button
     private val next: Button
     private val neighbours: LinearLayout
-    private val humanControls: LinearLayout
-    private val earlier: Button
-    private val later: Button
-    private val century: Button
-    private val recentSlider: SeekBar
     private val contextBand: LinearLayout
     private val contextTitle: TextView
     private val firstDate: TextView
@@ -52,7 +42,6 @@ class TimelineNavigator(
     private var first = chapter.start
     private var last = chapter.end
     private var canGoUp = false
-    private var visibleWindow: HumanTimeWindow? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val strip = object : View(context) {
         override fun onDraw(canvas: Canvas) {
@@ -132,20 +121,6 @@ class TimelineNavigator(
         lastDate = label(10f).apply { setSingleLine(); ellipsize = TextUtils.TruncateAt.END; gravity = Gravity.END }
         contextBand.addView(contextTitle)
         contextBand.addView(strip, LayoutParams(-1, dp(22)))
-        recentSlider = SeekBar(context).apply {
-            max = 10000
-            progressTintList = ColorStateList.valueOf(palette.accent)
-            thumbTintList = ColorStateList.valueOf(palette.accent)
-            layoutDirection = LAYOUT_DIRECTION_LTR
-            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(bar: SeekBar, progress: Int, fromUser: Boolean) {
-                    if (fromUser) seekRecent(progress.toDouble() / max)
-                }
-                override fun onStartTrackingTouch(bar: SeekBar) = Unit
-                override fun onStopTrackingTouch(bar: SeekBar) = Unit
-            })
-        }
-        contextBand.addView(recentSlider, LayoutParams(-1, dp(48)))
         contextBand.addView(row().apply {
             layoutDirection = LAYOUT_DIRECTION_LTR
             addView(firstDate, LayoutParams(0, -2, 1f)); addView(lastDate, LayoutParams(0, -2, 1f))
@@ -153,8 +128,8 @@ class TimelineNavigator(
         addView(contextBand, LayoutParams(-1, -2).apply { topMargin = dp(5) })
 
         neighbours = row()
-        previous = button(R.string.ct_previous) { TimelineChapters.neighbours(chapter, visibleWindow).first?.let { navigate(it.id) } }
-        next = button(R.string.ct_next) { TimelineChapters.neighbours(chapter, visibleWindow).second?.let { navigate(it.id) } }
+        previous = button(R.string.ct_previous) { TimelineChapters.neighbours(chapter).first?.let { navigate(it.id) } }
+        next = button(R.string.ct_next) { TimelineChapters.neighbours(chapter).second?.let { navigate(it.id) } }
         listOf(previous, next).forEachIndexed { index, view ->
             view.textSize = 12f
             view.setLines(2); view.ellipsize = TextUtils.TruncateAt.END
@@ -165,82 +140,31 @@ class TimelineNavigator(
         }
         addView(neighbours, LayoutParams(-1, -2).apply { topMargin = dp(5) })
 
-        humanControls = row()
-        earlier = button(R.string.ct_history_earlier) { moveWindow(-1.0) }
-        later = button(R.string.ct_history_later) { moveWindow(1.0) }
-        listOf(earlier, later).forEachIndexed { index, view ->
-            view.text = null
-            view.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                if (index == 0) R.drawable.ic_chevron_left else R.drawable.ic_chevron_right, 0, 0, 0)
-            view.compoundDrawableTintList = ColorStateList.valueOf(palette.text)
-            view.contentDescription = context.getString(if (index == 0) R.string.ct_history_earlier else R.string.ct_history_later)
-        }
-        century = button(R.string.ct_explorer_century) { showCentury() }.apply {
-            textSize = 13f; contentDescription = context.getString(R.string.ct_explorer_century_description)
-        }
-        humanControls.addView(earlier, LayoutParams(dp(48), -1))
-        humanControls.addView(button(R.string.ct_explorer_recent_short) { showRecent() }.apply {
-            textSize = 12f; setLines(2); ellipsize = TextUtils.TruncateAt.END
-            contentDescription = context.getString(R.string.ct_explorer_recent)
-        }, LayoutParams(0, -2, 1f).apply { marginStart = dp(4); marginEnd = dp(4) })
-        humanControls.addView(century, LayoutParams(0, -1, 1f).apply { marginEnd = dp(4) })
-        humanControls.addView(later, LayoutParams(dp(48), -1))
-        addView(humanControls, LayoutParams(-1, -2).apply { topMargin = dp(5) })
     }
 
-    fun bind(path: List<String>, window: HumanTimeWindow?) {
-        visibleWindow = window
+    fun bind(path: List<String>) {
         chapter = requireNotNull(TimelineChapters.get(path.last()))
-        val wider = TimelineChapters.wider(path, window)
-        val recent = window?.isRecent == true
-        surroundings = if (recent) TimelineChapters.recentHistory else wider ?: chapter
-        first = if (window != null) CosmicTimeline.PRESENT - HumanHistory.END_YEAR + window.start else chapter.start
-        last = if (window != null) CosmicTimeline.PRESENT - HumanHistory.END_YEAR + window.end else chapter.end
-        val range = if (window != null) context.getString(R.string.ct_range,
-            HumanDate(window.start.roundToInt()).label(context), HumanDate(window.end.roundToInt()).label(context))
-        else context.getString(R.string.ct_range, dates.edge(chapter, true), dates.edge(chapter, false))
+        val wider = TimelineChapters.wider(path)
+        surroundings = wider ?: chapter
+        first = chapter.start
+        last = chapter.end
+        val range = context.getString(R.string.ct_range, dates.edge(chapter, true), dates.edge(chapter, false))
         val heading = context.getString(R.string.ct_navigation_destination, context.getString(chapter.title), range)
         setText(title, context.getString(chapter.title))
         setText(rangeLabel, range)
         title.contentDescription = context.getString(R.string.ct_explorer_choose, heading)
         canGoUp = wider != null
         enabled(minus, canGoUp)
-        enabled(plus, TimelineChapters.zoomTargets(chapter).isNotEmpty() ||
-            (window != null && window.span > HumanTimeWindow.MIN_SPAN))
-        setText(contextTitle, if (recent) context.getString(R.string.ct_explorer_scrub_hint)
-            else context.getString(if (canGoUp) R.string.ct_explorer_context else R.string.ct_explorer_overview,
+        enabled(plus, TimelineChapters.zoomTargets(chapter).isNotEmpty())
+        setText(contextTitle, context.getString(if (canGoUp) R.string.ct_explorer_context else R.string.ct_explorer_overview,
                 context.getString(surroundings.title)))
         setText(firstDate, dates.edge(surroundings, true))
         setText(lastDate, dates.edge(surroundings, false))
-        contextBand.contentDescription = if (recent) null else context.getString(R.string.ct_explorer_position,
+        contextBand.contentDescription = context.getString(R.string.ct_explorer_position,
             context.getString(surroundings.title), range)
-        contextBand.isClickable = canGoUp && !recent
-        contextBand.isFocusable = !recent
-        contextBand.importantForAccessibility = if (recent) IMPORTANT_FOR_ACCESSIBILITY_NO else IMPORTANT_FOR_ACCESSIBILITY_YES
-        contextBand.tooltipText = if (canGoUp && !recent) context.getString(R.string.ct_history_zoom_out) else null
-        strip.visibility = if (recent) GONE else VISIBLE
-        recentSlider.visibility = if (recent) VISIBLE else GONE
-        neighbours.visibility = if (window == null) VISIBLE else GONE
-        humanControls.visibility = if (window != null) VISIBLE else GONE
-        if (window != null) {
-            enabled(earlier, window.start > window.navigationMin + .001)
-            enabled(later, window.end < HumanTimeWindow.MAX - .001)
-            val selected = kotlin.math.abs(window.span - HumanTimeWindow.CENTURY) < .001
-            if (century.isSelected != selected) {
-                century.isSelected = selected
-                century.background = palette.control(selected)
-                century.setTextColor(if (selected) palette.onAccent else palette.text)
-            }
-            val travel = HumanTimeWindow.RECENT_SPAN - window.span
-            recentSlider.isEnabled = travel > .001
-            recentSlider.contentDescription = context.getString(R.string.ct_explorer_scrub_description, range)
-            if (recent && travel > .001) {
-                if (!recentSlider.isPressed) recentSlider.progress =
-                    ((window.start - HumanTimeWindow.RECENT_MIN) / travel * recentSlider.max).roundToInt()
-                recentSlider.keyProgressIncrement = (HumanTimeWindow.CENTURY / travel * recentSlider.max).roundToInt().coerceIn(1, recentSlider.max)
-            } else recentSlider.progress = 0
-        }
-        val (before, after) = TimelineChapters.neighbours(chapter, window)
+        contextBand.isClickable = canGoUp
+        contextBand.tooltipText = if (canGoUp) context.getString(R.string.ct_history_zoom_out) else null
+        val (before, after) = TimelineChapters.neighbours(chapter)
         listOf(previous to before, next to after).forEachIndexed { index, (view, destination) ->
             val direction = context.getString(if (index == 0) R.string.ct_previous else R.string.ct_next)
             val text = if (destination != null) context.getString(R.string.ct_navigation_destination,

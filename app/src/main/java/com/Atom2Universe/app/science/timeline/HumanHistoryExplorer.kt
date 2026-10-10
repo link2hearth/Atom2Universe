@@ -1,10 +1,9 @@
 package com.Atom2Universe.app.science.timeline
 
 import android.content.Context
-import android.text.TextUtils
 import android.view.Gravity
+import android.view.View
 import android.widget.Button
-import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -20,7 +19,7 @@ class HumanHistoryExplorer(
     initialTopic: HistoryTopic,
     selectedId: String?,
     private val stateChanged: (HumanRegion?, HistoryTopic, String?) -> Unit,
-    private val navigate: (String) -> Unit,
+    chooseScale: (View) -> Unit,
     private val readPeriod: (CosmicPeriod) -> Unit
 ) : LinearLayout(context) {
     private val palette = SciencePalette(context)
@@ -28,8 +27,7 @@ class HumanHistoryExplorer(
     val timeline: HumanHistoryTimelineView
     // Le repère touché s'affiche ici, sous la frise, plutôt que dans une fenêtre en plus.
     private val panel = HumanLandmarkPanel(context, { entries -> focus(entries) }, { entry -> timeline.selectedId = entry?.id })
-    private val periods = line()
-    private var visibleChapterId: String? = null
+    private val navigation = HumanTimelineNavigator(context, window, ::changeWindow, chooseScale)
     private val filter: Button
     var region = initialRegion
         private set
@@ -38,11 +36,12 @@ class HumanHistoryExplorer(
 
     init {
         orientation = VERTICAL
-        addView(HorizontalScrollView(context).apply {
-            isHorizontalScrollBarEnabled = true; addView(periods)
-        }, LayoutParams(-1, dp((56 * resources.configuration.fontScale.coerceAtLeast(1f)).roundToInt())))
         timeline = HumanHistoryTimelineView(context, window, ::update, ::openMark)
-        addView(timeline, LayoutParams(-1, -2))
+        addView(LinearLayout(context).apply {
+            orientation = VERTICAL; background = palette.shape(palette.surface, 10f); clipToOutline = true
+            addView(navigation, LayoutParams(-1, -2))
+            addView(timeline, LayoutParams(-1, -2))
+        }, LayoutParams(-1, -2))
         addView(panel, LayoutParams(-1, -2).apply { topMargin = dp(10) })
         val options = line()
         filter = button(R.string.ct_history_all_regions) { anchor ->
@@ -121,24 +120,7 @@ class HumanHistoryExplorer(
     }
 
     private fun update() {
-        val chapter = TimelineChapters.humanWindow(window)
-        if (visibleChapterId != chapter.id) {
-            visibleChapterId = chapter.id
-            periods.removeAllViews()
-            TimelineChapters.children(chapter).forEach { child ->
-                periods.addView(button(child.title) { navigate(child.id) }.apply {
-                    text = context.getString(R.string.ct_explorer_enter, context.getString(child.title))
-                    maxLines = 2; ellipsize = TextUtils.TruncateAt.END
-                    contentDescription = context.getString(R.string.ct_zone_description,
-                        context.getString(child.title), child.dateLabel(context))
-                }, LayoutParams(-2, -2).apply { marginEnd = dp(6); bottomMargin = dp(8) })
-            }
-            if (periods.childCount == 0) periods.addView(TextView(context).apply {
-                setText(R.string.ct_history_gesture_hint); textSize = 12f; setTextColor(palette.secondary)
-                maxWidth = dp(290); setPadding(dp(4), dp(4), dp(4), dp(4))
-                maxLines = 2; ellipsize = TextUtils.TruncateAt.END
-            })
-        }
+        navigation.bind()
         filter.text = if (region == null) context.getString(topic.label)
             else context.getString(R.string.ct_history_filter_summary, context.getString(topic.label), context.getString(region!!.label))
         status.setText(if (timeline.visibleEntries().isEmpty()) R.string.ct_history_window_empty else R.string.ct_history_window_note)

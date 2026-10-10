@@ -41,6 +41,7 @@ class CosmicTimelineView(
     private data class Target(val period: CosmicPeriod, val label: Button,
         val labelBounds: RectF = RectF(), val zone: RectF = RectF(), var lane: Int = -1)
     private val targets = mutableListOf<Target>()
+    private val markers = mutableListOf<Target>()
     private val parallel = mutableListOf<Target>()
     private var sceneBottom = 0f
     private var downX = 0f
@@ -87,7 +88,16 @@ class CosmicTimelineView(
             ViewCompat.setScreenReaderFocusable(labels, true)
             importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
             subdivisions.forEach { targets.add(makeTarget(it)) }
-            TimelineChapters.related(chapter).forEach { parallel.add(makeTarget(it)) }
+            TimelineChapters.related(chapter).forEach { period ->
+                val target = makeTarget(period)
+                if (period.id == "solar" || period.id == "earth") {
+                    val formation = dates.edge(period, true)
+                    target.label.text = context.getString(R.string.ct_formation_marker, context.getString(period.title), formation)
+                    target.label.contentDescription = context.getString(R.string.ct_formation_description,
+                        context.getString(period.title), formation)
+                    markers.add(target)
+                } else parallel.add(target)
+            }
             landmarks.forEach { entry ->
                 parallel.add(makeTarget(entry.band(chapter)) { openLandmark(entry) })
             }
@@ -128,15 +138,24 @@ class CosmicTimelineView(
         val laneEnds = mutableListOf<Float>()
         val laneHeights = mutableListOf<Int>()
         var sceneHeight = dp(84)
+        var inlineHeight = 0
         targets.forEach { target ->
             val left = x(target.period.start, w); val right = x(target.period.end, w)
             target.label.measure(MeasureSpec.makeMeasureSpec(minOf(available, dp(190)), MeasureSpec.AT_MOST), unspecified)
             val labelWidth = target.label.measuredWidth
-            val inline = right - left >= labelWidth + dp(8)
-            val labelLeft = ((left + right - labelWidth) / 2).coerceIn(inset, (w - inset - labelWidth).coerceAtLeast(inset))
+            // Keep the period caption clear of the formation markers' stems.
+            val firstMarker = markers.filter { it.period.start in target.period.start..target.period.end }
+                .minOfOrNull { x(it.period.start, w) }
+            val captionRight = firstMarker?.minus(dp(12)) ?: right
+            val inline = captionRight - left >= labelWidth + dp(if (firstMarker == null) 8 else 16)
+            val labelLeft = (if (inline && firstMarker != null) left + dp(8) else (left + right - labelWidth) / 2)
+                .coerceIn(inset, (w - inset - labelWidth).coerceAtLeast(inset))
             target.labelBounds.set(labelLeft, 0f, labelLeft + labelWidth, 0f)
             target.lane = -1
-            if (inline) sceneHeight = maxOf(sceneHeight, target.label.measuredHeight + dp(28))
+            if (inline) {
+                inlineHeight = maxOf(inlineHeight, target.label.measuredHeight)
+                sceneHeight = maxOf(sceneHeight, target.label.measuredHeight + dp(28))
+            }
             else {
                 var lane = laneEnds.indexOfFirst { it + dp(6) <= labelLeft }
                 if (lane < 0) { lane = laneEnds.size; laneEnds.add(0f); laneHeights.add(0) }
@@ -144,6 +163,10 @@ class CosmicTimelineView(
                 laneHeights[lane] = maxOf(laneHeights[lane], target.label.measuredHeight)
                 target.lane = lane
             }
+        }
+        if (markers.isNotEmpty()) {
+            val markerBottom = measureMarkers(w, inset, available, top + dp(8), unspecified)
+            sceneHeight = maxOf(sceneHeight, ceil(markerBottom - top).toInt() + inlineHeight + dp(24))
         }
         sceneBottom = top + sceneHeight
         val laneTops = mutableListOf<Float>()
@@ -171,9 +194,29 @@ class CosmicTimelineView(
         setMeasuredDimension(w, resolveSize(ceil(bottom + dp(4)).toInt(), heightMeasureSpec))
     }
 
+    /** Separate close labels without shifting their dates; let their text wrap on narrow screens. */
+    private fun measureMarkers(w: Int, inset: Float, available: Int, top: Float, unspecified: Int): Float {
+        val gap = dp(8)
+        val row = markers.sortedBy { it.period.start }
+        val maxLabelWidth = ((available - gap * (row.size - 1)) / row.size).coerceIn(1, dp(190))
+        row.forEach { target ->
+            target.label.measure(MeasureSpec.makeMeasureSpec(maxLabelWidth, MeasureSpec.AT_MOST), unspecified)
+        }
+        val rowWidth = row.sumOf { it.label.measuredWidth } + gap * (row.size - 1)
+        val bottom = top + row.maxOf { it.label.measuredHeight }
+        val anchor = row.map { x(it.period.start, w).toDouble() }.average().toFloat()
+        var left = (anchor - rowWidth / 2f).coerceIn(inset, (w - inset - rowWidth).coerceAtLeast(inset))
+        row.forEach { target ->
+            target.labelBounds.set(left, bottom - target.label.measuredHeight, left + target.label.measuredWidth, bottom)
+            target.zone.set(target.labelBounds)
+            left += target.label.measuredWidth + gap
+        }
+        return bottom
+    }
+
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         labels.layout(0, 0, measuredWidth, labels.measuredHeight)
-        (targets + parallel).forEach { target ->
+        (targets + markers + parallel).forEach { target ->
             val bounds = target.labelBounds
             target.label.layout(bounds.left.roundToInt(), bounds.top.roundToInt(), bounds.right.roundToInt(), bounds.bottom.roundToInt())
         }
@@ -216,7 +259,16 @@ class CosmicTimelineView(
                 canvas.drawCircle(anchor, sceneBottom - dp(2), dp(2).toFloat(), paint)
             }
         }
-        targets.forEach { target ->
+        markers.forEach { target ->
+            val anchor = x(target.period.start)
+            paint.color = palette.mark(target.period.color); paint.strokeWidth = dp(1).toFloat(); paint.style = Paint.Style.STROKE
+            connector.reset(); connector.moveTo(target.labelBounds.centerX(), target.labelBounds.bottom)
+            connector.lineTo(anchor, target.labelBounds.bottom + dp(12))
+            connector.lineTo(anchor, sceneBottom - dp(2))
+            canvas.drawPath(connector, paint); paint.style = Paint.Style.FILL
+            canvas.drawCircle(anchor, sceneBottom - dp(2), dp(2).toFloat(), paint)
+        }
+        (targets + markers).forEach { target ->
             paint.color = labelSurface(target.period)
             canvas.drawRoundRect(target.labelBounds, dp(4).toFloat(), dp(4).toFloat(), paint)
         }
@@ -294,7 +346,7 @@ class CosmicTimelineView(
         if (!current) return super.onTouchEvent(event)
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                pressedTarget = (targets + parallel).firstOrNull { it.zone.contains(event.x, event.y) } ?: return false
+                pressedTarget = (markers + targets + parallel).firstOrNull { it.zone.contains(event.x, event.y) } ?: return false
                 downX = event.x; downY = event.y; invalidate(); return true
             }
             MotionEvent.ACTION_MOVE -> {

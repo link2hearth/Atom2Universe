@@ -8,6 +8,7 @@
     <string name="ct_explorer_century_description">Show a 100-year window, then drag to explore dates</string>
     <string name="ct_explorer_scrub_hint">100 years to zoom · slider to move</string>
     <string name="ct_explorer_scrub_description">Browse from 4000 BCE to the present. Visible window: %1$s</string>
+    <string name="ct_explorer_scrub_range">Browse %1$s. Visible window: %2$s</string>
     <string name="ct_explorer_choose">%1$s. Choose a period or a scale.</string>
     <string name="ct_explorer_context">Within %1$s · tap to zoom out</string>
     <string name="ct_explorer_overview">Overview · %1$s</string>
