@@ -17,6 +17,7 @@ class LivestockHabitatView(context: Context, sprites: FarmSprites, state: Livest
         private set
     var onPageChanged: ((LivestockKind) -> Unit)? = null
     var onOpen: ((LivestockKind) -> Unit)? = null
+    var onAnimal: ((Long) -> Unit)? = null
     var dismissBubble: (() -> Boolean)? = null
     private var shift = 0f
     private var downX = 0f
@@ -26,8 +27,10 @@ class LivestockHabitatView(context: Context, sprites: FarmSprites, state: Livest
     private var downTime = 0L
     private var lastFrame = 0L
     private var animator: ValueAnimator? = null
+    private var clickedAnimal: Long? = null
     private val slop = ViewConfiguration.get(context).scaledTouchSlop
     init { isClickable = true }
+    fun greet(ids: Collection<Long>) { scene.greet(ids); invalidate() }
     fun select(kind: LivestockKind, animate: Boolean = true) {
         if (kind == selected && shift == 0f) return
         animator?.cancel()
@@ -74,7 +77,12 @@ class LivestockHabitatView(context: Context, sprites: FarmSprites, state: Livest
         if (visibility == VISIBLE) invalidate()
     }
     override fun onDetachedFromWindow() { animator?.cancel(); lastFrame = 0; super.onDetachedFromWindow() }
-    override fun performClick(): Boolean { super.performClick(); onOpen?.invoke(selected); return true }
+    override fun performClick(): Boolean {
+        super.performClick()
+        val animal = clickedAnimal; clickedAnimal = null
+        if (animal == null) onOpen?.invoke(selected) else onAnimal?.invoke(animal)
+        return true
+    }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -97,7 +105,15 @@ class LivestockHabitatView(context: Context, sprites: FarmSprites, state: Livest
                         val fast = abs(shift) > slop * 3 && event.eventTime - downTime < 280
                         val step = if (abs(shift) > width * .18f || fast) { if (shift < 0) 1 else -1 } else 0
                         settle(LivestockKind.entries[(selected.ordinal + step).coerceIn(0, LivestockKind.entries.lastIndex)])
-                    } else performClick()
+                    } else {
+                        if (shift == 0f && width > 0 && height > 0) {
+                            val scale = min(width / 320f, height / 330f)
+                            val logicalHeight = (height / scale).toInt().coerceIn(330, 800)
+                            clickedAnimal = scene.hitAnimal((event.x - (width - 320 * scale) / 2) / scale,
+                                (event.y - (height - logicalHeight * scale) / 2) / scale)
+                        }
+                        performClick()
+                    }
                 }
             }
             MotionEvent.ACTION_CANCEL -> { parent?.requestDisallowInterceptTouchEvent(false); settle(selected) }

@@ -199,7 +199,15 @@ class FarmWorldView(context: Context, private val state: FarmState,
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 val game = harvestGame ?: return true
-                if (!game.done) harvestGame = null
+                val quickTap = event.actionMasked == MotionEvent.ACTION_UP &&
+                    event.eventTime - event.downTime < HarvestGauge.GRIP_DELAY &&
+                    kotlin.math.hypot(x - game.downX, y - game.downY) * zoom < touchSlop
+                if (!game.done && quickTap) {
+                    game.done = true; game.doneAt = now
+                    val result = state.harvestMany(state.harvestTargets(game.cell), now)
+                    onHarvested(game.cell, result)
+                    ensureHarvestTicking()
+                } else if (!game.done) harvestGame = null
                 invalidate(); true
             }
             else -> true
@@ -254,19 +262,39 @@ class FarmWorldView(context: Context, private val state: FarmState,
             state.wateringHitsNeeded(), state.wateringZoneScale())
         ensureWateringTicking(); invalidate()
     }
+    /** Explicitly chosen from a parcel card. Normal taps always use instant watering. */
+    fun startCarefulWatering(parcel: Int): Boolean {
+        val cell = state.visitCells(parcel).firstOrNull { thirsty(it, System.currentTimeMillis()) } ?: return false
+        cancelMiniGames()
+        if (region != FarmRegion.HOME) switchRegion(FarmRegion.HOME)
+        focusParcel(parcel)
+        startWateringGauge(cell)
+        return true
+    }
+
+    fun cancelMiniGames() {
+        debrisGame?.takeIf { it.done }?.let { finishDebrisGame(it) }
+        debrisGame = null; wateringGame = null; harvestGame = null
+        dropPendingTap(); lastTapParcel = -1
+        invalidate()
+    }
+
+    fun showWaterBursts(indices: List<Int>, now: Long = System.currentTimeMillis()) {
+        indices.forEach { waterBursts.add(WaterBurst(it, now)) }
+        if (indices.isNotEmpty()) ensureWateringTicking()
+        invalidate()
+    }
     /**
-     * True while a watering gauge swings. There is no watering mode any more: tapping a thirsty
-     * plant starts the gauge, and until it is won or given up, a tap anywhere on screen is the timing
-     * attempt - no need to hit the tiny cell again, and nothing else on the map answers meanwhile.
+     * While the optional gauge swings, a tap anywhere is the timing attempt. Leaving it costs
+     * nothing: ordinary watering is still available from the visit or parcel card.
      */
     private fun wateringActive() = wateringGame?.done == false
     private fun attemptWatering() {
         val game = wateringGame ?: return
         val now = System.currentTimeMillis()
         if (game.attempt(now) && game.done) {
-            // The bought reach applies here: the gauge was started with this cell's row or parcel.
-            val watered = state.waterMany(game.targets, now)
-            watered.forEach { waterBursts.add(WaterBurst(it, now)) }
+            val watered = state.waterMany(game.targets, now, careful = true)
+            showWaterBursts(watered, now)
             if (watered.isNotEmpty()) onWatered(watered.size)
         }
         ensureWateringTicking(); invalidate()
@@ -402,6 +430,17 @@ class FarmWorldView(context: Context, private val state: FarmState,
     private val sprites = FarmSprites(context)
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val scenery = FarmScenery(sprites)
+    private val projectArt = FarmProjectArt()
+    private val projectLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.CENTER
+        typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+    }
+    private val projectAreas = FarmProject.entries.associateWith {
+        FarmProjectsLayout.project(it).let { a -> RectF(a.left, a.top, a.right, a.bottom) }
+    }
+    private val giftAreas = FarmProject.entries.associateWith {
+        FarmProjectsLayout.decoration(it).let { a -> RectF(a.left, a.top, a.right, a.bottom) }
+    }
     // The meadow is baked once per region into a single bitmap laid out in world coordinates (see
     // FarmSprites.bakeMeadow) and stamped back with one drawBitmap. Nothing here is ever repainted:
     // the ground is static, so following the camera with a screen-sized cache - which is what this
@@ -438,6 +477,9 @@ class FarmWorldView(context: Context, private val state: FarmState,
     var region = FarmRegion.HOME
         private set
     var onRegionTap: (() -> Unit)? = null
+    var onProjectTap: ((FarmProject) -> Unit)? = null
+    var onDecorationTap: ((FarmProject) -> Unit)? = null
+    var onWorkshopTap: (() -> Unit)? = null
     var onBushBonus: ((Long) -> Unit)? = null
     // Tucked in the grass just above parcel 1; a coin pile only shows through it - and only gets a
     // tap - while the once-a-day bonus hasn't been claimed yet. FarmLayout places it, which is how
@@ -555,6 +597,17 @@ class FarmWorldView(context: Context, private val state: FarmState,
             return
         }
         if (wateringActive()) { attemptWatering(); return }
+        if (scenery.workshopHit(x, y)) { onWorkshopTap?.invoke(); return }
+        for (project in FarmProject.entries) {
+            val site = FarmProjectsLayout.project(project)
+            if (x in site.left..site.right && y in site.top..site.bottom) {
+                onProjectTap?.invoke(project); return
+            }
+            val gift = FarmProjectsLayout.decoration(project)
+            if (x in gift.left..gift.right && y in gift.top..gift.bottom) {
+                onDecorationTap?.invoke(project); return
+            }
+        }
         // The parcel banner carries its own prev/next arrows, so hopping across the farm never
         // needs a drag or a pinch - only its own index moves, never a shared "current" pointer.
         val bannerParcel = lands.indexOfFirst { y >= it.top - 12 && y <= it.top + 20 && x >= it.left + 45 && x <= it.right - 45 }
@@ -574,7 +627,12 @@ class FarmWorldView(context: Context, private val state: FarmState,
             val cell = cells.indexOfFirst { it.contains(x, y) }
             when {
                 cell < 0 -> onParcel(parcel)
-                thirsty(cell, System.currentTimeMillis()) -> startWateringGauge(cell)
+                thirsty(cell, System.currentTimeMillis()) -> {
+                    val now = System.currentTimeMillis()
+                    val watered = state.waterMany(state.wateringTargets(cell), now)
+                    showWaterBursts(watered, now)
+                    if (watered.isNotEmpty()) onWatered(watered.size)
+                }
                 else -> onPlant(cell)
             }
         }
@@ -662,6 +720,75 @@ class FarmWorldView(context: Context, private val state: FarmState,
         cameraAnimator?.cancel()
         parcelCamera(index).let { zoom = it.zoom; cameraX = it.x; cameraY = it.y }
         constrain(); invalidate()
+    }
+    fun focusProject(project: FarmProject) {
+        cancelMiniGames()
+        cameraAnimator?.cancel()
+        val site = FarmProjectsLayout.project(project)
+        val gift = FarmProjectsLayout.decoration(project)
+        val density = resources.displayMetrics.density
+        zoom = minOf(width / 400f, (height - 180 * density).coerceAtLeast(1f) / 300f)
+            .coerceIn(minimumZoom(), maximumZoom())
+        cameraX = width / 2f - (site.left + gift.right) / 2 * zoom
+        cameraY = height / 2f + 20 * density - (site.top + site.bottom) / 2 * zoom
+        constrain(); invalidate()
+    }
+    fun focusWorkshop() {
+        cancelMiniGames(); cameraAnimator?.cancel()
+        val area = FarmLayout.yard
+        val density = resources.displayMetrics.density
+        zoom = minOf(width / 480f, (height - 180 * density).coerceAtLeast(1f) / 300f)
+            .coerceIn(minimumZoom(), maximumZoom())
+        cameraX = width / 2f - area.centerX * zoom
+        cameraY = height / 2f + 20 * density - (area.top + area.bottom) / 2 * zoom
+        constrain(); invalidate()
+    }
+    private fun drawProjects(canvas: Canvas, visible: RectF) {
+        for (project in FarmProject.entries) {
+            val area = projectAreas.getValue(project)
+            if (RectF.intersects(area, visible)) {
+                projectArt.project(canvas, project, project.stage(state.projects.progress(project)),
+                    RectF(area.left, area.top, area.right, area.bottom - 26))
+                projectLabelPaint.color = Color.rgb(255, 248, 225)
+                canvas.drawRoundRect(area.left, area.bottom - 29, area.right, area.bottom + 2, 5f, 5f, projectLabelPaint)
+                projectLabelPaint.color = Color.rgb(76, 73, 48); projectLabelPaint.textSize = 13f
+                canvas.drawText(context.getString(project.label), area.centerX(), area.bottom - 15, projectLabelPaint)
+                projectLabelPaint.textSize = 10f
+                val caption = when {
+                    state.projects.complete(project) -> context.getString(R.string.farm_project_complete)
+                    state.projects.active == project -> context.getString(R.string.farm_project_map_active,
+                        state.projects.progress(project), project.helpNeeded)
+                    else -> context.getString(R.string.farm_project_progress, state.projects.progress(project), project.helpNeeded)
+                }
+                canvas.drawText(caption, area.centerX(), area.bottom - 3, projectLabelPaint)
+            }
+            val slot = giftAreas.getValue(project)
+            if (RectF.intersects(slot, visible)) {
+                val gift = state.projects.decoration(project)
+                if (gift != null) projectArt.gift(canvas, gift, slot)
+                else {
+                    projectLabelPaint.color = Color.argb(110, 255, 248, 225)
+                    canvas.drawOval(slot.left + 10, slot.bottom - 14, slot.right - 10, slot.bottom, projectLabelPaint)
+                    projectLabelPaint.color = Color.rgb(116, 138, 89)
+                    canvas.drawRect(slot.centerX() - 1, slot.bottom - 11, slot.centerX() + 1, slot.bottom - 3, projectLabelPaint)
+                    canvas.drawRect(slot.centerX() - 4, slot.bottom - 8, slot.centerX() + 4, slot.bottom - 6, projectLabelPaint)
+                }
+            }
+        }
+    }
+    private fun drawWorkshopSign(canvas: Canvas, visible: RectF) {
+        val yard = FarmLayout.yard
+        val sign = RectF(yard.left, yard.bottom + 4, yard.left + 210, yard.bottom + 38)
+        if (!RectF.intersects(sign, visible)) return
+        projectLabelPaint.color = Color.rgb(255, 248, 225)
+        canvas.drawRoundRect(sign, 5f, 5f, projectLabelPaint)
+        projectLabelPaint.color = Color.rgb(76, 73, 48); projectLabelPaint.textSize = 13f
+        canvas.drawText(context.getString(R.string.farm_workshop_title), sign.centerX(), sign.top + 14, projectLabelPaint)
+        projectLabelPaint.textSize = 10f
+        val ready = state.workshop.readyCount(System.currentTimeMillis())
+        val caption = if (ready > 0) context.getString(R.string.farm_workshop_collect, ready)
+            else context.getString(R.string.farm_workshop_free, FarmWorkshopState.SLOTS - state.workshop.jobs.size)
+        canvas.drawText(caption, sign.centerX(), sign.bottom - 4, projectLabelPaint)
     }
     private var cameraAnimator: ValueAnimator? = null
     /**
@@ -862,6 +989,8 @@ class FarmWorldView(context: Context, private val state: FarmState,
         // sprites that are cached per variant - both far below the cost of keeping a copy of them.
         scenery.ground(canvas)
         scenery.objects(canvas, visible, windTime)
+        drawProjects(canvas, visible)
+        drawWorkshopSign(canvas, visible)
 
         val now = System.currentTimeMillis()
         lands.forEachIndexed { index, land ->

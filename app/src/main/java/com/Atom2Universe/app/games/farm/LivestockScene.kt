@@ -21,6 +21,13 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
         fun hit(x: Float, y: Float) = pens.indexOfFirst { it.contains(x, y) }.takeIf { it >= 0 }?.let { LivestockKind.entries[it] }
     }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val hitAreas = mutableListOf<Pair<Long, RectF>>()
+    private val greetings = mutableMapOf<Long, Long>()
+    fun hitAnimal(x: Float, y: Float): Long? = hitAreas.asReversed().firstOrNull { it.second.contains(x, y) }?.first
+    fun greet(ids: Collection<Long>) {
+        val now = SystemClock.uptimeMillis()
+        ids.forEach { greetings[it] = now }
+    }
     private data class Motion(val random: java.util.Random, var time: Double, var x: Double = 0.0,
                               var y: Double = 0.0, var targetX: Double = 0.0, var targetY: Double = 0.0,
                               var wait: Double = 0.0, var walk: Double = 0.0, var eat: Double = 0.0,
@@ -33,6 +40,9 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
     private val backgrounds = mutableMapOf<LivestockKind, Bitmap>()
     private var backgroundHeight = 0
     fun drawPage(canvas: Canvas, kind: LivestockKind, height: Int, dt: Double) {
+        hitAreas.clear()
+        val animationNow = SystemClock.uptimeMillis()
+        greetings.entries.removeAll { animationNow - it.value >= 1800 || state.find(it.key) == null }
         if (backgroundHeight != height) { backgrounds.clear(); backgroundHeight = height }
         paint.isFilterBitmap = false
         paint.alpha = 255
@@ -72,6 +82,7 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
             if (!clear(m.targetX, m.targetY)) {
                 m.targetX = m.x; m.targetY = m.y; m.wait = 0.0
             }
+            if (greetings.containsKey(animal.id)) { m.wait = 2.0; m.targetX = m.x; m.targetY = m.y }
             m.wait = (m.wait - dt).coerceAtLeast(0.0)
             m.roamAfter = (m.roamAfter - dt).coerceAtLeast(0.0)
             var distance = hypot(m.targetX - m.x, m.targetY - m.y)
@@ -121,8 +132,20 @@ class LivestockScene(private val context: Context, private val sprites: FarmSpri
         herd.sortedBy { motions.getValue(it.id).y }.forEach { animal ->
             val m = motions.getValue(animal.id)
             val x = m.x.toFloat(); val bottom = m.y.toFloat()
-            sprites.livestock(canvas, animal.sprite, RectF(x - size / 2, bottom - size, x + size / 2, bottom),
+            val target = RectF(x - size / 2, bottom - size, x + size / 2, bottom)
+            hitAreas += animal.id to target
+            sprites.livestock(canvas, animal.sprite, target,
                 FarmAnimalArt.Pose(m.time, m.walk, m.eat, m.phase, m.direction))
+            greetings[animal.id]?.let { started ->
+                val t = (animationNow - started) / 1800f
+                val cy = bottom - size - 3 - t * 16
+                paint.color = Color.argb(((1 - t) * 255).toInt().coerceIn(0, 255), 216, 112, 108)
+                canvas.drawPath(Path().apply {
+                    moveTo(x, cy + 5); cubicTo(x - 13, cy - 2, x - 8, cy - 12, x, cy - 5)
+                    cubicTo(x + 8, cy - 12, x + 13, cy - 2, x, cy + 5); close()
+                }, paint)
+                paint.alpha = 255
+            }
         }
         if (!state.available(kind)) {
             paint.color = Color.argb(45, 76, 76, 57); canvas.drawRect(0f, 22f, 320f, height.toFloat(), paint)

@@ -25,6 +25,12 @@ class FarmScenery(private val sprites: FarmSprites) {
     // The shed and the well share the yard, the one clearing of the grid without a parcel.
     private val shed = FarmLayout.yard.let { RectF(it.left, it.bottom - 180f, it.left + 210f, it.bottom) }
     private val well = FarmLayout.yard.let { RectF(it.right - 110f, it.bottom - 140f, it.right, it.bottom) }
+    fun workshopHit(x: Float, y: Float) = x in shed.left..shed.right && y in shed.top..(shed.bottom + 38)
+    private val projectClearings = FarmProject.entries.map { project ->
+        val site = FarmProjectsLayout.project(project)
+        val gift = FarmProjectsLayout.decoration(project)
+        RectF(site.left - 12, site.top - 12, gift.right + 12, gift.bottom + 12)
+    }
     private val treasure = FarmLayout.treasure.let { RectF(it.left, it.top, it.right, it.bottom) }
     private val plots = FarmLayout.lands.map { RectF(it.x - 45, it.y - 50, it.x + it.width + 45, it.y + it.height + 50) }
 
@@ -91,6 +97,7 @@ class FarmScenery(private val sprites: FarmSprites) {
             val rect = RectF(x, y, x + w, y + h)
             if (decorations.size < 300 && plots.none { RectF.intersects(it, rect) } &&
                 !RectF.intersects(shed, rect) && !RectF.intersects(well, rect) &&
+                projectClearings.none { RectF.intersects(it, rect) } &&
                 !RectF.intersects(treasure, rect) &&
                 decorations.none { RectF.intersects(it.rect, rect) } &&
                 pathSamples.none { rect.left - 38 < it.x && rect.right + 38 > it.x && rect.top - 38 < it.y && rect.bottom + 38 > it.y }) {
