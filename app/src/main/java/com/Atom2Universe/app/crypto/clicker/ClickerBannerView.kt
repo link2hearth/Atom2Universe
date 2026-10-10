@@ -77,18 +77,12 @@ class ClickerBannerView @JvmOverloads constructor(
         Color.HSVToColor(floatArrayOf(360f, 0.38f, 0.98f)),   // rose (bouclage)
     )
 
-    private fun themedEffectColor(color: Int): Int =
-        if (com.Atom2Universe.app.AppearanceStyle.isLight(context))
-            androidx.core.graphics.ColorUtils.blendARGB(
-                com.Atom2Universe.app.AppearanceStyle.color(context, R.attr.a2uTextColor), color, 0.25f)
-        else color
-
     private fun startRainbow() {
         rainbowAnimator?.cancel()
         val stripeWidthPx = stripeWidthDp * resources.displayMetrics.density
         val shader = LinearGradient(
             0f, 0f, stripeWidthPx, 0f,
-            rainbowColors.map { themedEffectColor(it) }.toIntArray(), null,
+            rainbowColors, null,
             Shader.TileMode.REPEAT
         ).also { rainbowShader = it }
         atomsText.paint.shader = shader
@@ -136,7 +130,7 @@ class ClickerBannerView @JvmOverloads constructor(
         val stripeWidthPx = stripeWidthDp * resources.displayMetrics.density
         val shader = LinearGradient(
             0f, 0f, stripeWidthPx, 0f,
-            apcGlowColors.map { themedEffectColor(it) }.toIntArray(), null,
+            apcGlowColors, null,
             Shader.TileMode.REPEAT
         ).also { apcGlowShader = it }
         apcText.paint.shader = shader
@@ -184,7 +178,7 @@ class ClickerBannerView @JvmOverloads constructor(
         val stripeWidthPx = stripeWidthDp * resources.displayMetrics.density
         val shader = LinearGradient(
             0f, 0f, stripeWidthPx, 0f,
-            apsGlowColors.map { themedEffectColor(it) }.toIntArray(), null,
+            apsGlowColors, null,
             Shader.TileMode.REPEAT
         ).also { apsGlowShader = it }
         apsText.paint.shader = shader

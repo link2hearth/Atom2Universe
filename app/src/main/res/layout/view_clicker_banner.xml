@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/crypto_banner_background"
+        android:background="@color/clicker_banner_background"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
         android:gravity="center_vertical">
@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
-                android:textColor="@color/audio_text_primary"
+                android:textColor="@color/clicker_banner_text_primary"
                 android:textSize="14sp"
                 android:fontFamily="monospace" />
 
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="?attr/a2uTextColor"
+                android:textColor="@color/clicker_banner_text_primary"
                 android:textSize="18sp"
                 android:fontFamily="monospace"
                 android:textStyle="bold" />
@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@color/audio_text_primary"
+                android:textColor="@color/clicker_banner_text_primary"
                 android:textSize="14sp"
                 android:fontFamily="monospace" />
 
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="start|center_vertical"
-                android:background="@color/crypto_banner_background"
+                android:background="@color/clicker_banner_background"
                 android:paddingStart="16dp"
                 android:paddingEnd="8dp"
                 android:paddingTop="2dp"
@@ -129,7 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="×2"
-                    android:textColor="?attr/a2uTextColor"
+                    android:textColor="@color/clicker_banner_text_primary"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     android:textStyle="bold" />
@@ -139,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="  30s"
-                    android:textColor="?attr/a2uTextColor"
+                    android:textColor="@color/clicker_banner_text_primary"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     android:layout_marginStart="6dp" />
@@ -149,7 +149,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="  0"
-                    android:textColor="?attr/a2uTextColor"
+                    android:textColor="@color/clicker_banner_text_primary"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     android:layout_marginStart="6dp" />
@@ -224,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="end|center_vertical"
-                android:background="@color/crypto_banner_background"
+                android:background="@color/clicker_banner_background"
                 android:paddingStart="8dp"
                 android:paddingEnd="16dp"
                 android:paddingTop="2dp"
@@ -235,7 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="×2"
-                    android:textColor="?attr/a2uTextColor"
+                    android:textColor="@color/clicker_banner_text_primary"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     android:textStyle="bold" />

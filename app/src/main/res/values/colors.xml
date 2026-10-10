@@ -148,6 +148,8 @@
     <color name="creative_hub_tile_notes">#FF9800</color>
     <color name="main_hub_tile_clicker_stats">#546E7A</color>
     <color name="crypto_banner_background">@color/audio_surface</color>
+    <color name="clicker_banner_background">#000000</color>
+    <color name="clicker_banner_text_primary">#F5F7FA</color>
     <color name="crypto_banner_arrow">#9CA3AF</color>
     <color name="crypto_widget_background">@color/audio_surface</color>
     <color name="crypto_widget_value">@color/audio_text_primary</color>
