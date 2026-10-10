@@ -140,7 +140,7 @@
         <item>False chanterelle: thin, crowded, regularly forked gills that peel off with a fingernail. No apricot.</item>
     </string-array>
     <string name="myco_g_boletus_title">Porcini, or not?</string>
-    <string name="myco_g_boletus_evidence">ANSES 2022</string>
+    <string name="myco_g_boletus_evidence">ANSES 2022, Wikipedia entries</string>
     <string-array name="myco_g_boletus_points">
         <item>Porcini: fine white net at the top of the stem. Bitter bolete: coarse, dark brown net.</item>
         <item>Porcini: pores white, then yellow-green. Bitter bolete: pink pores. Satan’s bolete: red pores.</item>
@@ -253,12 +253,14 @@
         <item>The spore print settles it: let the spores fall on a sheet of paper before concluding.</item>
     </string-array>
     <string name="myco_g_redpore_title">Red pores: which one?</string>
-    <string name="myco_g_redpore_evidence">Swiss mushroom checks</string>
+    <string name="myco_g_redpore_evidence">ANSES 2022, Swiss mushroom checks</string>
     <string-array name="myco_g_redpore_points">
         <item>Dotted-stem bolete: yellow stem covered in red dots, no net. Satan’s bolete: stem with a fine net.</item>
         <item>Dotted-stem: dark brown, velvety cap. Satan: whitish, chalky, very large cap.</item>
+        <item>Scarlet-stemmed bolete: yellow pores, stem yellow above and red below with a white net; bitter, toxic.</item>
         <item>Both turn blue: deep navy for the dotted-stem, pale blue for Satan’s.</item>
-        <item>Dotted-stem: cook at least 20 minutes. Satan’s: toxic, digestive upset.</item>
+        <item>Dotted-stem: cook at least 20 minutes. Satan’s and scarlet-stemmed: toxic, digestive upset.</item>
+        <item>ANSES records Satan’s boletes and scarlet-stemmed boletes picked instead of dotted-stem boletes.</item>
     </string-array>
     <string name="myco_g_milkcap_title">Saffron milk cap, or not?</string>
     <string name="myco_g_milkcap_evidence">Belgian poison centre</string>
@@ -277,12 +279,39 @@
         <item>The young, egg-shaped forms of the death cap are mistaken for puffballs.</item>
     </string-array>
     <string name="myco_g_greyknights_title">Grey tricholoma: which one?</string>
-    <string name="myco_g_greyknights_evidence">Wikipedia entries</string>
+    <string name="myco_g_greyknights_evidence">ANSES 2022, Swiss controllers</string>
     <string-array name="myco_g_greyknights_points">
         <item>Tiger: silvery cap covered in scales in circles, thick stem, floury smell. Grey knight: mouse-grey, fibrous cap, smaller, no floury smell.</item>
         <item>Tiger: chalky soil, at altitude, mostly summer and autumn. Grey knight: mostly under pines.</item>
         <item>The tiger is toxic, even in small amounts: violent vomiting, 24 to 48 hours.</item>
-        <item>The grey knight is debated: not recommended.</item>
+        <item>The grey knight is debated: not recommended. The Swiss controllers say it is easily mistaken for the tiger and for some fibrecaps.</item>
+        <item>Livid entoloma: gills that turn pink, pink spores. The grey tricholomas have whitish to grey gills and white spores. ANSES records livid entolomas picked instead of « petits gris » (grey knights).</item>
+    </string-array>
+    <string name="myco_g_laccaria_title">Deceiver, or mycena?</string>
+    <string name="myco_g_laccaria_evidence">ANSES 2022</string>
+    <string-array name="myco_g_laccaria_points">
+        <item>Amethyst deceiver: dark, matt violet, gills of the same colour and distant, fibrous and hard stem. Lilac bonnet: pink to violet or grey, whitish to pinkish gills, fragile and hollow stem.</item>
+        <item>Lilac bonnet: striate margin, clear smell and taste of radish. The deceiver has no radish smell.</item>
+        <item>The lilac bonnet contains muscarine: sweating, salivation, nausea.</item>
+        <item>The deceiver can accumulate arsenic on polluted soil.</item>
+        <item>ANSES records mycenas picked by people looking for amethyst deceivers.</item>
+    </string-array>
+    <string name="myco_g_shaggy_title">Large lepiota: which one?</string>
+    <string name="myco_g_shaggy_evidence">ANSES 2022, Swiss controllers</string>
+    <string-array name="myco_g_shaggy_points">
+        <item>Parasol: banded stem, double sliding ring, flesh that does not change. Chlorophyllum brunneum: smooth stem, single ring, flesh that reddens.</item>
+        <item>Chlorophyllum rhacodes (shaggy parasol): smooth grey stem, rounded bulb, double ring, flesh that turns bright red when cut.</item>
+        <item>Chlorophyllum brunneum: large bulb with a sharp edge, often off-centre; it grows near houses, in gardens and on compost heaps.</item>
+        <item>Chlorophyllum brunneum causes digestive upset, rarely serious; C. rhacodes is good but poorly tolerated by some.</item>
+        <item>Small lepiotas (under 10 cm): deadly, never to be picked.</item>
+    </string-array>
+    <string name="myco_g_monkhead_title">Trooping funnel, or entoloma?</string>
+    <string name="myco_g_monkhead_evidence">ANSES 2022</string>
+    <string-array name="myco_g_monkhead_points">
+        <item>Trooping funnel: large (7 to 20 cm), cream to buff, deeply decurrent gills, solid fibrous stem, white spores.</item>
+        <item>Livid entoloma: notched gills that turn pink, floury smell, pink spores.</item>
+        <item>The miller is also edible, but its spores are pink.</item>
+        <item>ANSES records livid entolomas picked instead of trooping funnels.</item>
     </string-array>
 
     <!-- Plate labels -->
@@ -465,6 +494,38 @@
     <string name="myco_l_matt_green_red_cap">Matt cap, green and red</string>
     <string name="myco_l_cream_ochre_gills">Cream to ochre gills</string>
     <string name="myco_l_dotted_pink_stem">Dotted, pinkish stem</string>
+    <string name="myco_l_white_flaky_cap">White, flaky cap</string>
+    <string name="myco_l_cream_funnel_cap">Cream, dished cap</string>
+    <string name="myco_l_decurrent_cream_gills">Cream, deeply decurrent gills</string>
+    <string name="myco_l_solid_fibrous_stem">Solid, fibrous stem</string>
+    <string name="myco_l_violet_matt_cap">Matt violet cap</string>
+    <string name="myco_l_far_violet_gills">Violet, distant gills</string>
+    <string name="myco_l_twisted_stem">Slender, twisted stem</string>
+    <string name="myco_l_thin_lilac_flesh">Thin, pale lilac flesh</string>
+    <string name="myco_l_pink_striate_cap">Pink cap, striate margin</string>
+    <string name="myco_l_pinkish_gills">Whitish to pinkish gills</string>
+    <string name="myco_l_fragile_hollow_stem">Fragile, hollow stem</string>
+    <string name="myco_l_olive_beige_cap">Olive-beige cap</string>
+    <string name="myco_l_yellow_red_net_stem">Yellow and red stem, net at the top</string>
+    <string name="myco_l_star_brown_scales">Brown scales in a star</string>
+    <string name="myco_l_ring_thick_single">Thick, single ring</string>
+    <string name="myco_l_curled_brown_tufts">Curled brown tufts</string>
+    <string name="myco_l_round_bulb">Rounded bulb</string>
+    <string name="myco_l_smooth_grey_stem">Smooth, grey stem</string>
+    <string name="myco_l_bright_red_sticky_cap">Bright red, sticky cap</string>
+    <string name="myco_l_violet_green_cap">Violet and green cap, variable</string>
+    <string name="myco_l_flexible_forked_gills">Flexible, forked gills</string>
+    <string name="myco_l_ochre_umbo_cap">Ochre cap with a boss</string>
+    <string name="myco_l_close_brown_gills">Close, light brown gills</string>
+    <string name="myco_l_frosted_stem">Frosted stem</string>
+    <string name="myco_l_pale_cracked_cap">Pale cap, cracked centre</string>
+    <string name="myco_l_ring_ample">Ample, persistent ring</string>
+    <string name="myco_l_close_beige_gills">Close, beige gills</string>
+    <string name="myco_l_brown_dished_cap">Brown, dished cap</string>
+    <string name="myco_l_grey_folds">Grey folds, no gills</string>
+    <string name="myco_l_yellow_hollow_stem">Bright yellow, hollow stem</string>
+    <string name="myco_l_white_ball">White ball</string>
+    <string name="myco_l_no_stalk">No stem</string>
 
     <!-- Death cap -->
     <string name="myco_phalloides_name">Death cap</string>
@@ -1163,11 +1224,11 @@
         <item>White spores</item>
         <item>Open conifer woods, mostly under pines · autumn, into winter</item>
     </string-array>
-    <string name="myco_terreum_note">Opinions differ. The German mycological society list (2026) and French Wikipedia call it edible. A 2014 Chinese study found substances that damage muscle in mice, as in the yellow knight; a 2024 Italian study finds none and concludes it is edible. The most cautious status is kept: not recommended. It looks like the toxic tiger tricholoma: smaller, darker, no scales.</string>
+    <string name="myco_terreum_note">Opinions differ. The German mycological society (2026), the Swiss controllers (2023) and French Wikipedia call it edible. A 2014 Chinese study found substances that damage muscle in mice, as in the yellow knight; a 2016 comment disputes it and a 2024 Italian study finds none and concludes it is edible. The most cautious status is kept: not recommended. The Swiss controllers say it is easily mistaken for the toxic tiger tricholoma and for some fibrecaps; ANSES records livid entolomas picked instead of « petits gris », the name it gives to the grey knight.</string>
 
     <!-- Wood mushroom -->
     <string name="myco_silvicola_name">Wood mushroom</string>
-    <string name="myco_silvicola_alt">Agaric des bois</string>
+    <string name="myco_silvicola_alt">Agaric sylvicole</string>
     <string name="myco_silvicola_latin" translatable="false">Agaricus silvicola</string>
     <string-array name="myco_silvicola_traits">
         <item>White to cream cap, 6 to 9 cm (sometimes 12), globular then spreading, turning yellow with age or when touched</item>
@@ -1191,7 +1252,7 @@
         <item>Orange-brown spores with an olive sheen</item>
         <item>Under pines</item>
     </string-array>
-    <string name="myco_granulatus_note">Its sticky skin is laxative. ANSES attributes digestive upset to it, often with trembling, headaches and anxiety, a few hours after the meal: 25 cases recorded in France between 1999 and 2015. No cooking is shown to be effective. Skin contact can also cause dermatitis.</string>
+    <string name="myco_granulatus_note">Its sticky skin is laxative. ANSES attributes digestive upset to it, often with trembling, headaches and anxiety, a few hours after the meal: 25 cases recorded in France between 1999 and 2015. No cooking is shown to be effective. Skin contact can also cause dermatitis. The Swiss controllers list it among edible species while asking for the cap skin to be removed, and the German mycological society also lists it as edible: the most cautious status is kept.</string>
     <string name="myco_granulatus_history">Listed in several guides as a mediocre edible, although its sticky skin contains laxative substances. Its toxic power has been known since 1923. In 2015, ANSES judged that it can cause poisoning, even after canning. A decree of 5 August 2016 suspends for one year the sale of fresh granulated bolete not accompanied by information on thorough cooking.</string>
 
     <!-- Olive brittlegill -->
@@ -1208,4 +1269,189 @@
     </string-array>
     <string name="myco_olivacea_note">Digestive poisonings are reported mostly when it is eaten raw or lightly cooked, on a barbecue for instance: in Italy, a few dozen cases a year; in the Basque Country, over 40 cases in twenty years; in France, 3 grouped cases in 2012, with vomiting 2 hours later. ANSES judged in 2015 that the risk cannot be ruled out, even after cooking; Tox Info Suisse asks for at least 20 minutes of cooking.</string>
     <string name="myco_olivacea_history">Sometimes eaten, and even judged edible in Eastern Europe. In 2015, ANSES judged that the risk of poisoning cannot be ruled out, even after cooking, for lack of data proving it harmless. A decree of 5 August 2016 suspends for one year the sale of fresh olive brittlegill not accompanied by information on thorough cooking.</string>
+
+    <!-- Bearded amanita -->
+    <string name="myco_ovoidea_name">Bearded amanita</string>
+    <string name="myco_ovoidea_alt">Amanite ovoïde</string>
+    <string name="myco_ovoidea_latin" translatable="false">Amanita ovoidea</string>
+    <string-array name="myco_ovoidea_traits">
+        <item>White to very pale grey cap, thick, 15 to 20 cm (up to 30), hemispherical at first, flaky; the margin often keeps hanging cottony scraps of the veil</item>
+        <item>White, close, broad, free gills that may turn slightly pink with age</item>
+        <item>White, stout, powdery stem, 15 to 20 cm</item>
+        <item>Cream, fragile, cottony ring that tends to disappear</item>
+        <item>Large sac-like volva at the base, white to ochre-beige</item>
+        <item>Thick white flesh, strong unpleasant smell · white spores</item>
+        <item>Under broadleaves and especially pines, on sunny limy soil, in summer and autumn; fairly common in the south of France</item>
+    </string-array>
+    <string name="myco_ovoidea_note">Not recommended: books call it edible in some places and poisonous in others, and it is on neither the German mycological society list of edible species (2026) nor the Swiss controllers’ list (2023). ANSES records it among the mushrooms picked instead of puffballs or boletes in the second half of 2022. Its look-alike, Amanita proxima, damages the kidneys; poisonings happened in the south of France when it was mistaken for the bearded amanita: more russet volva, ring that stays, smooth margin.</string>
+
+    <!-- Trooping funnel -->
+    <string name="myco_geotropa_name">Trooping funnel</string>
+    <string name="myco_geotropa_alt">Clitocybe géotrope</string>
+    <string name="myco_geotropa_latin" translatable="false">Infundibulicybe geotropa</string>
+    <string-array name="myco_geotropa_traits">
+        <item>Cap 7 to 20 cm, cream, buff to cinnamon-brown: keel-shaped when young, then domed, then spreading with a boss, finally funnel-shaped; smooth margin</item>
+        <item>Fine, deeply decurrent gills, cream to buff</item>
+        <item>Solid, fibrous stem, 10 to 20 cm, very swollen when young, the colour of the cap; no ring</item>
+        <item>White flesh, firm when young · strong, sweet smell of bitter almond or hay</item>
+        <item>White spores</item>
+        <item>On the ground in broadleaf woods, edges and clearings, often in troops or rings, from late summer until the first frosts</item>
+    </string-array>
+    <string name="myco_geotropa_note">Edible of middling value, only when young: the fibrous stem becomes tough and is thrown away. It is on the German mycological society list (« Mönchskopf ») and on the Swiss controllers’ list (« tête de moine »). ANSES records livid entolomas picked instead of trooping funnels (2022): the entoloma has notched gills that turn pink, a floury smell and pink spores. The miller, also edible, has pink spores.</string>
+
+    <!-- Amethyst deceiver -->
+    <string name="myco_amethystina_name">Amethyst deceiver</string>
+    <string name="myco_amethystina_alt">Laccaire améthyste</string>
+    <string name="myco_amethystina_latin" translatable="false">Laccaria amethystina</string>
+    <string-array name="myco_amethystina_traits">
+        <item>Cap 2 to 8 cm, dark violet, matt, convex then dished like a navel; it fades and whitens as it dries; thin, striate margin</item>
+        <item>Gills the colour of the cap, distant, unequal</item>
+        <item>Stem 4 to 10 cm, slender and twisted, the colour of the cap, downy towards the base, fibrous</item>
+        <item>Thin, pale lilac flesh, mild smell and taste</item>
+        <item>White spores</item>
+        <item>Damp woods of broadleaves or conifers, from late summer to early winter</item>
+    </string-array>
+    <string name="myco_amethystina_note">Edible: it is on the German mycological society list and on the Swiss controllers’ list; the fibrous stem is not eaten. On polluted soil it can accumulate arsenic compounds: the German society advises against picking it near former military grounds, mines, factories and busy roads. The lilac bonnet, which is toxic, looks like it: ANSES records mycenas picked instead of deceivers.</string>
+
+    <!-- Lilac bonnet -->
+    <string name="myco_pura_name">Lilac bonnet</string>
+    <string name="myco_pura_alt">Mycène pur</string>
+    <string name="myco_pura_latin" translatable="false">Mycena pura</string>
+    <string-array name="myco_pura_traits">
+        <item>Cap 3 to 7 cm, convex without being pointed, then spreading with a slight boss; from pure pink to violet or grey, it whitens in dry weather; very thin margin, striate from the gills</item>
+        <item>Unequal, fairly distant gills, whitish to pinkish</item>
+        <item>Stem 4 to 9 cm, the colour of the cap or more violet, slightly striate, fragile, hollow</item>
+        <item>White flesh · clear smell and taste of radish</item>
+        <item>White spores</item>
+        <item>Common from spring to autumn, under broadleaves and conifers</item>
+    </string-array>
+    <string name="myco_pura_note">Toxic: it contains muscarine, which causes the sweating syndrome: heavy sweating, tears and salivation, short breath, nausea and vomiting, within minutes to 2 hours (Belgian poison centre). The German mycological society lists Mycena pura and Mycena rosea among muscarine mushrooms; M. rosea is often only a variety of M. pura. In 2022, pickers looking for amethyst deceivers picked mycenas (ANSES). The deceiver has more distant gills, a hard stem and no smell of radish.</string>
+
+    <!-- Bitter beech bolete -->
+    <string name="myco_calopus_name">Bitter beech bolete</string>
+    <string name="myco_calopus_alt">Bolet à beau pied</string>
+    <string name="myco_calopus_latin" translatable="false">Caloboletus calopus</string>
+    <string-array name="myco_calopus_traits">
+        <item>Cap about 15 cm (rarely 20), white, beige to olive, smooth or finely hairy, sometimes cracked with age</item>
+        <item>Fine, pale yellow pores that turn blue when touched then olive; tubes up to 2 cm</item>
+        <item>Stem 7 to 15 cm by 2 to 5, yellow above, red below, sometimes all reddish, with a raised white net at the top; the red may fade with age</item>
+        <item>Thick, firm, whitish to pale yellow flesh that turns blue when cut · bitter taste</item>
+        <item>Olive to olive-brown spores</item>
+        <item>Under broadleaves and conifers, mostly beeches and oaks, often at altitude, on chalky soil · July to December</item>
+    </string-array>
+    <string name="myco_calopus_note">Toxic: the German mycological society list puts it among the gastrointestinal-syndrome mushrooms. The bitterness does not go away with cooking and it can cause vomiting. ANSES records scarlet-stemmed boletes picked instead of dotted-stem boletes (2022) and the Zurich laboratory sorts it out among the toxic boletes (2023). It has the red stem of Satan’s bolete, but yellow pores; the porcino has no red stem.</string>
+
+    <!-- Shaggy parasol (C. brunneum) -->
+    <string name="myco_brunneum_name">Shaggy parasol (C. brunneum)</string>
+    <string name="myco_brunneum_alt">Lépiote des jardins</string>
+    <string name="myco_brunneum_latin" translatable="false">Chlorophyllum brunneum</string>
+    <string-array name="myco_brunneum_traits">
+        <item>Cap 6 to 15 cm, stout, globular then flat, no boss; broken into whitish, beige or brown plates or scales, often star-like; only the centre stays smooth</item>
+        <item>Free, broad gills, dirty ochre-white then pinkish cream</item>
+        <item>Stem 6 to 15 cm, white then ochre, smooth, turning saffron red when scraped; large bulb with a sharp edge, often off-centre</item>
+        <item>Thick but single, sliding ring</item>
+        <item>Thick white flesh that quickly reddens when cut then browns · mild taste</item>
+        <item>White spores</item>
+        <item>Gardens, parks, compost heaps, greenhouses and nitrogen-rich soils, near houses</item>
+    </string-array>
+    <string name="myco_brunneum_note">Toxic: digestive upset, rarely serious, varying with the person and the quantity; the German mycological society list puts it among the gastrointestinal-syndrome mushrooms. Wikipedia counts it among the mushrooms that cause the most poisonings each year, often mistaken for the parasol; ANSES records it among the 2022 confusions. The Swiss controllers point out that it looks like Chlorophyllum rhacodes (shaggy parasol), which is edible.</string>
+
+    <!-- Shaggy parasol -->
+    <string name="myco_rhacodes_name">Shaggy parasol (C. rhacodes)</string>
+    <string name="myco_rhacodes_alt">Lépiote déguenillée</string>
+    <string name="myco_rhacodes_latin" translatable="false">Chlorophyllum rhacodes</string>
+    <string-array name="myco_rhacodes_traits">
+        <item>Cap 8 to 18 cm, egg-shaped then almost flat, grey-beige to ochre-brown, covered in woolly, curled tufts of dull brown; only the centre stays smooth</item>
+        <item>White, very close gills that redden when touched</item>
+        <item>Stem 10 to 20 cm, smooth, hollow, grey, bulbous</item>
+        <item>Double, thick, sliding, smooth, whitish ring</item>
+        <item>Thick, tender white flesh · mild taste; the whole mushroom turns bright red and saffron when cut or scraped, then browns</item>
+        <item>White spores</item>
+        <item>Soil of broadleaf and conifer woods and of meadows at the edge, from late summer to autumn</item>
+    </string-array>
+    <string name="myco_rhacodes_note">A good edible according to Wikipedia, except the stem, which is fibrous and tough. Some people get gastroenteritis, which the article blames on the nitrates of very rich soils; others are allergic. The German mycological society and Swiss controllers’ lists put it among the edible species, under the name Chlorophyllum olivieri. Do not mistake it for Chlorophyllum brunneum (sharp-edged bulb, single ring, toxic), nor for the deadly parasol, which is much smaller.</string>
+
+    <!-- The sickener -->
+    <string name="myco_emetica_name">The sickener</string>
+    <string name="myco_emetica_alt">Russule émétique</string>
+    <string name="myco_emetica_latin" translatable="false">Russula emetica</string>
+    <string-array name="myco_emetica_traits">
+        <item>Cap 3 to 10 cm, bright cherry red, sticky; convex then spreading and slightly dished; the skin peels almost to the centre</item>
+        <item>White to cream, close, broad, adnate gills</item>
+        <item>White stem, 5 to 9 cm, sometimes swollen at the base; no ring</item>
+        <item>White flesh, pinkish under the skin, brittle · faintly fruity smell</item>
+        <item>White spores</item>
+        <item>Sandy soils, among mosses and sphagnum, mostly under conifers and pines · July to October</item>
+    </string-array>
+    <string name="myco_emetica_note">Toxic: digestive upset, mostly vomiting, between half an hour and three hours after the meal; it usually passes by itself (Wikipedia EN). The German mycological society lists the Russula emetica group among the gastrointestinal-syndrome mushrooms, and the Belgian poison centre cites the sickener among the causes of the mild resinoid syndrome (under 12 hours). Many red russulas look alike and some can only be told apart under a microscope: the cap is not enough.</string>
+
+    <!-- Charcoal burner -->
+    <string name="myco_cyanoxantha_name">Charcoal burner</string>
+    <string name="myco_cyanoxantha_alt">Russule charbonnière</string>
+    <string name="myco_cyanoxantha_latin" translatable="false">Russula cyanoxantha</string>
+    <string-array name="myco_cyanoxantha_traits">
+        <item>Cap 5 to 12 cm (up to 15), convex then flattened and dished; very variable colours, often mixed: greenish black, violet grey, blue green, lilac, pink, ochre, yellow, green</item>
+        <item>White then pale cream, often forked gills, flexible and greasy to the touch: they bend without breaking</item>
+        <item>White stem, 5 to 10 cm, solid to stuffed; no ring</item>
+        <item>White flesh · mild taste, reminiscent of hazelnut</item>
+        <item>White spores</item>
+        <item>Under broadleaves and conifers, mostly beeches and spruces, from early summer to late autumn</item>
+    </string-array>
+    <string name="myco_cyanoxantha_note">An excellent edible according to Wikipedia, on the German mycological society and Swiss controllers’ lists. Its mark: flexible, greasy gills that bend without breaking, whereas other russulas have brittle gills. Many russulas look alike, and the German society puts acrid and bitter russulas among the gastrointestinal-syndrome mushrooms; ANSES records pickers of charcoal burners who picked another russula (2022). A russula has neither ring nor volva, unlike the death cap.</string>
+
+    <!-- Poison pie -->
+    <string name="myco_hebeloma_name">Poison pie</string>
+    <string name="myco_hebeloma_alt">Hébélome échaudé</string>
+    <string name="myco_hebeloma_latin" translatable="false">Hebeloma crustuliniforme</string>
+    <string-array name="myco_hebeloma_traits">
+        <item>Cap 5 to 10 cm, convex then spreading, with a central boss; whitish ochre to reddish, paler at the margin; sticky in damp weather</item>
+        <item>Fairly close, toothed gills, whitish then brown; in damp weather they weep brownish drops</item>
+        <item>Stem 5 to 10 cm, whitish, rust-stained towards the base, slightly swollen below, frosted over a good length; no ring</item>
+        <item>Fairly thick white flesh · distinct smell of radish, bitter taste</item>
+        <item>Ochre to brown spores</item>
+        <item>Fairly common in summer and autumn, under broadleaves or conifers, in groups along paths and ditches, in lawns</item>
+    </string-array>
+    <string name="myco_hebeloma_note">Toxic: digestive upset, from mild to marked (nausea, vomiting, diarrhoea, cramps) (Wikipedia EN). The German mycological society lists the whole Hebeloma genus among the gastrointestinal-syndrome mushrooms, and the Belgian poison centre cites the poison pie among the causes of the mild resinoid syndrome: moderate gastroenteritis, less than 3 hours after the meal, lasting under 12 hours. The risk is confusion with tricholomas (Wikipedia FR): the radish smell and the browning gills help to recognise it.</string>
+
+    <!-- Poplar fieldcap -->
+    <string name="myco_aegerita_name">Poplar fieldcap</string>
+    <string name="myco_aegerita_alt">Pholiote du peuplier</string>
+    <string name="myco_aegerita_latin" translatable="false">Cyclocybe aegerita</string>
+    <string-array name="myco_aegerita_traits">
+        <item>Fleshy cap 3 to 10 cm, convex then flat, smooth and silky, tawny brown when young then beige to pale ochre, lighter towards the margin; slightly cracked towards the centre</item>
+        <item>Close, pale beige then brownish, adnate gills</item>
+        <item>Firm, fibrous, solid stem, pale then reddish brown, often curved</item>
+        <item>Ample, membranous, white, persistent ring; it turns tobacco-coloured under the falling spores</item>
+        <item>Whitish flesh · hazelnut taste, strong fruity smell of old cask</item>
+        <item>Dirty brown spores</item>
+        <item>In tufts at the foot of trees and on dead wood, mostly poplars and willows, in autumn</item>
+    </string-array>
+    <string name="myco_aegerita_note">A very good edible according to Wikipedia FR; the German mycological society and Swiss controllers’ lists put it under the name Cyclocybe cylindracea (« pholiote du peuplier »). Wikipedia EN warns that it resembles some deadly species, without naming them, and that the genus is difficult to identify.</string>
+
+    <!-- Winter chanterelle -->
+    <string name="myco_tubaeformis_name">Winter chanterelle</string>
+    <string name="myco_tubaeformis_alt">Chanterelle en tube</string>
+    <string name="myco_tubaeformis_latin" translatable="false">Craterellus tubaeformis</string>
+    <string-array name="myco_tubaeformis_traits">
+        <item>Cap 3 to 7 cm, convex then dished into a funnel, often pierced at the centre onto the hollow stem; brown to tawny, greyish; margin rolled when young then wavy</item>
+        <item>No true gills underneath: grey or silvery-yellow folds, branched and forked near the edge, running down the stem</item>
+        <item>Stem 3 to 12 cm, bright yellow, long, thin, winding and hollow</item>
+        <item>Thin, yellowish flesh, faint smell</item>
+        <item>Pale spores (cream to pale orange-pink)</item>
+        <item>In groups, often in lines, in broadleaf or mixed woods, on moss and litter, near very rotten wood · mid-autumn to the first frosts</item>
+    </string-array>
+    <string name="myco_tubaeformis_note">A renowned edible, fresh or dried; it is on the German mycological society list (« Trompeten-Pfifferling ») and on the Swiss controllers’ list. It has edible look-alikes (Craterellus lutescens, C. melanoxeros); Leotia lubrica, gelatinous and said to be suspect, can grow alongside (Wikipedia FR).</string>
+
+    <!-- Giant puffball -->
+    <string name="myco_gigantea_name">Giant puffball</string>
+    <string name="myco_gigantea_alt">Vesse-de-loup géante</string>
+    <string name="myco_gigantea_latin" translatable="false">Calvatia gigantea</string>
+    <string-array name="myco_gigantea_traits">
+        <item>White ball without a stem, 10 to 50 cm (up to 80), which can exceed a football</item>
+        <item>Pure white, even inside when young; yellowish or greenish brown with age</item>
+        <item>When young, smell of fresh flour</item>
+        <item>White spores when young, olive when ripe</item>
+        <item>Meadows rich in droppings of ruminants or birds, sometimes in groups, broadleaf woods · late summer and autumn</item>
+    </string-array>
+    <string name="myco_gigantea_note">Only when young, with pure white, even flesh inside: yellowish or greenish brown, it can cause digestive upset (Wikipedia EN), and it rots within weeks. It is on the German mycological society list and on the Swiss controllers’ list. Wikipedia FR says it can fix heavy metals such as mercury: not in large quantities. Cut it in two: a young amanita egg already shows the future cap and stem; throw it away and wash the knife.</string>
 </resources>

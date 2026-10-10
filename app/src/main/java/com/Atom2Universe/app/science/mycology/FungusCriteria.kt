@@ -87,6 +87,9 @@ object FungusCriteria {
     const val SMALL_CM = 6f
     const val LARGE_CM = 12f
 
+    /** Un chapeau dont le centre est creusé d'au moins autant (en cm) compte comme « creux ». */
+    const val DIPPED_CM = 0.6f
+
     private fun capTones(look: FungusLook) = setOf(look.capCenter, look.capMid, look.capEdge).map { Tone.of(it) }.toSet()
     private fun stipeTones(look: FungusLook) = setOf(look.stipeTop, look.stipeBottom).map { Tone.of(it) }.toSet()
 
@@ -122,7 +125,7 @@ object FungusCriteria {
         add(Criterion("u_ridges", CriterionGroup.UNDER, R.string.myco_c_ridges) { it.hymenium == Hymenium.RIDGES })
         add(Criterion("u_teeth", CriterionGroup.UNDER, R.string.myco_c_teeth) { it.hymenium == Hymenium.TEETH })
         add(Criterion("u_none", CriterionGroup.UNDER, R.string.myco_c_none_under) { it.hymenium == Hymenium.NONE })
-        add(Criterion("c_funnel", CriterionGroup.CAP, R.string.myco_c_funnel) { it.capShape == CapShape.FUNNEL || it.capShape == CapShape.DEPRESSED })
+        add(Criterion("c_funnel", CriterionGroup.CAP, R.string.myco_c_funnel) { it.capShape == CapShape.FUNNEL || it.capShape == CapShape.DEPRESSED || it.dip >= DIPPED_CM })
         add(Criterion("c_wrinkled", CriterionGroup.CAP, R.string.myco_c_wrinkled) { it.capShape == CapShape.MOREL || it.capShape == CapShape.BRAIN })
         add(Criterion("c_ball", CriterionGroup.CAP, R.string.myco_c_ball) { it.capShape == CapShape.BALL })
         add(Criterion("c_bracket", CriterionGroup.CAP, R.string.myco_c_bracket) { it.capShape == CapShape.BRACKET })

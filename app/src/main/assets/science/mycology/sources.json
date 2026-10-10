@@ -6,7 +6,7 @@
       "id": "anses2023", "kind": "official",
       "citation": "ANSES (2023). Intoxications accidentelles par des champignons en France métropolitaine : bilan des cas enregistrés par les centres antipoison du 1er juillet au 31 décembre 2022. Rapport d’étude de toxicovigilance n° 2023-VIG-0127.",
       "url": "https://www.anses.fr/system/files/Toxicovigilance2023VIG0127Ra.pdf",
-      "species": ["phalloides", "pantherina", "muscaria", "satanas", "olearius", "cibarius", "edulis", "procera", "campestris", "xanthodermus", "virosa", "paxillus", "rubescens", "caesarea", "sinuatum", "oreades", "gambosa", "erubescens", "rivulosa"]
+      "species": ["phalloides", "pantherina", "muscaria", "satanas", "olearius", "cibarius", "edulis", "procera", "campestris", "xanthodermus", "virosa", "paxillus", "rubescens", "caesarea", "sinuatum", "oreades", "gambosa", "erubescens", "rivulosa", "ovoidea", "geotropa", "amethystina", "pura", "calopus", "brunneum", "cyanoxantha", "terreum", "rhacodes"]
     },
     {
       "id": "anses2025", "kind": "official",
@@ -48,7 +48,7 @@
       "id": "be", "kind": "official",
       "citation": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf",
-      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum"]
+      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum", "hebeloma", "emetica"]
     },
     {
       "id": "toxinfo", "kind": "official",
@@ -84,7 +84,7 @@
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea"]
     },
     {
       "id": "toxinfo2025", "kind": "official",
@@ -114,7 +114,7 @@
       "id": "zh2023", "kind": "official",
       "citation": "Kanton Zürich, Kantonales Labor (2024). Pilzkontrollen im Kanton Zürich 2023.",
       "url": "https://www.zh.ch/de/news-uebersicht/mitteilungen/2024/gesundheit/lebensmittel/pilzkontrollen-im-kanton-zuerich-2023.html",
-      "species": ["satanas", "felleus"]
+      "species": ["satanas", "felleus", "calopus"]
     },
     {
       "id": "horn1997", "kind": "journal",
@@ -145,6 +145,18 @@
       "citation": "Clericuzio M., Serra S., Vidari G. (2024). No evidence was found for the presence of terreolides, terreumols or saponaceolides H-S in the fruiting bodies of Tricholoma terreum (Basidiomycota, Agaricales). Molecules 29(8) : 1794.",
       "url": "https://doi.org/10.3390/molecules29081794",
       "species": ["terreum"]
+    },
+    {
+      "id": "vapko2023", "kind": "society",
+      "citation": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
+      "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf",
+      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea"]
+    },
+    {
+      "id": "dgfm2026tox", "kind": "society",
+      "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
+      "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf",
+      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica"]
     },
     { "id": "wp-fr-phalloides", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite phalloïde", "url": "https://fr.wikipedia.org/wiki/Amanite_phallo%C3%AFde", "species": ["phalloides", "egg"] },
     { "id": "wp-fr-virosa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanite vireuse", "url": "https://fr.wikipedia.org/wiki/Amanite_vireuse", "species": ["virosa"] },
@@ -229,6 +241,32 @@
     { "id": "wp-fr-silvicola", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Agaricus silvicola", "url": "https://fr.wikipedia.org/wiki/Agaricus_silvicola", "species": ["silvicola"] },
     { "id": "wp-fr-granulatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Suillus granulatus", "url": "https://fr.wikipedia.org/wiki/Suillus_granulatus", "species": ["granulatus"] },
     { "id": "wp-fr-olivacea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russula olivacea", "url": "https://fr.wikipedia.org/wiki/Russula_olivacea", "species": ["olivacea"] },
-    { "id": "wp-en-olivacea", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula olivacea", "url": "https://en.wikipedia.org/wiki/Russula_olivacea", "species": ["olivacea"] }
+    { "id": "wp-en-olivacea", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula olivacea", "url": "https://en.wikipedia.org/wiki/Russula_olivacea", "species": ["olivacea"] },
+    { "id": "wp-fr-ovoidea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanita ovoidea", "url": "https://fr.wikipedia.org/wiki/Amanita_ovoidea", "species": ["ovoidea"] },
+    { "id": "wp-en-ovoidea", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita ovoidea", "url": "https://en.wikipedia.org/wiki/Amanita_ovoidea", "species": ["ovoidea"] },
+    { "id": "wp-fr-geotropa", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Infundibulicybe geotropa", "url": "https://fr.wikipedia.org/wiki/Infundibulicybe_geotropa", "species": ["geotropa"] },
+    { "id": "wp-en-geotropa", "kind": "encyclopedia", "citation": "Wikipedia (en): Infundibulicybe geotropa", "url": "https://en.wikipedia.org/wiki/Infundibulicybe_geotropa", "species": ["geotropa"] },
+    { "id": "wp-fr-amethystina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Laccaire améthyste", "url": "https://fr.wikipedia.org/wiki/Laccaria_amethystina", "species": ["amethystina"] },
+    { "id": "wp-en-amethystina", "kind": "encyclopedia", "citation": "Wikipedia (en): Laccaria amethystina", "url": "https://en.wikipedia.org/wiki/Laccaria_amethystina", "species": ["amethystina"] },
+    { "id": "wp-fr-pura", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Mycène pur", "url": "https://fr.wikipedia.org/wiki/Mycena_pura", "species": ["pura"] },
+    { "id": "wp-en-pura", "kind": "encyclopedia", "citation": "Wikipedia (en): Mycena pura", "url": "https://en.wikipedia.org/wiki/Mycena_pura", "species": ["pura"] },
+    { "id": "wp-fr-calopus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Bolet à beau pied", "url": "https://fr.wikipedia.org/wiki/Caloboletus_calopus", "species": ["calopus"] },
+    { "id": "wp-en-calopus", "kind": "encyclopedia", "citation": "Wikipedia (en): Caloboletus calopus", "url": "https://en.wikipedia.org/wiki/Caloboletus_calopus", "species": ["calopus"] },
+    { "id": "wp-fr-brunneum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Chlorophyllum brunneum", "url": "https://fr.wikipedia.org/wiki/Chlorophyllum_brunneum", "species": ["brunneum"] },
+    { "id": "wp-en-brunneum", "kind": "encyclopedia", "citation": "Wikipedia (en): Shaggy parasol", "url": "https://en.wikipedia.org/wiki/Chlorophyllum_brunneum", "species": ["brunneum"] },
+    { "id": "wp-fr-rhacodes", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Chlorophyllum rhacodes", "url": "https://fr.wikipedia.org/wiki/Chlorophyllum_rhacodes", "species": ["rhacodes"] },
+    { "id": "wp-en-rhacodes", "kind": "encyclopedia", "citation": "Wikipedia (en): Shaggy parasol", "url": "https://en.wikipedia.org/wiki/Shaggy_parasol", "species": ["rhacodes"] },
+    { "id": "wp-fr-emetica", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russule émétique", "url": "https://fr.wikipedia.org/wiki/Russule_%C3%A9m%C3%A9tique", "species": ["emetica"] },
+    { "id": "wp-en-emetica", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula emetica", "url": "https://en.wikipedia.org/wiki/Russula_emetica", "species": ["emetica"] },
+    { "id": "wp-fr-cyanoxantha", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russule charbonnière", "url": "https://fr.wikipedia.org/wiki/Russule_charbonni%C3%A8re", "species": ["cyanoxantha"] },
+    { "id": "wp-en-cyanoxantha", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula cyanoxantha", "url": "https://en.wikipedia.org/wiki/Russula_cyanoxantha", "species": ["cyanoxantha"] },
+    { "id": "wp-fr-hebeloma", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hébélome échaudé", "url": "https://fr.wikipedia.org/wiki/H%C3%A9b%C3%A9lome_cro%C3%BBte-de-pain", "species": ["hebeloma"] },
+    { "id": "wp-en-hebeloma", "kind": "encyclopedia", "citation": "Wikipedia (en): Hebeloma crustuliniforme", "url": "https://en.wikipedia.org/wiki/Hebeloma_crustuliniforme", "species": ["hebeloma"] },
+    { "id": "wp-fr-aegerita", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Pholiote du peuplier", "url": "https://fr.wikipedia.org/wiki/Cyclocybe_aegerita", "species": ["aegerita"] },
+    { "id": "wp-en-aegerita", "kind": "encyclopedia", "citation": "Wikipedia (en): Cyclocybe aegerita", "url": "https://en.wikipedia.org/wiki/Cyclocybe_aegerita", "species": ["aegerita"] },
+    { "id": "wp-fr-tubaeformis", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Craterellus tubaeformis", "url": "https://fr.wikipedia.org/wiki/Craterellus_tubaeformis", "species": ["tubaeformis"] },
+    { "id": "wp-en-tubaeformis", "kind": "encyclopedia", "citation": "Wikipedia (en): Craterellus tubaeformis", "url": "https://en.wikipedia.org/wiki/Craterellus_tubaeformis", "species": ["tubaeformis"] },
+    { "id": "wp-fr-gigantea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Vesse-de-loup géante", "url": "https://fr.wikipedia.org/wiki/Calvatia_gigantea", "species": ["gigantea"] },
+    { "id": "wp-en-gigantea", "kind": "encyclopedia", "citation": "Wikipedia (en): Calvatia gigantea", "url": "https://en.wikipedia.org/wiki/Calvatia_gigantea", "species": ["gigantea"] }
   ]
 }

@@ -135,7 +135,7 @@
         <item>Fausse girolle : lames fines, serrées, régulièrement fourchues, qui se détachent à l’ongle. Pas d’abricot.</item>
     </string-array>
     <string name="myco_g_boletus_title">Cèpe, ou pas ?</string>
-    <string name="myco_g_boletus_evidence">ANSES 2022</string>
+    <string name="myco_g_boletus_evidence">ANSES 2022, fiches Wikipédia</string>
     <string-array name="myco_g_boletus_points">
         <item>Cèpe : fin réseau blanc en haut du pied. Bolet amer : réseau brun foncé, épais.</item>
         <item>Cèpe : pores blancs puis jaune-vert. Bolet amer : pores roses. Bolet de Satan : pores rouges.</item>
@@ -235,7 +235,7 @@
     <string-array name="myco_g_whiteforms_points">
         <item>Amanite vireuse : anneau fragile et volve en sac, lames blanches. Colombette : ni anneau ni volve, chair à odeur de farine.</item>
         <item>Entolome livide : chapeau gris clair très fibrilleux, lames jaunes puis roses, sporée rose. Colombette : lames blanches, sporée blanche.</item>
-        <item>Agaric des bois : lames crème pâle puis roses puis brun chocolat, odeur d’anis, anneau très large. Les amanites ont des lames toujours blanches et une volve.</item>
+        <item>Agaric sylvicole : lames crème pâle puis roses puis brun chocolat, odeur d’anis, anneau très large. Les amanites ont des lames toujours blanches et une volve.</item>
         <item>La volve est sous terre : on ne cueille que des champignons entiers.</item>
         <item>L’odeur de farine se retrouve chez la colombette et chez l’entolome livide : elle ne suffit pas.</item>
     </string-array>
@@ -248,12 +248,14 @@
         <item>La sporée tranche : on laisse tomber les spores sur une feuille avant de conclure.</item>
     </string-array>
     <string name="myco_g_redpore_title">Pores rouges : lequel est-ce ?</string>
-    <string name="myco_g_redpore_evidence">Contrôles suisses</string>
+    <string name="myco_g_redpore_evidence">ANSES 2022, contrôles suisses</string>
     <string-array name="myco_g_redpore_points">
         <item>Bolet à pied rouge : pied jaune couvert de points rouges, sans réseau. Bolet de Satan : pied à fin réseau.</item>
         <item>Pied rouge : chapeau brun foncé, velouté. Satan : chapeau blanchâtre, crayeux, très gros.</item>
+        <item>Bolet à beau pied : pores jaunes, pied jaune en haut et rouge en bas avec un réseau blanc ; amer, toxique.</item>
         <item>Les deux bleuissent : bleu marine intense chez le pied rouge, bleu pâle chez Satan.</item>
-        <item>Pied rouge : à cuire au moins 20 minutes. Satan : toxique, troubles digestifs.</item>
+        <item>Pied rouge : à cuire au moins 20 minutes. Satan et beau pied : toxiques, troubles digestifs.</item>
+        <item>L’ANSES relève des bolets de Satan et des bolets à beau pied cueillis à la place de bolets à pied rouge.</item>
     </string-array>
     <string name="myco_g_milkcap_title">Lactaire délicieux, ou pas ?</string>
     <string name="myco_g_milkcap_evidence">Centre antipoison belge</string>
@@ -272,12 +274,39 @@
         <item>Les formes jeunes de la phalloïde, en œuf, sont prises pour des vesses-de-loup.</item>
     </string-array>
     <string name="myco_g_greyknights_title">Tricholome gris : lequel ?</string>
-    <string name="myco_g_greyknights_evidence">Fiches Wikipédia</string>
+    <string name="myco_g_greyknights_evidence">ANSES 2022, contrôleurs suisses</string>
     <string-array name="myco_g_greyknights_points">
         <item>Tigré : chapeau argenté couvert d’écailles en cercles, pied épais, odeur de farine. Terreux : chapeau gris souris fibrilleux, plus petit, sans odeur de farine.</item>
         <item>Tigré : sol calcaire, en altitude, plutôt en été et automne. Terreux : surtout sous les pins.</item>
         <item>Le tigré est toxique, même en petite quantité : vomissements violents, 24 à 48 heures.</item>
-        <item>Le terreux est discuté : non recommandé.</item>
+        <item>Le terreux est discuté : non recommandé. Les contrôleurs suisses le disent facile à confondre avec le tigré et avec certains inocybes.</item>
+        <item>Entolome livide : lames qui rosissent, sporée rose. Les tricholomes gris ont les lames blanchâtres à grises et la sporée blanche. L’ANSES relève des entolomes livides cueillis à la place de « petits gris » (tricholomes terreux).</item>
+    </string-array>
+    <string name="myco_g_laccaria_title">Laccaire, ou mycène ?</string>
+    <string name="myco_g_laccaria_evidence">ANSES 2022</string>
+    <string-array name="myco_g_laccaria_points">
+        <item>Laccaire améthyste : violet foncé et mat, lames de la même couleur et espacées, pied fibreux et dur. Mycène pur : rose à violet ou gris, lames blanchâtres à rosées, pied fragile et creux.</item>
+        <item>Mycène pur : marge striée, odeur et saveur nettes de radis. Le laccaire n’a pas d’odeur de radis.</item>
+        <item>Le mycène pur contient de la muscarine : sueurs, salivation, nausées.</item>
+        <item>Le laccaire peut accumuler l’arsenic sur les sols pollués.</item>
+        <item>L’ANSES relève des mycènes cueillis par des cueilleurs de laccaires améthystes.</item>
+    </string-array>
+    <string name="myco_g_shaggy_title">Grande lépiote : laquelle ?</string>
+    <string name="myco_g_shaggy_evidence">ANSES 2022, contrôleurs suisses</string>
+    <string-array name="myco_g_shaggy_points">
+        <item>Coulemelle : pied zébré, anneau double qui coulisse, chair qui ne change pas. Lépiote des jardins : pied lisse, anneau simple, chair qui rougit.</item>
+        <item>Lépiote déguenillée : pied lisse et gris, bulbe arrondi, anneau double, chair qui rougit vif à la coupe.</item>
+        <item>Lépiote des jardins : gros bulbe à bord net, souvent décentré ; elle pousse près des maisons, dans les jardins et sur les composts.</item>
+        <item>La lépiote des jardins donne des troubles digestifs, rarement graves ; la déguenillée est bonne mais mal tolérée par certains.</item>
+        <item>Petites lépiotes (moins de 10 cm) : mortelles, à ne jamais cueillir.</item>
+    </string-array>
+    <string name="myco_g_monkhead_title">Clitocybe géotrope, ou entolome ?</string>
+    <string name="myco_g_monkhead_evidence">ANSES 2022</string>
+    <string-array name="myco_g_monkhead_points">
+        <item>Clitocybe géotrope : grand (7 à 20 cm), crème à beige, lames très décurrentes, pied plein et fibreux, sporée blanche.</item>
+        <item>Entolome livide : lames échancrées qui rosissent, odeur de farine, sporée rose.</item>
+        <item>Le clitopile (meunier) est comestible aussi, mais sa sporée est rose.</item>
+        <item>L’ANSES relève des entolomes livides cueillis à la place de clitocybes géotropes.</item>
     </string-array>
 
     <!-- Repères sur les dessins -->
@@ -460,6 +489,38 @@
     <string name="myco_l_matt_green_red_cap">Chapeau mat, vert et rouge</string>
     <string name="myco_l_cream_ochre_gills">Lames crème à ocre</string>
     <string name="myco_l_dotted_pink_stem">Pied pointillé, rosé</string>
+    <string name="myco_l_white_flaky_cap">Chapeau blanc, floconneux</string>
+    <string name="myco_l_cream_funnel_cap">Chapeau crème, creusé</string>
+    <string name="myco_l_decurrent_cream_gills">Lames crème, très décurrentes</string>
+    <string name="myco_l_solid_fibrous_stem">Pied plein, fibreux</string>
+    <string name="myco_l_violet_matt_cap">Chapeau violet, mat</string>
+    <string name="myco_l_far_violet_gills">Lames violettes, espacées</string>
+    <string name="myco_l_twisted_stem">Pied mince, tortueux</string>
+    <string name="myco_l_thin_lilac_flesh">Chair mince, lilas pâle</string>
+    <string name="myco_l_pink_striate_cap">Chapeau rose, marge striée</string>
+    <string name="myco_l_pinkish_gills">Lames blanchâtres à rosées</string>
+    <string name="myco_l_fragile_hollow_stem">Pied fragile, creux</string>
+    <string name="myco_l_olive_beige_cap">Chapeau beige olive</string>
+    <string name="myco_l_yellow_red_net_stem">Pied jaune et rouge, réseau en haut</string>
+    <string name="myco_l_star_brown_scales">Écailles brunes en étoile</string>
+    <string name="myco_l_ring_thick_single">Anneau épais, simple</string>
+    <string name="myco_l_curled_brown_tufts">Mèches brunes retroussées</string>
+    <string name="myco_l_round_bulb">Bulbe arrondi</string>
+    <string name="myco_l_smooth_grey_stem">Pied lisse, gris</string>
+    <string name="myco_l_bright_red_sticky_cap">Chapeau rouge vif, visqueux</string>
+    <string name="myco_l_violet_green_cap">Chapeau violet et vert, variable</string>
+    <string name="myco_l_flexible_forked_gills">Lames souples, fourchues</string>
+    <string name="myco_l_ochre_umbo_cap">Chapeau ocre, avec un mamelon</string>
+    <string name="myco_l_close_brown_gills">Lames serrées, brun clair</string>
+    <string name="myco_l_frosted_stem">Pied pruineux</string>
+    <string name="myco_l_pale_cracked_cap">Chapeau pâle, centre craquelé</string>
+    <string name="myco_l_ring_ample">Anneau ample, persistant</string>
+    <string name="myco_l_close_beige_gills">Lames serrées, beiges</string>
+    <string name="myco_l_brown_dished_cap">Chapeau brun, creusé</string>
+    <string name="myco_l_grey_folds">Plis gris, pas de lames</string>
+    <string name="myco_l_yellow_hollow_stem">Pied jaune vif, creux</string>
+    <string name="myco_l_white_ball">Boule blanche</string>
+    <string name="myco_l_no_stalk">Pas de pied</string>
 
     <!-- Amanite phalloïde -->
     <string name="myco_phalloides_name">Amanite phalloïde</string>
@@ -1108,10 +1169,10 @@
         <item>Sporée blanche</item>
         <item>Conifères clairsemés, surtout sous les pins · automne, jusqu’en hiver</item>
     </string-array>
-    <string name="myco_terreum_note">Les avis divergent. La liste de la société mycologique allemande (2026) et Wikipédia FR le disent comestible. Une étude chinoise de 2014 y a trouvé des substances qui abîment les muscles chez la souris, comme chez le tricholome équestre ; une étude italienne de 2024 n’en retrouve aucune et conclut qu’il est comestible. Statut le plus prudent retenu : non recommandé. Il ressemble au tricholome tigré, toxique : plus petit, plus sombre, sans écailles.</string>
+    <string name="myco_terreum_note">Les avis divergent. La société allemande de mycologie (2026), les contrôleurs suisses (2023) et Wikipédia FR le disent comestible. Une étude chinoise de 2014 y a trouvé des substances qui abîment les muscles chez la souris, comme chez le tricholome équestre ; un commentaire de 2016 la conteste et une étude italienne de 2024 n’en retrouve aucune et conclut qu’il est comestible. Statut le plus prudent retenu : non recommandé. Les contrôleurs suisses le disent facile à confondre avec le tricholome tigré, toxique, et avec certains inocybes ; l’ANSES relève des entolomes livides cueillis à la place de « petits gris », nom qu’elle donne au tricholome terreux.</string>
 
-    <!-- Agaric des bois -->
-    <string name="myco_silvicola_name">Agaric des bois</string>
+    <!-- Agaric sylvicole -->
+    <string name="myco_silvicola_name">Agaric sylvicole</string>
     <string name="myco_silvicola_alt">Wood mushroom</string>
     <string-array name="myco_silvicola_traits">
         <item>Chapeau blanc à crème, 6 à 9 cm (parfois 12), globuleux puis étalé, qui jaunit en vieillissant ou au toucher</item>
@@ -1134,7 +1195,7 @@
         <item>Sporée brun orangé à reflet olive</item>
         <item>Sous les pins</item>
     </string-array>
-    <string name="myco_granulatus_note">Sa peau visqueuse est laxative. L’ANSES lui attribue des troubles digestifs, souvent avec tremblements, maux de tête et angoisse, quelques heures après le repas : 25 cas notés en France entre 1999 et 2015. Aucune cuisson n’est prouvée efficace. Le contact avec la peau peut aussi donner une dermite.</string>
+    <string name="myco_granulatus_note">Sa peau visqueuse est laxative. L’ANSES lui attribue des troubles digestifs, souvent avec tremblements, maux de tête et angoisse, quelques heures après le repas : 25 cas notés en France entre 1999 et 2015. Aucune cuisson n’est prouvée efficace. Le contact avec la peau peut aussi donner une dermite. Les contrôleurs suisses le rangent parmi les comestibles en demandant d’enlever la peau du chapeau, et la société allemande de mycologie le range aussi parmi les comestibles : statut le plus prudent retenu.</string>
     <string name="myco_granulatus_history">Cité dans plusieurs guides comme un comestible médiocre, alors que sa peau visqueuse contient des substances laxatives. Son pouvoir toxique est connu depuis 1923. En 2015, l’ANSES estime qu’il peut provoquer des intoxications, y compris après mise en conserve. Un arrêté du 5 août 2016 suspend pour un an la vente de bolet granulé frais non accompagné d’une information sur la cuisson complète.</string>
 
     <!-- Russule olivacée -->
@@ -1150,4 +1211,176 @@
     </string-array>
     <string name="myco_olivacea_note">Des intoxications digestives sont signalées surtout quand elle est mangée crue ou peu cuite, au barbecue notamment : en Italie, quelques dizaines de cas par an ; au Pays basque, plus de 40 cas en vingt ans ; en France, 3 cas groupés en 2012, avec des vomissements 2 heures après. L’ANSES juge en 2015 que le risque ne peut être exclu, même après cuisson ; Tox Info Suisse demande au moins 20 minutes de cuisson.</string>
     <string name="myco_olivacea_history">Parfois consommée, et même jugée comestible en Europe de l’Est. En 2015, l’ANSES estime que le risque d’intoxication ne peut être exclu, y compris après cuisson, faute de données prouvant son innocuité. Un arrêté du 5 août 2016 suspend pour un an la vente de russule olivacée fraîche non accompagnée d’une information sur la cuisson complète.</string>
+
+    <!-- Amanite ovoïde -->
+    <string name="myco_ovoidea_name">Amanite ovoïde</string>
+    <string name="myco_ovoidea_alt">Bearded amanita</string>
+    <string-array name="myco_ovoidea_traits">
+        <item>Chapeau blanc à gris très clair, épais, 15 à 20 cm (jusqu’à 30), d’abord en demi-sphère, floconneux ; la marge garde souvent des lambeaux cotonneux du voile</item>
+        <item>Lames blanches, serrées, larges et libres, qui peuvent rosir un peu avec l’âge</item>
+        <item>Pied blanc, robuste et poudreux, 15 à 20 cm</item>
+        <item>Anneau crème, fragile et cotonneux, qui a tendance à disparaître</item>
+        <item>Grande volve en sac à la base, blanche à beige ocre</item>
+        <item>Chair épaisse et blanche, odeur forte et désagréable · sporée blanche</item>
+        <item>Sous les feuillus et surtout sous les pins, sur sol calcaire et ensoleillé, en été et en automne ; assez commune dans le Midi</item>
+    </string-array>
+    <string name="myco_ovoidea_note">Non recommandée : les livres la disent tantôt comestible, tantôt vénéneuse, et elle ne figure ni sur la liste des comestibles de la société allemande de mycologie (2026), ni sur celle des contrôleurs suisses (2023). L’ANSES la relève parmi les champignons cueillis à la place de vesses-de-loup ou de bolets au second semestre 2022. Son sosie, l’amanite à volve rousse, abîme les reins ; des intoxications ont eu lieu dans le sud de la France en la prenant pour l’amanite ovoïde : volve plus rousse, anneau qui reste, marge lisse.</string>
+
+    <!-- Clitocybe géotrope -->
+    <string name="myco_geotropa_name">Clitocybe géotrope</string>
+    <string name="myco_geotropa_alt">Trooping funnel</string>
+    <string-array name="myco_geotropa_traits">
+        <item>Chapeau de 7 à 20 cm, crème, beige à brun cannelle : en forme de quille chez le jeune, puis bombé, puis étalé avec un mamelon, enfin creusé en entonnoir ; marge lisse</item>
+        <item>Lames fines, très décurrentes, crème à beige</item>
+        <item>Pied plein et fibreux, 10 à 20 cm, très renflé chez le jeune, de la couleur du chapeau ; pas d’anneau</item>
+        <item>Chair blanche, ferme chez le jeune · odeur forte, douce, d’amande amère ou de foin</item>
+        <item>Sporée blanche</item>
+        <item>Sol des bois de feuillus, lisières et clairières, souvent en troupes ou en ronds, de la fin de l’été jusqu’aux premières gelées</item>
+    </string-array>
+    <string name="myco_geotropa_note">Comestible de valeur moyenne, seulement jeune : le pied fibreux devient coriace et se jette. Il est sur la liste de la société allemande de mycologie (« Mönchskopf ») et sur celle des contrôleurs suisses (« tête de moine »). L’ANSES relève des entolomes livides cueillis à la place de clitocybes géotropes (2022) : l’entolome a des lames échancrées qui rosissent, une odeur de farine et une sporée rose. Le clitopile, comestible aussi, a la sporée rose.</string>
+
+    <!-- Laccaire améthyste -->
+    <string name="myco_amethystina_name">Laccaire améthyste</string>
+    <string name="myco_amethystina_alt">Amethyst deceiver</string>
+    <string-array name="myco_amethystina_traits">
+        <item>Chapeau de 2 à 8 cm, violet foncé, mat, convexe puis creusé en ombilic ; il pâlit et blanchit en séchant ; marge mince, striée</item>
+        <item>Lames de la couleur du chapeau, espacées, inégales</item>
+        <item>Pied de 4 à 10 cm, mince et tortueux, de la couleur du chapeau, duveteux vers la base, fibreux</item>
+        <item>Chair mince, lilas pâle, odeur et saveur douces</item>
+        <item>Sporée blanche</item>
+        <item>Bois humides de feuillus ou de conifères, de la fin de l’été au début de l’hiver</item>
+    </string-array>
+    <string name="myco_amethystina_note">Comestible : il est sur la liste de la société allemande de mycologie et sur celle des contrôleurs suisses ; le pied fibreux ne se mange pas. Sur des sols pollués, il peut accumuler des composés de l’arsenic : la société allemande déconseille de le cueillir près d’anciens terrains militaires, de mines, d’usines et de routes fréquentées. Le mycène pur, toxique, lui ressemble : l’ANSES relève des mycènes cueillis à la place de laccaires.</string>
+
+    <!-- Mycène pur -->
+    <string name="myco_pura_name">Mycène pur</string>
+    <string name="myco_pura_alt">Lilac bonnet</string>
+    <string-array name="myco_pura_traits">
+        <item>Chapeau de 3 à 7 cm, convexe sans être pointu, puis étalé à léger mamelon ; du rose pur au violet ou au gris, il blanchit par temps sec ; marge très mince, striée par les lames</item>
+        <item>Lames inégales, assez espacées, blanchâtres à rosées</item>
+        <item>Pied de 4 à 9 cm, de la couleur du chapeau ou plus violet, légèrement strié, fragile, creux</item>
+        <item>Chair blanche · odeur et saveur nettes de radis</item>
+        <item>Sporée blanche</item>
+        <item>Commun du printemps à l’automne, sous feuillus et sous conifères</item>
+    </string-array>
+    <string name="myco_pura_note">Toxique : il contient de la muscarine, qui provoque le syndrome sudorien : sueurs, larmes et salivation abondantes, souffle court, nausées et vomissements, en quelques minutes à 2 heures (centre antipoison belge). La société allemande de mycologie range le mycène pur et le mycène rose parmi les champignons à muscarine ; le mycène rose n’en est souvent qu’une variété. En 2022, des cueilleurs de laccaires améthystes ont cueilli des mycènes (ANSES). Le laccaire a des lames plus espacées, un pied dur et pas d’odeur de radis.</string>
+
+    <!-- Bolet à beau pied -->
+    <string name="myco_calopus_name">Bolet à beau pied</string>
+    <string name="myco_calopus_alt">Bitter beech bolete</string>
+    <string-array name="myco_calopus_traits">
+        <item>Chapeau d’environ 15 cm (rarement 20), blanc, beige à olive, lisse ou pubescent, parfois craquelé avec l’âge</item>
+        <item>Pores fins, jaune pâle, qui bleuissent au toucher puis tournent à l’olive ; tubes jusqu’à 2 cm</item>
+        <item>Pied de 7 à 15 cm sur 2 à 5, jaune en haut, rouge en dessous, parfois tout rougeâtre, avec un réseau saillant blanc en haut ; le rouge peut disparaître avec l’âge</item>
+        <item>Chair épaisse, ferme, blanchâtre à jaune pâle, qui bleuit à la coupe · saveur amère</item>
+        <item>Sporée olive à brun olive</item>
+        <item>Sous feuillus et conifères, surtout hêtres et chênes, souvent en altitude, sur sol calcaire · de juillet à décembre</item>
+    </string-array>
+    <string name="myco_calopus_note">Toxique : la liste de la société allemande de mycologie le range parmi les champignons à syndrome gastro-intestinal. L’amertume ne passe pas à la cuisson et il peut faire vomir. L’ANSES relève des bolets à beau pied cueillis à la place de bolets à pied rouge (2022) et le laboratoire de Zurich en trie parmi les bolets toxiques (2023). Il a le pied rouge du bolet de Satan, mais des pores jaunes ; le cèpe n’a pas de pied rouge.</string>
+
+    <!-- Lépiote des jardins -->
+    <string name="myco_brunneum_name">Lépiote des jardins</string>
+    <string name="myco_brunneum_alt">Shaggy parasol (C. brunneum)</string>
+    <string-array name="myco_brunneum_traits">
+        <item>Chapeau de 6 à 15 cm, robuste, globuleux puis plat, sans mamelon ; brisé en plaques ou en écailles blanchâtres, beiges ou brunes, souvent en étoile ; seul le centre reste lisse</item>
+        <item>Lames libres, larges, blanc sale ocracé puis crème rosé</item>
+        <item>Pied de 6 à 15 cm, blanc puis ocracé, lisse, qui devient rouge safran quand on le gratte ; gros bulbe à bord net, souvent décentré</item>
+        <item>Anneau épais mais simple, mobile</item>
+        <item>Chair épaisse et blanche, qui rougit vite à la coupe puis brunit · saveur douce</item>
+        <item>Sporée blanche</item>
+        <item>Jardins, parcs, composts, serres et sols riches en azote, près des habitations</item>
+    </string-array>
+    <string name="myco_brunneum_note">Toxique : troubles digestifs, rarement graves, qui varient selon les personnes et la quantité ; la liste de la société allemande de mycologie le range parmi les champignons à syndrome gastro-intestinal. Wikipédia le compte parmi les champignons qui font le plus d’intoxications chaque année, souvent pris pour la coulemelle ; l’ANSES le relève dans les confusions de 2022. Les contrôleurs suisses signalent qu’il ressemble à la lépiote déguenillée, comestible.</string>
+
+    <!-- Lépiote déguenillée -->
+    <string name="myco_rhacodes_name">Lépiote déguenillée</string>
+    <string name="myco_rhacodes_alt">Shaggy parasol (C. rhacodes)</string>
+    <string-array name="myco_rhacodes_traits">
+        <item>Chapeau de 8 à 18 cm, ovoïde puis presque plat, gris beige à brun ocre, couvert de mèches laineuses retroussées d’un brun terne ; seul le centre reste lisse</item>
+        <item>Lames blanches, très serrées, qui rougissent au toucher</item>
+        <item>Pied de 10 à 20 cm, lisse, creux, gris, bulbeux</item>
+        <item>Anneau double, épais, mobile, lisse, blanchâtre</item>
+        <item>Chair blanche, épaisse et tendre · saveur douce ; tout le champignon devient rouge vif et safran quand on le coupe ou le gratte, puis brunit</item>
+        <item>Sporée blanche</item>
+        <item>Sol des bois de feuillus et de conifères et des prairies de lisière, de la fin de l’été à l’automne</item>
+    </string-array>
+    <string name="myco_rhacodes_note">Bon comestible selon Wikipédia, sauf le pied, fibreux et coriace. Certaines personnes ont une gastro-entérite, que l’article attribue aux nitrates des sols très riches ; d’autres sont allergiques. Les listes de la société allemande de mycologie et des contrôleurs suisses la rangent parmi les comestibles, sous le nom de Chlorophyllum olivieri. Ne pas la prendre pour la lépiote des jardins (bulbe à bord net, anneau simple, toxique), ni pour la lépiote brun-incarnat (la « lépiote helvéolée »), beaucoup plus petite et mortelle.</string>
+
+    <!-- Russule émétique -->
+    <string name="myco_emetica_name">Russule émétique</string>
+    <string name="myco_emetica_alt">The sickener</string>
+    <string-array name="myco_emetica_traits">
+        <item>Chapeau de 3 à 10 cm, rouge cerise vif, visqueux ; convexe puis étalé et un peu creusé ; la cuticule se détache presque jusqu’au centre</item>
+        <item>Lames blanches à crème, serrées, larges, adnées</item>
+        <item>Pied blanc, 5 à 9 cm, parfois renflé à la base ; pas d’anneau</item>
+        <item>Chair blanche, rosée sous la cuticule, cassante · odeur légèrement fruitée</item>
+        <item>Sporée blanche</item>
+        <item>Sols sableux, parmi les mousses et les sphaignes, surtout sous les conifères et les pins · de juillet à octobre</item>
+    </string-array>
+    <string name="myco_emetica_note">Toxique : troubles digestifs, vomissements surtout, entre une demi-heure et trois heures après le repas ; ils passent en général d’eux-mêmes (Wikipédia EN). La société allemande de mycologie range le groupe Russula emetica parmi les champignons à syndrome gastro-intestinal, et le centre antipoison belge cite la russule émétique parmi les causes du syndrome résinoïdien léger (moins de 12 heures). Beaucoup de russules rouges se ressemblent et certaines ne se distinguent qu’au microscope : le chapeau ne suffit pas.</string>
+
+    <!-- Russule charbonnière -->
+    <string name="myco_cyanoxantha_name">Russule charbonnière</string>
+    <string name="myco_cyanoxantha_alt">Charcoal burner</string>
+    <string-array name="myco_cyanoxantha_traits">
+        <item>Chapeau de 5 à 12 cm (jusqu’à 15), convexe puis aplati et creusé ; couleurs très variables, souvent mêlées : noir verdâtre, gris violet, bleu vert, lilas, rose, ocre, jaune, vert</item>
+        <item>Lames blanches puis crème pâle, souvent fourchues, souples et grasses au toucher : elles plient sans casser</item>
+        <item>Pied blanc, 5 à 10 cm, plein à farci ; pas d’anneau</item>
+        <item>Chair blanche · saveur douce, qui rappelle la noisette</item>
+        <item>Sporée blanche</item>
+        <item>Sous feuillus et conifères, surtout hêtres et épicéas, du début de l’été à la fin de l’automne</item>
+    </string-array>
+    <string name="myco_cyanoxantha_note">Excellent comestible selon Wikipédia, sur les listes de la société allemande de mycologie et des contrôleurs suisses. Sa marque : des lames souples et grasses, qui plient sans casser, alors que celles des autres russules sont cassantes. Beaucoup de russules se ressemblent, et la société allemande classe les russules âcres et amères parmi les champignons à syndrome gastro-intestinal ; l’ANSES relève des cueilleurs de russules charbonnières qui ont cueilli une autre russule (2022). Une russule n’a ni anneau ni volve, contrairement à la phalloïde.</string>
+
+    <!-- Hébélome échaudé -->
+    <string name="myco_hebeloma_name">Hébélome échaudé</string>
+    <string name="myco_hebeloma_alt">Poison pie</string>
+    <string-array name="myco_hebeloma_traits">
+        <item>Chapeau de 5 à 10 cm, convexe puis étalé, avec un mamelon central ; blanc ocre à rougeâtre, plus pâle sur la marge ; visqueux par temps humide</item>
+        <item>Lames assez serrées, dentées, blanchâtres puis brunes ; par temps humide, elles laissent perler des gouttes brunâtres</item>
+        <item>Pied de 5 à 10 cm, blanchâtre, taché de rouille vers la base, un peu renflé en bas, pruineux sur une bonne longueur ; pas d’anneau</item>
+        <item>Chair assez épaisse et blanche · odeur nette de radis, saveur amère</item>
+        <item>Sporée ocre à brune</item>
+        <item>Assez commun en été et en automne, sous feuillus ou conifères, en groupes le long des chemins et des fossés, dans les pelouses</item>
+    </string-array>
+    <string name="myco_hebeloma_note">Toxique : troubles digestifs, de légers à marqués (nausées, vomissements, diarrhée, crampes) (Wikipédia EN). La société allemande de mycologie range tout le genre Hebeloma parmi les champignons à syndrome gastro-intestinal, et le centre antipoison belge cite l’hébélome parmi les causes du syndrome résinoïdien léger : gastro-entérite modérée, moins de 3 heures après le repas, moins de 12 heures de durée. Le risque est la confusion avec des tricholomes (Wikipédia FR) : l’odeur de radis et les lames qui brunissent aident à le reconnaître.</string>
+
+    <!-- Pholiote du peuplier -->
+    <string name="myco_aegerita_name">Pholiote du peuplier</string>
+    <string name="myco_aegerita_alt">Poplar fieldcap</string>
+    <string-array name="myco_aegerita_traits">
+        <item>Chapeau charnu de 3 à 10 cm, convexe puis plat, lisse et soyeux, brun fauve chez le jeune puis beige à ocre pâle, plus clair vers la marge ; un peu craquelé vers le centre</item>
+        <item>Lames serrées, beige pâle puis brunâtres, adnées</item>
+        <item>Pied ferme, fibreux et plein, pâle puis brun roux, souvent courbe</item>
+        <item>Anneau ample, membraneux, blanc, persistant ; il prend la couleur du tabac sous les spores qui tombent</item>
+        <item>Chair blanchâtre · saveur de noisette, forte odeur fruitée de vieux fût</item>
+        <item>Sporée brun sale</item>
+        <item>En touffes au pied des arbres et sur le bois mort, surtout peupliers et saules, en automne</item>
+    </string-array>
+    <string name="myco_aegerita_note">Très bon comestible selon Wikipédia FR ; les listes de la société allemande de mycologie et des contrôleurs suisses le rangent sous le nom de Cyclocybe cylindracea (« pholiote du peuplier »). Wikipédia EN avertit qu’il ressemble à certaines espèces mortelles, sans les nommer, et que le genre est difficile à identifier.</string>
+
+    <!-- Chanterelle en tube -->
+    <string name="myco_tubaeformis_name">Chanterelle en tube</string>
+    <string name="myco_tubaeformis_alt">Winter chanterelle</string>
+    <string-array name="myco_tubaeformis_traits">
+        <item>Chapeau de 3 à 7 cm, convexe puis creusé en entonnoir, souvent percé au centre sur le pied creux ; brun à fauve, grisé ; marge enroulée chez le jeune puis ondulée</item>
+        <item>Dessous sans vraies lames : des plis gris ou jaune argenté, ramifiés et fourchus près du bord, qui descendent sur le pied</item>
+        <item>Pied de 3 à 12 cm, jaune vif, long, mince, sinueux et creux</item>
+        <item>Chair mince et jaunâtre, odeur faible</item>
+        <item>Sporée pâle (crème à rose orangé pâle)</item>
+        <item>Par groupes, souvent en files, dans les bois de feuillus ou mixtes, sur la mousse et la litière, près du bois très pourri · de la mi-automne aux premières gelées</item>
+    </string-array>
+    <string name="myco_tubaeformis_note">Comestible réputé, frais ou séché ; il est sur la liste de la société allemande de mycologie (« Trompeten-Pfifferling ») et sur celle des contrôleurs suisses. Il a des sosies comestibles (chanterelle jaune, chanterelle noircissante) ; la léotie lubrique, gélatineuse et dite suspecte, peut pousser à côté (Wikipédia FR).</string>
+
+    <!-- Vesse-de-loup géante -->
+    <string name="myco_gigantea_name">Vesse-de-loup géante</string>
+    <string name="myco_gigantea_alt">Giant puffball</string>
+    <string-array name="myco_gigantea_traits">
+        <item>Boule blanche sans pied, de 10 à 50 cm (jusqu’à 80), qui peut dépasser un ballon de football</item>
+        <item>Intérieur blanc pur et uniforme chez le jeune ; jaunâtre ou brun verdâtre en vieillissant</item>
+        <item>Jeune, odeur de farine fraîche</item>
+        <item>Spores blanches chez le jeune, olive à maturité</item>
+        <item>Prés riches en déjections de ruminants ou d’oiseaux, parfois en groupes, bois de feuillus · fin d’été et automne</item>
+    </string-array>
+    <string name="myco_gigantea_note">Seulement jeune, quand l’intérieur est blanc pur et uniforme : jaunâtre ou brun verdâtre, il peut donner des troubles digestifs (Wikipédia EN), et elle pourrit en quelques semaines. Elle est sur la liste de la société allemande de mycologie et sur celle des contrôleurs suisses. Wikipédia FR la dit capable de fixer des métaux lourds comme le mercure : pas en grande quantité. On la coupe en deux : un jeune œuf d’amanite montre déjà le futur chapeau et le pied, on le jette et on lave le couteau.</string>
 </resources>
