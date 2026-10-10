@@ -23,12 +23,13 @@ class BlackjackHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) :
             canvas.drawRoundRect(x, y, x + cw, y + ch, cw * .08f, cw * .08f, paint)
             paint.color = if (card.isRed) 0xFFB82C3A.toInt() else 0xFF192331.toInt()
             paint.typeface = Typeface.DEFAULT_BOLD
-            paint.textAlign = Paint.Align.LEFT
-            paint.textSize = cw * .30f
-            canvas.drawText(card.rankLabel, x + cw * .09f, y + cw * .34f, paint)
             paint.textAlign = Paint.Align.CENTER
-            paint.textSize = cw * .65f
-            canvas.drawText(card.suitSymbol, x + cw * .53f, y + ch * .76f, paint)
+            paint.textSize = if (card.rankLabel.length > 1) cw * .22f else cw * .26f
+            canvas.drawText(card.rankLabel, x + cw * .20f, y + cw * .30f, paint)
+            paint.textSize = cw * .19f
+            canvas.drawText(card.suitSymbol, x + cw * .20f, y + cw * .51f, paint)
+            paint.textSize = cw * .38f
+            canvas.drawText(card.suitSymbol, x + cw * .50f, y + ch * .50f - (paint.ascent() + paint.descent()) / 2f, paint)
             canvas.restoreToCount(save)
         }
         // Deux mains : blackjack naturel et dix + huit = dix-huit.

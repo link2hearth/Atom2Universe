@@ -40,8 +40,8 @@ class SolitaireHubTileDrawable(@Suppress("UNUSED_PARAMETER") context: Context) :
             paint.textSize = cw * .24f
             canvas.drawText(rank.label + suit.symbol, x + cw * .10f, y + cw * .27f, paint)
             paint.textAlign = Paint.Align.CENTER
-            paint.textSize = cw * .63f
-            canvas.drawText(suit.symbol, x + cw * .50f, y + ch * .69f, paint)
+            paint.textSize = cw * .38f
+            canvas.drawText(suit.symbol, x + cw * .50f, y + ch * .50f - (paint.ascent() + paint.descent()) / 2f, paint)
         }
         val ranks = arrayOf(Rank.NINE, Rank.EIGHT, Rank.SEVEN)
         // Trois colonnes de cartes alternées et une fondation à l'as.

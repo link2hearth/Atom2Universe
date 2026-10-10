@@ -15,8 +15,8 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.games.kit.KitPalette
 
 /**
- * Le dessin des cartes pour les jeux de cartes du kit : une face (indice en haut à gauche et en bas
- * à droite, grosse couleur au centre) et un dos (une des images de [CardBacks], tirée au hasard à
+ * Le dessin des cartes pour les jeux de cartes du kit : une face (indice en haut à gauche,
+ * symbole discret au centre) et un dos (une des images de [CardBacks], tirée au hasard à
  * chaque partie par [newBack]).
  *
  * Les couleurs viennent de la palette du thème : le papier est un blanc légèrement teinté par la
@@ -111,19 +111,14 @@ class CardPainter(
         val ink = inkOf(card.suit)
         val label = rankLabel(card)
         text.color = ink
-        // Indice en haut à gauche, puis le même en bas à droite, la tête en bas.
-        for (turn in 0..1) {
-            canvas.save()
-            if (turn == 1) canvas.rotate(180f, r.centerX(), r.centerY())
-            text.textSize = if (label.length > 1) w * 0.27f else w * 0.31f
-            canvas.drawText(label, r.left + w * 0.20f, r.top + w * 0.34f, text)
-            text.textSize = w * 0.27f
-            canvas.drawText(card.suit.symbol, r.left + w * 0.20f, r.top + w * 0.64f, text)
-            canvas.restore()
-        }
-        // La grosse couleur du centre.
-        text.textSize = if (card.rank == PlayingCard.ACE) w * 0.78f else w * 0.58f
-        canvas.drawText(card.suit.symbol, r.centerX(), r.centerY() - (text.ascent() + text.descent()) / 2f + w * 0.04f, text)
+        // Un seul indice, lisible dans les mains et les piles de cartes.
+        text.textSize = if (label.length > 1) w * 0.22f else w * 0.26f
+        canvas.drawText(label, r.left + w * 0.20f, r.top + w * 0.30f, text)
+        text.textSize = w * 0.19f
+        canvas.drawText(card.suit.symbol, r.left + w * 0.20f, r.top + w * 0.51f, text)
+        // Même taille pour toutes les hauteurs, y compris l'as et les figures.
+        text.textSize = w * 0.38f
+        canvas.drawText(card.suit.symbol, r.centerX(), r.centerY() - (text.ascent() + text.descent()) / 2f, text)
 
         if (dimmed) {
             fill.color = palette.withAlpha(palette.background, 0.55f)
