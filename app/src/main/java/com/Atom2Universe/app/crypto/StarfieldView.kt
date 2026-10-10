@@ -41,6 +41,12 @@ class StarfieldView @JvmOverloads constructor(
     }
     private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    fun useThemePalette() {
+        bgPaint.color = com.Atom2Universe.app.AppearanceStyle.color(context, com.Atom2Universe.app.R.attr.a2uBackgroundColor)
+        starPaint.color = com.Atom2Universe.app.AppearanceStyle.color(context, com.Atom2Universe.app.R.attr.a2uTextColor)
+        invalidate()
+    }
+
     private var stars: List<Star> = emptyList()
     private val shootingStars: MutableList<ShootingStar> = mutableListOf()
 

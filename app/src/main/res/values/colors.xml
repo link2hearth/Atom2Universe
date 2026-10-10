@@ -117,7 +117,7 @@
     <!-- ===== Couleurs migrées depuis Atom2Universe ===== -->
     <!-- Vert avec 30% opacité -->
     <color name="sudoku_background">#121212</color>
-    <color name="sudoku_grid_background">#1C1C1C</color>
+    <color name="sudoku_grid_background">@color/audio_surface</color>
     <color name="sudoku_cell_background">#252525</color>
     <color name="sudoku_cell_fixed_background">#3A3A3A</color>
     <color name="sudoku_cell_selected_background">#4A4A4A</color>
@@ -130,7 +130,6 @@
     <color name="sudoku_text_fixed">#FFFFFF</color>
     <color name="sudoku_text_user">#64B5F6</color>
     <color name="sudoku_text_error">#EF5350</color>
-    <color name="sudoku_number_1">#F0F4FF</color><!-- blanc -->
     <color name="sudoku_number_2">#F87171</color><!-- rouge lumineux -->
     <color name="sudoku_number_3">#FB923C</color><!-- orange lumineux -->
     <color name="sudoku_number_4">#FFCA28</color><!-- jaune (inchangé) -->
@@ -139,7 +138,7 @@
     <color name="sudoku_number_7">#60A5FA</color><!-- bleu lumineux -->
     <color name="sudoku_number_8">#C084FC</color><!-- violet lumineux -->
     <color name="sudoku_number_9">#22D3EE</color><!-- cyan lumineux -->
-    <color name="sudoku_pad_button_background">#2C2C2C</color>
+    <color name="sudoku_pad_button_background">@color/audio_surface_raised</color>
     <color name="sudoku_pad_button_selected">#1E88E5</color>
     <color name="sudoku_status_ok">#4CAF50</color>
     <color name="sudoku_status_error">#F44336</color>
@@ -148,7 +147,7 @@
     <color name="creative_hub_tile_zoom_canvas">#7E57C2</color>
     <color name="creative_hub_tile_notes">#FF9800</color>
     <color name="main_hub_tile_clicker_stats">#546E7A</color>
-    <color name="crypto_banner_background">#000000</color>
+    <color name="crypto_banner_background">@color/audio_surface</color>
     <color name="crypto_banner_arrow">#9CA3AF</color>
     <color name="crypto_widget_background">@color/audio_surface</color>
     <color name="crypto_widget_value">@color/audio_text_primary</color>

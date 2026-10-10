@@ -360,22 +360,20 @@ class SudokuActivity : ThemedActivity(), SudokuGridView.OnCellSelectedListener {
     }
 
     private fun updateNumberButtonsHighlight() {
+        val background = ContextCompat.getColor(this, R.color.sudoku_pad_button_background)
+        val selectedBackground = androidx.core.graphics.ColorUtils.blendARGB(
+            background, com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uMusicAccent), 0.20f)
         numberButtons.forEachIndexed { index, button ->
             val buttonNumber = index + 1
-            if (buttonNumber == selectedNumber) {
-                // Highlight selected number
-                button.setBackgroundColor(ContextCompat.getColor(this, R.color.sudoku_pad_button_selected))
-            } else {
-                // Reset to default
-                button.setBackgroundColor(ContextCompat.getColor(this, R.color.sudoku_pad_button_background))
-            }
+            androidx.core.view.ViewCompat.setBackgroundTintList(button, android.content.res.ColorStateList.valueOf(
+                if (buttonNumber == selectedNumber) selectedBackground else background))
         }
-        notesButton.setBackgroundColor(
-            ContextCompat.getColor(
-                this,
-                if (notesMode) R.color.sudoku_pad_button_selected else R.color.sudoku_pad_button_background
-            )
-        )
+        androidx.core.view.ViewCompat.setBackgroundTintList(notesButton, android.content.res.ColorStateList.valueOf(
+            if (notesMode) selectedBackground else background))
+        notesButton.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uTextColor))
+        (notesButton as? com.google.android.material.button.MaterialButton)?.strokeColor =
+            android.content.res.ColorStateList.valueOf(com.Atom2Universe.app.AppearanceStyle.color(
+                this, if (notesMode) R.attr.a2uMusicAccent else R.attr.a2uOutlineColor))
     }
 
     private fun onNotesClicked() {

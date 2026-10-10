@@ -11,6 +11,7 @@
     <attr name="a2uOnAccentColor" format="color" />
     <attr name="a2uRippleColor" format="color" />
     <attr name="a2uLightPalette" format="boolean" />
+    <attr name="a2uSudokuNumberOneColor" format="color" />
     <attr name="a2uMediaChromeBackground" format="reference|color" />
     <attr name="a2uScreenGradientCenter" format="float" />
     <attr name="a2uVisualizerBackgroundColor" format="color" />
@@ -28,6 +29,7 @@
         <item name="a2uOnAccentColor">#10141C</item>
         <item name="a2uRippleColor">#24FFFFFF</item>
         <item name="a2uLightPalette">false</item>
+        <item name="a2uSudokuNumberOneColor">#F0F4FF</item>
         <item name="a2uMediaChromeBackground">#80000000</item>
         <item name="a2uScreenGradientCenter">0.25</item>
         <item name="a2uVisualizerBackgroundColor">#000000</item>
@@ -48,6 +50,7 @@
     <style name="ThemeOverlay.A2U.Palette.Light" parent="">
         <item name="isLightTheme">true</item>
         <item name="a2uLightPalette">true</item>
+        <item name="a2uSudokuNumberOneColor">#000000</item>
         <item name="a2uBackgroundColor">#F4F5F7</item>
         <item name="a2uSurfaceColor">#FCFCFD</item>
         <item name="a2uRaisedColor">#E6E8EC</item>

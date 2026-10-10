@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="?attr/a2uScreenBackground">
 
     <!-- Contenu principal -->
     <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_height="52dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:background="#0D1226">
+            android:background="?attr/a2uSurfaceColor">
 
             <ImageButton
                 android:id="@+id/fusion_back"
@@ -25,7 +25,7 @@
                 android:layout_height="48dp"
                 android:src="@android:drawable/ic_menu_close_clear_cancel"
                 android:background="@android:color/transparent"
-                app:tint="#AAFFFFFF"
+                app:tint="?attr/a2uTextColor"
                 android:contentDescription="@string/back" />
 
             <TextView
@@ -34,7 +34,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/fusion_title"
-                android:textColor="#FFD700"
+                android:textColor="?attr/a2uMusicAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:fontFamily="monospace"
@@ -60,7 +60,7 @@
             android:gravity="center"
             android:paddingTop="6dp"
             android:paddingBottom="4dp"
-            android:background="#0A0A18">
+            android:background="?attr/a2uRaisedColor">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                     android:id="@+id/fusion_bonus_apc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF8822"
+                    android:textColor="?attr/a2uMusicAccent"
                     android:textSize="11sp"
                     android:fontFamily="monospace"
                     android:layout_marginEnd="20dp" />
@@ -81,7 +81,7 @@
                     android:id="@+id/fusion_bonus_aps"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#44AAFF"
+                    android:textColor="?attr/a2uMusicAccent"
                     android:textSize="11sp"
                     android:fontFamily="monospace" />
 
@@ -91,7 +91,7 @@
                 android:id="@+id/fusion_next_bonus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#55FFFFFF"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="10sp"
                 android:fontFamily="monospace"
                 android:layout_marginTop="2dp" />
@@ -121,7 +121,7 @@
         android:id="@+id/fusion_anim_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FF000000"
+        android:background="?attr/a2uBackgroundColor"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true">
@@ -162,7 +162,7 @@
                 android:id="@+id/fusion_result_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#CCFFFFFF"
+                android:textColor="?attr/a2uTextColor"
                 android:textSize="16sp"
                 android:fontFamily="monospace"
                 android:layout_marginTop="16dp"
@@ -174,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fusion_tap_continue"
-                android:textColor="#44FFFFFF"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="11sp"
                 android:fontFamily="monospace"
                 android:layout_marginTop="44dp"
@@ -187,12 +187,13 @@
             android:id="@+id/fusion_card_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FF000000"
+            android:background="?attr/a2uBackgroundColor"
             android:visibility="gone"
             android:clickable="true"
             android:focusable="true">
 
             <com.Atom2Universe.app.crypto.StarfieldView
+                android:id="@+id/fusion_starfield"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
@@ -211,7 +212,7 @@
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginBottom="48dp"
                 android:text="@string/fusion_tap_continue"
-                android:textColor="#44FFFFFF"
+                android:textColor="?attr/a2uSecondaryTextColor"
                 android:textSize="11sp"
                 android:fontFamily="monospace"
                 android:alpha="0" />

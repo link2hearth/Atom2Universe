@@ -217,7 +217,7 @@
                 android:textColor="@color/startup_text_primary"
                 android:alpha="0.35"
                 android:enabled="false"
-                app:strokeColor="@color/sudoku_border_thin" />
+                app:strokeColor="?attr/a2uOutlineColor" app:backgroundTint="@color/sudoku_pad_button_background" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pad_notes"
@@ -228,7 +228,7 @@
                 android:layout_marginHorizontal="4dp"
                 android:text="@string/sudoku_notes"
                 android:textColor="@color/startup_text_primary"
-                app:strokeColor="@color/sudoku_border_thin" />
+                app:strokeColor="?attr/a2uOutlineColor" app:backgroundTint="@color/sudoku_pad_button_background" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pad_clear"
@@ -239,7 +239,7 @@
                 android:layout_marginHorizontal="4dp"
                 android:text="@string/sudoku_clear"
                 android:textColor="@color/startup_text_primary"
-                app:strokeColor="@color/sudoku_border_thin" />
+                app:strokeColor="?attr/a2uOutlineColor" app:backgroundTint="@color/sudoku_pad_button_background" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/pad_validate"
@@ -250,7 +250,7 @@
                 android:layout_marginHorizontal="4dp"
                 android:text="@string/sudoku_validate"
                 android:textColor="@color/startup_text_primary"
-                app:strokeColor="@color/sudoku_border_thin" />
+                app:strokeColor="?attr/a2uOutlineColor" app:backgroundTint="@color/sudoku_pad_button_background" />
         </LinearLayout>
     </LinearLayout>
 

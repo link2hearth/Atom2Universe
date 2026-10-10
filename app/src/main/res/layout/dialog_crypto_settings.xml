@@ -41,7 +41,7 @@
             android:textSize="13sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
             android:id="@+id/settings_background_enabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,14 +108,14 @@
             android:valueTo="10"
             android:stepSize="1" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
             android:id="@+id/settings_image_center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/crypto_image_center_label" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
             android:id="@+id/settings_favorites_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,21 +138,21 @@
             android:textSize="13sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
             android:id="@+id/settings_keep_screen_on"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/crypto_keep_screen_on_label" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
             android:id="@+id/settings_status_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/crypto_show_status_bar_label" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
             android:id="@+id/settings_nav_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
             android:textSize="13sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.switchmaterial.SwitchMaterial android:textColor="?attr/a2uTextColor"
             android:id="@+id/settings_clicker_sound_enabled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

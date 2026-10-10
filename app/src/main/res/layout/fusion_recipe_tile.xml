@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#FFFFFF"
+            android:textColor="?attr/a2uTextColor"
             android:textSize="14sp"
             android:textStyle="bold"
             android:fontFamily="monospace" />
@@ -28,7 +28,7 @@
             android:id="@+id/tile_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#88FFFFFF"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="22sp"
             android:fontFamily="monospace" />
 
@@ -39,7 +39,7 @@
         android:id="@+id/tile_science"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#77FFFFFF"
+        android:textColor="?attr/a2uSecondaryTextColor"
         android:textSize="11sp"
         android:fontFamily="monospace"
         android:layout_marginTop="5dp" />
@@ -49,7 +49,7 @@
         android:id="@+id/tile_game_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFCC44"
+        android:textColor="?attr/a2uMusicAccent"
         android:textSize="12sp"
         android:fontFamily="monospace"
         android:layout_marginTop="8dp" />
@@ -67,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#66FFFFFF"
+            android:textColor="?attr/a2uSecondaryTextColor"
             android:textSize="11sp"
             android:fontFamily="monospace"
             android:visibility="gone" />
@@ -77,8 +77,8 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:textSize="12sp"
-            android:textColor="#000000"
-            android:backgroundTint="#FFD700"
+            android:textColor="?attr/a2uOnAccentColor"
+            android:backgroundTint="?attr/a2uMusicAccent"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:minWidth="0dp"
@@ -90,8 +90,8 @@
             android:layout_height="32dp"
             android:layout_marginStart="8dp"
             android:textSize="12sp"
-            android:textColor="#000000"
-            android:backgroundTint="#CC8800"
+            android:textColor="?attr/a2uOnAccentColor"
+            android:backgroundTint="?attr/a2uMusicAccent"
             android:text="@string/fusion_fuse_all_short"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"

@@ -33,7 +33,7 @@ class NewsWidgetView @JvmOverloads constructor(
     companion object {
         private const val ROTATE_INTERVAL_MS = 30_000L
         const val EXTRA_HIGHLIGHT_ID = "news_highlight_id"
-        private val BASE_CARD_COLOR = 0xFF0F172A.toInt()
+
     }
 
     private val cardView: MaterialCardView
@@ -201,7 +201,7 @@ class NewsWidgetView @JvmOverloads constructor(
 
     fun applyBackgroundOpacity(opacityPercent: Int) {
         val alpha = ((opacityPercent.coerceIn(0, 100) / 100f) * 255f).toInt().coerceIn(0, 255)
-        cardView.setCardBackgroundColor(ColorUtils.setAlphaComponent(BASE_CARD_COLOR, alpha))
+        cardView.setCardBackgroundColor(ColorUtils.setAlphaComponent(com.Atom2Universe.app.AppearanceStyle.color(context, R.attr.a2uSurfaceColor), alpha))
     }
 
     // ── Public ────────────────────────────────────────────────────────────────

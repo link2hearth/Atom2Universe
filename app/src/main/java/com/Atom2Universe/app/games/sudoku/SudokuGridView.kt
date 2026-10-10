@@ -74,65 +74,65 @@ class SudokuGridView @JvmOverloads constructor(
 
     private fun setupPaints() {
         cellBackgroundPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_cell_background)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_background)
             style = Paint.Style.FILL
         }
 
         fixedCellBackgroundPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_cell_fixed_background)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_fixed_background)
             style = Paint.Style.FILL
         }
 
         selectedCellBackgroundPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_cell_selected_background)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_selected_background)
             style = Paint.Style.FILL
         }
 
         relatedCellBackgroundPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_cell_related_background)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_related_background)
             style = Paint.Style.FILL
         }
 
         sameValueCellBackgroundPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_cell_same_value_background)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_same_value_background)
             style = Paint.Style.FILL
         }
 
         errorCellBackgroundPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_cell_error_background)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_error_background)
             style = Paint.Style.FILL
         }
 
         conflictCellBackgroundPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_cell_conflict_background)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_conflict_background)
             style = Paint.Style.FILL
         }
 
         thinBorderPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_border_thin)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_border_thin)
             style = Paint.Style.STROKE
             strokeWidth = 2f
         }
 
         thickBorderPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_border_thick)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_border_thick)
             style = Paint.Style.STROKE
             strokeWidth = 4f
         }
 
         fixedTextPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_text_fixed)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_text_fixed)
             textAlign = Paint.Align.CENTER
             isFakeBoldText = true
         }
 
         userTextPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_text_user)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_text_user)
             textAlign = Paint.Align.CENTER
         }
 
         errorTextPaint.apply {
-            color = ContextCompat.getColor(context, R.color.sudoku_text_error)
+            color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_text_error)
             textAlign = Paint.Align.CENTER
         }
 
@@ -143,16 +143,16 @@ class SudokuGridView @JvmOverloads constructor(
         }
 
         // Number colors (index 0 unused, 1-9 for digits)
-        numberColors[0] = ContextCompat.getColor(context, R.color.sudoku_text_user)
-        numberColors[1] = ContextCompat.getColor(context, R.color.sudoku_number_1)
-        numberColors[2] = ContextCompat.getColor(context, R.color.sudoku_number_2)
-        numberColors[3] = ContextCompat.getColor(context, R.color.sudoku_number_3)
-        numberColors[4] = ContextCompat.getColor(context, R.color.sudoku_number_4)
-        numberColors[5] = ContextCompat.getColor(context, R.color.sudoku_number_5)
-        numberColors[6] = ContextCompat.getColor(context, R.color.sudoku_number_6)
-        numberColors[7] = ContextCompat.getColor(context, R.color.sudoku_number_7)
-        numberColors[8] = ContextCompat.getColor(context, R.color.sudoku_number_8)
-        numberColors[9] = ContextCompat.getColor(context, R.color.sudoku_number_9)
+        numberColors[0] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_text_user)
+        numberColors[1] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_1)
+        numberColors[2] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_2)
+        numberColors[3] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_3)
+        numberColors[4] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_4)
+        numberColors[5] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_5)
+        numberColors[6] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_6)
+        numberColors[7] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_7)
+        numberColors[8] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_8)
+        numberColors[9] = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_9)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

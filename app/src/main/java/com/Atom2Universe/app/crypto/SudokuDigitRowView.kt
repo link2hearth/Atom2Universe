@@ -25,16 +25,16 @@ class SudokuDigitRowView @JvmOverloads constructor(
     private var rowWidth = 0f
 
     private val cellBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = ContextCompat.getColor(context, R.color.sudoku_cell_background)
+        color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_background)
         style = Paint.Style.FILL
     }
     private val thinBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = ContextCompat.getColor(context, R.color.sudoku_border_thin)
+        color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_border_thin)
         style = Paint.Style.STROKE
         strokeWidth = 2f
     }
     private val thickBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = ContextCompat.getColor(context, R.color.sudoku_border_thick)
+        color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_border_thick)
         style = Paint.Style.STROKE
         strokeWidth = 4f
     }
@@ -43,16 +43,16 @@ class SudokuDigitRowView @JvmOverloads constructor(
     private val digitPaints: Array<Paint> = Array(10) { i ->
         Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = when (i) {
-                1 -> ContextCompat.getColor(context, R.color.sudoku_number_1)
-                2 -> ContextCompat.getColor(context, R.color.sudoku_number_2)
-                3 -> ContextCompat.getColor(context, R.color.sudoku_number_3)
-                4 -> ContextCompat.getColor(context, R.color.sudoku_number_4)
-                5 -> ContextCompat.getColor(context, R.color.sudoku_number_5)
-                6 -> ContextCompat.getColor(context, R.color.sudoku_number_6)
-                7 -> ContextCompat.getColor(context, R.color.sudoku_number_7)
-                8 -> ContextCompat.getColor(context, R.color.sudoku_number_8)
-                9 -> ContextCompat.getColor(context, R.color.sudoku_number_9)
-                else -> ContextCompat.getColor(context, R.color.sudoku_text_user)
+                1 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_1)
+                2 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_2)
+                3 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_3)
+                4 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_4)
+                5 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_5)
+                6 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_6)
+                7 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_7)
+                8 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_8)
+                9 -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_number_9)
+                else -> com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_text_user)
             }
             textAlign = Paint.Align.CENTER
             isFakeBoldText = true
@@ -61,7 +61,7 @@ class SudokuDigitRowView @JvmOverloads constructor(
 
     // Fond de la cellule pressée
     private val pressedBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = ContextCompat.getColor(context, R.color.sudoku_cell_selected_background)
+        color = com.Atom2Universe.app.games.sudoku.SudokuPalette.color(context, R.color.sudoku_cell_selected_background)
         style = Paint.Style.FILL
     }
     private var pressedCol = -1

@@ -1070,6 +1070,7 @@ class MainClickerActivity : ThemedActivity(), com.Atom2Universe.app.util.SystemB
         }
         shopDialog = dialog
         dialog.show()
+        com.Atom2Universe.app.audio.AudioStyle.styleDialog(dialog)
     }
 
     // ── Popup atome sur clic critique ─────────────────────────────────────────

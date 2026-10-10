@@ -71,6 +71,7 @@ class FusionActivity : ThemedActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fusion)
         enableImmersiveMode()
+        findViewById<com.Atom2Universe.app.crypto.StarfieldView>(R.id.fusion_starfield).useThemePalette()
 
         fusionStore     = FusionStore(this)
         collectionStore = PeriodicCollectionStore(this)
@@ -147,6 +148,7 @@ class FusionActivity : ThemedActivity() {
     }
 
     private fun setupTile(tile: View, recipe: FusionRecipe) {
+        tile.background = com.Atom2Universe.app.audio.AudioStyle.panel(this, 8f)
         tile.tag = recipe.id
         tile.findViewById<TextView>(R.id.tile_name).text = getString(recipe.nameRes)
         tile.findViewById<TextView>(R.id.tile_science).text = getString(recipe.scienceRes)
@@ -447,7 +449,7 @@ class FusionActivity : ThemedActivity() {
                 "\n✨ " + getString(R.string.fusion_card_dropped, cardName)
             } else ""
             resultDetail.text = elementLine + cardLine
-            resultDetail.setTextColor(Color.WHITE)
+            resultDetail.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uTextColor))
 
             confettiView.visibility = View.VISIBLE
             confettiView.launch()
@@ -455,10 +457,10 @@ class FusionActivity : ThemedActivity() {
             soundEngine.playFail()
             rainbowAnimator?.cancel()
             resultTitle.text = getString(R.string.fusion_fail)
-            resultTitle.setTextColor(Color.WHITE)
+            resultTitle.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uTextColor))
             resultTitle.paint.shader = null
             resultDetail.text = getString(R.string.fusion_result_consumed)
-            resultDetail.setTextColor(Color.parseColor("#AAFFFFFF"))
+            resultDetail.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uSecondaryTextColor))
         }
 
         animateResultIn()
@@ -478,7 +480,7 @@ class FusionActivity : ThemedActivity() {
             soundEngine.playFail()
             rainbowAnimator?.cancel()
             resultTitle.text = getString(R.string.fusion_fail)
-            resultTitle.setTextColor(Color.WHITE)
+            resultTitle.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uTextColor))
             resultTitle.paint.shader = null
         }
 
@@ -487,7 +489,7 @@ class FusionActivity : ThemedActivity() {
             batchLine + "\n✨ " + getString(R.string.fusion_batch_cards_won, cardsWon)
         else
             batchLine
-        resultDetail.setTextColor(Color.WHITE)
+        resultDetail.setTextColor(com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uTextColor))
 
         animateResultIn()
     }
@@ -504,12 +506,18 @@ class FusionActivity : ThemedActivity() {
 
     // ── Rainbow titre ─────────────────────────────────────────────────────────
 
+    private fun themedEffectColor(color: Int): Int =
+        if (com.Atom2Universe.app.AppearanceStyle.isLight(this))
+            androidx.core.graphics.ColorUtils.blendARGB(
+                com.Atom2Universe.app.AppearanceStyle.color(this, R.attr.a2uTextColor), color, 0.25f)
+        else color
+
     private fun startRainbowText(tv: TextView) {
         rainbowAnimator?.cancel()
         tv.paint.shader = null
         tv.post {
             val w = tv.width.toFloat().coerceAtLeast(300f)
-            val shader = LinearGradient(0f, 0f, w, 0f, rainbowColors, null, Shader.TileMode.MIRROR)
+            val shader = LinearGradient(0f, 0f, w, 0f, rainbowColors.map { themedEffectColor(it) }.toIntArray(), null, Shader.TileMode.MIRROR)
             tv.paint.shader = shader
             tv.invalidate()
             rainbowAnimator = ValueAnimator.ofFloat(0f, w).apply {
