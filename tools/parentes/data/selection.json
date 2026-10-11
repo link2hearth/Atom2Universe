@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 1934,
+  "candidate_count": 2007,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -1680,6 +1680,14 @@
       "label_revision": 2539428426
     },
     {
+      "name": "Agaricus campestris",
+      "en": "Field mushroom",
+      "fr": "Rosé des prés",
+      "seed": false,
+      "id": "ott112640",
+      "ott": 112640
+    },
+    {
       "name": "Agaricus pilatianus",
       "en": "Agaricus pilatianus",
       "fr": "Agaricus pilatianus",
@@ -1689,6 +1697,22 @@
       "ott": 3819768,
       "label_qid": "Q80443",
       "label_revision": 2537702498
+    },
+    {
+      "name": "Agaricus silvicola",
+      "en": "Wood mushroom",
+      "fr": "Agaric sylvicole",
+      "seed": false,
+      "id": "ott223687",
+      "ott": 223687
+    },
+    {
+      "name": "Agaricus xanthodermus",
+      "en": "Yellow stainer",
+      "fr": "Agaric jaunissant",
+      "seed": false,
+      "id": "ott223689",
+      "ott": 223689
     },
     {
       "name": "Agathidium rumsfeldi",
@@ -2602,6 +2626,62 @@
       "ott": 1137,
       "label_qid": "Q76832",
       "label_revision": 2537669711
+    },
+    {
+      "name": "Amanita caesarea",
+      "en": "Caesar’s mushroom",
+      "fr": "Oronge",
+      "seed": false,
+      "id": "ott769441",
+      "ott": 769441
+    },
+    {
+      "name": "Amanita ovoidea",
+      "en": "Bearded amanita",
+      "fr": "Amanite ovoïde",
+      "seed": false,
+      "id": "ott3829603",
+      "ott": 3829603
+    },
+    {
+      "name": "Amanita pantherina",
+      "en": "Panther cap",
+      "fr": "Amanite panthère",
+      "seed": false,
+      "id": "ott1017036",
+      "ott": 1017036
+    },
+    {
+      "name": "Amanita phalloides",
+      "en": "Death cap",
+      "fr": "Amanite phalloïde",
+      "seed": false,
+      "id": "ott545199",
+      "ott": 545199
+    },
+    {
+      "name": "Amanita proxima",
+      "en": "Amanita proxima",
+      "fr": "Amanite à volve rousse",
+      "seed": false,
+      "id": "ott148314",
+      "ott": 148314
+    },
+    {
+      "name": "Amanita rubescens",
+      "en": "Blusher",
+      "fr": "Amanite rougissante",
+      "seed": false,
+      "id": "ott148310",
+      "ott": 148310
+    },
+    {
+      "name": "Amanita virosa",
+      "en": "Destroying angel",
+      "fr": "Amanite vireuse",
+      "seed": false,
+      "id": "ott2023",
+      "ott": 2023
     },
     {
       "name": "Amatitlania coatepeque",
@@ -3759,6 +3839,14 @@
       "label_revision": 2547634979
     },
     {
+      "name": "Armillaria mellea",
+      "en": "Honey fungus",
+      "fr": "Armillaire couleur de miel",
+      "seed": false,
+      "id": "ott1047949",
+      "ott": 1047949
+    },
+    {
       "name": "Armoracia rusticana",
       "en": "Armoracia rusticana",
       "fr": "raifort",
@@ -4375,6 +4463,22 @@
       "label_revision": 2538256526
     },
     {
+      "name": "Boletus badius",
+      "en": "Bay bolete",
+      "fr": "Bolet bai",
+      "seed": false,
+      "id": "ott1084588",
+      "ott": 1084588
+    },
+    {
+      "name": "Boletus calopus",
+      "en": "Bitter beech bolete",
+      "fr": "Bolet à beau pied",
+      "seed": false,
+      "id": "ott800233",
+      "ott": 800233
+    },
+    {
       "name": "Boletus edulis",
       "en": "Boletus edulis",
       "fr": "Boletus edulis",
@@ -4384,6 +4488,38 @@
       "ott": 110737,
       "label_qid": "Q19740",
       "label_revision": 2548362494
+    },
+    {
+      "name": "Boletus erythropus",
+      "en": "Dotted-stem bolete",
+      "fr": "Bolet à pied rouge",
+      "seed": false,
+      "id": "ott968416",
+      "ott": 968416
+    },
+    {
+      "name": "Boletus pinophilus",
+      "en": "Pine bolete",
+      "fr": "Cèpe des pins",
+      "seed": false,
+      "id": "ott940449",
+      "ott": 940449
+    },
+    {
+      "name": "Boletus reticulatus",
+      "en": "Summer bolete",
+      "fr": "Cèpe d’été",
+      "seed": false,
+      "id": "ott697639",
+      "ott": 697639
+    },
+    {
+      "name": "Boletus satanas",
+      "en": "Satan’s bolete",
+      "fr": "Bolet de Satan",
+      "seed": false,
+      "id": "ott111540",
+      "ott": 111540
     },
     {
       "name": "Bombycilla garrulus",
@@ -4837,6 +4973,14 @@
       "label_revision": 2534651300
     },
     {
+      "name": "Calocybe gambosa",
+      "en": "St George’s mushroom",
+      "fr": "Tricholome de la Saint-Georges",
+      "seed": false,
+      "id": "ott454828",
+      "ott": 454828
+    },
+    {
       "name": "Calponia harrisonfordi",
       "en": "Calponia harrisonfordi",
       "fr": "Calponia harrisonfordi",
@@ -4846,6 +4990,14 @@
       "ott": 3575006,
       "label_qid": "Q135223",
       "label_revision": 2549714154
+    },
+    {
+      "name": "Calvatia gigantea",
+      "en": "Giant puffball",
+      "fr": "Vesse-de-loup géante",
+      "seed": false,
+      "id": "ott735797",
+      "ott": 735797
     },
     {
       "name": "Calymma communimacula",
@@ -4934,6 +5086,14 @@
       "ott": 84004,
       "label_qid": "Q26726",
       "label_revision": 2548728268
+    },
+    {
+      "name": "Cantharellus cibarius",
+      "en": "Chanterelle",
+      "fr": "Girolle",
+      "seed": false,
+      "id": "ott321275",
+      "ott": 321275
     },
     {
       "name": "Caprimulgus europaeus",
@@ -5508,6 +5668,22 @@
       "label_revision": 2547831634
     },
     {
+      "name": "Chlorophyllum brunneum",
+      "en": "Shaggy parasol (C. brunneum)",
+      "fr": "Lépiote des jardins",
+      "seed": false,
+      "id": "ott949907",
+      "ott": 949907
+    },
+    {
+      "name": "Chlorophyllum rachodes",
+      "en": "Shaggy parasol (C. rhacodes)",
+      "fr": "Lépiote déguenillée",
+      "seed": false,
+      "id": "ott484264",
+      "ott": 484264
+    },
+    {
       "name": "Chondrocladia lyra",
       "en": "Chondrocladia lyra",
       "fr": "Chondrocladia lyra",
@@ -5761,6 +5937,30 @@
       "label_revision": 2551362302
     },
     {
+      "name": "Clitocybe nebularis",
+      "en": "Clouded agaric",
+      "fr": "Clitocybe nébuleux",
+      "seed": false,
+      "id": "ott909208",
+      "ott": 909208
+    },
+    {
+      "name": "Clitocybe rivulosa",
+      "en": "Fool’s funnel",
+      "fr": "Clitocybe blanchi",
+      "seed": false,
+      "id": "ott5306429",
+      "ott": 5306429
+    },
+    {
+      "name": "Clitopilus prunulus",
+      "en": "The miller",
+      "fr": "Clitopile petite prune",
+      "seed": false,
+      "id": "ott438742",
+      "ott": 438742
+    },
+    {
       "name": "Clivia miniata",
       "en": "Clivia miniata",
       "fr": "Clivia miniata",
@@ -6003,6 +6203,22 @@
       "label_revision": 2541583197
     },
     {
+      "name": "Coprinopsis atramentaria",
+      "en": "Common ink cap",
+      "fr": "Coprin noir d’encre",
+      "seed": false,
+      "id": "ott363316",
+      "ott": 363316
+    },
+    {
+      "name": "Coprinus comatus",
+      "en": "Shaggy ink cap",
+      "fr": "Coprin chevelu",
+      "seed": false,
+      "id": "ott789172",
+      "ott": 789172
+    },
+    {
       "name": "Coregonus migratorius",
       "en": "omul",
       "fr": "Omoul",
@@ -6034,6 +6250,14 @@
       "ott": 7051277,
       "label_qid": "Q31492",
       "label_revision": 2455992924
+    },
+    {
+      "name": "Cortinarius orellanus",
+      "en": "Fool’s webcap",
+      "fr": "Cortinaire des montagnes",
+      "seed": false,
+      "id": "ott825113",
+      "ott": 825113
     },
     {
       "name": "Corvus cornix",
@@ -6155,6 +6379,22 @@
       "ott": 497498,
       "label_qid": "Q27765",
       "label_revision": 2537859605
+    },
+    {
+      "name": "Craterellus cornucopioides",
+      "en": "Horn of plenty",
+      "fr": "Trompette de la mort",
+      "seed": false,
+      "id": "ott194353",
+      "ott": 194353
+    },
+    {
+      "name": "Craterellus tubaeformis",
+      "en": "Winter chanterelle",
+      "fr": "Chanterelle en tube",
+      "seed": false,
+      "id": "ott183999",
+      "ott": 183999
     },
     {
       "name": "Crenicara latruncularium",
@@ -6463,6 +6703,14 @@
       "ott": 797308,
       "label_qid": "Q46552",
       "label_revision": 2516790055
+    },
+    {
+      "name": "Cyclocybe aegerita",
+      "en": "Poplar fieldcap",
+      "fr": "Pholiote du peuplier",
+      "seed": false,
+      "id": "ott7523923",
+      "ott": 7523923
     },
     {
       "name": "Cygnus columbianus",
@@ -7488,6 +7736,14 @@
       "label_revision": 2535304819
     },
     {
+      "name": "Entoloma sinuatum",
+      "en": "Livid pinkgill",
+      "fr": "Entolome livide",
+      "seed": false,
+      "id": "ott174906",
+      "ott": 174906
+    },
+    {
       "name": "Epipactis atrorubens",
       "en": "dark red helleborine",
       "fr": "Épipactis pourpre noirâtre",
@@ -8060,6 +8316,22 @@
       "label_revision": 2553108523
     },
     {
+      "name": "Fistulina hepatica",
+      "en": "Beefsteak fungus",
+      "fr": "Langue de bœuf",
+      "seed": false,
+      "id": "ott1044751",
+      "ott": 1044751
+    },
+    {
+      "name": "Flammulina velutipes",
+      "en": "Velvet foot",
+      "fr": "Collybie à pied velouté",
+      "seed": false,
+      "id": "ott189792",
+      "ott": 189792
+    },
+    {
       "name": "Fragaria iturupensis",
       "en": "Fragaria iturupensis",
       "fr": "Fragaria iturupensis",
@@ -8201,6 +8473,14 @@
       "ott": 207745,
       "label_qid": "Q26982",
       "label_revision": 2548445157
+    },
+    {
+      "name": "Galerina marginata",
+      "en": "Funeral bell",
+      "fr": "Galère marginée",
+      "seed": false,
+      "id": "ott666161",
+      "ott": 666161
     },
     {
       "name": "Galeus melastomus",
@@ -8632,6 +8912,14 @@
       "label_revision": 2537710648
     },
     {
+      "name": "Gymnopilus junonius",
+      "en": "Spectacular rustgill",
+      "fr": "Gymnopile remarquable",
+      "seed": false,
+      "id": "ott112257",
+      "ott": 112257
+    },
+    {
       "name": "Gymnopilus pseudofulgens",
       "en": "Gymnopilus pseudofulgens",
       "fr": "Gymnopilus pseudofulgens",
@@ -8775,6 +9063,14 @@
       "label_revision": 2534489107
     },
     {
+      "name": "Gyromitra esculenta",
+      "en": "False morel",
+      "fr": "Gyromitre",
+      "seed": false,
+      "id": "ott369457",
+      "ott": 369457
+    },
+    {
       "name": "Haematopus ostralegus",
       "en": "Eurasian Oystercatcher",
       "fr": "Huîtrier pie",
@@ -8883,6 +9179,14 @@
       "ott": 561817,
       "label_qid": "Q143705",
       "label_revision": 2517959022
+    },
+    {
+      "name": "Hebeloma crustuliniforme",
+      "en": "Poison pie",
+      "fr": "Hébélome échaudé",
+      "seed": false,
+      "id": "ott433926",
+      "ott": 433926
     },
     {
       "name": "Hedera helix",
@@ -9325,6 +9629,14 @@
       "label_revision": 2550174289
     },
     {
+      "name": "Hygrophoropsis aurantiaca",
+      "en": "False chanterelle",
+      "fr": "Fausse girolle",
+      "seed": false,
+      "id": "ott600646",
+      "ott": 600646
+    },
+    {
       "name": "Hygrophorus penarioides",
       "en": "Hygrophorus penarioides",
       "fr": "Hygrophorus penarioides",
@@ -9444,6 +9756,22 @@
       "ott": 550248,
       "label_qid": "Q144151",
       "label_revision": 2517959518
+    },
+    {
+      "name": "Hypholoma capnoides",
+      "en": "Conifer tuft",
+      "fr": "Hypholome à lames enfumées",
+      "seed": false,
+      "id": "ott898969",
+      "ott": 898969
+    },
+    {
+      "name": "Hypholoma fasciculare",
+      "en": "Sulphur tuft",
+      "fr": "Hypholome en touffe",
+      "seed": false,
+      "id": "ott600624",
+      "ott": 600624
     },
     {
       "name": "Hypomecis roboraria",
@@ -9567,6 +9895,14 @@
       "label_revision": 2547600395
     },
     {
+      "name": "Infundibulicybe geotropa",
+      "en": "Trooping funnel",
+      "fr": "Clitocybe géotrope",
+      "seed": false,
+      "id": "ott1072220",
+      "ott": 1072220
+    },
+    {
       "name": "Ingerophrynus gollum",
       "en": "Ingerophrynus gollum",
       "fr": "Ingerophrynus gollum",
@@ -9587,6 +9923,14 @@
       "ott": 530522,
       "label_qid": "Q76852",
       "label_revision": 2537638188
+    },
+    {
+      "name": "Inocybe erubescens",
+      "en": "Red-staining inocybe",
+      "fr": "Inocybe de Patouillard",
+      "seed": false,
+      "id": "ott1027647",
+      "ott": 1027647
     },
     {
       "name": "Inocybe tricolor",
@@ -9842,6 +10186,14 @@
       "label_revision": 2550171696
     },
     {
+      "name": "Kuehneromyces mutabilis",
+      "en": "Sheathed woodtuft",
+      "fr": "Pholiote changeante",
+      "seed": false,
+      "id": "ott595686",
+      "ott": 595686
+    },
+    {
       "name": "Labeo altivelis",
       "en": "Rednose Labeo",
       "fr": "Labeo altivelis",
@@ -9895,6 +10247,22 @@
       "ott": 874760,
       "label_qid": "Q144246",
       "label_revision": 2517960041
+    },
+    {
+      "name": "Laccaria amethystina",
+      "en": "Amethyst deceiver",
+      "fr": "Laccaire améthyste",
+      "seed": false,
+      "id": "ott646438",
+      "ott": 646438
+    },
+    {
+      "name": "Lactarius deliciosus",
+      "en": "Saffron milk cap",
+      "fr": "Lactaire délicieux",
+      "seed": false,
+      "id": "ott54236",
+      "ott": 54236
     },
     {
       "name": "Lactarius fennoscandicus",
@@ -10016,6 +10384,14 @@
       "ott": 795508,
       "label_qid": "Q3767",
       "label_revision": 2517810276
+    },
+    {
+      "name": "Laetiporus sulphureus",
+      "en": "Sulphur polypore",
+      "fr": "Polypore soufré",
+      "seed": false,
+      "id": "ott343979",
+      "ott": 343979
     },
     {
       "name": "Lagopus leucura",
@@ -10249,6 +10625,14 @@
       "label_revision": 2517911389
     },
     {
+      "name": "Lepiota brunneoincarnata",
+      "en": "Deadly parasol",
+      "fr": "Lépiote brun-incarnat",
+      "seed": false,
+      "id": "ott191818",
+      "ott": 191818
+    },
+    {
       "name": "Lepisma saccharina",
       "en": "silverfish",
       "fr": "Poisson d'argent",
@@ -10258,6 +10642,14 @@
       "ott": 845486,
       "label_qid": "Q26842",
       "label_revision": 2550878636
+    },
+    {
+      "name": "Lepista nuda",
+      "en": "Wood blewit",
+      "fr": "Pied bleu",
+      "seed": false,
+      "id": "ott1080645",
+      "ott": 1080645
     },
     {
       "name": "Leptinotarsa decemlineata",
@@ -10898,6 +11290,14 @@
       "label_revision": 2536476773
     },
     {
+      "name": "Lycoperdon perlatum",
+      "en": "Common puffball",
+      "fr": "Vesse-de-loup perlée",
+      "seed": false,
+      "id": "ott397715",
+      "ott": 397715
+    },
+    {
       "name": "Lymnocryptes minimus",
       "en": "Jack Snipe",
       "fr": "Bécassine sourde",
@@ -11030,6 +11430,14 @@
       "label_revision": 2539420428
     },
     {
+      "name": "Macrolepiota procera",
+      "en": "Parasol",
+      "fr": "Coulemelle",
+      "seed": false,
+      "id": "ott789177",
+      "ott": 789177
+    },
+    {
       "name": "Macrophyllum macrophyllum",
       "en": "Long-legged Bat",
       "fr": "Macrophyllum macrophyllum",
@@ -11105,6 +11513,14 @@
       "ott": 1000929,
       "label_qid": "Q143884",
       "label_revision": 2517958467
+    },
+    {
+      "name": "Marasmius oreades",
+      "en": "Fairy ring champignon",
+      "fr": "Faux mousseron",
+      "seed": false,
+      "id": "ott351351",
+      "ott": 351351
     },
     {
       "name": "Martes foina",
@@ -11635,6 +12051,14 @@
       "label_revision": 2517970098
     },
     {
+      "name": "Morchella esculenta",
+      "en": "Yellow morel",
+      "fr": "Morille jaune",
+      "seed": false,
+      "id": "ott186590",
+      "ott": 186590
+    },
+    {
       "name": "Morpho rhetenor",
       "en": "Morpho rhetenor",
       "fr": "Morpho rhetenor",
@@ -11809,6 +12233,14 @@
       "ott": 7366,
       "label_qid": "Q20958",
       "label_revision": 2537194739
+    },
+    {
+      "name": "Mycena pura",
+      "en": "Lilac bonnet",
+      "fr": "Mycène pur",
+      "seed": false,
+      "id": "ott314982",
+      "ott": 314982
     },
     {
       "name": "Mycobacterium tuberculosis",
@@ -12502,6 +12934,14 @@
       "ott": 23729,
       "label_qid": "Q37083",
       "label_revision": 2550495309
+    },
+    {
+      "name": "Omphalotus olearius",
+      "en": "Jack-o’-lantern",
+      "fr": "Clitocybe de l’olivier",
+      "seed": false,
+      "id": "ott834580",
+      "ott": 834580
     },
     {
       "name": "Ondatra zibethicus",
@@ -13294,6 +13734,14 @@
       "ott": 5852651,
       "label_qid": "Q148559",
       "label_revision": 2551131181
+    },
+    {
+      "name": "Paxillus involutus",
+      "en": "Brown roll-rim",
+      "fr": "Paxille enroulé",
+      "seed": false,
+      "id": "ott92696",
+      "ott": 92696
     },
     {
       "name": "Peganum harmala",
@@ -14110,6 +14558,14 @@
       "label_revision": 2533786536
     },
     {
+      "name": "Pleurocybella porrigens",
+      "en": "Angel wing",
+      "fr": "Pleurote en oreille",
+      "seed": false,
+      "id": "ott388480",
+      "ott": 388480
+    },
+    {
       "name": "Pleuronectes platessa",
       "en": "Pleuronectes platessa",
       "fr": "Pleuronectes platessa",
@@ -14119,6 +14575,14 @@
       "ott": 408337,
       "label_qid": "Q27098",
       "label_revision": 2531932901
+    },
+    {
+      "name": "Pleurotus ostreatus",
+      "en": "Oyster mushroom",
+      "fr": "Pleurote en huître",
+      "seed": false,
+      "id": "ott581149",
+      "ott": 581149
     },
     {
       "name": "Plocosperma buxifolium",
@@ -15551,6 +16015,14 @@
       "label_revision": 2517911222
     },
     {
+      "name": "Ramaria formosa",
+      "en": "Beautiful clavaria",
+      "fr": "Clavaire jolie",
+      "seed": false,
+      "id": "ott514463",
+      "ott": 514463
+    },
+    {
       "name": "Ramphastos sulfuratus",
       "en": "Keel-billed Toucan",
       "fr": "Toucan à carène",
@@ -16090,6 +16562,22 @@
       "label_revision": 2537479624
     },
     {
+      "name": "Russula cyanoxantha",
+      "en": "Charcoal burner",
+      "fr": "Russule charbonnière",
+      "seed": false,
+      "id": "ott611410",
+      "ott": 611410
+    },
+    {
+      "name": "Russula emetica",
+      "en": "The sickener",
+      "fr": "Russule émétique",
+      "seed": false,
+      "id": "ott760929",
+      "ott": 760929
+    },
+    {
       "name": "Russula laricina",
       "en": "Russula laricina",
       "fr": "Russula laricina",
@@ -16123,6 +16611,14 @@
       "label_revision": 2537479606
     },
     {
+      "name": "Russula olivacea",
+      "en": "Olive brittlegill",
+      "fr": "Russule olivacée",
+      "seed": false,
+      "id": "ott237552",
+      "ott": 237552
+    },
+    {
       "name": "Russula pallidospora",
       "en": "Russula pallidospora",
       "fr": "Russula pallidospora",
@@ -16154,6 +16650,14 @@
       "ott": 5299281,
       "label_qid": "Q80699",
       "label_revision": 2537479623
+    },
+    {
+      "name": "Russula virescens",
+      "en": "Green-cracking russula",
+      "fr": "Russule verdoyante",
+      "seed": false,
+      "id": "ott186286",
+      "ott": 186286
     },
     {
       "name": "Ruta graveolens",
@@ -16275,6 +16779,14 @@
       "ott": 842209,
       "label_qid": "Q156841",
       "label_revision": 2547599113
+    },
+    {
+      "name": "Sarcodon imbricatus",
+      "en": "Shingled hedgehog",
+      "fr": "Hydne imbriqué",
+      "seed": false,
+      "id": "ott788387",
+      "ott": 788387
     },
     {
       "name": "Satanoperca mapiritensis",
@@ -16528,6 +17040,14 @@
       "ott": 3943536,
       "label_qid": "Q146081",
       "label_revision": 2535932860
+    },
+    {
+      "name": "Scleroderma citrinum",
+      "en": "Common earthball",
+      "fr": "Scléroderme commun",
+      "seed": false,
+      "id": "ott989758",
+      "ott": 989758
     },
     {
       "name": "Scleronycteris ega",
@@ -17476,6 +17996,14 @@
       "label_revision": 2517439668
     },
     {
+      "name": "Suillus granulatus",
+      "en": "Granulated bolete",
+      "fr": "Bolet granulé",
+      "seed": false,
+      "id": "ott773527",
+      "ott": 773527
+    },
+    {
       "name": "Sula granti",
       "en": "Nazca Booby",
       "fr": "Fou de Grant",
@@ -18268,6 +18796,38 @@
       "label_revision": 2535370812
     },
     {
+      "name": "Tricholoma columbetta",
+      "en": "Dove-coloured tricholoma",
+      "fr": "Tricholome colombette",
+      "seed": false,
+      "id": "ott704126",
+      "ott": 704126
+    },
+    {
+      "name": "Tricholoma equestre",
+      "en": "Man on horseback",
+      "fr": "Tricholome équestre",
+      "seed": false,
+      "id": "ott382612",
+      "ott": 382612
+    },
+    {
+      "name": "Tricholoma pardinum",
+      "en": "Tiger tricholoma",
+      "fr": "Tricholome tigré",
+      "seed": false,
+      "id": "ott431741",
+      "ott": 431741
+    },
+    {
+      "name": "Tricholoma terreum",
+      "en": "Grey knight",
+      "fr": "Tricholome terreux",
+      "seed": false,
+      "id": "ott382617",
+      "ott": 382617
+    },
+    {
       "name": "Trichopteryx carpinata",
       "en": "Trichopteryx carpinata",
       "fr": "phalène du charme",
@@ -18686,6 +19246,14 @@
       "label_revision": 2516789962
     },
     {
+      "name": "Tylopilus felleus",
+      "en": "Bitter bolete",
+      "fr": "Bolet amer",
+      "seed": false,
+      "id": "ott646170",
+      "ott": 646170
+    },
+    {
       "name": "Tympanuchus cupido",
       "en": "Greater Prairie Chicken",
       "fr": "Tétras des prairies",
@@ -19080,6 +19648,14 @@
       "ott": 917049,
       "label_qid": "Q18856",
       "label_revision": 2541676750
+    },
+    {
+      "name": "Xerocomellus chrysenteron",
+      "en": "Red-cracking bolete",
+      "fr": "Bolet à chair jaune",
+      "seed": false,
+      "id": "ott3835402",
+      "ott": 3835402
     },
     {
       "name": "Xysticus lanio",
@@ -19667,6 +20243,10 @@
     },
     {
       "name": "Koolasuchus cleelandi",
+      "reason": "No unique accepted species in synthesis"
+    },
+    {
+      "name": "Lactarius torminosus",
       "reason": "No unique accepted species in synthesis"
     },
     {

@@ -443,10 +443,25 @@
       "qid": "Q141143"
     },
     {
+      "name": "Agaricus campestris",
+      "en": "Field mushroom",
+      "fr": "Rosé des prés"
+    },
+    {
       "name": "Agaricus pilatianus",
       "en": "Agaricus pilatianus",
       "fr": "Agaricus pilatianus",
       "qid": "Q80443"
+    },
+    {
+      "name": "Agaricus silvicola",
+      "en": "Wood mushroom",
+      "fr": "Agaric sylvicole"
+    },
+    {
+      "name": "Agaricus xanthodermus",
+      "en": "Yellow stainer",
+      "fr": "Agaric jaunissant"
     },
     {
       "name": "Agathidium rumsfeldi",
@@ -981,6 +996,46 @@
       "en": "Amanita beckeri",
       "fr": "Amanita beckeri",
       "qid": "Q76832"
+    },
+    {
+      "name": "Amanita caesarea",
+      "en": "Caesar’s mushroom",
+      "fr": "Oronge"
+    },
+    {
+      "name": "Amanita muscaria",
+      "en": "Fly agaric",
+      "fr": "Amanite tue-mouches"
+    },
+    {
+      "name": "Amanita ovoidea",
+      "en": "Bearded amanita",
+      "fr": "Amanite ovoïde"
+    },
+    {
+      "name": "Amanita pantherina",
+      "en": "Panther cap",
+      "fr": "Amanite panthère"
+    },
+    {
+      "name": "Amanita phalloides",
+      "en": "Death cap",
+      "fr": "Amanite phalloïde"
+    },
+    {
+      "name": "Amanita proxima",
+      "en": "Amanita proxima",
+      "fr": "Amanite à volve rousse"
+    },
+    {
+      "name": "Amanita rubescens",
+      "en": "Blusher",
+      "fr": "Amanite rougissante"
+    },
+    {
+      "name": "Amanita virosa",
+      "en": "Destroying angel",
+      "fr": "Amanite vireuse"
     },
     {
       "name": "Amatitlania coatepeque",
@@ -1739,6 +1794,11 @@
       "qid": "Q21036"
     },
     {
+      "name": "Armillaria mellea",
+      "en": "Honey fungus",
+      "fr": "Armillaire couleur de miel"
+    },
+    {
       "name": "Armoracia rusticana",
       "en": "Armoracia rusticana",
       "fr": "raifort",
@@ -2147,10 +2207,40 @@
       "qid": "Q20869"
     },
     {
+      "name": "Boletus badius",
+      "en": "Bay bolete",
+      "fr": "Bolet bai"
+    },
+    {
+      "name": "Boletus calopus",
+      "en": "Bitter beech bolete",
+      "fr": "Bolet à beau pied"
+    },
+    {
       "name": "Boletus edulis",
       "en": "Boletus edulis",
       "fr": "Boletus edulis",
       "qid": "Q19740"
+    },
+    {
+      "name": "Boletus erythropus",
+      "en": "Dotted-stem bolete",
+      "fr": "Bolet à pied rouge"
+    },
+    {
+      "name": "Boletus pinophilus",
+      "en": "Pine bolete",
+      "fr": "Cèpe des pins"
+    },
+    {
+      "name": "Boletus reticulatus",
+      "en": "Summer bolete",
+      "fr": "Cèpe d’été"
+    },
+    {
+      "name": "Boletus satanas",
+      "en": "Satan’s bolete",
+      "fr": "Bolet de Satan"
     },
     {
       "name": "Bombycilla garrulus",
@@ -2417,10 +2507,20 @@
       "qid": "Q141100"
     },
     {
+      "name": "Calocybe gambosa",
+      "en": "St George’s mushroom",
+      "fr": "Tricholome de la Saint-Georges"
+    },
+    {
       "name": "Calponia harrisonfordi",
       "en": "Calponia harrisonfordi",
       "fr": "Calponia harrisonfordi",
       "qid": "Q135223"
+    },
+    {
+      "name": "Calvatia gigantea",
+      "en": "Giant puffball",
+      "fr": "Vesse-de-loup géante"
     },
     {
       "name": "Calymma communimacula",
@@ -2481,6 +2581,11 @@
       "en": "Cannabis sativa",
       "fr": "chanvre cultivé",
       "qid": "Q26726"
+    },
+    {
+      "name": "Cantharellus cibarius",
+      "en": "Chanterelle",
+      "fr": "Girolle"
     },
     {
       "name": "Caprimulgus europaeus",
@@ -2831,6 +2936,16 @@
       "qid": "Q129036"
     },
     {
+      "name": "Chlorophyllum brunneum",
+      "en": "Shaggy parasol (C. brunneum)",
+      "fr": "Lépiote des jardins"
+    },
+    {
+      "name": "Chlorophyllum rachodes",
+      "en": "Shaggy parasol (C. rhacodes)",
+      "fr": "Lépiote déguenillée"
+    },
+    {
       "name": "Chondrocladia lyra",
       "en": "Chondrocladia lyra",
       "fr": "Chondrocladia lyra",
@@ -2999,6 +3114,21 @@
       "qid": "Q46156"
     },
     {
+      "name": "Clitocybe nebularis",
+      "en": "Clouded agaric",
+      "fr": "Clitocybe nébuleux"
+    },
+    {
+      "name": "Clitocybe rivulosa",
+      "en": "Fool’s funnel",
+      "fr": "Clitocybe blanchi"
+    },
+    {
+      "name": "Clitopilus prunulus",
+      "en": "The miller",
+      "fr": "Clitopile petite prune"
+    },
+    {
       "name": "Clivia miniata",
       "en": "Clivia miniata",
       "fr": "Clivia miniata",
@@ -3131,6 +3261,16 @@
       "qid": "Q101711"
     },
     {
+      "name": "Coprinopsis atramentaria",
+      "en": "Common ink cap",
+      "fr": "Coprin noir d’encre"
+    },
+    {
+      "name": "Coprinus comatus",
+      "en": "Shaggy ink cap",
+      "fr": "Coprin chevelu"
+    },
+    {
       "name": "Coregonus migratorius",
       "en": "omul",
       "fr": "Omoul",
@@ -3147,6 +3287,11 @@
       "en": "Coronidium boormanii",
       "fr": "Coronidium boormanii",
       "qid": "Q31492"
+    },
+    {
+      "name": "Cortinarius orellanus",
+      "en": "Fool’s webcap",
+      "fr": "Cortinaire des montagnes"
     },
     {
       "name": "Corvus corax",
@@ -3225,6 +3370,16 @@
       "en": "Crassostrea gigas",
       "fr": "Magallana gigas",
       "qid": "Q20857"
+    },
+    {
+      "name": "Craterellus cornucopioides",
+      "en": "Horn of plenty",
+      "fr": "Trompette de la mort"
+    },
+    {
+      "name": "Craterellus tubaeformis",
+      "en": "Winter chanterelle",
+      "fr": "Chanterelle en tube"
     },
     {
       "name": "Crenicara latruncularium",
@@ -3411,6 +3566,11 @@
       "en": "Cyclocheilichthys enoplos",
       "fr": "Cyclocheilichthys enoplus",
       "qid": "Q46552"
+    },
+    {
+      "name": "Cyclocybe aegerita",
+      "en": "Poplar fieldcap",
+      "fr": "Pholiote du peuplier"
     },
     {
       "name": "Cygnus columbianus",
@@ -4043,6 +4203,11 @@
       "qid": "Q135127"
     },
     {
+      "name": "Entoloma sinuatum",
+      "en": "Livid pinkgill",
+      "fr": "Entolome livide"
+    },
+    {
       "name": "Epipactis atrorubens",
       "en": "dark red helleborine",
       "fr": "Épipactis pourpre noirâtre",
@@ -4385,6 +4550,16 @@
       "qid": "Q148961"
     },
     {
+      "name": "Fistulina hepatica",
+      "en": "Beefsteak fungus",
+      "fr": "Langue de bœuf"
+    },
+    {
+      "name": "Flammulina velutipes",
+      "en": "Velvet foot",
+      "fr": "Collybie à pied velouté"
+    },
+    {
       "name": "Fragaria iturupensis",
       "en": "Fragaria iturupensis",
       "fr": "Fragaria iturupensis",
@@ -4467,6 +4642,11 @@
       "en": "Crested Lark",
       "fr": "Cochevis huppé",
       "qid": "Q26982"
+    },
+    {
+      "name": "Galerina marginata",
+      "en": "Funeral bell",
+      "fr": "Galère marginée"
     },
     {
       "name": "Galeus melastomus",
@@ -4703,6 +4883,11 @@
       "qid": "Q80613"
     },
     {
+      "name": "Gymnopilus junonius",
+      "en": "Spectacular rustgill",
+      "fr": "Gymnopile remarquable"
+    },
+    {
       "name": "Gymnopilus pseudofulgens",
       "en": "Gymnopilus pseudofulgens",
       "fr": "Gymnopilus pseudofulgens",
@@ -4829,6 +5014,11 @@
       "qid": "Q38693"
     },
     {
+      "name": "Gyromitra esculenta",
+      "en": "False morel",
+      "fr": "Gyromitre"
+    },
+    {
       "name": "Haematopus ostralegus",
       "en": "Eurasian Oystercatcher",
       "fr": "Huîtrier pie",
@@ -4893,6 +5083,11 @@
       "en": "Hatiora salicornoides",
       "fr": "Hatiora salicornioides",
       "qid": "Q135188"
+    },
+    {
+      "name": "Hebeloma crustuliniforme",
+      "en": "Poison pie",
+      "fr": "Hébélome échaudé"
     },
     {
       "name": "Hedera helix",
@@ -5219,6 +5414,11 @@
       "qid": "Q27129"
     },
     {
+      "name": "Hygrophoropsis aurantiaca",
+      "en": "False chanterelle",
+      "fr": "Fausse girolle"
+    },
+    {
       "name": "Hygrophorus penarioides",
       "en": "Hygrophorus penarioides",
       "fr": "Hygrophorus penarioides",
@@ -5289,6 +5489,16 @@
       "en": "Hyperprosopon argenteum",
       "fr": "Hyperprosopon argenteum",
       "qid": "Q144151"
+    },
+    {
+      "name": "Hypholoma capnoides",
+      "en": "Conifer tuft",
+      "fr": "Hypholome à lames enfumées"
+    },
+    {
+      "name": "Hypholoma fasciculare",
+      "en": "Sulphur tuft",
+      "fr": "Hypholome en touffe"
     },
     {
       "name": "Hypomecis roboraria",
@@ -5375,6 +5585,11 @@
       "qid": "Q27019"
     },
     {
+      "name": "Infundibulicybe geotropa",
+      "en": "Trooping funnel",
+      "fr": "Clitocybe géotrope"
+    },
+    {
       "name": "Ingerophrynus gollum",
       "en": "Ingerophrynus gollum",
       "fr": "Ingerophrynus gollum",
@@ -5385,6 +5600,11 @@
       "en": "Inocybe aeruginascens",
       "fr": "Inocybe aeruginascens",
       "qid": "Q76852"
+    },
+    {
+      "name": "Inocybe erubescens",
+      "en": "Red-staining inocybe",
+      "fr": "Inocybe de Patouillard"
     },
     {
       "name": "Inocybe tricolor",
@@ -5573,6 +5793,11 @@
       "qid": "Q132690"
     },
     {
+      "name": "Kuehneromyces mutabilis",
+      "en": "Sheathed woodtuft",
+      "fr": "Pholiote changeante"
+    },
+    {
       "name": "Labeo altivelis",
       "en": "Rednose Labeo",
       "fr": "Labeo altivelis",
@@ -5603,6 +5828,16 @@
       "qid": "Q144246"
     },
     {
+      "name": "Laccaria amethystina",
+      "en": "Amethyst deceiver",
+      "fr": "Laccaire améthyste"
+    },
+    {
+      "name": "Lactarius deliciosus",
+      "en": "Saffron milk cap",
+      "fr": "Lactaire délicieux"
+    },
+    {
       "name": "Lactarius fennoscandicus",
       "en": "Lactarius fennoscandicus",
       "fr": "Lactarius fennoscandicus",
@@ -5631,6 +5866,11 @@
       "en": "Lactarius torminosulus",
       "fr": "Lactarius torminosulus",
       "qid": "Q80677"
+    },
+    {
+      "name": "Lactarius torminosus",
+      "en": "Woolly milkcap",
+      "fr": "Lactaire à toison"
     },
     {
       "name": "Lactarius turpis",
@@ -5667,6 +5907,11 @@
       "en": "Laetacara curviceps",
       "fr": "Laetacara curviceps",
       "qid": "Q3767"
+    },
+    {
+      "name": "Laetiporus sulphureus",
+      "en": "Sulphur polypore",
+      "fr": "Polypore soufré"
     },
     {
       "name": "Lagopus leucura",
@@ -5807,10 +6052,20 @@
       "qid": "Q140019"
     },
     {
+      "name": "Lepiota brunneoincarnata",
+      "en": "Deadly parasol",
+      "fr": "Lépiote brun-incarnat"
+    },
+    {
       "name": "Lepisma saccharina",
       "en": "silverfish",
       "fr": "Poisson d'argent",
       "qid": "Q26842"
+    },
+    {
+      "name": "Lepista nuda",
+      "en": "Wood blewit",
+      "fr": "Pied bleu"
     },
     {
       "name": "Leptinotarsa decemlineata",
@@ -6203,6 +6458,11 @@
       "qid": "Q148951"
     },
     {
+      "name": "Lycoperdon perlatum",
+      "en": "Common puffball",
+      "fr": "Vesse-de-loup perlée"
+    },
+    {
       "name": "Lycus trabeatus",
       "en": "Lycus trabeatus",
       "fr": "Lycus trabeatus",
@@ -6281,6 +6541,11 @@
       "qid": "Q146026"
     },
     {
+      "name": "Macrolepiota procera",
+      "en": "Parasol",
+      "fr": "Coulemelle"
+    },
+    {
       "name": "Macrophyllum macrophyllum",
       "en": "Long-legged Bat",
       "fr": "Macrophyllum macrophyllum",
@@ -6327,6 +6592,11 @@
       "en": "Manduca florestan",
       "fr": "Manduca florestan",
       "qid": "Q143884"
+    },
+    {
+      "name": "Marasmius oreades",
+      "en": "Fairy ring champignon",
+      "fr": "Faux mousseron"
     },
     {
       "name": "Martes foina",
@@ -6641,6 +6911,11 @@
       "qid": "Q146458"
     },
     {
+      "name": "Morchella esculenta",
+      "en": "Yellow morel",
+      "fr": "Morille jaune"
+    },
+    {
       "name": "Morpho rhetenor",
       "en": "Morpho rhetenor",
       "fr": "Morpho rhetenor",
@@ -6741,6 +7016,11 @@
       "en": "ʻĀmaui",
       "fr": "Myadestes woahensis",
       "qid": "Q26660"
+    },
+    {
+      "name": "Mycena pura",
+      "en": "Lilac bonnet",
+      "fr": "Mycène pur"
     },
     {
       "name": "Mycobacterium bovis",
@@ -7161,6 +7441,11 @@
       "en": "Olea europaea",
       "fr": "olivier européen",
       "qid": "Q37083"
+    },
+    {
+      "name": "Omphalotus olearius",
+      "en": "Jack-o’-lantern",
+      "fr": "Clitocybe de l’olivier"
     },
     {
       "name": "Ondatra zibethicus",
@@ -7629,6 +7914,11 @@
       "en": "Edented Sulawesi Rat",
       "fr": "Paucidentomys vermidax",
       "qid": "Q148559"
+    },
+    {
+      "name": "Paxillus involutus",
+      "en": "Brown roll-rim",
+      "fr": "Paxille enroulé"
     },
     {
       "name": "Peganum harmala",
@@ -8135,10 +8425,20 @@
       "qid": "Q98884"
     },
     {
+      "name": "Pleurocybella porrigens",
+      "en": "Angel wing",
+      "fr": "Pleurote en oreille"
+    },
+    {
       "name": "Pleuronectes platessa",
       "en": "Pleuronectes platessa",
       "fr": "Pleuronectes platessa",
       "qid": "Q27098"
+    },
+    {
+      "name": "Pleurotus ostreatus",
+      "en": "Oyster mushroom",
+      "fr": "Pleurote en huître"
     },
     {
       "name": "Plocosperma buxifolium",
@@ -8951,6 +9251,11 @@
       "qid": "Q140132"
     },
     {
+      "name": "Ramaria formosa",
+      "en": "Beautiful clavaria",
+      "fr": "Clavaire jolie"
+    },
+    {
       "name": "Ramphastos sulfuratus",
       "en": "Keel-billed Toucan",
       "fr": "Toucan à carène",
@@ -9269,6 +9574,16 @@
       "qid": "Q80697"
     },
     {
+      "name": "Russula cyanoxantha",
+      "en": "Charcoal burner",
+      "fr": "Russule charbonnière"
+    },
+    {
+      "name": "Russula emetica",
+      "en": "The sickener",
+      "fr": "Russule émétique"
+    },
+    {
       "name": "Russula grisescens",
       "en": "Russula grisescens",
       "fr": "Russula grisescens",
@@ -9293,6 +9608,11 @@
       "qid": "Q80590"
     },
     {
+      "name": "Russula olivacea",
+      "en": "Olive brittlegill",
+      "fr": "Russule olivacée"
+    },
+    {
       "name": "Russula pallidospora",
       "en": "Russula pallidospora",
       "fr": "Russula pallidospora",
@@ -9309,6 +9629,11 @@
       "en": "Russula rhodopus",
       "fr": "Russula rhodopus",
       "qid": "Q80699"
+    },
+    {
+      "name": "Russula virescens",
+      "en": "Green-cracking russula",
+      "fr": "Russule verdoyante"
     },
     {
       "name": "Ruta graveolens",
@@ -9399,6 +9724,11 @@
       "en": "Saponaria officinalis",
       "fr": "Saponaire officinale",
       "qid": "Q156841"
+    },
+    {
+      "name": "Sarcodon imbricatus",
+      "en": "Shingled hedgehog",
+      "fr": "Hydne imbriqué"
     },
     {
       "name": "Sarcophilus harrisii",
@@ -9561,6 +9891,11 @@
       "en": "Mesa Verde cactus",
       "fr": "Sclerocactus mesae-verdae",
       "qid": "Q146081"
+    },
+    {
+      "name": "Scleroderma citrinum",
+      "en": "Common earthball",
+      "fr": "Scléroderme commun"
     },
     {
       "name": "Scleronycteris ega",
@@ -10103,6 +10438,11 @@
       "qid": "Q133090"
     },
     {
+      "name": "Suillus granulatus",
+      "en": "Granulated bolete",
+      "fr": "Bolet granulé"
+    },
+    {
       "name": "Sula granti",
       "en": "Nazca Booby",
       "fr": "Fou de Grant",
@@ -10583,10 +10923,30 @@
       "qid": "Q25599"
     },
     {
+      "name": "Tricholoma columbetta",
+      "en": "Dove-coloured tricholoma",
+      "fr": "Tricholome colombette"
+    },
+    {
+      "name": "Tricholoma equestre",
+      "en": "Man on horseback",
+      "fr": "Tricholome équestre"
+    },
+    {
+      "name": "Tricholoma pardinum",
+      "en": "Tiger tricholoma",
+      "fr": "Tricholome tigré"
+    },
+    {
       "name": "Tricholoma terraria",
       "en": "Tricholoma terreum",
       "fr": "Tricholoma terreum",
       "qid": "Q27266"
+    },
+    {
+      "name": "Tricholoma terreum",
+      "en": "Grey knight",
+      "fr": "Tricholome terreux"
     },
     {
       "name": "Trichopteryx carpinata",
@@ -10835,6 +11195,11 @@
       "qid": "Q46858"
     },
     {
+      "name": "Tylopilus felleus",
+      "en": "Bitter bolete",
+      "fr": "Bolet amer"
+    },
+    {
       "name": "Tympanuchus cupido",
       "en": "Greater Prairie Chicken",
       "fr": "Tétras des prairies",
@@ -11067,6 +11432,11 @@
       "en": "Terek Sandpiper",
       "fr": "Chevalier bargette",
       "qid": "Q18856"
+    },
+    {
+      "name": "Xerocomellus chrysenteron",
+      "en": "Red-cracking bolete",
+      "fr": "Bolet à chair jaune"
     },
     {
       "name": "Xysticus lanio",
