@@ -124274,6 +124274,29 @@
       "requested_node_id": "ott769441"
     },
     {
+      "id": "ott1067404",
+      "parent": "ott75256",
+      "scientific": "Amanita citrina",
+      "ott": 1067404,
+      "tax_sources": [
+        "if:205574",
+        "ncbi:67700",
+        "ncbi:235526",
+        "ncbi:235538",
+        "ncbi:67701",
+        "gbif:3328320",
+        "gbif:9655343",
+        "irmng:11117664"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1067404"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_1067404",
+      "requested_node_id": "ott1067404"
+    },
+    {
       "id": "ott3829603",
       "parent": "ott75256",
       "scientific": "Amanita ovoidea",
@@ -124397,6 +124420,25 @@
       "species": true,
       "key": "pt_species_148310",
       "requested_node_id": "ott148310"
+    },
+    {
+      "id": "ott627302",
+      "parent": "ott75256",
+      "scientific": "Amanita verna",
+      "ott": 627302,
+      "tax_sources": [
+        "if:163667",
+        "ncbi:112270",
+        "gbif:5240320",
+        "irmng:10379372"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott627302"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_627302",
+      "requested_node_id": "ott627302"
     },
     {
       "id": "ott2023",
@@ -191347,6 +191389,26 @@
       "species": false
     },
     {
+      "id": "ott324707",
+      "parent": "ott4102611",
+      "scientific": "Cortinarius rubellus",
+      "ott": 324707,
+      "tax_sources": [
+        "if:166839",
+        "ncbi:86073",
+        "ncbi:181881",
+        "ncbi:183889",
+        "irmng:11055982"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott324707"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_324707",
+      "requested_node_id": "ott324707"
+    },
+    {
       "id": "ott597020",
       "parent": "mrcaott501241ott597018",
       "scientific": "Corvus cornix",
@@ -241136,6 +241198,25 @@
       "species": false
     },
     {
+      "id": "ott489303",
+      "parent": "mrcaott5864ott7040",
+      "scientific": "Inocybe geophylla",
+      "ott": 489303,
+      "tax_sources": [
+        "if:192709",
+        "ncbi:71955",
+        "ncbi:71954",
+        "gbif:3330851"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott489303"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_489303",
+      "requested_node_id": "ott489303"
+    },
+    {
       "id": "ott251423",
       "parent": "mrcaott5864ott7040",
       "scientific": "Inocybe tricolor",
@@ -247655,6 +247736,25 @@
       },
       "conflicts_with": {},
       "species": false
+    },
+    {
+      "id": "ott163805",
+      "parent": "ott294447",
+      "scientific": "Lepiota subincarnata",
+      "ott": 163805,
+      "tax_sources": [
+        "if:299506",
+        "ncbi:56170",
+        "gbif:2535445",
+        "irmng:11206451"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott163805"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_163805",
+      "requested_node_id": "ott163805"
     },
     {
       "id": "ott845486",
@@ -326868,25 +326968,60 @@
       "requested_node_id": "ott431741"
     },
     {
-      "id": "ott382617",
-      "parent": "mrcaott154549ott382617",
-      "scientific": "Tricholoma terreum",
-      "ott": 382617,
+      "id": "ott718297",
+      "parent": "mrcaott718300ott7524131",
+      "scientific": "Tricholoma sulphureum",
+      "ott": 718297,
       "tax_sources": [
-        "if:216171",
-        "ncbi:76328",
-        "ncbi:54549",
-        "ncbi:176012",
-        "gbif:5241808",
-        "irmng:10668221"
+        "if:227491",
+        "ncbi:181718",
+        "ncbi:1779456",
+        "gbif:3324436",
+        "irmng:10388873"
       ],
       "supported_by": {
-        "ott3.7draft3": "ott382617"
+        "ott3.7draft3": "ott718297"
       },
       "conflicts_with": {},
       "species": true,
-      "key": "pt_species_382617",
-      "requested_node_id": "ott382617"
+      "key": "pt_species_718297",
+      "requested_node_id": "ott718297"
+    },
+    {
+      "id": "mrcaott718300ott7524131",
+      "parent": "mrcaott154549ott718300",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1100@tree1": "node526"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott154549ott718300",
+      "parent": "mrcaott154549ott805917",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1100@tree1": "node522"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott154549ott805917",
+      "parent": "mrcaott154549ott382617",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1100@tree1": "node521"
+      },
+      "conflicts_with": {},
+      "species": false
     },
     {
       "id": "mrcaott154549ott382617",
@@ -326919,6 +327054,27 @@
         ]
       },
       "species": false
+    },
+    {
+      "id": "ott382617",
+      "parent": "mrcaott154549ott382617",
+      "scientific": "Tricholoma terreum",
+      "ott": 382617,
+      "tax_sources": [
+        "if:216171",
+        "ncbi:76328",
+        "ncbi:54549",
+        "ncbi:176012",
+        "gbif:5241808",
+        "irmng:10668221"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott382617"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_382617",
+      "requested_node_id": "ott382617"
     },
     {
       "id": "ott540269",

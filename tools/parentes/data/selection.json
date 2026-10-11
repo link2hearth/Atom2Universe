@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2007,
+  "candidate_count": 2013,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -2636,6 +2636,14 @@
       "ott": 769441
     },
     {
+      "name": "Amanita citrina",
+      "en": "False death cap",
+      "fr": "Amanite citrine",
+      "seed": false,
+      "id": "ott1067404",
+      "ott": 1067404
+    },
+    {
       "name": "Amanita ovoidea",
       "en": "Bearded amanita",
       "fr": "Amanite ovoïde",
@@ -2674,6 +2682,14 @@
       "seed": false,
       "id": "ott148310",
       "ott": 148310
+    },
+    {
+      "name": "Amanita verna",
+      "en": "Fool’s mushroom",
+      "fr": "Amanite printanière",
+      "seed": false,
+      "id": "ott627302",
+      "ott": 627302
     },
     {
       "name": "Amanita virosa",
@@ -6258,6 +6274,14 @@
       "seed": false,
       "id": "ott825113",
       "ott": 825113
+    },
+    {
+      "name": "Cortinarius rubellus",
+      "en": "Deadly webcap",
+      "fr": "Cortinaire très élégant",
+      "seed": false,
+      "id": "ott324707",
+      "ott": 324707
     },
     {
       "name": "Corvus cornix",
@@ -9933,6 +9957,14 @@
       "ott": 1027647
     },
     {
+      "name": "Inocybe geophylla",
+      "en": "Common white inocybe",
+      "fr": "Inocybe à lames couleur de terre",
+      "seed": false,
+      "id": "ott489303",
+      "ott": 489303
+    },
+    {
       "name": "Inocybe tricolor",
       "en": "Inocybe tricolor",
       "fr": "Inocybe tricolor",
@@ -10631,6 +10663,14 @@
       "seed": false,
       "id": "ott191818",
       "ott": 191818
+    },
+    {
+      "name": "Lepiota subincarnata",
+      "en": "Fatal dapperling",
+      "fr": "Lépiote de Josserand",
+      "seed": false,
+      "id": "ott163805",
+      "ott": 163805
     },
     {
       "name": "Lepisma saccharina",
@@ -18818,6 +18858,14 @@
       "seed": false,
       "id": "ott431741",
       "ott": 431741
+    },
+    {
+      "name": "Tricholoma sulphureum",
+      "en": "Sulphur knight",
+      "fr": "Tricholome soufré",
+      "seed": false,
+      "id": "ott718297",
+      "ott": 718297
     },
     {
       "name": "Tricholoma terreum",

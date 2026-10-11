@@ -1003,6 +1003,11 @@
       "fr": "Oronge"
     },
     {
+      "name": "Amanita citrina",
+      "en": "False death cap",
+      "fr": "Amanite citrine"
+    },
+    {
       "name": "Amanita muscaria",
       "en": "Fly agaric",
       "fr": "Amanite tue-mouches"
@@ -1031,6 +1036,11 @@
       "name": "Amanita rubescens",
       "en": "Blusher",
       "fr": "Amanite rougissante"
+    },
+    {
+      "name": "Amanita verna",
+      "en": "Fool’s mushroom",
+      "fr": "Amanite printanière"
     },
     {
       "name": "Amanita virosa",
@@ -3292,6 +3302,11 @@
       "name": "Cortinarius orellanus",
       "en": "Fool’s webcap",
       "fr": "Cortinaire des montagnes"
+    },
+    {
+      "name": "Cortinarius rubellus",
+      "en": "Deadly webcap",
+      "fr": "Cortinaire très élégant"
     },
     {
       "name": "Corvus corax",
@@ -5607,6 +5622,11 @@
       "fr": "Inocybe de Patouillard"
     },
     {
+      "name": "Inocybe geophylla",
+      "en": "Common white inocybe",
+      "fr": "Inocybe à lames couleur de terre"
+    },
+    {
       "name": "Inocybe tricolor",
       "en": "Inocybe tricolor",
       "fr": "Inocybe tricolor",
@@ -6055,6 +6075,11 @@
       "name": "Lepiota brunneoincarnata",
       "en": "Deadly parasol",
       "fr": "Lépiote brun-incarnat"
+    },
+    {
+      "name": "Lepiota subincarnata",
+      "en": "Fatal dapperling",
+      "fr": "Lépiote de Josserand"
     },
     {
       "name": "Lepisma saccharina",
@@ -10936,6 +10961,11 @@
       "name": "Tricholoma pardinum",
       "en": "Tiger tricholoma",
       "fr": "Tricholome tigré"
+    },
+    {
+      "name": "Tricholoma sulphureum",
+      "en": "Sulphur knight",
+      "fr": "Tricholome soufré"
     },
     {
       "name": "Tricholoma terraria",
