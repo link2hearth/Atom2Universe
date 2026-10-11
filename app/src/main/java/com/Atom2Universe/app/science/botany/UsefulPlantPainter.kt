@@ -149,7 +149,13 @@ internal class UsefulPlantPainter(private val c:Canvas,private val species:Plant
         val x=cos(angle).toFloat()*r;val y=sin(angle).toFloat()*r
         b.line(x*.37f,y*.37f,x,y,0xffbfa66a.toInt(),1.2f)
         b.at(x,y,(angle*180/PI).toFloat()) {
-            oval(-1.6f,0f,2.1f,3.8f,0xffd5b746.toInt());oval(1.6f,0f,2.1f,3.8f,0xffd5b746.toInt())
+            if(avocado) {
+                // Persea has four pollen sacs/valves, unlike the two-celled Laurus anther.
+                for(side in listOf(-1,1))for(row in listOf(-1,1))
+                    oval(side*1.8f,row*2.2f,1.8f,2.1f,0xffd5b746.toInt())
+            } else {
+                oval(-1.6f,0f,2.1f,3.8f,0xffd5b746.toInt());oval(1.6f,0f,2.1f,3.8f,0xffd5b746.toInt())
+            }
         }
         if(glands)for(s in listOf(-1,1)) {
             val dx=-sin(angle).toFloat()*5*s;val dy=cos(angle).toFloat()*5*s
@@ -185,7 +191,12 @@ internal class UsefulPlantPainter(private val c:Canvas,private val species:Plant
             bay -> if(female) {
                 oval(0f,1f,9f,11f,green);b.line(0f,0f,0f,-18f,green,2f);oval(0f,-18f,4f,3f,green)
                 repeat(4){i->b.at(0f,0f,i*90f){oval(0f,-25f,2f,6f,0xffc6b26b.toInt())}}
-            } else repeat(12){stamen(2*PI*it/12,if(it%2==0)31f else 22f,true)}
+            } else {
+                // Flora of China: three whorls of four; outer filaments lack glands.
+                repeat(3){whorl->repeat(4){i->
+                    stamen(i*PI/2+whorl*PI/6,35f-whorl*8f,glands=whorl>0)
+                }}
+            }
             else -> {
                 repeat(if(tea)58 else 46){i->stamen(i*2.39996,17f+sqrt(i.toFloat())*2.2f)}
                 b.line(0f,4f,0f,-17f,green,2f)

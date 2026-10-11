@@ -15,6 +15,12 @@ import com.Atom2Universe.app.R
  */
 object BotanyCatalog {
     val collections = listOf(
+        PlantCollection("meadow_flowers",R.string.bot_collection_meadow_flowers,R.string.bot_collection_meadow_flowers_desc),
+        PlantCollection("hedgerow_diversity",R.string.bot_collection_hedgerow_diversity,R.string.bot_collection_hedgerow_diversity_desc),
+        PlantCollection("monocot_forms",R.string.bot_collection_monocot_forms,R.string.bot_collection_monocot_forms_desc),
+        PlantCollection("woody_fruits",R.string.bot_collection_woody_fruits,R.string.bot_collection_woody_fruits_desc),
+        PlantCollection("aromatics",R.string.bot_collection_aromatics,R.string.bot_collection_aromatics_desc),
+        PlantCollection("crop_diversity",R.string.bot_collection_crop_diversity,R.string.bot_collection_crop_diversity_desc),
         PlantCollection("useful_plants", R.string.bot_collection_useful_plants, R.string.bot_collection_useful_plants_desc),
         PlantCollection("food_crops", R.string.bot_collection_food_crops, R.string.bot_collection_food_crops_desc),
         PlantCollection("orchard", R.string.bot_collection_orchard, R.string.bot_collection_orchard_desc),
@@ -30,6 +36,16 @@ object BotanyCatalog {
         PlantSection("herbs", R.string.bot_section_herbs, R.string.bot_section_herbs_desc),
     )
     val families = listOf(
+        PlantFamily("Asphodelaceae",R.string.bot_family_Asphodelaceae,R.string.bot_family_Asphodelaceae_desc,R.string.bot_family_Asphodelaceae_aliases),
+        PlantFamily("Bromeliaceae",R.string.bot_family_Bromeliaceae,R.string.bot_family_Bromeliaceae_desc,R.string.bot_family_Bromeliaceae_aliases),
+        PlantFamily("Musaceae",R.string.bot_family_Musaceae,R.string.bot_family_Musaceae_desc,R.string.bot_family_Musaceae_aliases),
+        PlantFamily("Zingiberaceae",R.string.bot_family_Zingiberaceae,R.string.bot_family_Zingiberaceae_desc,R.string.bot_family_Zingiberaceae_aliases),
+        PlantFamily("Arecaceae",R.string.bot_family_Arecaceae,R.string.bot_family_Arecaceae_desc,R.string.bot_family_Arecaceae_aliases),
+        PlantFamily("Asparagaceae",R.string.bot_family_Asparagaceae,R.string.bot_family_Asparagaceae_desc,R.string.bot_family_Asparagaceae_aliases),
+        PlantFamily("Juglandaceae",R.string.bot_family_Juglandaceae,R.string.bot_family_Juglandaceae_desc,R.string.bot_family_Juglandaceae_aliases),
+        PlantFamily("Moraceae",R.string.bot_family_Moraceae,R.string.bot_family_Moraceae_desc,R.string.bot_family_Moraceae_aliases),
+        PlantFamily("Grossulariaceae",R.string.bot_family_Grossulariaceae,R.string.bot_family_Grossulariaceae_desc,R.string.bot_family_Grossulariaceae_aliases),
+
         PlantFamily("Theaceae", R.string.bot_family_Theaceae, R.string.bot_family_Theaceae_desc, R.string.bot_family_Theaceae_aliases),
         PlantFamily("Lythraceae", R.string.bot_family_Lythraceae, R.string.bot_family_Lythraceae_desc, R.string.bot_family_Lythraceae_aliases),
         PlantFamily("Lauraceae", R.string.bot_family_Lauraceae, R.string.bot_family_Lauraceae_desc, R.string.bot_family_Lauraceae_aliases),
@@ -78,11 +94,19 @@ object BotanyCatalog {
         PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
         PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
     val groups = listOf(
+        PlantGroup("palate_spur",R.string.bot_group_palate_spur,listOf("antirrhinum_majus","linaria_vulgaris","ajuga_reptans"),R.string.bot_group_palate_spur_desc),
+        PlantGroup("dispersal_appendages",R.string.bot_group_dispersal_appendages,listOf("pulsatilla_pratensis","tussilago_farfara","agrimonia_eupatoria","medicago_minima"),R.string.bot_group_dispersal_appendages_desc),
+        PlantGroup("storage_axes",R.string.bot_group_storage_axes,listOf("bowiea_volubilis","zingiber_officinale","clivia_miniata","musa_acuminata"),R.string.bot_group_storage_axes_desc),
+        PlantGroup("palm_fruits",R.string.bot_group_palm_fruits,listOf("cocos_nucifera","phoenix_dactylifera","areca_catechu"),R.string.bot_group_palm_fruits_desc),
+        PlantGroup("fruit_origins",R.string.bot_group_fruit_origins,listOf("pyrus_communis","ananas_comosus","ficus_carica","juniperus_communis"),R.string.bot_group_fruit_origins_desc),
+        PlantGroup("allium_organs",R.string.bot_group_allium_organs,listOf("allium_sativum","allium_ursinum","allium_fistulosum","allium_ampeloprasum"),R.string.bot_group_allium_organs_desc),
+        PlantGroup("cereal_spikelets",R.string.bot_group_cereal_spikelets,listOf("avena_sativa","hordeum_vulgare","secale_cereale"),R.string.bot_group_cereal_spikelets_desc),
+        PlantGroup("brassica_fruits",R.string.bot_group_brassica_fruits,listOf("brassica_rapa","sinapis_alba","raphanus_raphanistrum","nasturtium_officinale"),R.string.bot_group_brassica_fruits_desc),
         PlantGroup("useful_organs", R.string.bot_group_useful_organs, listOf("camellia_sinensis","gossypium_hirsutum","punica_granatum","persea_americana","laurus_nobilis"), R.string.bot_group_useful_organs_desc),
         PlantGroup("food_organs", R.string.bot_group_food_organs, listOf("allium_cepa","brassica_oleracea","cucumis_sativus","glycine_max","arachis"), R.string.bot_group_food_organs_desc),
         PlantGroup("orchard_fruits", R.string.bot_group_orchard, listOf("olea","coffea","persica","armeniaca","citrus_maxima"), R.string.bot_group_orchard_desc),
@@ -120,6 +144,19 @@ object BotanyCatalog {
         PlantGroup("heads", R.string.bot_group_heads, listOf("leucanthemum","matricaria","cichorium"), R.string.bot_group_heads_desc),
     )
     val sources = listOf(
+        BotanySource("rhs",R.string.bot_source_rhs,"https://www.rhs.org.uk/plants"),
+        BotanySource("wfo",R.string.bot_source_wfo,"https://www.worldfloraonline.org/"),
+        BotanySource("botanycz",R.string.bot_source_botanycz,"https://botany.cz/"),
+        BotanySource("plantnet",R.string.bot_source_plantnet,"https://plantnet.rbgsyd.nsw.gov.au/"),
+        BotanySource("euforgen",R.string.bot_source_euforgen,"https://www.euforgen.org/"),
+        BotanySource("nzpcn",R.string.bot_source_nzpcn,"https://www.nzpcn.org.nz/"),
+
+        BotanySource("nparks",R.string.bot_source_nparks,"https://www.nparks.gov.sg/florafaunaweb"),
+        BotanySource("oxford",R.string.bot_source_oxford,"https://herbaria.plants.ox.ac.uk/bol/plants400"),
+        BotanySource("nativeplant",R.string.bot_source_nativeplant,"https://gobotany.nativeplanttrust.org/"),
+        BotanySource("ids",R.string.bot_source_ids,"https://www.treesandshrubsonline.org/"),
+        BotanySource("jrc",R.string.bot_source_jrc,"https://forest.jrc.ec.europa.eu/en/european-atlas/"),
+
         BotanySource("ntbg", R.string.bot_source_ntbg, "https://ntbg.org/database/plants/"),
         BotanySource("umich", R.string.bot_source_umich, "https://climbers.lsa.umich.edu/"),
         BotanySource("efloras", R.string.bot_source_efloras, "https://www.efloras.org/"),

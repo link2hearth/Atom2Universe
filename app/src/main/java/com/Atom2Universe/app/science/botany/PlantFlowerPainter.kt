@@ -31,6 +31,14 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
     }
 
     fun head() {
+        if(l.flower==FlowerShape.PEA && d.cluster==FlowerCluster.FEW_FLOWERS) {
+            b.line(0f,83f,0f,25f,green,1.5f)
+            repeat(4){i->val x=(i-1.5f)*43f;val y=-27f+(i%2)*28
+                b.line(0f,25f-i*13f,x,y,green,1f)
+                b.at(x,y,i*9f,.44f){blossom(FlowerShape.PEA)}}
+            return
+        }
+
         if(d.cluster==FlowerCluster.TERMINAL_TRUSS){
             for(i in 0..6){val a=i*2.399963;val r=if(i==0)0f else 55f;val x=cos(a).toFloat()*r;val y=sin(a).toFloat()*r
                 b.line(0f,99f,x,y,green,1.1f);b.at(x,y,i*21f,.52f){blossom()}
@@ -327,14 +335,14 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
         petal(tube,color,-63f,0);tubeVeins(tube,39f,64f)
         val mouth=Path().apply{moveTo(-35f,35f);cubicTo(-25f,-8f,22f,-14f,32f,32f)
             quadTo(40f,58f,3f,63f);quadTo(-31f,71f,-35f,35f);close()}
-        b.wash(mouth,0f,0f,0f,63f,intArrayOf(0xff673650.toInt(),0xffdca3bf.toInt(),0xfff4dbe1.toInt()))
+        b.wash(mouth,0f,0f,0f,63f,if(l.color==FlowerColor.YELLOW)intArrayOf(0xff74613c.toInt(),0xffded28d.toInt(),0xfffaf0c4.toInt()) else intArrayOf(0xff673650.toInt(),0xffdca3bf.toInt(),0xfff4dbe1.toInt()))
         b.stroke(mouth,edge,.7f)
         c.save();c.clipPath(mouth)
         repeat(31){i->val a=i*2.399963;val r=sqrt(i/31f);val x=cos(a).toFloat()*27*r;val y=34f+sin(a).toFloat()*29*r
             val size=1.3f+(i%4)*.3f
-            b.oval(x,y,size+1.1f,size+1.2f,0xfff7e5e7.toInt());b.oval(x+.3f,y,size,size+.15f,0xff813857.toInt())}
+            b.oval(x,y,size+1.1f,size+1.2f,if(l.color==FlowerColor.YELLOW)0xfffaf0c4.toInt() else 0xfff7e5e7.toInt());b.oval(x+.3f,y,size,size+.15f,if(l.color==FlowerColor.YELLOW)0xff80633e.toInt() else 0xff813857.toInt())}
         c.restore()
-        b.stroke(Path().apply{moveTo(-32f,47f);quadTo(-10f,76f,26f,53f)},0xffedc6d9.toInt(),3f)
+        b.stroke(Path().apply{moveTo(-32f,47f);quadTo(-10f,76f,26f,53f)},if(l.color==FlowerColor.YELLOW)0xffeee5ab.toInt() else 0xffedc6d9.toInt(),3f)
         b.stroke(Path().apply{moveTo(-3f,3f);quadTo(7f,17f,6f,26f)},0xffe4d2b1.toInt(),1.2f)
     }
 

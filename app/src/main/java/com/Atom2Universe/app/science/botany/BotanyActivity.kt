@@ -24,6 +24,7 @@ import com.Atom2Universe.app.science.FitFrame
 import com.Atom2Universe.app.science.ScienceFiche
 import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.PlantGroupKnowledge
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import java.text.NumberFormat
@@ -322,6 +323,7 @@ class BotanyActivity : ThemedActivity() {
             key.startsWith("species:")->catalog.get(key.substringAfter(':'))?.let{showSpecies(it,back)}
             key.startsWith("group:")->catalog.groups.firstOrNull{it.id==key.substringAfter(':')}?.let{showGroup(it,back)}
             key.startsWith("family:")->catalog.families.firstOrNull{it.id==key.substringAfter(':')}?.let{showFamily(it,back)}
+            key.startsWith("taxon:")->showTaxon(key.substringAfter(':'),back)
             key.startsWith("lesson:")->BotanyLessons.all.firstOrNull{it.id==key.substringAfter(':')}?.let{lesson->
                 val p=catalog.get(lesson.specimen) ?: return
                 val body=column();body.addView(label(getString(lesson.body),16f),full())
@@ -342,6 +344,9 @@ class BotanyActivity : ThemedActivity() {
         val body=column()
         life?.index?.forIllustrated(p.id)?.let { entry ->
             body.addView(button(getString(R.string.bot_life_open_tree)){openTree(entry.nodeId)},full())
+            entry.lineage.reversed().filter { PlantGroupKnowledge.hasArticle(life!!.repository.tree.nodes.getValue(it).scientific) }.forEach { ancestor ->
+                body.addView(button(getString(R.string.plant_group_group_open,life!!.repository.name(this,ancestor))){open("taxon:$ancestor")},full(3))
+            }
         }
         heading(body,R.string.bot_traits)
         body.addView(label(getString(p.description),16f),full(4))
@@ -355,6 +360,8 @@ class BotanyActivity : ThemedActivity() {
         heading(body,R.string.bot_calendar)
         if(p.flowering.isNotEmpty() || p.fruiting.isNotEmpty())body.addView(calendar(p),full(4))
         body.addView(label(getString(p.phenologyNote.takeIf{it!=0} ?: R.string.bot_calendar_note),13f).apply{setTextColor(palette.secondary)},full(4))
+        heading(body,R.string.bot_references)
+        speciesReferences(body,p)
         val groups=catalog.groups.filter{p.id in it.members}
         if(groups.isNotEmpty()){heading(body,R.string.bot_related);groups.forEach{g->body.addView(button(getString(g.title)){open("group:${g.id}")},full(4))}}
         fiche.show(getString(p.name),top,media(p,mode),body,back)
@@ -416,7 +423,12 @@ class BotanyActivity : ThemedActivity() {
     }
 
     private fun showFamily(f:PlantFamily,back:(()->Unit)?) {
-        val body=column();body.addView(label(getString(f.description),16f),full())
+        val body=column()
+        PlantGroupKnowledge.append(this,body,palette,f.id)
+        life?.repository?.tree?.nodes?.values?.firstOrNull{it.scientific==f.id}?.let { node ->
+            body.addView(button(getString(R.string.bot_life_open_tree)){openTree(node.id)},full())
+            body.addView(button(getString(R.string.plant_group_group_members)){open("taxon:${node.id}")},full())
+        }
         val members=catalog.species.filter{it.familyId==f.id}
         body.addView(label(resources.getQuantityString(R.plurals.bot_species_count,members.size,members.size),13f),full())
         members.groupBy{getString(it.latin).substringBefore(' ')}.toSortedMap().forEach{(genus,plants)->
@@ -453,9 +465,19 @@ class BotanyActivity : ThemedActivity() {
             val latin=getString(p.latin)
             body.addView(label(getString(p.name),15f,true),full(12))
             body.addView(button(getString(R.string.bot_lookup_powo,latin)){link("https://powo.science.kew.org/results?q="+android.net.Uri.encode(latin))},full(2))
-            BotanyReferences.taxonPages[p.id]?.let{url->body.addView(button(getString(R.string.bot_taxon_reference,latin)){link(url)},full(2))}
+            speciesReferences(body,p)
         }
         fiche.show(getString(R.string.bot_about),null,null,body,back)
+    }
+
+    private fun speciesReferences(body:LinearLayout,p:PlantSpecies) {
+        val pages=BotanyReferences.pages(p.id)
+        if(pages.isEmpty())catalog.sources.filter{it.id in p.sourceIds}.forEach { source ->
+            body.addView(button(getString(source.title)){link(source.url)},full(3))
+        }
+        pages.forEach { url ->
+            body.addView(button(getString(R.string.bot_taxon_reference_domain,getString(p.latin),url.toUri().host.orEmpty())){link(url)},full(3))
+        }
     }
 
     private fun link(url:String){try{startActivity(Intent(Intent.ACTION_VIEW,url.toUri()))}catch(_:ActivityNotFoundException){Toast.makeText(this,R.string.bot_no_browser,Toast.LENGTH_SHORT).show()}}
@@ -477,7 +499,7 @@ class BotanyActivity : ThemedActivity() {
                 lifeFailed=true;android.util.Log.e("BotanyLife", "Plant reference catalogue load failed",it)
             }
             if(tab==Tab.LIFE)render()
-            current?.takeIf{it.startsWith("life:") || it.startsWith("species:")}?.let{open(it,false)}
+            current?.takeIf{it.startsWith("life:") || it.startsWith("species:") || it.startsWith("taxon:") || it.startsWith("family:")}?.let{open(it,false)}
         }
     }
 
@@ -557,7 +579,9 @@ class BotanyActivity : ThemedActivity() {
         repo.notes[id]?.let{note->heading(body,R.string.bot_life_notice);body.addView(label(repo.text(this,note.key),16f),full())}
         heading(body,R.string.bot_life_classification)
         entry.lineage.reversed().filter{repo.tree.nodes.getValue(it).scientific.isNotBlank() || it in repo.groups}.forEach { ancestor ->
-            body.addView(button(repo.name(this,ancestor)){openTree(ancestor)},full(3))
+            body.addView(button(repo.name(this,ancestor)){
+                if(PlantGroupKnowledge.hasArticle(repo.tree.nodes.getValue(ancestor).scientific))open("taxon:$ancestor") else openTree(ancestor)
+            },full(3))
         }
         entry.family?.let{family->body.addView(label(getString(R.string.bot_life_family_value,family),14f),full())}
         entry.lineage.firstOrNull{it in repo.groups}?.let{group->
@@ -577,6 +601,31 @@ class BotanyActivity : ThemedActivity() {
     private fun openTree(id:String) {
         startActivity(Intent(this,ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE,true)
             .putExtra(ParentesActivity.EXTRA_NODE_ID,id))
+    }
+
+    private fun showTaxon(id:String,back:(()->Unit)?) {
+        val repo=life?.repository
+        if(repo==null) {
+            val body=column();body.addView(label(getString(if(lifeFailed)R.string.bot_life_error else R.string.bot_life_loading)),full())
+            if(lifeFailed)body.addView(button(getString(R.string.bot_life_retry)){loadLife();showTaxon(id,back)},full())
+            fiche.show(getString(R.string.bot_life_reference),null,null,body,back);return
+        }
+        val node=repo.tree.nodes[id] ?: return
+        val body=column()
+        PlantGroupKnowledge.append(this,body,palette,node.scientific)
+        body.addView(button(getString(R.string.bot_life_open_tree)){openTree(id)},full())
+        heading(body,R.string.bot_life_classification)
+        repo.tree.ancestors(id).drop(1).filter{PlantGroupKnowledge.hasArticle(repo.tree.nodes.getValue(it).scientific)}.reversed().forEach { ancestor ->
+            body.addView(button(repo.name(this,ancestor)){open("taxon:$ancestor")},full(3))
+        }
+        heading(body,R.string.plant_group_group_members)
+        // Follow archive edges: never construct a replacement classification from order labels.
+        repo.tree.children[id].orEmpty().forEach { child ->
+            body.addView(button(repo.name(this,child)){
+                if(PlantGroupKnowledge.hasArticle(repo.tree.nodes.getValue(child).scientific))open("taxon:$child") else openTree(child)
+            },full(3))
+        }
+        fiche.show(repo.name(this,id),null,null,body,back)
     }
 
     companion object {

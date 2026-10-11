@@ -28,6 +28,9 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
         b.stroke(Path().apply{moveTo(x,y);quadTo(cx,cy,xx,yy)},color,width)
 
     fun draw(view:PlantView) {
+        if(form.meadow){MeadowPlantPainter(c,species,detailed).draw(view);return}
+        if(form.structural){StructuralPlantPainter(c,species,detailed).draw(view);return}
+        if(form.culinary){CulinaryPlantPainter(c,species,detailed).draw(view);return}
         if(form.usefulPlant){UsefulPlantPainter(c,species,detailed).draw(view);return}
         if(form.foodCrop){FoodCropPainter(c,species,detailed).draw(view);return}
         if(form.orchard){OrchardPainter(c,species,detailed).draw(view);return}
@@ -107,11 +110,12 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
                     val sheath=Path().apply{moveTo(-12f,22f);lineTo(-13f,-42f);lineTo(12f,-42f);lineTo(10f,22f);close()}
                     outlined(sheath);b.line(0f,20f,0f,-52f,light,.8f)
                     b.at(0f,-40f,-32f){blade(76f,10f,false)}
-                    val h=if(form==StudyForm.CEREAL_PANICLE)35f else 10f
+                    val h=if(form==StudyForm.CEREAL_PANICLE || form==StudyForm.OAT_PANICLE)35f else 10f
                     outlined(Path().apply{moveTo(-10f,-41f);quadTo(-4f,-42f-h,1f,-41f-h);quadTo(7f,-45f,10f,-41f);close()},cream)
-                    if(!maize)for(s in listOf(-1,1)) {
-                        curve(s*9f,-42f,s*24f,-42f,s*8f,-31f,light,2.6f)
-                        for(k in 0..4)b.line(s*(12f+k),-37f-k,s*(18f+k),-36f-k,ink,.45f)
+                    if(!maize && form!=StudyForm.OAT_PANICLE)for(s in listOf(-1,1)) {
+                        val reach=if(form==StudyForm.BARLEY_SPIKE)30f else if(form==StudyForm.RYE_SPIKE)17f else 24f
+                        curve(s*9f,-42f,s*reach,-42f,s*8f,-31f,light,2.6f)
+                        if(form!=StudyForm.BARLEY_SPIKE && form!=StudyForm.RYE_SPIKE)for(k in 0..4)b.line(s*(12f+k),-37f-k,s*(18f+k),-36f-k,ink,.45f)
                     }
                 }
             }
@@ -171,7 +175,7 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
     }
 
     private fun cerealHead(ripe:Boolean) {
-        val rice=form==StudyForm.CEREAL_PANICLE
+        val rice=form==StudyForm.CEREAL_PANICLE || form==StudyForm.OAT_PANICLE
         val color=if(ripe)straw else green
         if(rice) {
             curve(0f,0f,-15f,-147f,18f,-180f,color,1.6f)
@@ -184,7 +188,10 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
                     val xx=2*u*t*s*reach+t*t*s*(reach+8f)
                     val yy=u*u*(y+20)+2*u*t*(y-42)+t*t*(y-10)
                     b.line(xx,yy,xx+s*4,yy+4,color,.55f)
-                    b.at(xx+s*4,yy+4,s*153f,.23f){grainHull(color)}
+                    b.at(xx+s*4,yy+4,s*153f,.23f){
+                        grainHull(color)
+                        if(form==StudyForm.OAT_PANICLE)b.at(8f,-7f,18f){grainHull(color)}
+                    }
                 }
             }
         } else {
@@ -192,7 +199,9 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
             for(j in 0..17) {
                 val y=-16f-j*8.1f;val s=if(j%2==0)-1 else 1
                 b.at(s*3f,y,s*16f,.67f){
-                    for(k in 0..2)b.at((k-1)*6f,-k*3f,(k-1)*10f){grainHull(color)}
+                    // Barley: three single-flowered spikelets per node; rye: two florets in one spikelet.
+                    val units=if(form==StudyForm.RYE_SPIKE)2 else 3
+                    for(k in 0 until units)b.at((k-(units-1)/2f)*6f,-k*3f,(k-1)*10f){grainHull(color)}
                 }
             }
             b.at(0f,-151f,0f,.46f){grainHull(color)}
@@ -204,6 +213,7 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
         outlined(hull,color)
         for(i in -2..2)curve(0f,0f,i*6f,-24f,0f,-42f,botanicalMix(color,cream,.55f),.55f)
         if(form==StudyForm.CEREAL_SPIKE)b.line(0f,-42f,1f,-48f,color,.6f)
+        if(form==StudyForm.BARLEY_SPIKE || form==StudyForm.RYE_SPIKE)b.line(0f,-42f,3f,if(form==StudyForm.BARLEY_SPIKE)-106f else -76f,color,.75f)
     }
 
     private fun floret(rice:Boolean) {
@@ -269,7 +279,7 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
                 // Main caryopsis magnified; mature inflorescence is a smaller inset.
                 val rice=form==StudyForm.CEREAL_PANICLE
                 b.at(118f,262f){
-                    val w=if(rice)21f else 35f
+                    val w=if(rice || form==StudyForm.OAT_PANICLE || form==StudyForm.RYE_SPIKE)21f else 35f
                     outlined(Path().apply{moveTo(0f,0f);cubicTo(-w,-12f,-w,-149f,0f,-166f)
                         cubicTo(w,-147f,w,-15f,0f,0f);close()},if(rice)cream else straw)
                     if(!rice){curve(0f,-8f,-10f,-89f,0f,-158f,ink,1.1f)

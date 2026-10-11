@@ -44,6 +44,6 @@ internal object UsefulPlantsCatalog {
                 leafColor=0xff496f43.toInt(),leafDetail=LeafDetail(width=.19f,teeth=LeafTeeth.WAVY,veinPairs=9,glossy=true),
                 architecture=TreeArchitecture(radius=75f,top=32f,bottom=239f,fork=243f,trunkWidth=11f,density=.85f),study=StudyForm.DIOECIOUS_UMBEL),
             R.string.bot_laurus_nobilis_description,R.string.bot_laurus_nobilis_distribution,PlantView.entries.zip(listOf(R.string.bot_laurus_nobilis_habit,R.string.bot_laurus_nobilis_leaf,R.string.bot_laurus_nobilis_flower,R.string.bot_laurus_nobilis_fruit)).toMap(),
-            setOf("powo","ncsu"),collectionIds=setOf("useful_plants"),phenologyNote=R.string.bot_useful_plants_season,additionalColors=setOf(FlowerColor.GREEN,FlowerColor.YELLOW))
+            setOf("powo","ncsu","efloras"),collectionIds=setOf("useful_plants"),phenologyNote=R.string.bot_useful_plants_season,additionalColors=setOf(FlowerColor.GREEN,FlowerColor.YELLOW))
     )
 }

@@ -22,6 +22,7 @@ import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.SciencePalette
 import com.Atom2Universe.app.science.ScienceNavigation
+import com.Atom2Universe.app.science.PlantGroupKnowledge
 import com.Atom2Universe.app.science.timeline.CosmicTimelineActivity
 import com.Atom2Universe.app.science.timeline.LifeDate
 import com.Atom2Universe.app.science.timeline.LifeTimeline
@@ -384,6 +385,7 @@ class ParentesActivity : ThemedActivity() {
     }
 
     private fun article(id: String): String {
+        PlantGroupKnowledge.description(this,repo.tree.nodes.getValue(id).scientific)?.let { return it }
         repo.groups[id]?.let { return repo.text(this,it.key+"_body") }
         repo.notes[id]?.let { return repo.text(this,it.key) }
         val n = repo.tree.nodes.getValue(id)
@@ -397,6 +399,7 @@ class ParentesActivity : ThemedActivity() {
         val node = repo.tree.nodes.getValue(id)
         if (node.scientific.isNotEmpty()) body.addView(label(node.scientific,16f,true))
         body.addView(label(article(id)))
+        PlantGroupKnowledge.append(this,body,palette,node.scientific,includeDescription=false)
         val lineage = repo.tree.ancestors(id).drop(1).filter { it in repo.groups }.reversed()
         body.addView(label(getString(R.string.pt_position,lineage.joinToString(getString(R.string.pt_separator)) { repo.name(this,it) })))
         repo.tree.displayParent(id)?.let { parent ->

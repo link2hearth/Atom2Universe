@@ -109,6 +109,19 @@ internal class FoodCropPainter(private val c:Canvas,private val species:PlantSpe
         } else {
             b.at(144f,265f){foodLeaf(198f)}
             if(cucumber)b.at(231f,270f,0f,1.2f){tendril()}
+            if(form==StudyForm.HAIRY_TRIFOLIATE_POD && detailed)b.at(242f,276f) {
+                // Soybean seedling: opposite simple first leaves above the cotyledons.
+                b.line(0f,0f,0f,-65f,green,1.4f)
+                for(side in listOf(-1,1)) {
+                    oval(side*9f,-14f,10f,5f,0xffa9b87a.toInt())
+                    b.at(0f,-35f,side*57f) {
+                        leaf.simple(LeafShape.OVAL,39f,LeafMargin.ENTIRE,
+                            LeafDetail(width=.28f,veinPairs=6,ciliate=true),.15f)
+                    }
+                }
+                b.at(0f,-53f,0f,.20f){foodLeaf(95f)}
+                curve(0f,0f,-3f,7f,0f,12f,straw,.8f)
+            }
         }
     }
     private fun umbel(radius:Float) {

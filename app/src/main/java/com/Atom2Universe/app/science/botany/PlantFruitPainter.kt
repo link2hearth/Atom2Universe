@@ -8,7 +8,7 @@ import kotlin.math.*
  * References: Woodland Trust tree profiles; PlantNET and WFO floras; conifers.org/pi/.
  * Dehiscent fruits show one representative stage of opening, not every stage simultaneously.
  */
-internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,private val detailed:Boolean=true) {
+internal class PlantFruitPainter(private val c:Canvas,private val species:PlantSpecies,private val detailed:Boolean=true) {
     private val l=species.look
     private val d=l.fruitDetail
     private val b=BotanyInk(c)
@@ -17,10 +17,22 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
     private val cream=0xffefe1b8.toInt()
     private val brown=0xff9b713f.toInt()
 
-    fun plate()=b.at(150f,151f){
+    fun plate() {
+        val profile=when(l.fruit) {
+            FruitShape.MULTIPLE -> StudyForm.PINEAPPLE_SYNCARP
+            FruitShape.SYCONIUM -> StudyForm.FIG_SYCONIUM
+            else -> null
+        }
+        if(profile!=null) {
+            StructuralPlantPainter(c,species.copy(look=l.copy(study=profile)),detailed).draw(PlantView.FRUIT)
+            return
+        }
+        b.at(150f,151f){
         if(PlantSpecialFruitPainter(c,l,detailed).draw())return@at
+        // A winglike supporting bract is separate from the nutlet's pericarp.
+        if(d.samara==SamaraForm.THREE_LOBED_BRACT){samaras();return@at}
         when(l.fruit){
-            FruitShape.INDEHISCENT,FruitShape.FOLLICLE -> Unit // handled by reusable special-fruit profiles
+            FruitShape.MULTIPLE,FruitShape.SYCONIUM,FruitShape.INDEHISCENT,FruitShape.FOLLICLE -> Unit // handled by reusable special-fruit profiles
             FruitShape.ACORN -> acorns()
             FruitShape.NUT -> hazelnuts()
             FruitShape.BEECH -> beech()
@@ -42,6 +54,8 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             FruitShape.GRAIN -> grain()
             FruitShape.ACHENE -> achenes()
         }
+    }
+
     }
 
     private fun outline(q:Path,color:Int= brown,vertical:Boolean=false) {
@@ -395,6 +409,12 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
         val q=if(poppy)Path().apply{moveTo(-42f,-48f);cubicTo(-58f,17f,-25f,61f,0f,63f);cubicTo(25f,61f,58f,17f,42f,-48f);close()}
         else Path().apply{moveTo(0f,-h);cubicTo(-24f,-54f,-55f,-14f,-39f,39f);quadTo(0f,84f,39f,39f);cubicTo(55f,-14f,24f,-54f,0f,-h);close()}
         outline(q,0xffb0a675.toInt());ribs(q,19,71f,80f,0xff827f4c.toInt())
+        if(d.persistentCalyx) {
+            val calyx=Path().apply{moveTo(-37f,42f);lineTo(-30f,-15f);lineTo(-20f,-4f);lineTo(-10f,-18f);lineTo(0f,-5f);lineTo(10f,-18f);lineTo(20f,-4f);lineTo(30f,-15f);lineTo(37f,42f);quadTo(0f,79f,-37f,42f);close()}
+            outline(calyx,green)
+            for(i in -2..2)b.line(i*9f,0f,i*10f,52f,botanicalMix(green,cream,.5f),.8f)
+        }
+
         if(poppy){
             body(0f,-50f,44f,12f,0xff9e9865.toInt())
             repeat(12){i->val a=i*PI/6;b.line(0f,-50f,cos(a).toFloat()*43,-50f+sin(a).toFloat()*11,0xff686e47.toInt(),1.1f)}
@@ -407,6 +427,10 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             CapsuleForm.BASAL_PORES -> {
                 for(x in listOf(-25f,0f,25f)){body(x,37f,4f,7f,0xff554f32.toInt());b.line(x-5,42f,x+4,44f,cream,.7f)}
                 for(i in -2..2)b.stroke(Path().apply{moveTo(i*3f,-59f);quadTo(i*13f,-76f,i*15f,-66f)},green,1.6f)
+            }
+            CapsuleForm.APICAL_PORES -> {
+                for(x in listOf(-17f,17f))body(x,-42f,5f,4f,ink)
+                body(0f,-54f,4f,3f,ink)
             }
             CapsuleForm.APICAL_TEETH -> {
                 body(0f,-51f,18f,9f,ink)
@@ -459,7 +483,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
         repeat(5){i->val side=if(i%2==0)-1 else 1;val y=-68f+i*35
             b.line(0f,y+25f,side*48f,y,green,1.3f)
             b.at(side*48f,y,side*28f,.62f){
-                val q=Path().apply{moveTo(0f,0f);lineTo(-36f,-54f);quadTo(-38f,-73f,-16f,-70f)
+                val q=if(d.silicle==SilicleForm.OVAL)Path().apply{addOval(-28f,-70f,28f,0f,Path.Direction.CW)} else Path().apply{moveTo(0f,0f);lineTo(-36f,-54f);quadTo(-38f,-73f,-16f,-70f)
                     quadTo(-5f,-68f,0f,-60f);quadTo(5f,-68f,16f,-70f)
                     quadTo(38f,-73f,36f,-54f);close()}
                 outline(q,0xffb3b47b.toInt());b.line(0f,0f,0f,-59f,green,1f)
@@ -509,6 +533,10 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
         val q=Path().apply{moveTo(-w*.58f,-24f);cubicTo(-w*1.3f,-10f,-w,21f,0f,28f)
             cubicTo(w,19f,w*1.3f,-12f,w*.58f,-24f);quadTo(0f,-27f,-w*.58f,-24f);close()}
         outline(q,d.acheneColor);ribs(q,d.acheneRibs,31f,w*2,0xffd3bd86.toInt())
+        if(d.hairyAchene)for(i in 0..17) {
+            val a=i*2*PI/18
+            b.line(cos(a).toFloat()*w,sin(a).toFloat()*25,cos(a).toFloat()*(w+4),sin(a).toFloat()*29,cream,.7f)
+        }
         if(beak)b.stroke(Path().apply{moveTo(1f,-24f);quadTo(6f,-40f,14f,-33f)},ink,1.5f)
         if(d.pappusScales)for(i in -3..3){
             val q=Path().apply{moveTo(i*2.5f-1,-23f);lineTo(i*3f,-29f);lineTo(i*2.5f+1,-23f);close()}
@@ -527,7 +555,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             }
             AcheneForm.AGGREGATE -> {
                 stalk(0f,118f,0f,51f,2.2f);body(0f,0f,51f,51f,0xff8e9558.toInt())
-                repeat(29){i->val a=i*2.399963;val r=sqrt(i/29f)*51
+                repeat(d.aggregateCount){i->val a=i*2.399963;val r=sqrt(i.toFloat()/d.aggregateCount)*51
                     b.at(cos(a).toFloat()*r,sin(a).toFloat()*r,i*27f,.46f){achene(beak=d.beak)}}
                 if(detailed)b.at(85f,85f,22f,1.05f){achene(beak=d.beak)}
             }

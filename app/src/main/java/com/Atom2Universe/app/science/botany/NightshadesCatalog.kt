@@ -38,8 +38,17 @@ internal object NightshadesCatalog {
                 leafCm,flowerCm,fruitCm,leaflets=7,petals=5,fruitColor=fruitColor,seed=130+form.ordinal,study=form),
             description,distribution,PlantView.entries.zip(captions).toMap(),
             if(wild)setOf("powo","efloras") else setOf("ncsu","powo"),
-            additionalMargins=if(wild)setOf(LeafMargin.ENTIRE) else emptySet(),
-            additionalColors=if(form==StudyForm.TUBEROUS_BERRY)setOf(FlowerColor.WHITE,FlowerColor.PINK) else if(form==StudyForm.HOLLOW_BERRY)setOf(FlowerColor.PURPLE) else emptySet(),
+            additionalLeaves=if(form==StudyForm.HOLLOW_BERRY)setOf(LeafShape.LANCE) else emptySet(),
+            additionalMargins=when(form) {
+                StudyForm.SMALL_BERRY_CYME,StudyForm.LOBED_BERRY -> setOf(LeafMargin.ENTIRE)
+                StudyForm.PINNATE_BERRY -> setOf(LeafMargin.SERRATE)
+                else -> emptySet()
+            },
+            additionalColors=when(form) {
+                StudyForm.TUBEROUS_BERRY -> setOf(FlowerColor.WHITE,FlowerColor.PINK)
+                StudyForm.HOLLOW_BERRY,StudyForm.SMALL_BERRY_CYME -> setOf(FlowerColor.PURPLE)
+                else -> emptySet()
+            },
             collectionIds=setOf("nightshades"),phenologyNote=if(wild)R.string.bot_nightshade_wild_season else R.string.bot_nightshade_crop_season)
     }
 }

@@ -28,7 +28,7 @@ internal object OrchardCatalog {
                 leafColor=0xff466d40.toInt(),leafDetail=LeafDetail(width=.12f,veinPairs=12,petioleGlands=true),
                 architecture=TreeArchitecture(radius=89f,fork=222f,trunkWidth=12f,density=.6f,barkSurface=BarkSurface.LENTICELS),study=StudyForm.LANCE_STONE_FRUIT),
             R.string.bot_persica_description,R.string.bot_persica_distribution,PlantView.entries.zip(listOf(R.string.bot_persica_habit,R.string.bot_persica_leaf,R.string.bot_persica_flower,R.string.bot_persica_fruit)).toMap(),
-            setOf("powo","ncsu"),collectionIds=setOf("orchard"),phenologyNote=R.string.bot_orchard_season),
+            setOf("powo","ncsu"),collectionIds=setOf("orchard"),phenologyNote=R.string.bot_orchard_season,additionalColors=setOf(FlowerColor.WHITE)),
         PlantSpecies("armeniaca",R.string.bot_armeniaca_name,R.string.bot_armeniaca_latin,R.string.bot_armeniaca_aliases,"Rosaceae",setOf("trees"),
             300,1000,emptySet(),emptySet(),setOf(Habitat.CULTIVATED),false,
             PlantLook(Crown.ROUND,LeafShape.HEART,LeafMargin.SERRATE,LeafArrangement.ALTERNATE,FlowerShape.STAR,FruitShape.DRUPE,FlowerColor.WHITE,
@@ -36,14 +36,14 @@ internal object OrchardCatalog {
                 leafColor=0xff466d40.toInt(),leafDetail=LeafDetail(width=.36f,base=LeafBase.CORDATE,tip=LeafTip.ACUMINATE,petioleGlands=true),
                 architecture=TreeArchitecture(radius=91f,fork=205f,trunkWidth=15f,density=.8f,barkSurface=BarkSurface.LENTICELS),study=StudyForm.CORDATE_STONE_FRUIT),
             R.string.bot_armeniaca_description,R.string.bot_armeniaca_distribution,PlantView.entries.zip(listOf(R.string.bot_armeniaca_habit,R.string.bot_armeniaca_leaf,R.string.bot_armeniaca_flower,R.string.bot_armeniaca_fruit)).toMap(),
-            setOf("powo","ncsu"),collectionIds=setOf("orchard"),phenologyNote=R.string.bot_orchard_season),
+            setOf("powo","ncsu"),collectionIds=setOf("orchard"),phenologyNote=R.string.bot_orchard_season,additionalLeaves=setOf(LeafShape.OVAL),additionalColors=setOf(FlowerColor.PINK)),
         PlantSpecies("citrus_maxima",R.string.bot_citrus_maxima_name,R.string.bot_citrus_maxima_latin,R.string.bot_citrus_maxima_aliases,"Rutaceae",setOf("trees"),
             500,1500,emptySet(),emptySet(),setOf(Habitat.CULTIVATED),true,
             PlantLook(Crown.ROUND,LeafShape.OVAL,LeafMargin.ENTIRE,LeafArrangement.ALTERNATE,FlowerShape.STAR,FruitShape.BERRY,FlowerColor.WHITE,
                 18.0f,5.0f,20.0f,petals=5,petiole=.25f,fruitColor=0xffb6be54.toInt(),seed=174,
-                leafColor=0xff466d40.toInt(),leafDetail=LeafDetail(width=.27f,veinPairs=9,glossy=true),
+                leafColor=0xff466d40.toInt(),leafDetail=LeafDetail(width=.27f,base=LeafBase.ROUNDED,tip=LeafTip.ROUNDED,veinPairs=9,glossy=true),
                 architecture=TreeArchitecture(radius=94f,fork=216f,trunkWidth=17f,density=1f),study=StudyForm.WINGED_CITRUS),
             R.string.bot_citrus_maxima_description,R.string.bot_citrus_maxima_distribution,PlantView.entries.zip(listOf(R.string.bot_citrus_maxima_habit,R.string.bot_citrus_maxima_leaf,R.string.bot_citrus_maxima_flower,R.string.bot_citrus_maxima_fruit)).toMap(),
-            setOf("powo","ntbg"),collectionIds=setOf("orchard"),phenologyNote=R.string.bot_orchard_season)
+            setOf("powo","ntbg","efloras"),collectionIds=setOf("orchard"),phenologyNote=R.string.bot_orchard_season)
     )
 }

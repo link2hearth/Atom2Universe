@@ -189,7 +189,7 @@ internal object AfricanDrylandsCatalog {
             familyId="Pedaliaceae", sectionIds=setOf("herbs"),
             heightMinCm=50, heightMaxCm=150, flowering=emptySet(), fruiting=emptySet(),
             habitats=setOf(Habitat.SAVANNA, Habitat.DISTURBED), evergreen=false,
-            look=PlantLook(Crown.HERB, LeafShape.LANCE, LeafMargin.ENTIRE, LeafArrangement.ALTERNATE,
+            look=PlantLook(Crown.HERB, LeafShape.LANCE, LeafMargin.ENTIRE, LeafArrangement.OPPOSITE,
                 FlowerShape.LIPPED, FruitShape.CAPSULE, FlowerColor.PINK, 10.0f, 3.5f, 4.0f, seed=103,
                 leaflets=5, leafDetail=LeafDetail(width=.10f), flowerDetail=FlowerDetail(corolla=CorollaForm.SESAME), fruitDetail=FruitDetail(capsule=CapsuleForm.BEAKED), herbDetail=HerbArchitecture(basalLeaf=LeafShape.PALMATE, basalDetail=LeafDetail(leafletWidth=.10f), branches=false, flowerScale=.35f, basalRosette=false, lowerLeavesOpposite=true)),
             description=R.string.bot_sesamum_alatum_description, distribution=R.string.bot_sesamum_alatum_distribution,
@@ -197,7 +197,7 @@ internal object AfricanDrylandsCatalog {
                 PlantView.FLOWER to FlowerShape.LIPPED.label, PlantView.FRUIT to FruitShape.CAPSULE.label),
             sourceIds=setOf("powo", "fz"), collectionIds=setOf("africa_dry"),
             phenologyNote=R.string.bot_phenology_local,
-            additionalLeaves=setOf(LeafShape.PALMATE,LeafShape.PALMATILOBED), additionalArrangements=setOf(LeafArrangement.OPPOSITE)
+            additionalLeaves=setOf(LeafShape.PALMATE,LeafShape.PALMATILOBED), additionalArrangements=setOf(LeafArrangement.ALTERNATE), additionalColors=setOf(FlowerColor.PURPLE)
         ),
         PlantSpecies(
             id="hibiscus_trionum", name=R.string.bot_hibiscus_trionum_name, latin=R.string.bot_hibiscus_trionum_latin, aliases=R.string.bot_hibiscus_trionum_aliases,
@@ -221,7 +221,7 @@ internal object AfricanDrylandsCatalog {
             habitats=setOf(Habitat.SAVANNA, Habitat.DISTURBED), evergreen=false,
             look=PlantLook(Crown.HERB, LeafShape.PINNATE, LeafMargin.ENTIRE, LeafArrangement.ALTERNATE,
                 FlowerShape.PEA, FruitShape.POD, FlowerColor.PINK, 5.0f, 0.5f, 1.5f, seed=105,
-                leaflets=7, leafDetail=LeafDetail(leafletWidth=.28f, leafletShape=LeafShape.OVAL, leafletWidestAboveMiddle=true, leafletTip=LeafTip.ROUNDED), flowerDetail=FlowerDetail(cluster=FlowerCluster.RACEMOSE), fruitDetail=FruitDetail(podWidth=8f, podSeeds=6), herbDetail=HerbArchitecture(creeping=true, flowerScale=.27f)),
+                leaflets=7, leafDetail=LeafDetail(alternateLeaflets=true, leafletWidth=.28f, leafletShape=LeafShape.OVAL, leafletWidestAboveMiddle=true, leafletTip=LeafTip.ROUNDED), flowerDetail=FlowerDetail(cluster=FlowerCluster.RACEMOSE), fruitDetail=FruitDetail(podWidth=8f, podSeeds=6), herbDetail=HerbArchitecture(creeping=true, flowerScale=.27f)),
             description=R.string.bot_indigofera_spicata_description, distribution=R.string.bot_indigofera_spicata_distribution,
             captions=mapOf(PlantView.HABIT to R.string.bot_section_herbs, PlantView.LEAF to LeafShape.PINNATE.label,
                 PlantView.FLOWER to FlowerShape.PEA.label, PlantView.FRUIT to FruitShape.POD.label),

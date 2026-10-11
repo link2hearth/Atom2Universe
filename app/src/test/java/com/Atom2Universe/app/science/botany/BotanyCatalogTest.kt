@@ -7,6 +7,66 @@ import java.util.Locale
 import javax.xml.parsers.DocumentBuilderFactory
 
 class BotanyCatalogTest {
+    @Test fun deuxLotsPrairiesHaiesSources() {
+        assertEquals(10,MeadowFlowersCatalog.species.size)
+        assertEquals(10,HedgerowDiversityCatalog.species.size)
+        for(p in MeadowFlowersCatalog.species+HedgerowDiversityCatalog.species) {
+            assertNotNull(p.id,BotanyCatalog.get(p.id))
+            assertTrue(p.id,p.id in BotanyReferences.taxonPages)
+            assertTrue(p.id,p.look.study!!.meadow)
+            assertEquals(PlantView.entries.toSet(),p.captions.keys)
+        }
+        assertEquals(0,BotanyCatalog.get("silene_latifolia")!!.look.flowerDetail.stamens)
+        assertEquals(10,BotanyCatalog.get("silene_latifolia")!!.look.fruitDetail.capsuleTeeth)
+        assertEquals(FruitShape.POD,BotanyCatalog.get("medicago_minima")!!.look.fruit)
+        assertEquals(14,BotanyCatalog.get("filipendula_vulgaris")!!.look.fruitDetail.aggregateCount)
+    }
+
+    @Test fun nouveauxLotsEtFruitsDistincts() {
+        assertEquals(10,MonocotFormsCatalog.species.size)
+        assertEquals(10,WoodyFruitsCatalog.species.size)
+        for(p in MonocotFormsCatalog.species+WoodyFruitsCatalog.species) {
+            assertNotNull(p.id,BotanyCatalog.get(p.id))
+            assertTrue(p.id,p.id in BotanyReferences.taxonPages)
+            assertTrue(p.id,p.flowering.isEmpty() && p.fruiting.isEmpty() && p.phenologyNote!=0)
+        }
+        val pineapple=BotanyCatalog.get("ananas_comosus")!!
+        val fig=BotanyCatalog.get("ficus_carica")!!
+        val juniper=BotanyCatalog.get("juniperus_communis")!!
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.MULTIPLE)).matches(pineapple,""))
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.SYCONIUM)).matches(fig,""))
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.CONE)).matches(juniper,""))
+        assertFalse(PlantQuery(fruits=setOf(FruitShape.BERRY)).matches(juniper,""))
+        assertEquals(8,BotanyCatalog.get("vaccinium_vitis_idaea")!!.look.flowerDetail.stamens)
+        assertEquals(4,BotanyCatalog.get("vaccinium_vitis_idaea")!!.look.petals)
+        assertEquals(StudyForm.GINGER_RHIZOME,BotanyCatalog.get("zingiber_officinale")!!.look.study)
+    }
+    @Test fun deuxLotsCulinairesEtCaracteresDiagnostiques() {
+        assertEquals(10,AromaticsCatalog.species.size)
+        assertEquals(10,CropDiversityCatalog.species.size)
+        for(p in AromaticsCatalog.species+CropDiversityCatalog.species) {
+            assertNotNull(p.id,BotanyCatalog.get(p.id))
+            assertTrue(p.id,p.id in BotanyReferences.taxonPages)
+            assertTrue(p.id,p.flowering.isEmpty() && p.fruiting.isEmpty() && p.phenologyNote!=0)
+        }
+        assertEquals(StudyForm.TUFT_ALLIUM,BotanyCatalog.get("allium_fistulosum")!!.look.study)
+        assertEquals(StudyForm.BROAD_ALLIUM,BotanyCatalog.get("allium_ursinum")!!.look.study)
+        assertEquals(StudyForm.OAT_PANICLE,BotanyCatalog.get("avena_sativa")!!.look.study)
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.INDEHISCENT)).matches(BotanyCatalog.get("raphanus_raphanistrum")!!,""))
+        assertEquals(LeafArrangement.OPPOSITE,BotanyCatalog.get("thymus_vulgaris")!!.look.arrangement)
+        assertFalse(BotanyCatalog.get("cicer_arietinum")!!.look.leafDetail.terminalTendril)
+        // A supporting wing-like bract must not classify the hornbeam's nutlet as a samara.
+        val hornbeam=BotanyCatalog.get("carpinus")!!
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.ACHENE)).matches(hornbeam,""))
+        assertFalse(PlantQuery(fruits=setOf(FruitShape.SAMARA)).matches(hornbeam,""))
+        // Prevent generic many-stamen flowers from silently replacing these diagnostic counts.
+        for(p in AromaticsCatalog.species+CropDiversityCatalog.species) {
+            val count=mapOf("Amaryllidaceae" to 6,"Apiaceae" to 5,"Lamiaceae" to 4,
+                "Poaceae" to 3,"Fabaceae" to 10,"Cucurbitaceae" to 3,"Brassicaceae" to 6).getValue(p.familyId)
+            assertEquals(p.id,count,p.look.flowerDetail.stamens)
+            if(p.familyId=="Brassicaceae")assertEquals(p.id,2,p.look.flowerDetail.shortStamens)
+        }
+    }
     private fun texts(locale:String):Map<String,String> {
         val nodes=DocumentBuilderFactory.newInstance().newDocumentBuilder()
             .parse(File("src/main/res/$locale/strings_botany.xml")).getElementsByTagName("string")
@@ -108,8 +168,8 @@ class BotanyCatalogTest {
 
     @Test fun leLotDeTerrainExposeSesNouveauxCaracteresAuxFiltres() {
         val brassicas=BotanyCatalog.species.filter{PlantQuery(families=setOf("Brassicaceae")).matches(it,"")}
-        assertEquals(setOf("cardamine","capsella","arabidopsis","brassica_oleracea"),brassicas.map{it.id}.toSet())
-        assertEquals(listOf("capsella"),brassicas.filter{PlantQuery(fruits=setOf(FruitShape.SILICLE)).matches(it,"")}.map{it.id})
+        assertEquals(setOf("cardamine","capsella","arabidopsis","brassica_oleracea","brassica_rapa","sinapis_alba","raphanus_raphanistrum","nasturtium_officinale","armoracia_rusticana","barbarea_vulgaris"),brassicas.map{it.id}.toSet())
+        assertEquals(listOf("capsella","armoracia_rusticana"),brassicas.filter{PlantQuery(fruits=setOf(FruitShape.SILICLE)).matches(it,"")}.map{it.id})
         assertTrue(PlantQuery(flowers=setOf(FlowerShape.LIGULATE),colors=setOf(FlowerColor.BLUE)).matches(BotanyCatalog.get("cichorium")!!,""))
         assertTrue(PlantQuery(fruits=setOf(FruitShape.BERRY),evergreen=false).matches(BotanyCatalog.get("vaccinium")!!,""))
         assertTrue(PlantQuery(margins=setOf(LeafMargin.ENTIRE),evergreen=true).matches(BotanyCatalog.get("quercus_ilex")!!,""))

@@ -91,12 +91,26 @@ internal class OrchardPainter(private val c:Canvas,private val species:PlantSpec
             if(detailed)for(j in -1..1)curve(j*3f,-15f,j*15f,-35f,j*12f,-52f,0x657e7360,.6f)
         }}
         b.oval(0f,0f,12f,12f,0xffc7c38a.toInt())
-        val stamens=if(olive)2 else if(coffee)5 else 28
-        repeat(stamens){i->
-            val a=2*PI*i/stamens;val r=if(olive)17f else if(coffee)23f else 20f+(i%3)*6
-            val x=cos(a).toFloat()*r;val y=sin(a).toFloat()*r
-            b.line(x*.35f,y*.35f,x,y,0xffbdae80.toInt(),1f)
-            b.at(x,y,(a*180/PI).toFloat()){ellipse(0f,0f,if(olive)5f else 2.6f,if(olive)9f else 4f,0xffd3b354.toInt())}
+        if(citrus)repeat(5){group->
+            // Pummelo staminal filaments are joined basally in small bundles (NTBG).
+            val a=2*PI*group/5
+            val bx=cos(a).toFloat()*12;val by=sin(a).toFloat()*12
+            b.line(bx*.35f,by*.35f,bx,by,0xffbdae80.toInt(),2.4f)
+            repeat(5){i->
+                val angle=a+(i-2)*.115
+                val r=27f+(i%2)*4
+                val x=cos(angle).toFloat()*r;val y=sin(angle).toFloat()*r
+                b.line(bx,by,x,y,0xffbdae80.toInt(),1f)
+                b.at(x,y,(angle*180/PI).toFloat()){ellipse(0f,0f,2.4f,3.8f,0xffd3b354.toInt())}
+            }
+        } else {
+            val stamens=if(olive)2 else if(coffee)5 else 28
+            repeat(stamens){i->
+                val a=2*PI*i/stamens;val r=if(olive)17f else if(coffee)23f else 20f+(i%3)*6
+                val x=cos(a).toFloat()*r;val y=sin(a).toFloat()*r
+                b.line(x*.35f,y*.35f,x,y,0xffbdae80.toInt(),1f)
+                b.at(x,y,(a*180/PI).toFloat()){ellipse(0f,0f,if(olive)5f else 2.6f,if(olive)9f else 4f,0xffd3b354.toInt())}
+            }
         }
         b.line(0f,4f,0f,-9f,green,2f)
         if(coffee){b.line(0f,-9f,-5f,-15f,green,1.5f);b.line(0f,-9f,5f,-15f,green,1.5f)}

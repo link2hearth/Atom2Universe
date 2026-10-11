@@ -17,6 +17,54 @@ import java.io.File
 @Config(sdk=[34],manifest=Config.NONE)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class BotanyRenderingTest {
+    @Test fun deuxLotsPrairiesHaiesIllustres() {
+        referenceSheet(MeadowFlowersCatalog.species,"references-lot-10.png")
+        referenceSheet(HedgerowDiversityCatalog.species,"references-lot-11.png")
+        for(p in MeadowFlowersCatalog.species+HedgerowDiversityCatalog.species)for(view in PlantView.entries) {
+            val original=render(p.id,view)
+            val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
+            val canvas=Canvas(future);canvas.translate(20f,20f)
+            PlantPainter(canvas,p.copy(id="future_taxon")).draw(view)
+            assertArrayEquals("${p.id}/$view must use traits",pixels(original),pixels(future))
+            original.recycle();future.recycle()
+        }
+    }
+
+    @Test fun nouveauxFruitsDisponiblesSansProfilSpecialise() {
+        for(id in listOf("ananas_comosus","ficus_carica")) {
+            val p=BotanyCatalog.get(id)!!
+            val actual=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
+            val c=Canvas(actual);c.translate(20f,20f)
+            PlantPainter(c,p.copy(look=p.look.copy(study=null))).draw(PlantView.FRUIT)
+            assertTrue(id,pixels(actual).count{Color.alpha(it)>0}>150)
+            actual.recycle()
+        }
+    }
+    @Test fun deuxLotsArchitecturesEtFruitsIllustres() {
+        referenceSheet(MonocotFormsCatalog.species,"references-lot-8.png")
+        referenceSheet(WoodyFruitsCatalog.species,"references-lot-9.png")
+        for(p in MonocotFormsCatalog.species+WoodyFruitsCatalog.species)for(view in PlantView.entries) {
+            val original=render(p.id,view)
+            val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
+            val canvas=Canvas(future);canvas.translate(20f,20f)
+            PlantPainter(canvas,p.copy(id="future_taxon")).draw(view)
+            assertArrayEquals("${p.id}/$view must use traits",pixels(original),pixels(future))
+            original.recycle();future.recycle()
+        }
+    }
+    @Test fun deuxLotsCulinairesIllustres() {
+        referenceSheet(AromaticsCatalog.species,"references-lot-6.png")
+        referenceSheet(CropDiversityCatalog.species,"references-lot-7.png")
+        referenceSheet(listOfNotNull(BotanyCatalog.get("lotus"),BotanyCatalog.get("carpinus"),BotanyCatalog.get("indigofera_spicata"),BotanyCatalog.get("sesamum_alatum")),"audit-organes.png")
+        for(p in AromaticsCatalog.species+CropDiversityCatalog.species+listOfNotNull(BotanyCatalog.get("lotus"),BotanyCatalog.get("carpinus")))for(view in PlantView.entries) {
+            val original=render(p.id,view)
+            val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
+            val canvas=Canvas(future);canvas.translate(20f,20f)
+            PlantPainter(canvas,p.copy(id="future_taxon")).draw(view)
+            assertArrayEquals("${p.id}/$view must use traits",pixels(original),pixels(future))
+            original.recycle();future.recycle()
+        }
+    }
     private fun render(id:String,view:PlantView):Bitmap = Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888).also { bmp->
         val canvas=Canvas(bmp);canvas.translate(20f,20f)
         PlantPainter(canvas,BotanyCatalog.get(id)!!).draw(view)

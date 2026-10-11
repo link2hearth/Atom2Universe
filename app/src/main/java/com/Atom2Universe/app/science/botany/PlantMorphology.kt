@@ -57,12 +57,14 @@ data class FlowerDetail(
     val perianthLobes: Int = 4,
     val denseRaceme: Boolean = false
 )
-enum class CapsuleForm { OVOID, PORICIDAL_DISC, PYXIS, THREE_VALVES, FOUR_LOBES, THREE_HORNS, COTTON, BASAL_PORES, APICAL_TEETH, HEART, BEAKED, INFLATED_CALYX, LINEAR, VALVATE }
+enum class CapsuleForm { OVOID, PORICIDAL_DISC, PYXIS, THREE_VALVES, FOUR_LOBES, THREE_HORNS, COTTON, BASAL_PORES, APICAL_PORES, APICAL_TEETH, HEART, BEAKED, INFLATED_CALYX, LINEAR, VALVATE }
 enum class ConeForm { SPRUCE, FIR, PINE, LARCH, ALDER, SEQUOIA, REDWOOD, DOUGLAS }
 enum class SamaraForm { SINGLE, THREE_LOBED_BRACT, TWO_WINGS, ORBICULAR, FOUR_WINGS }
 enum class SchizocarpForm { PAIRED, CRANESBILL, WHEEL }
 enum class AcheneForm { SIMPLE, AGGREGATE, FOUR_NUTLETS, LINDEN, PAPPUS, SILKY_CLUSTER }
 enum class PodForm { STRAIGHT, SPIRAL, CURLED, PULPY, FLAT_CURVED }
+enum class SilicleForm { HEART, OVAL }
+
 data class FruitDetail(
     val capsule: CapsuleForm = CapsuleForm.OVOID,
     val cone: ConeForm = ConeForm.SPRUCE,
@@ -88,7 +90,10 @@ data class FruitDetail(
     val globoseCapsule: Boolean = false,
     val podForm: PodForm = PodForm.STRAIGHT,
     val shallowCup: Boolean = false,
-    val acheneColor: Int = 0xffaa9563.toInt()
+    val acheneColor: Int = 0xffaa9563.toInt(),
+    val aggregateCount: Int = 29,
+    val hairyAchene: Boolean = false,
+    val silicle: SilicleForm = SilicleForm.HEART
 )
 
 data class LeafDetail(
@@ -124,7 +129,15 @@ data class LeafDetail(
     val radialLeaflets: Boolean = false,
     val finelyDivided: Boolean = false,
     val bristleTips: Boolean = false,
-    val awlShoot: Boolean = false
+    val awlShoot: Boolean = false,
+    /** Five leaflets: three clustered distally and a separate stipulelike basal pair. */
+    val basalLeafletPair: Boolean = false,
+    /** Lateral leaflets alternate along the rachis instead of forming opposite pairs. */
+    val alternateLeaflets: Boolean = false,
+    /** Continuous blade with a large terminal lobe and smaller lateral lobes. */
+    val lyrate: Boolean = false,
+    /** Twice-divided leaf with broad lobed segments, rather than filiform divisions. */
+    val broadDivisions: Boolean = false
 )
 
 /** Representative free-growing adult habit, not an identification key or a fixed growth form. */

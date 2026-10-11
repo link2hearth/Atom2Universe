@@ -56,15 +56,15 @@ internal object TreesCatalog {
             heightMinCm = 1000, heightMaxCm = 2500, flowering = setOf(4,5), fruiting = setOf(9,10),
             habitats = setOf(Habitat.WOOD, Habitat.HEDGE), evergreen = false,
             look = PlantLook(Crown.COLUMN, LeafShape.OVAL, LeafMargin.SERRATE, LeafArrangement.ALTERNATE,
-                FlowerShape.CATKIN, FruitShape.SAMARA, FlowerColor.GREEN, 10.0f, 5.0f, 4.0f,
+                FlowerShape.CATKIN, FruitShape.ACHENE, FlowerColor.GREEN, 10.0f, 5.0f, 4.0f,
                 seed = 4, petiole=.11f, bark = 0xff8f8a79.toInt(),
                 leafDetail = LeafDetail(width=.29f, base=LeafBase.ROUNDED, tip=LeafTip.ACUMINATE, teeth=LeafTeeth.DOUBLE, veinPairs=12),
                 architecture = TreeArchitecture(radius=77f, bottom=211f, fork=196f, trunkWidth=17f, density=.95f, barkSurface=BarkSurface.FLUTED),
                 fruitDetail = FruitDetail(samara=SamaraForm.THREE_LOBED_BRACT)),
             description = R.string.bot_carpinus_description, distribution = R.string.bot_carpinus_distribution,
             captions = mapOf(PlantView.HABIT to R.string.bot_section_trees, PlantView.LEAF to LeafShape.OVAL.label,
-                PlantView.FLOWER to FlowerShape.CATKIN.label, PlantView.FRUIT to FruitShape.SAMARA.label),
-            sourceIds = setOf("powo", "tela", "botascopia", "onf")
+                PlantView.FLOWER to FlowerShape.CATKIN.label, PlantView.FRUIT to FruitShape.ACHENE.label),
+            sourceIds = setOf("powo", "tela", "botascopia", "onf", "ncsu")
         ),
         PlantSpecies(
             id = "betula", name = R.string.bot_betula_name, latin = R.string.bot_betula_latin, aliases = R.string.bot_betula_aliases,

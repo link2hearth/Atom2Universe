@@ -201,11 +201,12 @@ internal object HerbsCatalog {
             look = PlantLook(Crown.HERB, LeafShape.PINNATE, LeafMargin.ENTIRE, LeafArrangement.ALTERNATE,
                 FlowerShape.PEA, FruitShape.POD, FlowerColor.YELLOW, 4.0f, 2.0f, 3.0f,
                 seed = 49, leaflets = 5,
+                leafDetail = LeafDetail(basalLeafletPair=true,leafletShape=LeafShape.OVAL,leafletWidth=.31f,leafletTip=LeafTip.ROUNDED),
                 flowerDetail = FlowerDetail(cluster=FlowerCluster.SMALL_UMBEL), fruitDetail = FruitDetail(podSeeds=12, podWidth=9f)),
             description = R.string.bot_lotus_description, distribution = R.string.bot_lotus_distribution,
             captions = mapOf(PlantView.HABIT to R.string.bot_section_herbs, PlantView.LEAF to LeafShape.PINNATE.label,
                 PlantView.FLOWER to FlowerShape.PEA.label, PlantView.FRUIT to FruitShape.POD.label),
-            sourceIds = setOf("powo", "tela", "botascopia")
+            sourceIds = setOf("powo", "tela", "botascopia", "efloras")
         ),
         PlantSpecies(
             id = "vicia", name = R.string.bot_vicia_name, latin = R.string.bot_vicia_latin, aliases = R.string.bot_vicia_aliases,

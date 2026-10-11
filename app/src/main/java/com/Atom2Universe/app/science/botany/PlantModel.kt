@@ -35,6 +35,7 @@ enum class FlowerShape(val label: Int) {
     LIGULATE(R.string.bot_fl_ligulate), RACEME(R.string.bot_fl_raceme), GLOBOSE_HEAD(R.string.bot_fl_globose_head)
 }
 enum class FruitShape(val label: Int) {
+    MULTIPLE(R.string.bot_fr_multiple), SYCONIUM(R.string.bot_fr_syconium),
     ACORN(R.string.bot_fr_acorn), NUT(R.string.bot_fr_nut), BEECH(R.string.bot_fr_beech),
     CHESTNUT(R.string.bot_fr_chestnut), HORSECHESTNUT(R.string.bot_fr_horsechestnut),
     DOUBLE_SAMARA(R.string.bot_fr_double_samara), SAMARA(R.string.bot_fr_samara),

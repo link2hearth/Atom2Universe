@@ -21,7 +21,14 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             LeafShape.NEEDLE -> needles(length)
             LeafShape.PINNATE, LeafShape.PALMATE, LeafShape.TRIFOLIATE, LeafShape.BIFOLIATE -> compound(shape,length,margin,detail ?: look.leafDetail)
             LeafShape.BIPINNATE -> bipinnate(length,detail ?: look.leafDetail)
-            LeafShape.DIVIDED -> divided(length)
+            LeafShape.DIVIDED -> {
+                val divisions=detail ?: look.leafDetail
+                when {
+                    divisions.lyrate -> lyrate(length,divisions)
+                    divisions.broadDivisions -> broadDivisions(length,divisions)
+                    else -> divided(length)
+                }
+            }
             else -> simple(shape,length,margin,detail ?: if(shape==look.leaf)look.leafDetail else LeafDetail())
         }
     }
@@ -94,7 +101,7 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
         if(d.tip==LeafTip.ACUMINATE && q>.72f) envelope*=1f-.45f*(q-.72f)/.28f
         if(d.tip==LeafTip.ROUNDED && shape!=LeafShape.OAK) envelope=sin(PI*q).toFloat().pow(.52f)
         if(d.tip==LeafTip.NOTCHED) envelope=sin(PI*q*.91f).toFloat().pow(.68f)*(1f+.15f*q)
-        if(shape==LeafShape.OAK) {
+        if(shape==LeafShape.OAK || margin==LeafMargin.LOBED) {
             envelope*=1f-d.lobeDepth*.5f+d.lobeDepth*.5f*cos(2*PI*(q*d.lobePairs-.35)).toFloat()
             if(q>.91f) envelope*=sqrt(((1f-q)/.09f).coerceAtLeast(0f))
             if(q<.12f) envelope*=if(d.base==LeafBase.AURICLED) .5f+.5f*sin(PI*q/.12).toFloat() else q/.12f
@@ -103,7 +110,7 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
         val teeth = when {
             d.teeth==LeafTeeth.WAVY -> .018f*sin(q*d.veinPairs*2*PI).toFloat()
             d.teeth==LeafTeeth.CRENATE -> .035f*sin(q*11*2*PI).toFloat()
-            margin==LeafMargin.SERRATE -> {
+            margin==LeafMargin.SERRATE || (margin==LeafMargin.LOBED && d.teeth==LeafTeeth.DOUBLE) -> {
                 val phase=(q*d.veinPairs*2)%1f
                 val saw=if(phase<.72f) phase/.72f else (1f-phase)/.28f
                 val secondary=if(d.teeth==LeafTeeth.DOUBLE) .007f*sin(q*d.veinPairs*6*PI).toFloat() else 0f
@@ -328,15 +335,103 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
         brush.fill(midrib,light)
     }
 
+    private fun lyrate(length:Float,d:LeafDetail) {
+        val stalk=length*.16f;val h=length-stalk
+        brush.line(0f,0f,0f,-stalk,edge,1.7f)
+        brush.at(0f,-stalk) {
+            // The side lobes remain joined by a narrow blade, unlike separate pinnate leaflets.
+            val p=Path().apply {
+                moveTo(0f,0f)
+                quadTo(-h*.04f,-h*.03f,-h*.04f,-h*.12f)
+                quadTo(-h*.19f,-h*.10f,-h*.23f,-h*.22f)
+                quadTo(-h*.19f,-h*.29f,-h*.045f,-h*.31f)
+                lineTo(-h*.045f,-h*.37f)
+                quadTo(-h*.25f,-h*.33f,-h*.28f,-h*.45f)
+                quadTo(-h*.19f,-h*.54f,-h*.05f,-h*.53f)
+                quadTo(-h*.27f,-h*.59f,-h*.31f,-h*.73f)
+                quadTo(-h*.32f,-h*.87f,0f,-h)
+                quadTo(h*.32f,-h*.87f,h*.31f,-h*.73f)
+                quadTo(h*.27f,-h*.59f,h*.05f,-h*.53f)
+                quadTo(h*.19f,-h*.54f,h*.28f,-h*.45f)
+                quadTo(h*.25f,-h*.33f,h*.045f,-h*.37f)
+                lineTo(h*.045f,-h*.31f)
+                quadTo(h*.19f,-h*.29f,h*.23f,-h*.22f)
+                quadTo(h*.19f,-h*.10f,h*.04f,-h*.12f)
+                quadTo(h*.04f,-h*.03f,0f,0f);close()
+            }
+            brush.wash(p,-h*.31f,-h,h*.31f,0f,intArrayOf(light,green,edge))
+            brush.stroke(p,edge,.7f)
+            canvas.save();canvas.clipPath(p)
+            brush.line(0f,0f,0f,-h*.97f,light,1f)
+            for(side in listOf(-1,1))for((base,tip,width) in listOf(
+                Triple(.17f,.22f,.22f),Triple(.39f,.45f,.27f),
+                Triple(.57f,.68f,.30f),Triple(.70f,.79f,.28f),Triple(.82f,.89f,.18f))) {
+                brush.stroke(Path().apply{moveTo(0f,-h*base);quadTo(side*h*width*.65f,-h*(base+tip)/2,side*h*width,-h*tip)},light,.7f)
+            }
+            if(d.ciliate && detailed)for(i in 0..32) {
+                val x=sin(i*2.4f)*h*.27f;val y=-h*(.12f+i/40f)
+                brush.line(x,y,x+1.3f,y-2.3f,light,.45f)
+            }
+            canvas.restore()
+        }
+    }
+
+    private fun broadDivisions(length:Float,d:LeafDetail) {
+        val segment=d.copy(width=.30f,base=LeafBase.TAPERED,tip=LeafTip.POINTED,
+            venation=Venation.PINNATE,lobePairs=2,lobeDepth=.32f,roundedLobes=false)
+        brush.line(0f,0f,0f,-length*.78f,edge,1.6f)
+        for(level in 0..2)for(side in listOf(-1,1)) {
+            val y=-length*(.22f+level*.21f)
+            val reach=length*(.39f-level*.075f)
+            brush.at(0f,y,side*50f) {
+                brush.line(0f,0f,0f,-reach*.73f,edge,1.1f)
+                // Each primary division has broad secondary divisions and a terminal segment.
+                for(j in 0..1)for(s in listOf(-1,1))brush.at(0f,-reach*(.22f+j*.26f),s*51f) {
+                    simple(LeafShape.OAK,reach*(.54f-j*.12f),LeafMargin.LOBED,segment,.12f)
+                }
+                brush.at(0f,-reach*.65f) {
+                    simple(LeafShape.OAK,reach*.47f,LeafMargin.LOBED,segment,.10f)
+                }
+            }
+        }
+        brush.at(0f,-length*.73f) {
+            simple(LeafShape.OAK,length*.27f,LeafMargin.LOBED,segment,.10f)
+        }
+    }
+
     private fun compound(shape: LeafShape,length: Float,margin: LeafMargin,d:LeafDetail) {
         val leaflets=d.copy(width=d.leafletWidth,base=LeafBase.TAPERED,venation=Venation.PINNATE,
             tip=d.leafletTip,asymmetry=.045f)
+        if(d.basalLeafletPair) {
+            // Lotus-type compound leaf: three distal leaflets, two basal leaflets, not stipules.
+            val junction=-length*.44f
+            brush.line(0f,0f,0f,junction,edge,1.8f)
+            brush.line(-.4f,0f,-.4f,junction,light,.65f)
+            for(side in listOf(-1,1)) {
+                brush.at(0f,-length*.065f,side*76f) {
+                    simple(d.leafletShape,length*.43f,margin,leaflets,d.leafletPetiole)
+                }
+                brush.at(0f,junction,side*52f) {
+                    simple(d.leafletShape,length*.52f,margin,leaflets,d.leafletPetiole)
+                }
+            }
+            brush.at(0f,junction) {
+                simple(d.leafletShape,length*.56f,margin,leaflets,d.leafletPetiole)
+            }
+            return
+        }
         if(shape==LeafShape.PINNATE) {
             val terminal=look.leaflets%2==1; val pairs=look.leaflets/2
             val end=if(terminal) .76f else if(d.terminalTendril) .93f else if(d.leafletAngle!=null) .87f else .72f
             brush.line(0f,0f,0f,-length*end,edge,1.8f)
             brush.line(-.4f,0f,-.4f,-length*end,light,.65f)
-            repeat(pairs) { i ->
+            if(d.alternateLeaflets) repeat(pairs*2) { i ->
+                val t=i/(pairs*2-1f).coerceAtLeast(1f)
+                val side=if(i%2==0)-1 else 1
+                brush.at(0f,-length*(.20f+t*.46f),side*(d.leafletAngle ?: (62f-13f*t))) {
+                    simple(d.leafletShape,length*(.28f-.04f*t),margin,leaflets,d.leafletPetiole)
+                }
+            } else repeat(pairs) { i ->
                 val t=if(pairs==1) .45f else i/(pairs-1f)
                 val y=-length*(.23f+t*if(d.leafletAngle!=null).62f else .48f)
                 val leafletLength=length*(.28f-.055f*t)*(if(pairs>5) .8f else 1f)
