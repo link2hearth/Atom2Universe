@@ -15,6 +15,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
 
@@ -53,16 +54,22 @@ internal class CoralPainter(
     /** De l'ombre à la lumière : t = 0 la couleur du cœur, 1 celle du bord. */
     private fun tone(t: Float) = if (t < 0.5f) mixColor(look.capCenter, look.capMid, t * 2f) else mixColor(look.capMid, look.capEdge, (t - 0.5f) * 2f)
 
-    fun side() {
-        if (spec.kind == CoralKind.LOBES) lobesSide() else branchesSide()
+    fun side() = when (spec.kind) {
+        CoralKind.LOBES -> lobesSide()
+        CoralKind.BRANCHES -> branchesSide()
+        CoralKind.SPINES -> spinesSide()
     }
 
-    fun section() {
-        if (spec.kind == CoralKind.LOBES) lobesSection() else branchesSection()
+    fun section() = when (spec.kind) {
+        CoralKind.LOBES -> lobesSection()
+        CoralKind.BRANCHES -> branchesSection()
+        CoralKind.SPINES -> spinesSection()
     }
 
-    fun under(ucx: Float, ucy: Float, ur: Float) {
-        if (spec.kind == CoralKind.LOBES) lobesUnder(ucx, ucy, ur) else branchesUnder(ucx, ucy, ur)
+    fun under(ucx: Float, ucy: Float, ur: Float) = when (spec.kind) {
+        CoralKind.LOBES -> lobesUnder(ucx, ucy, ur)
+        CoralKind.BRANCHES -> branchesUnder(ucx, ucy, ur)
+        CoralKind.SPINES -> spinesUnder(ucx, ucy, ur)
     }
 
     // ------------------------------------------------------------------ la base
@@ -279,6 +286,168 @@ internal class CoralPainter(
         stroke(stipeOutline, hair * 1.2f); c.drawCircle(ucx, ucy, sr, p)
         anchors[Anchor.U_CENTER] = PointF(ucx, ucy)
         anchors[Anchor.U_RIM] = PointF(ucx + ur * 0.62f * cos(0.6f), ucy + ur * 0.62f * sin(0.6f))
+    }
+
+    // ------------------------------------------------------------------ aiguillons pendants (hydne hérisson)
+
+    /** Le haut de la masse, là où elle tient au bois : [baseH] = longueur des aiguillons sous la masse, [crown] = hauteur de la masse. */
+    private fun massTop() = baseH + crown
+    private fun massCy() = baseH + crown / 2f
+
+    /** Un petit morceau d'écorce posé au-dessus de la masse : c'est là qu'elle tient. */
+    private fun drawWood() {
+        val top = massTop()
+        val rect = RectF(px(-r * 0.42f), py(top + 0.42f), px(r * 0.42f), py(top - 0.25f))
+        p.reset(); p.isAntiAlias = true
+        p.shader = LinearGradient(rect.left, 0f, rect.right, 0f,
+            intArrayOf(0xFF4E3B2B.toInt(), 0xFF6D553F.toInt(), 0xFF5A4533.toInt()), floatArrayOf(0f, 0.55f, 1f), Shader.TileMode.CLAMP)
+        c.drawRoundRect(rect, 0.12f * s, 0.12f * s, p)
+        val g = Random(look.seed + 331)
+        stroke(withAlpha(0xFF2E2118.toInt(), 150), max(hair, 0.04f * s))
+        for (k in 0 until 6) {
+            val x = -r * 0.42f + r * 0.84f * (k + 0.5f) / 6f + (g.nextFloat() - 0.5f) * 0.1f
+            c.drawLine(px(x), rect.top + 0.04f * s, px(x + (g.nextFloat() - 0.5f) * 0.15f), rect.bottom - 0.04f * s, p)
+        }
+        stroke(withAlpha(0xFF2E2118.toInt(), 220), hair * 1.1f)
+        c.drawRoundRect(rect, 0.12f * s, 0.12f * s, p)
+    }
+
+    /** Le contour de la masse : une ellipse un peu bosselée. */
+    private fun massPath(): Path {
+        val path = Path()
+        val a = r * 0.96f
+        val b = crown / 2f
+        val yc = massCy()
+        val n = 90
+        for (i in 0..n) {
+            val t = 2f * PI.toFloat() * i / n
+            val bump = 1f + 0.035f * sin(5f * t + look.seed) + 0.02f * sin(9f * t)
+            val x = a * cos(t) * bump
+            val y = yc + b * sin(t) * bump
+            if (i == 0) path.moveTo(px(x), py(y)) else path.lineTo(px(x), py(y))
+        }
+        path.close()
+        return path
+    }
+
+    /** Un aiguillon : un fin cône qui pend depuis (x, y) sur [len] cm, penché de [sway]. */
+    private fun drawSpine(x: Float, y: Float, len: Float, sway: Float, w: Float, color: Int, outline: Int) {
+        val path = Path()
+        path.moveTo(px(x - w / 2f), py(y))
+        path.quadTo(px(x - w * 0.3f + sway * 0.4f), py(y - len * 0.55f), px(x + sway), py(y - len))
+        path.quadTo(px(x + w * 0.3f + sway * 0.4f), py(y - len * 0.55f), px(x + w / 2f), py(y))
+        path.close()
+        c.drawPath(path, fill(color))
+        stroke(outline, hair * 0.7f); c.drawPath(path, p)
+    }
+
+    private fun spinesSide() {
+        val a = r * 0.96f
+        val b = crown / 2f
+        val yc = massCy()
+        drawWood()
+        val body = massPath()
+        p.reset(); p.isAntiAlias = true
+        p.shader = RadialGradient(px(-a * 0.2f), py(yc + b * 0.3f), a * s * 1.3f,
+            intArrayOf(look.capEdge, look.capMid, look.capCenter), floatArrayOf(0f, 0.6f, 1f), Shader.TileMode.CLAMP)
+        c.drawPath(body, p)
+        stroke(withAlpha(darken(look.capMid, 0.5f), 220), hair * 1.2f); c.drawPath(body, p)
+        // des rangées d'aiguillons, du haut vers le bas : chaque rang recouvre le précédent et pend plus bas
+        val g = Random(look.seed + 321)
+        val rows = 17
+        val spacing = max(0.3f, r * 0.036f)
+        for (row in 0 until rows) {
+            val t = row / (rows - 1f)
+            val dy = 0.9f - 1.8f * t
+            val y = yc + b * dy
+            val half = a * kotlin.math.sqrt((1f - dy * dy).coerceAtLeast(0.02f)) * 0.97f
+            val count = max(4, (2f * half / spacing).toInt())
+            val reach = 0.7f + (baseH + b * 0.12f - 0.7f) * t.pow(1.7f)
+            for (j in 0 until count) {
+                val x = -half + 2f * half * (j + 0.5f + (g.nextFloat() - 0.5f) * 0.7f) / count
+                val len = reach * (0.75f + 0.5f * g.nextFloat())
+                val sway = (g.nextFloat() - 0.5f) * 0.22f + x / a * 0.12f
+                val light = (0.25f + 0.6f * t + (g.nextFloat() - 0.5f) * 0.2f).coerceIn(0f, 1f)
+                drawSpine(x, y + (g.nextFloat() - 0.5f) * 0.25f, len, sway, spacing * 0.95f, tone(light), withAlpha(darken(look.capMid, 0.5f), 200))
+            }
+        }
+        anchor(Anchor.CAP, -a * 0.45f, yc + b * 0.4f)
+        anchor(Anchor.FACE, a * 0.28f, yc - b * 0.2f)
+        anchor(Anchor.EDGE, a * 0.62f, baseH * 0.5f)
+        anchor(Anchor.BASE, 0f, massTop() + 0.1f)
+    }
+
+    private fun spinesSection() {
+        val a = r * 0.96f
+        val b = crown / 2f
+        val yc = massCy()
+        drawWood()
+        val body = massPath()
+        p.reset(); p.isAntiAlias = true
+        p.shader = RadialGradient(px(0f), py(yc), a * s,
+            intArrayOf(lighten(look.flesh, 0.1f), look.flesh, darken(look.flesh, 0.08f)), floatArrayOf(0f, 0.6f, 1f), Shader.TileMode.CLAMP)
+        c.drawPath(body, p)
+        c.save(); c.clipPath(body)
+        // la chair : des fibres qui partent de l'attache et s'ouvrent en éventail
+        val g = Random(look.seed + 322)
+        stroke(withAlpha(darken(look.flesh, 0.38f), 120), hair * 0.9f)
+        for (k in -8..8) {
+            val tx = a * 0.95f * k / 8f
+            val line = Path()
+            line.moveTo(px(0f), py(massTop() - 0.1f))
+            line.quadTo(px(tx * 0.35f + (g.nextFloat() - 0.5f) * 0.3f), py(yc), px(tx), py(yc - b * 0.98f * cos(k / 8f * 1.2f).coerceAtLeast(0.2f)))
+            c.drawPath(line, p)
+        }
+        c.restore()
+        // les aiguillons coupés, en frange sous la masse
+        val spacing = max(0.34f, r * 0.045f)
+        val n = max(8, (2f * a / spacing).toInt())
+        for (j in 0 until n) {
+            val u = (j + 0.5f) / n
+            val x = -a * 0.93f + 2f * a * 0.93f * u
+            val edge = yc - b * kotlin.math.sqrt((1f - (x / a) * (x / a)).coerceAtLeast(0f)) * 0.98f
+            val mid = 2f * u - 1f
+            val len = (0.9f + (baseH - 0.5f) * (1f - mid * mid)) * (0.85f + 0.3f * g.nextFloat())
+            drawSpine(x, edge + 0.05f, len, (g.nextFloat() - 0.5f) * 0.15f, spacing * 1.1f, lighten(look.flesh, 0.05f), withAlpha(darken(look.flesh, 0.5f), 220))
+        }
+        stroke(withAlpha(darken(look.flesh, 0.55f), 235), hair * 1.3f); c.drawPath(body, p)
+        anchor(Anchor.S_FLESH, a * 0.2f, yc + b * 0.25f)
+        anchor(Anchor.S_HYM, a * 0.35f, baseH * 0.5f)
+        anchor(Anchor.S_BASE, 0f, massTop() + 0.1f)
+    }
+
+    /** Vue de dessous : les pointes des aiguillons, une pelouse dense de petits points qui s'éclaircissent vers le bord. */
+    private fun spinesUnder(ucx: Float, ucy: Float, ur: Float) {
+        val g = Random(look.seed + 323)
+        p.reset(); p.isAntiAlias = true
+        p.shader = RadialGradient(ucx, ucy, ur, intArrayOf(darken(look.capCenter, 0.3f), look.capCenter, look.capMid), floatArrayOf(0f, 0.7f, 1f), Shader.TileMode.CLAMP)
+        c.drawCircle(ucx, ucy, ur, p)
+        c.save()
+        val clip = Path().apply { addCircle(ucx, ucy, ur, Path.Direction.CW) }
+        c.clipPath(clip)
+        val d = max(hair * 3.4f, ur * 0.05f)
+        var row = 0
+        var y = ucy - ur
+        while (y <= ucy + ur) {
+            var x = ucx - ur + (if (row % 2 == 0) 0f else d / 2f)
+            while (x <= ucx + ur) {
+                val dist = kotlin.math.sqrt((x - ucx) * (x - ucx) + (y - ucy) * (y - ucy)) / ur
+                if (dist <= 1f) {
+                    val tipColor = tone((0.35f + 0.6f * dist + (g.nextFloat() - 0.5f) * 0.2f).coerceIn(0f, 1f))
+                    c.drawCircle(x + (g.nextFloat() - 0.5f) * d * 0.3f, y + (g.nextFloat() - 0.5f) * d * 0.3f, d * 0.4f, fill(tipColor))
+                    stroke(withAlpha(darken(look.capMid, 0.45f), 150), hair * 0.6f)
+                    c.drawCircle(x, y, d * 0.4f, p)
+                }
+                x += d
+            }
+            y += d * 0.87f
+            row++
+        }
+        c.restore()
+        stroke(withAlpha(darken(look.capMid, 0.5f), 220), hair * 1.2f); c.drawCircle(ucx, ucy, ur, p)
+        anchors[Anchor.U_CENTER] = PointF(ucx, ucy)
+        anchors[Anchor.U_RIM] = PointF(ucx + ur * 0.62f * cos(0.4f), ucy + ur * 0.62f * sin(0.4f))
+        anchors[Anchor.U_HYM] = PointF(ucx - ur * 0.35f, ucy + ur * 0.3f)
     }
 
     // ------------------------------------------------------------------ branches

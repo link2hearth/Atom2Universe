@@ -84,7 +84,7 @@
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "impudicus", "erinaceus", "lignyotus"]
     },
     {
       "id": "toxinfo2025", "kind": "official",
@@ -150,13 +150,13 @@
       "id": "vapko2023", "kind": "society",
       "citation": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf",
-      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus"]
+      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "lignyotus", "imbricatus"]
     },
     {
       "id": "dgfm2026tox", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf",
-      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima"]
+      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima", "turpis"]
     },
     {
       "id": "mdc-velvetfoot", "kind": "official",
@@ -306,6 +306,17 @@
     { "id": "wp-en-pinophilus", "kind": "encyclopedia", "citation": "Wikipedia (en): Boletus pinophilus", "url": "https://en.wikipedia.org/wiki/Boletus_pinophilus", "species": ["pinophilus"] },
     { "id": "wp-fr-reticulatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Boletus reticulatus", "url": "https://fr.wikipedia.org/wiki/Boletus_reticulatus", "species": ["reticulatus"] },
     { "id": "wp-en-reticulatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Boletus reticulatus", "url": "https://en.wikipedia.org/wiki/Boletus_reticulatus", "species": ["reticulatus"] },
-    { "id": "wp-en-proxima", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita proxima", "url": "https://en.wikipedia.org/wiki/Amanita_proxima", "species": ["proxima"] }
+    { "id": "wp-en-proxima", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita proxima", "url": "https://en.wikipedia.org/wiki/Amanita_proxima", "species": ["proxima"] },
+    { "id": "wp-fr-bisporus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Agaricus bisporus", "url": "https://fr.wikipedia.org/wiki/Agaricus_bisporus", "species": ["bisporus"] },
+    { "id": "wp-en-bisporus", "kind": "encyclopedia", "citation": "Wikipedia (en): Agaricus bisporus", "url": "https://en.wikipedia.org/wiki/Agaricus_bisporus", "species": ["bisporus"] },
+    { "id": "wp-fr-impudicus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Phallus impudicus", "url": "https://fr.wikipedia.org/wiki/Phallus_impudicus", "species": ["impudicus"] },
+    { "id": "wp-en-impudicus", "kind": "encyclopedia", "citation": "Wikipedia (en): Phallus impudicus", "url": "https://en.wikipedia.org/wiki/Phallus_impudicus", "species": ["impudicus"] },
+    { "id": "wp-fr-erinaceus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hericium erinaceus", "url": "https://fr.wikipedia.org/wiki/Hericium_erinaceus", "species": ["erinaceus"] },
+    { "id": "wp-en-erinaceus", "kind": "encyclopedia", "citation": "Wikipedia (en): Hericium erinaceus", "url": "https://en.wikipedia.org/wiki/Hericium_erinaceus", "species": ["erinaceus"] },
+    { "id": "wp-fr-lignyotus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactarius lignyotus", "url": "https://fr.wikipedia.org/wiki/Lactarius_lignyotus", "species": ["lignyotus"] },
+    { "id": "wp-en-lignyotus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius lignyotus", "url": "https://en.wikipedia.org/wiki/Lactarius_lignyotus", "species": ["lignyotus"] },
+    { "id": "wp-en-turpis", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius turpis", "url": "https://en.wikipedia.org/wiki/Lactarius_turpis", "species": ["turpis"] },
+    { "id": "wp-fr-imbricatus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Sarcodon imbricatus", "url": "https://fr.wikipedia.org/wiki/Sarcodon_imbricatus", "species": ["imbricatus"] },
+    { "id": "wp-en-imbricatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Sarcodon imbricatus", "url": "https://en.wikipedia.org/wiki/Sarcodon_imbricatus", "species": ["imbricatus"] }
   ]
 }

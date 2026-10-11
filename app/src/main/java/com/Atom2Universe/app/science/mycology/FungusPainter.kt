@@ -1091,6 +1091,8 @@ internal class SpecimenPainter(
         anchor(Anchor.UMBO, cx, capCy + rY)
         anchor(Anchor.FACE, cx + rx * 0.5f, capCy - rY * 0.2f)
         anchor(Anchor.BULB, 0f, 0f)
+        // le reste de l'œuf qui chausse la base (satyre puant) ; les morilles n'en ont pas
+        drawVolva()
     }
 
     private fun drawPits(capCy: Float, rx: Float, rY: Float) {
@@ -1722,6 +1724,8 @@ internal class SpecimenPainter(
         anchor(Anchor.S_STIPE, stipeHalf(look.stipeH * 0.4f) - wall * 0.5f, look.stipeH * 0.4f)
         anchor(Anchor.S_HYM, cx - r + wall * 0.5f, capCy + rY * 0.35f)
         anchor(Anchor.S_BASE, 0f, 0.25f)
+        sectionVolva()
+        if (look.volva != VolvaKind.NONE) anchor(Anchor.S_VOLVA, stipeHalf(0.5f) + 0.3f, look.volvaH * 0.5f)
     }
 
     private fun brainSection() {

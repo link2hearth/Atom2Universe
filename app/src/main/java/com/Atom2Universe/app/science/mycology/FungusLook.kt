@@ -105,12 +105,16 @@ enum class BallInside {
  */
 class BallSpec(val inside: BallInside, val skin: Float, val skinColor: Int, val gleba: Int, val accent: Int, val cords: Boolean = false)
 
-/** Les champignons ramifiés : [LOBES] = un bloc de lobes plats et crépus (sparassis), [BRANCHES] = un buisson de branches dressées (clavaire). */
-enum class CoralKind { LOBES, BRANCHES }
+/**
+ * Les champignons ramifiés : [LOBES] = un bloc de lobes plats et crépus (sparassis), [BRANCHES] = un buisson de branches dressées (clavaire),
+ * [SPINES] = une masse accrochée au bois dont pendent de longs aiguillons (hydne hérisson).
+ */
+enum class CoralKind { LOBES, BRANCHES, SPINES }
 
 /**
  * Le détail d'un corail : [kind], [tip] = couleur du bord des lobes ou des pointes des branches, [density] = nombre de lobes
- * (LOBES) ou de branches à la base (BRANCHES). Largeur = capDiam, hauteur de la couronne = capRise, base = stipeH, stipeW.
+ * (LOBES), de branches à la base (BRANCHES) ou de rangées d'aiguillons (SPINES). Largeur = capDiam, hauteur de la couronne = capRise,
+ * base = stipeH, stipeW ; pour SPINES, stipeH = la longueur dont les aiguillons dépassent sous la masse.
  */
 class CoralSpec(val kind: CoralKind, val tip: Int, val density: Int)
 

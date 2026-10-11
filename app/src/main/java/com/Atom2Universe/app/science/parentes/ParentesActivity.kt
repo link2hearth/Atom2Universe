@@ -7,6 +7,9 @@ import com.Atom2Universe.app.science.botany.BotanyLifeIndex
 import com.Atom2Universe.app.science.bestiary.AnimalCatalog
 import com.Atom2Universe.app.science.bestiary.BestiaryActivity
 import com.Atom2Universe.app.science.bestiary.BestiaryLifeIndex
+import com.Atom2Universe.app.science.mycology.FungusCatalog
+import com.Atom2Universe.app.science.mycology.MycologyActivity
+import com.Atom2Universe.app.science.mycology.MycologyLifeIndex
 import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.coroutines.Job
 import android.os.Bundle
@@ -38,6 +41,7 @@ class ParentesActivity : ThemedActivity() {
     private var repository: ParentesRepository? = null
     private val repo get() = requireNotNull(repository)
     private var bestiaryIndex: BestiaryLifeIndex? = null
+    private var mycologyIndex: MycologyLifeIndex? = null
     private var focus = ""
     private var selected = ""
     private var first = ""
@@ -100,6 +104,7 @@ class ParentesActivity : ThemedActivity() {
                 loading.visibility = View.GONE
                 repository = result
                 bestiaryIndex = BestiaryLifeIndex(result.tree, AnimalCatalog.species.associate { it.id to it.scientific })
+                mycologyIndex = MycologyLifeIndex(result.tree, FungusCatalog.species.associate { it.id to getString(it.latin) })
                 focus = focus.takeIf { it in repo.tree.nodes } ?: repo.tree.root
                 selected = selected.takeIf { it in repo.tree.nodes } ?: focus
                 fun defaultSpecies(name: String) = repo.tree.species.first { it.scientific == name }.id
@@ -349,6 +354,7 @@ class ParentesActivity : ThemedActivity() {
             card.addView(label(if(repo.tree.nodes.getValue(selected).species) repo.tree.nodes.getValue(selected).scientific else article(selected),14f))
             botanyButton(selected)?.let{card.addView(it)}
             bestiaryButton(selected)?.let{card.addView(it)}
+            mycologyButton(selected)?.let{card.addView(it)}
         }
         cardScroll.post { cardScroll.scrollTo(0,0) }
     }
@@ -436,6 +442,7 @@ class ParentesActivity : ThemedActivity() {
         if (repo.tree.children[id].orEmpty().size > 2) body.addView(label(getString(R.string.pt_polytomy)))
         botanyButton(id)?.let{body.addView(it)}
         bestiaryButton(id)?.let{body.addView(it)}
+        mycologyButton(id)?.let{body.addView(it)}
         addDatingLink(body, id)
         dialog(repo.name(this,id),body)
     }
@@ -447,6 +454,16 @@ class ParentesActivity : ThemedActivity() {
                 .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
                 .putExtra(BestiaryActivity.EXTRA_SPECIES_ID, species)
                 .putExtra(BestiaryActivity.EXTRA_LIFE_NODE, id))
+        }
+    }
+
+    private fun mycologyButton(id: String): View? {
+        val species = mycologyIndex?.forNode(id) ?: return null
+        return button(getString(R.string.myco_open_profile)) {
+            startActivity(Intent(this, MycologyActivity::class.java)
+                .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                .putExtra(MycologyActivity.EXTRA_SPECIES_ID, species)
+                .putExtra(MycologyActivity.EXTRA_LIFE_NODE, id))
         }
     }
 

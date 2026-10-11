@@ -153,13 +153,14 @@
         <item>Petites lépiotes (moins de 10 cm) : mortelles, à ne jamais cueillir.</item>
     </string-array>
     <string name="myco_g_field_title">Rosé des prés, ou pas ?</string>
-    <string name="myco_g_field_evidence">ANSES 2022, contrôleurs suisses</string>
+    <string name="myco_g_field_evidence">ANSES 2022, contrôleurs suisses, Wikipédia</string>
     <string-array name="myco_g_field_points">
         <item>Rosé des prés : lames roses puis brun chocolat. Amanites blanches : lames toujours blanches, volve en sac.</item>
         <item>Agaric jaunissant : jaunit au frottement, bulbe à la base, odeur d’encre ou de phénol, anneau large.</item>
         <item>Rosé des prés : pied en fuseau sans bulbe, anneau mince et fugace.</item>
         <item>Agaric sylvicole, comestible : les contrôleurs suisses signalent qu’on le confond avec l’agaric jaunissant.</item>
         <item>En 2022, deux décès après une amanite mortelle prise pour un rosé des prés ou un agaric des jachères.</item>
+        <item>Champignon de Paris, forme sauvage : chapeau gris-brun écailleux, lames roses puis brunes, anneau épais et étroit. Wikipédia cite parmi ses sosies des amanites mortelles (volve, lames toutes blanches) et l’agaric jaunissant (odeur de phénol, chair qui jaunit).</item>
     </string-array>
     <string name="myco_g_morel_title">Morille, ou fausse morille ?</string>
     <string name="myco_g_morel_evidence">Décret de 1991</string>
@@ -1598,4 +1599,84 @@
         <item>Dans les bois et les lisières, surtout sous les chênes sur sol calcaire ; en automne ; surtout autour de la Méditerranée</item>
     </string-array>
     <string name="myco_proxima_note">Toxique : la société allemande de mycologie (2026) la range parmi les amanites qui abîment les reins (« syndrome de proxima ») ; elle note que la toxine supposée, l’allénylnorleucine, n’y a pas encore été trouvée. Elle ressemble beaucoup à l’amanite ovoïde, qu’on a parfois mangée : voir la fiche de celle-ci.</string>
+    <string name="myco_open_profile">Ouvrir la fiche du champignon</string>
+    <string name="myco_open_tree">Retrouver dans l’arbre du vivant</string>
+    <string name="myco_sec_classification">Classification</string>
+    <string name="myco_bisporus_name">Champignon de Paris</string>
+    <string name="myco_bisporus_alt">Button mushroom</string>
+    <string-array name="myco_bisporus_traits">
+        <item>Forme sauvage : chapeau de 5 à 10 cm, gris-brun pâle, à larges écailles plates (la forme cultivée est blanche)</item>
+        <item>Lames libres et serrées : roses, puis brun-rouge, puis brun foncé : jamais blanches</item>
+        <item>Anneau épais et étroit, parfois strié au-dessus</item>
+        <item>Pied cylindrique jusqu’à 6 cm, sans bulbe ni volve</item>
+        <item>Chair ferme et blanche qui rosit légèrement à la blessure</item>
+        <item>Sol riche, compost, fumier, hors des forêts</item>
+    </string-array>
+    <string name="myco_bisporus_note">Comestible : c’est le champignon le plus cultivé au monde, et il figure sur les listes de la DGfM et du VAPKO. À l’état sauvage, il est rare. On le confond avec des sosies parfois mortels : les anges destructeurs (volve à la base, lames toutes blanches) et l’agaric jaunissant, toxique (odeur de phénol, chair qui jaunit). Un champignon qui pousse sur un sol pollué peut accumuler des métaux lourds.</string>
+    <string name="myco_impudicus_name">Satyre puant</string>
+    <string name="myco_impudicus_alt">Common stinkhorn</string>
+    <string-array name="myco_impudicus_traits">
+        <item>Chapeau de 2 à 4 cm de haut, conique et alvéolé, couvert d’un mucus vert olive à noirâtre</item>
+        <item>Pied de 10 à 20 cm, blanc, alvéolé, creux et fragile</item>
+        <item>Volve en sac à la base : ce qui reste de l’œuf éclaté</item>
+        <item>Odeur de charogne, sensible à plusieurs mètres</item>
+        <item>Stade jeune : un œuf blanchâtre d’environ 3 à 6 cm, avec une couche de gelée</item>
+        <item>Bois de feuillus et de résineux, près des vieilles souches · fin du printemps à l’automne</item>
+    </string-array>
+    <string name="myco_impudicus_note">Comestible seulement à l’état d’œuf jeune, d’après la liste de la DGfM. Coupez chaque œuf en deux : l’œuf d’une amanite mortelle montre déjà son chapeau et ses lames dans un sac (voir l’œuf d’amanite phalloïde), celui du satyre montre de la gelée autour d’un cœur blanc. Une fois ouvert, l’odeur interdit tout usage.</string>
+    <string name="myco_erinaceus_name">Hydne hérisson</string>
+    <string name="myco_erinaceus_alt">Lion’s mane</string>
+    <string-array name="myco_erinaceus_traits">
+        <item>Une seule masse pendante de 10 à 20 cm, sans chapeau ni pied, fixée au bois par une base épaisse</item>
+        <item>Aiguillons mous et non ramifiés, longs de 2 à 7 cm, pendant en rangs serrés</item>
+        <item>Blanc quand il est frais, jaune brunâtre à brun rougeâtre en séchant</item>
+        <item>Chair molle, épaisse et blanche, qui ne change pas</item>
+        <item>Sporée blanche</item>
+        <item>Bois vivant ou fraîchement coupé de feuillus, surtout hêtre et chêne · fin d’été et automne</item>
+    </string-array>
+    <string name="myco_erinaceus_note">Comestible jeune, d’après la liste de la DGfM et Wikipédia, mais il peut être coriace. Il est rare : la DGfM le marque de la catégorie 2 de la liste rouge allemande, et Wikipédia (en) précise qu’il figure sur des listes rouges dans plusieurs pays d’Europe. Des espèces voisines portent aussi des aiguillons sur le bois : Hericium coralloides et H. americanum.</string>
+    <string name="myco_lignyotus_name">Lactaire velours</string>
+    <string name="myco_lignyotus_alt">Chocolate milky</string>
+    <string-array name="myco_lignyotus_traits">
+        <item>Chapeau de 3 à 8 cm, brun bistre foncé, mat et velouté, sans zones, avec un petit mamelon</item>
+        <item>Lames blanches, décurrentes et fourchues, virant à l’ocre clair ; elles rougissent aux endroits blessés</item>
+        <item>Pied de la couleur du chapeau, resserré et plissé, voire alvéolé, au sommet</item>
+        <item>Lait blanc et aqueux, qui vire lentement à la couleur brique sur la chair</item>
+        <item>Chair blanche qui rougit un peu à l’air ; odeur et saveur faibles</item>
+        <item>Sols acides de moyenne montagne, dans les sapinières · automne</item>
+    </string-array>
+    <string name="myco_lignyotus_note">Comestible, d’après les listes de la DGfM et du VAPKO, et d’après Wikipédia (fr), qui le trouve plus savoureux que le lactaire délicieux. Il figure sur la liste rouge allemande (catégorie 3). Pour le distinguer de Lactarius picinus et de L. fuliginosus, dont les lames sont plus jaunes, cherchez le chapeau brun foncé contre les lames blanches et le sommet plissé du pied.</string>
+    <string name="myco_turpis_name">Lactarius turpis</string>
+    <string name="myco_turpis_alt">Ugly milk-cap, green birch milk cap</string>
+    <string-array name="myco_turpis_traits">
+        <item>Chapeau de 4 à 20 cm, brun olive à jaune-vert, visqueux au centre ; marge enroulée et hirsute chez le jeune</item>
+        <item>Déprimé d’abord, en entonnoir avec l’âge, qui fonce jusqu’au noirâtre</item>
+        <item>Lames serrées, blanc sale, un peu décurrentes ; brun olive là où le lait sèche</item>
+        <item>Pied jusqu’à 7 cm, plus pâle que le chapeau, avec des fossettes peu profondes</item>
+        <item>Lait blanc abondant, âcre ; chair blanc sale qui brunit</item>
+        <item>Surtout avec le bouleau, aussi l’épicéa et le pin · été à automne</item>
+    </string-array>
+    <string name="myco_turpis_note">Toxique : la DGfM le range pour un syndrome gastro-intestinal et un effet soupçonné de provoquer des cancers ou des mutations. Wikipédia (en) cite une substance mutagène, la nécatorine, que l’ébullition réduit sans l’éliminer, et ajoute que la plupart des autorités d’Europe occidentale le jugent immangeable ou médiocre.</string>
+    <string name="myco_imbricatus_name">Hydne imbriqué</string>
+    <string name="myco_imbricatus_alt">Shingled hedgehog</string>
+    <string-array name="myco_imbricatus_traits">
+        <item>Chapeau jusqu’à 15 cm, brunâtre à chamois, en entonnoir, à grosses écailles sombres qui se relèvent avec l’âge</item>
+        <item>Des aiguillons à la place des lames : mous et gris pâle, de 0,5 à 1,5 cm, plus bruns avec l’âge</item>
+        <item>Pied gris pâle ou brun, jusqu’à 10 cm, parfois excentré</item>
+        <item>Chair molle, blanchâtre à fauve ; peut être amère, surtout chez les vieux</item>
+        <item>Sporée brune</item>
+        <item>Avec l’épicéa et le sapin, souvent en collines et en montagne, parfois en ronds · août à octobre</item>
+    </string-array>
+    <string name="myco_imbricatus_note">Non recommandé : les contrôleurs suisses (VAPKO) ne le citent que comme condiment, et Wikipédia (en) le dit comestible mais non recommandé : amer quand il est vieux, il peut irriter le tube digestif. D’autres champignons à aiguillons lui ressemblent : Sarcodon amarascens (amer, avec une bande noir bleuâtre) et Hydnellum scabrosum (amer, base teintée de turquoise).</string>
+    <string name="myco_l_grey_scaly_cap">Chapeau gris-brun, écailleux</string>
+    <string name="myco_l_pinkens_bruised">Rosit à la blessure</string>
+    <string name="myco_l_olive_slime_cap">Mucus olive sur un chapeau alvéolé</string>
+    <string name="myco_l_white_pitted_stem">Pied blanc, alvéolé, fragile</string>
+    <string name="myco_l_hanging_mass">Masse pendante, sans chapeau</string>
+    <string name="myco_l_long_soft_spines">Longs aiguillons mous</string>
+    <string name="myco_l_stem_pleated_top">Pied plissé au sommet</string>
+    <string name="myco_l_olive_sticky_cap">Chapeau brun olive, visqueux</string>
+    <string name="myco_l_flesh_dirty_white">Chair blanc sale qui brunit</string>
+    <string name="myco_l_dark_coarse_scales">Grosses écailles sombres</string>
+    <string name="myco_l_grey_spines">Aiguillons gris et mous</string>
 </resources>

@@ -24,14 +24,20 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.Atom2Universe.app.R
 import com.Atom2Universe.app.ThemedActivity
 import com.Atom2Universe.app.science.FitFrame
 import com.Atom2Universe.app.science.ScienceFiche
 import com.Atom2Universe.app.science.ScienceNavigation
 import com.Atom2Universe.app.science.SciencePalette
+import com.Atom2Universe.app.science.parentes.ParentesActivity
+import com.Atom2Universe.app.science.parentes.ParentesRepository
 import com.google.android.material.chip.ChipGroup
 import java.text.Collator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.min
 
 /**
@@ -67,6 +73,8 @@ class MycologyActivity : ThemedActivity() {
         ScienceFiche(this, palette, R.string.myco_back, R.string.myco_close) { current = null; history.clear() }
     }
     private var current: Sheet? = null
+    private var lifeIndex: MycologyLifeIndex? = null
+    private var lifeRepo: ParentesRepository? = null
     private val history = ArrayList<Sheet>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,8 +88,20 @@ class MycologyActivity : ThemedActivity() {
         buildUi()
         render()
         savedInstanceState?.getString("sheet")?.let { restoreSheet(it) }
+        if (savedInstanceState == null) intent.getStringExtra(EXTRA_SPECIES_ID)?.let { id -> content.post { open(Sheet.Species(id), push = false) } }
+        loadTree()
         val y = savedInstanceState?.getInt("scroll") ?: 0
         scroll.post { scroll.scrollTo(0, y) }
+    }
+
+    /** L'arbre se charge à part : le bouton « Retrouver dans l'arbre » apparaît dès qu'il est prêt. */
+    private fun loadTree() {
+        lifecycleScope.launch {
+            val repo = runCatching { withContext(Dispatchers.Default) { ParentesRepository.load(applicationContext) } }.getOrNull() ?: return@launch
+            lifeRepo = repo
+            lifeIndex = MycologyLifeIndex(repo.tree, FungusCatalog.species.associate { it.id to getString(it.latin) })
+            (current as? Sheet.Species)?.let { open(it, push = false) }
+        }
     }
 
     // ------------------------------------------------------------------ écran principal
@@ -397,6 +417,17 @@ class MycologyActivity : ThemedActivity() {
                 body.addView(button(group.title) { open(Sheet.Group(group.id)) }, full(6))
             }
         }
+        lifeIndex?.forSpecies(sp.id)?.let { node ->
+            val repo = lifeRepo ?: return@let
+            body.addView(label(getString(R.string.myco_sec_classification), 16f, true), full(20))
+            body.addView(label(repo.tree.ancestors(node).filter { it in repo.groups }.reversed()
+                .joinToString(getString(R.string.pt_separator)) { repo.name(this, it) }, 14.5f), full(4))
+            body.addView(button(R.string.myco_open_tree) {
+                if (ScienceNavigation.isModuleLink(intent) && intent.getStringExtra(EXTRA_LIFE_NODE) == node) finish()
+                else startActivity(Intent(this, ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                    .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
+            }, full(8))
+        }
         fiche.show(getString(sp.name), top, media, body, onBack)
     }
 
@@ -623,5 +654,10 @@ class MycologyActivity : ThemedActivity() {
             null -> null
         })
         super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        const val EXTRA_LIFE_NODE = "mycology_life_node"
+        const val EXTRA_SPECIES_ID = "mycology_species_id"
     }
 }

@@ -158,13 +158,14 @@
         <item>Small lepiotas (under 10 cm): deadly, never to be picked.</item>
     </string-array>
     <string name="myco_g_field_title">Field mushroom, or not?</string>
-    <string name="myco_g_field_evidence">ANSES 2022, Swiss controllers</string>
+    <string name="myco_g_field_evidence">ANSES 2022, Swiss controllers, Wikipedia</string>
     <string-array name="myco_g_field_points">
         <item>Field mushroom: gills pink, then chocolate brown. White amanitas: gills always white, sac-like volva.</item>
         <item>Yellow stainer: yellows when rubbed, bulb at the base, ink or phenol smell, wide ring.</item>
         <item>Field mushroom: spindle-shaped stem with no bulb, thin fleeting ring.</item>
         <item>Agaricus sylvicola, edible: the Swiss controllers point out that it is confused with the yellow stainer.</item>
         <item>In 2022, two deaths after a deadly amanita was taken for a field mushroom or a fallow-field agaric.</item>
+        <item>Button mushroom, wild form: grey-brown scaly cap, gills pink then brown, thick narrow ring. Wikipedia names deadly amanitas (a volva, pure white gills) and the yellow stainer (phenol smell, yellowing) among its look-alikes.</item>
     </string-array>
     <string name="myco_g_morel_title">Morel, or false morel?</string>
     <string name="myco_g_morel_evidence">1991 decree</string>
@@ -1680,4 +1681,90 @@
         <item>In woods and at their edges, mostly under oaks on limy soil; in autumn; mostly around the Mediterranean</item>
     </string-array>
     <string name="myco_proxima_note">Toxic: the German mycological society (2026) lists it among the amanitas that damage the kidneys (« proxima syndrome »); it notes that the suspected toxin, allenic norleucine, has not been found in it yet. It looks very much like the bearded amanita, which has sometimes been eaten: see that entry.</string>
+    <string name="myco_open_profile">Open mushroom profile</string>
+    <string name="myco_open_tree">Locate in the living tree</string>
+    <string name="myco_sec_classification">Classification</string>
+    <string name="myco_bisporus_name">Button mushroom</string>
+    <string name="myco_bisporus_alt">Champignon de Paris</string>
+    <string name="myco_bisporus_latin" translatable="false">Agaricus bisporus</string>
+    <string-array name="myco_bisporus_traits">
+        <item>Wild form: cap 5 to 10 cm, pale grey-brown, with broad flat scales (the cultivated form is white)</item>
+        <item>Gills free and crowded: pink, then red-brown, then dark brown: never white</item>
+        <item>Thick, narrow ring, sometimes streaked above</item>
+        <item>Cylindrical stem up to 6 cm, no bulb or volva</item>
+        <item>Firm white flesh that turns pale pinkish-red when bruised</item>
+        <item>Rich soil, compost, manure, outside forests</item>
+    </string-array>
+    <string name="myco_bisporus_note">Edible: it is the most cultivated mushroom in the world, and it is on the DGfM and VAPKO lists. In the wild it is rare. It is confused with look-alikes that can be deadly: destroying angels (a volva at the base, pure white gills) and the toxic yellow stainer (phenol smell, flesh turning yellow). A mushroom growing on polluted ground can accumulate heavy metals.</string>
+    <string name="myco_impudicus_name">Common stinkhorn</string>
+    <string name="myco_impudicus_alt">Satyre puant</string>
+    <string name="myco_impudicus_latin" translatable="false">Phallus impudicus</string>
+    <string-array name="myco_impudicus_traits">
+        <item>Cap 2 to 4 cm tall, conical and pitted, covered with olive-green to blackish slime</item>
+        <item>Stem 10 to 20 cm, white, pitted, hollow and fragile</item>
+        <item>Sac-like volva at the base: what remains of the burst egg</item>
+        <item>Foul carrion smell, noticeable from several metres</item>
+        <item>Young stage: a whitish egg of about 3 to 6 cm, with a layer of jelly</item>
+        <item>Broadleaf and conifer woods, near old stumps · late spring to autumn</item>
+    </string-array>
+    <string name="myco_impudicus_note">Edible only as a young egg, according to the DGfM list. Cut every egg in two: the egg of a deadly amanita already shows its cap and gills in a sac (see the death cap egg), a stinkhorn egg shows jelly around a white core. Once it has opened, the smell rules out any use.</string>
+    <string name="myco_erinaceus_name">Lion’s mane</string>
+    <string name="myco_erinaceus_alt">Hydne hérisson</string>
+    <string name="myco_erinaceus_latin" translatable="false">Hericium erinaceus</string>
+    <string-array name="myco_erinaceus_traits">
+        <item>One hanging mass, 10 to 20 cm, with no cap and no stem, fixed to the wood by a thick base</item>
+        <item>Soft, unbranched spines 2 to 7 cm long, hanging in tight rows</item>
+        <item>White when fresh, yellow-brown to reddish-brown as it dries</item>
+        <item>Soft, thick, white flesh that does not change</item>
+        <item>White spore print</item>
+        <item>Living or recently cut hardwood, mostly beech and oak · late summer and autumn</item>
+    </string-array>
+    <string name="myco_erinaceus_note">Edible when young, according to the DGfM list and to Wikipedia, but it can be tough. It is rare: the DGfM marks it with category 2 of the German red list, and Wikipedia (en) says it is red-listed in several European countries. Close species also have spines on wood: Hericium coralloides and H. americanum.</string>
+    <string name="myco_lignyotus_name">Chocolate milky</string>
+    <string name="myco_lignyotus_alt">Lactaire velours</string>
+    <string name="myco_lignyotus_latin" translatable="false">Lactarius lignyotus</string>
+    <string-array name="myco_lignyotus_traits">
+        <item>Cap 3 to 8 cm, dark bistre-brown, matt and velvety, not zoned, with a small boss</item>
+        <item>Gills white, decurrent and forked, turning pale ochre; they redden where hurt</item>
+        <item>Stem the colour of the cap, narrowed and pleated, even pitted, at the top</item>
+        <item>White, watery milk that slowly turns brick-coloured on the flesh</item>
+        <item>White flesh that reddens a little in the air; weak smell and taste</item>
+        <item>Acid soils in the mid mountains, in fir woods · autumn</item>
+    </string-array>
+    <string name="myco_lignyotus_note">Edible, according to the DGfM and VAPKO lists, and to Wikipedia (fr), which finds it tastier than the saffron milk cap. It is on the German red list (category 3). To tell it from Lactarius picinus and L. fuliginosus, whose gills are more yellow, look for the dark brown cap against white gills and the pleated top of the stem.</string>
+    <string name="myco_turpis_name">Ugly milk-cap</string>
+    <string name="myco_turpis_alt">Green birch milk cap</string>
+    <string name="myco_turpis_latin" translatable="false">Lactarius turpis</string>
+    <string-array name="myco_turpis_traits">
+        <item>Cap 4 to 20 cm, olive-brown to yellow-green, sticky in the centre; margin rolled in and shaggy when young</item>
+        <item>Dished at first, funnel-shaped with age, darkening to blackish</item>
+        <item>Gills crowded, dirty white, slightly decurrent; olive-brown where the milk dries</item>
+        <item>Stem up to 7 cm, paler than the cap, with shallow pits</item>
+        <item>Abundant white milk, acrid; dirty white flesh turning brown</item>
+        <item>Mostly with birch, also spruce and pine · summer to autumn</item>
+    </string-array>
+    <string name="myco_turpis_note">Toxic: the DGfM lists it for a gastrointestinal syndrome and a suspected cancer-causing or mutation-causing effect. Wikipedia (en) names a mutagenic substance, necatorin, that boiling reduces but does not remove, and says most western European authorities rate it inedible or poor.</string>
+    <string name="myco_imbricatus_name">Shingled hedgehog</string>
+    <string name="myco_imbricatus_alt">Hydne imbriqué</string>
+    <string name="myco_imbricatus_latin" translatable="false">Sarcodon imbricatus</string>
+    <string-array name="myco_imbricatus_traits">
+        <item>Cap up to 15 cm, brownish to buff, funnel-shaped, with coarse dark scales that turn up with age</item>
+        <item>Spines instead of gills: soft and pale grey, 0.5 to 1.5 cm, browner with age</item>
+        <item>Stem pale grey or brown, up to 10 cm, sometimes off-centre</item>
+        <item>Soft, whitish to tan flesh; can be bitter, especially when old</item>
+        <item>Brown spore print</item>
+        <item>With spruce and fir, often in hills and mountains, sometimes in rings · August to October</item>
+    </string-array>
+    <string name="myco_imbricatus_note">Not recommended: the Swiss controllers (VAPKO) list it only as a seasoning, and Wikipedia (en) calls it edible but not recommended: bitter when old, it can upset the gut. Other mushrooms with spines look alike: Sarcodon amarascens (bitter, with a bluish-black stripe) and Hydnellum scabrosum (bitter, turquoise-tinted base).</string>
+    <string name="myco_l_grey_scaly_cap">Grey-brown, scaly cap</string>
+    <string name="myco_l_pinkens_bruised">Pinkens when bruised</string>
+    <string name="myco_l_olive_slime_cap">Olive slime on a pitted cap</string>
+    <string name="myco_l_white_pitted_stem">White, pitted, fragile stem</string>
+    <string name="myco_l_hanging_mass">Hanging mass, no cap</string>
+    <string name="myco_l_long_soft_spines">Long, soft spines</string>
+    <string name="myco_l_stem_pleated_top">Stem pleated at the top</string>
+    <string name="myco_l_olive_sticky_cap">Olive-brown, sticky cap</string>
+    <string name="myco_l_flesh_dirty_white">Dirty white flesh, browning</string>
+    <string name="myco_l_dark_coarse_scales">Coarse, dark scales</string>
+    <string name="myco_l_grey_spines">Soft grey spines</string>
 </resources>

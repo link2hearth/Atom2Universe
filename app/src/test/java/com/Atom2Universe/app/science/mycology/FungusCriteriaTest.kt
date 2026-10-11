@@ -50,9 +50,9 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("virescens"), setOf("cap_GREEN", "s_no_ring", "s_no_volva", "sp_white")))
         assertTrue(FungusCriteria.matches(look("columbetta"), setOf("cap_WHITE", "stipe_WHITE", "s_no_ring", "s_no_volva")))
         // les lactaires seuls laissent couler un lait
-        assertEquals(setOf("deliciosus", "torminosus"), ids("m_latex"))
+        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis"), ids("m_latex"))
         // ce que le dessin ne montre pas ne s'invente pas : pas d'aiguillons ailleurs, pas de volve chez le lot trois
-        assertEquals(setOf("hydnum"), ids("u_teeth"))
+        assertEquals(setOf("hydnum", "erinaceus", "imbricatus"), ids("u_teeth"))
         for (id in listOf("hydnum", "craterellus", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "torminosus", "nuda", "orellanus", "virescens", "columbetta"))
             assertTrue("$id a une volve", look(id).volva == VolvaKind.NONE)
     }
@@ -104,7 +104,7 @@ class FungusCriteriaTest {
         // « sur le bois » = les touffes en bouquet sur un tronc, et les étagères
         assertEquals(
             setOf("olearius", "galerina", "mutabilis", "fasciculare", "mellea", "aegerita", "flammulina", "capnoides", "gymnopilus",
-                "ostreatus", "pleurocybella", "laetiporus", "fistulina"),
+                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus"),
             ids("m_wood")
         )
         assertTrue(FungusCriteria.matches(look("flammulina"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_white", "cap_ORANGE", "u_gills", "w_medium")))
@@ -130,6 +130,20 @@ class FungusCriteriaTest {
         assertEquals("et entre les lignes", brown.intersect(ring), ids("cap_BROWN", "s_ring"))
         assertEquals("avec / sans anneau ensemble = tout le monde", FungusCatalog.species.size, ids("s_ring", "s_no_ring").size)
         assertEquals("un critère inconnu ne restreint rien", FungusCatalog.species.size, ids("n_importe_quoi").size)
+    }
+
+    @Test
+    fun leLotSeptSeLitDansLeDessin() {
+        // la masse d'aiguillons pendants n'est pas un corail : elle se trouve par son dessous et son bois
+        assertEquals(setOf("sparassis", "formosa"), ids("c_coral"))
+        assertTrue(FungusCriteria.matches(look("erinaceus"), setOf("u_teeth", "m_wood", "s_no_ring", "s_no_volva", "sp_white", "w_large")))
+        // seul le satyre a un chapeau alvéolé ET une volve ; la morille n'en a pas
+        assertTrue(FungusCriteria.matches(look("impudicus"), setOf("c_wrinkled", "s_volva", "u_none", "w_small")))
+        assertFalse(FungusCriteria.matches(look("morchella"), setOf("s_volva")))
+        assertTrue(FungusCriteria.matches(look("bisporus"), setOf("s_ring", "u_gills", "sp_brown", "s_no_volva")))
+        assertTrue(FungusCriteria.matches(look("imbricatus"), setOf("u_teeth", "c_scaly", "c_funnel")))
+        assertTrue(FungusCriteria.matches(look("lignyotus"), setOf("m_latex", "cap_BROWN", "sp_white", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("turpis"), setOf("m_latex", "w_medium", "u_gills")))
     }
 
     @Test
