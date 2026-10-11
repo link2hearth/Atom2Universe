@@ -28,7 +28,8 @@ class MycologyLifeIndex(tree: LifeTree, latinById: Map<String, String>) {
             "Chlorophyllum rachodes" to "Chlorophyllum rhacodes",
             "Inocybe erubescens" to "Inosperma erubescens",
             "Lactarius volemus" to "Lactifluus volemus",
-            "Lactarius piperatus" to "Lactifluus piperatus"
+            "Lactarius piperatus" to "Lactifluus piperatus",
+            "Inocybe maculata" to "Inosperma maculatum"
         )
     }
 }

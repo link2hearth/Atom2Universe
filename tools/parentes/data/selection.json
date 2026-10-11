@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2041,
+  "candidate_count": 2047,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -2698,6 +2698,14 @@
       "seed": false,
       "id": "ott148314",
       "ott": 148314
+    },
+    {
+      "name": "Amanita regalis",
+      "en": "Royal fly agaric",
+      "fr": "Amanite royale",
+      "seed": false,
+      "id": "ott574899",
+      "ott": 574899
     },
     {
       "name": "Amanita rubescens",
@@ -6259,6 +6267,14 @@
       "label_revision": 2541583197
     },
     {
+      "name": "Coprinellus micaceus",
+      "en": "Mica cap",
+      "fr": "Coprin micacé",
+      "seed": false,
+      "id": "ott1046466",
+      "ott": 1046466
+    },
+    {
       "name": "Coprinopsis atramentaria",
       "en": "Common ink cap",
       "fr": "Coprin noir d’encre",
@@ -7556,6 +7572,14 @@
       "ott": 317505,
       "label_qid": "Q140054",
       "label_revision": 2534244400
+    },
+    {
+      "name": "Echinoderma asperum",
+      "en": "Freckled dapperling",
+      "fr": "Echinoderma asperum",
+      "seed": false,
+      "id": "ott5345324",
+      "ott": 5345324
     },
     {
       "name": "Echinopsis macrogona",
@@ -10064,6 +10088,14 @@
       "label_revision": 2537638185
     },
     {
+      "name": "Inocybe maculata",
+      "en": "Frosty fibrecap",
+      "fr": "Inosperma maculatum",
+      "seed": false,
+      "id": "ott95903",
+      "ott": 95903
+    },
+    {
       "name": "Intoshia linei",
       "en": "Intoshia linei",
       "fr": "Intoshia linei",
@@ -10815,6 +10847,14 @@
       "seed": false,
       "id": "ott191818",
       "ott": 191818
+    },
+    {
+      "name": "Lepiota castanea",
+      "en": "Chestnut dapperling",
+      "fr": "Lépiote châtain",
+      "seed": false,
+      "id": "ott355914",
+      "ott": 355914
     },
     {
       "name": "Lepiota subincarnata",
@@ -12457,6 +12497,14 @@
       "seed": false,
       "id": "ott314982",
       "ott": 314982
+    },
+    {
+      "name": "Mycena rosea",
+      "en": "Rosy bonnet",
+      "fr": "Mycène rose",
+      "seed": false,
+      "id": "ott5306013",
+      "ott": 5306013
     },
     {
       "name": "Mycobacterium tuberculosis",

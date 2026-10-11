@@ -1048,6 +1048,11 @@
       "fr": "Amanite à volve rousse"
     },
     {
+      "name": "Amanita regalis",
+      "en": "Royal fly agaric",
+      "fr": "Amanite royale"
+    },
+    {
       "name": "Amanita rubescens",
       "en": "Blusher",
       "fr": "Amanite rougissante"
@@ -3296,6 +3301,11 @@
       "qid": "Q101711"
     },
     {
+      "name": "Coprinellus micaceus",
+      "en": "Mica cap",
+      "fr": "Coprin micacé"
+    },
+    {
       "name": "Coprinopsis atramentaria",
       "en": "Common ink cap",
       "fr": "Coprin noir d’encre"
@@ -4097,6 +4107,11 @@
       "en": "Echinococcus shiquicus",
       "fr": "Echinococcus shiquicus",
       "qid": "Q140054"
+    },
+    {
+      "name": "Echinoderma asperum",
+      "en": "Freckled dapperling",
+      "fr": "Echinoderma asperum"
     },
     {
       "name": "Echinopsis macrogona",
@@ -5688,6 +5703,11 @@
       "qid": "Q76840"
     },
     {
+      "name": "Inocybe maculata",
+      "en": "Frosty fibrecap",
+      "fr": "Inosperma maculatum"
+    },
+    {
       "name": "Intoshia linei",
       "en": "Intoshia linei",
       "fr": "Intoshia linei",
@@ -6170,6 +6190,11 @@
       "name": "Lepiota brunneoincarnata",
       "en": "Deadly parasol",
       "fr": "Lépiote brun-incarnat"
+    },
+    {
+      "name": "Lepiota castanea",
+      "en": "Chestnut dapperling",
+      "fr": "Lépiote châtain"
     },
     {
       "name": "Lepiota subincarnata",
@@ -7156,6 +7181,11 @@
       "name": "Mycena pura",
       "en": "Lilac bonnet",
       "fr": "Mycène pur"
+    },
+    {
+      "name": "Mycena rosea",
+      "en": "Rosy bonnet",
+      "fr": "Mycène rose"
     },
     {
       "name": "Mycobacterium bovis",
