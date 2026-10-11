@@ -181,4 +181,18 @@ class BotanyCatalogTest {
         assertTrue(PlantQuery(leaves=setOf(LeafShape.TRIFOLIATE),colors=setOf(FlowerColor.WHITE)).matches(BotanyCatalog.get("glycine_max")!!,""))
     }
 
+    @Test fun plantesDuQuotidienEtNouveauxCaracteres() {
+        val plants=BotanyCatalog.species.filter{PlantQuery(collections=setOf("useful_plants")).matches(it,"")}
+        assertEquals(setOf("camellia_sinensis","gossypium_hirsutum","punica_granatum","persea_americana","laurus_nobilis"),plants.map{it.id}.toSet())
+        assertTrue(plants.all{it.look.study?.usefulPlant==true && it.id in BotanyReferences.taxonPages})
+        assertTrue(plants.all{it.flowering.isEmpty() && it.fruiting.isEmpty() && it.phenologyNote!=0})
+        assertEquals(setOf("persea_americana","laurus_nobilis"),plants.filter{PlantQuery(families=setOf("Lauraceae")).matches(it,"")}.map{it.id}.toSet())
+        // The avocado contains a seed, not a stony endocarp; cotton is seed hair within a capsule.
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.BERRY)).matches(BotanyCatalog.get("persea_americana")!!,""))
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.CAPSULE),leaves=setOf(LeafShape.PALMATILOBED)).matches(BotanyCatalog.get("gossypium_hirsutum")!!,""))
+        assertTrue(PlantQuery(arrangements=setOf(LeafArrangement.WHORLED)).matches(BotanyCatalog.get("punica_granatum")!!,""))
+        assertTrue(PlantQuery(families=setOf("Theaceae"),margins=setOf(LeafMargin.SERRATE)).matches(BotanyCatalog.get("camellia_sinensis")!!,""))
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.DRUPE),evergreen=true).matches(BotanyCatalog.get("laurus_nobilis")!!,""))
+    }
+
 }

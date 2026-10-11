@@ -15,6 +15,7 @@ import com.Atom2Universe.app.R
  */
 object BotanyCatalog {
     val collections = listOf(
+        PlantCollection("useful_plants", R.string.bot_collection_useful_plants, R.string.bot_collection_useful_plants_desc),
         PlantCollection("food_crops", R.string.bot_collection_food_crops, R.string.bot_collection_food_crops_desc),
         PlantCollection("orchard", R.string.bot_collection_orchard, R.string.bot_collection_orchard_desc),
         PlantCollection("nightshades", R.string.bot_collection_nightshades, R.string.bot_collection_nightshades_desc),
@@ -29,6 +30,10 @@ object BotanyCatalog {
         PlantSection("herbs", R.string.bot_section_herbs, R.string.bot_section_herbs_desc),
     )
     val families = listOf(
+        PlantFamily("Theaceae", R.string.bot_family_Theaceae, R.string.bot_family_Theaceae_desc, R.string.bot_family_Theaceae_aliases),
+        PlantFamily("Lythraceae", R.string.bot_family_Lythraceae, R.string.bot_family_Lythraceae_desc, R.string.bot_family_Lythraceae_aliases),
+        PlantFamily("Lauraceae", R.string.bot_family_Lauraceae, R.string.bot_family_Lauraceae_desc, R.string.bot_family_Lauraceae_aliases),
+
         PlantFamily("Amaryllidaceae", R.string.bot_family_Amaryllidaceae, R.string.bot_family_Amaryllidaceae_desc, R.string.bot_family_Amaryllidaceae_aliases),
         PlantFamily("Cucurbitaceae", R.string.bot_family_Cucurbitaceae, R.string.bot_family_Cucurbitaceae_desc, R.string.bot_family_Cucurbitaceae_aliases),
 
@@ -73,11 +78,12 @@ object BotanyCatalog {
         PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
         PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
     val groups = listOf(
+        PlantGroup("useful_organs", R.string.bot_group_useful_organs, listOf("camellia_sinensis","gossypium_hirsutum","punica_granatum","persea_americana","laurus_nobilis"), R.string.bot_group_useful_organs_desc),
         PlantGroup("food_organs", R.string.bot_group_food_organs, listOf("allium_cepa","brassica_oleracea","cucumis_sativus","glycine_max","arachis"), R.string.bot_group_food_organs_desc),
         PlantGroup("orchard_fruits", R.string.bot_group_orchard, listOf("olea","coffea","persica","armeniaca","citrus_maxima"), R.string.bot_group_orchard_desc),
         PlantGroup("nightshade_organs", R.string.bot_group_nightshade_organs, listOf("lycopersicum","tuberosum","melongena","capsicum","nigrum"), R.string.bot_group_nightshade_organs_desc),

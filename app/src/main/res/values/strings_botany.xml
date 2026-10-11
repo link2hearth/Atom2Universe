@@ -1265,4 +1265,64 @@
     <string name="bot_arachis_latin" translatable="false">Arachis hypogaea</string>
     <string name="bot_family_Amaryllidaceae" translatable="false">Amaryllidaceae</string>
     <string name="bot_family_Cucurbitaceae" translatable="false">Cucurbitaceae</string>
+
+    <string name="bot_collection_useful_plants">Everyday plants</string>
+    <string name="bot_collection_useful_plants_desc">Tea, cotton, fruit and seasoning: explore the organs of familiar plants.</string>
+    <string name="bot_group_useful_organs">Leaves, fibres or fruits?</string>
+    <string name="bot_group_useful_organs_desc">Compare harvested leaves, seed hairs, capsules, berries and drupes.</string>
+    <string name="bot_useful_plants_season">Flowering and fruiting depend on climate, cultivar and cultivation; no universal monthly calendar applies.</string>
+    <string name="bot_family_Theaceae_desc">Tea and camellia family; simple leaves and flowers often bearing numerous stamens.</string>
+    <string name="bot_family_Theaceae_aliases">tea family camellia</string>
+    <string name="bot_family_Lythraceae_desc">Pomegranate and loosestrife family; flowers have a floral tube, with varied fruits across genera.</string>
+    <string name="bot_family_Lythraceae_aliases">loosestrife family pomegranate</string>
+    <string name="bot_family_Lauraceae_desc">Laurel and avocado family, often aromatic, with small flowers and fleshy fruits.</string>
+    <string name="bot_family_Lauraceae_aliases">laurel family avocado</string>
+    <string name="bot_family_Theaceae" translatable="false">Theaceae</string>
+    <string name="bot_family_Lythraceae" translatable="false">Lythraceae</string>
+    <string name="bot_family_Lauraceae" translatable="false">Lauraceae</string>
+    <string name="bot_camellia_sinensis_latin" translatable="false">Camellia sinensis</string>
+    <string name="bot_camellia_sinensis_name">Tea plant</string>
+    <string name="bot_camellia_sinensis_aliases">tea green black oolong Camellia sinensis</string>
+    <string name="bot_camellia_sinensis_description">Evergreen shrub with alternate, leathery, finely toothed leaves. White flowers have six to eight petals, many stamens and a divided style. Capsules contain large brown seeds. Buds and young leaves provide tea; processing helps distinguish green tea from black tea.</string>
+    <string name="bot_camellia_sinensis_distribution">Asian origins; long cultivation obscures the wild range. Grown in many mild, humid regions, often pruned low for harvesting.</string>
+    <string name="bot_camellia_sinensis_habit">Freely branching habit; plantation pruning produces a lower crown.</string>
+    <string name="bot_camellia_sinensis_leaf">Toothed leaf and lateral veins; inset shows a harvestable shoot with a terminal bud.</string>
+    <string name="bot_camellia_sinensis_flower">Seven petals shown, numerous stamens and a three-branched style; axillary flower inset.</string>
+    <string name="bot_camellia_sinensis_fruit">Closed and open capsule with brown seeds; the number of developed chambers varies.</string>
+    <string name="bot_gossypium_hirsutum_latin" translatable="false">Gossypium hirsutum</string>
+    <string name="bot_gossypium_hirsutum_name">Upland cotton</string>
+    <string name="bot_gossypium_hirsutum_aliases">cotton upland Mexican cotton textile fibre Gossypium hirsutum</string>
+    <string name="bot_gossypium_hirsutum_description">Branching perennial usually cultivated as an annual. Leaves have three to five palmate lobes. Three large, cut-edged bracts surround each five-petalled flower; the stamens form a column. Ripe capsules split into valves, exposing seeds clothed in long hairs: these fibres are cotton.</string>
+    <string name="bot_gossypium_hirsutum_distribution">Native to tropical America, including the Caribbean region. Widely cultivated in warm countries for textile fibre.</string>
+    <string name="bot_gossypium_hirsutum_habit">Branching stem with alternate leaves, flowers and capsules at different stages.</string>
+    <string name="bot_gossypium_hirsutum_leaf">Five-lobed blade with a heart-shaped base, palmate veins and a long petiole.</string>
+    <string name="bot_gossypium_hirsutum_flower">Five cream petals, a staminal column and three toothed bracts; side-view inset.</string>
+    <string name="bot_gossypium_hirsutum_fruit">Green capsule and four open valves; fibres grow on the seeds, shown separately in detail.</string>
+    <string name="bot_punica_granatum_latin" translatable="false">Punica granatum</string>
+    <string name="bot_punica_granatum_name">Pomegranate</string>
+    <string name="bot_punica_granatum_aliases">pomegranate balausta Punica granatum</string>
+    <string name="bot_punica_granatum_description">Shrub or small tree with sometimes thorny shoots and small, entire, often opposite leaves. Flowers have a thick red tube, sepals, crumpled petals and many stamens. The pomegranate is a leathery berry; internal membranes divide groups of seeds with fleshy, juicy coverings.</string>
+    <string name="bot_punica_granatum_distribution">Native to western Asia and long cultivated around the Mediterranean and in warm regions. Usually deciduous, sometimes more persistent in warm climates.</string>
+    <string name="bot_punica_granatum_habit">Multi-stemmed shrub with slender shoots and fruits crowned by the calyx.</string>
+    <string name="bot_punica_granatum_leaf">Narrow, entire, glossy leaf; inset shows a pair of opposite leaves.</string>
+    <string name="bot_punica_granatum_flower">Six crumpled petals shown; side view of the fleshy floral tube and persistent sepals.</string>
+    <string name="bot_punica_granatum_fruit">Whole pomegranate and schematic section: leathery rind, membranes and fleshy seeds.</string>
+    <string name="bot_persea_americana_latin" translatable="false">Persea americana</string>
+    <string name="bot_persea_americana_name">Avocado</string>
+    <string name="bot_persea_americana_aliases">avocado alligator pear Persea americana</string>
+    <string name="bot_persea_americana_description">Tree with large, alternate, entire leaves. Small greenish flowers in panicles have six tepals, nine fertile stamens and three staminodes. Female and male function occur at different times. The avocado is a single-seeded berry, not a drupe with a stony pit; shape and skin vary among cultivars.</string>
+    <string name="bot_persea_americana_distribution">Native to Mexico and Central America; cultivated in tropical and subtropical regions. A green, pear-shaped fruit form is shown.</string>
+    <string name="bot_persea_americana_habit">Broad-crowned tree; foliage visually gathers near shoot tips.</string>
+    <string name="bot_persea_americana_leaf">Elliptic leaf with a tapering tip, midrib and branching secondary veins.</string>
+    <string name="bot_persea_americana_flower">Six tepals, nine stamens and three staminodes; inset shows a panicle of small flowers.</string>
+    <string name="bot_persea_americana_fruit">Whole berry and longitudinal section: skin, flesh and a large seed without a stony endocarp.</string>
+    <string name="bot_laurus_nobilis_latin" translatable="false">Laurus nobilis</string>
+    <string name="bot_laurus_nobilis_name">Bay laurel</string>
+    <string name="bot_laurus_nobilis_aliases">bay laurel sweet bay culinary bay Laurus nobilis</string>
+    <string name="bot_laurus_nobilis_description">Evergreen tree or shrub with alternate, leathery, aromatic leaves and entire, often wavy edges. Small umbels arise in leaf axils. Male and female flowers occur on separate plants. Only female plants bear fruit: small drupes that turn black at maturity. This is the bay used as a culinary herb.</string>
+    <string name="bot_laurus_nobilis_distribution">Native to the Mediterranean basin; also cultivated in gardens in mild temperate regions.</string>
+    <string name="bot_laurus_nobilis_habit">Dense evergreen crown; natural habit differs from clipped topiary forms.</string>
+    <string name="bot_laurus_nobilis_leaf">Lance-shaped blade with wavy, toothless edges; inset shows alternate leaves on a shoot.</string>
+    <string name="bot_laurus_nobilis_flower">Male flower with four tepals and twelve stamens; female flower and umbel at separate scales.</string>
+    <string name="bot_laurus_nobilis_fruit">Black drupe and longitudinal section with one seed; fruits occur on female plants.</string>
 </resources>

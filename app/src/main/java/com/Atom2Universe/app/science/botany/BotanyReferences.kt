@@ -3,6 +3,12 @@ package com.Atom2Universe.app.science.botany
 /** Stable taxon pages complement the general floras; adding a reference never changes the screens. */
 object BotanyReferences {
     val taxonPages: Map<String, String> = mapOf(
+        "camellia_sinensis" to "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200014043",
+        "gossypium_hirsutum" to "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200013695",
+        "punica_granatum" to "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200014674",
+        "persea_americana" to "https://naturalhistory2.si.edu/botany/hawaiianflora/speciesdescr.cfm?genus=Persea&species=americana",
+        "laurus_nobilis" to "https://plants.ces.ncsu.edu/plants/laurus-nobilis/",
+
         "allium_cepa" to "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200027457",
         "brassica_oleracea" to "https://plants.ces.ncsu.edu/plants/brassica-oleracea/",
         "cucumis_sativus" to "https://plants.ces.ncsu.edu/plants/cucumis-sativus/",

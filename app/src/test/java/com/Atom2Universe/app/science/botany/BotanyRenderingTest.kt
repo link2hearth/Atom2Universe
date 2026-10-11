@@ -52,6 +52,9 @@ class BotanyRenderingTest {
 
     @Test fun caracteresDesComparaisonsNeSontPasDesImagesIdentiques() {
         for((a,b,view) in listOf(
+            Triple("camellia_sinensis","gossypium_hirsutum",PlantView.FRUIT),
+            Triple("persea_americana","laurus_nobilis",PlantView.FLOWER),Triple("persea_americana","punica_granatum",PlantView.FRUIT),
+            Triple("camellia_sinensis","laurus_nobilis",PlantView.LEAF),
             Triple("glycine_max","arachis",PlantView.HABIT),Triple("glycine_max","arachis",PlantView.LEAF),
             Triple("glycine_max","arachis",PlantView.FRUIT),Triple("allium_cepa","brassica_oleracea",PlantView.FLOWER),
             Triple("olea","coffea",PlantView.HABIT),Triple("persica","armeniaca",PlantView.LEAF),
@@ -86,9 +89,9 @@ class BotanyRenderingTest {
 
     @Test fun lesProfilsDOrganesSontReutilisablesSansIdentifiantConnu() {
         for(id in listOf("papaver","viola","digitalis","corylus","pinus","plantago_major",
-            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + (AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species).map{it.id}) {
+            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + (AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species).map{it.id}) {
             val species=BotanyCatalog.get(id)!!
-            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species+NorthAmericanCatalog.species+ModelPlantsCatalog.species+NightshadesCatalog.species+OrchardCatalog.species+FoodCropsCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
+            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species+NorthAmericanCatalog.species+ModelPlantsCatalog.species+NightshadesCatalog.species+OrchardCatalog.species+FoodCropsCatalog.species + UsefulPlantsCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
             for(view in views) {
                 val original=render(id,view)
                 val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
@@ -114,6 +117,10 @@ class BotanyRenderingTest {
 
     @Test fun quatriemeLotDeReferencesIllustrees() {
         referenceSheet(FoodCropsCatalog.species,"references-lot-4.png")
+    }
+
+    @Test fun cinquiemeLotDeReferencesIllustrees() {
+        referenceSheet(UsefulPlantsCatalog.species,"references-lot-5.png")
     }
 
     private fun referenceSheet(species:List<PlantSpecies>,filename:String) {
