@@ -166,7 +166,9 @@ class CombatView @JvmOverloads constructor(
     private var previewCost: Double? = null
     private enum class SwipeDirection(val dx: Int, val dy: Int) { UP(0, -1), DOWN(0, 1), LEFT(-1, 0), RIGHT(1, 0) }
     private var swipeDirection = SwipeDirection.UP
-    private var nextSwipeDirection = 0
+    /** Attaque spéciale en deux swipes d'affilée ; [swipeFirst] : note du premier. */
+    private var doubleSwipe = false
+    private var swipeFirst: Timing? = null
     /** Le geste de la relique qu'on lance ; null, c'est la barre de frappe. */
     private var relicGesture: TouchGesture? = null
     private val gestureArt = RelicGestureArt()
@@ -224,7 +226,7 @@ class CombatView @JvmOverloads constructor(
         stageStart = SystemClock.uptimeMillis()
         if (newOutcome) onOutcomeShown?.invoke()
         if (s == Stage.STRIKE_TIMING) {
-            swipeDirection = SwipeDirection.entries[nextSwipeDirection++ % SwipeDirection.entries.size]
+            swipeDirection = SwipeDirection.entries.random()
             val relic = (pendingAction as? Action.Cast)?.relic
             relicGesture = relic?.let { buildRelicGesture(it) }
         } else relicGesture = null
@@ -407,6 +409,9 @@ class CombatView @JvmOverloads constructor(
         val c = combat ?: return
         pendingAction = action
         chainFirst = null
+        swipeFirst = null
+        // Le Vagabond a déjà ses deux swipes (l'Enchaînement) ; les autres en font deux pour l'attaque spéciale
+        doubleSwipe = action == Action.Deadly && c.hero.archetype != Archetype.VAGABOND
         // La barre d'ordre garde l'aperçu pendant le geste
         previewCost = when (action) {
             is Action.Cast -> c.relicCost(action.relic)
@@ -1419,6 +1424,7 @@ class CombatView @JvmOverloads constructor(
 
     private fun recognizeStrike(x: Float, y: Float, time: Long) {
         if (gestureConsumed || gestureStage != Stage.STRIKE_TIMING || stage != Stage.STRIKE_TIMING) return
+        if (time < stageStart) return   // point d'avant la barre en cours (historique du toucher)
         val dx = x - downX
         val dy = y - downY
         val length = hypot(dx, dy)
@@ -1426,11 +1432,21 @@ class CombatView @JvmOverloads constructor(
         gestureConsumed = true
         val d = abs((time - stageStart).toFloat() / strikeMs() - STRIKE_CENTER)
         val directed = (dx * swipeDirection.dx + dy * swipeDirection.dy) / length >= .72f
-        resolveStrike(if (!directed) Timing.MISS else when {
+        val timing = if (!directed) Timing.MISS else when {
             d <= strikePerfect() -> Timing.PERFECT
             d <= strikeGood() -> Timing.GOOD
             else -> Timing.MISS
-        })
+        }
+        if (doubleSwipe && swipeFirst == null) {
+            // Premier swipe noté : la barre repart aussitôt dans une autre direction ; il faut lever le doigt (gestureConsumed reste vrai jusqu'au prochain appui)
+            swipeFirst = timing
+            enter(Stage.STRIKE_TIMING)
+            return
+        }
+        // Les deux swipes comptent : le moins bon donne la note
+        val first = swipeFirst
+        swipeFirst = null
+        resolveStrike(if (first != null) minOf(first, timing) else timing)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
