@@ -15,7 +15,7 @@ class BotanyCatalogTest {
 
     @Test fun catalogueExtensibleEtReferencesCoherentes() {
         val c=BotanyCatalog
-        assertTrue(c.species.size>=105)
+        assertTrue(c.species.size>=120)
         assertTrue(c.species.count{"trees" in it.sectionIds}>=30)
         assertTrue(c.species.count{"shrubs" in it.sectionIds}>=25)
         assertTrue(c.species.count{"herbs" in it.sectionIds}>=35)
@@ -118,4 +118,19 @@ class BotanyCatalogTest {
         val searchable=fr.getValue("bot_stellaria_name")+" "+fr.getValue("bot_stellaria_aliases")
         assertTrue(PlantQuery(text="Stellaria holostea").matches(BotanyCatalog.get("stellaria")!!,searchable))
     }
+    @Test fun lotNordAmericainEtCaracteresRetrouvables() {
+        val plants=BotanyCatalog.species.filter{PlantQuery(collections=setOf("north_america")).matches(it,"")}
+        assertEquals(15,plants.size)
+        for(section in listOf("trees","shrubs","herbs"))assertEquals(5,plants.count{section in it.sectionIds})
+        assertTrue(plants.all{it.phenologyNote!=0 && it.id in BotanyReferences.taxonPages})
+        val conifers=plants.filter{PlantQuery(families=setOf("Cupressaceae"),evergreen=true).matches(it,"")}
+        assertEquals(setOf("sequoiadendron","sequoia"),conifers.map{it.id}.toSet())
+        assertTrue(PlantQuery(leaves=setOf(LeafShape.SCALE)).matches(BotanyCatalog.get("sequoia")!!,""))
+        assertTrue(PlantQuery(colors=setOf(FlowerColor.ORANGE),fruits=setOf(FruitShape.CAPSULE)).matches(BotanyCatalog.get("eschscholzia")!!,""))
+        assertTrue(PlantQuery(arrangements=setOf(LeafArrangement.OPPOSITE)).matches(BotanyCatalog.get("helianthus")!!,""))
+        assertFalse(PlantQuery(collections=setOf("africa_dry")).matches(BotanyCatalog.get("sequoiadendron")!!,""))
+        val fr=texts("values-fr")
+        assertTrue(PlantQuery(text="sequoia geant").matches(BotanyCatalog.get("sequoiadendron")!!,fr.getValue("bot_sequoiadendron_name")))
+    }
+
 }

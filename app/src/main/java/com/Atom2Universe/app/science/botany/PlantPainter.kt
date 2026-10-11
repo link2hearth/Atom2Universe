@@ -101,6 +101,18 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
     }
 
     private fun profiledHerb(form:HerbArchitecture) {
+        if(form.woodyMat) {
+            val brush=BotanyInk(c)
+            for(row in 0..2) {
+                val y=274f-row*23f
+                brush.stroke(Path().apply{moveTo(48f,y+4);quadTo(149f,y-25f,248f,y)},l.bark,2.5f)
+                for(i in 0..7){val x=56f+i*26;val yy=y-12f+sin(i*.8f)*5
+                    line(x,yy+7,x+6,yy-25,l.bark,1.2f)
+                    for(j in 0..2)at(x+2+j*2,yy-j*9,(if(j%2==0)-1 else 1)*58f,.37f){leaf(l.leaf,73f)}
+                    if(i%3==row%3)at(x+6,yy-24,0f,.10f){flowerHead()}
+                }
+            };return
+        }
         if(form.creeping) {
             line(50f,274f,247f,274f,green,2f)
             repeat(4){i->val x=66f+i*55
@@ -151,6 +163,7 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
     }
 
     private fun twig() {
+        if(l.leafDetail.awlShoot){PlantConiferPainter(c,l,!compact).awlShoot(175f);return}
         if(l.arrangement==LeafArrangement.ROSETTE) {
             for(i in 0..7) at(0f,-80f,i*45f,.7f) {leaf(l.leaf,65f)}
             return
@@ -166,7 +179,7 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
                 else {
                     val peg=if(species.id=="picea") 3f else 1f
                     line(0f,y,side*peg,y-2f,l.bark,1.4f)
-                    at(side*peg,y-2f,side*(if(species.id=="abies") 73f else 59f)) { leafPainter.needles(35f,1) }
+                    at(side*peg,y-2f,side*(if(species.id=="abies") 73f else l.leafDetail.needleAngle)) { leafPainter.needles(35f,1) }
                     if(species.id=="picea" && i%2==0) at(0f,y,side*145f) {leafPainter.needles(20f,1)}
                 }
             }

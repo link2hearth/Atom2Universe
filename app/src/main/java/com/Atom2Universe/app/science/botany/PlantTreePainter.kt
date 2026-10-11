@@ -25,7 +25,7 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
     private val foliage=mutableListOf<Foliage>()
 
     fun draw() {
-        if(form.bottleTrunk)bottleHabit() else if(look.crown==Crown.CONICAL) conifer() else broadleaf()
+        if(form.bottleTrunk)bottleHabit() else if(form.roundedConifer) matureConifer() else if(look.crown==Crown.CONICAL) conifer() else broadleaf()
         // Root collar and a broken ground line finish the plate like an ink herbarium drawing.
         brush.stroke(Path().apply { moveTo(118f,282f); quadTo(147f,278f,179f,282f) },0x696a634a,.7f)
         repeat(12) { i ->
@@ -256,6 +256,46 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
         }
     }
 
+    private fun matureConifer() {
+        val sprays=mutableListOf<Foliage>()
+        for(i in 0..7)for(side in listOf(-1,1)) {
+            val t=(i+1f)/9
+            val y=form.top+15+t*(form.bottom-form.top-15)
+            val reach=form.radius*sin(PI*(.04f+.87f*t)).toFloat().pow(.7f)
+            val endX=150f+side*reach*(.75f+random.nextFloat()*.15f)
+            val endY=y-8f-random.nextFloat()*12
+            branches+=Bough(axis(y+17),y+17,150f+side*reach*.7f,y+14,endX,endY,2f+t*4.5f)
+            for(j in 0..3) {
+                val u=.24f+j*.24f
+                sprays+=Foliage(150f+(endX-150)*u,endY+8f*(1-u),13f+random.nextFloat()*5,19f+random.nextFloat()*7,random.nextInt())
+            }
+        }
+        val central=(0..4).map{i->Foliage(150f+sin(i*2.1f)*7,form.top+20f+i*29f,18f,24f,random.nextInt())}
+        fun spray(f:Foliage,front:Boolean) {
+            val rnd=Random(f.seed)
+            val q=Path()
+            for(i in 0..90){val a=i*2*PI/90;val r=1f+.10f*sin(a*11).toFloat()+.05f*sin(a*19).toFloat()
+                val x=f.x+cos(a).toFloat()*f.rx*r;val y=f.y+sin(a).toFloat()*f.ry*r
+                if(i==0)q.moveTo(x,y)else q.lineTo(x,y)}
+            q.close()
+            val depth=((f.y-form.top)/(form.bottom-form.top)).coerceIn(0f,1f)
+            val shade=botanicalMix(green,0xff27483a.toInt(),if(front).10f+depth*.24f else .44f)
+            brush.cloud(q,f.x-7,f.y-11,38f,intArrayOf(botanicalMix(shade,0xffaabc86.toInt(),.35f),shade,botanicalMix(shade,0xff254537.toInt(),.3f)))
+            if(front)repeat(if(detailed)30 else 10) {
+                val a=rnd.nextFloat()*2*PI;val r=sqrt(rnd.nextFloat())
+                val x=f.x+cos(a).toFloat()*r*f.rx;val y=f.y+sin(a).toFloat()*r*f.ry
+                brush.at(x,y,rnd.nextFloat()*80-40,.05f){PlantConiferPainter(canvas,look,false).awlShoot(110f)}
+            }
+        }
+        sprays.forEach{spray(it,false)}
+        trunk(form.top)
+        branches.forEach(::branch)
+        // Irregular foliage hides some branches, while gaps expose the thick upper limbs.
+        sprays.filterIndexed{i,_->i%4!=0}.forEach{spray(it,true)}
+        central.forEach{spray(it,true)}
+        for(i in 0..4)brush.at(150f+(i-2)*3f,form.top+28f, (i-2)*13f,.15f){PlantConiferPainter(canvas,look,false).awlShoot(160f)}
+    }
+
     private fun conifer() {
         trunk(form.top)
         val type=form.spray
@@ -263,14 +303,14 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
         for(i in 0 until tiers) {
             val t=(i+1f)/tiers
             val tierY=form.top+14+t*(form.bottom-form.top-22)
-            val reach=form.radius*t.pow(.82f)*(1f-.16f*t)
+            val reach=form.radius*if(form.roundedConifer) sin(PI*(.05f+.87f*t)).toFloat().pow(.6f) else t.pow(.82f)*(1f-.16f*t)
             for(side in listOf(-1,1)) {
                 val y=tierY+(random.nextFloat()-.5f)*8f
                 val x=axis(y)
                 val endY=y+when(type) {ConiferSpray.PENDULOUS->14f*t;ConiferSpray.TUFTED->6f*t;else->-5f*t}+(random.nextFloat()-.5f)*8f
                 val endX=x+side*reach*(.92f+random.nextFloat()*.13f)
                 val cy=y+if(type==ConiferSpray.PENDULOUS) 10f else 3f
-                branch(Bough(x,y,x+side*reach*.6f,cy,endX,endY,1.4f+t*1.6f))
+                branch(Bough(x,y,x+side*reach*.6f,cy,endX,endY,1.4f+t*if(form.roundedConifer) form.trunkWidth*.12f else 1.6f))
                 // Shorter foreshortened sprays fill the rear and front of each whorl.
                 for(layer in 0..1) {
                     val r=reach*if(layer==0) .66f else 1f
@@ -280,7 +320,9 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
                         val xx=x+side*r*u
                         val yy=y+(endY-y)*u+(if(layer==0) -4f else 0f)+(random.nextFloat()-.5f)*4f
                         val size=(7f+9*t)*(1-u*.3f)*(.68f+random.nextFloat()*.65f)
-                        if(type==ConiferSpray.TUFTED) {
+                        if(type==ConiferSpray.AWL) {
+                            brush.at(xx,yy,side*24f,.10f){PlantConiferPainter(canvas,look,detailed).awlShoot(size*8f)}
+                        } else if(type==ConiferSpray.TUFTED) {
                             val drop=size*(.7f+random.nextFloat()*.5f)
                             brush.stroke(Path().apply { moveTo(xx,yy);quadTo(xx+side*4,yy+drop*.7f,xx+side*3,yy+drop) },bark,.45f)
                             for(k in 0..3) {

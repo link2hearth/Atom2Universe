@@ -15,6 +15,7 @@ import com.Atom2Universe.app.R
  */
 object BotanyCatalog {
     val collections = listOf(
+        PlantCollection("north_america", R.string.bot_collection_north_america, R.string.bot_collection_north_america_desc),
         PlantCollection("europe", R.string.bot_collection_europe, R.string.bot_collection_europe_desc),
         PlantCollection("africa_dry", R.string.bot_collection_africa_dry, R.string.bot_collection_africa_dry_desc),
     )
@@ -24,6 +25,7 @@ object BotanyCatalog {
         PlantSection("herbs", R.string.bot_section_herbs, R.string.bot_section_herbs_desc),
     )
     val families = listOf(
+        PlantFamily("Cupressaceae", R.string.bot_family_Cupressaceae, R.string.bot_family_Cupressaceae_desc, R.string.bot_family_Cupressaceae_aliases),
         PlantFamily("Zygophyllaceae", R.string.bot_family_Zygophyllaceae, R.string.bot_family_Zygophyllaceae_desc, R.string.bot_family_Zygophyllaceae_aliases),
         PlantFamily("Apocynaceae", R.string.bot_family_Apocynaceae, R.string.bot_family_Apocynaceae_desc, R.string.bot_family_Apocynaceae_aliases),
         PlantFamily("Combretaceae", R.string.bot_family_Combretaceae, R.string.bot_family_Combretaceae_desc, R.string.bot_family_Combretaceae_aliases),
@@ -60,11 +62,13 @@ object BotanyCatalog {
         PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
         PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
     val groups = listOf(
+        PlantGroup("redwoods", R.string.bot_group_redwoods, listOf("sequoiadendron","sequoia","pseudotsuga"), R.string.bot_group_redwoods_desc),
+        PlantGroup("prairie_heads", R.string.bot_group_prairie_heads, listOf("echinacea","rudbeckia","helianthus"), R.string.bot_group_prairie_heads_desc),
         PlantGroup("savanna_thorns", R.string.bot_group_savanna_thorns, listOf("vachellia_tortilis","faidherbia","balanites"), R.string.bot_group_savanna_thorns_desc),
         PlantGroup("combretaceae", R.string.bot_group_combretaceae, listOf("guiera","combretum_micranthum"), R.string.bot_group_combretaceae_desc),
         PlantGroup("african_grasses", R.string.bot_group_african_grasses, listOf("cenchrus_ciliaris","hyparrhenia"), R.string.bot_group_african_grasses_desc),
@@ -95,6 +99,9 @@ object BotanyCatalog {
         PlantGroup("heads", R.string.bot_group_heads, listOf("leucanthemum","matricaria","cichorium"), R.string.bot_group_heads_desc),
     )
     val sources = listOf(
+        BotanySource("ncsu", R.string.bot_source_ncsu, "https://plants.ces.ncsu.edu/"),
+        BotanySource("osu", R.string.bot_source_osu, "https://landscapeplants.oregonstate.edu/"),
+        BotanySource("usfs", R.string.bot_source_usfs, "https://research.fs.usda.gov/silvics/"),
         BotanySource("sanbi", R.string.bot_source_sanbi, "https://pza.sanbi.org/"),
         BotanySource("icraf", R.string.bot_source_icraf, "https://apps.worldagroforestry.org/treedb2/"),
         BotanySource("fz", R.string.bot_source_fz, "https://www.zimbabweflora.co.zw/"),

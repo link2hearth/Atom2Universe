@@ -917,4 +917,101 @@
     <string name="bot_family_Apocynaceae" translatable="false">Apocynaceae</string>
     <string name="bot_family_Combretaceae" translatable="false">Combretaceae</string>
     <string name="bot_family_Pedaliaceae" translatable="false">Pedaliaceae</string>
+
+    <string name="bot_collection_north_america">North America · iconic plants</string>
+    <string name="bot_collection_north_america_desc">Western forests, eastern woodlands and open landscapes. Native ranges are specified in each profile; some species also occur on other continents.</string>
+    <string name="bot_family_Cupressaceae_desc">Conifers with scale-like, awl-shaped or flat needle-like leaves. Woody cones have scales often shaped like shields; this family includes the two Californian redwoods.</string>
+    <string name="bot_family_Cupressaceae_aliases">Cypress family; redwoods; junipers; cedars</string>
+    <string name="bot_source_ncsu">NC State University · Extension Plant Toolbox</string>
+    <string name="bot_source_osu">Oregon State University · Landscape Plants</string>
+    <string name="bot_source_usfs">US Forest Service · Silvics of North America</string>
+    <string name="bot_group_redwoods">The two Californian redwoods</string>
+    <string name="bot_group_redwoods_desc">Compare the massive trunk and awl-shaped leaves of giant sequoia with the slender silhouette and flat foliage of coast redwood. Their cones have shield-like scales.</string>
+    <string name="bot_group_prairie_heads">North American flower heads</string>
+    <string name="bot_group_prairie_heads_desc">Cone height, ray colour and leaf insertion distinguish coneflower, black-eyed Susan and wild sunflower. Each head contains many flowers.</string>
+    <string name="bot_color_orange">Orange</string>
+    <string name="bot_awl_shoot">Shoot with overlapping awl-shaped leaves</string>
+    <string name="bot_phenology_na_spring">Spring flowers, followed by summer to autumn fruits. Timing shifts with latitude, elevation and local climate; no single monthly calendar covers the native range.</string>
+    <string name="bot_phenology_na_summer">Flowers mainly from late spring through summer, then fruits from summer into autumn. Timing varies across the native range and with local weather.</string>
+    <string name="bot_phenology_sequoiadendron">Pollination in spring. Seed cones mature in their second year and may remain green on the tree for many years before releasing seeds. These are cones, not flowers or botanical fruits.</string>
+    <string name="bot_phenology_sequoia">Pollination in winter to early spring; seed cones mature in the same year. Timing varies along the Pacific coast. Conifers bear cones rather than flowers or botanical fruits.</string>
+    <string name="bot_phenology_douglas">Pollination in spring; seed cones mature in late summer or autumn of the same year. Timing differs between coastal and inland populations.</string>
+    <string name="bot_phenology_rubra">Spring catkins; acorns mature in autumn of the second growing season, unlike the one-season acorns of many European white oaks.</string>
+    <string name="bot_phenology_california_poppy">Flowering follows favourable moisture, mainly in spring and early summer in its native range; capsules ripen afterwards. Drought shortens the season.</string>
+    <string name="bot_sequoiadendron_name">Giant sequoia</string>
+    <string name="bot_sequoiadendron_aliases">Giant redwood; Wellingtonia; séquoia de Wellington</string>
+    <string name="bot_sequoiadendron_description">A huge, long-lived conifer with a broad, buttressed trunk and reddish fibrous bark. Short pointed leaves overlap around cord-like shoots. Ovoid cones have thick shield-like scales. Old crowns become rounded and irregular.</string>
+    <string name="bot_sequoiadendron_distribution">Native to scattered groves on the western slopes of the Sierra Nevada, California. Planted in parks on other continents.</string>
+    <string name="bot_sequoiadendron_latin" translatable="false">Sequoiadendron giganteum</string>
+    <string name="bot_sequoia_name">Coast redwood</string>
+    <string name="bot_sequoia_aliases">Coastal redwood; séquoia à feuilles d’if</string>
+    <string name="bot_sequoia_description">A towering evergreen with a long straight trunk. Shaded lateral shoots carry flattened leaves in two apparent ranks, with pale stomatal bands beneath; exposed shoots also bear short scale-like leaves. Small woody cones have shield-like scales.</string>
+    <string name="bot_sequoia_distribution">Native to the fog-influenced Pacific coast of northern and central California and southwestern Oregon.</string>
+    <string name="bot_sequoia_latin" translatable="false">Sequoia sempervirens</string>
+    <string name="bot_pseudotsuga_name">Douglas-fir</string>
+    <string name="bot_pseudotsuga_aliases">Oregon pine; sapin de Douglas; pin d’Oregon</string>
+    <string name="bot_pseudotsuga_description">Evergreen tree with soft, flat, singly attached needles and pointed buds. Hanging cones are unmistakable when their three-pointed bracts project beyond the rounded scales. Despite its common name, it is not a true fir.</string>
+    <string name="bot_pseudotsuga_distribution">Western North America, from British Columbia to Mexico, with coastal and inland populations. Widely planted in Europe.</string>
+    <string name="bot_pseudotsuga_latin" translatable="false">Pseudotsuga menziesii</string>
+    <string name="bot_acer_saccharum_name">Sugar maple</string>
+    <string name="bot_acer_saccharum_aliases">Hard maple; rock maple; érable franc</string>
+    <string name="bot_acer_saccharum_description">Deciduous maple with opposite leaves, usually five pointed lobes and rounded sinuses. Small flowers hang on long slender stalks; paired samaras mature later. Its sap is traditionally used for maple syrup.</string>
+    <string name="bot_acer_saccharum_distribution">Eastern and central North America, from southeastern Canada to the eastern United States, especially mesic forests.</string>
+    <string name="bot_acer_saccharum_latin" translatable="false">Acer saccharum</string>
+    <string name="bot_quercus_rubra_name">Northern red oak</string>
+    <string name="bot_quercus_rubra_aliases">Red oak; chêne rouge</string>
+    <string name="bot_quercus_rubra_description">Broad-crowned deciduous oak. Leaves have seven to eleven pointed, bristle-tipped lobes. Male flowers form slender hanging catkins; acorns sit in shallow saucer-like cups and mature in the second season.</string>
+    <string name="bot_quercus_rubra_distribution">Native to eastern North America. Introduced in Europe, including forest plantations; locally naturalized.</string>
+    <string name="bot_quercus_rubra_latin" translatable="false">Quercus rubra</string>
+    <string name="bot_vaccinium_corymbosum_name">Highbush blueberry</string>
+    <string name="bot_vaccinium_corymbosum_aliases">Blueberry; bleuet en corymbe; bleuet américain</string>
+    <string name="bot_vaccinium_corymbosum_description">Upright deciduous shrub of acidic ground. Clusters of small urn-shaped flowers precede blue berries with a waxy bloom and a persistent calyx crown. It is a major parent of cultivated highbush blueberries.</string>
+    <string name="bot_vaccinium_corymbosum_distribution">Eastern North America, in moist woods, swamps and acidic clearings. Cultivated widely outside its native range.</string>
+    <string name="bot_vaccinium_corymbosum_latin" translatable="false">Vaccinium corymbosum</string>
+    <string name="bot_cornus_sericea_name">Red-osier dogwood</string>
+    <string name="bot_cornus_sericea_aliases">Cornus stolonifera; red-twig dogwood; cornouiller à bois rouge</string>
+    <string name="bot_cornus_sericea_description">Suckering shrub whose young twigs turn conspicuously red, especially in winter. Opposite leaves have arched veins. Flat clusters of four-petalled cream flowers produce white to bluish drupes.</string>
+    <string name="bot_cornus_sericea_distribution">Widespread in northern and western North America and parts of the eastern United States, especially along streams and wetlands.</string>
+    <string name="bot_cornus_sericea_latin" translatable="false">Cornus sericea</string>
+    <string name="bot_arctostaphylos_name">Bearberry</string>
+    <string name="bot_arctostaphylos_aliases">Kinnikinnick; raisin d’ours; bearberry</string>
+    <string name="bot_arctostaphylos_description">Evergreen mat-forming dwarf shrub with leathery spoon-shaped leaves. Small pale pink urn-shaped flowers hang in short clusters. Red, mealy drupes contain several hard nutlets.</string>
+    <string name="bot_arctostaphylos_distribution">Circumboreal: native to northern North America, Europe and Asia, including dry heaths and rocky mountain sites.</string>
+    <string name="bot_arctostaphylos_latin" translatable="false">Arctostaphylos uva-ursi</string>
+    <string name="bot_rhododendron_catawbiense_name">Catawba rhododendron</string>
+    <string name="bot_rhododendron_catawbiense_aliases">Mountain rosebay; Catawba rhododendron</string>
+    <string name="bot_rhododendron_catawbiense_description">Evergreen shrub with leathery elliptical leaves crowded near shoot tips. Large terminal clusters bear purple, broadly funnel-shaped flowers with five lobes, ten stamens and a marked upper lobe. Dry capsules split into valves.</string>
+    <string name="bot_rhododendron_catawbiense_distribution">Native to the southern Appalachian Mountains of the eastern United States, on wooded slopes and rocky ridges.</string>
+    <string name="bot_rhododendron_catawbiense_latin" translatable="false">Rhododendron catawbiense</string>
+    <string name="bot_rosa_virginiana_name">Virginia rose</string>
+    <string name="bot_rosa_virginiana_aliases">Virginia rose; rosier de Virginie</string>
+    <string name="bot_rosa_virginiana_description">Suckering native rose with prickly stems and usually seven glossy, toothed leaflets. Open pink flowers have five petals and numerous stamens. Rounded red hips retain their sepals.</string>
+    <string name="bot_rosa_virginiana_distribution">Eastern North America, from eastern Canada south into the United States, in open woods, coastal sites and thickets.</string>
+    <string name="bot_rosa_virginiana_latin" translatable="false">Rosa virginiana</string>
+    <string name="bot_echinacea_name">Purple coneflower</string>
+    <string name="bot_echinacea_aliases">Eastern purple coneflower; rudbeckie pourpre</string>
+    <string name="bot_echinacea_description">Perennial with rough, often three-veined leaves. Pink-purple ray florets spread or droop around a prominent spiny orange-brown cone of disc florets. The dry fruits are short angular cypselae, without a feathery pappus.</string>
+    <string name="bot_echinacea_distribution">Central and eastern United States, in open woods and prairie margins. Widely cultivated, with many horticultural forms.</string>
+    <string name="bot_echinacea_latin" translatable="false">Echinacea purpurea</string>
+    <string name="bot_rudbeckia_name">Black-eyed Susan</string>
+    <string name="bot_rudbeckia_aliases">Black-eyed Susan; rudbeckia</string>
+    <string name="bot_rudbeckia_description">Hairy annual, biennial or short-lived perennial. Yellow ray florets surround a dark brown, raised central disc. Rough leaves are simple and usually alternate; the small dry fruits lack a conspicuous pappus.</string>
+    <string name="bot_rudbeckia_distribution">Native to North America and now widespread in grasslands, roadsides and disturbed open ground; also introduced elsewhere.</string>
+    <string name="bot_rudbeckia_latin" translatable="false">Rudbeckia hirta</string>
+    <string name="bot_helianthus_name">Common sunflower</string>
+    <string name="bot_helianthus_aliases">Sunflower; grand soleil; hélianthe annuel</string>
+    <string name="bot_helianthus_description">Tall rough annual. Lower leaves are opposite, upper leaves alternate, with three main veins. Wild plants are often branched with several heads, unlike many giant single-headed crop forms. Each head combines yellow ray florets and fertile disc florets; the “seeds” are cypselae.</string>
+    <string name="bot_helianthus_distribution">Native to North America, especially central and western regions. Domesticated there and now cultivated and naturalized worldwide.</string>
+    <string name="bot_helianthus_latin" translatable="false">Helianthus annuus</string>
+    <string name="bot_eschscholzia_name">California poppy</string>
+    <string name="bot_eschscholzia_aliases">California poppy; eschscholzie</string>
+    <string name="bot_eschscholzia_description">Annual or short-lived perennial with finely divided blue-green foliage. Four silky orange to yellow petals form a cup above a small receptacular rim; the fused sepals fall as a cap. Long slender capsules split into two valves.</string>
+    <string name="bot_eschscholzia_distribution">Western North America, including California and adjacent regions of the United States and Mexico. Widely introduced as an ornamental.</string>
+    <string name="bot_eschscholzia_latin" translatable="false">Eschscholzia californica</string>
+    <string name="bot_lupinus_polyphyllus_name">Large-leaved lupin</string>
+    <string name="bot_lupinus_polyphyllus_aliases">Bigleaf lupine; large-leaved lupine; lupin des jardins</string>
+    <string name="bot_lupinus_polyphyllus_description">Perennial with long-stalked palmate leaves, commonly bearing nine to seventeen narrow leaflets. Tall racemes carry blue to violet pea flowers. Hairy pods split at maturity. Many garden lupins are hybrids rather than this wild species.</string>
+    <string name="bot_lupinus_polyphyllus_distribution">Native to western North America, in moist meadows, stream margins and open woods. Introduced and sometimes invasive in Europe and other regions.</string>
+    <string name="bot_lupinus_polyphyllus_latin" translatable="false">Lupinus polyphyllus</string>
+    <string name="bot_family_Cupressaceae" translatable="false">Cupressaceae</string>
 </resources>

@@ -82,7 +82,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
                     cubicTo(23f,84f,31f,48f,25f,18f);close()}
                 outline(nut,0xffad854d.toInt());ribs(nut,13,100f,50f)
                 b.line(0f,87f,0f,92f,ink,1.3f)
-                val cup=Path().apply{moveTo(-29f,17f);quadTo(-29f,48f,0f,49f);quadTo(29f,48f,29f,17f);quadTo(0f,7f,-29f,17f);close()}
+                val cup=Path().apply{moveTo(-29f,17f);quadTo(-29f,if(d.shallowCup)29f else 48f,0f,if(d.shallowCup)31f else 49f);quadTo(29f,if(d.shallowCup)29f else 48f,29f,17f);quadTo(0f,7f,-29f,17f);close()}
                 outline(cup,0xff93815a.toInt())
                 c.save();c.clipPath(cup)
                 for(i in 0..5)for(j in -4..4)b.at(j*8f+(i%2)*4,15f+i*6){
@@ -219,6 +219,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
     }
 
     private fun cones() {
+        if(d.cone in setOf(ConeForm.SEQUOIA,ConeForm.REDWOOD,ConeForm.DOUGLAS)){PlantConiferPainter(c,l,detailed).cone();return}
         if(d.cone==ConeForm.ALDER){
             b.line(-83f,-86f,74f,43f,l.bark,3f)
             repeat(3){i->b.at(-43f+i*43f,-35f+i*30f,20f,.47f){stalk(-8f,-49f,0f,-30f,3f);cone()}}
@@ -284,7 +285,12 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             if(l.fruit==FruitShape.POME || d.persistentCalyx)star(x,y+radius*.7f,radius*.34f)
             // Rosa canina sheds its reflexed sepals as the hip ripens: retain the apical scar.
             if(l.fruit==FruitShape.HIP){body(x,y+radius*d.elongation,7f,3.5f,0xff8b6847.toInt())
-                b.oval(x,y+radius*d.elongation,2.2f,1.5f,ink)}
+                b.oval(x,y+radius*d.elongation,2.2f,1.5f,ink)
+                if(d.persistentCalyx)repeat(5){j->b.at(x,y+radius*d.elongation,j*72f){
+                    val sepal=Path().apply{moveTo(-2f,0f);quadTo(-4f,-8f,0f,-17f);quadTo(4f,-8f,2f,0f);close()}
+                    b.fill(sepal,0xff87804c.toInt());b.stroke(sepal,ink,.5f)
+                }}
+            }
             b.oval(x,y-radius*d.elongation,2f,1.1f,ink)
         }
         if(l.fruit==FruitShape.HIP && detailed)b.at(90f,91f,-20f,.65f){
@@ -331,6 +337,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
     }
 
     private fun capsule() {
+        if(d.capsule==CapsuleForm.LINEAR || d.capsule==CapsuleForm.VALVATE){PlantAdditionalFruitPainter(c,l,detailed).capsule();return}
         when(d.capsule){
             CapsuleForm.HEART -> {
                 stalk(0f,116f,0f,49f,1.8f)
@@ -501,7 +508,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
         val w=d.acheneWidth
         val q=Path().apply{moveTo(-w*.58f,-24f);cubicTo(-w*1.3f,-10f,-w,21f,0f,28f)
             cubicTo(w,19f,w*1.3f,-12f,w*.58f,-24f);quadTo(0f,-27f,-w*.58f,-24f);close()}
-        outline(q,0xffaa9563.toInt());ribs(q,d.acheneRibs,31f,w*2,0xffd3bd86.toInt())
+        outline(q,d.acheneColor);ribs(q,d.acheneRibs,31f,w*2,0xffd3bd86.toInt())
         if(beak)b.stroke(Path().apply{moveTo(1f,-24f);quadTo(6f,-40f,14f,-33f)},ink,1.5f)
         if(d.pappusScales)for(i in -3..3){
             val q=Path().apply{moveTo(i*2.5f-1,-23f);lineTo(i*3f,-29f);lineTo(i*2.5f+1,-23f);close()}

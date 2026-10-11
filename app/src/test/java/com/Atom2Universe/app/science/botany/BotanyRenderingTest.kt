@@ -52,6 +52,8 @@ class BotanyRenderingTest {
 
     @Test fun caracteresDesComparaisonsNeSontPasDesImagesIdentiques() {
         for((a,b,view) in listOf(
+            Triple("sequoiadendron","sequoia",PlantView.HABIT), Triple("sequoiadendron","sequoia",PlantView.LEAF),
+            Triple("sequoiadendron","pseudotsuga",PlantView.FRUIT), Triple("echinacea","rudbeckia",PlantView.FLOWER),
             Triple("robur","petraea",PlantView.FRUIT),Triple("fagus","carpinus",PlantView.LEAF),
             Triple("abies","picea",PlantView.FRUIT),Triple("calluna","erica",PlantView.LEAF),
             Triple("dactylis","lolium",PlantView.FLOWER),Triple("robur","petraea",PlantView.LEAF),
@@ -77,9 +79,9 @@ class BotanyRenderingTest {
 
     @Test fun lesProfilsDOrganesSontReutilisablesSansIdentifiantConnu() {
         for(id in listOf("papaver","viola","digitalis","corylus","pinus","plantago_major",
-            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + AfricanDrylandsCatalog.species.map{it.id}) {
+            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + (AfricanDrylandsCatalog.species + NorthAmericanCatalog.species).map{it.id}) {
             val species=BotanyCatalog.get(id)!!
-            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
+            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species+NorthAmericanCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
             for(view in views) {
                 val original=render(id,view)
                 val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)

@@ -54,6 +54,7 @@ enum class FlowerColor(val label: Int, val ink: Int) {
     WHITE(R.string.bot_color_white, 0xfff6f1df.toInt()), YELLOW(R.string.bot_color_yellow, 0xffe6be35.toInt()),
     PINK(R.string.bot_color_pink, 0xffd77eab.toInt()), PURPLE(R.string.bot_color_purple, 0xff9962ae.toInt()),
     BLUE(R.string.bot_color_blue, 0xff667fbc.toInt()), RED(R.string.bot_color_red, 0xffdc5141.toInt()),
+    ORANGE(R.string.bot_color_orange, 0xffed9b28.toInt()),
     GREEN(R.string.bot_color_green, 0xffa5aa5a.toInt())
 }
 enum class PlantView(val label: Int) {

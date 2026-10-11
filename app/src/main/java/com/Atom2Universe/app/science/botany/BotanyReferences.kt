@@ -3,6 +3,21 @@ package com.Atom2Universe.app.science.botany
 /** Stable taxon pages complement the general floras; adding a reference never changes the screens. */
 object BotanyReferences {
     val taxonPages: Map<String, String> = mapOf(
+        "sequoiadendron" to "https://landscapeplants.oregonstate.edu/plants/sequoiadendron-giganteum",
+        "sequoia" to "https://landscapeplants.oregonstate.edu/plants/sequoia-sempervirens",
+        "pseudotsuga" to "https://www.srs.fs.usda.gov/pubs/misc/ag_654/volume_1/pseudotsuga/menziesii.htm",
+        "acer_saccharum" to "https://plants.ces.ncsu.edu/plants/acer-saccharum/",
+        "quercus_rubra" to "https://plants.ces.ncsu.edu/plants/quercus-rubra/",
+        "vaccinium_corymbosum" to "https://plants.ces.ncsu.edu/plants/vaccinium-corymbosum/",
+        "cornus_sericea" to "https://plants.ces.ncsu.edu/plants/cornus-sericea/",
+        "arctostaphylos" to "https://plants.ces.ncsu.edu/plants/arctostaphylos-uva-ursi/",
+        "rhododendron_catawbiense" to "https://plants.ces.ncsu.edu/plants/rhododendron-catawbiense/",
+        "rosa_virginiana" to "https://plants.ces.ncsu.edu/plants/rosa-virginiana/",
+        "echinacea" to "https://plants.ces.ncsu.edu/plants/echinacea-purpurea/",
+        "rudbeckia" to "https://plants.ces.ncsu.edu/plants/rudbeckia-hirta/",
+        "helianthus" to "https://plants.ces.ncsu.edu/plants/helianthus-annuus/",
+        "eschscholzia" to "https://plants.ces.ncsu.edu/plants/eschscholzia-californica/",
+        "lupinus_polyphyllus" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:504939-1/general-information",
         "adansonia" to "https://pza.sanbi.org/adansonia-digitata",
         "vachellia_tortilis" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Acacia_tortilis.PDF",
         "faidherbia" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Faidherbia_albida.PDF",

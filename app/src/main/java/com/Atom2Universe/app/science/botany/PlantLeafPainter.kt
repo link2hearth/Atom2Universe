@@ -16,6 +16,8 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
 
     fun draw(shape: LeafShape, length: Float, margin: LeafMargin = look.margin, detail:LeafDetail?=null) {
         when (shape) {
+            LeafShape.SCALE -> if(look.leafDetail.awlShoot) PlantConiferPainter(canvas,look,detailed).awlShoot(length)
+                else simple(shape,length,margin,detail ?: look.leafDetail)
             LeafShape.NEEDLE -> needles(length)
             LeafShape.PINNATE, LeafShape.PALMATE, LeafShape.TRIFOLIATE, LeafShape.BIFOLIATE -> compound(shape,length,margin,detail ?: look.leafDetail)
             LeafShape.BIPINNATE -> bipinnate(length,detail ?: look.leafDetail)
@@ -191,6 +193,7 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             val step=.82f/d.lobePairs;val t=.07f+i*step
             val w=(d.width ?: .3f)*(.55f+.45f*sin(PI*(i+.7f)/(d.lobePairs+.2f)).toFloat())
             half+=(-w*.72f) to -(t+.025f)
+            if(d.bristleTips)half+=(-w-.018f) to -(t+step*.36f+.012f)
             half+=(-w) to -(t+step*.36f)
             half+=(-w*.76f) to -(t+step*.39f)
             half+=(-w*.85f) to -(t+step*.61f)
@@ -249,9 +252,11 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
                 refined+=((a.first+(b.first-a.first)*t)*bulge) to ((a.second+(b.second-a.second)*t)*bulge)
             }
         }
-        val path=Path(); val round=if(d.roundedLobes) .32f else .055f
+        val path=Path()
         for(i in refined.indices) {
             val prev=refined[(i+refined.size-1)%refined.size]; val p=refined[i]; val next=refined[(i+1)%refined.size]
+            val cross=(p.first-prev.first)*(next.second-p.second)-(p.second-prev.second)*(next.first-p.first)
+            val round=if(d.tip==LeafTip.ACUMINATE && cross>0f).035f else if(d.roundedLobes).32f else .055f
             val x=(p.first*(1-round)+prev.first*round)*h; val y=(p.second*(1-round)+prev.second*round)*h
             if(i==0)path.moveTo(x,y) else path.lineTo(x,y)
             path.quadTo(p.first*h,p.second*h,(p.first*(1-round)+next.first*round)*h,(p.second*(1-round)+next.second*round)*h)
@@ -273,7 +278,8 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
         }
         when {
             d.venation==Venation.THREE_BASAL -> for(side in listOf(-1,1)) {
-                brush.stroke(Path().apply { moveTo(0f,0f);cubicTo(side*h*.42f,-h*.2f,side*h*.34f,-h*.65f,0f,-h*.94f) },light,1.1f)
+                val w=(d.width ?: .32f)*.88f
+                brush.stroke(Path().apply { moveTo(0f,0f);cubicTo(side*h*w,-h*.2f,side*h*w,-h*.65f,0f,-h*.94f) },light,1.25f)
                 for(i in 1..7)rib(0f,-h*i/9,side*h*.22f*sin(PI*i/9).toFloat(),-h*(i+.45f)/9,width=.45f)
             }
             shape==LeafShape.OAK -> for(i in 0 until d.lobePairs) {
@@ -345,8 +351,8 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             val junction=-length*.29f
             brush.line(0f,0f,0f,junction,edge,2f);brush.line(-.5f,0f,-.5f,junction,light,.65f)
             repeat(n) { i ->
-                val relative=i-(n-1)/2f; val angle=relative*if(n==2) 72f else if(n==3) 53f else 28f
-                val size=length*(.71f-abs(relative)*if(n==3) .13f else .08f)
+                val relative=i-(n-1)/2f; val angle=if(d.radialLeaflets)relative*300f/(n-1) else relative*if(n==2) 72f else if(n==3) 53f else 28f
+                val size=if(d.radialLeaflets)length*.45f else length*(.71f-abs(relative)*if(n==3) .13f else .08f)
                 brush.at(0f,junction,angle) {
                     val dl=if(n==3)leaflets.copy(width=.36f,tip=LeafTip.ROUNDED) else leaflets
                     // Horse chestnut leaflets broaden towards their distal half, tapering to the junction.
@@ -381,6 +387,17 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
     }
 
     private fun divided(length:Float) {
+        if(look.leafDetail.finelyDivided) {
+            brush.line(0f,0f,0f,-length*.91f,green,1.5f)
+            for(i in 1..5)for(side in listOf(-1,1))brush.at(0f,-length*i*.15f,side*54f){
+                val reach=length*(.39f-i*.035f)
+                brush.line(0f,0f,0f,-reach,green,1.3f)
+                for(j in 1..3)for(s in listOf(-1,1))brush.at(0f,-reach*j*.23f,s*40f){
+                    brush.line(0f,0f,0f,-reach*.40f,green,1.1f)
+                    for(k in -1..1)brush.at(0f,-reach*.25f,k*35f){simple(LeafShape.LINEAR,reach*.33f,LeafMargin.ENTIRE,LeafDetail(width=.09f,tip=LeafTip.ROUNDED),.02f)}
+                }
+            };return
+        }
         if(species.id=="papaver") {
             simple(LeafShape.OAK,length,LeafMargin.LOBED,LeafDetail(width=.24f,lobePairs=5,lobeDepth=.67f,roundedLobes=false),.12f)
             return
@@ -409,7 +426,7 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             val angle=if(n==2) (i-.5f)*13f else if(n==1) 0f else -61f+122f*i/(n-1)
             brush.at(0f,0f,angle) {
                 val h=length*(if(n>2) .77f+.23f*sin(PI*(i+1)/(n+1)).toFloat() else 1f)
-                val w=length*if(n==1) { if(look.leafDetail.tip==LeafTip.NOTCHED) .032f else .016f } else .0065f
+                val w=length*if(n==1) { look.leafDetail.needleWidth ?: if(look.leafDetail.tip==LeafTip.NOTCHED) .032f else .016f } else .0065f
                 val flat=look.leafDetail.tip==LeafTip.NOTCHED
                 val outline=Path().apply { moveTo(-.7f,0f); cubicTo(-w,-h*.25f,-w,-h*.85f,-w*.8f,-h)
                     if(flat) { quadTo(-w*.2f,-h+2f,0f,-h+1.5f);quadTo(w*.2f,-h+2f,w*.8f,-h) }
@@ -417,6 +434,7 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
                     cubicTo(w,-h*.85f,w,-h*.25f,.7f,0f);close() }
                 brush.wash(outline,-w,0f,w,0f,intArrayOf(light,green,edge));brush.stroke(outline,edge,.35f)
                 brush.line(0f,-3f,0f,-h+3f,0x8395ae79.toInt(),.5f)
+                if(look.leafDetail.stomatalBands)for(side in listOf(-1,1))brush.line(side*w*.45f,-h*.18f,side*w*.45f,-h*.88f,0xffced9b7.toInt(),w*.26f)
             }
         }
         if(count==2) {
