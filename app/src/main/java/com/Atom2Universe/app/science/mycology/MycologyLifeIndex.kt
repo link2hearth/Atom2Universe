@@ -26,7 +26,9 @@ class MycologyLifeIndex(tree: LifeTree, latinById: Map<String, String>) {
             "Boletus erythropus" to "Neoboletus erythropus",
             "Boletus satanas" to "Rubroboletus satanas",
             "Chlorophyllum rachodes" to "Chlorophyllum rhacodes",
-            "Inocybe erubescens" to "Inosperma erubescens"
+            "Inocybe erubescens" to "Inosperma erubescens",
+            "Lactarius volemus" to "Lactifluus volemus",
+            "Lactarius piperatus" to "Lactifluus piperatus"
         )
     }
 }

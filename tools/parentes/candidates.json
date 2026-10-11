@@ -3129,6 +3129,11 @@
       "fr": "Clitocybe nébuleux"
     },
     {
+      "name": "Clitocybe odora",
+      "en": "Blue-green anise mushroom",
+      "fr": "Clitocybe odorant"
+    },
+    {
       "name": "Clitocybe rivulosa",
       "en": "Fool’s funnel",
       "fr": "Clitocybe blanchi"
@@ -4820,6 +4825,11 @@
       "qid": "Q102345"
     },
     {
+      "name": "Gomphidius glutinosus",
+      "en": "Slimy spike-cap",
+      "fr": "Gomphide glutineux"
+    },
+    {
       "name": "Gonyosoma oxycephalum",
       "en": "Gonyosoma oxycephalum",
       "fr": "Gonyosoma oxycephalum",
@@ -5925,6 +5935,16 @@
       "qid": "Q80701"
     },
     {
+      "name": "Lactarius piperatus",
+      "en": "Peppery milk cap",
+      "fr": "Lactaire poivré"
+    },
+    {
+      "name": "Lactarius volemus",
+      "en": "Weeping milk cap",
+      "fr": "Lactaire à lait abondant"
+    },
+    {
       "name": "Lactobacillus acidophilus",
       "en": "Lactobacillus acidophilus",
       "fr": "Lactobacillus acidophilus",
@@ -6048,6 +6068,11 @@
       "en": "Laurus nobilis",
       "fr": "Laurus nobilis",
       "qid": "Q26006"
+    },
+    {
+      "name": "Leccinum scabrum",
+      "en": "Birch bolete",
+      "fr": "Bolet rude"
     },
     {
       "name": "Leedsichthys problematicus",
@@ -6524,6 +6549,11 @@
       "en": "Canada lynx",
       "fr": "lynx du Canada",
       "qid": "Q146457"
+    },
+    {
+      "name": "Lyophyllum decastes",
+      "en": "Clustered domecap",
+      "fr": "Tricholome agrégé"
     },
     {
       "name": "Macaria alternata",
@@ -10486,6 +10516,11 @@
       "en": "Tube-eye",
       "fr": "Stylephorus chordatus",
       "qid": "Q133090"
+    },
+    {
+      "name": "Suillus bovinus",
+      "en": "Bovine bolete",
+      "fr": "Bolet des bouviers"
     },
     {
       "name": "Suillus granulatus",

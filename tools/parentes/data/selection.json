@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2019,
+  "candidate_count": 2026,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -5961,6 +5961,14 @@
       "ott": 909208
     },
     {
+      "name": "Clitocybe odora",
+      "en": "Blue-green anise mushroom",
+      "fr": "Clitocybe odorant",
+      "seed": false,
+      "id": "ott387027",
+      "ott": 387027
+    },
+    {
       "name": "Clitocybe rivulosa",
       "en": "Fool’s funnel",
       "fr": "Clitocybe blanchi",
@@ -8793,6 +8801,14 @@
       "label_revision": 2520628703
     },
     {
+      "name": "Gomphidius glutinosus",
+      "en": "Slimy spike-cap",
+      "fr": "Gomphide glutineux",
+      "seed": false,
+      "id": "ott954794",
+      "ott": 954794
+    },
+    {
       "name": "Gonyosoma oxycephalum",
       "en": "Gonyosoma oxycephalum",
       "fr": "Gonyosoma oxycephalum",
@@ -10406,6 +10422,22 @@
       "label_revision": 2537499727
     },
     {
+      "name": "Lactarius piperatus",
+      "en": "Peppery milk cap",
+      "fr": "Lactaire poivré",
+      "seed": false,
+      "id": "ott1065735",
+      "ott": 1065735
+    },
+    {
+      "name": "Lactarius volemus",
+      "en": "Weeping milk cap",
+      "fr": "Lactaire à lait abondant",
+      "seed": false,
+      "id": "ott277115",
+      "ott": 277115
+    },
+    {
       "name": "Lactobacillus acidophilus",
       "en": "Lactobacillus acidophilus",
       "fr": "Lactobacillus acidophilus",
@@ -10621,6 +10653,14 @@
       "ott": 571537,
       "label_qid": "Q26006",
       "label_revision": 2550037620
+    },
+    {
+      "name": "Leccinum scabrum",
+      "en": "Birch bolete",
+      "fr": "Bolet rude",
+      "seed": false,
+      "id": "ott168215",
+      "ott": 168215
     },
     {
       "name": "Leiothrix argentauris",
@@ -11390,6 +11430,14 @@
       "ott": 507549,
       "label_qid": "Q146457",
       "label_revision": 2550171973
+    },
+    {
+      "name": "Lyophyllum decastes",
+      "en": "Clustered domecap",
+      "fr": "Tricholome agrégé",
+      "seed": false,
+      "id": "ott25198",
+      "ott": 25198
     },
     {
       "name": "Macaria alternata",
@@ -18074,6 +18122,14 @@
       "ott": 146678,
       "label_qid": "Q133090",
       "label_revision": 2517439668
+    },
+    {
+      "name": "Suillus bovinus",
+      "en": "Bovine bolete",
+      "fr": "Bolet des bouviers",
+      "seed": false,
+      "id": "ott199366",
+      "ott": 199366
     },
     {
       "name": "Suillus granulatus",
