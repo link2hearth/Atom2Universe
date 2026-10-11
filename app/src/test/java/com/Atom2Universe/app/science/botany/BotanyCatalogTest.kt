@@ -39,7 +39,7 @@ class BotanyCatalogTest {
 
     @Test fun tousLesTextesTraduitsEtFormatsCompatibles() {
         val en=texts("values");val fr=texts("values-fr")
-        val translated=en.keys.filterNot{it.endsWith("_latin") && it!="bot_sort_latin" || it.startsWith("bot_family_") && !it.endsWith("_desc") && !it.endsWith("_aliases")}.toSet()
+        val translated=en.keys.filterNot{it.endsWith("_latin") && it !in setOf("bot_sort_latin","bot_life_sort_latin") || it.startsWith("bot_family_") && !it.endsWith("_desc") && !it.endsWith("_aliases")}.toSet()
         assertEquals(translated,fr.keys)
         val formats=Regex("%[0-9]+\\$[dsf]")
         fr.forEach{(key,value)->assertEquals(key,formats.findAll(en.getValue(key)).map{it.value}.toList(),formats.findAll(value).map{it.value}.toList());assertTrue(key,value.isNotBlank())}

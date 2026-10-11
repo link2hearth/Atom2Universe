@@ -2,6 +2,8 @@ package com.Atom2Universe.app.science.parentes
 
 import android.graphics.Typeface
 import android.content.Intent
+import com.Atom2Universe.app.science.botany.BotanyActivity
+import com.Atom2Universe.app.science.botany.BotanyLifeIndex
 import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.coroutines.Job
 import android.os.Bundle
@@ -339,6 +341,7 @@ class ParentesActivity : ThemedActivity() {
             heading.addView(button(getString(R.string.pt_details)) { detailsDialog(selected) })
             card.addView(heading)
             card.addView(label(if(repo.tree.nodes.getValue(selected).species) repo.tree.nodes.getValue(selected).scientific else article(selected),14f))
+            botanyButton(selected)?.let{card.addView(it)}
         }
         cardScroll.post { cardScroll.scrollTo(0,0) }
     }
@@ -417,8 +420,17 @@ class ParentesActivity : ThemedActivity() {
         body.addView(label(getString(if (node.support.any { '@' in it }) R.string.pt_support_study else R.string.pt_support_taxonomy)))
         if (node.conflicts.isNotEmpty()) body.addView(label(getString(R.string.pt_conflicts)))
         if (repo.tree.children[id].orEmpty().size > 2) body.addView(label(getString(R.string.pt_polytomy)))
+        botanyButton(id)?.let{body.addView(it)}
         addDatingLink(body, id)
         dialog(repo.name(this,id),body)
+    }
+
+    private fun botanyButton(id:String):View? {
+        if(repo.tree.nodes[id]?.species!=true || BotanyLifeIndex.GREEN_ROOT !in repo.tree.ancestors(id))return null
+        return button(getString(R.string.bot_life_open_atlas)) {
+            startActivity(Intent(this,BotanyActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE,true)
+                .putExtra(BotanyActivity.EXTRA_LIFE_NODE,id))
+        }
     }
 
     private fun comparisonDetails() {

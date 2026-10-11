@@ -10,6 +10,11 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.Atom2Universe.app.science.parentes.ParentesActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,7 +32,7 @@ import java.util.Locale
 /** Catalogue pages share one full-screen fiche, including its navigation history. */
 class BotanyActivity : ThemedActivity() {
     private enum class Tab(val title:Int) {
-        EXPLORE(R.string.bot_explore), COMPARE(R.string.bot_compare), FAMILIES(R.string.bot_families), LEARN(R.string.bot_learn)
+        EXPLORE(R.string.bot_explore), COMPARE(R.string.bot_compare), FAMILIES(R.string.bot_families), LEARN(R.string.bot_learn), LIFE(R.string.bot_life_catalogue)
     }
     private data class Facet(val key:String,val title:Int,val options:List<Pair<String,Int>>,val present:(PlantSpecies)->Set<String>)
     private val palette by lazy { SciencePalette(this) }
@@ -46,6 +51,14 @@ class BotanyActivity : ThemedActivity() {
     private var current:String?=null
     private val history=mutableListOf<String>()
     private val fiche by lazy { ScienceFiche(this,palette,R.string.bot_back,R.string.bot_close){current=null;history.clear()} }
+    private var life:BotanyLifeCatalogue?=null
+    private var lifeLoading=false
+    private var lifeFailed=false
+    private var lifeSearch=""
+    private var lifeFamily=""
+    private var lifeBranch=""
+    private var lifeLatinSort=false
+    private var lifeLimit=40
     private val catalog=BotanyCatalog
     private val monthIds=listOf(R.string.bot_month_1,R.string.bot_month_2,R.string.bot_month_3,R.string.bot_month_4,
         R.string.bot_month_5,R.string.bot_month_6,R.string.bot_month_7,R.string.bot_month_8,R.string.bot_month_9,R.string.bot_month_10,R.string.bot_month_11,R.string.bot_month_12)
@@ -89,9 +102,17 @@ class BotanyActivity : ThemedActivity() {
             selected[f.key]=ids.filterTo(mutableSetOf()){id->f.options.any{it.first==id} && catalog.species.any{id in f.present(it)}}
         }
         expanded.addAll(savedInstanceState?.getStringArrayList("expanded") ?: prefs.getStringSet("expanded",emptySet()).orEmpty())
+        lifeSearch=savedInstanceState?.getString("life_search").orEmpty()
+        lifeFamily=savedInstanceState?.getString("life_family").orEmpty()
+        lifeBranch=savedInstanceState?.getString("life_branch").orEmpty()
+        lifeLatinSort=savedInstanceState?.getBoolean("life_latin_sort") ?: false
+        lifeLimit=savedInstanceState?.getInt("life_limit") ?: 40
         buildUi();render()
+        loadLife()
         savedInstanceState?.getStringArrayList("history")?.let{history.addAll(it)}
-        savedInstanceState?.getString("sheet")?.let { key->content.post{open(key,false)} }
+        val sheet=if(savedInstanceState!=null)savedInstanceState.getString("sheet")
+            else intent.getStringExtra(EXTRA_LIFE_NODE)?.let{"life:$it"} ?: intent.getStringExtra(EXTRA_SPECIES_ID)?.let{"species:$it"}
+        sheet?.let { key->content.post{open(key,false)} }
         val y=savedInstanceState?.getInt("scroll") ?: 0
         scroll.post{scroll.scrollTo(0,y)}
     }
@@ -129,6 +150,7 @@ class BotanyActivity : ThemedActivity() {
         Tab.entries.forEach { t->tabs.addView(button(getString(t.title),tab==t){tab=t;render();scroll.scrollTo(0,0)},wrap()) }
         when(tab) {
             Tab.EXPLORE->explore()
+            Tab.LIFE->lifeBrowser()
             Tab.COMPARE-> {
                 content.addView(label(getString(R.string.bot_compare_note),14f),full())
                 catalog.groups.forEach {g->content.addView(groupCard(g),full())}
@@ -296,6 +318,7 @@ class BotanyActivity : ThemedActivity() {
         val back:(()->Unit)?=if(history.isEmpty())null else ({open(history.removeAt(history.lastIndex),false)})
         when {
             key=="about"->showAbout(back)
+            key.startsWith("life:")->showLife(key.substringAfter(':'),back)
             key.startsWith("species:")->catalog.get(key.substringAfter(':'))?.let{showSpecies(it,back)}
             key.startsWith("group:")->catalog.groups.firstOrNull{it.id==key.substringAfter(':')}?.let{showGroup(it,back)}
             key.startsWith("family:")->catalog.families.firstOrNull{it.id==key.substringAfter(':')}?.let{showFamily(it,back)}
@@ -317,6 +340,9 @@ class BotanyActivity : ThemedActivity() {
         top.addView(label(getString(p.aliases),13f).apply{setTextColor(palette.secondary)},full(4))
         top.addView(button(getString(catalog.family(p.familyId).name)){open("family:${p.familyId}")},full(4))
         val body=column()
+        life?.index?.forIllustrated(p.id)?.let { entry ->
+            body.addView(button(getString(R.string.bot_life_open_tree)){openTree(entry.nodeId)},full())
+        }
         heading(body,R.string.bot_traits)
         body.addView(label(getString(p.description),16f),full(4))
         body.addView(label(getString(R.string.bot_height),13f,true),full())
@@ -433,6 +459,131 @@ class BotanyActivity : ThemedActivity() {
     }
 
     private fun link(url:String){try{startActivity(Intent(Intent.ACTION_VIEW,url.toUri()))}catch(_:ActivityNotFoundException){Toast.makeText(this,R.string.bot_no_browser,Toast.LENGTH_SHORT).show()}}
+
+    override fun onNewIntent(intent:Intent) {
+        super.onNewIntent(intent);setIntent(intent)
+        val key=intent.getStringExtra(EXTRA_LIFE_NODE)?.let{"life:$it"}
+            ?: intent.getStringExtra(EXTRA_SPECIES_ID)?.let{"species:$it"}
+        key?.let{open(it)}
+    }
+
+    private fun loadLife() {
+        if(lifeLoading || life!=null)return
+        lifeLoading=true;lifeFailed=false
+        lifecycleScope.launch {
+            val loaded=withContext(Dispatchers.Default){runCatching{BotanyLifeCatalogue.load(applicationContext)}}
+            lifeLoading=false
+            loaded.onSuccess{life=it}.onFailure{
+                lifeFailed=true;android.util.Log.e("BotanyLife", "Plant reference catalogue load failed",it)
+            }
+            if(tab==Tab.LIFE)render()
+            current?.takeIf{it.startsWith("life:") || it.startsWith("species:")}?.let{open(it,false)}
+        }
+    }
+
+    private fun lifeBrowser() {
+        content.addView(label(getString(R.string.bot_life_intro),14f),full())
+        val data=life
+        if(data==null){
+            content.addView(label(getString(if(lifeFailed)R.string.bot_life_error else R.string.bot_life_loading)),full())
+            if(lifeFailed)content.addView(button(getString(R.string.bot_life_retry)){loadLife();render()},full())
+            return
+        }
+        val repo=data.repository
+        val results=column()
+        fun refresh() {
+            results.removeAllViews()
+            val words=PlantQuery.normalize(lifeSearch).split(Regex("\\s+")).filter{it.isNotEmpty()}
+            val collator=java.text.Collator.getInstance(resources.configuration.locales[0])
+            val found=data.index.entries.filter{entry->
+                (lifeFamily.isEmpty() || entry.family==lifeFamily) && (lifeBranch.isEmpty() || lifeBranch in entry.lineage) &&
+                    words.all{it in data.searchTerms.getValue(entry.nodeId)}
+            }.sortedWith { a,b ->
+                val first=if(lifeLatinSort)a.scientific else repo.name(this,a.nodeId)
+                val second=if(lifeLatinSort)b.scientific else repo.name(this,b.nodeId)
+                collator.compare(first,second).takeIf{it!=0} ?: a.nodeId.compareTo(b.nodeId)
+            }
+            results.addView(label(getString(R.string.bot_life_count,found.size),13f),full())
+            for(entry in found.take(lifeLimit)) {
+                val name=repo.name(this,entry.nodeId)
+                val status=getString(if(entry.illustratedId!=null)R.string.bot_life_illustrated else R.string.bot_life_reference)
+                results.addView(button(getString(R.string.bot_life_row,name,entry.scientific,status)){open("life:${entry.nodeId}")}.apply{gravity=Gravity.START},full(4))
+            }
+            if(found.size>lifeLimit)results.addView(button(getString(R.string.bot_life_more)){lifeLimit+=40;refresh()},full())
+        }
+        content.addView(EditText(this).apply{
+            isSingleLine=true;hint=getString(R.string.bot_life_search);setTextColor(palette.text);setHintTextColor(palette.secondary);setText(lifeSearch)
+            addTextChangedListener(object:TextWatcher{
+                override fun beforeTextChanged(s:CharSequence?,start:Int,count:Int,after:Int)=Unit
+                override fun onTextChanged(s:CharSequence?,start:Int,before:Int,count:Int){lifeSearch=s.toString();lifeLimit=40;refresh()}
+                override fun afterTextChanged(s:Editable?)=Unit
+            })
+        },full())
+        fun selector(title:Int,items:List<Pair<String,String>>,selected:String,change:(String)->Unit) {
+            content.addView(label(getString(title),13f,true),full())
+            content.addView(Spinner(this).apply{
+                adapter=ArrayAdapter(this@BotanyActivity,android.R.layout.simple_spinner_dropdown_item,items.map{it.second})
+                setSelection(items.indexOfFirst{it.first==selected}.coerceAtLeast(0))
+                onItemSelectedListener=object:AdapterView.OnItemSelectedListener{
+                    override fun onItemSelected(parent:AdapterView<*>?,view:View?,position:Int,id:Long){change(items[position].first);refresh()}
+                    override fun onNothingSelected(parent:AdapterView<*>?)=Unit
+                }
+            },full(2))
+        }
+        val all="" to getString(R.string.bot_life_all)
+        selector(R.string.bot_family,listOf(all)+data.index.entries.mapNotNull{it.family}.distinct().sorted().map{it to it},lifeFamily){if(it!=lifeFamily)lifeLimit=40;lifeFamily=it}
+        val branches=repo.groups.keys.filter{it!=BotanyLifeIndex.GREEN_ROOT && data.index.isPlant(it)}
+            .map{it to repo.name(this,it)}.sortedBy{it.second}
+        selector(R.string.bot_life_branch,listOf(all)+branches,lifeBranch){if(it!=lifeBranch)lifeLimit=40;lifeBranch=it}
+        content.addView(CheckBox(this).apply{text=getString(R.string.bot_life_sort_latin);setTextColor(palette.text);isChecked=lifeLatinSort
+            setOnCheckedChangeListener{_,checked->lifeLatinSort=checked;refresh()}},full())
+        content.addView(results,full());refresh()
+    }
+
+    private fun showLife(id:String,back:(()->Unit)?) {
+        val data=life
+        if(data==null){
+            val body=column();body.addView(label(getString(if(lifeFailed)R.string.bot_life_error else R.string.bot_life_loading)),full())
+            if(lifeFailed)body.addView(button(getString(R.string.bot_life_retry)){loadLife();showLife(id,back)},full())
+            fiche.show(getString(R.string.bot_life_reference),null,null,body,back);return
+        }
+        val entry=data.index.forNode(id)
+        if(entry==null){Toast.makeText(this,R.string.bot_life_missing,Toast.LENGTH_LONG).show();fiche.dismiss();return}
+        entry.illustratedId?.let{catalog.get(it)}?.let{showSpecies(it,back);return}
+        val repo=data.repository
+        val top=column();top.addView(label(entry.scientific,17f).apply{setTypeface(typeface,Typeface.ITALIC)})
+        val body=column()
+        body.addView(label(getString(R.string.bot_life_reference_note),14f),full())
+        repo.notes[id]?.let{note->heading(body,R.string.bot_life_notice);body.addView(label(repo.text(this,note.key),16f),full())}
+        heading(body,R.string.bot_life_classification)
+        entry.lineage.reversed().filter{repo.tree.nodes.getValue(it).scientific.isNotBlank() || it in repo.groups}.forEach { ancestor ->
+            body.addView(button(repo.name(this,ancestor)){openTree(ancestor)},full(3))
+        }
+        entry.family?.let{family->body.addView(label(getString(R.string.bot_life_family_value,family),14f),full())}
+        entry.lineage.firstOrNull{it in repo.groups}?.let{group->
+            heading(body,R.string.bot_life_group_traits)
+            body.addView(label(repo.text(this,repo.groups.getValue(group).key+"_body"),15f),full())
+        }
+        body.addView(button(getString(R.string.bot_life_open_tree)){openTree(id)},full())
+        heading(body,R.string.bot_sources_species)
+        body.addView(label(getString(R.string.bot_life_provenance,repo.version,repo.taxonomy,repo.retrieved),12f),full())
+        body.addView(button(getString(R.string.bot_life_source_tree)){link("https://tree.opentreeoflife.org/opentree/${repo.version}@$id")},full())
+        val qid=repo.notes[id]?.qid ?: repo.labels[id]?.qid
+        if(qid?.matches(Regex("Q[0-9]+"))==true)body.addView(button(getString(R.string.bot_life_source_notice)){link("https://www.wikidata.org/wiki/$qid")},full())
+        body.addView(button(getString(R.string.bot_life_source_kew)){link("https://powo.science.kew.org/results?q=${android.net.Uri.encode(entry.scientific)}")},full())
+        fiche.show(repo.name(this,id),top,null,body,back)
+    }
+
+    private fun openTree(id:String) {
+        startActivity(Intent(this,ParentesActivity::class.java).putExtra(ScienceNavigation.EXTRA_FROM_MODULE,true)
+            .putExtra(ParentesActivity.EXTRA_NODE_ID,id))
+    }
+
+    companion object {
+        const val EXTRA_LIFE_NODE="botany_life_node"
+        const val EXTRA_SPECIES_ID="botany_species_id"
+    }
+
     private fun height(p:PlantSpecies):String {
         if(p.heightMaxCm<200)return getString(R.string.bot_height_cm,p.heightMinCm,p.heightMaxCm)
         val n=NumberFormat.getNumberInstance(resources.configuration.locales[0]).apply{maximumFractionDigits=1}
@@ -459,6 +610,8 @@ class BotanyActivity : ThemedActivity() {
 
     override fun onSaveInstanceState(out:Bundle) {
         super.onSaveInstanceState(out)
+        out.putString("life_search",lifeSearch);out.putString("life_family",lifeFamily);out.putString("life_branch",lifeBranch)
+        out.putBoolean("life_latin_sort",lifeLatinSort);out.putInt("life_limit",lifeLimit)
         out.putString("tab",tab.name);out.putString("search",search);out.putString("sort",sort.name);out.putString("mode",mode.name)
         out.putBoolean("marks",marks);out.putBoolean("filters",filtersOpen);out.putString("sheet",current)
         out.putStringArrayList("history",ArrayList(history));out.putStringArrayList("expanded",ArrayList(expanded));out.putInt("scroll",scroll.scrollY)

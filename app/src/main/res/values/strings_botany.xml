@@ -1014,4 +1014,31 @@
     <string name="bot_lupinus_polyphyllus_distribution">Native to western North America, in moist meadows, stream margins and open woods. Introduced and sometimes invasive in Europe and other regions.</string>
     <string name="bot_lupinus_polyphyllus_latin" translatable="false">Lupinus polyphyllus</string>
     <string name="bot_family_Cupressaceae" translatable="false">Cupressaceae</string>
+
+    <string name="bot_life_catalogue">Living tree</string>
+    <string name="bot_life_intro">Plant references from the living tree: land plants and green algae. Search names, scientific names, aliases and families. Illustrated profiles are reused when the taxon matches exactly.</string>
+    <string name="bot_life_loading">Loading plant references…</string>
+    <string name="bot_life_error">Plant references could not be loaded.</string>
+    <string name="bot_life_retry">Retry</string>
+    <string name="bot_life_search">Name, scientific name, family…</string>
+    <string name="bot_life_count">%1$d plant references</string>
+    <string name="bot_life_illustrated">Illustrated profile</string>
+    <string name="bot_life_reference">Reference profile</string>
+    <string name="bot_life_row">%1$s\n%2$s · %3$s</string>
+    <string name="bot_life_more">Show more</string>
+    <string name="bot_life_all">All</string>
+    <string name="bot_life_branch">Evolutionary group</string>
+    <string name="bot_life_sort_latin">Sort by scientific name</string>
+    <string name="bot_life_missing">This plant reference is not available in the local catalogue.</string>
+    <string name="bot_life_reference_note">Taxonomic reference from the offline living tree. Species-specific morphology, ecology and illustrations will be added in later batches. Group characteristics below describe shared ancestry, not an identification key.</string>
+    <string name="bot_life_notice">Species notice</string>
+    <string name="bot_life_classification">Position in the living tree</string>
+    <string name="bot_life_family_value">Family in the source tree: %1$s</string>
+    <string name="bot_life_group_traits">Shared group characteristics</string>
+    <string name="bot_life_open_tree">Locate in the living tree</string>
+    <string name="bot_life_open_atlas">Open botanical profile</string>
+    <string name="bot_life_provenance">Offline tree: %1$s · Taxonomy: %2$s · Retrieved: %3$s. Names and classifications follow this source version.</string>
+    <string name="bot_life_source_tree">Open Tree · taxon and references</string>
+    <string name="bot_life_source_notice">Wikidata · notice source</string>
+    <string name="bot_life_source_kew">Search this taxon at Kew</string>
 </resources>

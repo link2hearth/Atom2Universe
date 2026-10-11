@@ -858,4 +858,31 @@
     <string name="bot_lupinus_polyphyllus_aliases">Bigleaf lupine; large-leaved lupine; lupin des jardins</string>
     <string name="bot_lupinus_polyphyllus_description">Vivace à feuilles palmées longuement pétiolées, souvent composées de neuf à dix-sept folioles étroites. Les hautes grappes portent des fleurs papilionacées bleues à violettes. Les gousses velues s’ouvrent à maturité. De nombreux lupins de jardin sont des hybrides plutôt que cette espèce sauvage.</string>
     <string name="bot_lupinus_polyphyllus_distribution">Originaire de l’ouest de l’Amérique du Nord, dans les prairies humides, bords de ruisseaux et bois clairs. Introduit et parfois envahissant en Europe et dans d’autres régions.</string>
+
+    <string name="bot_life_catalogue">Arbre du vivant</string>
+    <string name="bot_life_intro">Références végétales de l’Arbre du vivant : plantes terrestres et algues vertes. Rechercher par nom, nom scientifique, synonyme ou famille. Les fiches illustrées sont réutilisées quand le taxon correspond exactement.</string>
+    <string name="bot_life_loading">Chargement des références végétales…</string>
+    <string name="bot_life_error">Les références végétales n’ont pas pu être chargées.</string>
+    <string name="bot_life_retry">Réessayer</string>
+    <string name="bot_life_search">Nom, nom scientifique, famille…</string>
+    <string name="bot_life_count">%1$d références végétales</string>
+    <string name="bot_life_illustrated">Fiche illustrée</string>
+    <string name="bot_life_reference">Fiche de référence</string>
+    <string name="bot_life_row">%1$s\n%2$s · %3$s</string>
+    <string name="bot_life_more">Afficher la suite</string>
+    <string name="bot_life_all">Toutes</string>
+    <string name="bot_life_branch">Groupe évolutif</string>
+    <string name="bot_life_sort_latin">Trier par nom scientifique</string>
+    <string name="bot_life_missing">Cette référence végétale n’est pas disponible dans le catalogue local.</string>
+    <string name="bot_life_reference_note">Référence taxonomique issue de l’Arbre du vivant hors ligne. La morphologie propre à l’espèce, son écologie et ses illustrations seront enrichies par lots. Les caractères du groupe ci-dessous décrivent un héritage commun, pas une clé d’identification.</string>
+    <string name="bot_life_notice">Notice de l’espèce</string>
+    <string name="bot_life_classification">Position dans l’Arbre du vivant</string>
+    <string name="bot_life_family_value">Famille dans l’arbre source : %1$s</string>
+    <string name="bot_life_group_traits">Caractères communs au groupe</string>
+    <string name="bot_life_open_tree">Situer dans l’Arbre du vivant</string>
+    <string name="bot_life_open_atlas">Ouvrir la fiche botanique</string>
+    <string name="bot_life_provenance">Arbre hors ligne : %1$s · Taxonomie : %2$s · Collecte : %3$s. Les noms et la classification suivent cette version de la source.</string>
+    <string name="bot_life_source_tree">Open Tree · taxon et références</string>
+    <string name="bot_life_source_notice">Wikidata · source de la notice</string>
+    <string name="bot_life_source_kew">Rechercher ce taxon chez Kew</string>
 </resources>
