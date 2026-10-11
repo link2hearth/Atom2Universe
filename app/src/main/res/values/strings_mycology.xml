@@ -212,12 +212,13 @@
         <item>Fatal dapperling: a small lepiota with a woolly ring and scaly stem; Wikipedia (fr) warns of a mix-up with the fairy ring champignon. The Belgian poison centre advises against eating any lepiota under 10 cm.</item>
     </string-array>
     <string name="myco_g_entoloma_title">Livid pinkgill, or clouded agaric?</string>
-    <string name="myco_g_entoloma_evidence">Belgian poison centre</string>
+    <string name="myco_g_entoloma_evidence">Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_entoloma_points">
         <item>Livid pinkgill: notched gills, butter-yellow then pink. Clouded agaric: pale, close gills.</item>
         <item>Clouded agaric: stout, light grey stem, grey cap with a white bloom. Pinkgill: white to cream stem, often club-shaped.</item>
         <item>Both smell floury: the smell is not enough.</item>
         <item>The clouded agaric can upset the digestion; the livid pinkgill causes severe gastroenteritis.</item>
+        <item>Clustered domecap: grows in clumps with stems fused at the base; both Wikipedia pages warn that it can be mistaken for an entoloma, and the French one advises abstaining in doubt.</item>
     </string-array>
     <string name="myco_g_inkcap_title">Shaggy ink cap, or common ink cap?</string>
     <string name="myco_g_inkcap_evidence">Belgian poison centre</string>
@@ -1940,12 +1941,13 @@
     <string name="myco_l_russet_woolly_cap">Russet, woolly cap</string>
     <string name="myco_l_spines_not_decurrent">Spines do not run down the stem</string>
     <string name="myco_l_thin_central_stem">Thin, central stem</string>
-    <string name="myco_g_pinebolete_title">Slippery jack, or granulated bolete?</string>
+    <string name="myco_g_pinebolete_title">Slimy pine boletes, or look-alike?</string>
     <string name="myco_g_pinebolete_evidence">Wikipedia</string>
     <string-array name="myco_g_pinebolete_points">
         <item>Slippery jack: a wide ring, white above and violet-brown below. Granulated bolete: no ring.</item>
         <item>Both are slimy-capped boletes of pine woods, with fine yellow pores.</item>
         <item>Wikipedia (fr) says the slippery jack is edible with care (peeled cap, young ones only); the granulated bolete has a card of its own, with the more prudent status.</item>
+        <item>Bovine bolete: no ring either, but very large angular pores running down the stem and a slimmer stem. Slimy spike-cap: gills, not pores, and only an indistinct ring zone (Wikipedia, en).</item>
     </string-array>
     <string name="myco_g_hedgehog_title">Pied-de-mouton, or terracotta hedgehog?</string>
     <string name="myco_g_hedgehog_evidence">Wikipedia</string>
@@ -1954,4 +1956,96 @@
         <item>Intermediate forms link the two species (Wikipedia, fr): the difference is not always clear.</item>
         <item>Both are edible and have spines instead of gills or pores; the terracotta hedgehog is less fleshy and slightly more bitter.</item>
     </string-array>
+    <string name="myco_volemus_name">Weeping milk cap</string>
+    <string name="myco_volemus_alt">Lactaire à lait abondant</string>
+    <string name="myco_volemus_latin" translatable="false">Lactifluus volemus</string>
+    <string-array name="myco_volemus_traits">
+        <item>Cap 5 to 11 cm, apricot to tawny, velvety or smooth, flat with a sunken centre</item>
+        <item>Gills narrow, very crowded, sometimes forked, pale golden yellow, turning brown when crushed</item>
+        <item>Stem 4 to 12 cm, firm, slightly paler than the cap</item>
+        <item>Abundant white milk that turns brownish in the air and stains brown; whitish, firm flesh</item>
+        <item>Fishy smell, which fades on cooking</item>
+        <item>Under broadleaf and conifer trees · summer and autumn</item>
+    </string-array>
+    <string name="myco_volemus_note">Edible: the DGfM and the VAPKO list it. Wikipedia (fr) calls its taste mediocre, Wikipedia (en) recommends it for cooking, slowly rather than pan-fried because of the milk. The fishy smell fades on cooking (Wikipedia, en). Wikipedia (en) reports one case of transient pancreatitis in two elderly people in Turkey who had eaten it before. Close species (Lactifluus corrugis, L. rugatus) are hard to tell apart; the sources read give no field rule.</string>
+    <string name="myco_glutinosus_name">Slimy spike-cap</string>
+    <string name="myco_glutinosus_alt">Gomphide glutineux</string>
+    <string name="myco_glutinosus_latin" translatable="false">Gomphidius glutinosus</string>
+    <string-array name="myco_glutinosus_traits">
+        <item>Cap 3 to 12 cm, convex then flat, dark brownish to purplish-grey, covered in thick slime</item>
+        <item>Gills widely spaced, running down the stem, white then grey, blackening with the spores</item>
+        <item>Stem 4 to 10 cm, white above, yellow at the base; the veil leaves only an indistinct ring zone, stained by the spores</item>
+        <item>Whitish flesh, faint smell, mild or slightly acidic taste</item>
+        <item>Under conifers, often spruce · July to November</item>
+    </string-array>
+    <string name="myco_glutinosus_note">Edible once the slime and the skin of the cap are removed: the DGfM and the VAPKO say so, Wikipedia (fr) calls it honourable or mediocre, Wikipedia (en) says opinions differ and that it accumulates heavy metals. Seen from above a young one looks like the slippery jack, but it has gills, not pores (Wikipedia, en); Wikipedia (fr) names Gomphidius maculatus, under larches, as its main look-alike.</string>
+    <string name="myco_bovinus_name">Bovine bolete</string>
+    <string name="myco_bovinus_alt">Bolet des bouviers</string>
+    <string name="myco_bovinus_latin" translatable="false">Suillus bovinus</string>
+    <string-array name="myco_bovinus_traits">
+        <item>Cap 3 to 10 cm, sticky, ochre to brownish-yellow, sometimes tinged pink, wavy edge</item>
+        <item>Very large angular pores, running down the stem, yellow to olive</item>
+        <item>Stem 3 to 10 cm, slim, beige to ochre, no ring</item>
+        <item>Soft, elastic, cream flesh, mild taste</item>
+        <item>Under pines, in groups · July to November</item>
+    </string-array>
+    <string name="myco_bovinus_note">Edible but of poor quality: the DGfM and the VAPKO list it; Wikipedia (fr) calls the flesh flabby and tasteless and, like other slippery boletes, laxative for some people; it advises young ones only, the stem removed and the cap peeled. Wikipedia (en) adds that old ones are rubbery and often full of maggots. It has no ring, unlike the slippery jack; the variegated bolete has smaller round pores that blue.</string>
+    <string name="myco_scabrum_name">Birch bolete</string>
+    <string name="myco_scabrum_alt">Bolet rude</string>
+    <string name="myco_scabrum_latin" translatable="false">Leccinum scabrum</string>
+    <string-array name="myco_scabrum_traits">
+        <item>Cap 4 to 20 cm, tan to dark brown, smooth or velvety, sticky when wet</item>
+        <item>Pores whitish then grey, browning when touched</item>
+        <item>Stem 5 to 20 cm, white, covered in small blackish-brown scales</item>
+        <item>Whitish flesh, almost unchanging when cut; mild taste, faint smell</item>
+        <item>Almost only under birch · summer to late autumn</item>
+    </string-array>
+    <string name="myco_scabrum_note">Edible when well cooked: the DGfM and the VAPKO list the rough-stemmed boletes, and Wikipedia (fr) warns that raw or undercooked ones cause digestive upset. Of medium value; the fibrous stem is often thrown away, young caps are preferred. The flesh darkens, even turns black, when cooked (Wikipedia, fr and en). The many other rough-stemmed boletes are close; the sources read give no simple rule to separate them.</string>
+    <string name="myco_odora_name">Blue-green anise mushroom</string>
+    <string name="myco_odora_alt">Clitocybe odorant</string>
+    <string name="myco_odora_latin" translatable="false">Clitocybe odora</string>
+    <string-array name="myco_odora_traits">
+        <item>Cap 3 to 8 cm, bluish to grey-green, fading, frosted, inrolled margin</item>
+        <item>Gills thin, widely spaced, slightly running down the stem, whitish</item>
+        <item>Stem fibrous, bent, pale bluish-green, thicker at the base, no ring</item>
+        <item>Strong sweet smell of aniseed, which stays when dried</item>
+        <item>Mostly broadleaf woods, sometimes conifers · midsummer to late autumn</item>
+    </string-array>
+    <string name="myco_odora_note">Not recommended: the sources disagree. The DGfM and the VAPKO list it, Wikipedia (fr) calls it a good edible used mostly as a seasoning, while Wikipedia (en) says edible but not recommended, some guides advising against it, and warns that young ones may be mistaken for the verdigris agaric and other poisonous species. The most prudent status is kept.</string>
+    <string name="myco_piperatus_name">Peppery milk cap</string>
+    <string name="myco_piperatus_alt">Lactaire poivré</string>
+    <string name="myco_piperatus_latin" translatable="false">Lactifluus piperatus</string>
+    <string-array name="myco_piperatus_traits">
+        <item>Cap 6 to 16 cm, dry, creamy-white, staining tan with age, sunken in the centre</item>
+        <item>Gills very crowded and narrow, running down the stem, white then cream</item>
+        <item>Stem 2 to 8 cm, white and smooth</item>
+        <item>Thick, firm white flesh; abundant white milk, very hot and acrid, drying olive-green</item>
+        <item>Deciduous woods, especially beech · summer to early winter</item>
+    </string-array>
+    <string name="myco_piperatus_note">Not recommended: the DGfM lists it with the advice to cook it through thoroughly, but Wikipedia (en) says it contains toxins, that some sources call it inedible or poisonous, and that raw it irritated lips and tongue for about an hour. Boiling removes the bite. The most prudent status is kept. Wikipedia (fr) has no description of the species: the text comes from Wikipedia (en) alone. Do not confuse it with the white Russula delica, which gives no milk.</string>
+    <string name="myco_decastes_name">Clustered domecap</string>
+    <string name="myco_decastes_alt">Tricholome agrégé</string>
+    <string name="myco_decastes_latin" translatable="false">Lyophyllum decastes</string>
+    <string-array name="myco_decastes_traits">
+        <item>Cap 4 to 15 cm, fawn to light brown, sometimes greyish, rolled wavy margin</item>
+        <item>Gills close, whitish to cream</item>
+        <item>Stem stocky, white, no ring; stems fused in a clump</item>
+        <item>Smell floury to fungal, sometimes absent</item>
+        <item>Edges and paths of woods, especially under poplars · late summer to autumn</item>
+    </string-array>
+    <string name="myco_decastes_note">Not recommended: the sources disagree. The DGfM and the VAPKO list it and Wikipedia (en) calls it edible or choice, but Wikipedia (fr) says some describe it as not to be eaten and others as poorly tolerated, and advises abstaining when in doubt; some gastric upset is reported (Wikipedia, en). The most prudent status is kept. Both pages warn of look-alikes among the entolomas (see the group) and Wikipedia (en) of Clitocybe dilatata.</string>
+    <string name="myco_l_apricot_velvet_cap">Apricot to tawny, velvety cap</string>
+    <string name="myco_l_golden_crowded_gills">Crowded, golden-yellow gills</string>
+    <string name="myco_l_stem_paler_than_cap">Stem paler than the cap</string>
+    <string name="myco_l_abundant_white_milk">Abundant white milk</string>
+    <string name="myco_l_dark_slimy_cap">Dark, slimy cap</string>
+    <string name="myco_l_white_stem_yellow_base">White stem, yellow base</string>
+    <string name="myco_l_pores_large_decurrent">Yellow pores running down the stem</string>
+    <string name="myco_l_tan_brown_cap">Tan to brown cap</string>
+    <string name="myco_l_pores_white_grey">Whitish to grey pores</string>
+    <string name="myco_l_black_scabers">Small blackish scales on the stem</string>
+    <string name="myco_l_frosted_blue_green_cap">Frosted blue-green cap</string>
+    <string name="myco_l_blue_green_stem">Pale blue-green stem, no ring</string>
+    <string name="myco_l_dry_cream_white_cap">Dry, creamy-white cap</string>
+    <string name="myco_l_fawn_cap">Fawn to light brown cap</string>
 </resources>

@@ -207,12 +207,13 @@
         <item>Lépiote de Josserand : une petite lépiote à anneau laineux et pied écailleux ; Wikipédia (fr) met en garde contre une confusion avec le faux mousseron. Le centre antipoison belge déconseille toute lépiote de moins de 10 cm.</item>
     </string-array>
     <string name="myco_g_entoloma_title">Entolome livide, ou clitocybe nébuleux ?</string>
-    <string name="myco_g_entoloma_evidence">Centre antipoisons belge</string>
+    <string name="myco_g_entoloma_evidence">Centre antipoisons belge, Wikipédia</string>
     <string-array name="myco_g_entoloma_points">
         <item>Entolome livide : lames échancrées, jaune beurre puis roses. Clitocybe nébuleux : lames pâles, serrées.</item>
         <item>Clitocybe nébuleux : pied massif, gris clair, chapeau gris voilé de blanc. Entolome : pied blanc à crème, souvent en massue.</item>
         <item>Les deux sentent la farine : l’odeur ne suffit pas.</item>
         <item>Le clitocybe nébuleux peut donner des troubles digestifs ; l’entolome livide, une gastro-entérite sévère.</item>
+        <item>Tricholome agrégé : pousse en touffes aux pieds soudés à la base ; les deux pages Wikipédia avertissent qu’on peut le prendre pour un entolome, et la française conseille de s’abstenir dans le doute.</item>
     </string-array>
     <string name="myco_g_inkcap_title">Coprin chevelu, ou coprin noir d’encre ?</string>
     <string name="myco_g_inkcap_evidence">Centre antipoisons belge</string>
@@ -1840,12 +1841,13 @@
     <string name="myco_l_russet_woolly_cap">Chapeau roux, laineux</string>
     <string name="myco_l_spines_not_decurrent">Aiguillons qui ne descendent pas sur le pied</string>
     <string name="myco_l_thin_central_stem">Pied central mince</string>
-    <string name="myco_g_pinebolete_title">Nonnette voilée, ou bolet granulé ?</string>
+    <string name="myco_g_pinebolete_title">Bolets visqueux des pins, ou sosie ?</string>
     <string name="myco_g_pinebolete_evidence">Wikipédia</string>
     <string-array name="myco_g_pinebolete_points">
         <item>Nonnette voilée : un large anneau, blanc dessus et brun violacé dessous. Bolet granulé : pas d’anneau.</item>
         <item>Tous deux sont des bolets des pinèdes, au chapeau visqueux et aux pores fins et jaunes.</item>
         <item>Wikipédia (fr) dit que la nonnette voilée se mange avec précaution (chapeau pelé, jeunes exemplaires seulement) ; le bolet granulé a sa propre fiche, avec le statut le plus prudent.</item>
+        <item>Bolet des bouviers : pas d’anneau non plus, mais de très grands pores anguleux qui descendent sur le pied et un pied plus mince. Gomphide glutineux : des lames, pas de pores, et seulement une zone annulaire floue (Wikipédia, en).</item>
     </string-array>
     <string name="myco_g_hedgehog_title">Pied-de-mouton, ou hydne roussissant ?</string>
     <string name="myco_g_hedgehog_evidence">Wikipédia</string>
@@ -1854,4 +1856,89 @@
         <item>Des formes intermédiaires relient les deux espèces (Wikipédia, fr) : la différence n’est pas toujours nette.</item>
         <item>Les deux sont comestibles et portent des aiguillons au lieu de lames ou de pores ; l’hydne roussissant est moins charnu et un peu plus amer.</item>
     </string-array>
+    <string name="myco_volemus_name">Lactaire à lait abondant</string>
+    <string name="myco_volemus_alt">Vachotte, weeping milk cap</string>
+    <string-array name="myco_volemus_traits">
+        <item>Chapeau de 5 à 11 cm, abricot à fauve, velouté ou lisse, plan à centre creux</item>
+        <item>Lames étroites, très serrées, parfois fourchues, jaune d’or pâle, qui brunissent quand on les froisse</item>
+        <item>Pied de 4 à 12 cm, ferme, un peu plus pâle que le chapeau</item>
+        <item>Lait blanc abondant qui brunit à l’air et tache de brun ; chair blanchâtre et ferme</item>
+        <item>Odeur de poisson, qui disparaît à la cuisson</item>
+        <item>Sous les feuillus et les conifères · été et automne</item>
+    </string-array>
+    <string name="myco_volemus_note">Comestible : la DGfM et la VAPKO le listent. Wikipédia (fr) lui trouve un goût médiocre, Wikipédia (en) le recommande en cuisine, lentement plutôt que poêlé à cause du lait. L’odeur de poisson disparaît à la cuisson (Wikipédia, en). Wikipédia (en) rapporte un cas de pancréatite passagère chez deux personnes âgées en Turquie, qui en avaient déjà mangé. Des espèces voisines (Lactifluus corrugis, L. rugatus) sont difficiles à séparer ; les sources lues ne donnent aucune règle de terrain.</string>
+    <string name="myco_glutinosus_name">Gomphide glutineux</string>
+    <string name="myco_glutinosus_alt">Slimy spike-cap</string>
+    <string-array name="myco_glutinosus_traits">
+        <item>Chapeau de 3 à 12 cm, convexe puis plan, brun foncé à gris pourpre, couvert d’un épais mucilage</item>
+        <item>Lames espacées, décurrentes, blanches puis grises, noircies par les spores</item>
+        <item>Pied de 4 à 10 cm, blanc en haut, jaune à la base ; le voile ne laisse qu’une zone annulaire floue, noircie par les spores</item>
+        <item>Chair blanchâtre, odeur faible, saveur douce ou un peu acide</item>
+        <item>Sous les conifères, souvent l’épicéa · juillet à novembre</item>
+    </string-array>
+    <string name="myco_glutinosus_note">Comestible une fois le mucilage et la peau du chapeau ôtés : la DGfM et la VAPKO le disent, Wikipédia (fr) le dit honorable ou médiocre, Wikipédia (en) dit que les avis divergent et qu’il accumule des métaux lourds. Vu de dessus, un jeune ressemble à la nonnette voilée, mais il a des lames, pas des pores (Wikipédia, en) ; Wikipédia (fr) cite Gomphidius maculatus, sous les mélèzes, comme principal sosie.</string>
+    <string name="myco_bovinus_name">Bolet des bouviers</string>
+    <string name="myco_bovinus_alt">Bovine bolete, Jersey cow mushroom</string>
+    <string-array name="myco_bovinus_traits">
+        <item>Chapeau de 3 à 10 cm, visqueux, ocre à jaune brunâtre, parfois teinté de rose, bord ondulé</item>
+        <item>Pores très grands et anguleux, décurrents, jaunes à olive</item>
+        <item>Pied de 3 à 10 cm, mince, beige à ocre, sans anneau</item>
+        <item>Chair molle, élastique, crème, saveur douce</item>
+        <item>Sous les pins, en groupes · juillet à novembre</item>
+    </string-array>
+    <string name="myco_bovinus_note">Comestible mais de piètre qualité : la DGfM et la VAPKO le listent ; Wikipédia (fr) lui trouve la chair flasque et insipide et, comme les autres bolets visqueux, laxative pour certains ; elle conseille les jeunes seulement, le pied ôté et le chapeau pelé. Wikipédia (en) ajoute que les vieux sont caoutchouteux et souvent véreux. Il n’a pas d’anneau, contrairement à la nonnette voilée ; le bolet moucheté a des pores ronds plus petits qui bleuissent.</string>
+    <string name="myco_scabrum_name">Bolet rude</string>
+    <string name="myco_scabrum_alt">Bolet des bouleaux, birch bolete</string>
+    <string-array name="myco_scabrum_traits">
+        <item>Chapeau de 4 à 20 cm, brun clair à brun foncé, lisse ou velouté, visqueux par temps humide</item>
+        <item>Pores blanchâtres puis gris, qui brunissent au toucher</item>
+        <item>Pied de 5 à 20 cm, blanc, couvert de petites écailles brun noirâtre</item>
+        <item>Chair blanchâtre, presque inchangée à la coupe ; saveur douce, odeur faible</item>
+        <item>Presque uniquement sous les bouleaux · été à fin d’automne</item>
+    </string-array>
+    <string name="myco_scabrum_note">Comestible bien cuit : la DGfM et la VAPKO listent les bolets rudes, et Wikipédia (fr) avertit que crus ou mal cuits ils donnent des troubles digestifs. Valeur moyenne ; le pied fibreux est souvent jeté, on préfère les jeunes chapeaux. La chair noircit à la cuisson (Wikipédia, fr et en). Les nombreux autres bolets rudes sont proches ; les sources lues ne donnent aucune règle simple pour les séparer.</string>
+    <string name="myco_odora_name">Clitocybe odorant</string>
+    <string name="myco_odora_alt">Clitocybe anisé, blue-green anise mushroom</string>
+    <string-array name="myco_odora_traits">
+        <item>Chapeau de 3 à 8 cm, bleuâtre à vert grisâtre, pâlissant, givré, marge enroulée</item>
+        <item>Lames minces, très espacées, un peu décurrentes, blanchâtres</item>
+        <item>Pied fibreux, souvent courbé, vert bleuâtre pâle, plus épais à la base, sans anneau</item>
+        <item>Forte odeur douce d’anis, qui persiste à la dessiccation</item>
+        <item>Surtout sous les feuillus, parfois sous les conifères · milieu d’été à fin d’automne</item>
+    </string-array>
+    <string name="myco_odora_note">Non recommandé : les sources divergent. La DGfM et la VAPKO le listent, Wikipédia (fr) le dit bon comestible surtout utilisé comme condiment, tandis que Wikipédia (en) dit comestible mais non recommandé, certains guides le déconseillant, et prévient que les jeunes peuvent être pris pour la strophaire vert-de-gris et d’autres espèces vénéneuses. Le statut le plus prudent est retenu.</string>
+    <string name="myco_piperatus_name">Lactaire poivré</string>
+    <string name="myco_piperatus_alt">Peppery milk cap</string>
+    <string-array name="myco_piperatus_traits">
+        <item>Chapeau de 6 à 16 cm, sec, blanc crème, se tachant de fauve avec l’âge, creusé au centre</item>
+        <item>Lames très serrées et étroites, décurrentes, blanches puis crème</item>
+        <item>Pied de 2 à 8 cm, blanc et lisse</item>
+        <item>Chair blanche, épaisse et ferme ; lait blanc abondant, très brûlant et âcre, qui sèche en vert olive</item>
+        <item>Bois de feuillus, surtout hêtre · été à début d’hiver</item>
+    </string-array>
+    <string name="myco_piperatus_note">Non recommandé : la DGfM le liste avec le conseil de le cuire à fond, mais Wikipédia (en) dit qu’il contient des toxines, que certaines sources le disent immangeable ou vénéneux, et que cru il a irrité les lèvres et la langue pendant environ une heure. L’ébullition en ôte le piquant. Le statut le plus prudent est retenu. Wikipédia (fr) ne décrit pas l’espèce : le texte vient de Wikipédia (en) seule. Ne pas le confondre avec la russule blanche Russula delica, qui ne donne pas de lait.</string>
+    <string name="myco_decastes_name">Tricholome agrégé</string>
+    <string name="myco_decastes_alt">Lyophylle en touffe, clustered domecap</string>
+    <string-array name="myco_decastes_traits">
+        <item>Chapeau de 4 à 15 cm, fauve à brun clair, parfois grisâtre, marge enroulée et ondulée</item>
+        <item>Lames serrées, blanchâtres à crème</item>
+        <item>Pied trapu, blanc, sans anneau ; pieds soudés en touffe</item>
+        <item>Odeur farineuse à fongique, parfois absente</item>
+        <item>Lisières et chemins de bois, surtout sous les peupliers · fin d’été à automne</item>
+    </string-array>
+    <string name="myco_decastes_note">Non recommandé : les sources divergent. La DGfM et la VAPKO le listent et Wikipédia (en) le dit comestible ou excellent, mais Wikipédia (fr) dit que certains le décrivent comme à ne pas manger et d’autres comme mal toléré, et conseille de s’abstenir dans le doute ; des troubles gastriques sont signalés (Wikipédia, en). Le statut le plus prudent est retenu. Les deux pages mettent en garde contre des sosies parmi les entolomes (voir le groupe), et Wikipédia (en) contre Clitocybe dilatata.</string>
+    <string name="myco_l_apricot_velvet_cap">Chapeau abricot à fauve, velouté</string>
+    <string name="myco_l_golden_crowded_gills">Lames serrées, jaune d’or</string>
+    <string name="myco_l_stem_paler_than_cap">Pied plus pâle que le chapeau</string>
+    <string name="myco_l_abundant_white_milk">Lait blanc abondant</string>
+    <string name="myco_l_dark_slimy_cap">Chapeau sombre, couvert de mucilage</string>
+    <string name="myco_l_white_stem_yellow_base">Pied blanc, base jaune</string>
+    <string name="myco_l_pores_large_decurrent">Pores jaunes qui descendent sur le pied</string>
+    <string name="myco_l_tan_brown_cap">Chapeau brun clair à brun</string>
+    <string name="myco_l_pores_white_grey">Pores blanchâtres à gris</string>
+    <string name="myco_l_black_scabers">Petites écailles noirâtres sur le pied</string>
+    <string name="myco_l_frosted_blue_green_cap">Chapeau vert bleuâtre, givré</string>
+    <string name="myco_l_blue_green_stem">Pied vert bleuâtre pâle, sans anneau</string>
+    <string name="myco_l_dry_cream_white_cap">Chapeau sec, blanc crème</string>
+    <string name="myco_l_fawn_cap">Chapeau fauve à brun clair</string>
 </resources>

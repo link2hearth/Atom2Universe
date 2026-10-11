@@ -84,7 +84,7 @@
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "impudicus", "erinaceus", "lignyotus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "impudicus", "erinaceus", "lignyotus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens", "volemus", "glutinosus", "bovinus", "scabrum", "odora", "piperatus", "decastes"]
     },
     {
       "id": "toxinfo2025", "kind": "official",
@@ -150,7 +150,7 @@
       "id": "vapko2023", "kind": "society",
       "citation": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf",
-      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "lignyotus", "imbricatus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens"]
+      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "lignyotus", "imbricatus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens", "volemus", "glutinosus", "bovinus", "scabrum", "odora", "decastes"]
     },
     {
       "id": "dgfm2026tox", "kind": "society",
@@ -341,6 +341,19 @@
     { "id": "wp-fr-vesca", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russula vesca", "url": "https://fr.wikipedia.org/wiki/Russula_vesca", "species": ["vesca"] },
     { "id": "wp-en-vesca", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula vesca", "url": "https://en.wikipedia.org/wiki/Russula_vesca", "species": ["vesca"] },
     { "id": "wp-fr-rufescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hydnum rufescens", "url": "https://fr.wikipedia.org/wiki/Hydnum_rufescens", "species": ["rufescens"] },
-    { "id": "wp-en-rufescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Hydnum rufescens", "url": "https://en.wikipedia.org/wiki/Hydnum_rufescens", "species": ["rufescens"] }
+    { "id": "wp-en-rufescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Hydnum rufescens", "url": "https://en.wikipedia.org/wiki/Hydnum_rufescens", "species": ["rufescens"] },
+    { "id": "wp-fr-volemus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactifluus volemus", "url": "https://fr.wikipedia.org/wiki/Lactifluus_volemus", "species": ["volemus"] },
+    { "id": "wp-en-volemus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactifluus volemus", "url": "https://en.wikipedia.org/wiki/Lactifluus_volemus", "species": ["volemus"] },
+    { "id": "wp-fr-glutinosus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Gomphidius glutinosus", "url": "https://fr.wikipedia.org/wiki/Gomphidius_glutinosus", "species": ["glutinosus"] },
+    { "id": "wp-en-glutinosus", "kind": "encyclopedia", "citation": "Wikipedia (en): Gomphidius glutinosus", "url": "https://en.wikipedia.org/wiki/Gomphidius_glutinosus", "species": ["glutinosus"] },
+    { "id": "wp-fr-bovinus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Suillus bovinus", "url": "https://fr.wikipedia.org/wiki/Suillus_bovinus", "species": ["bovinus"] },
+    { "id": "wp-en-bovinus", "kind": "encyclopedia", "citation": "Wikipedia (en): Suillus bovinus", "url": "https://en.wikipedia.org/wiki/Suillus_bovinus", "species": ["bovinus"] },
+    { "id": "wp-fr-scabrum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Leccinum scabrum", "url": "https://fr.wikipedia.org/wiki/Leccinum_scabrum", "species": ["scabrum"] },
+    { "id": "wp-en-scabrum", "kind": "encyclopedia", "citation": "Wikipedia (en): Leccinum scabrum", "url": "https://en.wikipedia.org/wiki/Leccinum_scabrum", "species": ["scabrum"] },
+    { "id": "wp-fr-odora", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Clitocybe odora", "url": "https://fr.wikipedia.org/wiki/Clitocybe_odora", "species": ["odora"] },
+    { "id": "wp-en-odora", "kind": "encyclopedia", "citation": "Wikipedia (en): Clitocybe odora", "url": "https://en.wikipedia.org/wiki/Clitocybe_odora", "species": ["odora"] },
+    { "id": "wp-en-piperatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactifluus piperatus", "url": "https://en.wikipedia.org/wiki/Lactifluus_piperatus", "species": ["piperatus"] },
+    { "id": "wp-fr-decastes", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lyophyllum decastes", "url": "https://fr.wikipedia.org/wiki/Lyophyllum_decastes", "species": ["decastes"] },
+    { "id": "wp-en-decastes", "kind": "encyclopedia", "citation": "Wikipedia (en): Lyophyllum decastes", "url": "https://en.wikipedia.org/wiki/Lyophyllum_decastes", "species": ["decastes"] }
   ]
 }
