@@ -108,7 +108,7 @@ class BotanyCatalogTest {
 
     @Test fun leLotDeTerrainExposeSesNouveauxCaracteresAuxFiltres() {
         val brassicas=BotanyCatalog.species.filter{PlantQuery(families=setOf("Brassicaceae")).matches(it,"")}
-        assertEquals(setOf("cardamine","capsella","arabidopsis"),brassicas.map{it.id}.toSet())
+        assertEquals(setOf("cardamine","capsella","arabidopsis","brassica_oleracea"),brassicas.map{it.id}.toSet())
         assertEquals(listOf("capsella"),brassicas.filter{PlantQuery(fruits=setOf(FruitShape.SILICLE)).matches(it,"")}.map{it.id})
         assertTrue(PlantQuery(flowers=setOf(FlowerShape.LIGULATE),colors=setOf(FlowerColor.BLUE)).matches(BotanyCatalog.get("cichorium")!!,""))
         assertTrue(PlantQuery(fruits=setOf(FruitShape.BERRY),evergreen=false).matches(BotanyCatalog.get("vaccinium")!!,""))
@@ -166,6 +166,19 @@ class BotanyCatalogTest {
         assertEquals(setOf("persica","armeniaca"),plants.filter{PlantQuery(evergreen=false).matches(it,"")}.map{it.id}.toSet())
         assertTrue(PlantQuery(families=setOf("Rutaceae"),fruits=setOf(FruitShape.BERRY)).matches(BotanyCatalog.get("citrus_maxima")!!,""))
         assertTrue(PlantQuery(families=setOf("Rubiaceae"),fruits=setOf(FruitShape.DRUPE)).matches(BotanyCatalog.get("coffea")!!,""))
+    }
+
+    @Test fun grandesCulturesEtOrganesConsommesDistinctsDesFruits() {
+        val plants=BotanyCatalog.species.filter{PlantQuery(collections=setOf("food_crops")).matches(it,"")}
+        assertEquals(setOf("allium_cepa","brassica_oleracea","cucumis_sativus","glycine_max","arachis"),plants.map{it.id}.toSet())
+        assertTrue(plants.all{it.look.study?.foodCrop==true && it.id in BotanyReferences.taxonPages})
+        assertTrue(plants.all{it.flowering.isEmpty() && it.fruiting.isEmpty() && it.phenologyNote!=0})
+        assertTrue(PlantQuery(families=setOf("Amaryllidaceae"),fruits=setOf(FruitShape.CAPSULE)).matches(BotanyCatalog.get("allium_cepa")!!,""))
+        assertTrue(PlantQuery(families=setOf("Brassicaceae"),fruits=setOf(FruitShape.SILIQUE)).matches(BotanyCatalog.get("brassica_oleracea")!!,""))
+        assertEquals(setOf("glycine_max","arachis"),plants.filter{PlantQuery(fruits=setOf(FruitShape.POD)).matches(it,"")}.map{it.id}.toSet())
+        assertTrue(PlantQuery(families=setOf("Cucurbitaceae"),fruits=setOf(FruitShape.BERRY)).matches(BotanyCatalog.get("cucumis_sativus")!!,""))
+        assertEquals(4,BotanyCatalog.get("arachis")!!.look.leaflets)
+        assertTrue(PlantQuery(leaves=setOf(LeafShape.TRIFOLIATE),colors=setOf(FlowerColor.WHITE)).matches(BotanyCatalog.get("glycine_max")!!,""))
     }
 
 }

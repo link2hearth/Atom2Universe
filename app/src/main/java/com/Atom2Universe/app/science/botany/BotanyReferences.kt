@@ -3,6 +3,12 @@ package com.Atom2Universe.app.science.botany
 /** Stable taxon pages complement the general floras; adding a reference never changes the screens. */
 object BotanyReferences {
     val taxonPages: Map<String, String> = mapOf(
+        "allium_cepa" to "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200027457",
+        "brassica_oleracea" to "https://plants.ces.ncsu.edu/plants/brassica-oleracea/",
+        "cucumis_sativus" to "https://plants.ces.ncsu.edu/plants/cucumis-sativus/",
+        "glycine_max" to "https://plants.ces.ncsu.edu/plants/glycine-max/",
+        "arachis" to "https://efloras.org/florataxon.aspx?flora_id=2&taxon_id=200011891",
+
         "olea" to "https://plants.ces.ncsu.edu/plants/olea-europaea/",
         "coffea" to "https://efloras.org/florataxon.aspx?flora_id=2&taxon_id=200022076",
         "persica" to "https://plants.ces.ncsu.edu/plants/prunus-persica/",

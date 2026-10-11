@@ -52,6 +52,8 @@ class BotanyRenderingTest {
 
     @Test fun caracteresDesComparaisonsNeSontPasDesImagesIdentiques() {
         for((a,b,view) in listOf(
+            Triple("glycine_max","arachis",PlantView.HABIT),Triple("glycine_max","arachis",PlantView.LEAF),
+            Triple("glycine_max","arachis",PlantView.FRUIT),Triple("allium_cepa","brassica_oleracea",PlantView.FLOWER),
             Triple("olea","coffea",PlantView.HABIT),Triple("persica","armeniaca",PlantView.LEAF),
             Triple("olea","coffea",PlantView.FLOWER),Triple("persica","armeniaca",PlantView.FRUIT),
             Triple("coffea","citrus_maxima",PlantView.FRUIT),
@@ -84,9 +86,9 @@ class BotanyRenderingTest {
 
     @Test fun lesProfilsDOrganesSontReutilisablesSansIdentifiantConnu() {
         for(id in listOf("papaver","viola","digitalis","corylus","pinus","plantago_major",
-            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + (AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species).map{it.id}) {
+            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + (AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species).map{it.id}) {
             val species=BotanyCatalog.get(id)!!
-            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species+NorthAmericanCatalog.species+ModelPlantsCatalog.species+NightshadesCatalog.species+OrchardCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
+            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species+NorthAmericanCatalog.species+ModelPlantsCatalog.species+NightshadesCatalog.species+OrchardCatalog.species+FoodCropsCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
             for(view in views) {
                 val original=render(id,view)
                 val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
@@ -108,6 +110,10 @@ class BotanyRenderingTest {
 
     @Test fun troisiemeLotDeReferencesIllustrees() {
         referenceSheet(OrchardCatalog.species,"references-lot-3.png")
+    }
+
+    @Test fun quatriemeLotDeReferencesIllustrees() {
+        referenceSheet(FoodCropsCatalog.species,"references-lot-4.png")
     }
 
     private fun referenceSheet(species:List<PlantSpecies>,filename:String) {

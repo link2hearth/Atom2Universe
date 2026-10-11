@@ -1208,4 +1208,61 @@
     <string name="bot_family_Rubiaceae" translatable="false">Rubiaceae</string>
     <string name="bot_family_Rutaceae" translatable="false">Rutaceae</string>
     <string name="bot_source_ntbg">National Tropical Botanical Garden</string>
+
+    <string name="bot_collection_food_crops">Major food crops</string>
+    <string name="bot_collection_food_crops_desc">Bulbs, leaves, fruits and seeds: five familiar plants with contrasting organs.</string>
+    <string name="bot_group_food_organs">Which organ do we harvest?</string>
+    <string name="bot_group_food_organs_desc">Onion: fleshy leaf bases in the bulb. Headed cabbage: leaves. Cucumber: immature fruit. Soybean and peanut: seeds inside pods, underground in peanut.</string>
+    <string name="bot_food_crop_season">Flowering and fruiting depend on climate, sowing and cultivar. Onion and cabbage are often harvested before flowering; there is no universal monthly calendar.</string>
+    <string name="bot_family_Amaryllidaceae_aliases">amaryllis onion daffodil family</string>
+    <string name="bot_family_Amaryllidaceae_desc">Often bulbous monocots, usually with six tepals per flower. Onions and garlic belong to subfamily Allioideae.</string>
+    <string name="bot_family_Cucurbitaceae_aliases">gourd melon cucumber family</string>
+    <string name="bot_family_Cucurbitaceae_desc">Often tendril-climbing plants with usually unisexual flowers and inferior ovaries; fruits are frequently pepos.</string>
+    <string name="bot_allium_cepa_name">Onion</string>
+    <string name="bot_allium_cepa_aliases">onion bulb shallot Allium cepa</string>
+    <string name="bot_allium_cepa_description">Bulbous plant, usually biennial but often harvested in its first year. Hollow leaves have parallel veins. The bulb consists of fleshy leaf bases around a very short stem: it is not a fruit. A hollow scape bears a globose umbel; each flower has six tepals and six stamens. The fruit is a capsule containing black seeds.</string>
+    <string name="bot_allium_cepa_distribution">Domesticated crop of Central Asian origin, widely cultivated. The plate represents a yellow bulb onion.</string>
+    <string name="bot_allium_cepa_habit">Tubular leaves, bulb and umbel on a leafless scape.</string>
+    <string name="bot_allium_cepa_leaf">Hollow leaf and cross section; bulb section inset at a different scale.</string>
+    <string name="bot_allium_cepa_flower">Six green-veined tepals, six stamens; miniature umbel.</string>
+    <string name="bot_allium_cepa_fruit">Three-chambered capsule opening in three valves; angular black seeds.</string>
+    <string name="bot_brassica_oleracea_name">Cabbage</string>
+    <string name="bot_brassica_oleracea_aliases">cabbage broccoli cauliflower Brussels sprout kale Brassica oleracea</string>
+    <string name="bot_brassica_oleracea_description">Thick-leaved, often glaucous species whose cultivated forms include headed cabbage, broccoli and cauliflower. A cabbage head is a cluster of tightly packed leaves, not a fruit. At flowering, a branched stem bears flowers with four crosswise petals and six stamens, two shorter. Fruits are siliques with two valves around a seed-bearing partition.</string>
+    <string name="bot_brassica_oleracea_distribution">European species with many domesticated forms, now grown worldwide. The plate distinguishes a cabbage head from a flowering plant.</string>
+    <string name="bot_brassica_oleracea_habit">Bolting flowering plant; cabbage head inset at a different scale.</string>
+    <string name="bot_brassica_oleracea_leaf">Large waxy leaf with branching veins; outline and margin vary among cultivars.</string>
+    <string name="bot_brassica_oleracea_flower">Four petals, four long and two short stamens.</string>
+    <string name="bot_brassica_oleracea_fruit">Closed and open silique: two valves, persistent partition and seeds.</string>
+    <string name="bot_cucumis_sativus_name">Cucumber</string>
+    <string name="bot_cucumis_sativus_aliases">cucumber gherkin Cucumis sativus</string>
+    <string name="bot_cucumis_sativus_description">Annual trailing or climbing herb with simple tendrils and rough, palmately veined leaves. Yellow flowers are usually male or female; the female flower has an inferior ovary already resembling a tiny cucumber. The fruit is a pepo, a specialized berry. It is usually harvested green and immature; some cultivars produce fruit without fertilization.</string>
+    <string name="bot_cucumis_sativus_distribution">Asian origin, cultivated worldwide. Height depends on support; the plate shows a trained vine and a seeded fruit.</string>
+    <string name="bot_cucumis_sativus_habit">Trained stem, alternate leaves and tendrils; the support is not part of the plant.</string>
+    <string name="bot_cucumis_sativus_leaf">Shallowly five-lobed blade, cordate base, palmate veins and tendril inset.</string>
+    <string name="bot_cucumis_sativus_flower">Five-lobed female flower with three-lobed stigma; inferior ovary in side view.</string>
+    <string name="bot_cucumis_sativus_fruit">Immature green fruit, yellowing ripe fruit and section with three placental regions.</string>
+    <string name="bot_glycine_max_name">Soybean</string>
+    <string name="bot_glycine_max_aliases">soy soybean soya edamame Glycine max</string>
+    <string name="bot_glycine_max_description">Hairy annual herb with leaves usually divided into three leaflets. Small white to violet pea flowers arise in leaf axils. Hairy pods contain several seeds, used for protein and oil; immature seeds are eaten as edamame. The plate shows a violet-flowered, yellow-seeded form.</string>
+    <string name="bot_glycine_max_distribution">Domesticated in eastern Asia and cultivated worldwide.</string>
+    <string name="bot_glycine_max_habit">Upright stems, trifoliolate leaves and axillary pods.</string>
+    <string name="bot_glycine_max_leaf">Three entire, veined, hairy leaflets.</string>
+    <string name="bot_glycine_max_flower">Standard, wings and keel; small axillary raceme inset.</string>
+    <string name="bot_glycine_max_fruit">Hairy pod and opened valve with three seeds; visible hilum.</string>
+    <string name="bot_arachis_name">Peanut</string>
+    <string name="bot_arachis_aliases">peanut groundnut monkey nut Arachis hypogaea</string>
+    <string name="bot_arachis_description">Annual herb with two pairs of leaflets per leaf. After fertilization of the yellow flower, a peg called the gynophore elongates into the soil, carrying the ovary: pods ripen underground. Their net-veined shell does not open spontaneously and contains one to several seeds. A peanut is therefore a legume seed, not a botanical nut.</string>
+    <string name="bot_arachis_distribution">South American origin, cultivated in warm regions. The plate represents a spreading form with two-seeded pods.</string>
+    <string name="bot_arachis_habit">Soil cutaway: stem-borne pegs and underground pods, distinct from roots.</string>
+    <string name="bot_arachis_leaf">Two pairs of rounded leaflets, no terminal leaflet; stipules at the petiole.</string>
+    <string name="bot_arachis_flower">Yellow pea flower; elongating post-fertilization peg inset.</string>
+    <string name="bot_arachis_fruit">Net-veined pod and artificially opened shell showing two seeds.</string>
+    <string name="bot_allium_cepa_latin" translatable="false">Allium cepa</string>
+    <string name="bot_brassica_oleracea_latin" translatable="false">Brassica oleracea</string>
+    <string name="bot_cucumis_sativus_latin" translatable="false">Cucumis sativus</string>
+    <string name="bot_glycine_max_latin" translatable="false">Glycine max</string>
+    <string name="bot_arachis_latin" translatable="false">Arachis hypogaea</string>
+    <string name="bot_family_Amaryllidaceae" translatable="false">Amaryllidaceae</string>
+    <string name="bot_family_Cucurbitaceae" translatable="false">Cucurbitaceae</string>
 </resources>
