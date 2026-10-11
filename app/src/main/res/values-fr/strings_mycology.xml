@@ -146,12 +146,13 @@
         <item>Le bolet amer n’est pas toxique, mais son amertume gâche tout. Le bolet de Satan rend malade.</item>
     </string-array>
     <string name="myco_g_parasol_title">Coulemelle, ou pas ?</string>
-    <string name="myco_g_parasol_evidence">ANSES 2022</string>
+    <string name="myco_g_parasol_evidence">ANSES 2022, Wikipédia</string>
     <string-array name="myco_g_parasol_points">
         <item>Coulemelle : grande (plus de 10 cm), pied zébré de brun, anneau double qui coulisse, pas de volve.</item>
         <item>Amanite phalloïde : volve en sac à la base, anneau tombant, pied chiné d’olive, chapeau vert olive.</item>
         <item>Amanite panthère : verrues blanches sur chapeau brun, bulbe à bord net, anneau lisse.</item>
         <item>Petites lépiotes (moins de 10 cm) : mortelles, à ne jamais cueillir.</item>
+        <item>Lépiote excoriée : plus petite que la coulemelle, avec des écailles ocre et une base bulbeuse ; Wikipédia (en) prévient qu’elle ressemble à de nombreuses espèces toxiques.</item>
     </string-array>
     <string name="myco_g_field_title">Rosé des prés, ou pas ?</string>
     <string name="myco_g_field_evidence">ANSES 2022, contrôleurs suisses, Wikipédia</string>
@@ -1941,4 +1942,100 @@
     <string name="myco_l_blue_green_stem">Pied vert bleuâtre pâle, sans anneau</string>
     <string name="myco_l_dry_cream_white_cap">Chapeau sec, blanc crème</string>
     <string name="myco_l_fawn_cap">Chapeau fauve à brun clair</string>
+    <string name="myco_xerampelina_name">Russule xérampéline</string>
+    <string name="myco_xerampelina_alt">Russule feuille-morte, shrimp russula</string>
+    <string-array name="myco_xerampelina_traits">
+        <item>Chapeau de 4 à 20 cm, rouge vineux à pourpre, marge carmin et centre pourpre noirâtre, parfois verdâtre</item>
+        <item>Lames presque libres, crème, jaunissant avec l’âge, à arêtes pourpres</item>
+        <item>Pied de 4 à 12 cm, blanc, parfois teinté de rouge, qui brunit au toucher</item>
+        <item>Odeur de crabe ou de crevette cuits, plus forte avec l’âge ; saveur douce</item>
+        <item>Surtout sous les conifères, épicéas, pins ou sapins · été à automne</item>
+    </string-array>
+    <string name="myco_xerampelina_note">Comestible : la DGfM et la VAPKO le listent. Wikipédia (en) le compte parmi les meilleurs comestibles de son genre, les jeunes chapeaux se prêtant à la farce ; Wikipédia (fr) le range parmi les comestibles mais trouve son goût d’écrevisse ou de hareng peu attirant. L’odeur de crustacé persiste à la cuisson (Wikipédia, en). La russule émétique a le pied et les lames blancs (Wikipédia, en) : voir le groupe.</string>
+    <string name="myco_nobilis_name">Russula nobilis</string>
+    <string name="myco_nobilis_alt">Beechwood sickener, Russula mairei</string>
+    <string-array name="myco_nobilis_traits">
+        <item>Chapeau de 3 à 6 cm, rouge ou rosé, convexe puis plan, peu visqueux, la peau se retirant sur le tiers environ</item>
+        <item>Lames blanches, serrées</item>
+        <item>Pied de 2 à 5 cm, blanc, plus ferme que celui de la russule émétique</item>
+        <item>Chair blanche et ferme ; odeur de noix de coco, saveur poivrée</item>
+        <item>Sous les hêtres · répandue en Europe</item>
+    </string-array>
+    <string name="myco_nobilis_note">Toxique : la DGfM la liste sous son ancien nom, Russula mairei, pour un syndrome gastro-intestinal, et Wikipédia (en) la dit immangeable, probablement vénéneuse en quantité mais pas mortelle : crues, les russules rouges au goût poivré donnent diarrhée, vomissements et crampes, la toxine restant inconnue. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_aurea_name">Russule dorée</string>
+    <string name="myco_aurea_alt">Gilded brittlegill</string>
+    <string-array name="myco_aurea_traits">
+        <item>Chapeau de 4 à 10 cm, rouge vermillon virant à l’orange, avec des plages jaune d’or, ou tout jaune d’or ; centre creux, bord ondulé</item>
+        <item>Lames crème puis jaune citron, aux arêtes les plus vives, souvent fourchues</item>
+        <item>Pied de 5 à 9 cm, blanc lavé de jaune, finement strié</item>
+        <item>Chair blanche et cassante avec une couche jaune sous la peau du chapeau ; saveur douce, de noisette</item>
+        <item>Sous les feuillus (hêtres, chênes, noisetiers) · surtout en été</item>
+    </string-array>
+    <string name="myco_aurea_note">Comestible : la DGfM et la VAPKO la listent ; Wikipédia (fr) la dit excellente et précise que l’ANSES soutient sa vente fraîche, séchée ou en conserve. Wikipédia (en) prévient qu’elle ressemble à Russula sanguinea, à la russule émétique et à Russula nobilis, rouges, poivrées et immangeables : voir le groupe. Les formes pâles peuvent être confondues avec la russule caméléon (Wikipédia, fr) ; seul le microscope sépare certaines espèces proches.</string>
+    <string name="myco_versipelle_name">Bolet orangé des bouleaux</string>
+    <string name="myco_versipelle_alt">Bolet roux, orange birch bolete</string>
+    <string-array name="myco_versipelle_traits">
+        <item>Chapeau de 3 à 18 cm, ocre orangé à brun orangé, velouté à feutré</item>
+        <item>Pores gris, de la couleur des tubes</item>
+        <item>Pied de 3 à 20 cm, couvert de mèches noires très denses</item>
+        <item>Chair blanche virant au gris rosé puis au gris violet sombre à la coupe ; saveur douce, odeur faible</item>
+        <item>Sous les bouleaux · juillet à novembre</item>
+    </string-array>
+    <string name="myco_versipelle_note">Comestible bien cuit : la DGfM le liste et la VAPKO liste les bolets rudes. Wikipédia (fr) dit que le pied fibreux est souvent jeté et que les bolets rudes donnent des troubles digestifs crus ou mal cuits ; Wikipédia (en) le dit légèrement toxique s’il n’est pas bien chauffé (15 à 20 minutes de friture ou d’ébullition), avec nausées et vomissements. La couleur de la chair à la coupe diffère : gris rosé à gris violet (fr), rougeâtre puis brunâtre (en). Il noircit à la cuisson.</string>
+    <string name="myco_agathosmus_name">Hygrophore à odeur agréable</string>
+    <string name="myco_agathosmus_alt">Gray almond waxy cap</string>
+    <string-array name="myco_agathosmus_traits">
+        <item>Chapeau de 3 à 10 cm, convexe à bord enroulé, gris cendré terne, visqueux par temps humide</item>
+        <item>Lames blanches puis grisâtres, un peu décurrentes</item>
+        <item>Pied de 4 à 15 cm, blanchâtre, cendré avec l’âge, sans voile</item>
+        <item>Chair molle et blanchâtre ; forte odeur de noyau de cerise ou d’amande amère, saveur fade</item>
+        <item>Sous les épicéas et les pins, épars</item>
+    </string-array>
+    <string name="myco_agathosmus_note">Comestible mais fade : la DGfM et la VAPKO le listent ; Wikipédia (en) est la seule page à le décrire (la page française est une ébauche). L’odeur est le repère : Wikipédia (en) cite des hygrophores plus petits à odeur d’amande semblable, que l’atlas ne dessine pas.</string>
+    <string name="myco_marzuolus_name">Hygrophore de mars</string>
+    <string name="myco_marzuolus_alt">Charbonnier de printemps, March mushroom</string>
+    <string-array name="myco_marzuolus_traits">
+        <item>Chapeau de 2,5 à 12 cm, convexe, visqueux, gris brunâtre pâle au centre et plus foncé, gris noirâtre vers la marge</item>
+        <item>Lames larges, espacées, blanches puis grises à gris bleuâtre</item>
+        <item>Pied de 3 à 10 cm, blanchâtre, grisonnant</item>
+        <item>Chair imbibée d’eau sous la peau du chapeau, grisâtre ; ni odeur ni saveur marquées</item>
+        <item>Sous conifères et hêtres, sur sol calcaire, sous la neige qui fond · fin d’hiver à début de printemps, surtout en mars</item>
+    </string-array>
+    <string name="myco_marzuolus_note">Comestible et estimé (Wikipédia, fr et en) ; la DGfM et la VAPKO le listent, et la DGfM le marque comme protégé en Allemagne et sur la liste rouge (catégorie 2). Il sort en hiver, quand peu d’autres champignons poussent. La page française est presque vide : la description vient de Wikipédia (en).</string>
+    <string name="myco_excoriata_name">Lépiote excoriée</string>
+    <string name="myco_excoriata_alt">Coulemelle excoriée, nez de chat</string>
+    <string-array name="myco_excoriata_traits">
+        <item>Chapeau de 6 à 10 cm, convexe à en bouclier, centre brunâtre relevé, écailles jaune ocre à brun pâle</item>
+        <item>Lames blanches à crème, libres</item>
+        <item>Pied de 5 à 15 cm, lisse, à base bulbeuse et anneau blanc</item>
+        <item>Chair blanche et tendre qui ne change pas de couleur ; odeur faible, goût de noisette</item>
+        <item>Prés, pelouses et bords de routes · milieu d’été à fin d’automne</item>
+    </string-array>
+    <string name="myco_excoriata_note">Comestible : la DGfM et la VAPKO la listent. Wikipédia (fr) dit qu’elle est bonne à condition de jeter le pied ; Wikipédia (en) conseille de la manger jeune et de ne pas la cueillir au bord des routes, et prévient qu’elle ressemble à de nombreuses espèces toxiques, ce qui rend la cueillette risquée. Elle est plus petite que la coulemelle. La page française est une ébauche : la description vient de Wikipédia (en).</string>
+    <string name="myco_l_wine_dark_centre_cap">Chapeau rouge vineux, centre sombre</string>
+    <string name="myco_l_white_reddish_stem">Pied blanc teinté de rouge</string>
+    <string name="myco_l_red_gold_cap">Chapeau rouge et jaune d’or</string>
+    <string name="myco_l_cream_yellow_forked_gills">Lames crème-jaune, fourchues</string>
+    <string name="myco_l_white_yellow_wash_stem">Pied blanc lavé de jaune</string>
+    <string name="myco_l_orange_ochre_felt_cap">Chapeau ocre orangé, feutré</string>
+    <string name="myco_l_pores_grey">Pores gris</string>
+    <string name="myco_l_turns_grey_violet">Chair qui vire au gris violet</string>
+    <string name="myco_l_ash_grey_sticky_cap">Chapeau gris cendré, visqueux</string>
+    <string name="myco_l_grey_dark_margin_cap">Chapeau gris brun, plus foncé à la marge</string>
+    <string name="myco_l_ochre_scaly_cap">Écailles ocre, centre brunâtre</string>
+    <string name="myco_g_redrussula_title">Russule rouge : laquelle ?</string>
+    <string name="myco_g_redrussula_evidence">DGfM, Wikipédia</string>
+    <string-array name="myco_g_redrussula_points">
+        <item>Russule dorée (comestible) : lames crème virant au jaune citron, souvent fourchues, pied lavé de jaune, saveur douce de noisette.</item>
+        <item>Russule émétique et Russula nobilis (toxiques) : lames et pied blancs, saveur poivrée ; la DGfM les liste toutes deux pour un syndrome gastro-intestinal.</item>
+        <item>Russule xérampéline (comestible) : chapeau rouge vineux à pourpre, lames crème puis jaunissantes, odeur de crabe ou de crevette. Wikipédia (en) dit que la russule émétique a toujours le pied et les lames blancs.</item>
+        <item>Wikipédia (en) cite la russule émétique et Russula nobilis parmi les sosies de la russule dorée ; les sources lues ne donnent pas d’autre règle de terrain, et certaines espèces proches ne se séparent qu’au microscope.</item>
+    </string-array>
+    <string name="myco_g_roughstem_title">Bolet rude, ou bolet orangé des bouleaux ?</string>
+    <string name="myco_g_roughstem_evidence">Wikipédia</string>
+    <string-array name="myco_g_roughstem_points">
+        <item>Bolet rude : chapeau brun clair à brun foncé, chair blanchâtre presque inchangée. Bolet orangé des bouleaux : chapeau ocre orangé, chair qui vire au gris violet, pied couvert de mèches noires denses.</item>
+        <item>Tous deux poussent sous les bouleaux et ont un pied couvert d’écailles sombres.</item>
+        <item>Tous deux se mangent bien cuits : crus ou mal cuits, les bolets rudes donnent des troubles digestifs (Wikipédia, fr). D’autres bolets rudes existent, et les sources lues ne donnent pas de règle simple pour les séparer tous.</item>
+    </string-array>
 </resources>

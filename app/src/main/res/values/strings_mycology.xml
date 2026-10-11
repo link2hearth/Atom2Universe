@@ -151,12 +151,13 @@
         <item>The bitter bolete is not toxic, but its bitterness ruins everything. Satan’s bolete makes you ill.</item>
     </string-array>
     <string name="myco_g_parasol_title">Parasol, or not?</string>
-    <string name="myco_g_parasol_evidence">ANSES 2022</string>
+    <string name="myco_g_parasol_evidence">ANSES 2022, Wikipedia</string>
     <string-array name="myco_g_parasol_points">
         <item>Parasol: large (over 10 cm), stem banded with brown, double ring that slides, no volva.</item>
         <item>Death cap: sac-like volva at the base, hanging ring, olive-streaked stem, olive-green cap.</item>
         <item>Panther cap: white warts on a brown cap, sharp-edged bulb, smooth ring.</item>
         <item>Small lepiotas (under 10 cm): deadly, never to be picked.</item>
+        <item>Excoriated parasol: smaller than the parasol, with ochre scales and a bulbous base; Wikipedia (en) warns that it looks like many toxic species.</item>
     </string-array>
     <string name="myco_g_field_title">Field mushroom, or not?</string>
     <string name="myco_g_field_evidence">ANSES 2022, Swiss controllers, Wikipedia</string>
@@ -2048,4 +2049,107 @@
     <string name="myco_l_blue_green_stem">Pale blue-green stem, no ring</string>
     <string name="myco_l_dry_cream_white_cap">Dry, creamy-white cap</string>
     <string name="myco_l_fawn_cap">Fawn to light brown cap</string>
+    <string name="myco_xerampelina_name">Shrimp russula</string>
+    <string name="myco_xerampelina_alt">Russule xérampéline</string>
+    <string name="myco_xerampelina_latin" translatable="false">Russula xerampelina</string>
+    <string-array name="myco_xerampelina_traits">
+        <item>Cap 4 to 20 cm, wine-red to purple with a carmine edge and a blackish-purple centre, sometimes greenish</item>
+        <item>Gills nearly free, cream, yellowing with age, with purplish edges</item>
+        <item>Stem 4 to 12 cm, white, sometimes tinged red, browning when bruised</item>
+        <item>Smell of boiled crab or shrimp, stronger with age; mild taste</item>
+        <item>Mostly under conifers, spruce, pine or fir · summer to autumn</item>
+    </string-array>
+    <string name="myco_xerampelina_note">Edible: the DGfM and the VAPKO list it. Wikipedia (en) counts it among the best edibles of its genus, young caps being good for stuffing; Wikipedia (fr) places it among the edibles but finds its crayfish or herring taste unappealing. The shellfish smell stays when cooked (Wikipedia, en). The sickener has a white stem and white gills (Wikipedia, en): see the group.</string>
+    <string name="myco_nobilis_name">Beechwood sickener</string>
+    <string name="myco_nobilis_alt">Russula mairei</string>
+    <string name="myco_nobilis_latin" translatable="false">Russula nobilis</string>
+    <string-array name="myco_nobilis_traits">
+        <item>Cap 3 to 6 cm, red or rosy, convex then flat, weakly sticky, the skin peeling about a third of the way in</item>
+        <item>Gills white, crowded</item>
+        <item>Stem 2 to 5 cm, white, firmer than that of the sickener</item>
+        <item>Firm white flesh; smell of coconut, peppery taste</item>
+        <item>Under beech · widespread in Europe</item>
+    </string-array>
+    <string name="myco_nobilis_note">Toxic: the DGfM lists it under its former name, Russula mairei, for a gastrointestinal syndrome, and Wikipedia (en) calls it inedible, probably poisonous in quantity but not deadly: raw, red-capped peppery russulas cause diarrhoea, vomiting and cramps, the toxin being unidentified. There is no French Wikipedia page for it: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_aurea_name">Gilded brittlegill</string>
+    <string name="myco_aurea_alt">Russule dorée</string>
+    <string name="myco_aurea_latin" translatable="false">Russula aurea</string>
+    <string-array name="myco_aurea_traits">
+        <item>Cap 4 to 10 cm, vermilion red shading to orange, with golden-yellow patches, or all golden-yellow; sunken centre, wavy edge</item>
+        <item>Gills cream then lemon yellow, the edges the most vivid, often forked</item>
+        <item>Stem 5 to 9 cm, white washed with yellow, lightly striate</item>
+        <item>Brittle white flesh with a yellow layer under the cap skin; mild, nutty taste</item>
+        <item>Under broadleaf trees (beech, oak, hazel) · mainly summer</item>
+    </string-array>
+    <string name="myco_aurea_note">Edible: the DGfM and the VAPKO list it; Wikipedia (fr) calls it excellent and says the French agency ANSES supports its sale fresh, dried or canned. Wikipedia (en) warns that it is look-alike to the bloody brittlegill, the sickener and the beechwood sickener, red-capped, peppery and inedible: see the group. Pale forms may be mistaken for the chameleon russula (Wikipedia, fr); only the microscope separates some close species.</string>
+    <string name="myco_versipelle_name">Orange birch bolete</string>
+    <string name="myco_versipelle_alt">Bolet orangé des bouleaux</string>
+    <string name="myco_versipelle_latin" translatable="false">Leccinum versipelle</string>
+    <string-array name="myco_versipelle_traits">
+        <item>Cap 3 to 18 cm, ochre-orange to orange-brown, velvety to felty</item>
+        <item>Pores grey, the same colour as the tubes</item>
+        <item>Stem 3 to 20 cm, covered with dense black tufts</item>
+        <item>White flesh turning grey-pink then dark grey-violet when cut; mild taste, faint smell</item>
+        <item>Under birch · July to November</item>
+    </string-array>
+    <string name="myco_versipelle_note">Edible when well cooked: the DGfM lists it and the VAPKO lists the rough-stemmed boletes. Wikipedia (fr) says the fibrous stem is often thrown away and that rough-stemmed boletes upset the stomach if raw or undercooked; Wikipedia (en) calls it mildly toxic unless properly heated (15 to 20 minutes of frying or boiling), with nausea and vomiting. Flesh colour on cutting differs: pink to grey-violet (fr), reddish then brownish (en). It turns black when cooked.</string>
+    <string name="myco_agathosmus_name">Gray almond waxy cap</string>
+    <string name="myco_agathosmus_alt">Hygrophore à odeur agréable</string>
+    <string name="myco_agathosmus_latin" translatable="false">Hygrophorus agathosmus</string>
+    <string-array name="myco_agathosmus_traits">
+        <item>Cap 3 to 10 cm, convex with rolled-in edges, dull ashy grey, sticky when moist</item>
+        <item>Gills white then greyish, running slightly down the stem</item>
+        <item>Stem 4 to 15 cm, whitish, pale ashy with age, no veil</item>
+        <item>Soft whitish flesh; strong smell of cherry stones or bitter almonds, bland taste</item>
+        <item>Under spruce and pine, scattered</item>
+    </string-array>
+    <string name="myco_agathosmus_note">Edible but bland: the DGfM and the VAPKO list it; Wikipedia (en) is the only page with a description (the French page is a stub). The smell is the mark: Wikipedia (en) names smaller waxy caps with a similar almond smell, which this atlas does not draw.</string>
+    <string name="myco_marzuolus_name">March mushroom</string>
+    <string name="myco_marzuolus_alt">Hygrophore de mars</string>
+    <string name="myco_marzuolus_latin" translatable="false">Hygrophorus marzuolus</string>
+    <string-array name="myco_marzuolus_traits">
+        <item>Cap 2.5 to 12 cm, convex, sticky, pale greyish-brown in the centre and darker, blackish-grey toward the margin</item>
+        <item>Gills broad, distant, white then grey to bluish-grey</item>
+        <item>Stem 3 to 10 cm, whitish, greying</item>
+        <item>Flesh water-soaked under the cap skin, greyish; no noticeable smell or taste</item>
+        <item>Under conifers, beech, on chalky soil, under melting snow · late winter to early spring, mainly March</item>
+    </string-array>
+    <string name="myco_marzuolus_note">Edible and well regarded (Wikipedia, fr and en); the DGfM and the VAPKO list it, and the DGfM marks it as protected in Germany and on the red list (category 2). It comes up in winter, when few other mushrooms do. The French page is nearly empty: the description comes from Wikipedia (en).</string>
+    <string name="myco_excoriata_name">Excoriated parasol</string>
+    <string name="myco_excoriata_alt">Lépiote excoriée</string>
+    <string name="myco_excoriata_latin" translatable="false">Macrolepiota excoriata</string>
+    <string-array name="myco_excoriata_traits">
+        <item>Cap 6 to 10 cm, convex to shield-shaped, brownish raised centre, ochre-yellow to pale brown scales</item>
+        <item>Gills white to cream, free</item>
+        <item>Stem 5 to 15 cm, smooth, with a bulbous base and a white ring</item>
+        <item>White, tender flesh that does not change colour; weak smell, hazelnut taste</item>
+        <item>Fields, lawns and roadsides · mid-summer to late autumn</item>
+    </string-array>
+    <string name="myco_excoriata_note">Edible: the DGfM and the VAPKO list it. Wikipedia (fr) says it is good provided the stem is thrown away; Wikipedia (en) advises eating it young and not gathering it by roadsides, and warns that it looks like many toxic species, which makes picking it risky. It is smaller than the parasol. The French page is a stub: the description comes from Wikipedia (en).</string>
+    <string name="myco_l_wine_dark_centre_cap">Wine-red cap, dark centre</string>
+    <string name="myco_l_white_reddish_stem">White stem tinged red</string>
+    <string name="myco_l_red_gold_cap">Red and golden-yellow cap</string>
+    <string name="myco_l_cream_yellow_forked_gills">Cream-yellow forked gills</string>
+    <string name="myco_l_white_yellow_wash_stem">White stem washed with yellow</string>
+    <string name="myco_l_orange_ochre_felt_cap">Ochre-orange, felty cap</string>
+    <string name="myco_l_pores_grey">Grey pores</string>
+    <string name="myco_l_turns_grey_violet">Flesh turning grey-violet</string>
+    <string name="myco_l_ash_grey_sticky_cap">Ashy grey, sticky cap</string>
+    <string name="myco_l_grey_dark_margin_cap">Grey-brown cap, darker at the margin</string>
+    <string name="myco_l_ochre_scaly_cap">Ochre scales, brownish centre</string>
+    <string name="myco_g_redrussula_title">Red russula: which one?</string>
+    <string name="myco_g_redrussula_evidence">DGfM, Wikipedia</string>
+    <string-array name="myco_g_redrussula_points">
+        <item>Gilded brittlegill (edible): cream gills turning lemon-yellow, often forked, stem washed with yellow, mild nutty taste.</item>
+        <item>Sickener and beechwood sickener (toxic): white gills and white stem, peppery taste; the DGfM lists both for a gastrointestinal syndrome.</item>
+        <item>Shrimp russula (edible): wine-purple cap, gills cream then yellowing, smell of crab or shrimp. Wikipedia (en) says the sickener always has a white stem and white gills.</item>
+        <item>Wikipedia (en) lists the sickener and the beechwood sickener as look-alikes of the gilded brittlegill; the sources read give no further field rule, and some close species are separated only by the microscope.</item>
+    </string-array>
+    <string name="myco_g_roughstem_title">Birch bolete, or orange birch bolete?</string>
+    <string name="myco_g_roughstem_evidence">Wikipedia</string>
+    <string-array name="myco_g_roughstem_points">
+        <item>Birch bolete: tan to dark brown cap, whitish flesh almost unchanging. Orange birch bolete: ochre-orange cap, flesh turning grey-violet, stem covered with dense black tufts.</item>
+        <item>Both grow under birch and have a stem covered with dark scales.</item>
+        <item>Both must be well cooked: raw or undercooked rough-stemmed boletes upset the stomach (Wikipedia, fr). Other rough-stemmed boletes exist, and the sources read give no simple rule to separate them all.</item>
+    </string-array>
 </resources>

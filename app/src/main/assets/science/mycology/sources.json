@@ -84,7 +84,7 @@
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "impudicus", "erinaceus", "lignyotus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens", "volemus", "glutinosus", "bovinus", "scabrum", "odora", "piperatus", "decastes"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "impudicus", "erinaceus", "lignyotus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens", "volemus", "glutinosus", "bovinus", "scabrum", "odora", "piperatus", "decastes", "xerampelina", "aurea", "versipelle", "agathosmus", "marzuolus", "excoriata"]
     },
     {
       "id": "toxinfo2025", "kind": "official",
@@ -150,13 +150,13 @@
       "id": "vapko2023", "kind": "society",
       "citation": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf",
-      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "lignyotus", "imbricatus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens", "volemus", "glutinosus", "bovinus", "scabrum", "odora", "decastes"]
+      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "lignyotus", "imbricatus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens", "volemus", "glutinosus", "bovinus", "scabrum", "odora", "decastes", "xerampelina", "aurea", "versipelle", "agathosmus", "marzuolus", "excoriata"]
     },
     {
       "id": "dgfm2026tox", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf",
-      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima", "turpis", "rubellus", "verna", "subincarnata", "geophylla", "sulphureum", "citrina"]
+      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima", "turpis", "rubellus", "verna", "subincarnata", "geophylla", "sulphureum", "citrina", "nobilis"]
     },
     {
       "id": "mdc-velvetfoot", "kind": "official",
@@ -354,6 +354,19 @@
     { "id": "wp-en-odora", "kind": "encyclopedia", "citation": "Wikipedia (en): Clitocybe odora", "url": "https://en.wikipedia.org/wiki/Clitocybe_odora", "species": ["odora"] },
     { "id": "wp-en-piperatus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactifluus piperatus", "url": "https://en.wikipedia.org/wiki/Lactifluus_piperatus", "species": ["piperatus"] },
     { "id": "wp-fr-decastes", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lyophyllum decastes", "url": "https://fr.wikipedia.org/wiki/Lyophyllum_decastes", "species": ["decastes"] },
-    { "id": "wp-en-decastes", "kind": "encyclopedia", "citation": "Wikipedia (en): Lyophyllum decastes", "url": "https://en.wikipedia.org/wiki/Lyophyllum_decastes", "species": ["decastes"] }
+    { "id": "wp-en-decastes", "kind": "encyclopedia", "citation": "Wikipedia (en): Lyophyllum decastes", "url": "https://en.wikipedia.org/wiki/Lyophyllum_decastes", "species": ["decastes"] },
+    { "id": "wp-fr-xerampelina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russula xerampelina", "url": "https://fr.wikipedia.org/wiki/Russula_xerampelina", "species": ["xerampelina"] },
+    { "id": "wp-en-xerampelina", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula xerampelina", "url": "https://en.wikipedia.org/wiki/Russula_xerampelina", "species": ["xerampelina"] },
+    { "id": "wp-en-nobilis", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula nobilis", "url": "https://en.wikipedia.org/wiki/Russula_nobilis", "species": ["nobilis"] },
+    { "id": "wp-fr-aurea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russula aurea", "url": "https://fr.wikipedia.org/wiki/Russula_aurea", "species": ["aurea"] },
+    { "id": "wp-en-aurea", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula aurea", "url": "https://en.wikipedia.org/wiki/Russula_aurea", "species": ["aurea"] },
+    { "id": "wp-fr-versipelle", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Leccinum versipelle", "url": "https://fr.wikipedia.org/wiki/Leccinum_versipelle", "species": ["versipelle"] },
+    { "id": "wp-en-versipelle", "kind": "encyclopedia", "citation": "Wikipedia (en): Leccinum versipelle", "url": "https://en.wikipedia.org/wiki/Leccinum_versipelle", "species": ["versipelle"] },
+    { "id": "wp-fr-agathosmus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hygrophorus agathosmus", "url": "https://fr.wikipedia.org/wiki/Hygrophorus_agathosmus", "species": ["agathosmus"] },
+    { "id": "wp-en-agathosmus", "kind": "encyclopedia", "citation": "Wikipedia (en): Hygrophorus agathosmus", "url": "https://en.wikipedia.org/wiki/Hygrophorus_agathosmus", "species": ["agathosmus"] },
+    { "id": "wp-fr-marzuolus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hygrophorus marzuolus", "url": "https://fr.wikipedia.org/wiki/Hygrophorus_marzuolus", "species": ["marzuolus"] },
+    { "id": "wp-en-marzuolus", "kind": "encyclopedia", "citation": "Wikipedia (en): Hygrophorus marzuolus", "url": "https://en.wikipedia.org/wiki/Hygrophorus_marzuolus", "species": ["marzuolus"] },
+    { "id": "wp-fr-excoriata", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Macrolepiota excoriata", "url": "https://fr.wikipedia.org/wiki/Macrolepiota_excoriata", "species": ["excoriata"] },
+    { "id": "wp-en-excoriata", "kind": "encyclopedia", "citation": "Wikipedia (en): Macrolepiota excoriata", "url": "https://en.wikipedia.org/wiki/Macrolepiota_excoriata", "species": ["excoriata"] }
   ]
 }

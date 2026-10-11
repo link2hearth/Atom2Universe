@@ -189,6 +189,20 @@ class FungusCriteriaTest {
     }
 
     @Test
+    fun leLotOnzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("xerampelina"), setOf("cap_RED", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("nobilis"), setOf("cap_RED", "w_small", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("aurea"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("versipelle"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("agathosmus"), setOf("u_gills", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("marzuolus"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("excoriata"), setOf("s_ring", "u_gills", "c_scaly")))
+        assertEquals(setOf("aurea", "emetica", "nobilis", "xerampelina"), FungusCatalog.groups.first { it.id == "redrussula" }.members.toSet())
+        assertEquals(setOf("scabrum", "versipelle"), FungusCatalog.groups.first { it.id == "roughstem" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "parasol" }.members.contains("excoriata"))
+    }
+
+    @Test
     fun lesBoutonsProposesTrouventTousQuelqueChose() {
         for ((_, list) in FungusCriteria.offered) for (c in list) {
             assertTrue("${c.id} ne trouve rien", ids(c.id).isNotEmpty())
