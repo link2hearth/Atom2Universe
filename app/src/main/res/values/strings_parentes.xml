@@ -85,7 +85,7 @@
     <string name="pt_hair_1">A seal and a dolphin are both mammals. The seal retains fur; dolphins have greatly reduced hair. An inherited character can be transformed without erasing ancestry.</string>
     <string name="pt_hair_2">Hair and active flight are different characters. A bat is part of the mammal lineage just as a cat is. The highlighted paths show their relationship, not a reconstructed history of every hair-related gene.</string>
     <string name="pt_heritages">Follow an inheritance</string>
-    <string name="pt_hint">Drag to move, pinch to zoom. Touch a node to read its card. Open a group to explore further.</string>
+    <string name="pt_hint">Drag to move, pinch to zoom. Double-tap to zoom and centre; hold the second tap and drag to move. Tap a node to read its card.</string>
     <string name="pt_hub">Explore living lineages, compare species and follow biological inheritances.</string>
     <string name="pt_junction">Branching point</string>
     <string name="pt_less">Show less</string>
@@ -94,7 +94,7 @@
     <string name="pt_list">Accessible list</string>
     <string name="pt_list_intro">The same visible branches, as buttons. Each card gives access to the parent group and representatives. Search includes the full catalogue.</string>
     <string name="pt_loading">Loading the offline atlas…</string>
-    <string name="pt_map_hint">Zoom to read species · touch a group</string>
+    <string name="pt_map_hint">Pinch or double-tap to read names · drag to move</string>
     <string name="pt_members">Representatives in this catalogue</string>
     <string name="pt_method">The atlas works offline. External reference links need a browser and a connection. The catalogue preserves every imported lineage node from Open Tree; the map only hides intermediate nodes. The source combines phylogenetic studies with taxonomy, and unresolved forks are not artificially resolved. Branch lengths, order around the tree and the number of examples are editorial choices, not time, evolutionary progress or real diversity. Deep divisions follow this version of the source: in particular, its separate Bacteria, Archaea and Eukaryota branches should not be read as a settled three-domain evolutionary hypothesis. Many analyses place eukaryotes within Archaea. Horizontal gene transfer and endosymbioses cannot be represented fully by this host tree.\n\nThe original selection has editorial common names; additional names are Wikidata labels, with the scientific name used when no common label is available. Educational group articles are original EN/FR text. Short structured descriptions and search aliases come from Wikidata (CC0), matched by exact scientific name; ambiguous matches and descriptions requiring review are excluded. Entity revisions are retained. No photographs or Wikipedia text are imported. No data from the inspiration website are used. No predicted traits or genetic proximity percentages are supplied. A first selection of ancestral groups has separately documented dating estimates in the timeline; these ages are never inferred from the source-tree branches. The illustrated lineage stories use selected milestones on source-tree paths. Their character explanations are sourced editorial text, not automatic inferences from the selected species. Original schematic drawings illustrate structures rather than identified ancestors. Chapter references are available here, under illustrated stories.</string>
     <string name="pt_next">Next</string>

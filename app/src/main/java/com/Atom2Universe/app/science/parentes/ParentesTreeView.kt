@@ -40,6 +40,8 @@ class ParentesTreeView(context:Context):View(context) {
     private var leafCount=1
     private val drawnLabels=ArrayList<RectF>()
     private var zoom=1f
+    private var maxZoom=4f
+    private var labelSpacing=0f
     private var tx=0f
     private var ty=0f
     private var animator:ValueAnimator?=null
@@ -86,6 +88,10 @@ class ParentesTreeView(context:Context):View(context) {
             Mark(id,(circular[id]?.x ?: horizontal.getValue(id).x)*density,
                 (circular[id]?.y ?: horizontal.getValue(id).y)*density,display,color(id),node.species,priority,text.measureText(display))
         }.sortedBy { it.priority }
+        // Leave enough room for complete horizontal labels even in the densest sector.
+        labelSpacing=2f*(marks.maxOfOrNull { it.width } ?: 0f)+24f*density
+        maxZoom=TreeZoom.limit(marks.filter { it.label.isNotEmpty() }.map { TreeZoom.Point(it.x,it.y) },
+            labelSpacing,text.descent()-text.ascent()+12f*density)
         val indexed=marks.associateBy { it.id }
         branches=scene.parents.mapNotNull { (id,parent) ->
             parent ?: return@mapNotNull null
@@ -119,14 +125,24 @@ class ParentesTreeView(context:Context):View(context) {
         moveCamera(target,(width-labelRoom)*.5f-extent.centerX()*target,height*.5f-extent.centerY()*target,animate)
     }
     fun zoomBy(factor:Float) {
-        val next=(zoom*factor).coerceIn(.04f,4f)
-        moveCamera(next,width*.5f-(width*.5f-tx)*next/zoom,height*.5f-(height*.5f-ty)*next/zoom,true)
+        zoomAt(factor,width*.5f,height*.5f)
     }
-    fun reveal(id:String) {
+    private fun zoomAt(factor:Float,x:Float,y:Float,recenter:Boolean=false) {
+        val next=(zoom*factor).coerceIn(TreeZoom.MIN,maxZoom)
+        val camera=TreeZoom.Camera(zoom,tx,ty).focus(next,x,y,
+            if(recenter)width*.5f else x,if(recenter)height*.5f else y)
+        moveCamera(camera.zoom,camera.x,camera.y,true)
+    }
+    fun reveal(id:String,minimumZoom:Float=zoom) {
         val m=marks.firstOrNull { it.id==id } ?: return
-        val next=max(zoom,.65f)
+        val distance=marks.asSequence().filter { it.id!=id && it.label.isNotEmpty() }
+            .map { hypot(it.x-m.x,it.y-m.y) }.filter { it>0f }.minOrNull() ?: Float.POSITIVE_INFINITY
+        val next=max(minimumZoom,TreeZoom.readable(distance,labelSpacing,text.descent()-text.ascent()+12f*density)).coerceAtMost(maxZoom)
         selected=id
-        moveCamera(next,width*.5f-m.x*next,height*.5f-m.y*next,true)
+        // Centre the node together with its name, not just the dot.
+        val offset=min(m.width+18f*density,width*.65f)*.5f
+        val center=width*.5f+if(radial && m.x<0)offset else -offset
+        moveCamera(next,center-m.x*next,height*.5f-m.y*next,true)
     }
     private fun moveCamera(target:Float,x:Float,y:Float,animate:Boolean) {
         animator?.cancel()
@@ -185,7 +201,11 @@ class ParentesTreeView(context:Context):View(context) {
             else canvas.drawCircle(x,y,radius,dot)
             if(m.label.isNotEmpty()) m.hit.set(x-12f*density,y-12f*density,x+12f*density,y+12f*density)
         }
-        val ordered=marks.sortedBy { if(it.id==selected && it.species) -1 else it.priority }
+        val chosen=marks.firstOrNull { it.id==selected }
+        val ordered=sequence {
+            if(chosen!=null)yield(chosen)
+            yieldAll(marks.asSequence().filter { it!==chosen })
+        }
         drawnLabels.clear()
         for(m in ordered) {
             if(m.label.isEmpty()) continue
@@ -193,12 +213,17 @@ class ParentesTreeView(context:Context):View(context) {
             if(radial && m.species && zoom < .38f && marks.size>40 && !essential) continue
             if(radial && m.priority==3 && zoom < .65f && !essential) continue
             val x=m.x*zoom+tx; val y=m.y*zoom+ty
-            if(x<0 || x>width || y<0 || y>height) continue
+            if(y < -text.textSize || y > height+text.textSize) continue
             text.typeface=if(m.species) Typeface.DEFAULT else Typeface.DEFAULT_BOLD
             val room=(width-12f*density).coerceAtLeast(density)
-            val label=android.text.TextUtils.ellipsize(m.label,text,room,android.text.TextUtils.TruncateAt.END).toString()
-            val length=min(m.width,room)
-            val left=(if(radial && m.x<0) x-length-9f*density else x+9f*density).coerceIn(6f*density,max(6f*density,width-length-6f*density))
+            // At detail scale names remain complete and attached to their node. Panning can
+            // reveal a long name even when its dot is outside the viewport.
+            val detail=zoom>=.65f
+            val label=if(detail)m.label else android.text.TextUtils.ellipsize(m.label,text,room,android.text.TextUtils.TruncateAt.END).toString()
+            val length=if(detail)m.width else min(m.width,room)
+            val anchor=if(radial && m.x<0)x-length-9f*density else x+9f*density
+            val left=if(detail)anchor else anchor.coerceIn(6f*density,max(6f*density,width-length-6f*density))
+            if(left+length<0 || left>width || (!detail && (x<0 || x>width)))continue
             val top=y-(text.descent()-text.ascent())*.5f-3*density
             m.bounds.set(left-3*density,top,left+length+3*density,top+text.descent()-text.ascent()+6*density)
             if(m.bounds.top<0 || m.bounds.bottom>height || drawnLabels.any { RectF.intersects(it,m.bounds) }) {
@@ -216,22 +241,63 @@ class ParentesTreeView(context:Context):View(context) {
     }
 
     private val scaleDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        private var lastFocusX=0f
+        private var lastFocusY=0f
+        override fun onScaleBegin(detector:ScaleGestureDetector):Boolean {
+            animator?.cancel()
+            lastFocusX=detector.focusX; lastFocusY=detector.focusY
+            return true
+        }
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-            val next = (zoom * detector.scaleFactor).coerceIn(.04f, 4f)
-            tx = detector.focusX - (detector.focusX-tx) * next/zoom
-            ty = detector.focusY - (detector.focusY-ty) * next/zoom
-            zoom = next
+            val next = (zoom * detector.scaleFactor).coerceIn(TreeZoom.MIN,maxZoom)
+            val camera=TreeZoom.Camera(zoom,tx,ty).focus(next,lastFocusX,lastFocusY,detector.focusX,detector.focusY)
+            lastFocusX=detector.focusX; lastFocusY=detector.focusY
+            tx=camera.x; ty=camera.y; zoom=camera.zoom
             invalidate()
             return true
         }
-    })
+    }).apply { isQuickScaleEnabled=false }
+    private var doubleDragging=false
+    private var doubleStartX=0f
+    private var doubleStartY=0f
+    private var doubleLastX=0f
+    private var doubleLastY=0f
+    private var doubleMoved=false
     private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent) = true
         override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
-            if (!scaleDetector.isInProgress) { tx -= distanceX; ty -= distanceY; invalidate() }
+            if (!scaleDetector.isInProgress && !doubleDragging) { tx -= distanceX; ty -= distanceY; invalidate() }
             return true
         }
-        override fun onSingleTapUp(e: MotionEvent): Boolean {
+        override fun onDoubleTap(e:MotionEvent):Boolean {
+            animator?.cancel()
+            doubleDragging=true; doubleMoved=false
+            doubleStartX=e.x; doubleStartY=e.y; doubleLastX=e.x; doubleLastY=e.y
+            return true
+        }
+        override fun onDoubleTapEvent(e:MotionEvent):Boolean {
+            when(e.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    doubleStartX=e.x; doubleStartY=e.y; doubleLastX=e.x; doubleLastY=e.y
+                }
+                MotionEvent.ACTION_MOVE -> if(!scaleDetector.isInProgress) {
+                    if(hypot(e.x-doubleStartX,e.y-doubleStartY)>android.view.ViewConfiguration.get(context).scaledTouchSlop)doubleMoved=true
+                    if(doubleMoved) { tx+=e.x-doubleLastX; ty+=e.y-doubleLastY; invalidate() }
+                    doubleLastX=e.x; doubleLastY=e.y
+                }
+                MotionEvent.ACTION_UP -> {
+                    if(!doubleMoved && !scaleDetector.isInProgress) {
+                        val nearest=marks.filter { it.label.isNotEmpty() }.minByOrNull { hypot(it.x*zoom+tx-e.x,it.y*zoom+ty-e.y) }
+                        if(nearest!=null && hypot(nearest.x*zoom+tx-e.x,nearest.y*zoom+ty-e.y)<=32f*density)reveal(nearest.id,zoom*2f)
+                        else zoomAt(2f,e.x,e.y,true)
+                    }
+                    doubleDragging=false
+                }
+                MotionEvent.ACTION_CANCEL -> doubleDragging=false
+            }
+            return true
+        }
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             val hit = marks.filter { it.hit.contains(e.x,e.y) }.minByOrNull {
                 kotlin.math.hypot(it.x*zoom+tx-e.x,it.y*zoom+ty-e.y)
             }
@@ -239,13 +305,17 @@ class ParentesTreeView(context:Context):View(context) {
             performClick()
             return true
         }
-    })
+    }).apply { setIsLongpressEnabled(false) }
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_DOWN) { animator?.cancel(); parent?.requestDisallowInterceptTouchEvent(true) }
+        if(event.actionMasked==MotionEvent.ACTION_POINTER_DOWN) { doubleMoved=true; doubleDragging=false }
         scaleDetector.onTouchEvent(event)
         gestureDetector.onTouchEvent(event)
-        if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) parent?.requestDisallowInterceptTouchEvent(false)
+        if (event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {
+            doubleDragging=false
+            parent?.requestDisallowInterceptTouchEvent(false)
+        }
         return true
     }
     override fun performClick(): Boolean { super.performClick(); return true }
