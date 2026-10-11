@@ -145,4 +145,27 @@ class BotanyCatalogTest {
         assertTrue(PlantQuery(text="sequoia geant").matches(BotanyCatalog.get("sequoiadendron")!!,fr.getValue("bot_sequoiadendron_name")))
     }
 
+    @Test fun deuxiemeLotDeReferencesEtNouvelleFamille() {
+        val plants=BotanyCatalog.species.filter{PlantQuery(collections=setOf("nightshades")).matches(it,"")}
+        assertEquals(setOf("lycopersicum","tuberosum","melongena","capsicum","nigrum"),plants.map{it.id}.toSet())
+        assertTrue(plants.all{it.familyId=="Solanaceae" && it.look.study?.nightshade==true && it.id in BotanyReferences.taxonPages})
+        assertEquals(plants.toSet(),BotanyCatalog.species.filter{PlantQuery(families=setOf("Solanaceae")).matches(it,"")}.toSet())
+        // The potato's botanical fruit is a berry, not its underground stem tuber.
+        assertTrue(plants.all{PlantQuery(fruits=setOf(FruitShape.BERRY)).matches(it,"")})
+        assertEquals(setOf("lycopersicum","tuberosum"),plants.filter{PlantQuery(leaves=setOf(LeafShape.PINNATE)).matches(it,"")}.map{it.id}.toSet())
+        assertTrue(PlantQuery(margins=setOf(LeafMargin.ENTIRE)).matches(BotanyCatalog.get("nigrum")!!,""))
+        assertTrue(plants.filter{it.id!="nigrum"}.all{it.flowering.isEmpty() && it.phenologyNote!=0})
+    }
+
+    @Test fun fruitiersConnusEtCaracteresDiagnostiques() {
+        val plants=BotanyCatalog.species.filter{PlantQuery(collections=setOf("orchard")).matches(it,"")}
+        assertEquals(setOf("olea","coffea","persica","armeniaca","citrus_maxima"),plants.map{it.id}.toSet())
+        assertTrue(plants.all{it.look.study?.orchard==true && it.id in BotanyReferences.taxonPages})
+        assertTrue(plants.all{it.flowering.isEmpty() && it.fruiting.isEmpty() && it.phenologyNote!=0})
+        assertEquals(setOf("olea","coffea"),plants.filter{PlantQuery(arrangements=setOf(LeafArrangement.OPPOSITE)).matches(it,"")}.map{it.id}.toSet())
+        assertEquals(setOf("persica","armeniaca"),plants.filter{PlantQuery(evergreen=false).matches(it,"")}.map{it.id}.toSet())
+        assertTrue(PlantQuery(families=setOf("Rutaceae"),fruits=setOf(FruitShape.BERRY)).matches(BotanyCatalog.get("citrus_maxima")!!,""))
+        assertTrue(PlantQuery(families=setOf("Rubiaceae"),fruits=setOf(FruitShape.DRUPE)).matches(BotanyCatalog.get("coffea")!!,""))
+    }
+
 }

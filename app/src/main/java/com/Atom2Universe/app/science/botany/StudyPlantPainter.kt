@@ -28,6 +28,8 @@ internal class StudyPlantPainter(private val c:Canvas,private val species:PlantS
         b.stroke(Path().apply{moveTo(x,y);quadTo(cx,cy,xx,yy)},color,width)
 
     fun draw(view:PlantView) {
+        if(form.orchard){OrchardPainter(c,species,detailed).draw(view);return}
+        if(form.nightshade){NightshadePainter(c,species,detailed).draw(view);return}
         when(view) {
             PlantView.HABIT -> habit()
             PlantView.LEAF -> leaves()

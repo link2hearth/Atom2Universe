@@ -15,6 +15,8 @@ import com.Atom2Universe.app.R
  */
 object BotanyCatalog {
     val collections = listOf(
+        PlantCollection("orchard", R.string.bot_collection_orchard, R.string.bot_collection_orchard_desc),
+        PlantCollection("nightshades", R.string.bot_collection_nightshades, R.string.bot_collection_nightshades_desc),
         PlantCollection("model_plants", R.string.bot_collection_model_plants, R.string.bot_collection_model_plants_desc),
         PlantCollection("north_america", R.string.bot_collection_north_america, R.string.bot_collection_north_america_desc),
         PlantCollection("europe", R.string.bot_collection_europe, R.string.bot_collection_europe_desc),
@@ -26,6 +28,10 @@ object BotanyCatalog {
         PlantSection("herbs", R.string.bot_section_herbs, R.string.bot_section_herbs_desc),
     )
     val families = listOf(
+        PlantFamily("Rubiaceae", R.string.bot_family_Rubiaceae, R.string.bot_family_Rubiaceae_desc, R.string.bot_family_Rubiaceae_aliases),
+        PlantFamily("Rutaceae", R.string.bot_family_Rutaceae, R.string.bot_family_Rutaceae_desc, R.string.bot_family_Rutaceae_aliases),
+
+        PlantFamily("Solanaceae", R.string.bot_family_Solanaceae, R.string.bot_family_Solanaceae_desc, R.string.bot_family_Solanaceae_aliases),
         PlantFamily("Cupressaceae", R.string.bot_family_Cupressaceae, R.string.bot_family_Cupressaceae_desc, R.string.bot_family_Cupressaceae_aliases),
         PlantFamily("Zygophyllaceae", R.string.bot_family_Zygophyllaceae, R.string.bot_family_Zygophyllaceae_desc, R.string.bot_family_Zygophyllaceae_aliases),
         PlantFamily("Apocynaceae", R.string.bot_family_Apocynaceae, R.string.bot_family_Apocynaceae_desc, R.string.bot_family_Apocynaceae_aliases),
@@ -63,11 +69,13 @@ object BotanyCatalog {
         PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
         PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
     val groups = listOf(
+        PlantGroup("orchard_fruits", R.string.bot_group_orchard, listOf("olea","coffea","persica","armeniaca","citrus_maxima"), R.string.bot_group_orchard_desc),
+        PlantGroup("nightshade_organs", R.string.bot_group_nightshade_organs, listOf("lycopersicum","tuberosum","melongena","capsicum","nigrum"), R.string.bot_group_nightshade_organs_desc),
         PlantGroup("model_cereals", R.string.bot_group_model_cereals, listOf("triticum","oryza","zea"), R.string.bot_group_model_cereals_desc),
         PlantGroup("redwoods", R.string.bot_group_redwoods, listOf("sequoiadendron","sequoia","pseudotsuga"), R.string.bot_group_redwoods_desc),
         PlantGroup("prairie_heads", R.string.bot_group_prairie_heads, listOf("echinacea","rudbeckia","helianthus"), R.string.bot_group_prairie_heads_desc),
@@ -101,6 +109,7 @@ object BotanyCatalog {
         PlantGroup("heads", R.string.bot_group_heads, listOf("leucanthemum","matricaria","cichorium"), R.string.bot_group_heads_desc),
     )
     val sources = listOf(
+        BotanySource("ntbg", R.string.bot_source_ntbg, "https://ntbg.org/database/plants/"),
         BotanySource("umich", R.string.bot_source_umich, "https://climbers.lsa.umich.edu/"),
         BotanySource("efloras", R.string.bot_source_efloras, "https://www.efloras.org/"),
         BotanySource("sernec", R.string.bot_source_sernec, "https://sernecportal.org/"),

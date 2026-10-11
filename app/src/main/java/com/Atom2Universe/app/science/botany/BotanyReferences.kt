@@ -3,6 +3,17 @@ package com.Atom2Universe.app.science.botany
 /** Stable taxon pages complement the general floras; adding a reference never changes the screens. */
 object BotanyReferences {
     val taxonPages: Map<String, String> = mapOf(
+        "olea" to "https://plants.ces.ncsu.edu/plants/olea-europaea/",
+        "coffea" to "https://efloras.org/florataxon.aspx?flora_id=2&taxon_id=200022076",
+        "persica" to "https://plants.ces.ncsu.edu/plants/prunus-persica/",
+        "armeniaca" to "https://plants.ces.ncsu.edu/plants/prunus-armeniaca/",
+        "citrus_maxima" to "https://ntbg.org/database/plants/detail/citrus-maxima",
+
+        "lycopersicum" to "https://plants.ces.ncsu.edu/plants/solanum-lycopersicum/",
+        "tuberosum" to "https://plants.ces.ncsu.edu/plants/solanum-tuberosum/",
+        "melongena" to "https://plants.ces.ncsu.edu/plants/solanum-melongena/",
+        "capsicum" to "https://plants.ces.ncsu.edu/plants/capsicum-annuum/",
+        "nigrum" to "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200020597",
         "arabidopsis" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:277970-1/general-information",
         "pisum" to "https://climbers.lsa.umich.edu/pisum-sativum/",
         "triticum" to "https://sernecportal.org/portal/taxa/index.php?taxon=Triticum+aestivum",

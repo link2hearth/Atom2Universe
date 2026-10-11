@@ -1096,4 +1096,116 @@
     <string name="bot_zea_leaf">Broad blade with a pale midrib and parallel veins; inset shows its sheathing base and short membranous ligule.</string>
     <string name="bot_zea_flower">Left: branched male tassel with hanging anthers. Right: female ear inside leafy husks, with a tuft of silks; these are not stamens.</string>
     <string name="bot_zea_fruit">Main subject: mature ear with rows of grains and peeled-back husks. Right: enlarged individual caryopsis with its embryo region indicated.</string>
+    <string name="bot_collection_nightshades">Solanaceae · reference batch 2</string>
+    <string name="bot_collection_nightshades_desc">Five living-tree references enriched with comparative plates of leaves, fused corollas and berries. Cultivated forms illustrate part of the diversity within each species.</string>
+    <string name="bot_family_Solanaceae" translatable="false">Solanaceae</string>
+    <string name="bot_family_Solanaceae_desc">Nightshade family. Leaves are usually alternate and flowers commonly have a fused, five-lobed corolla with five stamens. Fruits include berries and capsules. Solanum often has conspicuous yellow anthers grouped around the style. A potato tuber is a modified stem, not a fruit.</string>
+    <string name="bot_family_Solanaceae_aliases">Nightshades · Tomato · Potato · Pepper · Eggplant</string>
+    <string name="bot_group_nightshade_organs">Leaves, berries and tubers</string>
+    <string name="bot_group_nightshade_organs_desc">Tomato and potato have compound leaves with small intercalary leaflets; eggplant, pepper and black nightshade have simple leaves. All five produce berries. The potato tuber develops from a stolon and bears buds called eyes. Pepper seeds attach to pale placental tissue inside a largely hollow fruit; tomato seeds lie in fleshy, gel-filled locules. The illustrated fruit shapes and colours are examples, not universal cultivar traits.</string>
+    <string name="bot_nightshade_crop_season">These crops are often grown for one season in temperate climates, even when biologically perennial. Flowering and fruit set vary with cultivar and climate; no worldwide monthly calendar is assigned. Fruit shape, colour and seed number vary. The scale applies to the main subject; insets are enlarged independently.</string>
+    <string name="bot_nightshade_wild_season">Indicative flowering and fruiting months for temperate France; local climate may extend or shorten the season. This is a botanical comparison, not an edibility guide. The scale applies to the main subject; insets are enlarged independently.</string>
+    <string name="bot_lycopersicum_name">Tomato</string>
+    <string name="bot_lycopersicum_latin" translatable="false">Solanum lycopersicum</string>
+    <string name="bot_lycopersicum_aliases">Tomate · Lycopersicon esculentum</string>
+    <string name="bot_lycopersicum_description">Soft, hairy, branching plant, often sprawling unless supported. Alternate compound leaves carry lobed or toothed main leaflets with smaller leaflets between them. Yellow flowers have a fused corolla with pointed lobes; the elongated anthers form a cone around the style. The fruit is a berry with seeds in gel-filled locules. Cultivated forms differ greatly in growth habit, leaf shape, fruit colour and number of locules. The plate represents a round red, two-loculed tomato, not every cultivated variety.</string>
+    <string name="bot_lycopersicum_distribution">American crop with ancestry in western South America and a long history of domestication. Now cultivated widely in warm seasons, under protection or in open fields. Often treated as an annual despite its perennial potential in frost-free conditions.</string>
+    <string name="bot_lycopersicum_habit">Branching, leafy stems with yellow flowering clusters and developing berries; an unsupported habit is represented.</string>
+    <string name="bot_lycopersicum_leaf">Compound leaf: lobed principal leaflets, a terminal leaflet and small intercalary leaflets. The side shoot shows alternate insertion.</string>
+    <string name="bot_lycopersicum_flower">Continuous yellow corolla with five pointed lobes; elongated yellow anthers form a cone around the projecting style. Small flowering cluster at lower left.</string>
+    <string name="bot_lycopersicum_fruit">Main subject: a round berry with persistent calyx. The separate transverse section shows two seed-bearing locules and their fleshy partition.</string>
+    <string name="bot_tuberosum_name">Potato</string>
+    <string name="bot_tuberosum_latin" translatable="false">Solanum tuberosum</string>
+    <string name="bot_tuberosum_aliases">Pomme de terre · Irish potato</string>
+    <string name="bot_tuberosum_description">Tuber-forming perennial usually grown as an annual crop. The aerial stems carry alternate compound leaves with large oval leaflets and smaller intercalary ones. White to violet flowers have a broad, fused, five-lobed corolla and yellow anthers opening by terminal pores. Some plants develop small greenish berries containing seeds; these berries are not edible. Underground stolons swell into tubers whose eyes are buds: the tuber is a stem organ, distinct from the fruit and from a root.</string>
+    <string name="bot_tuberosum_distribution">Domesticated South American crop, now cultivated worldwide in suitable climates. Tuber formation, flowering and fruit set depend strongly on the variety and growing conditions. Vegetative propagation through tubers does not make the tuber a seed.</string>
+    <string name="bot_tuberosum_habit">Leafy aerial stems above a schematic soil line; below, lateral stolons end in tubers. Roots are omitted to keep these stem organs clear.</string>
+    <string name="bot_tuberosum_leaf">Compound leaf with broad principal leaflets and smaller intercalary ones; margins are much less deeply cut than in the tomato example.</string>
+    <string name="bot_tuberosum_flower">Broad violet corolla with five fused lobes; five yellow anthers with terminal pores surround the style. White-flowered varieties also occur.</string>
+    <string name="bot_tuberosum_fruit">Large green sphere: the seed-bearing berry, not edible. Separate brown inset: a stolon tuber with bud eyes, drawn at an independent scale.</string>
+    <string name="bot_melongena_name">Eggplant</string>
+    <string name="bot_melongena_latin" translatable="false">Solanum melongena</string>
+    <string name="bot_melongena_aliases">Aubergine · Brinjal</string>
+    <string name="bot_melongena_description">Upright branching herb or short-lived subshrub, commonly cultivated for one season. Broad alternate leaves have shallow lobes and often stellate hairs, especially beneath. Violet flowers have a fused corolla and yellow anthers opening by pores. The enlarged berry retains a prominent calyx; its spongy flesh contains many flattened seeds. Fruit shape, colour, size and prickliness vary markedly. The illustration uses a purple, elongated fruit and an unarmed calyx; white and rounded cultivars also exist.</string>
+    <string name="bot_melongena_distribution">Asian domesticated crop now cultivated widely in warm regions and protected cultivation. It is frost-sensitive and requires a warm growing season. The domesticated fruit range is much broader than a single purple cultivar.</string>
+    <string name="bot_melongena_habit">Upright branching plant with broad leaves, violet flowers and hanging elongated berries.</string>
+    <string name="bot_melongena_leaf">Broad simple leaf with shallow lobes and reticulate venation. A stellate hair is enlarged separately at lower right.</string>
+    <string name="bot_melongena_flower">Broad five-lobed violet corolla fused at the base; yellow, pore-bearing anthers encircle the style.</string>
+    <string name="bot_melongena_fruit">Purple elongated berry with a substantial persistent calyx. Longitudinal section at right shows pale flesh and numerous flattened seeds.</string>
+    <string name="bot_capsicum_name">Pepper and chilli</string>
+    <string name="bot_capsicum_latin" translatable="false">Capsicum annuum</string>
+    <string name="bot_capsicum_aliases">Poivron · Piment · Bell pepper · Chili pepper</string>
+    <string name="bot_capsicum_description">Branching herb or short-lived subshrub with simple, usually entire leaves. Flowers are commonly solitary at the nodes; their white corolla usually has five lobes, though lobe number and colour vary. The stamens have distinct anthers around the style, unlike the conspicuous yellow Solanum cone. The fruit is a berry with a persistent cup-like calyx. In a bell pepper, a fleshy wall surrounds large cavities and pale placental tissue carrying flattened seeds. Sweet peppers and many hot chillies belong to this same species.</string>
+    <string name="bot_capsicum_distribution">American domesticated species cultivated worldwide in warm conditions. Perennial where frost and other conditions permit, but usually grown as a seasonal crop in temperate regions. The plate shows a red bell-pepper form; slender, upright and differently coloured fruits also occur.</string>
+    <string name="bot_capsicum_habit">Forking leafy stems, solitary flowers and hanging berries; a bell-pepper cultivar is represented.</string>
+    <string name="bot_capsicum_leaf">Simple oval leaf with pointed tip, entire margin and branching lateral veins; leaves are borne alternately on the side shoot.</string>
+    <string name="bot_capsicum_flower">Five-lobed white fused corolla with separate grey-violet anthers and a central green style. Lobe number and colour can vary.</string>
+    <string name="bot_capsicum_fruit">Main subject: fleshy bell-pepper berry with calyx and stalk. The longitudinal section exposes a cavity and pale seed-bearing placenta.</string>
+    <string name="bot_nigrum_name">Black nightshade</string>
+    <string name="bot_nigrum_latin" translatable="false">Solanum nigrum</string>
+    <string name="bot_nigrum_aliases">Morelle noire · European black nightshade</string>
+    <string name="bot_nigrum_description">Usually annual, branching herb with simple ovate leaves, entire to irregularly toothed. Small, short-stalked cymes arise outside the leaf axils. White flowers have five spreading or reflexed lobes and a short yellow anther cone. Berries are commonly dark purple-black at maturity, with a small persistent calyx; the illustrated surface is only weakly shiny. This belongs to a complex of similar nightshades: fruit colour alone cannot distinguish the species. It is botanically distinct from deadly nightshade, Atropa belladonna.</string>
+    <string name="bot_nigrum_distribution">Widespread in the Old World and introduced elsewhere, especially on disturbed, nutrient-rich soils, field edges, gardens and waste ground. The name has historically been applied broadly; identification within the black-nightshade group requires several characters together.</string>
+    <string name="bot_nigrum_habit">Branching annual with simple leaves, small white flowering cymes and clusters of dark berries outside the leaf axils.</string>
+    <string name="bot_nigrum_leaf">Simple ovate leaf with a few shallow marginal teeth; some leaves are nearly entire. Small side shoot with alternate leaves.</string>
+    <string name="bot_nigrum_flower">Five white lobes of a fused corolla around a short cone of yellow anthers, with terminal pores. A small cyme is shown separately.</string>
+    <string name="bot_nigrum_fruit">Enlarged dark berry with a small persistent calyx; right-hand inset shows several stalked berries on a short cyme. Colour alone is not diagnostic.</string>
+
+    <string name="bot_collection_orchard">Familiar fruit trees</string>
+    <string name="bot_collection_orchard_desc">Familiar cultivated plants for comparing leaves, flowers and fruits.</string>
+    <string name="bot_group_orchard">Stones, beans and segments</string>
+    <string name="bot_group_orchard_desc">Olive, peach and apricot: one stone. Coffee: normally two seeds. Pummelo: segments inside a hesperidium, a specialized berry.</string>
+    <string name="bot_orchard_season">Timing varies with latitude, climate and cultivar. Drawings represent typical organs, not a universal cultivar.</string>
+    <string name="bot_family_Rubiaceae_aliases">coffee madder bedstraw family</string>
+    <string name="bot_family_Rubiaceae_desc">Family including coffee and bedstraw; leaves often opposite with interpetiolar stipules, flowers with fused corollas.</string>
+    <string name="bot_family_Rutaceae_aliases">rue citrus family</string>
+    <string name="bot_family_Rutaceae_desc">Citrus and rue family; tissues often bear aromatic glands. Hesperidia characterize citrus, not the entire family.</string>
+    <string name="bot_olea_name">Olive</string>
+    <string name="bot_olea_aliases">olive European olive oleaster</string>
+    <string name="bot_olea_description">Evergreen tree with a gnarled trunk, opposite leathery leaves and silvery undersides. Small flowers have four lobes and two stamens. The olive is a drupe: its stone is the hardened inner fruit wall surrounding the seed. The plate represents a cultivated Mediterranean form; size and fruits vary among varieties.</string>
+    <string name="bot_olea_distribution">Mediterranean region; the species also includes African and Asian populations. Cultivated in mild climates.</string>
+    <string name="bot_olea_habit">Twisted trunk and spreading grey-green crown.</string>
+    <string name="bot_olea_leaf">Entire blade, silvery underside and opposite-leaved twig.</string>
+    <string name="bot_olea_flower">Four-lobed corolla, two stamens; panicle inset.</string>
+    <string name="bot_olea_fruit">Ripe olive and longitudinal section showing flesh and stone.</string>
+    <string name="bot_coffea_name">Arabica coffee</string>
+    <string name="bot_coffea_aliases">coffee arabica coffee bean</string>
+    <string name="bot_coffea_description">Evergreen shrub or small tree with nearly horizontal lateral branches. Glossy, wavy, opposite leaves have stipules between their petioles. White flowers, usually five-lobed, cluster in the axils. The red fruit normally contains two seeds: coffee beans. This drupe is commonly called a coffee cherry.</string>
+    <string name="bot_coffea_distribution">Native to eastern Africa; cultivated in tropical regions, often at elevation.</string>
+    <string name="bot_coffea_habit">Upright axis and tiered lateral branches with paired leaves.</string>
+    <string name="bot_coffea_leaf">Curving veins, wavy edge; stipule between two petioles in inset.</string>
+    <string name="bot_coffea_flower">Five lobes, five stamens and bifid stigma; floral tube in side view.</string>
+    <string name="bot_coffea_fruit">Red fruit, section with two seeds and unroasted bean with ventral groove.</string>
+    <string name="bot_persica_name">Peach</string>
+    <string name="bot_persica_aliases">peach nectarine</string>
+    <string name="bot_persica_description">Small deciduous tree with long, toothed lanceolate leaves. Pink flowers with five petals and many stamens appear before or with the leaves. The peach is a drupe with a visible suture and deeply sculptured stone. The plate shows a fuzzy yellow-fleshed peach; smooth-skinned nectarines belong to the same species.</string>
+    <string name="bot_persica_distribution">Native to China, long cultivated in warm temperate regions.</string>
+    <string name="bot_persica_habit">Open crown and shoots bearing elongated foliage.</string>
+    <string name="bot_persica_leaf">Finely toothed lanceolate leaf; small glands near the petiole.</string>
+    <string name="bot_persica_flower">Five free pink petals, numerous stamens and central pistil.</string>
+    <string name="bot_persica_fruit">Peach with suture, section and deeply grooved stone.</string>
+    <string name="bot_armeniaca_name">Apricot</string>
+    <string name="bot_armeniaca_aliases">apricot apricot tree</string>
+    <string name="bot_armeniaca_description">Deciduous tree with broad, ovate to almost rounded, toothed and pointed leaves, often slightly heart-shaped at the base. White to pinkish five-petalled flowers precede the foliage. The apricot is a yellow-orange drupe with a marked suture; its flattened stone is less deeply sculptured than a peach stone.</string>
+    <string name="bot_armeniaca_distribution">Asian origin; cultivated in many temperate regions with warm summers.</string>
+    <string name="bot_armeniaca_habit">Rounded crown with broad foliage on ascending branches.</string>
+    <string name="bot_armeniaca_leaf">Broad blade with cordate base, toothed edge and tapered tip.</string>
+    <string name="bot_armeniaca_flower">Five pale petals, numerous stamens; bud on a bare twig.</string>
+    <string name="bot_armeniaca_fruit">Whole apricot and section with flattened, edged stone.</string>
+    <string name="bot_citrus_maxima_name">Pummelo</string>
+    <string name="bot_citrus_maxima_aliases">pomelo shaddock Citrus grandis Citrus decumana</string>
+    <string name="bot_citrus_maxima_description">Evergreen tree with large leaves and conspicuously winged petioles. Thick white flowers bear many stamens. The pummelo is a hesperidium, a specialized berry with thick rind and segments filled with juice vesicles. Citrus maxima is distinct from the hybrid grapefruit, Citrus × paradisi.</string>
+    <string name="bot_citrus_maxima_distribution">Native to tropical Asia; cultivated in tropical and subtropical regions.</string>
+    <string name="bot_citrus_maxima_habit">Dense evergreen crown; representative adult tree habit.</string>
+    <string name="bot_citrus_maxima_leaf">Large blade, glandular dots and broadly winged petiole.</string>
+    <string name="bot_citrus_maxima_flower">Five thick petals, numerous stamens and rounded central stigma.</string>
+    <string name="bot_citrus_maxima_fruit">Fruit and section: rind, thick white layer and juice-filled segments.</string>
+    <string name="bot_olea_latin" translatable="false">Olea europaea</string>
+    <string name="bot_coffea_latin" translatable="false">Coffea arabica</string>
+    <string name="bot_persica_latin" translatable="false">Prunus persica</string>
+    <string name="bot_armeniaca_latin" translatable="false">Prunus armeniaca</string>
+    <string name="bot_citrus_maxima_latin" translatable="false">Citrus maxima</string>
+    <string name="bot_family_Rubiaceae" translatable="false">Rubiaceae</string>
+    <string name="bot_family_Rutaceae" translatable="false">Rutaceae</string>
+    <string name="bot_source_ntbg">National Tropical Botanical Garden</string>
 </resources>
