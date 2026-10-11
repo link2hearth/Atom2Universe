@@ -134,12 +134,13 @@
 
     <!-- Look-alike groups -->
     <string name="myco_g_chanterelle_title">Chanterelle, or not?</string>
-    <string name="myco_g_chanterelle_evidence">ANSES 2024</string>
+    <string name="myco_g_chanterelle_evidence">ANSES 2024, Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_chanterelle_points">
         <item>Chanterelle: thick, forked ridges like veins. Jack-o’-lantern: real, thin, crowded gills.</item>
         <item>The chanterelle comes out of the ground. The jack-o’-lantern grows in a clump on wood, a stump or roots.</item>
         <item>Chanterelle: apricot smell, cream-white flesh. Jack-o’-lantern: oily smell, orange inside the stem.</item>
         <item>False chanterelle: thin, crowded, regularly forked gills that peel off with a fingernail. No apricot.</item>
+        <item>Deadly webcap: true gills, rust-brown, and a stem with yellow veil fragments. Wikipedia (en) says victims took it for a chanterelle.</item>
     </string-array>
     <string name="myco_g_boletus_title">Porcini, or not?</string>
     <string name="myco_g_boletus_evidence">ANSES 2022, Wikipedia entries</string>
@@ -166,6 +167,7 @@
         <item>Agaricus sylvicola, edible: the Swiss controllers point out that it is confused with the yellow stainer.</item>
         <item>In 2022, two deaths after a deadly amanita was taken for a field mushroom or a fallow-field agaric.</item>
         <item>Button mushroom, wild form: grey-brown scaly cap, gills pink then brown, thick narrow ring. Wikipedia names deadly amanitas (a volva, pure white gills) and the yellow stainer (phenol smell, yellowing) among its look-alikes.</item>
+        <item>Spring amanita, deadly: Bulliard warned in 1780 that it could be taken for the field mushroom. White gills, ring and sac-like volva give it away.</item>
     </string-array>
     <string name="myco_g_morel_title">Morel, or false morel?</string>
     <string name="myco_g_morel_evidence">1991 decree</string>
@@ -192,20 +194,22 @@
         <item>At the egg stage Caesar’s mushroom has none of these marks: do not pick it.</item>
     </string-array>
     <string name="myco_g_stgeorge_title">St George’s mushroom, or not?</string>
-    <string name="myco_g_stgeorge_evidence">ANSES 2022</string>
+    <string name="myco_g_stgeorge_evidence">ANSES 2022, Wikipedia</string>
     <string-array name="myco_g_stgeorge_points">
         <item>St George’s: white gills, white spores. Red-staining inocybe: conical cap that turns red, gills that brown, tobacco-brown spores.</item>
         <item>Livid pinkgill: gills yellowish then pink, pink spores, and a floury smell too: the smell is not enough.</item>
         <item>St George’s: appears in spring. Pinkgill: mostly autumn, but sometimes from summer.</item>
         <item>The inocybe causes sweating and salivation; the pinkgill, vomiting and heavy diarrhoea.</item>
+        <item>White inocybe: milk-white, silky cap with a boss, gills that grey, spermatic smell, tobacco-brown spores. Wikipedia (en) compares it with St George’s mushroom.</item>
     </string-array>
     <string name="myco_g_fairyring_title">Fairy ring champignon, or not?</string>
-    <string name="myco_g_fairyring_evidence">ANSES 2022</string>
+    <string name="myco_g_fairyring_evidence">ANSES 2022, Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_fairyring_points">
         <item>Fairy ring champignon: widely spaced gills, cap with an umbo. Fool’s funnel: close gills, frosted cap, often dished.</item>
         <item>Both grow on lawns, sometimes in fairy rings.</item>
         <item>Fairy ring champignon: smell of cut hay, sometimes cyanide. Fool’s funnel: floury smell.</item>
         <item>The deadly brown roll-rim is also mistaken for it: strongly rolled margin, decurrent gills that brown.</item>
+        <item>Fatal dapperling: a small lepiota with a woolly ring and scaly stem; Wikipedia (fr) warns of a mix-up with the fairy ring champignon. The Belgian poison centre advises against eating any lepiota under 10 cm.</item>
     </string-array>
     <string name="myco_g_entoloma_title">Livid pinkgill, or clouded agaric?</string>
     <string name="myco_g_entoloma_evidence">Belgian poison centre</string>
@@ -232,21 +236,23 @@
         <item>Honey fungus: also in tufts on stumps and roots; ANSES links it to digestive trouble, even after cooking.</item>
     </string-array>
     <string name="myco_g_greenforms_title">Green death cap, or not?</string>
-    <string name="myco_g_greenforms_evidence">Belgian poison centre</string>
+    <string name="myco_g_greenforms_evidence">Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_greenforms_points">
         <item>Death cap: ring and sac-like volva, smooth cap, free white gills. Green-cracking russula: no ring, no volva, cap cracked into patches.</item>
         <item>Russula: gills and flesh snap like chalk. Death cap: fibrous flesh that does not snap.</item>
         <item>Yellow knight: yellow gills and stem, no ring, no volva; it is no longer eaten.</item>
         <item>The green form of the death cap is mistaken for a russula or a green tricholoma.</item>
+        <item>False death cap: lemon-yellow cap with patches, bulb with a rim, smell of raw potato. Wikipedia says its main danger is its likeness to the death cap.</item>
     </string-array>
     <string name="myco_g_whiteforms_title">All white, but which one?</string>
-    <string name="myco_g_whiteforms_evidence">Belgian poison centre</string>
+    <string name="myco_g_whiteforms_evidence">Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_whiteforms_points">
         <item>Destroying angel: fragile ring and sac-like volva, white gills. Dove-coloured tricholoma: no ring, no volva, floury-smelling flesh.</item>
         <item>Livid pinkgill: pale grey, very fibrous cap, yellow then pink gills, pink spores. Dove-coloured tricholoma: white gills, white spores.</item>
         <item>Wood mushroom: pale cream then pink then chocolate-brown gills, aniseed smell, very wide ring. Amanitas have always-white gills and a volva.</item>
         <item>The volva is underground: only whole mushrooms are picked.</item>
         <item>The floury smell is found in both the dove-coloured tricholoma and the livid pinkgill: it is not enough.</item>
+        <item>Spring amanita: deadly like the destroying angel, with white gills, a ring and a sac-like volva; Wikipedia (fr) lists white agarics and volvarias among its look-alikes.</item>
     </string-array>
     <string name="myco_g_clitopilus_title">Miller, or white clitocybe?</string>
     <string name="myco_g_clitopilus_evidence">Belgian poison centre</string>
@@ -1767,4 +1773,89 @@
     <string name="myco_l_flesh_dirty_white">Dirty white flesh, browning</string>
     <string name="myco_l_dark_coarse_scales">Coarse, dark scales</string>
     <string name="myco_l_grey_spines">Soft grey spines</string>
+    <string name="myco_rubellus_name">Deadly webcap</string>
+    <string name="myco_rubellus_alt">Cortinaire très élégant</string>
+    <string name="myco_rubellus_latin" translatable="false">Cortinarius rubellus</string>
+    <string-array name="myco_rubellus_traits">
+        <item>Cap 2.5 to 10 cm, conical then with a boss, rust to tawny, finely fibrous, paler at the margin</item>
+        <item>Gills spaced, ochre or cinnamon, darker with age: true gills, not ridges</item>
+        <item>Stem 6 to 10 cm, slightly bulbous, the colour of the cap, with yellow veil fragments in the lower half</item>
+        <item>Pale yellow to saffron flesh, smell of radish</item>
+        <item>Wet conifer woods (spruce), moss, acid soils · late summer to autumn</item>
+    </string-array>
+    <string name="myco_rubellus_note">Deadly: orellanine destroys the kidneys. Digestive troubles may come 24 to 36 hours after the meal, or be missing; the kidney attack follows 2 to 20 days later, which makes the diagnosis very hard (Belgian poison centre). The kidney failure is often irreversible, and transplants were needed in several series (Wikipedia, en). Victims took it for a chanterelle or a porcini. Treatment is dialysis.</string>
+    <string name="myco_verna_name">Fool’s mushroom</string>
+    <string name="myco_verna_alt">Amanite printanière</string>
+    <string name="myco_verna_latin" translatable="false">Amanita verna</string>
+    <string-array name="myco_verna_traits">
+        <item>Pure white cap, 4 to 10 cm, convex to flat, sometimes ivory or ochre at the centre</item>
+        <item>Gills free, crowded, white</item>
+        <item>Stem 7 to 13 cm, white and silky, with a rounded bulb</item>
+        <item>Persistent, membranous ring</item>
+        <item>Whitish, sac-like volva, 2 to 3 cm</item>
+        <item>Light woods, mostly oak and chestnut, acid sandy soil · spring to summer; rare, Mediterranean</item>
+    </string-array>
+    <string name="myco_verna_note">Deadly: same toxins and same illness as the death cap (alpha-amanitin: liver, then kidney failure). Symptoms come late: 6 to 24 hours after the meal (Wikipedia, en), about 12 hours on average and up to 48 (Belgian poison centre). A few grams are enough (Wikipedia, fr). It has been taken for the field mushroom (Bulliard, 1780), for white agarics and volvarias, and for the white form of the death cap. The sources read give no field feature that separates it from the destroying angel: the atlas does not try.</string>
+    <string name="myco_subincarnata_name">Fatal dapperling</string>
+    <string name="myco_subincarnata_alt">Lépiote de Josserand</string>
+    <string name="myco_subincarnata_latin" translatable="false">Lepiota subincarnata</string>
+    <string-array name="myco_subincarnata_traits">
+        <item>Cap 5 to 6 cm, felted to finely scaly, pale rosy-brown to wine pink, darker boss in the centre</item>
+        <item>Gills free, fairly crowded, pale cream</item>
+        <item>Stem about 5 cm and under 1 cm thick, with a distinct woolly ring</item>
+        <item>Whitish above the ring, scaly below it in the colour of the cap</item>
+        <item>Typical fruity smell of tangerine on the gills</item>
+        <item>Hedges, gardens, leaf litter, rich soil</item>
+    </string-array>
+    <string name="myco_subincarnata_note">Deadly: amatoxins, as in the death cap. Symptoms come late: about 12 hours on average and up to 48 (Belgian poison centre, which names it Lepiota josserandii). The same centre advises against eating any lepiota smaller than 10 cm. Wikipedia (fr) warns of a mix-up with the fairy ring champignon.</string>
+    <string name="myco_geophylla_name">Common white inocybe</string>
+    <string name="myco_geophylla_alt">Inocybe à lames couleur de terre</string>
+    <string name="myco_geophylla_latin" translatable="false">Inocybe geophylla</string>
+    <string-array name="myco_geophylla_traits">
+        <item>Cap 1 to 4 cm, conical, always with a boss, milk-white then slightly ochre, silky</item>
+        <item>Gills white to cream, then grey, earthy brown with the spores</item>
+        <item>Slender stem, white, powdery at the top</item>
+        <item>Strong spermatic smell, acrid flesh</item>
+        <item>Shady broadleaf woods, sometimes conifers, grass, paths · June to November</item>
+    </string-array>
+    <string name="myco_geophylla_note">Toxic: muscarine. Wikipedia (fr) counts it among the most toxic inocybes; the Belgian poison centre describes the sweating syndrome: runny nose, drooling, heavy sweating, tears, breathing difficulty, from a few minutes to 2 hours after the meal; it heals within 24 hours, atropine is sometimes needed. A lilac form exists and has been taken for the amethyst deceiver. The white form is also compared with St George’s mushroom (Wikipedia, en), which is larger, smells of flour and keeps white gills.</string>
+    <string name="myco_sulphureum_name">Sulphur knight</string>
+    <string name="myco_sulphureum_alt">Tricholome soufré</string>
+    <string name="myco_sulphureum_latin" translatable="false">Tricholoma sulphureum</string>
+    <string-array name="myco_sulphureum_traits">
+        <item>Cap up to 8 cm, convex, sulphur-yellow, sometimes brownish at the centre, faint boss</item>
+        <item>Gills thick, widely spaced, notched</item>
+        <item>Stem up to 10 cm, bare</item>
+        <item>Thin flesh; strong smell of coal gas (skatole), nauseating; bitter taste</item>
+        <item>Deciduous woods, especially beech · spring to autumn</item>
+        <item>White spore print</item>
+    </string-array>
+    <string name="myco_sulphureum_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (en) calls it inedible and suspected poisonous, with some neurological symptoms reported. Smell and colour tell it from the yellow knight, which is darker, with a sticky cap, white flesh, thin crowded gills and a smell of flour (Wikipedia, en).</string>
+    <string name="myco_citrina_name">False death cap</string>
+    <string name="myco_citrina_alt">Amanite citrine</string>
+    <string name="myco_citrina_latin" translatable="false">Amanita citrina</string>
+    <string-array name="myco_citrina_traits">
+        <item>Cap 4 to 10 cm, pale lemon-yellow, sometimes nearly white, with greyish-white patches (volva remains)</item>
+        <item>Gills white, free</item>
+        <item>Stem 6 to 12 cm, with an ample, persistent ring, striate above</item>
+        <item>Bulb with a rim formed by the volva: not a sac</item>
+        <item>Smell of raw potato or radish</item>
+        <item>Deciduous and conifer woods, silicate soils · autumn, very common</item>
+    </string-array>
+    <string name="myco_citrina_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, notes bufotenin and warns against eating it raw. Wikipedia (fr) calls it a poor edible, slightly toxic, and says most mycologists advise throwing it away. Its real danger is its resemblance to the death cap, when young and in its yellowish and white forms; the raw-potato smell and the bulb with a rim, not a sac, set it apart.</string>
+    <string name="myco_l_rust_fibrous_cap">Rust-brown, fibrous cap</string>
+    <string name="myco_l_yellow_veil_stem">Yellow veil fragments on the stem</string>
+    <string name="myco_l_flesh_pale_yellow">Pale yellow flesh, radish smell</string>
+    <string name="myco_l_pink_wine_cap">Pale rosy-brown cap, darker boss</string>
+    <string name="myco_l_ring_woolly">Woolly ring</string>
+    <string name="myco_l_pale_cream_gills">Pale cream gills</string>
+    <string name="myco_l_gills_greying">Gills turning grey</string>
+    <string name="myco_l_lemon_patched_cap">Pale lemon cap, grey-white patches</string>
+    <string name="myco_g_knights_title">Yellow knight, or sulphur knight?</string>
+    <string name="myco_g_knights_evidence">Wikipedia</string>
+    <string-array name="myco_g_knights_points">
+        <item>Yellow knight: darker, sticky cap, white flesh, thin crowded gills, smell of flour. Sulphur knight: sulphur-yellow cap, thick, widely spaced gills, smell of coal gas.</item>
+        <item>The smell and the colour are what Wikipedia gives to tell them apart.</item>
+        <item>Neither is to be eaten: the yellow knight is toxic (see its card), the sulphur knight is listed by the DGfM for a gastrointestinal syndrome.</item>
+    </string-array>
 </resources>

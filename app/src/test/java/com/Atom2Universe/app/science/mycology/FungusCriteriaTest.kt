@@ -147,6 +147,19 @@ class FungusCriteriaTest {
     }
 
     @Test
+    fun leLotHuitSeLitDansLeDessin() {
+        // les amanites à volve en bourrelet ne sortent pas sur les volves en sac, et inversement
+        assertTrue(FungusCriteria.matches(look("citrina"), setOf("s_ring", "s_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("verna"), setOf("cap_WHITE", "stipe_WHITE", "s_ring", "s_volva", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("subincarnata"), setOf("c_scaly", "s_ring", "s_no_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("rubellus"), setOf("cap_BROWN", "s_no_ring", "s_no_volva", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("geophylla"), setOf("w_small", "cap_WHITE", "s_no_ring", "sp_brown")))
+        assertTrue(FungusCriteria.matches(look("sulphureum"), setOf("cap_YELLOW", "s_no_ring", "sp_white")))
+        // le tricholome équestre et le soufré sont comparés l'un à l'autre
+        assertEquals(setOf("equestre", "sulphureum"), FungusCatalog.groups.first { it.id == "knights" }.members.toSet())
+    }
+
+    @Test
     fun lesBoutonsProposesTrouventTousQuelqueChose() {
         for ((_, list) in FungusCriteria.offered) for (c in list) {
             assertTrue("${c.id} ne trouve rien", ids(c.id).isNotEmpty())

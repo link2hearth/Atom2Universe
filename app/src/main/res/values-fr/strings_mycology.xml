@@ -129,12 +129,13 @@
 
     <!-- Groupes de sosies -->
     <string name="myco_g_chanterelle_title">Girolle, ou pas ?</string>
-    <string name="myco_g_chanterelle_evidence">ANSES 2024</string>
+    <string name="myco_g_chanterelle_evidence">ANSES 2024, centre antipoison belge, Wikipédia</string>
     <string-array name="myco_g_chanterelle_points">
         <item>Girolle : des plis épais et fourchus, comme des veines. Clitocybe de l’olivier : de vraies lames fines et serrées.</item>
         <item>La girolle sort de terre. Le clitocybe de l’olivier pousse en touffe sur du bois, une souche ou des racines.</item>
         <item>Girolle : odeur d’abricot, chair blanc crème. Clitocybe de l’olivier : odeur d’huile, pied orange à l’intérieur.</item>
         <item>Fausse girolle : lames fines, serrées, régulièrement fourchues, qui se détachent à l’ongle. Pas d’abricot.</item>
+        <item>Cortinaire très élégant : de vraies lames, roussâtres, et un pied avec des débris jaunes de voile. Wikipédia (en) rapporte que des victimes l’ont pris pour une girolle.</item>
     </string-array>
     <string name="myco_g_boletus_title">Cèpe, ou pas ?</string>
     <string name="myco_g_boletus_evidence">ANSES 2022, fiches Wikipédia</string>
@@ -161,6 +162,7 @@
         <item>Agaric sylvicole, comestible : les contrôleurs suisses signalent qu’on le confond avec l’agaric jaunissant.</item>
         <item>En 2022, deux décès après une amanite mortelle prise pour un rosé des prés ou un agaric des jachères.</item>
         <item>Champignon de Paris, forme sauvage : chapeau gris-brun écailleux, lames roses puis brunes, anneau épais et étroit. Wikipédia cite parmi ses sosies des amanites mortelles (volve, lames toutes blanches) et l’agaric jaunissant (odeur de phénol, chair qui jaunit).</item>
+        <item>Amanite printanière, mortelle : Bulliard avertissait dès 1780 qu’on pouvait la prendre pour le rosé des prés. Lames blanches, anneau et volve en sac la trahissent.</item>
     </string-array>
     <string name="myco_g_morel_title">Morille, ou fausse morille ?</string>
     <string name="myco_g_morel_evidence">Décret de 1991</string>
@@ -187,20 +189,22 @@
         <item>Au stade œuf, l’oronge n’a aucun de ces repères : on ne la cueille pas.</item>
     </string-array>
     <string name="myco_g_stgeorge_title">Mousseron de la Saint-Georges, ou pas ?</string>
-    <string name="myco_g_stgeorge_evidence">ANSES 2022</string>
+    <string name="myco_g_stgeorge_evidence">ANSES 2022, Wikipédia</string>
     <string-array name="myco_g_stgeorge_points">
         <item>Saint-Georges : lames blanches, sporée blanche. Inocybe de Patouillard : chapeau conique qui rougit, lames qui brunissent, sporée brun tabac.</item>
         <item>Entolome livide : lames jaunâtres puis roses, sporée rose, et une odeur de farine aussi : l’odeur ne suffit pas.</item>
         <item>Saint-Georges : sort au printemps. Entolome : surtout en automne, mais parfois dès l’été.</item>
         <item>L’inocybe donne des sueurs et de la salivation ; l’entolome, des vomissements et une diarrhée importante.</item>
+        <item>Inocybe à lames couleur de terre : chapeau blanc de lait, soyeux, mamelonné, lames qui grisent, odeur spermatique, sporée brun tabac. Wikipédia (en) le compare au tricholome de la Saint-Georges.</item>
     </string-array>
     <string name="myco_g_fairyring_title">Faux mousseron, ou pas ?</string>
-    <string name="myco_g_fairyring_evidence">ANSES 2022</string>
+    <string name="myco_g_fairyring_evidence">ANSES 2022, centre antipoison belge, Wikipédia</string>
     <string-array name="myco_g_fairyring_points">
         <item>Faux mousseron : lames très espacées, chapeau à mamelon. Clitocybe blanchi : lames serrées, chapeau givré, souvent creusé.</item>
         <item>Tous deux poussent dans les pelouses, parfois en ronds de sorcières.</item>
         <item>Faux mousseron : odeur de foin coupé, parfois de cyanure. Clitocybe : odeur de farine.</item>
         <item>Le paxille enroulé, mortel, est aussi pris pour lui : marge très enroulée, lames décurrentes qui brunissent.</item>
+        <item>Lépiote de Josserand : une petite lépiote à anneau laineux et pied écailleux ; Wikipédia (fr) met en garde contre une confusion avec le faux mousseron. Le centre antipoison belge déconseille toute lépiote de moins de 10 cm.</item>
     </string-array>
     <string name="myco_g_entoloma_title">Entolome livide, ou clitocybe nébuleux ?</string>
     <string name="myco_g_entoloma_evidence">Centre antipoisons belge</string>
@@ -227,21 +231,23 @@
         <item>Armillaire : aussi en touffe sur souches et racines ; l’ANSES lui prête des troubles digestifs, même après cuisson.</item>
     </string-array>
     <string name="myco_g_greenforms_title">Phalloïde verte, ou pas ?</string>
-    <string name="myco_g_greenforms_evidence">Centre antipoison belge</string>
+    <string name="myco_g_greenforms_evidence">Centre antipoison belge, Wikipédia</string>
     <string-array name="myco_g_greenforms_points">
         <item>Phalloïde : anneau et volve en sac, chapeau lisse, lames blanches libres. Russule verdoyante : ni anneau ni volve, chapeau craquelé en plaques.</item>
         <item>Russule : lames et chair cassantes comme de la craie. Phalloïde : chair fibreuse, qui ne se casse pas.</item>
         <item>Tricholome équestre : lames et pied jaunes, sans anneau ni volve ; il ne se mange plus.</item>
         <item>La forme verte de la phalloïde est prise pour une russule ou un tricholome vert.</item>
+        <item>Amanite citrine : chapeau jaune citron à lambeaux, bulbe à bourrelet, odeur de pomme de terre crue. Wikipédia dit que son principal danger est sa ressemblance avec l’amanite phalloïde.</item>
     </string-array>
     <string name="myco_g_whiteforms_title">Tout blanc, mais lequel ?</string>
-    <string name="myco_g_whiteforms_evidence">Centre antipoison belge</string>
+    <string name="myco_g_whiteforms_evidence">Centre antipoison belge, Wikipédia</string>
     <string-array name="myco_g_whiteforms_points">
         <item>Amanite vireuse : anneau fragile et volve en sac, lames blanches. Colombette : ni anneau ni volve, chair à odeur de farine.</item>
         <item>Entolome livide : chapeau gris clair très fibrilleux, lames jaunes puis roses, sporée rose. Colombette : lames blanches, sporée blanche.</item>
         <item>Agaric sylvicole : lames crème pâle puis roses puis brun chocolat, odeur d’anis, anneau très large. Les amanites ont des lames toujours blanches et une volve.</item>
         <item>La volve est sous terre : on ne cueille que des champignons entiers.</item>
         <item>L’odeur de farine se retrouve chez la colombette et chez l’entolome livide : elle ne suffit pas.</item>
+        <item>Amanite printanière : mortelle comme l’amanite vireuse, avec des lames blanches, un anneau et une volve en sac ; Wikipédia (fr) cite parmi ses sosies des agarics et des volvaires blancs.</item>
     </string-array>
     <string name="myco_g_clitopilus_title">Clitopile, ou clitocybe blanc ?</string>
     <string name="myco_g_clitopilus_evidence">Centre antipoison belge</string>
@@ -1679,4 +1685,83 @@
     <string name="myco_l_flesh_dirty_white">Chair blanc sale qui brunit</string>
     <string name="myco_l_dark_coarse_scales">Grosses écailles sombres</string>
     <string name="myco_l_grey_spines">Aiguillons gris et mous</string>
+    <string name="myco_rubellus_name">Cortinaire très élégant</string>
+    <string name="myco_rubellus_alt">Deadly webcap</string>
+    <string-array name="myco_rubellus_traits">
+        <item>Chapeau de 2,5 à 10 cm, conique puis mamelonné, roux à fauve, finement fibrilleux, plus pâle à la marge</item>
+        <item>Lames espacées, ocre ou cannelle, plus foncées avec l’âge : de vraies lames, pas des plis</item>
+        <item>Pied de 6 à 10 cm, légèrement bulbeux, de la couleur du chapeau, avec des débris jaunes de voile dans la moitié basse</item>
+        <item>Chair jaune pâle à safran, odeur de rave</item>
+        <item>Bois humides de conifères (épicéas), mousses, sols acides · fin d’été à automne</item>
+    </string-array>
+    <string name="myco_rubellus_note">Mortel : l’orellanine détruit les reins. Des troubles digestifs peuvent apparaître 24 à 36 heures après le repas, ou manquer ; l’atteinte des reins suit 2 à 20 jours plus tard, ce qui rend le diagnostic très difficile (centre antipoison belge). L’insuffisance rénale est souvent irréversible, et des greffes ont été nécessaires dans plusieurs séries (Wikipédia, en). Les victimes l’avaient pris pour une girolle ou un cèpe. Le traitement est l’hémodialyse.</string>
+    <string name="myco_verna_name">Amanite printanière</string>
+    <string name="myco_verna_alt">Fool’s mushroom</string>
+    <string-array name="myco_verna_traits">
+        <item>Chapeau tout blanc, de 4 à 10 cm, convexe à plan, parfois ivoire ou ocre au centre</item>
+        <item>Lames libres, serrées, blanches</item>
+        <item>Pied de 7 à 13 cm, blanc et soyeux, avec un bulbe arrondi</item>
+        <item>Anneau membraneux et persistant</item>
+        <item>Volve en sac, blanchâtre, de 2 à 3 cm</item>
+        <item>Bois clairs, surtout chênes et châtaigniers, sols acides et sableux · printemps à été ; rare, méditerranéenne</item>
+    </string-array>
+    <string name="myco_verna_note">Mortelle : mêmes toxines et même maladie que l’amanite phalloïde (alpha-amanitine : foie, puis reins). Les symptômes viennent tard : 6 à 24 heures après le repas (Wikipédia, en), une douzaine d’heures en moyenne et jusqu’à 48 (centre antipoison belge). Quelques grammes suffisent (Wikipédia, fr). On l’a prise pour le rosé des prés (Bulliard, 1780), pour des agarics et des volvaires blancs, et pour la forme blanche de la phalloïde. Les sources lues ne donnent aucun critère de terrain qui la sépare de l’amanite vireuse : l’atlas n’essaie pas.</string>
+    <string name="myco_subincarnata_name">Lépiote de Josserand</string>
+    <string name="myco_subincarnata_alt">Fatal dapperling</string>
+    <string-array name="myco_subincarnata_traits">
+        <item>Chapeau de 5 à 6 cm, feutré à finement écailleux, brun rosé pâle à rose vineux, mamelon central plus foncé</item>
+        <item>Lames libres, assez serrées, crème pâle</item>
+        <item>Pied d’environ 5 cm et de moins de 1 cm d’épaisseur, avec un anneau laineux bien distinct</item>
+        <item>Blanchâtre au-dessus de l’anneau, écailleux en dessous, de la couleur du chapeau</item>
+        <item>Odeur fruitée typique de mandarine sur les lames</item>
+        <item>Haies, jardins, litière, sol riche</item>
+    </string-array>
+    <string name="myco_subincarnata_note">Mortelle : amatoxines, comme l’amanite phalloïde. Les symptômes viennent tard : une douzaine d’heures en moyenne et jusqu’à 48 (centre antipoison belge, qui la nomme Lepiota josserandii). Le même centre déconseille de manger toute lépiote de moins de 10 cm. Wikipédia (fr) met en garde contre une confusion avec le faux mousseron.</string>
+    <string name="myco_geophylla_name">Inocybe à lames couleur de terre</string>
+    <string name="myco_geophylla_alt">Common white inocybe</string>
+    <string-array name="myco_geophylla_traits">
+        <item>Chapeau de 1 à 4 cm, conique, toujours mamelonné, blanc de lait puis légèrement ocré, soyeux</item>
+        <item>Lames blanches à crème, puis grises, brun terreux avec les spores</item>
+        <item>Pied grêle, blanc, pruineux au sommet</item>
+        <item>Forte odeur spermatique, chair âcre</item>
+        <item>Sous-bois ombragés de feuillus, parfois sous conifères, herbe, chemins · juin à novembre</item>
+    </string-array>
+    <string name="myco_geophylla_note">Toxique : muscarine. Wikipédia (fr) le compte parmi les inocybes les plus toxiques ; le centre antipoison belge décrit le syndrome sudorien : écoulement du nez, hypersalivation, transpiration abondante, larmoiement, difficultés respiratoires, de quelques minutes à 2 heures après le repas ; la guérison se fait en moins de 24 heures, l’atropine est parfois nécessaire. Il existe une forme lilas, prise pour le laccaire améthyste. La forme blanche est aussi comparée au tricholome de la Saint-Georges (Wikipédia, en), plus grand, à odeur de farine et aux lames qui restent blanches.</string>
+    <string name="myco_sulphureum_name">Tricholome soufré</string>
+    <string name="myco_sulphureum_alt">Sulphur knight</string>
+    <string-array name="myco_sulphureum_traits">
+        <item>Chapeau jusqu’à 8 cm, convexe, jaune soufre, parfois brunâtre au centre, léger mamelon</item>
+        <item>Lames épaisses, très espacées, échancrées</item>
+        <item>Pied jusqu’à 10 cm, nu</item>
+        <item>Chair mince ; forte odeur de gaz de houille (scatol), nauséabonde ; saveur amère</item>
+        <item>Bois de feuillus, surtout hêtre · printemps à automne</item>
+        <item>Sporée blanche</item>
+    </string-array>
+    <string name="myco_sulphureum_note">Toxique : la DGfM le range pour un syndrome gastro-intestinal, et Wikipédia (en) le dit non comestible et soupçonné d’être vénéneux, avec quelques troubles neurologiques signalés. L’odeur et la couleur le distinguent du tricholome équestre, plus foncé, au chapeau visqueux, à la chair blanche, aux lames minces et serrées et à l’odeur de farine (Wikipédia, en).</string>
+    <string name="myco_citrina_name">Amanite citrine</string>
+    <string name="myco_citrina_alt">False death cap</string>
+    <string-array name="myco_citrina_traits">
+        <item>Chapeau de 4 à 10 cm, jaune citron pâle, parfois presque blanc, avec des lambeaux gris-blanc (restes de la volve)</item>
+        <item>Lames blanches, libres</item>
+        <item>Pied de 6 à 12 cm, avec un anneau ample et persistant, strié au-dessus</item>
+        <item>Bulbe à bourrelet formé par la volve : pas un sac</item>
+        <item>Odeur de pomme de terre crue ou de rave</item>
+        <item>Bois de feuillus et de conifères, sols siliceux · automne, très commune</item>
+    </string-array>
+    <string name="myco_citrina_note">Toxique : la DGfM la range pour un syndrome gastro-intestinal, note la bufoténine et déconseille de la manger crue. Wikipédia (fr) la dit comestible médiocre, légèrement toxique, et ajoute que la plupart des mycologues conseillent de la rejeter. Son vrai danger est sa ressemblance avec l’amanite phalloïde, jeune et sous ses formes jaunâtres et blanches ; l’odeur de pomme de terre crue et le bulbe à bourrelet, pas en sac, la distinguent.</string>
+    <string name="myco_l_rust_fibrous_cap">Chapeau roux, fibrilleux</string>
+    <string name="myco_l_yellow_veil_stem">Débris jaunes de voile sur le pied</string>
+    <string name="myco_l_flesh_pale_yellow">Chair jaune pâle, odeur de rave</string>
+    <string name="myco_l_pink_wine_cap">Chapeau brun rosé pâle, mamelon plus foncé</string>
+    <string name="myco_l_ring_woolly">Anneau laineux</string>
+    <string name="myco_l_pale_cream_gills">Lames crème pâle</string>
+    <string name="myco_l_gills_greying">Lames qui grisent</string>
+    <string name="myco_l_lemon_patched_cap">Chapeau jaune citron pâle, lambeaux gris-blanc</string>
+    <string name="myco_g_knights_title">Tricholome équestre, ou tricholome soufré ?</string>
+    <string name="myco_g_knights_evidence">Wikipédia</string>
+    <string-array name="myco_g_knights_points">
+        <item>Tricholome équestre : chapeau plus foncé et visqueux, chair blanche, lames minces et serrées, odeur de farine. Tricholome soufré : chapeau jaune soufre, lames épaisses et très espacées, odeur de gaz de houille.</item>
+        <item>L’odeur et la couleur sont ce que Wikipédia donne pour les distinguer.</item>
+        <item>Aucun des deux ne se mange : le tricholome équestre est toxique (voir sa fiche), le tricholome soufré est listé par la DGfM pour un syndrome gastro-intestinal.</item>
+    </string-array>
 </resources>
