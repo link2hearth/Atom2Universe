@@ -50,7 +50,7 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("virescens"), setOf("cap_GREEN", "s_no_ring", "s_no_volva", "sp_white")))
         assertTrue(FungusCriteria.matches(look("columbetta"), setOf("cap_WHITE", "stipe_WHITE", "s_no_ring", "s_no_volva")))
         // les lactaires seuls laissent couler un lait
-        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis", "sanguifluus", "deterrimus", "salmonicolor", "volemus", "piperatus"), ids("m_latex"))
+        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis", "sanguifluus", "deterrimus", "salmonicolor", "volemus", "piperatus", "helvus"), ids("m_latex"))
         // ce que le dessin ne montre pas ne s'invente pas : pas d'aiguillons ailleurs, pas de volve chez le lot trois
         assertEquals(setOf("hydnum", "erinaceus", "imbricatus", "rufescens"), ids("u_teeth"))
         for (id in listOf("hydnum", "craterellus", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "torminosus", "nuda", "orellanus", "virescens", "columbetta"))
@@ -104,7 +104,7 @@ class FungusCriteriaTest {
         // « sur le bois » = les touffes en bouquet sur un tronc, et les étagères
         assertEquals(
             setOf("olearius", "galerina", "mutabilis", "fasciculare", "mellea", "aegerita", "flammulina", "capnoides", "gymnopilus",
-                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus"),
+                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus", "platyphylla", "fusipes"),
             ids("m_wood")
         )
         assertTrue(FungusCriteria.matches(look("flammulina"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_white", "cap_ORANGE", "u_gills", "w_medium")))
@@ -200,6 +200,23 @@ class FungusCriteriaTest {
         assertEquals(setOf("aurea", "emetica", "nobilis", "xerampelina"), FungusCatalog.groups.first { it.id == "redrussula" }.members.toSet())
         assertEquals(setOf("scabrum", "versipelle"), FungusCatalog.groups.first { it.id == "roughstem" }.members.toSet())
         assertTrue(FungusCatalog.groups.first { it.id == "parasol" }.members.contains("excoriata"))
+    }
+
+    @Test
+    fun leLotDouzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("gemmata"), setOf("cap_YELLOW", "s_ring", "s_volva", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("porphyria"), setOf("s_ring", "s_volva", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("moelleri"), setOf("c_scaly", "s_ring", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("clavipes"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("helvus"), setOf("m_latex", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("platyphylla"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("fusipes"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("conica"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertEquals(setOf("nebularis", "clavipes"), FungusCatalog.groups.first { it.id == "cloudy" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "field" }.members.contains("moelleri"))
+        assertTrue(FungusCatalog.groups.first { it.id == "amanita" }.members.contains("gemmata"))
+        assertTrue(FungusCatalog.groups.first { it.id == "greenforms" }.members.contains("porphyria"))
+        assertTrue(FungusCatalog.groups.first { it.id == "woodtuft" }.members.contains("fusipes"))
     }
 
     @Test

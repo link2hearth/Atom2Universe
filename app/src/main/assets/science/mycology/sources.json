@@ -156,7 +156,7 @@
       "id": "dgfm2026tox", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf",
-      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima", "turpis", "rubellus", "verna", "subincarnata", "geophylla", "sulphureum", "citrina", "nobilis"]
+      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima", "turpis", "rubellus", "verna", "subincarnata", "geophylla", "sulphureum", "citrina", "nobilis", "gemmata", "porphyria", "moelleri", "clavipes", "helvus", "platyphylla", "fusipes", "conica"]
     },
     {
       "id": "mdc-velvetfoot", "kind": "official",
@@ -367,6 +367,18 @@
     { "id": "wp-fr-marzuolus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hygrophorus marzuolus", "url": "https://fr.wikipedia.org/wiki/Hygrophorus_marzuolus", "species": ["marzuolus"] },
     { "id": "wp-en-marzuolus", "kind": "encyclopedia", "citation": "Wikipedia (en): Hygrophorus marzuolus", "url": "https://en.wikipedia.org/wiki/Hygrophorus_marzuolus", "species": ["marzuolus"] },
     { "id": "wp-fr-excoriata", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Macrolepiota excoriata", "url": "https://fr.wikipedia.org/wiki/Macrolepiota_excoriata", "species": ["excoriata"] },
-    { "id": "wp-en-excoriata", "kind": "encyclopedia", "citation": "Wikipedia (en): Macrolepiota excoriata", "url": "https://en.wikipedia.org/wiki/Macrolepiota_excoriata", "species": ["excoriata"] }
+    { "id": "wp-en-excoriata", "kind": "encyclopedia", "citation": "Wikipedia (en): Macrolepiota excoriata", "url": "https://en.wikipedia.org/wiki/Macrolepiota_excoriata", "species": ["excoriata"] },
+    { "id": "wp-fr-gemmata", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanita gemmata", "url": "https://fr.wikipedia.org/wiki/Amanita_gemmata", "species": ["gemmata"] },
+    { "id": "wp-en-gemmata", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita gemmata", "url": "https://en.wikipedia.org/wiki/Amanita_gemmata", "species": ["gemmata"] },
+    { "id": "wp-en-porphyria", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita porphyria", "url": "https://en.wikipedia.org/wiki/Amanita_porphyria", "species": ["porphyria"] },
+    { "id": "wp-fr-moelleri", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Agaricus moelleri", "url": "https://fr.wikipedia.org/wiki/Agaricus_moelleri", "species": ["moelleri"] },
+    { "id": "wp-en-moelleri", "kind": "encyclopedia", "citation": "Wikipedia (en): Agaricus moelleri", "url": "https://en.wikipedia.org/wiki/Agaricus_moelleri", "species": ["moelleri"] },
+    { "id": "wp-en-clavipes", "kind": "encyclopedia", "citation": "Wikipedia (en): Ampulloclitocybe clavipes", "url": "https://en.wikipedia.org/wiki/Ampulloclitocybe_clavipes", "species": ["clavipes"] },
+    { "id": "wp-fr-helvus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactarius helvus", "url": "https://fr.wikipedia.org/wiki/Lactarius_helvus", "species": ["helvus"] },
+    { "id": "wp-en-helvus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius helvus", "url": "https://en.wikipedia.org/wiki/Lactarius_helvus", "species": ["helvus"] },
+    { "id": "wp-fr-platyphylla", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Megacollybia platyphylla", "url": "https://fr.wikipedia.org/wiki/Megacollybia_platyphylla", "species": ["platyphylla"] },
+    { "id": "wp-fr-fusipes", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Gymnopus fusipes", "url": "https://fr.wikipedia.org/wiki/Gymnopus_fusipes", "species": ["fusipes"] },
+    { "id": "wp-en-fusipes", "kind": "encyclopedia", "citation": "Wikipedia (en): Gymnopus fusipes", "url": "https://en.wikipedia.org/wiki/Gymnopus_fusipes", "species": ["fusipes"] },
+    { "id": "wp-en-conica", "kind": "encyclopedia", "citation": "Wikipedia (en): Hygrocybe conica", "url": "https://en.wikipedia.org/wiki/Hygrocybe_conica", "species": ["conica"] }
   ]
 }

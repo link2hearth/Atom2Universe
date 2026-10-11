@@ -164,6 +164,7 @@
         <item>En 2022, deux décès après une amanite mortelle prise pour un rosé des prés ou un agaric des jachères.</item>
         <item>Champignon de Paris, forme sauvage : chapeau gris-brun écailleux, lames roses puis brunes, anneau épais et étroit. Wikipédia cite parmi ses sosies des amanites mortelles (volve, lames toutes blanches) et l’agaric jaunissant (odeur de phénol, chair qui jaunit).</item>
         <item>Amanite printanière, mortelle : Bulliard avertissait dès 1780 qu’on pouvait la prendre pour le rosé des prés. Lames blanches, anneau et volve en sac la trahissent.</item>
+        <item>Agaric pintade : écailles gris brun foncé, chapeau et base du pied qui jaunissent, forte odeur de phénol ou d’encre ; toxique, comme l’agaric jaunissant.</item>
     </string-array>
     <string name="myco_g_morel_title">Morille, ou fausse morille ?</string>
     <string name="myco_g_morel_evidence">Décret de 1991</string>
@@ -174,12 +175,13 @@
         <item>La morille se mange toujours cuite. Le gyromitre est interdit à la vente en France.</item>
     </string-array>
     <string name="myco_g_amanita_title">Amanite rougissante, ou pas ?</string>
-    <string name="myco_g_amanita_evidence">Confusion classique</string>
+    <string name="myco_g_amanita_evidence">Confusion classique, Wikipédia</string>
     <string-array name="myco_g_amanita_points">
         <item>Rougissante : la chair et les lames rougissent à la blessure. Panthère : chair blanche, immuable.</item>
         <item>Rougissante : anneau strié sur le dessus. Panthère : anneau lisse.</item>
         <item>Panthère : bulbe à bord net, surmonté de bracelets ; verrues blanc pur sur brun foncé, marge striée.</item>
         <item>Tue-mouches : chapeau rouge, lames et pied blancs. Lavée par la pluie, elle ressemble à l’oronge, dont les lames et le pied sont jaunes.</item>
+        <item>Amanite jonquille : jaune, à plaques blanches, anneau fragile et petit bourrelet de volve ; toxique, avec les mêmes symptômes que l’amanite panthère et l’amanite tue-mouches (Wikipédia).</item>
     </string-array>
     <string name="myco_g_oronge_title">Oronge, ou pas ?</string>
     <string name="myco_g_oronge_evidence">ANSES 2022</string>
@@ -225,12 +227,13 @@
         <item>Chevelu : sans danger avec de l’alcool, mais à manger jeune et vite, blanc à la coupe.</item>
     </string-array>
     <string name="myco_g_woodtuft_title">Pholiote changeante, ou galère marginée ?</string>
-    <string name="myco_g_woodtuft_evidence">Centre antipoisons belge</string>
+    <string name="myco_g_woodtuft_evidence">Centre antipoisons belge, Wikipédia</string>
     <string-array name="myco_g_woodtuft_points">
         <item>Pholiote : le chapeau sèche du centre vers le bord, odeur douce. Galère marginée, mortelle : du bord vers le centre, odeur de farine.</item>
         <item>Les écailles sous l’anneau ne suffisent pas : la galère peut en avoir aussi.</item>
         <item>Hypholome en touffe : jaune soufre, lames jaunes puis vertes, très amer. Toxique.</item>
         <item>Armillaire : aussi en touffe sur souches et racines ; l’ANSES lui prête des troubles digestifs, même après cuisson.</item>
+        <item>Collybie à pied en fuseau : en touffes sur les souches de chêne, mais à pied sans anneau, sillonné et en fuseau ; Wikipédia (fr) dit que les débutants peuvent la prendre pour une pholiote, un hypholome ou une armillaire. Toxique (DGfM).</item>
     </string-array>
     <string name="myco_g_greenforms_title">Phalloïde verte, ou pas ?</string>
     <string name="myco_g_greenforms_evidence">Centre antipoison belge, Wikipédia</string>
@@ -240,6 +243,7 @@
         <item>Tricholome équestre : lames et pied jaunes, sans anneau ni volve ; il ne se mange plus.</item>
         <item>La forme verte de la phalloïde est prise pour une russule ou un tricholome vert.</item>
         <item>Amanite citrine : chapeau jaune citron à lambeaux, bulbe à bourrelet, odeur de pomme de terre crue. Wikipédia dit que son principal danger est sa ressemblance avec l’amanite phalloïde.</item>
+        <item>Amanita porphyria : chapeau brun à pourpré, anneau gris violet, odeur de pomme de terre crue ; Wikipédia (en) dit qu’on la prend facilement pour l’amanite phalloïde et qu’elle ressemble à l’amanite citrine.</item>
     </string-array>
     <string name="myco_g_whiteforms_title">Tout blanc, mais lequel ?</string>
     <string name="myco_g_whiteforms_evidence">Centre antipoison belge, Wikipédia</string>
@@ -2037,5 +2041,110 @@
         <item>Bolet rude : chapeau brun clair à brun foncé, chair blanchâtre presque inchangée. Bolet orangé des bouleaux : chapeau ocre orangé, chair qui vire au gris violet, pied couvert de mèches noires denses.</item>
         <item>Tous deux poussent sous les bouleaux et ont un pied couvert d’écailles sombres.</item>
         <item>Tous deux se mangent bien cuits : crus ou mal cuits, les bolets rudes donnent des troubles digestifs (Wikipédia, fr). D’autres bolets rudes existent, et les sources lues ne donnent pas de règle simple pour les séparer tous.</item>
+    </string-array>
+    <string name="myco_gemmata_name">Amanite jonquille</string>
+    <string name="myco_gemmata_alt">Jonquil amanita, gemmed amanita</string>
+    <string-array name="myco_gemmata_traits">
+        <item>Chapeau de 2,5 à 12 cm, jaune crème à jaune d’or, visqueux par temps humide, avec des plaques blanches molles que la pluie lave</item>
+        <item>Lames blanches, serrées</item>
+        <item>Pied de 4 à 12 cm, pâle, avec un anneau fragile qu’on perd facilement</item>
+        <item>Volve blanche formant un petit bourrelet libre à la base</item>
+        <item>Sol sableux et un peu acide, près des conifères · printemps à automne</item>
+    </string-array>
+    <string name="myco_gemmata_note">Toxique : la DGfM la liste comme suspecte, avec le syndrome de l’amanite panthère, et Wikipédia (en) donne l’acide iboténique et le muscimol, avec des symptômes en moins de trois heures (hallucinations, nausées, vomissements, douleurs d’estomac), les cas graves étant extrêmement rares. Wikipédia (fr) dit qu’elle donne les mêmes symptômes que l’amanite panthère et l’amanite tue-mouches. Wikipédia (en) cite l’amanite citrine, Amanita fulva et l’amanite panthère comme sosies ; son chapeau est d’un jaune plus vif que celui de la première.</string>
+    <string name="myco_porphyria_name">Amanita porphyria</string>
+    <string name="myco_porphyria_alt">Grey veiled amanita, porphyry amanita</string>
+    <string-array name="myco_porphyria_traits">
+        <item>Chapeau de 4 à 10 cm, brun à reflet pourpre ou grisâtre, parfois avec des plaques grises du voile</item>
+        <item>Lames blanchâtres, libres, qui foncent au froissement</item>
+        <item>Pied de 5 à 12 cm, base bulbeuse, avec un anneau fragile gris violet ou noirci</item>
+        <item>Base parfois dans une volve blanche membraneuse</item>
+        <item>Chair blanche, odeur de pomme de terre crue ou de rave</item>
+        <item>Sol pauvre, surtout sous les conifères (épicéas) · été à automne</item>
+    </string-array>
+    <string name="myco_porphyria_note">Toxique : la DGfM la liste pour un syndrome gastro-intestinal, note la bufoténine et déconseille de la manger crue ; Wikipédia (en) la dit immangeable. Elle ressemble à l’amanite citrine par la forme et l’odeur, mais s’en distingue par la couleur du chapeau et de l’anneau, et se prend facilement pour l’amanite phalloïde, bien plus vénéneuse (Wikipédia, en). On peut aussi la prendre pour l’amanite panthère. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_moelleri_name">Agaric pintade</string>
+    <string name="myco_moelleri_alt">Psalliote pintade, inky mushroom</string>
+    <string-array name="myco_moelleri_traits">
+        <item>Chapeau de 5 à 15 cm, couvert de petites écailles gris foncé à gris brun sur fond pâle, jaunissant au toucher</item>
+        <item>Lames libres, gris rosé quand elles sont jeunes, puis brunes</item>
+        <item>Pied de 6 à 12 cm, nettement bulbeux, avec un anneau mince et blanc ; la base jaunit fortement à la manipulation</item>
+        <item>Chair blanche, jaune chrome à la base du pied ; forte odeur de phénol, d’iodoforme ou d’encre</item>
+        <item>Bois de feuillus, surtout sur sol calcaire, aussi parcs et prairies</item>
+    </string-array>
+    <string name="myco_moelleri_note">Toxique : Wikipédia (fr) le dit sans détour, la DGfM le liste pour un syndrome gastro-intestinal, et Wikipédia (en) précise que, comme l’agaric jaunissant, il dérange certaines personnes et pas d’autres. Le jaunissement et l’odeur de phénol sont les signaux d’alerte. Ce n’est pas le rosé des prés : voir le groupe.</string>
+    <string name="myco_clavipes_name">Ampulloclitocybe clavipes</string>
+    <string name="myco_clavipes_alt">Club foot, club-footed clitocybe</string>
+    <string-array name="myco_clavipes_traits">
+        <item>Chapeau de 4 à 8 cm, convexe puis plan ou en coupe, gris brun parfois olivâtre, marge plus pâle</item>
+        <item>Lames jaune crème, très décurrentes, certaines fourchues</item>
+        <item>Pied de 3 à 7 cm, soyeux, de la couleur du chapeau, à base nettement bulbeuse en massue</item>
+        <item>Chair blanche et épaisse, un peu jaune à la base ; odeur faible, aqueuse, douceâtre</item>
+        <item>Bois de conifères et de feuillus, surtout sous les hêtres · août à novembre</item>
+    </string-array>
+    <string name="myco_clavipes_note">Non recommandé : jamais avec de l’alcool. La DGfM le dit inoffensif sans alcool et donne le syndrome de type coprine avec ; Wikipédia (en) décrit une réaction 5 à 10 minutes après avoir bu (rougeur, battements dans la tête et le cou, mains gonflées) et le dit comestible mais peu appétissant, certaines sources le disant immangeable. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM. Wikipédia (en) le sépare du clitocybe nébuleux par son pied en massue.</string>
+    <string name="myco_helvus_name">Lactaire à odeur d’érable</string>
+    <string name="myco_helvus_alt">Fenugreek milkcap</string>
+    <string-array name="myco_helvus_traits">
+        <item>Chapeau de 4 à 15 cm, velouté, en entonnoir avec l’âge, beige à gris clair à la marge et plus foncé au centre</item>
+        <item>Lames crème puis jaune ocre, décurrentes</item>
+        <item>Pied de 3 à 9 cm, creux, blanchâtre puis ocre ou teinté de rose</item>
+        <item>Lait aqueux et incolore ; chair blanche ou beige, souvent teintée de rose</item>
+        <item>Forte odeur de fenugrec, de livèche ou de céleri ; saveur douce</item>
+        <item>Lieux humides, souvent dans les sphaignes, près des épicéas, des pins et des bouleaux · fin d’été et automne</item>
+    </string-array>
+    <string name="myco_helvus_note">Toxique : la DGfM le liste pour un syndrome gastro-intestinal, et Wikipédia (en) le dit légèrement toxique cru, avec nausées, vomissements, vertiges et frissons en moins de 30 minutes, les toxines étant détruites par une ébullition prolongée ; 418 personnes ont été intoxiquées près de Leipzig en octobre 1949. Séché, il sert de condiment en petite quantité. La page Wikipédia française est une ébauche : la description vient de Wikipédia (en).</string>
+    <string name="myco_platyphylla_name">Collybie à lames larges</string>
+    <string name="myco_platyphylla_alt">Broadgilled collybia</string>
+    <string-array name="myco_platyphylla_traits">
+        <item>Chapeau de 5 à 12 cm, gris cendré, olive ou gris brun, plus foncé au centre, à fibrilles rayonnantes, souvent fendu au bord</item>
+        <item>Lames larges et profondes, blanchâtres puis crème, presque libres, à arête dentée</item>
+        <item>Pied de 5 à 12 cm, fibreux et coriace, plus pâle que le chapeau, avec des cordons blancs à la base</item>
+        <item>Chair mince, blanchâtre ; saveur douce à un peu amère, sans odeur marquée</item>
+        <item>Bois pourri de feuillus, aussi faînes enfouies · fin de printemps à automne</item>
+    </string-array>
+    <string name="myco_platyphylla_note">Toxique : la DGfM le liste pour un syndrome gastro-intestinal, et Wikipédia (fr) dit qu’il était mangé en Italie, mélangé à d’autres espèces, malgré son amertume, et qu’il est maintenant tenu pour toxique. Wikipédia (fr) cite parmi ses sosies Pluteus cervinus, Hymenopellis radicata et Tricholoma portentosum ; la chair mince, les lames larges et molles et les cordons blancs aident à le distinguer. Aucune page anglaise n’a pu être lue : le texte vient de Wikipédia (fr) et de la DGfM.</string>
+    <string name="myco_fusipes_name">Collybie à pied en fuseau</string>
+    <string name="myco_fusipes_alt">Souchette, spindle shank</string>
+    <string-array name="myco_fusipes_traits">
+        <item>Chapeau de 3 à 10 cm, convexe à conique, légèrement mamelonné, brun rougeâtre et plus pâle au centre</item>
+        <item>Lames espacées, blanc rosé, tachées de rouille</item>
+        <item>Pied de 8 à 14 cm, renflé au milieu et aminci aux deux bouts, radicant, profondément sillonné, brun rougeâtre à brun noirâtre en bas, sans anneau</item>
+        <item>Chair ferme et blanchâtre, saveur douce et sucrée</item>
+        <item>En touffes sur les souches de feuillus, surtout le chêne · été à automne</item>
+    </string-array>
+    <string name="myco_fusipes_note">Toxique : la DGfM le liste pour un syndrome gastro-intestinal. Les sources lues divergent : Wikipédia (fr) le dit assez bon si l’on ne mange que de très jeunes chapeaux, le pied coriace ôté, et prévient que les récoltes tardives donnent des indigestions ; Wikipédia (en) dit que la plupart des auteurs ne le jugent pas digne d’un repas et que les vieux risquent une gastro-entérite. Le statut le plus prudent, celui de la DGfM, est retenu. Wikipédia (fr) dit que les débutants peuvent le prendre pour une pholiote, un hypholome ou une armillaire ; il n’a pas d’anneau et son pied en fuseau est sillonné.</string>
+    <string name="myco_conica_name">Hygrocybe conica</string>
+    <string name="myco_conica_alt">Blackening waxcap, witch’s hat</string>
+    <string-array name="myco_conica_traits">
+        <item>Chapeau jusqu’à 10 cm, étroitement conique puis mamelonné et souvent lobé, jaune à orangé ou écarlate, visqueux quand il est jeune</item>
+        <item>Lames cireuses, blanches à jaune pâle ou grisâtres</item>
+        <item>Pied jusqu’à 20 cm, fibrilleux, jaune à rouge orangé, blanchâtre à la base, sans anneau</item>
+        <item>Chair jaunâtre ; toutes les parties grisonnent avec l’âge et finissent par noircir</item>
+        <item>Prairies à hygrophores, dunes, bords de routes · été et automne</item>
+    </string-array>
+    <string name="myco_conica_note">Toxique : la DGfM le liste pour un syndrome gastro-intestinal. Wikipédia (en) dit que sa comestibilité est inconnue et qu’il peut être vénéneux, en citant Arora : les intoxications signalées viennent peut-être d’autres espèces, et il peut causer des effets légers comme des étourdissements. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM. Le statut le plus prudent est retenu.</string>
+    <string name="myco_l_golden_warty_cap">Chapeau jaune d’or, plaques blanches</string>
+    <string name="myco_l_purple_brown_cap">Chapeau brun pourpré</string>
+    <string name="myco_l_ring_grey_violet">Anneau gris violet</string>
+    <string name="myco_l_ring_thin_drooping">Anneau mince et retombant</string>
+    <string name="myco_l_grey_brown_pale_margin_cap">Chapeau gris brun, marge plus pâle</string>
+    <string name="myco_l_club_stem">Pied en massue</string>
+    <string name="myco_l_beige_velvet_cap">Chapeau beige gris, velouté</string>
+    <string name="myco_l_watery_milk">Lait aqueux et incolore</string>
+    <string name="myco_l_grey_olive_fibrous_cap">Chapeau gris olive, fibrilleux</string>
+    <string name="myco_l_broad_gills">Lames larges et profondes</string>
+    <string name="myco_l_pale_grey_stem">Pied gris pâle</string>
+    <string name="myco_l_red_brown_cap">Chapeau brun rougeâtre</string>
+    <string name="myco_l_spindle_grooved_stem">Pied en fuseau, sillonné</string>
+    <string name="myco_l_conical_waxy_cap">Chapeau conique, jaune à écarlate</string>
+    <string name="myco_l_waxy_pale_gills">Lames cireuses et pâles</string>
+    <string name="myco_l_turns_black">Noircit avec l’âge</string>
+    <string name="myco_g_cloudy_title">Clitocybe nébuleux, ou Ampulloclitocybe clavipes ?</string>
+    <string name="myco_g_cloudy_evidence">Wikipédia, DGfM</string>
+    <string-array name="myco_g_cloudy_points">
+        <item>Ampulloclitocybe clavipes : un pied nettement bulbeux en massue, des lames très décurrentes, un chapeau gris brun, souvent olivâtre. Clitocybe nébuleux : plus sombre dans l’ensemble (Wikipédia, en).</item>
+        <item>Ampulloclitocybe clavipes est inoffensif sans alcool et donne une réaction de rougeur avec ; le clitocybe nébuleux est jugé de façon inégale, la DGfM notant un soupçon de cancérogénicité ou de mutagénicité.</item>
+        <item>Aucune des deux fiches ne dit de la manger.</item>
     </string-array>
 </resources>

@@ -169,6 +169,7 @@
         <item>In 2022, two deaths after a deadly amanita was taken for a field mushroom or a fallow-field agaric.</item>
         <item>Button mushroom, wild form: grey-brown scaly cap, gills pink then brown, thick narrow ring. Wikipedia names deadly amanitas (a volva, pure white gills) and the yellow stainer (phenol smell, yellowing) among its look-alikes.</item>
         <item>Spring amanita, deadly: Bulliard warned in 1780 that it could be taken for the field mushroom. White gills, ring and sac-like volva give it away.</item>
+        <item>Inky mushroom: dark grey-brown scales, a yellowing cap and stem base, and a strong smell of phenol or ink; toxic, like the yellow stainer.</item>
     </string-array>
     <string name="myco_g_morel_title">Morel, or false morel?</string>
     <string name="myco_g_morel_evidence">1991 decree</string>
@@ -179,12 +180,13 @@
         <item>The morel is always eaten cooked. The false morel may not be sold in France.</item>
     </string-array>
     <string name="myco_g_amanita_title">Blusher, or not?</string>
-    <string name="myco_g_amanita_evidence">Classic confusion</string>
+    <string name="myco_g_amanita_evidence">Classic confusion, Wikipedia</string>
     <string-array name="myco_g_amanita_points">
         <item>Blusher: flesh and gills turn red when damaged. Panther cap: white flesh that never changes.</item>
         <item>Blusher: ring striate on top. Panther cap: smooth ring.</item>
         <item>Panther cap: sharp-edged bulb topped with rings; pure white warts on dark brown, striate margin.</item>
         <item>Fly agaric: red cap, white gills and stem. Washed by rain, it resembles the Caesar’s mushroom, whose gills and stem are yellow.</item>
+        <item>Jonquil amanita: yellow, with white plaques, a fragile ring and a small volva rim; toxic, with the same symptoms as the panther cap and the fly agaric (Wikipedia).</item>
     </string-array>
     <string name="myco_g_oronge_title">Caesar’s mushroom, or not?</string>
     <string name="myco_g_oronge_evidence">ANSES 2022</string>
@@ -230,12 +232,13 @@
         <item>Shaggy: safe with alcohol, but eat it young and fast, white when cut.</item>
     </string-array>
     <string name="myco_g_woodtuft_title">Sheathed woodtuft, or funeral bell?</string>
-    <string name="myco_g_woodtuft_evidence">Belgian poison centre</string>
+    <string name="myco_g_woodtuft_evidence">Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_woodtuft_points">
         <item>Woodtuft: the cap dries from the centre outward, pleasant smell. Funeral bell, deadly: from the rim inward, floury smell.</item>
         <item>Scales below the ring are not enough: the funeral bell can have some too.</item>
         <item>Sulphur tuft: sulphur yellow, gills yellow then green, very bitter. Toxic.</item>
         <item>Honey fungus: also in tufts on stumps and roots; ANSES links it to digestive trouble, even after cooking.</item>
+        <item>Spindle shank: in clumps on oak stumps, but a ringless, grooved, spindle-shaped stem; Wikipedia (fr) says beginners may take it for a pholiota, a hypholoma or an honey fungus. Toxic (DGfM).</item>
     </string-array>
     <string name="myco_g_greenforms_title">Green death cap, or not?</string>
     <string name="myco_g_greenforms_evidence">Belgian poison centre, Wikipedia</string>
@@ -245,6 +248,7 @@
         <item>Yellow knight: yellow gills and stem, no ring, no volva; it is no longer eaten.</item>
         <item>The green form of the death cap is mistaken for a russula or a green tricholoma.</item>
         <item>False death cap: lemon-yellow cap with patches, bulb with a rim, smell of raw potato. Wikipedia says its main danger is its likeness to the death cap.</item>
+        <item>Porphyry amanita: brown to purplish cap, grey-violet ring, smell of raw potato; Wikipedia (en) says it is easily mistaken for the death cap and resembles the false death cap.</item>
     </string-array>
     <string name="myco_g_whiteforms_title">All white, but which one?</string>
     <string name="myco_g_whiteforms_evidence">Belgian poison centre, Wikipedia</string>
@@ -2151,5 +2155,118 @@
         <item>Birch bolete: tan to dark brown cap, whitish flesh almost unchanging. Orange birch bolete: ochre-orange cap, flesh turning grey-violet, stem covered with dense black tufts.</item>
         <item>Both grow under birch and have a stem covered with dark scales.</item>
         <item>Both must be well cooked: raw or undercooked rough-stemmed boletes upset the stomach (Wikipedia, fr). Other rough-stemmed boletes exist, and the sources read give no simple rule to separate them all.</item>
+    </string-array>
+    <string name="myco_gemmata_name">Jonquil amanita</string>
+    <string name="myco_gemmata_alt">Amanite jonquille</string>
+    <string name="myco_gemmata_latin" translatable="false">Amanita gemmata</string>
+    <string-array name="myco_gemmata_traits">
+        <item>Cap 2.5 to 12 cm, creamy to golden yellow, sticky when moist, with soft white plaques that rain washes off</item>
+        <item>Gills white, closely spaced</item>
+        <item>Stem 4 to 12 cm, pale, with a flimsy ring that is easily lost</item>
+        <item>White volva forming a small free rim at the base</item>
+        <item>Sandy, slightly acid soil, near conifers · spring to autumn</item>
+    </string-array>
+    <string name="myco_gemmata_note">Toxic: the DGfM lists it as suspect, with the panther cap syndrome, and Wikipedia (en) gives ibotenic acid and muscimol, with symptoms within three hours (hallucinations, nausea, vomiting, stomach pain), severe cases being extremely rare. Wikipedia (fr) says it causes the same symptoms as the panther cap and the fly agaric. Wikipedia (en) names the false death cap, Amanita fulva (the tawny grisette) and the panther cap as look-alikes; its cap is brighter yellow than the first.</string>
+    <string name="myco_porphyria_name">Grey veiled amanita</string>
+    <string name="myco_porphyria_alt">Porphyry amanita</string>
+    <string name="myco_porphyria_latin" translatable="false">Amanita porphyria</string>
+    <string-array name="myco_porphyria_traits">
+        <item>Cap 4 to 10 cm, brown with a purplish or greyish tint, sometimes with grey veil patches</item>
+        <item>Gills whitish, free, darkening when bruised</item>
+        <item>Stem 5 to 12 cm, bulbous base, with a fragile grey-violet or blackened ring</item>
+        <item>Base sometimes in a white membranous volva</item>
+        <item>White flesh with a smell of raw potato or radish</item>
+        <item>Poor soil, mostly under conifers (spruce) · summer to autumn</item>
+    </string-array>
+    <string name="myco_porphyria_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, notes bufotenin and warns against eating it raw; Wikipedia (en) calls it inedible. It looks like the false death cap in shape and smell but differs in cap colour and ring colour, and is easily mistaken for the death cap, which is far more poisonous (Wikipedia, en). It can also be taken for the panther cap. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_moelleri_name">Inky mushroom</string>
+    <string name="myco_moelleri_alt">Agaric pintade</string>
+    <string name="myco_moelleri_latin" translatable="false">Agaricus moelleri</string>
+    <string-array name="myco_moelleri_traits">
+        <item>Cap 5 to 15 cm, covered in small dark grey to grey-brown scales on a pale background, yellowing when touched</item>
+        <item>Gills free, grey-pink when young, then brown</item>
+        <item>Stem 6 to 12 cm, clearly bulbous, with a thin white ring; the base yellows strongly when handled</item>
+        <item>White flesh, chrome-yellow at the base of the stem; strong smell of phenol, iodoform or ink</item>
+        <item>Broadleaf woods, mostly on chalky soil, also parks and meadows</item>
+    </string-array>
+    <string name="myco_moelleri_note">Toxic: Wikipedia (fr) says so plainly, the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (en) says that like the yellow stainer it upsets some people and not others. The yellowing and the carbolic smell are what warn. It is not the field mushroom: see the group.</string>
+    <string name="myco_clavipes_name">Club foot</string>
+    <string name="myco_clavipes_alt">Club-footed clitocybe</string>
+    <string name="myco_clavipes_latin" translatable="false">Ampulloclitocybe clavipes</string>
+    <string-array name="myco_clavipes_traits">
+        <item>Cap 4 to 8 cm, convex then flat or dished, grey-brown sometimes olive, paler margin</item>
+        <item>Gills cream-yellow, strongly running down the stem, some forked</item>
+        <item>Stem 3 to 7 cm, silky, the colour of the cap, with a markedly bulbous, club-shaped base</item>
+        <item>Thick white flesh, slightly yellow at the base; faint, watery, sweetish smell</item>
+        <item>Conifer and broadleaf woods, especially beech · August to November</item>
+    </string-array>
+    <string name="myco_clavipes_note">Not recommended: never with alcohol. The DGfM lists it as harmless without alcohol and gives the coprine-type syndrome with it; Wikipedia (en) describes a reaction 5 to 10 minutes after drinking (flushing, throbbing in the head and neck, puffy hands) and says it is edible but unpalatable, some sources listing it inedible. There is no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM. Wikipedia (en) separates it from the clouded agaric by its club-shaped stem.</string>
+    <string name="myco_helvus_name">Fenugreek milkcap</string>
+    <string name="myco_helvus_alt">Lactaire à odeur d’érable</string>
+    <string name="myco_helvus_latin" translatable="false">Lactarius helvus</string>
+    <string-array name="myco_helvus_traits">
+        <item>Cap 4 to 15 cm, velvety, funnel-shaped with age, beige to light grey at the margin and darker at the centre</item>
+        <item>Gills cream then ochre-yellow, running down the stem</item>
+        <item>Stem 3 to 9 cm, hollow, whitish then ochre or pink-tinged</item>
+        <item>Watery, colourless milk; white or beige flesh, often pink-tinged</item>
+        <item>Strong smell of fenugreek, lovage or celery; mild taste</item>
+        <item>Wet places, often among sphagnum, near spruce, pine and birch · late summer and autumn</item>
+    </string-array>
+    <string name="myco_helvus_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (en) calls it mildly toxic raw, with nausea, vomiting, vertigo and chills within 30 minutes, the toxins being destroyed by thorough boiling; 418 people were poisoned near Leipzig in October 1949. The dried mushroom is used as a spice in small amounts. The French Wikipedia page is a stub: the description comes from Wikipedia (en).</string>
+    <string name="myco_platyphylla_name">Broadgilled collybia</string>
+    <string name="myco_platyphylla_alt">Collybie à lames larges</string>
+    <string name="myco_platyphylla_latin" translatable="false">Megacollybia platyphylla</string>
+    <string-array name="myco_platyphylla_traits">
+        <item>Cap 5 to 12 cm, ash-grey, olive or grey-brown, darker at the centre, with radial fibrils, often split at the edge</item>
+        <item>Gills broad and deep, whitish then cream, nearly free, edges serrated</item>
+        <item>Stem 5 to 12 cm, fibrous and tough, paler than the cap, with white cords at the base</item>
+        <item>Thin, whitish flesh; mild to slightly bitter taste, no distinctive smell</item>
+        <item>Rotting broadleaf wood, also beechnuts in the soil · late spring to autumn</item>
+    </string-array>
+    <string name="myco_platyphylla_note">Toxic: the DGfM lists it for a gastrointestinal syndrome, and Wikipedia (fr) says it was eaten in Italy, mixed with other species, despite its bitterness, and is now considered toxic. Wikipedia (fr) names look-alikes among Pluteus cervinus, Hymenopellis radicata and Tricholoma portentosum; the thin flesh, broad soft gills and white cords help set it apart. There is no English page read: the text comes from Wikipedia (fr) and the DGfM.</string>
+    <string name="myco_fusipes_name">Spindle shank</string>
+    <string name="myco_fusipes_alt">Collybie à pied en fuseau</string>
+    <string name="myco_fusipes_latin" translatable="false">Gymnopus fusipes</string>
+    <string-array name="myco_fusipes_traits">
+        <item>Cap 3 to 10 cm, convex to conical, slightly nippled, reddish-brown and paler at the centre</item>
+        <item>Gills spaced, whitish-pink, staining rusty red</item>
+        <item>Stem 8 to 14 cm, swollen in the middle and tapering at both ends, rooting, deeply grooved, reddish-brown to blackish below, no ring</item>
+        <item>Firm whitish flesh, mild sweet taste</item>
+        <item>In clumps on broadleaf stumps, mostly oak · summer to autumn</item>
+    </string-array>
+    <string name="myco_fusipes_note">Toxic: the DGfM lists it for a gastrointestinal syndrome. The sources read disagree: Wikipedia (fr) calls it fairly good if only very young caps are eaten, with the tough stem removed, and warns that late harvests cause indigestion; Wikipedia (en) says most authors do not think it worth a meal and that old ones risk gastro-enteritis. The most prudent status, the DGfM one, is kept. Wikipedia (fr) says beginners may take it for a pholiota, a hypholoma or an honey fungus; it has no ring and a grooved spindle stem.</string>
+    <string name="myco_conica_name">Blackening waxcap</string>
+    <string name="myco_conica_alt">Witch’s hat</string>
+    <string name="myco_conica_latin" translatable="false">Hygrocybe conica</string>
+    <string-array name="myco_conica_traits">
+        <item>Cap up to 10 cm, narrowly conical then umbonate and often lobed, yellow to orange or scarlet, viscid when young</item>
+        <item>Gills waxy, white to pale yellow or greyish</item>
+        <item>Stem up to 20 cm, fibrillose, yellow to orange-red, whitish at the base, no ring</item>
+        <item>Yellowish flesh; every part greys with age and finally turns black</item>
+        <item>Waxcap grassland, dunes, road verges · summer and autumn</item>
+    </string-array>
+    <string name="myco_conica_note">Toxic: the DGfM lists it for a gastrointestinal syndrome. Wikipedia (en) says its edibility is unknown and that it may be poisonous, quoting Arora: reported poisonings may come from other species, and it may cause minor effects such as lightheadedness. There is no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM. The most prudent status is kept.</string>
+    <string name="myco_l_golden_warty_cap">Golden-yellow cap, white plaques</string>
+    <string name="myco_l_purple_brown_cap">Purplish-brown cap</string>
+    <string name="myco_l_ring_grey_violet">Grey-violet ring</string>
+    <string name="myco_l_ring_thin_drooping">Thin, drooping ring</string>
+    <string name="myco_l_grey_brown_pale_margin_cap">Grey-brown cap, paler margin</string>
+    <string name="myco_l_club_stem">Club-shaped stem</string>
+    <string name="myco_l_beige_velvet_cap">Beige-grey, velvety cap</string>
+    <string name="myco_l_watery_milk">Watery, colourless milk</string>
+    <string name="myco_l_grey_olive_fibrous_cap">Grey-olive, fibrous cap</string>
+    <string name="myco_l_broad_gills">Broad, deep gills</string>
+    <string name="myco_l_pale_grey_stem">Pale grey stem</string>
+    <string name="myco_l_red_brown_cap">Reddish-brown cap</string>
+    <string name="myco_l_spindle_grooved_stem">Spindle-shaped, grooved stem</string>
+    <string name="myco_l_conical_waxy_cap">Conical cap, yellow to scarlet</string>
+    <string name="myco_l_waxy_pale_gills">Waxy, pale gills</string>
+    <string name="myco_l_turns_black">Turns black with age</string>
+    <string name="myco_g_cloudy_title">Clouded agaric, or club foot?</string>
+    <string name="myco_g_cloudy_evidence">Wikipedia, DGfM</string>
+    <string-array name="myco_g_cloudy_points">
+        <item>Club foot: a markedly bulbous, club-shaped stem, deeply running gills, a grey-brown cap, often olive-tinged. Clouded agaric: darker overall (Wikipedia, en).</item>
+        <item>The club foot is harmless without alcohol and causes a flushing reaction with it; the clouded agaric is judged inconsistently, the DGfM noting a suspicion of carcinogenicity or mutagenicity.</item>
+        <item>Neither has a card that says to eat it.</item>
     </string-array>
 </resources>
