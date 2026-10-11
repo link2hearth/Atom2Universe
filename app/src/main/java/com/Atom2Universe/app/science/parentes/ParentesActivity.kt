@@ -4,6 +4,9 @@ import android.graphics.Typeface
 import android.content.Intent
 import com.Atom2Universe.app.science.botany.BotanyActivity
 import com.Atom2Universe.app.science.botany.BotanyLifeIndex
+import com.Atom2Universe.app.science.bestiary.AnimalCatalog
+import com.Atom2Universe.app.science.bestiary.BestiaryActivity
+import com.Atom2Universe.app.science.bestiary.BestiaryLifeIndex
 import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.coroutines.Job
 import android.os.Bundle
@@ -34,6 +37,7 @@ class ParentesActivity : ThemedActivity() {
     private val palette by lazy { SciencePalette(this) }
     private var repository: ParentesRepository? = null
     private val repo get() = requireNotNull(repository)
+    private var bestiaryIndex: BestiaryLifeIndex? = null
     private var focus = ""
     private var selected = ""
     private var first = ""
@@ -95,6 +99,7 @@ class ParentesActivity : ThemedActivity() {
             loaded.onSuccess { result ->
                 loading.visibility = View.GONE
                 repository = result
+                bestiaryIndex = BestiaryLifeIndex(result.tree, AnimalCatalog.species.associate { it.id to it.scientific })
                 focus = focus.takeIf { it in repo.tree.nodes } ?: repo.tree.root
                 selected = selected.takeIf { it in repo.tree.nodes } ?: focus
                 fun defaultSpecies(name: String) = repo.tree.species.first { it.scientific == name }.id
@@ -343,6 +348,7 @@ class ParentesActivity : ThemedActivity() {
             card.addView(heading)
             card.addView(label(if(repo.tree.nodes.getValue(selected).species) repo.tree.nodes.getValue(selected).scientific else article(selected),14f))
             botanyButton(selected)?.let{card.addView(it)}
+            bestiaryButton(selected)?.let{card.addView(it)}
         }
         cardScroll.post { cardScroll.scrollTo(0,0) }
     }
@@ -399,6 +405,11 @@ class ParentesActivity : ThemedActivity() {
         val node = repo.tree.nodes.getValue(id)
         if (node.scientific.isNotEmpty()) body.addView(label(node.scientific,16f,true))
         body.addView(label(article(id)))
+        bestiaryIndex?.forNode(id)?.let { speciesId ->
+            AnimalCatalog.byId[speciesId]?.let { animal ->
+                body.addView(label(getString(animal.description)))
+            }
+        }
         PlantGroupKnowledge.append(this,body,palette,node.scientific,includeDescription=false)
         val lineage = repo.tree.ancestors(id).drop(1).filter { it in repo.groups }.reversed()
         body.addView(label(getString(R.string.pt_position,lineage.joinToString(getString(R.string.pt_separator)) { repo.name(this,it) })))
@@ -424,8 +435,19 @@ class ParentesActivity : ThemedActivity() {
         if (node.conflicts.isNotEmpty()) body.addView(label(getString(R.string.pt_conflicts)))
         if (repo.tree.children[id].orEmpty().size > 2) body.addView(label(getString(R.string.pt_polytomy)))
         botanyButton(id)?.let{body.addView(it)}
+        bestiaryButton(id)?.let{body.addView(it)}
         addDatingLink(body, id)
         dialog(repo.name(this,id),body)
+    }
+
+    private fun bestiaryButton(id: String): View? {
+        val species = bestiaryIndex?.forNode(id) ?: return null
+        return button(getString(R.string.be_open_profile)) {
+            startActivity(Intent(this, BestiaryActivity::class.java)
+                .putExtra(ScienceNavigation.EXTRA_FROM_MODULE, true)
+                .putExtra(BestiaryActivity.EXTRA_SPECIES_ID, species)
+                .putExtra(BestiaryActivity.EXTRA_LIFE_NODE, id))
+        }
     }
 
     private fun botanyButton(id:String):View? {

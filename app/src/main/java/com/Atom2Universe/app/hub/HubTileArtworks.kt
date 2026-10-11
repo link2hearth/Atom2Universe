@@ -41,6 +41,8 @@ object HubTileArtworks {
             com.Atom2Universe.app.science.mycology.MycologyHubTileDrawable::class,
         com.Atom2Universe.app.science.botany.BotanyActivity::class.java.name to
             com.Atom2Universe.app.science.botany.BotanyHubTileDrawable::class,
+        com.Atom2Universe.app.science.bestiary.BestiaryActivity::class.java.name to
+            com.Atom2Universe.app.science.bestiary.BestiaryHubTileDrawable::class,
         com.Atom2Universe.app.audio.AudioSubHubActivity::class.java.name to AudioOverviewHubTileDrawable::class,
         com.Atom2Universe.app.games.GamesActivity::class.java.name to GamesOverviewHubTileDrawable::class,
         com.Atom2Universe.app.creative.CreativeHubActivity::class.java.name to CreativeOverviewHubTileDrawable::class,

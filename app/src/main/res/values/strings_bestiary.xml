@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="be_title">Bestiary</string>
+    <string name="be_hub">Discover animals, illustrated profiles and their place in the living tree</string>
+    <string name="be_intro">A naturalist’s notebook: explore animals, learn their distinctive features and follow their branches in the living tree.</string>
+    <string name="be_back">Back</string>
+    <string name="be_close">Close profile</string>
+    <string name="be_search">Search by common or scientific name</string>
+    <string name="be_all">All animals</string>
+    <string name="be_mammals">Mammals</string>
+    <string name="be_birds">Birds</string>
+    <string name="be_reptiles">Reptiles</string>
+    <string name="be_amphibians">Amphibians</string>
+    <string name="be_fish">Fish</string>
+    <string name="be_invertebrates">Invertebrates</string>
+    <string name="be_count">%1$d of %2$d profiles</string>
+    <string name="be_empty">No animals match this search.</string>
+    <string name="be_tree_loading">Loading links to the living tree…</string>
+    <string name="be_tree_retry">Retry loading the living tree links</string>
+    <string name="be_unavailable">This animal does not have a bestiary profile yet.</string>
+    <string name="be_open_profile">Open illustrated bestiary profile</string>
+    <string name="be_open_tree">Find this animal in the living tree</string>
+    <string name="be_overview">Portrait</string>
+    <string name="be_identification">Recognising the animal</string>
+    <string name="be_habitat">Range and habitat</string>
+    <string name="be_diet">Diet</string>
+    <string name="be_behavior">Behaviour and life cycle</string>
+    <string name="be_classification">Position in the living tree</string>
+    <string name="be_sources">Sources</string>
+    <string name="be_source_note">Species account consulted for this profile. Taxonomic placement follows the archive used by the living tree. Published accounts may use an older classification.</string>
+    <string name="be_plate_note">Natural history illustration. Sex, age and seasonal plumage can change an animal’s appearance. See the identification notes.</string>
+    <string name="be_plate_accessibility">Illustration of %1$s. %2$s</string>
+    <string name="be_no_browser">No browser is available to open this source.</string>
+    <string name="best_plate_loading">Loading illustration…</string>
+    <string name="best_plate_unavailable">Illustration unavailable</string>
+</resources>

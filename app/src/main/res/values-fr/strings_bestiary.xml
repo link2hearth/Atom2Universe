@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="be_title">Bestiaire</string>
+    <string name="be_hub">Découvre les animaux, leurs fiches illustrées et leur place dans l’arbre du vivant</string>
+    <string name="be_intro">Un carnet naturaliste : explore les animaux, apprends leurs caractères distinctifs et retrouve leurs branches dans l’arbre du vivant.</string>
+    <string name="be_back">Retour</string>
+    <string name="be_close">Fermer la fiche</string>
+    <string name="be_search">Rechercher par nom courant ou scientifique</string>
+    <string name="be_all">Tous les animaux</string>
+    <string name="be_mammals">Mammifères</string>
+    <string name="be_birds">Oiseaux</string>
+    <string name="be_reptiles">Reptiles</string>
+    <string name="be_amphibians">Amphibiens</string>
+    <string name="be_fish">Poissons</string>
+    <string name="be_invertebrates">Invertébrés</string>
+    <string name="be_count">%1$d fiches sur %2$d</string>
+    <string name="be_empty">Aucun animal ne correspond à cette recherche.</string>
+    <string name="be_tree_loading">Chargement des liens avec l’arbre du vivant…</string>
+    <string name="be_tree_retry">Réessayer de charger les liens avec l’arbre du vivant</string>
+    <string name="be_unavailable">Cet animal ne possède pas encore de fiche dans le bestiaire.</string>
+    <string name="be_open_profile">Ouvrir la fiche illustrée du bestiaire</string>
+    <string name="be_open_tree">Retrouver cet animal dans l’arbre du vivant</string>
+    <string name="be_overview">Portrait</string>
+    <string name="be_identification">Reconnaître l’animal</string>
+    <string name="be_habitat">Répartition et habitat</string>
+    <string name="be_diet">Alimentation</string>
+    <string name="be_behavior">Comportement et cycle de vie</string>
+    <string name="be_classification">Place dans l’arbre du vivant</string>
+    <string name="be_sources">Sources</string>
+    <string name="be_source_note">Notice d’espèce consultée pour cette fiche. La position taxonomique suit l’archive utilisée par l’arbre du vivant. Les publications peuvent employer une classification plus ancienne.</string>
+    <string name="be_plate_note">Illustration naturaliste. Le sexe, l’âge et le plumage saisonnier peuvent modifier l’apparence. Lis les notes d’identification.</string>
+    <string name="be_plate_accessibility">Illustration de %1$s. %2$s</string>
+    <string name="be_no_browser">Aucun navigateur disponible pour ouvrir cette source.</string>
+    <string name="best_plate_loading">Chargement de l’illustration…</string>
+    <string name="best_plate_unavailable">Illustration indisponible</string>
+</resources>
