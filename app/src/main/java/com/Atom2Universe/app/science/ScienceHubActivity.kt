@@ -74,6 +74,14 @@ class ScienceHubActivity : BaseHubActivity() {
             activityClass = com.Atom2Universe.app.science.mycology.MycologyActivity::class.java
         ),
         HubTile(
+            id = "botany",
+            titleRes = R.string.bot_title,
+            descriptionRes = R.string.bot_hub,
+            iconRes = R.drawable.ic_science,
+            defaultColorRes = R.color.science_tile_botany,
+            activityClass = com.Atom2Universe.app.science.botany.BotanyActivity::class.java
+        ),
+        HubTile(
             id = "periodic_table",
             titleRes = R.string.hub_periodic_title,
             descriptionRes = R.string.hub_periodic_desc,

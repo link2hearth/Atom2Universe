@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bot_plate_loading">Drawing…</string>
+    <string name="bot_plate_unavailable">Illustration unavailable</string>
+    <string name="bot_title">Botanical atlas</string>
+    <string name="bot_hub">Trees, shrubs and herbs: observe, compare, understand</string>
+    <string name="bot_back">Back</string>
+    <string name="bot_close">Close</string>
+    <string name="bot_about">About and references</string>
+    <string name="bot_explore">Explore</string>
+    <string name="bot_compare">Compare</string>
+    <string name="bot_families">Families</string>
+    <string name="bot_learn">Learn</string>
+    <string name="bot_all">All</string>
+    <string name="bot_search">Common name, scientific name, synonym or family…</string>
+    <string name="bot_sort">Sort species</string>
+    <string name="bot_sort_name">Common name</string>
+    <string name="bot_sort_latin">Scientific name</string>
+    <string name="bot_sort_family">Family</string>
+    <string name="bot_sort_height">Increasing height</string>
+    <string name="bot_sort_flowering">Start of flowering</string>
+    <string name="bot_filters">Observation filters</string>
+    <string name="bot_filters_count">Observation filters · %1$d</string>
+    <string name="bot_filter_help">Multiple choices on one line: either matches. Between lines: all criteria must match. Leave unobserved features unset.</string>
+    <string name="bot_reset">Clear all</string>
+    <string name="bot_empty">No species in this atlas matches. Try removing a filter: the actual flora is much larger.</string>
+    <string name="bot_result_count">%1$d species</string>
+    <string name="bot_section_trees">Trees</string>
+    <string name="bot_section_shrubs">Shrubs and dwarf shrubs</string>
+    <string name="bot_section_herbs">Herbaceous plants</string>
+    <string name="bot_section_trees_desc">Observe the habit, twigs, leaves and reproductive structures.</string>
+    <string name="bot_section_shrubs_desc">Explore hedges, scrub and heathland, from hazel to heathers.</string>
+    <string name="bot_section_herbs_desc">Meadow and woodland flowers, rosettes and grasses.</string>
+    <string name="bot_port_note">These sections describe plant growth forms. Botanical families describe their relationships.</string>
+    <string name="bot_family">Family</string>
+    <string name="bot_genus">Genus: %1$s</string>
+    <string name="bot_taxonomy">%1$s → %2$s → %3$s</string>
+    <string name="bot_height">Typical height</string>
+    <string name="bot_height_cm">%1$d–%2$d cm</string>
+    <string name="bot_height_m">%1$s–%2$s m</string>
+    <string name="bot_scale_cm">%1$s cm</string>
+    <string name="bot_scale_m">%1$s m</string>
+    <string name="bot_plate_note">Simplified diagram; indicative scale for the main subject. Twig and cross-section insets are not to scale. Dimensions and colours vary in nature.</string>
+    <string name="bot_compare_note">Compare the same organ. Each plate has its own scale; magnification may differ.</string>
+    <string name="bot_marks">Labels</string>
+    <string name="bot_traits">Features to observe</string>
+    <string name="bot_ecology">Habitats and distribution</string>
+    <string name="bot_calendar">Indicative calendar</string>
+    <string name="bot_calendar_note">Mainland France: approximate periods varying with region, elevation and year. For conifers, flowering means pollination and fruiting means cone maturity.</string>
+    <string name="bot_bloom">Flowering / pollination</string>
+    <string name="bot_fruiting">Ripe fruits / cones</string>
+    <string name="bot_month_on">%1$s: %2$s</string>
+    <string name="bot_calendar_cell">%1$s · %2$s · %3$s</string>
+    <string name="bot_present">typical period</string>
+    <string name="bot_absent">outside typical period</string>
+    <string name="bot_related">Compare with</string>
+    <string name="bot_evergreen">Evergreen</string>
+    <string name="bot_deciduous">Deciduous / seasonal</string>
+    <string name="bot_foliage">Foliage persistence</string>
+    <string name="bot_leaf_shape">Leaf shape</string>
+    <string name="bot_leaf_margin">Leaf margin</string>
+    <string name="bot_leaf_arrangement">Leaf arrangement</string>
+    <string name="bot_flower_color">Main flower colour</string>
+    <string name="bot_flower_shape">Flowers and inflorescences</string>
+    <string name="bot_fruit_shape">Fruits and cones</string>
+    <string name="bot_habitat">Habitat</string>
+    <string name="bot_month">Flowering / pollination month</string>
+    <string name="bot_view_habit">Habit</string>
+    <string name="bot_view_leaf">Leaf and twig</string>
+    <string name="bot_view_flower">Flowers</string>
+    <string name="bot_view_fruit">Fruits</string>
+    <string name="bot_leaf_oval">Oval</string>
+    <string name="bot_leaf_lance">Lanceolate</string>
+    <string name="bot_leaf_heart">Heart-shaped</string>
+    <string name="bot_leaf_triangle">Triangular</string>
+    <string name="bot_leaf_round">Rounded</string>
+    <string name="bot_leaf_oak">Pinnately lobed</string>
+    <string name="bot_leaf_maple">Palmately lobed</string>
+    <string name="bot_leaf_pinnate">Pinnately compound</string>
+    <string name="bot_leaf_palmate">Palmately compound</string>
+    <string name="bot_leaf_trifoliate">Three leaflets</string>
+    <string name="bot_leaf_divided">Deeply divided</string>
+    <string name="bot_leaf_needle">Needle</string>
+    <string name="bot_leaf_scale">Small scale</string>
+    <string name="bot_leaf_linear">Linear</string>
+    <string name="bot_margin_entire">Entire</string>
+    <string name="bot_margin_serrate">Toothed</string>
+    <string name="bot_margin_lobed">Lobed / cut</string>
+    <string name="bot_margin_spiny">Spiny</string>
+    <string name="bot_arr_alternate">Alternate</string>
+    <string name="bot_arr_opposite">Opposite</string>
+    <string name="bot_arr_whorled">Whorled</string>
+    <string name="bot_arr_rosette">Basal rosette</string>
+    <string name="bot_arr_fascicle">In bundles</string>
+    <string name="bot_fl_catkin">Catkins</string>
+    <string name="bot_fl_conifer">Pollen cones</string>
+    <string name="bot_fl_star">Spreading petals</string>
+    <string name="bot_fl_cup">Cup-shaped flower</string>
+    <string name="bot_fl_daisy">Head with ray florets</string>
+    <string name="bot_fl_thistle">Head with tubular florets</string>
+    <string name="bot_fl_umbel">Compound umbel</string>
+    <string name="bot_fl_corymb">Flat-topped cluster</string>
+    <string name="bot_fl_pea">Pea flower</string>
+    <string name="bot_fl_bell">Bell / tubular corolla</string>
+    <string name="bot_fl_lipped">Two-lipped corolla</string>
+    <string name="bot_fl_grass">Grass spikelets</string>
+    <string name="bot_fl_spike">Spike of small flowers</string>
+    <string name="bot_fl_panicle">Branched flower cluster</string>
+    <string name="bot_fl_apetalous">Flowers without petals</string>
+    <string name="bot_fr_acorn">Acorn and cup</string>
+    <string name="bot_fr_nut">Hazelnut and husk</string>
+    <string name="bot_fr_beech">Beechnuts and cup</string>
+    <string name="bot_fr_chestnut">Chestnuts and burr</string>
+    <string name="bot_fr_horsechestnut">Capsule and conker</string>
+    <string name="bot_fr_double_samara">Paired samaras</string>
+    <string name="bot_fr_samara">Winged dry fruit</string>
+    <string name="bot_fr_cone">Cone / woody structure</string>
+    <string name="bot_fr_drupe">Drupe</string>
+    <string name="bot_fr_pome">Pome</string>
+    <string name="bot_fr_hip">Rose hip</string>
+    <string name="bot_fr_pod">Pod</string>
+    <string name="bot_fr_capsule">Capsule</string>
+    <string name="bot_fr_achene">Achenes / small dry fruits</string>
+    <string name="bot_fr_grain">Caryopsis</string>
+    <string name="bot_fr_schizocarp">Two mericarps</string>
+    <string name="bot_hab_wood">Woods and forests</string>
+    <string name="bot_hab_hedge">Hedges and woodland edges</string>
+    <string name="bot_hab_meadow">Meadows and grassland</string>
+    <string name="bot_hab_wet">Wet habitats</string>
+    <string name="bot_hab_heath">Heathland and acid soils</string>
+    <string name="bot_hab_mountain">Mountains</string>
+    <string name="bot_hab_disturbed">Paths, disturbed ground and fields</string>
+    <string name="bot_hab_park">Parks and plantations</string>
+    <string name="bot_color_white">White / cream</string>
+    <string name="bot_color_yellow">Yellow</string>
+    <string name="bot_color_pink">Pink</string>
+    <string name="bot_color_purple">Purple</string>
+    <string name="bot_color_blue">Blue</string>
+    <string name="bot_color_red">Red</string>
+    <string name="bot_color_green">Green / inconspicuous</string>
+    <string name="bot_about_text">An educational atlas of plants found in mainland France, wild or commonly planted. Original code-drawn illustrations highlight selected features; they do not show every variation within a species. Comparison groups explore morphological similarities and are not exhaustive lists of lookalikes. Families and names can change with research.</string>
+    <string name="bot_about_scope">The atlas supports observation and learning. It cannot on its own confirm an identification or establish that a plant is safe to eat.</string>
+    <string name="bot_references">References and further reading</string>
+    <string name="bot_sources_species">Look up this species in the references</string>
+    <string name="bot_source_powo">Kew — Plants of the World Online: names, synonyms and distribution</string>
+    <string name="bot_source_tela">Tela Botanica — educational resources and floras</string>
+    <string name="bot_source_onf">ONF — recognising trees</string>
+    <string name="bot_source_botascopia">Botascopia — botanical descriptions (Inria and partners)</string>
+    <string name="bot_lookup_powo">Kew: %1$s</string>
+    <string name="bot_lookup_tela">Tela Botanica: %1$s</string>
+    <string name="bot_taxon_reference">Botanical description: %1$s</string>
+    <string name="bot_no_browser">No application can open this link.</string>
+    <string name="bot_learn_intro">Tap a concept to read its explanation and inspect an atlas plate.</string>
+    <string name="bot_legend_format">%1$d · %2$s</string>
+    <string name="bot_plate_accessibility">%1$s — %2$s. %3$s</string>
+    <string name="bot_month_1">January</string>
+    <string name="bot_month_short_1">Jan</string>
+    <string name="bot_month_2">February</string>
+    <string name="bot_month_short_2">Feb</string>
+    <string name="bot_month_3">March</string>
+    <string name="bot_month_short_3">Mar</string>
+    <string name="bot_month_4">April</string>
+    <string name="bot_month_short_4">Apr</string>
+    <string name="bot_month_5">May</string>
+    <string name="bot_month_short_5">May</string>
+    <string name="bot_month_6">June</string>
+    <string name="bot_month_short_6">Jun</string>
+    <string name="bot_month_7">July</string>
+    <string name="bot_month_short_7">Jul</string>
+    <string name="bot_month_8">August</string>
+    <string name="bot_month_short_8">Aug</string>
+    <string name="bot_month_9">September</string>
+    <string name="bot_month_short_9">Sep</string>
+    <string name="bot_month_10">October</string>
+    <string name="bot_month_short_10">Oct</string>
+    <string name="bot_month_11">November</string>
+    <string name="bot_month_short_11">Nov</string>
+    <string name="bot_month_12">December</string>
+    <string name="bot_month_short_12">Dec</string>
+    <string name="bot_family_Fagaceae" translatable="false">Fagaceae</string>
+    <string name="bot_family_Fagaceae_desc">Oaks, beeches and chestnuts: dry fruits associated with a cupule.</string>
+    <string name="bot_family_Betulaceae" translatable="false">Betulaceae</string>
+    <string name="bot_family_Betulaceae_desc">Birches, alders, hornbeams and hazels: unisexual flowers, often in catkins, and dry fruits.</string>
+    <string name="bot_family_Sapindaceae" translatable="false">Sapindaceae</string>
+    <string name="bot_family_Sapindaceae_desc">In this atlas: maples with opposite leaves and winged fruits, and horse chestnut with palmately compound leaves.</string>
+    <string name="bot_family_Oleaceae" translatable="false">Oleaceae</string>
+    <string name="bot_family_Oleaceae_desc">In this atlas: ash and privet, both with opposite leaves but very different fruits.</string>
+    <string name="bot_family_Malvaceae" translatable="false">Malvaceae</string>
+    <string name="bot_family_Malvaceae_desc">This family includes lindens: alternate leaves and a flower cluster associated with a long bract.</string>
+    <string name="bot_family_Rosaceae" translatable="false">Rosaceae</string>
+    <string name="bot_family_Rosaceae_desc">A diverse family: often five petals and many stamens; a wide range of fruit types.</string>
+    <string name="bot_family_Salicaceae" translatable="false">Salicaceae</string>
+    <string name="bot_family_Salicaceae_desc">In this atlas: aspen, with catkins and small hairy seeds.</string>
+    <string name="bot_family_Pinaceae" translatable="false">Pinaceae</string>
+    <string name="bot_family_Pinaceae_desc">Needle-bearing conifers with cones; ovules and seeds are not enclosed within an ovary.</string>
+    <string name="bot_family_Viburnaceae" translatable="false">Viburnaceae</string>
+    <string name="bot_family_Viburnaceae_desc">Elder and viburnum: opposite leaves and small flowers in broad clusters. Often called Adoxaceae in earlier works.</string>
+    <string name="bot_family_Cornaceae" translatable="false">Cornaceae</string>
+    <string name="bot_family_Cornaceae_desc">In this atlas: common dogwood, with curved leaf veins and four-petalled flowers.</string>
+    <string name="bot_family_Celastraceae" translatable="false">Celastraceae</string>
+    <string name="bot_family_Celastraceae_desc">In this atlas: spindle, with opposite leaves and pink capsules revealing orange seed coverings.</string>
+    <string name="bot_family_Aquifoliaceae" translatable="false">Aquifoliaceae</string>
+    <string name="bot_family_Aquifoliaceae_desc">In this atlas: holly, with leathery evergreen leaves and red fruits on female plants.</string>
+    <string name="bot_family_Buxaceae" translatable="false">Buxaceae</string>
+    <string name="bot_family_Buxaceae_desc">In this atlas: box, with small opposite leaves and inconspicuous flowers without petals.</string>
+    <string name="bot_family_Fabaceae" translatable="false">Fabaceae</string>
+    <string name="bot_family_Fabaceae_desc">The species shown have pea flowers and pods.</string>
+    <string name="bot_family_Ericaceae" translatable="false">Ericaceae</string>
+    <string name="bot_family_Ericaceae_desc">In this atlas: heather and bell heather, small woody plants of acid ground with reduced leaves.</string>
+    <string name="bot_family_Asteraceae" translatable="false">Asteraceae</string>
+    <string name="bot_family_Asteraceae_desc">What looks like a single flower is a head containing many small florets.</string>
+    <string name="bot_family_Papaveraceae" translatable="false">Papaveraceae</string>
+    <string name="bot_family_Papaveraceae_desc">In this atlas: common poppy, with four petals, many stamens and a capsule with pores.</string>
+    <string name="bot_family_Ranunculaceae" translatable="false">Ranunculaceae</string>
+    <string name="bot_family_Ranunculaceae_desc">In this atlas: meadow buttercup and lesser celandine, with yellow flowers, many stamens and many carpels.</string>
+    <string name="bot_family_Primulaceae" translatable="false">Primulaceae</string>
+    <string name="bot_family_Primulaceae_desc">In this atlas: cowslip, with a basal rosette and tubular flowers with five joined lobes.</string>
+    <string name="bot_family_Plantaginaceae" translatable="false">Plantaginaceae</string>
+    <string name="bot_family_Plantaginaceae_desc">A diverse family including foxgloves and plantains here; habit alone does not identify it.</string>
+    <string name="bot_family_Campanulaceae" translatable="false">Campanulaceae</string>
+    <string name="bot_family_Campanulaceae_desc">In this atlas: harebell, whose corolla has five fused petals.</string>
+    <string name="bot_family_Violaceae" translatable="false">Violaceae</string>
+    <string name="bot_family_Violaceae_desc">In this atlas: sweet violet, with five unequal petals and a spur on the lower petal.</string>
+    <string name="bot_family_Apiaceae" translatable="false">Apiaceae</string>
+    <string name="bot_family_Apiaceae_desc">Wild carrot and cow parsley: small flowers in compound umbels and fruits splitting into two mericarps.</string>
+    <string name="bot_family_Urticaceae" translatable="false">Urticaceae</string>
+    <string name="bot_family_Urticaceae_desc">In this atlas: stinging nettle, with stinging hairs and small greenish flowers without petals.</string>
+    <string name="bot_family_Lamiaceae" translatable="false">Lamiaceae</string>
+    <string name="bot_family_Lamiaceae_desc">In this atlas: dead-nettle and sage, with opposite leaves, usually square stems and two-lipped corollas.</string>
+    <string name="bot_family_Poaceae" translatable="false">Poaceae</string>
+    <string name="bot_family_Poaceae_desc">Grasses: narrow sheathing leaves, flowers grouped in spikelets and fruits called caryopses.</string>
+    <string name="bot_family_Fagaceae_aliases">Beech family</string>
+    <string name="bot_family_Betulaceae_aliases">Birch family</string>
+    <string name="bot_family_Sapindaceae_aliases">Soapberry family; Aceraceae; Hippocastanaceae</string>
+    <string name="bot_family_Oleaceae_aliases">Olive family</string>
+    <string name="bot_family_Malvaceae_aliases">Mallow family; Tiliaceae</string>
+    <string name="bot_family_Rosaceae_aliases">Rose family</string>
+    <string name="bot_family_Salicaceae_aliases">Willow family</string>
+    <string name="bot_family_Pinaceae_aliases">Pine family; conifers</string>
+    <string name="bot_family_Viburnaceae_aliases">Viburnum family; Adoxaceae</string>
+    <string name="bot_family_Cornaceae_aliases">Dogwood family</string>
+    <string name="bot_family_Celastraceae_aliases">Spindle family</string>
+    <string name="bot_family_Aquifoliaceae_aliases">Holly family</string>
+    <string name="bot_family_Buxaceae_aliases">Box family</string>
+    <string name="bot_family_Fabaceae_aliases">Pea family; legumes; Leguminosae</string>
+    <string name="bot_family_Ericaceae_aliases">Heath family</string>
+    <string name="bot_family_Asteraceae_aliases">Daisy family; Compositae</string>
+    <string name="bot_family_Papaveraceae_aliases">Poppy family</string>
+    <string name="bot_family_Ranunculaceae_aliases">Buttercup family</string>
+    <string name="bot_family_Primulaceae_aliases">Primrose family</string>
+    <string name="bot_family_Plantaginaceae_aliases">Plantain family</string>
+    <string name="bot_family_Campanulaceae_aliases">Bellflower family</string>
+    <string name="bot_family_Violaceae_aliases">Violet family</string>
+    <string name="bot_family_Apiaceae_aliases">Carrot family; umbellifers; Umbelliferae</string>
+    <string name="bot_family_Urticaceae_aliases">Nettle family</string>
+    <string name="bot_family_Lamiaceae_aliases">Mint family; Labiatae</string>
+    <string name="bot_family_Poaceae_aliases">Grass family; grasses; Gramineae</string>
+    <string name="bot_lesson_habit">Habit and relationship</string>
+    <string name="bot_lesson_habit_body">Tree, shrub and herb describe growth forms, not families. A family may contain several growth forms; a species can change its appearance with age and habitat.</string>
+    <string name="bot_lesson_simple">Leaf or leaflet?</string>
+    <string name="bot_lesson_simple_body">A simple leaf has one blade, even when lobed. A compound leaf has several leaflets. A bud at the base of the leaf stalk helps identify the whole leaf; there is no bud at the base of each leaflet.</string>
+    <string name="bot_lesson_arrangement">Alternate, opposite, whorled</string>
+    <string name="bot_lesson_arrangement_body">Inspect a twig: one leaf per node is alternate; two are opposite; three or more form a whorl. A rosette gathers leaves on a very short stem.</string>
+    <string name="bot_lesson_margins">Margin and veins</string>
+    <string name="bot_lesson_margins_body">Margins can be entire, toothed or lobed. Veins may branch along a central axis or radiate from the base. Examine the whole leaf and both surfaces.</string>
+    <string name="bot_lesson_head">One flower or a hundred?</string>
+    <string name="bot_lesson_head_body">In Asteraceae, a head contains many small florets on one receptacle. In oxeye daisy, the white rays belong to flowers distinct from those of the yellow disc.</string>
+    <string name="bot_lesson_umbel">Umbels and clusters</string>
+    <string name="bot_lesson_umbel_body">In an umbel, several flower stalks arise from roughly the same point. A compound umbel bears smaller umbels. A flat flower cluster is not automatically an umbel.</string>
+    <string name="bot_lesson_pea">The pea flower</string>
+    <string name="bot_lesson_pea_body">A pea flower has a large upper standard petal, two lateral wings and a keel formed by the two lower petals. This structure occurs in the Fabaceae shown here.</string>
+    <string name="bot_lesson_fruit">Fruit and seed</string>
+    <string name="bot_lesson_fruit_body">In flowering plants, fruit develops from the ovary, sometimes with other tissues. It contains seeds. Pods, samaras and acorns are fruits; a conker is a seed inside a capsule.</string>
+    <string name="bot_lesson_cones">Conifers</string>
+    <string name="bot_lesson_cones_body">Conifers produce pollen cones and cones bearing ovules and then seeds. They lack flowers and fruits in the angiosperm sense. Larch sheds its needles every autumn.</string>
+    <string name="bot_lesson_grasses">Observing grasses</string>
+    <string name="bot_lesson_grasses_body">Poaceae bear reduced flowers in spikelets. Spikelet arrangement, glumes, awns and the junction of sheath and blade are useful features. Their flowers are often inconspicuous but present.</string>
+    <string name="bot_lesson_seasons">Observing through the seasons</string>
+    <string name="bot_lesson_seasons_body">Plants change: buds, leaves, flowers and fruits provide complementary features. Timing varies with region, elevation and weather. A calendar is a guide, not a guaranteed date.</string>
+    <string name="bot_lesson_names">Scientific names and synonyms</string>
+    <string name="bot_lesson_names_body">A species name combines a genus and an epithet. Common names vary by region. Research can move a species to another genus or family; older names then provide useful search synonyms.</string>
+    <string name="bot_robur_name">Pedunculate oak</string>
+    <string name="bot_robur_latin" translatable="false">Quercus robur</string>
+    <string name="bot_robur_aliases">Chêne pédonculé</string>
+    <string name="bot_robur_description">Very short leaf stalk with small basal lobes. Acorns on long stalks. The two oaks can hybridise: examine several features.</string>
+    <string name="bot_robur_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_petraea_name">Sessile oak</string>
+    <string name="bot_petraea_latin" translatable="false">Quercus petraea</string>
+    <string name="bot_petraea_aliases">Chêne sessile</string>
+    <string name="bot_petraea_description">Well-developed leaf stalk; leaf base usually wedge-shaped without pronounced basal lobes. Acorns nearly stalkless on the twig. Intermediate forms occur.</string>
+    <string name="bot_petraea_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_fagus_name">European beech</string>
+    <string name="bot_fagus_latin" translatable="false">Fagus sylvatica</string>
+    <string name="bot_fagus_aliases">Hêtre commun</string>
+    <string name="bot_fagus_description">Smooth grey bark. Young leaf margins are hairy, scarcely toothed or untoothed; buds are long and pointed. Triangular beechnuts in a bristly cup.</string>
+    <string name="bot_fagus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_carpinus_name">European hornbeam</string>
+    <string name="bot_carpinus_latin" translatable="false">Carpinus betulus</string>
+    <string name="bot_carpinus_aliases">Charme commun</string>
+    <string name="bot_carpinus_description">Doubly toothed leaves with prominent lateral veins. Buds lie against the twig. Each small dry fruit has a large three-lobed bract.</string>
+    <string name="bot_carpinus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_betula_name">Silver birch</string>
+    <string name="bot_betula_latin" translatable="false">Betula pendula</string>
+    <string name="bot_betula_aliases">Bouleau verruqueux</string>
+    <string name="bot_betula_description">White bark, dark and fissured at the base of older trunks. Slender, often drooping twigs bear small warts. Triangular leaves and tiny winged fruits.</string>
+    <string name="bot_betula_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_alnus_name">Common alder</string>
+    <string name="bot_alnus_latin" translatable="false">Alnus glutinosa</string>
+    <string name="bot_alnus_aliases">Aulne glutineux</string>
+    <string name="bot_alnus_description">Rounded leaves, often notched at the tip. Long hanging male catkins; woody female fruiting structures resemble small cones, but this is not a conifer.</string>
+    <string name="bot_alnus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_campestre_name">Field maple</string>
+    <string name="bot_campestre_latin" translatable="false">Acer campestre</string>
+    <string name="bot_campestre_aliases">Érable champêtre</string>
+    <string name="bot_campestre_description">Small leaves with five rather rounded lobes. Twigs sometimes bear corky ridges. The two samara wings spread widely, nearly in a straight line.</string>
+    <string name="bot_campestre_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_platanoides_name">Norway maple</string>
+    <string name="bot_platanoides_latin" translatable="false">Acer platanoides</string>
+    <string name="bot_platanoides_aliases">Érable plane</string>
+    <string name="bot_platanoides_description">Leaf lobes end in long points. Upright flower clusters, often before the leaves. Samara wings form a very wide angle.</string>
+    <string name="bot_platanoides_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_pseudoplatanus_name">Sycamore maple</string>
+    <string name="bot_pseudoplatanus_latin" translatable="false">Acer pseudoplatanus</string>
+    <string name="bot_pseudoplatanus_aliases">Érable sycomore</string>
+    <string name="bot_pseudoplatanus_description">Large five-lobed toothed leaves. Flowers in hanging racemes. Samara wings are closer together than in Norway maple; older bark flakes in plates.</string>
+    <string name="bot_pseudoplatanus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_fraxinus_name">Common ash</string>
+    <string name="bot_fraxinus_latin" translatable="false">Fraxinus excelsior</string>
+    <string name="bot_fraxinus_aliases">Frêne commun</string>
+    <string name="bot_fraxinus_description">Black buds and opposite leaves, usually with 7–13 toothed leaflets. Flowers lack petals and appear before the leaves. Elongated winged dry fruits.</string>
+    <string name="bot_fraxinus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_tilia_name">Small-leaved lime</string>
+    <string name="bot_tilia_latin" translatable="false">Tilia cordata</string>
+    <string name="bot_tilia_aliases">Tilleul à petites feuilles</string>
+    <string name="bot_tilia_description">Heart-shaped leaves with an asymmetric base; small rusty hair tufts below vein junctions. Flowers and fruits are attached to a long pale bract.</string>
+    <string name="bot_tilia_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_castanea_name">Sweet chestnut</string>
+    <string name="bot_castanea_latin" translatable="false">Castanea sativa</string>
+    <string name="bot_castanea_aliases">Châtaignier commun</string>
+    <string name="bot_castanea_description">Long simple leaves with sharp teeth. Long upright catkins. Burr densely covered in slender spines, usually enclosing several chestnuts.</string>
+    <string name="bot_castanea_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_aesculus_name">Horse chestnut</string>
+    <string name="bot_aesculus_latin" translatable="false">Aesculus hippocastanum</string>
+    <string name="bot_aesculus_aliases">Marronnier d’Inde</string>
+    <string name="bot_aesculus_description">Opposite leaves with 5–7 large leaflets meeting at one point. Upright flower panicles. Sparsely spiny capsules contain one or a few large seeds.</string>
+    <string name="bot_aesculus_distribution">Native to the Balkans; widely planted in French parks and avenues.</string>
+    <string name="bot_prunus_avium_name">Wild cherry</string>
+    <string name="bot_prunus_avium_latin" translatable="false">Prunus avium</string>
+    <string name="bot_prunus_avium_aliases">Merisier</string>
+    <string name="bot_prunus_avium_description">Toothed leaves, often with two red glands on the stalk. Bark with horizontal lenticels. White flowers in small clusters; long-stalked cherries.</string>
+    <string name="bot_prunus_avium_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_sorbus_name">Rowan</string>
+    <string name="bot_sorbus_latin" translatable="false">Sorbus aucuparia</string>
+    <string name="bot_sorbus_aliases">Sorbier des oiseleurs</string>
+    <string name="bot_sorbus_description">Alternate leaves, usually with 9–15 toothed leaflets. White flowers in dense clusters. Small orange-red pomes, not true botanical berries.</string>
+    <string name="bot_sorbus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_populus_name">European aspen</string>
+    <string name="bot_populus_latin" translatable="false">Populus tremula</string>
+    <string name="bot_populus_aliases">Peuplier tremble</string>
+    <string name="bot_populus_description">Rounded mature leaves with long flattened stalks that flutter in the wind. Young shoot leaves may be more triangular. Catkins precede the leaves; seeds have cottony hairs.</string>
+    <string name="bot_populus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_pinus_name">Scots pine</string>
+    <string name="bot_pinus_latin" translatable="false">Pinus sylvestris</string>
+    <string name="bot_pinus_aliases">Pin sylvestre</string>
+    <string name="bot_pinus_description">Needles in pairs, slightly twisted. Upper trunk often orange. Egg-shaped cones with woody scales mature over more than one season.</string>
+    <string name="bot_pinus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_abies_name">Silver fir</string>
+    <string name="bot_abies_latin" translatable="false">Abies alba</string>
+    <string name="bot_abies_aliases">Sapin pectiné</string>
+    <string name="bot_abies_description">Flat, usually blunt needles with two pale bands underneath. Upright cones break apart on the tree, leaving their central axis behind.</string>
+    <string name="bot_abies_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_picea_name">Norway spruce</string>
+    <string name="bot_picea_latin" translatable="false">Picea abies</string>
+    <string name="bot_picea_aliases">Épicéa commun</string>
+    <string name="bot_picea_description">Sharp four-sided needles attached all around the twig on small pegs. Long hanging cones fall intact.</string>
+    <string name="bot_picea_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_larix_name">European larch</string>
+    <string name="bot_larix_latin" translatable="false">Larix decidua</string>
+    <string name="bot_larix_aliases">Mélèze d’Europe</string>
+    <string name="bot_larix_description">Soft needles in tufts on short shoots, single on long shoots. Needles turn yellow and fall in autumn. Small upright cones remain on the branches.</string>
+    <string name="bot_larix_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_corylus_name">Common hazel</string>
+    <string name="bot_corylus_latin" translatable="false">Corylus avellana</string>
+    <string name="bot_corylus_aliases">Noisetier commun</string>
+    <string name="bot_corylus_description">Often has several stems from the base. Broad hairy leaves with a heart-shaped base. Male catkins in winter; tiny female flowers with red stigmas. Nuts in leafy husks.</string>
+    <string name="bot_corylus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_crataegus_name">Common hawthorn</string>
+    <string name="bot_crataegus_latin" translatable="false">Crataegus monogyna</string>
+    <string name="bot_crataegus_aliases">Aubépine monogyne</string>
+    <string name="bot_crataegus_description">Thorny twigs. Deeply lobed leaves; small five-petalled flowers usually have one style. Red fruits usually contain one stone; hybridisation with other hawthorns occurs.</string>
+    <string name="bot_crataegus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_spinosa_name">Blackthorn</string>
+    <string name="bot_spinosa_latin" translatable="false">Prunus spinosa</string>
+    <string name="bot_spinosa_aliases">Prunellier</string>
+    <string name="bot_spinosa_description">Shrub with many thorny twigs. Small toothed leaves. White flowers often precede the leaves; blue-black sloes have a pale waxy bloom.</string>
+    <string name="bot_spinosa_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_rosa_name">Dog rose</string>
+    <string name="bot_rosa_latin" translatable="false">Rosa canina</string>
+    <string name="bot_rosa_aliases">Églantier</string>
+    <string name="bot_rosa_description">Arching stems with hooked prickles. Leaves usually have 5–7 leaflets. Five-petalled flowers; red hips contain the small dry fruits. The dog-rose group is complex.</string>
+    <string name="bot_rosa_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_sambucus_name">Common elder</string>
+    <string name="bot_sambucus_latin" translatable="false">Sambucus nigra</string>
+    <string name="bot_sambucus_aliases">Sureau noir</string>
+    <string name="bot_sambucus_description">Opposite leaves with 5–7 toothed leaflets. Broad flat clusters of tiny cream flowers. Black fruits in drooping clusters when ripe; twigs have white pith.</string>
+    <string name="bot_sambucus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_viburnum_name">Guelder rose</string>
+    <string name="bot_viburnum_latin" translatable="false">Viburnum opulus</string>
+    <string name="bot_viburnum_aliases">Viorne obier</string>
+    <string name="bot_viburnum_description">Opposite three-lobed leaves. Large sterile flowers surround small fertile central flowers. Translucent red fruits; the wild form differs from snowball cultivars.</string>
+    <string name="bot_viburnum_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_cornus_name">Common dogwood</string>
+    <string name="bot_cornus_latin" translatable="false">Cornus sanguinea</string>
+    <string name="bot_cornus_aliases">Cornouiller sanguin</string>
+    <string name="bot_cornus_description">Opposite leaves with lateral veins curving towards the tip. Young twigs often red. White four-petalled flowers and black fruits.</string>
+    <string name="bot_cornus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_euonymus_name">European spindle</string>
+    <string name="bot_euonymus_latin" translatable="false">Euonymus europaeus</string>
+    <string name="bot_euonymus_aliases">Fusain d’Europe</string>
+    <string name="bot_euonymus_description">Opposite finely toothed leaves; green, sometimes angular twigs. Small four-petalled flowers. Pink four-lobed capsules reveal bright orange seed coverings.</string>
+    <string name="bot_euonymus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_ilex_name">Common holly</string>
+    <string name="bot_ilex_latin" translatable="false">Ilex aquifolium</string>
+    <string name="bot_ilex_aliases">Houx commun</string>
+    <string name="bot_ilex_description">Thick glossy leaves, often spiny low down but sometimes entire higher up. Male and female flowers usually occur on separate plants. Red fruits on female plants.</string>
+    <string name="bot_ilex_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_buxus_name">Common box</string>
+    <string name="bot_buxus_latin" translatable="false">Buxus sempervirens</string>
+    <string name="bot_buxus_aliases">Buis commun</string>
+    <string name="bot_buxus_description">Small opposite leathery leaves with rounded or slightly notched tips. Yellowish flowers without petals in leaf axils. Capsules end in three small points.</string>
+    <string name="bot_buxus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_ligustrum_name">Wild privet</string>
+    <string name="bot_ligustrum_latin" translatable="false">Ligustrum vulgare</string>
+    <string name="bot_ligustrum_aliases">Troène commun</string>
+    <string name="bot_ligustrum_description">Opposite entire leaves, sometimes retained through part of winter. Tiny white four-lobed flowers in terminal panicles. Black fruits; leaf retention depends on climate.</string>
+    <string name="bot_ligustrum_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_cytisus_name">Common broom</string>
+    <string name="bot_cytisus_latin" translatable="false">Cytisus scoparius</string>
+    <string name="bot_cytisus_aliases">Genêt à balais</string>
+    <string name="bot_cytisus_description">Green angled stems without spines. Lower leaves often have three leaflets, upper leaves are simple; some fall early. Large yellow flowers and dark pods with hairy margins.</string>
+    <string name="bot_cytisus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_ulex_name">Common gorse</string>
+    <string name="bot_ulex_latin" translatable="false">Ulex europaeus</string>
+    <string name="bot_ulex_aliases">Ajonc d’Europe</string>
+    <string name="bot_ulex_description">Dense shrub with many spiny shoots and spine-like leaves. Yellow flowers with a hairy calyx; short hairy pods. Flowering may extend well beyond the main season.</string>
+    <string name="bot_ulex_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_calluna_name">Common heather</string>
+    <string name="bot_calluna_latin" translatable="false">Calluna vulgaris</string>
+    <string name="bot_calluna_aliases">Callune commune</string>
+    <string name="bot_calluna_description">Tiny opposite scale-like leaves in four rows. Small pink flowers with four coloured sepals longer than the corolla. A dwarf shrub of acid soils.</string>
+    <string name="bot_calluna_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_erica_name">Bell heather</string>
+    <string name="bot_erica_latin" translatable="false">Erica cinerea</string>
+    <string name="bot_erica_aliases">Bruyère cendrée</string>
+    <string name="bot_erica_description">Small narrow leaves in whorls of three. Purple-pink urn-shaped corolla with four small lobes. Unlike the scale-leaved common heather.</string>
+    <string name="bot_erica_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_bellis_name">Common daisy</string>
+    <string name="bot_bellis_latin" translatable="false">Bellis perennis</string>
+    <string name="bot_bellis_aliases">Pâquerette vivace</string>
+    <string name="bot_bellis_description">All leaves form a spoon-leaved basal rosette. Each leafless stalk carries one head: white, sometimes pink, ray florets surround yellow tubular florets.</string>
+    <string name="bot_bellis_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_leucanthemum_name">Oxeye daisy</string>
+    <string name="bot_leucanthemum_latin" translatable="false">Leucanthemum vulgare</string>
+    <string name="bot_leucanthemum_aliases">Marguerite commune</string>
+    <string name="bot_leucanthemum_description">Stems bear alternate leaves; basal leaves are broader than upper leaves. Large white-and-yellow flower heads. Several related oxeye daisies require detailed examination.</string>
+    <string name="bot_leucanthemum_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_achillea_name">Common yarrow</string>
+    <string name="bot_achillea_latin" translatable="false">Achillea millefolium</string>
+    <string name="bot_achillea_aliases">Achillée millefeuille</string>
+    <string name="bot_achillea_description">Finely divided feathery leaves. Many tiny white or pinkish heads form a flat cluster; each head has a few short ray florets.</string>
+    <string name="bot_achillea_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_centaurea_name">Brown knapweed</string>
+    <string name="bot_centaurea_latin" translatable="false">Centaurea jacea</string>
+    <string name="bot_centaurea_aliases">Centaurée jacée</string>
+    <string name="bot_centaurea_description">Purple heads of tubular florets, often enlarged around the edge. Involucral bracts have brown fringed appendages. Variable and similar to other knapweeds.</string>
+    <string name="bot_centaurea_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_papaver_name">Common poppy</string>
+    <string name="bot_papaver_latin" translatable="false">Papaver rhoeas</string>
+    <string name="bot_papaver_aliases">Coquelicot</string>
+    <string name="bot_papaver_description">Stem with spreading hairs and a nodding flower bud. Four crumpled red petals, sometimes black at the base. Rounded capsule topped by a radiating disc and opening through pores.</string>
+    <string name="bot_papaver_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_ranunculus_name">Meadow buttercup</string>
+    <string name="bot_ranunculus_latin" translatable="false">Ranunculus acris</string>
+    <string name="bot_ranunculus_aliases">Renoncule âcre</string>
+    <string name="bot_ranunculus_description">Leaves deeply divided into narrow segments. Upright flowers have five glossy yellow petals and many stamens. Small achenes form a head; several buttercups look alike.</string>
+    <string name="bot_ranunculus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_ficaria_name">Lesser celandine</string>
+    <string name="bot_ficaria_latin" translatable="false">Ficaria verna</string>
+    <string name="bot_ficaria_aliases">Ranunculus ficaria; ficaire</string>
+    <string name="bot_ficaria_description">Shiny heart-shaped leaves, sometimes dark-marked. Spring flowers usually have 8–12 narrow petals and three sepals. Foliage usually disappears after spring.</string>
+    <string name="bot_ficaria_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_primula_name">Cowslip</string>
+    <string name="bot_primula_latin" translatable="false">Primula veris</string>
+    <string name="bot_primula_aliases">Primevère officinale</string>
+    <string name="bot_primula_description">Rosette of wrinkled leaves. A stalk bears several flowers nodding to one side; yellow corollas with small orange marks and inflated pale calyces.</string>
+    <string name="bot_primula_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_digitalis_name">Common foxglove</string>
+    <string name="bot_digitalis_latin" translatable="false">Digitalis purpurea</string>
+    <string name="bot_digitalis_aliases">Digitale pourpre</string>
+    <string name="bot_digitalis_description">A large rosette precedes the leafy stem. Long raceme of hanging tubular flowers, often facing one side; spotted inside. Capsules hold numerous tiny seeds.</string>
+    <string name="bot_digitalis_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_campanula_name">Harebell</string>
+    <string name="bot_campanula_latin" translatable="false">Campanula rotundifolia</string>
+    <string name="bot_campanula_aliases">Campanule à feuilles rondes</string>
+    <string name="bot_campanula_description">Rounded basal leaves often disappear by flowering; stem leaves are narrow and elongated. Blue five-lobed bell flowers. Look for both leaf types.</string>
+    <string name="bot_campanula_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_viola_name">Sweet violet</string>
+    <string name="bot_viola_latin" translatable="false">Viola odorata</string>
+    <string name="bot_viola_aliases">Violette odorante</string>
+    <string name="bot_viola_description">Heart-shaped leaves; flowers have five unequal petals and a rear spur. A creeping, stolon-forming plant, usually with scented flowers. Other violets require examination of stipules and hairs.</string>
+    <string name="bot_viola_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_trifolium_pratense_name">Red clover</string>
+    <string name="bot_trifolium_pratense_latin" translatable="false">Trifolium pratense</string>
+    <string name="bot_trifolium_pratense_aliases">Trèfle des prés</string>
+    <string name="bot_trifolium_pratense_description">Three oval leaflets, often with a pale chevron. Upright hairy stems. Pink to purple pea flowers form dense heads close to the upper leaves.</string>
+    <string name="bot_trifolium_pratense_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_trifolium_repens_name">White clover</string>
+    <string name="bot_trifolium_repens_latin" translatable="false">Trifolium repens</string>
+    <string name="bot_trifolium_repens_aliases">Trèfle blanc</string>
+    <string name="bot_trifolium_repens_description">Creeping stems root at the nodes. Three rounded leaflets, often pale-marked. White flower heads on long stalks; older flowers bend downwards.</string>
+    <string name="bot_trifolium_repens_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_lotus_name">Common bird’s-foot trefoil</string>
+    <string name="bot_lotus_latin" translatable="false">Lotus corniculatus</string>
+    <string name="bot_lotus_aliases">Lotier corniculé</string>
+    <string name="bot_lotus_description">Five leaflets: three at the tip and two near the base. Small clusters of yellow, sometimes orange-tinted flowers. Slender pods spread like toes.</string>
+    <string name="bot_lotus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_vicia_name">Tufted vetch</string>
+    <string name="bot_vicia_latin" translatable="false">Vicia cracca</string>
+    <string name="bot_vicia_aliases">Vesce cracca</string>
+    <string name="bot_vicia_description">Leaves have many narrow leaflets and end in a branched tendril. Climbs through surrounding vegetation. Long one-sided racemes of violet flowers; flattened pods.</string>
+    <string name="bot_vicia_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_daucus_name">Wild carrot</string>
+    <string name="bot_daucus_latin" translatable="false">Daucus carota</string>
+    <string name="bot_daucus_aliases">Carotte sauvage</string>
+    <string name="bot_daucus_description">Stem and leaves usually hairy; leaves finely divided. Umbels have divided bracts, sometimes a dark central flower. Rays often curl into a nest at maturity.</string>
+    <string name="bot_daucus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_anthriscus_name">Cow parsley</string>
+    <string name="bot_anthriscus_latin" translatable="false">Anthriscus sylvestris</string>
+    <string name="bot_anthriscus_aliases">Cerfeuil sauvage</string>
+    <string name="bot_anthriscus_description">Large finely divided triangular leaves. Spring white umbels usually lack large bracts beneath the main umbel. Long smooth dark fruits; many similar species occur in this family.</string>
+    <string name="bot_anthriscus_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_plantago_lanceolata_name">Ribwort plantain</string>
+    <string name="bot_plantago_lanceolata_latin" translatable="false">Plantago lanceolata</string>
+    <string name="bot_plantago_lanceolata_aliases">Plantain lancéolé</string>
+    <string name="bot_plantago_lanceolata_description">Rosette of narrow leaves with 3–5 prominent lengthwise veins. Grooved leafless stalk ends in a short spike ringed by pale stamens during flowering.</string>
+    <string name="bot_plantago_lanceolata_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_plantago_major_name">Greater plantain</string>
+    <string name="bot_plantago_major_latin" translatable="false">Plantago major</string>
+    <string name="bot_plantago_major_aliases">Grand plantain</string>
+    <string name="bot_plantago_major_description">Rosette of broad oval leaves with long stalks and strong curved veins. Long slender spikes of inconspicuous flowers. Common on compacted ground and paths.</string>
+    <string name="bot_plantago_major_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_urtica_name">Stinging nettle</string>
+    <string name="bot_urtica_latin" translatable="false">Urtica dioica</string>
+    <string name="bot_urtica_aliases">Grande ortie</string>
+    <string name="bot_urtica_description">Opposite coarsely toothed leaves; stems and leaves bear stinging hairs. Tiny greenish flowers in axillary clusters; male and female flowers usually on separate plants.</string>
+    <string name="bot_urtica_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_lamium_name">White dead-nettle</string>
+    <string name="bot_lamium_latin" translatable="false">Lamium album</string>
+    <string name="bot_lamium_aliases">Lamier blanc</string>
+    <string name="bot_lamium_description">Opposite toothed nettle-like leaves without stinging hairs. Square stem. Large white two-lipped flowers cluster around the stem at the nodes.</string>
+    <string name="bot_lamium_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_salvia_name">Meadow sage</string>
+    <string name="bot_salvia_latin" translatable="false">Salvia pratensis</string>
+    <string name="bot_salvia_aliases">Sauge des prés</string>
+    <string name="bot_salvia_description">Large wrinkled basal leaves and opposite stem leaves. Blue-violet flowers have an arched upper lip and form spaced tiers; two fertile stamens.</string>
+    <string name="bot_salvia_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_dactylis_name">Cock’s-foot</string>
+    <string name="bot_dactylis_latin" translatable="false">Dactylis glomerata</string>
+    <string name="bot_dactylis_aliases">Dactyle aggloméré</string>
+    <string name="bot_dactylis_description">Tufted grass; young leaves are folded and sheaths flattened. Panicle has dense spikelet clusters, often facing one side. A membranous ligule is visible.</string>
+    <string name="bot_dactylis_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_lolium_name">Perennial ryegrass</string>
+    <string name="bot_lolium_latin" translatable="false">Lolium perenne</string>
+    <string name="bot_lolium_aliases">Ivraie vivace</string>
+    <string name="bot_lolium_description">Leaves often glossy underneath. Simple spike: alternate spikelets are set edge-on to the axis. Usually awnless; small auricles clasp the stem.</string>
+    <string name="bot_lolium_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_briza_name">Quaking grass</string>
+    <string name="bot_briza_latin" translatable="false">Briza media</string>
+    <string name="bot_briza_aliases">Brize intermédiaire</string>
+    <string name="bot_briza_description">Airy panicle with small hanging heart-shaped spikelets on fine stalks. Spikelets are often purple-tinged and tremble in the wind. Narrow leaves.</string>
+    <string name="bot_briza_distribution">Found in mainland France; frequency and local occurrence vary.</string>
+    <string name="bot_group_oaks">The two oaks</string>
+    <string name="bot_group_oaks_desc">Compare leaf stalks and acorn stalks: short leaf stalks and long acorn stalks in pedunculate oak; longer leaf stalks and nearly stalkless acorns in sessile oak. Hybrids can blur these differences.</string>
+    <string name="bot_group_beech">Beech and hornbeam</string>
+    <string name="bot_group_beech_desc">Beech has scarcely toothed leaf margins, hairy when young; hornbeam has strong teeth and prominent veins. Also compare buds and fruits.</string>
+    <string name="bot_group_maples">Three maples</string>
+    <string name="bot_group_maples_desc">Field maple: small rounded lobes and nearly aligned samaras. Norway maple: long points and widely spreading wings. Sycamore: toothed lobes and hanging flower racemes.</string>
+    <string name="bot_group_conifers">Four conifers</string>
+    <string name="bot_group_conifers_desc">Pine: needles in pairs. Larch: tufts of deciduous needles. Fir: flat needles and upright cones. Spruce: four-sided needles and hanging cones. Inspect twigs rather than habit alone.</string>
+    <string name="bot_group_chestnuts">Sweet and horse chestnut</string>
+    <string name="bot_group_chestnuts_desc">Sweet chestnut: simple toothed leaf, burr with numerous fine spines. Horse chestnut: palmately compound leaf, capsule with widely spaced spines; the conker is a seed.</string>
+    <string name="bot_group_pinnate">Compound leaves</string>
+    <string name="bot_group_pinnate_desc">Ash and elder: opposite leaves; rowan: alternate leaves. Ash has winged fruits, rowan orange-red fruits and elder black fruits.</string>
+    <string name="bot_group_thorny">Thorny hedgerow shrubs</string>
+    <string name="bot_group_thorny_desc">Hawthorn: lobed leaves. Blackthorn: small simple toothed leaves. Dog rose: compound leaves and hooked prickles. White or pink flowers alone do not distinguish them.</string>
+    <string name="bot_group_heathers">Heather and bell heather</string>
+    <string name="bot_group_heathers_desc">Common heather: tiny opposite scale leaves and visible coloured sepals. Bell heather: narrow leaves in threes and an urn-shaped corolla.</string>
+    <string name="bot_group_yellow_shrubs">Broom and gorse</string>
+    <string name="bot_group_yellow_shrubs_desc">Common broom has green angled shoots without spines; gorse forms a dense network of spines. Both bear yellow pea flowers and pods.</string>
+    <string name="bot_group_daisies">Daisy and oxeye daisy</string>
+    <string name="bot_group_daisies_desc">Daisy: small rosette and leafless stalk. Oxeye daisy: taller leafy stem and usually larger flower head. Yellow discs and white rays consist of many florets.</string>
+    <string name="bot_group_buttercups">Buttercup and celandine</string>
+    <string name="bot_group_buttercups_desc">Meadow buttercup: divided leaves, usually five petals. Lesser celandine: heart-shaped leaves, usually eight to twelve petals, mainly spring flowering.</string>
+    <string name="bot_group_clovers">Two clovers</string>
+    <string name="bot_group_clovers_desc">Red clover: upright hairy stems and pink heads. White clover: creeping stems rooting at nodes and long-stalked white heads. Pale leaflet markings vary.</string>
+    <string name="bot_group_umbels">Two umbellifers</string>
+    <string name="bot_group_umbels_desc">Wild carrot: divided bracts below the umbel and bristly fruits. Cow parsley: no large bracts below the main umbel and long smooth fruits. This comparison does not cover the many other Apiaceae.</string>
+    <string name="bot_group_plantains">Two plantains</string>
+    <string name="bot_group_plantains_desc">Ribwort plantain: narrow leaves and short spike. Greater plantain: broad stalked leaves and long slender spike. Both have strong lengthwise or curved veins.</string>
+    <string name="bot_group_nettles">Nettle and dead-nettle</string>
+    <string name="bot_group_nettles_desc">Stinging nettle: stinging hairs and tiny greenish flowers. White dead-nettle: no stinging hairs and white two-lipped flowers. Do not use skin contact as a test.</string>
+    <string name="bot_group_grasses">Three grasses</string>
+    <string name="bot_group_grasses_desc">Cock’s-foot: dense spikelet clusters. Perennial ryegrass: spikelets attached alternately along one axis. Quaking grass: heart-shaped spikelets hanging on fine stalks.</string>
+    <plurals name="bot_species_count"><item quantity="one">%1$d species</item><item quantity="other">%1$d species</item></plurals>
+</resources>

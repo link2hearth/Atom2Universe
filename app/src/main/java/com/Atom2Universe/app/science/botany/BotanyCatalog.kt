@@ -1,0 +1,78 @@
+package com.Atom2Universe.app.science.botany
+
+import com.Atom2Universe.app.R
+
+/**
+ * Extension points:
+ * 1. Add a PlantSpecies to an existing catalogue or append a new catalogue to species below.
+ * 2. Register new family/section IDs here; pages and offered filters are derived from this data.
+ * 3. Add FR + EN resources, organ dimensions, traits and references. Variants belong in additional* fields.
+ * 4. PlantGroup members are stable species IDs; a species may belong to any number of groups/sections.
+ * 5. LeafDetail and TreeArchitecture refine existing shapes (lobes, veins, crown, bark, branch sprays).
+ *    Defaults still draw new species. Novel organs extend their enum and the corresponding organ painter.
+ * 6. Run compileDebugKotlin and the targeted BotanyCatalogTest/BotanyRenderingTest guards.
+ * The source catalogues are authoritative; no generator or network access is needed to extend the atlas.
+ */
+object BotanyCatalog {
+    val sections = listOf(
+        PlantSection("trees", R.string.bot_section_trees, R.string.bot_section_trees_desc),
+        PlantSection("shrubs", R.string.bot_section_shrubs, R.string.bot_section_shrubs_desc),
+        PlantSection("herbs", R.string.bot_section_herbs, R.string.bot_section_herbs_desc),
+    )
+    val families = listOf(
+        PlantFamily("Fagaceae", R.string.bot_family_Fagaceae, R.string.bot_family_Fagaceae_desc, R.string.bot_family_Fagaceae_aliases),
+        PlantFamily("Betulaceae", R.string.bot_family_Betulaceae, R.string.bot_family_Betulaceae_desc, R.string.bot_family_Betulaceae_aliases),
+        PlantFamily("Sapindaceae", R.string.bot_family_Sapindaceae, R.string.bot_family_Sapindaceae_desc, R.string.bot_family_Sapindaceae_aliases),
+        PlantFamily("Oleaceae", R.string.bot_family_Oleaceae, R.string.bot_family_Oleaceae_desc, R.string.bot_family_Oleaceae_aliases),
+        PlantFamily("Malvaceae", R.string.bot_family_Malvaceae, R.string.bot_family_Malvaceae_desc, R.string.bot_family_Malvaceae_aliases),
+        PlantFamily("Rosaceae", R.string.bot_family_Rosaceae, R.string.bot_family_Rosaceae_desc, R.string.bot_family_Rosaceae_aliases),
+        PlantFamily("Salicaceae", R.string.bot_family_Salicaceae, R.string.bot_family_Salicaceae_desc, R.string.bot_family_Salicaceae_aliases),
+        PlantFamily("Pinaceae", R.string.bot_family_Pinaceae, R.string.bot_family_Pinaceae_desc, R.string.bot_family_Pinaceae_aliases),
+        PlantFamily("Viburnaceae", R.string.bot_family_Viburnaceae, R.string.bot_family_Viburnaceae_desc, R.string.bot_family_Viburnaceae_aliases),
+        PlantFamily("Cornaceae", R.string.bot_family_Cornaceae, R.string.bot_family_Cornaceae_desc, R.string.bot_family_Cornaceae_aliases),
+        PlantFamily("Celastraceae", R.string.bot_family_Celastraceae, R.string.bot_family_Celastraceae_desc, R.string.bot_family_Celastraceae_aliases),
+        PlantFamily("Aquifoliaceae", R.string.bot_family_Aquifoliaceae, R.string.bot_family_Aquifoliaceae_desc, R.string.bot_family_Aquifoliaceae_aliases),
+        PlantFamily("Buxaceae", R.string.bot_family_Buxaceae, R.string.bot_family_Buxaceae_desc, R.string.bot_family_Buxaceae_aliases),
+        PlantFamily("Fabaceae", R.string.bot_family_Fabaceae, R.string.bot_family_Fabaceae_desc, R.string.bot_family_Fabaceae_aliases),
+        PlantFamily("Ericaceae", R.string.bot_family_Ericaceae, R.string.bot_family_Ericaceae_desc, R.string.bot_family_Ericaceae_aliases),
+        PlantFamily("Asteraceae", R.string.bot_family_Asteraceae, R.string.bot_family_Asteraceae_desc, R.string.bot_family_Asteraceae_aliases),
+        PlantFamily("Papaveraceae", R.string.bot_family_Papaveraceae, R.string.bot_family_Papaveraceae_desc, R.string.bot_family_Papaveraceae_aliases),
+        PlantFamily("Ranunculaceae", R.string.bot_family_Ranunculaceae, R.string.bot_family_Ranunculaceae_desc, R.string.bot_family_Ranunculaceae_aliases),
+        PlantFamily("Primulaceae", R.string.bot_family_Primulaceae, R.string.bot_family_Primulaceae_desc, R.string.bot_family_Primulaceae_aliases),
+        PlantFamily("Plantaginaceae", R.string.bot_family_Plantaginaceae, R.string.bot_family_Plantaginaceae_desc, R.string.bot_family_Plantaginaceae_aliases),
+        PlantFamily("Campanulaceae", R.string.bot_family_Campanulaceae, R.string.bot_family_Campanulaceae_desc, R.string.bot_family_Campanulaceae_aliases),
+        PlantFamily("Violaceae", R.string.bot_family_Violaceae, R.string.bot_family_Violaceae_desc, R.string.bot_family_Violaceae_aliases),
+        PlantFamily("Apiaceae", R.string.bot_family_Apiaceae, R.string.bot_family_Apiaceae_desc, R.string.bot_family_Apiaceae_aliases),
+        PlantFamily("Urticaceae", R.string.bot_family_Urticaceae, R.string.bot_family_Urticaceae_desc, R.string.bot_family_Urticaceae_aliases),
+        PlantFamily("Lamiaceae", R.string.bot_family_Lamiaceae, R.string.bot_family_Lamiaceae_desc, R.string.bot_family_Lamiaceae_aliases),
+        PlantFamily("Poaceae", R.string.bot_family_Poaceae, R.string.bot_family_Poaceae_desc, R.string.bot_family_Poaceae_aliases),
+    )
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species
+    private val byId = species.associateBy { it.id }
+    fun get(id: String) = byId[id]
+    fun family(id: String) = families.first { it.id == id }
+    val groups = listOf(
+        PlantGroup("oaks", R.string.bot_group_oaks, listOf("robur","petraea"), R.string.bot_group_oaks_desc),
+        PlantGroup("beech", R.string.bot_group_beech, listOf("fagus","carpinus"), R.string.bot_group_beech_desc),
+        PlantGroup("maples", R.string.bot_group_maples, listOf("campestre","platanoides","pseudoplatanus"), R.string.bot_group_maples_desc),
+        PlantGroup("conifers", R.string.bot_group_conifers, listOf("pinus","abies","picea","larix"), R.string.bot_group_conifers_desc),
+        PlantGroup("chestnuts", R.string.bot_group_chestnuts, listOf("castanea","aesculus"), R.string.bot_group_chestnuts_desc),
+        PlantGroup("pinnate", R.string.bot_group_pinnate, listOf("fraxinus","sorbus","sambucus"), R.string.bot_group_pinnate_desc),
+        PlantGroup("thorny", R.string.bot_group_thorny, listOf("crataegus","spinosa","rosa"), R.string.bot_group_thorny_desc),
+        PlantGroup("heathers", R.string.bot_group_heathers, listOf("calluna","erica"), R.string.bot_group_heathers_desc),
+        PlantGroup("yellow_shrubs", R.string.bot_group_yellow_shrubs, listOf("cytisus","ulex"), R.string.bot_group_yellow_shrubs_desc),
+        PlantGroup("daisies", R.string.bot_group_daisies, listOf("bellis","leucanthemum"), R.string.bot_group_daisies_desc),
+        PlantGroup("buttercups", R.string.bot_group_buttercups, listOf("ranunculus","ficaria"), R.string.bot_group_buttercups_desc),
+        PlantGroup("clovers", R.string.bot_group_clovers, listOf("trifolium_pratense","trifolium_repens"), R.string.bot_group_clovers_desc),
+        PlantGroup("umbels", R.string.bot_group_umbels, listOf("daucus","anthriscus"), R.string.bot_group_umbels_desc),
+        PlantGroup("plantains", R.string.bot_group_plantains, listOf("plantago_lanceolata","plantago_major"), R.string.bot_group_plantains_desc),
+        PlantGroup("nettles", R.string.bot_group_nettles, listOf("urtica","lamium"), R.string.bot_group_nettles_desc),
+        PlantGroup("grasses", R.string.bot_group_grasses, listOf("dactylis","lolium","briza"), R.string.bot_group_grasses_desc),
+    )
+    val sources = listOf(
+        BotanySource("powo", R.string.bot_source_powo, "https://powo.science.kew.org/"),
+        BotanySource("tela", R.string.bot_source_tela, "https://www.tela-botanica.org/ressources/ressources-pedagogiques/"),
+        BotanySource("onf", R.string.bot_source_onf, "https://www.onf.fr/"),
+        BotanySource("botascopia", R.string.bot_source_botascopia, "https://botascopia.inria.fr/"),
+    )
+}
