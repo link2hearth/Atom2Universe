@@ -1,0 +1,363 @@
+{
+  "id": "chaffinch",
+  "scientific": "Fringilla coelebs",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian chaffinch",
+    "fr": "Pinson des arbres"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian chaffinch is a small, widespread finch whose continental range extends from Europe eastward through temperate Asia. AviList 2025b treats Fringilla coelebs as distinct from the African, Azores, Madeira and Canary Islands chaffinches; the Tenerife and Gran Canaria Blue Chaffinches are separate species too. Many populations are resident, while birds from northern and eastern breeding areas move south or west for winter.",
+      "fr": "Le Pinson des arbres est un petit fringille répandu dont l’aire continentale s’étend de l’Europe vers l’est à travers l’Asie tempérée. AviList 2025b distingue Fringilla coelebs des pinsons d’Afrique du Nord, des Açores, de Madère et des Canaries ; les Pinsons bleus de Tenerife et de Grande Canarie sont également des espèces distinctes. De nombreuses populations sont sédentaires, tandis que celles du nord et de l’est gagnent le sud ou l’ouest en hiver."
+    },
+    "identification": {
+      "en": "Breeding males have a blue-grey crown, rosy face and breast, chestnut back, and two white wing bars. The male’s pinkish-orange breast becomes a darker wine shade in winter, a subtle seasonal change within the same male pattern. The female and juvenile are softer brown and olive tones; their pale wing bars and white outer tail feathers remain useful clues in flight. The RSPB lists a typical adult length of 14.5 cm, a weight range of 18–29 g, and a wingspan of 24.5–28.5 cm. In British ringing samples, males average 22.6 g and females 20.9 g, against 21.8 g for adults overall.",
+      "fr": "En plumage nuptial, le mâle a calotte gris bleuté, face et poitrine rosées, dos marron et deux barres alaires blanches. Sa poitrine rose orangé prend une teinte lie-de-vin plus sombre en hiver : c’est une variation saisonnière discrète du plumage mâle. La femelle et le jeune ont des tons bruns et olivâtres plus doux ; leurs barres alaires pâles et les rectrices externes blanches restent de bons repères en vol. La RSPB donne une longueur adulte habituelle de 14,5 cm, une masse de 18 à 29 g et une envergure de 24,5 à 28,5 cm. Dans les échantillons britanniques bagués, les mâles pèsent en moyenne 22,6 g et les femelles 20,9 g, contre 21,8 g pour l’ensemble des adultes."
+    },
+    "habitat": {
+      "en": "In Britain, chaffinches occupy deciduous, mixed and coniferous woodland during breeding and also visit open farmland in winter.",
+      "fr": "En Grande-Bretagne, le Pinson fréquente les bois feuillus, mixtes et de conifères pendant la reproduction, et visite aussi les terres agricoles ouvertes en hiver."
+    },
+    "diet": {
+      "en": "Outside breeding, adults pick seeds from the ground and rarely take them directly from plants; in spring and summer they also glean insects from shrub and tree foliage. They feed nestlings invertebrates, including caterpillars, spiders, crane flies, aphids, and beetles, shifting the young diet toward animal prey.",
+      "fr": "Hors reproduction, les adultes ramassent des graines au sol et les prennent rarement directement sur les plantes ; au printemps et en été, ils glanent aussi des insectes dans le feuillage des arbres et arbustes. Ils nourrissent les poussins d’invertébrés, notamment chenilles, araignées, tipules, pucerons et coléoptères, ce qui donne aux jeunes un régime davantage animal."
+    },
+    "behavior": {
+      "en": "During spring, males sing from exposed perches and defend breeding territories; the familiar song descends through a short sequence and ends in a flourish. Chaffinch song is learned from adult tutors, and neighbouring populations develop distinct song dialects through cultural transmission. Outside the territorial season, birds feed in loose flocks, sometimes alongside Bramblings and other finches; migration is partial, with northern and eastern birds moving while many western birds stay year-round.",
+      "fr": "Au printemps, les mâles chantent depuis des perchoirs dégagés et défendent un territoire de reproduction ; le chant familier descend en une courte séquence avant une terminaison rapide. Le chant du Pinson s’apprend auprès d’adultes, et les populations voisines développent des dialectes distincts transmis culturellement. Hors de la saison territoriale, les oiseaux s’alimentent en groupes lâches, parfois avec des Pinsons du Nord et d’autres fringilles ; la migration est partielle, les oiseaux du nord et de l’est se déplaçant tandis que beaucoup d’oiseaux occidentaux restent toute l’année."
+    },
+    "reproduction": {
+      "en": "The female builds a compact, deep cup in a tree or shrub fork, weaving moss, grass, roots, lichens, bark, hair, and feathers together. In Britain, laying begins on average around 30 April; a typical clutch contains four or five eggs, incubated by the female for about 12–13 days. The female feeds nestlings caterpillars and other animal food; after they leave the nest, the male also helps provision the young for about three weeks. BTO nest records show that chicks usually fledge at 13–15.5 days.",
+      "fr": "La femelle construit une coupe compacte et profonde dans la fourche d’un arbre ou d’un arbuste, en assemblant mousse, herbes, racines, lichens, écorce, poils et plumes. En Grande-Bretagne, la ponte commence en moyenne vers le 30 avril ; une nichée typique compte quatre ou cinq œufs, couvés par la femelle pendant environ 12 à 13 jours. La femelle nourrit les poussins de chenilles et d’autres aliments animaux ; après leur sortie du nid, le mâle participe aussi à leur nourrissage pendant environ trois semaines. Les données de nids du BTO indiquent que les jeunes s’envolent généralement à 13–15,5 jours."
+    },
+    "ecology": {
+      "en": "On nine south-central English farms, adults made little use of crops when feeding nestlings; trees and hedges, especially oaks and willows, were frequent feeding sites. Successful nests tended to be nearer oaks or willows than nests where chicks starved; in one study year, starvation was less frequent along field boundaries with oak trees.",
+      "fr": "Dans neuf fermes du centre-sud de l’Angleterre, les adultes utilisaient peu les cultures pour nourrir les poussins ; arbres et haies, surtout les chênes et les saules, étaient des sites fréquents de recherche alimentaire. Les nids où les jeunes ont réussi étaient souvent plus proches de chênes ou de saules que ceux où ils sont morts de faim ; une année, la famine était moins fréquente le long des bordures avec des chênes."
+    },
+    "conservation": {
+      "en": "The IUCN assessment, last assessed on 9 August 2018 and published as an amended 2019 version, listed the then broadly defined Common Chaffinch as Least Concern and reported an increasing global population trend at that time; its preliminary population estimate still required validation. That assessment predates the current separation of several island and North African chaffinch species, so it should not be read as a fresh assessment of every present-day taxon. In the UK, the BTO records a 26% breeding decline (1967–2024), though the species remains Green on the UK Birds of Conservation Concern list; numbers have fallen in all four countries since about 2010 after late-century growth. Trichomonosis, a contagious protozoan disease, has been linked to the downturn, but BTO researchers say its role in the sharper recent decline remains uncertain.",
+      "fr": "Évalué le 9 août 2018 et publié dans une version amendée en 2019, le Pinson des arbres alors défini au sens large était classé en préoccupation mineure par l’UICN ; la tendance mondiale était indiquée comme croissante, mais l’estimation préliminaire de la population restait à valider. Cette évaluation précède la séparation actuelle de plusieurs pinsons insulaires et nord-africains ; elle ne constitue donc pas une nouvelle évaluation de chacun des taxons reconnus aujourd’hui. Au Royaume-Uni, le BTO relève une baisse de 26 % des nicheurs (1967–2024), bien que l’espèce reste verte dans Birds of Conservation Concern ; après une hausse en fin de siècle, les effectifs reculent depuis 2010 dans les quatre pays. La trichomonose, maladie contagieuse due à un protozoaire, est associée au recul, mais le BTO juge incertain son rôle dans la baisse récente la plus marquée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Fringilla coelebs (Common Chaffinch) — The IUCN Red List of Threatened Species",
+        "fr": "Fringilla coelebs (Pinson des arbres) — Liste rouge des espèces menacées de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22720030A155432370.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "Assessed 9 Aug 2018; amended 2019; global trend increasing; provisional estimate."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 11,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chaffinch — Birds and Wildlife, Royal Society for the Protection of Birds",
+        "fr": "Pinson des arbres — Birds and Wildlife, Royal Society for the Protection of Birds"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/chaffinch/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "RSPB describes sex-specific plumage, body length, mass range and wingspan."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 10,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chaffinch — BirdFacts, British Trust for Ornithology",
+        "fr": "Pinson des arbres — BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/chaffinch",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British nest records document clutch, incubation and fledging timings."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 9,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chapter Six: Learning and Cultural Transmission in Chaffinch Song — Advances in the Study of Behavior",
+        "fr": "Chapitre six : apprentissage et transmission culturelle du chant du Pinson — Advances in the Study of Behavior"
+      },
+      "url": "https://doi.org/10.1016/bs.asb.2015.01.001",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Review synthesizes learned songs, regional dialects, and cultural transmission."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 9,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chaffinch — Garden Birds A–Z, British Trust for Ornithology",
+        "fr": "Pinson des arbres — Garden Birds A–Z, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/our-science/projects/gbw/gardens-wildlife/garden-birds/a-z-garden-birds/chaffinch",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "BTO records winter arrivals, mixed flocks, and regional disease-linked trends."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 10,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Use of Cereal Fields by Birds: A Review in Relation to Field Margin Managements — BTO Research Report 195",
+        "fr": "Utilisation des champs céréaliers par les oiseaux : revue sur la gestion des bordures — rapport BTO 195"
+      },
+      "url": "https://www.bto.org/sites/default/files/shared_documents/publications/research-reports/1998/rr195.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "BTO review describes ground-seed collection, foliage gleaning, and seasonal insect provisioning."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 11,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chaffinch Fringilla coelebs foraging patterns, nestling survival and territory distribution on lowland farmland",
+        "fr": "Recherche alimentaire, survie des jeunes et répartition des territoires du Pinson des arbres en terres agricoles"
+      },
+      "url": "https://doi.org/10.1080/00063650109461226",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Farm study links tree foraging, nestling survival and lower starvation."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 10,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Checklist v2025b — AviList: The Global Avian Checklist",
+        "fr": "Checklist v2025b — AviList, liste mondiale des oiseaux"
+      },
+      "url": "https://www.avilist.org/checklist/v2025b/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "AviList 2025b is the current consensus global bird checklist."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 9,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal plumage of the Chaffinch — BirdWatch Ireland",
+        "fr": "Plumage saisonnier du Pinson des arbres — BirdWatch Ireland"
+      },
+      "url": "https://birdwatchireland.ie/birds/chaffinch/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The male breast darkens to a wine shade in winter."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 10,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chaffinch behaviour and nesting — BTO Garden BirdWatch",
+        "fr": "Comportement et nidification du Pinson — BTO Garden BirdWatch"
+      },
+      "url": "https://www.bto.org/sites/default/files/shared_documents/gbw/associated_files/bird-table-62-2010-chaffinch-article.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Females feed nestlings; males continue provisioning after fledging."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 8,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chaffinch — New Zealand Birds Online species account (HANZAB)",
+        "fr": "Pinson des arbres — fiche de New Zealand Birds Online (HANZAB)"
+      },
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691918921-350_chaffinch.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Handbook account reports typical fledging at about 14 days and post-fledging feeding."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 12,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the accepted plate: one adult male Eurasian chaffinch in European breeding plumage, full bird visible, natural proportions and anatomy, on a pure white background.",
+  "uncertainties": [
+    "The 2018 IUCN assessment applies to the then-broad Common Chaffinch concept; after taxonomic splits, it is not a current assessment of all species now separated from that complex.",
+    "Adult mass and sex-specific values are from British ringing samples; body mass varies seasonally and geographically.",
+    "The disease association and UK population trend are regional; BTO notes that trichomonosis has not been established as the main cause of the latest decline."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Distinguished current species from older broad2018 assessment amended2019; removed unsupported Fife habitat comparison, corrected ecological study to brood survival, validated maternal nestling care and male post-fledging provisioning. Verified regional winter plumage and UK trend; image European breeding male accepted independently."
+}

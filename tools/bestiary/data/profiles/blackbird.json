@@ -1,0 +1,540 @@
+{
+  "id": "blackbird",
+  "scientific": "Turdus merula",
+  "group": "birds",
+  "name": {
+    "en": "Blackbird",
+    "fr": "Merle noir"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian Blackbird is a thrush in the family Turdidae, native to Europe, North Africa, the Middle East and Central Asia. The Himalayan, Indian and Chinese blackbirds are separate species. Its flexible diet and ability to use wooded edges, scrub and gardens help it live in both rural and urban landscapes.",
+      "fr": "Le Merle noir d’Eurasie est un turdidé, de la famille des Turdidae, natif d’Europe, d’Afrique du Nord, du Moyen-Orient et d’Asie centrale. Les merles de l’Himalaya, de l’Inde et de Chine sont des espèces distinctes. Son régime souple et sa capacité à fréquenter lisières boisées, fourrés et jardins lui permettent de vivre dans les paysages ruraux comme urbains."
+    },
+    "identification": {
+      "en": "An adult is about 25 centimetres long. Adult UK ringing samples averaged 101.8 grams, with the central 90 percent between 87 and 122 grams. The adult male is glossy black with a yellow-orange bill and eye-ring; the female is dark brown with a paler throat and faintly mottled breast, while young birds are browner and more spotted before males acquire adult plumage.",
+      "fr": "L’adulte mesure environ 25 centimètres. Dans les échantillons d’adultes bagués au Royaume-Uni, la masse moyenne était de 101,8 grammes, avec 90 % des valeurs entre 87 et 122 grammes. Le mâle adulte est noir lustré, avec le bec et le cercle oculaire jaune orangé ; la femelle est brun sombre, à gorge plus claire et poitrine discrètement tachetée, tandis que les jeunes sont plus bruns et plus mouchetés avant que les mâles n’acquièrent leur plumage adulte."
+    },
+    "habitat": {
+      "en": "The species uses deciduous and mixed woods, scrub, orchards, hedges and gardens, especially where low vegetation offers cover beside open ground for feeding. Introduced populations established in Australia and New Zealand are geographically separate from the native range.",
+      "fr": "L’espèce fréquente les forêts de feuillus ou mixtes, les fourrés, vergers, haies et jardins, surtout lorsque la végétation basse lui procure un abri près de terrains découverts où chercher sa nourriture. Des populations introduites en Australie et en Nouvelle-Zélande restent séparées de l’aire d’origine."
+    },
+    "diet": {
+      "en": "An opportunistic omnivore, the Blackbird walks or hops over soil, then probes or turns leaves to uncover prey. Earthworms and other invertebrates dominate much of the breeding-season diet, supplying protein to growing chicks; beetles, caterpillars, spiders and small snails add variety. In a Budapest park, parents brought mostly earthworms to early broods in April and May; as June dried and worms became less available, males ranged farther and carried a wider variety of invertebrates. In autumn and winter, berries and other fruits become especially useful, though worms remain available in mild, wet weather.",
+      "fr": "Omnivore opportuniste, le Merle noir marche ou sautille sur le sol, puis le fouille ou retourne les feuilles pour découvrir des proies. Les vers de terre et autres invertébrés dominent une grande part du régime pendant la reproduction et apportent des protéines aux poussins ; coléoptères, chenilles, araignées et petits escargots ajoutent de la variété. Dans un parc de Budapest, les parents apportaient surtout des vers aux premières nichées en avril et mai ; quand le mois de juin s’asséchait et que les vers devenaient plus rares, les mâles élargissaient leur zone de recherche et rapportaient une plus grande variété d’invertébrés. En automne et en hiver, baies et autres fruits deviennent particulièrement utiles, même si des vers restent accessibles par temps doux et humide."
+    },
+    "behavior": {
+      "en": "During breeding, pairs defend territories. Males sing from exposed perches; playback experiments show that song intensity and form can predict escalation in a territorial encounter. Short rattling calls serve in alarm and territorial interactions. Outside the breeding season, birds may gather loosely at rich fruit sources. Migration is partial: a seven-year German study tracked both residents and southbound migrants. Some winter departures occurred during cold spells with snow; cold, snow and reduced food were proposed as possible triggers.",
+      "fr": "Pendant la reproduction, les couples défendent un territoire. Les mâles chantent depuis des perchoirs dégagés ; des expériences de diffusion montrent que l’intensité et la forme du chant peuvent prédire l’escalade d’une confrontation territoriale. Des cris brefs de crécelle servent à l’alarme et aux interactions territoriales. Hors reproduction, les oiseaux peuvent se rassembler autour de fruits abondants. La migration est partielle : une étude allemande de sept ans a suivi à la fois des oiseaux sédentaires et des migrateurs vers le sud. Quelques départs hivernaux ont eu lieu pendant des périodes froides avec neige ; le froid, la neige et le manque de nourriture ont été proposés comme déclencheurs possibles."
+    },
+    "reproduction": {
+      "en": "In Portugal, males generally begin singing in February or March to defend territories and attract females. The female builds a sturdy cup of grass, leaves and mud, usually low in vegetation, and lays blue-green, speckled eggs. In the United Kingdom, first clutches are laid on average in late April, typically contain three to four eggs, and two or three broods are common. The female incubates for about 12–14 days. Both parents feed the helpless hatchlings. Young usually leave the nest at about two weeks, before they can forage well; Oxford observations found that parents divide fledgling care, and young generally become independent 15–24 days after fledging.",
+      "fr": "Au Portugal, les mâles commencent généralement à chanter en février ou en mars pour défendre leur territoire et attirer les femelles. La femelle construit une coupe solide d’herbes, de feuilles et de boue, souvent bas dans la végétation, et pond des œufs bleu-vert tachetés. Au Royaume-Uni, la première ponte a lieu en moyenne fin avril, compte généralement trois à quatre œufs, et deux ou trois nichées sont habituelles. La femelle couve pendant environ 12 à 14 jours. Les deux parents nourrissent les oisillons dépendants. Les jeunes quittent généralement le nid vers deux semaines, avant de savoir bien se nourrir seuls ; à Oxford, les observations ont montré que les parents se répartissent les soins, et que les jeunes deviennent généralement indépendants 15 à 24 jours après l’envol."
+    },
+    "ecology": {
+      "en": "By eating fruit and later depositing seeds in droppings, Blackbirds can disperse some plants away from the parent; experiments with captive birds show gut passage can alter germination timing, with effects varying by plant species. Blackbirds are also prey for raptors such as Eurasian Sparrowhawks. In a UK urban-park study, magpie predation on Blackbird nests was inferred from disappearance patterns around artificial eggs, rather than directly observed.",
+      "fr": "En mangeant des fruits puis en déposant leurs graines dans leurs fientes, les merles peuvent disperser certaines plantes loin du pied parent ; des expériences avec des oiseaux captifs montrent que le transit digestif peut modifier le délai de germination, avec des effets variables selon les plantes. Les merles sont aussi des proies pour des rapaces comme l’Épervier d’Europe. Dans une étude menée dans un parc urbain britannique, la prédation de nids de merles par les pies a été déduite de la disparition d’œufs factices, sans observation directe."
+    },
+    "conservation": {
+      "en": "The global IUCN Red List update published in 2024 lists the Blackbird as Least Concern, reflecting its large range and population. BTO data show a 21% decline in the UK breeding population between 1967 and 2024, despite partial recovery since the mid-1990s; regional trends differ, including a marked decline in London. A 2022 study associated the 2020 Usutu virus incursion in Greater London with potential impacts on wild birds; later BTO analysis identifies reduced Blackbird survival linked to the virus in recent south-east English declines.",
+      "fr": "La mise à jour mondiale de la Liste rouge de l’UICN publiée en 2024 classe le Merle noir en préoccupation mineure, compte tenu de son aire et de sa population étendues . Les données du BTO indiquent une baisse de 21 % de la population nicheuse du Royaume-Uni entre 1967 et 2024, malgré une reprise partielle depuis le milieu des années 1990 ; les tendances régionales diffèrent, avec un recul marqué à Londres. Une étude de 2022 a associé l’arrivée du virus Usutu dans le Grand Londres en 2020 à des impacts possibles sur les oiseaux sauvages ; une analyse ultérieure du BTO relie le virus à une baisse récente de survie des merles dans le sud-est de l’Angleterre."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eurasian Blackbird — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Merle noir — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Blackbird/overview",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Cornell overview summarizes range, adult size and plumage differences."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 12,
+        "notes_words": 9,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eurasian Blackbird Life History — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Histoire naturelle du Merle noir — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Blackbird/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell life history summarizes habitat use, seasonal foods and parental care."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.4",
+        "diet.fr.4",
+        "behavior.en.4",
+        "behavior.fr.4",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 11,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blackbird BirdFacts — British Trust for Ornithology",
+        "fr": "Fiche BirdFacts du Merle noir — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/blackbird",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "UK nest records give typical clutch size, first-laying dates and population-trend estimates."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 12,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal changes in foraging strategies of nesting blackbirds — Behavioral Ecology and Sociobiology",
+        "fr": "Variations saisonnières des stratégies alimentaires des merles nicheurs — Behavioral Ecology and Sociobiology"
+      },
+      "url": "https://doi.org/10.1007/BF00295101",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Budapest males fed earthworms early, then diversified loads and expanded ranges as June dried."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 14,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging Behavior and Predation Risk in Male and Female Eurasian Blackbirds During the Breeding Season — Ornithology",
+        "fr": "Recherche alimentaire et risque de prédation chez les merles noirs mâles et femelles en reproduction — Ornithology"
+      },
+      "url": "https://academic.oup.com/auk/article/123/1/162/5562527",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Field research examines ground feeding, prey and sparrowhawk predation risk."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 10,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Song and information about aggressive responses of blackbirds — Animal Behaviour",
+        "fr": "Chant et information sur les réponses agressives des merles — Animal Behaviour"
+      },
+      "url": "https://doi.org/10.1016/S0003-3472(05)80182-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Playback experiments link song intensity and type to territorial escalation."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 10,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Acoustic cues to individual identity in the rattle calls of common blackbirds — Behaviour",
+        "fr": "Indices acoustiques d’identité individuelle dans les cris de crécelle du Merle noir — Behaviour"
+      },
+      "url": "https://doi.org/10.1163/1568539X-00003232",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Rattle calls occur in alarm and territorial contexts and contain individual acoustic variation."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 13,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Migration confers winter survival benefits in a partially migratory songbird — Ecology and Evolution",
+        "fr": "La migration améliore la survie hivernale d’un passereau à migration partielle — Ecology and Evolution"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5697929/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "German study excluded 11 winter departures; cold, snow and food were possible triggers."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
+        "behavior.en.6",
+        "behavior.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 13,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brood division and transition to independence in Blackbirds — Ibis",
+        "fr": "Répartition des jeunes et passage à l’indépendance chez le Merle noir — Ibis"
+      },
+      "url": "https://doi.org/10.1111/j.1474-919X.1985.tb05036.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Oxford observations found brood division and independence 15–24 days after fledging."
+      ],
+      "prose_claims": [
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 11,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Passage through bird guts causes interspecific differences in seed germination characteristics — Functional Ecology",
+        "fr": "Le transit dans le tube digestif des oiseaux modifie différemment la germination des graines — Functional Ecology"
+      },
+      "url": "https://doi.org/10.1046/j.0269-8463.2001.00561.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Mallorca experiment found gut passage altered germination speed, with effects varying by plant species."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 14,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Turdus merula — IUCN Red List update 2024-2",
+        "fr": "Turdus merula — mise à jour 2024-2 de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T103888106A264548442.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN global Red List version 2024-2 lists Blackbird as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 11,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Combining host and vector data informs emergence and potential impact of an Usutu virus outbreak in UK wild birds — Parasites & Vectors",
+        "fr": "L’association des données sur les hôtes et vecteurs éclaire l’émergence et l’impact potentiel du virus Usutu chez les oiseaux sauvages britanniques — Parasites & Vectors"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9206397/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "UK monitoring linked the 2020 London decline to Usutu activity without proving sole causation."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 14,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Magpie predation on Blackbird nests in urban areas — Bird Study",
+        "fr": "Prédation des nids de merles par la Pie bavarde en milieu urbain — Bird Study"
+      },
+      "url": "https://doi.org/10.1080/00063659309477129",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Urban park study inferred magpie predation from artificial-egg disappearance patterns."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 10,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Blackbird — FCT VIVA, NOVA University Lisbon",
+        "fr": "Merle noir — FCT VIVA, Université NOVA de Lisbonne"
+      },
+      "url": "https://www.viva.fct.unl.pt/aves/turdus-merula",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "University account describes sex and juvenile plumage, habitats and parental feeding."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 11,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lord Howe Island Biodiversity Management Plan: Fauna Appendix — NSW Government",
+        "fr": "Plan de gestion de la biodiversité de l’île Lord Howe : annexe sur la faune — Gouvernement de Nouvelle-Galles du Sud"
+      },
+      "url": "https://www.environment.nsw.gov.au/sites/default/files/lord-howe-island-biodiversity-management-plan-fauna-appendix-070469.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Government plan records established introduced populations in Australia and New Zealand."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 11,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The breeding of the Blackbird Turdus merula at Oxford — Ibis",
+        "fr": "La reproduction du Merle noir à Oxford — Ibis"
+      },
+      "url": "https://doi.org/10.1111/j.1474-919X.1958.tb00362.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Oxford primary study documents Blackbird breeding cycle and care of young."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 11,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "AviList: The Global Avian Checklist, v2025b",
+        "fr": "AviList : Liste mondiale des oiseaux, v2025b"
+      },
+      "url": "https://www.avilist.org/checklist/v2025b/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "AviList 2025b recognizes Turdus merula separately from Asian blackbird taxa."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 10,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "AOS Classification Committee proposal 2021-C-5: Eurasian Blackbird split",
+        "fr": "Proposition 2021-C-5 du comité de classification AOS : séparation du Merle noir d’Eurasie"
+      },
+      "url": "https://americanornithology.org/wp-content/uploads/2021/07/2021-C-final.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "AOS proposal discusses four lineages formerly grouped within Turdus merula."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 10,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show one adult male Turdus merula, complete body in natural proportions, glossy black plumage, yellow-orange bill and eye-ring, perched or walking on leaf litter in a garden-edge woodland. Pure white background.",
+  "uncertainties": [
+    "The native range here follows the strict Turdus merula taxon in AviList 2025b; seasonal occupancy and migration differ across populations.",
+    "The UK breeding dates and clutch values are nest-record summaries, not fixed timing or clutch size for every population.",
+    "A 2022 study associated the Usutu incursion with potential impacts; BTO later linked reduced survival to the virus in south-east England.",
+    "The seed evidence is based on captive birds and a limited set of western Mediterranean plants; it supports variable effects on germination timing, not a universal increase in plant recruitment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique corrected strict species range, unsupported prey-listening, scope of winter migration and indirect magpie evidence; clarified UK reproduction and conservation, aligned EN/FR and audited source budgets; illustration inspected."
+}

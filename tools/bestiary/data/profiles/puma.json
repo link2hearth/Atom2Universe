@@ -1,0 +1,115 @@
+{
+  "id": "puma",
+  "scientific": "Puma concolor",
+  "group": "mammals",
+  "name": {
+    "en": "Puma",
+    "fr": "Puma"
+  },
+  "sections": {
+    "overview": {
+      "en": "The puma, also called cougar or mountain lion, is a large cat native to the Americas. Usually solitary, it ranges from western Canada through much of South America. Its presence across varied landscapes makes it one of the continent’s most widely distributed native mammals.",
+      "fr": "Le puma, aussi appelé cougar ou lion de montagne, est un grand félin des Amériques. Généralement solitaire, il vit de l’ouest du Canada à une grande partie de l’Amérique du Sud. Sa présence dans des paysages variés explique sa vaste répartition."
+    },
+    "identification": {
+      "en": "Adults have a tawny, grey-brown or reddish coat, usually paler underneath, with a small head, rounded ears, powerful hindquarters and a long, thick tail. Adults lack spots; kittens are spotted, and their markings fade as they grow.",
+      "fr": "L’adulte porte une robe fauve, gris-brun ou roussâtre, souvent plus claire dessous. Sa petite tête, ses oreilles arrondies, son arrière-train puissant et sa longue queue épaisse le distinguent. Les adultes n’ont pas de taches; celles des petits s’estompent en grandissant."
+    },
+    "habitat": {
+      "en": "Pumas occupy forests, scrub, grasslands, deserts and wetlands, from lowlands to mountains. They use places with prey and cover, including dense vegetation, rocky crevices and caves. Habitat use varies locally: Florida panthers, for example, use swamp forest and wooded hammocks.",
+      "fr": "Les pumas fréquentent forêts, broussailles, prairies, déserts et zones humides, des basses terres aux montagnes. Ils recherchent des proies et des abris parmi la végétation dense, les fissures rocheuses ou les grottes. En Floride, les panthères fréquentent notamment marécages boisés et hammocks forestiers."
+    },
+    "diet": {
+      "en": "This carnivore takes locally available prey. Deer are important across much of North America; elk, moose, wild pigs, guanacos, hares and smaller mammals may also be eaten. Pumas stalk and ambush prey, then cover large carcasses to return for later meals.",
+      "fr": "Ce carnivore capture les proies locales. Les cerfs comptent dans une grande partie de l’Amérique du Nord; wapitis, orignaux, porcs sauvages, guanacos, lièvres et petits mammifères sont aussi consommés. Le puma approche sa proie à couvert, bondit, puis dissimule les grandes carcasses pour y revenir."
+    },
+    "behavior": {
+      "en": "Adults generally live alone, except during mating and while females raise young. Home ranges can overlap; a male’s range may encompass several females. Scent marks, scraped ground and scratched logs signal occupancy. Pumas may be active by day or night, often around dusk and dawn.",
+      "fr": "Les adultes sont seuls, sauf lors de l’accouplement et de l’élevage des petits. Leurs domaines se chevauchent; celui d’un mâle peut inclure plusieurs femelles. Marquages odorants, terre et troncs griffés signalent leur présence. Ils sont actifs jour et nuit, souvent à l’aube et au crépuscule."
+    },
+    "reproduction": {
+      "en": "Pumas breed year-round, though some populations have seasonal peaks. After about three months, a female gives birth to one to six kittens in a den. Spotted at birth, they eat meat at six weeks and stay with her for about a year.",
+      "fr": "Les pumas se reproduisent toute l’année, avec des pics saisonniers locaux. Après environ trois mois, la femelle met bas un à six petits dans un abri. Tachetés à la naissance, ils mangent de la viande vers six semaines et restent avec elle environ un an."
+    },
+    "ecology": {
+      "en": "As a large predator, the puma hunts herbivores and can affect where prey feed and move. Its effects depend on local conditions and interactions with other predators. Yellowstone research examines cougars alongside wolves, bears and elk; carcasses also provide food for scavengers.",
+      "fr": "Grand prédateur, le puma chasse des herbivores et peut modifier où ses proies se nourrissent et circulent. Ses effets dépendent du milieu et des autres prédateurs. À Yellowstone, des études examinent pumas, loups, ours et wapitis; leurs carcasses nourrissent des charognards."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2015 classified the species as Least Concern, while noting uncertainty and suspected declines in parts of Central and South America. Habitat loss, fragmentation, persecution, hunting and depleted prey threaten some populations. Connected habitat and reduced conflict are conservation priorities.",
+      "fr": "L’évaluation UICN de 2015 classait l’espèce en préoccupation mineure, mais signalait incertitudes et déclins suspectés en Amérique centrale et du Sud. Perte d’habitat, fragmentation, chasse, persécution et raréfaction des proies menacent certaines populations. Protéger les corridors et favoriser la coexistence sont des priorités."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mountain Lion (Puma, Cougar)",
+        "fr": "Lion de montagne (puma, cougar)"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/mountain-lion-puma-cougar",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Describes adult coat and body shape, spotted young, regional prey and ambush feeding."
+      ]
+    },
+    {
+      "title": {
+        "en": "Puma concolor, mountain lion",
+        "fr": "Puma concolor, lion de montagne"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/puco",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Reviews western North American habitat types and Florida panther vegetation use.",
+        "Reports breeding timing, 82–98-day gestation, litter size, kitten growth and weaning."
+      ]
+    },
+    {
+      "title": {
+        "en": "Puma",
+        "fr": "Puma"
+      },
+      "url": "https://panthera.org/sites/default/files/science-documents/Panthera_FactSheet_Puma.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Fact sheet maps the species across the Americas and lists forest, desert and steppe habitats.",
+        "Reports the dated 2015 IUCN category, regional uncertainty, and human-related threats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cougar",
+        "fr": "Cougar"
+      },
+      "url": "https://www.nps.gov/yell/learn/nature/cougar.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Yellowstone research documents male territoriality, seasonal prey tracking and scent scrapes.",
+        "Describes predator interactions, cached kills and ecological research on pumas, bears, wolves and prey."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult Puma concolor, sex unspecified, natural tawny coat, small rounded ears, muscular limbs and long thick tail; exact species morphology on a PURE WHITE background.",
+  "uncertainties": [
+    "The 2015 IUCN assessment is historical; it is cited with its date and does not establish a current global status.",
+    "Population trends and ecological effects vary geographically, and Central and South American status remains poorly known."
+  ],
+  "reviewed": true,
+  "review_note": "Coordinator reviewed bilingual paragraphs, exact taxonomy, geographically scoped claims and sources. Existing validated plate retained."
+}

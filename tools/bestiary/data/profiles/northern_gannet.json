@@ -1,0 +1,303 @@
+{
+  "id": "northern_gannet",
+  "scientific": "Morus bassanus",
+  "group": "birds",
+  "name": {
+    "en": "Northern gannet",
+    "fr": "Fou de Bassan"
+  },
+  "sections": {
+    "overview": {
+      "en": "The northern gannet is a large seabird of the North Atlantic, breeding on offshore islands and cliffs from northeastern North America to western Europe. It spends much of the year at sea, returning to crowded colonies to nest.",
+      "fr": "Le Fou de Bassan est un grand oiseau marin de l’Atlantique Nord. Il niche sur des îles et des falaises, du nord-est de l’Amérique à l’Europe occidentale, et passe une grande partie de l’année en mer avant de revenir nicher en colonies denses."
+    },
+    "identification": {
+      "en": "Adults are about 85–100 cm long, with a wingspan of roughly 165–180 cm. The sexes look alike: the body is white, the long narrow wings have black tips, and the head and neck are buff-yellow in breeding plumage. Young birds are dark brown and acquire more white feathers over several years.",
+      "fr": "L’adulte mesure environ 85 à 100 cm, pour une envergure de l’ordre de 165 à 180 cm. Mâle et femelle se ressemblent : le corps est blanc, les longues ailes étroites ont les extrémités noires, et la tête ainsi que le cou prennent une teinte jaune pâle en plumage nuptial. Le jeune, brun, blanchit progressivement en plusieurs années."
+    },
+    "habitat": {
+      "en": "Breeding colonies occupy steep sea cliffs, rocky islands and other isolated coastal sites, where many nests fit close together. At sea, gannets range widely over productive shelf waters and follow moving shoals; after breeding, many migrate south within the Atlantic or into the western Mediterranean.",
+      "fr": "Les colonies occupent des falaises maritimes, des îles rocheuses et d’autres sites côtiers isolés, où les nids sont très rapprochés. En mer, les fous parcourent les eaux productives du plateau continental et suivent les bancs de poissons; après la reproduction, beaucoup gagnent le sud de l’Atlantique ou la Méditerranée occidentale."
+    },
+    "diet": {
+      "en": "It eats mainly schooling fish, including mackerel, herring and sandeels, as well as squid. From a glide or steep flight it folds its wings and plunges bill-first, often striking at high speed; it can also pursue prey below the surface. Its eyes are protected by a translucent third eyelid, and air spaces beneath the skin cushion the impact. It swallows captured fish underwater or at the surface.",
+      "fr": "Il mange surtout des poissons vivant en bancs, comme le maquereau, le hareng et le lançon, ainsi que des calmars. Après un vol plané ou une descente abrupte, il replie ses ailes et plonge le bec en avant, parfois à grande vitesse; il peut aussi poursuivre une proie sous l’eau. Une membrane translucide protège ses yeux, et des espaces remplis d’air sous la peau amortissent le choc. Il avale sa prise sous l’eau ou en surface."
+    },
+    "behavior": {
+      "en": "Gannets forage singly or in loose groups, and several birds may dive where fish are driven toward the surface by predators or boats. At colonies, close neighbors defend small nest spaces with upright postures, bill-pointing and harsh calls. Pairs greet with raised bills and mutual display; their repeated calls help maintain contact in the noisy crowd.",
+      "fr": "Les fous pêchent seuls ou en groupes lâches; plusieurs peuvent plonger là où des prédateurs ou des bateaux rabattent les poissons vers la surface. Dans la colonie, chaque couple défend le petit espace autour de son nid par des postures dressées, le bec dirigé vers les intrus et des cris rauques. Les partenaires se saluent bec levé et par des parades; leurs appels répétés entretiennent le contact dans le vacarme."
+    },
+    "reproduction": {
+      "en": "Pairs usually return to the same colony and may remain together across years. They build a mound of seaweed, grass and other material, then lay a single egg. Both parents incubate it between their webbed feet for about 42–46 days. The chick hatches helpless and is fed regurgitated fish by both adults; it grows for roughly 84–97 days before its first flight, then leaves the colony and must find food at sea. Breeding generally begins at around five years.",
+      "fr": "Les couples reviennent généralement à la même colonie et peuvent rester unis plusieurs années. Ils construisent un amas d’algues, d’herbes et d’autres matériaux, puis pondent un seul œuf. Les deux parents le couvent entre leurs pattes palmées pendant environ 42 à 46 jours. Le poussin, incapable de se débrouiller seul à l’éclosion, reçoit des poissons régurgités par les adultes; il grandit quelque 84 à 97 jours avant son premier envol, puis quitte la colonie et doit trouver sa nourriture en mer. Il commence généralement à se reproduire vers cinq ans."
+    },
+    "ecology": {
+      "en": "Northern gannets consume schooling pelagic fish and squid, linking their feeding to stocks also sought by commercial fisheries. They can be caught accidentally in fishing nets, so fishing activity affects both their food supply and survival.",
+      "fr": "Les fous de Bassan consomment des poissons pélagiques grégaires et des calmars, ce qui relie leur alimentation aux stocks exploités par les pêcheries. Ils peuvent être capturés accidentellement dans les filets; l’activité de pêche influe donc sur leurs ressources et leur survie."
+    },
+    "conservation": {
+      "en": "The species is globally classified as Least Concern, a status that describes extinction risk across its full range and does not mean every colony is secure. Past egg collection and hunting reduced some colonies, while fishing pressure, bycatch, pollution and changing food supplies remain concerns. Highly pathogenic avian influenza caused severe recent losses: in 2022, at least 11,000 gannet deaths were recorded in Scotland and 5,000 at Grassholm, Wales.",
+      "fr": "À l’échelle mondiale, l’espèce est classée en préoccupation mineure; cette catégorie évalue le risque d’extinction sur l’ensemble de son aire et ne garantit pas la sécurité de chaque colonie. La collecte des œufs et la chasse ont autrefois réduit certaines colonies; pression de la pêche, captures accidentelles, pollution et évolution des ressources alimentaires restent des préoccupations. La grippe aviaire hautement pathogène a provoqué de lourdes pertes récentes : en 2022, au moins 11 000 morts ont été recensés en Écosse et 5 000 à Grassholm, au pays de Galles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Northern gannet — Wikipedia",
+        "fr": "Fou de Bassan — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Northern_gannet",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "North Atlantic range, migration and historical hunting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "habitat.en.1",
+        "conservation.en.2",
+        "behavior.en.3",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "diet.en.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 7,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern gannet — Wikipedia",
+        "fr": "Fou de Bassan — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Fou_de_Bassan",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "French species account covers appearance, range, diving and human pressures."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.fr.3",
+        "habitat.fr.1",
+        "conservation.fr.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 10,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gannet — BirdFacts, British Trust for Ornithology",
+        "fr": "Fou de Bassan — BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/gannet",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "BTO: one egg; incubation 42–46 days; fledging 84–97 days."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 9,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern Gannet Life History — Cornell Lab of Ornithology",
+        "fr": "Cycle de vie du Fou de Bassan — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Northern_Gannet/lifehistory/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell describes gannet anatomy, diving and colony behavior."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.2",
+        "diet.fr.4",
+        "reproduction.en.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 8,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seabird of the month – Northern Gannet (Morus bassanus) — BirdLife International",
+        "fr": "Oiseau marin du mois – Fou de Bassan (Morus bassanus) — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/news/2021/07/06/seabird-month-northern-gannet-morus-bassanus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "BirdLife describes mixed feeding associations in which seabirds exploit prey driven toward the surface."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 14,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Avian Influenza: a major threat to our struggling seabirds — RSPB",
+        "fr": "Grippe aviaire : une menace majeure pour les oiseaux marins — RSPB"
+      },
+      "url": "https://web-cdn.rspb.org.uk/birds-and-wildlife/seabird-surveys-project-report",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "RSPB recorded at least 11,000 Scottish and 5,000 Grassholm gannet deaths in 2022."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 13,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Analysis of the possible displacement of bird and marine mammal species related to marine energy systems — NatureScot",
+        "fr": "Analyse du déplacement potentiel des oiseaux et mammifères marins lié aux systèmes d’énergie marine — NatureScot"
+      },
+      "url": "https://www.nature.scot/sites/default/files/2017-06/Publication%202017%20-%20SNH%20Commissioned%20Report%20947%20-%20Analysis%20of%20the%20possible%20displacement%20of%20bird%20and%20marine%20mammal%20species%20related%20to%20the%20installation%20and%20operation%20of%20marine%20energy%20conversion%20systems.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "habitat"
+      ],
+      "facts": [
+        "Regional report documents prey, diving, colonies and seasonal migration."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 9,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genetic Scorecard Indicator – Northern Gannet — NatureScot",
+        "fr": "Indicateur de score génétique – Fou de Bassan — NatureScot"
+      },
+      "url": "https://www.nature.scot/doc/genetic-scorecard-indicator-northern-gannet",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "NatureScot lists global Least Concern and describes fishery bycatch vulnerability."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 10,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult northern gannet, Morus bassanus, accurate full-body seabird in a naturalistic field-guide pose: white body, long narrow wings with black tips, pale buff-yellow head and neck, long pointed grey bill with dark facial lines, short greenish webbed feet. Show normal adult plumage and proportions; no fish, nest, text or background.",
+  "uncertainties": [
+    "Adult length and wingspan are indicative ranges compiled from the species accounts; measurements vary among individuals and sources.",
+    "The global Least Concern category is cited from the species accounts; the exact latest assessment year was not independently established here, so no year is asserted.",
+    "The 2022 mortality figures are regional outbreak counts and do not quantify the species-wide population effect."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: BTO incubation, fledging and maturity checked; RSPB confirms dated regional 2022 mortality counts; bilingual colony-return qualifier and bill-pointing restored. Omitted nostril wording to avoid conflating internal passages and external openings. Global status not assigned an unverified latest year."
+}

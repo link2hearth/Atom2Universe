@@ -1,0 +1,348 @@
+{
+  "id": "wild_turkey",
+  "scientific": "Meleagris gallopavo",
+  "group": "birds",
+  "name": {
+    "en": "Wild turkey",
+    "fr": "Dindon sauvage"
+  },
+  "sections": {
+    "overview": {
+      "en": "The wild turkey is a large North American forest bird that moves between woods and clearings. It walks and scratches for much of the day, yet flies strongly enough to reach night roosts in trees and escape danger.",
+      "fr": "Le Dindon sauvage est un grand oiseau forestier d’Amérique du Nord qui circule entre bois et clairières. Il marche et gratte le sol une grande partie de la journée, mais vole assez bien pour gagner un perchoir nocturne dans les arbres ou fuir un danger."
+    },
+    "identification": {
+      "en": "Adult males are substantially larger than females: usual masses are about 6.8–11 kilograms for males and 3.6–5.4 kilograms for hens, varying among populations and seasons. A male’s bare blue-red head bears small fleshy caruncles; a soft flap called a snood hangs above the bill, red throat wattles and a black bristly breast beard stand out, and long legs carry sharp spurs. Hens are smaller and browner, usually without a beard. Both sexes have barred wings and a broad rounded tail, closed at rest and fanned during display.",
+      "fr": "Le mâle adulte est nettement plus grand que la femelle : sa masse habituelle est d’environ 6,8 à 11 kilogrammes, contre 3,6 à 5,4 kilogrammes chez la femelle, avec des variations selon les populations et les saisons. Sa tête nue bleue et rouge porte de petites caroncules charnues ; un appendice souple appelé snood pend au-dessus du bec, des caroncules rouges de la gorge et une barbe noire de soies se détachent, et ses longues pattes portent des ergots acérés. La femelle est plus petite et brune, généralement sans barbe. Les deux sexes ont des ailes barrées et une large queue arrondie, fermée au repos et déployée en éventail pendant la parade."
+    },
+    "habitat": {
+      "en": "Across much of North America, turkeys use mature mixed or hardwood forest with fields and grassy openings. In the southeastern United States, trees supply roosts and acorns, while open low cover helps birds spot predators and shelters nests and insect-rich brood habitat.",
+      "fr": "Dans une grande partie de l’Amérique du Nord, le Dindon sauvage fréquente les forêts mûres de feuillus ou mixtes, les champs et les clairières herbeuses. Dans le sud-est des États-Unis, les arbres fournissent perchoirs et glands, tandis qu’un couvert bas permet de repérer les prédateurs et abrite les nids et les insectes des zones de nourrissage des poussins."
+    },
+    "diet": {
+      "en": "Turkeys are omnivores, though plant foods dominate: they eat seeds, acorns, nuts, berries and green plants, plus insects and other invertebrates, especially when young. They scratch leaf litter and peck food from the ground, sometimes reaching fruit in shrubs. They swallow grit; in the muscular gizzard, contractions and hard particles grind coarse seeds and plant matter into smaller pieces for digestion.",
+      "fr": "Le Dindon sauvage est omnivore, même si les végétaux dominent : il mange graines, glands, noix, baies et plantes vertes, ainsi que des insectes et autres invertébrés, surtout jeune. Il gratte la litière, picore au sol et atteint parfois des fruits dans les arbustes. Il avale de petits cailloux qui, avec les contractions du gésier musculaire, broient graines et végétaux grossiers en fragments plus petits qui seront digérés."
+    },
+    "behavior": {
+      "en": "Turkeys are social, but flock structure varies by season and sex: males often associate together outside breeding, while hens travel with young and may join other families. At dusk, birds fly up into sheltered trees to roost; their powerful burst flight also helps them escape danger. Many broad-breasted commercial strains have been selected for heavy bodies and have limited flight ability. In spring, males gobble, strut with lowered wings and fan the tail, using sound and plumage to attract females and signal to rivals.",
+      "fr": "Le Dindon sauvage est grégaire, mais les groupes varient selon la saison et le sexe : hors reproduction, les mâles s’associent souvent, tandis que les femelles voyagent avec les jeunes et rejoignent parfois d’autres familles. Au crépuscule, les oiseaux volent jusqu’aux arbres abrités pour dormir ; leurs puissants départs en vol les aident aussi à fuir un danger. De nombreuses lignées commerciales à poitrine large ont été sélectionnées pour leur masse et volent difficilement. Au printemps, les mâles glougloutent, paradent ailes basses et queue en éventail ; cris et plumage attirent les femelles et signalent leur présence aux rivaux."
+    },
+    "reproduction": {
+      "en": "A male may display to several females and does not help build the nest or raise young; females visit display grounds to mate. A genetic study of eastern wild turkeys in Georgia and South Carolina found that some clutches had multiple fathers. The hen scratches a shallow nest in leaf litter or low cover and usually lays one seasonal clutch of roughly 4–17 eggs; she incubates for about 25–31 days. The down-covered poults hatch well developed, leave the nest within about a day, and follow their mother, who broods and protects them. They feed themselves early, often taking many insects, and typically can fly to tree roosts at two to three weeks; this is a vulnerable transition because they sleep on the ground before then.",
+      "fr": "Un mâle peut parader pour plusieurs femelles et ne participe ni au nid ni à l’élevage ; celles-ci viennent s’accoupler sur les lieux de parade. Une étude génétique menée sur des dindons sauvages de l’Est en Géorgie et en Caroline du Sud a trouvé plusieurs pères dans certaines couvées. La femelle gratte un nid peu profond dans la litière ou un couvert bas et pond généralement une seule couvée saisonnière d’environ 4 à 17 œufs ; elle les couve pendant 25 à 31 jours. Les poussins couverts de duvet éclosent déjà bien développés, quittent le nid en un jour environ et suivent leur mère, qui les réchauffe et les protège. Ils se nourrissent tôt seuls, notamment de nombreux insectes, et savent généralement voler jusqu’aux arbres pour dormir entre deux et trois semaines ; auparavant, ils passent la nuit au sol, période où ils sont vulnérables."
+    },
+    "ecology": {
+      "en": "Turkeys eat seeds and nuts, and their young consume many insects; they in turn feed predators such as coyotes, bobcats, eagles and owls, while raccoons and snakes take eggs and young.",
+      "fr": "Les dindons mangent graines et noix, et leurs poussins consomment beaucoup d’insectes ; ils nourrissent à leur tour des prédateurs comme coyotes, lynx roux, aigles et hiboux, tandis que ratons laveurs et serpents prennent œufs et jeunes."
+    },
+    "conservation": {
+      "en": "The IUCN global assessment completed on 9 August 2018 and published in 2018 classified the wild turkey as Least Concern; this worldwide category is not a guarantee that every local population is secure. Hunting and forest clearance caused severe declines in the nineteenth and early twentieth centuries. Early releases of farm-raised birds often failed, but wildlife agencies later restored populations by trapping wild birds and moving them into suitable habitat; New York’s program began in 1959 and supplied other northeastern states and Ontario. The bird is also the ancestor of domestic turkeys: Indigenous peoples in Mexico domesticated it centuries before Europeans carried domestic birds to Europe. Hunting remains an important human use and a management consideration, with seasons and rules determined locally.",
+      "fr": "L’évaluation mondiale de l’UICN achevée le 9 août 2018 et publiée en 2018 classait le Dindon sauvage en préoccupation mineure ; cette catégorie mondiale ne garantit pas la sécurité de chaque population locale. La chasse et le défrichement des forêts ont provoqué de forts déclins aux XIXe et au début du XXe siècle. Les premiers lâchers d’oiseaux d’élevage échouaient souvent, mais les agences de la faune ont ensuite rétabli des populations en capturant des oiseaux sauvages pour les déplacer dans des habitats adaptés ; le programme de l’État de New York a commencé en 1959 et a fourni d’autres États du nord-est ainsi que l’Ontario. L’espèce est aussi l’ancêtre des dindons domestiques : des peuples autochtones du Mexique l’avaient domestiquée plusieurs siècles avant que des Européens n’emportent des oiseaux domestiques en Europe. La chasse reste un usage humain important et un enjeu de gestion, encadré localement par des saisons et des règles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Wild Turkey Identification — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Identification du Dindon sauvage — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Wild_Turkey/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Cornell field guide describes plumage, size range, flight and roosting."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 10,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meleagris gallopavo (wild turkey) — Animal Diversity Web",
+        "fr": "Meleagris gallopavo (Dindon sauvage) — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Meleagris_gallopavo/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "University records turkey sizes and predators."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 6,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild Turkey — NC State Extension Publications",
+        "fr": "Dindon sauvage — Publications de vulgarisation de NC State"
+      },
+      "url": "https://content.ces.ncsu.edu/wild-turkey",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Southeastern US account links forest openings, mast, broods and insects."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 10,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild Turkey Life History — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Cycle biologique du Dindon sauvage — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/wild_turkey/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell summarizes seasonal foods, nests, flocking, flight and predators."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 9,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Turkey — Pennsylvania Game Commission",
+        "fr": "Dindon — Pennsylvania Game Commission"
+      },
+      "url": "https://www.pa.gov/agencies/pgc/wildlife/discover-pa-wildlife/turkey",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "State agency explains crop, gizzard and grit grinding food."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 9,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genetic analysis provides insight into the mating system of Meleagris gallopavo (Wild Turkey) and reveals frequent extra-pair paternity",
+        "fr": "L’analyse génétique éclaire le système d’accouplement de Meleagris gallopavo et révèle une paternité extrapaire fréquente"
+      },
+      "url": "https://academic.oup.com/auk/article/143/1/1/8279657",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Eastern wild turkey eggshell DNA found multiple fathers in some nests."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 11,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild Turkey Overview — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Présentation du Dindon sauvage — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/wild_turkey",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Cornell describes Mexican domestication and twentieth-century wild translocations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 8,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild Turkey — New York State Department of Environmental Conservation",
+        "fr": "Dindon sauvage — Département de la conservation de l’environnement de l’État de New York"
+      },
+      "url": "https://dec.ny.gov/nature/animals-fish-plants/wild-turkey",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "DEC: 1959 translocations; 2–3-week roost flight."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "conservation.en.5",
+        "conservation.fr.5",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 6,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild turkey, Meleagris gallopavo — IUCN Red List of Threatened Species 2018",
+        "fr": "Dindon sauvage, Meleagris gallopavo — Liste rouge de l’UICN 2018"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22679525A132051953.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global status Least Concern; assessed 9 August and published 2018."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 10,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The difference between wild and domestic turkeys — South Carolina Department of Natural Resources",
+        "fr": "Différences entre dindons sauvages et domestiques — South Carolina Department of Natural Resources"
+      },
+      "url": "https://www.dnr.sc.gov/news/2019/nov/nov25_turkeys.php",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Agency attributes commercial domestic flight loss to selection for heavier bodies."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 11,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult male of the eastern wild population, standing with wings folded and tail closed. Show dark bronze iridescent plumage, barred wings, bare red-and-blue head, visible snood and wattles, hanging black breast beard and leg spurs. Keep the proportions leaner than a commercial domestic turkey; no display fan.",
+  "uncertainties": [
+    "Wild turkey masses, plumage details and seasonal group structure vary geographically; figures here describe ordinary broad ranges rather than records. The IUCN Red List DOI identifies a 2018 global assessment, but its species endpoint could not be opened directly during source checking."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Scoped domestic flight limitation to commercial strains, contextualized regional multiple paternity, corrected early roosting to2–3weeks and clarified ecological diet of young. Confirmed2018 global assessment; naturalistic eastern wild male accepted independently with minor uncropped margin limitation."
+}

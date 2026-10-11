@@ -1,0 +1,154 @@
+{
+  "id": "aardvark",
+  "scientific": "Orycteropus afer",
+  "group": "mammals",
+  "name": {
+    "en": "Aardvark",
+    "fr": "Oryctérope du Cap"
+  },
+  "sections": {
+    "overview": {
+      "en": "The aardvark is the only living member of the mammalian order Tubulidentata. It is native to sub-Saharan Africa. Despite eating ants and termites, it is not a South American anteater; the resemblance reflects a similar diet, not close kinship.",
+      "fr": "L’oryctérope est le seul mammifère vivant de l’ordre des Tubulidentés. Originaire d’Afrique subsaharienne, il mange fourmis et termites. Sa ressemblance avec le fourmilier sud-américain vient de ce régime semblable, et non d’une parenté proche."
+    },
+    "identification": {
+      "en": "An adult has a heavy arched body, sparse yellow-grey coat, long tapered tail, narrow snout and tall ears that fold back. It has four large digging claws on each forefoot and five on each hind foot. Its cheek teeth are enamel-free dentine tubes; adults lack incisors and canines.",
+      "fr": "L’adulte a un corps massif et arqué, un pelage clairsemé gris-jaune, une longue queue effilée, un museau étroit et de grandes oreilles rabattables. Il porte quatre fortes griffes fouisseuses à chaque patte avant et cinq à l’arrière. Ses dents jugales sont des tubes de dentine sans émail; l’adulte n’a ni incisives ni canines."
+    },
+    "habitat": {
+      "en": "Aardvarks range widely across sub-Saharan Africa, where soils are diggable and prey is available. They inhabit savanna, grassland, woodland and thicket. Hard rocky ground, waterlogged sites and hyper-arid deserts limit them because they need diggable earth for both feeding and shelter. Deep burrows provide daytime refuge.",
+      "fr": "Il vit en Afrique subsaharienne, là où sol et proies lui conviennent. Il fréquente savanes, prairies, boisements et fourrés. Il évite les sols rocheux ou détrempés, difficiles à creuser. Son terrier profond le protège de la chaleur diurne."
+    },
+    "diet": {
+      "en": "A field study in South Africa’s Nama Karoo found ants and termites exclusively in aardvark diets, with ants predominant in every season. Termites became more important in winter, when ant numbers fell and aardvarks may have had more difficulty meeting their nutritional needs.",
+      "fr": "Une étude de terrain dans le Nama-Karoo sud-africain a trouvé exclusivement des fourmis et des termites dans le régime des oryctéropes; les fourmis dominaient en toute saison. Les termites prenaient davantage d’importance en hiver, lorsque les fourmis se raréfiaient et que les besoins nutritionnels étaient peut-être plus difficiles à couvrir."
+    },
+    "behavior": {
+      "en": "Radio-tracking in South Africa’s Nama Karoo found that aardvarks used a burrow for about five to nine days on average, then moved on. Nightly travel reached roughly two to four kilometres. Activity timing and duration shifted with the season, with shorter winter outings.",
+      "fr": "Le suivi par radio dans le Nama-Karoo sud-africain a montré que les oryctéropes occupaient un terrier environ cinq à neuf jours en moyenne, puis changeaient d’abri. Ils parcouraient quelque deux à quatre kilomètres par nuit. Leur horaire et leur durée d’activité variaient selon la saison, avec des sorties hivernales plus courtes."
+    },
+    "reproduction": {
+      "en": "A female usually gives birth to one young after a gestation of roughly seven months. The newborn stays in the burrow during its first weeks, then begins to accompany its mother. Nursing continues for about three months, when it also starts eating insects. It becomes independent at around six months; the mother provides the care.",
+      "fr": "Après environ sept mois de gestation, la femelle met généralement au monde un seul petit. Celui-ci reste dans le terrier durant ses premières semaines, puis commence à suivre sa mère. L’allaitement dure près de trois mois; le jeune commence alors aussi à manger des insectes. Il devient indépendant vers six mois. La mère assure les soins."
+    },
+    "ecology": {
+      "en": "A study of aardvark burrows compared entrances, excavated soil mounds and nearby control ground. Burrowing increased variation in soil and vegetation; plant richness differed among these microsites, and the effect depended on how degraded a burrow had become. Burrowing therefore reshapes local habitat, while its effects vary over time.",
+      "fr": "Une étude a comparé les entrées de terriers, les monticules de terre excavée et des sols témoins voisins. Le creusement accroissait la variation des sols et de la végétation; la richesse végétale différait entre ces micro-sites selon le degré de dégradation du terrier. Les terriers modifient donc le milieu local, avec des effets qui évoluent dans le temps."
+    },
+    "conservation": {
+      "en": "The 2015 global IUCN assessment classified the aardvark as Least Concern. The 2016 southern African assessment reached the same category but noted local declines associated with habitat transformation and persecution. These dated assessments describe different geographic scales; a widespread species can still face serious local pressures.",
+      "fr": "L’évaluation mondiale de l’UICN de2015 classait l’oryctérope en préoccupation mineure. Celle d’Afrique australe de2016 retenait la même catégorie, mais signalait des déclins locaux liés à la transformation des habitats et aux persécutions. Ces évaluations datées portent sur des échelles géographiques différentes ; une espèce largement répartie peut subir de fortes pressions locales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Orycteropus afer (aardvark) — Animal Diversity Web, University of Michigan",
+        "fr": "Orycteropus afer (oryctérope) — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Orycteropus_afer/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Tubulidentata is the aardvark’s order; its adult cheek teeth lack enamel and are built from dentine tubules."
+      ]
+    },
+    {
+      "title": {
+        "en": "A conservation assessment of Orycteropus afer — SANBI and Endangered Wildlife Trust",
+        "fr": "Évaluation de conservation d’Orycteropus afer — SANBI et Endangered Wildlife Trust"
+      },
+      "url": "https://ewt.org/wp-content/uploads/2022/11/Aardvark-Orycteropus-afer_LC.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Regional assessment (2016) notes habitat alteration, persecution and suspected local declines."
+      ]
+    },
+    {
+      "title": {
+        "en": "Orycteropus afer — South African National Biodiversity Institute (SANBI)",
+        "fr": "Orycteropus afer — Institut national sud-africain de la biodiversité (SANBI)"
+      },
+      "url": "https://www.sanbi.org/animal-of-the-week/orycteropus-afer/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Gestation about seven months; usually one young, nursed to roughly three months."
+      ]
+    },
+    {
+      "title": {
+        "en": "The ecology of the aardvark, Orycteropus afer — University of Pretoria repository",
+        "fr": "Écologie de l’oryctérope, Orycteropus afer — dépôt de l’université de Pretoria"
+      },
+      "url": "https://repository.up.ac.za/items/68c213e0-aa66-4b65-92f8-a62cbad1d4c5",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Karoo telemetry: burrow use averaged 4.9–8.6 days; nightly travel 2.11–4.39 km."
+      ]
+    },
+    {
+      "title": {
+        "en": "The feeding ecology of the aardvark Orycteropus afer — Journal of Arid Environments",
+        "fr": "Écologie alimentaire de l’oryctérope Orycteropus afer — Journal of Arid Environments"
+      },
+      "url": "https://doi.org/10.1006/jare.2001.0854",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "In the Nama Karoo study, diet consisted of ants and termites; termites gained importance in winter."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ecosystem engineering through aardvark burrowing: mechanisms and effects — Ecological Engineering",
+        "fr": "Ingénierie écologique par le creusement des terriers d’oryctérope : mécanismes et effets — Ecological Engineering"
+      },
+      "url": "https://doi.org/10.1016/j.ecoleng.2018.04.022",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Burrows increased soil and vegetation heterogeneity; plant richness depended on burrow degradation stage."
+      ]
+    },
+    {
+      "title": {
+        "en": "Orycteropus afer — The IUCN Red List of Threatened Species, 2015",
+        "fr": "Orycteropus afer — Liste rouge de l’UICN, 2015"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-2.RLTS.T41504A21286437.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment published in 2015: Least Concern."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult Orycteropus afer, isolated full-body naturalistic field-guide view on a pure white background: heavy arched, sparsely haired pale grey-yellow body with soil-reddened patches; elongated narrow tubular snout, large upright rabbit-like ears, small dark eyes, long tapered muscular tail; powerful short forelimbs with four oversized shovel-shaped claws, longer hind limbs with five claws. No anteater-like bushy tail, armor or scales, pig hooves, or prominent tusks. Accurate mammalian anatomy.",
+  "uncertainties": [
+    "The latest global IUCN assessment directly verified in this research was published in 2015; later global reassessment status was not established.",
+    "Population trend and abundance remain poorly quantified across much of the range.",
+    "The feeding and burrow engineering studies describe specific South African study sites; results may not represent the whole range.",
+    "Adult measurements were omitted because sources differed and were unnecessary for the description."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR coherence and source support checked; institutional morphology cross-check; final individual illustration inspected."
+}

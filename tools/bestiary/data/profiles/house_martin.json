@@ -1,0 +1,222 @@
+{
+  "id": "house_martin",
+  "scientific": "Delichon urbicum",
+  "group": "birds",
+  "name": {
+    "en": "House Martin",
+    "fr": "Hirondelle de fenêtre"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small swallow breeds across Europe, North Africa and temperate Asia, then migrates to sub-Saharan Africa following seasonal supplies of flying insects.",
+      "fr": "Cette hirondelle niche en Europe, en Afrique du Nord et en Asie tempérée, puis migre vers l’Afrique subsaharienne en suivant les ressources saisonnières en insectes volants."
+    },
+    "identification": {
+      "en": "Adults average about 13 cm long, with a 26–29 cm wingspan; the sexes look alike. Blue-black upperparts, white rump and belly, and a shallowly forked tail mark the species. Unlike the barn swallow, it has no red throat or long tail streamers; juveniles are duller.",
+      "fr": "L’adulte mesure environ 13 cm, pour une envergure de 26 à 29 cm; les sexes se ressemblent. Dessus bleu-noir, croupion et ventre blancs, queue peu fourchue : tels sont ses traits. L’Hirondelle rustique, à gorge rousse et longs filets, diffère; le jeune est plus terne."
+    },
+    "habitat": {
+      "en": "It hunts over open country, meadows, farmland and water, where flying insects are accessible. It nests on cliffs or, commonly, outside buildings and bridges beneath sheltered overhangs. British surveys in 2016–17 found lower breeding success on PVC than on brick, concrete or wood, with more nest collapses: the supporting surface matters as well as available mud.",
+      "fr": "Elle chasse au-dessus des espaces ouverts, prairies, cultures et plans d’eau, où les insectes volent à découvert. Elle niche sur les falaises ou, souvent, à l’extérieur des bâtiments et ponts, sous un surplomb abrité. Des suivis britanniques de 2016–17 ont trouvé un succès de reproduction plus faible sur le PVC que sur la brique, le béton ou le bois, avec davantage de chutes de nids : le support compte autant que la boue disponible."
+    },
+    "diet": {
+      "en": "It captures small insects and spiders in flight. Flies and aphids are common breeding-season prey; flying ants also contribute on African wintering grounds.",
+      "fr": "Elle capture en vol de petits insectes et des araignées. Mouches et pucerons sont des proies fréquentes en saison de nidification; les fourmis volantes comptent aussi en Afrique l’hiver."
+    },
+    "behavior": {
+      "en": "They often forage in loose groups above water and nest socially in colonies. Soft twittering maintains contact, while sharper alarm calls alert nearby birds to danger.",
+      "fr": "Elles chassent souvent en groupes lâches au-dessus de l’eau et nichent en colonies. Des gazouillis entretiennent le contact, tandis que des cris d’alarme plus aigus avertissent les oiseaux voisins d’un danger."
+    },
+    "reproduction": {
+      "en": "After courtship, both partners build or repair a closed mud nest under an eave, leaving a small entrance; grasses and hair soften its lining. The female lays usually four or five eggs, incubated by the pair for about two weeks. Helpless hatchlings stay in the nest for roughly three to four weeks, then parents feed them for about another week. Mud mixed with saliva dries into a durable cement, allowing nests to be reused in successive years. Two broods in a season are usual in Britain.",
+      "fr": "Après la parade, les deux partenaires construisent ou réparent sous un avant-toit un nid fermé en boue, doté d’une petite entrée et tapissé d’herbes et de poils. La femelle pond généralement quatre ou cinq œufs, couvés par le couple pendant environ deux semaines. Les poussins, dépendants à l’éclosion, restent au nid trois à quatre semaines; leurs parents les nourrissent encore environ une semaine après l’envol. La boue mêlée à la salive sèche en un ciment durable, permettant de réutiliser les nids d’une année à l’autre. Deux nichées au cours de la saison sont habituelles en Grande-Bretagne."
+    },
+    "ecology": {
+      "en": "It eats flying insects, is prey for the Eurasian hobby, and its reused mud nests can harbour fleas and mites.",
+      "fr": "Elle mange des insectes volants, est une proie du Faucon hobereau et ses nids de boue réutilisés peuvent abriter puces et acariens."
+    },
+    "conservation": {
+      "en": "The LPO reports a 26% decline in European breeding numbers from 1980 to 2019; pesticides, poor weather, scarce mud and nest destruction are local pressures. This regional trend differs from the global IUCN assessment: dated 1 October 2016 and amended in 2017, it classed the species as Least Concern.",
+      "fr": "La LPO signale une baisse de 26 % des effectifs nicheurs européens entre 1980 et 2019; pesticides, mauvais temps, boue rare et destruction des nids sont des pressions locales. Cette tendance régionale diffère de l’évaluation mondiale de l’UICN : datée du 1er octobre 2016 et amendée en 2017, elle classait l’espèce en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Western house martin — Wikipedia",
+        "fr": "Hirondelle de fenêtre — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Western_house_martin",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Adults average 13 cm; rump white."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "habitat.en.1",
+        "habitat.en.2",
+        "diet.en.2",
+        "behavior.en.2",
+        "reproduction.en.1",
+        "reproduction.en.3",
+        "ecology.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 6,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hirondelle de fenêtre — Wikipédia",
+        "fr": "Hirondelle de fenêtre — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Hirondelle_de_fen%C3%AAtre",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Fledging takes about three weeks."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.3",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "diet.fr.2",
+        "reproduction.fr.1",
+        "reproduction.fr.3",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 5,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hirondelle de fenêtre — Ligue pour la Protection des Oiseaux",
+        "fr": "Hirondelle de fenêtre — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/hirondelles-martinets/hirondelle-de-fenetre",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "European breeding decline: 26% from 1980 to 2019."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 8,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Delichon urbicum — IUCN Red List of Threatened Species, amended 2017 record",
+        "fr": "Delichon urbicum — Liste rouge de l’UICN, notice amendée de 2017"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T103811886A118748864.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 1 October 2016; amended record published 2017; category Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 13,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "House Martin — BirdFacts",
+        "fr": "Hirondelle de fenêtre — BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/house-martin",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "British nest survey: substrate affects nesting success."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 7,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Delichon urbicum in a clear flying profile, compact swallow with dark steel-blue upperparts, pure white rump and underparts, short slightly forked tail, pointed wings and short bill; natural field-guide proportions and no red throat or long tail streamers. Plain white background.",
+  "uncertainties": [
+    "The Red List metadata indicates a 2024 Least Concern listing, but its detailed record was inaccessible; the article therefore dates the accessible global assessment to 2016, amended and published in 2017."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: LPO confirms identity, aerial prey, nesting and dated European decline; BTO clutch/incubation/fledging cross-check. Added mud-and-saliva construction mechanism and scoped British substrate study; corrected hair translation and prey wording. Global assessment explicitly dated, no unverified latest assessment year asserted."
+}

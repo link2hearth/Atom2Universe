@@ -1,0 +1,258 @@
+{
+  "id": "spring_peeper",
+  "scientific": "Pseudacris crucifer",
+  "group": "amphibians",
+  "name": {
+    "en": "Spring peeper",
+    "fr": "Rainette crucifère"
+  },
+  "sections": {
+    "overview": {
+      "en": "The spring peeper is a tiny chorus frog native to eastern North America, from southeastern Canada through much of the eastern United States. Its shrill, repeated peep is among the first frog calls heard as spring approaches.",
+      "fr": "La rainette crucifère est une petite grenouille chanteuse indigène de l’est de l’Amérique du Nord, du sud-est du Canada à une grande partie de l’est des États-Unis. Son pépiement aigu et répété compte parmi les premiers chants de grenouilles entendus au retour du printemps."
+    },
+    "identification": {
+      "en": "Adult males are often 20–30 mm long and females 30–40 mm; measurements vary among populations. Tan, brown or grey skin usually bears a dark X-shaped mark; the forefeet have four digits and the hindfeet five, tipped with adhesive pads.",
+      "fr": "Les mâles adultes mesurent souvent 20 à 30 mm et les femelles 30 à 40 mm ; les mesures varient selon les populations. La peau beige, brune ou grise porte souvent un X sombre ; les pattes avant ont quatre doigts et les arrière cinq, terminés par des disques adhésifs."
+    },
+    "habitat": {
+      "en": "It can climb but often stays near the ground, hiding in leaf litter in marshy woods or lowlands near ponds and swamps. It breeds in shallow freshwater pools, often temporary, where plants or debris can hold eggs.",
+      "fr": "Bien qu’elle puisse grimper, elle reste souvent au sol et se cache dans la litière des bois marécageux ou des basses terres proches des mares. Elle pond dans des bassins peu profonds, parfois temporaires, où plantes ou débris retiennent les œufs."
+    },
+    "diet": {
+      "en": "Adults catch small live insects and other arthropods visually, using a sticky tongue; prey includes ants, beetles, flies and spiders. Tadpoles graze on algae and consume detritus and microorganisms in the pond.",
+      "fr": "Les adultes capturent visuellement de petits insectes et autres arthropodes vivants avec leur langue collante ; leurs proies incluent fourmis, coléoptères, mouches et araignées. Les têtards broutent les algues et consomment détritus et microorganismes dans la mare."
+    },
+    "behavior": {
+      "en": "Male spring peepers call at breeding pools at dusk and on spring evenings; the throat vocal sac is an expandable pouch that inflates and deflates during the repeated peep. In northern populations, some individuals can survive partial freezing during winter dormancy, but this tolerance is not universal.",
+      "fr": "Les mâles chantent près des mares au crépuscule et les soirs de printemps ; le sac vocal, une poche extensible de la gorge, se gonfle et se dégonfle pendant le pépiement répété. Dans les populations nordiques, certains individus survivent à un gel partiel durant la dormance hivernale, mais cette tolérance n’est pas universelle."
+    },
+    "reproduction": {
+      "en": "After winter, males call at breeding sites and clasp females in amplexus, the mating hold. They externally fertilize several hundred eggs as females lay them; eggs attach singly underwater and hatch within days. Larvae usually metamorphose after roughly 45–90 days, with development partly dependent on water availability.",
+      "fr": "Après l’hiver, les mâles appellent près des sites de reproduction et saisissent les femelles en amplexus, la position d’accouplement. Ils fécondent à l’extérieur plusieurs centaines d’œufs pondus par les femelles ; ceux-ci se fixent sous l’eau et éclosent en quelques jours. Les larves se métamorphosent généralement après environ 45 à 90 jours, durée en partie liée à la disponibilité de l’eau."
+    },
+    "ecology": {
+      "en": "Spring peepers use fishless pools and also breed in temporary ponds that may dry after tadpoles transform, linking successful development to water persistence. Predators include aquatic beetle larvae for tadpoles and snakes, skunks and larger frogs for adults.",
+      "fr": "La rainette utilise des mares sans poissons et se reproduit aussi dans des bassins temporaires qui peuvent sécher après la métamorphose, reliant le développement à la durée de présence de l’eau. Les prédateurs comprennent les larves de coléoptères aquatiques pour les têtards, et les serpents, mouffettes et grandes grenouilles pour les adultes."
+    },
+    "conservation": {
+      "en": "The IUCN assessed the species as Least Concern in 2020, citing its broad range, large presumed population and use of varied habitats. Wetland drainage is a minor threat globally, while intensive urbanization and agriculture can make some areas less suitable.",
+      "fr": "L’UICN a évalué l’espèce en préoccupation mineure en 2020, en raison de sa vaste répartition, de sa population présumée importante et de l’usage d’habitats variés. Le drainage des zones humides constitue une menace mondiale mineure, tandis que l’urbanisation et l’agriculture intensives peuvent rendre certains secteurs moins favorables."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Spring peeper",
+        "fr": "Spring peeper"
+      },
+      "url": "https://en.wikipedia.org/wiki/Spring_peeper",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Eastern range; northern freeze tolerance"
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "behavior.en.2",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 5,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudacris crucifer",
+        "fr": "Pseudacris crucifer"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Pseudacris_crucifer",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "French range, body form and call"
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 6,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudacris crucifer (Spring Peeper): Information",
+        "fr": "Pseudacris crucifer (Spring Peeper) : informations"
+      },
+      "url": "https://animaldiversity.org/accounts/Pseudacris_crucifer/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Michigan zoology account: size, diet, larvae"
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 6,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spring Peeper",
+        "fr": "Spring Peeper"
+      },
+      "url": "https://www.ncwildlife.gov/education/spring-peeper-wildlife-profile/open",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "North Carolina profile: courtship, young and predators"
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 7,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spring Peeper",
+        "fr": "Spring Peeper"
+      },
+      "url": "https://www.dnr.state.mn.us/minnaqua/speciesprofile/springpeeper.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Males call at dusk; throat vocal sac inflates and deflates."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 10,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spring Peeper",
+        "fr": "Spring Peeper"
+      },
+      "url": "https://webapps.fhsu.edu/cnah/kansas/species/pseudacris-crucifer",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Forefoot has four digits; hindfoot has five toes."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 8,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudacris crucifer (Spring Peeper)",
+        "fr": "Pseudacris crucifer (Rainette crucifère)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T55892A193392474.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Red List assessment year: 2020; category: Least Concern"
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 8,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Tiny tan or grey frog, dark X on back, small toe pads; show four foretoes and five hindtoes.",
+  "uncertainties": [
+    "Maturity estimates differ: Animal Diversity Web gives about two to three years, while the North Carolina profile says normally by the following breeding season."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: restored matching EN/FR predator examples; exposed conflicting maturity estimates instead of presenting one as universal; checked external fertilization and egg attachment against NCWRC and the dated IUCN assessment record. Conflicting maturity ages retained as metadata rather than a universal biological age.",
+  "source_audit_version": 1
+}

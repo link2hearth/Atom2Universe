@@ -1,0 +1,439 @@
+{
+  "id": "lion",
+  "scientific": "Panthera leo",
+  "group": "mammals",
+  "name": {
+    "en": "Lion",
+    "fr": "Lion"
+  },
+  "sections": {
+    "overview": {
+      "en": "Wild lions now survive in fragmented parts of sub-Saharan Africa and in one Asian population in western India. They use settings from savanna and scrub to dry woodland, while prey and human pressures vary between regions. In India, lions move through the wider Gir landscape, where protected forest meets farms and settlements.",
+      "fr": "Les lions sauvages subsistent aujourd’hui dans des régions morcelées d’Afrique subsaharienne et dans une population asiatique de l’ouest de l’Inde. Ils fréquentent savanes, broussailles et bois secs, tandis que proies et pressions humaines varient selon les régions. En Inde, ils circulent dans le paysage élargi de Gir, où les forêts protégées côtoient fermes et villages."
+    },
+    "identification": {
+      "en": "The lion has a muscular, deep-chested body, a short tawny coat, pale underparts and a long tail tipped with a dark tuft; cubs often have fading spots. Adult males usually grow a mane whose length and shade vary with age and individual; females generally lack one. African reference adults average 180 kilograms and 1.20 metres at the shoulder for males, and 130 kilograms and 1.05 metres for females; individuals vary. Asiatic lions often have shorter manes and a more visible abdominal fold. Retractile claws grip prey; long canines kill and cheek teeth slice meat.",
+      "fr": "Le lion a un corps musclé à poitrine ample, un pelage fauve court, le dessous pâle et une longue queue terminée par une touffe sombre ; les lionceaux ont souvent des taches qui s’estompent. Les mâles adultes développent généralement une crinière dont la longueur et la teinte varient selon l’âge et l’individu ; les femelles en sont habituellement dépourvues. À titre indicatif, les adultes africains mesurent en moyenne 1,20 mètre au garrot et 180 kilogrammes chez les mâles, contre 1,05 mètre et 130 kilogrammes chez les femelles ; les individus varient. Les lions asiatiques ont souvent une crinière plus courte et un pli ventral plus visible. Les griffes rétractiles agrippent les proies ; les longues canines tuent et les dents jugales découpent la viande."
+    },
+    "habitat": {
+      "en": "Lions occupy savannas, grasslands, scrub, open woodland and dry forests, provided that cover, prey and relatively undisturbed den sites are available. Gir combines dry deciduous forest, thorn scrub, grassland and river corridors within a cultivated regional landscape. Asiatic lions may rest in dense vegetation by day and range more widely at night, sometimes near farms and settlements. A comparison across ten habitats found that seasonal food scarcity, rather than overall prey abundance alone, was linked to larger home ranges.",
+      "fr": "Les lions occupent savanes, prairies, broussailles, bois clairs et forêts sèches, si le couvert, les proies et des sites de mise bas peu dérangés sont disponibles. Gir associe forêt sèche décidue, broussailles épineuses, prairies et corridors fluviaux au sein d’un paysage régional cultivé. Les lions asiatiques peuvent se reposer dans une végétation dense le jour et parcourir davantage le paysage la nuit, parfois près des fermes et villages. Une comparaison de dix habitats a associé les pénuries saisonnières de nourriture à des domaines vitaux plus vastes, davantage que l’abondance totale des proies seule."
+    },
+    "diet": {
+      "en": "Lions are opportunistic carnivores, but medium and large hoofed mammals usually supply most of their food. They stalk close before a short rush, then use jaws and forelimbs to bring prey down. Group hunts may divide roles, but observations show that participation varies and some lions hang back when prey is easier to catch. In Gir, chital, sambar, nilgai and wild pigs are documented prey; livestock made up a larger share of recorded kills in peripheral areas than inside the protected landscape.",
+      "fr": "Le lion est un carnivore opportuniste, mais les ongulés de taille moyenne ou grande constituent généralement l’essentiel de sa nourriture. Il s’approche à couvert avant une brève attaque, puis utilise mâchoires et pattes antérieures pour maîtriser sa proie. Les chasses en groupe peuvent répartir les rôles, mais les observations montrent que la participation varie et que certains lions restent en retrait lorsque la proie est plus facile à capturer. À Gir, chital, sambar, nilgai et sangliers figurent parmi les proies documentées ; les animaux domestiques représentaient une part plus élevée des prises recensées en périphérie que dans l’aire protégée."
+    },
+    "behavior": {
+      "en": "In many African populations, a pride is a flexible, fission-fusion group built around related females and their young. Males may hold territory in coalitions, while females often stay in their birth group and young males disperse; local patterns vary. Pride members split into smaller parties and reunite to rest, care for cubs, mate or defend territory. Both sexes roar and growl to communicate. Roars maintain contact with pride members and advertise territorial boundaries; lions can use the number of callers they hear to assess the strength of rivals. At Gir, female groups and male coalitions commonly use separate ranges, meeting mainly to mate or at large kills.",
+      "fr": "Dans de nombreuses populations africaines, la troupe est un groupe souple à fission-fusion, structuré autour de femelles apparentées et de leurs petits. Les mâles peuvent tenir un territoire en coalition, tandis que les femelles restent souvent dans leur groupe natal et que les jeunes mâles se dispersent ; les organisations locales varient. Les membres se séparent en petits groupes puis se retrouvent pour se reposer, s’occuper des lionceaux, s’accoupler ou défendre leur territoire. Les deux sexes rugissent et grondent pour communiquer. Les rugissements maintiennent le contact avec les membres de la troupe et signalent les limites territoriales ; les lions peuvent utiliser le nombre d’individus qu’ils entendent pour évaluer la force de leurs rivaux. À Gir, groupes de femelles et coalitions de mâles occupent souvent des domaines séparés et se rejoignent surtout pour s’accoupler ou autour de grosses prises."
+    },
+    "reproduction": {
+      "en": "Females breed in different seasons; gestation lasts about 110 days and litters usually contain one to four cubs. A mother gives birth in a secluded thicket, hiding the cubs for their first weeks and returning to nurse them. Cubs eat meat from about three months and are weaned near six months, yet Gir young may depend on the natal group for food until two or three years old. Females may first breed at about three and a half years; males often mate only after securing territory. A takeover by unfamiliar males can put cubs at risk; mothers may hide or defend them, and outcomes vary with age and local conditions.",
+      "fr": "Les femelles se reproduisent à différentes saisons ; la gestation dure environ 110 jours et les portées comptent généralement un à quatre lionceaux. La mère met bas dans un fourré isolé, cache les petits durant leurs premières semaines et revient les allaiter. Les lionceaux mangent de la viande vers trois mois et sont sevrés près de six mois, mais à Gir les jeunes peuvent dépendre du groupe natal pour se nourrir jusqu’à deux ou trois ans. Les femelles peuvent se reproduire vers trois ans et demi ; les mâles souvent seulement après avoir obtenu un territoire. La prise de contrôle par des mâles inconnus peut menacer les lionceaux ; les mères peuvent les cacher ou les défendre, et les conséquences varient selon leur âge et les conditions locales."
+    },
+    "ecology": {
+      "en": "Food scarcity can enlarge territories and reduce prides: a comparison of ten habitats linked lean-season prey availability with group size and cub survival. Lions consume large herbivores, but also compete with other carnivores over carcasses, scavenging and sometimes losing kills to rivals. In Gir, the balance between wild prey and livestock shifts with season and location, linking prey access to local feeding patterns.",
+      "fr": "La pénurie de nourriture peut agrandir les territoires et réduire les troupes : une comparaison de dix habitats a associé l’accès aux proies pendant la saison difficile à la taille des groupes et à la survie des lionceaux. Les lions consomment de grands herbivores, mais rivalisent aussi avec d’autres carnivores autour des carcasses, récupérant des restes ou perdant parfois leurs prises. À Gir, l’équilibre entre proies sauvages et bétail varie selon la saison et le lieu, reliant l’accès aux proies aux pratiques locales de chasse."
+    },
+    "conservation": {
+      "en": "The IUCN global assessment, made on 1 February 2023 and published in 2024, lists lions as Vulnerable and the trend as decreasing. It inferred a 36 percent range reduction over three generations, with habitat loss, prey depletion and conflict-related killing among the pressures. African populations are fragmented; Gujarat’s protection and habitat management have supported a recovery, but India’s lions remain concentrated in one regional population. The government reported 891 Asiatic lions in its 2025 count on 10 August 2026.",
+      "fr": "L’évaluation mondiale de l’UICN, réalisée le 1er février 2023 et publiée en 2024, classe les lions « vulnérables » et indique une tendance à la baisse. Elle estime une réduction de 36 % de l’aire sur trois générations ; perte d’habitat, raréfaction des proies et mises à mort liées aux conflits figurent parmi les pressions. Les populations africaines sont fragmentées ; la protection et la gestion des habitats au Gujarat ont favorisé un rétablissement, mais les lions d’Inde restent concentrés dans une population régionale. Le gouvernement a annoncé 891 lions asiatiques dans son comptage de 2025, le 10 août 2026."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lion — University of the Free State, African Large Predator Research Unit",
+        "fr": "Lion — University of the Free State, African Large Predator Research Unit"
+      },
+      "url": "https://www.ufs.ac.za/natagri/departments-and-divisions/animal-science-home/alpru/alpru-home/unlisted-pages/predator-species/lion",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "African adult measurements vary across populations."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.5",
+        "identification.fr.5",
+        "behavior.en.4",
+        "behavior.fr.4",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 6,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lion — Smithsonian’s National Zoo and Conservation Biology Institute",
+        "fr": "Lion — Smithsonian’s National Zoo and Conservation Biology Institute"
+      },
+      "url": "https://nationalzoo.si.edu/animals/lion",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Lions stalk close; cubs begin eating meat before weaning."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 9,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lion — IUCN SSC Cat Specialist Group, Living Species",
+        "fr": "Lion — Groupe de spécialistes des félidés de la CSE de l’UICN, espèces actuelles"
+      },
+      "url": "https://www.catsg.org/living-species-lions",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Regional prey, habitat and social patterns differ."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 193,
+        "notes_words": 7,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Panthera leo — IUCN Red List of Threatened Species (2024 global assessment version)",
+        "fr": "Panthera leo — Liste rouge de l’UICN des espèces menacées (version de l’évaluation mondiale 2024)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T15951A266696959.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Assessment date and publication year are distinct."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 7,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Asiatic Lion: Ecology, Economics, and Politics of Conservation — Frontiers in Ecology and Evolution",
+        "fr": "Lion asiatique : écologie, économie et politique de la conservation — Frontiers in Ecology and Evolution"
+      },
+      "url": "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2019.00312/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Gir studies describe social units, cub dependence and recovery."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.6",
+        "behavior.fr.6",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 9,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecological correlates of lion social organization (Panthera leo) — Journal of Zoology",
+        "fr": "Corrélats écologiques de l’organisation sociale du lion (Panthera leo) — Journal of Zoology"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1985.tb05639.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Lean-season prey availability related to range and cub survival."
+      ],
+      "prose_claims": [
+        "habitat.en.4",
+        "habitat.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 9,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Implications of diet composition of Asiatic lions for their conservation — Journal of Zoology",
+        "fr": "Conséquences de la composition du régime des lions asiatiques pour leur conservation — Journal of Zoology"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.2010.00780.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Gir records show seasonal and local variation in lion kills."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 10,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Group hunting behaviour of lions: a search for cooperation — Animal Behaviour",
+        "fr": "Comportement de chasse en groupe chez le lion : recherche de coopération — Animal Behaviour"
+      },
+      "url": "https://doi.org/10.1016/S0003-3472(05)80907-8",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Observations of 64 hunts found participation varied among lions."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 9,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Social Structure of Lions (Panthera leo) Is Affected by Management in Pendjari Biosphere Reserve, Benin — PLOS ONE",
+        "fr": "La structure sociale des lions (Panthera leo) dépend de la gestion dans la réserve de biosphère de la Pendjari, au Bénin — PLOS ONE"
+      },
+      "url": "https://doi.org/10.1371/journal.pone.0084674",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Field observations document fission-fusion prides and group variation."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 8,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Adaptations of Female Lions to Infanticide by Incoming Males — The American Naturalist",
+        "fr": "Adaptations des lionnes à l’infanticide par les mâles entrants — The American Naturalist"
+      },
+      "url": "https://doi.org/10.1086/284097",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Serengeti research documents cub risk after incoming-male takeovers."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 8,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Asiatic Lion population rises from 523 in 2015 to 891 in 2025 — Press Information Bureau, Government of India",
+        "fr": "La population du lion asiatique passe de 523 en 2015 à 891 en 2025 — Press Information Bureau, Gouvernement indien"
+      },
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2296978&lang=1&reg=48",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Government reported 891 in its 2025 lion count."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 8,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dynamic interactions between apex predators reveal contrasting seasonal attraction patterns — Oecologia",
+        "fr": "Les interactions dynamiques entre superprédateurs révèlent des attractions saisonnières contrastées — Oecologia"
+      },
+      "url": "https://doi.org/10.1007/s00442-020-04802-w",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "GPS study linked lion-hyena encounters to seasonal competition and scavenging."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 10,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Acoustic features and functions of lion roars — Pfefferle et al. (2007)",
+        "fr": "Caractéristiques acoustiques et fonctions des rugissements du lion — Pfefferle et al. (2007)"
+      },
+      "url": "https://cbs.umn.edu/sites/cbs.umn.edu/files/migrated-files/downloads/Pfefferle_et_al_Do_acoustic_features_of_lion_roars_reflect_sex_and_male_condition.pdf",
+      "doi": "https://doi.org/10.1121/1.2722507",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Roars maintain group contact, advertise boundaries and enable assessment of opposing callers."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 12,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a realistic adult Asiatic male lion, with a tawny coat, shorter and sparser mane than many African males, visible ears, pale underside and dark tail tuft. Keep variation natural; a belly fold can be shown but is not universal. Do not depict a uniform, oversized mane.",
+  "uncertainties": [
+    "Adult mass and length vary substantially among populations and individuals; University of the Free State measurements are reference values, not species-wide limits.",
+    "The global IUCN Red List record used here was assessed in 2023 and published in 2024; 2025 subspecies-level assessments and newer range summaries have a different scope and should not be conflated with that global category.",
+    "The 891 figure is the Government of India’s 2025 count, reported in August 2026; it is a dated count, not a permanent population total.",
+    "The Gir diet study summarizes kills recorded in 2002–2006, so its prey proportions are a local historical sample rather than a current estimate for all lions."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Fresh expanded article independently reviewed. Root corrected unsupported gestation range, sourced communication functions to primary acoustic paper, removed redundant methodological caveats, checked bilingual sentence/source budgets. Approved original lion illustration unchanged."
+}

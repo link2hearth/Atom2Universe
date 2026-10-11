@@ -1,0 +1,235 @@
+{
+  "id": "common_nightingale",
+  "scientific": "Luscinia megarhynchos",
+  "group": "birds",
+  "name": {
+    "en": "Common nightingale",
+    "fr": "Rossignol philomèle"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common nightingale is a small, ground-foraging Old World flycatcher whose celebrated song carries through European scrub in spring. It breeds across Europe and parts of western and central Asia, then crosses the Sahara to winter in sub-Saharan Africa.",
+      "fr": "Le Rossignol philomèle est un petit passereau apparenté aux gobemouches qui cherche sa nourriture au sol et dont le chant célèbre porte dans les fourrés européens au printemps. Il se reproduit en Europe et dans une partie de l’Asie occidentale et centrale, puis traverse le Sahara pour hiverner en Afrique subsaharienne."
+    },
+    "identification": {
+      "en": "Adults are about 15–16.5 cm long, and the sexes look alike in plumage. Brown upperparts, a reddish tail, pale unspotted underparts, a fine bill and relatively long legs give this secretive bird a plain, upright appearance; juveniles are spotted. British ringing samples put adult mass around 18–24 g.",
+      "fr": "L’adulte mesure environ 15 à 16,5 cm et les sexes ont un plumage semblable. Le dessus brun, la queue rousse, le dessous clair sans taches, le bec fin et les pattes assez longues donnent à cet oiseau discret une silhouette sobre et dressée ; les jeunes sont tachetés. Les échantillons britanniques de baguage situent la masse adulte autour de 18 à 24 g."
+    },
+    "habitat": {
+      "en": "Breeding birds favour dense scrub and young woodland with low, leafy cover and patches of bare soil beneath. They place their nest on or close to the ground, concealed among leaves and stems; this structure provides cover and nearby foraging ground.",
+      "fr": "En période de reproduction, l’espèce privilégie les fourrés denses et les jeunes bois avec un couvert bas et feuillu ainsi que des zones de terre nue dessous. Le nid est posé au sol ou tout près, caché parmi feuilles et tiges ; cette structure protège la nichée et laisse des zones proches pour chercher la nourriture."
+    },
+    "diet": {
+      "en": "It takes insects and other small invertebrates, especially beetles and ants, searching through leaf litter and low vegetation with short hops and pauses. In late summer and autumn, berries and other fruits supplement this animal prey.",
+      "fr": "Il capture des insectes et d’autres petits invertébrés, notamment des coléoptères et des fourmis, en fouillant la litière et la végétation basse par bonds et pauses. À la fin de l’été et en automne, baies et autres fruits complètent ces proies animales."
+    },
+    "behavior": {
+      "en": "Males produce loud, varied whistles, trills and bubbling phrases to attract females and advertise or defend a breeding territory. Night song is especially associated with unpaired males seeking mates; after pairing, males usually stop singing regularly at night, so not every individual sings nocturnally all season.",
+      "fr": "Les mâles émettent des sifflements puissants et variés, des trilles et des phrases roulées pour attirer les femelles et signaler ou défendre un territoire de reproduction. Le chant nocturne est surtout associé aux mâles non appariés qui cherchent une partenaire ; après l’appariement, ils cessent généralement de chanter régulièrement la nuit, si bien que tous les individus ne chantent pas ainsi toute la saison."
+    },
+    "reproduction": {
+      "en": "The female builds a low cup of dead leaves and grasses, lined with finer plant material, feathers or hair, and usually lays four or five eggs. She incubates them for about 14 days; downy, helpless chicks are fed in the nest and normally fledge at 11–13 days. Leaving the nest is not independence: young remain near cover while learning to forage and continue to rely on adults afterward.",
+      "fr": "La femelle construit une coupe basse de feuilles mortes et d’herbes, garnie de matières végétales fines, de plumes ou de poils, puis pond généralement quatre ou cinq œufs. Elle les couve environ 14 jours ; les poussins couverts de duvet et dépendants sont nourris au nid et prennent normalement leur envol à 11–13 jours. Quitter le nid ne signifie pas être autonome : les jeunes restent près du couvert, apprennent à chercher leur nourriture et dépendent encore des adultes ensuite."
+    },
+    "ecology": {
+      "en": "Ground-foraging nightingales take invertebrates, while raptors and mammals prey on them; low dense scrub gives cover to nests and newly fledged young.",
+      "fr": "Les rossignols qui fouillent le sol capturent des invertébrés, tandis que rapaces et mammifères les chassent ; les fourrés bas et denses abritent nids et jeunes fraîchement envolés."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2017, based on a 2016 assessment, classified the species as Least Concern. In Britain, BTO describes the localized breeding population as declining; deer browsing and scrub loss or maturation reduce suitable low cover, and winter-ground changes may also affect returning birds.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2017, issue d’une évaluation de 2016, classe l’espèce en préoccupation mineure. En Grande-Bretagne, le BTO décrit la population nicheuse localisée comme en déclin ; le broutage des cervidés et la disparition ou la maturation des fourrés réduisent le couvert bas favorable, et les changements dans les quartiers d’hiver peuvent aussi affecter les oiseaux au retour."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common nightingale — Wikipedia",
+        "fr": "Rossignol philomèle — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Common_nightingale",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Range, adult length, plumage, migration and male song context."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 9,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rossignol philomèle — Wikipédia",
+        "fr": "Rossignol philomèle — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Rossignol_philom%C3%A8le",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Female courtship song is infrequent; males sing nightly before pairing."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 10,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nightingale BirdFacts — British Trust for Ornithology",
+        "fr": "Nightingale BirdFacts — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/nightingale",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British measurements, nest, clutch, incubation, fledging and local pressures."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 9,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Nightingale — Oiseaux.net",
+        "fr": "Rossignol philomèle — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/common.nightingale.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Nestlings fledge at about twelve days; independence follows later."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 9,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Luscinia megarhynchos — IUCN Red List assessment",
+        "fr": "Luscinia megarhynchos — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22709696A111760622.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Assessment year 2016; report published in 2017."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 7,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nightingale — Woodland Trust",
+        "fr": "Rossignol — Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/nightingale/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Ground-level nest; scrub and coppice habitat; listed raptor and mammal predators."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 11,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "",
+  "uncertainties": [
+    "The duration of post-fledging dependence is variable and is not quantified consistently across the consulted accounts; the text therefore gives no fixed number of days."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: BTO typical egg, incubation and fledging figures checked; Woodland Trust nesting material and predator account checked while ignoring its outdated family label. Nocturnal song correctly distinguished between unpaired and paired males; British decline separated from dated global category."
+}

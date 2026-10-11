@@ -1,0 +1,132 @@
+{
+  "id": "cheetah",
+  "scientific": "Acinonyx jubatus",
+  "group": "mammals",
+  "name": {
+    "en": "Cheetah",
+    "fr": "Guépard"
+  },
+  "sections": {
+    "overview": {
+      "en": "The cheetah is a large African and Asian cat, the only living species in genus Acinonyx. Its slim body, long legs and blunt, partly non-retractile claws suit acceleration over open ground. It is mostly solitary, except for mothers with cubs and male coalitions.",
+      "fr": "Le guépard est un grand félin d’Afrique et d’Asie, l’unique espèce actuelle du genre Acinonyx. Son corps fin, ses longues pattes et ses griffes émoussées favorisent l’accélération en terrain ouvert. Il vit seul, sauf les mères avec leurs petits et les coalitions de mâles."
+    },
+    "identification": {
+      "en": "An adult has a slender frame, small rounded head and yellowish, tawny or grey coat with separate black spots. Dark tear-lines run from the inner eye corners toward the mouth. Its spotted tail ends in dark rings and a pale tip.",
+      "fr": "L’adulte a une silhouette fine, une petite tête arrondie et un pelage jaunâtre, fauve ou gris tacheté de noir. Des lignes sombres vont du coin interne des yeux vers la bouche. Sa queue tachetée porte des anneaux foncés et une pointe claire."
+    },
+    "habitat": {
+      "en": "Cheetahs use open habitats where they can see prey and run: African grasslands, savannas and dry country, including deserts. They also occur in open woodland and scrub. Their former range spanned Africa to the Middle East and India; populations now occupy scattered remnants.",
+      "fr": "Le guépard fréquente les milieux ouverts pour repérer ses proies : prairies, savanes et zones arides. Il vit aussi dans les bois clairsemés et broussailles. Son ancienne aire allait de l’Afrique au Moyen-Orient et à l’Inde ; il n’en reste que des noyaux dispersés."
+    },
+    "diet": {
+      "en": "It hunts mainly small and medium-sized hoofed mammals, including gazelles and impalas; hares and ground birds supplement its diet. It approaches or watches from cover, then charges and trips prey with its forelegs before suffocating it with a throat bite. Many chases fail.",
+      "fr": "Il chasse surtout de petits ongulés, dont gazelles et impalas ; lièvres et oiseaux complètent parfois son régime. Il observe depuis un couvert, puis charge et fait tomber sa proie avec les pattes avant avant de l’étouffer d’une morsure à la gorge. Beaucoup de courses échouent."
+    },
+    "behavior": {
+      "en": "Females generally roam alone; males may form lasting coalitions, often with brothers, and defend territories. Females do not defend territories. Scent marks and calls maintain contact: mothers call to hidden cubs, while coalition partners vocalize when separated. Cheetahs sometimes climb trees.",
+      "fr": "Les femelles se déplacent seules ; les mâles forment des coalitions, souvent entre frères, et défendent un territoire. Marques odorantes et appels maintiennent le contact : les mères appellent leurs petits cachés, et les partenaires vocalisent s’ils sont séparés. Le guépard grimpe parfois aux arbres."
+    },
+    "reproduction": {
+      "en": "Breeding occurs year-round. After about three months of gestation, a female gives birth. Wild litters average fewer cubs than the three to six often reported by zoos. Cubs are helpless and hidden at birth; the mother moves their den and teaches hunting before independence.",
+      "fr": "La reproduction a lieu toute l’année. Après trois mois, la femelle met bas. Les portées sauvages comptent moins de petits que les trois à six signalés en zoo. Les nouveau-nés sont cachés ; la mère déplace leur tanière et leur apprend à chasser avant l’indépendance."
+    },
+    "ecology": {
+      "en": "The cheetah competes with larger carnivores for food and space. Lions, spotted hyenas and leopards can kill cubs, and competitors sometimes steal its kills. Successful hunting therefore does not always secure a meal; reproduction and cub survival also depend on these interactions.",
+      "fr": "Le guépard partage nourriture et espace avec de plus grands carnivores. Lions, hyènes tachetées et léopards peuvent tuer ses petits, tandis que des concurrents lui dérobent parfois ses prises. Une chasse réussie ne garantit donc pas un repas ; reproduction et survie des petits dépendent aussi de ces interactions."
+    },
+    "conservation": {
+      "en": "In its profile consulted in October2026, the IUCN Cat Specialist Group reports the species as Vulnerable. Habitat loss, conflict with livestock owners and illegal trade threaten fragmented populations. Most survivors occur in eastern and southern Africa; the remaining Asiatic population is in Iran.",
+      "fr": "Dans sa notice consultée en octobre2026, le Groupe de spécialistes des félidés de l’UICN indique le statut vulnérable. Perte d’habitat, conflits avec les éleveurs et commerce illégal menacent des populations fragmentées. Les principaux noyaux se trouvent en Afrique orientale et australe ; la population asiatique restante vit en Iran."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Acinonyx jubatus (cheetah)",
+        "fr": "Acinonyx jubatus (guépard)"
+      },
+      "url": "https://animaldiversity.org/accounts/Acinonyx_jubatus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "University of Michigan educational species account: coat and tear marks, habitat, prey and hunting sequence, social organization, denning, cub development, predators; older account's status figures are not treated as current."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cheetah",
+        "fr": "Guépard"
+      },
+      "url": "https://nationalzoo.si.edu/animals/cheetah",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Smithsonian National Zoo account identifies Acinonyx jubatus as the sole living Acinonyx species; gives gestation of about three months, typical managed litter size, cub development, historical range and current threats/context."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cheetah Breeding at the Smithsonian's National Zoo and Conservation Biology Institute",
+        "fr": "Reproduction du guépard au Smithsonian's National Zoo and Conservation Biology Institute"
+      },
+      "url": "https://nationalzoo.si.edu/conservation/cheetah-breeding-program",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Smithsonian conservation institute describes male coalitions and solitary breeding females in the wild; summarizes range contraction, human pressure, genetic bottleneck and cub survival evidence from the Serengeti."
+      ]
+    },
+    {
+      "title": {
+        "en": "Media Resources: Cheetahs",
+        "fr": "Ressources médias : guépards"
+      },
+      "url": "https://cheetah.org/media-resources/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Cheetah Conservation Fund's current range summary identifies southern Africa, north-central Africa, the Horn of Africa and a small Iranian population; lists habitat loss, conflict and illegal trade as principal threats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cheetah — IUCN SSC Cat Specialist Group",
+        "fr": "Guépard — Groupe de spécialistes des félidés de l’UICN"
+      },
+      "url": "https://www.catsg.org/living-species-cheetah",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The current species profile reports a global Vulnerable listing; the Asiatic remnant occurs in Iran."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult cheetah, sex unspecified; slim natural build, separate black spots, dark tear-lines, ringed tail with pale tip; pure white background.",
+  "uncertainties": [
+    "Wild population estimates and some range boundaries differ among sources and survey dates; no single current global total is asserted.",
+    "Fine-scale ecosystem effects are insufficiently documented in the consulted species account."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/scientific critique completed; identified grammar, dating and generalization issues corrected."
+}

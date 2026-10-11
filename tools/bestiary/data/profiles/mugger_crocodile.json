@@ -1,0 +1,177 @@
+{
+  "id": "mugger_crocodile",
+  "scientific": "Crocodylus palustris",
+  "group": "reptiles",
+  "name": {
+    "en": "Mugger crocodile",
+    "fr": "Crocodile des marais"
+  },
+  "sections": {
+    "overview": {
+      "en": "The mugger, or marsh crocodile, is a broad-snouted crocodilian native to South Asia and eastern Iran. It occupies freshwater rivers, lakes, marshes and ponds, including reservoirs and irrigation waters. This adaptable predator persists in both protected wetlands and human-altered waterways.",
+      "fr": "Le crocodile des marais, ou mugger, est un crocodilien au museau large originaire d’Asie du Sud et de l’est de l’Iran. Il fréquente les rivières, lacs, marais et étangs d’eau douce, ainsi que des réservoirs et canaux d’irrigation. Ce prédateur adaptable persiste dans les zones humides protégées comme dans les eaux aménagées."
+    },
+    "identification": {
+      "en": "Males usually stay below 3.5 m; females average 2.5–3 m, though exceptional individuals approach 5 m. The mugger has the broadest snout in Crocodylus. Adults are grey-brown; young have lighter colouring and dark bands. Its muscular tail drives swimming, and sturdy limbs support movement on land. Crocodilians can also lift the body into a high walk, though fast gaits are poorly documented for this species. Hatchlings measure about 25–27 cm.",
+      "fr": "Les mâles restent généralement sous 3,5 m ; les femelles mesurent en moyenne 2,5 à 3 m, même si certains individus approchent 5 m. Le mugger a le museau le plus large du genre Crocodylus. Les adultes sont gris-brun ; les jeunes sont plus clairs et portent des bandes sombres. Sa queue musclée propulse la nage, et ses membres robustes assurent ses déplacements terrestres. Les crocodiliens peuvent aussi soulever leur corps pour une marche haute, mais les allures rapides sont peu documentées chez cette espèce. Les nouveau-nés mesurent environ 25 à 27 cm."
+    },
+    "habitat": {
+      "en": "Muggers inhabit freshwater rivers, lakes, marshes and ponds, often using deeper pools with sandy banks and dense riverside cover. They also occupy reservoirs, irrigation canals and aquaculture ponds; some enter brackish lagoons. This flexibility allows use of human-made waters, but can bring crocodiles near fishing and farming communities.",
+      "fr": "Les muggers vivent dans les rivières, lacs, marais et étangs d’eau douce, souvent près de mares profondes aux berges sableuses et couvertes de végétation. Ils occupent aussi réservoirs, canaux d’irrigation et bassins d’aquaculture ; certains fréquentent des lagunes saumâtres. Cette souplesse leur permet d’utiliser des eaux artificielles, mais les rapproche des communautés de pêcheurs et d’agriculteurs."
+    },
+    "diet": {
+      "en": "Muggers are opportunistic carnivores whose diet changes with size. Young take insects, crustaceans and small fish; adults eat fish, amphibians, reptiles, birds and mammals. Deer and buffalo are occasional large prey, not a routine meal for every crocodile. Local feeding reflects available prey and body size; individuals have also been seen corralling fish.",
+      "fr": "Les muggers sont des carnivores opportunistes dont le régime évolue avec la taille. Les jeunes capturent insectes, crustacés et petits poissons ; les adultes mangent poissons, amphibiens, reptiles, oiseaux et mammifères. Cerfs et buffles sont des proies occasionnelles, pas un repas habituel de chaque crocodile. L’alimentation dépend des proies locales et de la taille ; des individus ont aussi été vus rabattant des poissons."
+    },
+    "behavior": {
+      "en": "As ectotherms, muggers warm by basking and cool by entering water or shade. Individuals dig bank burrows that buffer harsh heat and cold; underground temperatures change more slowly than surface air. During prolonged hot, dry spells, a mugger may aestivate—remain inactive in its burrow—then travel overland when seeking permanent water. Such treks can cross roads and railways.",
+      "fr": "Ectothermes, les muggers se réchauffent au soleil et se refroidissent dans l’eau ou à l’ombre. Ils creusent des terriers de berge qui amortissent les chaleurs et froids extrêmes ; sous terre, la température varie moins vite qu’à l’air libre. Lors de longues périodes chaudes et sèches, un mugger peut estiver, c’est-à-dire rester inactif dans son terrier, puis se déplacer à terre pour chercher une eau permanente. Ces trajets peuvent traverser routes et voies ferrées."
+    },
+    "reproduction": {
+      "en": "Females lay 10–30 eggs in a hole nest, often in sandy bank soil; some nests sit beside or inside burrows. Dry-season laying varies geographically. Eggs incubate for about 55–75 days. Temperature affects sex: controlled experiments yielded all females at 28–31 °C and all males at 32.5 °C, with both sexes at intermediate temperatures. The female guards the nest and may help hatchlings emerge and carry them to water; field observations document such care, but its duration and effect on survival remain uncertain. Captive double clutches have not been documented in the wild.",
+      "fr": "Les femelles pondent 10 à 30 œufs dans un nid en trou, souvent dans le sable d’une berge ; certains nids se trouvent près d’un terrier ou dedans. La ponte de saison sèche varie selon les régions. L’incubation dure environ 55 à 75 jours. La température détermine le sexe : en expérience contrôlée, 28 à 31 °C ont produit uniquement des femelles et 32,5 °C uniquement des mâles, les températures intermédiaires donnant les deux sexes. La femelle garde le nid et peut aider les jeunes à sortir puis les transporter jusqu’à l’eau ; des observations de terrain confirment ces soins, mais leur durée et leur effet sur la survie restent incertains. Les doubles pontes observées en captivité ne sont pas attestées à l’état sauvage."
+    },
+    "ecology": {
+      "en": "As a generalist predator, the mugger links aquatic and terrestrial prey in wetland food webs; its eggs and young are also eaten by other animals. In the Chambal River, a 2024 study found increasing mugger numbers and occupancy in a sanctuary established for gharial recovery. Researchers flagged possible competition with this more habitat-specialised crocodilian as a local management concern, not a proven species-wide effect.",
+      "fr": "Prédateur généraliste, le mugger relie proies aquatiques et terrestres dans les réseaux trophiques des zones humides ; ses œufs et ses jeunes sont aussi consommés. Dans la rivière Chambal, une étude de 2024 a constaté une hausse des effectifs et de l’occupation du mugger dans un sanctuaire créé pour le gavial. Les chercheurs ont signalé une concurrence possible avec ce crocodilien plus spécialisé comme enjeu local de gestion, sans établir un effet généralisé à l’espèce."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 30 June 2009 and published in 2013 classified the mugger as Vulnerable (A2cd). The IUCN Crocodile Specialist Group estimated over 20,000 adults in its 2025 action plan. Habitat loss, fishing nets, egg collection, persecution and transport deaths remain documented threats. A 2008–2010 survey near Vadodara documented crocodile rescues and relocation after human encounters, illustrating the need for local coexistence measures.",
+      "fr": "L’évaluation mondiale de l’UICN datée du 30 juin 2009 et publiée en 2013 classe le mugger comme vulnérable (A2cd). Le Groupe de spécialistes des crocodiles de l’UICN estimait plus de 20 000 adultes dans son plan d’action de 2025. Perte d’habitat, filets de pêche, prélèvement des œufs, persécution et mortalité liée aux transports restent des menaces documentées. Une étude menée près de Vadodara de 2008 à 2010 a documenté le sauvetage et le déplacement de crocodiles après des rencontres avec des humains, illustrant le besoin de mesures locales de coexistence."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Crocodiles. Status Survey and Conservation Action Plan: Mugger Crocodile Crocodylus palustris, Fourth Edition — IUCN SSC Crocodile Specialist Group",
+        "fr": "Crocodiles. Enquête sur le statut et plan d’action pour la conservation : crocodile des marais Crocodylus palustris, quatrième édition — Groupe de spécialistes des crocodiles de la CSE de l’UICN"
+      },
+      "url": "https://www.iucncsg.org/365_docs/attachments/protarea/1b50c4af9119656246f593e34497385e.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The 2025 species action plan records range, habitat adaptation, burrowing and drought movements, regional nesting, documented parental care, threats, the historical 2009 Red List assessment, and its own 2025 adult estimate."
+      ]
+    },
+    {
+      "title": {
+        "en": "Locomotion — IUCN SSC Crocodile Specialist Group",
+        "fr": "Locomotion — Groupe de spécialistes des crocodiles de la CSE de l’UICN"
+      },
+      "url": "https://www.iucncsg.org/pages/Locomotion.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "The crocodilian tail is the organ of swimming propulsion; Muggers are among crocodilians recorded travelling overland between drying pools."
+      ]
+    },
+    {
+      "title": {
+        "en": "Crocodylus palustris (Mugger crocodile, Swamp crocodile) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Crocodylus palustris (mugger, crocodile des marais) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Crocodylus_palustris/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Broad snout, adult size and sexual size difference, young age classes, water habitats, burrowing, and reproductive development overview."
+      ]
+    },
+    {
+      "title": {
+        "en": "Marsh Crocodile — Wildlife Institute of India, Ministry of Environment, Forest and Climate Change, Government of India",
+        "fr": "Crocodile des marais — Institut indien de la faune sauvage, ministère de l’Environnement, des Forêts et du Changement climatique du gouvernement indien"
+      },
+      "url": "https://v1.wii.gov.in/nmcg/priority-species/reptiles/marsh-crocodile",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Juveniles take crustaceans, insects and small fish; adults take varied vertebrate prey. Its account distinguishes captive double clutches from wild evidence and lists habitat, fishing, egg and conflict pressures."
+      ]
+    },
+    {
+      "title": {
+        "en": "Temperature-dependent sex determination in Crocodylus palustris — Integrative and Comparative Biology, Oxford University Press",
+        "fr": "Détermination du sexe dépendante de la température chez Crocodylus palustris — Integrative and Comparative Biology, Oxford University Press"
+      },
+      "url": "https://academic.oup.com/icb/article-abstract/29/3/935/294200",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Controlled incubation produced female-only outcomes at 28–31 °C, male-only at 32.5 °C, and both sexes at intermediate temperatures; seasonal nest timing and placement affect sex ratios."
+      ]
+    },
+    {
+      "title": {
+        "en": "Crocodylus palustris (Mugger) — The IUCN Red List of Threatened Species",
+        "fr": "Crocodylus palustris (mugger) — Liste rouge de l’UICN des espèces menacées"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2013-2.RLTS.T5667A3046723.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Last assessed 30 June 2009 and published in 2013 as Vulnerable A2cd; the Red List record says the assessment needs updating."
+      ]
+    },
+    {
+      "title": {
+        "en": "Population status and genetic assessment of mugger (Crocodylus palustris) in a tropical regulated river system in North India — Scientific Reports",
+        "fr": "Statut démographique et évaluation génétique du mugger (Crocodylus palustris) dans un système fluvial régulé du nord de l’Inde — Scientific Reports"
+      },
+      "url": "https://www.nature.com/articles/s41598-024-57983-2",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "A 2024 Chambal River study found increasing mugger counts and occupied range in a sanctuary established for gharial recovery; it raised potential competition as a site-specific concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Current status of Marsh Crocodiles Crocodylus palustris in Vishwamitri River, Vadodara City, Gujarat, India — Journal of Threatened Taxa",
+        "fr": "Statut actuel des crocodiles des marais Crocodylus palustris dans la rivière Vishwamitri, Vadodara, Gujarat, Inde — Journal of Threatened Taxa"
+      },
+      "url": "https://threatenedtaxa.org/index.php/JoTT/article/view/1324",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "A 2008–2010 urban river study documented fish, birds and livestock in the diet, human-crocodile encounters, habitat alteration, erosion and rail mortality in one Gujarat population."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult Mugger crocodile of unspecified sex, with the species’ very broad blunt snout, grey-brown adult scales, long muscular tail, and natural robust proportions. Pure uniform white #FFFFFF background; no scenery, water, props, text, border or watermark.",
+  "uncertainties": [
+    "Adult size, diet, nesting dates and burrow use vary by population and habitat; the figures given are reported ranges or region-specific observations, not universal values.",
+    "The latest published global IUCN assessment located remains the 2009 assessment published in 2013. The IUCN Crocodile Specialist Group’s 2025 adult-population estimate is newer but does not itself replace that assessment.",
+    "Post-hatching care is documented in wild and captive Muggers, but its duration and contribution to juvenile survival remain incompletely known."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review confirms 2025 CSG account, dated historical Red List assessment and scoped parental care. Illustration feet corrected and independently accepted."
+}

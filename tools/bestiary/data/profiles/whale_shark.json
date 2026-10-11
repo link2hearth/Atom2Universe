@@ -1,0 +1,425 @@
+{
+  "id": "whale_shark",
+  "scientific": "Rhincodon typus",
+  "group": "fish",
+  "name": {
+    "en": "Whale shark",
+    "fr": "Requin-baleine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The whale shark is the largest living fish, a slow-moving shark whose immense size comes with a specialised way of feeding on small prey. It ranges through tropical and warm-temperate seas, crossing ocean basins while repeatedly visiting some seasonal feeding sites.",
+      "fr": "Le requin-baleine est le plus grand poisson vivant : ce requin nage lentement et sa taille immense s’accompagne d’un régime spécialisé en petites proies. Il parcourt les mers tropicales et tempérées chaudes, traverse des bassins océaniques et revient souvent dans certains secteurs d’alimentation saisonniers."
+    },
+    "identification": {
+      "en": "Its broad, flattened head bears a very wide mouth at the tip of the snout; five pairs of large gill slits open behind it. Pale spots and bars form a checkerboard over the dark back, and the pattern is distinctive enough for researchers to identify individuals in photographs. Individuals recorded at feeding sites often measure around 4–10 m, but this is an observation range that includes juveniles, and many coastal sites are dominated by young males. The 2025 IUCN assessment estimates male maturity at 6.8–9.2 m by region and female maturity at about 9–10 m. A Ningaloo re-sighting model estimated average eventual lengths—the limits approached as growth slows—of 8.5–9 m for males and 14.5 m for females; rare records approach 18 m, and these modelled averages are not maximum lengths.",
+      "fr": "Sa tête large et aplatie porte une très grande bouche au bout du museau ; cinq paires de grandes fentes branchiales s’ouvrent derrière elle. Des taches et des barres claires dessinent un damier sur le dos sombre, motif assez singulier pour identifier les individus sur des photographies. Les individus observés sur les sites d’alimentation mesurent souvent autour de 4 à 10 m, mais cette fourchette d’observations inclut des juvéniles et de nombreux sites côtiers sont dominés par de jeunes mâles. L’évaluation UICN 2025 estime la maturité des mâles entre 6,8 et 9,2 m selon la région, et celle des femelles vers 9 à 10 m. Un modèle de réobservations à Ningaloo estime une longueur limite moyenne, vers laquelle la croissance tend en ralentissant, de 8,5 à 9 m chez les mâles et de 14,5 m chez les femelles ; de rares observations approchent 18 m, mais ces moyennes modélisées ne sont pas des maxima."
+    },
+    "habitat": {
+      "en": "The species occurs in coastal waters and the open ocean, usually in warm seas, and spends much of its time near the surface. It can also dive into cold deep water; a satellite-tagged shark off Yucatán reached 1,928 m, although the purpose of such exceptional dives is not settled. Seasonal prey pulses bring sharks together at regional feeding sites, but their movements differ among regions and individuals.",
+      "fr": "L’espèce fréquente les eaux côtières comme la pleine mer, surtout dans les régions chaudes, et passe une grande partie de son temps près de la surface. Elle peut aussi plonger dans des eaux froides et profondes ; un requin muni d’une balise au large du Yucatán a atteint 1 928 m, sans que la fonction de ces plongées exceptionnelles soit établie. Les poussées saisonnières de proies réunissent les requins sur des zones d’alimentation régionales, mais leurs déplacements varient selon les régions et les individus."
+    },
+    "diet": {
+      "en": "Its food includes zooplankton such as copepods and sergestid shrimp, as well as fish eggs, larvae and small fish; the menu depends on what is locally abundant. In a feeding bout it may cruise with its mouth open, draw water in by suction, or feed nearly upright while stationary. Water exits through the gills after prey is retained by filtering pads in the pharynx. Motta and colleagues proposed that tangential cross-flow across the pad mesh may limit clogging, but described this as a mechanism rather than directly demonstrating that effect. Indirect biochemical evidence from tissues, faeces and prey at Ningaloo suggests floating Sargassum and its small associated animals can contribute to the diet there; this does not establish plant feeding as universal.",
+      "fr": "Son alimentation comprend du zooplancton, notamment des copépodes et des crevettes sergestides, ainsi que des œufs et larves de poissons et de petits poissons ; le menu dépend des ressources locales. Pendant une phase d’alimentation, il peut avancer bouche ouverte, aspirer l’eau ou se nourrir presque verticalement sans nager. L’eau ressort par les branchies après que les proies ont été retenues par des coussinets filtrants du pharynx. Selon Motta et ses collègues, un écoulement tangentiel sur le treillis pourrait limiter l’obstruction ; ce mécanisme reste une proposition, non une démonstration directe. À Ningaloo, des analyses biochimiques indirectes suggèrent que le Sargassum flottant et ses petits organismes associés contribuent au régime ; cela ne rend pas l’alimentation végétale universelle."
+    },
+    "behavior": {
+      "en": "At the northeastern Yucatán feeding area, hundreds of sharks gather in summer and disperse between August and October. A female tracked from Mexico travelled at least 7,213 km in 150 days. In Qatar, tracking showed that many tagged sharks returned to the same feeding area. Dives vary with region and prey: most tagged sharks spend much time in shallow water, yet some make deep excursions.",
+      "fr": "Sur la zone d’alimentation du nord-est du Yucatán, des centaines de requins se rassemblent en été puis se dispersent entre août et octobre. Une femelle suivie depuis le Mexique a parcouru au moins 7 213 km en 150 jours. Au Qatar, le suivi a montré que de nombreux requins balisés revenaient sur la même zone d’alimentation. Les plongées varient selon la région et les proies : la plupart des requins suivis passent beaucoup de temps en eau peu profonde, mais certains plongent profondément."
+    },
+    "reproduction": {
+      "en": "Reproduction remains poorly observed: the only confirmed pregnant female was a 10.6 m shark caught off Taiwan in 1995. She carried 304 embryos at different stages, including some still enclosed in egg cases and others already hatched; this showed aplacental yolk-sac viviparity, in which eggs hatch inside the mother and embryos develop without a placenta. The litter is an exceptional documented case, not a typical or known universal litter size. Newborns are rarely seen, so their birth size, nursery grounds and early growth in natural habitat remain uncertain.",
+      "fr": "La reproduction reste peu observée : la seule femelle gestante confirmée était un requin de 10,6 m capturé au large de Taïwan en 1995. Elle portait 304 embryons à différents stades, certains encore dans leur enveloppe et d’autres déjà éclos ; cette découverte a démontré une viviparité aplacentaire à sac vitellin, où les œufs éclosent dans le corps maternel et les embryons se développent sans placenta. Cette portée est un cas documenté exceptionnel, pas une taille de portée typique ni universelle. Les nouveau-nés étant rarement observés, leur taille à la naissance, leurs zones de naissance et leur croissance précoce en milieu naturel restent incertaines."
+    },
+    "ecology": {
+      "en": "By filtering plankton and fish eggs, whale sharks feed on concentrated pulses of production and connect tiny prey to large marine predators. In the southern Gulf of California, seasonal plankton blooms draw juvenile sharks to feeding areas, where they can also become prey for large sharks and killer whales. Predation by killer whales is documented there: observations recorded four events of killing and consumption between 2018 and 2024, evidence that does not show orcas commonly hunt the species everywhere.",
+      "fr": "En filtrant le plancton et les œufs de poissons, les requins-baleines exploitent des poussées concentrées de production et relient de minuscules proies aux grands prédateurs marins. Dans le sud du golfe de Californie, les floraisons saisonnières de plancton attirent de jeunes requins vers des zones d’alimentation où de grands requins et des orques peuvent aussi les prédater. La prédation par les orques y est documentée : quatre événements de mise à mort et de consommation ont été observés entre 2018 et 2024 ; cela ne montre pas que les orques chassent couramment l’espèce partout."
+    },
+    "conservation": {
+      "en": "Targeted fisheries once supplied meat, oil and fins, and some fisheries closed in the 1990s and 2000s; incidental capture in nets continues in parts of the range. The global IUCN assessment, assessed on 31 March 2025 and published in 2025, lists the species as Endangered and infers a 50–79% population reduction over three generations (120 years), with declines especially severe in the Indo-Pacific. Serious vessel strikes are another major threat because sharks cross shipping routes and aggregate predictably near the surface.",
+      "fr": "Des pêcheries ciblées ont autrefois fourni viande, huile et nageoires, et certaines ont fermé dans les années 1990 et 2000 ; les captures accidentelles dans les filets persistent dans une partie de l’aire. L’évaluation mondiale de l’UICN, réalisée le 31 mars 2025 et publiée en 2025, classe l’espèce « En danger » et estime une réduction de population de 50 à 79 % sur trois générations (120 ans), particulièrement marquée dans l’Indo-Pacifique. Les collisions graves avec les navires constituent une autre menace importante, car les requins traversent les routes maritimes et se rassemblent de façon prévisible près de la surface."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Whale Shark — Discover Fishes, Florida Museum of Natural History, University of Florida",
+        "fr": "Requin-baleine — Discover Fishes, Florida Museum of Natural History, University of Florida"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/whale-shark/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Institutional profile describes anatomy, range, feeding, grouping and fisheries history."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 10,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Feeding anatomy, filter-feeding rate, and diet of whale sharks during surface ram filter feeding off Yucatan — Zoology",
+        "fr": "Anatomie alimentaire, filtration et régime du requin-baleine au large du Yucatán — Zoology"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/20817493/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "Yucatán observations measured filtering pads, prey and feeding behavior."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.1",
+        "diet.fr.3",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 9,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Horizontal Movements, Migration Patterns, and Population Structure of Whale Sharks in the Gulf of Mexico and Northwestern Caribbean Sea — PLOS ONE",
+        "fr": "Déplacements horizontaux, migrations et structure de population dans le golfe du Mexique et les Caraïbes — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3749210/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Tags and photo-identification followed seasonal Mexico aggregation sharks."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 8,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Some like it hot: Repeat migration and residency of whale sharks within an extreme natural environment — PLOS ONE",
+        "fr": "Certains aiment la chaleur : migrations répétées et résidence dans un milieu extrême — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5608409/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Qatar satellite tags showed regional movements, depth use and returns."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.fr.3",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 10,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Asymptotic Growth of Whale Sharks Suggests Sex-Specific Life-History Strategies — Frontiers in Marine Science",
+        "fr": "La croissance asymptotique révèle des stratégies d’histoire de vie propres au sexe — Frontiers in Marine Science"
+      },
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2020.575683/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "Ningaloo resightings modelled sex-specific growth from limited observations."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 8,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Paternity analysis in a litter of whale shark embryos — Endangered Species Research",
+        "fr": "Analyse de paternité dans une portée d’embryons de requin-baleine — Endangered Species Research"
+      },
+      "url": "https://doi.org/10.3354/esr00300",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Taiwan specimen carried 304 embryos at several developmental stages."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 9,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Killer whales hunt, kill and consume whale sharks in the Gulf of California — Frontiers in Marine Science",
+        "fr": "Les orques chassent et consomment des requins-baleines dans le golfe de Californie — Frontiers in Marine Science"
+      },
+      "url": "https://doi.org/10.3389/fmars.2024.1448254",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Four observed predation events occurred in the southern Gulf of California."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 11,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rhincodon typus — IUCN Red List of Threatened Species, 2025 global assessment",
+        "fr": "Rhincodon typus — Liste rouge de l’UICN, évaluation mondiale 2025"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T19488A126673248.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Global assessment dated 31 March 2025 lists Endangered, decline 50–79%."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 10,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whale sharks increase swimming effort while filter feeding, but appear to maintain high foraging efficiencies — Journal of Experimental Biology",
+        "fr": "Les requins-baleines augmentent leur effort de nage pendant la filtration, tout en gardant une forte efficacité alimentaire — Journal of Experimental Biology"
+      },
+      "url": "https://journals.biologists.com/jeb/article/223/11/jeb224402/223619/Whale-sharks-increase-swimming-effort-while-filter",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Biologging documented several feeding modes and swimming effort in Yucatán."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 10,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Limiting Global Ship Strikes on Whale Sharks — Convention on Migratory Species",
+        "fr": "Limiter les collisions mondiales avec les requins-baleines — Convention sur les espèces migratrices"
+      },
+      "url": "https://www.cms.int/publication/limiting-global-ship-strikes-whale-sharks",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "CMS identifies surface use and shipping lanes as major collision risks."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 11,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Love bites? Pre-copulatory behaviours of whale sharks at Ningaloo Reef — Frontiers in Marine Science",
+        "fr": "Morsures nuptiales ? Comportements pré-copulatoires à Ningaloo — Frontiers in Marine Science"
+      },
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2024.1507072/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Recent field report describes rare courtship and maturity evidence."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 9,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The world’s largest omnivore is a fish — Ecology",
+        "fr": "Le plus grand omnivore du monde est un poisson — Ecology"
+      },
+      "url": "https://doi.org/10.1002/ecy.3818",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Ningaloo biochemical study suggests dietary contribution from Sargassum."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 8,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Field identification guide to the living marine resources of Kenya — FAO",
+        "fr": "Guide d’identification des ressources marines vivantes du Kenya — FAO"
+      },
+      "url": "https://www.fao.org/4/i2741e/i2741e.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "FAO identifies five pairs of gill slits and terminal mouth morphology."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 11,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Single adult whale shark, side three-quarter view, natural proportions, flattened broad head and terminal mouth, five gill slits, dark blue-grey back with clear pale checkerboard spots and bars, large pectoral fins and crescent tail. Sex unspecified. Plain white background, no water, props, labels, border or watermark.",
+  "uncertainties": [
+    "Adult maximum length remains uncertain; 18 m is a credible reported extreme, while growth estimates vary with sex, region, sample sizes and model.",
+    "The Taiwan female caught in 1995 is the sole confirmed pregnant specimen; litter size, gestation, pupping sites, newborn size and early wild growth are not established for the species.",
+    "Deep dives are documented, but their functions are not known; movement and aggregation patterns vary among regional populations.",
+    "IUCN global assessment was assessed 31 March 2025 and published in 2025; Endangered, with a 50–79% inferred reduction over 120 years (three generations)."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Corrected juvenile-inclusive feeding-site sizes, five paired gill slits,2025 assessment maturity estimates, tentative cross-flow mechanism and local biochemical algae evidence. Distinguished asymptotic growth models from extreme lengths, preserved unique Taiwan pregnancy context and removed conflicting old maturity sentence left in reproduction. Existing illustration visually reviewed."
+}

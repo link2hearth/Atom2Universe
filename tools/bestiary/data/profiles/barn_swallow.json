@@ -1,0 +1,352 @@
+{
+  "id": "barn_swallow",
+  "scientific": "Hirundo rustica",
+  "group": "birds",
+  "name": {
+    "en": "Barn swallow",
+    "fr": "Hirondelle rustique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Barn Swallow is a small, agile passerine that breeds across much of the Northern Hemisphere and moves south when cold weather reduces flying-insect food. Many European populations cross to Africa for winter. Most North American breeders winter in Central or South America. A small breeding population is established in Argentina, well south of the main Northern Hemisphere range. Its use of barns and other buildings brings it close to people, but it remains a wild aerial hunter.",
+      "fr": "L’Hirondelle rustique est un petit passereau agile qui niche dans une grande partie de l’hémisphère Nord et gagne le sud lorsque le froid réduit les insectes volants. De nombreuses populations européennes traversent vers l’Afrique pour hiverner. La plupart des nicheuses d’Amérique du Nord hivernent en Amérique centrale ou du Sud. Une petite population nicheuse est établie en Argentine, bien au sud de l’aire principale de l’hémisphère Nord. Les granges et autres bâtiments la rapprochent des humains, mais elle reste un prédateur aérien sauvage."
+    },
+    "identification": {
+      "en": "Adults are about 15–18 cm long and weigh roughly 17–20 g; pointed wings and long outer tail feathers give them a swift, deeply forked silhouette. Plumage varies across geographic forms: European birds are relatively pale below, while North American birds are generally darker underneath. Males usually have longer tail streamers than females.",
+      "fr": "L’adulte mesure environ 15 à 18 cm et pèse de 17 à 20 g; ses ailes pointues et ses longues plumes externes lui donnent une silhouette rapide à queue profondément fourchue. Le plumage varie selon les formes géographiques: les oiseaux européens ont le dessous relativement pâle, tandis que les oiseaux nord-américains sont généralement plus sombres. Les filets de queue du mâle sont généralement plus longs que ceux de la femelle."
+    },
+    "habitat": {
+      "en": "For breeding, the species needs open airspace rich in flying insects, including meadows, grazed fields, shorelines and wetlands. It commonly attaches a nest to a sheltered beam or ledge in a barn, shed or other outbuilding. Wet mud nearby supplies building material, and shelter helps protect the nest.",
+      "fr": "Pour nicher, l’espèce a besoin d’espaces ouverts riches en insectes volants: prairies, pâtures, rivages et zones humides. Elle fixe souvent son nid à une poutre ou un rebord abrités dans une grange, une remise ou une autre dépendance. La boue humide voisine fournit le matériau de construction, et l’abri protège le nid."
+    },
+    "diet": {
+      "en": "Barn Swallows are aerial insectivores: they catch flies, beetles, bees, wasps, ants and moths in flight, often low over grass or water, turning quickly to seize prey. They often select larger individual insects; swallowed grit or tiny shell fragments may help grind food or supply calcium. A farm study linked livestock presence with more large fly and beetle prey in the swallow’s diet.",
+      "fr": "Les Hirondelles rustiques sont des insectivores aériens: elles capturent mouches, coléoptères, abeilles, guêpes, fourmis et papillons de nuit en vol, souvent au ras de l’herbe ou de l’eau, en virant rapidement. Elles choisissent souvent des insectes individuels assez gros; les petits graviers ou de minuscules fragments de coquille avalés peuvent aider à broyer la nourriture ou apporter du calcium. Une étude agricole a associé la présence de bétail à davantage de grosses mouches et de coléoptères dans le régime de l’hirondelle."
+    },
+    "behavior": {
+      "en": "The swallow’s agile flight lets it skim over water to drink or bathe without landing. Pairs nest alone or in loose colonies, and migrants gather in communal roosts. Its twittering song and short calls help maintain contact.",
+      "fr": "Son vol agile lui permet de frôler l’eau pour boire ou se baigner sans se poser. Les couples nichent seuls ou en colonies lâches, et les migrateurs se rassemblent dans des dortoirs collectifs. Son chant gazouillant et ses cris brefs maintiennent le contact."
+    },
+    "reproduction": {
+      "en": "The pair builds a cup of mud pellets, often mixed with grass and lined with feathers, on a sheltered wall or beam. A typical clutch contains four or five eggs. In Britain, the female usually incubates them for 16–18 days, with occasional help from the male. Chicks hatch altricial, meaning helpless and sparsely feathered, and both parents feed them insects. In Ontario, young fledge at about 19–24 days; parents may continue feeding them for up to a week after they leave the nest.",
+      "fr": "Le couple construit une coupe de boulettes de boue, souvent mêlées d’herbes et garnie de plumes, contre un mur ou une poutre abrités. Une ponte typique compte quatre ou cinq œufs. En Grande-Bretagne, la femelle les couve généralement pendant 16 à 18 jours, parfois aidée du mâle. Les oisillons éclosent nidicoles, c’est-à-dire incapables de se débrouiller seuls et encore peu emplumés; les deux parents leur apportent des insectes. En Ontario, les jeunes s’envolent vers 19 à 24 jours; les parents peuvent continuer à les nourrir jusqu’à une semaine après leur sortie du nid."
+    },
+    "ecology": {
+      "en": "By feeding on flying insects, the swallow is both predator and prey: diurnal raptors hunt adults, while rats and squirrels may raid nests in Canada. House Sparrows compete for nest sites and can destroy eggs or chicks; nest parasites can also reduce breeding success.",
+      "fr": "En consommant des insectes volants, l’hirondelle est à la fois prédatrice et proie: les rapaces diurnes chassent les adultes, tandis que rats et écureuils peuvent piller les nids au Canada. Les Moineaux domestiques rivalisent pour les sites de nidification et peuvent détruire œufs ou poussins; les parasites du nid peuvent aussi réduire le succès reproducteur."
+    },
+    "conservation": {
+      "en": "Trends vary by region. Canada’s 2021 COSEWIC assessment classed the species as Special Concern, after a Threatened assessment in 2011; national numbers were broadly stable from 2009 to 2019 following a longer decline. Declining insect prey, severe spring temperature swings, agricultural change and some nest-site losses remain concerns, though causes are not fully understood. In the UK, BTO records a 23% breeding-population fall from 1995 to 2024; it also identifies agricultural intensification and winter survival as possible influences.",
+      "fr": "Les tendances varient selon les régions. En 2021, le COSEPAC a classé l’espèce comme préoccupante au Canada, après l’avoir évaluée comme menacée en 2011; les effectifs nationaux sont restés globalement stables de 2009 à 2019 après un recul plus ancien. Le déclin des insectes-proies, les fortes variations de température au printemps, les changements agricoles et la perte locale de sites de nidification restent préoccupants, même si les causes ne sont pas entièrement comprises. Au Royaume-Uni, le BTO relève une baisse de 23 % des effectifs nicheurs entre 1995 et 2024; il cite aussi l’intensification agricole et la survie en hiver parmi les facteurs possibles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Barn Swallow (Hirundo rustica): COSEWIC assessment and status report 2021",
+        "fr": "Hirondelle rustique (Hirundo rustica): évaluation et rapport de situation du COSEPAC, 2021"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/barn-swallow-2021.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "Canadian report gives North American measurements and 2021 status trends."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 10,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barn swallow (Hirundo rustica): COSEWIC assessment and status report 2011",
+        "fr": "Hirondelle rustique (Hirundo rustica): évaluation et rapport de situation du COSEPAC, 2011"
+      },
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/barn-swallow-2011.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Older Canadian report covers open habitats, social roosts and nest interactions."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 11,
+        "total": 140,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Swallow BirdFacts, British Trust for Ornithology",
+        "fr": "Fiche BirdFacts de l’Hirondelle rustique, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/swallow",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British records describe African migration, incubation and recent population trends."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 10,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barn Swallow Life History, All About Birds, Cornell Lab of Ornithology",
+        "fr": "Histoire naturelle de l’Hirondelle rustique, All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Barn_Swallow/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell covers prey, grit, nests and care."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 7,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barn Swallow Overview, All About Birds, Cornell Lab of Ornithology",
+        "fr": "Présentation de l’Hirondelle rustique, All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Barn_Swallow",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Cornell overview describes the species’ broad range and human association."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 10,
+        "total": 95,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barn Swallow Range Map, All About Birds, Cornell Lab of Ornithology",
+        "fr": "Carte de répartition de l’Hirondelle rustique, All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Barn_Swallow/maps-range",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Cornell map and text show North American wintering grounds."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 9,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Swallow Bird Facts, RSPB",
+        "fr": "Faits sur l’Hirondelle rustique, RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/swallow",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "RSPB describes low acrobatic flight, calls and sheltered mud nests."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 134,
+        "notes_words": 10,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Geographic variation in sexual selection and implications for speciation in the Barn Swallow",
+        "fr": "Variation géographique de la sélection sexuelle et implications pour la divergence de l’Hirondelle rustique"
+      },
+      "url": "https://doi.org/10.1186/s40657-014-0008-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Review compares pale European and darker North American forms and tail streamers."
+      ],
+      "prose_claims": [
+        "overview.en.5",
+        "overview.fr.5",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 12,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barn Swallow Recovery Strategy, Ontario",
+        "fr": "Stratégie de rétablissement de l’Hirondelle rustique, Ontario"
+      },
+      "url": "https://www.ontario.ca/page/barn-swallow-recovery-strategy",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Ontario strategy reports fledging ages and parental feeding after fledging."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 10,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Partitioning the effects of livestock farming on the diet of an aerial insectivorous passerine, the Barn Swallow Hirundo rustica",
+        "fr": "Répartition des effets de l’élevage sur le régime de l’Hirondelle rustique, passereau insectivore aérien"
+      },
+      "url": "https://www.tandfonline.com/doi/full/10.1080/00063657.2012.748717",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Farm animals were associated with larger fly and beetle prey in diets."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 12,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "One adult Hirundo rustica in natural proportions, showing a deeply forked tail, pointed wings, chestnut throat, and regionally accurate plumage; identify the intended population before choosing belly and breast-band colours. White background.",
+  "uncertainties": [
+    "The COSEWIC report is a Canadian regional assessment; its North American plumage and conservation details do not describe every global population.",
+    "Incubation and fledging durations differ slightly among populations and reference datasets; the article gives ranges and labels regional examples.",
+    "The global causes of population change remain incompletely understood; Canadian and British trends are reported separately rather than generalized worldwide.",
+    "The Ontario recovery page and livestock diet study exposed only search-result or abstract excerpts during consultation; claims from them are limited to those excerpts."
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual review; Canadian 2021 COSEWIC category and regional qualifiers checked; French grit and breeding-population terms corrected; source audit passed; art accepted.",
+  "source_audit_version": 1
+}

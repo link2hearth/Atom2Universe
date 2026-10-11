@@ -1,0 +1,350 @@
+{
+  "id": "european_polecat",
+  "scientific": "Mustela putorius",
+  "group": "mammals",
+  "name": {
+    "en": "European polecat",
+    "fr": "Putois d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European polecat is a wild mustelid that ranges across much of Europe and western Eurasia, where it hunts small vertebrates. The domestic ferret is a domesticated form of the polecat, and the two can interbreed to produce fertile hybrids. Their fur and facial markings overlap enough that field identification may be uncertain, and genetic testing may be needed to distinguish hybrids from wild polecats.",
+      "fr": "Le putois d’Europe est un mustélidé sauvage présent dans une grande partie de l’Europe et de l’ouest de l’Eurasie, où il chasse de petits vertébrés. Le furet domestique est une forme domestiquée du putois, et les deux peuvent se croiser pour produire des hybrides fertiles. Leurs pelages et marques faciales se ressemblent assez pour rendre l’identification incertaine sur le terrain ; une analyse génétique peut être nécessaire pour distinguer les hybrides des putois sauvages."
+    },
+    "identification": {
+      "en": "Its long, low body has short legs and a comparatively short, bushy tail. Dark guard hairs over a pale yellowish underfur create a grizzled coat; the pale muzzle, eyebrows and ear margins frame a dark facial mask. Adult British males are about 33–45 cm long and 0.8–1.9 kg, while females are 32–39 cm and 0.5–1.1 kg; the tail adds 12–19 cm.",
+      "fr": "Son corps allongé et bas a des pattes courtes et une queue relativement courte et touffue. Des jarres sombres sur une bourre jaunâtre donnent un pelage grisonnant ; le museau, les sourcils et le bord des oreilles clairs encadrent un masque sombre. En Grande-Bretagne, les mâles adultes mesurent environ 33–45 cm et pèsent 0,8–1,9 kg, contre 32–39 cm et 0,5–1,1 kg chez les femelles ; la queue mesure 12–19 cm."
+    },
+    "habitat": {
+      "en": "The polecat occupies a broad range of landscapes, but in France it is especially associated with wetlands and river margins. British polecats often use hedged farmland and small woods, resting in rabbit burrows, hay bales or farm outbuildings as prey and shelter shift seasonally.",
+      "fr": "Le putois fréquente des paysages variés, mais il est particulièrement associé aux zones humides et aux cours d’eau en France. En Grande-Bretagne, il fréquente souvent les terres agricoles bordées de haies et les petits bois ; il se repose dans des terriers de lapins, du foin ou des dépendances selon les proies et les saisons."
+    },
+    "diet": {
+      "en": "It is a carnivore whose prey changes with place and season: rabbits and other small mammals are important, with frogs, birds and other animals also taken. In a British stomach-content study of animals collected in 2012–2016, lagomorph remains occurred most often, followed by other mammals, amphibians and birds. Rabbits were more frequent in spring and summer than in autumn in that sample, illustrating how prey availability shapes a local diet. Its slender body lets it hunt rabbits inside their burrows.",
+      "fr": "Carnivore, il adapte ses prises au lieu et à la saison : lapins et autres petits mammifères comptent beaucoup, mais il capture aussi grenouilles, oiseaux et autres animaux. Dans une étude britannique de contenus stomacaux d’individus recueillis entre 2012 et 2016, les restes de lagomorphes étaient les plus fréquents, suivis d’autres mammifères, d’amphibiens et d’oiseaux. Dans cet échantillon, les lapins apparaissaient plus souvent au printemps et en été qu’en automne, montrant le rôle des proies locales. Son corps fin lui permet de chasser les lapins dans leurs terriers."
+    },
+    "behavior": {
+      "en": "The polecat is solitary; during breeding, males may mate with several females. Its movements are mainly nocturnal or crepuscular, although it can also be active by day. Radio-tracking there found that time spent foraging and travelling varied with food categories, while mating and breeding also changed activity. In that sample, activity averaged about seven and a half hours daily; females spent more time foraging, while males travelled more. Anal scent glands release a pungent secretion under stress and may also help communicate with neighbours, possibly limiting direct aggression.",
+      "fr": "Le putois est solitaire ; pendant la reproduction, les mâles peuvent s’accoupler avec plusieurs femelles. Ses déplacements sont surtout nocturnes ou crépusculaires, mais il peut aussi être actif le jour. Le radio-pistage a montré que le temps consacré à la recherche de nourriture et aux déplacements variait selon les proies, tandis que l’accouplement et l’élevage des jeunes modifiaient aussi l’activité. Dans cet échantillon, l’activité durait en moyenne environ sept heures et demie par jour ; les femelles consacraient plus de temps à chercher de la nourriture et les mâles aux déplacements. Les glandes anales libèrent une sécrétion âcre en situation de stress et pourraient aussi informer les voisins, et contribuer à limiter les agressions directes."
+    },
+    "reproduction": {
+      "en": "In France, mating usually occurs in March–April; births follow in May–June after 40–42 days of gestation, without delayed implantation. One annual litter is usual, with one to twelve kits and weaning at about six weeks. Born blind and helpless, kits stay with their mother, become independent at three months and reach sexual maturity at ten to eleven months.",
+      "fr": "En France, l’accouplement a généralement lieu en mars-avril ; les naissances suivent en mai-juin après 40 à 42 jours de gestation, sans implantation différée. Une portée annuelle est habituelle, avec un à douze petits et un sevrage vers six semaines. Aveugles et dépendants à la naissance, les jeunes restent avec leur mère, deviennent autonomes à trois mois et atteignent la maturité sexuelle vers dix à onze mois."
+    },
+    "ecology": {
+      "en": "As a predator, the polecat takes rabbits, amphibians and birds, linking terrestrial and wetland food webs. In western France, tracking found marshy habitats associated with greater male mating success, while pregnant or nursing females shifted towards deciduous woodland.",
+      "fr": "Prédateur de lapins, d’amphibiens et d’oiseaux, le putois relie les réseaux alimentaires terrestres et humides. Dans l’ouest de la France, le suivi a associé les marais à un meilleur succès d’accouplement des mâles, tandis que les femelles gestantes ou allaitantes se déplaçaient vers les boisements feuillus."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2016 classified the species as Least Concern while noting that population trends were uncertain across much of its range. A French survey in 2017 found sparse, fragmented populations in many regions, with evidence varying greatly among areas. Documented pressures include habitat loss and fragmentation, trapping, road deaths, pollution and disease. In Britain, persecution and fur hunting severely reduced the polecat’s range before the population recovered.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2016 classait l’espèce en préoccupation mineure, tout en signalant que les tendances démographiques étaient incertaines sur une grande partie de son aire. Une enquête française de 2017 a relevé des populations peu abondantes et fragmentées dans de nombreuses régions, avec des données très variables selon les secteurs. Les pressions documentées comprennent la perte et la fragmentation des habitats, le piégeage, les collisions routières, la pollution et les maladies. En Grande-Bretagne, les persécutions et la chasse pour la fourrure ont fortement réduit l’aire du putois avant le rétablissement de sa population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Polecat — The Mammal Society",
+        "fr": "Putois — The Mammal Society"
+      },
+      "url": "https://mammal.org.uk/british-mammals/polecat",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "British account: hybrids, appearance, adult dimensions, habitat and resting places."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 10,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The welfare of animals kept for fur production — European Commission",
+        "fr": "Bien-être des animaux élevés pour leur fourrure — Commission européenne"
+      },
+      "url": "https://food.ec.europa.eu/system/files/2020-12/sci-com_scah_out67_en.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult sex-weight differences, coat layers and contrasting facial markings described."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 10,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The polecat — French Office for Biodiversity",
+        "fr": "Le putois — Office français de la biodiversité"
+      },
+      "url": "https://ofb.gouv.fr/doc/le-putois",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "French account emphasizes wetlands, river margins, population monitoring and habitat regression."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 11,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diets of European polecats in Great Britain — NERC Open Research Archive",
+        "fr": "Régime des putois en Grande-Bretagne — NERC Open Research Archive"
+      },
+      "url": "https://nora.nerc.ac.uk/id/eprint/527285/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UK stomach samples: lagomorphs most frequent; rabbit occurrence varies by season."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.3",
+        "diet.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 11,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Le Putois d’Europe — French Society for the Study and Protection of Mammals",
+        "fr": "Le Putois d’Europe — Société française pour l’étude et la protection des mammifères"
+      },
+      "url": "https://www.sfepm.org/le-putois-deurope.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French specialist account: scent glands, fragmented populations and documented habitat, traffic and health threats."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 14,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Time budget as related to feeding tactics of European polecats — PubMed",
+        "fr": "Budget-temps et stratégies alimentaires du Putois — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24896689/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Western-France tracking measured daily activity and sex-specific foraging and travel."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 10,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Plan national de conservation du Putois d’Europe en France — SFEPM",
+        "fr": "Plan national de conservation du Putois d’Europe en France — SFEPM"
+      },
+      "url": "https://www.sfepm.org/sites/default/files/inline-files/Plan_national_conservation_Putois_2021_SFEPM_web_5.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "conservation",
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "French plan: domestication, reproduction, juvenile development and habitat."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 8,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Habitat Selection and Mating Success in a Mustelid — University of Rennes study",
+        "fr": "Sélection de l’habitat et succès d’accouplement — étude de l’université de Rennes"
+      },
+      "url": "https://doi.org/10.1155/2011/159462",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "behavior"
+      ],
+      "facts": [
+        "Western France telemetry linked marshes to mating success and deciduous woods to maternal females."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 14,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mustela putorius — IUCN Red List 2016",
+        "fr": "Mustela putorius — Liste rouge de l’UICN 2016"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41658A45214384.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "Global Least Concern assessment published 2016; assessment dated 5 March 2016."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 11,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "accessible_copy": "https://www.researchgate.net/publication/305266434_Mustela_putorius"
+    },
+    {
+      "title": {
+        "en": "Polecat population and conservation status in Britain — NERC",
+        "fr": "Population et état de conservation du Putois en Grande-Bretagne — NERC"
+      },
+      "url": "https://nora.nerc.ac.uk/id/eprint/520322/9/JP025%20edition%201%20A%20Review%20of%20the%20Population%20and%20Conservation%20Status%20Technical%20summary.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "British historical persecution and fur hunting preceded recovery from a severely reduced range."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 13,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult wild European polecat, dark guard hairs over cream underfur, pale cheeks and eyebrows framing a dark mask extending to the nose; elongated low body, short legs and moderately bushy short tail. Validated naturalistic plate on pure white.",
+  "uncertainties": [
+    "The global IUCN status cited is the 2016 assessment; it should not be read as a current population trend.",
+    "Size, diet, seasonal activity and reproductive figures vary by region and sample; several quantitative values here are British or French.",
+    "Polecat–ferret hybrids can be hard to identify visually, and phenotype alone may not establish ancestry."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root compared British measurements, diet study, western-France activity study and primary French conservation-plan reproduction; clarified seasonal direct gestation and matched EN/FR. Independent anatomy critic accepted wild polecat plate; sentence source budgets passed."
+}

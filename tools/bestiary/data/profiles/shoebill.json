@@ -1,0 +1,139 @@
+{
+  "id": "shoebill",
+  "scientific": "Balaeniceps rex",
+  "group": "birds",
+  "name": {
+    "en": "Shoebill",
+    "fr": "Bec-en-sabot du Nil"
+  },
+  "sections": {
+    "overview": {
+      "en": "The shoebill is a wetland bird and the sole living member of Balaenicipitidae. Despite its stork-like silhouette, it is neither a stork nor a heron: evidence places it closer to pelicans. Its slate-grey body, long legs, and broad, shoe-shaped bill mark this marsh hunter.",
+      "fr": "Le bec-en-sabot est un oiseau des marais africains, seul représentant vivant des Balaenicipitidés. Malgré sa silhouette de cigogne, il est plus proche des pélicans que des cigognes ou des hérons. Son corps gris ardoise, ses longues pattes et son large bec en sabot le distinguent."
+    },
+    "identification": {
+      "en": "Adults are mainly blue-grey, with darker flight feathers, a pale eye, and long, widely spread toes suited to walking over floating vegetation. The enormous bill has a deep, bulbous base, sharp cutting edges, and a hooked tip; males average slightly larger.",
+      "fr": "L’adulte est gris bleuté, avec des rémiges sombres, un œil pâle et de longs doigts écartés pour marcher sur la végétation flottante. Son immense bec a une base profonde et renflée, des bords tranchants et une pointe crochue; le mâle est légèrement plus grand."
+    },
+    "habitat": {
+      "en": "It occupies freshwater swamps and seasonally flooded marshes across central and eastern Africa, from South Sudan south to Zambia. Dense reeds, sedges, or papyrus provide cover, while small open patches and floating plant mats offer places to fish and nest.",
+      "fr": "Il fréquente les marécages d’eau douce et les plaines inondables saisonnières d’Afrique centrale et orientale, du Soudan du Sud à la Zambie. Les roseaux, les laîches et le papyrus forment des abris; des clairières et tapis végétaux flottants servent à pêcher et à nicher."
+    },
+    "diet": {
+      "en": "Fish dominate its diet, especially lungfish, bichirs, and catfish; it also takes water snakes and frogs, with other aquatic vertebrates reported less often. The bird waits motionless or walks slowly, then lunges down in a forceful forward collapse to seize prey in its bill.",
+      "fr": "Les poissons dominent son régime, notamment les dipneustes, les polyptères et les poissons-chats; il capture aussi des serpents d’eau et des grenouilles, et plus rarement d’autres vertébrés aquatiques. Il attend sans bouger ou avance lentement, puis s’abat vers l’avant pour saisir sa proie."
+    },
+    "behavior": {
+      "en": "Usually solitary, shoebills keep space between feeding birds, even when a pair is nesting. A successful strike may bring up fish tangled with vegetation; the bird shakes plant matter free before swallowing. It is largely sedentary, though changing water levels can prompt local movements.",
+      "fr": "Solitaire, le bec-en-sabot garde ses distances avec les autres oiseaux qui se nourrissent, même en période de nidification. Une attaque peut ramener un poisson mêlé de végétaux, que l’oiseau secoue avant d’avaler. Il est plutôt sédentaire, mais les variations d’eau entraînent des déplacements locaux."
+    },
+    "reproduction": {
+      "en": "Pairs nest far apart, building broad platforms of wetland vegetation on floating mats or small mounds. Clutches hold one to three eggs, commonly two; both parents incubate and tend young. Often only one chick survives, as food shortage or sibling aggression limits the brood.",
+      "fr": "Les couples nichent sur une plateforme végétale posée sur un tapis flottant ou un monticule. La ponte compte un à trois œufs, souvent deux; les deux parents couvent et nourrissent les petits. Souvent, un seul jeune survit, faute de nourriture ou après l’agression du cadet."
+    },
+    "ecology": {
+      "en": "The shoebill depends on a shifting mosaic: dense cover for concealment, fish-rich water, and open footing where it can recover after a lunge. In Bangweulu, Zambia, tracking found mostly short daily movements, linked to feeding and the search for suitable wetland patches.",
+      "fr": "Le bec-en-sabot dépend d’une mosaïque: couvert dense pour se dissimuler, eaux poissonneuses et sol dégagé pour reprendre son équilibre après l’attaque. Dans le Bangweulu, en Zambie, le suivi a révélé surtout de courts déplacements liés à l’alimentation et à la recherche de sites adaptés."
+    },
+    "conservation": {
+      "en": "In its profile consulted in October2026, BirdLife International lists the shoebill as Vulnerable and reports an estimate of3,300–5,300 mature individuals. These are assessment estimates, not a new census. Wetland loss, hunting, nest disturbance, illegal capture and drought are identified pressures.",
+      "fr": "Dans sa notice consultée en octobre2026, BirdLife International classe le bec-en-sabot comme vulnérable et rapporte une estimation de3 300–5 300 individus matures. Il s’agit d’estimations d’évaluation, pas d’un nouveau recensement. Disparition des marais, chasse, dérangement des nids, captures illégales et sécheresse figurent parmi les pressions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Shoebill",
+        "fr": "Bec-en-sabot"
+      },
+      "url": "https://www.birdlife.org/birds/shoebill/?m=0&sid=3808",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife identifies it as the sole species in Balaenicipitidae and closer to pelicans than storks.",
+        "Its profile describes range from South Sudan to Zambia, solitary feeding, fish-based diet, nesting, and threats; it gives a 3,300–5,300 mature-individual estimate."
+      ]
+    },
+    {
+      "title": {
+        "en": "International Single Species Action Plan for the Conservation of the Shoebill",
+        "fr": "Plan d’action international pour la conservation du bec-en-sabot"
+      },
+      "url": "https://www.unep-aewa.org/sites/default/files/document/mop6_29_shoebill_issap.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The AEWA plan describes freshwater swamp mosaics, reed and papyrus cover, shallow or floating-vegetation fishing sites, and isolated nesting habitat.",
+        "It notes fish including lungfish, bichirs, and catfish; nesting near water level; and frequent loss of the weaker nestling."
+      ]
+    },
+    {
+      "title": {
+        "en": "Balaeniceps rex (Shoebill)",
+        "fr": "Balaeniceps rex (bec-en-sabot)"
+      },
+      "url": "https://animaldiversity.org/accounts/Balaeniceps_rex/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The University of Michigan Animal Diversity Web account describes grey plumage, hooked shoe-shaped bill, long toes, fish prey, and the forward-collapse strike.",
+        "It reports one to three eggs and describes parental care and chick loss; its numerical breeding details are not generalized here."
+      ]
+    },
+    {
+      "title": {
+        "en": "Surface water drives the movement of Shoebills",
+        "fr": "La surface de l’eau détermine les déplacements des becs-en-sabot"
+      },
+      "url": "https://ueaeprints.uea.ac.uk/id/eprint/85279/1/2022SerraAcacioMPhD.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "behavior"
+      ],
+      "facts": [
+        "A University of East Anglia thesis reports that Bangweulu birds were mostly sedentary, with short movements on most tracked days, and links movement to foraging or suitable habitat searches.",
+        "These movement findings are specific to the studied Bangweulu population."
+      ]
+    },
+    {
+      "title": {
+        "en": "The phylogenetic affinities of the Shoebill (Balaeniceps rex)",
+        "fr": "Les affinités phylogénétiques du bec-en-sabot (Balaeniceps rex)"
+      },
+      "url": "https://doi.org/10.1046/j.1439-0361.2003.03002.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Mayr’s 2003 anatomical analysis supports affinity between Balaenicipitidae and the pelican group and shows traditional stork and pelican orders as polyphyletic in that analysis.",
+        "The article supports the broad relationship stated here, not a claim that the shoebill is itself a pelican."
+      ]
+    }
+  ],
+  "illustration_notes": "Depict one adult Balaeniceps rex, with accurate slate-grey plumage, long dark legs and toes, pale eye, and huge broad yellowish bill with dark markings and a hooked tip, standing naturally on pure white background.",
+  "uncertainties": [
+    "The conservation profile's population estimate is an assessment estimate rather than a current census.",
+    "Breeding and movement observations cited here vary by wetland and are not assumed to describe every population identically."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/source and image critique, followed by correction of identified omissions/overgeneralization."
+}

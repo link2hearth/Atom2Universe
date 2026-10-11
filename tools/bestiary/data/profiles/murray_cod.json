@@ -1,0 +1,206 @@
+{
+  "id": "murray_cod",
+  "scientific": "Maccullochella peelii",
+  "group": "fish",
+  "name": {
+    "en": "Murray cod",
+    "fr": "Morue de Murray"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Murray cod is a large freshwater predator endemic to eastern Australia. Unlike true cod, it belongs to Percichthyidae, alongside the related trout cod and eastern freshwater cod. It is Australia’s largest freshwater fish.",
+      "fr": "La morue de Murray est un grand prédateur d’eau douce d’Australie orientale. Contrairement aux vraies morues, elle appartient aux Percichthyidés, comme la morue à truite et la morue d’eau douce orientale. Elle est le plus grand poisson d’eau douce australien."
+    },
+    "identification": {
+      "en": "Its robust, elongated body carries a broad, flattened head, small eyes and a wide mouth with fine teeth; the snout profile is concave. Adults commonly measure under 70 cm, while exceptional historical fish reached about 1.8 m and 113.5 kg. Olive-green flanks bear darker marbling and fade to a pale belly. Rounded fins frame a long dorsal fin with a notch between spiny and soft parts. The mouth reaches behind the eyes; the lower jaw may protrude. Maximum lifespan estimates range from 75 to 114 years.",
+      "fr": "Son corps robuste et allongé porte une tête large et aplatie, de petits yeux, une grande bouche aux dents fines et un museau concave. Les adultes mesurent souvent moins de 70 cm, mais des spécimens historiques exceptionnels ont atteint 1,8 m et 113,5 kg. Ses flancs vert olive marbrés de sombre s’éclaircissent vers le ventre pâle. Ses nageoires sont arrondies; une encoche sépare les parties épineuse et molle de la dorsale. La bouche dépasse les yeux; la mâchoire inférieure peut avancer. Les estimations de longévité maximale vont de 75 à 114 ans."
+    },
+    "habitat": {
+      "en": "Deep pools, boulders, undercut banks and submerged fallen timber provide ambush cover and shelter. The fish is most characteristic of lowland rivers, though it also occurs in some upland reaches. Its native range spans the Murray–Darling Basin in Queensland, New South Wales, Victoria and South Australia, excluding the coldest upper reaches.",
+      "fr": "Les fosses profondes, les blocs rocheux, les berges creusées et les troncs immergés lui offrent des postes d’affût et des abris. L’espèce caractérise surtout les rivières de plaine, mais vit aussi dans certains tronçons d’altitude. Elle peuple le bassin Murray–Darling, au Queensland, en Nouvelle-Galles du Sud, au Victoria et en Australie-Méridionale, sauf dans les secteurs supérieurs les plus froids."
+    },
+    "diet": {
+      "en": "Adults take crayfish, freshwater shrimp and fish, including introduced carp and redfin when available; molluscs and occasionally small animals from the water’s edge broaden the menu. It hunts by ambush from cover.",
+      "fr": "Les adultes capturent écrevisses, crevettes d’eau douce et poissons, notamment des carpes et des perches introduites lorsqu’elles sont disponibles; mollusques et parfois petits animaux du bord complètent le régime. Elle chasse à l’affût depuis un abri."
+    },
+    "behavior": {
+      "en": "Territorial, it favors deep pools beside logs, boulders or overhanging banks. By day it shelters; at night it may hunt shallows or the surface.",
+      "fr": "Territoriale, elle préfère les fosses profondes, les troncs, rochers et berges surplombantes. Le jour, elle s’abrite; la nuit, elle chasse parfois hauts-fonds ou surface."
+    },
+    "reproduction": {
+      "en": "Maturity usually comes at about five years, though growth and location alter the timing. In spring, pairs court and choose hard surfaces, often submerged logs or rocks. The female lays eggs on this submerged surface; the male fertilises them externally. The male guards and fans the eggs until free-swimming larvae hatch. The larvae drift away, use their yolk reserves, then feed on tiny invertebrates as they develop.",
+      "fr": "La maturité survient vers cinq ans, mais varie avec la croissance et le lieu. Au printemps, les couples paradent et choisissent des surfaces dures, souvent des troncs ou roches immergés. La femelle y dépose des œufs adhésifs de fond, que le mâle féconde extérieurement. Le mâle garde et ventile les œufs jusqu’à l’éclosion des larves nageant en pleine eau. Les larves dérivent, résorbent leurs réserves vitellines, puis consomment de minuscules invertébrés en grandissant."
+    },
+    "ecology": {
+      "en": "A top predator, it eats native fish, crustaceans and introduced carp in the same river food webs.",
+      "fr": "Prédateur supérieur, elle mange poissons indigènes, crustacés et carpes introduites dans les mêmes réseaux fluviaux."
+    },
+    "conservation": {
+      "en": "Overfishing sharply reduced stocks from the nineteenth century; dams, altered flows, cold releases and snag removal still damage habitat and recruitment. The species is listed as Vulnerable under Australia’s EPBC Act; this national conservation status is distinct from local fishing regulations.",
+      "fr": "La surpêche a réduit les stocks dès le XIXe siècle; barrages, débits modifiés, eaux froides et retrait des troncs dégradent encore l’habitat et le recrutement. L’espèce est classée Vulnérable au titre de l’EPBC australien; ce statut national de conservation est distinct des règles locales de pêche."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Murray Cod, Maccullochella peelii (Mitchell, 1838)",
+        "fr": "Morue de Murray, Maccullochella peelii (Mitchell, 1838)"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/murray-cod-maccullochella-peelii/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Australian Museum account updated 6 April 2021."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.3",
+        "overview.fr.3",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 7,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Murray Cod, Maccullochella peelii (Mitchell 1838)",
+        "fr": "Morue de Murray, Maccullochella peelii (Mitchell 1838)"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/4655",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Ichthyology account, 2023; specialist source."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "identification.en.5",
+        "identification.fr.5",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 5,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Murray cod",
+        "fr": "Morue de Murray"
+      },
+      "url": "https://en.wikipedia.org/wiki/Murray_cod",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "English Wikipedia; no French species page."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.5",
+        "reproduction.fr.5",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 6,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Maccullochella peelii peelii (Murray Cod, Cod, Goodoo)",
+        "fr": "Maccullochella peelii peelii (morue de Murray, cod, goodoo)"
+      },
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/conservation-advices/maccullochella-peelii-peelii",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "habitat",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Federal advice page updated 3 October 2021."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 7,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show olive-green marbled adult, pale belly, broad flattened head, small eyes, large terminal mouth, rounded tail and long notched dorsal fin; no barbels.",
+  "uncertainties": [
+    "No dedicated French Wikipedia article for this species was located; French text was translated and checked against the same primary institutional sources.",
+    "The federal advice page was updated on 3 October 2021; that date is not treated as a new biological assessment date.",
+    "The sources consulted describe territoriality and courtship but do not establish a particular communication signal."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: FishesofAustralia adult morphology and official Australian conservation scope checked. Taxonomic sentence corrected: trout cod/eastern freshwater cod are fellow percichthyids, not outside the family. Sparse egg-hatching25day claim omitted because it conflates development timing in accounts. Longevity explicitly an estimate; technical larval terms explained in plain language.",
+  "source_audit_version": 1
+}

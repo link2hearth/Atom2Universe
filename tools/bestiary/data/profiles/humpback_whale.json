@@ -1,0 +1,504 @@
+{
+  "id": "humpback_whale",
+  "scientific": "Megaptera novaeangliae",
+  "group": "mammals",
+  "name": {
+    "en": "Humpback whale",
+    "fr": "Baleine à bosse"
+  },
+  "sections": {
+    "overview": {
+      "en": "The humpback whale is a baleen whale found in all major oceans. Most populations migrate between high-latitude feeding grounds and warmer breeding areas, but the Arabian Sea population remains in its region year-round. Males sing patterned songs, and South Pacific research documents song themes spreading socially between populations.",
+      "fr": "La baleine à bosse est un cétacé à fanons présent dans tous les grands océans. La plupart migrent entre zones d’alimentation de haute latitude et lieux de reproduction chauds ; celle de la mer d’Arabie reste résidente. Les mâles émettent des chants structurés ; des travaux dans le Pacifique Sud documentent la diffusion sociale de thèmes entre populations."
+    },
+    "identification": {
+      "en": "Adults have a stocky dark-grey body, a broad flattened head and a small dorsal fin behind the midpoint; the fin varies in shape. Females average about 15 metres and are slightly longer than males in NOAA’s Pacific Marine Environmental Laboratory account. The pectoral fins reach roughly one-third of body length; fleshy tubercles on the head and lower jaw bear sensory hairs. Researchers identify individuals by the distinctive black-and-white pattern beneath each broad fluke.",
+      "fr": "L’adulte a un corps trapu gris foncé, une tête large et aplatie et une petite nageoire dorsale située derrière le milieu du corps ; sa forme varie. Selon NOAA PMEL, les femelles mesurent en moyenne 15 mètres et dépassent légèrement les mâles. Les nageoires pectorales atteignent environ le tiers de la longueur du corps ; les tubercules charnus de la tête et de la mâchoire portent des poils sensoriels. La face inférieure de chaque large nageoire caudale présente des motifs noir et blanc distinctifs que les chercheurs utilisent pour reconnaître les individus d’une observation à l’autre."
+    },
+    "habitat": {
+      "en": "Migratory populations typically feed in cold, productive high-latitude waters in summer and move to tropical or subtropical breeding grounds in winter. Some whales travel up to 8,000 kilometres between feeding and breeding grounds; routes differ among populations and hemispheres. Southern populations commonly breed from July to October and feed near Antarctica from November to March; northern populations follow the opposite seasonal cycle. Arabian Sea whales are resident rather than migratory, using warm regional waters that also provide feeding opportunities through seasonal upwelling.",
+      "fr": "Les populations migratrices s’alimentent en été dans les eaux froides des hautes latitudes, puis hivernent dans des zones tropicales de reproduction. Certaines parcourent jusqu’à 8 000 kilomètres entre alimentation et reproduction ; les routes varient selon les populations. Les populations australes se reproduisent généralement de juillet à octobre et s’alimentent près de l’Antarctique de novembre à mars ; celles du Nord suivent le cycle inverse. Résidentes, les baleines de la mer d’Arabie trouvent des ressources dans les remontées saisonnières d’eaux profondes."
+    },
+    "diet": {
+      "en": "Prey varies geographically: Southern Hemisphere whales mainly take Antarctic krill, while northern populations eat small schooling fish including herring, anchovies and sand lance. During a lunge, a whale engulfs prey-rich water; expandable throat grooves let the mouth and ventral pouch distend. It then expels water through fringed baleen plates that retain prey. In Southeast Alaska, solitary tagged whales formed bubble curtains around krill layers before lunging through the concentrated prey. This detailed bubble-net mechanism is documented at that Alaskan feeding site and does not establish a universal tactic.",
+      "fr": "Les baleines australes consomment surtout du krill antarctique ; celles du Nord prennent des poissons en bancs, dont harengs, anchois et lançons. En ruée, elle engloutit l’eau chargée de proies ; les sillons extensibles dilatent bouche et poche ventrale. Elle expulse l’eau à travers ses fanons, qui retiennent les proies. Dans le sud-est de l’Alaska, des baleines solitaires balisées formaient des rideaux de bulles autour du krill avant de traverser les proies. Ce mécanisme documenté en Alaska ne prouve pas que le filet de bulles soit universel."
+    },
+    "behavior": {
+      "en": "Breeding groups are fluid: a female may travel with a calf and a principal male escort, while other males join and jostle for close position. Off eastern Australia, observed males used both escorting and singing tactics; whether song attracts females or mediates competition remains debated. In Hawaiian breeding-area recordings, social “wops” and “grumbles” varied with group context and were quieter when a nearby singing whale could hear them. South Pacific recordings show song themes spreading between populations and some singers combining old and newly introduced material during rapid song change.",
+      "fr": "Les groupes sont changeants : une femelle et son petit peuvent être escortés par un mâle, rejoint par des rivaux qui se disputent la proximité. Au large de l’Australie orientale, des mâles escortaient ou chantaient ; le rôle du chant dans l’attraction ou la compétition reste débattu. À Hawaï, les « wops » et « grumbles » variaient selon le groupe et baissaient de volume en présence d’un chanteur proche. Dans le Pacifique Sud, des thèmes se propageaient entre populations ; certains chanteurs mêlaient éléments anciens et nouveaux lors de changements rapides."
+    },
+    "reproduction": {
+      "en": "Mating and birth occur mainly in warm lower-latitude waters during each hemisphere’s winter; gestation lasts about 11 to 11.5 months. A pregnant female feeds on temperate or polar grounds to build reserves before returning to give birth; she may reach breeding areas before other whales. Females usually have one calf every two or three years, and mother-calf pairs often use shallow, sheltered water. Calves nurse for about 10 to 11 months; compiled estimates place their length near 4.3 metres at birth and 8.8 metres at weaning. In Exmouth Gulf, resting lactating females had respiration rates about half those of adults on feeding grounds, consistent with rest conserving maternal energy.",
+      "fr": "L’accouplement et les naissances ont surtout lieu en hiver, dans les eaux chaudes ; la gestation dure environ 11 à 11,5 mois. Une femelle gestante s’alimente aux latitudes tempérées ou polaires, puis revient mettre bas ; elle peut arriver tôt. Les femelles ont généralement un baleineau tous les deux ou trois ans ; mères et petits fréquentent souvent des eaux peu profondes et abritées. Les baleineaux tètent 10 à 11 mois ; des estimations donnent 4,3 mètres à la naissance et 8,8 mètres au sevrage. Dans le golfe d’Exmouth, les femelles allaitantes au repos respiraient deux fois moins souvent que les adultes en alimentation, signe possible d’économie d’énergie."
+    },
+    "ecology": {
+      "en": "Baleen whales release nitrogen, phosphorus and iron near the surface in waste, and these nutrients can support phytoplankton growth. A recent model including humpbacks among several whale species estimated variable regional and seasonal effects of whale nutrient recycling on primary production. The model does not isolate a global contribution attributable to humpbacks alone.",
+      "fr": "Les matières excrétées des baleines à fanons apportent azote, phosphore et fer près de la surface, nutriments susceptibles de favoriser le phytoplancton. Un modèle multi-espèces estime des effets du recyclage des nutriments sur la production primaire, variables selon régions et saisons. Le modèle n’isole pas la contribution mondiale des seules baleines à bosse."
+    },
+    "conservation": {
+      "en": "NOAA reports that commercial whaling greatly reduced all humpback populations and depleted most by more than 95 percent before the commercial-whaling moratorium. An IWC assessment found strong overall North Pacific recovery from the low level around 1966, with a peak in 2014 and regional declines linked to the 2014–2016 marine heatwave. The CSG’s 2025-2 summary lists the species globally as Least Concern but the Arabian Sea and Oceania subpopulations as Endangered. The global Least Concern assessment was published in November 2018; the separate Arabian Sea assessment is dated 2008. Current pressures include entanglement in fishing gear and debris, vessel strikes and disturbance, underwater noise, and climate-related changes to prey; their effects vary by region. NOAA notes that entanglement can impair feeding or cause injury and death, while prey shifts may worsen nutritional condition and affect reproduction.",
+      "fr": "Selon NOAA, la chasse commerciale avait réduit toutes les populations et la plupart de plus de 95 % avant le moratoire sur la chasse commerciale. La CBI constate le rétablissement du Pacifique Nord depuis 1966 environ, un pic en 2014 puis des baisses régionales liées à la vague de chaleur de 2014–2016. En 2025-2, le CSG classe l’espèce en préoccupation mineure, mais les sous-populations de la mer d’Arabie et d’Océanie en danger. L’évaluation mondiale « préoccupation mineure » date de novembre 2018 ; celle de la mer d’Arabie, distincte, date de 2008. Les pressions comprennent engins de pêche et débris, collisions et perturbations liées au trafic maritime, bruit sous-marin et changements de proies liés au climat ; leurs effets varient. Selon NOAA, l’enchevêtrement gêne parfois l’alimentation, blesse ou tue ; les changements de proies peuvent altérer nutrition et reproduction."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Humpback whale",
+        "fr": "Baleine à bosse"
+      },
+      "url": "https://iwc.int/about-whales/whale-species/humpback-whale",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "IWC account: seasonal timing and maternal migration."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 7,
+        "total": 143
+      }
+    },
+    {
+      "title": {
+        "en": "Humpback Whale Biology",
+        "fr": "Biologie de la baleine à bosse"
+      },
+      "url": "https://www.pmel.noaa.gov/acoustics/whales/whale-biology-hump.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "NOAA PMEL: morphology and fluke identification."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 6,
+        "total": 175
+      }
+    },
+    {
+      "title": {
+        "en": "Humpback Whale",
+        "fr": "Baleine à bosse"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/humpback-whale?page=1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "NOAA: range, migration and regional prey."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 6,
+        "total": 155
+      }
+    },
+    {
+      "title": {
+        "en": "Megaptera novaeangliae (Arabian Sea subpopulation)",
+        "fr": "Megaptera novaeangliae (sous-population de la mer d’Arabie)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2008.RLTS.T132835A3464679.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "IUCN 2008 Arabian Sea resident-population record."
+      ],
+      "prose_claims": [
+        "habitat.en.4",
+        "habitat.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 6,
+        "total": 42
+      }
+    },
+    {
+      "title": {
+        "en": "Song hybridization events during revolutionary song change provide insights into cultural transmission in humpback whales",
+        "fr": "Les hybridations de chants lors de changements rapides éclairent la transmission culturelle chez les baleines à bosse"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5543391/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Primary South Pacific research on cultural song change."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 8,
+        "total": 88
+      }
+    },
+    {
+      "title": {
+        "en": "Baleen whales: Filter feeding explained",
+        "fr": "Les baleines à fanons : le filtrage alimentaire expliqué"
+      },
+      "url": "https://www.nhm.ac.uk/discover/baleen-whales-filter-feeding-explained.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Museum explanation of baleen filtration."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 5,
+        "total": 62
+      }
+    },
+    {
+      "title": {
+        "en": "Solitary humpback whales manufacture bubble-nets as tools to increase prey intake",
+        "fr": "Des baleines à bosse solitaires fabriquent des filets de bulles pour accroître leur capture de proies"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11336686/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Primary Southeast Alaska bubble-net observations."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4",
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 5,
+        "total": 78
+      }
+    },
+    {
+      "title": {
+        "en": "Male humpback whales switch to singing in the presence of seismic air guns",
+        "fr": "Les mâles baleines à bosse passent au chant en présence de canons à air sismiques"
+      },
+      "url": "https://www.nature.com/articles/s42003-024-06908-w",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Primary eastern Australia mating-tactic study."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 5,
+        "total": 97
+      }
+    },
+    {
+      "title": {
+        "en": "Changes in vocal parameters with social context in humpback whales: considering the effect of bystanders",
+        "fr": "Variation des paramètres vocaux selon le contexte social chez la baleine à bosse"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4859862/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Primary Hawaiian study of social-call context."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 6,
+        "total": 52
+      }
+    },
+    {
+      "title": {
+        "en": "Humpback Whale",
+        "fr": "Baleine à bosse"
+      },
+      "url": "https://repository.library.noaa.gov/view/noaa/35695/noaa_35695_DS1.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA account of gestation, calf interval and nursing."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 8,
+        "total": 92
+      }
+    },
+    {
+      "title": {
+        "en": "Optimal migration energetics of humpback whales and the implications of disturbance",
+        "fr": "Énergétique optimale de la migration et implications des perturbations chez la baleine à bosse"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4778463/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Synthesis of calf size at birth and weaning."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 8,
+        "total": 52
+      }
+    },
+    {
+      "title": {
+        "en": "Energetic benefits of resting behaviour in humpback whale mother–calf pairs revealed by biologging and UAS-photogrammetry",
+        "fr": "Bénéfices énergétiques du repos chez les couples mère-baleineau révélés par biologging et photogrammétrie aérienne"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6347592/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Exmouth Gulf study of maternal rest."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 6,
+        "total": 52
+      }
+    },
+    {
+      "title": {
+        "en": "Impact of baleen whales on ocean primary production across space and time",
+        "fr": "Impact des baleines à fanons sur la production primaire océanique dans l’espace et le temps"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12582259/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Multi-species nutrient-recycling model."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 3,
+        "total": 109
+      }
+    },
+    {
+      "title": {
+        "en": "Humpback Whale: Management",
+        "fr": "Baleine à bosse : gestion"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/humpback-whale/management?page=1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "NOAA account of whaling and current threats."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.5",
+        "conservation.fr.5",
+        "conservation.en.6",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 7,
+        "total": 148
+      }
+    },
+    {
+      "title": {
+        "en": "Status Summaries",
+        "fr": "Synthèses des statuts"
+      },
+      "url": "https://iwc.int/about-whales/intro-to-population-status/status-of-whales-text-summaries",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IWC North Pacific recovery assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 5,
+        "total": 61
+      }
+    },
+    {
+      "title": {
+        "en": "Red List Status of Cetaceans",
+        "fr": "Statut des cétacés sur la Liste rouge"
+      },
+      "url": "https://iucn-csg.org/red-list-status-of-cetaceans/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "CSG 2025-2 global and regional categories."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 6,
+        "total": 46
+      }
+    },
+    {
+      "title": {
+        "en": "35 Updated Cetacean Red List Assessments published in Nov 2018",
+        "fr": "35 évaluations actualisées de la Liste rouge des cétacés publiées en novembre 2018"
+      },
+      "url": "https://iucn-csg.org/35-updated-cetacean-red-list-assessments-published-in-nov-2018/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "CSG table: November 2018 assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 5,
+        "total": 43
+      }
+    }
+  ],
+  "illustration_notes": "Adult female humpback whale with accurate robust dark-grey body, tubercled broad head, very long pectoral fins and broad patterned tail flukes; full animal on a PURE WHITE background, no water, shadows or labels.",
+  "uncertainties": [
+    "The current Cetacean Specialist Group summary reports Red List version 2025-2 categories but does not state this species assessment date; the global assessment date is independently confirmed as November 2018.",
+    "The Arabian Sea assessment record dates from 2008; exact assessment dates for the current Arabian Sea and Oceania entries were not verified.",
+    "Song, social-call and mating observations come from South Pacific, Hawaiian and eastern Australian study settings and should not be generalized to every population.",
+    "Calf growth dimensions are compiled estimates; maternal resting results are specific to Exmouth Gulf."
+  ],
+  "reviewed": true,
+  "review_note": "Root and independent scientific reader verified bilingual explanations, source scope and allocations. All identified corrections resolved; blue whale dimensions additionally checked against NOAA.",
+  "source_audit_version": 1
+}

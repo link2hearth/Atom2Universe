@@ -1,0 +1,127 @@
+{
+  "id": "bactrian_camel",
+  "scientific": "Camelus bactrianus",
+  "group": "mammals",
+  "name": {
+    "en": "Bactrian camel",
+    "fr": "Chameau de Bactriane"
+  },
+  "sections": {
+    "overview": {
+      "en": "The two-humped Bactrian camel is a domestic livestock species of Central and East Asia, valued for transport, milk, meat and fibre. Its scientific name is Camelus bactrianus; the distinct wild camel is Camelus ferus.",
+      "fr": "Le chameau de Bactriane à deux bosses est un animal domestique d’Asie centrale et orientale, élevé pour le transport, le lait, la viande et les fibres. Le chameau sauvage, distinct, est Camelus ferus."
+    },
+    "identification": {
+      "en": "Two separated humps distinguish it from the dromedary. Domestic Bactrians are sturdy, shaggy-haired camels, often dark to sandy brown; males tend to be larger. Humps store fat, not water, and the thick winter coat is shed in warmer weather.",
+      "fr": "Ses deux bosses le distinguent du dromadaire. Le Bactrien domestique est robuste et hirsute, souvent brun foncé à sable ; les mâles sont plus grands. Les bosses stockent de la graisse, non de l’eau ; son pelage d’hiver tombe au printemps."
+    },
+    "habitat": {
+      "en": "Domestic herds occur across Inner, Central and East Asia, notably Mongolia and China. Herders keep them in steppe, semi-desert and desert environments, moving with seasonal forage and temperature; these managed ranges are not a single wild habitat.",
+      "fr": "Les troupeaux vivent en Asie intérieure, centrale et orientale, notamment en Mongolie et en Chine. Les éleveurs les gardent dans les steppes et déserts, où déplacements et fourrage dépendent du climat ; ce n’est pas une aire sauvage unique."
+    },
+    "diet": {
+      "en": "It grazes grasses and browses dry, salty or thorny plants. A split upper lip helps it take coarse forage; it regurgitates and rechews food. In snowy winters, Bactrians dig through snow for plants. Hump fat supplies energy when feed is scarce.",
+      "fr": "Il broute herbes et plantes sèches, salées ou épineuses. Sa lèvre fendue saisit le fourrage ; il régurgite et remâche. En hiver neigeux, il dégage la neige pour atteindre les plantes. La graisse des bosses fournit de l’énergie quand le fourrage manque."
+    },
+    "behavior": {
+      "en": "Social groups commonly include females, young and a dominant male; excluded males may form bachelor groups. Males display or fight for mates. Calls and scent aid communication. Herders guide managed groups between pastures and use camels for riding or carrying loads.",
+      "fr": "Les groupes comprennent femelles, jeunes et mâle dominant ; les mâles écartés forment parfois des groupes de célibataires. Les mâles paradent ou se battent pour s’accoupler. Cris et odeurs assurent la communication. Les éleveurs conduisent les troupeaux et utilisent les chameaux comme montures ou animaux de bât."
+    },
+    "reproduction": {
+      "en": "Spring mating is commonly reported. After about 12–14 months’ gestation, females usually bear one calf; twins are rare. Newborns walk within a day and nurse for roughly one to two years.",
+      "fr": "Les accouplements ont souvent lieu au printemps. Après 12 à 14 mois de gestation, les femelles mettent généralement bas un petit ; les jumeaux sont rares. Le nouveau-né marche en un jour et tète un à deux ans."
+    },
+    "ecology": {
+      "en": "Domestic camels convert sparse steppe and desert vegetation into transport, milk, meat and fibre for herding households. Their grazing occurs within managed systems; effects on plants depend on local herd density, mobility and pasture conditions.",
+      "fr": "Les chameaux convertissent la maigre végétation des steppes et déserts en transport, lait, viande et fibres. Leur pâturage est géré ; ses effets dépendent de la densité des troupeaux, de leur mobilité et des conditions locales."
+    },
+    "conservation": {
+      "en": "Critical-endangerment listings for the “wild Bactrian camel” concern Camelus ferus, not this domestic species. Camelus bactrianus remains livestock; a wildlife extinction-risk category is not a measure of the condition of its domestic herds. Conditions and pressures affecting domestic herds require region-specific assessment.",
+      "fr": "Le classement « en danger critique » du chameau sauvage concerne Camelus ferus, non cette espèce domestique. Camelus bactrianus reste un animal d’élevage ; aucune catégorie mondiale unique ne lui est attribuée. Les pressions sur les troupeaux exigent une évaluation régionale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bactrian camel",
+        "fr": "Chameau de Bactriane"
+      },
+      "url": "https://www.sfzoo.org/animals-exhibits/a-to-z/bactrian-camel/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Identifies zoo animals as domesticated C. bactrianus and distinguishes wild C. ferus.",
+        "Describes two humps, coat, sex size difference, broad diet, social groups and camel husbandry.",
+        "Says critically endangered status applies to C. ferus and domestic Bactrian camels are not endangered."
+      ]
+    },
+    {
+      "title": {
+        "en": "Camelus bactrianus (Bactrian camel)",
+        "fr": "Camelus bactrianus (chameau de Bactriane)"
+      },
+      "url": "https://animaldiversity.org/accounts/Camelus_bactrianus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "University of Michigan account summarizes seasonal breeding, one usual calf, long gestation and maternal care.",
+        "Describes feeding on dry, salty and thorny vegetation, cud chewing and winter snow foraging.",
+        "Its page includes both domestic and wild camel observations; only clearly attributable domestic-species facts are used here."
+      ]
+    },
+    {
+      "title": {
+        "en": "Bactrian camels—an invaluable resource of the Gobi Desert",
+        "fr": "Les chameaux de Bactriane, ressource précieuse du désert de Gobi"
+      },
+      "url": "https://www.fao.org/dad-is/stories/story-detail/bactrian-camels--an-invaluable-resource-of-the-gobi-desert/en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "FAO DAD-IS describes domestic Bactrian camel keeping in the Gobi by herding communities.",
+        "Reports seasonal winter thickening and summer thinning of the coat.",
+        "Documents the animals’ practical role in local pastoral livelihoods."
+      ]
+    },
+    {
+      "title": {
+        "en": "Dromedary and Bactrian camel crossbreeding husbandry practices in Turkey and Kazakhstan: an in-depth review",
+        "fr": "Pratiques d’élevage et de croisement du dromadaire et du chameau de Bactriane en Turquie et au Kazakhstan : revue approfondie"
+      },
+      "url": "https://link.springer.com/article/10.1186/s13570-020-0159-3",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed review places domestic Bactrian camels in Inner, Central and East Asia, including Mongolia and China.",
+        "Explains their livestock role and regional husbandry, while distinguishing them from dromedaries."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult domestic Bactrian camel, either sex; robust body, two distinct fat humps, long shaggy seasonal coat, split upper lip, broad padded feet; natural proportions and coat texture, standing in a neutral pose on a PURE WHITE background. Do not depict the slimmer wild Camelus ferus.",
+  "uncertainties": [
+    "Exact domesticated population totals and conservation status vary by country and are not supplied as a single global estimate.",
+    "Reproductive timing and calf weaning vary with husbandry, forage and individual condition; numeric ranges summarize commonly reported observations."
+  ],
+  "reviewed": true,
+  "review_note": "Independent image and bilingual/source coherence review; flagged unsupported claims removed and translation corrected."
+}

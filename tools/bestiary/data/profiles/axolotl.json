@@ -1,0 +1,652 @@
+{
+  "id": "axolotl",
+  "scientific": "Ambystoma mexicanum",
+  "group": "amphibians",
+  "name": {
+    "en": "Axolotl",
+    "fr": "Axolotl"
+  },
+  "sections": {
+    "overview": {
+      "en": "The axolotl is a mole salamander of Mexico’s highland wetlands, with its surviving natural habitat concentrated around Xochimilco. Rather than metamorphosing into a land-dwelling salamander, it reaches reproductive maturity while retaining larval features such as external gills and a finned tail. Its remarkable limb and tissue regeneration makes it a major developmental model, but laboratory findings do not promise human treatments. After a limb is amputated, a specialized wound epidermis covers the stump, where cells gather into a blastema, a growth zone that rebuilds missing structures; experiments show that nerve signals are needed for its growth.",
+      "fr": "L’axolotl est une salamandre taupe des zones humides d’altitude du Mexique; son habitat naturel subsistant se concentre autour de Xochimilco. Au lieu de se métamorphoser en salamandre terrestre, il atteint la maturité reproductive tout en conservant des traits larvaires comme les branchies externes et la nageoire caudale. Sa régénération en fait un modèle du développement; les résultats de laboratoire ne garantissent aucun traitement humain. Après l’amputation d’un membre, un épiderme spécialisé recouvre le moignon; les cellules y forment un blastème, zone de croissance qui reconstruit les parties manquantes grâce à des signaux nerveux nécessaires à sa croissance."
+    },
+    "identification": {
+      "en": "Adults average about 20 centimetres, and some exceed 30; age, sex and rearing conditions influence size. Wild-type animals are dark brown, olive or blackish with mottling; captive lines also include pink-bodied leucistic and pale-eyed albino forms. Three pairs of feathery external gills project from the head, above a long tail edged by a low fin. Four short limbs have slender digits. Gills and vascularized skin absorb dissolved oxygen from water, while simple lungs let the axolotl breathe air at the surface. Mature males tend to have a swollen cloaca, while egg-bearing females may have a fuller abdomen.",
+      "fr": "Les adultes mesurent en moyenne environ 20 centimètres, et certains dépassent 30; âge, sexe et élevage influencent la taille. Les individus sauvages sont brun foncé, olive ou noirâtres et tachetés; les lignées captives comprennent aussi des formes leucistiques roses et des albinos aux yeux pâles. Trois paires de branchies plumeuses dépassent de la tête, au-dessus d’une longue queue bordée d’une nageoire basse. Quatre membres courts portent des doigts fins. Les branchies et la peau vascularisée captent l’oxygène dissous dans l’eau, tandis que les poumons simples lui permettent de respirer l’air en surface. Le cloaque des mâles mûrs tend à être renflé, tandis que l’abdomen des femelles peut s’arrondir lorsqu’elles portent des œufs."
+    },
+    "habitat": {
+      "en": "Historically, axolotls inhabited freshwater lakes and wetlands across the Mexican Central Valley, including Xochimilco and Chalco; Lake Chalco was later drained. The canal network of Xochimilco, south of Mexico City, is the best-documented modern natural habitat; the 2019 IUCN assessment also listed records from other sites. These cool, high-altitude waters have muddy bottoms, aquatic plants and channels woven through cultivated chinampas. Chinampa refuge canals combine habitat structure with local farming and wetland restoration.",
+      "fr": "Autrefois, les axolotls occupaient des lacs et marais d’eau douce de la vallée centrale du Mexique, notamment Xochimilco et Chalco; ce dernier lac a ensuite été drainé. Le réseau de canaux de Xochimilco, au sud de Mexico, est l’habitat naturel actuel le mieux documenté; l’évaluation de l’UICN de 2019 mentionne aussi des observations sur d’autres sites. Ces eaux fraîches d’altitude ont des fonds vaseux, des plantes aquatiques et des chenaux entrelacés aux chinampas cultivées. Les canaux-refuges des chinampas associent habitat, agriculture locale et restauration du marais."
+    },
+    "diet": {
+      "en": "Young larvae eat zooplankton, including small crustaceans, and laboratory trials show that prey choice changes as they grow. Larger axolotls are carnivores; wild gut samples and food-web studies find varied aquatic invertebrate and fish prey, though adult field data remain limited. The axolotl approaches prey closely, then rapidly opens its mouth and lowers the floor of its mouth, drawing water and prey inward by suction. Laboratory tests with Xochimilco water found that contamination reduced feeding by axolotl larvae.",
+      "fr": "Les jeunes larves mangent du zooplancton, notamment de petits crustacés; des essais montrent que leur choix de proies évolue avec la croissance. Les axolotls plus grands sont carnivores; contenus digestifs et études trophiques révèlent des invertébrés aquatiques et des poissons, mais les données de terrain sur les adultes restent limitées. L’axolotl s’approche de sa proie, puis ouvre rapidement la bouche et abaisse le plancher buccal, aspirant eau et proie. Des essais en laboratoire avec l’eau de Xochimilco ont montré que la contamination réduisait l’alimentation des larves d’axolotl."
+    },
+    "behavior": {
+      "en": "Axolotls swim through waves of bending that pass along the body and tail, a motion documented in adults. Their external gills remain functional in adulthood, and their vascularized skin also exchanges gases with water. Courtship is the clearest documented adult social interaction: a male nudges a female and leads her to a sperm packet on the bottom. Studies have detected male proteins released into the water during courtship, evidence for chemical communication.",
+      "fr": "L’axolotl nage par des ondulations qui parcourent son corps et sa queue, mouvement documenté chez l’adulte. Ses branchies externes restent fonctionnelles à l’âge adulte et sa peau vascularisée échange aussi des gaz avec l’eau. La parade est l’interaction sociale adulte la mieux documentée: le mâle pousse la femelle du museau et la conduit vers un spermatophore. Des études ont détecté des protéines mâles libérées dans l’eau pendant la parade, indice d’une communication chimique."
+    },
+    "reproduction": {
+      "en": "During courtship, the male deposits a spermatophore that the female takes up with her cloaca, enabling internal fertilization. In controlled UAM Xochimilco breeding, females laid roughly 300–600 eggs, attaching them to plants or other submerged surfaces. Transparent egg coverings reveal development; one university study recorded hatching about 15 days after laying under laboratory conditions. Newly hatched larvae feed on small zooplankton, with intake changing as they grow. Their limbs develop progressively while adults retain the larval body plan and external gills. Laboratory studies place female maturity around 12–18 months; growth varies with rearing conditions, and comparable wild-age data are scarce.",
+      "fr": "Pendant la parade, le mâle dépose un spermatophore que la femelle recueille avec son cloaque, permettant une fécondation interne. Lors d’une reproduction contrôlée à l’UAM-Xochimilco, les femelles ont pondu environ 300 à 600 œufs fixés à des plantes ou à d’autres supports immergés. Leur enveloppe transparente révèle le développement; une étude universitaire a relevé l’éclosion environ 15 jours après la ponte en laboratoire. Les larves nouvellement écloses consomment du petit zooplancton, en quantité variable au fil de leur croissance. Leurs membres se développent progressivement tandis que les adultes gardent le plan corporel larvaire et les branchies externes. Les études de laboratoire situent la maturité des femelles vers 12 à 18 mois; la croissance dépend de l’élevage et les données sur l’âge sauvage manquent."
+    },
+    "ecology": {
+      "en": "As a predator, the axolotl links zooplankton and other small aquatic animals to larger consumers in the Xochimilco food web. Introduced carp and tilapia eat some of the same prey as axolotls, and carp stomach samples have also contained axolotl eggs. Vegetated chinampa edges and filtered refuge canals can shelter axolotls from invasive fish and improve local water conditions. A release study documented survival and foraging at two sites, but also recorded a great egret capturing an axolotl in Xochimilco; releases alone cannot prove population recovery.",
+      "fr": "Prédateur, l’axolotl relie le zooplancton et d’autres petits animaux aquatiques aux consommateurs plus grands du réseau trophique de Xochimilco. Les carpes et les tilapias introduits mangent certaines proies également consommées par les axolotls; des contenus stomacaux de carpes contenaient aussi des œufs d’axolotl. Les bordures végétalisées des chinampas et les chenaux-refuges filtrés peuvent abriter les axolotls des poissons invasifs et améliorer l’eau localement. Une étude de relâcher a documenté survie et alimentation sur deux sites, mais aussi la capture d’un axolotl de Xochimilco par une grande aigrette; un lâcher seul ne prouve pas le rétablissement."
+    },
+    "conservation": {
+      "en": "The IUCN SSC Amphibian Specialist Group assessed the axolotl as Critically Endangered globally on 23 October 2019; the assessment appeared in the 2020 Red List. The assessment estimated an observed decline of more than 80 percent over three generations (16.5 years), associated with urban habitat change, water pollution and introduced fish. Drainage and conversion erased much of the historic lake habitat, while remaining canals face urban pressure and degraded water quality. This wild crisis is distinct from extensive captive and research colonies; laboratory abundance does not mean Xochimilco has recovered. UNAM researchers and chinamperos have built filtered refuge canals that pair habitat restoration with local agriculture.",
+      "fr": "Le Groupe de spécialistes des amphibiens de l’UICN a évalué l’axolotl « en danger critique » à l’échelle mondiale le 23 octobre 2019; cette évaluation figure dans la Liste rouge 2020. L’évaluation estimait un déclin observé de plus de 80 % sur trois générations (16,5 ans), associé à l’urbanisation, à la pollution et aux poissons introduits. Le drainage et la conversion ont détruit une grande partie des anciens lacs; les canaux restants subissent la pression urbaine et la dégradation de l’eau. Cette crise sauvage est distincte des vastes colonies captives et de recherche: leur abondance ne signifie pas que Xochimilco s’est rétabli. Des chercheurs de l’UNAM et des chinamperos ont créé des canaux-refuges filtrés associant restauration et agriculture locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Mexican Axolotl: A Versatile Amphibian Model for Regeneration, Development, and Evolution Studies — Cold Spring Harbor Protocols",
+        "fr": "The Mexican Axolotl: A Versatile Amphibian Model for Regeneration, Development, and Evolution Studies — Cold Spring Harbor Protocols"
+      },
+      "url": "https://doi.org/10.1101/pdb.emo128",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Review describes the axolotl as a laboratory model for development and regeneration."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 12,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Introduction to the Laboratory Axolotl and Ambystoma Genetic Stock Center Guide 2024 — University of Kentucky",
+        "fr": "Introduction to the Laboratory Axolotl and Ambystoma Genetic Stock Center Guide 2024 — université du Kentucky"
+      },
+      "url": "https://ambystoma.as.uky.edu/genetic-stock-center/documents/AGSC%20_Guide_2024.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Colony resource summarizes adult morphology, color morphs, breeding, and laboratory maturation."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.6",
+        "identification.fr.6",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 11,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fgf- and Bmp-signaling regulate gill regeneration in Ambystoma mexicanum — Developmental Biology",
+        "fr": "Fgf- and Bmp-signaling regulate gill regeneration in Ambystoma mexicanum — Developmental Biology"
+      },
+      "url": "https://ousar.lib.okayama-u.ac.jp/files/public/5/57315/20191101155729326960/DevBiol_452_104.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Study describes persistent external gills and their respiratory function in paedomorphic axolotls."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 12,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ambystoma mexicanum external and internal anatomy: morphometric description — International Journal of Morphology",
+        "fr": "Ambystoma mexicanum external and internal anatomy: morphometric description — International Journal of Morphology"
+      },
+      "url": "https://www.scielo.cl/scielo.php?pid=S0717-95022022000200401&script=sci_arttext&tlng=es",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Anatomical survey documents gills, limbs, tail fin, and respiratory organs."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 13,
+        "notes_words": 10,
+        "total": 23,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ambystoma mexicanum — The IUCN Red List of Threatened Species 2020",
+        "fr": "Ambystoma mexicanum — Liste rouge de l’UICN des espèces menacées 2020"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T1095A53947343.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global CR assessment dated 23 October 2019; published 2020; inferred decline at least 80%."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 14,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Threatened Amphibians of the World: Ambystoma mexicanum species profile — IUCN SSC Amphibian Specialist Group",
+        "fr": "Threatened Amphibians of the World: profil d’Ambystoma mexicanum — Groupe de spécialistes des amphibiens de l’UICN"
+      },
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2018/11/TAW-Threatened-Species-Profiles_Part5.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Earlier profile describes Xochimilco and Chalco range and threats from drainage, pollution, urbanization."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 13,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Creating Refuges for the Axolotl (Ambystoma mexicanum) — Ecological Restoration",
+        "fr": "Creating Refuges for the Axolotl (Ambystoma mexicanum) — Ecological Restoration"
+      },
+      "url": "https://doi.org/10.3368/er.28.3.257",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UNAM scientists and chinamperos established refuge canals within working chinampa plots."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3",
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 11,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Movement ecology of captive-bred axolotls in restored and artificial wetlands — PLOS ONE",
+        "fr": "Movement ecology of captive-bred axolotls in restored and artificial wetlands — PLOS ONE"
+      },
+      "url": "https://doi.org/10.1371/journal.pone.0314257",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Telemetry recorded site use; one field observation documented an egret preying on a released axolotl."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 15,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Feeding behaviour of larval Ambystoma mexicanum — Amphibia-Reptilia",
+        "fr": "Feeding behaviour of larval Ambystoma mexicanum — Amphibia-Reptilia"
+      },
+      "url": "https://doi.org/10.1163/156853811X610348",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Larval trials tested local zooplankton and found age- and prey-dependent intake."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 11,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Effect of water quality on the feeding ecology of axolotl Ambystoma mexicanum — Journal of Limnology",
+        "fr": "Effect of water quality on the feeding ecology of axolotl Ambystoma mexicanum — Journal of Limnology"
+      },
+      "url": "https://doi.org/10.4081/jlimnol.2013.e46",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Experiments link contaminated Xochimilco water and tilapia to reduced larval feeding success."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 12,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food web overlap among native axolotl and two exotic fishes in Xochimilco — Biological Invasions",
+        "fr": "Chevauchement du réseau trophique entre l’axolotl et deux poissons exotiques à Xochimilco — Biological Invasions"
+      },
+      "url": "https://doi.org/10.1007/s10530-010-9697-8",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Stable-isotope and food-web study compares axolotl, carp, and tilapia trophic overlap."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 11,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The impact of size and ontogeny on suction feeding kinematics in the axolotl — Biology Open",
+        "fr": "The impact of size and ontogeny on suction feeding kinematics in the axolotl — Biology Open"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12309904/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "High-speed videos document size- and stage-dependent suction feeding in captive axolotls."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 11,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kinematics and Efficiency of Steady Swimming in Adult Axolotls — Journal of Experimental Biology",
+        "fr": "Kinematics and Efficiency of Steady Swimming in Adult Axolotls — Journal of Experimental Biology"
+      },
+      "url": "https://doi.org/10.1242/jeb.200.13.1863",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "High-speed recordings found anguilliform body waves and tailbeat-linked swimming speed in adult axolotls."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 13,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Courtship Pheromone Use in a Model Urodele, the Mexican Axolotl — Scientific Reports",
+        "fr": "Courtship Pheromone Use in a Model Urodele, the Mexican Axolotl — Scientific Reports"
+      },
+      "url": "https://doi.org/10.1038/srep20184",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Males release sodefrin precursor-like proteins during courtship in controlled study."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 10,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Normal Stages of Development of the Axolotl, Ambystoma mexicanum — Developmental Biology",
+        "fr": "Normal Stages of Development of the Axolotl, Ambystoma mexicanum — Developmental Biology"
+      },
+      "url": "https://doi.org/10.1016/0012-1606(75)90343-7",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Classic staging table describes embryo and larval morphology during normal development."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 11,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seguimiento del Desarrollo Embrionario del Ajolote Ambystoma mexicanum en Condiciones Controladas — Universidad Autónoma Metropolitana, Xochimilco",
+        "fr": "Suivi du développement embryonnaire de l’axolotl Ambystoma mexicanum en conditions contrôlées — UAM-Xochimilco"
+      },
+      "url": "https://repositorio.xoc.uam.mx/jspui/handle/123456789/48017",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Captive study reports spermatophore transfer, clutch range, and day-15 hatching."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 10,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gonadal Development in Larvae of the Paedomorphic Ambystoma mexicanum — Journal of Morphology",
+        "fr": "Développement gonadique des larves pédomorphes d’Ambystoma mexicanum — Journal of Morphology"
+      },
+      "url": "https://doi.org/10.1002/jmor.70118",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Histology documents female gonadal maturation beginning in larvae under laboratory conditions."
+      ],
+      "prose_claims": [
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 11,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Neuregulin-1 signaling is essential for nerve-dependent axolotl limb regeneration — Development",
+        "fr": "Neuregulin-1 signaling is essential for nerve-dependent axolotl limb regeneration — Development"
+      },
+      "url": "https://doi.org/10.1242/dev.133363",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Axolotl limb regeneration involves nerve-dependent blastema formation and NRG1 signaling."
+      ],
+      "prose_claims": [
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 10,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Participatory Monitoring and Evaluation of a Mexico City Wetland Restoration Effort — Ecological Restoration",
+        "fr": "Suivi participatif et évaluation d’une restauration de zone humide à Mexico — Ecological Restoration"
+      },
+      "url": "https://doi.org/10.3368/er.28.3.343",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Xochimilco restoration effort combines local fishers’ knowledge, wetland work, and invasive-fish control."
+      ],
+      "prose_claims": [
+        "habitat.en.4",
+        "habitat.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 12,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A population matrix model and population viability analysis to predict the fate of endangered species in highly managed water systems — Animal Conservation",
+        "fr": "Modèle matriciel de population et analyse de viabilité pour des espèces menacées en eaux aménagées — Animal Conservation"
+      },
+      "url": "https://doi.org/10.1111/j.1469-1795.2007.00105.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Population model links axolotl decline with Xochimilco habitat transformation."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 9,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ambystoma mexicanum — Animal Diversity Web, University of Michigan",
+        "fr": "Ambystoma mexicanum — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Ambystoma_mexicanum/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Curated species account reports a mean adult length near 20 cm and maxima above 30 cm."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 16,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aquatic oxygen conformity in the Mexican axolotl, Ambystoma mexicanum — Herpetological Journal",
+        "fr": "Aquatic oxygen conformity in the Mexican axolotl, Ambystoma mexicanum — Herpetological Journal"
+      },
+      "url": "https://www.thebhs.org/publications/the-herpetological-journal/volume-2-number-1-january-1992/1261-01-aquatic-oxygen-conformity-in-the-mexican-axolotl-ambystoma-mexicanum/file",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Paedomorphic adults use aquatic gills and skin plus lungs; air-breathing increases under hypoxia."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 13,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Accurate adult Ambystoma mexicanum in natural dark mottled wild-type coloration, full body isolated on white. Show aquatic paedomorphic anatomy: three pairs of branched external gills, broad head, four short limbs with slender digits, long laterally compressed tail and continuous low dorsal/caudal fin. Do not depict the popular pink leucistic captive morph as the wild norm; no clothes, props, or other species.",
+  "uncertainties": [
+    "The 2019 IUCN global assessment (published 2020) describes records at Xochimilco canals and additional southern Mexico City sites; the best-supported modern persistent wild habitat is usually described as Xochimilco, so the article avoids calling it the sole extant site.",
+    "Adult size and sexual maturity vary with sex and laboratory conditions; common size and laboratory age ranges are presented as approximate, not wild population averages.",
+    "Wild adult diet and daily behavior are poorly documented; feeding and movement claims are explicitly qualified by larval, captive, or experimental study settings.",
+    "The UAM clutch and hatching results come from controlled breeding observations and should not be read as universal field values.",
+    "No post-2019 global IUCN reassessment was verified during this research."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Explained maturity without metamorphosis, differentiated dissolved-oxygen exchange from lung air breathing, clarified blastema and nerve-dependent limb regeneration, suction feeding and introduced-fish interactions; scoped laboratory development and historical range records, verified IUCN2019 assessment published2020. Existing wild-type illustration visually examined."
+}

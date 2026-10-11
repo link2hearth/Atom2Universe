@@ -1,0 +1,225 @@
+{
+  "id": "european_green_crab",
+  "scientific": "Carcinus maenas",
+  "group": "invertebrates",
+  "name": {
+    "en": "European green crab",
+    "fr": "Crabe vert"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European green crab is a common shore crab native to the north-east Atlantic and nearby European and North African coasts. Human transport has also established it on distant shores, where it can become invasive.",
+      "fr": "Le Crabe vert est un crabe littoral commun, indigène dans l’Atlantique nord-est et sur les côtes voisines d’Europe et d’Afrique du Nord. Les transports humains l’ont aussi établi sur des rivages éloignés, où il peut devenir envahissant."
+    },
+    "identification": {
+      "en": "Its broad carapace may reach about 9 cm across, with records near 10 cm outside its native range. Five teeth sit behind each eye and three lobes between them; C. aestuarii, its Mediterranean relative, has a smoother, projecting front. The first of its five pairs of legs bears claws; the other four are walking legs. Colour varies from green to orange or red.",
+      "fr": "Sa large carapace peut atteindre environ 9 cm, avec des spécimens proches de 10 cm hors de son aire d’origine. Cinq dents se trouvent derrière chaque œil et trois lobes entre eux ; C. aestuarii, son parent méditerranéen, a un front plus lisse et avancé. La première de ses cinq paires de pattes porte des pinces ; les quatre autres servent à marcher. La coloration varie du vert à l’orange ou au rouge."
+    },
+    "habitat": {
+      "en": "It inhabits sheltered shores, estuaries and shallow subtidal waters, on mud, sand, rock or submerged vegetation. Its tolerance of changing salinity helps it live across tidal creeks and estuarine margins.",
+      "fr": "Il vit sur les rivages abrités, dans les estuaires et les eaux subtidales peu profondes, sur la vase, le sable, les rochers ou la végétation immergée. Sa tolérance aux variations de salinité lui permet d’occuper les chenaux de marée et les marges estuariennes."
+    },
+    "diet": {
+      "en": "It is an omnivore, eating mussels, clams, worms, small crustaceans, algae and carrion. Its claws handle or crush prey, while smaller mouthparts move food to the mouth.",
+      "fr": "Omnivore, il mange des moules, des palourdes, des vers, de petits crustacés, des algues et des charognes. Ses pinces manipulent ou broient les proies, tandis que les pièces buccales plus petites conduisent la nourriture vers la bouche."
+    },
+    "behavior": {
+      "en": "Growth requires moulting: the crab sheds its rigid exoskeleton, expands beneath a soft replacement, which then hardens. Female urine carries sex pheromones that attract males before mating. Feeding often peaks at night around high tide.",
+      "fr": "La croissance nécessite des mues : le crabe abandonne son exosquelette rigide, se dilate sous une nouvelle cuticule molle, puis celle-ci durcit. L’urine des femelles contient des phéromones sexuelles qui attirent les mâles avant l’accouplement. L’alimentation culmine souvent la nuit autour de la marée haute."
+    },
+    "reproduction": {
+      "en": "Males guard females before mating, which follows the female’s moult while her new shell is soft. The male transfers spermatophores, or sperm packets; the female can store sperm and later attach fertilized eggs beneath her abdomen. Eggs hatch into planktonic zoeae, pass through four stages, then become megalopae, crab-shaped larvae that settle and moult into bottom-living juveniles. In a North American monitoring report, the zoea phase lasted 17–80 days and the megalopa 5.5–26 days, with temperature affecting timing.",
+      "fr": "Les mâles gardent les femelles avant l’accouplement, qui suit la mue de la femelle lorsque sa nouvelle carapace est molle. Le mâle transfère des spermatophores, ou paquets de spermatozoïdes ; la femelle peut stocker le sperme, puis fixer les œufs fécondés sous son abdomen. Les œufs donnent des zoés planctoniques qui traversent quatre stades, puis deviennent des mégalopes, larves en forme de crabe qui se posent et muent en juvéniles benthiques. Dans un rapport de suivi nord-américain, la phase zoé durait 17 à 80 jours et celle de mégalope 5,5 à 26 jours, les délais variant avec la température."
+    },
+    "ecology": {
+      "en": "Eelgrass beds provide nursery habitat for juvenile fish and invertebrates, so crab damage can reduce this shelter. Adults can uproot shoots while digging for prey, and juveniles may graze the soft tissue at their bases. Waves and currents can dislodge shoots whose roots have been weakened.",
+      "fr": "Les herbiers de zostères servent de nourriceries aux poissons et invertébrés juvéniles ; les dégâts causés par les crabes peuvent donc réduire ces abris. Les adultes peuvent déraciner les pousses en fouillant à la recherche de proies, et les juvéniles brouter leurs tissus tendres à la base. Les vagues et les courants peuvent emporter des pousses dont les racines ont été fragilisées."
+    },
+    "conservation": {
+      "en": "Introduced populations can threaten shellfish and coastal habitats through predation and disturbance. Monitoring in introduced regions aims to limit further spread and protect local shellfish and habitats.",
+      "fr": "Les populations introduites peuvent menacer les coquillages et les habitats côtiers par prédation et perturbation. Dans les régions où il a été introduit, la surveillance vise à freiner sa propagation et à protéger les coquillages et habitats locaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Carcinus maenas",
+        "fr": "Carcinus maenas"
+      },
+      "url": "https://en.wikipedia.org/wiki/Carcinus_maenas",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Native distribution, morphology, habitats, colour and introduced-range impacts."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.3",
+        "habitat.en.1",
+        "conservation.en.1",
+        "overview.fr.2",
+        "overview.fr.1",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 8,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carcinus maenas",
+        "fr": "Carcinus maenas"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Carcinus_maenas",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French account cross-checks anatomy, mating and larval development."
+      ],
+      "prose_claims": [
+        "identification.fr.1",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "reproduction.fr.2",
+        "conservation.fr.1",
+        "reproduction.en.2",
+        "habitat.en.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 8,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Green Crab Early Detection and Monitoring — Washington Sea Grant, final report (2017)",
+        "fr": "Détection précoce et suivi du Crabe vert — Washington Sea Grant, rapport final (2017)"
+      },
+      "url": "https://wsg.washington.edu/wordpress/wp-content/uploads/GreenCrabProjectFinalEPAReport.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "North American report describes larval duration and invasive monitoring."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.en.4",
+        "reproduction.fr.3",
+        "reproduction.fr.4",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 9,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common shore crab (Carcinus maenas)",
+        "fr": "Crabe commun (Carcinus maenas)"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/1497",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species account covers omnivory, moulting, mating and foraging."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "identification.fr.2",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 8,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Disruption of essential habitat by a coastal invader: new evidence of the effects of green crabs on eelgrass beds",
+        "fr": "Perturbation d’un habitat essentiel par un envahisseur côtier : nouvelles preuves des effets des crabes verts sur les herbiers de zostères"
+      },
+      "url": "https://academic.oup.com/icesjms/article/68/9/1852/670391",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Study links crab feeding and uprooting to eelgrass shoot loss."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 10,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "No illustration requested; image work is handled separately.",
+  "uncertainties": [
+    "Adult maximum width and larval durations vary by population and conditions; the cited values are indicative records, not universal growth schedules.",
+    "The strength of eelgrass damage varies among field settings; the cited study experimentally demonstrates feeding and uprooting mechanisms.",
+    "No current global extinction-risk assessment is asserted here; conservation remarks concern impacts in introduced regions."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: checked anatomy, colour and mating against actual accounts; replaced mismatched NOAA phase-2 link with Washington Sea Grant report whose page 12 gives the cited larval stages and durations; eelgrass mechanisms verified against the primary ICES study; regional introduction impacts kept separate from native range.",
+  "source_audit_version": 1
+}

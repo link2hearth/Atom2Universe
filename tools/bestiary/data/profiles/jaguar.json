@@ -1,0 +1,129 @@
+{
+  "id": "jaguar",
+  "scientific": "Panthera onca",
+  "group": "mammals",
+  "name": {
+    "en": "Jaguar",
+    "fr": "Jaguar"
+  },
+  "sections": {
+    "overview": {
+      "en": "The jaguar is the largest cat native to the Americas and the only living member of its genus there. Its range stretches from Mexico through Central America into South America, with its strongest continuous populations centered on the Amazon basin.",
+      "fr": "Le jaguar est le plus grand félin des Amériques et le seul représentant actuel de son genre sur ce continent. Son aire s’étend du Mexique à l’Amérique du Sud, avec les populations les plus continues concentrées autour du bassin amazonien."
+    },
+    "identification": {
+      "en": "A jaguar has a compact, muscular body, broad head, short limbs and a tawny to reddish coat. Dark rosettes usually contain smaller central spots; their arrangement differs across the two flanks. Some individuals are melanistic, so rosettes remain faintly visible on black fur.",
+      "fr": "Le jaguar a un corps compact et musclé, une tête large, des membres courts et un pelage fauve ou roux. Ses rosettes sombres contiennent souvent une tache centrale ; leur disposition diffère entre les flancs. Certains individus mélaniques portent des rosettes peu visibles sur fond noir."
+    },
+    "habitat": {
+      "en": "It favors dense lowland forest, wetlands and river margins, where cover and water are close, but also occupies scrub, savanna and some dry woodland. In the southwestern United States and northwestern Mexico, it uses wooded and riparian corridors rather than rainforest alone.",
+      "fr": "Il fréquente surtout les forêts denses de basse altitude, zones humides et berges, mais aussi broussailles, savanes et bois secs. Dans le sud-ouest des États-Unis et le nord-ouest du Mexique, il utilise des corridors boisés et riverains."
+    },
+    "diet": {
+      "en": "This obligate carnivore takes prey ranging from reptiles and fish to large mammals. Peccaries, deer, capybaras, tapirs, caimans and turtles feature in regional diets; livestock may be taken where natural prey has declined. Its strong jaws help dispatch armored reptiles, including by biting through shells.",
+      "fr": "Carnivore, il capture des proies allant des poissons aux grands mammifères. Son régime régional inclut pécaris, cerfs, capybaras, tapirs, caïmans et tortues. Il peut aussi prendre du bétail quand les proies sauvages diminuent. Ses mâchoires puissantes percent parfois les carapaces."
+    },
+    "behavior": {
+      "en": "Jaguars generally live and hunt alone, and scent or scratch marks help signal territorial use. Activity is mainly nocturnal, though individuals may move at any hour as conditions change. Hunting relies on concealment, a short rush and a forceful pounce rather than prolonged pursuit.",
+      "fr": "Les jaguars vivent et chassent généralement seuls ; odeurs et griffures signalent le territoire. Leur activité est surtout nocturne, mais ils peuvent se déplacer à toute heure selon les conditions. La chasse privilégie dissimulation, accélération brève et bond puissant plutôt qu’une longue poursuite."
+    },
+    "reproduction": {
+      "en": "Breeding can occur throughout the year across much of the range, although seasonality appears at its northern and southern edges. After roughly 100 days of gestation, a female gives birth to one to four cubs, usually two, in a sheltered den and raises them alone.",
+      "fr": "La reproduction peut avoir lieu toute l’année dans une grande partie de l’aire, mais semble saisonnière à ses marges nord et sud. Après environ 100 jours de gestation, la femelle met bas un à quatre petits, généralement deux, dans un abri et les élève seule."
+    },
+    "ecology": {
+      "en": "As a large predator, the jaguar consumes many animals and can influence prey populations in the ecosystems it occupies. It also depends on connected territories, freshwater and adequate prey. Forest fragmentation can therefore disrupt both its movements and access to food or mates.",
+      "fr": "Grand prédateur, le jaguar consomme de nombreuses espèces et peut influencer les populations de proies. Il dépend aussi de territoires connectés, d’eau douce et de proies suffisantes. La fragmentation des forêts peut perturber ses déplacements et son accès à la nourriture ou aux partenaires."
+    },
+    "conservation": {
+      "en": "Habitat conversion and fragmentation, prey depletion, illegal trade and retaliatory killing all pressure jaguar populations. Livestock losses can bring conflict where ranches overlap with jaguar habitat. Protecting connected landscapes, wild prey and practical coexistence measures addresses several linked pressures across the species’ range.",
+      "fr": "La conversion et la fragmentation des habitats, le recul des proies, le commerce illégal et les représailles menacent les jaguars. Les pertes de bétail peuvent provoquer des conflits près des élevages. Protéger les paysages connectés, les proies sauvages et la coexistence répond à plusieurs pressions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Jaguar (Panthera onca) — U.S. Fish & Wildlife Service",
+        "fr": "Jaguar (Panthera onca) — Service américain de la pêche et de la faune"
+      },
+      "url": "https://www.fws.gov/species/jaguar-panthera-onca",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "The jaguar is the largest cat in the Americas; its range spans 19 countries from the United States to Argentina.",
+        "FWS describes solitary territorial behavior and mainly nocturnal activity, with flexible timing."
+      ]
+    },
+    {
+      "title": {
+        "en": "Panthera onca (jaguar) — Animal Diversity Web, University of Michigan",
+        "fr": "Panthera onca (jaguar) — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Panthera_onca/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The species uses humid forest, scrub and wetlands, and is associated with water and cover.",
+        "More than 85 prey species are reported; common prey categories include mammals, reptiles, birds and fish."
+      ]
+    },
+    {
+      "title": {
+        "en": "Jaguar — San Diego Zoo Animals & Plants",
+        "fr": "Jaguar — San Diego Zoo Animals & Plants"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/jaguar",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Rosettes often have central spots; melanistic animals occur, with markings remaining faintly visible."
+      ]
+    },
+    {
+      "title": {
+        "en": "Jaguar Fact Sheet: Reproduction & Development — San Diego Zoo Wildlife Alliance Library",
+        "fr": "Fiche Jaguar : reproduction et développement — Bibliothèque de la San Diego Zoo Wildlife Alliance"
+      },
+      "url": "https://ielc.libguides.com/sdzg/factsheets/jaguar/reproduction",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Gestation lasts about 100 days; litters range up to four, with twins most common; mothers provide all cub care."
+      ]
+    },
+    {
+      "title": {
+        "en": "Jaguar — World Wildlife Fund",
+        "fr": "Jaguar — Fonds mondial pour la nature"
+      },
+      "url": "https://www.worldwildlife.org/species/jaguar/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "WWF describes jaguars as top predators that help shape food webs.",
+        "Habitat fragmentation, illegal trade and livestock conflict are identified threats."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult jaguar of either sex with exact natural proportions: compact muscular body, broad head, short powerful limbs, tawny coat with dark rosettes containing central spots, and a long spotted tail. Place the animal alone on a pure white background; do not add scenery or stylize the markings.",
+  "uncertainties": [
+    "Body size, habitat use and prey composition vary substantially by region.",
+    "Breeding seasonality differs across the range; year-round breeding is not uniform everywhere.",
+    "No current global population estimate or conservation category is stated here because the consulted sources present differing figures and status summaries without a fresh assessment date."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/scientific critique completed; identified grammar, dating and generalization issues corrected."
+}

@@ -1,0 +1,235 @@
+{
+  "id": "common_fruit_fly",
+  "scientific": "Drosophila melanogaster",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common fruit fly",
+    "fr": "Drosophile commune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Despite its common name, Drosophila melanogaster is a vinegar fly in the family Drosophilidae, not a tephritid true fruit fly. Its short generations and well-studied genetics made it a landmark model for studying animal heredity and development.",
+      "fr": "Malgré son nom courant, Drosophila melanogaster est une mouche du vinaigre de la famille des Drosophilidae, et non une mouche des fruits « vraie » des Tephritidae. Ses générations courtes et sa génétique bien étudiée en ont fait un modèle majeur de l’hérédité et du développement."
+    },
+    "identification": {
+      "en": "Adults are about 3 millimetres long, with females slightly larger than males. The thorax bears six legs and clear forewings; small knob-shaped halteres, the altered hindwings, help stabilize flight. Wild-type flies have reddish eyes and a yellow-brown body with dark abdominal bands; the male’s abdomen is darker toward the rear.",
+      "fr": "L’adulte mesure environ 3 millimètres et la femelle est légèrement plus grande que le mâle. Le thorax porte six pattes et des ailes transparentes ; les balanciers, ailes postérieures réduites en petites massues, stabilisent le vol. La forme sauvage a des yeux rougeâtres et un corps brun jaunâtre à bandes abdominales sombres ; l’abdomen du mâle est plus foncé vers l’arrière."
+    },
+    "habitat": {
+      "en": "Originally African, it now occurs worldwide. It gathers where fruit, plant juices and other foods ferment, from orchards and markets to kitchens and restaurants.",
+      "fr": "Originaire d’Afrique, elle est aujourd’hui présente dans le monde entier. Elle fréquente les lieux où fermentent fruits, sucs végétaux et autres aliments, des vergers et marchés jusqu’aux cuisines et restaurants."
+    },
+    "diet": {
+      "en": "Larvae and adults exploit fermenting fruit together with its yeasts, bacteria and other microbes; the patch supplies microbial food as well as a suitable place for young flies to develop.",
+      "fr": "Les larves et les adultes exploitent les fruits en fermentation et leurs levures, bactéries et autres microbes ; ce foyer leur procure une nourriture microbienne et un lieu adapté au développement des jeunes mouches."
+    },
+    "behavior": {
+      "en": "Adults often gather around fermenting food. During courtship, a male follows and taps a female, vibrates one wing to sing, then licks her before attempting to mate; she may reject him. The exchange combines sound, touch and chemical cues.",
+      "fr": "Les adultes se rassemblent souvent autour d’aliments en fermentation. Pendant la parade, un mâle suit et touche une femelle, fait vibrer une aile pour chanter, puis la lèche avant de tenter l’accouplement ; elle peut le repousser. Cet échange combine sons, contacts et signaux chimiques."
+    },
+    "reproduction": {
+      "en": "After mating, the female stores sperm and lays successive fertilized eggs on suitable decaying food; she can lay roughly 400 eggs over time. At about 25 °C in standard laboratory conditions, eggs hatch in roughly a day; larvae feed and moult twice through three stages, then pupate before adults emerge. This egg-to-adult cycle takes about ten days under those laboratory conditions. Females may become receptive to mating within about 8–12 hours of emergence, depending on temperature.",
+      "fr": "Après l’accouplement, la femelle stocke le sperme et dépose plusieurs œufs fécondés sur une nourriture en décomposition adaptée ; elle peut pondre environ 400 œufs au fil du temps. Vers 25 °C en laboratoire, les œufs éclosent en environ un jour ; les larves se nourrissent, muent deux fois en trois stades, puis se nymphosent avant l’émergence des adultes. Le cycle de l’œuf à l’adulte dure environ dix jours dans ces conditions de laboratoire. Selon la température, les femelles peuvent s’accoupler environ 8 à 12 heures après leur émergence."
+    },
+    "ecology": {
+      "en": "By feeding and breeding in decomposing fruit, flies ingest microbes and return them to the substrate in their droppings, helping maintain a shared fruit–microbe–fly community and carrying microbes between temporary patches of decay. Yeasts and bacteria do not just share the patch: they shape its food value and microbial conditions for the next brood.",
+      "fr": "En se nourrissant et en se reproduisant dans les fruits en décomposition, les mouches ingèrent des microbes puis les redéposent dans le milieu avec leurs excréments, entretenant une communauté fruit-microbes-mouches et transportant des microbes entre foyers temporaires de décomposition. Les levures et bactéries ne font pas que partager ce milieu : elles modifient sa valeur alimentaire et ses conditions microbiennes pour la génération suivante."
+    },
+    "conservation": {
+      "en": "The species is globally widespread and commonly gathers in homes, restaurants and other places where food is served, where people often regard it as a nuisance.",
+      "fr": "L’espèce est largement répandue dans le monde et fréquente les maisons, restaurants et autres lieux de restauration, où elle est souvent considérée comme une nuisance."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Drosophila melanogaster",
+        "fr": "Drosophila melanogaster"
+      },
+      "url": "https://en.wikipedia.org/wiki/Drosophila_melanogaster",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Worldwide distribution; household nuisance; adult anatomy; short generation model."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 9,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Drosophila melanogaster",
+        "fr": "Drosophila melanogaster"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Drosophila_melanogaster",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Short generation and tractable genetics; female stores sperm after mating."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 10,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fruit flies (Drosophila melanogaster)",
+        "fr": "Mouches des fruits (Drosophila melanogaster)"
+      },
+      "url": "https://www.fml.tuebingen.mpg.de/68672/fruit-flies",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "At 25 °C, hatch after one day; larvae five days; pupae four days; yeast food."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 15,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chapter 6: Pest On or Near Food",
+        "fr": "Chapitre 6 : Ravageurs sur ou près des aliments"
+      },
+      "url": "https://entomology.ucr.edu/ebelingchapter6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Adult D. melanogaster about 3 mm; vinegar flies common near fermenting foods."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 12,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sexual Communication in the Drosophila Genus",
+        "fr": "Communication sexuelle dans le genre Drosophila"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4592592/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Wing vibration, touch and chemical cues carry courtship signals; females may reject."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 12,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gut-associated microbes of Drosophila melanogaster",
+        "fr": "Microbes associés à l’intestin de Drosophila melanogaster"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3463489/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Fermenting fruit provides microbes and food; flies re-seed these communities."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 10,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Small yellow-brown fly with red compound eyes, dark abdominal bands, six legs, one clear wing pair and visible knob-like halteres; avoid tephritid fruit flies.",
+  "uncertainties": [
+    "A species-specific global conservation assessment or formal threat category was not verified; the conservation text describes documented distribution and nuisance context only."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: three larval instars/two moults and ten-day25°C laboratory cycle checked with MaxPlanck account; courtship and microbial interactions checked in cited scientific reviews. Added recognizable wild-type eye/body/sex characters. No invented global RedList category.",
+  "source_audit_version": 1
+}

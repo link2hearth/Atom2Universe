@@ -1,0 +1,374 @@
+{
+  "id": "water_vole",
+  "scientific": "Arvicola amphibius",
+  "group": "mammals",
+  "name": {
+    "en": "Eurasian water vole",
+    "fr": "Campagnol terrestre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian water vole, Arvicola amphibius, is a wetland rodent widespread across Europe and northern Asia. Its range reaches from Britain east through Russia to Siberia, and south into the Middle East. Most populations live beside water, while some use damp grasslands and other less aquatic habitats. The IUCN classified it as globally Least Concern in 2023, despite regional declines.",
+      "fr": "Le campagnol terrestre, Arvicola amphibius, est un rongeur des zones humides, répandu en Europe et en Asie septentrionale. Son aire s’étend de la Grande-Bretagne vers l’est, à travers la Russie jusqu’en Sibérie, et descend au Moyen-Orient. La plupart vivent près de l’eau, mais certaines populations occupent des prairies humides et d’autres milieux moins aquatiques. En 2023, l’UICN l’a classé en préoccupation mineure à l’échelle mondiale, malgré des reculs régionaux."
+    },
+    "identification": {
+      "en": "Adults are usually 14–22 cm long, with a 9.5–14 cm tail, and weigh 150–300 g. A blunt muzzle, fur-hidden ears and furry tail distinguish it from the brown rat, which has a pointed face and bare tail. The coat is usually chestnut or dark brown above, greyish below; some populations are entirely black. Continuously growing incisors cut vegetation, and broad molars grind it.",
+      "fr": "L’adulte mesure généralement 14 à 22 cm, avec une queue de 9,5 à 14 cm, et pèse 150 à 300 g. Son museau émoussé, ses oreilles dissimulées dans le pelage et sa queue velue le distinguent du rat brun, au museau pointu et à la queue nue. Le pelage est généralement brun roux ou brun foncé sur le dos, grisâtre dessous ; certaines populations sont entièrement noires. Ses incisives à croissance continue coupent les végétaux, que ses larges molaires broient."
+    },
+    "habitat": {
+      "en": "The waterside form favours slow streams, ditches, ponds, marshes and reedbeds with soft banks and dense cover. It stays near water but travels and feeds mostly on land, often under grass. Bank burrows contain nest chambers and may open both above and below water, offering escape from danger. Some northern and upland populations also occupy wet grassland or moorland away from rivers.",
+      "fr": "La forme riveraine fréquente les cours d’eau lents, fossés, mares, marais et roselières aux berges meubles et densément végétalisées. Elle reste près de l’eau, mais circule et se nourrit surtout à terre, souvent sous les herbes. Les terriers des berges abritent des nids et peuvent avoir des entrées hors de l’eau comme sous l’eau, pour fuir le danger. Certaines populations du nord et des montagnes vivent aussi dans les prairies humides ou les landes, loin des rivières."
+    },
+    "diet": {
+      "en": "It is chiefly herbivorous and may eat plant matter approaching 80 percent of its body mass daily. Grasses, sedges, rushes and waterside herbs dominate, supplemented by roots, bulbs, shoots and fruit. It carries cut stems to feeding spots and stores vegetation underground for lean periods. Pregnant females sometimes seek protein-rich snails or flowers. In captive water voles, the caecum, a pouch in the large intestine, enlarged on cellulose-rich food; pellet-eating (coprophagy) also became more frequent.",
+      "fr": "Il est surtout herbivore et peut manger chaque jour des végétaux approchant 80 % de sa masse corporelle. Graminées, laîches, joncs et herbes riveraines dominent, complétés par des racines, bulbes, pousses et fruits. Il transporte les tiges coupées vers des postes de repas et stocke des végétaux sous terre lorsque la nourriture manque. Les femelles gestantes recherchent parfois des escargots ou des fleurs riches en protéines. Chez des campagnols captifs, le cæcum, poche située au début du gros intestin, s’agrandissait avec une alimentation riche en cellulose ; l’ingestion de fèces (coprophagie) devenait aussi plus fréquente."
+    },
+    "behavior": {
+      "en": "It swims and dives over short distances but is no aquatic specialist: it breathes air with lungs, and its coat can become waterlogged. A compact body and burrows help it escape predators; most feeding and resting occur on land. Activity peaks by day and at twilight, varying with season. Along streams, females often defend breeding territories while males range farther and overlap several females; studies in other habitats find looser boundaries. Scent marks and latrines advertise territories.",
+      "fr": "Il nage et plonge sur de courtes distances, sans être spécialiste aquatique : il respire avec des poumons et son pelage peut se gorger d’eau. Son corps compact et ses terriers l’aident à fuir les prédateurs ; il vit surtout à terre. Son activité culmine le jour et au crépuscule, avec des variations saisonnières. Le long des cours d’eau, les femelles défendent souvent un territoire et les domaines des mâles chevauchent ceux de plusieurs femelles ; ailleurs, les limites sont plus souples. Odeurs et latrines signalent les territoires."
+    },
+    "reproduction": {
+      "en": "Breeding in temperate Europe usually lasts from spring into early autumn, with a shorter season in colder regions. Gestation is about three weeks; litters commonly contain four to six pups, and females may produce several. Newborns are hairless and blind, sheltered in a grass nest; their eyes open within days. They are weaned at two to three weeks, leave the nest soon after, and may mature in their first year.",
+      "fr": "En Europe tempérée, la reproduction dure généralement du printemps au début de l’automne, et moins longtemps dans les régions froides. La gestation dure environ trois semaines ; les portées comptent souvent quatre à six petits, et les femelles peuvent en avoir plusieurs. Les nouveau-nés, nus et aveugles, sont abrités dans un nid d’herbes ; leurs yeux s’ouvrent en quelques jours. Sevrés vers deux ou trois semaines, ils quittent bientôt le nid et peuvent devenir adultes dès leur première année."
+    },
+    "ecology": {
+      "en": "By burrowing, feeding and moving through wetlands, the vole helps create conditions that other plants and animals can use. Burrowing and droppings alter soil structure and nutrient cycling. It is prey for native predators and, in Britain, introduced American mink. Dispersing juveniles can recolonize empty patches, linking local populations across wetlands.",
+      "fr": "En creusant, en se nourrissant et en circulant dans les zones humides, le campagnol contribue à créer des conditions favorables à d’autres plantes et animaux. Terriers et déjections modifient la structure du sol et le cycle des nutriments. Il est la proie de prédateurs indigènes et, en Grande-Bretagne, du vison d’Amérique introduit. Les jeunes dispersés peuvent recoloniser des parcelles vides et relier les populations locales dans les zones humides."
+    },
+    "conservation": {
+      "en": "The IUCN’s 2023 Least Concern assessment reflects the species’ broad range and mostly stable global trend, while recognizing regional declines. In Britain it is Endangered in England and Great Britain, and Near Threatened in Scotland. Agricultural intensification, pollution and watercourse development have destroyed and fragmented British water vole habitat. Introduced American mink can enter burrows and intensify predation; river restoration and mink control are part of recovery work.",
+      "fr": "Le classement 2023 de l’UICN en préoccupation mineure reflète la vaste aire de l’espèce et sa tendance mondiale généralement stable, tout en reconnaissant des reculs régionaux. Le statut est « en danger » à l’échelle de la Grande-Bretagne et de l’Angleterre, et « quasi menacé » en Écosse. L’intensification agricole, la pollution et l’aménagement des cours d’eau ont détruit et fragmenté l’habitat britannique du campagnol terrestre. Le vison d’Amérique introduit peut entrer dans les terriers et accentuer la prédation ; restauration des rivières et contrôle du vison font partie des mesures de rétablissement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Arvicola amphibius (Eurasian Water Vole)",
+        "fr": "Arvicola amphibius (Campagnol terrestre eurasien)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T219451656A219451755.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "2023 assessment: Least Concern; extensive Eurasian range.",
+        "Local declines include Britain; broader trends mostly stable."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "overview.en.3",
+        "overview.fr.3",
+        "overview.en.4",
+        "overview.fr.4",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 15,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Water vole",
+        "fr": "Campagnol terrestre"
+      },
+      "url": "https://www.wwt.org.uk/discover-wetlands/wetland-wildlife/species-factfiles/water-vole",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Wetland charity account gives adult measurements."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.4",
+        "diet.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 6,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Water vole",
+        "fr": "Campagnol terrestre"
+      },
+      "url": "https://mammal.org.uk/british-mammals/water-vole",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "ecology",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "British specialist account covers ecology and threats.",
+        "Regional Red List categories and historical decline."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.3",
+        "ecology.fr.3",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 14,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Arvicola amphibius",
+        "fr": "Arvicola amphibius"
+      },
+      "url": "https://doi.org/10.5281/zenodo.6706842",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Handbook account contrasts aquatic and fossorial forms.",
+        "Documents burrows, plant diet, breeding and social spacing."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 15,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Influence of Reproductive Status: Home Range Size in Water Voles (Arvicola amphibius)",
+        "fr": "Influence du statut reproducteur sur la taille du domaine vital du campagnol terrestre (Arvicola amphibius)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4846030/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Radio-tracking on a northern Norwegian island, 2006–2009.",
+        "Reproductive males expanded ranges; overlap varied among individuals."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 15,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Arvicola amphibius (Eurasian water vole)",
+        "fr": "Arvicola amphibius (Campagnol terrestre eurasien)"
+      },
+      "url": "https://animaldiversity.org/accounts/Arvicola_amphibius/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Michigan account on pup development."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "diet.en.3",
+        "diet.fr.3",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 5,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Habitat, home range, diet and demography of the water vole: Patch-use in a complex wetland landscape",
+        "fr": "Habitat, domaine vital, régime et démographie du campagnol terrestre : occupation des parcelles dans un milieu humide complexe"
+      },
+      "url": "https://cronfa.swan.ac.uk/Record/cronfa42744",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Four-year Swansea study of Welsh wetland vole populations.",
+        "Juveniles recolonized habitat patches."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 12,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The effects of increased dietary cellulose on the anatomy, physiology and behaviour of captive water voles, Arvicola terrestris (L.)",
+        "fr": "Effets d’une hausse de la cellulose alimentaire sur l’anatomie, la physiologie et le comportement de campagnols terrestres captifs, Arvicola terrestris (L.)"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/2575948/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Captive trial linked fibre diets, caecum changes and coprophagy."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 9,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Arvicola amphibius (European Water Vole)",
+        "fr": "Arvicola amphibius (Campagnol terrestre européen)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T2149A197271401.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "IUCN account summarizes warmer-season breeding and riparian ecology.",
+        "Older assessment remains useful for natural-history details."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 15,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "When Weasels Eat Water Voles",
+        "fr": "Quand les belettes mangent les campagnols terrestres"
+      },
+      "url": "https://mammal.org.uk/blog/2020/06/when-weasels-eat-water-voles",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Aberdeen study documents mink pressure and restoration measures."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 78,
+        "notes_words": 8,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict a compact chestnut-brown vole with rounded blunt muzzle, tiny fur-hidden ears and a furry tail, beside a grassy riverbank burrow; show it swimming at the surface with all limbs visible. Avoid rat-like bare tail, pointed face, or nutria-like size and orange incisors.",
+  "uncertainties": [
+    "The global IUCN account leaves total population size unquantified; Least Concern describes global risk, not British status.",
+    "Body dimensions and breeding schedules vary by population and habitat; the ordinary ranges here combine species-wide and British specialist accounts.",
+    "Water vole taxonomy and aquatic versus fossorial forms have a complex history; this profile follows the supplied species name and avoids treating forms as separate species.",
+    "French vernacular checked against SFEPM/INPN: Arvicola amphibius is campagnol terrestre/aquatique; campagnol amphibie ordinarily denotes Arvicola sapidus. https://inpn.mnhn.fr/docs-web/docs/download/441129"
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual editorial review; sensitive taxonomy, life-cycle and conservation statements checked against cited primary sources; source accounting passed; independent artwork review accepted.",
+  "source_audit_version": 1
+}

@@ -1,0 +1,190 @@
+{
+  "id": "cattle",
+  "scientific": "Bos taurus",
+  "group": "mammals",
+  "name": {
+    "en": "Domestic cattle",
+    "fr": "Bovin domestique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Taurine cattle are large, hoofed mammals domesticated from aurochs in Southwest Asia. Ancient genomes indicate a small founding group and later mixing with other aurochs lineages as herds spread. Today people keep cattle worldwide in varied production systems.",
+      "fr": "Les bovins taurins sont de grands mammifères à sabots, domestiqués à partir d’aurochs du sud-ouest de l’Asie. Les génomes anciens indiquent un petit groupe fondateur, puis des croisements avec d’autres lignées d’aurochs lors de l’expansion des troupeaux. Aujourd’hui, les humains élèvent des bovins partout dans le monde selon divers systèmes."
+    },
+    "identification": {
+      "en": "Cattle have a sturdy body, broad muzzle, cloven hooves and a long tufted tail. Coat, size and horns vary widely among breeds; some are naturally hornless. The term includes both sexes: mature females are cows, males bulls, and young animals calves.",
+      "fr": "Les bovins ont un corps robuste, un large mufle, des sabots fendus et une longue queue terminée par une touffe. Pelage, taille et cornes varient selon les races ; certaines sont naturellement sans cornes. Le terme désigne les deux sexes : femelles adultes, vaches ; mâles, taureaux ; jeunes, veaux."
+    },
+    "habitat": {
+      "en": "FAO livestock maps show cattle widely distributed around the world. They live in human-managed pastures, mixed farms, extensive pastoral systems, feedlots or barns. Local conditions vary with husbandry, while climate, water and forage shape where herds can be maintained.",
+      "fr": "Les cartes de la FAO montrent que les bovins sont largement répartis dans le monde. Ils vivent dans des pâturages, des fermes mixtes, des systèmes pastoraux extensifs, des parcs d’engraissement ou des étables. Les conditions locales dépendent de l’élevage, tandis que climat, eau et fourrage déterminent où les troupeaux peuvent être entretenus."
+    },
+    "diet": {
+      "en": "Cattle eat grasses, leaves and other plants, then regurgitate partly digested forage to chew it again. Their four digestive compartments are the rumen, reticulum, omasum and abomasum. Microbes ferment fibrous plants in the rumen, making their energy available to the animal.",
+      "fr": "Les bovins mangent des graminées, des feuilles et d’autres végétaux, puis régurgitent une partie du fourrage pour la remâcher. Leur appareil digestif comporte quatre compartiments : rumen, réticulum, feuillet et caillette. Dans le rumen, les microbes fermentent les fibres végétales et rendent leur énergie accessible à l’animal."
+    },
+    "behavior": {
+      "en": "Cattle are social grazers that feed and rest in groups. Studies of managed herds find associations among individuals and different responses to familiar and unfamiliar herd members. They communicate through posture, touch, smell and calls; group composition can affect these relationships.",
+      "fr": "Les bovins sont des herbivores sociaux qui s’alimentent et se reposent en groupe. Des études de troupeaux conduits par l’humain observent des associations entre individus et des réactions différentes aux congénères familiers ou inconnus. Ils communiquent par la posture, le contact, l’odorat et les vocalisations ; la composition du groupe influence ces relations."
+    },
+    "reproduction": {
+      "en": "Females cycle when not pregnant; estrus averages about 21 days between cycles, with variation. A receptive female may stand to be mounted. After fertilization, gestation lasts about 283 days on average and ends with a calf’s birth; the mother then produces milk.",
+      "fr": "Hors gestation, les femelles ont des cycles ; l’intervalle entre chaleurs est en moyenne d’environ 21 jours, avec des variations. Une femelle réceptive peut rester immobile lorsqu’un congénère la monte. Après fécondation, la gestation dure en moyenne 283 jours et se termine par la naissance d’un veau ; la mère produit ensuite du lait."
+    },
+    "ecology": {
+      "en": "Cattle grazing removes plant shoots; dung and urine return nutrients, while hooves compact soil. In one Finnish dairy pasture, these processes altered plant growth and soil communities. Their effects arose from defoliation, patchy excreta and trampling, and depend on local pasture conditions.",
+      "fr": "Le pâturage retire des pousses ; bouses et urine restituent des nutriments, tandis que les sabots tassent le sol. Dans une prairie laitière finlandaise, ces processus ont modifié la croissance végétale et les communautés du sol. Leurs effets venaient de la défoliation, des déjections localisées et du piétinement, et dépendent des conditions locales."
+    },
+    "conservation": {
+      "en": "Bos taurus is domesticated and maintained in human herds, rather than a wild population with a natural range. Relevant conservation concerns include preserving domestic breed diversity and locally adapted traits. The extinct aurochs is a separate ancestral wild taxon, not the status of domestic cattle.",
+      "fr": "Bos taurus est domestiqué et entretenu dans des troupeaux humains, plutôt qu’une population sauvage occupant une aire naturelle. La conservation concerne notamment la diversité des races domestiques et leurs caractères adaptés localement. L’aurochs éteint est un taxon sauvage ancestral distinct, et son statut ne s’applique pas aux bovins domestiques."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The genomic natural history of the aurochs",
+        "fr": "Histoire naturelle génomique de l’aurochs"
+      },
+      "url": "https://www.nature.com/articles/s41586-024-08112-6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Genomic study of 38 ancient aurochs genomes identifies four ancestral populations.",
+        "Taurine domestication drew on a small Southwest Asian aurochs population, followed by admixture after cattle dispersed."
+      ]
+    },
+    {
+      "title": {
+        "en": "The Digestive System of Beef Cattle",
+        "fr": "Le système digestif des bovins à viande"
+      },
+      "url": "https://www.msdvetmanual.com/management-and-nutrition/nutrition-beef-cattle/the-digestive-system-of-beef-cattle",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "Ruminant cattle have rumen, reticulum, omasum and abomasum as four major digestive organs.",
+        "Microbial fermentation enables use of fibrous feed; the lower incisors work against an upper dental pad.",
+        "The mouth uses a lower incisor row against a fibrous upper dental pad to gather forage."
+      ]
+    },
+    {
+      "title": {
+        "en": "The Estrous Cycle of Cattle",
+        "fr": "Le cycle œstral des bovins"
+      },
+      "url": "https://extension.msstate.edu/publications/the-estrous-cycle-cattle",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The typical estrous interval averages 21 days, with a reported range of 18–24 days.",
+        "Gestation is approximately 283 days; a fetus is born as a calf."
+      ]
+    },
+    {
+      "title": {
+        "en": "Global distributions: Cattle",
+        "fr": "Répartitions mondiales : bovins"
+      },
+      "url": "https://www.fao.org/livestock-systems/global-distributions/cattle/en/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FAO describes cattle as widely raised in grass-based, mixed, intensive and pastoral systems.",
+        "Its livestock mapping tracks the broad global distribution and abundance of cattle."
+      ]
+    },
+    {
+      "title": {
+        "en": "Impact of Group Management and Transfer on Individual Sociality in Highland Cattle",
+        "fr": "Effets de la gestion et du transfert de groupes sur la sociabilité des bovins Highland"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6581677/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "A study of Highland cattle reports social network structure and individual effects of age, sex and familiar group members.",
+        "The authors connect changes in group composition with altered social organization and possible stress."
+      ]
+    },
+    {
+      "title": {
+        "en": "Defoliation and patchy nutrient return drive grazing effects on plant and soil properties in a dairy cow pasture",
+        "fr": "La défoliation et le retour localisé des nutriments expliquent les effets du pâturage sur les plantes et le sol d’une prairie laitière"
+      },
+      "url": "https://researchportal.helsinki.fi/en/publications/defoliation-and-patchy-nutrient-return-drive-grazing-effects-on-p/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A Finland pasture experiment examined defoliation, dung and urine, and trampling as mechanisms.",
+        "Observed plant and soil effects reflected several mechanisms and spatially patchy nutrient availability."
+      ]
+    },
+    {
+      "title": {
+        "en": "Social isolation of unfamiliar cattle by groups of familiar cattle",
+        "fr": "Isolement social de bovins inconnus par des groupes de bovins familiers"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0376635723000293",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "An experiment on domestic cattle found unfamiliar individuals socially isolated from resident groups after introduction.",
+        "The study notes strong motivation among domestic herbivores to associate with conspecifics."
+      ]
+    },
+    {
+      "title": {
+        "en": "Polled cattle, USDA-APHIS",
+        "fr": "Bovins naturellement sans cornes, USDA-APHIS"
+      },
+      "url": "https://www.aphis.usda.gov/sites/default/files/beef2017_dr_parti.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Some cattle breeds, including Angus, are naturally polled, meaning horns do not grow."
+      ]
+    },
+    {
+      "title": {
+        "en": "Conservation of animal genetic resources — FAO",
+        "fr": "Conservation des ressources génétiques animales — FAO"
+      },
+      "url": "https://www.fao.org/animal-genetics/global-policy/funding-strategy/projects/en/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "FAO projects conserve local cattle breeds and locally adapted genetic resources, including Busha cattle in the Balkans and native cattle in Mozambique."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult female Bos taurus (cow), natural breed morphology with sturdy bovine body, cloven hooves, broad muzzle, and coat/horns matching the validated reference image; isolated on a pure white background.",
+  "uncertainties": [
+    "Domestic cattle show extensive breed variation; a single appearance cannot represent all Bos taurus forms.",
+    "The ecological effects described are measured in a specific Finnish dairy pasture and should not be generalized to every grazing system."
+  ],
+  "reviewed": true,
+  "review_note": "Independent factual and bilingual review; cattle conservation supplemented with FAO breed-conservation evidence; horse ecological observations explicitly scoped to feral herds and mixed grazing."
+}

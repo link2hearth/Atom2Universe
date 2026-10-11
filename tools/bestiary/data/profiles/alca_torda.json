@@ -1,0 +1,189 @@
+{
+  "id": "alca_torda",
+  "scientific": "Alca torda",
+  "group": "birds",
+  "name": {
+    "en": "Razorbill",
+    "fr": "Petit Pingouin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Razorbill is a North Atlantic auk that breeds on rocky coasts and spends much of the year at sea. Its colonies extend from eastern North America to northern Europe. Its wings serve two functions: rapid flapping powers flight, while underwater strokes propel it after fish. Dense breeding colonies contrast with flocks at sea outside the breeding season. Because adults forage over marine waters, breeding success can depend on food conditions far beyond the nesting cliff.",
+      "fr": "Le Petit Pingouin est un alcidé de l’Atlantique Nord qui niche sur les côtes rocheuses et passe une grande partie de l’année en mer. Ses colonies s’étendent de l’est de l’Amérique du Nord au nord de l’Europe. Ses ailes ont deux fonctions : elles assurent le vol et le propulsent sous l’eau à la poursuite des poissons. Les colonies denses contrastent avec les groupes marins hors reproduction. Le succès reproducteur dépend des ressources au-delà de la falaise de nidification."
+    },
+    "identification": {
+      "en": "A compact auk with a large head, short neck and narrow wings, the Razorbill is black above and white below in breeding plumage. Its deep black bill has a pale transverse line. In winter, the throat and face sides turn white. The sexes look alike. Compared with the Common Guillemot, it is stockier and has a heavier bill, though the species can be difficult to distinguish at sea.",
+      "fr": "Alcidé compact à grosse tête, cou court et ailes étroites, le Petit Pingouin est noir dessus et blanc dessous en plumage nuptial. Son bec profond et noir porte une ligne transversale claire. En hiver, la gorge et les côtés du visage blanchissent. Les sexes se ressemblent. Comparé au Guillemot de Troïl, il est plus trapu et son bec est plus massif, même si les espèces sont difficiles à distinguer en mer."
+    },
+    "habitat": {
+      "en": "Razorbills lay eggs on cliff ledges or among boulders, often in colonies shared with Common Guillemots and other seabirds. These sites provide sheltered space and immediate sea access for chicks that leave before they can fly. BTO records show British and Irish colonies follow suitable rocky coasts; in winter, birds range more widely offshore. Their annual cycle thus shifts between coastal breeding sites and marine feeding grounds.",
+      "fr": "Les Petits Pingouins pondent sur des corniches ou parmi les blocs rocheux, souvent dans des colonies partagées avec le Guillemot de Troïl et d’autres oiseaux marins. Ces sites abritent l’œuf et donnent un accès immédiat à la mer aux poussins qui partent avant de savoir voler. Les relevés du BTO montrent que les colonies britanniques et irlandaises suivent les côtes rocheuses adaptées ; en hiver, les oiseaux s’éloignent au large. Leur cycle alterne sites côtiers de reproduction et zones marines d’alimentation."
+    },
+    "diet": {
+      "en": "Razorbills pursue fish underwater, using wing strokes for propulsion and their feet to steer. Buoyancy changes with depth: loggers on free-ranging auks recorded Razorbills ascending without wing strokes at depths shallower than roughly 20–30 m. Fish dominate the breeding-season diet, but prey varies by sea. At Stora Karlsö in the Baltic, clupeids, usually sprat, dominated photographed food loads; mean fish length was 115 mm. At Hornøya in the Barents Sea, chick food included capelin and sandeels, with young herring in some years.",
+      "fr": "Le Petit Pingouin poursuit les poissons sous l’eau, se propulsant par battements d’ailes et se dirigeant avec ses pattes. La flottabilité varie avec la profondeur : des enregistreurs posés sur des alcidés libres ont montré que les Petits Pingouins remontaient sans battre des ailes à moins d’environ 20 à 30 m de profondeur. Les poissons dominent le régime reproducteur, mais les proies varient selon les mers. À Stora Karlsö, les clupéidés, souvent le sprat, dominaient les charges photographiées (longueur moyenne : 115 mm). À Hornøya, dans la mer de Barents, les poussins recevaient capelans et lançons, et parfois de jeunes harengs."
+    },
+    "behavior": {
+      "en": "Razorbills breed in dense colonies and often return to established sites. At sea they may feed in flocks, but tracking shows that they do not simply repeat fixed routes. In a three-year study of 18 breeders and 56 trips, foraging locations were more flexible during incubation and more focused on productive water during chick-rearing. Both parents care for the chick at the colony; after it leaves the ledge, the male accompanies and feeds it at sea.",
+      "fr": "Les Petits Pingouins nichent en colonies denses et reviennent souvent aux mêmes sites. En mer, ils peuvent se nourrir en groupes, mais le suivi montre qu’ils ne répètent pas un trajet fixe. Dans une étude de trois ans portant sur 18 reproducteurs et 56 trajets, les zones de recherche étaient plus variables pendant l’incubation et davantage concentrées sur des eaux productives pendant l’élevage. Les deux parents s’occupent du poussin à la colonie ; après son départ de la corniche, le mâle l’accompagne et le nourrit en mer."
+    },
+    "reproduction": {
+      "en": "The pair usually lays one egg on a ledge; BTO records from Britain and Ireland include occasional two-egg clutches. Both adults incubate for about 32–39 days. The downy chick leaves the ledge before it can fly, within the locally recorded 14–24-day fledging interval, and reaches the sea by walking or fluttering down.",
+      "fr": "La femelle pond généralement un œuf sur une corniche ; les relevés du BTO en Grande-Bretagne et en Irlande comprennent exceptionnellement deux œufs dans un nid. Les deux adultes couvent pendant environ 32 à 39 jours. Le poussin duveteux quitte la corniche avant de savoir voler, dans l’intervalle localement observé de 14 à 24 jours, et gagne la mer à pied ou en planant."
+    },
+    "ecology": {
+      "en": "As a fish predator, the Razorbill depends on marine prey populations and can respond to their changing distribution. At Hornøya, northeast Norway, a 1981–2013 study found annual variation in chick food and suggested warming-related shifts in fish distribution could alter future diets. At Stora Karlsö in the Baltic, the prey loads were largely clupeids, fish also targeted by industrial fisheries. These local studies document a trophic link, not a measured effect on fish stocks or a uniform relationship across the North Atlantic.",
+      "fr": "Prédateur de poissons, le Petit Pingouin dépend des populations de proies marines et peut répondre à leurs déplacements. À Hornøya, dans le nord-est de la Norvège, une étude de 1981 à 2013 a relevé des variations annuelles du régime des poussins et suggéré que les changements de répartition des poissons liés au réchauffement pourraient le modifier. À Stora Karlsö, en Baltique, les charges rapportées étaient surtout composées de clupéidés, poissons également ciblés par les pêcheries industrielles. Ces études locales documentent un lien trophique, mais ne mesurent ni un effet sur les stocks ni une relation uniforme dans l’Atlantique Nord."
+    },
+    "conservation": {
+      "en": "BirdLife International’s global IUCN assessment of 17 August 2021 classified the Razorbill as Least Concern and estimated 838,000–1,660,000 mature individuals. This dated global status does not exclude local declines. The assessment identifies climate-related prey shifts, entanglement in gillnets and driftnets, and unregulated hunting as threats. Bycatch risk follows from pursuit-diving; changing fish availability can affect chick provisioning. Colony counts and fishery data are needed to assess local risk.",
+      "fr": "L’évaluation mondiale de l’UICN par BirdLife International, datée du 17 août 2021, classe le Petit Pingouin en préoccupation mineure et estime 838 000–1 660 000 individus adultes. Ce statut mondial daté n’exclut pas de déclins locaux. L’évaluation cite les déplacements de proies liés au climat, les captures accidentelles dans les filets maillants ou dérivants et la chasse non réglementée. Le risque de capture découle de la plongée-poursuite ; la disponibilité des poissons peut influer sur le nourrissage des poussins. Le suivi des colonies et des pêcheries est nécessaire pour évaluer les risques locaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Razorbill: BirdFacts",
+        "fr": "Petit Pingouin : BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/razorbill",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "British and Irish records: breeding distribution, one typical egg, shared incubation, incubation and fledging intervals; pelagic winter distribution."
+      ]
+    },
+    {
+      "title": {
+        "en": "Razorbill Life History",
+        "fr": "Histoire naturelle du Petit Pingouin"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Razorbill/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "habitat"
+      ],
+      "facts": [
+        "Wing propulsion underwater, foot steering, flocking and the male’s post-fledging care at sea.",
+        "Nesting sites include cliffs and boulder fields; nests are often shallow scrapes."
+      ]
+    },
+    {
+      "title": {
+        "en": "Razorbill Identification",
+        "fr": "Identification du Petit Pingouin"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Razorbill/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Range spans eastern North America to northwestern Russia; describes adult bill and seasonal plumage."
+      ]
+    },
+    {
+      "title": {
+        "en": "Swim speeds and stroke patterns in wing-propelled divers",
+        "fr": "Vitesse de nage et battements chez les plongeurs à propulsion alaire"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16547294/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Free-ranging alcids including Razorbills descended obliquely; at 20–30 m, buoyancy supported ascent without wing strokes."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diet and prey size preference in Razorbills breeding at Stora Karlsö",
+        "fr": "Régime et taille des proies des Petits Pingouins de Stora Karlsö"
+      },
+      "url": "https://journals.lub.lu.se/os/en/article/view/22615",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Baltic colony study: clupeids, usually sprat, dominated fish loads; mean prey length was 115 mm, a local estimate."
+      ]
+    },
+    {
+      "title": {
+        "en": "The diet, growth and survival of Razorbill chicks in the southern Barents Sea",
+        "fr": "Régime, croissance et survie des poussins dans le sud de la mer de Barents"
+      },
+      "url": "https://boap.uib.no/index.php/ornis/article/view/891",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "At Hornøya, northeast Norway, a 1981–2013 series found capelin and sandeels, with young herring in some years; warming may shift prey distributions."
+      ]
+    },
+    {
+      "title": {
+        "en": "Foraging flexibility and search patterns in a free-ranging seabird",
+        "fr": "Flexibilité alimentaire et recherche chez un oiseau marin libre"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4791460/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Three-year GPS/depth-logger study of 18 Razorbills and 56 trips: foraging locations were more flexible during incubation and more focused during chick-rearing."
+      ]
+    },
+    {
+      "title": {
+        "en": "Sex differences in Razorbill parent–offspring vocal recognition",
+        "fr": "Différences sexuelles dans la reconnaissance vocale parent-poussin"
+      },
+      "url": "https://journals.biologists.com/jeb/article/206/1/25/9265/Sex-differences-in-razorbill-Alca-torda-parent",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Natural-population study documents biparental care at the colony followed by male-only care at sea, and sex-specific recognition of chick calls."
+      ]
+    },
+    {
+      "title": {
+        "en": "Alca torda: The IUCN Red List",
+        "fr": "Alca torda : Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T22694852A228697220.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 17 August 2021: Least Concern; estimate 838,000–1,660,000 mature individuals; identifies climate-related prey shifts, gillnet bycatch and hunting."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult Razorbill in accurate breeding plumage: compact black upperparts and head, white underparts, broad deep black bill with a fine white transverse line and white eye-line, short narrow black wings. Show the natural heavy-bodied auk silhouette on a PURE WHITE background.",
+  "uncertainties": [
+    "Prey composition and sizes vary among seas, colonies and years; Baltic and Barents Sea findings are explicitly local.",
+    "The global conservation category and population estimate are from the 2021 IUCN assessment and should not be read as a current estimate or a guarantee of stable local colonies."
+  ],
+  "reviewed": true,
+  "review_note": "Independent primary-source and bilingual review accepts local study scope, ecological mechanisms and dated conservation; existing or new ImageGen plate validated independently."
+}

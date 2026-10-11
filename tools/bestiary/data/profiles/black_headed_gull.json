@@ -1,0 +1,218 @@
+{
+  "id": "black_headed_gull",
+  "scientific": "Chroicocephalus ridibundus",
+  "group": "birds",
+  "name": {
+    "en": "Black-headed Gull",
+    "fr": "Mouette rieuse"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Black-headed Gull breeds widely across Europe and northern Asia, with a small population on Canada’s east coast. Many birds from colder regions migrate south or west for winter, while populations in mild areas may remain.",
+      "fr": "La Mouette rieuse niche largement en Europe et dans le nord de l’Asie, avec une petite population sur la côte est du Canada. Beaucoup d’oiseaux des régions froides migrent vers le sud ou l’ouest en hiver, tandis que les populations des zones douces peuvent rester."
+    },
+    "identification": {
+      "en": "Adults are about 34–39 cm long, span 100–110 cm and usually weigh 166–400 g; males average heavier, though sexes overlap. The breeding hood is chocolate brown, not black; in winter the head is white with a dark spot behind each eye, and the red bill and legs, black wingtips and white wing edge remain useful marks.",
+      "fr": "L’adulte mesure environ 34 à 39 cm, présente une envergure de 100 à 110 cm et pèse généralement 166 à 400 g ; les mâles sont en moyenne plus lourds, malgré un chevauchement entre sexes. La capuche nuptiale est brun chocolat, non noire ; en hiver, la tête est blanche avec une tache derrière chaque œil, et le bec et les pattes rouges, les pointes noires et le bord blanc de l’aile restent distinctifs."
+    },
+    "habitat": {
+      "en": "It breeds and feeds on coastal and inland wetlands, including marshes, reedbeds, lakes, ponds and estuaries. Gravel pits, reservoirs, settling ponds, fields and towns also host birds.",
+      "fr": "Elle niche et se nourrit sur les côtes et dans les zones humides intérieures, comme marais, roselières, lacs, étangs et estuaires. Gravières, réservoirs, bassins de décantation, champs et villes accueillent aussi ces oiseaux."
+    },
+    "diet": {
+      "en": "This flexible omnivore eats aquatic and terrestrial insects, earthworms and other invertebrates, as well as fish, rodents, seeds, grain, berries and discarded food. In fields it may stamp the ground with webbed feet to bring worms to the surface. At water margins it takes prey from the surface or dips its head below.",
+      "fr": "Cette omnivore opportuniste consomme des insectes aquatiques et terrestres, des lombrics et d’autres invertébrés, ainsi que poissons, rongeurs, graines, céréales, baies et restes alimentaires. Dans les champs, elle peut piétiner le sol de ses pieds palmés pour faire remonter les vers. Au bord de l’eau, elle saisit les proies en surface ou plonge la tête sous l’eau."
+    },
+    "behavior": {
+      "en": "During breeding, adults mob birds that threaten eggs or chicks, but dense flocks may flee falcons attacking adults.",
+      "fr": "Pendant la reproduction, les adultes houspillent les oiseaux menaçant œufs ou poussins, mais les groupes denses peuvent fuir les faucons attaquant les adultes."
+    },
+    "reproduction": {
+      "en": "In spring, pairs form through visual displays and calls; courtship includes the male regurgitating food for the female before mating. The pair then defends a small territory within its colony. Both adults build a shallow nest from vegetation, twigs and other plant matter, usually in a marsh, reedbed or island, and sometimes on an artificial raft. A usual clutch contains two or three eggs, incubated by both adults for about 23–26 days. The downy chicks leave the nest soon after hatching but depend on their parents, which guard and feed them by regurgitating food onto the ground for the brood. Young usually fledge at 34–36 days and reach breeding maturity around two years.",
+      "fr": "Au printemps, les couples se forment par des parades visuelles et des cris ; la cour comprend une offrande de nourriture régurgitée par le mâle à la femelle avant l’accouplement. Le couple défend ensuite un petit territoire dans sa colonie. Les deux adultes construisent un nid peu profond de végétaux, brindilles et autres matières végétales, généralement dans un marais, une roselière ou sur un îlot, parfois sur un radeau artificiel. La ponte comprend généralement deux ou trois œufs, couvés par les deux adultes pendant environ 23 à 26 jours. Les poussins duveteux quittent le nid peu après l’éclosion, mais restent dépendants de leurs parents, qui les protègent et les nourrissent en régurgitant la nourriture au sol pour la nichée. Les jeunes prennent généralement leur envol vers 34 à 36 jours et atteignent la maturité reproductrice vers deux ans."
+    },
+    "ecology": {
+      "en": "In Dutch colonies, gulls sometimes defend Sandwich Tern nests from predators, yet also steal tern fish and eat their eggs and chicks.",
+      "fr": "Dans les colonies néerlandaises, les mouettes défendent parfois les nids de Sternes caugek, mais volent aussi leurs poissons et mangent œufs et poussins."
+    },
+    "conservation": {
+      "en": "The global assessment is Least Concern, although regional trends differ. British coastal breeding populations declined between the 1998–2002 and 2015–2021 censuses, with several pressures involved; avian influenza subsequently caused further mortality in 2022–2023.",
+      "fr": "Le statut mondial est de préoccupation mineure, malgré des tendances régionales différentes. Les populations nicheuses côtières britanniques ont diminué entre les recensements de 1998–2002 et 2015–2021 sous plusieurs pressions ; la grippe aviaire a ensuite causé des mortalités supplémentaires en 2022–2023."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Black-headed gull",
+        "fr": "Mouette rieuse"
+      },
+      "url": "https://en.wikipedia.org/wiki/Black-headed_gull",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "habitat",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Range, adult measurements, plumage and parental feeding."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "identification.en.1",
+        "identification.en.2",
+        "reproduction.en.5",
+        "conservation.en.1",
+        "habitat.en.2",
+        "diet.en.2",
+        "diet.en.3",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 7,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mouette rieuse",
+        "fr": "Mouette rieuse"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Mouette_rieuse",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "French account confirms seasonal form, diet and foot stamping."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "diet.fr.2",
+        "conservation.fr.1",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 9,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-headed Gull: BirdFacts",
+        "fr": "Mouette rieuse : BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-headed-gull",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "BTO records clutch, shared incubation, fledging and breeding ages."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 9,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seabird Population Trends and Causes of Change: 1986–2024 — BTO Research Report 795 (2026)",
+        "fr": "Tendances des populations d’oiseaux marins et causes du changement : 1986–2024 — rapport BTO 795 (2026)"
+      },
+      "url": "https://www.bto.org/sites/default/files/bto-jncc-rspb-seabird-montoring-programme-annual-report-2024.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "UK diet, nest sites, trends and threats."
+      ],
+      "prose_claims": [
+        "diet.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 7,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-headed gull: Information",
+        "fr": "Mouette rieuse : informations"
+      },
+      "url": "https://animaldiversity.org/accounts/Larus_ridibundus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Courtship, foraging, predators and terns."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "diet.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 5,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult breeding plumage: chocolate-brown hood, never solid black; preserve white eye area, red bill and legs, grey wings and black wing tips.",
+  "uncertainties": [],
+  "reviewed": true,
+  "review_note": "Root review: corrected complete bilingual habitat and feeding; development in reproduction. Actual2024monitoring report, publishedMarch2026, contains species diet/nest background. Removed wrong28% figure and separated pre2021decline from2022–23influenza; no causal anachronism. Dutch tern interaction scoped.",
+  "source_audit_version": 1
+}

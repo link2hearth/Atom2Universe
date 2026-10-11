@@ -1,0 +1,179 @@
+{
+  "id": "alauda_arvensis",
+  "scientific": "Alauda arvensis",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian skylark",
+    "fr": "Alouette des champs"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian skylark is a ground-foraging songbird of open landscapes across Europe and temperate Asia, reaching North Africa. It uses natural grasslands, moors and steppes as well as cultivated fields. Streaked brown plumage conceals it on the ground, while the male’s sustained song flight makes it conspicuous over its territory. Movement varies geographically: some populations remain near breeding grounds year-round, while birds from colder or northern regions move south or west for winter.",
+      "fr": "L’Alouette des champs est un passereau qui cherche sa nourriture au sol dans les paysages ouverts d’Europe et d’Asie tempérée, jusqu’en Afrique du Nord. Elle fréquente prairies, landes et steppes naturelles ainsi que les champs cultivés. Son plumage brun strié la camoufle au sol, tandis que le vol chanté prolongé du mâle le rend visible au-dessus du territoire. Les déplacements varient selon les régions : certaines populations restent près de leurs sites de reproduction toute l’année, tandis que celles des régions froides ou septentrionales gagnent le sud ou l’ouest en hiver."
+    },
+    "identification": {
+      "en": "This compact bird has streaked brown upperparts, a pale underside, marked breast and short raisable crest. The sexes look alike, though British ringing samples show males average larger. Long broad wings and white outer tail feathers show in flight. Compared with the smaller woodlark, the skylark has a longer tail and lacks its pale eyebrow. Mottled plumage conceals it as it walks and feeds among low plants; undulating flight and pale wing edges help identify it in the air.",
+      "fr": "Cet oiseau trapu a le dessus brun strié, le dessous clair, la poitrine marquée et une courte huppe relevable. Les sexes se ressemblent, bien que les mâles soient en moyenne plus grands dans les échantillons britanniques. Les longues ailes larges et les rectrices externes blanches se remarquent en vol. Plus grande et à queue plus longue que l’Alouette lulu, elle n’a pas son sourcil pâle marqué. Son plumage moucheté la camoufle dans les herbes basses et sur le sol nu, où elle marche et se nourrit. Son vol ondulé et les bords pâles de ses ailes aident à l’identifier."
+    },
+    "habitat": {
+      "en": "Skylarks use open ground with low or patchy vegetation: natural steppe, heath, saltmarsh and mountain grassland as well as crops and pasture. A breeding site allows movement and display but also offers cover for a shallow ground nest. Tall crops obstruct access; bare ground conceals little. Birds may leave a field as vegetation grows too high. In winter, stubbles provide spilled grain and weed seeds. The species depends on a mosaic of open ground, low cover and food rather than on one crop.",
+      "fr": "L’alouette a besoin d’espaces ouverts à végétation basse ou clairsemée : elle fréquente steppes, landes, marais salés et prairies de montagne, ainsi que cultures et pâtures. Un site de reproduction permet déplacements et parade, tout en offrant un couvert pour le nid au sol. Les cultures hautes gênent l’accès ; le sol nu protège peu. Les oiseaux peuvent quitter une parcelle avant la fin de la saison lorsque la végétation devient trop haute. En hiver, les chaumes fournissent grains tombés et graines. L’espèce dépend donc d’une mosaïque d’espaces libres, de couvert bas et de nourriture, plutôt que d’une culture précise."
+    },
+    "diet": {
+      "en": "Skylarks glean seeds, grains, leaves and small invertebrates from the ground, with proportions varying by season and habitat. Winter samples from southern Britain contained cereal grain and leaves, weed leaves and seeds, grass leaves and arthropods. Stubbles supplied grain; winter cereals supplied leaves. Weed leaves were eaten disproportionately to their cover. During breeding, invertebrates provide protein for chicks, while adults also eat plants. Harvest, herbicides and stubble removal alter access to these foods.",
+      "fr": "L’alouette prélève au sol graines, grains, feuilles et petits invertébrés, en proportions variables selon la saison. En hiver dans le sud de l’Angleterre, son régime comprenait céréales, feuilles et graines d’adventices, graminées et arthropodes. Les chaumes fournissaient plus de grains, les céréales d’hiver plus de feuilles. Les feuilles d’adventices étaient consommées malgré leur faible couverture. En période de reproduction, les invertébrés apportent des protéines aux poussins ; les adultes mangent aussi des végétaux. Récolte, herbicides et disparition des chaumes peuvent ainsi réduire l’accès aux aliments."
+    },
+    "behavior": {
+      "en": "In breeding season a male sings while climbing on fluttering wings, circling high above its territory, then descends. The aerial display signals territorial occupation. Playback experiments found that level-flight song can help neighbours recognize individual singers; song tempo increases on ascent, perhaps reflecting respiratory demands. Skylarks also sing on the ground and walk as they forage. Territorial in spring, they gather in autumn and winter flocks. Some European populations migrate at night; others are resident, and passage can also be seen by day.",
+      "fr": "Pendant la reproduction, le mâle monte en chantant, décrit des cercles haut dans le ciel, puis redescend. Cette parade signale l’occupation du territoire. Des expériences indiquent que le chant en vol horizontal peut aider les voisins à reconnaître les chanteurs ; son tempo accélère en montée, peut-être à cause des besoins respiratoires du vol. Les alouettes chantent aussi au sol et marchent en se nourrissant. Territoriales au printemps, elles se rassemblent en bandes à l’automne et en hiver. Certaines populations migrent de nuit ; des passages diurnes sont aussi observés, tandis que d’autres restent près de leurs sites de reproduction toute l’année."
+    },
+    "reproduction": {
+      "en": "The nest is a shallow cup on the ground, often beside a grass tuft or in a low crop. The female incubates three or four eggs for about 12–14 days. Chicks usually leave the nest after eight to ten days, before they can fly; flight develops around 16–20 days after hatching. Both parents feed the dependent young. More than one brood is possible when season and habitat allow. Among 995 nests monitored in southern England, predation caused most failures; trampling and farm operations also mattered in grass. Cereal nest survival was lower near tractor tracks and later in the season.",
+      "fr": "Le nid est une coupe au sol, souvent près d’une touffe d’herbe ou dans une culture basse. La ponte compte généralement trois ou quatre œufs, couvés par la femelle pendant 12 à 14 jours. Les poussins quittent généralement le nid après huit à dix jours, avant de pouvoir voler ; le vol se développe vers 16 à 20 jours après l’éclosion. Les deux parents nourrissent les jeunes dépendants. Plusieurs nichées sont possibles si la saison le permet. Au sud de l’Angleterre, le suivi de 995 nids a relevé surtout des pertes par prédation ; piétinement et travaux agricoles comptaient aussi dans les prairies. En céréales, la survie baissait près des traces de tracteur et en fin de saison."
+    },
+    "ecology": {
+      "en": "The skylark links open-field plants with invertebrate prey, while eggs and young are vulnerable to predators and farm disturbance. Studies describe its diet and nest outcomes but do not establish broad control of insects or weeds. Crops may provide food but become too dense for nesting; winter flocks use patches where seeds and green plants persist. The bird responds to vegetation, food and disturbance together, not to farmland as a uniform habitat.",
+      "fr": "En consommant des invertébrés au sol, l’alouette relie la végétation des espaces ouverts à leurs petites proies ; œufs et jeunes sont exposés aux prédateurs et aux travaux agricoles. Les études décrivent alimentation et devenir des nids, sans démontrer un contrôle général des insectes. Une culture peut fournir nourriture puis devenir trop dense pour nicher. En hiver, les groupes utilisent les parcelles où subsistent graines et végétaux verts. L’espèce dépend donc de la structure de la végétation, de la nourriture et des perturbations, et non des terres agricoles considérées comme un habitat uniforme."
+    },
+    "conservation": {
+      "en": "The 2018 global IUCN assessment lists the skylark as Least Concern: its range and population remain above threatened thresholds despite a decreasing trend. This does not describe every regional population. In the UK it is Red-listed; BTO monitoring records a 9% breeding-population decline from 1995 to 2024, following a sharper earlier fall. British evidence links decline chiefly to agricultural intensification, especially the shift from spring to autumn cereal sowing: dense winter crops can close nesting habitat and loss of stubbles reduces winter food. Local studies also find nest losses to predators, trampling and machinery. Open plots in cereals, spring crops, managed grass and seed-rich stubbles can maintain nesting access or winter feeding.",
+      "fr": "L’évaluation mondiale de l’UICN de 2018 classe l’alouette en préoccupation mineure : son aire et ses effectifs restent au-dessus des seuils de menace malgré une tendance à la baisse. Cela ne décrit pas chaque population régionale. Au Royaume-Uni, elle figure sur la liste rouge ; le suivi du BTO relève une baisse de 9 % des effectifs nicheurs entre 1995 et 2024, après un recul antérieur plus marqué. En Grande-Bretagne, le déclin est surtout lié à l’intensification agricole et au passage des semis de printemps à ceux d’automne : les céréales d’hiver ferment l’habitat de nidification et la disparition des chaumes réduit la nourriture hivernale. Les études locales relèvent aussi prédation, piétinement et travaux mécaniques. Des zones ouvertes dans les céréales, cultures de printemps, prairies gérées et chaumes riches en graines maintiennent nidification ou alimentation hivernale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Skylark — BirdFacts, British Trust for Ornithology",
+        "fr": "Alouette des champs — BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/skylark",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BTO ringing and nest-record datasets give British adult biometrics, typical clutch (3–4 eggs), incubation (12–14 days), movement seasonality, UK Red status and 1995–2024 breeding trend. Its synthesis identifies crop sowing shifts and loss of stubble as key pressures."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurasian Skylark — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Alouette des champs — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Skylark/overview",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Describes the open-country range and contrast between streaked ground camouflage and the male’s conspicuous high song display."
+      ]
+    },
+    {
+      "title": {
+        "en": "Flight Phases in the Song of Skylarks: Impact on Acoustic Parameters and Coding Strategy — PLOS ONE",
+        "fr": "Phases de vol dans le chant des alouettes : effet sur les paramètres acoustiques et le codage — PLOS ONE"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0072768",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Playback and acoustic analyses found faster song tempo during ascent and evidence that song during level flight carries individual identity; the authors present respiratory demand as a plausible, not demonstrated, explanation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Survival rates, causes of failure and productivity of Skylark nests on lowland farmland — Ibis",
+        "fr": "Survie, causes d’échec et productivité des nids d’alouettes en terres agricoles de plaine — Ibis"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1046/j.1474-919X.2002.00101.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Analysis of 995 nests on lowland farms in southern England (1996–1998) found predation dominated nest failures, with trampling and farm operations also important in grass; cereal nest survival was lower later in the season and near tramlines."
+      ]
+    },
+    {
+      "title": {
+        "en": "Habitat use and diet of skylarks wintering on lowland farmland in southern Britain — Journal of Applied Ecology",
+        "fr": "Habitat et alimentation hivernale des alouettes en terres agricoles de plaine du sud de la Grande-Bretagne — Journal of Applied Ecology"
+      },
+      "url": "https://besjournals.onlinelibrary.wiley.com/doi/10.1046/j.1365-2664.2001.00618.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Faecal analysis and field surveys in two winters recorded crop-specific diets and field occupancy; cereal stubbles were persistently occupied, and cereal grain, leaves, broad-leaved weed leaves and arthropods contributed variably."
+      ]
+    },
+    {
+      "title": {
+        "en": "Suivi de la migration nocturne de l’Alouette des champs — CRBPO, Muséum national d’Histoire naturelle",
+        "fr": "Suivi de la migration nocturne de l’Alouette des champs — CRBPO, Muséum national d’Histoire naturelle"
+      },
+      "url": "https://crbpo.mnhn.fr/les-programmes-de-recherche/axe-2-migration-et-dispersion/article/suivi-de-la-migration-nocturne-de-l-alouette-des-champs-smac",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "The French ringing programme studies post-breeding migration in October–November, including timing, survival, and geographic origins and destinations of birds passing through or wintering in France."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurasian Skylark — BirdLife International Species Factsheet",
+        "fr": "Alouette des champs — fiche espèce de BirdLife International"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T102998555A132039889.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The 2018 global assessment is Least Concern: despite a decreasing trend, the decline was not judged rapid enough to meet global Vulnerable thresholds, given the species’ very large range and population."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurasian Skylark: life history — Cornell Lab of Ornithology",
+        "fr": "Alouette des champs : histoire naturelle — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Eurasian_Skylark/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell distinguishes leaving the nest at eight to ten days from flight at 16–20 days after hatching, and records feeding by both parents; describes open habitats, seasonal diet and song flights."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated image asset. Depict one adult Eurasian skylark (Alauda arvensis) with natural compact proportions, streaked brown upperparts and breast, pale belly, short erectile crest, long broad wings and long tail with pale outer feathers. Perched or standing on low open grassland, complete bird visible, natural anatomy, on a PURE WHITE background.",
+  "uncertainties": [
+    "Migration varies geographically; the description of south- and westward winter movements refers to populations from colder or northern regions and should not be read as applying to all populations.",
+    "The 1995–2024 population change and Red-list concern are UK-specific. The global Least Concern assessment applies at species level and does not establish the trend of any local population.",
+    "Agricultural studies cited here concern particular landscapes in southern England and southern Britain; nest survival, crop use and diet can differ in other regions and farming systems."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review confirms regional conservation, nesting-study scope and song-mechanism hypothesis; root corrected nest departure versus first flight using Cornell and removed conflicting BTO fledging metadata."
+}

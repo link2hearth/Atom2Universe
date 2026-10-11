@@ -1,0 +1,650 @@
+{
+  "id": "rock_pigeon",
+  "scientific": "Columba livia",
+  "group": "birds",
+  "name": {
+    "en": "Rock pigeon",
+    "fr": "Pigeon biset"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Rock Pigeon is a dove that nests on natural cliffs and city ledges. Its close association with people began through domestication thousands of years ago; the familiar urban bird is usually descended from domestic pigeons that escaped or were released. This history has carried feral populations around the world, while genuinely wild populations retain a much narrower native range. The distinction matters because plentiful city flocks do not by themselves show that wild cliff populations are secure.",
+      "fr": "Le Pigeon biset est un colombidé qui niche sur les falaises naturelles et les corniches urbaines. Son association étroite avec les humains remonte à une domestication vieille de plusieurs millénaires ; l’oiseau urbain familier descend généralement de pigeons domestiques échappés ou relâchés. Cette histoire a répandu des populations férales à travers le monde, alors que les véritables populations sauvages occupent une aire native bien plus restreinte. Cette distinction compte : l’abondance des groupes urbains ne prouve pas à elle seule la sécurité des populations de falaises."
+    },
+    "identification": {
+      "en": "A typical wild adult is blue-grey, with two black bars across each wing, a white patch on the lower back, and a dark band near the tail tip. Green and purplish iridescence flashes on the neck as the bird turns in the light. Adults usually measure 30–36 cm, weigh 265–380 g and span 50–67 cm; sex and population cause variation. Domestication has produced many colours and patterns, and feral birds may show them too, so a grey, barred individual is not automatically a wild Rock Pigeon.",
+      "fr": "L’adulte sauvage typique est bleu-gris, porte deux barres noires sur chaque aile, une tache blanche au bas du dos et une bande sombre près de l’extrémité de la queue. Des reflets verts et violacés brillent sur le cou lorsque l’oiseau tourne dans la lumière. L’adulte mesure généralement 30 à 36 cm, pèse 265 à 380 g et présente 50 à 67 cm d’envergure ; les mesures varient selon le sexe et la population. La domestication a produit de nombreuses couleurs et taches, également visibles chez les oiseaux férals : un plumage gris barré ne suffit donc pas à identifier un biset sauvage."
+    },
+    "habitat": {
+      "en": "The wild native range extends across parts of Europe, North Africa, the Middle East, Central Asia and South Asia, but millennia of domestic movement blur its limits and make some remnant wild populations hard to distinguish from feral birds. Rock Pigeons nest in cliff crevices, usually near open ground where seeds are accessible. Farms provide grain and water, while cliffs offer protected roosts and nest sites. In towns, roofs, bridges and ledges provide similar shelter, explaining urban success without making cities the species’ original home.",
+      "fr": "L’aire native du Biset sauvage s’étend à des régions d’Europe, d’Afrique du Nord, du Moyen-Orient, d’Asie centrale et d’Asie du Sud ; des millénaires de déplacements par les humains en brouillent les limites et rendent certains vestiges sauvages difficiles à distinguer des oiseaux férals. Le Biset niche dans les fissures des falaises, souvent près de terrains ouverts où les graines sont accessibles. Les fermes procurent grains et eau, tandis que les falaises offrent des reposoirs et nids protégés. En ville, toits, ponts et corniches fournissent des abris comparables, ce qui explique le succès urbain sans faire de la ville le milieu d’origine."
+    },
+    "diet": {
+      "en": "The bill picks up seeds and grains from the ground, along with small fruits, green plant material and occasional invertebrates. A pigeon can drink by immersing its bill and drawing water continuously, an unusual ability among birds that avoids repeated head tipping. Swallowed food may pause in the crop, an expandable part of the oesophagus that stores and moistens it. In the glandular stomach (proventriculus), hydrochloric acid activates pepsin for chemical digestion; the muscular gizzard grinds seeds, often aided by swallowed grit, before the small intestine completes digestion and absorbs nutrients. Urban scraps broaden the menu but do not erase the species’ seed-eating biology.",
+      "fr": "Le bec ramasse au sol graines et grains, ainsi que de petits fruits, des végétaux verts et parfois des invertébrés. Le pigeon peut boire en plongeant le bec et en aspirant l’eau d’un trait, aptitude inhabituelle qui lui évite de relever la tête à chaque gorgée. Les aliments peuvent séjourner dans le jabot, partie extensible de l’œsophage qui les stocke et les humidifie. Dans l’estomac glandulaire (proventricule), l’acide chlorhydrique active la pepsine, qui participe à la digestion chimique ; le gésier musclé broie les graines, souvent avec l’aide de petits cailloux avalés, avant que l’intestin grêle achève la digestion et absorbe les nutriments. Les déchets urbains élargissent le menu sans effacer cette biologie de granivore."
+    },
+    "behavior": {
+      "en": "Outside the breeding season, pigeons often gather to feed and roost. Males bow and coo during courtship, and may regurgitate food to a partner. Experiments on trained homing pigeons show a sun compass corrected by the internal clock and olfactory map cues for locating home after unfamiliar releases; the strength of odor-based navigation varies among regions. GPS-tracked pigeons also follow learned visual routes over familiar terrain. When the sun compass is unavailable, tests support a magnetic compass; these experiments study domestic birds released away from their loft.",
+      "fr": "Hors de la reproduction, les pigeons se rassemblent souvent pour se nourrir et dormir. Le mâle s’incline et roucoule pendant la parade, et peut régurgiter de la nourriture pour sa partenaire. Des expériences sur des pigeons voyageurs entraînés montrent une boussole solaire corrigée par l’horloge interne et des indices olfactifs de position lors de lâchers en terrain inconnu ; l’efficacité de cette navigation par les odeurs varie selon les régions. Le suivi GPS montre aussi que les pigeons apprennent des itinéraires visuels sur les secteurs familiers. Quand la boussole solaire n’est pas disponible, des essais étayent l’usage d’une boussole magnétique ; ces expériences étudient des oiseaux domestiques lâchés loin de leur pigeonnier."
+    },
+    "reproduction": {
+      "en": "Pairs may keep the same partner through successive nesting attempts, but long-term bonds can break when breeding conditions change. The male brings twigs while the female arranges them into a loose platform on a ledge or in a cavity. A clutch is usually two white eggs; both adults share incubation for about 18 days, with the male commonly taking the middle of the day. Hatchlings are helpless, sparsely downy nestlings that remain in the nest. Both parents feed crop milk: prolactin stimulates crop-lining cells to multiply and shed, producing a secretion rich in protein and fat but poor in carbohydrates, not milk from mammary glands. Parents gradually add softened or regurgitated seeds as chicks grow. Young usually leave the nest at 25–32 days and continue to be fed as they learn to forage.",
+      "fr": "Les couples peuvent rester unis plusieurs nichées, mais leur lien peut se rompre si les conditions changent. Le mâle apporte des brindilles que la femelle agence en plate-forme lâche sur une corniche ou dans une cavité. La ponte compte généralement deux œufs blancs ; les deux adultes se relaient pendant environ 18 jours, le mâle prenant souvent le milieu de la journée. Les nouveau-nés, couverts d’un duvet clairsemé, sont nidicoles et restent au nid. Les deux parents nourrissent les petits avec le lait de jabot : la prolactine stimule la multiplication puis le détachement des cellules de la paroi, qui donnent une sécrétion riche en protéines et lipides mais pauvre en glucides, sans glandes mammaires. Les parents ajoutent peu à peu des graines ramollies ou régurgitées. Les jeunes quittent le nid vers 25 à 32 jours et restent nourris pendant qu’ils apprennent à chercher leur nourriture."
+    },
+    "ecology": {
+      "en": "By eating seeds on open ground, Rock Pigeons link wild plants and cultivated grain to the animals that prey on birds. They are themselves taken by predators including Peregrine Falcons; in cities, these raptors sometimes nest on tall buildings and hunt pigeons among the rooftops. Nesting colonies leave conspicuous droppings on building ledges. Their broad diet also lets them exploit food discarded or provided by people, tying local flocks to human activity.",
+      "fr": "En consommant des graines au sol, les Pigeons bisets relient plantes sauvages et céréales cultivées aux animaux qui chassent les oiseaux. Ils sont eux-mêmes capturés par des prédateurs comme le Faucon pèlerin ; en ville, ces rapaces nichent parfois sur de grands immeubles et chassent les pigeons au-dessus des toits. Les colonies de nidification déposent des fientes visibles sur les corniches des bâtiments. Leur régime large leur permet aussi d’exploiter la nourriture jetée ou distribuée par les humains, reliant les groupes locaux aux activités humaines."
+    },
+    "conservation": {
+      "en": "The IUCN lists the Rock Pigeon globally as Least Concern. The cited assessment is the 2016 version amended in 2019. That broad category can obscure a problem for wild birds: domestic and feral pigeons interbreed with cliff-dwelling Rock Pigeons, introducing genes and sometimes replacing local ancestry. Research in Britain and Ireland found the least introgression in the Outer Hebrides and varying admixture elsewhere; plumage alone cannot reliably identify an individual’s ancestry. The 2021 European Red List assessment classed the species as Least Concern but its regional population trend was unknown. Cornell’s North American summary reported a 46% decline from 1966 to 2015, a regional signal rather than a global estimate.",
+      "fr": "L’UICN classe mondialement le Biset en préoccupation mineure. La référence de l’évaluation correspond à la version 2016, amendée en 2019. Cette catégorie générale peut masquer un problème pour les oiseaux sauvages : pigeons domestiques et férals se croisent avec les bisets de falaise, introduisent leurs gènes et parfois remplacent des ascendances locales. En Grande-Bretagne et en Irlande, les recherches ont trouvé le moins d’introgression dans les Hébrides extérieures et des mélanges variables ailleurs ; le plumage ne révèle pas sûrement l’ascendance individuelle. L’évaluation de la Liste rouge européenne de 2021 classait l’espèce en préoccupation mineure, avec une tendance régionale inconnue. La synthèse de Cornell sur l’Amérique du Nord rapporte une baisse de 46 % entre 1966 et 2015, résultat régional et non mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rock Pigeon Identification — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Identification du Pigeon biset — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Rock_pigeon/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult dimensions, grey wing bars and variable plumage."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 8,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Columba livia — Animal Diversity Web, University of Michigan",
+        "fr": "Columba livia — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Columba_livia/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Cliff nests, seeds, feral dispersal and urban foods."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 8,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rock Pigeon Overview — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Présentation du Pigeon biset — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Rock_Pigeon/overview",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Cliff and urban nesting, farms and ledges."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "habitat.en.4",
+        "habitat.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 7,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rock Dove — Australian Museum",
+        "fr": "Pigeon biset — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/birds/feral-pigeon/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Urban colonies and food scraps in Australia."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3",
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 7,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Digestive Anatomy and Physiology of Birds — Colorado State University",
+        "fr": "Anatomie et physiologie digestives des oiseaux — Colorado State University"
+      },
+      "url": "https://vivo.colostate.edu/hbooks/pathphys/digestion/birds.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Proventricular acid and pepsin, gizzard grinding, intestinal absorption."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4",
+        "diet.en.5",
+        "diet.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 8,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rock Pigeon Life History — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Cycle de vie du Pigeon biset — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Rock_Pigeon/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Nest building, shared incubation, fledging and drinking."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.7",
+        "reproduction.fr.7",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 7,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spatio-temporal transcriptome dynamics coordinate rapid transition of core crop functions in ‘lactating’ pigeon — PLOS ONE",
+        "fr": "Les changements transcriptomiques coordonnent les fonctions du jabot du pigeon — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10249823/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Both sexes shed nutrient-rich cells from the crop lining."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 9,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Homing pigeons develop local route stereotypy — Proceedings of the Royal Society B",
+        "fr": "Les pigeons voyageurs développent des itinéraires locaux stéréotypés — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1634935/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "GPS-tracked trained pigeons learned visual routes near home."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 8,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Limited domestic introgression in a final refuge of the wild pigeon — iScience",
+        "fr": "Une introgression domestique limitée dans un dernier refuge du pigeon sauvage — iScience"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9308148/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Genomic study of feral gene flow in wild populations."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "overview.en.4",
+        "overview.fr.4",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 9,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Birds 2021 — BirdLife International",
+        "fr": "Liste rouge européenne des oiseaux 2021 — BirdLife International"
+      },
+      "url": "https://birdlifedata.blob.core.windows.net/sub-global/2444_columba_livia.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "European 2021 assessment: least concern, trend unknown."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 7,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Redefining the Evolutionary History of the Rock Dove, Columba livia, Using Whole Genome Sequences",
+        "fr": "Redéfinir l’histoire évolutive du Pigeon biset à partir de génomes complets"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10667084/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Genome study of wild and domestic ancestry."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "overview.en.3",
+        "overview.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 7,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Operational sex ratio and breeding strategies in the Feral Pigeon — Ardea",
+        "fr": "Sex-ratio opérationnel et stratégies de reproduction du pigeon féral — Ardea"
+      },
+      "url": "https://ardea.nou.nu/ardea_show_abstract.php?lang=uk&nr=194",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Field study found long-term bonds whose stability varied with sex ratio."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 11,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peregrine Falcons and urban prey — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Faucon pèlerin et proies urbaines — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Peregrine_Falcon/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Peregrines nesting in cities take pigeons among their common bird prey."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 11,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rock Pigeon Sounds — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Cris du Pigeon biset — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Rock_Pigeon/sounds",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Courtship coos and bowing displays attract mates at nests."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 9,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rapid assessment of the extent of feral introgression in British and Irish Rock Dove populations — Ibis",
+        "fr": "Évaluation rapide de l’introgression férale chez le Pigeon biset en Grande-Bretagne et en Irlande — Ibis"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ibi.13213",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2023 study reports uncertain wild persistence and island-level admixture."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 9,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nutrition in Pigeons and Doves — Merck Veterinary Manual",
+        "fr": "Nutrition des pigeons et des colombes — Merck Veterinary Manual"
+      },
+      "url": "https://www.merckvetmanual.com/management-and-nutrition/nutrition-exotic-and-zoo-animals/nutrition-in-pigeons-and-doves",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Seed-eating squabs transition gradually from crop milk to regurgitated seed."
+      ],
+      "prose_claims": [
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 10,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "North American Breeding Bird Survey, Analysis Results 1966–2019 — U.S. Geological Survey",
+        "fr": "Résultats du Relevé des oiseaux nicheurs d’Amérique du Nord, 1966–2019 — U.S. Geological Survey"
+      },
+      "url": "https://www.usgs.gov/data/north-american-breeding-bird-survey-analysis-results-1966-2019",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Survey dataset provides continental trends from 1966 through 2019."
+      ],
+      "prose_claims": [
+        "conservation.en.6",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 9,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anatomical, histological, and scanning electron microscopic features of the esophagus and crop in young and adult domestic pigeons — BMC Veterinary Research",
+        "fr": "Caractéristiques anatomiques et histologiques de l’œsophage et du jabot chez le pigeon domestique — BMC Veterinary Research"
+      },
+      "url": "https://bmcvetres.biomedcentral.com/articles/10.1186/s12917-024-04147-z",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Morphology identifies the crop as a thin-walled esophageal outpouching."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 9,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Syria Country Factsheet — BirdLife International DataZone",
+        "fr": "Fiche pays Syrie — BirdLife International DataZone"
+      },
+      "url": "https://datazone.birdlife.org/country/factsheet/syria",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife lists Rock Dove as Least Concern in its IUCN category table."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 18,
+        "notes_words": 12,
+        "total": 30,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Columba livia — IUCN Red List (amended version of 2016 assessment)",
+        "fr": "Columba livia — Liste rouge de l’UICN (version amendée de l’évaluation 2016)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22690066A155493121.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "DOI citation identifies an amended 2016 assessment; page inaccessible."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 9,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cues indicating location in pigeon navigation — Journal of Comparative Physiology A",
+        "fr": "Les indices de localisation dans la navigation du pigeon — Journal of Comparative Physiology A"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26149606/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Review distinguishes time-compensated sun compass and olfactory map evidence."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 9,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pigeons with a deficient sun compass use the magnetic compass — Science",
+        "fr": "Les pigeons privés de boussole solaire utilisent la boussole magnétique — Science"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/7280697/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Clock-manipulated homing pigeons relied on magnetic compass when sun cues unavailable."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 11,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Original approved illustration already exists; retain it for this species. No new image requested.",
+  "uncertainties": [
+    "Wild and feral birds are the same species and can interbreed; plumage cannot reliably classify individual ancestry.",
+    "The 2021 European assessment reports an unknown regional population trend; North American survey decline is geographically specific.",
+    "Urban scraps and feeding practices vary substantially among cities, so their contribution to local populations is not uniform.",
+    "The IUCN DOI page returned an access error; Least Concern status is corroborated by BirdLife DataZone and the 2023 genomic review, while the amended-2016 citation is bibliographic metadata only.",
+    "The stated native range is historical and broad; ongoing domestic transport and introgression make the limits and persistence of wild populations uncertain."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique; corrected digestion and crop-milk composition, historical range and dated conservation attribution; navigation mechanisms clarified with experimental context. Principal review preserves existing illustration."
+}

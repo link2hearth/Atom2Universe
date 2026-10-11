@@ -1,0 +1,218 @@
+{
+  "id": "lingcod",
+  "scientific": "Ophiodon elongatus",
+  "group": "fish",
+  "name": {
+    "en": "Lingcod",
+    "fr": "Morue-lingue"
+  },
+  "sections": {
+    "overview": {
+      "en": "The lingcod is a large northeastern Pacific predator in the greenling family Hexagrammidae, not the cod family Gadidae. It ranges from the Gulf of Alaska to Baja California and may live for more than twenty years.",
+      "fr": "La morue-lingue est un grand prédateur du nord-est du Pacifique, de la famille des Hexagrammidae, et non des Gadidae comme les vraies morues. Elle vit du golfe d’Alaska à la Basse-Californie et peut dépasser vingt ans."
+    },
+    "identification": {
+      "en": "Its elongated body tapers toward the tail and is mottled grey, brown, green or blue, often with copper spots. A broad, unscaled head and large mouth hold many sharp teeth. Canadian records place maturity near 45 centimetres in males and 61–75 centimetres in females. Some have blue-green flesh that loses colour when cooked; its cause remains unknown.",
+      "fr": "Son corps allongé et effilé est marbré de gris, brun, vert ou bleu, souvent avec des taches cuivrées. Sa tête large et sans écailles porte une grande gueule garnie de dents pointues. Les données canadiennes situent la maturité vers 45 centimètres chez les mâles et 61–75 centimètres chez les femelles. La chair de certains est bleu-vert et pâlit à la cuisson; sa cause reste inconnue."
+    },
+    "habitat": {
+      "en": "Adults occupy coastal rocky reefs and other complex bottom habitats, with crevices that provide shelter. Adhesive eggs stay in shallow crevices, and larvae drift near the surface. Juveniles settle on nearshore sand among eelgrass or kelp, then move toward deeper reefs as they grow.",
+      "fr": "Les adultes fréquentent les récifs rocheux côtiers et d’autres fonds complexes, dont les crevasses leur offrent un abri. Les œufs adhésifs restent dans des crevasses peu profondes; les larves dérivent près de la surface. Les juvéniles s’établissent sur le sable côtier près des zostères ou laminaires, puis gagnent des récifs plus profonds."
+    },
+    "diet": {
+      "en": "Adults seize prey with a sudden lunge, eating bottom fish—including smaller lingcod—as well as octopuses, squid and crabs. Larvae feed on drifting zooplankton such as krill and tiny crustaceans; juveniles switch to small fish.",
+      "fr": "Les adultes happent poissons du fond, dont de jeunes lingcods, mais aussi poulpes, calmars et crabes. Les larves consomment du zooplancton dérivant, comme le krill et de petits crustacés; les juvéniles passent aux poissons."
+    },
+    "behavior": {
+      "en": "Lingcod remain near familiar reefs; males defend nesting territories in late autumn while females visit spawning grounds seasonally. Sharks, marine mammals and larger lingcod prey on them.",
+      "fr": "Les lingcods restent près de récifs familiers; à la fin de l’automne, les mâles défendent les sites de nidification et les femelles rejoignent les lieux de ponte. Requins, mammifères marins et grands lingcods les chassent."
+    },
+    "reproduction": {
+      "en": "Males mature near age two and females near three. In winter and spring, females lay adhesive eggs in rocky crevices; males fertilize and guard them for eight to ten weeks. The eggs hatch into drifting larvae that eat plankton, then settle in coastal nurseries and later feed on fish.",
+      "fr": "Les mâles mûrissent vers deux ans et les femelles vers trois. En hiver et au printemps, les femelles pondent dans des crevasses rocheuses; les mâles fécondent les œufs adhésifs et les gardent huit à dix semaines. Les larves dérivent, mangent du plancton, puis gagnent les nurseries côtières et consomment ensuite des poissons."
+    },
+    "ecology": {
+      "en": "Rockfish, sculpins, greenlings and sea stars consume unguarded eggs. Young lingcod enter coastal food webs after feeding on surface plankton.",
+      "fr": "Les sébastes, chabots, poissons-lingues et étoiles de mer consomment les œufs sans garde. Après le plancton de surface, les jeunes rejoignent les réseaux alimentaires côtiers."
+    },
+    "conservation": {
+      "en": "Commercial and recreational fisheries target lingcod; bottom trawls can disturb habitat and catch other groundfish. NOAA reports both U.S. Pacific stocks were not overfished in 2021 assessments and were not subject to overfishing in 2024. Seasonal closures and limits protect spawning fish.",
+      "fr": "Les pêches commerciales et récréatives ciblent le lingcod; le chalutage peut perturber le fond et capturer d’autres poissons. Selon la NOAA, les deux stocks du Pacifique américain n’étaient pas surexploités dans les évaluations de 2021 ni soumis à la surpêche en 2024. Les fermetures saisonnières et les limites de capture protègent les reproducteurs."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lingcod",
+        "fr": "Morue-lingue"
+      },
+      "url": "https://en.wikipedia.org/wiki/Lingcod",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Taxon, appearance, range, habitat, diet and ecological relationships."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.4",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.4",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 8,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ophiodon elongatus",
+        "fr": "Ophiodon elongatus"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Ophiodon_elongatus",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Nom français et distinction avec les vraies morues."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 8,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lingcod",
+        "fr": "Lingcod"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/lingcod",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Status."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 197,
+        "notes_words": 1,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lingcod — Animal Diversity Web",
+        "fr": "Morue-lingue — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Ophiodon_elongatus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Egg guarding and planktonic larval development."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.en.3",
+        "habitat.fr.2",
+        "habitat.fr.3",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 6,
+        "total": 170,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lingcod — Fisheries and Oceans Canada",
+        "fr": "Morue-lingue — Pêches et Océans Canada"
+      },
+      "url": "https://www.dfo-mpo.gc.ca/species-especes/profiles-profils/lingcod-morue-lingue-eng.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Reef habitat, sex-specific growth and marine mammal predation."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "behavior.en.2",
+        "identification.en.3",
+        "behavior.fr.2",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 8,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult lingcod on a rocky reef; broad head and mouth, elongated mottled body, copper spots, prominent dorsal fin notch.",
+  "uncertainties": [
+    "The mechanism producing blue-green flesh is unresolved; no cause is proposed."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: NOAA exact2021assessment/2024catch status, eight-to-ten-week male guarding and egg predators checked. Unsupported ordinary adult range replaced with Canadian sex-specific maturity lengths. Sparse AFSC table replaced by actual fuller developmental account; Canadian primary account replaces inaccessible portal. French conservation limits restored.",
+  "source_audit_version": 1
+}

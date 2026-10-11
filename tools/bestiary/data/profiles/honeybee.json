@@ -1,0 +1,474 @@
+{
+  "id": "honeybee",
+  "scientific": "Apis mellifera",
+  "group": "invertebrates",
+  "name": {
+    "en": "Western honey bee",
+    "fr": "Abeille mellifère occidentale"
+  },
+  "sections": {
+    "overview": {
+      "en": "The western honey bee is a social insect whose colony functions through cooperation among thousands of females and a smaller number of males. Its natural range spans Africa, Europe and western Asia, while people have transported managed colonies widely for honey and crop pollination. Wild colonies still nest independently in some regions, so the species cannot be described only as a domesticated hive animal.",
+      "fr": "L’abeille mellifère occidentale est un insecte social dont la colonie repose sur la coopération de milliers de femelles et d’un nombre plus réduit de mâles. Son aire naturelle couvre l’Afrique, l’Europe et l’Asie occidentale, tandis que l’humain a largement déplacé des colonies élevées pour le miel et la pollinisation agricole. Dans certaines régions, des colonies sauvages nichent encore de façon autonome : l’espèce ne se réduit donc pas aux ruches domestiques."
+    },
+    "identification": {
+      "en": "Adults have a hairy thorax, a banded abdomen and two pairs of wings joined by tiny hooks in flight. Worker females are usually about 10–15 millimetres long, drones about 15–17 millimetres, and egg-laying queens roughly 18–20 millimetres; these are indicative caste ranges, not fixed limits. A worker’s hind-leg pollen basket, or corbicula, and its branched body hairs help carry pollen, while the male’s very large eyes aid aerial mate-searching.",
+      "fr": "Les adultes ont un thorax velu, un abdomen annelé et deux paires d’ailes reliées en vol par de minuscules crochets. Les ouvrières mesurent généralement environ 10 à 15 millimètres, les mâles 15 à 17 millimètres et les reines pondeuses quelque 18 à 20 millimètres ; ces fourchettes indicatives varient selon la caste. La corbeille à pollen des pattes postérieures et les poils ramifiés de l’ouvrière transportent le pollen, tandis que les très grands yeux du mâle facilitent la recherche d’une partenaire en vol."
+    },
+    "habitat": {
+      "en": "Colonies need repeated access to flowering plants, water and a protected nesting cavity; hollow trees are natural nest sites, and buildings or managed hives can provide alternatives. The species uses meadows, open woodland, gardens and agricultural landscapes, and may persist in drier or wetter settings where forage and shelter remain available.",
+      "fr": "Les colonies ont besoin de fleurs disponibles au fil des saisons, d’eau et d’une cavité protégée ; les arbres creux servent de nids naturels, tandis que bâtiments et ruches offrent d’autres abris. L’espèce fréquente prairies, bois ouverts, jardins et paysages agricoles, et peut vivre dans des milieux plus secs ou humides si nourriture et abri sont présents."
+    },
+    "diet": {
+      "en": "Foragers use a long proboscis to drink floral nectar, carrying it in a crop separate from the digestive midgut; pollen is packed into hind-leg baskets and supplies protein, lipids and micronutrients. Nectar fuels adult flight, while digested pollen supplies nurse bees with nutrients used by their head glands to produce larval food. Nestmates receive incoming nectar, add glandular enzymes, pass it among workers and fan air over it as water evaporates, turning the sugary liquid into stored honey. Pollen mixed with nectar and salivary secretions becomes bee bread in comb cells, and stored honey fuels the colony when flowers are scarce.",
+      "fr": "Les butineuses aspirent le nectar avec leur trompe et le transportent dans un jabot distinct de l’intestin ; elles récoltent dans leurs corbeilles arrière le pollen, riche en protéines, lipides et micronutriments. Le nectar alimente le vol ; le pollen digéré fournit aux nourrices les nutriments utilisés par les glandes de leur tête pour produire la nourriture des larves. Au nid, les ouvrières se transmettent le nectar, y ajoutent des enzymes glandulaires et ventilent les rayons pour en évaporer l’eau : il devient du miel stocké. Pollen, nectar et sécrétions forment le pain d’abeille ; le miel nourrit la colonie quand les fleurs manquent."
+    },
+    "behavior": {
+      "en": "A colony is eusocial: queens reproduce, workers normally do not, and drones mate with queens from other colonies. Worker jobs commonly shift with age from cleaning cells and feeding brood to building wax comb, guarding entrances and foraging, although workers can change tasks when the colony loses bees or brood. Pheromones and food-sharing coordinate the colony’s tasks. Workers fan air or vibrate flight muscles to hold the brood nest near 34 degrees Celsius. Returning foragers may perform a waggle dance: its angle relative to vertical signals direction relative to the sun, and the waggle-run duration roughly indicates distance.",
+      "fr": "La colonie est eusociale : les reines se reproduisent, les ouvrières généralement non, et les mâles s’accouplent avec des reines d’autres colonies. Les tâches des ouvrières évoluent souvent avec l’âge, du nettoyage des cellules et du nourrissage du couvain à la construction de cire, la garde de l’entrée et la récolte ; elles peuvent toutefois changer de rôle après une perte d’abeilles ou de couvain. Les phéromones et les échanges de nourriture coordonnent les tâches de la colonie. Les ouvrières ventilent le nid ou font vibrer leurs muscles alaires pour maintenir le couvain près de 34 degrés Celsius. De retour, une butineuse peut danser : l’angle de sa course frétillante par rapport à la verticale indique une direction par rapport au soleil, et sa durée estime la distance."
+    },
+    "reproduction": {
+      "en": "Usually, unfertilized eggs develop as haploid males, with one chromosome set, and fertilized eggs as diploid females, with two sets; rarely, a fertilized egg carrying two identical variants of the sex-determining gene csd develops as a diploid male, which workers generally destroy early. Larval nutrition helps determine whether a female becomes a worker or queen. Workers rear queens in enlarged cells, feeding them royal jelly throughout development; worker larvae receive nurse-produced brood food that changes with age and includes honey- and pollen-derived nutrients. After emerging, a virgin queen takes orientation flights and mates in flight with several drones at congregation areas, storing sperm for later egg fertilization; drones die after successful mating. Egg-to-adult development usually takes about 16 days for queens, 21 for workers and 24 for drones, though temperature affects timing. In a seasonal colony, swarming is colony-level reproduction: the old queen and many workers leave to establish a nest elsewhere while a successor queen develops.",
+      "fr": "Le plus souvent, les œufs non fécondés donnent des mâles haploïdes, avec un seul jeu de chromosomes, et les œufs fécondés des femelles diploïdes, avec deux jeux ; rarement, un œuf fécondé portant deux variantes identiques du gène csd de détermination sexuelle donne un mâle diploïde, généralement éliminé tôt par les ouvrières. La nourriture larvaire contribue à déterminer si une femelle devient ouvrière ou reine. Les ouvrières élèvent les reines dans de grandes cellules et les nourrissent de gelée royale pendant tout leur développement ; les larves ouvrières reçoivent une nourriture de couvain sécrétée par les nourrices, dont la composition évolue avec l’âge et comprend des nutriments issus du miel et du pollen. Après ses vols d’orientation, une reine vierge s’accouple en vol avec plusieurs mâles rassemblés et stocke leur sperme pour féconder des œufs ultérieurs ; les mâles meurent après un accouplement réussi. Le développement de l’œuf à l’adulte prend généralement environ 16 jours chez la reine, 21 chez l’ouvrière et 24 chez le mâle, selon la température. Lors de l’essaimage, l’ancienne reine et de nombreuses ouvrières partent nicher ailleurs pendant qu’une remplaçante se développe."
+    },
+    "ecology": {
+      "en": "When workers visit flowers for nectar and pollen, grains stick to their hairy bodies and can reach stigmas on later visits, making the bee an important pollinator of wild plants and crops. Wild insects can improve crop fruit set even where honey bees visit flowers, so managed colonies do not replace diverse pollinator communities. Where managed colonies are dense and forage is limited, honey bees can compete with wild bees for nectar and pollen; studies find variable outcomes, and many have measured visitation or resource overlap rather than lasting population effects. Shared pathogens are another possible route of impact, so ecological effects depend on local colony density, resources and species.",
+      "fr": "Lorsqu’elles récoltent nectar et pollen, des grains s’accrochent aux poils des ouvrières et peuvent atteindre les stigmates lors d’autres visites : l’abeille pollinise ainsi des plantes sauvages et cultivées. Les insectes sauvages peuvent améliorer la nouaison même lorsque des abeilles mellifères visitent les fleurs ; les ruchers ne remplacent donc pas une communauté diversifiée de pollinisateurs. Là où les ruchers sont denses et les ressources limitées, l’abeille mellifère peut concurrencer les espèces sauvages pour le nectar et le pollen ; les résultats des études varient et beaucoup mesurent les visites ou le partage des ressources plutôt que des effets durables sur les populations. Des agents pathogènes partagés constituent une autre voie possible ; les effets écologiques dépendent donc de la densité locale des colonies, des ressources et des espèces concernées."
+    },
+    "conservation": {
+      "en": "Conservation assessments distinguish self-sustaining wild colonies from human-managed hives. In 2025, IUCN classified wild colonies in the 27 European Union member states as Endangered, based on estimated decline and evidence of threats. The wider pan-European status remains Data Deficient because distribution, survival and trend data are sparse; the 2014 European assessment was also Data Deficient. Threats cited for wild honey bees include parasites, pests, predators, pathogens, pesticides and hybridization. Across European wild pollinators, IUCN also identifies habitat loss, intensive farming, fragmentation, nitrogen deposition and pesticides as pressures.",
+      "fr": "Les évaluations de conservation distinguent les colonies sauvages autonomes des ruches gérées par l’humain. En 2025, l’UICN a classé « En danger » les colonies sauvages des 27 États membres de l’Union européenne, d’après le déclin estimé et les menaces documentées. À l’échelle paneuropéenne, le statut reste « Données insuffisantes », car les données de répartition, de survie et de tendance sont rares ; l’évaluation européenne de 2014 était également « Données insuffisantes ». Les menaces citées pour les abeilles mellifères sauvages comprennent parasites, ravageurs, prédateurs, agents pathogènes, pesticides et hybridation. Pour les pollinisateurs sauvages européens, l’UICN signale aussi la perte d’habitat, l’agriculture intensive, la fragmentation, les dépôts d’azote et les pesticides."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Apis mellifera (honey bee) — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Apis mellifera (abeille mellifère) — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Apis_mellifera/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Caste morphology."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 198,
+        "notes_words": 2,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Social Organization of Honey Bees — University of Florida IFAS Extension",
+        "fr": "Organisation sociale des abeilles mellifères — service de vulgarisation IFAS de l’Université de Floride"
+      },
+      "url": "https://ask.ifas.ufl.edu/publication/IN1102",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "facts": [
+        "Workers regulate brood-nest temperature."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 4,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Colony and Its Organization — Mid-Atlantic Apiculture Research and Extension Consortium",
+        "fr": "La colonie et son organisation — consortium de recherche et vulgarisation apicole du Mid-Atlantic"
+      },
+      "url": "https://canr.udel.edu/maarec/honey-bee-biology/the-colony-and-its-organization/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Queens mate in flight with several drones and store sperm in a spermatheca.",
+        "Worker task sequences vary with colony needs."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 20,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Complex Life of the Honey Bee — Purdue University Extension",
+        "fr": "La vie complexe de l’abeille mellifère — service de vulgarisation de l’Université Purdue"
+      },
+      "url": "https://ag.purdue.edu/department/extension/ppp/resources/ppp-publications/mobile/ppp-116-pol-91.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Foragers transport nectar in a honey crop and pollen in baskets; honey and bee bread are colony stores.",
+        "Worker tasks and swarming vary seasonally; winter clusters use stored honey to generate heat."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 32,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Honey Bee Development — Food and Agriculture Organization of the United Nations",
+        "fr": "Développement de l’abeille mellifère — Organisation des Nations unies pour l’alimentation et l’agriculture"
+      },
+      "url": "https://www.fao.org/4/t0104e/t0104e05.htm",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Queens emerge after 16 days, workers after 21, and drones after 24 days."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 13,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Honey Bee Dance Language — North Carolina State University Extension",
+        "fr": "Danse de communication des abeilles mellifères — service de vulgarisation de l’Université d’État de Caroline du Nord"
+      },
+      "url": "https://content.ces.ncsu.edu/honey-bee-dance-language",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Waggle-run duration signals distance; dance angle on the comb encodes direction relative to the sun."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 15,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Honey as a Functional Food for Apis mellifera — Annual Review of Entomology",
+        "fr": "Le miel comme aliment fonctionnel pour Apis mellifera — Annual Review of Entomology"
+      },
+      "url": "https://doi.org/10.1146/annurev-ento-040320-074933",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Worker gland enzymes process nectar sugars during honey ripening and storage."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 11,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Do managed bees have negative effects on wild bees? A systematic review — PLOS ONE",
+        "fr": "Les abeilles élevées ont-elles des effets négatifs sur les abeilles sauvages ? Revue systématique — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5722319/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Competition findings vary; many studies measured foraging or pathogen presence rather than population-level outcomes.",
+        "Resource scarcity, colony density, range and local bee communities can alter interaction outcomes."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3",
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 27,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Apis mellifera (Europe assessment), IUCN Red List of Threatened Species — 2025 reassessment announcement, Honey Bee Watch",
+        "fr": "Apis mellifera (évaluation européenne), Liste rouge de l’UICN — annonce de la réévaluation 2025, Honey Bee Watch"
+      },
+      "url": "https://coloss.org/wp-content/uploads/Honey-Bee-Watch_press-release_IUCN-Red-List-for-Apis-mellifera_IMMEDIATE-1.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The 11 October 2025 announcement reports Endangered for wild EU27 colonies.",
+        "The release cites free-living colony declines and multiple threats."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 20,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mounting risks threaten survival of wild European pollinators — IUCN Red List press release",
+        "fr": "Les pollinisateurs sauvages européens sont menacés par des risques croissants — communiqué de la Liste rouge de l’UICN"
+      },
+      "url": "https://iucn.org/press-release/202510/mounting-risks-threaten-survival-wild-european-pollinators-iucn-red-list",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN identifies habitat loss, intensive farming, fragmentation, nitrogen deposition and pesticides as pollinator pressures."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 14,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Honey Bees as Pollinators, Their Habitats and Products — University of Missouri Extension",
+        "fr": "Les abeilles mellifères comme pollinisatrices, leurs habitats et leurs produits — service de vulgarisation de l’Université du Missouri"
+      },
+      "url": "https://extension.missouri.edu/publications/m403",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Free-living colonies nest in protected cavities and forage among flowering plants."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 11,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Wild Pollinators Enhance Fruit Set of Crops Regardless of Honey Bee Abundance — Science",
+        "fr": "Les pollinisateurs sauvages améliorent la nouaison indépendamment de l’abondance des abeilles mellifères — Science"
+      },
+      "url": "https://doi.org/10.1126/science.1230200",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Across crop systems, increased wild-insect visitation enhanced fruit set more than equivalent honey-bee visitation."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 14,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Uneven distribution of complementary sex determiner (csd) alleles in Apis mellifera population — peer-reviewed research",
+        "fr": "Répartition inégale des allèles csd chez Apis mellifera — étude évaluée par les pairs"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5443781/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Unfertilized eggs normally produce haploid males; fertilized eggs homozygous at csd can rarely produce diploid males, which workers usually eliminate early."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 21,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Honey Bee Watch: Team and 2025 Red List Reassessment",
+        "fr": "Honey Bee Watch : équipe et réévaluation 2025 de la Liste rouge"
+      },
+      "url": "https://www.honeybeewatch.com/team",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Pan-European wild populations remain Data Deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 6,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Welcome to the Hive! Honey Bee 4-H Project Book — University of Florida IFAS Extension",
+        "fr": "Welcome to the Hive! Guide 4-H sur les abeilles mellifères — service de vulgarisation IFAS de l’Université de Floride"
+      },
+      "url": "https://ask.ifas.ufl.edu/publication/4H419",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Nurses provide all larvae royal jelly for the first three days; worker larvae then receive brood food containing pollen and honey, while queen larvae receive royal jelly throughout development."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 29,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a single adult worker western honey bee in a natural three-quarter side view, with a moderately hairy thorax, banded abdomen, two pairs of translucent veined wings, six legs, and visible pollen baskets on the hind legs. Use realistic proportions and warm brown, golden and dark bands without claiming a specific subspecies. Pure uniform white #FFFFFF background; no flower, hive, text, frame or watermark.",
+  "uncertainties": [
+    "The 2025 Honey Bee Watch announcement links the latest IUCN Red List record, but the record page was inaccessible during research; its exact assessment date and DOI were not verified, so neither is asserted here.",
+    "The Endangered category applies to wild colonies in EU27; wild populations across pan-Europe remain Data Deficient, and managed stocks are outside that regional wild-population claim.",
+    "Adult lengths, annual timing and colony behavior vary with caste, subspecies, climate, forage and management; cited seasonal examples are not universal schedules."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; diploid male exception and larval nutrition clarified, bilingual omissions corrected and technical terms explained."
+}

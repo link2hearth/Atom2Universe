@@ -1,0 +1,124 @@
+{
+  "id": "asian_elephant",
+  "scientific": "Elephas maximus",
+  "group": "mammals",
+  "name": {
+    "en": "Asian elephant",
+    "fr": "Éléphant d’Asie"
+  },
+  "sections": {
+    "overview": {
+      "en": "Elephas maximus is Asia’s largest living land mammal. Smaller than African elephants, it survives in scattered populations. Its grasping trunk and massive body support foraging across varied landscapes.",
+      "fr": "Elephas maximus est le plus grand mammifère terrestre d’Asie. Plus petit que l’éléphant d’Afrique, il subsiste en populations dispersées. Trompe préhensile et corps massif facilitent la recherche de nourriture."
+    },
+    "identification": {
+      "en": "Adults have grey skin, sometimes pink on the ears, forehead or trunk; young are hairier and reddish. They have smaller, rounder ears than African elephants and one finger-like trunk tip. Only some males grow prominent tusks; many lack them, while females and some males have short tushes. Tusk frequency varies among populations.",
+      "fr": "L’adulte a la peau grise, parfois rosée aux oreilles, au front ou à la trompe ; le jeune est plus velu et roux. Ses oreilles arrondies sont plus petites que celles de l’éléphant d’Afrique ; sa trompe porte une excroissance préhensile. Seuls certains mâles ont de grandes défenses, beaucoup n’en ont pas. Femelles et certains mâles portent de petites défenses ; leur fréquence varie selon les populations."
+    },
+    "habitat": {
+      "en": "It survives in fragmented parts of South and Southeast Asia, including India, Sri Lanka, Sumatra and Borneo. Habitats include evergreen and deciduous forests, thorn scrub, grasslands and modified landscapes. It forages in forest clearings and moves widely for food and water.",
+      "fr": "Il subsiste en Asie du Sud et du Sud-Est, notamment en Inde, au Sri Lanka, à Sumatra et Bornéo. Il fréquente forêts sempervirentes ou décidues, broussailles, prairies et milieux aménagés. Il cherche aussi sa nourriture dans les clairières et se déplace pour trouver eau et végétaux."
+    },
+    "diet": {
+      "en": "This herbivore eats grasses, leaves, roots, vines, shoots, twigs, bark and fruit. Its diet shifts with habitat and season; studies in southern India found more browse in the dry season. It feeds for much of the day because digestion extracts only part of food energy.",
+      "fr": "Cet herbivore mange graminées, feuilles, racines, lianes, pousses, rameaux, écorce et fruits. Son régime varie selon le milieu et la saison ; dans le sud de l’Inde, des études ont relevé davantage de feuillage ligneux en saison sèche. Il s’alimente longtemps, car sa digestion extrait seulement une partie de l’énergie végétale."
+    },
+    "behavior": {
+      "en": "Related females and young form matrilineal communities; groups may split and reunite while foraging. Young males leave their natal group; adults are often solitary or associate with males. Elephants communicate through scent, touch and low-frequency calls, and explore objects with the trunk.",
+      "fr": "Les femelles apparentées et leurs petits forment des communautés matrilinéaires ; leurs groupes se séparent et se réunissent parfois. Les jeunes mâles quittent le groupe natal ; les adultes vivent souvent seuls ou s’associent à d’autres mâles. Ils communiquent par odeurs, toucher et appels graves, et explorent avec leur trompe."
+    },
+    "reproduction": {
+      "en": "Females usually have their first calf in their teens. Gestation lasts about 21.5–22 months; births are usually single, though twins occur. Calves stand and nurse soon after birth, then eat vegetation at about six months. Several years separate births, depending on environmental conditions.",
+      "fr": "Les femelles ont généralement leur premier petit à l’adolescence. La gestation dure environ 21,5 à 22 mois ; les naissances sont uniques, parfois gémellaires. Le nouveau-né se lève et tète rapidement, puis mange des végétaux vers six mois. Plusieurs années séparent les naissances, selon l’environnement."
+    },
+    "ecology": {
+      "en": "Elephants disperse seeds far from parent plants. In a Kerala evergreen forest, a study found viable seeds of 27 woody species in dung; ingested seeds germinated sooner than controls. This shows seed dispersal at that site, without implying identical effects across the species’ range.",
+      "fr": "Les éléphants transportent des graines loin des plantes mères. Dans une forêt du Kerala, une étude a trouvé dans leurs déjections des graines viables de 27 espèces ligneuses ; elles ont germé plus vite que les témoins. Ce résultat montre une dispersion locale, sans l’étendre à toute l’aire de l’espèce."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2020 classified the species as Endangered, based on a 2019 assessment. It inferred a decline of at least 50% over three generations, linked to habitat loss and degradation. Fragmentation blocks movement routes and brings elephants near farms and settlements. These data belong to that dated global assessment.",
+      "fr": "L’évaluation de l’UICN publiée en 2020 classe l’espèce « en danger », d’après un examen de 2019. Elle estime un déclin d’au moins 50 % sur trois générations, lié à la perte et dégradation de l’habitat. La fragmentation bloque les déplacements et rapproche les éléphants des cultures et villages. Ces données sont celles de cette évaluation datée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Asian Elephant — Smithsonian’s National Zoo and Conservation Biology Institute",
+        "fr": "Éléphant d’Asie — Zoo national et Institut de biologie de la conservation du Smithsonian"
+      },
+      "url": "https://nationalzoo.si.edu/animals/asian-elephant",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Smaller than African elephants; one trunk-tip projection; tusks vary by sex and region.",
+        "The page describes skin, feeding, social groups, communication, gestation, calf development and habitat use."
+      ]
+    },
+    {
+      "title": {
+        "en": "Elephas maximus — IUCN Red List assessment 2020, IUCN SSC Asian Elephant Specialist Group",
+        "fr": "Elephas maximus — évaluation 2020 de la Liste rouge de l’UICN, Groupe de spécialistes de l’éléphant d’Asie de la CSE-UICN"
+      },
+      "url": "https://asesg.org/PDFfiles/Asian%20Elephant%20Red%20List%20Assessment%202020.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The assessment, dated 18 September 2019 and published in 2020, lists the species as Endangered and infers at least a 50% decline over three generations.",
+        "It documents the current range, varied habitats and diets, matrilineal social structure, male dispersal, and threats from habitat loss and fragmentation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Asian Elephant — World Wildlife Fund",
+        "fr": "Éléphant d’Asie — Fonds mondial pour la nature"
+      },
+      "url": "https://www.worldwildlife.org/species/elephant/asian-elephant/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The species uses dry-to-wet forests and grasslands across 13 range countries; forage varies by place.",
+        "WWF describes grass and browse in the diet, female social groups, and habitat loss and human-elephant conflict."
+      ]
+    },
+    {
+      "title": {
+        "en": "Frugivory and seed dispersal by the Asian elephant in an evergreen forest in India — Journal of Tropical Ecology",
+        "fr": "Frugivorie et dispersion des graines par l’éléphant d’Asie dans une forêt sempervirente d’Inde — Journal of Tropical Ecology"
+      },
+      "url": "https://doi.org/10.1017/S0266467413000060",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A Kerala study found seeds and seedlings of 27 woody species in elephant dung; ingested seeds were viable and germinated sooner than controls."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the validated existing image: one adult male Asian elephant, natural grey skin with subtle pink areas, small rounded ears, domed forehead, one finger-like trunk tip and prominent curved tusks; realistic proportions on a pure white background.",
+  "uncertainties": [
+    "The global population estimate and Endangered category cited here come from the IUCN assessment published in 2020; they are not presented as a new census or reassessment.",
+    "Tusks, diet, group size and movement vary among populations and with local conditions; the seed-dispersal findings are specific to the Kerala study site."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source, morphology and bilingual critique passed. Mojibake in Asian elephant names/source titles repaired; publication encoding guard added."
+}

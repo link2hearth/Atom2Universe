@@ -1,0 +1,221 @@
+{
+  "id": "mahi_mahi",
+  "scientific": "Coryphaena hippurus",
+  "group": "fish",
+  "name": {
+    "en": "Mahi-mahi",
+    "fr": "Dorade coryphène"
+  },
+  "sections": {
+    "overview": {
+      "en": "The mahi-mahi, or common dolphinfish, is a fast-growing, open-ocean fish found in tropical and warm temperate seas worldwide. Despite its English name, it is a fish, not a dolphin.",
+      "fr": "La dorade coryphène, ou mahi-mahi, est un poisson pélagique à croissance rapide des mers tropicales et tempérées chaudes du monde entier. Malgré son nom anglais de dolphinfish, elle n’a aucun lien avec les dauphins, qui sont des mammifères."
+    },
+    "identification": {
+      "en": "Its laterally flattened, streamlined body carries a single dorsal fin that runs from above the head almost to the deeply forked tail. The back is metallic blue-green, the sides flash gold and silver with dark spots, and these vivid colours fade quickly after death. Adult males develop a high, squared forehead, while females have a more rounded head. The related pompano dolphinfish, Coryphaena equiselis, is deeper-bodied and has a trapezoid-shaped tooth patch on the tongue; C. hippurus has an oval patch.",
+      "fr": "Son corps fuselé et comprimé sur les côtés porte une nageoire dorsale unique, longue, qui va de la tête presque jusqu’à la queue très fourchue. Le dos bleu-vert métallique contraste avec les flancs argentés et dorés tachetés de sombre, mais ces couleurs vives pâlissent rapidement après la mort. Le mâle adulte développe un front haut et carré, tandis que la tête de la femelle est plus arrondie. La coryphène pompano, Coryphaena equiselis, est plus trapue et porte sur la langue une plaque dentaire trapézoïdale ; celle de C. hippurus est ovale."
+    },
+    "habitat": {
+      "en": "It lives near the surface of offshore tropical, subtropical and warm temperate waters across the Atlantic, Indian and Pacific oceans, entering the Mediterranean occasionally. Floating seaweed rafts and other drifting objects offer shelter and concentrated feeding grounds, especially for smaller fish. Adults commonly reach about one metre; rare specimens approach 2.1 metres.",
+      "fr": "Elle fréquente la couche de surface des eaux océaniques tropicales, subtropicales et tempérées chaudes, dans les océans Atlantique, Indien et Pacifique, et pénètre parfois en Méditerranée. Les radeaux d’algues flottantes et autres objets dérivants abritent les jeunes poissons et concentrent les proies. Les adultes mesurent couramment près d’un mètre ; les spécimens de 2,1 mètres sont rares."
+    },
+    "diet": {
+      "en": "A daytime predator, the mahi-mahi pursues small pelagic fish such as flying fish and juvenile tuna, as well as squid, crabs and other drifting invertebrates. Its fast swimming and broad prey menu let it exploit abundant food around floating weed and in open water.",
+      "fr": "Prédateur actif le jour, le mahi-mahi chasse des poissons pélagiques comme les poissons-volants et les jeunes thons, ainsi que des calmars, des crabes et d’autres invertébrés dérivants. Sa nage rapide et son régime varié lui permettent de capturer des proies dans le sillage des algues flottantes comme en pleine eau."
+    },
+    "behavior": {
+      "en": "Young fish commonly school, whereas older individuals are often solitary; large males tend to range in open water, while females and smaller males often gather near floating objects. Its changing colour pattern is striking in life but fades rapidly when the fish is landed.",
+      "fr": "Les jeunes vivent souvent en bancs, tandis que les individus plus âgés sont généralement solitaires ; les grands mâles fréquentent davantage le large, alors que les femelles et les petits mâles se rassemblent volontiers près d’objets flottants. Leur robe changeante est éclatante dans l’eau, puis se ternit rapidement après la capture."
+    },
+    "reproduction": {
+      "en": "Both sexes can mature within their first year, at about four to five months in Atlantic populations. Females release eggs into the water repeatedly during the warm spawning season; in the Atlantic, spawning occurs beneath floating Sargassum mats.",
+      "fr": "Les deux sexes peuvent atteindre la maturité au cours de leur première année, vers quatre à cinq mois dans les populations atlantiques. Pendant la saison chaude, les femelles libèrent plusieurs pontes d’œufs dans l’eau ; dans l’Atlantique, la ponte a lieu sous des tapis flottants de sargasses."
+    },
+    "ecology": {
+      "en": "Mahi-mahi transfer energy from small fish and drifting invertebrates to larger predators, including tuna, marlin, sailfish, swordfish and marine mammals. Floating algae serve as juvenile shelter and feeding habitat, linking this open-water predator to drifting surface communities.",
+      "fr": "Le mahi-mahi transfère l’énergie des petits poissons et invertébrés dérivants vers de plus grands prédateurs, notamment les thons, marlins, voiliers, espadons et mammifères marins. Les algues flottantes servent d’abri et de zone d’alimentation aux jeunes, reliant ce prédateur du large aux communautés de surface."
+    },
+    "conservation": {
+      "en": "Its global conservation status is Least Concern. Fishing pressure and longline bycatch of turtles or marine mammals are concerns; Atlantic stock assessments remain incomplete in several U.S. regions.",
+      "fr": "Son statut mondial de conservation est de préoccupation mineure. La pression de pêche et les captures accidentelles de tortues ou de mammifères marins par les palangres restent préoccupantes ; plusieurs stocks atlantiques des États-Unis n’ont pas été évalués complètement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mahi-mahi",
+        "fr": "Mahi-mahi"
+      },
+      "url": "https://en.wikipedia.org/wiki/Mahi-mahi",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "diet",
+        "ecology",
+        "habitat",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Worldwide pelagic range; colours and fins; schooling; warm-water spawning; diverse prey."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "identification.en.1",
+        "identification.en.2",
+        "habitat.en.1",
+        "diet.en.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 11,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coryphaena hippurus",
+        "fr": "Coryphaena hippurus"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Coryphaena_hippurus",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "French page confirms tropical oceans, Mediterranean occurrence, predatory ecology and fishing interest."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "diet.fr.1",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "behavior.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 12,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Atlantic Mahi Mahi",
+        "fr": "Atlantic Mahi Mahi"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/atlantic-mahi-mahi",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA details Atlantic size, sex traits, maturity, spawning, prey, predators, stock limits and bycatch."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "habitat.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 14,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mahi Mahi, Coryphaena hippurus (Linnaeus, 1758)",
+        "fr": "Mahi Mahi, Coryphaena hippurus (Linnaeus, 1758)"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/mahi-mahi-coryphaena-hippurus-linnaeus-1758/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Museum source verifies comparison and ordinary versus maximum size."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.en.4",
+        "habitat.en.3",
+        "identification.fr.3",
+        "identification.fr.4",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 9,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dolphinfish",
+        "fr": "Dolphinfish"
+      },
+      "url": "https://www.montereybayaquarium.org/animals-the-ocean/animals-a-to-z/dolphinfish",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "identification"
+      ],
+      "facts": [
+        "Aquarium confirms diet, appearance and fast growth."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "identification.fr.1",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 7,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "",
+  "uncertainties": [
+    "Le détail du développement larvaire en milieu naturel et la dynamique mondiale des stocks ne sont pas établis ici ; les données de reproduction détaillées sont atlantiques.",
+    "Australian Museum describes the tooth patch as oval; NOAA Atlantic page calls it square. The comparative museum account is retained for species identification."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: NOAA Atlantic maturity4–5months, spawning under Sargassum and sex-dependent surface schooling checked. Museum explicitly supports oval tooth patch versus trapezoid in C.equiselis despite conflicting NOAA wording. Optional untranslated etymology removed, global status distinguished from incomplete regional stock assessments.",
+  "source_audit_version": 1
+}

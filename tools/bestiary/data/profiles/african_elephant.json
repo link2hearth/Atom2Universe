@@ -1,0 +1,596 @@
+{
+  "id": "african_elephant",
+  "scientific": "Loxodonta africana",
+  "group": "mammals",
+  "name": {
+    "en": "African savanna elephant",
+    "fr": "Éléphant de savane d’Afrique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The African savanna elephant is an immensely large herbivore whose movement and feeding shape its surroundings while it depends on broad access to forage and water. It occurs mainly in eastern and southern sub-Saharan Africa, across open grasslands, scrub, and woodland mosaics rather than one uniform kind of savanna. It is a distinct species from the African forest elephant, Loxodonta cyclotis, which is generally smaller and adapted to closed forest; individuals in the forest–savanna transition can show mixed traits.",
+      "fr": "L’éléphant de savane d’Afrique est un herbivore de très grande taille dont les déplacements et l’alimentation façonnent le milieu, tout en exigeant de vastes ressources en nourriture et en eau. Il vit surtout en Afrique subsaharienne orientale et australe, dans des mosaïques de prairies, de broussailles et de boisements plutôt que dans un seul type de savane. C’est une espèce distincte de l’éléphant de forêt d’Afrique, Loxodonta cyclotis, généralement plus petit et adapté aux forêts denses ; des individus de la zone de transition forêt-savane peuvent présenter des caractères mixtes."
+    },
+    "identification": {
+      "en": "Adults have grey, deeply folded skin, very large triangular ears, a concave or saddle-shaped back, and a long trunk; these traits together help distinguish them from the smaller, round-eared forest species. A SANParks comparison guide lists broad adult-male ranges of 3–4 m at the shoulder and 4–6.3 tonnes; females are smaller, and size varies with age and population. Known-age Amboseli data were fitted with growth curves: the estimated sex difference widened after about ten years, with males 60–70 cm taller at age 65. The trunk is an elongated upper lip and nose made of muscle, connective tissue, nerves and skin, with no bones; it smells, breathes, touches, lifts and manipulates food. Its sensitive tip has two small opposing projections, often called fingers, which pinch small objects while the flexible trunk can also wrap around larger loads. Tusks are enlarged upper incisors, not horns; both sexes generally grow them, and males tend to have thicker, faster-growing tusks. Some populations show local exceptions: in Gorongosa, Mozambique, ivory poaching during the civil war favored female tusklessness, and researchers implicated tooth-development genes.",
+      "fr": "L’adulte a une peau grise très plissée, de grandes oreilles triangulaires, un dos concave ou ensellé et une longue trompe ; l’ensemble aide à le distinguer de l’espèce forestière, plus petite et aux oreilles arrondies. Un guide comparatif de SANParks indique des fourchettes larges pour les mâles adultes : 3 à 4 m au garrot et 4 à 6,3 tonnes ; les femelles sont plus petites, et la taille varie selon l’âge et la population. Les données d’Amboseli sur des éléphants d’âge connu ont servi à ajuster des courbes de croissance : l’écart estimé s’accentue après dix ans, les mâles dépassant les femelles de 60 à 70 cm à 65 ans. La trompe prolonge la lèvre supérieure et le nez ; faite de muscles, de tissus conjonctifs, de nerfs et de peau, sans os, elle sert à sentir, respirer, toucher, soulever et manipuler les aliments. Son extrémité sensible porte deux petites saillies opposées, comparables à des doigts, qui pincent les petits objets, tandis que la trompe enroule des charges plus grandes. Les défenses sont des incisives supérieures agrandies, et non des cornes ; les deux sexes en portent généralement, celles des mâles étant plus épaisses et poussant plus vite. Certaines populations font exception : à Gorongosa, au Mozambique, le braconnage pour l’ivoire durant la guerre civile a favorisé l’absence de défenses chez les femelles, avec des gènes du développement dentaire impliqués."
+    },
+    "habitat": {
+      "en": "The species uses grassland, savanna, scrub, and open woodland, shifting among them as seasonal rains change the availability of grass, leaves, and surface water. In arid regions, waterholes anchor dry-season movements, and ranges expand when local forage and water become scarce. Their large ears help limit overheating: flapping moves air across the broad surface and exposes blood vessels on the inner surface of the ear flap, increasing heat loss.",
+      "fr": "L’espèce fréquente prairies, savanes, broussailles et bois clairs, passant de l’un à l’autre quand les pluies saisonnières changent l’accès à l’herbe, aux feuilles et à l’eau de surface. En milieu aride, les points d’eau structurent les déplacements de saison sèche et les parcours s’étendent lorsque nourriture et eau locales se raréfient. Ses grandes oreilles limitent la surchauffe : leur battement fait circuler l’air sur une large surface et expose les vaisseaux de la face interne du pavillon, favorisant la perte de chaleur."
+    },
+    "diet": {
+      "en": "It grazes grasses and sedges, and browses leaves, herbs, fruits, roots, twigs and bark as seasonal plant growth changes. The trunk gathers vegetation and carries it to the mouth, pinching small pieces and wrapping around larger bundles. Unlike a cow, an elephant does not ferment food in a multi-chambered foregut before digestion; microbes ferment fibrous material in the large intestine, after the small intestine. This hindgut fermentation lets food pass relatively quickly, supporting the enormous daily intake needed by a very large body, but it extracts nutrients less completely than slow retention would; elephants compensate by eating for many hours and selecting high-quality parts when available.",
+      "fr": "Il broute des graminées et des cypéracées, et consomme feuilles, herbes, fruits, racines, rameaux et écorce selon la pousse saisonnière. La trompe rassemble les végétaux et les porte à la bouche, pinçant les petits morceaux et s’enroulant autour des plus grosses prises. Contrairement à la vache, l’éléphant ne fermente pas d’abord les aliments dans un estomac compartimenté : les microbes dégradent les fibres dans le gros intestin, après l’intestin grêle. Cette fermentation postérieure permet un passage assez rapide des aliments, compatible avec l’énorme prise quotidienne nécessaire à un grand corps, mais extrait moins complètement les nutriments qu’une longue rétention ; l’éléphant compense en mangeant de nombreuses heures et en choisissant les parties nutritives lorsqu’elles existent."
+    },
+    "behavior": {
+      "en": "Females and dependent young form enduring family units, usually led by a matriarch; female group membership follows close maternal kinship and affiliative ties. These units do not remain in one fixed herd: related families may gather into larger clans, then separate into smaller parties and reunite as local conditions change, a pattern called fission–fusion. Older daughters and other females help guard and guide calves, spreading care and learned behaviour through the maternal family. Males leave the natal family as they mature and often travel alone or associate in loose bachelor groups; they still encounter female groups, especially when females are receptive. Adult bulls may enter musth, a recurring reproductive state marked by raised testosterone, urine dribbling, secretion from temporal glands and altered behaviour; it can improve access to mates, but sexual activity also occurs outside musth. Communication is multimodal: contact, posture, scent and calls work together, and low rumbles include infrasound, frequencies below human hearing that can carry social signals across open country. Experiments with recorded calls show that females can recognize familiar family voices at long range, while the exact information carried by each call depends on context.",
+      "fr": "Les femelles et leurs jeunes forment des familles durables, généralement guidées par une matriarche ; les groupes féminins reposent sur une proche parenté maternelle et des liens sociaux. Des familles apparentées se rassemblent puis se séparent en petits groupes avant de se retrouver selon les conditions locales : c’est la fission-fusion. Les filles plus âgées et d’autres femelles protègent et guident les petits, transmettant soins et comportements appris dans la famille maternelle. En grandissant, les mâles quittent leur famille natale et voyagent souvent seuls ou en groupes lâches de célibataires ; ils retrouvent néanmoins des groupes de femelles, surtout quand celles-ci sont réceptives. Le musth, état reproducteur périodique des mâles, associe hausse de testostérone, écoulement urinaire, sécrétions temporales et changements de comportement ; il peut favoriser l’accès aux partenaires, mais l’activité sexuelle existe aussi hors musth. La communication combine contacts, postures, odeurs et appels ; les grondements graves comprennent des infrasons, inaudibles pour nous, qui portent des signaux à distance. Des expériences de diffusion sonore montrent que les femelles reconnaissent à longue distance les voix de membres de leur famille, tandis que l’information portée par chaque appel dépend du contexte."
+    },
+    "reproduction": {
+      "en": "Females usually produce one calf after a gestation of about 22 months, among the longest pregnancies of any land mammal. At birth a calf already weighs around 100 kg, and field observations show that healthy newborns generally stand and begin walking within hours, allowing them to keep pace with the family. The mother nurses for years; weaning is gradual and varies, often overlapping with a later birth rather than occurring at one fixed age. Calves learn by following and imitating adults: using the trunk to grasp, drink and feed takes practice, while allomothers provide protection and opportunities to learn social rules. Females commonly wait several years between births because pregnancy, lactation and care require sustained investment; drought and poor body condition can lengthen the interval. Males mature physically later than females and their reproductive success is strongly affected by body size, age and the competitive advantage of musth, so reaching adulthood does not mean immediate breeding access.",
+      "fr": "Les femelles mettent généralement au monde un seul petit après environ 22 mois de gestation, l’une des plus longues chez les mammifères terrestres. À la naissance, le jeune pèse autour de 100 kg ; en bonne santé, il se dresse et marche dans les heures suivantes pour suivre sa famille. La mère allaite pendant des années ; le sevrage est progressif et variable, chevauchant souvent une naissance ultérieure au lieu de survenir à un âge fixe. Le jeune apprend en imitant les adultes : saisir, boire et se nourrir avec la trompe demande de la pratique ; les autres femelles le protègent et lui offrent des interactions sociales formatrices. Les femelles attendent souvent plusieurs années entre deux naissances, car gestation, allaitement et soins mobilisent durablement leurs ressources ; sécheresse et mauvais état corporel peuvent allonger l’intervalle. Les mâles mûrissent physiquement plus tard que les femelles et leur succès reproducteur dépend fortement de leur taille, de leur âge et de l’avantage compétitif du musth ; devenir adulte n’assure donc pas l’accès immédiat à la reproduction."
+    },
+    "ecology": {
+      "en": "By browsing, grazing, pushing over trees and opening paths, elephants alter vegetation structure; the outcome depends on elephant density, rainfall, soils and the plants present, so local woodland change is not a universal result. In Hwange, elephant density was higher where artificial waterholes were more concentrated in the late dry season; density did not predict short-term vegetation heterogeneity, while long-term waterhole maintenance was associated with less woody structural variety. Elephants also move seeds in dung: in a southern African study of Balanites maughamii, seeds passed through elephant dung germinated better than intact seeds, illustrating one documented plant relationship rather than a rule for every species. In South African Sand Forest, field research found that elephant effects on smaller browsers changed with hillslope position, showing why plant-eater interactions depend on local terrain.",
+      "fr": "Broutage, pâturage et arbres renversés modifient la végétation ; les effets dépendent de la densité des éléphants, des pluies, des sols et des espèces végétales. À Hwange, la densité des éléphants était plus élevée là où les points d’eau artificiels étaient plus concentrés en fin de saison sèche ; elle ne prédisait pas l’hétérogénéité végétale à court terme, tandis que l’entretien durable des points d’eau était associé à une moindre diversité structurale des ligneux. Les éléphants transportent aussi des graines dans leurs déjections : dans une étude d’Afrique australe sur Balanites maughamii, les graines passées par les déjections germaient mieux que les graines intactes, exemple documenté d’une relation végétale précise plutôt que règle générale. Dans la forêt sableuse sud-africaine, une étude de terrain a montré que l’effet des éléphants sur les brouteurs plus petits varie selon la position sur le versant, donc selon le terrain local."
+    },
+    "conservation": {
+      "en": "The IUCN assessed the savanna elephant separately on 13 November 2020 and published the assessment in 2021; a 2022 amendment retained the Endangered category. Earlier IUCN assessments treated African elephants as one taxon: it was listed as Vulnerable in the 2004 and 2008 updates, and Endangered in 1996 under older criteria. The amended assessment identifies continuing ivory poaching and human-driven habitat loss as major drivers, while noting uneven trends: some subpopulations are stable or increasing and others decline faster.",
+      "fr": "L’UICN a évalué séparément l’éléphant de savane le 13 novembre 2020 et publié l’évaluation en 2021 ; un amendement de 2022 a maintenu la catégorie « en danger ». Les évaluations antérieures réunissaient les éléphants d’Afrique en un seul taxon : il était classé « vulnérable » dans les mises à jour de 2004 et 2008, et auparavant « en danger » en 1996 selon d’anciens critères. L’évaluation amendée cite le braconnage pour l’ivoire et la perte d’habitat due aux activités humaines parmi les causes majeures, tout en signalant des tendances inégales : certaines sous-populations sont stables ou croissent, d’autres déclinent plus vite."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "African Elephant — South African National Parks",
+        "fr": "Éléphant d’Afrique — Parcs nationaux sud-africains"
+      },
+      "url": "https://www.sanparks.org/conservation/parks/marakele-national-park/primary-consumers-herbivores/african-elephant",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "SANParks describes male dispersal and heat loss through the ear pinna."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 11,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Statural growth in known-age African elephants",
+        "fr": "Croissance staturale d’éléphants d’Afrique d’âge connu"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1995.tb01782.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Growth curves estimate increasing sex differences in known-age Amboseli elephants."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 10,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Evolution and taxonomy of African elephants — Natural History Museum",
+        "fr": "Évolution et taxonomie des éléphants d’Afrique — Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/research/projects/african-elephants.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Savanna and forest elephants differ in size, range and typical form."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.en.3",
+        "overview.fr.2",
+        "overview.fr.3",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 11,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "African vs Asian Elephants — SANParks Letaba Elephant Hall",
+        "fr": "Éléphants d’Afrique et d’Asie — SANParks, musée de Letaba"
+      },
+      "url": "https://www.sanparks.org/conservation/parks/kruger/letaba-elephant-hall/learn-more/african-vs-asian-elephants",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Comparison guide tabulates broad male height and mass ranges; females are smaller."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 12,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Elephant trunk tip musculature reflects species differences in grasping behavior",
+        "fr": "La musculature de l’extrémité de la trompe reflète les différences de préhension entre espèces"
+      },
+      "url": "https://www.nature.com/articles/s42003-025-08998-6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "African trunk fingers pinch; trunk-tip anatomy supports grasping."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.en.5",
+        "identification.fr.4",
+        "identification.fr.5",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 8,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mass harvested per trunkload as a constraint to forage consumption by the African savanna elephant",
+        "fr": "Masse récoltée par prise de trompe comme contrainte sur l’ingestion de l’éléphant de savane"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11890037/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Rapid gut passage constrains forage intake in this hindgut fermenter."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 10,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fermentative digestion in the African elephant",
+        "fr": "Digestion fermentaire chez l’éléphant d’Afrique"
+      },
+      "url": "https://journals.co.za/doi/10.10520/AJA03794369_2599",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Hindgut fermentation yields volatile fatty acids used for energy."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 9,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The ties that bind: genetic relatedness predicts fission and fusion of social groups in wild African elephants",
+        "fr": "Les liens de parenté prédisent la fission et la fusion des groupes d’éléphants sauvages"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1560064/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Amboseli female groups are matrilocal and socially fluid."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 8,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The sexually active states of free-ranging male African elephants",
+        "fr": "États d’activité sexuelle des mâles d’éléphants d’Afrique en liberté"
+      },
+      "url": "https://doi.org/10.1016/j.yhbeh.2004.09.002",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Musth combines elevated androgens, gland secretions and altered behaviour."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 9,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Long-distance communication of acoustic cues to social identity in African elephants",
+        "fr": "Communication à longue distance de signaux acoustiques d’identité sociale chez l’éléphant d’Afrique"
+      },
+      "url": "https://doi.org/10.1016/S0003-3472(03)00065-0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Playback trials show female recognition of familiar calls over long distances."
+      ],
+      "prose_claims": [
+        "behavior.en.6",
+        "behavior.en.7",
+        "behavior.fr.6",
+        "behavior.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 11,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Movement behaviour after birth demonstrates precocial abilities of African savannah elephant calves",
+        "fr": "Les déplacements après la naissance révèlent les capacités précoces des éléphanteaux de savane"
+      },
+      "url": "https://ora.ox.ac.uk/objects/uuid%3A43a6fecd-80ac-49c9-898f-4f1680b22c4b/files/rdf65v8503",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Calves are mobile soon after birth and must follow family movements."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 11,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Loxodonta africana — Animal Diversity Web, University of Michigan",
+        "fr": "Loxodonta africana — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Loxodonta_africana/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Account summarizes habitat use, diet, gestation and nursing."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 8,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "African savanna plant Balanites maughamii: fruit and seed traits",
+        "fr": "La plante de savane Balanites maughamii : caractères des fruits et graines"
+      },
+      "url": "https://doi.org/10.1017/S0266467415000437",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Study found better germination after elephant-dung passage."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 7,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Elephant-induced landscape heterogeneity change around artificial waterholes in a protected savanna woodland ecosystem",
+        "fr": "Modification de l’hétérogénéité paysagère autour des points d’eau artificiels par les éléphants"
+      },
+      "url": "https://doi.org/10.1016/j.rsase.2018.10.009",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Hwange study relates late-dry-season waterhole concentration to elephant density; short-term vegetation response differed."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 13,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Loxodonta africana (African Savanna Elephant) — IUCN Red List amended 2022 assessment",
+        "fr": "Loxodonta africana (éléphant de savane d’Afrique) — évaluation amendée 2022 de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T181008073A223031019.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "2022 amendment retains EN; records threats and older combined-taxon listings."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.fr.2",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 10,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The demography of an African elephant (Loxodonta africana) population in Amboseli, Kenya",
+        "fr": "Démographie d’une population d’éléphants d’Afrique à Amboseli, au Kenya"
+      },
+      "url": "https://doi.org/10.1017/S0952836901001212",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Amboseli females averaged 4.5 years between births in this population."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 10,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Allomothering among African elephants",
+        "fr": "Soins allomaternels chez les éléphants d’Afrique"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0003347287802348",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Field observations document calf care and interactions with other females."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 10,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Change in Mesoherbivore Browsing Is Mediated by Elephant and Hillslope Position",
+        "fr": "Le broutage des herbivores moyens dépend des éléphants et de la position sur le versant"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4471177/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Field study documents context-dependent interactions between elephants and smaller browsers."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 10,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ivory poaching and the rapid evolution of tusklessness in African elephants",
+        "fr": "Braconnage pour l’ivoire et évolution rapide de l’absence de défenses chez les éléphants d’Afrique"
+      },
+      "url": "https://doi.org/10.1126/science.abe7389",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Gorongosa war-era poaching selected for female tusklessness; tooth genes were implicated."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 11,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ruling of the IUCN SSC Standards and Petitions Committee on the Listing of the African Savanna Elephant (Loxodonta africana)",
+        "fr": "Décision du Comité des normes et pétitions de la CSE de l’UICN sur l’inscription de l’éléphant de savane d’Afrique"
+      },
+      "url": "https://nc.iucnredlist.org/redlist/content/attachment_files/SPC_African_Savanna_Elephant_Ruling_13Oct2022.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Ruling dates assessment, publication, amendment and explains uncertainty behind retained EN."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 11,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an adult African savanna elephant with very large triangular ears, a concave back, grey folded skin and tusks, on a pure white background. Keep proportions and tusks realistic; do not depict the compact, round-eared African forest elephant.",
+  "uncertainties": [
+    "Adult mass and shoulder height vary by sex, age, population and condition; SANParks figures are broad guide ranges, while the Amboseli sex difference comes from fitted growth curves.",
+    "Musth, diet, movement and social associations vary among populations and contexts; several detailed observations come from sites such as Amboseli, Hwange, Gorongosa and South African parks.",
+    "The IUCN global assessment was conducted in 2020, published in 2021 and amended in 2022; regional population trends remain uneven."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Deep explanatory replacement reviewed by independent primary-source critic and root. Corrected2020 separate assessment/2021 publication/2022 amendment and old combinedVU history, guide dimensions versus growth-model estimates, external ear vascular anatomy, sedge translation, waterhole-study variables and bilingual musth/allomaternal caveats. Restricted matriarch memory to evidenced social ties; original savanna illustration retained after root visual check."
+}

@@ -1,0 +1,491 @@
+{
+  "id": "dugong",
+  "scientific": "Dugong dugon",
+  "group": "mammals",
+  "name": {
+    "en": "Dugong",
+    "fr": "Dugong"
+  },
+  "sections": {
+    "overview": {
+      "en": "The dugong is a fully marine sirenian and the only living member of Dugongidae. It ranges through tropical coastal waters from East Africa and the Red Sea across the Indian Ocean to the western Pacific, where seagrass grows. Unlike manatees, some of which enter rivers, the dugong has a notched tail fluke rather than a rounded paddle. Its life follows shallow seagrass beds: it feeds and rests nearby, and moves when food patches shift or deteriorate.",
+      "fr": "Le dugong est un sirénien entièrement marin, seul représentant actuel des Dugongidés. Il fréquente les eaux tropicales côtières, de l’Afrique de l’Est et de la mer Rouge jusqu’au Pacifique occidental, là où poussent des herbiers. À la différence de certains lamantins qui remontent les rivières, sa queue se termine par une nageoire échancrée, non par une palette arrondie. Sa vie suit les herbiers peu profonds : il s’y nourrit, se repose à proximité et se déplace lorsque les zones de nourriture changent ou se dégradent."
+    },
+    "identification": {
+      "en": "An adult has a heavy, tapered body, short foreflippers and no visible hind limbs. Its broad muzzle turns down toward the seabed; a flexible upper lip and sensory bristles help it find and pull plants. Sparse hair covers the grey skin, which can look brown or green where algae grow. The tail has two pointed lobes. Males may develop small tusks from their upper incisors. Together, the downturned muzzle and fluked tail distinguish the dugong from manatees and suit a slow-swimming grazer of the seabed. Adults are around three metres long and may weigh up to 500 kilograms.",
+      "fr": "L’adulte a un corps massif qui s’amincit vers l’arrière, de courtes nageoires antérieures et aucun membre postérieur visible. Son large museau s’oriente vers le fond ; une lèvre supérieure souple et des soies sensorielles l’aident à repérer et saisir les plantes. La peau grise, couverte de poils clairsemés, peut paraître brune ou verte sous les algues. La queue porte deux lobes pointus. Les mâles peuvent développer de petites défenses issues des incisives supérieures. Le museau incliné et la queue à deux lobes le distinguent des lamantins et correspondent à son broutage lent sur le fond. Les adultes mesurent environ trois mètres et peuvent peser jusqu’à 500 kilogrammes."
+    },
+    "habitat": {
+      "en": "Dugongs favour warm, shallow coastal waters with seagrass, especially protected bays, lagoons, channels and island shores. Most feeding occurs in shallow water, often less than 20 metres deep, though animals also use deeper meadows over broad, gently sloping shelves. Seagrass beds are patchy and vary in species, quality and seasonal growth. Tracking in Queensland and the Northern Territory found both relatively local animals and individuals travelling hundreds of kilometres. Movement is individual and food-linked; it is not one fixed migration route shared by all dugongs.",
+      "fr": "Le dugong préfère les eaux côtières chaudes et peu profondes avec herbiers, notamment les baies abritées, lagons, chenaux et rivages insulaires. Il s’alimente surtout à faible profondeur, souvent à moins de 20 mètres, mais utilise aussi des herbiers plus profonds sur les larges plateaux peu inclinés. Les herbiers sont discontinus et varient par leurs espèces, leur qualité et leur croissance saisonnière. Le suivi au Queensland et dans le Territoire du Nord a révélé des individus assez sédentaires et d’autres parcourant des centaines de kilomètres. Ces déplacements individuels suivent la nourriture ; ils ne forment pas une migration fixe commune à tous les dugongs."
+    },
+    "diet": {
+      "en": "Seagrasses make up nearly all of the dugong’s diet. Its muzzle and bristled upper lip help it pull shoots from the sediment. Where plants can be uprooted, dugongs may eat leaves, rhizomes and roots; on firm ground or among resistant plants, they crop leaves instead. Root feeding is therefore conditional, not universal. At Ambon, Indonesia, field researchers recorded dugongs removing shoots and below-ground biomass from Halodule uninervis beds. Dugongs often select digestible, nutrient-rich species. Their trails through soft sediment show where grazing has disturbed the meadow.",
+      "fr": "Les herbiers composent presque toute l’alimentation du dugong. Son museau et sa lèvre garnie de soies l’aident à arracher les pousses du sédiment. Lorsque les plantes se déracinent, il peut manger feuilles, rhizomes et racines ; sur un sol ferme ou parmi des plantes résistantes, il broute plutôt les feuilles. La consommation des racines dépend donc des conditions. À Ambon, en Indonésie, des chercheurs ont observé le prélèvement de pousses et de biomasse souterraine d’Halodule uninervis. Le dugong sélectionne souvent des espèces digestibles et nutritives. Ses traces dans les sédiments meubles indiquent les zones perturbées par le broutage."
+    },
+    "behavior": {
+      "en": "Dugongs breathe air and surface between bouts of underwater feeding. They occur alone, in small groups or in larger feeding aggregations. Observations in Moreton Bay, Australia, found that animals in dense herds spent more time feeding, suggesting that food helped bring them together. Neighbours changed frequently, and the herds were not clearly organized as protection against predators. Mothers and calves remain close; calves sometimes travel or rest over their mothers’ backs. The same observations showed that mother–calf pairs spent more time near the surface than lone animals, increasing their exposure to boat strikes. These findings describe that bay rather than every dugong population.",
+      "fr": "Le dugong respire de l’air et remonte entre ses périodes d’alimentation sous l’eau. Il vit seul, en petits groupes ou dans des rassemblements alimentaires plus importants. Dans la baie de Moreton, en Australie, les animaux des troupeaux denses passaient davantage de temps à manger, ce qui suggère un regroupement lié à la nourriture. Leurs voisins changeaient souvent ; les rassemblements ne semblaient pas organisés pour se protéger des prédateurs. Mère et petit restent proches ; le jeune se déplace ou se repose parfois au-dessus du dos maternel. Dans cette même baie, les paires mère–petit passaient davantage de temps près de la surface que les animaux isolés, augmentant leur exposition aux collisions avec les bateaux. Ces résultats décrivent les animaux étudiés dans cette baie."
+    },
+    "reproduction": {
+      "en": "Dugongs mature late and usually produce one calf after a pregnancy estimated at about fourteen months. Births are separated by several years, with longer intervals when food is poor, so populations replace lost adults slowly. The calf is born underwater. It nurses while also beginning to eat seagrass soon after birth. It remains close to her for roughly one or two years. Age at first birth and birth intervals vary among populations. In Torres Strait, reproduction was lower during a period of seagrass decline than when meadows were abundant, although food and population density could not be separated as causes.",
+      "fr": "Le dugong atteint tardivement la maturité et donne généralement naissance à un seul petit après une gestation estimée à environ quatorze mois. Plusieurs années séparent les naissances, davantage lorsque la nourriture manque ; les populations remplacent donc lentement les adultes disparus. Le petit naît sous l’eau. Il tète tout en commençant à manger les plantes des herbiers peu après la naissance. Il reste près d’elle environ un à deux ans. L’âge à la première naissance et l’intervalle entre naissances varient selon les populations. Dans le détroit de Torres, la reproduction était plus faible lorsque les herbiers déclinaient que lorsqu’ils étaient abondants, sans pouvoir isoler l’effet de la nourriture de celui de la densité."
+    },
+    "ecology": {
+      "en": "As a large herbivore, the dugong changes the meadows where it feeds. Cropping leaves or excavating plants creates trails and alters the balance between shoots and underground parts. At one Indonesian site, grazing removed much of the shoots and upper below-ground biomass; tracks recovered during wet-season growth but not in the dry season. Effects are thus local and seasonal. Grazing produces a shifting pattern of cropped and intact patches, while seagrass meadows also shelter young fish and invertebrates. Dugong health and meadow condition are closely connected.",
+      "fr": "Grand herbivore, le dugong transforme les herbiers où il se nourrit. En coupant les feuilles ou en déterrant les plantes, il forme des traces et modifie l’équilibre entre pousses et parties souterraines. Sur un site indonésien, le broutage a retiré une grande part des pousses et de la biomasse souterraine superficielle ; les traces se sont rétablies pendant la croissance de saison humide, mais pas en saison sèche. Les effets sont donc locaux et saisonniers. Le broutage crée une mosaïque de zones coupées et intactes ; les herbiers servent aussi d’abri aux jeunes poissons et invertébrés. La santé du dugong et celle des herbiers sont liées."
+    },
+    "conservation": {
+      "en": "The amended global IUCN assessment of 2015, published in 2019, classifies the dugong as Vulnerable. Separate 2022 assessments classify the East African subpopulation as Critically Endangered and New Caledonia’s as Endangered. Those categories apply locally, not to the whole species. Fishing nets can entangle and drown dugongs; hunting, boat strikes, and seagrass loss or degradation add pressure. East Africa’s assessment reports very low numbers and fishing deaths. In New Caledonia, hunting and boat injuries combine with seagrass decline linked to coastal development, pollution and anchoring. Slow maturity and infrequent births impede recovery after adult losses.",
+      "fr": "L’évaluation mondiale amendée de l’UICN de 2015, publiée en 2019, classe le dugong « Vulnérable ». Deux évaluations distinctes de 2022 classent la sous-population d’Afrique de l’Est « En danger critique » et celle de Nouvelle-Calédonie « En danger ». Ces catégories sont locales, pas mondiales. Les filets peuvent piéger et noyer les dugongs ; chasse, collisions avec les bateaux et perte ou dégradation des herbiers s’ajoutent aux pressions. L’évaluation d’Afrique de l’Est relève de très faibles effectifs et des mortalités liées à la pêche. En Nouvelle-Calédonie, chasse et blessures par bateau s’ajoutent au déclin des herbiers lié aux aménagements côtiers, à la pollution et aux ancres. Maturité tardive et naissances espacées freinent le rétablissement après la perte d’adultes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "More than Manatees: Meet the Sirenians — Smithsonian Ocean",
+        "fr": "Au-delà des lamantins : découvrir les siréniens — Smithsonian Ocean"
+      },
+      "url": "https://ocean.si.edu/more-manatees-meet-sirenians",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Marine sirenian; fluked tail, sensory muzzle, male incisor tusks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.3",
+        "overview.fr.1",
+        "overview.fr.3",
+        "identification.en.2",
+        "identification.en.5",
+        "identification.fr.2",
+        "identification.fr.5",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 9,
+        "total": 169,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dugong FAQ — CMS Dugong Memorandum of Understanding",
+        "fr": "FAQ sur le dugong — Mémorandum d’entente CMS sur le dugong"
+      },
+      "url": "https://dugong.cms.int/about/faq-dugong",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Slow reproduction, seagrass dependence, nursery habitat and anthropogenic threats."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.5",
+        "ecology.en.6",
+        "ecology.fr.5",
+        "ecology.fr.6",
+        "conservation.en.4",
+        "conservation.en.7",
+        "conservation.fr.4",
+        "conservation.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 9,
+        "total": 146,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Global Assessment of Dugong Status and Conservation Needs — CMS and James Cook University",
+        "fr": "Évaluation mondiale du statut du dugong et des besoins de conservation — CMS et James Cook University"
+      },
+      "url": "https://dugong.cms.int/publication/global-assessment-dugong-status-and-conservation-needs",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Coastal habitats; substrate-dependent leaf cropping and uprooting; sparse body hair."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.3",
+        "diet.en.4",
+        "diet.fr.3",
+        "diet.fr.4",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 10,
+        "total": 200,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The spatial ecology of dugongs: applications to conservation management — James Cook University thesis",
+        "fr": "Écologie spatiale des dugongs : applications à la gestion de la conservation — thèse de James Cook University"
+      },
+      "url": "https://researchonline.jcu.edu.au/2097/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Australian movements vary with habitat and nutritious seagrass patches."
+      ],
+      "prose_claims": [
+        "overview.en.4",
+        "overview.fr.4",
+        "habitat.en.3",
+        "habitat.en.4",
+        "habitat.en.5",
+        "habitat.fr.3",
+        "habitat.fr.4",
+        "habitat.fr.5",
+        "diet.en.6",
+        "diet.fr.6",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seagrass distribution and seasonal biomass changes in relation to dugong grazing in the Moluccas, East Indonesia — Aquatic Botany",
+        "fr": "Répartition et variations saisonnières de la biomasse des herbiers en lien avec le broutage du dugong aux Moluques, Indonésie orientale — Aquatic Botany"
+      },
+      "url": "https://doi.org/10.1016/0304-3770(94)00438-R",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Ambon study: grazing removed Halodule shoots and below-ground biomass.",
+        "Tracks recovered in wet season, not dry season."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.en.7",
+        "diet.fr.5",
+        "diet.fr.7",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 17,
+        "total": 187,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Temporal variability in the life history and reproductive biology of female dugongs in Torres Strait — Continental Shelf Research",
+        "fr": "Variabilité temporelle de l’histoire de vie et de la biologie reproductive des dugongs femelles du détroit de Torres — Continental Shelf Research"
+      },
+      "url": "https://doi.org/10.1016/j.csr.2008.03.023",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Torres Strait comparison linked seagrass abundance with earlier first birth and shorter intervals.",
+        "Authors could not separate food and density effects."
+      ],
+      "prose_claims": [
+        "reproduction.en.6",
+        "reproduction.en.7",
+        "reproduction.fr.6",
+        "reproduction.fr.7",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 21,
+        "total": 140,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dugong dugon (amended version of 2015 assessment) — IUCN Red List, published 2019",
+        "fr": "Dugong dugon (version amendée de l’évaluation de 2015) — Liste rouge de l’UICN, publiée en 2019"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2015-4.RLTS.T6909A160756767.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global IUCN category: Vulnerable; assessment amended from 2015, citation published 2019."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 11,
+        "total": 42,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dugong dugon (Eastern Africa subpopulation) — IUCN Red List, 2022 assessment",
+        "fr": "Dugong dugon (sous-population d’Afrique de l’Est) — Liste rouge de l’UICN, évaluation de 2022"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T218582764A218589142.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "East Africa assessment: Critically Endangered; assessed 30 August 2022; fewer than 250 mature animals estimated."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 15,
+        "total": 41,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dugong dugon (New Caledonia subpopulation) — IUCN Red List, 2022 assessment",
+        "fr": "Dugong dugon (sous-population de Nouvelle-Calédonie) — Liste rouge de l’UICN, évaluation de 2022"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T218582754A218589361.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "New Caledonia assessment: Endangered, 2022, criterion C2a(ii)."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 7,
+        "total": 7,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dugongs — Australian Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Dugongs — ministère australien du Changement climatique, de l’Énergie, de l’Environnement et de l’Eau"
+      },
+      "url": "https://www.dcceew.gov.au/environment/marine/marine-species/dugongs",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Air-breathing marine grazer, coastal habitats, close calf association."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.en.4",
+        "identification.en.6",
+        "identification.fr.1",
+        "identification.fr.4",
+        "identification.fr.6",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 8,
+        "total": 188,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Human activity devastating marine species from mammals to corals — IUCN Red List update, 9 December 2022",
+        "fr": "Les activités humaines déciment les espèces marines, des mammifères aux coraux — mise à jour de la Liste rouge de l’UICN, 9 décembre 2022"
+      },
+      "url": "https://iucn.org/press-release/202212/human-activity-devastating-marine-species-mammals-corals-iucn-red-list",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN 2022 update: East Africa CR, New Caledonia EN, global VU.",
+        "Regional threats include bycatch, poaching, boat injury and seagrass damage."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.en.3",
+        "conservation.en.6",
+        "conservation.fr.2",
+        "conservation.fr.3",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 21,
+        "total": 116,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hodgson (2004) — Dugong behaviour in Moreton Bay",
+        "fr": "Hodgson (2004) — Comportement du dugong dans la baie de Moreton"
+      },
+      "url": "https://researchonline.jcu.edu.au/73/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Moreton Bay herds fed more, changed neighbours frequently; mother–calf pairs spent more time near surface."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.en.4",
+        "behavior.en.5",
+        "behavior.en.6",
+        "behavior.en.7",
+        "behavior.fr.3",
+        "behavior.fr.4",
+        "behavior.fr.5",
+        "behavior.fr.6",
+        "behavior.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 15,
+        "total": 194,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dugong calf production and climatic variation (2016)",
+        "fr": "Production de jeunes dugongs et variations climatiques (2016)"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0155675",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Gestation about fourteen months; calves eat seagrass soon after birth while receiving milk."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 13,
+        "total": 77,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      },
+      "accessible_copy": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4927176/"
+    },
+    {
+      "title": {
+        "en": "Queensland Government — Dugongs",
+        "fr": "Gouvernement du Queensland — Dugongs"
+      },
+      "url": "https://www.qld.gov.au/environment/plants-animals/conservation/threatened-species/featured-projects/dugongs",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Adults about three metres, up to 500 kg; nursing association one–two years."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.fr.7",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 12,
+        "total": 57,
+        "method": "Full referenced bilingual sentences, plus factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show one adult Dugong dugon with the species' accurate downturned broad muzzle, grey natural skin, paddle-like foreflippers and two-lobed fluked tail. Sex unspecified; do not add tusks unless showing an adult male. Natural proportions, viewed from the side in a relaxed swimming pose. PURE WHITE background (#FFFFFF), no seabed, water, props, text, border or watermark.",
+  "uncertainties": [
+    "Foraging roots and rhizomes depends on whether species and substrate permit uprooting; leaf-only feeding also occurs. The Ambon field result is local and should not be generalized to every meadow.",
+    "Movement distances are highly individual and documented examples come from Australia; they do not establish a fixed migration schedule throughout the range.",
+    "Reproductive age, birth interval and calf dependence vary with population and food availability; regional assessments describe local populations rather than global abundance.",
+    "The global Red List citation is an amended 2015 assessment published in the 2019 Red List record. The regional East Africa and New Caledonia assessments are dated 2022."
+  ],
+  "reviewed": true,
+  "review_note": "Root and independent scientific critic reviewed explanatory bilingual prose, factual scope, dated global/regional status and complete source allocations; identified corrections resolved.",
+  "source_audit_version": 1
+}

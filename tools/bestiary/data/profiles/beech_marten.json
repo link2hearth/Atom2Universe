@@ -1,0 +1,414 @@
+{
+  "id": "beech_marten",
+  "scientific": "Martes foina",
+  "group": "mammals",
+  "name": {
+    "en": "Beech marten",
+    "fr": "Fouine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The beech marten is a medium-sized mustelid with a long, supple body, short legs and a bushy tail. Its native range spans much of Europe and central Asia east to the Himalaya and north-west China. It uses woodland, rocky slopes and settled landscapes, and in parts of Europe regularly shelters in buildings. The species is also called the stone marten. An introduced population has been reported in southeastern Wisconsin, outside its native range; this isolated record should not be confused with the native American marten, a different species.",
+      "fr": "La fouine est un mustélidé de taille moyenne au corps long et souple, aux pattes courtes et à la queue touffue. Son aire d’origine couvre une grande partie de l’Europe et de l’Asie centrale, jusqu’à l’Himalaya et au nord-ouest de la Chine. Elle fréquente les bois, les pentes rocheuses et les paysages habités, et s’abrite régulièrement dans des bâtiments en certaines régions d’Europe. On l’appelle aussi martre des pierres. Une population introduite a été signalée dans le sud-est du Wisconsin, hors de son aire d’origine ; ce signalement isolé ne doit pas être confondu avec la martre d’Amérique, une autre espèce."
+    },
+    "identification": {
+      "en": "Adults generally have sandy to dark brown fur, a cream-white throat and chest patch, rounded ears and a long tail; the head is elongated and angular. The pale bib often forks and may extend down the forelegs. The fur on the underside of the paws is sparse, a useful close-view distinction from the Eurasian pine marten. That relative, Martes martes, usually has a smaller yellowish or cream bib, larger ears and furrier feet. The beech marten’s pinkish-brown nose contrasts with the darker nose of Martes martes. Adults typically measure 45–60 cm head–body, with a 25–30 cm tail, and weigh 1.2–2.3 kg.",
+      "fr": "L’adulte porte généralement une fourrure brun sable à brun foncé, une bavette blanc crème sur la gorge et la poitrine, des oreilles arrondies et une longue queue ; sa tête est allongée et anguleuse. La bavette claire se divise souvent en deux branches et peut descendre sur les pattes avant. Le dessous des pattes est peu poilu, détail utile lorsqu’on peut l’observer de près pour la distinguer de la martre des pins. Cette proche parente, Martes martes, a généralement une bavette plus petite, jaunâtre ou crème, des oreilles plus grandes et des pieds plus velus. Le nez brun rosé de la fouine contraste avec celui, plus sombre, de Martes martes. Les adultes mesurent généralement 45–60 cm hors queue, celle-ci mesurant 25–30 cm, et pèsent 1,2–2,3 kg."
+    },
+    "habitat": {
+      "en": "Across its range the species occupies deciduous woodland, scrub, forest edges, open rocky ground and farmland. In southern Portugal, radio-tracked martens used structurally complex cork-oak woodland together with riparian strips, orchards and pasture; foraging and resting sites differed by sex and landscape scale. In several central European regions, animals also occupy villages and cities, nesting in attics, barns, garages or wall cavities. Urban tolerance is not universal: the IUCN account reports greater woodland association in Israel. Habitat use therefore reflects local resources and landscape, rather than a simple preference for either forest or people.",
+      "fr": "Dans toute son aire, la fouine fréquente forêts feuillues, fourrés, lisières, pentes rocheuses et terres agricoles. Au sud du Portugal, des fouines suivies par radio utilisaient des chênaies-lièges complexes, des bandes riveraines, des vergers et des pâturages ; les sites d’alimentation et de repos variaient selon le sexe et l’échelle. En Europe centrale, elles nichent aussi dans des bâtiments : greniers, granges, garages et cavités murales. Cette tolérance urbaine n’est pas universelle : selon la fiche de l’UICN, en Israël elles sont davantage associées aux bois. Leur habitat dépend donc des ressources et du paysage locaux."
+    },
+    "diet": {
+      "en": "The beech marten is an opportunistic omnivore. It takes small mammals, birds and eggs, reptiles, invertebrates and carrion, as well as fruit and other plant material. Stomach analyses in central Greece found animal prey especially prominent in spring, when small vertebrates and arthropods were frequent; fruits and insects became more important in summer and autumn as seasonal foods ripened. The pattern shifted among seasons and individuals, rather than following one fixed menu.",
+      "fr": "La fouine est omnivore et opportuniste. Elle mange de petits mammifères, des oiseaux et des œufs, des reptiles, des invertébrés et des charognes, ainsi que des fruits et d’autres matières végétales. En Grèce centrale, les contenus stomacaux révélaient surtout des proies animales au printemps, notamment de petits vertébrés et des arthropodes ; fruits mûrs et insectes devenaient plus importants en été et en automne. Le régime variait selon la saison et les individus, plutôt que de suivre un menu fixe."
+    },
+    "behavior": {
+      "en": "Beech martens forage mainly at night and spend daylight hours in sheltered resting places. They are generally solitary outside breeding; scent marks signal territorial boundaries. In two towns in Luxembourg, radio-tracked animals held stable territories through the year, mostly within the urban boundary; territories of males and females overlapped little with those of the same sex. Urban living did not erase this spacing pattern. Local food and shelter can bring individuals into human structures, while their routine movements still follow territorial boundaries.",
+      "fr": "Les fouines cherchent surtout leur nourriture la nuit et passent le jour dans des gîtes abrités. Elles sont généralement solitaires en dehors de la reproduction ; les marques odorantes signalent les limites territoriales. Dans deux villes du Luxembourg, le suivi radio a révélé des territoires stables toute l’année, presque entièrement urbains, et peu de chevauchement entre individus du même sexe. La vie en ville n’a donc pas effacé cette organisation spatiale. Nourriture et abris les attirent parfois dans les bâtiments, mais leurs mouvements restent territoriaux."
+    },
+    "reproduction": {
+      "en": "Mating occurs in summer, but birth follows the next spring because development pauses after fertilization. A study of more than 100 animals from the Bordeaux region documented about eight months of delayed implantation, ending in late February; implantation is followed by roughly 30 days of active gestation. Litters are born around late March or early April. The young are initially helpless and remain in a den while the mother nurses them. In the Bordeaux study, nursing could continue until mid-May. After weaning, juveniles continue to develop and learn to forage before becoming independent later in the year. The long pause separates mating from the brief period of embryo growth and birth.",
+      "fr": "L’accouplement a lieu en été, mais la naissance survient au printemps suivant, car le développement s’interrompt après la fécondation. Une étude portant sur plus de 100 individus de la région de Bordeaux a établi une implantation différée d’environ huit mois, qui prend fin à la fin février ; l’implantation est suivie d’une gestation active d’environ 30 jours. Les portées naissent vers la fin mars ou le début avril. Au départ, les petits sont dépendants et restent au gîte pendant que leur mère les allaite. Dans l’étude bordelaise, l’allaitement pouvait se poursuivre jusqu’à la mi-mai. Après le sevrage, les jeunes continuent de grandir et apprennent à chercher leur nourriture avant de devenir indépendants plus tard dans l’année. Cette longue pause sépare l’accouplement de la courte période de croissance embryonnaire et de la naissance."
+    },
+    "ecology": {
+      "en": "In Bussaco National Forest in central Portugal, a study recovered seeds from stone-marten scats and tested their germination, including seeds of native plants and introduced cherry laurel. Gut passage increased and accelerated germination of native elmleaf blackberry, Rubus ulmifolius, but did not measurably affect cherry laurel; preference for that introduced fruit may nonetheless help it spread. Martens also used orchards, woodland edges and buildings in the southern Portuguese landscape studied by radio-tracking, linking their ecology to cultivated and less-modified patches.",
+      "fr": "Dans la forêt nationale de Bussaco, au centre du Portugal, une étude a recueilli des graines dans les fèces de fouines et en a testé la germination, notamment pour des plantes indigènes et le laurier-cerise introduit. Le passage intestinal a accru et accéléré la germination de la ronce à feuilles d’orme indigène, Rubus ulmifolius, mais n’a pas eu d’effet mesurable sur le laurier-cerise ; la préférence pour ce fruit introduit pourrait néanmoins favoriser sa propagation. Les fouines utilisaient aussi les vergers, les lisières boisées et les bâtiments dans le paysage du sud du Portugal étudié par radiopistage, reliant leur écologie aux parcelles cultivées et moins modifiées."
+    },
+    "conservation": {
+      "en": "Published in 2016 from an assessment dated 3 March 2015, the IUCN classified the species as Least Concern globally, citing its broad range, large population and occurrence in protected areas. Persecution and fur hunting occur locally, but assessors found no evidence of widespread decline from these pressures. Jordan’s 2020 national mammal Red Data Book lists the species as Endangered there and cites habitat degradation and direct killing, illustrating how regional circumstances differ.",
+      "fr": "Publiée en 2016 à partir d’une évaluation datée du 3 mars 2015, l’UICN classait l’espèce en préoccupation mineure à l’échelle mondiale, en invoquant sa vaste aire de répartition, sa population importante et sa présence dans des espaces protégés. La persécution et la chasse pour la fourrure existent localement, mais les évaluateurs ne trouvaient pas de preuve d’un déclin généralisé causé par ces pressions. Le Livre rouge national des mammifères de Jordanie de 2020 classe l’espèce en danger dans ce pays et cite la dégradation des habitats et les mises à mort directes, ce qui illustre les différences régionales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Martes foina: IUCN Red List assessment",
+        "fr": "Martes foina : évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T29672A45202514.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Native range; global status date, trend, habitats, persecution."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 8,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stone Marten species account",
+        "fr": "Fiche d’espèce : martre des pierres"
+      },
+      "url": "https://www.martesworkinggroup.org/martes-species/stone-marten",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Body size, coat tones, patch, and habitat breadth."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.3",
+        "overview.fr.3",
+        "overview.en.4",
+        "overview.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 8,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Beech marten field guide",
+        "fr": "Guide de terrain de la fouine"
+      },
+      "url": "https://www.mammalweb.org/en/learn-dropdown/learn-about-animals/178-beech-marten",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Angular head, rounded ears, longer tail, pale chest."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 8,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stone marten habitat in a Mediterranean ecosystem",
+        "fr": "Habitat de la martre des pierres en milieu méditerranéen"
+      },
+      "url": "https://link.springer.com/article/10.1007/s10344-009-0317-9",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Portuguese telemetry: cork oak, streams, orchards, pasture."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "habitat.en.5",
+        "habitat.fr.5",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 7,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Socio-spatial organization of urban stone martens",
+        "fr": "Organisation socio-spatiale des fouines urbaines"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.2008.00510.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Luxembourg telemetry: year-round territories, little same-sex overlap."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 7,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet composition and feeding strategies in central Greece",
+        "fr": "Régime et stratégies alimentaires en Grèce centrale"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3349108/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Stomach contents: prey spring; fruits and insects summer/autumn."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.3",
+        "diet.fr.3",
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 8,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Delayed implantation in the beech marten",
+        "fr": "Implantation différée chez la fouine"
+      },
+      "url": "https://doi.org/10.1111/j.1469-7998.1981.tb03448.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Bordeaux study: eight-month pause, 30-day gestation, spring birth, lactation."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.en.3",
+        "reproduction.en.5",
+        "reproduction.fr.1",
+        "reproduction.fr.2",
+        "reproduction.fr.3",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 9,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Native and exotic seed dispersal by the stone marten",
+        "fr": "Dispersion de graines indigènes et exotiques par la fouine"
+      },
+      "url": "https://doi.org/10.1111/1749-4877.12362",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Portuguese scat/germination study; native and cherry-laurel seeds."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 7,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Martens – Genuine Mustelids: Wisconsin population",
+        "fr": "Martres – Genuine Mustelids : population du Wisconsin"
+      },
+      "url": "https://www.genuinemustelids.org/family/martens/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Wisconsin feral population reported; numbers poorly known; scent marks signal territories."
+      ],
+      "prose_claims": [
+        "overview.en.5",
+        "overview.fr.5",
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.5",
+        "identification.fr.5",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 11,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "National Red Data Book of Mammals in Jordan",
+        "fr": "Livre rouge national des mammifères de Jordanie"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-569.5-001-En.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Jordan 2020 national status: Endangered; habitat degradation and direct killing."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 10,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pine marten identification guidelines",
+        "fr": "Guide d’identification de la martre des pins"
+      },
+      "url": "https://www.face.eu/sites/default/files/attachments/trapping_guidelines_-_martes_martes.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "White ventral bib of beech marten contrasts with cream bib of pine marten."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 13,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Beech marten species account, Animal Diversity Web",
+        "fr": "Fiche de la fouine, Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Martes_foina/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Sparse sole fur; dependent young; nursing and juvenile learning."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.6",
+        "reproduction.fr.6",
+        "reproduction.en.7",
+        "reproduction.fr.7",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 9,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult beech marten, exact natural morphology with long bushy tail and forked white throat bib; pure white background.",
+  "uncertainties": [
+    "The Wisconsin occurrence is treated as an isolated introduced population report; the accessible evidence does not establish its present size or status.",
+    "The consulted accounts give seasonal, not precise, timing for juvenile independence."
+  ],
+  "reviewed": true,
+  "review_note": "Root and independent scientific critic reviewed species identity, regional studies, delayed implantation, seed effects, dated status and bilingual source allocation. Dependent young attributed to ADW; scent claim restricted to documented territorial signalling; indicative adult dimensions verified against Martes Working Group.",
+  "source_audit_version": 1
+}

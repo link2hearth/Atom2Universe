@@ -1,0 +1,641 @@
+{
+  "id": "giant_panda",
+  "scientific": "Ailuropoda melanoleuca",
+  "group": "mammals",
+  "name": {
+    "en": "Giant panda",
+    "fr": "Panda géant"
+  },
+  "sections": {
+    "overview": {
+      "en": "The giant panda is a bear of central China, now confined to scattered mountain forests in Sichuan, Shaanxi and Gansu. Its diet is almost entirely bamboo, although its body remains recognizably that of a bear rather than a specialized grazing mammal. Adults usually forage alone, but overlapping ranges and scent trails help them find one another during the breeding season.",
+      "fr": "Le panda géant est un ours du centre de la Chine, aujourd’hui cantonné à des forêts de montagne dispersées au Sichuan, au Shaanxi et au Gansu. Son régime se compose presque entièrement de bambou, même si son corps reste celui d’un ours plutôt que d’un herbivore spécialisé dans le pâturage. Les adultes cherchent généralement leur nourriture seuls, mais leurs domaines vitaux et leurs pistes odorantes les aident à se retrouver à la saison des amours."
+    },
+    "identification": {
+      "en": "The panda has a broad head, sturdy body and dense woolly coat: black fur marks its ears, eye patches, shoulders and legs, while its face and trunk are white. Adults are about 1.2 to 1.8 metres long; wild males can reach 113 kilograms and females rarely reach 104 kilograms, figures near the upper end rather than typical weights. Strong jaw muscles and broad molars crush tough bamboo stems. Beside five ordinary digits, each forepaw has an enlarged radial sesamoid, a small wrist bone covered by a fleshy pad. This so-called pseudo-thumb is relatively immobile: the five fingers flex around a bamboo stalk against it, while the panda’s teeth tear the stalk. The bone acts as a passive stop, not an active pinching finger, and its form balances feeding grip with bearing weight when the paw meets the ground.",
+      "fr": "Le panda a une tête large, un corps robuste et une fourrure épaisse : noir aux oreilles, autour des yeux, aux épaules et aux pattes, blanc au visage et au tronc. Les adultes mesurent environ 1,2 à 1,8 mètre de long; les mâles sauvages peuvent atteindre 113 kilogrammes et les femelles dépassent rarement 104 kilogrammes, des valeurs proches des maxima plutôt que des poids typiques. Des mâchoires musclées et de larges molaires broient les tiges coriaces de bambou. À côté des cinq doigts ordinaires, chaque patte avant porte un sésamoïde radial agrandi, un petit os du poignet recouvert d’un coussinet charnu. Ce « pseudo-pouce » est relativement immobile : les cinq doigts se replient contre lui autour d’une tige, que le panda déchire ensuite avec ses dents. L’os sert de butée passive, et non de doigt qui pince activement; sa forme concilie la prise alimentaire et l’appui du membre au sol."
+    },
+    "habitat": {
+      "en": "Wild pandas survive in six mountain systems across Sichuan, Shaanxi and Gansu, in moist broadleaf or conifer forests with bamboo beneath the canopy. These forests usually lie around 1,500 to 3,000 metres above sea level, often under heavy rain or mist. In one Foping study in the Qinling Mountains, six GPS-collared pandas shifted between lower and higher ranges as different bamboo shoots and leaves came into season. That local pattern shows how a home range can include several feeding zones rather than one bamboo patch. Farming, timber extraction and forest clearing have removed lowland habitat, while broken forest can obstruct travel and contact between populations.",
+      "fr": "Les pandas sauvages subsistent dans six massifs du Sichuan, du Shaanxi et du Gansu, au sein de forêts humides de feuillus ou de conifères dont le sous-bois est riche en bambou. Ces forêts se trouvent généralement entre 1 500 et 3 000 mètres d’altitude, souvent sous de fortes pluies ou dans la brume. Dans une étude menée à Foping, dans les monts Qinling, six pandas munis de colliers GPS passaient de secteurs bas à des secteurs élevés selon la saison des pousses et des feuilles de bambou. Ce cas local montre qu’un domaine vital peut relier plusieurs zones de nourrissage plutôt qu’une seule parcelle. Agriculture, exploitation du bois et défrichement ont supprimé des habitats de plaine; les coupures forestières peuvent gêner les déplacements et les contacts entre populations."
+    },
+    "diet": {
+      "en": "Bamboo is the panda’s staple food, and a wild adult may spend about 12 hours a day feeding. Across the year it selects tender shoots, leaves and stems as their availability changes. Its short digestive tract resembles that of other bears and extracts little energy from bamboo; it ferments plant fibre only to a limited degree. Captive feeding trials found low energy digestibility on bamboo-only diets, so much of the food’s energy remains unavailable to the animal. Field estimates put daily intake at roughly 13 to 15 kilograms of leaves and stems, while intake of watery shoots can be much higher. A study of eight pandas—five captive and three wild—measured daily energy expenditure at 37.7 percent of the amount predicted for a mammal of similar size, consistent with a low-activity lifestyle that reduces energy needs.",
+      "fr": "Le bambou est l’aliment de base du panda, et un adulte sauvage peut passer environ 12 heures par jour à s’alimenter. Au fil de l’année, il choisit pousses tendres, feuilles ou tiges selon leur disponibilité. Son tube digestif court ressemble à celui des autres ours et extrait peu d’énergie du bambou; il ne fermente que dans une mesure limitée les fibres végétales. Des essais alimentaires en captivité ont mesuré une faible digestibilité énergétique avec un régime exclusivement composé de bambou : une grande part de son énergie reste donc inaccessible à l’animal. Les estimations de terrain situent l’ingestion quotidienne autour de 13 à 15 kilogrammes de feuilles et de tiges, et celle des pousses aqueuses peut être bien supérieure. Une étude portant sur huit pandas — cinq captifs et trois sauvages — a mesuré une dépense énergétique quotidienne égale à 37,7 % de la valeur prédite pour un mammifère de taille comparable, un faible coût énergétique compatible avec son activité limitée."
+    },
+    "behavior": {
+      "en": "Pandas are mostly solitary, yet overlapping ranges, scent stations and occasional meetings create a loose social network. Glands near the anus leave chemical marks on trees, rocks and paths; these can carry information about sex, individual identity and reproductive condition. During the short breeding season, pandas also call as they approach through dense bamboo. In playback trials, females distinguished individual males’ bleats, evidence that calls can help coordinate close encounters. At other times, scent marks often help animals avoid one another. Feeding alternates with rests of several hours; pandas also climb and swim, though most of their active time is spent on the ground.",
+      "fr": "Les pandas sont surtout solitaires, mais leurs domaines vitaux se chevauchent et les rencontres occasionnelles forment un réseau social lâche. Des glandes proches de l’anus déposent sur les arbres, les rochers et les sentiers des marques chimiques qui renseignent sur le sexe, l’identité et l’état reproducteur. À la brève saison des amours, les pandas vocalisent aussi en s’approchant dans le bambou dense. Lors d’essais de diffusion sonore, les femelles distinguaient les bêlements de différents mâles, ce qui indique que les cris peuvent coordonner les rencontres rapprochées. À d’autres périodes, les marques odorantes aident souvent les animaux à s’éviter. Les repas alternent avec des repos de plusieurs heures; les pandas grimpent et nagent aussi, mais passent la plupart de leur temps actif au sol."
+    },
+    "reproduction": {
+      "en": "Females come into heat once each spring, often for only two or three days, so mating is concentrated in a brief window. After fertilization, the embryo can pause before attaching to the uterus, a process called delayed implantation that shifts the timing of birth. Field observations in the Qinling Mountains recorded most matings in March and April; pregnancy lasted four to five months overall, including about one and a half to two months after implantation. The same study recorded births from mid-August to early September. Captive records put newborns at about 90 to 130 grams: pink, nearly hairless and blind, they are tiny beside their mother. She nurses the helpless cub in a sheltered den. Zoo observations report that cubs open their eyes at six to eight weeks. In the Qinling field study, young pandas left the den at about three to four months. Litters can include twins. Milk remains important through infancy; captive records show nursing for eight to nine months and social separation may occur later.",
+      "fr": "Les femelles entrent en chaleur une fois au printemps, souvent pendant deux ou trois jours seulement; les accouplements se concentrent donc sur une période brève. Après la fécondation, l’embryon peut attendre avant de s’attacher à l’utérus : cette implantation différée décale la naissance. Dans les monts Qinling, les observations de terrain ont relevé la plupart des accouplements en mars et avril; la gestation durait quatre à cinq mois au total, dont environ un mois et demi à deux mois après l’implantation. La même étude a enregistré des naissances de la mi-août au début septembre. Les relevés en zoo situent le nouveau-né vers 90 à 130 grammes : rose, presque nu et aveugle, il est minuscule auprès de sa mère. Elle allaite ce petit sans défense dans une tanière abritée. Les observations en zoo indiquent que les petits ouvrent les yeux vers six à huit semaines. Dans l’étude de terrain des Qinling, les jeunes pandas quittaient la tanière vers trois à quatre mois. Les portées peuvent compter des jumeaux. Le lait reste important pendant l’enfance; en captivité, l’allaitement dure huit à neuf mois et la séparation sociale peut survenir plus tard."
+    },
+    "ecology": {
+      "en": "Pandas depend on bamboo, whose shoots and leaves change in quality and availability through the year. At Wolong, the preferred bamboo Bashania fangiana mass-flowered and died in 1983, sharply reducing the standing crop. Pandas changed what they ate and, two years later, began using more of a lower-elevation alternative bamboo, Fargesia robusta. In the Qinling Mountains, seasonal shifts between bamboo species were documented among tracked pandas in Foping. A separate Qinling study found seasonal dietary overlap between pandas and wild boar eating shoots, suggesting potential competition for a brief, nutritious food. Connected forest can help pandas reach alternate feeding areas as bamboo resources shift.",
+      "fr": "Les pandas dépendent du bambou, dont les pousses et les feuilles varient en qualité et en disponibilité au fil de l’année. À Wolong, le bambou préféré, Bashania fangiana, a fleuri en masse puis dépéri en 1983, réduisant fortement les stocks sur pied. Les pandas ont modifié leur alimentation et, deux ans plus tard, ont davantage utilisé un bambou de remplacement à plus basse altitude, Fargesia robusta. Dans les Qinling, des changements saisonniers entre espèces de bambou ont été documentés chez des pandas suivis à Foping. Une autre étude des Qinling a constaté un chevauchement alimentaire saisonnier entre pandas et sangliers consommant des pousses, ce qui suggère une concurrence potentielle pour cette ressource brève et nutritive. Des forêts reliées peuvent aider les pandas à atteindre d’autres zones d’alimentation lorsque les ressources en bambou changent."
+    },
+    "conservation": {
+      "en": "Hunting for pelts, farming, timber extraction and settlement reduced the panda’s range and broke mountain forests into isolated patches. China’s fourth national survey, conducted in 2011–2014 and published in 2015, reported 1,864 wild pandas at the end of 2013 and 67 reserves in the range, while noting fragmentation and small populations at risk. A 2021 analysis of those census data found that 25 of 33 populations held about 259 pandas, around 14 percent of the wild total. In 2016 the IUCN changed the species’ Red List category from Endangered to Vulnerable after population growth linked to forest protection and restoration, while recognizing continuing risks. Reserves, forest restoration and corridors aim to reconnect habitat, but isolated groups remain vulnerable to habitat loss and limited exchange.",
+      "fr": "La chasse pour les fourrures, l’agriculture, l’exploitation du bois et les établissements humains ont réduit l’aire du panda et fragmenté les forêts de montagne. La quatrième enquête nationale chinoise, menée en 2011–2014 et publiée en 2015, rapportait 1 864 pandas sauvages fin 2013 et 67 réserves dans leur aire, tout en signalant la fragmentation et de petites populations à risque. Une analyse de 2021 fondée sur ces données recensait environ 259 pandas dans 25 des 33 populations, soit près de 14 % du total sauvage. En 2016, l’UICN a fait passer l’espèce de la catégorie « En danger » à « Vulnérable » après une croissance de la population associée à la protection et à la restauration des forêts, tout en reconnaissant les risques persistants. Réserves, restauration forestière et corridors visent à reconnecter les habitats, mais les groupes isolés restent vulnérables à leur perte et aux faibles échanges."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Giant panda — Smithsonian's National Zoo and Conservation Biology Institute",
+        "fr": "Panda géant — Smithsonian's National Zoo and Conservation Biology Institute"
+      },
+      "url": "https://nationalzoo.si.edu/animals/giant-panda",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Smithsonian account documents wild dimensions, coat, jaws and paw anatomy."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.10",
+        "reproduction.fr.10"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 10,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Earliest giant panda false thumb suggests conflicting demands for locomotion and feeding",
+        "fr": "Earliest giant panda false thumb suggests conflicting demands for locomotion and feeding"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9246853/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Comparative fossils and anatomy trace the enlarged wrist sesamoid and its feeding trade-off."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "identification.en.5",
+        "identification.fr.5",
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 13,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Energy digestibility of giant pandas on bamboo-only and on supplemented diets",
+        "fr": "Energy digestibility of giant pandas on bamboo-only and on supplemented diets"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/20814990/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "overview"
+      ],
+      "facts": [
+        "Controlled trials measured low energy digestibility on bamboo-only diets."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 9,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stable seasonal migration patterns in giant pandas",
+        "fr": "Stable seasonal migration patterns in giant pandas"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10083218/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Long-term GPS study in Foping recorded seasonal routes and bamboo foraging."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 11,
+        "total": 141,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Giant panda Ailuropoda melanoleuca behaviour and carrying capacity following a bamboo die-off",
+        "fr": "Giant panda Ailuropoda melanoleuca behaviour and carrying capacity following a bamboo die-off"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/0006320789900815",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Wolong field research documented bamboo die-off responses and later use of alternative food."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "ecology.en.3",
+        "ecology.fr.3",
+        "ecology.en.6",
+        "ecology.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 13,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal competition between sympatric species for a key resource: Implications for conservation management",
+        "fr": "Seasonal competition between sympatric species for a key resource: Implications for conservation management"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S000632071930151X",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Qinling study found seasonal dietary overlap between pandas and wild boar."
+      ],
+      "prose_claims": [
+        "ecology.en.5",
+        "ecology.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 11,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "How Panda Pregnancies Can Be a Months-Long Waiting Game",
+        "fr": "How Panda Pregnancies Can Be a Months-Long Waiting Game"
+      },
+      "url": "https://nationalzoo.si.edu/animals/news/how-panda-pregnancies-can-be-months-long-waiting-game",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Smithsonian reproductive account explains delayed implantation and variable birth timing."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 10,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Growth and development of giant panda cubs at Beijing Zoo",
+        "fr": "Growth and development of giant panda cubs at Beijing Zoo"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1017/S0952836901000772",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Beijing Zoo records document captive cub weights, eye opening and nursing."
+      ],
+      "prose_claims": [
+        "reproduction.en.5",
+        "reproduction.fr.5",
+        "reproduction.en.7",
+        "reproduction.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 11,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chemical cues identify gender and individuality in Giant pandas (Ailuropoda melanoleuca)",
+        "fr": "Chemical cues identify gender and individuality in Giant pandas (Ailuropoda melanoleuca)"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12918929/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Chemical analyses show scent marks carry sex and individual identity cues."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 11,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vocal discrimination of potential mates by female giant pandas (Ailuropoda melanoleuca)",
+        "fr": "Vocal discrimination of potential mates by female giant pandas (Ailuropoda melanoleuca)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2781960/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Playback trials show females distinguish male callers by bleat characteristics."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 10,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fourth National Giant Panda Survey results (2011–2014)",
+        "fr": "Résultats de la quatrième enquête nationale sur le panda géant (2011–2014)"
+      },
+      "url": "https://www.forestry.gov.cn/main/65/20150302/758158.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "Survey reported 1,864 wild pandas at end-2013 and persistent fragmentation."
+      ],
+      "prose_claims": [
+        "habitat.en.5",
+        "habitat.fr.5",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 10,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List: Giant Panda Vulnerable category announcement, 4 September 2016",
+        "fr": "Liste rouge de l’UICN : annonce du classement Vulnérable, 4 septembre 2016"
+      },
+      "url": "https://iucn.org/news/species/201609/four-out-six-great-apes-one-step-away-extinction-%E2%80%93-iucn-red-list",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN announced the category change to Vulnerable on 4 September 2016."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 11,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Conservation of the Endangered giant panda Ailuropoda melanoleuca in China: successes and challenges",
+        "fr": "Conservation of the Endangered giant panda Ailuropoda melanoleuca in China: successes and challenges"
+      },
+      "url": "https://www.cambridge.org/core/journals/oryx/article/conservation-of-the-endangered-giant-panda-ailuropoda-melanoleuca-in-china-successes-and-challenges/8F640E878E6010EB760B78440975FE9B",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "Review discusses historical hunting, reserve policy, habitat degradation and fragmentation."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 10,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ailuropoda melanoleuca (giant panda) — Animal Diversity Web, University of Michigan",
+        "fr": "Ailuropoda melanoleuca (panda géant) — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Ailuropoda_melanoleuca/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "University of Michigan species account describes range, bear identity and solitary behavior."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.3",
+        "overview.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 12,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal shifts in giant panda feeding behavior: relationships to bamboo plant part consumption",
+        "fr": "Seasonal shifts in giant panda feeding behavior: relationships to bamboo plant part consumption"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19862794/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Wild and captive observations document seasonal shifts among bamboo plant parts."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 11,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Metabolic rates of giant pandas inform conservation strategies",
+        "fr": "Metabolic rates of giant pandas inform conservation strategies"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4893702/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Study measured daily expenditure in five captive and three wild pandas."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5",
+        "diet.en.6",
+        "diet.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 11,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Giant Panda — The Nature Conservancy",
+        "fr": "Panda géant — The Nature Conservancy"
+      },
+      "url": "https://www.nature.org/en-us/get-involved/how-to-help/animals-we-protect/giant-panda/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Institutional account notes climbing, swimming and other panda behaviors."
+      ],
+      "prose_claims": [
+        "behavior.en.6",
+        "behavior.fr.6",
+        "reproduction.en.9",
+        "reproduction.fr.9",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 9,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spatial models of giant pandas under current and future conditions reveal extinction risks",
+        "fr": "Spatial models of giant pandas under current and future conditions reveal extinction risks"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34312523/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Analysis of fourth-census data identified 33 populations and 259 pandas in 25 small groups."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 14,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Obligate herbivory in an ancestrally carnivorous lineage: the giant panda and bamboo from the perspective of nutritional geometry",
+        "fr": "Obligate herbivory in an ancestrally carnivorous lineage: the giant panda and bamboo from the perspective of nutritional geometry"
+      },
+      "url": "https://besjournals.onlinelibrary.wiley.com/doi/10.1111/1365-2435.12302",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Six collared Foping pandas and Qinling reproductive records document seasonal movements and timing."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 13,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The reproductive strategy of giant pandas (Ailuropoda melanoleuca): infant growth and development and mother–infant relationships",
+        "fr": "The reproductive strategy of giant pandas (Ailuropoda melanoleuca): infant growth and development and mother–infant relationships"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1017/S0952836901000139",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Qinling field study records den care and cub emergence at about three to four months."
+      ],
+      "prose_claims": [
+        "reproduction.en.6",
+        "reproduction.fr.6",
+        "reproduction.en.8",
+        "reproduction.fr.8"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 15,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Metagenomic Study Suggests That the Gut Microbiota of the Giant Panda (Ailuropoda melanoleuca) May Not Be Specialized for Fiber Fermentation",
+        "fr": "Metagenomic Study Suggests That the Gut Microbiota of the Giant Panda (Ailuropoda melanoleuca) May Not Be Specialized for Fiber Fermentation"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5820910/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Metagenomic evidence indicates a bear-like microbiome with limited capacity for fiber fermentation."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 12,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult giant panda in accurate natural black-and-white coat and robust bear proportions, isolated on a PURE WHITE background.",
+  "uncertainties": [
+    "The 1,864 wild-animal figure is the Chinese fourth survey's end-2013 estimate; it is a dated count.",
+    "Newborn measurements and eye-opening timing come from captive records; wild birth and cub-survival observations remain sparse.",
+    "Seasonal migration and reproductive dates described here come from Foping/Qinling field studies and should not be generalized to every mountain population.",
+    "The IUCN Vulnerable category cited is the 2016 announcement; these sources do not establish a later global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Deep explanatory revision with independent scientific critique, passive radial sesamoid mechanics, wild versus captive digestion/reproduction data and regional ecological scope; EN/FR and source budget audit, original illustration inspected."
+}

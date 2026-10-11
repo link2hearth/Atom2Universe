@@ -1,0 +1,542 @@
+{
+  "id": "stoat",
+  "scientific": "Mustela erminea",
+  "group": "mammals",
+  "name": {
+    "en": "Stoat",
+    "fr": "Hermine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The stoat is a small mustelid with a long, slender body, short legs and a black-tipped tail. It searches covered ground and follows prey into burrows. Its coat moults seasonally, but winter whitening varies with local climate and snow conditions.",
+      "fr": "L’hermine est un petit mustélidé au corps long et fin, aux pattes courtes et à la queue terminée de noir. Elle fouille les milieux couverts et poursuit ses proies jusque dans leurs terriers. Son pelage mue au fil des saisons, mais le blanchiment hivernal varie selon le climat et l’enneigement locaux."
+    },
+    "identification": {
+      "en": "In Britain, adult males measure about 27.5–31 cm and weigh roughly 200–450 g; females are about 24–29 cm and 140–280 g. Tails measure 9.5–14 cm in both sexes. In summer the back is chestnut to reddish brown and the underside pale; the black tail tip remains in winter. The smaller least weasel, Mustela nivalis, lacks this black tip. Stoats moult twice yearly: day length helps set the seasonal timing, while temperature affects whether winter fur becomes fully white or stays mottled. A study of Dutch pelts found full winter whiteness more often in colder regions. When snow disappears, a white coat can stand out against bare ground.",
+      "fr": "En Grande-Bretagne, les mâles adultes mesurent environ 27,5 à 31 cm et pèsent 200 à 450 g ; les femelles mesurent environ 24 à 29 cm et pèsent 140 à 280 g. La queue mesure 9,5 à 14 cm dans les deux sexes. En été, le dos est brun roux et le dessous clair ; la pointe noire persiste en hiver. La belette, Mustela nivalis, plus petite, n’a pas cette pointe noire. L’hermine mue deux fois par an : la durée du jour contribue au calendrier saisonnier, tandis que la température influe sur le blanchiment complet ou partiel. Une étude de peaux néerlandaises a trouvé davantage de pelages entièrement blancs dans les régions froides. Quand la neige disparaît, le pelage blanc peut trancher sur le sol nu."
+    },
+    "habitat": {
+      "en": "Stoats occupy a broad range of covered habitats, from grassland and farmland to woodland, marsh and upland; in Britain they travel along hedgerows, ditches and stone walls. A 2021 genetic and morphometric revision assigns M. erminea mainly to the Old World and Beringia into Alaska; most continental North American populations are M. richardsonii, while Haida Gwaii and Alexander Archipelago island populations are M. haidarum.",
+      "fr": "L’hermine fréquente des milieux variés offrant du couvert, des prairies et terres agricoles aux bois, marais et reliefs élevés ; en Grande-Bretagne, elle circule le long des haies, fossés et murs de pierre. Une révision génétique et morphométrique de 2021 attribue M. erminea surtout à l’Ancien Monde et à la Béringie jusqu’en Alaska ; la plupart des populations continentales d’Amérique du Nord sont M. richardsonii, tandis que celles de Haida Gwaii et de l’archipel Alexandre sont M. haidarum."
+    },
+    "diet": {
+      "en": "Small mammals, especially rabbits and water voles where abundant, are staple prey; stoats also take rodents, birds and eggs. A British stomach-content study found lagomorphs most often, followed by rodents and birds or eggs; in that sample, males ate more lagomorphs and females more small rodents. Stoats enter wider prey tunnels, such as rabbit, rat and water-vole burrows, and climb to reach birds’ nests. Most prey are killed with a bite to the back of the neck. Stoats cache surplus prey and reuse former prey nests as dens, sometimes lining them with fur in cold regions.",
+      "fr": "Les petits mammifères, surtout les lapins et les campagnols aquatiques là où ils abondent, constituent l’essentiel des proies ; l’hermine prend aussi des rongeurs, des oiseaux et des œufs. Une étude britannique de contenus stomacaux a trouvé surtout des lagomorphes, puis des rongeurs, oiseaux ou œufs ; dans cet échantillon, les mâles mangeaient davantage de lagomorphes et les femelles davantage de petits rongeurs. L’hermine pénètre dans des terriers assez larges, comme ceux des lapins, rats et campagnols aquatiques, et grimpe jusqu’aux nids d’oiseaux. La plupart des proies sont tuées d’une morsure à la nuque. L’hermine met en réserve les surplus et réutilise comme gîtes les anciens nids de proies, parfois garnis de fourrure dans les régions froides."
+    },
+    "behavior": {
+      "en": "Stoats are mostly solitary: adult males and females occupy separate territories, and males range more widely when searching for mates. Scent marks communicate territorial presence and social status. At about eight weeks, kits begin hunting alongside their mother.",
+      "fr": "L’hermine est surtout solitaire : adultes mâles et femelles occupent des territoires distincts, et les mâles s’éloignent davantage lorsqu’ils cherchent une partenaire. Les marques odorantes signalent la présence territoriale et le statut social. Vers huit semaines, les jeunes commencent à chasser aux côtés de leur mère."
+    },
+    "reproduction": {
+      "en": "In wild stoats in New Zealand, females mate in September–November and give birth the following September–October. The fertilised egg remains dormant in the uterus for about eight to nine months before implantation. After implantation, active pregnancy lasts about four weeks. Spring litters usually contain six to twelve young, born blind, deaf and sparsely furred. Mothers care for the kits until they become self-sufficient at around twelve weeks. Female kits can mate at only two or three weeks old, before leaving the nest.",
+      "fr": "Chez les hermines sauvages de Nouvelle-Zélande, les femelles s’accouplent de septembre à novembre et mettent bas en septembre-octobre de l’année suivante. L’œuf fécondé reste dormant dans l’utérus environ huit à neuf mois avant l’implantation. Après l’implantation, la gestation active dure environ quatre semaines. Les portées printanières comptent généralement six à douze petits, nés aveugles, sourds et peu couverts de poils. Les mères s’occupent des jeunes jusqu’à leur autonomie, vers douze semaines. Les très jeunes femelles peuvent s’accoupler dès deux ou trois semaines, avant de quitter le nid."
+    },
+    "ecology": {
+      "en": "In Britain, stoat abundance often tracks prey populations, especially rabbits; myxomatosis-driven rabbit crashes coincided with sharp stoat declines in the 1950s and 1960s. A recent climate projection for the Italian Alps suggests its local range may contract as snow cover declines and snow voles shift distribution, but this is a regional forecast rather than a measured global trend. On Orkney, introduced stoats prey on endemic voles and ground-nesting birds, and compete with native raptors for voles. New Zealand stoats were introduced from Britain in the nineteenth century to control rabbits, but they have had a devastating effect on native birdlife.",
+      "fr": "En Grande-Bretagne, les effectifs d’hermines suivent souvent ceux de leurs proies, surtout des lapins ; l’effondrement des lapins dû à la myxomatose a coïncidé avec un fort recul des hermines dans les années 1950 et 1960. Une projection climatique récente dans les Alpes italiennes suggère que son aire locale pourrait se réduire avec le recul de l’enneigement et le déplacement des campagnols des neiges, mais il s’agit d’une prévision régionale, non d’une tendance mondiale mesurée. Aux Orcades, les hermines introduites prédatent les campagnols endémiques et les oiseaux nichant au sol, et concurrencent les rapaces indigènes pour les campagnols. Les hermines ont été introduites depuis la Grande-Bretagne en Nouvelle-Zélande au XIXe siècle pour lutter contre les lapins, mais elles ont eu des effets dévastateurs sur les oiseaux indigènes."
+    },
+    "conservation": {
+      "en": "England’s 2021 mammal assessment classed the stoat as Least Concern but also described its population evidence as highly data deficient. In Britain, hedgerow loss and rabbit declines may reduce habitat or food. On Orkney, where they were first recorded in 2010, an eradication programme targets this introduced predator to protect native wildlife.",
+      "fr": "L’évaluation des mammifères d’Angleterre de 2021 classait l’hermine en préoccupation mineure, tout en jugeant les données sur ses effectifs très lacunaires. En Grande-Bretagne, la disparition des haies et le recul des lapins peuvent réduire les abris ou la nourriture. Aux Orcades, où elles ont été signalées pour la première fois en 2010, un programme d’éradication vise ce prédateur introduit afin de protéger la faune indigène."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Naturblick species portrait: Stoat",
+        "fr": "Portrait d’espèce Naturblick : hermine"
+      },
+      "url": "https://naturblick.museumfuernaturkunde.berlin/species/portrait/509?lang=en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Berlin museum portrait: coat, tail, activity and shelters."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "identification.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 8,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Society: Stoat",
+        "fr": "Mammal Society : stoat"
+      },
+      "url": "https://mammal.org.uk/british-mammals/stoat",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "British account gives dimensions, life history and Orkney history."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.fr.2",
+        "diet.en.5",
+        "diet.fr.5",
+        "reproduction.en.6",
+        "reproduction.fr.6",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 9,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Journal of Zoology: Stoat and weasel diets in Great Britain",
+        "fr": "Journal of Zoology : régimes alimentaires du stoat et de la belette en Grande-Bretagne"
+      },
+      "url": "https://zslpublications.onlinelibrary.wiley.com/doi/10.1111/j.1469-7998.2000.tb00631.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Stomach-content study examined 789 British stoats."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 6,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Orkney Native Wildlife Project: Stoats in Orkney",
+        "fr": "Orkney Native Wildlife Project : les stoats dans les Orcades"
+      },
+      "url": "https://www.orkneynativewildlife.org.uk/project/stoats-in-orkney",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Reports first observation in 2010 and a conservation project."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 9,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stoat — IUCN UK Peatland Programme",
+        "fr": "Hermine — programme tourbières de l’IUCN Royaume-Uni"
+      },
+      "url": "https://www.iucn-uk-peatlandprogramme.org/wildlife-explorer/mammals/stoat",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "identification"
+      ],
+      "facts": [
+        "UK habitat account describes cover, hunting routes and bounding gait."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 10,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stoat reproductive biology — New Zealand Department of Conservation",
+        "fr": "Biologie reproductive du stoat — Département néo-zélandais de la conservation"
+      },
+      "url": "https://www.doc.govt.nz/documents/science-and-technical/sfc268.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Research report documents seasonal mating and embryonic diapause."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 8,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "On the moult in the Stoat, Mustela erminea, from the Netherlands",
+        "fr": "La mue de l’hermine aux Pays-Bas"
+      },
+      "url": "https://repository.naturalis.nl/pub/504487",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Study of 300 Dutch pelts linked winter whiteness with temperature."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "identification.en.6",
+        "identification.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 10,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snow loss and prey shift may threaten alpine stoats under climate change",
+        "fr": "La perte de neige et le déplacement des proies menacent les hermines alpines"
+      },
+      "url": "https://doi.org/10.1007/s13364-026-00878-6",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "Alpine distribution model projects snow-dependent local range changes."
+      ],
+      "prose_claims": [
+        "identification.en.7",
+        "identification.fr.7",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 8,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Social organization in European small mustelids",
+        "fr": "Organisation sociale des petits mustélidés européens"
+      },
+      "url": "https://doi.org/10.4404/hystrix-7.1-2-4047",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Radio-tracking review describes seasonal spacing in stoats."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 7,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scent-marking and its territorial significance in stoats",
+        "fr": "Le marquage olfactif et sa fonction territoriale chez l’hermine"
+      },
+      "url": "https://doi.org/10.1016/S0003-3472(82)80154-1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Study describes distinct scent marks and territorial information."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 8,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colella et al. 2021: Holarctic ermine species delimitation",
+        "fr": "Colella et al. 2021 : délimitation des espèces d’hermines holarctiques"
+      },
+      "url": "https://pubs.usgs.gov/publication/70218814",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Genetic and morphometric study recognizes three ermine species."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 8,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stoat and weasel — NatureScot",
+        "fr": "Hermine et belette — NatureScot"
+      },
+      "url": "https://www.nature.scot/plants-animals-and-fungi/mammals/land-mammals/other-carnivores/stoat-and-weasel",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Scottish authority describes burrow pursuit, prey range and eight-week maternal hunting."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.3",
+        "diet.fr.3",
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 11,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moult and colour change in stoats in New Zealand",
+        "fr": "Mue et changement de couleur chez les hermines de Nouvelle-Zélande"
+      },
+      "url": "https://doi.org/10.1080/03014223.1982.10423841",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Field pelts support daylength timing and temperature effects on winter whiteness."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 11,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stoat — Game & Wildlife Conservation Trust",
+        "fr": "Hermine — Game & Wildlife Conservation Trust"
+      },
+      "url": "https://www.gwct.org.uk/research/long-term-monitoring/national-gamebag-census/mammal-bags-comprehensive-overviews/stoat/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "British account reports rabbit-linked declines and historical myxomatosis impact."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 9,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "England assessment — Mammal Society Red List 2021",
+        "fr": "Évaluation de l’Angleterre — Liste rouge des mammifères 2021 de la Mammal Society"
+      },
+      "url": "https://mammal.org.uk/s/RedList_30June2021.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "England 2021 assessment listed stoat LC and population evidence highly data deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 12,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stoat — Woodland Trust",
+        "fr": "Hermine — Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/mammals/stoat/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "British account notes hedgerow loss and rabbit decline as possible pressures."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 11,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Bible — Health and Safety Executive",
+        "fr": "Mammal Bible — Health and Safety Executive"
+      },
+      "url": "https://www.hse.gov.uk/pesticides/assets/docs/MammBible.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "British handbook describes stoat burrow pursuit and neck bite."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 9,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stoats — Department of Conservation, New Zealand",
+        "fr": "Les stoats — Département de la conservation, Nouvelle-Zélande"
+      },
+      "url": "https://www.doc.govt.nz/nature/pests-and-threats/animal-pests-and-threats/stoats/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "New Zealand authority documents the 1879 introduction and native-bird impacts."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 10,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the already validated European summer stoat drawing; no new image.",
+  "uncertainties": [
+    "The 2021 English assessment is regional; a post-2021 global IUCN assessment for Mustela erminea sensu stricto was not verified. Dutch moult observations and the Italian Alps climate projection are regional evidence and do not establish a global response. Juvenile play is reported from one 2026 trail-camera account.",
+    "Introduction chronology: DOC cites as early as 1879, while King (2021, DOI10.1080/03014223.2021.2003410) and parliamentary records document 1882–1885 shipments/releases. The article uses the nineteenth century rather than a disputed precise first year."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Two independent scientific reviews checked modern species range including Beringian Alaska, winter molt, direct prey capture, early female mating and delayed implantation. Root removed unsupported filmed-play function, moved maturity into life-cycle section, avoided disputed exact New Zealand introduction year. Complete source sentence budgets passed; separately critiqued summer-coat illustration accepted."
+}

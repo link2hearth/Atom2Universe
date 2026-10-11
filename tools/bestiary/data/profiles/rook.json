@@ -1,0 +1,212 @@
+{
+  "id": "rook",
+  "scientific": "Corvus frugilegus",
+  "group": "birds",
+  "name": {
+    "en": "Rook",
+    "fr": "Corbeau freux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The rook is a social Eurasian crow of open farmland, ranging from western Europe across northern Asia to eastern Siberia. Most western populations stay near their breeding grounds, while birds farther north and east move south for winter.",
+      "fr": "Le corbeau freux est un corvidé grégaire des campagnes ouvertes d’Eurasie, présent de l’Europe occidentale jusqu’à la Sibérie orientale. La plupart des populations occidentales restent près de leurs lieux de nidification, tandis que celles du nord et de l’est gagnent le sud en hiver."
+    },
+    "identification": {
+      "en": "Adults measure about 44–46 cm long, with a wingspan of 81–99 cm; their black plumage often shines blue or violet in sunlight. Bare pale skin around the slim bill distinguishes adults from carrion crows; juveniles retain facial feathers until roughly six months old.",
+      "fr": "L’adulte mesure environ 44 à 46 cm, pour une envergure de 81 à 99 cm ; son plumage noir prend souvent des reflets bleus ou violets au soleil. La peau pâle et nue autour du bec fin distingue l’adulte de la corneille noire ; le jeune garde des plumes sur le visage jusqu’à environ six mois."
+    },
+    "habitat": {
+      "en": "Rooks are most common in rural fields and villages, nesting in mature trees between farmland; they also enter towns when suitable habitat is available. They use parks and churchyards where large trees provide nesting sites.",
+      "fr": "Le freux est surtout commun dans les champs et villages, où il niche dans les grands arbres entre les terres agricoles ; il gagne aussi les villes lorsque l’habitat s’y prête. Il fréquente les parcs et cimetières où de grands arbres offrent des sites de nidification."
+    },
+    "diet": {
+      "en": "As an omnivore, the rook eats earthworms and insect larvae, while grain and other plant foods also make up a major part of its diet. In spring it may pull up germinating crops, and occasionally eats small vertebrates, eggs or carrion.",
+      "fr": "Omnivore, le freux mange des vers de terre et des larves d’insectes, mais les céréales et autres végétaux forment aussi une part importante de son régime. Au printemps, il peut arracher des semis, et mange parfois de petits vertébrés, des œufs ou des charognes."
+    },
+    "behavior": {
+      "en": "Rooks feed in noisy flocks and gather at dusk before flying to communal night roosts, sometimes alongside jackdaws. Their varied calls signal recognition between mates or aggression, while long-term pair bonds persist within the colony.",
+      "fr": "Les freux se nourrissent en bandes bruyantes et se rassemblent au crépuscule avant de gagner des dortoirs communs, parfois avec des choucas. Leurs cris variés signalent la reconnaissance entre partenaires ou l’agression, tandis que les couples durables restent unis dans la colonie."
+    },
+    "reproduction": {
+      "en": "Established pairs build or repair a cup of twigs high in a tree, often reusing a site in a rookery that may persist for years. The female usually incubates three or four eggs for about 15–16 days while the male brings food; after hatching, both parents feed the helpless chicks. Young leave the nest at about 32–34 days but remain dependent on parental feeding for some time before becoming independent.",
+      "fr": "Les couples établis construisent ou réparent une coupe de brindilles dans la cime d’un arbre, souvent sur un site réutilisé durant des années. La femelle couve généralement trois ou quatre œufs pendant environ 15 à 16 jours, tandis que le mâle apporte de la nourriture ; après l’éclosion, les deux parents nourrissent les petits incapables de se débrouiller seuls. Les jeunes quittent le nid vers 32 à 34 jours, mais dépendent encore de la nourriture apportée par leurs parents avant de devenir autonomes."
+    },
+    "ecology": {
+      "en": "By eating soil invertebrates, rooks remove some crop pests, yet their taste for newly sown grain and emerging seedlings can bring them into conflict with farmers. Their feeding therefore links the seasonal supply of field prey and seeds with both agricultural benefits and losses.",
+      "fr": "En consommant des invertébrés du sol, les freux prélèvent certains ravageurs des cultures, mais leur goût pour les graines fraîchement semées et les jeunes pousses les oppose parfois aux agriculteurs. Leur alimentation relie ainsi les ressources saisonnières des champs à la fois aux bénéfices agricoles et aux pertes de semis."
+    },
+    "conservation": {
+      "en": "Its global conservation status is Least Concern, although local fortunes differ. In Britain, breeding numbers have declined since around 2000, while the causes remain unclear. Across its range, changing farmland, pesticide-treated seed and persecution are documented pressures.",
+      "fr": "Son statut mondial de conservation est de préoccupation mineure, malgré des situations locales contrastées. En Grande-Bretagne, les effectifs nicheurs baissent depuis environ 2000, mais les causes restent incertaines. Dans son aire, les transformations agricoles, les semences traitées aux pesticides et les persécutions constituent des pressions documentées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Rook (bird)",
+        "fr": "Rook (bird)"
+      },
+      "url": "https://en.wikipedia.org/wiki/Rook_(bird)",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "Adult facial skin is bare; juveniles retain feathers."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 8,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Corbeau freux",
+        "fr": "Corbeau freux"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Corbeau_freux",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Colonies use parks."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 3,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rook BirdFacts",
+        "fr": "Fiche BirdFacts du freux"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/rook",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "Typical clutch: 3–4; fledging: 32–34 days."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 6,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rook — Animal Diversity Web",
+        "fr": "Corbeau freux — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Corvus_frugilegus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Seasonal movement, habitat and omnivorous diet."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 6,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rook",
+        "fr": "Corbeau freux"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/rook/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Rookeries may persist for decades."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 5,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult rook with bare pale skin around bill; show black plumage and a nearby rookery in tall trees.",
+  "uncertainties": [
+    "Causes of the recent British breeding decline remain unclear."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: juvenile feather loss clarified; BTO exact clutch/incubation/fledging checked. Recent British decline describes breeding numbers rather than nest counts. 2025 IUCN citation located in species-account references; direct DOI access failed, so source-record access remains qualified. Broad biological claims moved from inaccessible RedList record to verified ADW account; global LC corroborated with BTO without assigning a current assessment date.",
+  "source_audit_version": 1
+}

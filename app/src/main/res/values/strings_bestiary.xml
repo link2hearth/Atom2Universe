@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="be_title">Bestiary</string>
     <string name="be_hub">Discover animals, illustrated profiles and their place in the living tree</string>
@@ -27,10 +27,13 @@
     <string name="be_behavior">Behaviour and life cycle</string>
     <string name="be_classification">Position in the living tree</string>
     <string name="be_sources">Sources</string>
-    <string name="be_source_note">Species account consulted for this profile. Taxonomic placement follows the archive used by the living tree. Published accounts may use an older classification.</string>
+    <string name="be_source_note">References used for this profile. Taxonomic placement follows the archive used by the tree of life; publications may use an earlier classification.</string>
     <string name="be_plate_note">Natural history illustration. Sex, age and seasonal plumage can change an animal’s appearance. See the identification notes.</string>
     <string name="be_plate_accessibility">Illustration of %1$s. %2$s</string>
     <string name="be_no_browser">No browser is available to open this source.</string>
     <string name="best_plate_loading">Loading illustration…</string>
     <string name="best_plate_unavailable">Illustration unavailable</string>
+    <string name="be_reproduction">Reproduction and development</string>
+    <string name="be_ecology">Ecological role</string>
+    <string name="be_conservation">Conservation and human interactions</string>
 </resources>

@@ -1,0 +1,379 @@
+{
+  "id": "barnacle_goose",
+  "scientific": "Branta leucopsis",
+  "group": "birds",
+  "name": {
+    "en": "Barnacle Goose",
+    "fr": "Bernache nonnette"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Barnacle Goose is a compact, strongly social Arctic goose whose annual life follows a long migration between northern breeding grounds and milder European wintering areas. Three principal flyway populations breed in northeast Greenland, Svalbard and the Russian Arctic, including Baltic regions; their winter destinations differ, so conservation counts track them separately.",
+      "fr": "La Bernache nonnette est une oie arctique trapue et très grégaire, dont le cycle annuel relie les zones de reproduction nordiques aux régions européennes plus douces où elle hiverne. Trois grandes populations migratrices nichent au nord-est du Groenland, au Svalbard et dans l’Arctique russe, y compris la région baltique ; leurs quartiers d’hiver diffèrent et les suivis les distinguent."
+    },
+    "identification": {
+      "en": "Adults have a black head, neck and breast, sharply set off by a complete creamy-white face; the upper body is blue-grey with fine black bars, while the belly is pale. The short black bill and legs, white tail patch and compact body complete a distinctive pattern. At 58–70 cm long, with a wingspan around 132–145 cm, it is a relatively small goose. Canada Goose is larger and has a black neck with a white chinstrap, not the Barnacle Goose’s full white face.",
+      "fr": "L’adulte porte la tête, le cou et la poitrine noirs, nettement contrastés par une face entièrement blanc crème ; le dessus est gris bleuté finement barré de noir et le ventre pâle. Le bec court et noir, les pattes sombres, le miroir blanc de la queue et le corps compact complètent ce plumage caractéristique. Elle mesure 58–70 cm, pour une envergure d’environ 132–145 cm : c’est une oie relativement petite. La Bernache du Canada, plus grande, a le cou noir barré d’un menton blanc, et non la face blanche entière de la nonnette."
+    },
+    "habitat": {
+      "en": "Arctic breeders use tundra coasts, offshore islets and, in some colonies, ledges on steep cliffs; nesting on islands or heights can reduce access by terrestrial predators. After hatching, families move to tundra, coastal marshes and freshwater margins. During migration and winter, flocks use estuaries, tidal flats, saltmarshes and open grassland, and often graze on agricultural pasture. In northwestern Europe, some descendants of established or escaped birds also breed on temperate islands and lakes.",
+      "fr": "Dans l’Arctique, les nicheuses fréquentent les côtes de toundra, les îlots et, dans certaines colonies, les corniches de falaises abruptes ; les îles et les hauteurs peuvent limiter l’accès des prédateurs terrestres. Après l’éclosion, les familles gagnent la toundra, les marais côtiers et les rives d’eau douce. En migration et en hiver, les groupes occupent estuaires, vasières, prés salés et prairies, notamment les pâturages agricoles. En Europe du Nord-Ouest, des oiseaux issus de populations établies ou échappés nichent aussi sur des îles et lacs tempérés."
+    },
+    "diet": {
+      "en": "This is a grazing herbivore: its stubby bill clips grass leaves and shoots close to the ground, and it also takes sedges, mosses, buds and other tundra plants as availability changes. Goslings pick vegetation for themselves soon after hatching rather than being fed by their parents. Like other grazing geese, it processes abundant, fibrous forage rapidly; frequent feeding and cropping young growth help meet the high energy costs of migration and egg production.",
+      "fr": "C’est un herbivore qui pâture : son bec court coupe les feuilles et jeunes pousses près du sol ; selon les ressources, elle consomme aussi laîches, mousses, bourgeons et autres plantes de toundra. Peu après l’éclosion, les oisons prélèvent eux-mêmes leur nourriture au lieu d’être nourris par leurs parents. Comme les autres oies brouteuses, elle traite rapidement une nourriture végétale abondante et fibreuse ; le pâturage fréquent et la consommation des jeunes pousses couvrent les besoins énergétiques de la migration et de la ponte."
+    },
+    "behavior": {
+      "en": "Barnacle Geese remain vocal and sociable, gathering into large flocks outside the breeding season and travelling in noisy lines or V-shaped formations. Pairs maintain close bonds, and parents accompany and defend their young within family groups. Their repeated barking calls help keep flock members in contact, especially in flight and at crowded roosts. Seasonal movements connect northern breeding areas with wintering sites in Britain, Ireland, the Netherlands and adjacent coasts.",
+      "fr": "Les Bernaches nonnettes sont bruyantes et grégaires ; hors reproduction, elles se rassemblent en grandes bandes et voyagent en lignes ou en formations en V. Les couples restent proches et les parents accompagnent et défendent leurs jeunes au sein de groupes familiaux. Leurs cris rauques répétés maintiennent le contact entre oiseaux, notamment en vol et sur les dortoirs très fréquentés. Les déplacements saisonniers relient les sites de nidification nordiques aux quartiers d’hiver de Grande-Bretagne, d’Irlande, des Pays-Bas et des côtes voisines."
+    },
+    "reproduction": {
+      "en": "Pairs nest once each year, usually in a colony. Depending on the population and local predators, a nest may sit on a cliff ledge, a small island or low ground; cliff nesting is not universal. The female usually incubates four to five eggs for about 24–25 days while her mate guards nearby. Downy, precocial goslings leave the nest soon after hatching and feed themselves; both parents guide and protect them. Only cliff-nesting colonies require the famous descent: chicks follow adults down to feeding areas, sometimes by leaping from ledges. They can fly at about 40–45 days and remain with family through their first winter.",
+      "fr": "Les couples nichent une fois par an, généralement en colonie. Selon la population et les prédateurs locaux, le nid se trouve sur une corniche, un îlot ou au sol ; la falaise n’est donc pas une règle générale. La femelle couve habituellement quatre à cinq œufs pendant environ 24–25 jours tandis que le mâle garde les environs. Les oisons couverts de duvet, capables de se déplacer dès l’éclosion, quittent vite le nid et se nourrissent seuls ; les deux parents les guident et les protègent. La descente spectaculaire concerne les colonies de falaise : les petits suivent les adultes vers les zones d’alimentation, parfois en sautant des corniches. Ils prennent leur envol vers 40–45 jours et restent avec leur famille durant leur premier hiver."
+    },
+    "ecology": {
+      "en": "On Svalbard, the availability of nutritious plants affects nesting success: females feeding on poorer vegetation spend longer away from their nests, increasing exposure of eggs to predators. Droppings return nutrients to feeding and roosting sites, while seeds may be moved between patches. Eggs and young are vulnerable to Arctic foxes, polar bears, and adults can be taken by raptors. On temperate wintering grounds, concentrated grazing sometimes brings geese into conflict with farmers.",
+      "fr": "Au Svalbard, la disponibilité de plantes nutritives influence le succès de nidification : les femelles consommant une végétation pauvre passent davantage de temps hors du nid, ce qui expose plus longtemps les œufs aux prédateurs. Les fientes restituent des nutriments aux zones d’alimentation et de repos, et des graines peuvent être transportées entre parcelles. Les œufs et les jeunes sont exposés aux renards arctiques, aux ours polaires ; des rapaces capturent aussi des adultes. Dans les quartiers d’hiver tempérés, le pâturage concentré peut provoquer des conflits avec les agriculteurs."
+    },
+    "conservation": {
+      "en": "The Barnacle Goose is globally listed as Least Concern in BTO’s species account. AEWA’s 2024 report estimated about 1.4 million birds in the Russia–Netherlands/Germany flyway population in January 2023, following decades of growth and signs of recent stabilization. Protection of breeding and wintering wetlands, coordinated counts and management of crop damage remain important. Arctic habitat change, hunting and disturbance require attention alongside the benefits and pressures created by expanding populations.",
+      "fr": "La Bernache nonnette est classée en Préoccupation mineure à l’échelle mondiale dans la fiche du British Trust for Ornithology. Le rapport AEWA de 2024 estime à environ 1,4 million d’oiseaux la population de la voie migratoire Russie–Pays-Bas/Allemagne en janvier 2023, après des décennies de croissance et des signes récents de stabilisation. La protection des zones humides de reproduction et d’hivernage, les comptages coordonnés et la gestion des dégâts aux cultures restent importants. Les changements de l’Arctique, la chasse et le dérangement méritent une attention continue, avec les effets des populations en expansion."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Barnacle Goose",
+        "fr": "Bernache nonnette"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/barnacle-goose",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Plumage, size and diet."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "habitat.en.4",
+        "habitat.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 4,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barnacle Goose BirdFacts",
+        "fr": "Fiche espèce : Bernache nonnette"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/barnacle-goose",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BTO data: clutch, incubation, fledging and migration."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.6",
+        "reproduction.fr.6",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 7,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Why do barnacle geese jump off cliffs?",
+        "fr": "Pourquoi les oisons sautent-ils des falaises ?"
+      },
+      "url": "https://www.wwt.org.uk/discover-wetlands/blog/barmy-barnacle-geese",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Cliff descent follows hatching only at cliff-nesting colonies."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 8,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barnacle Goose Life History",
+        "fr": "Histoire naturelle de la Bernache nonnette"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Barnacle_Goose/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Life history account covers lookalikes, habitats and plant food."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "behavior.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 9,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vurdering av hvitkinngås Branta leucopsis",
+        "fr": "Évaluation de la Bernache nonnette Branta leucopsis"
+      },
+      "url": "https://lister.artsdatabanken.no/rodlisteforarter/2021/31807",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Norwegian assessment describes distinct breeding populations and habitats."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 8,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "EGMP Population Status and Offtake Assessment Report 2024",
+        "fr": "Rapport 2024 sur l’état et l’évaluation des populations EGMP"
+      },
+      "url": "https://egmp.aewa.info/sites/default/files/download/population_status_reports/Population%20Status%20and%20Assessment%20Report%202024.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Russia–Netherlands/Germany flyway: January 2023 abundance and stabilization."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 7,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vegetation exploitation by barnacle geese during incubation on Svalbard",
+        "fr": "Exploitation de la végétation par les Bernaches nonnettes pendant l’incubation au Svalbard"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1751-8369.1998.tb00255.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Svalbard food quality affects incubation attendance and predation exposure."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 9,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "International Single Species Management Plan for the Barnacle Goose",
+        "fr": "Plan international de gestion de la Bernache nonnette"
+      },
+      "url": "https://www.unep-aewa.org/document/draft-international-single-species-management-plan-barnacle-goose-branta-leucopsis",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "AEWA coordinates flyway monitoring and crop-damage management."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "conservation.en.4",
+        "conservation.fr.4",
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 7,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Branta leucopsis (barnacle goose)",
+        "fr": "Branta leucopsis (Bernache nonnette)"
+      },
+      "url": "https://animaldiversity.org/accounts/Branta_leucopsis/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "behavior"
+      ],
+      "facts": [
+        "Predators include Arctic foxes, polar bears, gulls and raptors."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "ecology.en.3",
+        "ecology.fr.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 9,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging routines and estimated daily food intake in Barnacle Geese wintering in the northern Netherlands",
+        "fr": "Rythmes d’alimentation et apport alimentaire quotidien estimé chez les Bernaches nonnettes hivernant aux Pays-Bas"
+      },
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/154307",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Winter field study estimated grass intake and digestion in the Netherlands."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 11,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barnacle Goose Overview",
+        "fr": "Présentation de la Bernache nonnette"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Barnacle_Goose/overview",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "overview"
+      ],
+      "facts": [
+        "Cornell overview summarizes Arctic breeding, European migration and social flocks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.en.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 10,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult in profile with full creamy-white facial field, black head and neck, blue-grey barred back, white belly and short black bill. Include a smaller Canada Goose comparison inset showing only the white chinstrap. For Arctic nesting, distinguish cliff-ledged colonies from ground or island nests; do not depict cliff-jumping as universal.",
+  "uncertainties": [
+    "No single global population total is given because assessments count distinct flyway populations and management units on different dates."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: BTO reproductive timings and global status checked; corrected population figure/date to actual AEWA 2024 report (1.4 million January 2023); replaced unsupported grazing claim with documented food-quality and nest-predation mechanism; cliff nesting remains population-specific."
+}

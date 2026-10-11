@@ -1,0 +1,613 @@
+{
+  "id": "buff_tailed_bumblebee",
+  "scientific": "Bombus terrestris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Buff-tailed bumblebee",
+    "fr": "Bourdon terrestre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The buff-tailed bumblebee is a large social bee native to Europe, North Africa and western Asia. Its annual colony begins with one queen, grows through worker daughters, then produces males and future queens. People rear it commercially for crop pollination, and escaped colonies have established beyond its native range. European assessments still list it as widespread and Least Concern, a regional status that does not describe impacts after introduction elsewhere.",
+      "fr": "Le Bourdon terrestre est une grande abeille sociale originaire d’Europe, d’Afrique du Nord et d’Asie occidentale. Sa colonie annuelle commence avec une reine, s’agrandit grâce aux ouvrières, puis produit des mâles et de futures reines. L’humain l’élève pour polliniser des cultures, et des colonies échappées se sont établies hors de son aire naturelle. En Europe, l’espèce reste largement répartie et classée en préoccupation mineure ; ce statut régional ne décrit pas ses effets après introduction ailleurs."
+    },
+    "identification": {
+      "en": "Adults have dense black fur, two golden-yellow bands and a pale abdomen tip. Queens measure about 20–22 millimetres, workers 11–17 and males 14–16; these British reference ranges vary among individuals. A queen’s tail is buff, while workers and males usually have white tails, sometimes with a fine buff edge. Workers can resemble the white-tailed bumblebee, Bombus lucorum; DNA markers distinguish the species more reliably than some field keys.",
+      "fr": "L’adulte porte une fourrure noire dense, deux bandes jaune doré et une extrémité abdominale pâle. Les reines mesurent environ 20 à 22 millimètres, les ouvrières 11 à 17 et les mâles 14 à 16 ; ces mesures britanniques varient selon les individus. La queue de la reine est fauve ; celle des ouvrières et des mâles est généralement blanche, parfois bordée de fauve. Les ouvrières ressemblent au Bourdon des saussaies, Bombus lucorum ; l’ADN les distingue plus sûrement que certaines clés de terrain."
+    },
+    "habitat": {
+      "en": "The species uses gardens, parks, farmland and meadows where flowers and nest shelter are available. Queens often nest underground in abandoned rodent burrows, reusing their protected cavities. In Britain, queens emerge in late winter or early spring; workers appear about six weeks after a nest is founded.",
+      "fr": "L’espèce fréquente jardins, parcs, terres agricoles et prairies offrant fleurs et abris. Les reines nichent souvent sous terre, dans d’anciens terriers de rongeurs dont elles réutilisent les cavités protégées. En Grande-Bretagne, elles émergent à la fin de l’hiver ou au début du printemps ; les ouvrières apparaissent environ six semaines après la fondation du nid."
+    },
+    "diet": {
+      "en": "Adults drink nectar for energy and gather pollen to nourish brood. Their short tongue works well on many open flowers but less well in long tubular blooms; they nevertheless forage as generalists across many plant species. Sometimes a bee pierces a flower’s side to reach nectar without touching its reproductive parts. On nightshades whose anthers release pollen through small pores, workers grip the anthers and vibrate flight muscles, shaking pollen loose into their hairs. The foundress feeds the first larvae; later, workers provision brood as the queen focuses on laying eggs. The nest contains small pots for sugary food, separate from clusters of brood cells. Unlike honeybees, these bumblebees vibrate flowers to release pollen from poricidal anthers. Pollen is also stored for the brood, but nectar and pollen reserves remain relatively small rather than providing a large winter stock.",
+      "fr": "Les adultes boivent le nectar énergétique et récoltent le pollen qui nourrit le couvain. Leur langue courte convient à de nombreuses fleurs ouvertes, moins aux corolles tubulaires profondes ; ils butinent néanmoins une grande diversité de plantes. Parfois, l’abeille perce le côté d’une fleur pour atteindre le nectar sans toucher ses organes reproducteurs. Sur les solanacées dont les anthères libèrent le pollen par de petits pores, les ouvrières s’agrippent aux anthères et font vibrer leurs muscles alaires, libérant le pollen dans leur fourrure. La fondatrice nourrit les premières larves ; ensuite, les ouvrières s’en chargent tandis que la reine pond. Le nid comporte de petits pots de nourriture sucrée, distincts des groupes de cellules du couvain. Contrairement aux abeilles mellifères, ces bourdons font vibrer les fleurs pour libérer le pollen des anthères à pores. Le pollen est aussi conservé pour le couvain, mais les réserves de nectar et de pollen restent relativement modestes plutôt que de constituer un vaste stock hivernal."
+    },
+    "behavior": {
+      "en": "One mated queen founds the nest alone; her daughters become workers who forage, feed larvae and maintain it, while males mainly leave to seek mates. Colony size varies; British accounts give a broad range of 100 to 1,000 bees. Bumblebees lack the honeybee waggle dance; chemical and contact cues help coordinate activity. Workers can learn floral scents brought home by successful foragers. Flight muscles warm before flight in cool air. At the nest, queens and later workers also generate heat to keep brood warm.",
+      "fr": "Une reine fécondée fonde seule le nid ; ses filles deviennent ouvrières, butinent, nourrissent les larves et entretiennent le nid, tandis que les mâles partent surtout chercher une partenaire. La taille varie ; des sources britanniques indiquent une large fourchette de 100 à 1 000 individus. Les bourdons n’ont pas la danse frétillante de l’abeille mellifère ; des signaux chimiques et tactiles coordonnent leurs activités. Les ouvrières apprennent les odeurs florales rapportées par les butineuses. Les muscles alaires se réchauffent avant le vol par air frais. Au nid, la reine puis les ouvrières produisent aussi de la chaleur pour le couvain."
+    },
+    "reproduction": {
+      "en": "In the usual temperate cycle, a mated queen spends winter in diapause and emerges when conditions allow nesting. Winter-active colonies have been observed in southern Britain, including urban parks and gardens. She lays eggs in a wax-lined nest and incubates them using heat from her flight muscles. Eggs hatch into larvae, which grow, spin cocoons and pupate; laboratory worker development averaged about 26 days from egg to adult, while field timing varies. The first workers take over much of the foraging and brood care. Later the colony produces males and new queens; after mating, the young queens enter diapause and the old colony normally dies.",
+      "fr": "Dans le cycle tempéré habituel, la reine fécondée passe l’hiver en diapause et émerge quand les conditions permettent de nicher. Des colonies actives en hiver ont été observées dans le sud de la Grande-Bretagne, notamment dans les parcs et jardins urbains. Elle pond dans un nid ciré et couve les œufs grâce à la chaleur de ses muscles alaires. Les œufs donnent des larves qui grandissent, tissent un cocon puis se nymphosent ; en laboratoire, le développement moyen de l’ouvrière durait environ 26 jours, de l’œuf à l’adulte, mais varie sur le terrain. Les premières ouvrières prennent en charge le butinage et le couvain. Plus tard, la colonie produit des mâles et de nouvelles reines ; après l’accouplement, celles-ci entrent en diapause et l’ancienne colonie meurt normalement."
+    },
+    "ecology": {
+      "en": "Foraging bees carry pollen between flowers, making them important pollinators of crops. Some crops benefit from the bee’s abundance and its ability to vibrate poricidal anthers, releasing pollen. Commercial rearing makes it a useful managed pollinator, but introductions can alter local communities. In Chile and Patagonia, surveys recorded introduced B. terrestris spreading as native B. dahlbomii retreated; competition and parasite spillover may contribute, though their relative roles remain unresolved. This regional case is distinct from the species’ widespread, Least Concern status in Europe.",
+      "fr": "En butinant, les abeilles transportent le pollen d’une fleur à l’autre et pollinisent des cultures importantes. Certaines cultures bénéficient de leur abondance et de leur capacité à faire vibrer les anthères poricides, libérant le pollen. L’élevage commercial en fait un pollinisateur utile, mais les introductions peuvent modifier les communautés locales. Au Chili et en Patagonie, des inventaires ont suivi l’expansion du B. terrestris introduit tandis que le B. dahlbomii indigène reculait ; concurrence et transfert de parasites pourraient contribuer, sans que leurs rôles respectifs soient établis. Ce cas régional est distinct du statut européen de préoccupation mineure et de la vaste répartition de l’espèce."
+    },
+    "conservation": {
+      "en": "The IUCN assessment dated 14 July 2023 and published in 2025 lists B. terrestris as Least Concern in Europe and the EU27, citing its broad range and continued abundance. This regional status does not remove ecological concerns where commercial colonies escape and establish beyond the native range. A 2013 Patagonian survey reported rapid spread and a marked local replacement pattern involving native B. dahlbomii. A 2014 study detected parasites in introduced and native bees but said the evidence could not assign the decline to one cause. IUCN notes that climate and land-use change could affect the species in Europe in coming decades.",
+      "fr": "L’évaluation UICN datée du 14 juillet 2023 et publiée en 2025 classe B. terrestris en préoccupation mineure en Europe et dans l’UE27, compte tenu de sa vaste aire et de son abondance. Ce statut régional n’écarte pas les préoccupations écologiques lorsque des colonies commerciales s’échappent et s’établissent hors de leur aire naturelle. Un inventaire patagonien de 2013 a signalé l’expansion rapide et un remplacement local marqué impliquant le B. dahlbomii indigène. Une étude de 2014 a détecté des parasites chez des bourdons introduits et indigènes, sans pouvoir attribuer le déclin à une cause unique. L’UICN indique que climat et usage des terres pourraient affecter l’espèce en Europe dans les prochaines décennies."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bombus terrestris — IUCN Red List of Threatened Species, 2025 assessment account",
+        "fr": "Bombus terrestris — fiche d’évaluation 2025 de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/iucn.uk.2025-2.rlts.t221880141a221880274.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Assessment 14 July 2023; published in 2025.",
+        "EU27 assessed Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.4",
+        "overview.fr.4",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.5",
+        "ecology.fr.5",
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 11,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Buff-tailed bumblebee — Bumblebee Conservation Trust species guide",
+        "fr": "Bourdon terrestre — guide d’identification du Bumblebee Conservation Trust"
+      },
+      "url": "https://www.bumblebeeconservation.org/learn-about-bumblebees/species-guide/buff-tailed-bumblebee/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "UK account: nests often use old rodent burrows."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 8,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bombus terrestris — Britain’s Bees, BWARS species descriptions",
+        "fr": "Bombus terrestris — descriptions d’espèces de Britain’s Bees, BWARS"
+      },
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Indicative British adult lengths: queen 20–22 mm, worker 11–17 mm, male 14–16 mm."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 13,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reliability of morphological traits in differentiating Bombus terrestris and B. lucorum — Apidologie",
+        "fr": "Fiabilité des caractères morphologiques distinguant Bombus terrestris et B. lucorum — Apidologie"
+      },
+      "url": "https://doi.org/10.1051/apido/2009048",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Field key misclassified 45% of B. lucorum and 5% of B. terrestris against mtDNA."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 14,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The physiological and genomic bases of bumble bee social behaviour — Advances in Insect Physiology",
+        "fr": "Bases physiologiques et génomiques du comportement social des bourdons — Advances in Insect Physiology"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0065280615000090",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Bombus colonies are annual; terrestris queens found underground nests, then produce workers and reproductives."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "diet.en.5",
+        "diet.fr.5",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 14,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colony initiation and development in captivity of Bombus terrestris — Turkish Journal of Veterinary and Animal Sciences",
+        "fr": "Fondation et développement en captivité de colonies de Bombus terrestris — Turkish Journal of Veterinary and Animal Sciences"
+      },
+      "url": "https://journals.tubitak.gov.tr/veterinary/vol23/iss4/12/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Under laboratory rearing, mean worker egg-to-adult development was 26.425 days (±0.384)."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 11,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Thermoregulation dynamics in commercially reared colonies of Bombus terrestris — Physiological Entomology",
+        "fr": "Dynamique de la thermorégulation dans des colonies commerciales de Bombus terrestris — Physiological Entomology"
+      },
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/full/10.1111/phen.12350",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Queens warm brood with flight muscles; workers later help regulate nest temperature."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "behavior.en.6",
+        "behavior.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 12,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Floral sonication is an innate behaviour in bumblebees that can be fine-tuned with experience — PLOS ONE",
+        "fr": "La sonication florale est un comportement inné que les bourdons peuvent affiner par l’expérience — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4841848/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Workers vibrate Solanum anthers to release pollen, tuning buzzes with experience."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 11,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nutrient enrichment and altered floral rewards affect larvae of the pollinator Bombus terrestris — PLOS ONE",
+        "fr": "L’enrichissement nutritif et les récompenses florales modifiées affectent les larves du pollinisateur Bombus terrestris — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5390989/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "Species account describes a short-tongued generalist used commercially for crop pollination."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 11,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "How floral odours are learned inside the Bombus terrestris nest — Naturwissenschaften",
+        "fr": "Apprentissage des odeurs florales dans le nid de Bombus terrestris — Naturwissenschaften"
+      },
+      "url": "https://doi.org/10.1007/s00114-008-0465-x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Experiments showed nestmates learned rewarding floral scents carried into the colony by successful foragers."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 14,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mitochondrial glycerol 3-phosphate facilitates bumblebee pre-flight thermogenesis — Scientific Reports",
+        "fr": "Le glycérol-3-phosphate mitochondrial facilite la thermogenèse pré-vol des bourdons — Scientific Reports"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5638826/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "B. terrestris warms flight muscles before cold-weather flight through thermogenic metabolism and shivering."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 13,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bombus terrestris in a mass-flowering pollinator-dependent crop — PLOS ONE",
+        "fr": "Bombus terrestris dans une culture à floraison massive dépendante des pollinisateurs — PLOS ONE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6342091/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Courgette study measured high visitation and pollination potential from abundant nectar and pollen rewards."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 14,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The invasion of southern South America by imported bumblebees and associated parasites — Journal of Animal Ecology",
+        "fr": "Invasion du sud de l’Amérique du Sud par des bourdons importés et leurs parasites — Journal of Animal Ecology"
+      },
+      "url": "https://doi.org/10.1111/1365-2656.12185",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Chile introduction spread rapidly; native retreat and parasites were observed, but causes remain uncertain."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 14,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The distribution of Bombus terrestris — Atlas Hymenoptera, University of Mons",
+        "fr": "Répartition de Bombus terrestris — Atlas Hymenoptera, université de Mons"
+      },
+      "url": "https://zoologie.umons.ac.be/hymenoptera/pagetaxon.aspx?tx_id=3042",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "West Palaearctic atlas maps a Mediterranean-centred range extending across Europe and North Africa."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 13,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hibernation leads to altered gut communities in bumblebee queens (Bombus terrestris) — MicrobiologyOpen",
+        "fr": "L’hibernation modifie les communautés intestinales des reines de Bombus terrestris — MicrobiologyOpen"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6316087/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Colonies last a year; new queens overwinter and found spring nests."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 11,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rapid ecological replacement of a native bumble bee by invasive species — Frontiers in Ecology and the Environment",
+        "fr": "Remplacement écologique rapide d’un bourdon indigène par une espèce invasive — Frontiers in Ecology and the Environment"
+      },
+      "url": "https://doi.org/10.1890/120321",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Patagonian surveys linked B. terrestris spread with local retreat of native B. dahlbomii."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 13,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coordinated species importation policies are needed to reduce serious invasions globally: alien bumblebees in South America — Journal of Applied Ecology",
+        "fr": "Des politiques coordonnées d’importation sont nécessaires pour limiter les invasions : les bourdons exotiques en Amérique du Sud — Journal of Applied Ecology"
+      },
+      "url": "https://doi.org/10.1111/1365-2664.13121",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Review describes commercial pollination introductions and ecological risks from non-native bumblebees."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 11,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Radioentomology of Bombus terrestris nests — Greco and Sadd (2012)",
+        "fr": "Structure des nids de Bombus terrestris par radioentomologie — Greco et Sadd (2012)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3596939/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Imaging identifies sugar storage pots apart from brood; introduction distinguishes honeybee floral sonication."
+      ],
+      "prose_claims": [
+        "diet.en.6",
+        "diet.fr.6",
+        "diet.en.7",
+        "diet.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 13,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nectar and pollen foraging in Bombus terrestris — Konzmann and Lunau (2014)",
+        "fr": "Récolte du nectar et du pollen chez Bombus terrestris — Konzmann et Lunau (2014)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3956814/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Bumblebee colonies maintain modest nectar and pollen reserves compared with winter honey stores."
+      ],
+      "prose_claims": [
+        "diet.en.8",
+        "diet.fr.8"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 13,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Winter-active Bombus terrestris in urban Britain — Stelzer and colleagues (2010)",
+        "fr": "Bombus terrestris actif en hiver en Grande-Bretagne urbaine — Stelzer et collaborateurs (2010)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2832779/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Winter queens and workers observed in southern Britain; London survey confirms winter foraging."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 13,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the existing valid buff-tailed bumblebee image. If an illustration is required, show one adult queen Bombus terrestris in a natural side view, with black body, two golden-yellow bands, dense short fur, and a clearly buff-coloured abdominal tail; use realistic anatomy and proportions on a pure white background. Do not show a flower, nest, text, border or watermark.",
+  "uncertainties": [
+    "Worker colour patterns overlap strongly with Bombus lucorum and related members of the B. lucorum complex; even field keys misclassify some workers, so a worker photograph may not support a confident species identification.",
+    "The cited worker lengths and seasonal dates are mainly British reference ranges; caste size, colony size and timing vary with population, climate, food and management.",
+    "Winter-active colonies are documented in parts of southern Britain and cities, but should not be generalized to all populations or regions.",
+    "South American studies documented spread and spatial replacement patterns and detected parasites, but the relative roles of competition and pathogen spillover in native Bombus dahlbomii declines remain unresolved.",
+    "French comparison name corrected: Bombus lucorum is Bourdon des saussaies (also des forêts), not Bourdon des pierres (Bombus lapidarius); verified against INPN/official inventories. PMC7240610 studies B. impatiens and was not used for B. terrestris-specific stores."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; French lucorum common name corrected, winter observations geographically scoped, food storage and floral sonication explained with species-specific complementary sources."
+}

@@ -1,0 +1,146 @@
+{
+  "id": "indian_rhino",
+  "scientific": "Rhinoceros unicornis",
+  "group": "mammals",
+  "name": {
+    "en": "Greater one-horned rhinoceros",
+    "fr": "Rhinocéros indien"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Asian herbivore is native to the northern Indian subcontinent. Wild populations persist in scattered sites in India and Nepal, especially river floodplains. Its distribution reflects the link between grazing, abundant grass, water and seasonal wetlands.",
+      "fr": "Cet herbivore asiatique est originaire du nord du sous-continent indien. Ses populations sauvages subsistent en Inde et au Népal, surtout dans les plaines inondables. Sa répartition reflète le lien entre pâturages, abondance des herbes, eau et zones humides saisonnières."
+    },
+    "identification": {
+      "en": "Adults bear one dark nasal horn of compacted keratin, not bone. Thick grey-brown skin folds at the neck, shoulder and hindquarters, with raised bumps on the shoulders and upper legs. Its flexible upper lip gathers food; young rhinos develop adult folds as they mature.",
+      "fr": "L’adulte porte une corne nasale sombre en kératine, et non en os. Sa peau épaisse gris-brun forme des plis au cou, aux épaules et à l’arrière-train, avec des protubérances sur les épaules et le haut des pattes. Sa lèvre supérieure mobile saisit la nourriture ; les plis adultes apparaissent en grandissant."
+    },
+    "habitat": {
+      "en": "It favours low alluvial grasslands beside large rivers, with marshes, reed beds, pools and woodland. Flooding renews the plains, producing patches of tall grass and wet ground. Rhinos bathe and wallow, may move higher as floods rise, and also use dry grassland and forest edges.",
+      "fr": "Il privilégie les prairies alluviales basses bordant les grands cours d’eau, avec marais, roselières, mares et boisements. Les crues renouvellent les plaines et produisent des zones d’herbes hautes et humides. Les rhinocéros se baignent et se vautrent, gagnent parfois les hauteurs lors des crues et fréquentent aussi prairies sèches et lisières."
+    },
+    "diet": {
+      "en": "Grasses, including tall riverine growth, form most of its diet. It also eats aquatic plants, leaves, shoots, twigs and fruit, varying its menu with season and vegetation. Its flexible upper lip gathers plants; it sometimes feeds partly submerged.",
+      "fr": "Les graminées, notamment riveraines, forment l’essentiel de son régime. Il mange aussi plantes aquatiques, feuilles, pousses, rameaux et fruits ; son menu varie avec les saisons et la végétation. Sa lèvre préhensile cueille les plantes ; il se nourrit parfois en partie immergé."
+    },
+    "behavior": {
+      "en": "Adults are usually solitary, though females stay with calves and animals may gather at grazing sites or wallows. Males hold loosely defended ranges and mark with dung and urine. Activity often peaks in cooler hours. Bathing and wallowing help with heat and biting insects; rhinos also rub against vegetation.",
+      "fr": "Les adultes sont généralement solitaires ; les femelles restent avec leurs petits et des animaux se rassemblent parfois aux pâturages ou aux souilles. Les mâles occupent des domaines peu défendus et marquent avec crottin et urine. L’activité culmine souvent aux heures fraîches. Bains et souilles aident contre chaleur et insectes piqueurs ; les rhinocéros se frottent aussi à la végétation."
+    },
+    "reproduction": {
+      "en": "After about 15–16 months, a female gives birth to one calf. Breeding has no fixed annual season, and births are years apart. The calf soon walks and nurses; weaning takes about 12–18 months. Maternal care continues as it learns to forage and becomes independent.",
+      "fr": "Après environ 15 à 16 mois, la femelle met bas un seul petit. La reproduction n’a pas de saison fixe et plusieurs années séparent les naissances. Le petit marche bientôt et tète ; le sevrage prend 12 à 18 mois. Les soins maternels continuent pendant qu’il apprend à s’alimenter et devient indépendant."
+    },
+    "ecology": {
+      "en": "This large herbivore changes plant cover through grazing, trampling and paths. Dung returns seeds and nutrients to floodplain soil, and other wildlife uses its muddy wallows. These effects vary with local conditions.",
+      "fr": "Ce grand herbivore modifie le couvert végétal par pâturage, piétinement et sentiers. Ses excréments ramènent graines et nutriments aux sols inondables ; d’autres animaux utilisent ses souilles boueuses. Ces effets varient localement."
+    },
+    "conservation": {
+      "en": "The IUCN’s 2019 Red List assessment classified it as Vulnerable, estimating 2,100–2,200 mature animals in 11 subpopulations and noting habitat decline. This dated assessment is not a current census. The International Rhino Foundation later reported about 4,075 wild animals after recovery under protection in India and Nepal. Poaching, floodplain habitat loss and fragmentation, and conflict near crowded reserves remain concerns.",
+      "fr": "L’évaluation 2019 de l’UICN classait l’espèce comme Vulnérable et estimait 2 100–2 200 adultes en 11 sous-populations, avec un habitat en déclin. Cette évaluation datée n’est pas un recensement actuel. L’International Rhino Foundation a ensuite rapporté environ 4 075 animaux sauvages après un rétablissement sous protection en Inde et au Népal. Braconnage, perte et fragmentation des plaines inondables et conflits près des réserves surpeuplées restent préoccupants."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Greater One-Horned Rhino",
+        "fr": "Rhinocéros unicorne d’Asie"
+      },
+      "url": "https://rhinos.org/about-rhinos/rhino-species/greater-one-horned-rhino/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Wild range countries are India and Nepal; habitat includes river floodplain grasslands and adjacent woodland.",
+        "Mainly grazes and also feeds on aquatic plants; approximately 15–16-month gestation and one calf every 2–3 years.",
+        "IRF page reports an estimated 4,075 wild animals and Vulnerable status; estimate is presented as the organization’s current figure."
+      ]
+    },
+    {
+      "title": {
+        "en": "Rhinoceros unicornis (Indian rhinoceros)",
+        "fr": "Rhinoceros unicornis (rhinocéros indien)"
+      },
+      "url": "https://animaldiversity.org/accounts/Rhinoceros_unicornis/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Describes wet alluvial grassland, adjacent rivers and pools, and seasonal swamp-forest use.",
+        "Reports solitary habits, wallowing, grazing and browsing, single births, and maternal care.",
+        "Its detailed reproductive ranges are broader than the rounded figures used here; this article avoids presenting them as universal exact values."
+      ]
+    },
+    {
+      "title": {
+        "en": "Greater One-Horned Rhino",
+        "fr": "Rhinocéros unicorne d’Asie"
+      },
+      "url": "https://www.worldwildlife.org/species/greater-one-horned-rhino",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Describes one horn, grey-brown folded skin, mostly solitary behavior and a diet dominated by grass.",
+        "Identifies loss of alluvial grasslands, habitat pressure and illegal horn trade as threats.",
+        "Describes flood-related movement to higher areas and the broad historical recovery from around 200 animals in the early twentieth century."
+      ]
+    },
+    {
+      "title": {
+        "en": "Greater One-Horned Rhinoceros",
+        "fr": "Rhinocéros unicorne"
+      },
+      "url": "https://www.sfzoo.org/animals-exhibits/a-to-z/greater-one-horned-rhinoceros/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The single horn is keratin, and the grey skin has folds and raised bumps over the shoulders and upper legs.",
+        "The flexible upper lip gathers grasses and browse; habitat includes floodplains, marshes, reed beds and wooded meadows."
+      ]
+    },
+    {
+      "title": {
+        "en": "The IUCN Red List of Threatened Species: Rhinoceros unicornis",
+        "fr": "Liste rouge de l’UICN : Rhinoceros unicornis"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T19496A18494149.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2019 global assessment classified the species as Vulnerable.",
+        "It estimated 2,100–2,200 mature individuals in 11 subpopulations and noted continuing decline in habitat area, extent or quality.",
+        "The assessment predates later population estimates and is explicitly dated in the article."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated image. Adult Rhinoceros unicornis, natural full-body morphology on a PURE WHITE background: massive grey-brown body, one short dark nasal horn, deep folds at neck, shoulder and hindquarters, small raised shoulder and upper-leg bumps, broad head and flexible upper lip. Preserve realistic proportions and do not add a second horn.",
+  "uncertainties": [
+    "The 2019 IUCN estimate is retained only as a dated assessment; later population estimates differ in scope and date.",
+    "Gestation and interval figures vary among sources and observations; rounded approximate values are used."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source, morphology and bilingual critique passed. Mojibake in Asian elephant names/source titles repaired; publication encoding guard added."
+}

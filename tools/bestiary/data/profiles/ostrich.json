@@ -1,0 +1,453 @@
+{
+  "id": "ostrich",
+  "scientific": "Struthio camelus",
+  "group": "birds",
+  "name": {
+    "en": "Common ostrich",
+    "fr": "Autruche d’Afrique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common ostrich is the largest living bird, a flightless inhabitant of Africa’s open landscapes. Its long stride is carried by a two-toed foot whose large inner toe bears most of its weight.",
+      "fr": "L’autruche d’Afrique est le plus grand oiseau vivant, incapable de voler et habitant les espaces ouverts d’Afrique. Sa grande foulée repose sur un pied à deux doigts, dont le doigt interne volumineux supporte la majeure partie du poids."
+    },
+    "identification": {
+      "en": "Adult males are larger on average: the Paris Muséum gives females as 1.75–1.90 metres tall and 90–110 kilograms, and males as 2.10–2.75 metres and 100–150 kilograms. Males have black plumage with white wing and tail feathers; females are grey-brown. Each foot has two toes, a large clawed inner toe and a smaller outer toe. Pressure recordings show that the main toe bears most of the load, while the mobile outer toe helps balance the foot during walking and running. In laboratory trials, two adult females ran at 3–6 m/s; the study did not test a maximum speed.",
+      "fr": "Le mâle adulte est en moyenne plus grand: le Muséum de Paris indique 1,75 à 1,90 m et 90 à 110 kg chez la femelle, contre 2,10 à 2,75 m et 100 à 150 kg chez le mâle. Le mâle a un plumage noir avec des plumes blanches aux ailes et à la queue; la femelle est gris-brun. Chaque pied porte deux doigts, un doigt interne volumineux et griffu et un doigt externe plus petit. Les mesures de pression montrent que le doigt principal supporte l’essentiel de la charge, tandis que le doigt externe mobile aide le pied à garder l’équilibre pendant la marche et la course. En laboratoire, deux femelles adultes ont couru à 3–6 m/s; l’étude n’a pas testé la vitesse maximale."
+    },
+    "habitat": {
+      "en": "It uses open savannas, grasslands and dry scrub, including places with sparse or short vegetation. Sparse plants leave open sightlines. The species occurs across much of Africa.",
+      "fr": "Elle fréquente les savanes ouvertes, les prairies et les broussailles sèches, y compris les lieux à végétation basse ou clairsemée. La végétation clairsemée laisse voir le terrain. L’espèce vit dans une grande partie de l’Afrique."
+    },
+    "diet": {
+      "en": "Leaves, roots, flowers and seeds make up much of the diet; ostriches also take insects and other small animals. Food is swallowed whole. In adult domesticated birds, a study describes pebbles grinding food in the muscular gizzard and microbial fermentation in the caeca and colon. These digestive observations come from managed birds; wild food choices vary with local and seasonal plant growth.",
+      "fr": "Les feuilles, racines, fleurs et graines composent une grande partie du régime; l’autruche consomme aussi des insectes et d’autres petits animaux. Elle avale les aliments entiers. Chez des adultes domestiques, une étude décrit le broyage des aliments par des cailloux dans le gésier musculaire et une fermentation microbienne dans les cæcums et le côlon. Ces observations digestives proviennent d’oiseaux élevés en captivité; les aliments sauvages varient selon les plantes disponibles et les saisons."
+    },
+    "behavior": {
+      "en": "Ostriches are social ground-dwellers. Groups loosen outside breeding and become more organized around territorial males during courtship; reported flock sizes vary with place and season. Males court with bows, wing movements and conspicuous feathers, accompanied by calls. Although flightless, it uses its wings while running to help change direction, and fans them in hot weather to help keep cool.",
+      "fr": "L’autruche est un oiseau social qui vit au sol. Les groupes se dispersent davantage hors reproduction et s’organisent autour de mâles territoriaux pendant la parade; leur taille varie selon le lieu et la saison. Le mâle parade par des révérences, des mouvements d’ailes et l’exposition de ses plumes, accompagnés de cris. Bien qu’incapable de voler, elle utilise ses ailes en courant pour faciliter les changements de direction et les déploie par temps chaud pour contribuer à son refroidissement."
+    },
+    "reproduction": {
+      "en": "Breeding arrangements vary among populations. In East Africa, several hens laid in one shallow scrape; a field report describes communal nests holding 30–40 eggs of about 1.5 kilograms each. Genetic work in Nairobi found multiple mothers and fathers among eggs in the same nest. A dominant hen and territorial male guard and incubate; the female’s pale plumage blends by day and the male’s dark plumage by night. San Diego Zoo gives 42–46 days for incubation. Chicks leave within days, follow adults and are sheltered from sun, rain and predators. Their patterned down is replaced as adult feathers develop; the zoo account says they near adult size at about six months. Adult size precedes sexual maturity, which the Smithsonian account places around three to four years.",
+      "fr": "L’organisation de la reproduction varie selon les populations. En Afrique de l’Est, plusieurs femelles pondaient dans une cuvette commune; une étude de terrain décrit des nids collectifs de 30 à 40 œufs d’environ 1,5 kg chacun. Des analyses génétiques à Nairobi ont trouvé plusieurs mères et pères parmi les œufs d’un même nid. Une femelle dominante et un mâle territorial assurent la garde et l’incubation; le plumage pâle de la femelle se fond dans le paysage le jour, celui du mâle la nuit. Le zoo de San Diego indique une incubation de 42 à 46 jours. Les poussins quittent le nid en quelques jours, suivent les adultes et sont protégés du soleil, de la pluie et des prédateurs. Leur duvet tacheté est remplacé par le plumage adulte; selon le zoo, ils approchent la taille adulte vers six mois. La taille adulte précède la maturité sexuelle, que le Smithsonian situe vers trois à quatre ans."
+    },
+    "ecology": {
+      "en": "Ostriches move nomadically as rainfall changes the availability of fresh plant food. A South African field guide reports that breeding and laying precede rains, so chicks hatch as forage becomes available. In northern Tanzania, surveys of the Masai population found local ostrich densities correlated with those of nine of ten large ungulate species, although their site-specific population trends were not closely correlated. Ostriches themselves are prey for large carnivores, including lions, cheetahs, leopards and hyenas.",
+      "fr": "Les autruches se déplacent de façon nomade tandis que les pluies modifient la disponibilité des nouvelles pousses. Un guide de terrain sud-africain rapporte que la reproduction et la ponte précèdent les pluies, de sorte que les poussins éclosent lorsque le fourrage devient disponible. Dans le nord de la Tanzanie, des relevés de la population masaï ont trouvé une corrélation locale entre la densité des autruches et celle de neuf espèces d’ongulés sur dix, mais leurs tendances démographiques propres aux sites étaient peu corrélées. Les autruches sont elles-mêmes des proies de grands carnivores, dont les lions, guépards, léopards et hyènes."
+    },
+    "conservation": {
+      "en": "BirdLife International’s 2025 global IUCN assessment lists the common ostrich as Least Concern, with a decreasing population trend. This global category does not describe the condition of every regional population. Northern Sahel transects repeated in 1971–73 and 2004 documented severe regional declines and identified hunting, overgrazing and woodland degradation among local pressures. Historic feather hunting and egg collection also affected ostriches, while habitat loss remains a concern.",
+      "fr": "L’évaluation mondiale 2025 de BirdLife International pour la Liste rouge de l’UICN classe l’autruche d’Afrique en Préoccupation mineure, avec une tendance démographique à la baisse. Cette catégorie mondiale ne décrit pas la situation de chaque population régionale. Des transects du nord du Sahel répétés en 1971-1973 et en 2004 ont documenté de forts déclins régionaux et relevé la chasse, le surpâturage et la dégradation des boisements parmi les pressions locales. La chasse historique pour les plumes et le prélèvement des œufs ont également touché l’espèce, tandis que la perte d’habitat reste préoccupante."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Ostrich — IUCN Red List assessment",
+        "fr": "Autruche d’Afrique — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T45020636A280828427.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "2025 global assessment: Least Concern, decreasing population trend."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 8,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ostrich",
+        "fr": "Autruche"
+      },
+      "url": "https://www.mnhn.fr/en/ostrich",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "overview"
+      ],
+      "facts": [
+        "The museum lists adult female and male size ranges.",
+        "Le musée indique les dimensions adultes des femelles et des mâles."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 20,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ostrich",
+        "fr": "Autruche"
+      },
+      "url": "https://animals.sandiegozoo.org/animals/ostrich?qt-animals_page_content_tabs=0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Zoo account describes plumage, food and chick development.",
+        "La fiche du zoo décrit plumage, alimentation et développement des jeunes."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.5",
+        "reproduction.fr.5",
+        "reproduction.en.6",
+        "reproduction.fr.6",
+        "reproduction.en.7",
+        "reproduction.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 19,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Struthio camelus (ostrich)",
+        "fr": "Struthio camelus (autruche)"
+      },
+      "url": "https://animaldiversity.org/accounts/Struthio_camelus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "University account describes open habitat and seasonal social groups.",
+        "La fiche universitaire décrit habitat ouvert et groupes saisonniers."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 18,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ostrich",
+        "fr": "Autruche"
+      },
+      "url": "https://lazoo.org/explore-your-zoo/our-animals/birds/ostrich/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Zoo account describes nomadism and seasonal breeding.",
+        "Le zoo décrit le nomadisme et la reproduction saisonnière."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.4",
+        "diet.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 16,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Toe function and dynamic pressure distribution in ostrich locomotion",
+        "fr": "Rôle des doigts et répartition dynamique des pressions chez l’autruche en locomotion"
+      },
+      "url": "https://journals.biologists.com/jeb/article/214/7/1123/33537/Toe-function-and-dynamic-pressure-distribution-in",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Two adult females show distinct load and balance roles for toes.",
+        "Deux femelles adultes montrent le rôle des doigts dans l’appui."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 21,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Studies on the gastrointestinal tract and digesta of adult domesticated ostriches",
+        "fr": "Étude du tube digestif et du contenu intestinal d’autruches adultes domestiques"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8342792/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Domestic adult birds show gizzard grinding and hindgut fermentation.",
+        "Des adultes domestiques montrent broyage gastrique et fermentation intestinale."
+      ],
+      "access_note": "Full text blocked; indexed summary used.",
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 18,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ostriches recognise their own eggs and discard others",
+        "fr": "Les autruches reconnaissent leurs œufs et écartent ceux des autres"
+      },
+      "url": "https://www.nature.com/articles/279233a0",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Wild East African communal nests may hold 30–40 large eggs.",
+        "Des nids collectifs est-africains peuvent contenir 30 à 40 œufs."
+      ],
+      "access_note": "Full page fetch failed; indexed excerpt used.",
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 20,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A molecular genetic analysis of the communal nesting of the ostrich",
+        "fr": "Analyse génétique moléculaire de la nidification collective de l’autruche"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12492891/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Nairobi parentage study found multiple mothers and fathers per nest.",
+        "À Nairobi, plusieurs mères et pères ont pondu dans un nid."
+      ],
+      "access_note": "Full page blocked; indexed abstract used.",
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 21,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Flightless Fancy",
+        "fr": "Une élégante incapable de voler"
+      },
+      "url": "https://sandiegozoowildlifealliance.org/story-hub/zoonooz/flightless-fancy",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Field account describes courtship, egg care and historical pressures.",
+        "Le récit décrit parade, soins aux œufs et pressions historiques."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 19,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ostrich",
+        "fr": "Autruche"
+      },
+      "url": "https://nationalzoo.si.edu/animals/ostrich",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Wings aid turning and cooling; maturity follows adult size; large carnivores prey on ostriches."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "reproduction.en.8",
+        "reproduction.fr.8",
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 14,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Severe decline of large birds in the Northern Sahel of West Africa: a long-term assessment",
+        "fr": "Déclin marqué des grands oiseaux du nord du Sahel ouest-africain : évaluation à long terme"
+      },
+      "url": "https://doi.org/10.1017/S0959270906000487",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Repeated Sahel surveys documented local ostrich declines and pressures.",
+        "Des relevés sahéliens répétés documentent déclins et pressions locales."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 18,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ostrich population densities and temporal dynamics in coupled social-ecological systems",
+        "fr": "Densité et dynamique temporelle des autruches dans des systèmes socio-écologiques couplés"
+      },
+      "url": "https://doi.org/10.1016/j.ecolind.2021.107348",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Northern Tanzania study found density correlations with nine of ten ungulates.",
+        "Dans le nord tanzanien, corrélations de densité avec neuf ongulés sur dix."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 23,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict one adult female Struthio camelus, with grey-brown plumage, long bare legs and neck, and two toes on each foot, standing naturally on a PURE WHITE background; do not depict the Somali ostrich.",
+  "uncertainties": [
+    "Adult size ranges differ among populations and references; the listed ranges are from the Paris museum profile.",
+    "Communal nest size and breeding associations vary by population; the 30–40-egg report is from East African field observations.",
+    "The 2025 global assessment lists Least Concern and a decreasing trend; this is not a current population count.",
+    "The digestive study concerns adult domesticated birds, and zoo accounts summarize chick development rather than uniform wild growth rates.",
+    "The 2025 IUCN publication and category are corroborated by official records; an exact assessment day was not independently verified and is omitted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique checked communal nests, development, exact taxonomy, digestive and Tanzanian population studies. Root removed unverified exact assessment day, clarified local correlations, added directly verified wing functions, predators and sexual maturity. Complete source sentence budgets passed; original illustration retained."
+}

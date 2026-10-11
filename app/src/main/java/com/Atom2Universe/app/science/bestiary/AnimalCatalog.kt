@@ -3,15 +3,21 @@ package com.Atom2Universe.app.science.bestiary
 import com.Atom2Universe.app.R
 import androidx.annotation.StringRes
 
+data class AnimalReference(val url: String, @param:StringRes val title: Int)
+
 data class AnimalSpecies(
     val id: String, val scientific: String, val name: Int, val group: String,
     val description: Int, val habitat: Int, val diet: Int, val behavior: Int, val identification: Int,
-    val sourceUrl: String, val sourceTitle: Int, @StringRes val latin: Int
+    val sourceUrl: String, val sourceTitle: Int, @param:StringRes val latin: Int,
+    @param:StringRes val reproduction: Int? = null,
+    @param:StringRes val ecology: Int? = null,
+    @param:StringRes val conservation: Int? = null,
+    val references: List<AnimalReference> = listOf(AnimalReference(sourceUrl, sourceTitle))
 )
 
 /** Stable species identities; content deliberately avoids dated population and status estimates. */
 object AnimalCatalog {
-    val species = listOf(
+    private val initial = listOf(
         AnimalSpecies("lion", "Panthera leo", R.string.animal_lion_name, "mammals", R.string.animal_lion_description, R.string.animal_lion_habitat, R.string.animal_lion_diet, R.string.animal_lion_behavior, R.string.animal_lion_identification, "https://nationalzoo.si.edu/animals/lion", R.string.animal_source_smithsonian, latin = R.string.animal_lion_latin),
         AnimalSpecies("tiger", "Panthera tigris", R.string.animal_tiger_name, "mammals", R.string.animal_tiger_description, R.string.animal_tiger_habitat, R.string.animal_tiger_diet, R.string.animal_tiger_behavior, R.string.animal_tiger_identification, "https://animaldiversity.org/accounts/Panthera_tigris/", R.string.animal_source_adw, latin = R.string.animal_tiger_latin),
         AnimalSpecies("leopard", "Panthera pardus", R.string.animal_leopard_name, "mammals", R.string.animal_leopard_description, R.string.animal_leopard_habitat, R.string.animal_leopard_diet, R.string.animal_leopard_behavior, R.string.animal_leopard_identification, "https://animals.sandiegozoo.org/animals/leopard", R.string.animal_source_sandiego, latin = R.string.animal_leopard_latin),
@@ -113,5 +119,6 @@ object AnimalCatalog {
         AnimalSpecies("common_octopus", "Octopus vulgaris", R.string.animal_common_octopus_name, "invertebrates", R.string.animal_common_octopus_description, R.string.animal_common_octopus_habitat, R.string.animal_common_octopus_diet, R.string.animal_common_octopus_behavior, R.string.animal_common_octopus_identification, "https://animaldiversity.org/accounts/Octopus_vulgaris/", R.string.animal_source_adw, latin = R.string.animal_common_octopus_latin),
         AnimalSpecies("common_starfish", "Asterias rubens", R.string.animal_common_starfish_name, "invertebrates", R.string.animal_common_starfish_description, R.string.animal_common_starfish_habitat, R.string.animal_common_starfish_diet, R.string.animal_common_starfish_behavior, R.string.animal_common_starfish_identification, "https://animaldiversity.org/accounts/Asterias_rubens/", R.string.animal_source_adw, latin = R.string.animal_common_starfish_latin),
     )
+    val species = (initial.associateBy { it.id } + BestiaryEncyclopediaCatalog.species.associateBy { it.id }).values.toList()
     val byId = species.associateBy { it.id }
 }

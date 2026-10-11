@@ -1,0 +1,154 @@
+{
+  "id": "red_deer",
+  "scientific": "Cervus elaphus",
+  "group": "mammals",
+  "name": {
+    "en": "Red deer",
+    "fr": "Cerf élaphe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The red deer is a large hoofed ruminant native to Europe, the Atlas Mountains, Anatolia, the Caucasus and northwestern Iran. Current classifications distinguish it from the wapiti and Central Asian red deer. Introduced populations occur elsewhere, including New Zealand.",
+      "fr": "Le cerf élaphe est un grand ruminant à sabots, indigène d’Europe, de l’Atlas, d’Anatolie, du Caucase et du nord-ouest de l’Iran. Les classifications actuelles le distinguent du wapiti et du cerf d’Asie centrale. Des populations introduites vivent ailleurs, notamment en Nouvelle-Zélande."
+    },
+    "identification": {
+      "en": "Adults have a reddish-brown summer coat, greyer or darker in winter; it is not spotted. Stags are generally larger and darker than hinds and have a pale rump. Males grow branching antlers, shed annually and regrow them beneath velvet, which they rub off when growth ends. Point count does not reliably show age.",
+      "fr": "Son pelage brun roux en été devient plus gris ou sombre en hiver ; il n’est pas tacheté. Le cerf est généralement plus grand et plus foncé que la biche. Les bois ramifiés des mâles tombent chaque année, repoussent sous le velours puis sont frottés à maturité. Leur nombre de pointes n’indique pas sûrement l’âge."
+    },
+    "habitat": {
+      "en": "It uses deciduous and coniferous woods, edges, scrub, grasslands and moorland, feeding in open areas with cover nearby. Habitat use varies regionally. Introduced deer released in New Zealand since 1851 now occupy forest and tussock country on the main islands.",
+      "fr": "Il fréquente forêts, lisières, fourrés, prairies et landes, se nourrissant en terrain ouvert avec un couvert proche. Son habitat varie selon les régions. Introduits depuis 1851, les cerfs occupent forêts et prairies à touffes des principales îles néo-zélandaises."
+    },
+    "diet": {
+      "en": "This flexible herbivore grazes grasses and herbs and browses leaves, shoots and shrubs. Spring growth, winter bark and ferns, and other foods vary with season and location. As a ruminant, it regurgitates and rechews plant matter; diets differ between woodland and open habitats.",
+      "fr": "Il broute graminées et herbes, et prélève feuilles, pousses et arbustes. Jeunes pousses au printemps, écorce et fougères en hiver : les aliments varient selon saison et lieu. Ruminant, il régurgite et remâche les végétaux ; son régime diffère entre forêt et milieux ouverts."
+    },
+    "behavior": {
+      "en": "Hinds often associate with calves and younger deer; mature stags tend to keep apart outside breeding season. In autumn, males roar, scent-mark and display. Rivals may walk parallel, then clash with locked antlers; successful stags gather temporary harems. The sexes usually separate again after the rut.",
+      "fr": "Les biches vivent souvent avec les jeunes ; les cerfs adultes restent à l’écart hors reproduction. En automne, les mâles brament et paradent. Les rivaux marchent parfois côte à côte, puis s’affrontent bois entrecroisés ; les vainqueurs forment des harems temporaires. Les sexes se séparent après le rut."
+    },
+    "reproduction": {
+      "en": "In Europe, the rut usually occurs in autumn, though timing varies with latitude and hemisphere. After about eight months, a hind generally bears one calf in late spring or early summer. Its reddish coat has pale spots that fade within months. At first it hides in vegetation while its mother feeds nearby.",
+      "fr": "En Europe, le rut a généralement lieu en automne, mais varie selon latitude et hémisphère. Après environ huit mois, la biche met bas un faon à la fin du printemps ou au début de l’été. Son pelage roux tacheté pâlit en quelques mois. D’abord, il se cache pendant que sa mère se nourrit à proximité."
+    },
+    "ecology": {
+      "en": "Grazing and browsing change vegetation, depending on deer density and habitat. In Swiss subalpine grasslands, seeds in red deer dung showed that deer disperse plants between feeding and resting areas. This can shape local plant communities, though effects vary by site.",
+      "fr": "Pâturage et broutage modifient la végétation selon la densité et le milieu. Dans des prairies subalpines suisses, des graines dans les déjections ont montré que les cerfs dispersent des plantes entre zones d’alimentation et de repos. L’effet sur les communautés végétales varie selon les sites."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment, last assessed on 12 October 2015 and published in 2018, classified red deer as Least Concern because of its wide range and presumed large populations. This dated assessment is not a new count; it also noted regional contractions and likely declines. In introduced New Zealand populations, deer can damage native plants and forest regeneration, prompting control. Taxonomic limits in Asia have changed since that assessment.",
+      "fr": "L’évaluation mondiale UICN, réalisée le 12 octobre 2015 et publiée en 2018, classait l’espèce « Préoccupation mineure », vu sa vaste aire et ses populations supposées nombreuses. Ce statut daté n’est pas un nouveau dénombrement ; des régressions et baisses locales probables étaient aussi signalées. En Nouvelle-Zélande, les cerfs introduits endommagent parfois les plantes indigènes et la régénération forestière, d’où leur contrôle. Les limites taxonomiques en Asie ont changé depuis cette évaluation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red Deer — The British Deer Society",
+        "fr": "Cerf élaphe — The British Deer Society"
+      },
+      "url": "https://bds.org.uk/information-advice/about-deer/deer-species/red-deer/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Describes seasonal coat colour, sex differences, antler shedding and velvet, annual autumn rut, social group patterns, varied habitat use and grazing/browsing in the British context.",
+        "The page timed out when opened directly; indexed source text was accessible and used for these facts."
+      ]
+    },
+    {
+      "title": {
+        "en": "Red deer — Muséum national d’Histoire naturelle",
+        "fr": "Cerf élaphe — Muséum national d’Histoire naturelle"
+      },
+      "url": "https://www.mnhn.fr/en/red-deer",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "For the French population described, reports seasonal coat differences, male antlers and rutting displays, seasonal diet, one calf and about eight months of gestation.",
+        "Its account concerns the European subspecies C. e. hippelaphus and local French data; those details are not treated as universal measurements."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cervus elaphus — The IUCN Red List of Threatened Species",
+        "fr": "Cervus elaphus — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T55997072A142404453.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment is Least Concern; last assessed 12 October 2015 and published in 2018. Its rationale cites broad distribution and presumed large populations, while acknowledging regional contractions and declines.",
+        "The assessment covers native and established introduced populations and notes forest, shrubland, grassland and rocky habitats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Deer: Animal Threats — Department of Conservation, New Zealand",
+        "fr": "Cerfs : menaces pour la faune — Department of Conservation, Nouvelle-Zélande"
+      },
+      "url": "https://www.doc.govt.nz/nature/pests-and-threats/animal-pests-and-threats/deer/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "States that deer were imported and released in New Zealand from 1851, that red deer are the most widespread established deer there, and that they can damage native plants and forest regeneration.",
+        "Distinguishes red deer (C. elaphus scoticus) from wapiti (C. elaphus nelsoni) in New Zealand management context."
+      ]
+    },
+    {
+      "title": {
+        "en": "The essential, but complex, role of red deer as an ecosystem service provider: a comprehensive review across Europe — European Journal of Wildlife Research",
+        "fr": "Le rôle essentiel mais complexe du cerf élaphe dans les services écosystémiques : revue européenne — European Journal of Wildlife Research"
+      },
+      "url": "https://link.springer.com/article/10.1007/s10344-025-01922-7",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Review of 86 studies reports context-dependent effects of red deer on vegetation and biodiversity, and evidence for seed dispersal as well as negative effects of herbivory in some settings."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cervus elaphus — Mammal Diversity Database, American Society of Mammalogists",
+        "fr": "Cervus elaphus — Mammal Diversity Database, American Society of Mammalogists"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1006313/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Current range includes Europe, Atlas, Anatolia, Caucasus and northwest Iran; formerly included Cervus canadensis."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated image. Adult red deer with natural species-specific morphology; show a mature stag with branching antlers and a hind with no antlers, on a PURE WHITE background.",
+  "uncertainties": [
+    "Antler form, body size, coat shade, rut and calving dates vary across the species’ broad range; seasonal timing in the article is qualified by region.",
+    "The IUCN category cited is from the global assessment dated 12 October 2015 and published in 2018; it is not presented as a new 2026 assessment.",
+    "The British Deer Society page timed out on direct opening, so its indexed text was used. The IUCN page was accessible through its indexed assessment record.",
+    "Taxonomic treatments of red deer and wapiti have changed; this entry uses Cervus elaphus for red deer and does not apply North American Cervus canadensis facts to it."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source/taxonomic and bilingual critique; red deer range narrowed to current MDD treatment and elk terminology corrected."
+}

@@ -1,0 +1,506 @@
+{
+  "id": "emperor_penguin",
+  "scientific": "Aptenodytes forsteri",
+  "group": "birds",
+  "name": {
+    "en": "Emperor penguin",
+    "fr": "Manchot empereur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The emperor penguin is the largest living penguin, a flightless seabird that breeds through the Antarctic winter. Adults combine a large store of body fat with dense, layered feathers and heat-conserving circulation. When cold and wind intensify, birds gather in compact groups; this social thermoregulation complements their physical insulation and helps breeding males endure long fasts.",
+      "fr": "Le manchot empereur est le plus grand manchot vivant, un oiseau marin incapable de voler qui se reproduit durant l’hiver antarctique. Les adultes associent de la graisse, un plumage dense et stratifié et une circulation qui conserve la chaleur. Par froid et vent intenses, ils se serrent ; cette thermorégulation sociale complète leur isolation et aide les mâles reproducteurs à jeûner longtemps."
+    },
+    "identification": {
+      "en": "Adults stand about 115 centimetres tall and may weigh up to 40 kilograms at the start of breeding. Their mass changes substantially through fasting and breeding. The adult has a black head and back, a white breast and belly, and a broad pale-yellow patch along each side of the neck; juveniles have a duller patch. The similar king penguin is smaller, with a narrower, darker orange neck patch; in an emperor, the pale patch extends down to the waterline when it swims.",
+      "fr": "Les adultes mesurent environ 115 cm et peuvent peser jusqu’à 40 kg au début de la reproduction. Leur masse change fortement avec le jeûne et la saison reproductive. La tête et le dos sont noirs, la poitrine et le ventre blancs ; l’adulte porte une large tache jaune pâle de chaque côté du cou, plus terne chez les jeunes. Le manchot royal, plus petit, a une tache cervicale plus étroite et orange foncé ; celle de l’empereur descend jusqu’à l’eau lorsqu’il nage."
+    },
+    "habitat": {
+      "en": "Breeding colonies lie around the Antarctic coast. Most occupy fast ice, frozen seawater attached to the continent; unlike many birds, emperors have no fixed nests and colonies can shift during winter storms. Nearby open-water polynyas give adults access to feeding areas even when sea ice is extensive; local ice conditions shape each colony’s position and timing.",
+      "fr": "Les colonies reproductrices se répartissent autour des côtes de l’Antarctique. La plupart occupent la banquise côtière, attachée au continent ; sans nid fixe, les colonies peuvent se déplacer lors des tempêtes hivernales. Les polynies voisines donnent accès aux zones de pêche malgré l’étendue de la glace ; leur position et le calendrier varient localement."
+    },
+    "diet": {
+      "en": "At sea, emperor penguins pursue prey underwater, commonly diving 150–250 metres for three to six minutes, although much deeper and longer dives have been recorded. They eat fish, krill, other crustaceans and squid. In stomach samples from adults provisioning chicks at Amanda Bay in 1986, fish made up nearly all the measured diet, chiefly Antarctic silverfish. That result describes one colony and season: prey proportions vary among sites and years as local ocean conditions alter what is available. Adults can warm small, cold prey internally; breeding birds also return with stomach contents to feed their chicks.",
+      "fr": "En mer, les manchots plongent souvent entre 150 et 250 m pendant trois à six minutes ; quelques plongées atteignent des profondeurs et durées bien supérieures. Ils mangent poissons, krill, crustacés et calmars. En 1986, des estomacs d’adultes nourrissant leurs poussins à Amanda Bay contenaient presque uniquement des poissons, surtout le poisson d’argent antarctique. Ce résultat local et saisonnier ne s’applique pas partout : disponibilité et part des proies varient selon les conditions océaniques. Les petites proies froides se réchauffent dans le corps ; avant de nourrir leurs poussins, les adultes reviennent avec l’estomac plein."
+    },
+    "behavior": {
+      "en": "Colonies are crowded but not defended as individual territories. During severe winter weather, males carrying eggs close ranks to conserve heat while continuing to incubate. At one observed colony, tightly packed huddles remained mostly still, then all birds took small coordinated steps every 30–60 seconds, passing a movement wave through the group. Courtship uses calls. Returning mates locate one another by voice in the noisy crowd.",
+      "fr": "Les colonies sont denses, mais les oiseaux n’y défendent pas de territoire individuel. Par mauvais temps hivernal, les mâles portant un œuf se serrent pour conserver la chaleur tout en continuant à couver. Dans une colonie observée, les amas serrés restaient surtout immobiles, puis tous les oiseaux faisaient de petits pas coordonnés toutes les 30 à 60 secondes, propageant une vague de mouvement dans le groupe. La parade mobilise des cris. Les partenaires se retrouvent à la voix dans la foule."
+    },
+    "reproduction": {
+      "en": "The annual cycle begins as autumn sea ice thickens and adults return to colonies, usually around April. A pair lays one egg, which the female transfers to the male before leaving to feed at sea. The male balances the egg on his feet beneath a brood pouch. He incubates without feeding for 65–75 days, while his breeding-season fast, which begins before incubation, can last about four months. The female returns with food around hatching, and the parents exchange care and foraging shifts. If the chick hatches first, the fasting male can briefly feed it a secretion from his oesophagus. Newly hatched chicks weigh about 150–200 grams, have sparse down, and cannot yet regulate their temperature. At roughly 50 days they can thermoregulate and begin spending time in groups, or crèches, while adults forage. In early summer, down is replaced by waterproof juvenile feathers; young birds leave for the sea around December or January, with exact timing depending on development and ice.",
+      "fr": "Le cycle commence vers avril, quand les adultes reviennent sur la banquise d’automne. Chaque couple pond un œuf que la femelle remet au mâle avant de partir en mer. Le mâle pose l’œuf sur ses pieds et le couvre de sa poche incubatrice. Il jeûne durant l’hiver ; l’incubation dure 65 à 75 jours, tandis que son jeûne, commencé avant l’incubation, peut approcher quatre mois. La femelle revient avec de la nourriture vers l’éclosion ; les parents alternent soins et sorties de pêche. Si le poussin éclot avant son retour, le mâle peut le nourrir brièvement d’une sécrétion de l’œsophage. À l’éclosion, le poussin pèse 150 à 200 g, porte peu de duvet et ne régule pas encore sa température. Vers 50 jours, il y parvient et rejoint les crèches tandis que les adultes pêchent. Au début de l’été, le duvet cède la place aux plumes juvéniles imperméables ; les jeunes partent en mer vers décembre ou janvier, selon leur développement et la glace."
+    },
+    "ecology": {
+      "en": "Emperor penguins link midwater prey to larger Southern Ocean consumers. In spring samples from three western Ross Sea sites, Antarctic silverfish dominated fish prey and connected zooplankton to seabird predators. Their prey mix is not uniform: fish, crustaceans and squid contribute differently among regions, so penguin foraging reflects the local marine food web. At the Haswell Islands, a study found South Polar Skuas mainly scavenged frozen emperor penguin eggs and chicks; researchers judged their effect on emperor breeding success there negligible.",
+      "fr": "Les manchots empereurs transfèrent aux grands prédateurs l’énergie de proies de pleine eau. Dans des échantillons printaniers de trois sites de la mer de Ross occidentale, le poisson d’argent dominait les poissons consommés et reliait zooplancton et oiseaux marins. Le régime varie selon les régions : poissons, crustacés et calmars reflètent le réseau alimentaire local. Aux îles Haswell, les labbes antarctiques consommaient surtout des œufs et poussins gelés ; leur effet sur la reproduction des manchots empereurs était jugé négligeable sur ce site."
+    },
+    "conservation": {
+      "en": "The IUCN assessment dated 26 February 2026 assigns category Endangered (A3bc). Its climate-dependent models estimate a 45% probability that the global population will decline by more than half by 2073; this is a projection, not a measured future count. On 9 April 2026, BirdLife International announced the move from Near Threatened to Endangered; its summary separately projects a halving by the 2080s. Satellite estimates indicated a loss of about 10% of the population between 2009 and 2018. Early breakup can remove the fast-ice platform before chicks have waterproof feathers. In 2022, researchers judged that four of five Bellingshausen Sea colonies probably suffered total breeding failure after exceptional sea-ice loss; colony abandonment was inferred from satellite images, not observed directly.",
+      "fr": "L’évaluation de l’UICN datée du 26 février 2026 attribue la catégorie « En danger » (A3bc). Ses modèles dépendant du climat estiment à 45 % la probabilité que la population mondiale baisse de plus de moitié d’ici 2073 : c’est une projection, non un décompte futur mesuré. Le 9 avril 2026, BirdLife International a annoncé le passage de « Quasi menacé » à « En danger » ; son résumé prévoit séparément une réduction de moitié d’ici aux années 2080. Les estimations satellitaires indiquaient une baisse d’environ 10 % de la population entre 2009 et 2018. Une débâcle précoce peut emporter la banquise côtière avant que les poussins aient des plumes imperméables. En 2022, les chercheurs ont estimé que quatre des cinq colonies de la mer de Bellingshausen avaient probablement subi un échec reproducteur total après une perte exceptionnelle de glace ; l’abandon a été déduit des images satellite, et non observé directement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Emperor penguin — Australian Antarctic Program",
+        "fr": "Manchot empereur — Programme antarctique australien"
+      },
+      "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Largest living penguin; layered feathers, circulation, prey and dive benchmarks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.5",
+        "diet.fr.5",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 10,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Penguins — British Antarctic Survey",
+        "fr": "Les manchots — British Antarctic Survey"
+      },
+      "url": "https://legacy.bas.ac.uk/about_antarctica/wildlife/birds/penguins/index.php",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Approximate emperor adult height 115 cm and maximum mass 40 kg; king comparison."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 13,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Emperor penguin — New Zealand Birds Online",
+        "fr": "Manchot empereur — New Zealand Birds Online"
+      },
+      "url": "https://www.nzbirdsonline.org.nz/species/emperor-penguin",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Neck-patch distinction; fast-ice colonies commonly near open-water polynyas."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 8,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "An Emperor Penguin Population Estimate: The First Global, Synoptic Survey of a Species from Space — PLOS ONE",
+        "fr": "Estimation de la population du manchot empereur : premier recensement synoptique mondial d’une espèce depuis l’espace — PLOS ONE"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0033751",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Satellite survey examined the full Antarctic coastline and mapped emperor breeding colonies."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 12,
+        "total": 29,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Finding emperor penguin colonies — Australian Antarctic Program",
+        "fr": "Localiser les colonies de manchots empereurs — Programme antarctique australien"
+      },
+      "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/finding-emperor-penguin-colonies/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Most colonies use attached fast ice; no fixed nests, and storm huddles shift."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 13,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Emperor penguin breeding cycle — Australian Antarctic Program",
+        "fr": "Cycle reproducteur du manchot empereur — Programme antarctique australien"
+      },
+      "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/breeding-cycle/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Autumn arrival, single egg, male incubation fast, chick growth, fledging and moult."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "reproduction.en.7",
+        "reproduction.fr.7",
+        "reproduction.en.8",
+        "reproduction.fr.8",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 12,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Emperor penguins diving and travelling — Australian Antarctic Program",
+        "fr": "Plongées et déplacements des manchots empereurs — Programme antarctique australien"
+      },
+      "url": "https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/how-deep-can-they-dive/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Foraging depths and typical dive durations; maximum records are exceptional."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 10,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Coordinated Movements Prevent Jamming in an Emperor Penguin Huddle — PLOS ONE",
+        "fr": "Des mouvements coordonnés empêchent le blocage des groupes de manchots empereurs — PLOS ONE"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0020283",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Observed colony huddles reorganized through coordinated steps every 30–60 seconds."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 10,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The diet of the emperor penguin in Amanda Bay — Antarctic Science",
+        "fr": "Régime alimentaire du manchot empereur à Amanda Bay — Antarctic Science"
+      },
+      "url": "https://doi.org/10.1017/S0954102090000037",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Amanda Bay adult stomach contents, chick-rearing August–October 1986; silverfish predominated."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "diet.en.4",
+        "diet.fr.4",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 125,
+        "notes_words": 10,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Food of Emperor Penguins in the western Ross Sea — Marine Biology",
+        "fr": "Alimentation des manchots empereurs dans la mer de Ross occidentale — Marine Biology"
+      },
+      "url": "https://doi.org/10.1007/s002270050253",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Regional stomach sampling identifies silverfish as a zooplankton-to-seabird food-web link."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 10,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "South Polar Skua diet and feeding at Haswell Islands — Birds",
+        "fr": "Régime et alimentation du labbe antarctique aux îles Haswell — Birds"
+      },
+      "url": "https://doi.org/10.3390/birds5020016",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Haswell skuas mainly scavenged frozen emperor eggs and chicks; local breeding effect negligible."
+      ],
+      "prose_claims": [
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 13,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Emperor Penguin pre-publication assessment — IUCN Red List",
+        "fr": "Évaluation prépublication du manchot empereur — Liste rouge de l’UICN"
+      },
+      "url": "https://nc.iucnredlist.org/redlist/content/attachment_files/Aptenodytes_forsteri_Pre-Publication_Assessment_RLTS_T22697752A197622453_eng.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Assessed 26 February 2026 as Endangered A3bc; early-online Red List entry is 2026."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 13,
+        "total": 99,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Emperor Penguin now Endangered due to climate change — BirdLife International",
+        "fr": "Le manchot empereur désormais En danger en raison du changement climatique — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/news/2026/04/09/emperor-penguin-now-endangered-due-to-climate-change/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Public announcement on 9 April 2026; satellite decline and sea-ice threat summary."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "conservation.en.4",
+        "conservation.fr.4",
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 12,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Record low 2022 Antarctic sea ice led to catastrophic breeding failure — Communications Earth & Environment",
+        "fr": "Le niveau historiquement bas de glace de mer en 2022 a provoqué un échec reproducteur majeur — Communications Earth & Environment"
+      },
+      "url": "https://doi.org/10.1038/s43247-023-00927-x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Chicks fledge in December–January; waterproof juvenile plumage develops by fledging."
+      ],
+      "prose_claims": [
+        "reproduction.en.9",
+        "reproduction.fr.9"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 10,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aptenodytes forsteri — Animal Diversity Web, University of Michigan",
+        "fr": "Aptenodytes forsteri — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Aptenodytes_forsteri/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "Seasonal mass; female lays one egg; calls locate mates; males feed hatchlings."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.6",
+        "reproduction.fr.6",
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 12,
+        "total": 120,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Loss of sea ice causes catastrophic breeding failure for emperor penguins — British Antarctic Survey",
+        "fr": "La perte de banquise provoque un échec reproducteur majeur chez les manchots empereurs — British Antarctic Survey"
+      },
+      "url": "https://www.bas.ac.uk/news/loss-of-sea-ice-causes-catastrophic-breeding-failure-for-emperor-penguins/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BAS reports probable total failure at four sites, inferred from satellite observations."
+      ],
+      "prose_claims": [
+        "conservation.en.6",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 12,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Adult emperor penguin (Aptenodytes forsteri), unmistakable broad pale-yellow neck patch, black-and-white plumage, upright flippers and heavy body. Natural species proportions; isolated on a pure white background, with no props, text, labels or scenery.",
+  "uncertainties": [
+    "Adult mass varies strongly with sex and annual breeding, fasting and moult stages; listed values are approximate.",
+    "Diet composition and colony phenology vary regionally; the 1986 Amanda Bay stomach sample is not a species-wide diet estimate.",
+    "The IUCN PDF is labelled pre-publication, while BirdLife announced the Endangered listing on 9 April 2026; no final document issue date is asserted here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific review checked species, social thermoregulation, diving, yearly reproduction and 2026 Endangered assessment. Root clarified fasting versus incubation duration, restored French behavioral qualifiers and spring ecological-study scope. Satellite breeding failure remains explicitly probable. Complete source sentence budgets passed; original illustration retained."
+}

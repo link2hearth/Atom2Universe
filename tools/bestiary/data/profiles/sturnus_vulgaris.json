@@ -1,0 +1,410 @@
+{
+  "id": "sturnus_vulgaris",
+  "scientific": "Sturnus vulgaris",
+  "group": "birds",
+  "name": {
+    "en": "Common starling",
+    "fr": "Étourneau sansonnet"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Starling is a medium-sized, adaptable songbird native across much of Europe and temperate Asia. It moves between open feeding grounds and sheltered roosts, and often nests in cavities in trees or buildings. Its seasonal plumage, varied calls and large coordinated flocks make it conspicuous, while its ecological effects depend strongly on whether it lives within or beyond its native range.",
+      "fr": "L’Étourneau sansonnet est un passereau de taille moyenne, adaptable, indigène dans une grande partie de l’Europe et de l’Asie tempérée. Il fréquente les terrains ouverts pour s’alimenter et les abris pour dormir ; il niche souvent dans des cavités d’arbres ou de bâtiments. Son plumage saisonnier, ses cris variés et ses grands vols coordonnés le rendent visible, tandis que ses effets écologiques dépendent fortement de son origine locale ou de son introduction."
+    },
+    "identification": {
+      "en": "Adults have a compact, dark body, short tail, pointed wings and a slender bill. The apparent blackness is broken by green, blue and purple iridescence: ordered melanosomes beneath a thin keratin layer in feather barbules produce structural colour whose hue changes with illumination and viewing angle. After the annual moult, fresh feathers carry pale tips that create conspicuous winter spots; abrasion gradually removes the tips towards spring, exposing the darker glossy feather. The bill is dark in winter and becomes yellow as breeding approaches. In breeding condition, the lower bill base is usually blue-grey in males and pink in females. A late-winter bird can therefore show both residual white spots and a yellow bill.",
+      "fr": "L’adulte a un corps compact et sombre, une queue courte, des ailes pointues et un bec fin. Cette apparence noire est nuancée d’irisations vertes, bleues et violettes : des mélanosomes ordonnés sous une fine couche de kératine, dans les barbules des plumes, produisent une couleur structurelle dont la teinte varie avec l’éclairage et l’angle de vue. Après la mue annuelle, les plumes neuves portent des pointes pâles qui forment les taches hivernales ; leur usure progressive vers le printemps révèle la plume sombre et brillante. Le bec, sombre en hiver, jaunit à l’approche de la reproduction. En période nuptiale, la base de la mandibule inférieure est généralement bleu-gris chez le mâle et rose chez la femelle. Un oiseau de fin d’hiver peut donc garder des taches blanches tout en ayant le bec jaune."
+    },
+    "habitat": {
+      "en": "Starlings use open country with short vegetation, including pasture, lawns, parks and cultivated fields, where the ground is accessible for probing. Trees, reedbeds and buildings provide night roosts; nest sites are cavities such as old woodpecker holes, tree hollows, nest boxes and gaps in structures. Their broad use of human-shaped landscapes helps explain successful establishment in several introduced regions, but does not make every introduced population equally damaging.",
+      "fr": "Les étourneaux fréquentent les espaces ouverts à végétation basse, notamment pâtures, pelouses, parcs et champs cultivés, où ils peuvent sonder le sol. Les arbres, roselières et bâtiments servent de dortoirs ; ils nichent dans des cavités telles que d’anciens trous de pics, des arbres creux, des nichoirs ou des ouvertures de constructions. Leur usage étendu des paysages transformés par l’humain aide à comprendre leur implantation dans plusieurs régions où ils ont été introduits, sans pour autant rendre toutes ces populations également nuisibles."
+    },
+    "diet": {
+      "en": "The diet shifts with season and opportunity. During much of the breeding season, adults search soil for invertebrates such as beetle larvae and other prey, which also provide protein for growing chicks; in other periods they take fruit, seeds and other available foods. A characteristic feeding sequence is to insert the closed bill into turf or soft soil, then force it open to widen the gap and expose hidden prey. This probing-and-gaping action reaches food beneath the surface, unlike simple picking from foliage.",
+      "fr": "Le régime varie selon la saison et les ressources disponibles. Pendant une grande partie de la reproduction, les adultes recherchent dans le sol des invertébrés, notamment des larves de coléoptères, qui fournissent aussi des protéines aux poussins en croissance ; à d’autres périodes, ils consomment fruits, graines et aliments accessibles. Une séquence typique consiste à enfoncer le bec fermé dans le gazon ou la terre meuble, puis à l’ouvrir en force pour élargir la fente et découvrir les proies enfouies. Cette technique de sondage et d’ouverture du bec donne accès à la nourriture sous la surface, plutôt que de simplement cueillir des proies sur les feuilles."
+    },
+    "behavior": {
+      "en": "They forage in loose groups and gather in larger flocks at communal roosts, especially outside the breeding season. Before settling, flocks may wheel in dense aerial displays called murmurations. Measurements and models of starling flocks show that birds adjust direction and speed in response to nearby flockmates; local reactions can spread through the group, so no central leader is needed. Rapid turns propagate as birds respond to nearby flockmates and predators. Starlings also produce whistles, rattles and imitations within their vocal repertoire.",
+      "fr": "Ils s’alimentent en groupes lâches et se rassemblent en bandes plus vastes dans des dortoirs communs, surtout hors de la saison de reproduction. Avant de se poser, les groupes peuvent effectuer des évolutions aériennes denses appelées murmurations. Les mesures et modèles de vols d’étourneaux montrent que chaque oiseau ajuste sa direction et sa vitesse en fonction de voisins proches ; les réactions locales se propagent dans le groupe, sans chef central. Les virages rapides se propagent à mesure que les oiseaux réagissent aux voisins proches et aux prédateurs. Les étourneaux émettent aussi sifflements, cliquetis et imitations vocales."
+    },
+    "reproduction": {
+      "en": "Starlings nest in cavities, where the male begins a nest of grasses and other material and the female helps finish it. A clutch usually contains three to six eggs; both parents incubate, and both feed the helpless hatchlings. Chicks remain in the nest for roughly three weeks before fledging, then continue to depend on adults while learning to forage. Some populations can raise a second brood when conditions allow. Nest cavities are a limiting resource in many landscapes, so competition for them can be intense.",
+      "fr": "Les étourneaux nichent dans des cavités. Le mâle commence le nid avec des herbes et d’autres matériaux, puis la femelle contribue à le terminer. La ponte compte généralement trois à six œufs ; les deux parents couvent et nourrissent les oisillons dépendants. Les jeunes restent au nid environ trois semaines avant l’envol, puis demeurent dépendants des adultes pendant qu’ils apprennent à chercher leur nourriture. Certaines populations peuvent élever une seconde nichée lorsque les conditions le permettent. Dans de nombreux paysages, les cavités sont une ressource limitée, ce qui rend la compétition pour les sites de nidification intense."
+    },
+    "ecology": {
+      "en": "Within its native range, the starling consumes soil invertebrates and fruit and also supplies prey to predators. Its probing can affect the availability of pasture invertebrates, while large feeding flocks may concentrate pressure on particular fields. In North America, where it was introduced, competition for nest cavities can displace native cavity-nesting birds; a 2003 analysis of 27 native North American cavity-nesting species detected few population declines potentially attributable to starlings. The balance of effects is therefore local and evidence-dependent, rather than a universal property of the species.",
+      "fr": "Dans son aire d’origine, l’étourneau consomme des invertébrés du sol et des fruits, et constitue aussi une proie pour des prédateurs. Son sondage peut modifier la disponibilité des invertébrés des pâtures, tandis que de grands groupes peuvent exercer une pression concentrée sur certains champs. En Amérique du Nord, où il a été introduit, la compétition pour les cavités peut évincer des oiseaux indigènes qui nichent dans des trous ; une analyse de 2003 sur 27 espèces indigènes nord-américaines nichant en cavités a décelé peu de déclins démographiques potentiellement attribuables aux étourneaux. Le bilan dépend donc du lieu et des données disponibles : il ne constitue pas une propriété universelle de l’espèce."
+    },
+    "conservation": {
+      "en": "Global assessments classify the Common Starling as Least Concern because of its very large range and population. That category masks substantial regional differences. In the UK, the species is Red-listed: the British Trust for Ornithology reports a 61% decline in the breeding population from 1995 to 2024, and links concern to losses in pastoral farmland and reduced access to food. In North America and parts of Australasia it is introduced and can compete for nest cavities or cause agricultural problems, leading to local control policies. Conservation status and management therefore need a stated geography; a global category does not describe the condition of every regional population.",
+      "fr": "Les évaluations mondiales classent l’Étourneau sansonnet en préoccupation mineure, compte tenu de son aire et de sa population très vastes. Cette catégorie masque d’importantes différences régionales. Au Royaume-Uni, l’espèce figure sur la liste rouge : le British Trust for Ornithology rapporte une baisse de 61 % de la population nicheuse entre 1995 et 2024 et relie les inquiétudes au recul des pâturages et à une moindre disponibilité alimentaire. En Amérique du Nord et dans certaines régions d’Australasie, l’oiseau est introduit et peut concurrencer les espèces pour les cavités ou causer des problèmes agricoles, d’où des politiques locales de contrôle. Il faut donc préciser l’échelle géographique du statut et de la gestion : une catégorie mondiale ne décrit pas l’état de chaque population régionale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "European Starling Identification — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Identification de l’Étourneau sansonnet — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/European_Starling/id/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Winter feather tips wear away by spring, revealing dark iridescent feathers; bill shifts from dark to yellow.",
+        "Adults forage on short grass by probing; cavity nesting, large winter flocks, and introduced North American history/effects are described."
+      ],
+      "prose_claims": [
+        "Compact dark adult, short tail, pointed wings, slender bill; changing winter spots, seasonal yellow bill and open short-grass feeding grounds."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 163,
+        "notes_words": 37,
+        "total_estimate": 200
+      }
+    },
+    {
+      "title": {
+        "en": "Cortex Thickness Is Key for the Colors of Iridescent Starling Feather Barbules — Frontiers in Ecology and Evolution",
+        "fr": "L’épaisseur du cortex détermine les couleurs des barbules iridescentes chez l’étourneau — Frontiers in Ecology and Evolution"
+      },
+      "url": "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2021.746254/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "In Sturnus vulgaris, blue-to-purple iridescence arises from solid rod-shaped melanosomes beneath keratin in feather barbules."
+      ],
+      "prose_claims": [
+        "The melanosome and keratin arrangement in feather barbules produces the described blue-purple structural iridescence."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 60,
+        "notes_words": 15,
+        "total_estimate": 75
+      }
+    },
+    {
+      "title": {
+        "en": "European Starling Life History — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Cycle de vie de l’Étourneau sansonnet — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/european_starling/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Closed-bill probing followed by forceful gaping opens soil to reveal invertebrates; foraging occurs in lawns and fields.",
+        "Clutches are 3–6 eggs; both sexes incubate; hatchlings are helpless and stay in the nest about 21–23 days.",
+        "North American study found few measured population effects among 27 native bird species, with sapsuckers an exception."
+      ],
+      "prose_claims": [
+        "Soil probing and gaping for invertebrates; seasonal plant foods; clutch, incubation, nestling and North American effects."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 146,
+        "notes_words": 54,
+        "total_estimate": 200
+      }
+    },
+    {
+      "title": {
+        "en": "Spatio-temporal variation in European starling reproductive success at multiple small spatial scales — PeerJ",
+        "fr": "Variation spatio-temporelle du succès reproducteur de l’étourneau à petite échelle — PeerJ"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4569032/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Starlings are semi-colonial, defend the immediate nest site rather than a broad breeding territory, forage communally on grassland invertebrates, and may raise two broods depending on location."
+      ],
+      "prose_claims": [
+        "Semi-colonial nesting, communal grassland foraging, immediate nest-site defence and geographically variable second broods."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 120,
+        "notes_words": 27,
+        "total_estimate": 147
+      }
+    },
+    {
+      "title": {
+        "en": "Sexing starlings Sturnus vulgaris using iris colour — Ringing & Migration",
+        "fr": "Sexage de l’étourneau sansonnet par la couleur de l’iris — Ringing & Migration"
+      },
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/03078698.2005.9674332",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The field study compared sexing traits with DNA sexing; during breeding condition the bill base is blue-grey in males and pink in females."
+      ],
+      "prose_claims": [
+        "Blue-grey male versus pink female bill base in breeding condition."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 35,
+        "notes_words": 23,
+        "total_estimate": 58
+      }
+    },
+    {
+      "title": {
+        "en": "Complex patterns of collective escape in starling flocks under predation — Proceedings of the National Academy of Sciences",
+        "fr": "Motifs complexes de fuite collective dans les bandes d’étourneaux face aux prédateurs — Proceedings of the National Academy of Sciences"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6404399/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Field observations of Sturnus vulgaris document distinct collective escape patterns during raptor attacks, including waves, expansion and flock splitting as birds change orientation and position relative to neighbours and predator."
+      ],
+      "prose_claims": [
+        "Observed flock escape patterns in response to raptor attacks and changes in flock shape/orientation."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 70,
+        "notes_words": 30,
+        "total_estimate": 100
+      }
+    },
+    {
+      "title": {
+        "en": "How starlings check their own speed — Nature Italy, research highlight on CNR/Sapienza flock research",
+        "fr": "Comment les étourneaux régulent leur vitesse — Nature Italy, synthèse de recherches du CNR et de Sapienza"
+      },
+      "url": "https://www.nature.com/articles/d43978-022-00067-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "A model based on observations in Rome describes each starling matching speed and direction to roughly a dozen nearest flockmates; local changes propagate through a flock."
+      ],
+      "prose_claims": [
+        "Local neighbour matching of speed and direction and propagation of turns through flocks."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 135,
+        "notes_words": 26,
+        "total_estimate": 161
+      }
+    },
+    {
+      "title": {
+        "en": "Global invasion history and native decline of the Common Starling: insights through genetics — Macquarie University",
+        "fr": "Histoire mondiale des introductions et déclin dans l’aire d’origine de l’étourneau — Université Macquarie"
+      },
+      "url": "https://researchers.mq.edu.au/en/publications/global-invasion-history-and-native-decline-of-the-common-starling/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Peer-reviewed review describes the Common Starling as native to the Palearctic and records intentional introductions to the Americas, South Africa, Australia and Pacific islands."
+      ],
+      "prose_claims": [
+        "Native Palearctic range and documented intentional introductions beyond that range."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 70,
+        "notes_words": 24,
+        "total_estimate": 94
+      }
+    },
+    {
+      "title": {
+        "en": "The effect of sward height and drainage on Common Starlings and Northern Lapwings foraging in grassland habitats — Ibis",
+        "fr": "Effet de la hauteur du couvert et du drainage sur l’alimentation des étourneaux et des vanneaux en prairie — Ibis"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1474-919X.2004.00355.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Field study identifies Common Starlings as probing for soil invertebrates and finds short swards more profitable for soil-invertebrate feeders."
+      ],
+      "prose_claims": [
+        "Soil-invertebrate probing and advantage of short swards for foraging."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 40,
+        "notes_words": 19,
+        "total_estimate": 59
+      }
+    },
+    {
+      "title": {
+        "en": "Starling — BTO BirdFacts",
+        "fr": "Étourneau — BirdFacts du BTO"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/starling",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "UK breeding population is Red-listed; BTO reports a 61% fall over 1995–2024 and discusses pastoral farming and food availability.",
+        "Species uses buildings, cavities, open feeding ground and communal roosts; global IUCN category shown as Least Concern."
+      ],
+      "prose_claims": [
+        "Global status, UK Red listing and measured UK trend; winter flocks, habitat and seasonal plumage."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 163,
+        "notes_words": 37,
+        "total_estimate": 200
+      }
+    },
+    {
+      "title": {
+        "en": "Common Starlings increasingly select for grazed areas with increasing distance-to-nest — PeerJ",
+        "fr": "Les étourneaux choisissent de plus en plus les zones pâturées à mesure qu’ils s’éloignent du nid — PeerJ"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5542446/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Danish farmland study describes breeding birds foraging for soil invertebrates in short grass and identifies intensified cultivation, loss of rich feeding cover and landscape homogenization as proposed pressures on food availability."
+      ],
+      "prose_claims": [
+        "Farmland foraging, short grazing, and proposed food-availability pressures linked to land-use changes."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 169,
+        "notes_words": 31,
+        "total_estimate": 200
+      }
+    },
+    {
+      "title": {
+        "en": "Natural nest sites of the European Starling in a primeval temperate forest — Bird Study",
+        "fr": "Sites naturels de nidification de l’étourneau dans une forêt tempérée primaire — Bird Study"
+      },
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/00063657.2022.2028718",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "A 46-season study in protected Polish forest found most nests in deep, strong-walled holes, commonly excavated by woodpeckers in living trees; nest-hole features likely help reduce predation risk."
+      ],
+      "prose_claims": [
+        "Natural tree-hole nest selection and cavity features associated with reduced predation risk."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 110,
+        "notes_words": 28,
+        "total_estimate": 138
+      }
+    },
+    {
+      "title": {
+        "en": "European Starling — Department of Primary Industries and Regional Development, Western Australia",
+        "fr": "Étourneau sansonnet — ministère des Industries primaires et du Développement régional d’Australie-Occidentale"
+      },
+      "url": "https://www.dpird.wa.gov.au/businesses/pests-weeds-and-diseases/animal-pests-diseases/pest-birds/European-starling/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The species is native to Europe, Asia and North Africa and introduced in many regions; Western Australia maintains surveillance to prevent establishment because of potential agricultural, environmental and social impacts."
+      ],
+      "prose_claims": [
+        "Western Australia’s surveillance and the potential local environmental/agricultural impacts of introduced populations."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 130,
+        "notes_words": 30,
+        "total_estimate": 160
+      }
+    },
+    {
+      "title": {
+        "en": "Sturnus vulgaris — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Sturnus vulgaris — Animal Diversity Web, musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Sturnus_vulgaris/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Species account describes an omnivorous diet of animal prey and plant foods, and identifies European starlings as prey for small predators in their native range."
+      ],
+      "prose_claims": [
+        "Omnivorous feeding, animal and plant foods, and the species’ role as prey for small predators in the native range."
+      ],
+      "budget": {
+        "source_word_limit": 200,
+        "article_words_en_fr_estimate": 100,
+        "notes_words": 25,
+        "total_estimate": 125
+      }
+    },
+    {
+      "title": {
+        "en": "European Starlings and Their Effect on Native Cavity-Nesting Birds — Koenig (2003)",
+        "fr": "Effets des étourneaux sur les oiseaux indigènes nichant en cavités — Koenig (2003)"
+      },
+      "url": "https://conbio.onlinelibrary.wiley.com/doi/abs/10.1046/j.1523-1739.2003.02262.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Compared 27 native species before and after invasion; ten significant effects were potentially attributable, only half partly negative."
+      ],
+      "prose_claims": [
+        "Scoped 2003 population-analysis finding, distinct from individual nest usurpation."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult male common starling in prebreeding transition: yellow bill with blue-grey base, remaining pale feather tips and purple-green iridescence. Three forward toes and one backward toe per foot. Pure white background; approved existing generated plate retained.",
+  "uncertainties": [
+    "The shade and extent of iridescence vary with feather angle and illumination; winter spotting fades as feather tips wear, so transitional birds show mixed appearance.",
+    "Breeding dates, number of broods and local ecological effects vary geographically. The British population trend is specifically UK-scoped and should not be generalized worldwide.",
+    "The exact current global IUCN assessment year was not confirmed from an accessible species record; the category is reported here as shown by BTO at consultation, separately from the dated UK trend."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review; root corrected UK geographic scope, removed rhetorical collective-mind claim and strengthened introduced-range ecology with primary Koenig study. Plate accepted as prebreeding transition."
+}

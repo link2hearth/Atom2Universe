@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="be_title">Bestiaire</string>
     <string name="be_hub">Découvre les animaux, leurs fiches illustrées et leur place dans l’arbre du vivant</string>
@@ -27,10 +27,13 @@
     <string name="be_behavior">Comportement et cycle de vie</string>
     <string name="be_classification">Place dans l’arbre du vivant</string>
     <string name="be_sources">Sources</string>
-    <string name="be_source_note">Notice d’espèce consultée pour cette fiche. La position taxonomique suit l’archive utilisée par l’arbre du vivant. Les publications peuvent employer une classification plus ancienne.</string>
+    <string name="be_source_note">Références utilisées pour cette fiche. La position taxonomique suit l’archive de l’arbre du vivant ; les publications peuvent employer une classification plus ancienne.</string>
     <string name="be_plate_note">Illustration naturaliste. Le sexe, l’âge et le plumage saisonnier peuvent modifier l’apparence. Lis les notes d’identification.</string>
     <string name="be_plate_accessibility">Illustration de %1$s. %2$s</string>
     <string name="be_no_browser">Aucun navigateur disponible pour ouvrir cette source.</string>
     <string name="best_plate_loading">Chargement de l’illustration…</string>
     <string name="best_plate_unavailable">Illustration indisponible</string>
+    <string name="be_reproduction">Reproduction et développement</string>
+    <string name="be_ecology">Rôle écologique</string>
+    <string name="be_conservation">Conservation et relations avec les humains</string>
 </resources>

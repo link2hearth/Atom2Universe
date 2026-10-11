@@ -1,0 +1,159 @@
+{
+  "id": "hedgehog",
+  "scientific": "Erinaceus europaeus",
+  "group": "mammals",
+  "name": {
+    "en": "European hedgehog",
+    "fr": "Hérisson d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European hedgehog is a ground-dwelling insectivore native to much of Europe; people introduced it to New Zealand. Short legs and a pointed snout suit foraging in low cover. Mostly active after dark, it hibernates when cold weather reduces prey. Its spiny back protects it when curled. The IUCN’s 2024 assessment classifies it Near Threatened.",
+      "fr": "Le Hérisson d’Europe est un insectivore terrestre originaire d’une grande partie de l’Europe ; il a été introduit en Nouvelle-Zélande. Ses pattes courtes et son museau pointu facilitent la fouille dans les couverts bas. Actif surtout la nuit, il hiberne lorsque le froid raréfie ses proies. Son dos piquant le protège roulé en boule. L’évaluation UICN de 2024 le classe quasi menacé."
+    },
+    "identification": {
+      "en": "The adult has a pointed snout, small eyes and short limbs. Brown-and-cream keratin spines cover its crown and back; face, limbs and belly bear fur. A broad muscle sheet under the skin draws head and limbs inward while smaller muscles raise the spines, enclosing vulnerable surfaces in a defensive ball.",
+      "fr": "L’adulte a un museau pointu, de petits yeux et des membres courts. Des piquants kératinisés bruns et crème couvrent crâne et dos ; visage, membres et ventre portent des poils. Une large nappe musculaire sous la peau ramène tête et membres tandis que de petits muscles dressent les piquants, enfermant les parties vulnérables dans une boule défensive."
+    },
+    "habitat": {
+      "en": "The species uses pasture margins, hedgerows, scrub, woodland edges, parks and gardens. It benefits where cover, prey and nesting material occur together; large exposed fields offer fewer refuges. By day it rests in nests and makes a sturdier winter shelter from dry leaves, supported by nearby vegetation or other objects. The nest insulates and protects it during hibernation. Use of gardens and farmland depends on local cover and food, so habitat use varies among populations.",
+      "fr": "L’espèce fréquente bordures de pâturages, haies, broussailles, lisières, parcs et jardins. Elle profite de la proximité entre abris, proies et matériaux du nid ; les grandes parcelles ouvertes offrent moins de refuges. Le jour, elle se repose dans un nid et construit pour l’hiver un abri plus solide de feuilles sèches, calé contre la végétation ou d’autres éléments. Ce nid l’isole et la protège pendant l’hibernation. L’usage des jardins et terres agricoles dépend du couvert et des ressources locales."
+    },
+    "diet": {
+      "en": "Food consists mainly of ground invertebrates: slugs, snails, earthworms, beetles and other insects. DNA analysis of faeces from 193 hedgehogs admitted to rescue centres in northern Belgium detected slugs and snails in 92% of samples, earthworms and beetles in 54% each. These frequencies describe that sample, not a universal diet. The study also detected occasional vertebrate prey and human-provided foods. The hedgehog is opportunistic, but invertebrates remain its characteristic natural food.",
+      "fr": "Son alimentation comprend surtout des invertébrés du sol : limaces, escargots, vers de terre, coléoptères et autres insectes. Une analyse d’ADN de fèces de 193 hérissons admis en centres de soins du nord de la Belgique a détecté limaces et escargots dans 92 % des échantillons, vers et coléoptères dans 54 % chacun. Ces fréquences décrivent cet échantillon, pas un régime universel. L’étude a aussi relevé quelques proies vertébrées et aliments humains. Opportuniste, le hérisson reste surtout insectivore au sens large."
+    },
+    "behavior": {
+      "en": "Radio-tracking in Switzerland found a mostly nocturnal rhythm, with strong activity early in the night and marked variation among individuals. Smell and hearing help locate prey; the mobile snout probes litter and soil. Adults generally forage alone and do not defend fixed territories. Hibernation lowers body temperature and metabolism, conserving energy during winter food shortages. Animals may arouse and change nests; timing and duration vary with weather, region and body condition.",
+      "fr": "Le radio-pistage en Suisse a révélé un rythme surtout nocturne, avec une forte activité en début de nuit et des différences entre individus. L’odorat et l’ouïe aident à localiser les proies ; le museau fouille la litière et le sol. Les adultes cherchent généralement seuls et ne défendent pas de territoire fixe. L’hibernation réduit température corporelle et métabolisme, économisant l’énergie lorsque la nourriture manque. Des réveils et changements de nid sont possibles ; calendrier et durée dépendent de la région, de la météo et de l’état corporel."
+    },
+    "reproduction": {
+      "en": "Breeding begins as activity resumes after winter. A male may follow and circle a female before mating; the pair does not remain together and he provides no routine care. After about five weeks of gestation, the female gives birth in a sheltered nest, usually to three to six young; a second litter is possible. Newborns are blind, and their first spines emerge from beneath swollen skin soon after birth. The mother nurses the litter; young become mobile and independent over the following weeks.",
+      "fr": "La reproduction commence avec le retour de l’activité après l’hiver. Le mâle peut suivre et contourner la femelle avant l’accouplement ; le couple ne reste pas uni et il ne prodigue pas de soins. Après environ cinq semaines de gestation, la femelle met bas dans un nid abrité, généralement trois à six petits ; une seconde portée est possible. Les nouveau-nés sont aveugles et leurs premiers piquants, initialement masqués par la peau gonflée, deviennent visibles peu après la naissance. La mère allaite les petits, qui deviennent mobiles puis indépendants au fil des semaines."
+    },
+    "ecology": {
+      "en": "Hedgehogs eat soil and litter invertebrates and are prey for badgers, foxes and large owls; spines deter some predators but do not ensure safety. Their movements connect feeding and nesting areas, and hedgerows can guide travel. Radio-tracking in two English urban sites found roads and verges little used and documented crossings. Roads can therefore kill hedgehogs and impede movement, depending on traffic and landscape. Ticks and fleas also use them as hosts.",
+      "fr": "Le hérisson mange les invertébrés du sol et de la litière, et devient la proie de blaireaux, renards et grands-ducs ; ses piquants dissuadent certains prédateurs sans le sauver à coup sûr. Ses déplacements relient zones d’alimentation et nids ; les haies peuvent guider ses trajets. Un radio-pistage dans deux secteurs urbains anglais a montré que routes et accotements étaient peu utilisés et a observé des traversées. Les routes peuvent donc tuer et freiner ses déplacements, selon le trafic et le paysage. Tiques et puces l’utilisent aussi comme hôte."
+    },
+    "conservation": {
+      "en": "The IUCN’s 2024 publication assigns Near Threatened (NT) globally and in the EU27, from an assessment dated 18 February 2023; the trend is decreasing. Declines in over half of range countries and reductions near or above 30% per decade across extensive areas informed the category. This replaces the 2016 and 2008 global Least Concern assessments. Monitoring remains uneven, so regional populations may differ.",
+      "fr": "La publication UICN de 2024 classe l’espèce quasi menacée (NT) dans le monde et l’UE27, d’après l’évaluation du 18 février 2023 ; la tendance baisse. Des déclins dans plus de la moitié des pays de l’aire et des réductions proches ou supérieures à 30 % par décennie dans de vastes secteurs ont motivé ce statut. Elle remplace les évaluations mondiales « préoccupation mineure » de 2016 et 2008. Le suivi inégal peut masquer des différences régionales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Erinaceus europaeus — IUCN Red List 2024",
+        "fr": "Erinaceus europaeus — Liste rouge UICN 2024"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T29650A213411773.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation",
+        "reproduction"
+      ],
+      "facts": [
+        "2024 global and EU27 NT; assessed 18 Feb 2023, declining, with broad decadal declines near or above 30%.",
+        "Regional studies summarized: litters usually three to six, sometimes a second litter."
+      ]
+    },
+    {
+      "title": {
+        "en": "Erinaceus europaeus — Animal Diversity Web, University of Michigan",
+        "fr": "Erinaceus europaeus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Erinaceus_europaeus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Species account supports curling muscles, sensory and solitary behavior, gestation, newborn development, maternal care and predators."
+      ]
+    },
+    {
+      "title": {
+        "en": "Winter nests of the hedgehog — Oecologia",
+        "fr": "Nids d’hiver du hérisson — Oecologia"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28307214/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Field study: dry leaves built into weatherproof winter nests, supported by surrounding objects."
+      ]
+    },
+    {
+      "title": {
+        "en": "L’activité du Hérisson européen — Revue d’Écologie",
+        "fr": "L’activité du Hérisson européen — Revue d’Écologie"
+      },
+      "url": "https://doi.org/10.3406/revec.1982.4366",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Radio-tracked 56 Swiss hedgehogs; activity was predominantly nocturnal and varied individually."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diet metabarcoding in European hedgehogs — Animals",
+        "fr": "Métabarcoding alimentaire chez le Hérisson d’Europe — Animals"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13362287/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Belgian rescue-centre fecal DNA sample (n=193): slugs/snails 92%, earthworms and beetles 54% each."
+      ]
+    },
+    {
+      "title": {
+        "en": "Roads as barriers to movement for hedgehogs — Functional Ecology",
+        "fr": "Les routes, barrières aux déplacements des hérissons — Functional Ecology"
+      },
+      "url": "https://eprints.soton.ac.uk/35570/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Two English urban tracking sites: roads/verges ranked low in habitat preference; crossing varied by site."
+      ]
+    },
+    {
+      "title": {
+        "en": "European hedgehog — Natural History Museum, London",
+        "fr": "Hérisson d’Europe — Natural History Museum, Londres"
+      },
+      "url": "https://www.nhm.ac.uk/discover/hedgehog-erinaceus-europaeus.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Institutional species account supports range, visible appearance and use of hedgerows, woodland edges, parks and gardens."
+      ]
+    }
+  ],
+  "illustration_notes": "Use the existing validated asset. Depict one adult European hedgehog (Erinaceus europaeus), naturally proportioned, with a brown-and-cream spiny crown and back, pointed snout, small dark eyes, rounded ears, short legs and visible furred underside; relaxed, uncurled natural posture on a PURE WHITE background.",
+  "uncertainties": [
+    "Swiss activity observations date from 1975–1978; timing and hibernation vary by individual, climate and population.",
+    "Diet proportions are from rescue-centre animals in northern Belgium, not a representative survey of all wild populations.",
+    "Breeding details vary geographically; the Scottish study concerns an introduced island population.",
+    "E. roumanicus occurs in parts of central and eastern Europe; no biology of that species is described here."
+  ],
+  "reviewed": true,
+  "review_note": "Independent factual and bilingual review with primary sources. Root edited newborn-spine wording where applicable and improved clouded-leopard geographic habitat and functional climbing explanation while preserving captive-data scope."
+}

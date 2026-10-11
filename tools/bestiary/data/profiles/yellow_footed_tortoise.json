@@ -1,0 +1,187 @@
+{
+  "id": "yellow_footed_tortoise",
+  "scientific": "Chelonoidis denticulatus",
+  "group": "reptiles",
+  "name": {
+    "en": "Yellow-footed tortoise",
+    "fr": "Tortue charbonnière à pattes jaunes"
+  },
+  "sections": {
+    "overview": {
+      "en": "The yellow-footed tortoise is a large land tortoise native to tropical South America. Its scientific name is Chelonoidis denticulatus; older names include C. denticulata and Geochelone denticulata. It lives chiefly in humid forest and searches the ground for fallen foods and shelter. Field knowledge comes mainly from a few studied sites.",
+      "fr": "La tortue charbonnière à pattes jaunes est une grande tortue terrestre originaire d’Amérique du Sud tropicale. Son nom scientifique est Chelonoidis denticulatus ; les noms anciens comprennent C. denticulata et Geochelone denticulata. Elle vit surtout en forêt humide et cherche au sol nourriture tombée et abris. Les données de terrain proviennent principalement de quelques sites étudiés."
+    },
+    "identification": {
+      "en": "Its rounded, domed carapace is bone covered by horny scutes, above a flatter plastron. The shell is brown, often with pale yellow or orange scute centers; yellow-orange scales mark the head and limbs. This pattern helps separate it from the red-footed tortoise (Chelonoidis carbonarius), but colors vary and should not be used alone. Adult males have a longer, thicker tail and a somewhat concave plastron. The species is generally larger, though size also varies by region. Elongated prefrontal scales on the head are another useful distinction from the smaller, fragmented scales typical of red-footed tortoises.",
+      "fr": "Sa carapace arrondie et bombée est formée d’os recouverts de scutelles cornées, au-dessus d’un plastron plus plat. La carapace est brune, souvent avec un centre jaune pâle ou orange sur les scutelles ; la tête et les membres portent des écailles jaune orangé. Ce motif aide à la distinguer de la tortue à pattes rouges (Chelonoidis carbonarius), mais les couleurs varient et ne suffisent pas seules. Le mâle adulte a une queue plus longue et épaisse et un plastron légèrement concave. L’espèce est généralement plus grande, avec des variations régionales. Les écailles préfrontales allongées de la tête constituent un autre caractère utile, comparées aux petites écailles fragmentées typiques de la tortue à pattes rouges."
+    },
+    "habitat": {
+      "en": "The species is associated mainly with humid tropical forests, including Amazonian rainforest. It shelters in leaf litter, beneath fallen logs and among roots or dense plants, which buffer heat and drying. In a six-month Central Amazon study, tortoises usually sheltered when encountered; smaller animals often used leaf litter. Tracked individuals used an average 1.56 hectares, with larger areas used by larger tortoises. This local estimate is not a universal home range.",
+      "fr": "L’espèce fréquente surtout les forêts tropicales humides, dont la forêt amazonienne. Elle s’abrite dans la litière, sous les troncs tombés et parmi les racines ou les plantes denses, qui limitent chaleur et dessèchement. Dans une étude de six mois en Amazonie centrale, les tortues étaient généralement à l’abri lors des rencontres ; les petites utilisaient souvent la litière. Les individus suivis ont utilisé en moyenne 1,56 hectare, et les plus grands des surfaces plus étendues. Cette estimation locale n’est pas un domaine vital universel."
+    },
+    "diet": {
+      "en": "This opportunistic omnivore gathers food mainly from the forest floor: fallen fruits, flowers, seeds, fungi, invertebrates and carrion. A Brazilian study found seeds of several plants in tortoise droppings, many still viable; a later study of two Chelonoidis species found viable seeds in most samples. Seeds can therefore survive gut passage, but germination and successful plant recruitment are not guaranteed.",
+      "fr": "Cette omnivore opportuniste récolte surtout au sol fruits tombés, fleurs, graines, champignons, invertébrés et charognes. Une étude brésilienne a trouvé dans les fèces les graines de plusieurs plantes, dont beaucoup restaient viables ; une étude ultérieure de deux espèces de Chelonoidis a trouvé des graines viables dans la plupart des échantillons. Certaines graines survivent donc au transit intestinal, sans garantie de germination ni d’établissement des plantes."
+    },
+    "behavior": {
+      "en": "Field accounts describe mostly daytime activity, though weather and local conditions affect when tortoises move. As reptiles they depend on external heat; shade, humid refuges and sunlit patches offer different thermal conditions, but detailed seasonal thermoregulation is poorly studied in this species. In Central Amazonia, animals were encountered sheltering much more often than walking or feeding. Studies document individual movements and shelter use, not a stable social-group system.",
+      "fr": "Les observations décrivent une activité surtout diurne, modulée par la météo et les conditions locales. Comme les autres reptiles, l’espèce dépend de la chaleur extérieure ; ombre, abris humides et zones ensoleillées offrent des conditions thermiques différentes, mais sa thermorégulation saisonnière reste peu étudiée. En Amazonie centrale, les animaux étaient beaucoup plus souvent rencontrés à l’abri qu’en marche ou en train de manger. Les études décrivent déplacements et abris individuels, pas un système stable de groupes sociaux."
+    },
+    "reproduction": {
+      "en": "Wild breeding is opportunistic and seasonal. In 347 adult females from the Peruvian Amazon, reproductive stages occurred through the year, but output varied with climate: follicle growth tracked peak rainfall and laying was estimated mainly in the dry season. Gravid females held an average 3.7 shelled eggs; estimated clutch size averaged 5.1, with a wide range. These figures come from one harvested population. Wild incubation duration and hatchling survival remain poorly documented.",
+      "fr": "La reproduction sauvage est opportuniste et saisonnière. Chez 347 femelles adultes d’Amazonie péruvienne, les stades reproductifs étaient présents toute l’année, mais le rendement variait selon le climat : la croissance folliculaire suivait le pic des pluies et la ponte était estimée surtout en saison sèche. Les femelles gravides portaient en moyenne 3,7 œufs à coquille ; la ponte était estimée à 5,1 œufs, avec une forte variation. Ces chiffres proviennent d’une population exploitée. La durée d’incubation et la survie des jeunes dans la nature sont peu documentées."
+    },
+    "ecology": {
+      "en": "By eating fruit and moving through forest, the tortoise can carry seeds away from parent plants. A 2025 study of two Chelonoidis species combined fecal samples, seed tests and movement data; its models placed many seeds hundreds of metres away, sometimes beyond a kilometre. This supports a dispersal role, but the effect on plants depends on where seeds land and whether they germinate and establish.",
+      "fr": "En mangeant des fruits et en traversant la forêt, la tortue peut transporter des graines loin des plantes parentes. Une étude de 2025 portant sur deux espèces de Chelonoidis a combiné fèces, tests de viabilité et données de déplacement ; ses modèles situent de nombreuses graines à plusieurs centaines de mètres, parfois au-delà d’un kilomètre. Cela étaye un rôle de dispersion, mais l’effet sur les plantes dépend du lieu de dépôt, de la germination et de l’établissement."
+    },
+    "conservation": {
+      "en": "The 1996 global IUCN assessment classified the tortoise as Vulnerable, a historical result rather than a recent measurement. In December 2025, the IUCN specialist group listed an Endangered assessment among those submitted and in press, without giving its assessment date. The tortoise is hunted for meat and enters international live-animal trade. A Norwegian scientific review reports depletion and scarcity in some populations, while noting uncertainty about captive breeding in trade. Conditions vary across its range and need local monitoring.",
+      "fr": "L’évaluation mondiale de l’UICN de 1996 classait la tortue comme vulnérable ; ce résultat est historique, pas une mesure récente. En décembre 2025, le groupe de spécialistes de l’UICN a inscrit une évaluation « En danger » parmi celles soumises et sous presse, sans en donner la date d’évaluation. La tortue est chassée pour sa viande et entre dans le commerce international d’animaux vivants. Une expertise scientifique norvégienne signale raréfaction et épuisement dans certaines populations, tout en mentionnant l’incertitude sur l’élevage captif dans le commerce. La situation varie selon les régions et nécessite un suivi local."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Turtles of the World: Annotated Checklist and Atlas, 10th Edition (2025) — IUCN/SSC Tortoise and Freshwater Turtle Specialist Group",
+        "fr": "Turtles of the World : checklist annotée et atlas, 10e édition (2025) — Groupe de spécialistes des tortues terrestres et d’eau douce de l’UICN/SSC"
+      },
+      "url": "https://iucn-tftsg.org/wp-content/uploads/crm.10.checklist.atlas_.v10.2025.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "Retains Chelonoidis denticulatus in the 2025 taxonomy; older combinations include C. denticulata and Geochelone denticulata.",
+        "2025 checklist reports EN A2bcd+4bcd assessment in press; not treated as a newly published Red List assessment."
+      ]
+    },
+    {
+      "title": {
+        "en": "Chelonoidis denticulata — PPBio-INPA Chelonian Collection, National Institute for Amazonian Research",
+        "fr": "Chelonoidis denticulata — collection de chéloniens PPBio-INPA, Institut national de recherche amazonienne"
+      },
+      "url": "https://ppbio.inpa.gov.br/en/Cheloniateca/Chelonoidis_denticulata",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Describes brown shell with yellow or pale-orange spots and yellow head/limb scales, forest habitat, daytime activity, fruit/flowers/seeds/invertebrates/carrion diet, and egg laying."
+      ]
+    },
+    {
+      "title": {
+        "en": "Morphological variations and sexual dimorphism in Chelonoidis carbonaria and C. denticulata — Brazilian Journal of Biology",
+        "fr": "Variations morphologiques et dimorphisme sexuel chez Chelonoidis carbonaria et C. denticulata — Brazilian Journal of Biology"
+      },
+      "url": "https://www.scielo.br/j/bjb/a/PpqM86dq5FpJhcNXrkhRjCn/?lang=en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Compares the two species directly and reports substantial morphological variation and sex-related differences; supports caution against identification by a single color trait."
+      ]
+    },
+    {
+      "title": {
+        "en": "Influence of body size, topography, food availability and tree-fall gaps on space use by yellow-footed tortoises in Central Amazonia — PLOS ONE",
+        "fr": "Influence de la taille, du relief, des ressources alimentaires et des chablis sur l’utilisation de l’espace par les tortues à pattes jaunes en Amazonie centrale — PLOS ONE"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0211869",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Tracked 21 tortoises in dense Central Amazon rainforest in 2017; shelters were common, mean used area was 1.56 ha, and area increased with body size. Forest-floor resources sampled included fruit, flowers and fungi."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ovarian cycle, reproductive performance and breeding seasonality of Amazonian yellow-footed tortoises in the wild — Theriogenology Wild",
+        "fr": "Cycle ovarien, rendement reproducteur et saisonnalité de la reproduction de tortues amazoniennes à pattes jaunes sauvages — Theriogenology Wild"
+      },
+      "url": "https://doi.org/10.1016/j.therwi.2023.100022",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Examined reproductive organs of 347 adult females from the Peruvian Amazon; reproductive activity occurred across the year but timing and output correlated with climatic conditions. Mean estimate was 5.1 eggs per clutch; this is geographically scoped and derived from harvested females."
+      ]
+    },
+    {
+      "title": {
+        "en": "Seed Dispersal Effectiveness of Chelonoidis carbonarius and C. denticulatus Tortoises Is Mediated by Body Size and Sex-Differences in Tortoise Movement — Biotropica",
+        "fr": "L’efficacité de la dispersion des graines par Chelonoidis carbonarius et C. denticulatus dépend de la taille et des différences de déplacement entre sexes — Biotropica"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/btp.70055",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "A 2025 study found seeds in 92% of 113 fecal samples, with viable seeds from 17 plant species; movement and retention models estimated dispersal shadows extending hundreds of metres and beyond 1 km. Results combine two species, so they are not all species-specific estimates."
+      ]
+    },
+    {
+      "title": {
+        "en": "Chelonian Conservation News No. 3 (December 2025), IUCN/SSC Tortoise and Freshwater Turtle Specialist Group",
+        "fr": "Chelonian Conservation News no 3 (décembre 2025), Groupe de spécialistes des tortues terrestres et d’eau douce de l’UICN/SSC"
+      },
+      "url": "https://iucn-tftsg.org/wp-content/uploads/file/ChelonianConservationNews/Chelonian_Conservation_News.3.Dec2025.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Lists a Chelonoidis denticulatus Endangered assessment among Red List assessments submitted and in press as of December 2025; does not state the assessment completion date."
+      ]
+    },
+    {
+      "title": {
+        "en": "Scientific assessment of risk to tortoise populations listed by CITES as a result of trade — Norwegian Scientific Committee for Food and Environment",
+        "fr": "Évaluation scientifique des risques du commerce pour les populations de tortues inscrites à la CITES — Comité scientifique norvégien pour l’alimentation et l’environnement"
+      },
+      "url": "https://vkm.no/download/18.12dd184318e517da1a03e832/1710939913411/Scientific%2520assessment%2520of%2520risk%2520to%2520the%2520populations%2520of%2520tortoises%2520listed%2520by%2520CITES%2520as%2520a%2520result%2520of%2520trade_publisert%2520versjon.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Treats the 1996 Vulnerable listing as historical and reports that current status had not yet been assessed in the report; documents concerns about international trade and depleted populations in some range areas."
+      ]
+    },
+    {
+      "title": {
+        "en": "Distinguishing yellow-footed and red-footed tortoises — California Turtle & Tortoise Club",
+        "fr": "Distinguer les tortues à pattes jaunes et rouges — California Turtle & Tortoise Club"
+      },
+      "url": "https://www.tortoise.org/archives/carbdent.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Head scalation: elongated prefrontals in yellow-footed tortoises versus small fragmented prefrontals in red-footed tortoises. Historical habitat claims not used."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult Chelonoidis denticulatus with a rounded domed brown carapace, pale yellow to orange centers on the scutes, yellow-orange scales on head and limbs, and accurate tortoise anatomy. Distinguish it from C. carbonarius by the overall yellow limb markings, while preserving natural variation. Pure uniform white #FFFFFF background; no scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "Wild incubation duration, hatching success and juvenile development are poorly documented; captive observations should not be generalized to free-ranging nests.",
+    "Movement and home-area estimates come from limited field sites and short tracking periods; they do not establish a species-wide range size or seasonal activity schedule.",
+    "The December 2025 IUCN/SSC newsletter identifies an Endangered assessment as submitted and in press but gives no assessment date. The IUCN Vulnerable classification cited in the trade review is from 1996 and is reported here only as historical."
+  ],
+  "reviewed": true,
+  "review_note": "Independent primary-source and bilingual review confirms scoped wild reproduction and modeled two-species dispersal; dated 2025 specialist EN assessment remains explicitly in press. Approved illustration."
+}

@@ -34,7 +34,8 @@ class BestiaryCatalogTest {
             assertEquals(animal.scientific, tree.nodes.getValue(node).scientific)
             assertEquals(animal.id, index.forNode(node))
             assertTrue(animal.group in setOf("mammals", "birds", "reptiles", "amphibians", "fish", "invertebrates"))
-            for (resource in listOf(animal.name, animal.latin, animal.description, animal.identification, animal.habitat, animal.diet, animal.behavior, animal.sourceTitle)) {
+            for (resource in listOfNotNull(animal.name, animal.latin, animal.description, animal.identification, animal.habitat, animal.diet, animal.behavior,
+                animal.reproduction, animal.ecology, animal.conservation) + animal.references.map { it.title }) {
                 val key = names.getValue(resource)
                 assertFalse("EN/$key", en.getValue(key).isBlank())
                 assertFalse("FR/$key", fr.getValue(key).isBlank())
@@ -45,7 +46,20 @@ class BestiaryCatalogTest {
             val source = URI(animal.sourceUrl)
             assertEquals("https", source.scheme)
             assertFalse(source.host.isNullOrBlank())
-            assertTrue("Species-specific source: ${animal.id}", source.path.length > 2)
+            assertTrue("Species-specific source: ${animal.id}", source.path.length > 2 || !source.rawQuery.isNullOrBlank())
+            assertTrue(animal.references.isNotEmpty())
+            for (reference in animal.references) {
+                val uri = URI(reference.url)
+                assertEquals("https", uri.scheme)
+                assertFalse(uri.host.isNullOrBlank())
+                // University publication records may identify the document in the query.
+                assertTrue("Document source: ${reference.url}", uri.path.length > 2 || !uri.rawQuery.isNullOrBlank())
+            }
+            if (animal.reproduction != null) {
+                assertNotNull(animal.ecology)
+                assertNotNull(animal.conservation)
+                assertTrue("Complementary sources: ${animal.id}", animal.references.map { URI(it.url).host }.distinct().size >= 2)
+            }
         }
         val lion = catalog.single { it.scientific == "Panthera leo" }
         assertEquals(lion.id, index.forNode(tree.species.single { it.scientific == "Panthera leo" }.id))

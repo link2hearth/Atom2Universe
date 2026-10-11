@@ -1,0 +1,424 @@
+{
+  "id": "fire_salamander",
+  "scientific": "Salamandra salamandra",
+  "group": "amphibians",
+  "name": {
+    "en": "Fire salamander",
+    "fr": "Salamandre tachetée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The fire salamander is a robust, long-tailed amphibian of Europe whose life joins damp woodland with freshwater nurseries. Most adults live on land, while their offspring begin life as gilled larvae in streams or pools. This split means a healthy population needs both sheltered ground and suitable water within reach. Its conspicuous pattern and secretive habits make it easier to recognize than to observe.",
+      "fr": "La Salamandre tachetée est un amphibien robuste à longue queue, présent en Europe, dont le cycle relie les bois humides aux eaux douces où grandissent les jeunes. La plupart des adultes vivent à terre, tandis que leur progéniture commence sa vie sous forme de larves à branchies dans des ruisseaux ou des mares. Une population viable a donc besoin à la fois de refuges terrestres et de points d’eau accessibles. Ses couleurs voyantes contrastent avec ses habitudes secrètes."
+    },
+    "identification": {
+      "en": "An adult has a broad head, stout trunk, four short limbs and a rounded tail; in Central Europe adults commonly measure about 14-17 cm from snout to tail tip, with larger individuals reaching around 20-23 cm. Females tend to be heavier and slightly larger, especially when carrying embryos. The smooth, glossy black back bears irregular yellow spots or bands, sometimes orange or reddish; each pattern is distinctive, but its exact form varies among individuals and regions. Skin glands release secretions containing toxic alkaloids, including samandarine and samandarone. These chemicals can deter predators, but do not prevent every attack.",
+      "fr": "L’adulte porte une tête large, un tronc trapu, quatre membres courts et une queue arrondie ; en Europe centrale, il mesure couramment environ 14 à 17 cm du museau à l’extrémité de la queue, tandis que les plus grands atteignent environ 20 à 23 cm. Les femelles, souvent un peu plus grandes, deviennent plus lourdes lorsqu’elles portent des embryons. Le dos noir luisant et lisse est marqué de taches ou de bandes jaunes irrégulières, parfois orangées ou rougeâtres ; chaque motif est distinctif, mais sa forme varie selon les individus et les régions. Des glandes cutanées libèrent des sécrétions contenant des alcaloïdes toxiques, dont la samandarine et la samandarone. Ces substances peuvent décourager les prédateurs, sans empêcher toutes les attaques."
+    },
+    "habitat": {
+      "en": "Across much of its range, the species favours deciduous and mixed woodland with cool, moist soil, leaf litter and hiding places such as dead wood, rock gaps and root hollows. Adults shelter by day and may roam through the forest floor at night, so a stream alone cannot provide the habitat they need. Females use springs, headwater streams and sometimes ponds or other still waters to release larvae; local choice depends on what water bodies are available. Forest cover, clean water and connected refuges together make a usable landscape.",
+      "fr": "Dans une grande partie de son aire, l’espèce privilégie les forêts de feuillus ou mixtes, au sol frais et humide, avec litière et abris comme le bois mort, les fissures rocheuses et les cavités sous les racines. Les adultes se cachent le jour et peuvent parcourir le sous-bois la nuit ; un ruisseau seul ne suffit donc pas à leur fournir un habitat complet. Les femelles utilisent des sources, des ruisseaux de tête de bassin et parfois des mares ou d’autres eaux calmes pour déposer les larves ; le choix local dépend des points d’eau disponibles. Forêts, eaux propres et refuges reliés forment un habitat viable."
+    },
+    "diet": {
+      "en": "On land, adults hunt small invertebrates such as earthworms, woodlice, beetles and slugs, swallowing each prey whole. Aquatic larvae hunt small water-dwelling animals, especially insect larvae.",
+      "fr": "À terre, les adultes chassent de petits invertébrés comme les vers de terre, cloportes, coléoptères et limaces, puis avalent leurs proies entières. Les larves aquatiques chassent de petits animaux de l’eau, surtout des larves d’insectes."
+    },
+    "behavior": {
+      "en": "The salamander is mainly nocturnal and becomes easier to see on rainy nights, when its skin is less exposed to drying. Adults breathe air with lungs, while aquatic larvae use external gills; in dry weather adults seek cool crevices, burrows or shelter beneath logs. During courtship, males may compete or interfere with rivals near a female.",
+      "fr": "La salamandre est surtout nocturne et se laisse plus facilement voir les nuits pluvieuses, lorsque sa peau risque moins de se dessécher. Les adultes respirent l’air avec leurs poumons, tandis que les larves aquatiques utilisent des branchies externes ; par temps sec, les adultes regagnent les fissures fraîches, les terriers ou le dessous des troncs. Pendant la parade, les mâles peuvent se concurrencer ou gêner leurs rivaux près d’une femelle."
+    },
+    "reproduction": {
+      "en": "Mating takes place on land: the male courts the female at close range and deposits a gelatinous spermatophore on the ground, which she takes up with her cloaca. Sperm is stored inside her, so fertilisation is internal; after gestation, she usually enters shallow water and releases fully formed, gilled larvae rather than laying eggs there. Many populations give birth to several dozen larvae, but two localized Iberian lineages independently evolved births of near-metamorphosed or fully terrestrial juveniles. In Central Europe larvae commonly metamorphose in roughly 40–120 days, losing their gills as lungs and limbs support life on land; timing changes with water conditions and food.",
+      "fr": "L’accouplement a lieu à terre : le mâle courtise la femelle de près et dépose au sol un spermatophore gélatineux, que celle-ci recueille avec son cloaque. Le sperme est stocké dans son appareil reproducteur : la fécondation est interne ; après la gestation, elle gagne généralement une eau peu profonde et y libère des larves déjà formées et pourvues de branchies, au lieu d’y pondre des œufs. De nombreuses populations donnent naissance à plusieurs dizaines de larves, mais deux lignées ibériques localisées ont évolué indépendamment vers la naissance de jeunes proches de la métamorphose ou déjà terrestres. En Europe centrale, les larves se métamorphosent souvent en 40 à 120 jours environ : elles perdent leurs branchies, tandis que poumons et membres permettent la vie terrestre ; la durée dépend de l’eau et de la nourriture."
+    },
+    "ecology": {
+      "en": "In pond-breeding populations, larvae prey on aquatic invertebrates and can affect local food webs. In a studied pond-adapted Central European population, females brought nutrients from land into ponds with their broods, and metamorphs carried some biomass back onto land; the return was smaller than the initial input because many larvae died and survivors were small. Larvae and adults are themselves food for other predators, although an adult’s glandular secretion can make it an unpalatable meal.",
+      "fr": "Dans les populations qui se reproduisent en mare, les larves prédatent des invertébrés aquatiques et peuvent agir sur les réseaux alimentaires locaux. Dans une population d’Europe centrale adaptée aux mares, les femelles ont apporté aux mares des nutriments terrestres avec leur portée ; les métamorphes en ont ramené une partie à terre, mais moins qu’à l’aller, car beaucoup de larves meurent et les survivantes sont petites. Larves et adultes servent eux-mêmes de nourriture à d’autres prédateurs, même si les sécrétions glandulaires peuvent rendre l’adulte peu appétissant."
+    },
+    "conservation": {
+      "en": "The global IUCN Red List classifies Salamandra salamandra as Vulnerable; the assessment was made on 26 July 2022 and published in 2023, so its category is not a current count at every site. Batrachochytrium salamandrivorans, or Bsal, is a chytrid fungus that infects skin and has been linked to severe, documented population declines in the Netherlands and Belgium. At Het Bunderbos in the Netherlands, one population fell by about 99.9% within seven years of the suspected introduction. EFSA notes that the historical route into Europe is not established and that a causal link between Bsal and declines in wild populations is not always clear; amphibian trade is a suspected pathway. Habitat loss, road deaths and drained springs threaten some populations.",
+      "fr": "La Liste rouge mondiale de l’UICN classe Salamandra salamandra parmi les espèces Vulnérables ; l’évaluation a été réalisée le 26 juillet 2022 et publiée en 2023, mais cette catégorie ne constitue pas un comptage actuel de chaque site. Batrachochytrium salamandrivorans, ou Bsal, est un champignon chytride qui infecte la peau et a été associé à de graves déclins documentés aux Pays-Bas et en Belgique. À Het Bunderbos, aux Pays-Bas, une population a chuté d’environ 99,9 % en sept ans après l’introduction présumée. L’EFSA souligne que la voie historique d’introduction en Europe n’est pas établie et que le lien causal entre Bsal et les déclins sauvages n’est pas toujours clair ; le commerce d’amphibiens est une piste suspectée. La perte d’habitat, la mortalité routière et le drainage des sources menacent certaines populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Basic information and care recommendations for Central European fire salamanders",
+        "fr": "Informations générales et recommandations pour la salamandre tachetée d’Europe centrale"
+      },
+      "url": "https://citizen-conservation.org/wp-content/uploads/2024/04/CC-Breeding-Guidelines_Salamandra-salamandra-Central-Europe_02-2023.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Metamorphosis takes about 40-120 days under Central European conditions."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 9,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Variability of alkaloids in the skin secretion of the European fire salamander",
+        "fr": "Variabilité des alcaloïdes dans les sécrétions cutanées de la salamandre tachetée européenne"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15777956/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Skin secretions contain samandarine and samandarone alkaloids."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 7,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Field observations on the reproductive biology of the fire salamander (Salamandra salamandra)",
+        "fr": "Observations de terrain sur la biologie reproductive de la salamandre tachetée (Salamandra salamandra)"
+      },
+      "url": "https://shop.laurenti.de/media/Abstracts%20ab%202020/ZfF%202024-02%20-%20Dehling%20-%20abstract.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Field observations document courtship, spermatophore uptake and rival interference."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 9,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Linking the evolution of habitat choice to ecosystem functioning: direct and indirect effects of pond-reproducing fire salamanders on aquatic-terrestrial subsidies",
+        "fr": "Relier l’évolution du choix de l’habitat au fonctionnement des écosystèmes : effets des salamandres tachetées sur les échanges entre mares et terre"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23358795/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Larvae alter aquatic food webs and move biomass during metamorphosis."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 10,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Expanding Distribution of Lethal Amphibian Fungus Batrachochytrium salamandrivorans in Europe",
+        "fr": "Extension en Europe de la répartition du champignon amphibien mortel Batrachochytrium salamandrivorans"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4918153/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "A Dutch site population declined 99.9% within seven years."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 9,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Salamandra salamandra: The IUCN Red List of Threatened Species 2023",
+        "fr": "Salamandra salamandra : Liste rouge mondiale de l’UICN 2023"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T59467A219148292.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global Vulnerable assessment dates to 2022 and was published in 2023."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.5",
+        "conservation.fr.5",
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 183,
+        "notes_words": 12,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ultrastructural and morphometric study of the lung of the European salamander",
+        "fr": "Etude du poumon de Salamandra salamandra"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/679270/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "A species-specific anatomical study examined fire salamander lungs."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 8,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dispersal of viviparity across contact zones in Iberian populations of fire salamanders",
+        "fr": "Reproduction des salamandres iberiques"
+      },
+      "url": "https://doi.org/10.1046/j.0014-3820.2003.00538.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Iberian populations differ in offspring development and live-birth forms."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 9,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fire salamander",
+        "fr": "Salamandre tachetée"
+      },
+      "url": "https://www.hlnug.de/?id=18334",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Moist woodland, wet nights and nearby waters support activity and breeding."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 11,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aposematism as a trap? A case of heavy predation on a poisonous salamander",
+        "fr": "Predation on a poisonous salamander"
+      },
+      "url": "https://doi.org/10.1002/fee.2580",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Toxic skin secretions deter predators but do not prevent all attacks."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.5",
+        "identification.fr.5",
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 11,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Trophic Niche of Two Sympatric Species of Salamanders from Italy",
+        "fr": "La niche trophique de deux espèces sympatriques de salamandres en Italie"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9454711/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Stomach contents showed a diet dominated by soft-bodied prey."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 9,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scientific and technical assistance concerning the survival, establishment and spread of Bsal in the EU",
+        "fr": "Assistance scientifique sur la survie, l’établissement et la propagation de Bsal dans l’UE"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7010177/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "EFSA discusses uncertainty in wild declines and Bsal introduction routes."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 10,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Salamander research",
+        "fr": "Recherche sur les salamandres"
+      },
+      "url": "https://www.lw.uni-leipzig.de/en/institut-fuer-biologie/abteilungen/molecular-evolution-and-systematic-of-animals/research/salamander-research",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "University field research documents wet beech forests and spring-fed stream nurseries."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.3",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 11,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the existing fire salamander illustration; show the black body with distinct yellow markings and short limbs, without flames or fire effects.",
+  "uncertainties": [
+    "Adult size and typical pattern vary among populations and geographic lineages; the quoted Central European range is not universal.",
+    "The 40–120-day larval development estimate applies to Central European conditions; local water temperature, food and habitat can change timing.",
+    "IUCN global assessment was conducted in 2022 and published in 2023; the category does not describe the current status of every local population.",
+    "The 99.9% decline concerns Het Bunderbos; EFSA describes uncertainty in the historical introduction route and causal evidence for wild population declines."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review; replaced Wikipedia-derived and personal reference pages with specialist, university and research sources. Corrected French gill/lung coordination and habitat/road threats; qualified Iberian reproduction, pond-specific biomass transfers, Het Bunderbos collapse and historical Bsal introduction uncertainties. Confirmed2022 global assessment published2023. Original illustration retained after root visual check."
+}

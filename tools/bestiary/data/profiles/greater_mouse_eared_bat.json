@@ -1,0 +1,269 @@
+{
+  "id": "greater_mouse_eared_bat",
+  "scientific": "Myotis myotis",
+  "group": "mammals",
+  "name": {
+    "en": "Greater mouse-eared bat",
+    "fr": "Grand murin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The greater mouse-eared bat is one of Europe’s largest bats, a member of the vesper-bat family. Across much of continental Europe, females gather in warm summer maternity roosts, often in large buildings; caves are important in the Mediterranean. At night it searches near the ground for arthropods. Its annual cycle links summer roosts, autumn mating, winter hibernation and the short season when females raise young.",
+      "fr": "Le Grand murin est l’une des plus grandes chauves-souris d’Europe et appartient à la famille des Vespertilionidés. Dans une grande partie de l’Europe continentale, les femelles se réunissent l’été dans des gîtes de mise bas chauds, souvent de grands bâtiments ; les grottes sont importantes en région méditerranéenne. La nuit, il recherche des arthropodes près du sol. Son cycle annuel relie gîtes d’été, accouplement automnal, hibernation et courte période d’élevage des jeunes."
+    },
+    "identification": {
+      "en": "Adults measure about 65–80 mm from head to body, weigh roughly 24–40 g and have a wingspan of 365–450 mm. The back is brown or sandy-brown, the underside pale; the bare face and long ears are pinkish. Its elongated muzzle and prominent tragus help with identification. The related lesser mouse-eared bat (Myotis blythii) can look very similar; field separation is improved by combining several measurements rather than relying on one trait. It has broad wings and flies slowly, close to the ground.",
+      "fr": "Les adultes mesurent environ 65 à 80 mm de la tête au corps, pèsent environ 24 à 40 g et présentent une envergure de 365 à 450 mm. Le dos est brun ou brun sable, le dessous pâle ; le museau nu et les longues oreilles sont rosés. Son museau allongé et son tragus bien visible aident à l’identification. Le Petit murin proche (Myotis blythii) peut lui ressembler ; pour les distinguer sur le terrain, plusieurs mesures sont plus fiables qu’un seul caractère. Ses ailes sont larges ; son vol est lent et proche du sol."
+    },
+    "habitat": {
+      "en": "Day roosts and feeding grounds differ. In Central Europe, maternity colonies often occupy warm, spacious, draught-free roofs of churches or historic buildings; southern colonies also use caves. Winter quarters include caves, tunnels, mines and similar cavities, and bats show fidelity to hibernation sites. Foraging commonly favours mature deciduous or mixed woodland with an open floor, where ground prey is accessible, as well as woodland edges, pastures and recently cut grass. A Bavarian tracking study found a local preference for deciduous forest, not a universal rule.",
+      "fr": "Gîtes diurnes et terrains de chasse diffèrent. En Europe centrale, les colonies de mise bas occupent souvent des combles chauds, vastes et sans courants d’air, dans des églises ou bâtiments historiques ; les colonies méridionales utilisent aussi les grottes. L’hiver, les chauves-souris gagnent grottes, tunnels, mines et cavités comparables, avec fidélité aux sites d’hibernation. La chasse privilégie souvent les forêts matures de feuillus ou mixtes au sol dégagé, où les proies terrestres sont accessibles, ainsi que les lisières, pâtures et prairies fauchées. En Bavière, un suivi a révélé une préférence locale pour les feuillus, pas une règle universelle."
+    },
+    "diet": {
+      "en": "This bat often gleans ground-active prey. It flies low, listens for arthropods rustling in leaf litter, then lands briefly to seize them. It continues echolocating as it approaches prey but can lower call strength; echoes from prey can be masked by the forest floor, making passive listening useful. Carabid beetles were the main prey by volume in one Swiss Alpine study, while bush-crickets dominated the diet of M. blythii. Other studies report seasonal changes and locally different prey mixes, so one colony cannot define the species’ diet.",
+      "fr": "Cette chauve-souris glane souvent des proies actives au sol. Elle vole bas, écoute les arthropodes bruissant dans la litière puis se pose brièvement pour les saisir. Elle continue à émettre des signaux d’écholocation en approchant, mais peut en réduire l’intensité ; les échos des proies peuvent être masqués par le sol forestier, d’où l’intérêt de l’écoute passive. Les carabes dominaient en volume une étude des Alpes suisses, tandis que les sauterelles (tettigoniidés) dominaient chez M. blythii. D’autres études révèlent des variations saisonnières et locales : une colonie ne définit pas le régime de toute l’espèce."
+    },
+    "behavior": {
+      "en": "After dusk, females from maternity colonies disperse to individual feeding grounds. After hibernation, males usually roost alone while females gather in maternity colonies. Experiments show that background noise can reduce use of feeding areas: bats avoided noisy compartments, especially when playback resembled vegetation movement. Such results show how noise may mask prey sounds, though a laboratory choice test does not measure wild population effects. At six roosts surveyed over two years, males showed fidelity to display spots; females visited from mid-August to mid-September, and repeated copulations were observed. Seasonal movements connect summer roosts with winter quarters.",
+      "fr": "Après le crépuscule, les femelles des colonies de mise bas rejoignent des terrains de chasse individuels. Après l’hibernation, les mâles gîtent généralement seuls tandis que les femelles se regroupent en colonies de mise bas. En expérience, les chauves-souris évitaient les zones de chasse bruyantes, surtout lorsque le bruit diffusé rappelait le mouvement de la végétation. Le bruit peut masquer les sons des proies ; ce test en laboratoire ne mesure pas ses effets sur les populations sauvages. Dans six gîtes suivis deux ans, les mâles sont restés fidèles à leur site de parade ; des femelles l’ont visité de mi-août à mi-septembre et plusieurs accouplements ont été observés. Les déplacements saisonniers relient les gîtes d’été aux sites d’hiver."
+    },
+    "reproduction": {
+      "en": "Mating occurs from late summer into autumn. Females can retain sperm through hibernation, and fertilization follows after winter, when pregnancy begins. Females gather in maternity colonies and usually produce one pup annually, generally from late May to early July. At five German roosts monitored during 2005–2015, births began between 17 May and 14 June, showing local variation. The young practise flying at about three to four weeks. In that German study, warmer springs correlated with earlier births; this does not establish identical timing across the range.",
+      "fr": "L’accouplement a lieu de la fin de l’été à l’automne. Les femelles peuvent conserver le sperme pendant l’hibernation ; la fécondation intervient après l’hiver et la gestation commence alors. Les femelles se regroupent en colonies de mise bas et donnent généralement naissance à un petit par an, entre la fin mai et le début juillet. Dans cinq gîtes allemands suivis en 2005–2015, les naissances ont commencé entre le 17 mai et le 14 juin, montrant une variation locale. Les jeunes s’exercent au vol vers trois ou quatre semaines. Dans cette étude allemande, les printemps chauds étaient corrélés à des naissances plus précoces, sans établir un calendrier uniforme dans toute l’aire."
+    },
+    "ecology": {
+      "en": "By taking ground-active arthropods, the greater mouse-eared bat uses prey that many aerial-hawking bats reach less readily. Its diet can include predatory ground beetles as well as other insects, but composition changes with season and place. Reliance on rustling sounds links foraging to acoustic conditions: experiments demonstrate interference by noise, a plausible way for noisy infrastructure to degrade a feeding patch. Its life therefore depends on both secure roosts and extensive, accessible feeding habitat; these needs connect building and cave protection with woodland management.",
+      "fr": "En consommant des arthropodes actifs au sol, le Grand murin exploite des proies moins accessibles à de nombreuses chauves-souris qui chassent en vol. Son régime peut comprendre des carabes prédateurs et d’autres insectes, mais varie selon les saisons et les lieux. Sa dépendance aux bruissements relie la chasse aux conditions acoustiques : les expériences montrent une interférence du bruit, qui peut ainsi dégrader un terrain de chasse près d’infrastructures bruyantes. Sa vie dépend donc à la fois de gîtes sûrs et de vastes zones de chasse accessibles ; cela relie la protection des bâtiments et grottes à la gestion des forêts."
+    },
+    "conservation": {
+      "en": "The Convention on Migratory Species (CMS) species account consulted on 11 October 2026 lists the global IUCN category as Least Concern. A British mammal review published by Natural England in 2018 classed it as Critically Endangered in Great Britain and England; at that time, it knew one male and cautioned that summer roost searches were not exhaustive. These geographic and dated assessments describe different situations. EUROBATS identifies cave tourism, building renovation, habitat fragmentation and pesticides as threats. Protection therefore includes secure maternity roofs, quiet hibernation sites and connected feeding habitat.",
+      "fr": "La fiche d’espèce de la Convention sur les espèces migratrices (CMS), consultée le 11 octobre 2026, relaie la catégorie mondiale de l’UICN : préoccupation mineure. Une revue des mammifères britanniques publiée par Natural England en 2018 le classait en danger critique en Grande-Bretagne et en Angleterre ; elle ne connaissait alors qu’un mâle et précisait que les recherches de gîtes estivaux n’étaient pas exhaustives. Ces évaluations datées et géographiques décrivent des situations différentes. EUROBATS cite le tourisme souterrain, la rénovation des bâtiments, la fragmentation des habitats et les pesticides parmi les menaces. La protection implique donc des combles de reproduction sûrs, des sites d’hibernation tranquilles et des zones de chasse reliées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Greater mouse-eared bat — Bat Conservation Trust species account",
+        "fr": "Grand murin — fiche espèce du Bat Conservation Trust"
+      },
+      "url": "https://www.bats.org.uk/about-bats/what-are-bats/uk-bats/greater-mouse-eared-bat",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Reports adult measurements and sandy fur/paler underside, bare pink face with prominent tragus, continental roof and Mediterranean cave maternity roosts, one summer pup and flight practice at 3–4 weeks."
+      ]
+    },
+    {
+      "title": {
+        "en": "Großes Mausohr (Myotis myotis) — Bavarian Environment Agency species account",
+        "fr": "Grand murin (Myotis myotis) — fiche espèce de l’Agence bavaroise de l’environnement"
+      },
+      "url": "https://www.lfu.bayern.de/natur/sap/arteninformationen/steckbrief/zeige?stbname=Myotis+myotis",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "In Bavaria, females use spacious warm roofs; open broadleaf/mixed woodland is preferred, and bats fly low to capture ground insects."
+      ]
+    },
+    {
+      "title": {
+        "en": "Foraging bats avoid noise — Journal of Experimental Biology",
+        "fr": "Les chauves-souris en chasse évitent le bruit — Journal of Experimental Biology"
+      },
+      "url": "https://journals.biologists.com/jeb/article/211/19/3174/18275/Foraging-bats-avoid-noise",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "In choice experiments, bats avoided noisy foraging compartments; sound similar to vegetation movement deterred them strongly."
+      ]
+    },
+    {
+      "title": {
+        "en": "Influence of ambient temperature on the phenology of the greater mouse-eared bat (Myotis myotis) — Ecology and Evolution",
+        "fr": "Influence de la température ambiante sur la phénologie du Grand murin (Myotis myotis) — Ecology and Evolution"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10196220/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "German study reports body size and mass and temperature associations at five monitored maternity roosts in 2005–2015."
+      ]
+    },
+    {
+      "title": {
+        "en": "Feeding behaviour and foraging strategy of free-living mouse-eared bats, Myotis myotis and Myotis blythii — Animal Behaviour",
+        "fr": "Comportement alimentaire et stratégie de chasse de Myotis myotis et Myotis blythii libres — Animal Behaviour"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0003347296900019",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Swiss Alps: carabids were 46% by volume of M. myotis prey while bush-crickets were 60% of M. blythii diet; diet shifted seasonally."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mating system and copulatory behavior of the greater mouse-eared bat (Myotis myotis) — Frontiers in Physiology",
+        "fr": "Système d’accouplement et comportement copulatoire du Grand murin (Myotis myotis) — Frontiers in Physiology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12309444/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species-specific annual cycle includes autumn mating, female sperm retention through hibernation and spring fertilization; after hibernation males roost alone while females form maternity colonies."
+      ]
+    },
+    {
+      "title": {
+        "en": "Myotis myotis — UNEP/EUROBATS species account",
+        "fr": "Myotis myotis — fiche espèce d’UNEP/EUROBATS"
+      },
+      "url": "https://www.eurobats.org/species/myotis-myotis",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Account covers range, winter cave/mine roosts, regional migration, woodland hunting and named conservation threats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diet composition of Myotis myotis in western Poland: results of fecal analyses — Turkish Journal of Zoology",
+        "fr": "Composition du régime de Myotis myotis dans l’ouest de la Pologne : analyse des fèces — Turkish Journal of Zoology"
+      },
+      "url": "https://journals.tubitak.gov.tr/zoology/vol36/iss2/7/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Droppings from eight colonies showed beetles common across seasons and prey composition differing among sites."
+      ]
+    },
+    {
+      "title": {
+        "en": "Echolocation and passive listening in mouse-eared bats — Journal of Experimental Biology",
+        "fr": "Écholocation et écoute passive chez les chauves-souris à oreilles de souris — Journal of Experimental Biology"
+      },
+      "url": "https://doi.org/10.1242/jeb.02644",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "In tests, both sibling species reduced call amplitude during prey approach while continuing echolocation during passive gleaning."
+      ]
+    },
+    {
+      "title": {
+        "en": "Habitat selection and activity patterns in the greater mouse-eared bat — Acta Chiropterologica",
+        "fr": "Sélection de l’habitat et activité du Grand murin — Acta Chiropterologica"
+      },
+      "url": "https://doi.org/10.3161/150811009X485585",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Bavarian radiotracking found preference for mature deciduous stands and feeding trips up to 10.8 km from a maternity roost."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mating system and copulatory behavior of the greater mouse-eared bat — PubMed record",
+        "fr": "Système d’accouplement du Grand murin — notice PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40530678/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Six roosts/two years: male display-site fidelity; females visited mid-August to mid-September; repeated copulations observed."
+      ]
+    },
+    {
+      "title": {
+        "en": "Greater mouse-eared bat — Natural England British mammals review (2018), technical summary",
+        "fr": "Grand murin — revue Natural England des mammifères britanniques (2018), synthèse technique"
+      },
+      "url": "https://nora.nerc.ac.uk/id/eprint/520322/9/JP025%20edition%201%20A%20Review%20of%20the%20Population%20and%20Conservation%20Status%20Technical%20summary.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2018 review classed Great Britain and England as CR, knew one male then, and noted summer-roost searches were incomplete."
+      ]
+    },
+    {
+      "title": {
+        "en": "Sibling Myotis myotis and M. blythii: morphological and genetic evidence — Proceedings of the Royal Society B",
+        "fr": "Myotis myotis et M. blythii, espèces sœurs : données morphologiques et génétiques — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1679893/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Royal Society study calls M. myotis and M. blythii sibling species and reports difficulty separating them morphologically; combinations of measurements help."
+      ]
+    },
+    {
+      "title": {
+        "en": "Myotis myotis — Convention on Migratory Species species account",
+        "fr": "Myotis myotis — fiche espèce de la Convention sur les espèces migratrices"
+      },
+      "url": "https://www.cms.int/species/myotis-myotis",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Species account lists global IUCN Least Concern and summarizes family, morphology, roost and feeding habitats."
+      ]
+    }
+  ],
+  "illustration_notes": "Show one adult greater mouse-eared bat (sex unspecified) with the exact natural morphology of Myotis myotis: robust body, brown to sandy-brown dorsal fur, pale grey-white underside, bare pinkish face, elongated muzzle, long ears with visible tragus, and broad folded wings. Adult proportions and realistic fur and wing membranes. Pure uniform white #FFFFFF background; no scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "Myotis myotis and M. blythii are morphologically similar; field identification is more reliable when several measurements are combined. Diet and size observations vary regionally.",
+    "The CMS species page relays the global Least Concern category but provides no assessment year. The Natural England 2018 Critically Endangered status is geographically limited to Great Britain and England; the review noted incomplete searches for summer roosts.",
+    "Reproductive dates and roost patterns from German and Bavarian studies are geographically bounded. The temperature study reports correlations at five maternity roosts, not proof that warming will shift all populations in the same way."
+  ],
+  "reviewed": true,
+  "review_note": "Independent zoological and bilingual review plus source-by-fact budget revision; exact-species passive listening, sperm storage and local phenology retained, British 2018 category separated from global CMS account."
+}

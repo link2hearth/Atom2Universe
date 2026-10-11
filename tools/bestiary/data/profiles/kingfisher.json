@@ -1,0 +1,461 @@
+{
+  "id": "kingfisher",
+  "scientific": "Alcedo atthis",
+  "group": "birds",
+  "name": {
+    "en": "Common kingfisher",
+    "fr": "Martin-pêcheur d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common kingfisher is a small hunter of waterways, often watching fish from a low branch before plunging into the water. It ranges across Europe, North Africa and much of Asia. A European synthesis of ringing records found movement most marked in northern populations, while most adults and juveniles were sedentary; winter dispersal varies by region and age. Its piping call can reveal the bird before its bright colours do.",
+      "fr": "Le Martin-pêcheur d’Europe est un petit chasseur des milieux aquatiques, qui guette souvent les poissons depuis une branche basse avant de plonger. Il vit en Europe, en Afrique du Nord et dans une grande partie de l’Asie. Une synthèse européenne des reprises de bagues a montré que les déplacements sont surtout marqués dans les populations du nord, tandis que la plupart des adultes et des jeunes sont sédentaires ; la dispersion hivernale varie selon la région et l’âge. Son cri flûté peut révéler l’oiseau avant ses couleurs vives."
+    },
+    "identification": {
+      "en": "Adults are typically 16–17 cm long. The compact body carries a long dark bill, blue-green upperparts and orange underparts. The blue is structural: a spongy keratin-and-air layer in the feather barbs, branches along its shaft, coherently scatters light, rather than relying on blue pigment. Both sexes look alike at a distance, but the female’s lower bill is orange-red with a dark tip, whereas the male’s bill is almost entirely black. British ringing samples average 39 g for adults and 36 g for juveniles.",
+      "fr": "L’adulte mesure généralement 16 à 17 cm. Son corps compact porte un long bec sombre, un dessus bleu-vert et un dessous orange. Le bleu est structural : la couche spongieuse de kératine et d’air dans les barbes, ramifications principales de la plume, diffuse la lumière de façon cohérente, sans pigment bleu. Les sexes se ressemblent de loin, mais la mandibule inférieure de la femelle est orangée à rouge avec une pointe sombre, tandis que le bec du mâle est presque entièrement noir. Dans les échantillons britanniques, adultes et jeunes pèsent en moyenne 39 g et 36 g."
+    },
+    "habitat": {
+      "en": "It uses slow rivers, streams, canals, lakes and marshes where fish can be watched from a perch and caught in shallow water. Clear water can make prey easier to see, but field studies also find kingfishers in small wetlands and ponds away from the nest, so a riverbank alone does not define its feeding habitat. Open, steep earth or sand banks provide places to excavate a nesting tunnel. Bank reinforcement, channel straightening and intensive river works remove nesting faces and can sever feeding reaches and habitat corridors.",
+      "fr": "Il fréquente rivières lentes, ruisseaux, canaux, lacs et marais, où il peut observer les poissons depuis un perchoir et les capturer en eau peu profonde. Une eau claire peut faciliter le repérage des proies, mais des suivis ont aussi trouvé des oiseaux dans de petites zones humides et mares éloignées du nid : la berge d’une rivière ne résume donc pas leur habitat alimentaire. Les berges raides et dégagées de terre ou de sable offrent des emplacements pour creuser un tunnel de nidification. Le bétonnage des rives, la rectification des cours d’eau et les travaux intensifs suppriment les parois de nidification et peuvent couper des secteurs de pêche et des corridors d’habitat."
+    },
+    "diet": {
+      "en": "Small fish make up most of the diet, although aquatic insect larvae and crustaceans are also taken. It watches from a perch, then dives after a fish; surface refraction shifts the prey’s apparent position. Experiments with this species found more attacks and higher capture success in shallow tanks, consistent with prey being more accessible there. After a catch, it beats the fish against its perch to stun it, swallows it head-first, and later regurgitates indigestible bones in a pellet. A study on Italy’s River Ticino found fish in pellets collected at resting sites from March to October 2019, documenting diet outside nesting but not in winter.",
+      "fr": "Les petits poissons constituent l’essentiel du régime, mais l’oiseau capture aussi des larves d’insectes aquatiques et des crustacés. Il guette depuis un perchoir puis plonge ; la réfraction de surface décale la position apparente de la proie. Des expériences menées sur cette espèce ont constaté davantage d’attaques et de captures réussies dans des bassins peu profonds, résultats compatibles avec une meilleure accessibilité des proies. Après une capture, il frappe le poisson contre son perchoir pour l’assommer, l’avale tête la première, puis régurgite les os indigestes dans une pelote. Une étude du Tessin, en Italie, a trouvé des poissons dans des pelotes récoltées sur des reposoirs de mars à octobre 2019 : elle documente le régime hors nidification, mais pas en hiver."
+    },
+    "behavior": {
+      "en": "Outside courtship and nesting, adults usually forage alone and defend stretches of water that supply dependable fish and perches. A rival may be chased or confronted in a prolonged display, and fights can become physical. Courtship includes the male presenting fish to the female, linking food delivery with pair formation.",
+      "fr": "En dehors de la parade et de la nidification, les adultes pêchent généralement seuls et défendent les portions de cours d’eau qui offrent poissons et perchoirs fiables. Un rival peut être poursuivi ou affronté dans une longue démonstration, et les conflits peuvent devenir physiques. La parade comprend l’offrande d’un poisson par le mâle à la femelle, associant apport de nourriture et formation du couple."
+    },
+    "reproduction": {
+      "en": "The pair excavates a tunnel in an earth or sand bank, usually ending in a bare chamber. In Britain, five to seven eggs are typical. Both adults incubate for about 20 days, and the naked, dependent chicks remain in the nest for roughly 23–26 days. Hampshire nest observations found that fish delivered grew larger as nestlings developed. In observations from Chiplun, Maharashtra, both parents fed chicks, and fledglings continued begging near the nest for about a week. In Britain, one or two broods are usual and three are recorded in favourable seasons.",
+      "fr": "Le couple creuse un tunnel dans une berge de terre ou de sable, qui débouche généralement sur une chambre nue. En Grande-Bretagne, la ponte compte habituellement cinq à sept œufs. Les deux adultes couvent pendant environ 20 jours ; les poussins nus et dépendants restent au nid quelque 23 à 26 jours. Dans le Hampshire, des observations de nids ont montré que la taille des poissons apportés augmentait avec le développement des petits. À Chiplun, au Maharashtra, les observations ont établi que les deux parents nourrissaient les poussins et que les jeunes continuaient à réclamer près du nid environ une semaine après l’envol. En Grande-Bretagne, une ou deux nichées sont habituelles et trois sont observées lors des saisons favorables."
+    },
+    "ecology": {
+      "en": "The kingfisher catches small fish and aquatic invertebrates, while its eggs and nestlings can be preyed upon by snakes and other ground-dwelling animals. In the River Ticino, pellet analysis found mainly common native fish and fewer introduced fish than expected from their availability, showing how this local predator selects prey.",
+      "fr": "Le Martin-pêcheur capture petits poissons et invertébrés aquatiques, tandis que ses œufs et ses poussins peuvent être dévorés par des serpents et d’autres prédateurs terrestres. Dans le Tessin, l’analyse des pelotes a révélé surtout des poissons indigènes communs et moins de poissons introduits que ne le laissait prévoir leur disponibilité, montrant comment ce prédateur local choisit ses proies."
+    },
+    "conservation": {
+      "en": "Cold snaps can freeze fishing waters and cause heavy mortality. Pollution, sediment and river engineering can reduce prey visibility or remove nesting banks. North Rhine-Westphalia’s state nature conservation agency identifies bank reinforcement, channel modification, contaminated runoff and disturbance at nest sites as local pressures. BirdLife’s 2024 global IUCN record classifies the species as Least Concern. In the 2021 European assessment, published by the EU in 2022, it is also Least Concern, though the trend remains downward at a slower rate than in 2015, when it was Vulnerable. These dated assessments use different geographic scales and do not establish that every regional population is secure.",
+      "fr": "Les vagues de froid peuvent geler les eaux de pêche et provoquer une forte mortalité. Pollution, sédiments et aménagements peuvent réduire la visibilité des proies ou faire disparaître les berges de nidification. L’agence de protection de la nature du Land de Rhénanie-du-Nord-Westphalie identifie localement le renforcement des rives, la modification des chenaux, les eaux polluées et le dérangement près des nids parmi les pressions. La fiche mondiale UICN de BirdLife datée de 2024 classe l’espèce en préoccupation mineure. Dans l’évaluation européenne de 2021, publiée par l’Union européenne en 2022, elle reste aussi en préoccupation mineure, malgré une tendance toujours à la baisse, moins rapide qu’en 2015, lorsqu’elle était vulnérable. Ces évaluations datées portent sur des échelles géographiques différentes et ne prouvent pas que chaque population régionale soit à l’abri."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Migration et déplacements du martin pêcheur Alcedo atthis en Europe — Aves",
+        "fr": "Migration et déplacements du martin pêcheur Alcedo atthis en Europe — Aves"
+      },
+      "url": "https://orbi.uliege.be/handle/2268/111532",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "European ringing synthesis: movement varies by latitude, age and season."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 10,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kingfisher — BirdFacts, British Trust for Ornithology",
+        "fr": "Martin-pêcheur — BirdFacts, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/kingfisher",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British data record body mass, nesting, broods and age of young."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.6",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 11,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kingfisher — RSPB species account",
+        "fr": "Martin-pêcheur — fiche espèce de la RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/kingfisher",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "RSPB notes habitat, dives, territories and nesting banks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.4",
+        "overview.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 8,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alcedo atthis — Animal Diversity Web, University of Michigan Museum of Zoology",
+        "fr": "Alcedo atthis — Animal Diversity Web, Musée de zoologie de l’Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Alcedo_atthis/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Account covers solitary habits, prey handling and pellets."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.4",
+        "diet.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 8,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Microstructures in Blue Feathers of the Common Kingfisher — National Institute of Ecology, Republic of Korea",
+        "fr": "Microstructures des plumes bleues du Martin-pêcheur — Institut national d’écologie de Corée"
+      },
+      "url": "https://doi.org/10.22920/PNIE.2021.2.1.21",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Microscopy found a keratin-air layer in blue feather barbs."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 9,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Using miniaturized GPS archival tags to assess home range features of a small plunge-diving bird: the European Kingfisher — Avian Research",
+        "fr": "Suivi GPS des domaines vitaux du Martin-pêcheur d’Europe — Avian Research"
+      },
+      "url": "https://doi.org/10.1186/s40657-021-00267-4",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Gironde tracking found use of small wetlands, ditches and ponds away from nests."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 13,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "An experimental evaluation of the influence of water depth and bottom color on the Common kingfisher’s foraging performance — Behavioural Processes",
+        "fr": "Effet de la profondeur et de la couleur du fond sur la pêche du Martin-pêcheur — Behavioural Processes"
+      },
+      "url": "https://doi.org/10.1016/j.beproc.2013.04.012",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Young birds attacked and captured prey more successfully in shallow experimental tanks."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 12,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kingfisher diet and prey selection from pellets under resting sites on the River Ticino — Aquatic Ecology",
+        "fr": "Régime et sélection des proies dans les pelotes du Tessin — Aquatic Ecology"
+      },
+      "url": "https://doi.org/10.1007/s10452-020-09817-2",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Ticino pellets contained mainly fish, with fewer introduced fish than availability predicted."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 12,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foods brought to the nest by breeding Kingfishers Alcedo atthis in the New Forest — Bird Study",
+        "fr": "Proies apportées au nid par des Martins-pêcheurs reproducteurs dans la New Forest — Bird Study"
+      },
+      "url": "https://doi.org/10.1080/00063659609460999",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Hampshire nest observations found fish delivered grew larger with nestling development."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 11,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Breeding biology of the Common Kingfisher Alcedo atthis from Chiplun, Maharashtra, India — Indian BIRDS",
+        "fr": "Biologie de la reproduction du Martin-pêcheur à Chiplun, Maharashtra — Indian BIRDS"
+      },
+      "url": "https://indianbirds.in/pdfs/IB_20_1_FinalPrintReady.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Maharashtra observations recorded courtship and biparental chick feeding."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 8,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kingfisher — Species protection information, North Rhine-Westphalia State Nature Conservation Agency",
+        "fr": "Martin-pêcheur — informations de conservation, Agence de protection de la nature de Rhénanie-du-Nord-Westphalie"
+      },
+      "url": "https://artenschutz.naturschutzinformationen.nrw.de/artenschutz/de/arten/gruppe/voegel/schutzziele/102951",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The state lists bank works, channel change, pollution, sediment and nest disturbance as pressures."
+      ],
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3",
+        "habitat.en.4",
+        "habitat.fr.4",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 14,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alcedo atthis — The IUCN Red List of Threatened Species 2024, BirdLife International",
+        "fr": "Alcedo atthis — Liste rouge de l’UICN 2024, BirdLife International"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22683027A264589271.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife classifies the species globally as Least Concern in its 2024 IUCN record."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.4",
+        "conservation.fr.4",
+        "conservation.en.6",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 13,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "European Red List of Birds 2021 — BirdLife International",
+        "fr": "Liste rouge européenne des oiseaux 2021 — BirdLife International"
+      },
+      "url": "https://www.birdlife.org/wp-content/uploads/2022/05/BirdLife-European-Red-List-of-Birds-2021.pdf.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Assessment 2021: Least Concern, still declining more slowly than in 2015."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 11,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Kingfisher — Woodland Trust species account",
+        "fr": "Martin-pêcheur — fiche espèce de la Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/kingfisher/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The profile gives adult length and describes plumage and riverside hunting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 11,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Use the existing validated image asset. Depict one Common kingfisher (Alcedo atthis), with natural compact proportions, blue-green upperparts, orange underparts, long dark bill and a visible orange lower mandible if female. Perched beside a quiet freshwater bank, complete bird visible, natural anatomy, on a PURE WHITE background.",
+  "uncertainties": [
+    "The global IUCN record is dated 2024; the exact assessment day is not stated. European trends vary by country, with many reported as unknown.",
+    "The 2021 European assessment reports a continuing but slower decline; it does not resolve the trend of every national population."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent primary-source critique and root bilingual review. Corrected feather barbs and structural blue, removed unsupported non-fish dietary predominance, scoped Hampshire prey-size and Chiplun post-fledging observations, distinguished Ticino season and winter, verified European2021 assessment published2022 with declining trend versus global2024 record. Regional NRW agency named; existing male dark-bill illustration visually examined."
+}

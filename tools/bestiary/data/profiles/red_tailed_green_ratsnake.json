@@ -1,0 +1,248 @@
+{
+  "id": "red_tailed_green_ratsnake",
+  "scientific": "Gonyosoma oxycephalum",
+  "group": "reptiles",
+  "name": {
+    "en": "Red-tailed green ratsnake",
+    "fr": "Serpent ratier vert à queue rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large colubrid snake ranges across Southeast Asia, from the Andaman Islands to the Philippines and Indonesian archipelagos. Records include Myanmar, Thailand, Vietnam, Malaysia, Singapore, Indonesia and the Philippines. Its common name reflects the frequent green body and rusty-red tail, though brown and other colour forms occur.",
+      "fr": "Cette grande couleuvre est présente dans toute l’Asie du Sud-Est, des îles Andaman aux Philippines et aux archipels indonésiens. Les mentions comprennent le Myanmar, la Thaïlande, le Viêt Nam, la Malaisie, Singapour, l’Indonésie et les Philippines. Son nom courant évoque son corps souvent vert et sa queue rouge rouille, même si des formes brunes ou d’autres couleurs existent."
+    },
+    "identification": {
+      "en": "Adults generally measure 1.6–2.3 metres. Singapore’s National Parks Board lists the species at 2.4 metres. The body is laterally compressed, with broad smooth belly scales for gripping branches, a dark eye stripe and often green colouring with a rusty tail.",
+      "fr": "L’adulte mesure généralement de 1,6 à 2,3 mètres. Le National Parks Board de Singapour indique une longueur de 2,4 mètres pour l’espèce. Son corps est comprimé sur les côtés et porte de larges écailles ventrales lisses qui agrippent les branches ; une ligne sombre traverse l’œil et la queue est souvent rouille."
+    },
+    "habitat": {
+      "en": "It inhabits tropical forests, including mangroves, lowland woods and forest edges, and may also occur in plantations or gardens. Fully arboreal, it moves through the branches above the ground.",
+      "fr": "Elle fréquente les forêts tropicales, dont les mangroves, les boisements de basse altitude et leurs lisières ; elle peut aussi vivre dans des plantations ou des jardins. Entièrement arboricole, elle circule dans les branches au-dessus du sol."
+    },
+    "diet": {
+      "en": "Its prey includes birds and eggs, lizards, bats and small mammals. It hunts in trees, sometimes hanging from a branch to seize prey moving through the canopy, including bats in flight.",
+      "fr": "Elle mange des oiseaux et leurs œufs, des lézards, des chauves-souris et de petits mammifères. Elle chasse dans les arbres et peut se suspendre à une branche pour saisir des proies qui traversent la canopée, notamment des chauves-souris en vol."
+    },
+    "behavior": {
+      "en": "Diurnal and arboreal, it moves through branches above the ground. When threatened, it can inflate its body and strike defensively.",
+      "fr": "Diurne et arboricole, elle circule dans les branches au-dessus du sol. Lorsqu’elle est menacée, elle peut gonfler son corps et frapper pour se défendre."
+    },
+    "reproduction": {
+      "en": "Mating occurs in trees, and the female lays eggs in a sheltered place. In one captive case, a fertile clutch of four eggs was incubated at 30°C; hatchlings emerged over days 87–89. The three young first shed 10–14 days after hatching, then accepted pinkie mice; all fed regularly within a month. The same report noted a second fertile clutch after the female had been kept apart from a male, suggesting stored sperm.",
+      "fr": "L’accouplement a lieu dans les arbres et la femelle pond dans un endroit abrité. Dans un cas en captivité, une ponte fertile de quatre œufs a été incubée à 30 °C ; les jeunes ont éclos entre le 87e et le 89e jour. Les trois serpenteaux ont mué pour la première fois 10 à 14 jours après l’éclosion, puis accepté des souriceaux ; tous s’alimentaient régulièrement en moins d’un mois. Le même compte rendu signale une seconde ponte fertile après séparation d’avec le mâle, ce qui suggère une conservation du sperme."
+    },
+    "ecology": {
+      "en": "As a tree-dwelling predator, it feeds on animals that use the canopy, including birds, bats and lizards, as well as small mammals.",
+      "fr": "Ce prédateur arboricole consomme des animaux de la canopée, dont des oiseaux, des chauves-souris et des lézards, ainsi que de petits mammifères."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2012 classified the species as Least Concern. Singapore’s National Parks Board records it in Bukit Timah and Central Catchment forest reserves, a local occurrence within its much wider range.",
+      "fr": "L’évaluation de l’UICN publiée en 2012 classait l’espèce en préoccupation mineure. À Singapour, le National Parks Board la signale dans les réserves forestières de Bukit Timah et de Central Catchment, où elle est présente au sein d’une aire bien plus vaste."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gonyosoma oxycephalum — Wikipedia",
+        "fr": "Gonyosoma oxycephalum — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Gonyosoma_oxycephalum",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Summarizes range, appearance, prey and arboreal hunting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.en.3",
+        "identification.en.3",
+        "habitat.en.1",
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 7,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gonyosoma oxycephalum — Wikipédia",
+        "fr": "Gonyosoma oxycephalum — Wikipédia"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Gonyosoma_oxycephalum",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Confirms range, habitat, diet, coloration and arboreal activity."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2",
+        "overview.fr.3",
+        "habitat.fr.1",
+        "diet.fr.1",
+        "reproduction.fr.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 8,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gonyosoma oxycephalum — Flora & Fauna Web, National Parks Board Singapore",
+        "fr": "Gonyosoma oxycephalum — Flora & Fauna Web, National Parks Board de Singapour"
+      },
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/8/1/816",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Lists size as 2.4 metres and records the species in Singapore forest reserves."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 13,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Captive breeding, egg incubation and rearing of the red-tailed ratsnake Gonyosoma oxycephala — The Herpetological Bulletin",
+        "fr": "Élevage, incubation et croissance de Gonyosoma oxycephala — The Herpetological Bulletin"
+      },
+      "url": "https://www.thebhs.org/publications/the-herpetological-bulletin/issue-number-116-summer-2011/58-06-captive-breeding-egg-incubation-and-rearing-of-the-red-tailed-ratsnake-i-gonyosoma-oxycephala-i/file",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "One captive pair produced fertile eggs; three hatchlings emerged days 87–89 at 30°C."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 13,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gonyosoma oxycephalum — IUCN Red List of Threatened Species",
+        "fr": "Gonyosoma oxycephalum — Liste rouge de l’UICN des espèces menacées"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2012-1.RLTS.T183196A1732988.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Assessment identifier dates this Least Concern evaluation to 2012."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 9,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gonyosoma oxycephalum — The Reptile Database",
+        "fr": "Gonyosoma oxycephalum — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/front.front/species?genus=gonyosoma&species=oxycephalum",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Species account identifies this snake as diurnal and arboreal in tropical forests."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 12,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "",
+  "uncertainties": [
+    "The current range-wide population trend and the present importance of habitat change or collection are not established by the consulted pages; the IUCN assessment cited is from 2012.",
+    "The 1.6–2.3 m adult range comes from the French species page; Singapore NParks separately lists 2.4 m without specifying typical size or a formal maximum.",
+    "The four-egg clutch, 30°C incubation and 87–89 day hatching span are observations from one captive case, not universal reproductive timing."
+  ],
+  "reviewed": true,
+  "review_note": "Root review: NParks body shape and Singapore occurrence checked directly; actual BHS PDF corroborates the scoped captive incubation, first moult and proposed sperm retention; defence added from its species introduction; removed unsupported belly-grip mechanism allocation to genus-level database diagnosis.",
+  "source_audit_version": 1
+}

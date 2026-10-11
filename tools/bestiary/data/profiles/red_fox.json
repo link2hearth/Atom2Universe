@@ -1,0 +1,132 @@
+{
+  "id": "red_fox",
+  "scientific": "Vulpes vulpes",
+  "group": "mammals",
+  "name": {
+    "en": "Red fox",
+    "fr": "Renard roux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The red fox is an adaptable canid native across much of the Northern Hemisphere, from Arctic regions to North Africa, Central America and Asia. It occupies wild, farmed and urban landscapes, while local abundance and habits depend on food, cover and human pressures.",
+      "fr": "Le renard roux est un canidé adaptable, naturellement présent dans une grande partie de l’hémisphère Nord, de l’Arctique à l’Afrique du Nord, l’Amérique centrale et l’Asie. Il fréquente milieux naturels, agricoles et urbains, selon ressources, abris et pressions humaines."
+    },
+    "identification": {
+      "en": "Its familiar coat is rusty red above, pale underneath, with dark lower legs and a bushy tail often tipped white. Colour is variable: individuals may be pale, dark or cross-patterned. The pointed muzzle, upright ears and slender build remain useful features across these forms.",
+      "fr": "Son pelage classique est roux dessus, clair dessous, avec le bas des pattes sombre et une queue touffue souvent terminée de blanc. La couleur varie: certains individus sont pâles, foncés ou marqués d’une croix dorsale. Museau pointu et oreilles dressées restent caractéristiques."
+    },
+    "habitat": {
+      "en": "Red foxes use forests, scrub, grasslands, deserts, mountains, farmland and city edges; they often benefit from a patchwork of cover and open feeding ground. In Australia they were introduced for hunting in the nineteenth century and spread widely, though distribution remains uneven.",
+      "fr": "Le renard roux fréquente forêts, broussailles, prairies, déserts, montagnes, terres agricoles et périphéries urbaines; il utilise souvent une mosaïque d’abris et d’espaces ouverts. Introduit en Australie pour la chasse au XIXe siècle, il s’y est largement répandu, mais de façon inégale."
+    },
+    "diet": {
+      "en": "It is an opportunistic feeder, taking small mammals such as rodents and rabbits when available, as well as birds, invertebrates, reptiles, fruit and carrion. Proportions shift with season and place. Urban foxes may use discarded food, while Australian foxes consume introduced and native prey.",
+      "fr": "Opportuniste, il capture de petits mammifères comme rongeurs et lapins, mais mange aussi oiseaux, invertébrés, reptiles, fruits et charognes. Les proportions changent selon saison et lieu. En ville, il exploite parfois les déchets; en Australie, il consomme des proies introduites et indigènes."
+    },
+    "behavior": {
+      "en": "Foxes often forage alone around dusk or at night, but schedules vary with disturbance and food. They cache surplus food in small buried stores. A pair may share a territory; some populations form family groups where related nonbreeders help provision or guard young.",
+      "fr": "Le renard cherche sa nourriture seul au crépuscule ou la nuit, mais son rythme varie avec les dérangements et les ressources. Il enterre parfois des réserves. Un couple peut occuper un territoire; certains groupes familiaux comptent des individus apparentés qui aident à protéger les jeunes."
+    },
+    "reproduction": {
+      "en": "Breeding is seasonal, with timing shifting across the species’ range. After about seven to eight weeks of pregnancy, a vixen gives birth in a den. Cubs are born blind, leave after several weeks and are gradually weaned; litter size and helper care vary among populations.",
+      "fr": "La reproduction est saisonnière, mais sa période varie dans l’aire de l’espèce. Après environ sept à huit semaines de gestation, la femelle met bas dans un terrier. Aveugles à la naissance, les renardeaux sortent après plusieurs semaines puis sont sevrés; portées et aide parentale varient."
+    },
+    "ecology": {
+      "en": "As predator and scavenger, the fox consumes many kinds of animal matter and sometimes fruit, but its effects depend on local food webs. In Australia, government reviews link introduced fox predation to declines in several native ground-dwelling mammals and birds; other pressures can also contribute.",
+      "fr": "Prédateur et charognard, le renard consomme de nombreux animaux et parfois des fruits, mais ses effets dépendent des réseaux alimentaires locaux. En Australie, des organismes publics relient sa prédation au déclin de plusieurs mammifères terrestres et oiseaux indigènes; d’autres facteurs interviennent aussi."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment published in 2021 retained Least Concern, based on the assessment dated 2016 and the species’ broad range. This category does not describe every local population. In Australia, introduced foxes are managed as invasive predators because of risks to native wildlife.",
+      "fr": "L’évaluation mondiale de l’UICN publiée en 2021 maintient la catégorie «Préoccupation mineure», d’après l’évaluation de 2016 et l’aire de l’espèce. Cette catégorie ne décrit pas chaque population. En Australie, le renard introduit est géré comme prédateur envahissant en raison des risques pour la faune."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red fox – Canid Specialist Group",
+        "fr": "Renard roux – Groupe de spécialistes des canidés"
+      },
+      "url": "https://canids.org/canids/red-fox/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Broad Northern Hemisphere range and introduction to Australia; occurrence from tundra and desert to forest and cities."
+      ]
+    },
+    {
+      "title": {
+        "en": "Vulpes vulpes – Animal Diversity Web",
+        "fr": "Vulpes vulpes – Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Vulpes_vulpes/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction",
+        "behavior"
+      ],
+      "facts": [
+        "Coat variation; omnivorous diet; seasonal breeding, den-reared blind pups and variation in mating and family structure."
+      ]
+    },
+    {
+      "title": {
+        "en": "The secret life of urban foxes",
+        "fr": "La vie secrète des renards urbains"
+      },
+      "url": "https://www.nhm.ac.uk/discover/the-secret-life-of-urban-foxes.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Urban habitats, den sites, coat features and differences between rural and city food sources."
+      ]
+    },
+    {
+      "title": {
+        "en": "Foxes – NSW Environment and Heritage",
+        "fr": "Renards – Environnement et Patrimoine de Nouvelle-Galles du Sud"
+      },
+      "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/pest-animals-and-weeds/pest-animals/foxes",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Introduction in the 1870s; Australian spread and documented regional impacts on native mammals, birds and turtles."
+      ]
+    },
+    {
+      "title": {
+        "en": "Vulpes vulpes (Red Fox) – IUCN Red List, amended assessment",
+        "fr": "Vulpes vulpes (Renard roux) – Liste rouge de l’UICN, évaluation amendée"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T23062A193903628.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "2021 publication amends the global assessment dated 2016; category Least Concern, with broad range and stable trend stated in that assessment."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult red fox, sex unspecified, accurate natural morphology with a naturally variable rusty coat, standing in a relaxed three-quarter view on a PURE WHITE background.",
+  "uncertainties": [
+    "Social organization ranges from mostly solitary or paired animals to family groups with helpers; neither pattern applies uniformly across the species.",
+    "The IUCN category is global and its underlying assessment dates to 2016; Australian impacts refer to introduced populations and cannot be generalized to the native range."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/source critique; coordinator checked reported omissions against final text and removed unsupported assertions."
+}

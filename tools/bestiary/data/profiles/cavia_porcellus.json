@@ -1,0 +1,206 @@
+{
+  "id": "cavia_porcellus",
+  "scientific": "Cavia porcellus",
+  "group": "mammals",
+  "name": {
+    "en": "Domestic guinea pig",
+    "fr": "Cochon d’Inde"
+  },
+  "sections": {
+    "overview": {
+      "en": "The domestic guinea pig is a small caviid rodent whose populations are primarily maintained by people. The domesticated lineage is recognized as Cavia porcellus, taxonomically distinguished from the wild species C. aperea and C. tschudii. Genetic comparisons identify the Andean montane guinea pig, C. tschudii, as its closest wild relative, while ancient DNA points to a more complex domestication history than a single simple origin. Genomic project accounts place Andean domestication more than four millennia ago. Today people keep guinea pigs as companions and research animals, and raise them for food in parts of South America.",
+      "fr": "Le cochon d’Inde est un petit rongeur caviidé dont les populations sont principalement entretenues par les humains. La lignée domestiquée est reconnue sous le nom Cavia porcellus, distinct dans la classification des espèces sauvages C. aperea et C. tschudii. Les comparaisons génétiques désignent le cobaye montagnard andin, C. tschudii, comme son plus proche parent sauvage, tandis que l’ADN ancien révèle une histoire de domestication plus complexe qu’une origine unique et simple. Les données d’un projet génomique situent la domestication andine il y a plus de quatre millénaires. Aujourd’hui, il est élevé comme animal de compagnie ou de recherche, ainsi que pour l’alimentation dans certaines régions d’Amérique du Sud."
+    },
+    "identification": {
+      "en": "A guinea pig has a compact, low-set body, short limbs, a blunt head and no external tail. Each forefoot has four digits and each hind foot three. Its coat may be short or long, smooth or rough, and comes in many colours and patterns; these differences reflect selective breeding. Smithsonian measurements place typical adults at about 20–25 centimetres long, although size varies among breeds.",
+      "fr": "Le cochon d’Inde a un corps compact et bas, des membres courts, une tête arrondie et aucune queue externe. Chaque patte avant porte quatre doigts et chaque patte arrière trois. Son pelage peut être court ou long, lisse ou rude, et présenter de nombreuses couleurs et marques ; ces différences résultent de la sélection. Le Smithsonian indique une longueur adulte typique d’environ 20 à 25 centimètres, avec des variations selon les lignées."
+    },
+    "habitat": {
+      "en": "Cavia porcellus is associated with human settlements rather than a self-sustaining wild range: it lives in household enclosures, farms and research facilities, and has travelled globally through human keeping and trade. The high Andean grasslands sometimes described as guinea-pig habitat belong to wild relatives, especially C. tschudii, not automatically to the domestic species. That montane cavy is reported from Peru, Bolivia, north-western Argentina and north-eastern Chile.",
+      "fr": "Cavia porcellus est lié aux lieux habités par les humains plutôt qu’à une aire sauvage autonome : il vit dans des enclos domestiques, des élevages et des installations de recherche, et s’est diffusé dans le monde par l’élevage et les échanges. Les prairies andines parfois présentées comme son habitat sont celles de proches parents sauvages, notamment C. tschudii, et ne décrivent pas automatiquement l’espèce domestique. Ce cobaye montagnard est signalé au Pérou, en Bolivie, dans le nord-ouest de l’Argentine et le nord-est du Chili."
+    },
+    "diet": {
+      "en": "Guinea pigs are obligate herbivores and hindgut fermenters. Their large caecum contains microbes that process plant fibre after it passes through the stomach and small intestine. One published estimate attributes about 30–40% of maintenance energy to short-chain fatty acids from gut fermentation. Guinea pigs also eat faecal pellets (coprophagy); preventing this behaviour reduces fibre digestion and body weight, although its precise nutritional contribution remains uncertain. The Merck Veterinary Manual states that guinea pigs do not produce cecotropes, the distinct soft pellets associated with caecotrophy. They also cannot synthesize vitamin C: evolutionary research reports loss of the GULO gene, which encodes the final enzyme in the animal pathway.",
+      "fr": "Le cochon d’Inde est un herbivore strict et un fermentateur du gros intestin. Son grand cæcum abrite des microbes qui transforment les fibres végétales après leur passage dans l’estomac et l’intestin grêle. Une estimation publiée attribue environ 30 à 40 % des besoins énergétiques d’entretien aux acides gras à chaîne courte issus de la fermentation intestinale. Il ingère aussi des boulettes fécales (coprophagie) ; empêcher ce comportement réduit la digestion des fibres et le poids corporel, bien que sa contribution nutritionnelle précise reste incertaine. Le Merck Veterinary Manual indique que le cobaye ne produit pas de cæcotrophes, boulettes molles distinctes associées à la cæcotrophie. Il ne peut pas non plus synthétiser la vitamine C : les travaux évolutifs rapportent la perte du gène GULO, qui code la dernière enzyme de la voie animale."
+    },
+    "behavior": {
+      "en": "Guinea pigs are social and commonly remain close to other individuals, resting or huddling together. In domestic groups, males can form dominance relationships. Calls documented in laboratory recordings include purrs and rumbles during interactions between males, with whines and chutters also heard; the sound pattern depended on the social setting, so a call should not be assigned one universal meaning.",
+      "fr": "Les cochons d’Inde sont sociables et restent souvent proches de leurs congénères, avec lesquels ils se reposent ou se blottissent. Dans les groupes domestiques, les mâles peuvent établir des rapports de dominance. Des enregistrements en laboratoire ont relevé des ronronnements et grondements lors d’échanges entre mâles, ainsi que des gémissements et des claquements ; les sons variaient selon la situation sociale, ce qui interdit de leur attribuer un sens universel unique."
+    },
+    "reproduction": {
+      "en": "Pregnancy lasts about 59–72 days, according to a veterinary-school natural-history account. Pups are born furred, with eyes and ears open; they can stand and move soon after birth and nibble solid food within a day. This precocial development contrasts with the helpless young of many rodents, yet pups still remain attached to their mother. Their early mobility does not mean they are independent at birth.",
+      "fr": "La gestation dure environ 59 à 72 jours, selon un document d’histoire naturelle d’une faculté vétérinaire. Les petits naissent couverts de poils, les yeux et les oreilles ouverts ; ils peuvent se tenir debout et se déplacer rapidement, puis grignoter des aliments solides dès le premier jour. Ce développement précoce contraste avec celui des jeunes dépendants de nombreux rongeurs, mais les petits restent attachés à leur mère. Leur mobilité ne signifie donc pas qu’ils soient autonomes dès la naissance."
+    },
+    "ecology": {
+      "en": "The domestic guinea pig occupies an ecological setting built around people. In Andean societies, animals are raised in household settings and form part of local food traditions; elsewhere they are kept as pets or used in biomedical research. These uses explain the species’ wide distribution without implying a wild ecological role. Habitat and ecological relationships described for wild cavies belong to those wild species unless independently demonstrated for domestic C. porcellus.",
+      "fr": "Le cochon d’Inde domestique occupe un environnement façonné par les humains. Dans les sociétés andines, il est élevé dans les foyers et participe aux traditions alimentaires locales ; ailleurs, il est compagnon ou animal de recherche biomédicale. Ces usages expliquent sa diffusion sans lui attribuer un rôle écologique sauvage. Les habitats et relations écologiques décrits chez les cobayes sauvages concernent ces espèces tant qu’ils n’ont pas été établis indépendamment pour C. porcellus."
+    },
+    "conservation": {
+      "en": "The domestic species is maintained through breeding and is not treated by the Smithsonian National Zoo as a threatened wild animal. That description should not be transferred to C. tschudii or other wild Cavia species: they are separate taxa with their own distributions and conservation evidence. The domestic guinea pig’s global presence does not mean that it has a naturally widespread wild population.",
+      "fr": "L’espèce domestique est maintenue par l’élevage et le Smithsonian National Zoo ne la présente pas comme un animal sauvage menacé. Cette description ne doit pas être transposée à C. tschudii ni aux autres Cavia sauvages : ce sont des taxons distincts, avec leurs propres répartitions et données de conservation. La présence mondiale du cobaye domestique ne signifie pas qu’il existe une vaste population sauvage naturelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Guinea pig",
+        "fr": "Cochon d’Inde"
+      },
+      "url": "https://nationalzoo.si.edu/animals/guinea-pig",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Smithsonian account: no external tail, coat variation, adult length, human uses, C. tschudii range and elevation, and domestic status."
+      ]
+    },
+    {
+      "title": {
+        "en": "Similarities and differences among the chromosomes of the wild guinea pig Cavia tschudii and the domestic guinea pig Cavia porcellus",
+        "fr": "Similarités et différences chromosomiques entre le cobaye sauvage Cavia tschudii et le cobaye domestique Cavia porcellus"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25147626/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Cytogenetic comparison treats C. tschudii and C. porcellus as distinct species and summarizes evidence that C. tschudii is the closer relative."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ancient DNA of Guinea Pigs (Cavia spp.) Indicates a Probable New Center of Domestication and Pathways of Global Distribution",
+        "fr": "L’ADN ancien des cobayes (Cavia spp.) indique un probable nouveau centre de domestication et des voies de diffusion mondiale"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32483316/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Ancient mitogenomes suggest an eastern Colombian domestication centre and Caribbean introductions from a Peruvian-derived population from about AD 600."
+      ]
+    },
+    {
+      "title": {
+        "en": "Guinea Pig Care",
+        "fr": "Soins du cochon d’Inde"
+      },
+      "url": "https://healthtopics.vetmed.ucdavis.edu/health-topics/exotics/guinea-pig-care",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "UC Davis account gives wild cavy habitats and a 59–72-day guinea-pig gestation range; it does not establish a wild range for C. porcellus."
+      ]
+    },
+    {
+      "title": {
+        "en": "Anatomy, Physiology, and Behavior of Guinea Pigs",
+        "fr": "Anatomie, physiologie et comportement du cochon d’Inde"
+      },
+      "url": "https://www.merckvetmanual.com/exotic-and-laboratory-animals/guinea-pigs/anatomy-physiology-and-behavior-of-guinea-pigs",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Merck review: four forefoot and three hind-foot digits; large fermentative caecum; coprophagy but no cecotropes; reduced fibre digestion when coprophagy is prevented; precocial young and social calls."
+      ]
+    },
+    {
+      "title": {
+        "en": "The evolution of vitamin C biosynthesis and transport in animals",
+        "fr": "Évolution de la biosynthèse et du transport de la vitamine C chez les animaux"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35752765/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Review reports loss of guinea-pig vitamin C synthesis through complete or partial loss of the GULO gene."
+      ]
+    },
+    {
+      "title": {
+        "en": "Updates to the guinea pig animal model for in-vivo auditory neuroscience in the low-frequency hearing range",
+        "fr": "Mise à jour du modèle cobaye pour les neurosciences auditives in vivo dans les basses fréquences"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36099806/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Laboratory recordings associate chuts and purrs with affiliative interactions; paired males also produced rumbles, whines and chutters."
+      ]
+    },
+    {
+      "title": {
+        "en": "Filial Attachment and its Disruption: Insights from the Guinea Pig",
+        "fr": "Attachement filial et perturbations : éclairages apportés par le cobaye"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24733361/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Review characterizes guinea pigs as precocial rodents with selective attachment to their mothers, who show little active maternal care."
+      ]
+    },
+    {
+      "title": {
+        "en": "Effects of animal or plant protein diets on cecal fermentation in guinea pigs, rats and chicks",
+        "fr": "Effets de régimes protéiques animaux ou végétaux sur la fermentation cæcale chez le cobaye, le rat et le poussin"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11064281/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Guinea-pig study describes short-chain fatty acids from enteric fermentation as meeting about 30–40% of maintenance energy needs."
+      ]
+    },
+    {
+      "title": {
+        "en": "Guinea Pig Genome Project",
+        "fr": "Projet génomique du cobaye"
+      },
+      "url": "https://www.broadinstitute.org/guinea-pig/guinea-pig-genome-project",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Broad Institute genome-project account places domestication in the Andes more than 4,000 years ago."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult short-haired agouti domestic guinea pig, sex unspecified, compact tailless body and natural cavy proportions, full body on a PURE WHITE background.",
+  "uncertainties": [
+    "Ancient DNA evidence supports a complex domestication and dispersal history; the number and location of domestication events are not fully resolved.",
+    "The domestic species has no recognized natural wild range in the cited institutional account; the range described for C. tschudii belongs to a distinct wild relative.",
+    "The nutritional contribution of coprophagy remains uncertain according to the current Merck review."
+  ],
+  "reviewed": true,
+  "review_note": "Independent source and bilingual review verified coprophagy without cecotropes per Merck, closest wild relative and complex domestication; no invented wild ecology."
+}

@@ -1,0 +1,355 @@
+{
+  "id": "banded_mongoose",
+  "scientific": "Mungos mungo",
+  "group": "mammals",
+  "name": {
+    "en": "Banded mongoose",
+    "fr": "Mangouste rayée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The banded mongoose is a small, day-active African carnivore whose dark transverse back bands distinguish it from other mongooses. It lives in mixed social groups that rear their litters communally.",
+      "fr": "La mangouste rayée est un petit carnivore africain diurne, dont les bandes transversales sombres du dos la distinguent des autres mangoustes. Elle vit en groupes mixtes qui élèvent leurs portées en commun."
+    },
+    "identification": {
+      "en": "Adults measure about 30–45 cm from head to rump, with a tail of 15–30 cm and a reported mass of 1.5–2.5 kg. The coarse coat ranges from pale to reddish brown, with dark bars starting midway along the back, dark feet and a black tail tip. Each forefoot bears five clawed digits and each hind foot four; rear claws are shorter and blunter, while rounded cheek teeth help crush hard prey.",
+      "fr": "L’adulte mesure environ 30 à 45 cm de la tête à la croupe, avec une queue de 15 à 30 cm et une masse rapportée de 1,5 à 2,5 kg. Le pelage va du pâle au roux, avec des bandes sombres dès le milieu du dos, des pieds foncés et le bout de la queue noir. Chaque patte avant porte cinq doigts griffus et chaque patte arrière en porte quatre ; les griffes arrière sont plus courtes et émoussées, tandis que les molaires arrondies aident à broyer les proies dures."
+    },
+    "habitat": {
+      "en": "Across sub-Saharan Africa, banded mongooses occupy forest, savanna, shrubland and grassland. Field studies recorded dens in termite mounds, erosion gullies, aardvark holes and sometimes human structures; most were used briefly, though a few favored dens were reused for weeks.",
+      "fr": "Dans l’Afrique subsaharienne, la mangouste rayée fréquente forêts, savanes, broussailles et prairies. Les études de terrain ont relevé des gîtes dans des termitières, ravines, terriers d’oryctérope et parfois bâtiments ; la plupart servaient peu de temps, mais certains étaient réutilisés pendant des semaines."
+    },
+    "diet": {
+      "en": "In a two-year Ugandan study, beetles and millipedes dominated food records, while vertebrate remains occurred in only 12% of droppings. Other observations include termites, grasshoppers, worms, fruit, reptiles, small mammals, birds and eggs; to crack an egg or a snail’s shell, a mongoose may throw it backward between its hind legs against a stone or other hard surface.",
+      "fr": "Dans une étude de deux ans en Ouganda, les coléoptères et mille-pattes dominaient les relevés alimentaires, tandis que des restes de vertébrés n’apparaissaient que dans 12 % des déjections. D’autres observations mentionnent termites, sauterelles, vers, fruits, reptiles, petits mammifères, oiseaux et œufs ; pour briser un œuf ou la coquille d’un escargot, la mangouste peut le lancer en arrière entre ses pattes arrière contre une pierre ou une autre surface dure."
+    },
+    "behavior": {
+      "en": "A Ugandan field study reported packs of six to 35 adults and subadults; group size varies, and individuals forage for prey while the pack travels together. Frequent close calls help maintain group contact during foraging, when animals often work with their heads lowered to dig. Experimental work found that recruitment calls convey urgency or risk rather than a fixed label for each stimulus. In the Ugandan study population, younger males tended to provide more babysitting than older males, so care is not divided equally among group members.",
+      "fr": "Une étude de terrain en Ouganda a relevé des groupes de six à 35 adultes et subadultes ; leur taille varie et les individus cherchent leurs proies pendant que le groupe se déplace ensemble. Des appels de contact fréquents maintiennent la cohésion pendant le fourragement, lorsque les animaux fouillent le sol tête baissée. Une étude expérimentale montre que les appels de rassemblement indiquent le degré d’urgence ou de risque plutôt qu’un signal distinct pour chaque stimulus. Dans la population étudiée en Ouganda, les jeunes mâles avaient tendance à assurer davantage de garde que les plus âgés ; les soins ne sont donc pas répartis également entre les membres du groupe."
+    },
+    "reproduction": {
+      "en": "Females can breed from about one year old and, in the long-studied Ugandan population, several females often give birth together, sometimes on the same day; females there may breed repeatedly through the year. Gestation lasts close to two months, and typical litters contain two to six blind, sparsely furred pups; eyes begin opening at about ten days. Pups leave the den at three to four weeks, then usually form a close escort relationship with an adult that feeds, carries, grooms and protects them until nutritional independence at roughly three months; care received predicts survival to nutritional independence and greater mass at one year in that study population.",
+      "fr": "Les femelles peuvent se reproduire vers l’âge d’un an ; dans la population ougandaise suivie à long terme, plusieurs mettent souvent bas ensemble, parfois le même jour, et peuvent avoir plusieurs portées dans l’année. La gestation dure près de deux mois et les portées comptent généralement deux à six petits, aveugles et peu poilus ; leurs yeux s’ouvrent vers le dixième jour. À trois ou quatre semaines, les petits sortent du terrier et nouent souvent une relation étroite avec un adulte qui les nourrit, transporte, toilette et protège jusqu’à leur autonomie alimentaire, vers trois mois ; dans cette population, les soins reçus prédisent une meilleure survie jusqu’à l’autonomie alimentaire et une masse plus élevée à un an."
+    },
+    "ecology": {
+      "en": "In the studied Ugandan population, competition for food and mates across the population increased the probability of encounters between groups. Conflicts were also associated with periods of group growth and with reduced litter and adult survival.",
+      "fr": "Dans la population ougandaise étudiée, la compétition à l’échelle de la population pour la nourriture et les partenaires augmentait la probabilité de rencontres entre groupes. Les conflits étaient aussi associés aux périodes de croissance des groupes et à une baisse de la survie des portées et des adultes."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment completed on 28 February 2015 and published in 2016 listed the species as Least Concern, citing its broad range, common occurrence, protected-area presence and tolerance of human-modified places; that assessment reported a stable trend. A serious regional exception is documented in northern Botswana: the mongoose-associated bacterium Mycobacterium mungi caused repeated outbreaks and high mortality in troops living near people during 2000–2010. The study did not establish the pathogen’s full host range or transmission to humans, and this local disease record should not be generalized to the species across Africa.",
+      "fr": "L’évaluation mondiale de l’UICN achevée le 28 février 2015 et publiée en 2016 classe l’espèce en préoccupation mineure, en raison de sa vaste aire, de sa présence fréquente, de ses populations en zones protégées et de sa tolérance aux milieux modifiés ; elle indique une tendance stable. Une exception régionale sérieuse est documentée dans le nord du Botswana : la bactérie associée à la mangouste, Mycobacterium mungi, a provoqué des foyers répétés et une forte mortalité chez des groupes vivant près des humains entre 2000 et 2010. L’étude n’a établi ni l’ensemble des hôtes de l’agent ni sa transmission aux humains ; ce signal sanitaire local ne doit pas être généralisé à toute l’aire africaine."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Animal Diversity Web: Mungos mungo",
+        "fr": "Animal Diversity Web : Mungos mungo"
+      },
+      "url": "https://animaldiversity.org/accounts/Mungos_mungo/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "University of Michigan account reports anatomy and range."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 8,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Smithsonian National Zoo: Banded mongoose",
+        "fr": "Smithsonian National Zoo : mangouste rayée"
+      },
+      "url": "https://nationalzoo.si.edu/animals/banded-mongoose",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Zoo account gives size, digits, egg cracking and diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 9,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Furrer and Manser: Banded mongoose recruitment calls convey information about risk and not stimulus type",
+        "fr": "Furrer et Manser : les appels de rassemblement renseignent sur le risque"
+      },
+      "url": "https://doi.org/10.1016/j.anbehav.2009.05.002",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Playback study tested risk calls in wild Ugandan groups."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 9,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vocal communication in banded mongooses: segmented close calls",
+        "fr": "Communication vocale des mangoustes rayées : appels de contact segmentés"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3529192/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Field bioacoustics study analyses identity and activity cues."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 8,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Vincent et al.: Durable benefits of early-life care in banded mongooses",
+        "fr": "Vincent et al. : effets durables des soins précoces chez la mangouste rayée"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6460079/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Seventeen-year Uganda dataset follows pups into adulthood."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 7,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Variable ecological conditions promote male helping by changing banded mongoose group composition",
+        "fr": "Les conditions écologiques variables favorisent l’aide des mâles chez les mangoustes rayées"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4943108/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Longitudinal Uganda study compares male and female caregiving."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 8,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Causes and consequences of intergroup conflict in cooperative banded mongooses",
+        "fr": "Causes et conséquences des conflits entre groupes de mangoustes rayées"
+      },
+      "url": "https://doi.org/10.1016/j.anbehav.2017.01.017",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Sixteen-year study links food and mate competition with contests."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 9,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "accessible_copy": "https://www.sciencedirect.com/science/article/pii/S0003347217300180"
+    },
+    {
+      "title": {
+        "en": "IUCN Red List: Mungos mungo",
+        "fr": "Liste rouge de l’UICN : Mungos mungo"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41621A45208886.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment completed 2015; publication year 2016."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 7,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Alexander et al.: Novel Mycobacterium tuberculosis complex pathogen M. mungi",
+        "fr": "Alexander et al. : nouvel agent du complexe Mycobacterium tuberculosis, M. mungi"
+      },
+      "url": "https://wwwnc.cdc.gov/eid/article/16/8/10-0314_article",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Botswana report documents outbreaks, deaths and unknown host range."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 9,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rood: Population dynamics and food habits of the banded mongoose",
+        "fr": "Rood : dynamique des populations et régime alimentaire de la mangouste rayée"
+      },
+      "url": "https://doi.org/10.1111/j.1365-2028.1975.tb00125.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Two-year field study in Rwenzori National Park, Uganda."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 8,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "VanderWaal et al.: Helpers benefit offspring in both the short and long term",
+        "fr": "VanderWaal et al. : les aides bénéficient aux jeunes à court et long terme"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1599779/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Uganda field study documents communal breeding in groups of 8–28."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 10,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Naturalistic field-guide plate on a clean white background: one adult in a low alert stance, full body and tail visible, side three-quarter view. Show the coarse brown-grey coat, transverse dark bands confined to the mid-back through rump, dark feet, black tail tip, five foredigits and four hind digits; anatomically plausible proportions, soft ground shadow, no scenery, labels or props.",
+  "uncertainties": [
+    "Adult mass ranges differ among reference accounts; the identification gives the Smithsonian range without treating it as a sex-specific maximum.",
+    "The global IUCN assessment is dated 2015 (published 2016); its stable trend does not resolve present-day local disease impacts. The M. mungi evidence is from northern Botswana, and the original study states that its full host range and transmission dynamics were unknown."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent article critique verified cooperative care, actual Ugandan studies, anatomy and regional Botswana disease. Root corrected intergroup-conflict DOI and separated correlated findings, matched French juvenile mass wording. Root and independent anatomy critic accepted white-background plate. Complete sentence budgets passed."
+}

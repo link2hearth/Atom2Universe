@@ -195,7 +195,10 @@ class BestiaryActivity : ThemedActivity() {
         media.addView(label(getString(R.string.be_plate_note), 12f), full())
         val body = column()
         listOf(R.string.be_overview to animal.description, R.string.be_identification to animal.identification,
-            R.string.be_habitat to animal.habitat, R.string.be_diet to animal.diet, R.string.be_behavior to animal.behavior).forEach { (title, text) ->
+            R.string.be_habitat to animal.habitat, R.string.be_diet to animal.diet, R.string.be_behavior to animal.behavior,
+            R.string.be_reproduction to animal.reproduction, R.string.be_ecology to animal.ecology,
+            R.string.be_conservation to animal.conservation).forEach { (title, text) ->
+            if (text == null) return@forEach
             body.addView(label(getString(title), 18f, true).apply { ViewCompat.setAccessibilityHeading(this, true) }, full(18))
             body.addView(label(getString(text)).apply { setTextIsSelectable(true) }, full(4))
         }
@@ -212,11 +215,13 @@ class BestiaryActivity : ThemedActivity() {
         }
         body.addView(label(getString(R.string.be_sources), 18f, true), full(18))
         body.addView(label(getString(R.string.be_source_note), 12f), full(4))
-        body.addView(button(getString(animal.sourceTitle)) {
-            try { startActivity(Intent(Intent.ACTION_VIEW, animal.sourceUrl.toUri())) }
-            catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.be_no_browser, Toast.LENGTH_SHORT).show() }
-        }, full())
-        body.addView(label(animal.sourceUrl, 12f).apply { setTextIsSelectable(true) }, full(4))
+        animal.references.forEach { reference ->
+            body.addView(button(getString(reference.title)) {
+                try { startActivity(Intent(Intent.ACTION_VIEW, reference.url.toUri())) }
+                catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.be_no_browser, Toast.LENGTH_SHORT).show() }
+            }, full())
+            body.addView(label(reference.url, 12f).apply { setTextIsSelectable(true) }, full(4))
+        }
         fiche.show(getString(animal.name), top, media, body)
     }
 

@@ -1,0 +1,397 @@
+{
+  "id": "white_stork",
+  "scientific": "Ciconia ciconia",
+  "group": "birds",
+  "name": {
+    "en": "White stork",
+    "fr": "Cigogne blanche"
+  },
+  "sections": {
+    "overview": {
+      "en": "The white stork is a large wading bird that breeds across Europe, North Africa and western Asia, then winters in Africa or nearer regions.",
+      "fr": "La Cigogne blanche est un grand échassier qui niche en Europe, en Afrique du Nord et en Asie occidentale, puis hiverne en Afrique ou plus près."
+    },
+    "identification": {
+      "en": "Adults are unmistakable at a distance: most of the body is white, the flight feathers are black, and the long bill and legs are red. The recorded maximum height is about 1.15 metres and maximum wingspan 2.15 metres. Males average slightly larger, although the sexes share the same plumage. Newly hatched young have dark bills and dull yellow-grey legs, which turn red as they mature.",
+      "fr": "L’adulte se reconnaît de loin: le corps est surtout blanc, les rémiges sont noires, et le long bec comme les pattes sont rouges. La hauteur maximale documentée est d’environ 1,15 m et l’envergure maximale de 2,15 m. Le mâle est en moyenne un peu plus grand, bien que les sexes aient le même plumage. Les poussins ont le bec sombre et les pattes jaune grisâtre, qui deviennent rouges avec l’âge."
+    },
+    "habitat": {
+      "en": "The species favours open landscapes where it can see and reach prey: floodplains, marsh edges, wet meadows, pastures and cultivated fields. In Alsace, Rhine-valley ried meadows are characteristic; across its range, nests also stand on trees, roofs, chimneys and purpose-built platforms.",
+      "fr": "L’espèce préfère les paysages ouverts où elle repère ses proies: plaines inondables, marges de marais, prairies humides, pâtures et champs. En Alsace, les rieds de la vallée du Rhin sont caractéristiques; ailleurs, les nids se trouvent aussi dans les arbres, sur les toits, les cheminées ou des plateformes."
+    },
+    "diet": {
+      "en": "As it walks, the stork spots prey, snaps it up in a bill thrust and regurgitates food for chicks. Its menu is opportunistic rather than frog-centred: earthworms, insects, small mammals, amphibians, reptiles and fish all feature. In dry conditions insects and mice may dominate, whereas wetter seasons make aquatic prey more available. A Polish study found that grassland and uncultivated margins supplied much of the food, alongside prey from fields and wetlands.",
+      "fr": "En marchant, elle repère une proie, la saisit d’un coup de bec et régurgite la nourriture aux poussins. Son menu est opportuniste et ne se limite pas aux grenouilles: vers de terre, insectes, petits mammifères, amphibiens, reptiles, poissons et autres petits animaux y figurent. Par temps sec, insectes et souris peuvent dominer; en saison humide, les proies aquatiques sont plus accessibles. Une étude en Pologne a constaté que les prairies et marges non cultivées fournissaient une grande part de la nourriture, avec des proies des champs et des zones humides."
+    },
+    "behavior": {
+      "en": "Adults are quiet compared with many birds: they greet a mate or warn rivals with loud bill-clattering, raising and lowering the head and neck. Pairs also use postures and wing movements during courtship and nest defence. On migration, the stork saves energy by circling in rising columns of warm air called thermals, then gliding as the air carries it forward. Because thermals weaken over open sea, European birds funnel around the Mediterranean through the Strait of Gibraltar or the Bosporus rather than crossing directly. Migration differs among individuals and regions: many western and central European birds travel to Africa, while some winter in Iberia or southern France and some remain near reliable food. Landfills have helped sustain resident groups in Iberia, changing local movements without making every population sedentary.",
+      "fr": "Les adultes sont peu vocaux: ils saluent leur partenaire ou avertissent un rival par des claquements sonores du bec, en levant puis abaissant la tête et le cou. Les couples emploient aussi postures et mouvements d’ailes pendant la parade et la défense du nid. En migration, la cigogne économise son énergie en tournoyant dans des colonnes d’air chaud ascendant, les thermiques, puis en planant tandis que l’air la porte. Comme ces courants faiblissent au-dessus de la mer, les oiseaux européens contournent la Méditerranée par le détroit de Gibraltar ou le Bosphore au lieu de la traverser directement. La migration varie selon les individus et les régions: beaucoup de cigognes d’Europe occidentale et centrale gagnent l’Afrique, tandis que certaines hivernent en Ibérie ou dans le sud de la France et que d’autres restent près d’une nourriture régulière. Les décharges ont favorisé des groupes sédentaires en Ibérie, modifiant les déplacements locaux sans rendre toutes les populations sédentaires."
+    },
+    "reproduction": {
+      "en": "Pairs reuse and enlarge bulky nests of sticks, often on high structures; the female usually lays three to five eggs, incubated by both adults for about a month. Incubation starts before the clutch is complete, so chicks hatch asynchronously; both parents feed them, and the young begin flying at about eight to ten weeks.",
+      "fr": "Les couples réutilisent et agrandissent de grands nids de branches, souvent sur des structures élevées; la femelle pond généralement trois à cinq œufs, couvés par les deux adultes environ un mois. L’incubation commence avant la fin de la ponte: les éclosions sont donc décalées; les deux parents nourrissent les poussins, qui commencent à voler vers huit à dix semaines."
+    },
+    "ecology": {
+      "en": "Storks consume insects such as grasshoppers, which farmers may regard as pests, as well as rodents and other prey. Eagles and other large raptors may prey on young storks. GPS tracking in Spain and Morocco shows birds moving from landfills to wetlands and rice fields, linking separate habitats. These journeys create a possible route for litter or contaminants to move between waste sites and wetlands in droppings or regurgitated pellets.",
+      "fr": "Les cigognes consomment des insectes comme les criquets, que les agriculteurs peuvent considérer comme des ravageurs, ainsi que des rongeurs et d’autres proies. Aigles et autres grands rapaces peuvent capturer les jeunes cigognes. Le suivi GPS en Espagne et au Maroc montre des oiseaux allant des décharges aux marais et aux rizières, reliant des milieux séparés. Ces trajets créent une voie possible de transfert de déchets ou de contaminants entre décharges et marais par les fientes ou les pelotes régurgitées."
+    },
+    "conservation": {
+      "en": "BirdLife International’s global IUCN assessment, published in 2025 after assessment on 5 June 2025, lists the species as Least Concern and increasing, with an estimated 526,000–588,000 mature birds. This is a global risk category, not a claim that every regional population is secure. In Alsace, numbers fell from about 145 breeding pairs in 1960 to only nine in 1974, amid deaths during migration and on African wintering grounds, as well as drought and habitat pressures. From the early 1970s, local groups held storks in enclosures for three years before release, encouraging them to settle and breed locally; later nest platforms and habitat work helped the population expand. Current hazards include wetland loss, intensive land management, electrocution and collisions with overhead wires, as well as hunting along some migration routes. A newer localized concern is landfill feeding: litter may be ingested, and movements between waste sites and wetlands create a possible transfer route.",
+      "fr": "L’évaluation mondiale de BirdLife International pour l’UICN, publiée en 2025 après une évaluation le 5 juin 2025, classe l’espèce en préoccupation mineure et en hausse, avec 526 000 à 588 000 individus matures estimés. Cette catégorie de risque mondiale ne signifie pas que chaque population régionale est à l’abri. En Alsace, les effectifs sont passés d’environ 145 couples nicheurs en 1960 à seulement neuf en 1974, sur fond de mortalité migratoire et dans les quartiers d’hiver africains, ainsi que de sécheresse et de pressions sur les habitats. Dès le début des années 1970, des associations locales ont maintenu les cigognes en enclos pendant trois ans avant leur lâcher, afin de favoriser leur installation et leur nidification locales; des plateformes de nidification et des actions sur l’habitat ont ensuite accompagné l’expansion. Les dangers actuels comprennent la disparition des zones humides, l’agriculture intensive, l’électrocution et les collisions avec les câbles aériens, ainsi que la chasse sur certaines routes migratoires. Le nourrissage en décharge constitue une préoccupation localisée: des déchets peuvent être ingérés, et les déplacements entre décharges et marais créent une voie possible de transfert."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ciconia ciconia (European white stork)",
+        "fr": "Ciconia ciconia (Cigogne blanche)"
+      },
+      "url": "https://animaldiversity.org/accounts/Ciconia_ciconia/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Michigan account: dimensions, sex and feeding."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 6,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White stork",
+        "fr": "Cigogne blanche"
+      },
+      "url": "https://www.mnhn.fr/en/white-stork",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French museum source covers nests, migration, chicks and power-line hazards."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 10,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cigogne blanche",
+        "fr": "Cigogne blanche"
+      },
+      "url": "https://alsace.lpo.fr/index.php/actions-par-espece/cigogne-blanche?showall=1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "LPO Alsace documents ried meadows, feeding sites and nest locations."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 10,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Data exploration on diet, composition, energy value and functional division of prey items ingested by White Storks Ciconia ciconia in south-western Poland: Dietary variation due to land cover, reproductive output and colonial breeding",
+        "fr": "Analyse du régime, de la composition, de la valeur énergétique et de la répartition fonctionnelle des proies ingérées par les Cigognes blanches Ciconia ciconia dans le sud-ouest de la Pologne: variation alimentaire selon le couvert, le succès reproducteur et la nidification coloniale"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6230975/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Pellet analysis documents prey from grassland margins, cropland and wetlands in a Polish breeding population."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 15,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Are white storks addicted to junk food? Impacts of landfill use on the movement and behaviour of resident white storks (Ciconia ciconia) from a partially migratory population",
+        "fr": "Les cigognes blanches sont-elles dépendantes de la malbouffe? Effets des décharges sur les déplacements et le comportement d’une population partiellement migratrice"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4791752/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "GPS-tagged Iberian birds used landfills year-round; this documents a regional change, not universal sedentariness."
+      ],
+      "prose_claims": [
+        "behavior.en.6",
+        "behavior.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 14,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "La migration",
+        "fr": "La migration"
+      },
+      "url": "https://alsace.lpo.fr/index.php/observer-les-oiseaux-en-alsace/la-migration",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "LPO Alsace describes individuals wintering in Africa, Spain or southern France, and some remaining locally."
+      ],
+      "prose_claims": [
+        "behavior.en.5",
+        "behavior.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 15,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White stork movements reveal the ecological connectivity between landfills and different habitats",
+        "fr": "Les déplacements de la Cigogne blanche révèlent la connectivité écologique entre décharges et autres milieux"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10045253/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "GPS study links Iberian and Moroccan landfills with wetlands and rice fields."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3",
+        "ecology.en.4",
+        "ecology.fr.4",
+        "conservation.en.6",
+        "conservation.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 12,
+        "total": 149,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ciconia ciconia (White Stork)",
+        "fr": "Ciconia ciconia (Cigogne blanche)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T22697691A281839847.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment dated 5 June 2025, published 2025: Least Concern, increasing, 526,000–588,000 mature individuals."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 14,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "LPO Alsace’s position on reinforcement of the White Stork population",
+        "fr": "Position de la LPO Alsace concernant le renforcement des populations de Cigogne blanche"
+      },
+      "url": "https://alsace.lpo.fr/images/stories/Articles/docLPO/ResolutiondeLPOAlsacecigbla.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "LPO Alsace records the decline, captive reinforcement and its 2002 call to end new releases."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 15,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bird of the month: White Stork",
+        "fr": "L’oiseau du mois: la Cigogne blanche"
+      },
+      "url": "https://www.birdlife.org/news/2024/03/13/migratory-bird-of-the-month-white-stork/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "BirdLife International notes the migratory species identity and adult white, black and red field marks."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 15,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White Stork",
+        "fr": "Cigogne blanche"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/white-stork/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife South Africa describes juvenile bill and plumage differences from adults."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 11,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Variation in White Stork diet along a climatic gradient and across rural-to-urban landscapes in North Africa",
+        "fr": "Variation du régime alimentaire de la Cigogne blanche selon le climat et les paysages en Afrique du Nord"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27582284/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "North African study found diet composition adapts across climatic and rural-to-urban gradients."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 12,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict one adult Ciconia ciconia standing naturally on a pure white background: white body, black flight feathers, red straight bill and red legs; do not depict the Oriental stork.",
+  "uncertainties": [
+    "The cited body dimensions are indicative account ranges; actual size varies individually and by sex.",
+    "Migration and landfill use vary among individuals and regional populations; Iberian tracking results should not be generalized to all European storks."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique followed by corrections, source allocation audit, EN/FR parity review and illustration inspection."
+}

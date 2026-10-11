@@ -1,0 +1,420 @@
+{
+  "id": "red_junglefowl",
+  "scientific": "Gallus gallus",
+  "group": "birds",
+  "name": {
+    "en": "Red junglefowl",
+    "fr": "Coq bankiva"
+  },
+  "sections": {
+    "overview": {
+      "en": "The red junglefowl is a wild galliform bird of the pheasant family, native to South and Southeast Asia and the principal wild ancestor of the domestic chicken. Whole-genome comparisons support an early contribution from the Southeast Asian subspecies Gallus gallus spadiceus, followed by gene flow among chicken populations and other junglefowl; domestication was not a simple, isolated event. Some regional chicken genomes also carry introgressed DNA from grey junglefowl (Gallus sonneratii), with lesser or rarer signals from Ceylon junglefowl (Gallus lafayettii) and green junglefowl (Gallus varius); these findings do not displace red junglefowl as the main ancestor.",
+      "fr": "Le coq bankiva est un oiseau galliforme de la famille des Phasianidés, originaire d’Asie du Sud et du Sud-Est, et le principal ancêtre sauvage de la poule domestique. Les comparaisons de génomes entiers appuient une contribution initiale de la sous-espèce d’Asie du Sud-Est Gallus gallus spadiceus, suivie de flux génétiques entre populations de poules et autres coqs sauvages ; la domestication ne fut pas un événement simple et isolé. Certains génomes régionaux de poules portent aussi de l’ADN introgressé du coq de Sonnerat (Gallus sonneratii), avec des signaux moindres ou plus rares du coq de Ceylan (Gallus lafayettii) et du coq vert (Gallus varius) ; ces résultats ne remplacent pas le coq bankiva comme ancêtre principal."
+    },
+    "identification": {
+      "en": "The wild adult male has a bright red comb and wattles, orange-gold neck feathers, a dark iridescent body, and long curved feathers over the tail; total length can reach about 70 centimetres including that tail. Females are smaller-looking and mottled brown, with a short tail and camouflage suited to nesting on the ground. A study of the Thai subspecies Gallus gallus spadiceus found breeding males with long golden neck hackles, unlike the shorter black feathers outside the breeding period. A wild-type outline alone cannot establish genetic purity, because domestic ancestry may be invisible in appearance. Domestic chickens have also been selected for rapid growth, so breed size and body form are not reliable norms for wild birds.",
+      "fr": "Le mâle adulte sauvage porte une crête et des caroncules rouge vif, des plumes du cou orange doré, un corps sombre irisé et de longues plumes courbées au-dessus de la queue ; la longueur totale peut atteindre environ 70 centimètres, queue comprise. Les femelles paraissent plus petites, sont brun moucheté et ont une queue courte ainsi qu’un camouflage adapté à la nidification au sol. Une étude de la sous-espèce thaïlandaise Gallus gallus spadiceus a observé chez les mâles reproducteurs de longues plumes dorées au cou, contrairement aux plumes noires plus courtes hors de la période de reproduction. Une silhouette de type sauvage ne permet pas à elle seule d’établir la pureté génétique, car une ascendance domestique peut rester invisible. Les poules domestiques ont aussi été sélectionnées pour une croissance rapide ; la taille et la forme des races ne donnent pas des normes fiables pour les oiseaux sauvages."
+    },
+    "habitat": {
+      "en": "Its native range spans the Indian subcontinent and much of mainland and island Southeast Asia, with regional subspecies occupying different areas. It uses old and secondary forest, mangroves, and forest edges, often feeding in a clearing or plantation beside cover.",
+      "fr": "Son aire naturelle couvre le sous-continent indien et une grande partie de l’Asie du Sud-Est continentale et insulaire, où les sous-espèces régionales occupent des secteurs différents. Il fréquente forêts anciennes ou secondaires, mangroves et lisières, et s’alimente souvent dans une clairière ou une plantation proche d’un couvert."
+    },
+    "diet": {
+      "en": "This opportunistic omnivore takes seeds, fruits, and small invertebrates, including ants, beetles, and termites; the mix changes with local and seasonal availability. It scratches through soil and leaf litter with its feet before pecking at food, often visiting open ground in the early morning and evening. Its digestive tract includes a crop and muscular gizzard; the gizzard mechanically breaks down ingested food.",
+      "fr": "Cet omnivore opportuniste consomme graines, fruits et petits invertébrés, notamment fourmis, coléoptères et termites ; la composition varie selon les ressources locales et la saison. Il gratte le sol et la litière avec ses pattes avant de picorer, et fréquente souvent les espaces ouverts tôt le matin et le soir. Son appareil digestif comprend un jabot et un gésier musculeux ; le gésier broie mécaniquement les aliments ingérés."
+    },
+    "behavior": {
+      "en": "Wary and mostly terrestrial, red junglefowl can fly strongly when alarmed and commonly roost in trees at night. Field observations describe small, changing groups: a male may accompany one or several females, while solitary males and females are also seen. Males crow repeatedly, often before dawn, and crowing helps reveal their presence; calls and displays also communicate between birds, though social patterns vary with place and season.",
+      "fr": "Méfiant et surtout terrestre, le coq bankiva peut s’envoler avec puissance lorsqu’il est alarmé et dort souvent dans les arbres. Les observations de terrain décrivent de petits groupes changeants : un mâle peut accompagner une ou plusieurs femelles, mais on voit aussi des individus solitaires. Les mâles chantent de façon répétée, souvent avant l’aube, et leur chant signale leur présence ; appels et parades assurent aussi la communication entre oiseaux, même si les relations sociales varient selon le lieu et la saison."
+    },
+    "reproduction": {
+      "en": "Breeding schedules differ by region: a two-year study of the subspecies Gallus gallus spadiceus in Malaysian agricultural landscapes recorded nests year-round, with a local peak in December. Nests averaged about four eggs, and captive incubation lasted roughly 19.5 days, close to three weeks. In Hainan, field researchers observed only females tending the brood, while accounts from southern Yunnan report both sexes incubating eggs; parental roles vary among the populations studied. Chicks hatch covered in down and leave the nest soon; a natural-history account places full feathering at about four to five weeks and sexual maturity near five months, somewhat later in females.",
+      "fr": "Le calendrier de reproduction varie selon les régions : une étude de deux ans sur la sous-espèce Gallus gallus spadiceus dans des paysages agricoles malaisiens a relevé des nids toute l’année, avec un pic local en décembre. Les nids contenaient en moyenne environ quatre œufs et l’incubation en captivité durait près de 19,5 jours, soit presque trois semaines. À Hainan, les chercheurs ont observé les femelles seules s’occuper de la couvée, tandis que des observations du Yunnan méridional rapportent la participation des deux sexes à la couvaison des œufs ; les rôles parentaux varient parmi les populations étudiées. Les poussins naissent couverts de duvet et quittent rapidement le nid ; un compte rendu d’histoire naturelle situe le plumage complet vers quatre à cinq semaines et la maturité sexuelle autour de cinq mois, un peu plus tard chez les femelles."
+    },
+    "ecology": {
+      "en": "Field observations and local reports from Thailand and Malaysia identify wild cats and birds of prey among predators of adult junglefowl. In Hainan, nest monitoring found predation to be a major cause of breeding failure, with coucals and rodents recorded at experimental nests and reptiles proposed as other potential predators.",
+      "fr": "Des observations et témoignages locaux de Thaïlande et de Malaisie citent les chats sauvages et les oiseaux de proie parmi les prédateurs des coqs bankiva adultes. À Hainan, le suivi des nids a montré que la prédation était une cause majeure d’échec de la reproduction ; des coucals et des rongeurs ont été enregistrés aux nids expérimentaux, et les reptiles proposés comme autres prédateurs possibles."
+    },
+    "conservation": {
+      "en": "BirdLife International’s global IUCN assessment published in 2024 classifies the species as Least Concern, a global risk category that does not guarantee the security of each local population. An Indian Wildlife Institute of India project reported a fragmented distribution and growing pressures in several states, and found ten domestic-chicken hybrids among 220 birds sampled at captive centres. A 2023 genome comparison found domestic ancestry of about 20–50 percent in the modern wild populations sampled, relative to museum birds collected roughly a century earlier, with strong variation among individuals and places; habitat change and contact with free-ranging poultry remain local concerns.",
+      "fr": "L’évaluation mondiale de BirdLife International pour la Liste rouge de l’UICN, publiée en 2024, classe l’espèce en préoccupation mineure ; cette catégorie de risque mondial ne garantit pas la sécurité de chaque population locale. En Inde, un projet du Wildlife Institute of India a signalé une répartition fragmentée et des pressions croissantes dans plusieurs États, et trouvé dix hybrides avec des poules domestiques parmi 220 oiseaux échantillonnés dans des centres d’élevage. Une comparaison génomique de 2023 a trouvé environ 20 à 50 % d’ascendance domestique chez les populations sauvages actuelles échantillonnées, par comparaison avec des oiseaux de musée collectés environ un siècle auparavant, avec de fortes variations entre individus et lieux ; changements d’habitat et contact avec les volailles en liberté restent des enjeux locaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red Junglefowl Life History, Cornell Lab of Ornithology",
+        "fr": "Histoire naturelle du coq bankiva, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Red_Junglefowl/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Forest habitats and forest-edge cover",
+        "Seasonal seeds, fruits, insects; ground scratching"
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 11,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gallus gallus, Animal Diversity Web, University of Michigan",
+        "fr": "Gallus gallus, Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Gallus_gallus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Sex-specific wild morphology and dimensions",
+        "Juvenile growth estimates"
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 190,
+        "notes_words": 8,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecology of the Red Jungle Fowl in Thailand and Malaya, Siam Society",
+        "fr": "Écologie du coq bankiva en Thaïlande et en Malaisie, Siam Society"
+      },
+      "url": "https://thesiamsociety.org/wp-content/uploads/2020/04/NHBSS_022_1-2n_Collias_EcologyOfTheRedJ.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Thailand and Malaya field observations",
+        "Groups, roosts, calls, and adult predators"
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 11,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "An Ecological Study of Red Junglefowl in Agricultural Areas, Universiti Putra Malaysia",
+        "fr": "Étude écologique du coq bankiva en milieu agricole, Universiti Putra Malaysia"
+      },
+      "url": "https://psasir.upm.edu.my/id/eprint/8223/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Selangor study, 1995–1997",
+        "Year-round nesting; clutch and incubation"
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 8,
+        "total": 109,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "863 genomes reveal the origin and domestication of chicken, Nature Communications",
+        "fr": "863 génomes révèlent l’origine et la domestication du poulet, Nature Communications"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7395088/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "787 genomes from chickens and wild Gallus",
+        "Spadiceus ancestry and selection for growth"
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 13,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Historic samples reveal loss of wild genotype through domestic chicken introgression, PLOS Genetics",
+        "fr": "Les échantillons historiques révèlent la perte du génotype sauvage par introgression de poules domestiques, PLOS Genetics"
+      },
+      "url": "https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1010551",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "Published 2023; modern and museum genomes",
+        "Domestic ancestry varies among populations"
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 11,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Conservation of red junglefowl in India, Wildlife Institute of India final report",
+        "fr": "Conservation du coq bankiva en Inde, rapport final du Wildlife Institute of India"
+      },
+      "url": "https://digitalrepository.wii.gov.in/items/af79ed62-6e9b-4679-9a66-9de0256b96df",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "India report: fragmented range and local pressures",
+        "10 hybrids among 220 captive birds"
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 13,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gallus gallus, IUCN Red List assessment 2024, BirdLife International",
+        "fr": "Gallus gallus, évaluation 2024 de la Liste rouge de l’UICN, BirdLife International"
+      },
+      "url": "https://dx.doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22679199A263732457.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment published in 2024",
+        "Least Concern is a global risk category"
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 12,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red Junglefowl Overview, Cornell Lab of Ornithology",
+        "fr": "Présentation du coq bankiva, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/redjun",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Native Asian forest range",
+        "Secretive bird; small groups"
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 8,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nesting success and potential nest predators of the red junglefowl, Frontiers in Ecology and Evolution",
+        "fr": "Réussite de nidification et prédateurs potentiels du coq bankiva, Frontiers in Ecology and Evolution"
+      },
+      "url": "https://www.frontiersin.org/journals/ecology-and-evolution/articles/10.3389/fevo.2023.1127139/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Hainan nests monitored in 2020–2021",
+        "Predation and female-only brooding in Hainan"
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 11,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Morphology, calling and habitat utilization of Gallus gallus spadiceus, Chulalongkorn University",
+        "fr": "Morphologie, chant et utilisation de l’habitat de Gallus gallus spadiceus, Université Chulalongkorn"
+      },
+      "url": "https://digital.car.chula.ac.th/chulaetd/58768/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Thai subspecies study of seasonal male plumage"
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 7,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The physiological and neuroendocrine correlates of hunger in the Red Junglefowl, Scientific Reports",
+        "fr": "Corrélats physiologiques et neuroendocriniens de la faim chez le coq bankiva, Scientific Reports"
+      },
+      "url": "https://www.nature.com/articles/s41598-017-17922-w",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Red junglefowl chick digestion study",
+        "Crop, gizzard contents, and food breakdown"
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 11,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The wild species genome ancestry of domestic chickens, BMC Biology",
+        "fr": "L’ascendance génomique des espèces sauvages chez les poules domestiques, BMC Biology"
+      },
+      "url": "https://bmcbiol.biomedcentral.com/articles/10.1186/s12915-020-0738-1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Domestic chicken genomes show Gallus introgression",
+        "Grey junglefowl signal is strongest"
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 11,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Illustration: existing adult male red junglefowl image; no new image requested.",
+  "uncertainties": [
+    "The exact timing and location of chicken domestication remain debated; current genomic evidence supports a principal early contribution from G. g. spadiceus but also later introgression.",
+    "Body-length measurements vary by sex, subspecies, and inclusion of elongated tail feathers; the approximately 70 cm figure is an upper total-length estimate, not a body-only mean.",
+    "Breeding season and social group composition vary among populations; the Malaysian agricultural study and Thai field observations are geographically and temporally limited."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and principal review; wild/domestic ancestry scoped, incubation distinguished from post-hatching care and inferred nest predators distinguished from experimental observations."
+}

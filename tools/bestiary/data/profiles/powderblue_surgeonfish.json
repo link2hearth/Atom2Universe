@@ -1,0 +1,366 @@
+{
+  "id": "powderblue_surgeonfish",
+  "scientific": "Acanthurus leucosternon",
+  "group": "fish",
+  "name": {
+    "en": "Powderblue surgeonfish",
+    "fr": "Chirurgien à poitrine blanche"
+  },
+  "sections": {
+    "overview": {
+      "en": "The powderblue surgeonfish is a reef-dwelling member of the surgeonfish family, Acanthuridae, native to the tropical Indian Ocean. Its blue body, dark head and white chest make it distinctive. It grazes on algae growing on reefs and may feed alone or join other fish. The species is best known from shallow reefs, where feeding grounds and territorial behaviour are tied to patches of algal growth.",
+      "fr": "Le chirurgien à poitrine blanche est un poisson de récif de la famille des Acanthuridés, originaire de l’océan Indien tropical. Son corps bleu, sa tête sombre et sa poitrine blanche le rendent reconnaissable. Il broute les algues des récifs et peut s’alimenter seul ou rejoindre d’autres poissons. Il fréquente surtout les récifs peu profonds, où ses zones d’alimentation et ses comportements territoriaux sont liés aux tapis d’algues."
+    },
+    "identification": {
+      "en": "Its deep body is flattened from side to side. A broad white band crosses the chest from the pectoral-fin bases, and a narrow pale line outlines the lower face. The dorsal fin is yellow with a pale edge and dark submarginal line; the tail base and paired spines are yellow. A pale crescent marks the dark tail fin. Each side of the tail base bears a sharp spine that folds into a groove and can be raised when the fish bends its tail. The Andaman Sea account reports specimens up to 23 cm. FishBase lists a maximum total length of 54 cm.",
+      "fr": "Son corps haut est aplati latéralement. Une large bande blanche traverse la poitrine depuis la base des nageoires pectorales, et un fin trait clair souligne le bas du visage. La nageoire dorsale jaune porte un bord pâle et un trait sombre ; la base de la queue et les épines sont jaunes. Un croissant clair marque la nageoire caudale sombre. De chaque côté de la queue, une épine acérée se replie dans un sillon et peut se redresser quand le poisson courbe la queue. L’entrée sur les poissons de la mer d’Andaman indique des individus jusqu’à 23 cm. FishBase donne une longueur totale maximale de 54 cm."
+    },
+    "habitat": {
+      "en": "It ranges through the tropical Indian Ocean, from eastern Africa to the Andaman Sea and Indonesia, reaching Bali; records include Cocos (Keeling) and Christmas islands. It occupies shallow coastal and island reefs, especially reef flats and upper outer slopes, generally down to about 25 metres. These sunlit surfaces support the benthic algae it eats, although feeding grounds vary among reef zones.",
+      "fr": "Il vit dans l’océan Indien tropical, de l’Afrique orientale à la mer d’Andaman et l’Indonésie, jusqu’à Bali ; il est aussi signalé aux îles Cocos (Keeling) et Christmas. Il fréquente les récifs côtiers et insulaires peu profonds, surtout les platiers et le haut des pentes externes, jusqu’à environ 25 mètres. Ces surfaces ensoleillées abritent les algues benthiques consommées, mais les ressources diffèrent selon les zones récifales."
+    },
+    "diet": {
+      "en": "Adults are herbivores that crop benthic algae, including short microalgal turf on hard reef surfaces. At Aldabra, researchers observed adults defending permanent feeding territories containing these algal mats. FishBase also records feeding on scattered algae and small growths in crevices. Each jaw bears a row of incisor-like teeth. High-speed recordings show the fish grasping algae, then pulling them free by rotating its head and closed jaws downward. An articulation within the lower jaw enables this movement without turning the whole body sideways. This may help feeding in strong currents, although that ecological advantage remains an interpretation of the mechanics.",
+      "fr": "Les adultes sont herbivores et broutent les algues benthiques, notamment les tapis courts de microalgues sur le récif. À Aldabra, des chercheurs ont observé des adultes défendant des territoires permanents contenant ces tapis. FishBase signale aussi des algues clairsemées et de petites pousses dans les anfractuosités. Chaque mâchoire porte une rangée de dents incisiformes. Des enregistrements rapides montrent le poisson saisissant les algues, puis les arrachant par une rotation vers le bas de la tête et des mâchoires fermées. Une articulation interne de la mâchoire inférieure permet ce mouvement sans tourner tout le corps de côté. Cela pourrait faciliter l’alimentation dans les courants forts, mais cet avantage écologique reste une interprétation du mécanisme."
+    },
+    "behavior": {
+      "en": "Individuals forage alone or gather in feeding groups. At Aldabra, adults defended permanent algal territories against other fishes, protecting access to food. The study describes territorial defence within and between species among surgeonfishes.",
+      "fr": "Les individus s’alimentent seuls ou se rassemblent pour brouter. À Aldabra, des adultes défendaient des territoires permanents riches en algues contre d’autres poissons, protégeant leur accès à la nourriture. L’étude décrit une défense territoriale entre individus de la même espèce et d’espèces différentes chez les poissons-chirurgiens."
+    },
+    "reproduction": {
+      "en": "The sexes are separate, and observations describe paired spawning during the breeding period. FishBase describes the species as monogamous. At Aldabra, the study documented pairs among permanently territorial surgeonfishes and no parental care in its study group. Eggs and sperm are released into open water for external fertilization. Surgeonfish yolk-sac larvae float near the surface, then swim and feed after the yolk is absorbed. They pass through a pelagic acronurus stage before reef settlement.",
+      "fr": "Les sexes sont séparés et les observations décrivent une ponte en couple pendant la période de reproduction. FishBase décrit l’espèce comme monogame. À Aldabra, l’étude a documenté des couples chez les poissons-chirurgiens durablement territoriaux et l’absence de soins parentaux dans le groupe étudié. Les ovules et spermatozoïdes sont libérés en pleine eau, avec fécondation externe. Chez les poissons-chirurgiens, les larves à sac vitellin flottent près de la surface, puis nagent et s’alimentent après sa résorption. Elles traversent un stade acronure pélagique avant de s’établir sur le récif."
+    },
+    "ecology": {
+      "en": "By cropping attached algae, this fish uses food produced on reef surfaces and participates in grazing those patches. Herbivorous reef fishes can limit algae that impede coral recruitment, although the strength of this effect varies among species. At Aldabra, adults defended small turf plots against competitors, dividing access to algal resources. Territories focus grazing on defended patches. Feeding aggregations bring several fish to shared food areas.",
+      "fr": "En broutant les algues fixées, ce poisson exploite une ressource des surfaces récifales et participe au broutage de ces zones. Les poissons herbivores peuvent limiter les algues qui freinent le recrutement des coraux, mais l’intensité de cet effet varie selon les espèces. À Aldabra, des adultes défendaient de petits tapis contre des concurrents, répartissant l’accès aux ressources algales. Ces territoires concentrent le broutage sur des zones défendues. Les rassemblements réunissent plusieurs poissons autour de ressources partagées."
+    },
+    "conservation": {
+      "en": "The IUCN Red List account lists the species as Least Concern, assessed on 3 May 2010 and published in 2012. On the Kenyan coast, people harvest it for subsistence and commercial fisheries. This species is also collected for the aquarium trade. Along Kenya’s southern coast, a fishery study found 27% of sampled Acanthurus leucosternon below estimated maturity length; beach seines caught the largest share of immature fish (64%). Its exploitation estimate was below the sustainable-yield threshold, unlike that of sympatric Acanthurus triostegus. Reef Life Survey recorded it at 27% of surveyed sites, averaging six fish per transect where present.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, selon une évaluation datée du 3 mai 2010 et publiée en 2012. Sur la côte kényane, il est pêché pour la subsistance et le commerce. L’espèce est aussi prélevée pour le commerce aquariophile. Sur la côte sud du Kenya, une étude halieutique a trouvé 27 % des Acanthurus leucosternon échantillonnés sous la taille estimée de maturité ; les sennes de plage capturaient la plus grande part de poissons immatures (64 %). Dans cette étude, son taux d’exploitation restait sous le seuil de rendement durable, contrairement à Acanthurus triostegus sympatrique. Reef Life Survey l’a relevé sur 27 % des sites visités, avec six poissons en moyenne par transect lorsqu’il était présent."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Fishes of Australia: Powderblue Surgeonfish",
+        "fr": "Fishes of Australia : chirurgien à poitrine blanche"
+      },
+      "url": "https://fishesofaustralia.net.au/Home/species/4959",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Indian Ocean reef distribution; chest band, fin colours, algal grazing."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 10,
+        "total": 198,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase: Acanthurus leucosternon",
+        "fr": "FishBase : Acanthurus leucosternon"
+      },
+      "url": "https://www.fishbase.se/summary/acanthurus-leucosternon",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "identification"
+      ],
+      "facts": [
+        "Shallow reefs, algal diet, grouping, monogamy, trade and 2010 status."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.en.4",
+        "overview.fr.3",
+        "overview.fr.4",
+        "diet.en.3",
+        "diet.fr.3",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.5",
+        "ecology.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 10,
+        "total": 182,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "Fishes of the Andaman Sea: Acanthurus leucosternon",
+        "fr": "Poissons de la mer d’Andaman : Acanthurus leucosternon"
+      },
+      "url": "https://www.kahaku.go.jp/research/db/zoology/Fishes_of_Andaman_Sea/contents/acanthuridae/02.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Deep body, caudal pattern and spine, distribution, length, shallow reef."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.4",
+        "identification.en.5",
+        "identification.en.6",
+        "identification.fr.2",
+        "identification.fr.4",
+        "identification.fr.5",
+        "identification.fr.6",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 10,
+        "total": 195,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "Robertson, Polunin & Leighton (1979), behavioral ecology of three surgeonfishes",
+        "fr": "Robertson, Polunin et Leighton (1979), écologie comportementale de trois poissons-chirurgiens"
+      },
+      "url": "https://doi.org/10.1007/BF00005448",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Aldabra feeding territories, algal turf, pair formation and no parental care."
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.2",
+        "behavior.en.3",
+        "behavior.fr.2",
+        "behavior.fr.3",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.fr.3",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 11,
+        "total": 185,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "DORIS: Chirurgien à poitrine blanche",
+        "fr": "DORIS : chirurgien à poitrine blanche"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Acanthurus-leucosternon-Chirurgien-a-poitrine-blanche-2199",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "diet",
+        "reproduction",
+        "habitat"
+      ],
+      "facts": [
+        "Incisor teeth, spawning, larval sequence, and maximum size records."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.4",
+        "diet.fr.4",
+        "reproduction.en.1",
+        "reproduction.en.4",
+        "reproduction.en.5",
+        "reproduction.en.6",
+        "reproduction.fr.1",
+        "reproduction.fr.4",
+        "reproduction.fr.5",
+        "reproduction.fr.6"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 9,
+        "total": 151,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "Reef Life Survey: Acanthurus leucosternon",
+        "fr": "Reef Life Survey : Acanthurus leucosternon"
+      },
+      "url": "https://reeflife.org/species/acanthurus-leucosternon/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Reef depth and underwater-survey occurrence and transect abundance."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.6",
+        "conservation.fr.6",
+        "identification.en.7",
+        "identification.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 8,
+        "total": 106,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "Comeros-Raynal et al. (2012), reef herbivores and extinction risk",
+        "fr": "Comeros-Raynal et al. (2012), herbivores récifaux et risque d’extinction"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0039825",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Herbivorous fish grazing can limit algae that impede coral recruitment."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 10,
+        "total": 89,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "Otwoma (2021), exploitation and life history of two Acanthurus on the Kenyan coast",
+        "fr": "Otwoma (2021), exploitation et histoire de vie de deux Acanthurus sur la côte kényane"
+      },
+      "url": "https://doi.org/10.1016/j.rsma.2021.101979",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Kenyan fisheries, monogamous pairing, immature catch, gear share and exploitation."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.2",
+        "conservation.en.4",
+        "conservation.en.5",
+        "conservation.fr.2",
+        "conservation.fr.4",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 10,
+        "total": 143,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    },
+    {
+      "title": {
+        "en": "Mihalitsis & Wainwright (2024) — Surgeonfish feeding mechanics",
+        "fr": "Mihalitsis et Wainwright (2024) — Mécanique alimentaire du poisson-chirurgien"
+      },
+      "url": "https://fishlab.ucdavis.edu/wp-content/uploads/sites/397/2024/01/Mihalitsis_CommunicationsBiology_2024.pdf",
+      "doi": "10.1038/s42003-023-05696-z",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Algal grip, ventral head and closed-jaw rotation; proposed current-related advantage."
+      ],
+      "prose_claims": [
+        "diet.en.5",
+        "diet.en.6",
+        "diet.en.7",
+        "diet.fr.5",
+        "diet.fr.6",
+        "diet.fr.7"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 10,
+        "total": 120,
+        "method": "Full referenced bilingual sentences; factual notes included."
+      }
+    }
+  ],
+  "illustration_notes": "Adult Acanthurus leucosternon with exact species-specific natural markings: powder-blue deep oval body, black head, broad white chest band, yellow dorsal fin and tail base, pale fins, crescent-marked tail and one folded yellow scalpel spine on each side of the caudal peduncle. Pure white background.",
+  "uncertainties": [
+    "Published maximum sizes differ: the Andaman Sea account reports specimens to 23 cm, whereas FishBase, DORIS and Reef Life Survey list 54 cm; the sources do not reconcile the records.",
+    "The IUCN Red List page was not directly retrievable; Least Concern and the 3 May 2010 assessment date were cross-checked in FishBase, and the 2012 publication is cited in Museums Victoria’s bibliography.",
+    "Species-specific spawning frequency and offspring survival are not established by the sources here; larval sequence statements are explicitly family-level."
+  ],
+  "reviewed": true,
+  "review_note": "Root and independent critic verified exact species, geographically scoped fisheries, family-level larval sequence and source allocation. Feeding mechanism corrected using species-specific 2024 high-speed study; illustration independently accepted.",
+  "source_audit_version": 1
+}

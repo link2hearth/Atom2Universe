@@ -1,0 +1,351 @@
+{
+  "id": "baikal_seal",
+  "scientific": "Pusa sibirica",
+  "group": "mammals",
+  "name": {
+    "en": "Baikal seal",
+    "fr": "Phoque du Baïkal"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Baikal seal, or nerpa, is a true seal whose entire natural range lies in Lake Baikal, southern Siberia. It is the only mammal native to the lake and the only seal species living exclusively in freshwater.",
+      "fr": "Le phoque du Baïkal, appelé nerpa en russe, est un phoque véritable dont toute l’aire naturelle se trouve dans le lac Baïkal, en Sibérie méridionale. C’est le seul mammifère indigène du lac et la seule espèce de phoque vivant exclusivement en eau douce."
+    },
+    "identification": {
+      "en": "Adults are about 1.1–1.4 metres long; males are slightly larger at physical maturity. The FAO guide reports adults around 80–90 kilograms. Like other true seals, the Baikal seal has no visible external ear flaps; its foreflippers steer while its hind flippers propel it underwater.",
+      "fr": "L’adulte mesure environ 1,1 à 1,4 mètre ; les mâles sont légèrement plus grands à maturité physique. Le guide de la FAO indique un poids adulte d’environ 80 à 90 kilogrammes. Comme les autres phoques véritables, le phoque du Baïkal n’a pas de pavillons externes visibles ; ses nageoires antérieures le dirigent tandis que ses nageoires postérieures le propulsent sous l’eau."
+    },
+    "habitat": {
+      "en": "This freshwater seal is endemic to Lake Baikal and its connecting streams. In winter, seals breathe through holes in the ice, while females shelter newborns in snow lairs on the frozen lake.",
+      "fr": "Ce phoque d’eau douce est endémique du lac Baïkal et des cours d’eau qui le relient. En hiver, les phoques respirent par des trous dans la glace, tandis que les femelles abritent les nouveau-nés dans des tanières de neige sur le lac gelé."
+    },
+    "diet": {
+      "en": "Baikal seals hunt underwater, taking small endemic golomyanka and sculpins as well as other freshwater fishes; the mix changes with season and location. They also eat amphipods, tiny crustaceans that form dense swarms in some parts of the lake. Video and tag data show seals pursuing these prey at night, when amphipods rise in the water column and fish shift into shallower depths. Behind the canines, its cheek teeth have closely spaced cusps that form a comb-like filter. This lets it expel water while retaining tiny prey, making repeated captures more efficient.",
+      "fr": "Sous l’eau, le phoque capture surtout de petites golomyankas endémiques et des chabots, mais aussi d’autres poissons d’eau douce ; le menu varie selon la saison et le lieu. Il mange également des amphipodes, de minuscules crustacés qui forment des essaims denses dans certaines zones du lac. Des vidéos et des données d’instruments montrent qu’il poursuit ces proies la nuit, lorsque les amphipodes remontent dans la colonne d’eau et que les poissons gagnent des profondeurs moindres. Derrière les canines, les dents portent des pointes rapprochées formant un filtre en peigne. Il peut ainsi rejeter l’eau tout en retenant les petites proies, ce qui rend les captures successives plus efficaces."
+    },
+    "behavior": {
+      "en": "Most seals forage alone and remain spread across the lake in winter, although several may share access to an ice hole. Instrumented seals commonly dived for 10–20 minutes to depths of 50–200 metres; the greatest depth reported in the FAO guide was 300 metres. Baikal seals have been heard vocalizing both above and below water, and reported sound types differ between sexes; recordings remain scarce, so their social function is not settled.",
+      "fr": "La plupart des phoques chassent seuls et restent dispersés sur le lac en hiver, même si plusieurs peuvent utiliser le même accès à travers la glace. Les phoques équipés d’instruments plongent généralement pendant 10 à 20 minutes, à 50–200 mètres de profondeur ; le guide de la FAO rapporte une profondeur maximale de 300 mètres. Des vocalisations du phoque du Baïkal ont été entendues hors de l’eau et sous l’eau, et les types de sons rapportés diffèrent selon le sexe ; les enregistrements restent rares et leur fonction sociale n’est donc pas établie."
+    },
+    "reproduction": {
+      "en": "Pups are born in snow lairs on lake ice from mid-February through March. Newborns measure about 64–66 centimetres, weigh 4–4.2 kilograms and have white lanugo, a soft first coat. They stay in the den and generally avoid water for their first two or three weeks. Mating takes place in water, mainly in the first half of April, and pregnancy lasts about 11 months. Lactation lasts around 2.5 months and overlaps with the mating season.",
+      "fr": "Les petits naissent dans des tanières de neige sur la glace du lac, de la mi-février à la fin mars. À la naissance, ils mesurent 64–66 centimètres, pèsent 4–4,2 kilogrammes et portent un lanugo blanc, un duvet doux. Ils restent dans la tanière et évitent généralement l’eau pendant leurs deux ou trois premières semaines. L’accouplement a lieu dans l’eau, surtout durant la première moitié d’avril, et la gestation dure environ onze mois. L’allaitement dure environ deux mois et demi et chevauche la période d’accouplement."
+    },
+    "ecology": {
+      "en": "By eating amphipods directly, it draws energy from a lower level of the food chain than when it eats fish that consume those crustaceans. This shorter pathway loses less energy between successive consumers and helps explain how a nutrient-poor lake supports many seals.",
+      "fr": "En mangeant directement les amphipodes, il prélève l’énergie à un niveau plus bas de la chaîne alimentaire que lorsqu’il consomme les poissons qui mangent ces crustacés. Ce trajet plus court limite les pertes d’énergie entre consommateurs successifs et contribue à expliquer comment un lac pauvre en nutriments peut abriter de nombreux phoques."
+    },
+    "conservation": {
+      "en": "Goodman’s IUCN assessment lists Least Concern; it was assessed on 10 July 2015 and published in 2016. Commercial hunting rose in the twentieth century; the population grew after early-century hunting but later declined with harvest and distemper outbreaks. A distemper-related morbillivirus epidemic struck the population in 1987–1988. Pollution, bycatch, illegal hunting and shrinking breeding ice remain concerns. A 2022 field project reported that tourist activity can disturb seals at the Ushkanyi Islands haul-outs.",
+      "fr": "L’évaluation de Goodman pour l’UICN classe l’espèce dans la catégorie « Préoccupation mineure » ; elle a été réalisée le 10 juillet 2015 et publiée en 2016. La chasse commerciale s’est intensifiée au XXe siècle ; la population a augmenté après les prélèvements du début du siècle, puis a reculé avec les captures et les épizooties de maladie de Carré. Une épidémie de morbillivirus apparenté à la maladie de Carré a touché la population en 1987–1988. La pollution, les prises accessoires, le braconnage et la réduction de la glace de reproduction restent préoccupants. Un projet de terrain mené en 2022 a signalé que le tourisme peut déranger les phoques sur les reposoirs des îles Ouchkany."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pusa sibirica (Baikal seal)",
+        "fr": "Pusa sibirica (Phoque du Baïkal)"
+      },
+      "url": "https://animaldiversity.org/accounts/Pusa_sibirica/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Michigan species account: freshwater range, body size, solitary habits and breeding."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 11,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pusa sibirica: The IUCN Red List of Threatened Species 2016",
+        "fr": "Pusa sibirica : Liste rouge de l’UICN des espèces menacées, 2016"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T41676A45231738.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Goodman assessment: Least Concern, dated population and threat history."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carnivora - Pinnipedia - Phocidae",
+        "fr": "Carnivora - Pinnipedia - Phocidae"
+      },
+      "url": "https://www.fao.org/4/t0725e/t0725e39.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FAO guide documents adult size, ice lairs, pups and diving."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 10,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ultrahigh foraging rates of Baikal seals make tiny endemic amphipods profitable in Lake Baikal",
+        "fr": "Le rythme de chasse élevé du phoque du Baïkal rend rentables de minuscules amphipodes endémiques"
+      },
+      "url": "https://doi.org/10.1073/pnas.2014021117",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Field video and tags document nocturnal feeding on endemic amphipods and fish."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 12,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New Information on the Number and Status of the Baikal seals in 2023 has been obtained",
+        "fr": "De nouvelles informations sur le nombre et l’état des phoques du Baïkal en 2023"
+      },
+      "url": "https://baikalfoundation.ru/en/new-information-on-the-number-and-status-of-the-baikal-seals-in-2023-has-been-obtained/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "2022 Ushkanyi Islands field project found noisy tourist visits could disturb haul-out seals."
+      ],
+      "prose_claims": [
+        "conservation.en.5",
+        "conservation.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 13,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Round table on morbilliviruses in marine mammals",
+        "fr": "Table ronde sur les morbillivirus chez les mammifères marins"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1481361/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Baikal seal epidemic linked to a distemper-related morbillivirus."
+      ],
+      "prose_claims": [
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 8,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Species Information - The Pinnipeds",
+        "fr": "Informations sur les espèces - The Pinnipeds"
+      },
+      "url": "https://www.pinnipeds.org/seal-information/species-information-pages",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Specialist pinniped account explains true seals lack visible ear flaps and swim with hindflippers."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 14,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pinniped Sounds",
+        "fr": "Les sons des pinnipèdes"
+      },
+      "url": "https://link.springer.com/chapter/10.1007/978-3-031-77022-7_5",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Chapter reports scarce Baikal recordings above water and underwater, differing by sex."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 12,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A 9,000 Year History of Seal Hunting on Lake Baikal, Siberia: The Zooarchaeology of Sagan-Zaba II",
+        "fr": "Une histoire de 9 000 ans de chasse au phoque sur le lac Baïkal : l’archéozoologie de Sagan-Zaba II"
+      },
+      "url": "https://doi.org/10.1371/journal.pone.0128314",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Paper reports in-water mating, an eleven-month pregnancy and lactation of about two and a half months."
+      ],
+      "prose_claims": [
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "reproduction.en.5",
+        "reproduction.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 16,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mystery of Siberian freshwater seal food choice solved",
+        "fr": "Le mystère de l’alimentation du phoque d’eau douce sibérien résolu"
+      },
+      "url": "https://www.nipr.ac.jp/english/info/notice/20201127.html",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Comb-like teeth expel water; direct amphipod consumption shortens the food chain."
+      ],
+      "prose_claims": [
+        "diet.en.4",
+        "diet.en.5",
+        "diet.fr.4",
+        "diet.fr.5",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 11,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the rounded head, compact body, silvery coat, short foreflippers and claws beside an ice breathing hole; include a snow lair and one white-coated pup without implying a marine setting.",
+  "uncertainties": [
+    "The population size and trend vary among surveys; the 2016 assessment describes limits in survey coverage and comparability. The assessment year must not be mistaken for a current population census."
+  ],
+  "review_notes": [
+    "Root added sourced explanation of comb-like teeth and the ecological energy pathway, from the research institute’s original report, instead of leaving generic ecological prose."
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual editorial review; sensitive taxonomy, life-cycle and conservation statements checked against cited primary sources; source accounting passed; independent artwork review accepted.",
+  "source_audit_version": 1
+}

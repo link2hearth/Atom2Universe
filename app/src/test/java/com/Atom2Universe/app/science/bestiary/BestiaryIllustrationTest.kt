@@ -63,7 +63,8 @@ class BestiaryIllustrationTest {
             bitmap.recycle()
         }
         hashes.values.filter { it.size > 1 }.forEach { failures += "Repeated artwork: ${it.joinToString(" / ")}" }
-        if (totalBytes > 20L * 1024 * 1024) failures += "Illustration catalogue exceeds 20 MiB: $totalBytes bytes"
+        val budget = minOf(50L * 1024 * 1024, AnimalCatalog.species.size * 50L * 1024)
+        if (totalBytes > budget) failures += "Illustration catalogue exceeds an average 50 KiB per animal or 50 MiB total: $totalBytes bytes"
         assertTrue(failures.joinToString("\n"), failures.isEmpty())
     }
 

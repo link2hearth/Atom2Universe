@@ -1,0 +1,133 @@
+{
+  "id": "domestic_cat",
+  "scientific": "Felis catus",
+  "group": "mammals",
+  "name": {
+    "en": "Domestic cat",
+    "fr": "Chat domestique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The domestic cat is a small carnivorous mammal descended chiefly from Near Eastern wildcats. Its association with people began around early farming settlements, where rodents gathered near stored grain. Cats spread widely with human travel while retaining much of their ancestral hunting behaviour.",
+      "fr": "Le chat domestique est un petit mammifère carnivore issu de chats sauvages du Proche-Orient. Sa relation avec les humains s’est développée près des premiers villages agricoles, où les rongeurs fréquentaient les réserves. Il s’est ensuite dispersé avec les voyageurs, en gardant ses aptitudes de chasse."
+    },
+    "identification": {
+      "en": "A compact, four-legged feline, it has a flexible spine, padded feet, sensitive whiskers and retractile claws. Coat length, colour, pattern, body size and tail shape vary widely among individuals and breeds; most cats nevertheless share a broadly similar, agile build.",
+      "fr": "Ce félin au corps compact possède une colonne souple, des coussinets, des vibrisses sensibles et des griffes rétractiles. Longueur, couleur et motifs du pelage, taille et forme de la queue varient selon individus et races ; sa silhouette reste généralement agile."
+    },
+    "habitat": {
+      "en": "Cats now occur worldwide, especially around settlements. They live in homes, farms, towns and suburbs, while unowned or free-roaming populations often remain near present or former human habitation. Shelter, food supplied by people and access to small prey influence where they settle.",
+      "fr": "Présent dans le monde entier, le chat vit surtout près des habitations : maisons, fermes, villes et banlieues. Les populations sans propriétaire ou en liberté restent souvent proches des lieux habités. Abris, nourriture humaine et petites proies influencent leur implantation."
+    },
+    "diet": {
+      "en": "Cats are obligate meat-eaters. They stalk and ambush small prey, commonly rodents and birds, and may also catch reptiles, insects or fish. A free-roaming cat can hunt even when people provide food, so hunting is not simply a response to hunger.",
+      "fr": "Le chat est un carnivore strict. Il approche ses proies puis leur tend une embuscade ; il capture surtout rongeurs et oiseaux, mais aussi reptiles, insectes ou poissons. Même nourri, un chat qui sort peut chasser : la faim n’explique pas seule ce comportement."
+    },
+    "behavior": {
+      "en": "Hunting combines quiet approach, a sudden pounce and a bite; play rehearses parts of this sequence. Cats communicate through posture, sound, touch and scent marks. Though often solitary and territorial, they can form social groups where food and shelter are concentrated.",
+      "fr": "La chasse associe approche silencieuse, bond brusque et morsure ; le jeu répète certaines étapes. Le chat communique par postures, sons, contacts et marques odorantes. Souvent solitaire et territorial, il peut néanmoins former des groupes là où nourriture et abris se concentrent."
+    },
+    "reproduction": {
+      "en": "Females can cycle repeatedly during a breeding season, with timing affected by daylight and conditions. Mating commonly induces ovulation; pregnancy lasts roughly two months. Kittens are born dependent, nursed by their mother, and gradually weaned over their first weeks; paternal care is uncommon.",
+      "fr": "Les femelles ont plusieurs cycles durant la saison de reproduction, selon durée du jour et conditions locales. L’accouplement déclenche l’ovulation ; la gestation dure environ deux mois. Dépendants à la naissance, les chatons tètent leur mère puis sont sevrés ; les soins paternels sont rares."
+    },
+    "ecology": {
+      "en": "Free-ranging cats also kill native wildlife, and research documents predation across many regions and islands. The outcome varies with prey, habitat, cat density and human feeding; island species can be especially vulnerable.",
+      "fr": "En liberté, ils tuent aussi la faune indigène ; des études documentent cette prédation dans plusieurs régions et îles. Ses effets dépendent des proies, du milieu, de la densité et du nourrissage ; les espèces insulaires restent vulnérables."
+    },
+    "conservation": {
+      "en": "The species is widespread through human care, but introduced, free-ranging populations create local conservation problems where native prey lack defences against mammalian hunters. Such impacts concern particular ecosystems and do not describe every domestic cat.",
+      "fr": "Répandu grâce aux humains, le chat pose des problèmes locaux lorsque des populations introduites et libres chassent une faune indigène peu adaptée aux prédateurs mammaliens. Ces impacts concernent certains écosystèmes, pas chaque chat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Felis catus (domestic cat)",
+        "fr": "Felis catus (chat domestique)"
+      },
+      "url": "https://animaldiversity.org/accounts/Felis_catus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "identification",
+        "reproduction",
+        "behavior",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Animal Diversity Web, University of Michigan Museum of Zoology: settlement-associated habitat; body variation; induced ovulation and approximate gestation; solitary and territorial behaviours; carnivorous diet and prey."
+      ]
+    },
+    {
+      "title": {
+        "en": "The palaeogenetics of cat dispersal in the ancient world",
+        "fr": "La paléogénétique de la dispersion du chat dans le monde ancien"
+      },
+      "url": "https://www.nature.com/articles/s41559-017-0139",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Ancient DNA study: Near Eastern and Egyptian cat populations contributed to domestic-cat ancestry at different historical times."
+      ]
+    },
+    {
+      "title": {
+        "en": "Drivers and facilitators of hunting behaviour in domestic cats and options for management",
+        "fr": "Facteurs du comportement de chasse des chats domestiques et pistes de gestion"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/mam.12230",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Review describes commensal origins around farming settlements, retained solitary hunting and hypercarnivory; notes variation in hunting by cats with or without human care."
+      ]
+    },
+    {
+      "title": {
+        "en": "Review and synthesis of the global literature on domestic cat impacts on wildlife",
+        "fr": "Revue et synthèse mondiale des travaux sur les effets des chats domestiques sur la faune"
+      },
+      "url": "https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2656.13745",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Synthesis of 332 studies across 37 nations and at least 74 islands documents widespread research on free-roaming-cat impacts; predation dominates the evidence, while other effects are less studied."
+      ]
+    },
+    {
+      "title": {
+        "en": "Chat domestique",
+        "fr": "Chat domestique"
+      },
+      "url": "https://www.mnhn.fr/fr/chat-domestique",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Muséum national d’Histoire naturelle: coat varies among breeds and individuals; feral cats retain hunting ability; introduced cats can threaten other species, particularly on islands."
+      ]
+    }
+  ],
+  "illustration_notes": "Adult domestic cat, natural and variable coat morphology, standing in a neutral full-body pose on a PURE WHITE background.",
+  "uncertainties": [
+    "The precise timing and sequence of domestication remain debated; the evidence supports Near Eastern ancestry and later Egyptian contribution, rather than a single simple event.",
+    "Wildlife effects vary greatly by place and have been studied unevenly; no single global impact estimate is given here."
+  ],
+  "reviewed": true,
+  "review_note": "Independent bilingual/source critique; coordinator checked reported omissions against final text and removed unsupported assertions."
+}

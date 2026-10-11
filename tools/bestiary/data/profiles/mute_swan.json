@@ -1,0 +1,434 @@
+{
+  "id": "mute_swan",
+  "scientific": "Cygnus olor",
+  "group": "birds",
+  "name": {
+    "en": "Mute Swan",
+    "fr": "Cygne tuberculé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Mute Swan is a large Eurasian waterfowl of lakes, slow rivers, marshes and sheltered coasts, feeding and nesting close to water.",
+      "fr": "Le Cygne tuberculé est un grand oiseau d’eau d’Eurasie, présent sur les lacs, cours d’eau lents, marais et côtes abritées, où il se nourrit et niche près de l’eau."
+    },
+    "identification": {
+      "en": "Adults are white, with black legs, a bright orange bill and a black knob at its base; typical birds measure 127–152 cm long, with a wingspan of 208–238 cm. Males are generally larger than females, although the sexes look alike. Young cygnets are downy and pale grey, with dark bills and legs; older juveniles may show brown-grey feathers as their plumage gradually turns white during the first year. The orange bill and black knob distinguish this species from the Whooper Swan (Cygnus cygnus) and Tundra Swan (Cygnus columbianus), whose bills lack that knob. Both sexes bear the fleshy black knob; it is usually larger in males and varies seasonally, peaking near hatching in one monitored population, so size alone cannot reliably determine sex.",
+      "fr": "Les adultes sont blancs, avec les pattes noires, un bec orange vif et un tubercule noir à sa base ; ils mesurent typiquement de 127 à 152 cm de long, pour une envergure de 208 à 238 cm. Les mâles sont généralement plus grands que les femelles, bien que les sexes se ressemblent. Les cygneaux sont couverts de duvet gris pâle, avec le bec et les pattes sombres ; les juvéniles plus âgés peuvent porter des plumes gris-brun, leur plumage devenant progressivement blanc au cours de la première année. Le bec orange et son tubercule noir distinguent cette espèce du Cygne chanteur (Cygnus cygnus) et du Cygne siffleur (Cygnus columbianus), dont le bec n’a pas ce tubercule. Les deux sexes portent ce tubercule charnu noir ; il est généralement plus grand chez le mâle et varie selon la saison, avec un maximum près de l’éclosion dans une population suivie, si bien que sa taille seule ne permet pas de déterminer sûrement le sexe."
+    },
+    "habitat": {
+      "en": "It uses freshwater and brackish wetlands, including ponds, lakes, estuaries and sheltered bays, nesting on islands or vegetated banks near water.",
+      "fr": "Il fréquente les zones humides d’eau douce ou saumâtre, notamment les étangs, lacs, estuaires et baies abritées, et niche près de l’eau sur des îles ou des rives végétalisées."
+    },
+    "diet": {
+      "en": "Aquatic vegetation is the main food, though Mute Swans also take animal prey such as snails, insects and small aquatic animals. They skim plants from the surface, tip forward to reach submerged growth and rake the bottom with their feet to uncover tubers. In the eastern Gulf of Finland, one study found a seasonal shift from stranded filamentous algae in late winter to new plant growth during egg laying and incubation.",
+      "fr": "La végétation aquatique constitue l’essentiel de leur alimentation, mais les Cygnes tuberculés prennent aussi des proies animales comme des escargots, des insectes et de petits animaux aquatiques. Ils glanent les plantes en surface, basculent vers l’avant pour atteindre la végétation immergée et remuent le fond avec leurs pattes pour découvrir des tubercules. Dans l’est du golfe de Finlande, une étude a relevé un changement saisonnier : des algues filamenteuses échouées à la fin de l’hiver, puis de nouvelles pousses lors de la ponte et de l’incubation."
+    },
+    "behavior": {
+      "en": "In one Midlands study, 85% of paired breeders retained the same mate from year to year if both survived. During nesting, pairs defend nest territories with raised-wing displays and arched necks. Though called mute, the swan is not silent: it hisses and snorts when disturbed and gives muffled calls during territorial encounters. After breeding, adults shed all their flight feathers at once and cannot fly for roughly six to eight weeks.",
+      "fr": "Dans une étude menée dans les Midlands, 85 % des couples reproducteurs gardèrent le même partenaire d’une année à l’autre, si les deux oiseaux survivaient. Pendant la nidification, les couples défendent leur territoire avec les ailes relevées et le cou arqué. Malgré son nom, le cygne n’est pas silencieux : il siffle et souffle lorsqu’il est dérangé et lance des appels étouffés lors des affrontements territoriaux. Après la reproduction, les adultes perdent simultanément toutes leurs rémiges et ne peuvent voler pendant environ six à huit semaines."
+    },
+    "reproduction": {
+      "en": "Pairs build a large nest from reeds and other plants; males choose the site and begin the platform, while females shape the cup. British records give a typical clutch of four to seven eggs, usually incubated by the female for about 34–44 days. Newly hatched cygnets can move around the nest, feed and enter the water once their down dries. British records report a typical fledging duration of 120–150 days.",
+      "fr": "Les couples construisent un grand nid de roseaux et d’autres plantes ; le mâle choisit le site et commence la plateforme, tandis que la femelle façonne la coupe. Les données britanniques indiquent une ponte typique de quatre à sept œufs, couvés généralement par la femelle pendant environ 34 à 44 jours. Une fois leur duvet sec, les cygneaux peuvent se déplacer autour du nid, s’alimenter et entrer dans l’eau. Les jeunes prennent leur envol vers 120 à 150 jours, selon les données britanniques."
+    },
+    "ecology": {
+      "en": "Grazing submerged vegetation can change the biomass and structure of shallow plant beds, although effects vary with local conditions. In an Illinois experiment, swan access was associated with lower below-ground plant biomass, while above-ground biomass did not differ detectably. In Chesapeake Bay, introduced Mute Swans (Cygnus olor) remain year-round, unlike Tundra Swans (Cygnus columbianus), which migrate there for winter. Across Europe, populations are generally resident, although cold weather can displace birds locally.",
+      "fr": "Le broutage de la végétation immergée peut modifier la biomasse et la structure des herbiers peu profonds, mais ses effets varient selon les conditions locales. Dans une expérience menée dans l’Illinois, leur accès était associé à une biomasse végétale souterraine moindre, tandis que la biomasse aérienne ne différait pas de façon détectable. Dans la baie de Chesapeake, les Cygnes tuberculés (Cygnus olor) introduits restent toute l’année, contrairement aux Cygnes siffleurs (Cygnus columbianus), qui y migrent pour l’hiver. En Europe, les populations sont généralement sédentaires, mais le froid peut provoquer des déplacements locaux."
+    },
+    "conservation": {
+      "en": "BirdLife International’s 2016 global IUCN Red List assessment classified the Mute Swan as Least Concern. The species is native across much of Eurasia and introduced in North America. Locally dense introduced flocks can compete with native waterbirds and affect aquatic vegetation. In Britain, population recovery followed severe declines associated with lead poisoning from swallowed fishing weights and shot; restrictions on lead weights and improved protection helped recovery.",
+      "fr": "Dans son évaluation mondiale de 2016 pour la Liste rouge de l’UICN, BirdLife International a classé le Cygne tuberculé en préoccupation mineure. L’espèce est indigène dans une grande partie de l’Eurasie et introduite en Amérique du Nord. Des groupes introduits localement denses peuvent concurrencer les oiseaux d’eau indigènes et affecter la végétation aquatique. En Grande-Bretagne, le rétablissement des effectifs a suivi de fortes baisses associées à l’intoxication au plomb provenant de plombs de pêche et de chasse avalés ; les restrictions sur les plombs de pêche et une meilleure protection ont favorisé cette reprise."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mute Swan Identification",
+        "fr": "Identification du Cygne tuberculé"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Mute_Swan/id",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Adult size, bill and age-linked plumage stages."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 7,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal changes in male and female bill knob size in the mute swan Cygnus olor",
+        "fr": "Variations saisonnières de la taille du tubercule du bec chez le Cygne tuberculé"
+      },
+      "url": "https://nsojournals.onlinelibrary.wiley.com/doi/10.1111/j.1600-048X.2008.04515.x",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Both sexes have knobs; male size peaks near hatching in monitored birds."
+      ],
+      "prose_claims": [
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 12,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mute Swan Life History",
+        "fr": "Cycle de vie du Cygne tuberculé"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Mute_Swan/lifehistory",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Aquatic-plant foraging, nest roles and cygnet development."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 7,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal changes in the diet of Mute Swans Cygnus olor in the recently colonised eastern Gulf of Finland",
+        "fr": "Variations saisonnières du régime du Cygne tuberculé dans l’est du golfe de Finlande"
+      },
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/153433",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Eastern Gulf study: filamentous algae first, new plant growth later."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 10,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mute Swan Sounds",
+        "fr": "Sons du Cygne tuberculé"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Mute_Swan/sounds",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Calls, hisses, snorts and wing sounds refute literal silence."
+      ],
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 9,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mute Swan BirdFacts",
+        "fr": "Fiche espèce : Cygne tuberculé"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/mute-swan",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "British clutch, incubation and fledging records; population history and lead."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 134,
+        "notes_words": 10,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cygnus olor: Animal Diversity Web",
+        "fr": "Cygnus olor : Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Cygnus_olor/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "University of Michigan species account summarizes Eurasian distribution and habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 10,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Impacts of mute swans on submerged aquatic vegetation in Illinois River Valley backwaters",
+        "fr": "Effets des cygnes tuberculés sur la végétation aquatique immergée des bras morts de l’Illinois"
+      },
+      "url": "https://pubs.usgs.gov/publication/70173501",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Exclosures found lower below-ground, but not above-ground, plant biomass."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 9,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The exotic mute swan in Chesapeake Bay, USA",
+        "fr": "Le Cygne tuberculé exotique dans la baie de Chesapeake, États-Unis"
+      },
+      "url": "https://pubs.usgs.gov/publication/5211225",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "Chesapeake population history; contrast with migratory tundra swans."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 8,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The IUCN Red List of Threatened Species 2016: Cygnus olor",
+        "fr": "The IUCN Red List of Threatened Species 2016 : Cygnus olor"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22679839A85946855.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International’s global 2016 Red List assessment: Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 9,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecological Risk Screening Summary - Mute Swan (Cygnus olor) - Uncertain Risk",
+        "fr": "Évaluation synthétique du risque écologique - Cygne tuberculé - Risque incertain"
+      },
+      "url": "https://www.fws.gov/media/ecological-risk-screening-summary-mute-swan-cygnus-olor-uncertain-risk",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Introduced North American populations can locally affect native waterbirds and plants."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 11,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mute Swan - Swan Specialist Group",
+        "fr": "Cygne tuberculé - Swan Specialist Group"
+      },
+      "url": "https://swansg.org/the-swans/mute/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "European populations are mostly resident but can shift in cold weather."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.4",
+        "ecology.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 11,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Moult in Birds",
+        "fr": "Moult in Birds"
+      },
+      "url": "https://www.bto.org/sites/default/files/moult-in-birds-web.pdf",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Flight feathers moult simultaneously; flightlessness commonly lasts six to eight weeks."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 11,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pairing and breeding of mute swans",
+        "fr": "Pairing and breeding of mute swans"
+      },
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/154512",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "In one Midlands population, 85% of paired breeders retained mates if both survived."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 13,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Conserver l’illustration originale ; vérifier le tubercule noir à la base du bec orange.",
+  "uncertainties": [
+    "La taille du tubercule varie avec le sexe et la condition reproductive ; les valeurs de masse publiées couvrent une amplitude importante."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Independent scientific critique and second review confirm revised typical clutch, gradual plumage change, diet and foraging, regional movements, wing moult, fledging and primary institutional corroboration of the 2016 IUCN record. Original illustration reviewed and preserved."
+}

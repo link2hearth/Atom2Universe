@@ -1,0 +1,382 @@
+{
+  "id": "lowland_paca",
+  "scientific": "Cuniculus paca",
+  "group": "mammals",
+  "name": {
+    "en": "Lowland paca",
+    "fr": "Paca de plaine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The lowland paca is a large, mostly nocturnal rodent of tropical America, from eastern Mexico through Central America and much of South America. It belongs to Cuniculidae, the paca family; the agoutis are separate rodents in genus Dasyprocta, despite the similar common name. Its close relative, the mountain paca, is a distinct species associated with higher Andean forests.",
+      "fr": "Le paca de plaine est un grand rongeur surtout nocturne des régions tropicales américaines, de l’est du Mexique à l’Amérique centrale et à une grande partie de l’Amérique du Sud. Il appartient aux Cuniculidés, la famille des pacas ; les agoutis sont des rongeurs distincts du genre Dasyprocta, malgré la proximité de leurs noms communs. Son proche parent, le paca de montagne, est une autre espèce des forêts andines d’altitude."
+    },
+    "identification": {
+      "en": "Adults commonly weigh about 6–12 kilograms and measure roughly 60–82 centimetres from head to body; males tend to be a little larger. A compact, nearly tailless body, short sturdy legs, blunt head and long whiskers suit this ground-dwelling animal. Its coarse reddish- to dark-brown back bears several lengthwise rows of pale spots, above a lighter belly. The mountain paca is generally smaller and more thickly furred. The agouti is a separate rodent, not another paca.",
+      "fr": "L’adulte pèse généralement environ 6 à 12 kilogrammes et mesure près de 60 à 82 centimètres du museau à la base de la queue ; le mâle est souvent un peu plus grand. Son corps trapu presque dépourvu de queue, ses pattes courtes et robustes, sa tête arrondie et ses longues vibrisses caractérisent ce rongeur terrestre. Le dos rêche, brun roux à brun foncé, porte plusieurs rangées longitudinales de taches pâles au-dessus d’un ventre plus clair. Le paca de montagne est généralement plus petit et plus fourni en poils. L’agouti est un rongeur distinct, et non un autre paca."
+    },
+    "habitat": {
+      "en": "In the Lacandon rainforest, pacas also use secondary woodland and riparian cover. It favors stream and river banks, which provide den sites and quick access to water as an escape route. A daytime refuge may be a self-dug burrow or a cavity among roots, rocks or an old burrow; several exits can connect to forest paths. In the Lacandon Forest, used cavities lay under roots or inside fallen logs in riparian or secondary vegetation, generally within 100 metres of water.",
+      "fr": "Le paca fréquente les forêts tropicales et subtropicales, jusque dans des boisements modifiés. Il préfère les rives, où les berges offrent des terriers et l’eau une voie de fuite. Le jour, il s’abrite dans un terrier creusé ou une cavité sous des racines ou des rochers ; plusieurs sorties rejoignent des sentiers forestiers. Dans la forêt Lacandone, les cavités occupées se trouvaient sous des racines ou des troncs tombés, en forêt secondaire ou riveraine, à moins de 100 mètres de l’eau."
+    },
+    "diet": {
+      "en": "Fallen fruit is the main food, supplemented by seeds, tender leaves, stems and roots; the exact menu follows local fruiting seasons. A French Guianan stomach-content comparison found that fruit dominated the paca diet, with more seasonal variation than in smaller terrestrial rodents. In the Lacandon Forest of southern Mexico, cameras confirmed fruit at 31 of 57 monitored feeding sites, with fruits from 20 tree species recorded. Only 40 percent of the tree species eaten were shared between preserved and transformed sites, evidence that local pacas use a flexible menu.",
+      "fr": "Les fruits tombés constituent l’aliment principal, complétés par des graines, des feuilles tendres, des tiges et des racines ; le menu varie selon les saisons locales. Une comparaison des contenus stomacaux en Guyane française a montré que les fruits dominaient le régime du paca, avec plus de variations saisonnières que chez les rongeurs terrestres plus petits. En forêt Lacandone, des caméras ont détecté des fruits sur 31 sites d’alimentation sur 57 et relevé 20 espèces d’arbres. Seulement 40 % des espèces consommées étaient communes aux sites préservés et transformés, signe d’un régime souple."
+    },
+    "behavior": {
+      "en": "By day the paca rests; around dusk it follows familiar trails to feed. Adults are often encountered alone, though some accounts describe territorial pairs using separate burrows. Alarmed pacas may flee into water, stamp, grind their teeth or give a low rumble. Expanded cheek arches and hollows in the upper jaw form a bony chamber proposed to amplify that call, but this acoustic function remains uncertain.",
+      "fr": "Le paca se repose le jour, puis sort au crépuscule pour suivre ses sentiers familiers et se nourrir. Les adultes sont souvent seuls, bien que des couples territoriaux vivant dans des terriers séparés soient aussi décrits. En alerte, il peut fuir dans l’eau, frapper le sol, grincer des dents ou gronder sourdement. Ses arcades zygomatiques élargies et les creux du maxillaire forment une cavité osseuse qui pourrait amplifier l’appel ; cette fonction reste incertaine."
+    },
+    "reproduction": {
+      "en": "In tropical populations, breeding may occur throughout the year, while some subtropical populations have a seasonal cycle. After roughly 97–118 days of gestation in the wild, a female usually gives birth to one well-developed young; twins are reported but less typical. The young are well developed at birth: their eyes are open and their movements already coordinated, rather than remaining helpless in a nest. They start sampling solid food at about three weeks and are usually weaned within six to twelve weeks; this early development helps a young paca move to shelter and escape danger.",
+      "fr": "Sous les tropiques, la reproduction peut avoir lieu toute l’année, mais elle est saisonnière dans certaines régions subtropicales. Après 97 à 118 jours de gestation dans la nature, la femelle met généralement au monde un petit bien développé ; les jumeaux sont moins courants. Il naît nidifuge, les yeux ouverts, et peut se déplacer rapidement, sans dépendre d’un nid. Il goûte aux aliments solides vers trois semaines et est sevré entre six et douze semaines ; il peut tôt gagner un abri et fuir le danger."
+    },
+    "ecology": {
+      "en": "By feeding on fallen fruit, pacas can disperse seeds and support fruit-tree regeneration. Their abandoned burrows provide shelters that other animals may use. Jaguars, ocelots and other predators hunt pacas, which may compete with agoutis and other forest mammals for fruit.",
+      "fr": "En mangeant des fruits tombés, les pacas peuvent disperser des graines et favoriser le renouvellement des arbres fruitiers. Leurs terriers abandonnés servent d’abris à d’autres animaux. Jaguars, ocelots et autres prédateurs les chassent ; ils peuvent aussi concurrencer les agoutis et d’autres mammifères forestiers pour les fruits."
+    },
+    "conservation": {
+      "en": "Globally, IUCN lists the paca as Least Concern. The same system reports a Near Threatened Argentine assessment by SAREM in 2025 and a Vulnerable national assessment published in 2021. The paca is among the most heavily hunted Neotropical mammals for food and sport; researchers warn that modest reproductive output may not offset intense hunting. A slow life history, with first parturition only after several months, makes recovery vulnerable to sustained hunting pressure, even where the species remains widespread overall.",
+      "fr": "L’UICN classe le paca en préoccupation mineure à l’échelle mondiale. Le même système signale la catégorie « Quasi menacée » de la SAREM en Argentine (2025) et « Vulnérable » au niveau national (2021). Chassé pour sa viande et le sport, le paca compte parmi les mammifères néotropicaux les plus ciblés ; les chercheurs doutent que sa reproduction suffise sous forte pression. Une première mise bas après plusieurs mois rend ce cycle lent vulnérable à une chasse soutenue, malgré l’aire étendue."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cuniculus paca (lowland paca)",
+        "fr": "Cuniculus paca (paca de plaine)"
+      },
+      "url": "https://animaldiversity.org/accounts/Cuniculus_paca/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "University of Michigan species account gives range, adult size, coat, anatomy and reproductive observations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 14,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cuniculus paca (paca, lapa)",
+        "fr": "Cuniculus paca (paca, lapa)"
+      },
+      "url": "https://sib.gob.ar/especies/cuniculus-paca",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "Argentina National Parks account gives coat rows, regional status dates and tropical breeding pattern."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "conservation.en.2",
+        "conservation.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 14,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lowland Paca",
+        "fr": "Paca de plaine"
+      },
+      "url": "https://lazoo.org/explore-your-zoo/our-animals/mammals/lowland-paca/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Los Angeles Zoo account describes water refuges, burrows, pair territories, predators, fruit and hunting."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "behavior.en.3",
+        "behavior.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 14,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cuniculidae (pacas)",
+        "fr": "Cuniculidae (pacás)"
+      },
+      "url": "https://animaldiversity.org/accounts/Cuniculidae/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "diet",
+        "ecology",
+        "identification"
+      ],
+      "facts": [
+        "University of Michigan family account documents calls, foot stamping, predators, and seed consumer role."
+      ],
+      "prose_claims": [
+        "behavior.en.4",
+        "behavior.fr.4",
+        "ecology.en.3",
+        "ecology.fr.3",
+        "identification.en.5",
+        "identification.fr.5",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 14,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cuniculus paca: Lowland Paca",
+        "fr": "Cuniculus paca : Paca de plaine"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1001213/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Mammal Diversity Database records the lowland species as Least Concern; no assessment year inferred."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 14,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Age at sexual maturity, first parturition and reproductive senescence in wild lowland pacas",
+        "fr": "Âge à la maturité sexuelle, première mise bas et sénescence reproductive chez les pacas sauvages"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31060921/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "A 15-year hunter-participatory sample informs wild paca harvest-sustainability estimates."
+      ],
+      "prose_claims": [
+        "conservation.en.4",
+        "conservation.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 9,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Foraging ecology of lowland paca in preserved and transformed areas of the Lacandon rainforest",
+        "fr": "Écologie alimentaire du paca de plaine en zones préservées et transformées de la forêt Lacandone"
+      },
+      "url": "https://www.scielo.org.mx/scielo.php?lng=en&pid=S1870-34532018000200507&script=sci_abstract",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Camera monitoring documented feeding-site fruit and divergent tree-species menus in the Lacandon Forest."
+      ],
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3",
+        "diet.en.4",
+        "diet.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 13,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Availability and characterization of cavities used by pacas in the Lacandon Rainforest",
+        "fr": "Disponibilité et caractéristiques des cavités utilisées par les pacas dans la forêt Lacandone"
+      },
+      "url": "https://www.revista.ib.unam.mx/index.php/bio/article/view/1450",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Study documents used cavities in secondary and riparian cover near water."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.3",
+        "habitat.fr.3",
+        "habitat.en.4",
+        "habitat.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 11,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Comparison of diets of the acouchy, agouti and paca in French Guianan forests",
+        "fr": "Comparaison des régimes de l’acouchi, de l’agouti et du paca des forêts de Guyane française"
+      },
+      "url": "https://www.cambridge.org/core/journals/journal-of-tropical-ecology/article/abs/comparison-of-diets-of-the-acouchy-agouti-and-paca-the-three-largest-terrestrial-rodents-of-french-guianan-forests/1A776EF5F98B63809E86E0AEF221265F",
+      "consulted": "2026-10-11",
+      "facts": [
+        "Stomach-content comparison found paca diets mainly frugivorous with greater seasonal variation."
+      ],
+      "supports": [
+        "diet"
+      ],
+      "prose_claims": [
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 11,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fetal bone development in the lowland paca determined using ultrasonography",
+        "fr": "Développement osseux fœtal du paca de plaine étudié par échographie"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7309292/",
+      "consulted": "2026-10-11",
+      "facts": [
+        "Study review describes precocial newborn development and early weaning in pacas."
+      ],
+      "supports": [
+        "conservation",
+        "reproduction"
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3",
+        "reproduction.en.4",
+        "reproduction.fr.4",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 11,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cuniculus taczanowskii (mountain paca)",
+        "fr": "Cuniculus taczanowskii (paca de montagne)"
+      },
+      "url": "https://animaldiversity.org/accounts/Cuniculus_taczanowskii/",
+      "consulted": "2026-10-11",
+      "facts": [
+        "University of Michigan account compares mountain paca size and coat with lowland paca."
+      ],
+      "supports": [
+        "identification"
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 13,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the compact reddish-brown rodent with several clear longitudinal rows of pale flank spots, short legs, tiny tail and long whiskers beside a forest stream; avoid agouti-like plain speckling and mountain-paca proportions.",
+  "uncertainties": [
+    "The enlarged zygomatic arches and upper-jaw hollows are described as a possible sound-resonating chamber; the consulted university account says amplification is suggested, and the mechanism was not verified as established.",
+    "Social pairing and breeding frequency vary among reports and conditions; solitary encounters are common, and captivity-derived reproductive rates should not be generalized to all wild populations.",
+    "The global Least Concern listing and Argentine regional categories use different scales and dates; local hunting pressure and habitat loss can produce declines despite a broad range."
+  ],
+  "review_notes": [
+    "Root verified SIB 2025 national assessment and sourced the global IUCN category to the actual biodiversity status record rather than a taxonomy-only page."
+  ],
+  "reviewed": true,
+  "review_note": "Root single-pass bilingual editorial review; sensitive taxonomy, life-cycle and conservation statements checked against cited primary sources; source accounting passed; independent artwork review accepted.",
+  "source_audit_version": 1
+}

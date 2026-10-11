@@ -1,0 +1,202 @@
+{
+  "id": "whooper_swan",
+  "scientific": "Cygnus cygnus",
+  "group": "birds",
+  "name": {
+    "en": "Whooper swan",
+    "fr": "Cygne chanteur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The whooper swan is a large migratory waterbird of northern Eurasia, with white plumage, a long upright neck and ringing calls; it breeds from Iceland to Siberia and winters farther south.",
+      "fr": "Le cygne chanteur est un grand oiseau d’eau migrateur du nord de l’Eurasie, au plumage blanc, au long cou dressé et aux appels sonores ; il niche de l’Islande à la Sibérie et hiverne plus au sud."
+    },
+    "identification": {
+      "en": "Adults measure about 140–165 cm long and span 205–275 cm; males are heavier, and their black bill bears more yellow than the smaller, mostly black-billed Bewick’s swan.",
+      "fr": "L’adulte mesure environ 140 à 165 cm et son envergure atteint 205 à 275 cm ; le mâle est plus lourd, et son bec noir porte plus de jaune que celui du plus petit cygne de Bewick."
+    },
+    "habitat": {
+      "en": "It nests beside shallow lakes and marshes in Eurasian taiga and subarctic tundra, where waterside vegetation offers cover; wintering birds also use estuaries, sheltered coasts and farmland.",
+      "fr": "Il niche près des lacs peu profonds et marais de la taïga eurasienne et de la toundra subarctique, où la végétation riveraine abrite les nids ; en hiver, il fréquente aussi estuaires, côtes abritées et terres agricoles."
+    },
+    "diet": {
+      "en": "It feeds mainly on aquatic leaves, shoots, stems and roots, reaching plants with its long neck or by tipping forward; in winter it also grazes grass and crops, while small invertebrates are a minor food.",
+      "fr": "Il mange surtout feuilles, pousses, tiges et racines aquatiques, qu’il atteint avec son long cou ou en basculant vers l’avant ; en hiver, il broute aussi herbe et cultures, tandis que les petits invertébrés restent secondaires."
+    },
+    "behavior": {
+      "en": "Pairs defend territories while breeding, then gather in flocks; deep trumpet-like calls keep family members in contact, and head-bobbing can signal that birds are ready to take flight. Pairs usually remain together for life, and winter flocks contain families whose young migrate with their parents until the following breeding season.",
+      "fr": "Les couples défendent leur territoire pendant la nidification, puis se rassemblent ; leurs appels profonds gardent la famille en contact et les hochements de tête peuvent annoncer le départ en vol. Les couples restent généralement unis pour la vie, et les groupes hivernaux comprennent des familles dont les jeunes migrent avec leurs parents jusqu’à la saison de reproduction suivante."
+    },
+    "reproduction": {
+      "en": "Females lay four to seven eggs and incubate them about 35 days while males guard; downy cygnets leave the nest and fledge at roughly 78–105 days, depending on region. The nest is a mound of vegetation beside freshwater; the mobile young are nevertheless dependent on parental protection and help with feeding during their early development.",
+      "fr": "Les femelles pondent quatre à sept œufs et les couvent environ 35 jours sous la garde du mâle ; les cygneaux duveteux quittent le nid et prennent leur envol vers 78 à 105 jours, selon la région. Le nid est un monticule de végétaux près de l’eau douce ; même capables de se déplacer, les jeunes dépendent encore de la protection des parents et de leur aide pour se nourrir au début de leur développement."
+    },
+    "ecology": {
+      "en": "Natural predators in northern Russia include red foxes, white-tailed eagles and golden eagles. Open water also supplies communal roosts for winter flocks. Predation affects eggs and small young most strongly; adults can retreat into water to escape terrestrial predators, while the parents’ vigilance protects the brood.",
+      "fr": "Dans le nord de la Russie, le renard roux, le pygargue à queue blanche et l’aigle royal sont des prédateurs du cygne chanteur. Les eaux libres servent aussi de dortoirs collectifs en hiver. La prédation touche surtout les œufs et les petits jeunes ; les adultes peuvent se réfugier dans l’eau pour échapper aux prédateurs terrestres, tandis que la vigilance des parents protège la couvée."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment of 5 June 2025 lists the species as Least Concern, estimates 176,000 mature individuals and an increasing trend, while identifying wetland loss, disturbance, hunting, lead poisoning and power-line collisions as threats. Persecution reduced numbers and range in the 19th and early 20th centuries; bans on hunting later brought recovery.",
+      "fr": "L’évaluation mondiale de l’UICN du 5 juin 2025 classe l’espèce en préoccupation mineure, estime 176 000 individus matures et une tendance croissante, tout en signalant la perte des zones humides, le dérangement, la chasse, le plomb et les collisions avec les lignes comme menaces. La persécution a réduit effectifs et aire au XIXe et début XXe siècle ; les interdictions de chasse ont ensuite permis le rétablissement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Whooper swan",
+        "fr": "Cygne chanteur"
+      },
+      "url": "https://en.wikipedia.org/wiki/Whooper_swan",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Adult size, bill markings, incubation and juvenile fledging."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 8,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cygne chanteur",
+        "fr": "Cygne chanteur"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Cygne_chanteur",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Eurasian breeding and winter ranges; aquatic plants, field grazing and shallow-water habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 12,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whooper Swan",
+        "fr": "Cygne chanteur (Whooper Swan)"
+      },
+      "url": "https://swansg.org/the-swans/whooper/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Swan Specialist Group account distinguishes Bewick’s bill markings and describes wetland use."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 12,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cygnus cygnus (Whooper Swan), IUCN Red List 2025",
+        "fr": "Cygnus cygnus (Cygne chanteur), Liste rouge de l’UICN 2025"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T22679856A281843607.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment 5 June 2025; Least Concern; estimated 176,000 mature individuals; increasing trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 13,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cygnus cygnus (whooper swan)",
+        "fr": "Cygnus cygnus — Cygne chanteur"
+      },
+      "url": "https://animaldiversity.org/accounts/Cygnus_cygnus/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Pair bonds, parental care and vulnerability of eggs and young."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 10,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show an adult with a long upright neck and the distinctive yellow wedge on its black bill; a smaller Bewick’s swan may be included only as a clearly secondary comparison.",
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Root review: actual 2025 IUCN assessment located by search and checked (5 June, global LC, 176000 mature best estimate); dimensions and regional fledging ranges checked; added family cohesion, young care and predation explanation from ADW without using its geographically questionable predator list."
+}

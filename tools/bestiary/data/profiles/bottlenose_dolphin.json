@@ -1,0 +1,517 @@
+{
+  "id": "bottlenose_dolphin",
+  "scientific": "Tursiops truncatus",
+  "group": "mammals",
+  "name": {
+    "en": "Common bottlenose dolphin",
+    "fr": "Grand dauphin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common bottlenose dolphin is a toothed whale of temperate and tropical seas worldwide, found in coastal and offshore waters. In the western North Atlantic, the coastal form is recognized as a separate species, Tursiops erebennus, by the Society for Marine Mammalogy’s 2026 list. Boundaries between species in this genus remain under study. Tursiops aduncus, the Indo-Pacific bottlenose dolphin, is another distinct species.",
+      "fr": "Le grand dauphin est un cétacé à dents des mers tempérées et tropicales du monde entier, présent près des côtes comme au large. Dans l’ouest de l’Atlantique Nord, la forme côtière est reconnue comme une espèce distincte, Tursiops erebennus, dans la liste de 2026 de la Society for Marine Mammalogy. Les limites entre les espèces de ce genre restent étudiées. Tursiops aduncus, le grand dauphin de l’Indo-Pacifique, est une autre espèce distincte."
+    },
+    "identification": {
+      "en": "Adults are robust, usually grey above and paler below, with a short thick rostrum and curved dorsal fin; coastal individuals tend to be smaller and lighter than offshore ones. Teeth are numerous, conical and suited to seizing prey rather than chewing: each upper jaw side bears about 20–26 and each lower side 18–24. The tail flukes are horizontal, the pectoral flippers broad and rounded, and the dorsal fin falcate; the blowhole opens at the top of the head.",
+      "fr": "L’adulte est robuste, généralement gris sur le dos et plus clair dessous, avec un rostre court et épais et une nageoire dorsale recourbée ; les individus côtiers tendent à être plus petits et plus clairs que ceux du large. Ses dents coniques saisissent les proies sans les broyer : chaque côté de la mâchoire supérieure en porte 20 à 26, et l’inférieure 18 à 24. Les nageoires caudales sont horizontales, les pectorales larges et arrondies, et la dorsale falciforme ; l’évent s’ouvre au sommet de la tête."
+    },
+    "habitat": {
+      "en": "The species uses estuaries, bays, lagoons, harbours, continental shelves and open ocean in temperate and tropical waters. Long-term photo-identification in Sarasota Bay documents a resident, multigenerational community with strong site fidelity; this local pattern does not define every population. NOAA lists nearshore T. erebennus from New York to Florida; its wider range is unresolved.",
+      "fr": "L’espèce fréquente estuaires, baies, lagunes, ports, plateaux continentaux et haute mer dans les eaux tempérées et tropicales. À Sarasota, un suivi photographique de longue durée décrit une communauté résidente sur plusieurs générations ; ce modèle local ne vaut pas partout. NOAA signale T. erebennus près du rivage, de New York à la Floride ; son aire complète reste incertaine."
+    },
+    "diet": {
+      "en": "The diet includes locally available fish, squid and crustaceans. Dolphins locate prey by passive listening and echolocation, especially useful when visibility is poor. Air moving through nasal passages activates the phonic lips to produce brief clicks; forehead tissues including the melon shape and direct the outgoing sonar beam. Echoes are received through sound-sensitive tissues associated with the lower jaw and carry information about target direction and distance. At Cedar Key, Florida, observers recorded group hunting with role specialization: a driver herded fish toward waiting dolphins.",
+      "fr": "L’alimentation comprend les poissons, calmars et crustacés disponibles localement. Les dauphins repèrent leurs proies par écoute passive et écholocation, surtout lorsque la visibilité est faible. L’air circulant dans les voies nasales active les lèvres phoniques et produit de brefs clics ; les tissus du front, dont le melon, façonnent et dirigent le faisceau sonar émis. Les échos sont reçus par des tissus sensibles au son associés à la mâchoire inférieure et renseignent sur la direction et la distance de la cible. À Cedar Key, en Floride, une chasse collective observée comportait des rôles différenciés : un meneur rabattait les poissons vers les autres."
+    },
+    "behavior": {
+      "en": "Groups split and reunite, a fission–fusion pattern in which associations change with activity and circumstance. At Sarasota Bay, long-term studies of T. truncatus describe stable male pairs that cooperate in associations accompanying females; these findings are specific to that population. Dolphins produce echolocation clicks as well as whistles and burst-pulsed sounds. Individuals develop learned, distinctive signature whistles. Playback experiments found wild dolphins responded to copies of their own signature whistle, supporting its use as an identity signal directed to another dolphin. During sleep, EEG recordings show slow-wave sleep in one brain hemisphere at a time; dolphins continue surfacing to breathe while the other hemisphere remains more alert.",
+      "fr": "Les groupes se séparent et se reforment ; les associations changent selon un modèle de fission-fusion. Dans la baie de Sarasota, des études de longue durée sur T. truncatus décrivent des paires mâles stables qui coopèrent pour accompagner une femelle ; ces observations concernent cette population. Les dauphins produisent des clics d’écholocation, des sifflements et des sons pulsés. Les individus développent un sifflement-signature appris et distinctif. Lors d’expériences de diffusion sonore, des dauphins sauvages ont répondu à la copie de leur propre sifflement-signature, ce qui étaye son emploi comme signal identitaire adressé à un congénère. Les enregistrements EEG montrent un sommeil lent dans un seul hémisphère à la fois ; le dauphin remonte respirer tandis que l’autre hémisphère reste plus éveillé."
+    },
+    "reproduction": {
+      "en": "Females usually give birth to one calf after about 12 months of gestation; NOAA reports births three to six years apart on average in the populations summarized by its account. A Sarasota Bay study found that calving intervals vary with maternal age and calf survival, illustrating that reproductive timing is not constant. Mothers that successfully raised a calf remained associated with it for about 4.2–4.4 years on average, extending well beyond nursing and allowing time for learning and development.",
+      "fr": "La femelle donne généralement naissance à un petit après environ douze mois de gestation ; NOAA rapporte un intervalle moyen de trois à six ans entre les naissances dans les populations résumées par sa fiche. Une étude de la baie de Sarasota montre que l’intervalle entre naissances varie avec l’âge maternel et la survie du petit : le calendrier reproductif n’est donc pas fixe. Les mères ayant élevé leur petit jusqu’à la séparation sont restées associées à lui environ 4,2 à 4,4 ans en moyenne, bien après l’allaitement, lui laissant du temps pour apprendre et se développer."
+    },
+    "ecology": {
+      "en": "Dolphins are linked to the habitats supporting their prey. In Sarasota Bay, Florida, stomach contents of stranded resident dolphins contained fish, most associated to varying degrees with seagrass. The principal prey produced sounds, suggesting that passive listening helped locate them. Seagrass meadows were important feeding habitat for this community, although animals also foraged elsewhere. Protecting these habitats therefore matters for local dolphin conservation; prey composition and habitat use differ among populations.",
+      "fr": "Les dauphins sont liés aux milieux qui abritent leurs proies. Dans la baie de Sarasota, en Floride, les contenus stomacaux de dauphins résidents échoués contenaient des poissons dont la plupart étaient associés, à des degrés divers, aux herbiers marins. Les principales proies produisaient des sons, suggérant que l’écoute passive aidait à les repérer. Les herbiers constituaient un habitat alimentaire important pour cette communauté, bien que les animaux cherchent aussi leur nourriture ailleurs. Protéger ces habitats contribue donc à la conservation locale du dauphin ; proies et utilisation des milieux diffèrent selon les populations."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 13 May 2018 and published in 2019 classified T. truncatus as Least Concern; that category does not establish the condition of every local population. NOAA lists several western North Atlantic coastal stocks as depleted under US management and reports unknown trends for many other stocks. Documented pressures include bycatch and entanglement, vessel strikes, pollution, harmful algal toxins, habitat alteration and underwater noise; status depends on population and region.",
+      "fr": "L’évaluation mondiale de l’UICN, datée du 13 mai 2018 et publiée en 2019, classe T. truncatus en Préoccupation mineure ; cette catégorie n’établit pas l’état de chaque population locale. NOAA classe plusieurs stocks côtiers de l’ouest de l’Atlantique Nord comme appauvris selon la gestion américaine et signale que la tendance est inconnue pour beaucoup d’autres. Les pressions documentées comprennent captures accidentelles et emmêlement, collisions avec les navires, pollution, toxines d’algues nuisibles, transformation des habitats et bruit sous-marin ; le statut dépend de la population et de la région."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Bottlenose Dolphin — NOAA Fisheries",
+        "fr": "Grand dauphin — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/common-bottlenose-dolphin?page=2",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "NOAA reports tooth function, gestation and birth interval."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 145,
+        "notes_words": 8,
+        "total": 153,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Bottlenose Dolphin Ecotypes of the Western North Atlantic Revisited — NOAA Fisheries",
+        "fr": "Écotypes du grand dauphin de l’ouest de l’Atlantique Nord réexaminés — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/resource/peer-reviewed-research/common-bottlenose-dolphin-ecotypes-western-north-atlantic-revisited",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Authors propose coastal species split; NOAA says taxonomy unsettled."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 9,
+        "total": 43,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "habitat.en.3",
+        "habitat.fr.3"
+      ]
+    },
+    {
+      "title": {
+        "en": "List of Marine Mammal Species and Subspecies — Society for Marine Mammalogy, 2026",
+        "fr": "Liste des espèces et sous-espèces de mammifères marins — Society for Marine Mammalogy, 2026"
+      },
+      "url": "https://marinemammalscience.org/science-and-publications/list-marine-mammal-species-subspecies/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "April 2026 list recognizes T. erebennus; cites its regional range."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 10,
+        "total": 61,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ]
+    },
+    {
+      "title": {
+        "en": "Tursiops erebennus — ASM Mammal Diversity Database, version 2.5",
+        "fr": "Tursiops erebennus — Base de données de diversité des mammifères de l’ASM, version 2.5"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1006849/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ASM lists T. erebennus and flags tentative genus taxonomy."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 9,
+        "total": 28,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ]
+    },
+    {
+      "title": {
+        "en": "Species account of the Common Bottlenose Dolphin — Texas Tech Natural Science Research Laboratory",
+        "fr": "Fiche d’espèce du grand dauphin — laboratoire de recherche en sciences naturelles de Texas Tech"
+      },
+      "url": "https://www.depts.ttu.edu/nsrl/mammals-of-texas-online-edition/Accounts_Cetacea/Tursiops_truncatus.php",
+      "consulted": "2026-10-11",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Texas Tech account describes adult coloration, anatomy and teeth."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 9,
+        "total": 124,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.3",
+        "identification.fr.3"
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Bottlenose Dolphin: Science — NOAA Fisheries",
+        "fr": "Grand dauphin : données scientifiques — NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/common-bottlenose-dolphin/science?page=1",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "NOAA stock status and pollution effects are regionally scoped."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 9,
+        "total": 112,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2",
+        "conservation.en.3",
+        "conservation.fr.3"
+      ]
+    },
+    {
+      "title": {
+        "en": "A division of labour with role specialization in group-hunting bottlenose dolphins — Proceedings of the Royal Society B",
+        "fr": "Division du travail et spécialisation des rôles lors de la chasse collective chez le grand dauphin — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1634948/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Cedar Key study documents driver and waiting partners during hunts."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 10,
+        "total": 50,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "diet.en.5",
+        "diet.fr.5"
+      ]
+    },
+    {
+      "title": {
+        "en": "Frequency-dependent variation in the two-dimensional beam pattern of an echolocating dolphin",
+        "fr": "Variation selon la fréquence du faisceau bidimensionnel d’un dauphin écholocateur"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3210668/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Study examines nasal click production and directional sonar beam."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 9,
+        "total": 64,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "diet.en.3",
+        "diet.fr.3"
+      ]
+    },
+    {
+      "title": {
+        "en": "Sound localization by the bottlenose dolphin Tursiops truncatus",
+        "fr": "Localisation sonore chez le grand dauphin Tursiops truncatus"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1214118/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Behavioral tests examine jaw reception and click localization."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 8,
+        "total": 53,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "diet.en.4",
+        "diet.fr.4"
+      ]
+    },
+    {
+      "title": {
+        "en": "Bottlenose dolphin community structure along Florida’s Gulf coast",
+        "fr": "Structure communautaire des grands dauphins le long de la côte floridienne du golfe"
+      },
+      "url": "https://doi.org/10.1016/j.anbehav.2025.123229",
+      "consulted": "2026-10-11",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Sarasota study documents site fidelity and dynamic associations."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 76,
+        "notes_words": 8,
+        "total": 84,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ]
+    },
+    {
+      "title": {
+        "en": "Ranging and social association patterns of paired and unpaired adult male bottlenose dolphins, Tursiops truncatus, in Sarasota, Florida",
+        "fr": "Déplacements et associations sociales des grands dauphins mâles appariés ou non à Sarasota, Floride"
+      },
+      "url": "https://doi.org/10.1139/z02-195",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Sarasota study reports stable male pairs and ranging."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 8,
+        "total": 63,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ]
+    },
+    {
+      "title": {
+        "en": "Bottlenose dolphins can use learned vocal labels to address each other — PNAS",
+        "fr": "Les grands dauphins peuvent utiliser des signaux vocaux appris pour s’adresser les uns aux autres — PNAS"
+      },
+      "url": "https://doi.org/10.1073/pnas.1304459110",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Wild signature-whistle playback experiment tests identity recognition."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 7,
+        "total": 97,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "behavior.en.3",
+        "behavior.fr.3",
+        "behavior.en.4",
+        "behavior.fr.4",
+        "behavior.en.5",
+        "behavior.fr.5"
+      ]
+    },
+    {
+      "title": {
+        "en": "Sleep in Aquatic Mammals",
+        "fr": "Le sommeil chez les mammifères aquatiques"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8665646/",
+      "consulted": "2026-10-11",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Review summarizes EEG evidence for unihemispheric dolphin sleep."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 8,
+        "total": 60,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "behavior.en.6",
+        "behavior.fr.6"
+      ]
+    },
+    {
+      "title": {
+        "en": "Life history, reproductive, and demographic parameters for bottlenose dolphins (Tursiops truncatus) in Sarasota Bay, Florida",
+        "fr": "Paramètres démographiques, reproductifs et biologiques du grand dauphin dans la baie de Sarasota, Floride"
+      },
+      "url": "https://www.frontiersin.org/journals/marine-science/articles/10.3389/fmars.2025.1531528/full",
+      "consulted": "2026-10-11",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Sarasota records link reproductive variation to maternal and calf outcomes."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 10,
+        "total": 121,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ]
+    },
+    {
+      "title": {
+        "en": "Prey and Feeding Patterns of Resident Bottlenose Dolphins in Sarasota Bay, Florida",
+        "fr": "Proies et alimentation des grands dauphins résidents de la baie de Sarasota, Floride"
+      },
+      "url": "https://doi.org/10.2307/1383114",
+      "consulted": "2026-10-11",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Sarasota stomach contents link fish prey with seagrass."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 8,
+        "total": 172,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.en.3",
+        "ecology.en.4",
+        "ecology.en.5",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "ecology.fr.3",
+        "ecology.fr.4",
+        "ecology.fr.5"
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Bottlenose Dolphin — IUCN Red List of Threatened Species, 2019",
+        "fr": "Grand dauphin — Liste rouge de l’UICN des espèces menacées, 2019"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T22563A156932432.en",
+      "consulted": "2026-10-11",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN record dates global assessment and category."
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 7,
+        "total": 65,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      },
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ]
+    },
+    {
+      "title": {
+        "en": "Bottlenose Dolphin — International Whaling Commission",
+        "fr": "Grand dauphin — Commission baleinière internationale"
+      },
+      "url": "https://iwc.int/about-whales/whale-species/bottlenose-dolphin",
+      "consulted": "2026-10-11",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "IWC account describes broad distribution, habitats and prey."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.4",
+        "overview.fr.4"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 8,
+        "total": 125,
+        "method": "Full referenced bilingual sentences; taxon initials are not sentence boundaries."
+      }
+    }
+  ],
+  "illustration_notes": "Show one adult Tursiops truncatus with anatomically accurate robust grey body, pale underside, short thick rostrum, curved dorsal fin, pectoral flippers and horizontal tail flukes. Natural proportions and skin texture, sex unspecified, side three-quarter view. Pure white background; no water, scenery, props, text, border or watermark.",
+  "uncertainties": [
+    "Costa et al. (2022) proposed a split from western North Atlantic evidence; NOAA describes the taxonomy as unsettled, while the April 2026 SMM list recognizes T. erebennus and ASM cautions that genus-wide arrangements remain tentative.",
+    "The cited nearshore T. erebennus range is regional; its full distribution beyond the western North Atlantic remains unresolved.",
+    "Calving intervals and mother-calf association vary with maternal age, calf survival and population."
+  ],
+  "reviewed": true,
+  "review_note": "Root and independent scientific reader verified bilingual explanations, source scope and allocations. All identified corrections resolved; blue whale dimensions additionally checked against NOAA.",
+  "source_audit_version": 1
+}
