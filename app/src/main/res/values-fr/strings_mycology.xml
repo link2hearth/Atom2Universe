@@ -268,12 +268,13 @@
         <item>L’ANSES relève des bolets de Satan et des bolets à beau pied cueillis à la place de bolets à pied rouge.</item>
     </string-array>
     <string name="myco_g_milkcap_title">Lactaire délicieux, ou pas ?</string>
-    <string name="myco_g_milkcap_evidence">Centre antipoison belge</string>
+    <string name="myco_g_milkcap_evidence">Centre antipoison belge, Wikipédia</string>
     <string-array name="myco_g_milkcap_points">
         <item>Délicieux : lait orange. Toison : lait blanc, âcre.</item>
         <item>Délicieux : chapeau orange, zones concentriques, pied à fossettes. Toison : chapeau rose et ocre, marge velue.</item>
         <item>On coupe le champignon pour voir le lait avant de conclure : une fois la couleur du lait notée, la confusion n’est plus possible.</item>
         <item>Le lactaire à toison irrite le tube digestif : nausées, vomissements, diarrhée.</item>
+        <item>Trois cousins du lactaire délicieux, tous à lait coloré : lactaire sanguin (lait rouge vineux), lactaire des épicéas (sous les épicéas, lait orange qui tourne au violet vineux, chapeau qui verdit), lactaire saumon (sous les sapins, fins anneaux pâles, jamais vert).</item>
     </string-array>
     <string name="myco_g_puffball_title">Vesse-de-loup, ou pas ?</string>
     <string name="myco_g_puffball_evidence">Centre antipoison belge</string>
@@ -1763,5 +1764,94 @@
         <item>Tricholome équestre : chapeau plus foncé et visqueux, chair blanche, lames minces et serrées, odeur de farine. Tricholome soufré : chapeau jaune soufre, lames épaisses et très espacées, odeur de gaz de houille.</item>
         <item>L’odeur et la couleur sont ce que Wikipédia donne pour les distinguer.</item>
         <item>Aucun des deux ne se mange : le tricholome équestre est toxique (voir sa fiche), le tricholome soufré est listé par la DGfM pour un syndrome gastro-intestinal.</item>
+    </string-array>
+    <string name="myco_sanguifluus_name">Lactaire sanguin</string>
+    <string name="myco_sanguifluus_alt">Bloody milk cap</string>
+    <string-array name="myco_sanguifluus_traits">
+        <item>Chapeau de 4 à 12 cm, convexe à centre creux, visqueux, beige rosé à orangé, parfois taché de gris-vert aux blessures</item>
+        <item>Lames rose vineux pâle, un peu décurrentes</item>
+        <item>Pied de 2 à 5 cm, beige rosé, parfois avec des fossettes brunâtres ou rougeâtres</item>
+        <item>Lait rouge vineux à la coupe ; chair rouge brique sous la peau du chapeau, saveur douce à légèrement amère, presque pas d’odeur</item>
+        <item>Pinèdes sur sol calcaire, surtout dans le sud de l’Europe · septembre à novembre</item>
+    </string-array>
+    <string name="myco_sanguifluus_note">Comestible : Wikipédia (fr) le dit excellent et certains auteurs le tiennent pour le meilleur des lactaires ; la DGfM et la VAPKO le listent (liste rouge allemande, catégorie 2). Wikipédia (en) avertit qu’il peut accumuler des métaux lourds : pas au bord des routes ni sur un sol pollué. Le lait fait la différence : rouge vineux d’emblée. Un lait orange désigne le lactaire délicieux ou ses cousins (voir le groupe). Wikipédia (fr) dit que les sosies partagent sa sécurité alimentaire, mais pas sa valeur culinaire.</string>
+    <string name="myco_deterrimus_name">Lactaire des épicéas</string>
+    <string name="myco_deterrimus_alt">False saffron milkcap</string>
+    <string-array name="myco_deterrimus_traits">
+        <item>Chapeau de 3 à 12 cm, orange carotte, visqueux, déprimé à en entonnoir, qui verdit avec l’âge, le gel ou les blessures</item>
+        <item>Lames serrées, orange puis saumon, tachées de vert avec l’âge</item>
+        <item>Pied de 3 à 8 cm, orange, lisse, sans fossettes, souvent avec une bande blanche au sommet</item>
+        <item>Lait orange peu abondant, qui devient violet vineux en une demi-heure environ ; odeur fruitée, saveur amère et poivrée</item>
+        <item>Sous les épicéas (aussi la busserole) · juin à novembre, surtout d’août à octobre</item>
+    </string-array>
+    <string name="myco_deterrimus_note">Comestible mais médiocre : Wikipédia (fr) et (en) s’accordent sur une saveur amère et désagréable et sur les larves fréquentes ; la DGfM et la VAPKO le listent. En manger plusieurs peut rougir les urines, sans danger (Wikipédia, en). Le lactaire délicieux ne pousse que sous les pins, avec des zones concentriques sur le chapeau et des fossettes sur le pied ; le lactaire saumon pousse sous les sapins et ne verdit pas.</string>
+    <string name="myco_salmonicolor_name">Lactaire saumon</string>
+    <string name="myco_salmonicolor_alt">Salmon milk cap</string>
+    <string-array name="myco_salmonicolor_traits">
+        <item>Chapeau de 6 à 15 cm, en entonnoir avec l’âge, fins anneaux concentriques orange ou plus pâles, jamais verts</item>
+        <item>Lames orange, serrées, décurrentes</item>
+        <item>Pied de 2 à 10 cm, de la couleur du chapeau, vite creux, souvent à fossettes</item>
+        <item>Lait orange assez abondant ; chair orange à rouge, blanche au centre du pied ; odeur fruitée, saveur douce ou amère</item>
+        <item>Sous les sapins, surtout le sapin pectiné, sur sols riches · surtout en automne</item>
+    </string-array>
+    <string name="myco_salmonicolor_note">Comestible, d’intérêt faible selon certains auteurs (Wikipédia, fr) ; la VAPKO note un fort goût de résine, et la DGfM et la VAPKO le listent. Sous les sapins et jamais vert : c’est ce qui le sépare du lactaire des épicéas (sous les épicéas, qui verdit) et du lactaire délicieux (sous les pins, au lait doux).</string>
+    <string name="myco_luteus_name">Nonnette voilée</string>
+    <string name="myco_luteus_alt">Bolet jaune, bolet beurré</string>
+    <string-array name="myco_luteus_traits">
+        <item>Chapeau de 4 à 15 cm, brun à marron, très visqueux et luisant, la peau se détache</item>
+        <item>Pores fins, jaunes, qui virent à l’olive avec l’âge</item>
+        <item>Pied de 4 à 12 cm, pâle, avec un large anneau : blanc dessus, brun violacé dessous</item>
+        <item>Granulations glanduleuses au-dessus de l’anneau</item>
+        <item>Saveur douce, odeur faible et agréable</item>
+        <item>Sous les pins · surtout en automne</item>
+    </string-array>
+    <string name="myco_luteus_note">Comestible : la DGfM et la VAPKO le listent. Wikipédia (fr) le dit médiocre, le plus savoureux de son genre, et conseille de ne cueillir que des jeunes, de peler le chapeau et d’enlever le pied ; la peau visqueuse est laxative et peut donner des indigestions, et des allergies sont possibles. Il accumule fortement le césium 137 (Wikipédia, fr). Le bolet granulé n’a pas d’anneau ; le bolet élégant pousse sous les mélèzes ; un jeune gomphide lui ressemble vu de dessus mais a des lames (Wikipédia, en).</string>
+    <string name="myco_vesca_name">Russule vieux-rose</string>
+    <string name="myco_vesca_alt">Russule comestible, bare-toothed russula</string>
+    <string-array name="myco_vesca_traits">
+        <item>Chapeau de 5 à 10 cm, pâle puis rose ocracé, rose vineux ou brun pourpre, souvent marbré de taches olivâtres ou rouille</item>
+        <item>La peau n’atteint pas la marge, et les lames « montrent les dents »</item>
+        <item>Lames blanches à crème, serrées, fourchues près du pied, tachées de rouille avec l’âge</item>
+        <item>Pied de 2 à 10 cm, ferme, blanc, parfois teinté de rose, brunissant à la base</item>
+        <item>Chair blanche et ferme, saveur douce à note de noisette</item>
+        <item>Sous les feuillus, surtout les chênes, sur sols légers et acides · juillet à octobre, parfois dès mai</item>
+    </string-array>
+    <string name="myco_vesca_note">Bon comestible (Wikipédia, fr) ; la DGfM et la VAPKO le listent. Frotté au sulfate de fer, le pied vire au saumon (Wikipédia, en). Wikipédia (fr) cite parmi ses sosies la russule charbonnière et la russule olivacée (voir leurs fiches). Le centre antipoison belge range la russule émétique parmi les russules qui donnent une gastro-entérite légère.</string>
+    <string name="myco_rufescens_name">Hydne roussissant</string>
+    <string name="myco_rufescens_alt">Pied-de-mouton roux, terracotta hedgehog</string>
+    <string-array name="myco_rufescens_traits">
+        <item>Chapeau orange à orangé rougeâtre, roux plutôt que beige, finement laineux puis lisse, marge ondulée, souvent plus pâle</item>
+        <item>Aiguillons fins et cassants, crème à reflets orange, attachés au pied sans jamais le descendre</item>
+        <item>Pied central, plus mince que celui du pied-de-mouton, blanc à rose pâle, jaunissant foncé à la manipulation</item>
+        <item>Chair blanche très cassante, odeur fruitée, saveur douce ou un peu amère</item>
+        <item>Bois de feuillus et de conifères, isolé ou en grands ronds · juillet à octobre</item>
+    </string-array>
+    <string name="myco_rufescens_note">Comestible, mais moins estimé que le pied-de-mouton : moins charnu et un peu plus amer (Wikipédia, fr) ; la DGfM et la VAPKO le listent. Aucune intoxication n’est connue (Wikipédia, fr). Il diffère du pied-de-mouton par son chapeau roux, sa taille plus petite et ses aiguillons qui ne descendent pas sur le pied ; il existe des formes intermédiaires, si bien que les deux sont souvent difficiles à séparer. Les sources lues ne donnent pas la taille du chapeau.</string>
+    <string name="myco_l_pink_buff_cap">Chapeau beige rosé, visqueux, centre creux</string>
+    <string name="myco_l_wine_gills">Lames rose vineux pâle</string>
+    <string name="myco_l_wine_milk">Lait rouge vineux</string>
+    <string name="myco_l_flesh_brick">Chair rouge brique sous la peau</string>
+    <string name="myco_l_orange_greening_cap">Chapeau orange carotte, qui verdit</string>
+    <string name="myco_l_orange_smooth_stem">Pied orange lisse, sans fossettes</string>
+    <string name="myco_l_pale_orange_flesh">Chair pâle, lait qui tourne au vineux</string>
+    <string name="myco_l_funnel_rings_cap">Chapeau en entonnoir, fins anneaux pâles</string>
+    <string name="myco_l_ring_violet_under">Anneau violacé en dessous</string>
+    <string name="myco_l_wine_pink_cap">Chapeau rose vineux</string>
+    <string name="myco_l_russet_woolly_cap">Chapeau roux, laineux</string>
+    <string name="myco_l_spines_not_decurrent">Aiguillons qui ne descendent pas sur le pied</string>
+    <string name="myco_l_thin_central_stem">Pied central mince</string>
+    <string name="myco_g_pinebolete_title">Nonnette voilée, ou bolet granulé ?</string>
+    <string name="myco_g_pinebolete_evidence">Wikipédia</string>
+    <string-array name="myco_g_pinebolete_points">
+        <item>Nonnette voilée : un large anneau, blanc dessus et brun violacé dessous. Bolet granulé : pas d’anneau.</item>
+        <item>Tous deux sont des bolets des pinèdes, au chapeau visqueux et aux pores fins et jaunes.</item>
+        <item>Wikipédia (fr) dit que la nonnette voilée se mange avec précaution (chapeau pelé, jeunes exemplaires seulement) ; le bolet granulé a sa propre fiche, avec le statut le plus prudent.</item>
+    </string-array>
+    <string name="myco_g_hedgehog_title">Pied-de-mouton, ou hydne roussissant ?</string>
+    <string name="myco_g_hedgehog_evidence">Wikipédia</string>
+    <string-array name="myco_g_hedgehog_points">
+        <item>Pied-de-mouton : chapeau beige, robuste, aiguillons qui descendent sur le pied. Hydne roussissant : chapeau roux, plus petit et plus mince, aiguillons qui ne descendent pas sur le pied.</item>
+        <item>Des formes intermédiaires relient les deux espèces (Wikipédia, fr) : la différence n’est pas toujours nette.</item>
+        <item>Les deux sont comestibles et portent des aiguillons au lieu de lames ou de pores ; l’hydne roussissant est moins charnu et un peu plus amer.</item>
     </string-array>
 </resources>

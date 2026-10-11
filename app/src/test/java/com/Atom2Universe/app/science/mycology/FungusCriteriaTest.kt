@@ -50,9 +50,9 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("virescens"), setOf("cap_GREEN", "s_no_ring", "s_no_volva", "sp_white")))
         assertTrue(FungusCriteria.matches(look("columbetta"), setOf("cap_WHITE", "stipe_WHITE", "s_no_ring", "s_no_volva")))
         // les lactaires seuls laissent couler un lait
-        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis"), ids("m_latex"))
+        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis", "sanguifluus", "deterrimus", "salmonicolor"), ids("m_latex"))
         // ce que le dessin ne montre pas ne s'invente pas : pas d'aiguillons ailleurs, pas de volve chez le lot trois
-        assertEquals(setOf("hydnum", "erinaceus", "imbricatus"), ids("u_teeth"))
+        assertEquals(setOf("hydnum", "erinaceus", "imbricatus", "rufescens"), ids("u_teeth"))
         for (id in listOf("hydnum", "craterellus", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "torminosus", "nuda", "orellanus", "virescens", "columbetta"))
             assertTrue("$id a une volve", look(id).volva == VolvaKind.NONE)
     }
@@ -157,6 +157,21 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("sulphureum"), setOf("cap_YELLOW", "s_no_ring", "sp_white")))
         // le tricholome équestre et le soufré sont comparés l'un à l'autre
         assertEquals(setOf("equestre", "sulphureum"), FungusCatalog.groups.first { it.id == "knights" }.members.toSet())
+    }
+
+    @Test
+    fun leLotNeufSeLitDansLeDessin() {
+        // les trois lactaires à lait coloré sortent sur le lait ; le roux a des aiguillons qui ne descendent pas
+        for (id in listOf("sanguifluus", "deterrimus", "salmonicolor")) {
+            assertTrue(id, FungusCriteria.matches(look(id), setOf("m_latex", "s_no_ring", "sp_white").minus("sp_white")))
+        }
+        assertTrue(FungusCriteria.matches(look("luteus"), setOf("s_ring", "u_pores")))
+        assertTrue(FungusCriteria.matches(look("vesca"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("rufescens"), setOf("u_teeth", "s_no_ring")))
+        // les groupes nouveaux et agrandis
+        assertEquals(setOf("luteus", "granulatus"), FungusCatalog.groups.first { it.id == "pinebolete" }.members.toSet())
+        assertEquals(setOf("hydnum", "rufescens"), FungusCatalog.groups.first { it.id == "hedgehog" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "milkcap" }.members.containsAll(listOf("deliciosus", "sanguifluus", "deterrimus", "salmonicolor")))
     }
 
     @Test

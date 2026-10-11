@@ -48,7 +48,7 @@
       "id": "be", "kind": "official",
       "citation": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf",
-      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum", "hebeloma", "emetica", "formosa", "rubellus", "verna", "subincarnata", "geophylla"]
+      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum", "hebeloma", "emetica", "formosa", "rubellus", "verna", "subincarnata", "geophylla", "vesca"]
     },
     {
       "id": "toxinfo", "kind": "official",
@@ -84,7 +84,7 @@
       "id": "dgfm2026", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Positivliste der Speisepilze, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-05-01_positivliste-speisepilze.pdf",
-      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "impudicus", "erinaceus", "lignyotus"]
+      "species": ["caesarea", "gambosa", "comatus", "mutabilis", "oreades", "edulis", "procera", "cibarius", "campestris", "rubescens", "craterellus", "hydnum", "badia", "chrysenteron", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "impudicus", "erinaceus", "lignyotus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens"]
     },
     {
       "id": "toxinfo2025", "kind": "official",
@@ -150,7 +150,7 @@
       "id": "vapko2023", "kind": "society",
       "citation": "VAPKO, Vereinigung amtlicher Pilzkontrollorgane der Schweiz (2023). Empfehlungsliste (liste des champignons recommandés), version 09.2023.",
       "url": "https://www.vapko.ch/phocadownload/public/TOUS/09_2023%20Empfehlungsliste%20VAPKO.pdf",
-      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "lignyotus", "imbricatus"]
+      "species": ["ostreatus", "perlatum", "terreum", "silvicola", "granulatus", "olivacea", "mellea", "rubescens", "caesarea", "gambosa", "comatus", "oreades", "edulis", "procera", "cibarius", "craterellus", "hydnum", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "nuda", "virescens", "columbetta", "mutabilis", "campestris", "morchella", "geotropa", "amethystina", "rhacodes", "cyanoxantha", "aegerita", "tubaeformis", "gigantea", "flammulina", "capnoides", "laetiporus", "fistulina", "sparassis", "pinophilus", "reticulatus", "bisporus", "lignyotus", "imbricatus", "sanguifluus", "deterrimus", "salmonicolor", "luteus", "vesca", "rufescens"]
     },
     {
       "id": "dgfm2026tox", "kind": "society",
@@ -329,6 +329,18 @@
     { "id": "wp-fr-sulphureum", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Tricholoma sulphureum", "url": "https://fr.wikipedia.org/wiki/Tricholoma_sulphureum", "species": ["sulphureum"] },
     { "id": "wp-en-sulphureum", "kind": "encyclopedia", "citation": "Wikipedia (en): Tricholoma sulphureum", "url": "https://en.wikipedia.org/wiki/Tricholoma_sulphureum", "species": ["sulphureum"] },
     { "id": "wp-fr-citrina", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanita citrina", "url": "https://fr.wikipedia.org/wiki/Amanita_citrina", "species": ["citrina"] },
-    { "id": "wp-en-citrina", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita citrina", "url": "https://en.wikipedia.org/wiki/Amanita_citrina", "species": ["citrina"] }
+    { "id": "wp-en-citrina", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita citrina", "url": "https://en.wikipedia.org/wiki/Amanita_citrina", "species": ["citrina"] },
+    { "id": "wp-fr-sanguifluus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactarius sanguifluus", "url": "https://fr.wikipedia.org/wiki/Lactarius_sanguifluus", "species": ["sanguifluus"] },
+    { "id": "wp-en-sanguifluus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius sanguifluus", "url": "https://en.wikipedia.org/wiki/Lactarius_sanguifluus", "species": ["sanguifluus"] },
+    { "id": "wp-fr-deterrimus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactarius deterrimus", "url": "https://fr.wikipedia.org/wiki/Lactarius_deterrimus", "species": ["deterrimus"] },
+    { "id": "wp-en-deterrimus", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius deterrimus", "url": "https://en.wikipedia.org/wiki/Lactarius_deterrimus", "species": ["deterrimus"] },
+    { "id": "wp-fr-salmonicolor", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lactarius salmonicolor", "url": "https://fr.wikipedia.org/wiki/Lactarius_salmonicolor", "species": ["salmonicolor"] },
+    { "id": "wp-en-salmonicolor", "kind": "encyclopedia", "citation": "Wikipedia (en): Lactarius salmonicolor", "url": "https://en.wikipedia.org/wiki/Lactarius_salmonicolor", "species": ["salmonicolor"] },
+    { "id": "wp-fr-luteus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Suillus luteus", "url": "https://fr.wikipedia.org/wiki/Suillus_luteus", "species": ["luteus"] },
+    { "id": "wp-en-luteus", "kind": "encyclopedia", "citation": "Wikipedia (en): Suillus luteus", "url": "https://en.wikipedia.org/wiki/Suillus_luteus", "species": ["luteus"] },
+    { "id": "wp-fr-vesca", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Russula vesca", "url": "https://fr.wikipedia.org/wiki/Russula_vesca", "species": ["vesca"] },
+    { "id": "wp-en-vesca", "kind": "encyclopedia", "citation": "Wikipedia (en): Russula vesca", "url": "https://en.wikipedia.org/wiki/Russula_vesca", "species": ["vesca"] },
+    { "id": "wp-fr-rufescens", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Hydnum rufescens", "url": "https://fr.wikipedia.org/wiki/Hydnum_rufescens", "species": ["rufescens"] },
+    { "id": "wp-en-rufescens", "kind": "encyclopedia", "citation": "Wikipedia (en): Hydnum rufescens", "url": "https://en.wikipedia.org/wiki/Hydnum_rufescens", "species": ["rufescens"] }
   ]
 }

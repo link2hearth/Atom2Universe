@@ -273,12 +273,13 @@
         <item>ANSES records Satan’s boletes and scarlet-stemmed boletes picked instead of dotted-stem boletes.</item>
     </string-array>
     <string name="myco_g_milkcap_title">Saffron milk cap, or not?</string>
-    <string name="myco_g_milkcap_evidence">Belgian poison centre</string>
+    <string name="myco_g_milkcap_evidence">Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_milkcap_points">
         <item>Saffron milk cap: orange milk. Woolly milkcap: white, acrid milk.</item>
         <item>Saffron milk cap: orange cap, concentric zones, pitted stem. Woolly milkcap: pink and ochre cap, hairy margin.</item>
         <item>Cut the mushroom to see the milk before concluding: once the colour of the milk is noted, the confusion is no longer possible.</item>
         <item>The woolly milkcap irritates the gut: nausea, vomiting, diarrhoea.</item>
+        <item>Three cousins of the delicious milk cap, all with coloured milk: bloody milk cap (wine-red milk), false saffron milkcap (under spruce, orange milk turning wine-purple, cap turning green), salmon milk cap (under firs, thin pale rings, never green).</item>
     </string-array>
     <string name="myco_g_puffball_title">Puffball, or not?</string>
     <string name="myco_g_puffball_evidence">Belgian poison centre</string>
@@ -1857,5 +1858,100 @@
         <item>Yellow knight: darker, sticky cap, white flesh, thin crowded gills, smell of flour. Sulphur knight: sulphur-yellow cap, thick, widely spaced gills, smell of coal gas.</item>
         <item>The smell and the colour are what Wikipedia gives to tell them apart.</item>
         <item>Neither is to be eaten: the yellow knight is toxic (see its card), the sulphur knight is listed by the DGfM for a gastrointestinal syndrome.</item>
+    </string-array>
+    <string name="myco_sanguifluus_name">Bloody milk cap</string>
+    <string name="myco_sanguifluus_alt">Lactaire sanguin</string>
+    <string name="myco_sanguifluus_latin" translatable="false">Lactarius sanguifluus</string>
+    <string-array name="myco_sanguifluus_traits">
+        <item>Cap 4 to 12 cm, convex with a sunken centre, sticky, pink-buff to orange, sometimes with grey-green patches where bruised</item>
+        <item>Gills pale wine-pink, slightly running down the stem</item>
+        <item>Stem 2 to 5 cm, pinkish-beige, sometimes with brownish or reddish pits</item>
+        <item>Wine-red milk when cut; flesh brick-red under the cap skin, mild to slightly bitter, almost no smell</item>
+        <item>Pine woods on chalky soil, mostly southern Europe · September to November</item>
+    </string-array>
+    <string name="myco_sanguifluus_note">Edible: Wikipedia (fr) calls it excellent and some authors the best of the milk caps; the DGfM and the VAPKO list it (red list category 2 in Germany). Wikipedia (en) warns that it can accumulate heavy metals: not from roadsides or polluted ground. The milk is the key: wine-red from the start. Orange milk points to the delicious milk cap or its cousins (see the group). Wikipedia (fr) says the look-alikes share its food safety but not its culinary value.</string>
+    <string name="myco_deterrimus_name">False saffron milkcap</string>
+    <string name="myco_deterrimus_alt">Lactaire des épicéas</string>
+    <string name="myco_deterrimus_latin" translatable="false">Lactarius deterrimus</string>
+    <string-array name="myco_deterrimus_traits">
+        <item>Cap 3 to 12 cm, carrot-orange, sticky, depressed to funnel-shaped, turning green with age, frost or bruising</item>
+        <item>Gills close, orange then salmon, green-spotted with age</item>
+        <item>Stem 3 to 8 cm, orange, smooth, without pits, often with a white band at the top</item>
+        <item>Scarce orange milk turning wine-purple in about half an hour; fruity smell, taste bitter and peppery</item>
+        <item>Under spruce (also bearberry) · June to November, mostly August to October</item>
+    </string-array>
+    <string name="myco_deterrimus_note">Edible but mediocre: Wikipedia (fr) and (en) agree on a bitter, unpleasant taste and often maggots; the DGfM and the VAPKO list it. Eating several can turn the urine red, which is harmless (Wikipedia, en). The delicious milk cap grows only under pines, with concentric zones on the cap and pits on the stem; the salmon milk cap grows under firs and does not turn green.</string>
+    <string name="myco_salmonicolor_name">Salmon milk cap</string>
+    <string name="myco_salmonicolor_alt">Lactaire saumon</string>
+    <string name="myco_salmonicolor_latin" translatable="false">Lactarius salmonicolor</string>
+    <string-array name="myco_salmonicolor_traits">
+        <item>Cap 6 to 15 cm, funnel-shaped with age, thin concentric rings in orange or paler, never green</item>
+        <item>Gills orange, crowded, running down the stem</item>
+        <item>Stem 2 to 10 cm, the colour of the cap, soon hollow, often pitted</item>
+        <item>Fairly abundant orange milk; flesh orange to red, white in the centre of the stem; fruity smell, taste mild or bitter</item>
+        <item>Under firs, mostly white fir, on rich soils · mainly autumn</item>
+    </string-array>
+    <string name="myco_salmonicolor_note">Edible, of little interest for some authors (Wikipedia, fr); the VAPKO notes a strong resinous taste, and the DGfM and the VAPKO list it. Under firs and never green: that sets it apart from the false saffron milkcap (under spruce, turning green) and from the delicious milk cap (under pines, mild milk).</string>
+    <string name="myco_luteus_name">Slippery jack</string>
+    <string name="myco_luteus_alt">Bolet jaune</string>
+    <string name="myco_luteus_latin" translatable="false">Suillus luteus</string>
+    <string-array name="myco_luteus_traits">
+        <item>Cap 4 to 15 cm, brown to chestnut, very slimy and glossy, the skin peels off</item>
+        <item>Fine yellow pores, turning olive with age</item>
+        <item>Stem 4 to 12 cm, pale, with a wide ring: white above, violet-brown below</item>
+        <item>Glandular dots above the ring</item>
+        <item>Mild taste, faint pleasant smell</item>
+        <item>Under pines · mostly autumn</item>
+    </string-array>
+    <string name="myco_luteus_note">Edible: the DGfM and the VAPKO list it. Wikipedia (fr) calls it mediocre, the tastiest of its genus, and advises picking only young ones, peeling the cap and removing the stem; the slimy skin is laxative and may cause indigestion, and allergies are possible. It strongly accumulates caesium-137 (Wikipedia, fr). The granulated bolete has no ring; the larch bolete grows under larches; a young Gomphidius looks alike from above but has gills (Wikipedia, en).</string>
+    <string name="myco_vesca_name">Bare-toothed russula</string>
+    <string name="myco_vesca_alt">Russule vieux-rose</string>
+    <string name="myco_vesca_latin" translatable="false">Russula vesca</string>
+    <string-array name="myco_vesca_traits">
+        <item>Cap 5 to 10 cm, pale then pink-ochre, wine-pink or purple-brown, often marbled with olive or rust patches</item>
+        <item>The skin stops short of the margin, so the gills "show their teeth"</item>
+        <item>Gills white to cream, close, forked near the stem, rust-spotted with age</item>
+        <item>Stem 2 to 10 cm, firm, white, sometimes tinged pink, browning at the base</item>
+        <item>Firm white flesh, mild taste with a nutty note</item>
+        <item>Under broadleaf trees, especially oaks, on light acid soil · July to October, sometimes from May</item>
+    </string-array>
+    <string name="myco_vesca_note">Good edible (Wikipedia, fr); the DGfM and the VAPKO list it. Rubbing the stem with ferrous sulfate turns it salmon (Wikipedia, en). Wikipedia (fr) names among its look-alikes the charcoal burner and the olive brittlegill (see their cards). The Belgian poison centre names the sickener among the russulas that cause a mild gastrointestinal illness.</string>
+    <string name="myco_rufescens_name">Terracotta hedgehog</string>
+    <string name="myco_rufescens_alt">Hydne roussissant</string>
+    <string name="myco_rufescens_latin" translatable="false">Hydnum rufescens</string>
+    <string-array name="myco_rufescens_traits">
+        <item>Cap orange to reddish-orange, russet rather than beige, finely woolly then smooth, wavy margin, often paler</item>
+        <item>Fine, brittle spines, cream with orange tints, attached to the stem and never running down it</item>
+        <item>Central stem, thinner than the pied-de-mouton, white to pale pink, turning dark yellow when handled</item>
+        <item>Brittle white flesh, fruity smell, mild or somewhat bitter taste</item>
+        <item>Broadleaf and conifer woods, alone or in large rings · July to October</item>
+    </string-array>
+    <string name="myco_rufescens_note">Edible, but less prized than the pied-de-mouton: less fleshy and slightly more bitter (Wikipedia, fr); the DGfM and the VAPKO list it. No poisoning is known (Wikipedia, fr). It differs from the pied-de-mouton by its russet cap, its smaller size and its spines that do not run down the stem; intermediate forms exist, so the two are often hard to separate. The size of the cap is not given by the sources read.</string>
+    <string name="myco_l_pink_buff_cap">Pink-buff, sticky cap, sunken centre</string>
+    <string name="myco_l_wine_gills">Pale wine-pink gills</string>
+    <string name="myco_l_wine_milk">Wine-red milk</string>
+    <string name="myco_l_flesh_brick">Brick-red flesh under the skin</string>
+    <string name="myco_l_orange_greening_cap">Carrot-orange cap, turning green</string>
+    <string name="myco_l_orange_smooth_stem">Smooth orange stem, no pits</string>
+    <string name="myco_l_pale_orange_flesh">Pale flesh, milk turning wine</string>
+    <string name="myco_l_funnel_rings_cap">Funnel cap, thin pale rings</string>
+    <string name="myco_l_ring_violet_under">Ring, violet underneath</string>
+    <string name="myco_l_wine_pink_cap">Wine-pink cap</string>
+    <string name="myco_l_russet_woolly_cap">Russet, woolly cap</string>
+    <string name="myco_l_spines_not_decurrent">Spines do not run down the stem</string>
+    <string name="myco_l_thin_central_stem">Thin, central stem</string>
+    <string name="myco_g_pinebolete_title">Slippery jack, or granulated bolete?</string>
+    <string name="myco_g_pinebolete_evidence">Wikipedia</string>
+    <string-array name="myco_g_pinebolete_points">
+        <item>Slippery jack: a wide ring, white above and violet-brown below. Granulated bolete: no ring.</item>
+        <item>Both are slimy-capped boletes of pine woods, with fine yellow pores.</item>
+        <item>Wikipedia (fr) says the slippery jack is edible with care (peeled cap, young ones only); the granulated bolete has a card of its own, with the more prudent status.</item>
+    </string-array>
+    <string name="myco_g_hedgehog_title">Pied-de-mouton, or terracotta hedgehog?</string>
+    <string name="myco_g_hedgehog_evidence">Wikipedia</string>
+    <string-array name="myco_g_hedgehog_points">
+        <item>Pied-de-mouton: beige cap, sturdy, spines running down the stem. Terracotta hedgehog: russet cap, smaller and thinner, spines that do not run down the stem.</item>
+        <item>Intermediate forms link the two species (Wikipedia, fr): the difference is not always clear.</item>
+        <item>Both are edible and have spines instead of gills or pores; the terracotta hedgehog is less fleshy and slightly more bitter.</item>
     </string-array>
 </resources>
