@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2026,
+  "candidate_count": 2033,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -9685,6 +9685,22 @@
       "ott": 600646
     },
     {
+      "name": "Hygrophorus agathosmus",
+      "en": "Gray almond waxy cap",
+      "fr": "Hygrophore à odeur agréable",
+      "seed": false,
+      "id": "ott256601",
+      "ott": 256601
+    },
+    {
+      "name": "Hygrophorus marzuolus",
+      "en": "March mushroom",
+      "fr": "Hygrophore de mars",
+      "seed": false,
+      "id": "ott3822293",
+      "ott": 3822293
+    },
+    {
       "name": "Hygrophorus penarioides",
       "en": "Hygrophorus penarioides",
       "fr": "Hygrophorus penarioides",
@@ -10663,6 +10679,14 @@
       "ott": 168215
     },
     {
+      "name": "Leccinum versipelle",
+      "en": "Orange birch bolete",
+      "fr": "Bolet orangé des bouleaux",
+      "seed": false,
+      "id": "ott157714",
+      "ott": 157714
+    },
+    {
       "name": "Leiothrix argentauris",
       "en": "Silver-eared Mesia",
       "fr": "Léiothrix à joues argent",
@@ -11548,6 +11572,14 @@
       "ott": 3093625,
       "label_qid": "Q146026",
       "label_revision": 2539420428
+    },
+    {
+      "name": "Macrolepiota excoriata",
+      "en": "Excoriated parasol",
+      "fr": "Lépiote excoriée",
+      "seed": false,
+      "id": "ott789184",
+      "ott": 789184
     },
     {
       "name": "Macrolepiota procera",
@@ -16682,6 +16714,14 @@
       "label_revision": 2537479624
     },
     {
+      "name": "Russula aurea",
+      "en": "Gilded brittlegill",
+      "fr": "Russule dorée",
+      "seed": false,
+      "id": "ott164590",
+      "ott": 164590
+    },
+    {
       "name": "Russula cyanoxantha",
       "en": "Charcoal burner",
       "fr": "Russule charbonnière",
@@ -16729,6 +16769,14 @@
       "ott": 439480,
       "label_qid": "Q80590",
       "label_revision": 2537479606
+    },
+    {
+      "name": "Russula nobilis",
+      "en": "Beechwood sickener",
+      "fr": "Russula nobilis",
+      "seed": false,
+      "id": "ott5299312",
+      "ott": 5299312
     },
     {
       "name": "Russula olivacea",
@@ -16786,6 +16834,14 @@
       "seed": false,
       "id": "ott186286",
       "ott": 186286
+    },
+    {
+      "name": "Russula xerampelina",
+      "en": "Shrimp russula",
+      "fr": "Russule xérampéline",
+      "seed": false,
+      "id": "ott647038",
+      "ott": 647038
     },
     {
       "name": "Ruta graveolens",

@@ -238333,22 +238333,24 @@
       "species": false
     },
     {
-      "id": "ott1002181",
+      "id": "ott256601",
       "parent": "ott135578",
-      "scientific": "Hygrophorus penarioides",
-      "ott": 1002181,
+      "scientific": "Hygrophorus agathosmus",
+      "ott": 256601,
       "tax_sources": [
-        "if:510527",
-        "ncbi:445026",
-        "gbif:3344835"
+        "if:218387",
+        "ncbi:860354",
+        "ncbi:183972",
+        "gbif:2538727",
+        "irmng:10478514"
       ],
       "supported_by": {
-        "ott3.7draft3": "ott1002181"
+        "ott3.7draft3": "ott256601"
       },
       "conflicts_with": {},
       "species": true,
-      "key": "pt_species_1002181",
-      "requested_node_id": "ott1002181"
+      "key": "pt_species_256601",
+      "requested_node_id": "ott256601"
     },
     {
       "id": "ott135578",
@@ -238426,6 +238428,42 @@
         ]
       },
       "species": false
+    },
+    {
+      "id": "ott3822293",
+      "parent": "ott135578",
+      "scientific": "Hygrophorus marzuolus",
+      "ott": 3822293,
+      "tax_sources": [
+        "if:181113",
+        "ncbi:1742600",
+        "gbif:7244099"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott3822293"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_3822293",
+      "requested_node_id": "ott3822293"
+    },
+    {
+      "id": "ott1002181",
+      "parent": "ott135578",
+      "scientific": "Hygrophorus penarioides",
+      "ott": 1002181,
+      "tax_sources": [
+        "if:510527",
+        "ncbi:445026",
+        "gbif:3344835"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1002181"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_1002181",
+      "requested_node_id": "ott1002181"
     },
     {
       "id": "ott251862",
@@ -246962,6 +247000,28 @@
       "species": false
     },
     {
+      "id": "ott157714",
+      "parent": "ott1012685",
+      "scientific": "Leccinum versipelle",
+      "ott": 157714,
+      "tax_sources": [
+        "if:287526",
+        "ncbi:121053",
+        "ncbi:273856",
+        "ncbi:196698",
+        "gbif:2524490",
+        "irmng:10873318",
+        "irmng:11431436"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott157714"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_157714",
+      "requested_node_id": "ott157714"
+    },
+    {
       "id": "ott451623",
       "parent": "ott1076202",
       "scientific": "Leiothrix argentauris",
@@ -255049,6 +255109,68 @@
       "species": false
     },
     {
+      "id": "ott789184",
+      "parent": "mrcaott141106ott789184",
+      "scientific": "Macrolepiota excoriata",
+      "ott": 789184,
+      "tax_sources": [
+        "if:299967",
+        "ncbi:56181",
+        "ncbi:229011",
+        "gbif:2536733",
+        "irmng:10399637"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott789184"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_789184",
+      "requested_node_id": "ott789184"
+    },
+    {
+      "id": "mrcaott141106ott789184",
+      "parent": "mrcaott141106ott141109",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "pg_368@tree5553": "node954601"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott141106ott141109",
+      "parent": "ott484268",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "pg_368@tree5553": "node954600"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott484268",
+      "parent": "mrcaott20519ott115787",
+      "scientific": "Macrolepiota",
+      "ott": 484268,
+      "tax_sources": [
+        "if:18007",
+        "ncbi:34435",
+        "gbif:2536706",
+        "irmng:1075182"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott484268",
+        "pg_368@tree5553": "node954582"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
       "id": "ott789177",
       "parent": "mrcaott789177ott929295",
       "scientific": "Macrolepiota procera",
@@ -255111,24 +255233,6 @@
       "tax_sources": [],
       "supported_by": {
         "pg_368@tree5553": "node954584"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott484268",
-      "parent": "mrcaott20519ott115787",
-      "scientific": "Macrolepiota",
-      "ott": 484268,
-      "tax_sources": [
-        "if:18007",
-        "ncbi:34435",
-        "gbif:2536706",
-        "irmng:1075182"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott484268",
-        "pg_368@tree5553": "node954582"
       },
       "conflicts_with": {},
       "species": false
@@ -305239,6 +305343,26 @@
       "requested_node_id": "ott3806400"
     },
     {
+      "id": "ott164590",
+      "parent": "ott1012685",
+      "scientific": "Russula aurea",
+      "ott": 164590,
+      "tax_sources": [
+        "if:156423",
+        "ncbi:176784",
+        "ncbi:258978",
+        "gbif:2551388",
+        "irmng:10646017"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott164590"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_164590",
+      "requested_node_id": "ott164590"
+    },
+    {
       "id": "ott611410",
       "parent": "mrcaott82940ott611410",
       "scientific": "Russula cyanoxantha",
@@ -305395,6 +305519,26 @@
       "requested_node_id": "ott439480"
     },
     {
+      "id": "ott5299312",
+      "parent": "ott1012685",
+      "scientific": "Russula nobilis",
+      "ott": 5299312,
+      "tax_sources": [
+        "if:272416",
+        "ncbi:1566360",
+        "ncbi:34443",
+        "gbif:2551208",
+        "irmng:11211722"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott5299312"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_5299312",
+      "requested_node_id": "ott5299312"
+    },
+    {
       "id": "ott237552",
       "parent": "ott1012685",
       "scientific": "Russula olivacea",
@@ -305502,6 +305646,62 @@
       "species": true,
       "key": "pt_species_186286",
       "requested_node_id": "ott186286"
+    },
+    {
+      "id": "ott647038",
+      "parent": "mrcaott647038ott829944",
+      "scientific": "Russula xerampelina",
+      "ott": 647038,
+      "tax_sources": [
+        "if:211051",
+        "ncbi:118041",
+        "ncbi:370618",
+        "gbif:2551356",
+        "irmng:10727205"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott647038"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_647038",
+      "requested_node_id": "ott647038"
+    },
+    {
+      "id": "mrcaott647038ott829944",
+      "parent": "mrcaott129159ott647038",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1140@Tr103257": "Tn16124497"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott129159ott647038",
+      "parent": "mrcaott129159ott965276",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1140@Tr103257": "Tn16124581"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott129159ott965276",
+      "parent": "ott1012685",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1140@Tr103257": "Tn16124517"
+      },
+      "conflicts_with": {},
+      "species": false
     },
     {
       "id": "ott596623",

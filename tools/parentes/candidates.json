@@ -5449,6 +5449,16 @@
       "fr": "Fausse girolle"
     },
     {
+      "name": "Hygrophorus agathosmus",
+      "en": "Gray almond waxy cap",
+      "fr": "Hygrophore à odeur agréable"
+    },
+    {
+      "name": "Hygrophorus marzuolus",
+      "en": "March mushroom",
+      "fr": "Hygrophore de mars"
+    },
+    {
       "name": "Hygrophorus penarioides",
       "en": "Hygrophorus penarioides",
       "fr": "Hygrophorus penarioides",
@@ -6075,6 +6085,11 @@
       "fr": "Bolet rude"
     },
     {
+      "name": "Leccinum versipelle",
+      "en": "Orange birch bolete",
+      "fr": "Bolet orangé des bouleaux"
+    },
+    {
       "name": "Leedsichthys problematicus",
       "en": "Leedsichthys problematicus",
       "fr": "Leedsichthys problematicus",
@@ -6614,6 +6629,11 @@
       "en": "Macroglossum trochilus",
       "fr": "Macroglossum trochilus",
       "qid": "Q146026"
+    },
+    {
+      "name": "Macrolepiota excoriata",
+      "en": "Excoriated parasol",
+      "fr": "Lépiote excoriée"
     },
     {
       "name": "Macrolepiota procera",
@@ -9649,6 +9669,11 @@
       "qid": "Q80697"
     },
     {
+      "name": "Russula aurea",
+      "en": "Gilded brittlegill",
+      "fr": "Russule dorée"
+    },
+    {
       "name": "Russula cyanoxantha",
       "en": "Charcoal burner",
       "fr": "Russule charbonnière"
@@ -9683,6 +9708,11 @@
       "qid": "Q80590"
     },
     {
+      "name": "Russula nobilis",
+      "en": "Beechwood sickener",
+      "fr": "Russula nobilis"
+    },
+    {
       "name": "Russula olivacea",
       "en": "Olive brittlegill",
       "fr": "Russule olivacée"
@@ -9714,6 +9744,11 @@
       "name": "Russula virescens",
       "en": "Green-cracking russula",
       "fr": "Russule verdoyante"
+    },
+    {
+      "name": "Russula xerampelina",
+      "en": "Shrimp russula",
+      "fr": "Russule xérampéline"
     },
     {
       "name": "Ruta graveolens",
