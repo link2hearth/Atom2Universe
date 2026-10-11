@@ -30,6 +30,8 @@
     <string name="be_source_note">References used for this profile. Taxonomic placement follows the archive used by the tree of life; publications may use an earlier classification.</string>
     <string name="be_plate_note">Natural history illustration. Sex, age and seasonal plumage can change an animal’s appearance. See the identification notes.</string>
     <string name="be_plate_accessibility">Illustration of %1$s. %2$s</string>
+    <string name="be_plate_accessibility_name">Illustration of %1$s</string>
+    <string name="be_encyclopedia_coming">An illustrated profile is available. Encyclopedic content is coming soon.</string>
     <string name="be_no_browser">No browser is available to open this source.</string>
     <string name="best_plate_loading">Loading illustration…</string>
     <string name="best_plate_unavailable">Illustration unavailable</string>

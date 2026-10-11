@@ -43,11 +43,13 @@ class BestiaryCatalogTest {
             val latinKey = names.getValue(animal.latin)
             assertEquals(animal.scientific, en.getValue(latinKey))
             assertEquals(animal.scientific, fr.getValue(latinKey))
-            val source = URI(animal.sourceUrl)
-            assertEquals("https", source.scheme)
-            assertFalse(source.host.isNullOrBlank())
-            assertTrue("Species-specific source: ${animal.id}", source.path.length > 2 || !source.rawQuery.isNullOrBlank())
-            assertTrue(animal.references.isNotEmpty())
+            if (animal.sourceUrl != null) {
+                val source = URI(animal.sourceUrl)
+                assertEquals("https", source.scheme)
+                assertFalse(source.host.isNullOrBlank())
+                assertTrue("Species-specific source: ${animal.id}", source.path.length > 2 || !source.rawQuery.isNullOrBlank())
+            }
+            if (animal.description != null) assertTrue("Detailed profile has references: ${animal.id}", animal.references.isNotEmpty())
             for (reference in animal.references) {
                 val uri = URI(reference.url)
                 assertEquals("https", uri.scheme)

@@ -7,12 +7,12 @@ data class AnimalReference(val url: String, @param:StringRes val title: Int)
 
 data class AnimalSpecies(
     val id: String, val scientific: String, val name: Int, val group: String,
-    val description: Int, val habitat: Int, val diet: Int, val behavior: Int, val identification: Int,
-    val sourceUrl: String, val sourceTitle: Int, @param:StringRes val latin: Int,
+    val description: Int?, val habitat: Int?, val diet: Int?, val behavior: Int?, val identification: Int?,
+    val sourceUrl: String?, val sourceTitle: Int?, @param:StringRes val latin: Int,
     @param:StringRes val reproduction: Int? = null,
     @param:StringRes val ecology: Int? = null,
     @param:StringRes val conservation: Int? = null,
-    val references: List<AnimalReference> = listOf(AnimalReference(sourceUrl, sourceTitle))
+    val references: List<AnimalReference> = if (sourceUrl != null && sourceTitle != null) listOf(AnimalReference(sourceUrl, sourceTitle)) else emptyList()
 )
 
 /** Stable species identities; content deliberately avoids dated population and status estimates. */
@@ -119,6 +119,7 @@ object AnimalCatalog {
         AnimalSpecies("common_octopus", "Octopus vulgaris", R.string.animal_common_octopus_name, "invertebrates", R.string.animal_common_octopus_description, R.string.animal_common_octopus_habitat, R.string.animal_common_octopus_diet, R.string.animal_common_octopus_behavior, R.string.animal_common_octopus_identification, "https://animaldiversity.org/accounts/Octopus_vulgaris/", R.string.animal_source_adw, latin = R.string.animal_common_octopus_latin),
         AnimalSpecies("common_starfish", "Asterias rubens", R.string.animal_common_starfish_name, "invertebrates", R.string.animal_common_starfish_description, R.string.animal_common_starfish_habitat, R.string.animal_common_starfish_diet, R.string.animal_common_starfish_behavior, R.string.animal_common_starfish_identification, "https://animaldiversity.org/accounts/Asterias_rubens/", R.string.animal_source_adw, latin = R.string.animal_common_starfish_latin),
     )
-    val species = (initial.associateBy { it.id } + BestiaryEncyclopediaCatalog.species.associateBy { it.id }).values.toList()
+    // Detailed profiles take precedence if an accepted illustration manifest repeats an existing identity.
+    val species = (BestiaryIllustratedCatalog.species.associateBy { it.id } + initial.associateBy { it.id } + BestiaryEncyclopediaCatalog.species.associateBy { it.id }).values.toList()
     val byId = species.associateBy { it.id }
 }

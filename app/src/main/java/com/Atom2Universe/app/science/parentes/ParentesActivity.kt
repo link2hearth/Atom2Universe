@@ -413,7 +413,7 @@ class ParentesActivity : ThemedActivity() {
         body.addView(label(article(id)))
         bestiaryIndex?.forNode(id)?.let { speciesId ->
             AnimalCatalog.byId[speciesId]?.let { animal ->
-                body.addView(label(getString(animal.description)))
+                animal.description?.let { body.addView(label(getString(it))) }
             }
         }
         PlantGroupKnowledge.append(this,body,palette,node.scientific,includeDescription=false)

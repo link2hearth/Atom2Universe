@@ -1,0 +1,1614 @@
+{
+  "schema_version": 1,
+  "review_status": "accepted",
+  "species": [
+    {
+      "id": "eurasian_sparrowhawk",
+      "scientific_name": "Accipiter nisus",
+      "name_en": "Eurasian Sparrowhawk",
+      "name_fr": "Épervier d'Europe",
+      "group": "birds",
+      "image": "eurasian_sparrowhawk.webp"
+    },
+    {
+      "id": "common_sandpiper",
+      "scientific_name": "Actitis hypoleucos",
+      "name_en": "Common Sandpiper",
+      "name_fr": "Chevalier guignette",
+      "group": "birds",
+      "image": "common_sandpiper.webp"
+    },
+    {
+      "id": "little_auk",
+      "scientific_name": "Alle alle",
+      "name_en": "Little Auk",
+      "name_fr": "Mergule nain",
+      "group": "birds",
+      "image": "little_auk.webp"
+    },
+    {
+      "id": "northern_pintail",
+      "scientific_name": "Anas acuta",
+      "name_en": "Northern Pintail",
+      "name_fr": "Canard pilet",
+      "group": "birds",
+      "image": "northern_pintail.webp"
+    },
+    {
+      "id": "eurasian_teal",
+      "scientific_name": "Anas crecca",
+      "name_en": "Eurasian Teal",
+      "name_fr": "Sarcelle d'hiver",
+      "group": "birds",
+      "image": "eurasian_teal.webp"
+    },
+    {
+      "id": "meadow_pipit",
+      "scientific_name": "Anthus pratensis",
+      "name_en": "Meadow Pipit",
+      "name_fr": "Pipit farlouse",
+      "group": "birds",
+      "image": "meadow_pipit.webp"
+    },
+    {
+      "id": "ruddy_turnstone",
+      "scientific_name": "Arenaria interpres",
+      "name_en": "Ruddy Turnstone",
+      "name_fr": "Tournepierre à collier",
+      "group": "birds",
+      "image": "ruddy_turnstone.webp"
+    },
+    {
+      "id": "short_eared_owl",
+      "scientific_name": "Asio flammeus",
+      "name_en": "Short-eared Owl",
+      "name_fr": "Hibou des marais",
+      "group": "birds",
+      "image": "short_eared_owl.webp"
+    },
+    {
+      "id": "common_pochard",
+      "scientific_name": "Aythya ferina",
+      "name_en": "Common Pochard",
+      "name_fr": "fuligule milouin",
+      "group": "birds",
+      "image": "common_pochard.webp"
+    },
+    {
+      "id": "tufted_duck",
+      "scientific_name": "Aythya fuligula",
+      "name_en": "Tufted Duck",
+      "name_fr": "Fuligule morillon",
+      "group": "birds",
+      "image": "tufted_duck.webp"
+    },
+    {
+      "id": "bohemian_waxwing",
+      "scientific_name": "Bombycilla garrulus",
+      "name_en": "Bohemian Waxwing",
+      "name_fr": "Jaseur boréal",
+      "group": "birds",
+      "image": "bohemian_waxwing.webp"
+    },
+    {
+      "id": "eurasian_bittern",
+      "scientific_name": "Botaurus stellaris",
+      "name_en": "Eurasian Bittern",
+      "name_fr": "Butor étoilé",
+      "group": "birds",
+      "image": "eurasian_bittern.webp"
+    },
+    {
+      "id": "brant_goose",
+      "scientific_name": "Branta bernicla",
+      "name_en": "Brant Goose",
+      "name_fr": "bernache cravant",
+      "group": "birds",
+      "image": "brant_goose.webp"
+    },
+    {
+      "id": "great_horned_owl",
+      "scientific_name": "Bubo virginianus",
+      "name_en": "Great Horned Owl",
+      "name_fr": "Grand-duc d'Amérique",
+      "group": "birds",
+      "image": "great_horned_owl.webp"
+    },
+    {
+      "id": "dunlin",
+      "scientific_name": "Calidris alpina",
+      "name_en": "Dunlin",
+      "name_fr": "Bécasseau variable",
+      "group": "birds",
+      "image": "dunlin.webp"
+    },
+    {
+      "id": "red_knot",
+      "scientific_name": "Calidris canutus",
+      "name_en": "Red Knot",
+      "name_fr": "Bécasseau maubèche",
+      "group": "birds",
+      "image": "red_knot.webp"
+    },
+    {
+      "id": "european_nightjar",
+      "scientific_name": "Caprimulgus europaeus",
+      "name_en": "European Nightjar",
+      "name_fr": "Engoulevent d'Europe",
+      "group": "birds",
+      "image": "european_nightjar.webp"
+    },
+    {
+      "id": "european_herring_gull",
+      "scientific_name": "Larus argentatus",
+      "name_en": "European Herring Gull",
+      "name_fr": "Goéland argenté",
+      "group": "birds",
+      "image": "european_herring_gull.webp"
+    },
+    {
+      "id": "eurasian_oystercatcher",
+      "scientific_name": "Haematopus ostralegus",
+      "name_en": "Eurasian Oystercatcher",
+      "name_fr": "Huîtrier pie",
+      "group": "birds",
+      "image": "eurasian_oystercatcher.webp"
+    },
+    {
+      "id": "northern_lapwing",
+      "scientific_name": "Vanellus vanellus",
+      "name_en": "Northern Lapwing",
+      "name_fr": "Vanneau huppé",
+      "group": "birds",
+      "image": "northern_lapwing.webp"
+    },
+    {
+      "id": "greater_scaup",
+      "scientific_name": "Aythya marila",
+      "name_en": "Greater Scaup",
+      "name_fr": "Fuligule milouinan",
+      "group": "birds",
+      "image": "greater_scaup.webp"
+    },
+    {
+      "id": "black_stork",
+      "scientific_name": "Ciconia nigra",
+      "name_en": "Black Stork",
+      "name_fr": "Cigogne noire",
+      "group": "birds",
+      "image": "black_stork.webp"
+    },
+    {
+      "id": "hooded_crow",
+      "scientific_name": "Corvus cornix",
+      "name_en": "Hooded Crow",
+      "name_fr": "corneille mantelée",
+      "group": "birds",
+      "image": "hooded_crow.webp"
+    },
+    {
+      "id": "yellowhammer",
+      "scientific_name": "Emberiza citrinella",
+      "name_en": "Yellowhammer",
+      "name_fr": "Bruant jaune",
+      "group": "birds",
+      "image": "yellowhammer.webp"
+    },
+    {
+      "id": "reed_bunting",
+      "scientific_name": "Emberiza schoeniclus",
+      "name_en": "Reed Bunting",
+      "name_fr": "Bruant des roseaux",
+      "group": "birds",
+      "image": "reed_bunting.webp"
+    },
+    {
+      "id": "pied_flycatcher",
+      "scientific_name": "Ficedula hypoleuca",
+      "name_en": "European Pied Flycatcher",
+      "name_fr": "Gobemouche noir",
+      "group": "birds",
+      "image": "pied_flycatcher.webp"
+    },
+    {
+      "id": "northern_fulmar",
+      "scientific_name": "Fulmarus glacialis",
+      "name_en": "Northern Fulmar",
+      "name_fr": "Fulmar boréal",
+      "group": "birds",
+      "image": "northern_fulmar.webp"
+    },
+    {
+      "id": "white_tailed_eagle",
+      "scientific_name": "Haliaeetus albicilla",
+      "name_en": "White-tailed Eagle",
+      "name_fr": "Pygargue à queue blanche",
+      "group": "birds",
+      "image": "white_tailed_eagle.webp"
+    },
+    {
+      "id": "red_backed_shrike",
+      "scientific_name": "Lanius collurio",
+      "name_en": "Red-backed Shrike",
+      "name_fr": "Pie-grièche écorcheur",
+      "group": "birds",
+      "image": "red_backed_shrike.webp"
+    },
+    {
+      "id": "great_black_backed_gull",
+      "scientific_name": "Larus marinus",
+      "name_en": "Great Black-backed Gull",
+      "name_fr": "Goéland marin",
+      "group": "birds",
+      "image": "great_black_backed_gull.webp"
+    },
+    {
+      "id": "red_crossbill",
+      "scientific_name": "Loxia curvirostra",
+      "name_en": "Red Crossbill",
+      "name_fr": "Bec-croisé des sapins",
+      "group": "birds",
+      "image": "red_crossbill.webp"
+    },
+    {
+      "id": "bluethroat",
+      "scientific_name": "Luscinia svecica",
+      "name_en": "Bluethroat",
+      "name_fr": "Gorgebleue à miroir",
+      "group": "birds",
+      "image": "bluethroat.webp"
+    },
+    {
+      "id": "black_kite",
+      "scientific_name": "Milvus migrans",
+      "name_en": "Black Kite",
+      "name_fr": "Milan noir",
+      "group": "birds",
+      "image": "black_kite.webp"
+    },
+    {
+      "id": "black_tailed_godwit",
+      "scientific_name": "Limosa limosa",
+      "name_en": "Black-tailed Godwit",
+      "name_fr": "Barge à queue noire",
+      "group": "birds",
+      "image": "black_tailed_godwit.webp"
+    },
+    {
+      "id": "long_tailed_duck",
+      "scientific_name": "Clangula hyemalis",
+      "name_en": "Long-tailed Duck",
+      "name_fr": "Harelde de Miquelon",
+      "group": "birds",
+      "image": "long_tailed_duck.webp"
+    },
+    {
+      "id": "stock_dove",
+      "scientific_name": "Columba oenas",
+      "name_en": "Stock Dove",
+      "name_fr": "Pigeon colombin",
+      "group": "birds",
+      "image": "stock_dove.webp"
+    },
+    {
+      "id": "rough_legged_buzzard",
+      "scientific_name": "Buteo lagopus",
+      "name_en": "Rough-legged Buzzard",
+      "name_fr": "Buse pattue",
+      "group": "birds",
+      "image": "rough_legged_buzzard.webp"
+    },
+    {
+      "id": "western_marsh_harrier",
+      "scientific_name": "Circus aeruginosus",
+      "name_en": "Western Marsh Harrier",
+      "name_fr": "Busard des roseaux",
+      "group": "birds",
+      "image": "western_marsh_harrier.webp"
+    },
+    {
+      "id": "hen_harrier",
+      "scientific_name": "Circus cyaneus",
+      "name_en": "Hen Harrier",
+      "name_fr": "Busard Saint-Martin",
+      "group": "birds",
+      "image": "hen_harrier.webp"
+    },
+    {
+      "id": "eurasian_hobby",
+      "scientific_name": "Falco subbuteo",
+      "name_en": "Eurasian Hobby",
+      "name_fr": "Faucon hobereau",
+      "group": "birds",
+      "image": "eurasian_hobby.webp"
+    },
+    {
+      "id": "motacilla_alba",
+      "scientific_name": "Motacilla alba",
+      "name_en": "White Wagtail",
+      "name_fr": "Bergeronnette grise",
+      "group": "birds",
+      "image": "motacilla_alba.webp"
+    },
+    {
+      "id": "passer_montanus",
+      "scientific_name": "Passer montanus",
+      "name_en": "Eurasian Tree Sparrow",
+      "name_fr": "Moineau friquet",
+      "group": "birds",
+      "image": "passer_montanus.webp"
+    },
+    {
+      "id": "regulus_regulus",
+      "scientific_name": "Regulus regulus",
+      "name_en": "Goldcrest",
+      "name_fr": "Roitelet huppé",
+      "group": "birds",
+      "image": "regulus_regulus.webp"
+    },
+    {
+      "id": "tachybaptus_ruficollis",
+      "scientific_name": "Tachybaptus ruficollis",
+      "name_en": "Little Grebe",
+      "name_fr": "Grèbe castagneux",
+      "group": "birds",
+      "image": "tachybaptus_ruficollis.webp"
+    },
+    {
+      "id": "muscicapa_striata",
+      "scientific_name": "Muscicapa striata",
+      "name_en": "Spotted Flycatcher",
+      "name_fr": "Gobemouche gris",
+      "group": "birds",
+      "image": "muscicapa_striata.webp"
+    },
+    {
+      "id": "scolopax_rusticola",
+      "scientific_name": "Scolopax rusticola",
+      "name_en": "Eurasian Woodcock",
+      "name_fr": "Bécasse des bois",
+      "group": "birds",
+      "image": "scolopax_rusticola.webp"
+    },
+    {
+      "id": "hemiechinus_auritus",
+      "scientific_name": "Hemiechinus auritus",
+      "name_en": "Long-eared Hedgehog",
+      "name_fr": "Hérisson à grandes oreilles",
+      "group": "mammals",
+      "image": "hemiechinus_auritus.webp"
+    },
+    {
+      "id": "pelophylax_esculentus",
+      "scientific_name": "Pelophylax esculentus",
+      "name_en": "Edible Frog",
+      "name_fr": "Grenouille verte",
+      "group": "amphibians",
+      "image": "pelophylax_esculentus.webp"
+    },
+    {
+      "id": "anguilla_anguilla",
+      "scientific_name": "Anguilla anguilla",
+      "name_en": "European Eel",
+      "name_fr": "Anguille européenne",
+      "group": "fish",
+      "image": "anguilla_anguilla.webp"
+    },
+    {
+      "id": "solea_solea",
+      "scientific_name": "Solea solea",
+      "name_en": "Common Sole",
+      "name_fr": "Sole commune",
+      "group": "fish",
+      "image": "solea_solea.webp"
+    },
+    {
+      "id": "petromyzon_marinus",
+      "scientific_name": "Petromyzon marinus",
+      "name_en": "Sea Lamprey",
+      "name_fr": "Lamproie marine",
+      "group": "fish",
+      "image": "petromyzon_marinus.webp"
+    },
+    {
+      "id": "tinca_tinca",
+      "scientific_name": "Tinca tinca",
+      "name_en": "Tench",
+      "name_fr": "Tanche",
+      "group": "fish",
+      "image": "tinca_tinca.webp"
+    },
+    {
+      "id": "amatitlania_nigrofasciata",
+      "scientific_name": "Amatitlania nigrofasciata",
+      "name_en": "Convict Cichlid",
+      "name_fr": "Cichlidé zébré",
+      "group": "fish",
+      "image": "amatitlania_nigrofasciata.webp"
+    },
+    {
+      "id": "anax_imperator",
+      "scientific_name": "Anax imperator",
+      "name_en": "Emperor Dragonfly",
+      "name_fr": "Anax empereur",
+      "group": "invertebrates",
+      "image": "anax_imperator.webp"
+    },
+    {
+      "id": "araneus_diadematus",
+      "scientific_name": "Araneus diadematus",
+      "name_en": "Cross Orbweaver",
+      "name_fr": "Épeire diadème",
+      "group": "invertebrates",
+      "image": "araneus_diadematus.webp"
+    },
+    {
+      "id": "gryllus_campestris",
+      "scientific_name": "Gryllus campestris",
+      "name_en": "Field Cricket",
+      "name_fr": "Grillon champêtre",
+      "group": "invertebrates",
+      "image": "gryllus_campestris.webp"
+    },
+    {
+      "id": "chorthippus_parallelus",
+      "scientific_name": "Chorthippus parallelus",
+      "name_en": "Meadow Grasshopper",
+      "name_fr": "Criquet des pâtures",
+      "group": "invertebrates",
+      "image": "chorthippus_parallelus.webp"
+    },
+    {
+      "id": "dytiscus_marginalis",
+      "scientific_name": "Dytiscus marginalis",
+      "name_en": "Great Diving Beetle",
+      "name_fr": "Dytique bordé",
+      "group": "invertebrates",
+      "image": "dytiscus_marginalis.webp"
+    },
+    {
+      "id": "lasius_niger",
+      "scientific_name": "Lasius niger",
+      "name_en": "Black Garden Ant",
+      "name_fr": "Fourmi noire des jardins",
+      "group": "invertebrates",
+      "image": "lasius_niger.webp"
+    },
+    {
+      "id": "lumbricus_terrestris",
+      "scientific_name": "Lumbricus terrestris",
+      "name_en": "Common Earthworm",
+      "name_fr": "Lombric terrestre",
+      "group": "invertebrates",
+      "image": "lumbricus_terrestris.webp"
+    },
+    {
+      "id": "aegithina_tiphia",
+      "scientific_name": "Aegithina tiphia",
+      "name_en": "Common Iora",
+      "name_fr": "Petit Iora",
+      "group": "birds",
+      "image": "aegithina_tiphia.webp"
+    },
+    {
+      "id": "anser_cygnoides",
+      "scientific_name": "Anser cygnoides",
+      "name_en": "Swan Goose",
+      "name_fr": "Oie cygnoïde",
+      "group": "birds",
+      "image": "anser_cygnoides.webp"
+    },
+    {
+      "id": "bonasa_umbellus",
+      "scientific_name": "Bonasa umbellus",
+      "name_en": "Ruffed Grouse",
+      "name_fr": "Gélinotte huppée",
+      "group": "birds",
+      "image": "bonasa_umbellus.webp"
+    },
+    {
+      "id": "charadrius_dubius",
+      "scientific_name": "Charadrius dubius",
+      "name_en": "Little Ringed Plover",
+      "name_fr": "Petit Gravelot",
+      "group": "birds",
+      "image": "charadrius_dubius.webp"
+    },
+    {
+      "id": "chloephaga_picta",
+      "scientific_name": "Chloephaga picta",
+      "name_en": "Upland Goose",
+      "name_fr": "Ouette de Magellan",
+      "group": "birds",
+      "image": "chloephaga_picta.webp"
+    },
+    {
+      "id": "galerida_cristata",
+      "scientific_name": "Galerida cristata",
+      "name_en": "Crested Lark",
+      "name_fr": "Cochevis huppé",
+      "group": "birds",
+      "image": "galerida_cristata.webp"
+    },
+    {
+      "id": "gavia_stellata",
+      "scientific_name": "Gavia stellata",
+      "name_en": "Red-throated Diver",
+      "name_fr": "Plongeon catmarin",
+      "group": "birds",
+      "image": "gavia_stellata.webp"
+    },
+    {
+      "id": "lullula_arborea",
+      "scientific_name": "Lullula arborea",
+      "name_en": "Woodlark",
+      "name_fr": "Alouette lulu",
+      "group": "birds",
+      "image": "lullula_arborea.webp"
+    },
+    {
+      "id": "melanitta_nigra",
+      "scientific_name": "Melanitta nigra",
+      "name_en": "Common Scoter",
+      "name_fr": "Macreuse noire",
+      "group": "birds",
+      "image": "melanitta_nigra.webp"
+    },
+    {
+      "id": "merops_philippinus",
+      "scientific_name": "Merops philippinus",
+      "name_en": "Blue-tailed Bee-eater",
+      "name_fr": "Guêpier à queue d’azur",
+      "group": "birds",
+      "image": "merops_philippinus.webp"
+    },
+    {
+      "id": "numenius_arquata",
+      "scientific_name": "Numenius arquata",
+      "name_en": "Eurasian Curlew",
+      "name_fr": "Courlis cendré",
+      "group": "birds",
+      "image": "numenius_arquata.webp"
+    },
+    {
+      "id": "oenanthe_oenanthe",
+      "scientific_name": "Oenanthe oenanthe",
+      "name_en": "Northern Wheatear",
+      "name_fr": "Traquet motteux",
+      "group": "birds",
+      "image": "oenanthe_oenanthe.webp"
+    },
+    {
+      "id": "plectrophenax_nivalis",
+      "scientific_name": "Plectrophenax nivalis",
+      "name_en": "Snow Bunting",
+      "name_fr": "Bruant des neiges",
+      "group": "birds",
+      "image": "plectrophenax_nivalis.webp"
+    },
+    {
+      "id": "pluvialis_apricaria",
+      "scientific_name": "Pluvialis apricaria",
+      "name_en": "European Golden Plover",
+      "name_fr": "Pluvier doré",
+      "group": "birds",
+      "image": "pluvialis_apricaria.webp"
+    },
+    {
+      "id": "turdus_pilaris",
+      "scientific_name": "Turdus pilaris",
+      "name_en": "Fieldfare",
+      "name_fr": "Grive litorne",
+      "group": "birds",
+      "image": "turdus_pilaris.webp"
+    },
+    {
+      "id": "somateria_mollissima",
+      "scientific_name": "Somateria mollissima",
+      "name_en": "Common Eider",
+      "name_fr": "Eider à duvet",
+      "group": "birds",
+      "image": "somateria_mollissima.webp"
+    },
+    {
+      "id": "tadorna_tadorna",
+      "scientific_name": "Tadorna tadorna",
+      "name_en": "Common Shelduck",
+      "name_fr": "Tadorne de Belon",
+      "group": "birds",
+      "image": "tadorna_tadorna.webp"
+    },
+    {
+      "id": "mytilus_edulis",
+      "scientific_name": "Mytilus edulis",
+      "name_en": "Blue mussel",
+      "name_fr": "Moule commune",
+      "group": "invertebrates",
+      "image": "mytilus_edulis.webp"
+    },
+    {
+      "id": "hippocampus_reidi",
+      "scientific_name": "Hippocampus reidi",
+      "name_en": "Slender seahorse",
+      "name_fr": "Hippocampus reidi",
+      "group": "fish",
+      "image": "hippocampus_reidi.webp"
+    },
+    {
+      "id": "sepia_officinalis",
+      "scientific_name": "Sepia officinalis",
+      "name_en": "Common cuttlefish",
+      "name_fr": "Seiche commune",
+      "group": "invertebrates",
+      "image": "sepia_officinalis.webp"
+    },
+    {
+      "id": "strongylocentrotus_purpuratus",
+      "scientific_name": "Strongylocentrotus purpuratus",
+      "name_en": "Purple sea urchin",
+      "name_fr": "Oursin pourpre",
+      "group": "invertebrates",
+      "image": "strongylocentrotus_purpuratus.webp"
+    },
+    {
+      "id": "limulus_polyphemus",
+      "scientific_name": "Limulus polyphemus",
+      "name_en": "Atlantic horseshoe crab",
+      "name_fr": "Limule atlantique",
+      "group": "invertebrates",
+      "image": "limulus_polyphemus.webp"
+    },
+    {
+      "id": "leptinotarsa_decemlineata",
+      "scientific_name": "Leptinotarsa decemlineata",
+      "name_en": "Colorado potato beetle",
+      "name_fr": "Doryphore",
+      "group": "invertebrates",
+      "image": "leptinotarsa_decemlineata.webp"
+    },
+    {
+      "id": "lepisma_saccharina",
+      "scientific_name": "Lepisma saccharina",
+      "name_en": "Silverfish",
+      "name_fr": "Lepisma saccharina",
+      "group": "invertebrates",
+      "image": "lepisma_saccharina.webp"
+    },
+    {
+      "id": "latrodectus_hasselti",
+      "scientific_name": "Latrodectus hasselti",
+      "name_en": "Redback spider",
+      "name_fr": "Latrodectus hasselti",
+      "group": "invertebrates",
+      "image": "latrodectus_hasselti.webp"
+    },
+    {
+      "id": "daphnia_magna",
+      "scientific_name": "Daphnia magna",
+      "name_en": "Water flea",
+      "name_fr": "Grande daphnie",
+      "group": "invertebrates",
+      "image": "daphnia_magna.webp"
+    },
+    {
+      "id": "carausius_morosus",
+      "scientific_name": "Carausius morosus",
+      "name_en": "Indian stick insect",
+      "name_fr": "Phasme morose",
+      "group": "invertebrates",
+      "image": "carausius_morosus.webp"
+    },
+    {
+      "id": "acheta_domesticus",
+      "scientific_name": "Acheta domesticus",
+      "name_en": "House cricket",
+      "name_fr": "Acheta domesticus",
+      "group": "invertebrates",
+      "image": "acheta_domesticus.webp"
+    },
+    {
+      "id": "blatta_orientalis",
+      "scientific_name": "Blatta orientalis",
+      "name_en": "Oriental cockroach",
+      "name_fr": "Blatta orientalis",
+      "group": "invertebrates",
+      "image": "blatta_orientalis.webp"
+    },
+    {
+      "id": "pandalus_borealis",
+      "scientific_name": "Pandalus borealis",
+      "name_en": "Northern prawn",
+      "name_fr": "Crevette nordique du Canada",
+      "group": "invertebrates",
+      "image": "pandalus_borealis.webp"
+    },
+    {
+      "id": "iphiclides_podalirius",
+      "scientific_name": "Iphiclides podalirius",
+      "name_en": "Scarce Swallowtail",
+      "name_fr": "Flambé",
+      "group": "invertebrates",
+      "image": "iphiclides_podalirius.webp"
+    },
+    {
+      "id": "actias_luna",
+      "scientific_name": "Actias luna",
+      "name_en": "Luna moth",
+      "name_fr": "Actias luna",
+      "group": "invertebrates",
+      "image": "actias_luna.webp"
+    },
+    {
+      "id": "aplysia_dactylomela",
+      "scientific_name": "Aplysia dactylomela",
+      "name_en": "Aplysia dactylomela",
+      "name_fr": "Aplysia dactylomela",
+      "group": "invertebrates",
+      "image": "aplysia_dactylomela.webp"
+    },
+    {
+      "id": "elysia_chlorotica",
+      "scientific_name": "Elysia chlorotica",
+      "name_en": "Eastern emerald elysia",
+      "name_fr": "Elysia chlorotica",
+      "group": "invertebrates",
+      "image": "elysia_chlorotica.webp"
+    },
+    {
+      "id": "anartia_amathea",
+      "scientific_name": "Anartia amathea",
+      "name_en": "Scarlet Peacock",
+      "name_fr": "Anartia amathea",
+      "group": "invertebrates",
+      "image": "anartia_amathea.webp"
+    },
+    {
+      "id": "callorhinus_ursinus",
+      "scientific_name": "Callorhinus ursinus",
+      "name_en": "northern fur seal",
+      "name_fr": "Otarie à fourrure du Nord",
+      "group": "mammals",
+      "image": "callorhinus_ursinus.webp"
+    },
+    {
+      "id": "dicrurus_macrocercus",
+      "scientific_name": "Dicrurus macrocercus",
+      "name_en": "Black Drongo",
+      "name_fr": "Drongo royal",
+      "group": "birds",
+      "image": "dicrurus_macrocercus.webp"
+    },
+    {
+      "id": "hydrophasianus_chirurgus",
+      "scientific_name": "Hydrophasianus chirurgus",
+      "name_en": "Pheasant-tailed Jacana",
+      "name_fr": "Jacana à longue queue",
+      "group": "birds",
+      "image": "hydrophasianus_chirurgus.webp"
+    },
+    {
+      "id": "jynx_torquilla",
+      "scientific_name": "Jynx torquilla",
+      "name_en": "Eurasian Wryneck",
+      "name_fr": "Torcol fourmilier",
+      "group": "birds",
+      "image": "jynx_torquilla.webp"
+    },
+    {
+      "id": "neophron_percnopterus",
+      "scientific_name": "Neophron percnopterus",
+      "name_en": "Egyptian Vulture",
+      "name_fr": "Percnoptère",
+      "group": "birds",
+      "image": "neophron_percnopterus.webp"
+    },
+    {
+      "id": "pelecanus_conspicillatus",
+      "scientific_name": "Pelecanus conspicillatus",
+      "name_en": "Australian Pelican",
+      "name_fr": "Pélican à lunettes",
+      "group": "birds",
+      "image": "pelecanus_conspicillatus.webp"
+    },
+    {
+      "id": "phoenicurus_phoenicurus",
+      "scientific_name": "Phoenicurus phoenicurus",
+      "name_en": "Common Redstart",
+      "name_fr": "Rougequeue à front blanc",
+      "group": "birds",
+      "image": "phoenicurus_phoenicurus.webp"
+    },
+    {
+      "id": "probosciger_aterrimus",
+      "scientific_name": "Probosciger aterrimus",
+      "name_en": "Palm Cockatoo",
+      "name_fr": "Cacatoès noir",
+      "group": "birds",
+      "image": "probosciger_aterrimus.webp"
+    },
+    {
+      "id": "riparia_riparia",
+      "scientific_name": "Riparia riparia",
+      "name_en": "Sand Martin",
+      "name_fr": "Hirondelle de rivage",
+      "group": "birds",
+      "image": "riparia_riparia.webp"
+    },
+    {
+      "id": "sula_granti",
+      "scientific_name": "Sula granti",
+      "name_en": "Nazca Booby",
+      "name_fr": "Fou de Grant",
+      "group": "birds",
+      "image": "sula_granti.webp"
+    },
+    {
+      "id": "larus_hyperboreus",
+      "scientific_name": "Larus hyperboreus",
+      "name_en": "Glaucous Gull",
+      "name_fr": "Goéland bourgmestre",
+      "group": "birds",
+      "image": "larus_hyperboreus.webp"
+    },
+    {
+      "id": "larus_canus",
+      "scientific_name": "Larus canus",
+      "name_en": "Common Gull",
+      "name_fr": "Goéland cendré",
+      "group": "birds",
+      "image": "larus_canus.webp"
+    },
+    {
+      "id": "ophiophagus_hannah",
+      "scientific_name": "Ophiophagus hannah",
+      "name_en": "king cobra",
+      "name_fr": "Cobra royal",
+      "group": "reptiles",
+      "image": "ophiophagus_hannah.webp"
+    },
+    {
+      "id": "thymallus_arcticus",
+      "scientific_name": "Thymallus arcticus",
+      "name_en": "Arctic grayling",
+      "name_fr": "Ombre Arctique",
+      "group": "fish",
+      "image": "thymallus_arcticus.webp"
+    },
+    {
+      "id": "zoarces_viviparus",
+      "scientific_name": "Zoarces viviparus",
+      "name_en": "Viviparous eelpout",
+      "name_fr": "Blennie vivipare",
+      "group": "fish",
+      "image": "zoarces_viviparus.webp"
+    },
+    {
+      "id": "homarus_americanus",
+      "scientific_name": "Homarus americanus",
+      "name_en": "American lobster",
+      "name_fr": "homard américain",
+      "group": "invertebrates",
+      "image": "homarus_americanus.webp"
+    },
+    {
+      "id": "hetaerina_americana",
+      "scientific_name": "Hetaerina americana",
+      "name_en": "American Rubyspot",
+      "name_fr": "Hetaerina americana",
+      "group": "invertebrates",
+      "image": "hetaerina_americana.webp"
+    },
+    {
+      "id": "anobium_punctatum",
+      "scientific_name": "Anobium punctatum",
+      "name_en": "Common furniture beetle",
+      "name_fr": "Petite vrillette",
+      "group": "invertebrates",
+      "image": "anobium_punctatum.webp"
+    },
+    {
+      "id": "hylotrupes_bajulus",
+      "scientific_name": "Hylotrupes bajulus",
+      "name_en": "Old-house borer",
+      "name_fr": "Capricorne des maisons",
+      "group": "invertebrates",
+      "image": "hylotrupes_bajulus.webp"
+    },
+    {
+      "id": "acanthoscurria_geniculata",
+      "scientific_name": "Acanthoscurria geniculata",
+      "name_en": "Brazilian Whiteknee Tarantula",
+      "name_fr": "Mygale à genoux blancs",
+      "group": "invertebrates",
+      "image": "acanthoscurria_geniculata.webp"
+    },
+    {
+      "id": "anas_clypeata",
+      "scientific_name": "Anas clypeata",
+      "name_en": "Northern Shoveler",
+      "name_fr": "Canard souchet",
+      "group": "birds",
+      "image": "anas_clypeata.webp"
+    },
+    {
+      "id": "recurvirostra_avosetta",
+      "scientific_name": "Recurvirostra avosetta",
+      "name_en": "Pied Avocet",
+      "name_fr": "Avocette élégante",
+      "group": "birds",
+      "image": "recurvirostra_avosetta.webp"
+    },
+    {
+      "id": "tringa_totanus",
+      "scientific_name": "Tringa totanus",
+      "name_en": "Common Redshank",
+      "name_fr": "Chevalier gambette",
+      "group": "birds",
+      "image": "tringa_totanus.webp"
+    },
+    {
+      "id": "turdus_philomelos",
+      "scientific_name": "Turdus philomelos",
+      "name_en": "Song Thrush",
+      "name_fr": "Grive musicienne",
+      "group": "birds",
+      "image": "turdus_philomelos.webp"
+    },
+    {
+      "id": "perdix_perdix",
+      "scientific_name": "Perdix perdix",
+      "name_en": "Grey Partridge",
+      "name_fr": "Perdrix grise",
+      "group": "birds",
+      "image": "perdix_perdix.webp"
+    },
+    {
+      "id": "uria_aalge",
+      "scientific_name": "Uria aalge",
+      "name_en": "Common Guillemot",
+      "name_fr": "Guillemot de Troïl",
+      "group": "birds",
+      "image": "uria_aalge.webp"
+    },
+    {
+      "id": "charadrius_alexandrinus",
+      "scientific_name": "Charadrius alexandrinus",
+      "name_en": "Kentish Plover",
+      "name_fr": "Pluvier à collier interrompu",
+      "group": "birds",
+      "image": "charadrius_alexandrinus.webp"
+    },
+    {
+      "id": "accipiter_gentilis",
+      "scientific_name": "Accipiter gentilis",
+      "name_en": "Northern Goshawk",
+      "name_fr": "Autour des palombes",
+      "group": "birds",
+      "image": "accipiter_gentilis.webp"
+    },
+    {
+      "id": "gallinago_gallinago",
+      "scientific_name": "Gallinago gallinago",
+      "name_en": "Common Snipe",
+      "name_fr": "Bécassine des marais",
+      "group": "birds",
+      "image": "gallinago_gallinago.webp"
+    },
+    {
+      "id": "pieris_rapae",
+      "scientific_name": "Pieris rapae",
+      "name_en": "Small White",
+      "name_fr": "Piéride de la rave",
+      "group": "invertebrates",
+      "image": "pieris_rapae.webp"
+    },
+    {
+      "id": "pieris_brassicae",
+      "scientific_name": "Pieris brassicae",
+      "name_en": "Large White",
+      "name_fr": "Piéride du chou",
+      "group": "invertebrates",
+      "image": "pieris_brassicae.webp"
+    },
+    {
+      "id": "porcellio_scaber",
+      "scientific_name": "Porcellio scaber",
+      "name_en": "Common Rough Woodlouse",
+      "name_fr": "Cloporte rugueux",
+      "group": "invertebrates",
+      "image": "porcellio_scaber.webp"
+    },
+    {
+      "id": "henosepilachna_argus",
+      "scientific_name": "Henosepilachna argus",
+      "name_en": "Bryony Ladybird",
+      "name_fr": "Coccinelle de la Bryone",
+      "group": "invertebrates",
+      "image": "henosepilachna_argus.webp"
+    },
+    {
+      "id": "plathemis_lydia",
+      "scientific_name": "Plathemis lydia",
+      "name_en": "Common Whitetail",
+      "name_fr": "Plathemis lydia",
+      "group": "invertebrates",
+      "image": "plathemis_lydia.webp"
+    },
+    {
+      "id": "papilio_demodocus",
+      "scientific_name": "Papilio demodocus",
+      "name_en": "Citrus Swallowtail",
+      "name_fr": "Papilio demodocus",
+      "group": "invertebrates",
+      "image": "papilio_demodocus.webp"
+    },
+    {
+      "id": "stegobium_paniceum",
+      "scientific_name": "Stegobium paniceum",
+      "name_en": "Biscuit Beetle",
+      "name_fr": "Vrillette du pain",
+      "group": "invertebrates",
+      "image": "stegobium_paniceum.webp"
+    },
+    {
+      "id": "arion_ater",
+      "scientific_name": "Arion ater",
+      "name_en": "Black Slug",
+      "name_fr": "Grande limace noire",
+      "group": "invertebrates",
+      "image": "arion_ater.webp"
+    },
+    {
+      "id": "thalasseus_sandvicensis",
+      "scientific_name": "Thalasseus sandvicensis",
+      "name_en": "Sandwich Tern",
+      "name_fr": "Sterne caugek",
+      "group": "birds",
+      "image": "thalasseus_sandvicensis.webp"
+    },
+    {
+      "id": "todiramphus_sanctus",
+      "scientific_name": "Todiramphus sanctus",
+      "name_en": "Sacred Kingfisher",
+      "name_fr": "Martin-chasseur sacré",
+      "group": "birds",
+      "image": "todiramphus_sanctus.webp"
+    },
+    {
+      "id": "falco_biarmicus",
+      "scientific_name": "Falco biarmicus",
+      "name_en": "Lanner Falcon",
+      "name_fr": "Faucon lanier",
+      "group": "birds",
+      "image": "falco_biarmicus.webp"
+    },
+    {
+      "id": "hydrobates_pelagicus",
+      "scientific_name": "Hydrobates pelagicus",
+      "name_en": "European Storm Petrel",
+      "name_fr": "Océanite tempête",
+      "group": "birds",
+      "image": "hydrobates_pelagicus.webp"
+    },
+    {
+      "id": "hydroprogne_caspia",
+      "scientific_name": "Hydroprogne caspia",
+      "name_en": "Caspian Tern",
+      "name_fr": "Sterne caspienne",
+      "group": "birds",
+      "image": "hydroprogne_caspia.webp"
+    },
+    {
+      "id": "limosa_lapponica",
+      "scientific_name": "Limosa lapponica",
+      "name_en": "Bar-tailed Godwit",
+      "name_fr": "Barge rousse",
+      "group": "birds",
+      "image": "limosa_lapponica.webp"
+    },
+    {
+      "id": "numenius_phaeopus",
+      "scientific_name": "Numenius phaeopus",
+      "name_en": "Eurasian Whimbrel",
+      "name_fr": "Courlis corlieu",
+      "group": "birds",
+      "image": "numenius_phaeopus.webp"
+    },
+    {
+      "id": "pluvialis_squatarola",
+      "scientific_name": "Pluvialis squatarola",
+      "name_en": "Grey Plover",
+      "name_fr": "Pluvier argenté",
+      "group": "birds",
+      "image": "pluvialis_squatarola.webp"
+    },
+    {
+      "id": "prunella_modularis",
+      "scientific_name": "Prunella modularis",
+      "name_en": "Dunnock",
+      "name_fr": "Accenteur mouchet",
+      "group": "birds",
+      "image": "prunella_modularis.webp"
+    },
+    {
+      "id": "sterna_paradisaea",
+      "scientific_name": "Sterna paradisaea",
+      "name_en": "Arctic Tern",
+      "name_fr": "Sterne arctique",
+      "group": "birds",
+      "image": "sterna_paradisaea.webp"
+    },
+    {
+      "id": "andinoacara_pulcher",
+      "scientific_name": "Andinoacara pulcher",
+      "name_en": "Blue acara",
+      "name_fr": "Andinoacara pulcher",
+      "group": "fish",
+      "image": "andinoacara_pulcher.webp"
+    },
+    {
+      "id": "betta_imbellis",
+      "scientific_name": "Betta imbellis",
+      "name_en": "Peaceful betta",
+      "name_fr": "Betta imbellis",
+      "group": "fish",
+      "image": "betta_imbellis.webp"
+    },
+    {
+      "id": "callionymus_lyra",
+      "scientific_name": "Callionymus lyra",
+      "name_en": "Common dragonet",
+      "name_fr": "Callionymus lyra",
+      "group": "fish",
+      "image": "callionymus_lyra.webp"
+    },
+    {
+      "id": "nothobranchius_rachovii",
+      "scientific_name": "Nothobranchius rachovii",
+      "name_en": "Nothobranchius rachovii",
+      "name_fr": "Nothobranche de Rachov",
+      "group": "fish",
+      "image": "nothobranchius_rachovii.webp"
+    },
+    {
+      "id": "cassida_rubiginosa",
+      "scientific_name": "Cassida rubiginosa",
+      "name_en": "Thistle tortoise beetle",
+      "name_fr": "Cassida rubiginosa",
+      "group": "invertebrates",
+      "image": "cassida_rubiginosa.webp"
+    },
+    {
+      "id": "libellula_forensis",
+      "scientific_name": "Libellula forensis",
+      "name_en": "Eight-spotted Skimmer",
+      "name_fr": "Libellula forensis",
+      "group": "invertebrates",
+      "image": "libellula_forensis.webp"
+    },
+    {
+      "id": "euproctis_similis",
+      "scientific_name": "Euproctis similis",
+      "name_en": "yellow-tail",
+      "name_fr": "Euproctis similis",
+      "group": "invertebrates",
+      "image": "euproctis_similis.webp"
+    },
+    {
+      "id": "tockus_flavirostris",
+      "scientific_name": "Tockus flavirostris",
+      "name_en": "Eastern Yellow-billed Hornbill",
+      "name_fr": "Calao à bec jaune",
+      "group": "birds",
+      "image": "tockus_flavirostris.webp"
+    },
+    {
+      "id": "tringa_nebularia",
+      "scientific_name": "Tringa nebularia",
+      "name_en": "Common Greenshank",
+      "name_fr": "Chevalier aboyeur",
+      "group": "birds",
+      "image": "tringa_nebularia.webp"
+    },
+    {
+      "id": "calidris_ruficollis",
+      "scientific_name": "Calidris ruficollis",
+      "name_en": "Red-necked Stint",
+      "name_fr": "Bécasseau à col roux",
+      "group": "birds",
+      "image": "calidris_ruficollis.webp"
+    },
+    {
+      "id": "anas_querquedula",
+      "scientific_name": "Anas querquedula",
+      "name_en": "Garganey",
+      "name_fr": "Sarcelle d’été",
+      "group": "birds",
+      "image": "anas_querquedula.webp"
+    },
+    {
+      "id": "circus_pygargus",
+      "scientific_name": "Circus pygargus",
+      "name_en": "Montagu Harrier",
+      "name_fr": "Busard cendré",
+      "group": "birds",
+      "image": "circus_pygargus.webp"
+    },
+    {
+      "id": "motacilla_flava",
+      "scientific_name": "Motacilla flava",
+      "name_en": "Yellow Wagtail",
+      "name_fr": "Bergeronnette printanière",
+      "group": "birds",
+      "image": "motacilla_flava.webp"
+    },
+    {
+      "id": "larus_fuscus",
+      "scientific_name": "Larus fuscus",
+      "name_en": "Lesser Black-backed Gull",
+      "name_fr": "Goéland brun",
+      "group": "birds",
+      "image": "larus_fuscus.webp"
+    },
+    {
+      "id": "cygnus_columbianus",
+      "scientific_name": "Cygnus columbianus",
+      "name_en": "Tundra Swan",
+      "name_fr": "Cygne siffleur",
+      "group": "birds",
+      "image": "cygnus_columbianus.webp"
+    },
+    {
+      "id": "turdus_torquatus",
+      "scientific_name": "Turdus torquatus",
+      "name_en": "Ring Ouzel",
+      "name_fr": "Merle à plastron",
+      "group": "birds",
+      "image": "turdus_torquatus.webp"
+    },
+    {
+      "id": "sternula_antillarum",
+      "scientific_name": "Sternula antillarum",
+      "name_en": "Least Tern",
+      "name_fr": "Petite Sterne",
+      "group": "birds",
+      "image": "sternula_antillarum.webp"
+    },
+    {
+      "id": "crex_crex",
+      "scientific_name": "Crex crex",
+      "name_en": "Corn Crake",
+      "name_fr": "Râle des genêts",
+      "group": "birds",
+      "image": "crex_crex.webp"
+    },
+    {
+      "id": "phalacrocorax_fuscescens",
+      "scientific_name": "Phalacrocorax fuscescens",
+      "name_en": "Black-faced Cormorant",
+      "name_fr": "Cormoran de Tasmanie",
+      "group": "birds",
+      "image": "phalacrocorax_fuscescens.webp"
+    },
+    {
+      "id": "eidolon_helvum",
+      "scientific_name": "Eidolon helvum",
+      "name_en": "Straw-coloured Fruit Bat",
+      "name_fr": "Eidolon helvum",
+      "group": "mammals",
+      "image": "eidolon_helvum.webp"
+    },
+    {
+      "id": "ictiobus_cyprinellus",
+      "scientific_name": "Ictiobus cyprinellus",
+      "name_en": "Bigmouth Buffalo",
+      "name_fr": "Ictiobus cyprinellus",
+      "group": "fish",
+      "image": "ictiobus_cyprinellus.webp"
+    },
+    {
+      "id": "scyliorhinus_stellaris",
+      "scientific_name": "Scyliorhinus stellaris",
+      "name_en": "Nursehound",
+      "name_fr": "Scyliorhinus stellaris",
+      "group": "fish",
+      "image": "scyliorhinus_stellaris.webp"
+    },
+    {
+      "id": "antennarius_multiocellatus",
+      "scientific_name": "Antennarius multiocellatus",
+      "name_en": "Longlure Frogfish",
+      "name_fr": "Antennarius multiocellatus",
+      "group": "fish",
+      "image": "antennarius_multiocellatus.webp"
+    },
+    {
+      "id": "adela_reaumurella",
+      "scientific_name": "Adela reaumurella",
+      "name_en": "Green Longhorn Moth",
+      "name_fr": "Adela reaumurella",
+      "group": "invertebrates",
+      "image": "adela_reaumurella.webp"
+    },
+    {
+      "id": "agriopis_marginaria",
+      "scientific_name": "Agriopis marginaria",
+      "name_en": "Dotted Border Moth",
+      "name_fr": "Agriopis marginaria",
+      "group": "invertebrates",
+      "image": "agriopis_marginaria.webp"
+    },
+    {
+      "id": "chiasmia_clathrata",
+      "scientific_name": "Chiasmia clathrata",
+      "name_en": "Latticed Heath",
+      "name_fr": "Chiasmia clathrata",
+      "group": "invertebrates",
+      "image": "chiasmia_clathrata.webp"
+    },
+    {
+      "id": "erythemis_vesiculosa",
+      "scientific_name": "Erythemis vesiculosa",
+      "name_en": "Great Pondhawk",
+      "name_fr": "Erythemis vesiculosa",
+      "group": "invertebrates",
+      "image": "erythemis_vesiculosa.webp"
+    },
+    {
+      "id": "tramea_onusta",
+      "scientific_name": "Tramea onusta",
+      "name_en": "Red-mantled Saddlebags",
+      "name_fr": "Tramea onusta",
+      "group": "invertebrates",
+      "image": "tramea_onusta.webp"
+    },
+    {
+      "id": "apus_nipalensis",
+      "scientific_name": "Apus nipalensis",
+      "name_en": "House Swift",
+      "name_fr": "Martinet malais",
+      "group": "birds",
+      "image": "apus_nipalensis.webp"
+    },
+    {
+      "id": "calidris_tenuirostris",
+      "scientific_name": "Calidris tenuirostris",
+      "name_en": "Great Knot",
+      "name_fr": "Bécasseau de l'Anadyr",
+      "group": "birds",
+      "image": "calidris_tenuirostris.webp"
+    },
+    {
+      "id": "troglodytes_troglodytes",
+      "scientific_name": "Troglodytes troglodytes",
+      "name_en": "Wren",
+      "name_fr": "Troglodyte mignon",
+      "group": "birds",
+      "image": "troglodytes_troglodytes.webp"
+    },
+    {
+      "id": "coccyzus_minor",
+      "scientific_name": "Coccyzus minor",
+      "name_en": "Mangrove Cuckoo",
+      "name_fr": "Coulicou manioc",
+      "group": "birds",
+      "image": "coccyzus_minor.webp"
+    },
+    {
+      "id": "coscoroba_coscoroba",
+      "scientific_name": "Coscoroba coscoroba",
+      "name_en": "Coscoroba Swan",
+      "name_fr": "Coscoroba blanc",
+      "group": "birds",
+      "image": "coscoroba_coscoroba.webp"
+    },
+    {
+      "id": "dinopium_javanense",
+      "scientific_name": "Dinopium javanense",
+      "name_en": "Common Flameback",
+      "name_fr": "Pic à dos rouge",
+      "group": "birds",
+      "image": "dinopium_javanense.webp"
+    },
+    {
+      "id": "gelochelidon_nilotica",
+      "scientific_name": "Gelochelidon nilotica",
+      "name_en": "Gull-billed Tern",
+      "name_fr": "Sterne hansel",
+      "group": "birds",
+      "image": "gelochelidon_nilotica.webp"
+    },
+    {
+      "id": "phalacrocorax_varius",
+      "scientific_name": "Phalacrocorax varius",
+      "name_en": "Australian Pied Cormorant",
+      "name_fr": "Cormoran varié",
+      "group": "birds",
+      "image": "phalacrocorax_varius.webp"
+    },
+    {
+      "id": "pluvialis_fulva",
+      "scientific_name": "Pluvialis fulva",
+      "name_en": "Pacific Golden Plover",
+      "name_fr": "Pluvier fauve",
+      "group": "birds",
+      "image": "pluvialis_fulva.webp"
+    },
+    {
+      "id": "rostratula_benghalensis",
+      "scientific_name": "Rostratula benghalensis",
+      "name_en": "Greater Painted-snipe",
+      "name_fr": "Rhynchée peinte",
+      "group": "birds",
+      "image": "rostratula_benghalensis.webp"
+    },
+    {
+      "id": "thalasseus_bergii",
+      "scientific_name": "Thalasseus bergii",
+      "name_en": "Greater Crested Tern",
+      "name_fr": "Sterne huppée",
+      "group": "birds",
+      "image": "thalasseus_bergii.webp"
+    },
+    {
+      "id": "todiramphus_chloris",
+      "scientific_name": "Todiramphus chloris",
+      "name_en": "Collared Kingfisher",
+      "name_fr": "Martin-chasseur à collier blanc",
+      "group": "birds",
+      "image": "todiramphus_chloris.webp"
+    },
+    {
+      "id": "tringa_flavipes",
+      "scientific_name": "Tringa flavipes",
+      "name_en": "Lesser Yellowlegs",
+      "name_fr": "Petit Chevalier",
+      "group": "birds",
+      "image": "tringa_flavipes.webp"
+    },
+    {
+      "id": "tringa_glareola",
+      "scientific_name": "Tringa glareola",
+      "name_en": "Wood Sandpiper",
+      "name_fr": "Chevalier sylvain",
+      "group": "birds",
+      "image": "tringa_glareola.webp"
+    },
+    {
+      "id": "tringa_erythropus",
+      "scientific_name": "Tringa erythropus",
+      "name_en": "Spotted Redshank",
+      "name_fr": "Chevalier arlequin",
+      "group": "birds",
+      "image": "tringa_erythropus.webp"
+    },
+    {
+      "id": "xenus_cinereus",
+      "scientific_name": "Xenus cinereus",
+      "name_en": "Terek Sandpiper",
+      "name_fr": "Chevalier bargette",
+      "group": "birds",
+      "image": "xenus_cinereus.webp"
+    },
+    {
+      "id": "coregonus_migratorius",
+      "scientific_name": "Coregonus migratorius",
+      "name_en": "omul",
+      "name_fr": "Omoul",
+      "group": "fish",
+      "image": "coregonus_migratorius.webp"
+    },
+    {
+      "id": "ixodes_ricinus",
+      "scientific_name": "Ixodes ricinus",
+      "name_en": "Castor bean tick",
+      "name_fr": "Tique du mouton",
+      "group": "invertebrates",
+      "image": "ixodes_ricinus.webp"
+    },
+    {
+      "id": "coccyzus_erythropthalmus",
+      "scientific_name": "Coccyzus erythropthalmus",
+      "name_en": "Black-billed Cuckoo",
+      "name_fr": "Coulicou à bec noir",
+      "group": "birds",
+      "image": "coccyzus_erythropthalmus.webp"
+    },
+    {
+      "id": "alcedo_coerulescens",
+      "scientific_name": "Alcedo coerulescens",
+      "name_en": "Cerulean Kingfisher",
+      "name_fr": "Martin-pêcheur aigue-marine",
+      "group": "birds",
+      "image": "alcedo_coerulescens.webp"
+    },
+    {
+      "id": "anastomus_lamelligerus",
+      "scientific_name": "Anastomus lamelligerus",
+      "name_en": "African Openbill",
+      "name_fr": "Bec-ouvert africain",
+      "group": "birds",
+      "image": "anastomus_lamelligerus.webp"
+    },
+    {
+      "id": "caprimulgus_macrurus",
+      "scientific_name": "Caprimulgus macrurus",
+      "name_en": "Large-tailed Nightjar",
+      "name_fr": "Engoulevent de Horsfield",
+      "group": "birds",
+      "image": "caprimulgus_macrurus.webp"
+    },
+    {
+      "id": "common_ringed_plover",
+      "scientific_name": "Charadrius hiaticula",
+      "name_en": "Common Ringed Plover",
+      "name_fr": "Pluvier grand-gravelot",
+      "group": "birds",
+      "image": "common_ringed_plover.webp"
+    },
+    {
+      "id": "dallia_pectoralis",
+      "scientific_name": "Dallia pectoralis",
+      "name_en": "Alaska blackfish",
+      "name_fr": "Dallia pectoralis",
+      "group": "fish",
+      "image": "dallia_pectoralis.webp"
+    },
+    {
+      "id": "deltote_uncula",
+      "scientific_name": "Deltote uncula",
+      "name_en": "Silver Hook Moth",
+      "name_fr": "Deltote uncula",
+      "group": "invertebrates",
+      "image": "deltote_uncula.webp"
+    },
+    {
+      "id": "libellula_luctuosa",
+      "scientific_name": "Libellula luctuosa",
+      "name_en": "Widow Skimmer",
+      "name_fr": "Libellule mélancolique",
+      "group": "invertebrates",
+      "image": "libellula_luctuosa.webp"
+    },
+    {
+      "id": "littorina_littorea",
+      "scientific_name": "Littorina littorea",
+      "name_en": "Common periwinkle",
+      "name_fr": "Bigorneau commun",
+      "group": "invertebrates",
+      "image": "littorina_littorea.webp"
+    },
+    {
+      "id": "merops_leschenaulti",
+      "scientific_name": "Merops leschenaulti",
+      "name_en": "Chestnut-headed Bee-eater",
+      "name_fr": "Guêpier de Leschenault",
+      "group": "birds",
+      "image": "merops_leschenaulti.webp"
+    },
+    {
+      "id": "rissa_tridactyla",
+      "scientific_name": "Rissa tridactyla",
+      "name_en": "Black-legged Kittiwake",
+      "name_fr": "Mouette tridactyle",
+      "group": "birds",
+      "image": "rissa_tridactyla.webp"
+    },
+    {
+      "id": "trachinotus_baillonii",
+      "scientific_name": "Trachinotus baillonii",
+      "name_en": "Smallspotted dart",
+      "name_fr": "Pompaneau muscadin",
+      "group": "fish",
+      "image": "trachinotus_baillonii.webp"
+    },
+    {
+      "id": "tramea_lacerata",
+      "scientific_name": "Tramea lacerata",
+      "name_en": "Black Saddlebags",
+      "name_fr": "Tramea lacerata",
+      "group": "invertebrates",
+      "image": "tramea_lacerata.webp"
+    }
+  ]
+}

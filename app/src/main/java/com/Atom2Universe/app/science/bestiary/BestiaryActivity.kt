@@ -188,12 +188,17 @@ class BestiaryActivity : ThemedActivity() {
         val media = column()
         val plate = AnimalPlateView(this).apply {
             variant = animal.id
-            contentDescription = getString(R.string.be_plate_accessibility, getString(animal.name), getString(animal.identification))
+            contentDescription = animal.identification?.let {
+                getString(R.string.be_plate_accessibility, getString(animal.name), getString(it))
+            } ?: getString(R.string.be_plate_accessibility_name, getString(animal.name))
         }
         media.addView(FitFrame(this, .78f, dp(640)).apply { addView(plate, android.widget.FrameLayout.LayoutParams(-1, -1, Gravity.CENTER)) },
             if (fiche.wide) LinearLayout.LayoutParams(-1, 0, 1f) else full())
         media.addView(label(getString(R.string.be_plate_note), 12f), full())
         val body = column()
+        if (animal.description == null) {
+            body.addView(label(getString(R.string.be_encyclopedia_coming), 15f), full())
+        }
         listOf(R.string.be_overview to animal.description, R.string.be_identification to animal.identification,
             R.string.be_habitat to animal.habitat, R.string.be_diet to animal.diet, R.string.be_behavior to animal.behavior,
             R.string.be_reproduction to animal.reproduction, R.string.be_ecology to animal.ecology,
@@ -213,14 +218,16 @@ class BestiaryActivity : ThemedActivity() {
                     .putExtra(ParentesActivity.EXTRA_NODE_ID, node))
             }, full())
         }
-        body.addView(label(getString(R.string.be_sources), 18f, true), full(18))
-        body.addView(label(getString(R.string.be_source_note), 12f), full(4))
-        animal.references.forEach { reference ->
-            body.addView(button(getString(reference.title)) {
-                try { startActivity(Intent(Intent.ACTION_VIEW, reference.url.toUri())) }
-                catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.be_no_browser, Toast.LENGTH_SHORT).show() }
-            }, full())
-            body.addView(label(reference.url, 12f).apply { setTextIsSelectable(true) }, full(4))
+        if (animal.references.isNotEmpty()) {
+            body.addView(label(getString(R.string.be_sources), 18f, true), full(18))
+            body.addView(label(getString(R.string.be_source_note), 12f), full(4))
+            animal.references.forEach { reference ->
+                body.addView(button(getString(reference.title)) {
+                    try { startActivity(Intent(Intent.ACTION_VIEW, reference.url.toUri())) }
+                    catch (_: ActivityNotFoundException) { Toast.makeText(this, R.string.be_no_browser, Toast.LENGTH_SHORT).show() }
+                }, full())
+                body.addView(label(reference.url, 12f).apply { setTextIsSelectable(true) }, full(4))
+            }
         }
         fiche.show(getString(animal.name), top, media, body)
     }

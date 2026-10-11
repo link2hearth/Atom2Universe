@@ -30,6 +30,8 @@
     <string name="be_source_note">Références utilisées pour cette fiche. La position taxonomique suit l’archive de l’arbre du vivant ; les publications peuvent employer une classification plus ancienne.</string>
     <string name="be_plate_note">Illustration naturaliste. Le sexe, l’âge et le plumage saisonnier peuvent modifier l’apparence. Lis les notes d’identification.</string>
     <string name="be_plate_accessibility">Illustration de %1$s. %2$s</string>
+    <string name="be_plate_accessibility_name">Illustration de %1$s</string>
+    <string name="be_encyclopedia_coming">Une illustration est disponible. La fiche encyclopédique sera ajoutée plus tard.</string>
     <string name="be_no_browser">Aucun navigateur disponible pour ouvrir cette source.</string>
     <string name="best_plate_loading">Chargement de l’illustration…</string>
     <string name="best_plate_unavailable">Illustration indisponible</string>
