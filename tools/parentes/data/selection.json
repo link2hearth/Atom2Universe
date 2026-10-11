@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2033,
+  "candidate_count": 2041,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -1688,6 +1688,14 @@
       "ott": 112640
     },
     {
+      "name": "Agaricus moelleri",
+      "en": "Inky mushroom",
+      "fr": "Agaric pintade",
+      "seed": false,
+      "id": "ott744057",
+      "ott": 744057
+    },
+    {
       "name": "Agaricus pilatianus",
       "en": "Agaricus pilatianus",
       "fr": "Agaricus pilatianus",
@@ -2644,6 +2652,14 @@
       "ott": 1067404
     },
     {
+      "name": "Amanita gemmata",
+      "en": "Jonquil amanita",
+      "fr": "Amanite jonquille",
+      "seed": false,
+      "id": "ott490816",
+      "ott": 490816
+    },
+    {
       "name": "Amanita ovoidea",
       "en": "Bearded amanita",
       "fr": "Amanite ovoïde",
@@ -2666,6 +2682,14 @@
       "seed": false,
       "id": "ott545199",
       "ott": 545199
+    },
+    {
+      "name": "Amanita porphyria",
+      "en": "Grey veiled amanita",
+      "fr": "Amanita porphyria",
+      "seed": false,
+      "id": "ott2015",
+      "ott": 2015
     },
     {
       "name": "Amanita proxima",
@@ -2885,6 +2909,14 @@
       "ott": 893890,
       "label_qid": "Q139978",
       "label_revision": 2524239617
+    },
+    {
+      "name": "Ampulloclitocybe clavipes",
+      "en": "Club foot",
+      "fr": "Ampulloclitocybe clavipes",
+      "seed": false,
+      "id": "ott454800",
+      "ott": 454800
     },
     {
       "name": "Anacardium occidentale",
@@ -8971,6 +9003,14 @@
       "label_revision": 2537710646
     },
     {
+      "name": "Gymnopus fusipes",
+      "en": "Spindle shank",
+      "fr": "Collybie à pied en fuseau",
+      "seed": false,
+      "id": "ott106239",
+      "ott": 106239
+    },
+    {
       "name": "Gyptis bruneli",
       "en": "Gyptis bruneli",
       "fr": "Gyptis bruneli",
@@ -9677,6 +9717,14 @@
       "label_revision": 2550174289
     },
     {
+      "name": "Hygrocybe conica",
+      "en": "Blackening waxcap",
+      "fr": "Hygrocybe conica",
+      "seed": false,
+      "id": "ott110716",
+      "ott": 110716
+    },
+    {
       "name": "Hygrophoropsis aurantiaca",
       "en": "False chanterelle",
       "fr": "Fausse girolle",
@@ -10354,6 +10402,14 @@
       "ott": 115819,
       "label_qid": "Q80533",
       "label_revision": 2537499722
+    },
+    {
+      "name": "Lactarius helvus",
+      "en": "Fenugreek milkcap",
+      "fr": "Lactaire à odeur d’érable",
+      "seed": false,
+      "id": "ott912861",
+      "ott": 912861
     },
     {
       "name": "Lactarius lignyotus",
@@ -11761,6 +11817,14 @@
       "ott": 73662,
       "label_qid": "Q106728",
       "label_revision": 2517946500
+    },
+    {
+      "name": "Megacollybia platyphylla",
+      "en": "Broadgilled collybia",
+      "fr": "Collybie à lames larges",
+      "seed": false,
+      "id": "ott292755",
+      "ott": 292755
     },
     {
       "name": "Megahexura fulva",

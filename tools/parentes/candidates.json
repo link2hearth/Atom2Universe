@@ -448,6 +448,11 @@
       "fr": "Rosé des prés"
     },
     {
+      "name": "Agaricus moelleri",
+      "en": "Inky mushroom",
+      "fr": "Agaric pintade"
+    },
+    {
       "name": "Agaricus pilatianus",
       "en": "Agaricus pilatianus",
       "fr": "Agaricus pilatianus",
@@ -1008,6 +1013,11 @@
       "fr": "Amanite citrine"
     },
     {
+      "name": "Amanita gemmata",
+      "en": "Jonquil amanita",
+      "fr": "Amanite jonquille"
+    },
+    {
       "name": "Amanita muscaria",
       "en": "Fly agaric",
       "fr": "Amanite tue-mouches"
@@ -1026,6 +1036,11 @@
       "name": "Amanita phalloides",
       "en": "Death cap",
       "fr": "Amanite phalloïde"
+    },
+    {
+      "name": "Amanita porphyria",
+      "en": "Grey veiled amanita",
+      "fr": "Amanita porphyria"
     },
     {
       "name": "Amanita proxima",
@@ -1184,6 +1199,11 @@
       "en": "Amphioctopus marginatus",
       "fr": "Amphioctopus marginatus",
       "qid": "Q139978"
+    },
+    {
+      "name": "Ampulloclitocybe clavipes",
+      "en": "Club foot",
+      "fr": "Ampulloclitocybe clavipes"
     },
     {
       "name": "Anacardium occidentale",
@@ -4919,6 +4939,11 @@
       "qid": "Q80601"
     },
     {
+      "name": "Gymnopus fusipes",
+      "en": "Spindle shank",
+      "fr": "Collybie à pied en fuseau"
+    },
+    {
       "name": "Gyptis arenicolus",
       "en": "Gyptis arenicolus",
       "fr": "Gyptis arenicolus",
@@ -5444,6 +5469,11 @@
       "qid": "Q27129"
     },
     {
+      "name": "Hygrocybe conica",
+      "en": "Blackening waxcap",
+      "fr": "Hygrocybe conica"
+    },
+    {
       "name": "Hygrophoropsis aurantiaca",
       "en": "False chanterelle",
       "fr": "Fausse girolle"
@@ -5892,6 +5922,11 @@
       "en": "Lactarius fennoscandicus",
       "fr": "Lactarius fennoscandicus",
       "qid": "Q80533"
+    },
+    {
+      "name": "Lactarius helvus",
+      "en": "Fenugreek milkcap",
+      "fr": "Lactaire à odeur d’érable"
     },
     {
       "name": "Lactarius lignyotus",
@@ -6740,6 +6775,11 @@
       "en": "Megamouth shark",
       "fr": "Requin grande gueule",
       "qid": "Q106728"
+    },
+    {
+      "name": "Megacollybia platyphylla",
+      "en": "Broadgilled collybia",
+      "fr": "Collybie à lames larges"
     },
     {
       "name": "Megahexura fulva",
