@@ -237577,6 +237577,25 @@
       "species": false
     },
     {
+      "id": "ott935577",
+      "parent": "ott788391",
+      "scientific": "Hydnum rufescens",
+      "ott": 935577,
+      "tax_sources": [
+        "if:219829",
+        "ncbi:139363",
+        "gbif:2544165",
+        "irmng:11395402"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott935577"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_935577",
+      "requested_node_id": "ott935577"
+    },
+    {
       "id": "ott656589",
       "parent": "mrcaott137524ott3595637",
       "scientific": "Hydrobates pelagicus",
@@ -244156,6 +244175,25 @@
       "requested_node_id": "ott54236"
     },
     {
+      "id": "ott558125",
+      "parent": "mrcaott471ott5265",
+      "scientific": "Lactarius deterrimus",
+      "ott": 558125,
+      "tax_sources": [
+        "if:332881",
+        "ncbi:36060",
+        "gbif:7925734",
+        "irmng:10396642"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott558125"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_558125",
+      "requested_node_id": "ott558125"
+    },
+    {
       "id": "ott115819",
       "parent": "mrcaott471ott5265",
       "scientific": "Lactarius fennoscandicus",
@@ -244286,6 +244324,43 @@
       "species": true,
       "key": "pt_species_55178",
       "requested_node_id": "ott55178"
+    },
+    {
+      "id": "ott561236",
+      "parent": "mrcaott471ott5265",
+      "scientific": "Lactarius salmonicolor",
+      "ott": 561236,
+      "tax_sources": [
+        "if:332907",
+        "ncbi:93010",
+        "gbif:5248788",
+        "irmng:11255835"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott561236"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_561236",
+      "requested_node_id": "ott561236"
+    },
+    {
+      "id": "ott451905",
+      "parent": "mrcaott471ott5265",
+      "scientific": "Lactarius sanguifluus",
+      "ott": 451905,
+      "tax_sources": [
+        "if:229103",
+        "ncbi:111137",
+        "gbif:5248648"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott451905"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_451905",
+      "requested_node_id": "ott451905"
     },
     {
       "id": "ott186676",
@@ -305131,6 +305206,25 @@
       "requested_node_id": "ott5299281"
     },
     {
+      "id": "ott812088",
+      "parent": "ott1012685",
+      "scientific": "Russula vesca",
+      "ott": 812088,
+      "tax_sources": [
+        "if:203547",
+        "ncbi:152972",
+        "gbif:2551415",
+        "irmng:11363198"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott812088"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_812088",
+      "requested_node_id": "ott812088"
+    },
+    {
       "id": "ott186286",
       "parent": "ott1012685",
       "scientific": "Russula virescens",
@@ -319055,6 +319149,50 @@
       "supported_by": {
         "ot_1784@Tr106951": "Tn16775874",
         "ot_458@Tr80994": "Tn12454591"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott428806",
+      "parent": "mrcaott896824ott5263066",
+      "scientific": "Suillus luteus",
+      "ott": 428806,
+      "tax_sources": [
+        "if:120823",
+        "ncbi:5384",
+        "ncbi:1814250",
+        "gbif:7777157",
+        "irmng:11169580"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott428806"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_428806",
+      "requested_node_id": "ott428806"
+    },
+    {
+      "id": "mrcaott896824ott5263066",
+      "parent": "mrcaott428804ott896824",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "pg_348@tree381": "node198678"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott428804ott896824",
+      "parent": "mrcaott199372ott428804",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "pg_348@tree381": "node198677"
       },
       "conflicts_with": {},
       "species": false

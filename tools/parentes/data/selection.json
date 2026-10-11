@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2013,
+  "candidate_count": 2019,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -9609,6 +9609,14 @@
       "label_revision": 2537669357
     },
     {
+      "name": "Hydnum rufescens",
+      "en": "Terracotta hedgehog",
+      "fr": "Hydne roussissant",
+      "seed": false,
+      "id": "ott935577",
+      "ott": 935577
+    },
+    {
       "name": "Hydrobates pelagicus",
       "en": "European Storm Petrel",
       "fr": "Océanite tempête",
@@ -10297,6 +10305,14 @@
       "ott": 54236
     },
     {
+      "name": "Lactarius deterrimus",
+      "en": "False saffron milkcap",
+      "fr": "Lactaire des épicéas",
+      "seed": false,
+      "id": "ott558125",
+      "ott": 558125
+    },
+    {
       "name": "Lactarius fennoscandicus",
       "en": "Lactarius fennoscandicus",
       "fr": "Lactarius fennoscandicus",
@@ -10328,6 +10344,22 @@
       "ott": 55178,
       "label_qid": "Q80742",
       "label_revision": 2537499729
+    },
+    {
+      "name": "Lactarius salmonicolor",
+      "en": "Salmon milk cap",
+      "fr": "Lactaire saumon",
+      "seed": false,
+      "id": "ott561236",
+      "ott": 561236
+    },
+    {
+      "name": "Lactarius sanguifluus",
+      "en": "Bloody milk cap",
+      "fr": "Lactaire sanguin",
+      "seed": false,
+      "id": "ott451905",
+      "ott": 451905
     },
     {
       "name": "Lactarius sphagneti",
@@ -16692,6 +16724,14 @@
       "label_revision": 2537479623
     },
     {
+      "name": "Russula vesca",
+      "en": "Bare-toothed russula",
+      "fr": "Russule vieux-rose",
+      "seed": false,
+      "id": "ott812088",
+      "ott": 812088
+    },
+    {
       "name": "Russula virescens",
       "en": "Green-cracking russula",
       "fr": "Russule verdoyante",
@@ -18042,6 +18082,14 @@
       "seed": false,
       "id": "ott773527",
       "ott": 773527
+    },
+    {
+      "name": "Suillus luteus",
+      "en": "Slippery jack",
+      "fr": "Nonnette voilée",
+      "seed": false,
+      "id": "ott428806",
+      "ott": 428806
     },
     {
       "name": "Sula granti",

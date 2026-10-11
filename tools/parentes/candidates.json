@@ -5405,6 +5405,11 @@
       "qid": "Q13684"
     },
     {
+      "name": "Hydnum rufescens",
+      "en": "Terracotta hedgehog",
+      "fr": "Hydne roussissant"
+    },
+    {
       "name": "Hydrobates pelagicus",
       "en": "European Storm Petrel",
       "fr": "Océanite tempête",
@@ -5858,6 +5863,11 @@
       "fr": "Lactaire délicieux"
     },
     {
+      "name": "Lactarius deterrimus",
+      "en": "False saffron milkcap",
+      "fr": "Lactaire des épicéas"
+    },
+    {
       "name": "Lactarius fennoscandicus",
       "en": "Lactarius fennoscandicus",
       "fr": "Lactarius fennoscandicus",
@@ -5874,6 +5884,16 @@
       "en": "Lactarius picinus",
       "fr": "Lactarius picinus",
       "qid": "Q80742"
+    },
+    {
+      "name": "Lactarius salmonicolor",
+      "en": "Salmon milk cap",
+      "fr": "Lactaire saumon"
+    },
+    {
+      "name": "Lactarius sanguifluus",
+      "en": "Bloody milk cap",
+      "fr": "Lactaire sanguin"
     },
     {
       "name": "Lactarius sphagneti",
@@ -9656,6 +9676,11 @@
       "qid": "Q80699"
     },
     {
+      "name": "Russula vesca",
+      "en": "Bare-toothed russula",
+      "fr": "Russule vieux-rose"
+    },
+    {
       "name": "Russula virescens",
       "en": "Green-cracking russula",
       "fr": "Russule verdoyante"
@@ -10466,6 +10491,11 @@
       "name": "Suillus granulatus",
       "en": "Granulated bolete",
       "fr": "Bolet granulé"
+    },
+    {
+      "name": "Suillus luteus",
+      "en": "Slippery jack",
+      "fr": "Nonnette voilée"
     },
     {
       "name": "Sula granti",

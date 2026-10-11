@@ -20,7 +20,7 @@
     }
   ],
   "modifications": [
-    "Selection of 1836 terminal species",
+    "Selection of 1842 terminal species",
     "Union of full source lineages; no edges rewired",
     "Original EN/FR seed names and group articles; additional Wikidata labels, short descriptions and aliases matched by scientific name",
     "Unary nodes may be hidden only in the view",
@@ -33,6 +33,6 @@
     "Synechococcus elongatus excluded because it is suppressed in synthesis; Nostoc commune selected instead",
     "Escherichia coli OTT query maps to an unnamed synthetic MRCA; source-node identity and requested taxon identity both retained"
   ],
-  "selection_sha256": "3cff0936d0ae648d121653c002ed1954d7bf356d757274131277e108ed33aa16",
-  "tree_sha256": "585f5446acb0eef6109a637ed91df439ad1c67ff37b23059f737f4055211ec71"
+  "selection_sha256": "e53edb8ec1370ebcd7599db9bcdf0f0400846bca2508f62b96fc079d3d3ee379",
+  "tree_sha256": "29bb509a48a064d946df1f59aada28809934bc4f4dd7f9ea27c943d5a806ceb6"
 }
