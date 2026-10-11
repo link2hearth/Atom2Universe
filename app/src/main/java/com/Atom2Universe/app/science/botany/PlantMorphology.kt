@@ -9,7 +9,7 @@ package com.Atom2Universe.app.science.botany
 enum class LeafBase { TAPERED, ROUNDED, CORDATE, AURICLED }
 enum class LeafTip { POINTED, ACUMINATE, ROUNDED, NOTCHED }
 enum class LeafTeeth { AUTO, DOUBLE, CRENATE, WAVY }
-enum class Venation { PINNATE, PALMATE, ARCUATE, PARALLEL }
+enum class Venation { PINNATE, PALMATE, ARCUATE, PARALLEL, THREE_BASAL }
 enum class BarkSurface { FURROWED, SMOOTH, FLUTED, PAPERY, PLATED, LENTICELS }
 enum class ConiferSpray { FLAT, PENDULOUS, TUFTED }
 
@@ -19,15 +19,18 @@ data class HerbArchitecture(
     val stemLeaf: LeafShape? = null,
     val creeping: Boolean = false,
     val branches: Boolean = true,
-    val flowerScale: Float = .22f
+    val flowerScale: Float = .22f,
+    val basalRosette: Boolean = true,
+    val lowerLeavesOpposite: Boolean = false
 )
 
 /** Organ profiles are reusable by future taxa, without adding species-ID branches to the painters. */
-enum class CorollaForm { RADIAL, POPPY, VIOLET, COWSLIP, FOXGLOVE, HAREBELL, HEATHER, URN, BIFID, MALLOW, SPEEDWELL }
+enum class CorollaForm { RADIAL, POPPY, VIOLET, COWSLIP, FOXGLOVE, HAREBELL, HEATHER, URN, BIFID, MALLOW, SPEEDWELL,
+    BAOBAB, TAMARIND, SENNA, CORONA, HIBISCUS, SESAME }
 enum class FlowerCluster {
     DEFAULT, CLOVER, UNILATERAL, SMALL_UMBEL, FEW_FLOWERS, STERILE_RIM, LINDEN,
     GLOBOSE_CATKIN, HAZEL, UPRIGHT_CATKIN, PENDANT_RACEME, RYEGRASS, COCKSFOOT, QUAKING_GRASS,
-    WILLOW, AXILLARY, SIMPLE_UMBEL, RACEMOSE
+    WILLOW, AXILLARY, SIMPLE_UMBEL, RACEMOSE, BRUSH_SPIKE, BRISTLY_SPIKE, PAIRED_RACEMES
 }
 data class FlowerDetail(
     val corolla: CorollaForm = CorollaForm.RADIAL,
@@ -47,11 +50,12 @@ data class FlowerDetail(
     val styles: Int = 0,
     val shortStamens: Int = 0
 )
-enum class CapsuleForm { OVOID, PORICIDAL_DISC, PYXIS, THREE_VALVES, FOUR_LOBES, THREE_HORNS, COTTON, BASAL_PORES, APICAL_TEETH, HEART }
+enum class CapsuleForm { OVOID, PORICIDAL_DISC, PYXIS, THREE_VALVES, FOUR_LOBES, THREE_HORNS, COTTON, BASAL_PORES, APICAL_TEETH, HEART, BEAKED, INFLATED_CALYX }
 enum class ConeForm { SPRUCE, FIR, PINE, LARCH, ALDER }
-enum class SamaraForm { SINGLE, THREE_LOBED_BRACT, TWO_WINGS, ORBICULAR }
+enum class SamaraForm { SINGLE, THREE_LOBED_BRACT, TWO_WINGS, ORBICULAR, FOUR_WINGS }
 enum class SchizocarpForm { PAIRED, CRANESBILL, WHEEL }
-enum class AcheneForm { SIMPLE, AGGREGATE, FOUR_NUTLETS, LINDEN, PAPPUS }
+enum class AcheneForm { SIMPLE, AGGREGATE, FOUR_NUTLETS, LINDEN, PAPPUS, SILKY_CLUSTER }
+enum class PodForm { STRAIGHT, SPIRAL, CURLED, PULPY, FLAT_CURVED }
 data class FruitDetail(
     val capsule: CapsuleForm = CapsuleForm.OVOID,
     val cone: ConeForm = ConeForm.SPRUCE,
@@ -74,7 +78,8 @@ data class FruitDetail(
     val raceme: Boolean = false,
     val pappusScales: Boolean = false,
     val prominentRibs: Boolean = false,
-    val globoseCapsule: Boolean = false
+    val globoseCapsule: Boolean = false,
+    val podForm: PodForm = PodForm.STRAIGHT
 )
 
 data class LeafDetail(
@@ -97,9 +102,13 @@ data class LeafDetail(
     val basalOffset: Float = 0f,
     val leafletTip: LeafTip = LeafTip.ACUMINATE,
     val leafletShape: LeafShape = LeafShape.LANCE,
+    val leafletAngle: Float? = null,
     val palmateSegments: Int = 5,
     val petioleGlands: Boolean = false,
-    val subdividedLobes: Boolean = false
+    val subdividedLobes: Boolean = false,
+    val terminalTendril: Boolean = false,
+    val pinnaPairs: Int = 5,
+    val pinnulePairs: Int = 10
 )
 
 /** Representative free-growing adult habit, not an identification key or a fixed growth form. */
@@ -113,5 +122,7 @@ data class TreeArchitecture(
     val density: Float = .85f,
     val droop: Float = 0f,
     val barkSurface: BarkSurface = BarkSurface.FURROWED,
-    val spray: ConiferSpray = ConiferSpray.FLAT
+    val spray: ConiferSpray = ConiferSpray.FLAT,
+    val bottleTrunk: Boolean = false,
+    val umbrella: Boolean = false
 )

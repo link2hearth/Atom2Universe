@@ -801,4 +801,120 @@
     <string name="bot_group_brassicas_desc">Cuckooflower has pale pink to white flowers and long narrow siliques. Shepherd’s purse has tiny white flowers and short triangular silicles. Both fruits open by two valves around a seed-bearing partition; neither is a legume.</string>
     <string name="bot_group_heads">Three types of flower head</string>
     <string name="bot_group_heads_desc">Oxeye daisy: white rays around a yellow disc, simple leaves. German chamomile: white rays and yellow disc, finely divided leaves, hollow conical receptacle. Chicory: blue head made entirely of ligulate florets, no yellow disc.</string>
+
+    <string name="bot_collections">Collections</string>
+    <string name="bot_collection_europe">Europe · flora of France</string>
+    <string name="bot_collection_europe_desc">Plants found in France and Europe; some also occur on other continents.</string>
+    <string name="bot_collection_africa_dry">Africa · savannas and drylands</string>
+    <string name="bot_collection_africa_dry_desc">First African collection: 15 trees, shrubs and herbs from savannas, dry scrub and disturbed open habitats. Their ranges differ; this is not a continent-wide abundance ranking.</string>
+    <string name="bot_collection_help">Collections are geographic selections, not exclusive native ranges.</string>
+    <string name="bot_month_scope">The month filter includes only species with a documented monthly calendar. Consult local seasonal notes for the others.</string>
+    <string name="bot_phenology_local">Flowering and fruiting vary with local rainfall, latitude and site. No single monthly calendar applies throughout this range.</string>
+    <string name="bot_phenology_faidherbia">Often leafy in the dry season and leafless during the rains. Flowering generally starts in the dry season; pods ripen later, often near its end. Local timing varies.</string>
+    <string name="bot_phenology_guiera">Flowering can recur at the end of the rains and in the dry season. Flowers and fruits may therefore be observed over much of the year, depending on locality.</string>
+    <string name="bot_persistence_variable">Leaf persistence varies with climate</string>
+    <string name="bot_leaf_bipinnate">Bipinnately compound</string>
+    <string name="bot_leaf_bifoliate">Two leaflets</string>
+    <string name="bot_fl_globose_head">Globose flower heads</string>
+    <string name="bot_fr_follicle">Follicle</string>
+    <string name="bot_fr_indehiscent">Indehiscent dry fruit</string>
+    <string name="bot_hab_savanna">Savanna and open tropical grassland</string>
+    <string name="bot_hab_dry_scrub">Dry scrub and semi-desert</string>
+    <string name="bot_source_sanbi">SANBI · PlantZAfrica</string>
+    <string name="bot_source_icraf">CIFOR-ICRAF · Agroforestree Database</string>
+    <string name="bot_source_fz">Flora of Zimbabwe</string>
+    <string name="bot_source_prota">PROTA · Plant Resources of Tropical Africa</string>
+    <string name="bot_group_savanna_thorns">Savanna thorn trees</string>
+    <string name="bot_group_savanna_thorns_desc">Vachellia has globose flower heads and narrow coiled pods; Faidherbia has flower spikes and broad curled pods; Balanites has only two leaflets and a stone fruit.</string>
+    <string name="bot_group_combretaceae">Two savanna Combretaceae</string>
+    <string name="bot_group_combretaceae_desc">Guiera has grey, hairy leaves and radiating silky fruits. Combretum micranthum has greener leaves, flower spikes and four-winged fruits.</string>
+    <string name="bot_group_african_grasses">Bristly spike or paired racemes?</string>
+    <string name="bot_group_african_grasses_desc">Cenchrus has a dense bristly false spike. Hyparrhenia has paired racemes with long bent awns, grouped into a loose inflorescence.</string>
+    <string name="bot_family_Zygophyllaceae_aliases">Caltrop family</string>
+    <string name="bot_family_Zygophyllaceae_desc">Includes dryland plants with varied habits. Balanites has paired leaflets, five-parted flowers and drupes.</string>
+    <string name="bot_family_Apocynaceae_aliases">Dogbane milkweed family</string>
+    <string name="bot_family_Apocynaceae_desc">Often latex-bearing plants with fused corollas. In Calotropis a five-parted corona surrounds the reproductive column.</string>
+    <string name="bot_family_Combretaceae_aliases">Combretum family</string>
+    <string name="bot_family_Combretaceae_desc">Mostly woody plants, often with opposite leaves, inferior ovaries and dry fruits, sometimes winged.</string>
+    <string name="bot_family_Pedaliaceae_aliases">Sesame family</string>
+    <string name="bot_family_Pedaliaceae_desc">Often herbs with tubular, bilaterally symmetrical flowers and dry capsules; seed and fruit structures vary between genera.</string>
+    <string name="bot_adansonia_name">African baobab</string>
+    <string name="bot_adansonia_aliases">Adansonia digitata</string>
+    <string name="bot_adansonia_description">Massive trunk and stout branches. Adult leaves have usually five to seven leaflets; young plants may bear simple leaves. Large hanging flowers have five white petals and a dense brush of stamens. The velvety woody fruit stays closed around dry pulp and seeds.</string>
+    <string name="bot_adansonia_distribution">Widespread in seasonally dry tropical Africa, particularly savannas; also planted near settlements.</string>
+    <string name="bot_vachellia_tortilis_name">Umbrella thorn</string>
+    <string name="bot_vachellia_tortilis_aliases">Acacia tortilis · acacia raddiana</string>
+    <string name="bot_vachellia_tortilis_description">A spreading crown often forms an umbrella. Tiny leaflets are carried on paired pinnae. Long straight thorns and short hooked thorns may coexist. Cream flower heads give way to narrow, coiled, usually indehiscent pods.</string>
+    <string name="bot_vachellia_tortilis_distribution">Dry African savannas and semi-desert regions, from northern and Sahelian areas to eastern and southern Africa; forms vary by subspecies.</string>
+    <string name="bot_faidherbia_name">Apple-ring acacia</string>
+    <string name="bot_faidherbia_aliases">Acacia albida · kad · cad · gao</string>
+    <string name="bot_faidherbia_description">Large tree with pale young twigs and paired straight stipular thorns. Bipinnate leaves and slender creamy flower spikes. Thick orange-brown pods curl into open rings. Its often reversed leaf cycle is particularly distinctive.</string>
+    <string name="bot_faidherbia_distribution">Widespread through African savannas, alluvial plains and seasonal watercourses; frequently retained in cultivated fields.</string>
+    <string name="bot_tamarindus_name">Tamarind</string>
+    <string name="bot_tamarindus_aliases">Tamarin · tamarind</string>
+    <string name="bot_tamarindus_description">Dense rounded crown and leaves with many paired oblong leaflets, without a terminal leaflet or tendril. Three conspicuous yellow petals carry red veins; two other petals are reduced. Brown brittle pods remain closed around pulp and hard seeds.</string>
+    <string name="bot_tamarindus_distribution">Native to tropical Africa and widely cultivated throughout the tropics. African savannas, wooded sites and villages.</string>
+    <string name="bot_balanites_name">Desert date</string>
+    <string name="bot_balanites_aliases">Balanitès · desert date</string>
+    <string name="bot_balanites_description">Thorny tree with an open crown. Each leaf bears exactly two leathery leaflets. Small greenish-yellow flowers have five petals and ten stamens. The elongated drupe contains one hard stone; despite its name, this is not a palm.</string>
+    <string name="bot_balanites_distribution">Very widespread in dry tropical Africa, notably the Sahel and eastern Africa; also occurs beyond Africa.</string>
+    <string name="bot_calotropis_name">Sodom apple</string>
+    <string name="bot_calotropis_aliases">Calotrope · arbre à soie · Sodom apple</string>
+    <string name="bot_calotropis_description">Upright shrub with thick, nearly stalkless opposite leaves and milky latex. The waxy five-lobed corolla surrounds a five-parted corona. Inflated follicles release flat seeds with silky tufts.</string>
+    <string name="bot_calotropis_distribution">Dry northern and tropical Africa, especially sandy disturbed ground, roadsides and overgrazed areas; also native in southwestern Asia.</string>
+    <string name="bot_senna_italica_name">Senegal senna</string>
+    <string name="bot_senna_italica_aliases">Cassia italica · Cassia obovata · séné d’Italie</string>
+    <string name="bot_senna_italica_description">Low perennial or subshrub with paired, blunt leaflets and no terminal tendril. Yellow flowers have five unequal petals and conspicuous unequal anthers. The flattened pods are curved. Habit and hairiness vary among subspecies.</string>
+    <string name="bot_senna_italica_distribution">Dry sandy or stony habitats across much of Africa, including the Sahel; its native range extends to the Indian subcontinent.</string>
+    <string name="bot_guiera_name">Guiera</string>
+    <string name="bot_guiera_aliases">Nguer · guier · n’guère</string>
+    <string name="bot_guiera_description">Much-branched shrub with small grey-green, softly hairy leaves, usually opposite. Cream flower heads have projecting stamens. Long spindle-shaped silky fruits radiate from the same head, producing a distinctive spider-like cluster.</string>
+    <string name="bot_guiera_distribution">Savannas from Senegal to Sudan. Often abundant on sandy soils and degraded fallows in the Sahelian and Sudanian zones.</string>
+    <string name="bot_combretum_micranthum_name">Kinkeliba</string>
+    <string name="bot_combretum_micranthum_aliases">Kinkeliba · quinquéliba · Combretum raimbaultii</string>
+    <string name="bot_combretum_micranthum_description">Spreading shrub, sometimes a small tree or scrambling climber. Opposite leaves become reddish-brown when old. Small white flowers occur in short spikes; the dry reddish fruit has four papery wings.</string>
+    <string name="bot_combretum_micranthum_distribution">West Africa to the Central African Republic, in savanna scrub, rocky sites and woodland margins. The illustrated habit is shrubby.</string>
+    <string name="bot_ziziphus_mauritiana_name">Indian jujube</string>
+    <string name="bot_ziziphus_mauritiana_aliases">Jujube · ber · Ziziphus mauritiana</string>
+    <string name="bot_ziziphus_mauritiana_description">Thorny shrub or tree with drooping branches. The shiny leaves show three strong veins from the base and a pale hairy underside. Tiny greenish flowers grow in axillary clusters. Wild drupes are smaller than those of many cultivated forms.</string>
+    <string name="bot_ziziphus_mauritiana_distribution">Widespread in warm African drylands and cultivated near settlements; also widespread in Asia. It may grow as a tree where conditions permit.</string>
+    <string name="bot_cenchrus_ciliaris_name">Buffel grass</string>
+    <string name="bot_cenchrus_ciliaris_aliases">Pennisetum ciliare · buffel grass</string>
+    <string name="bot_cenchrus_ciliaris_description">Tufted perennial grass with narrow blades. Its dense false spike is purple when young, becoming straw-coloured. Bristles surround groups of spikelets and remain with the dispersal unit. The true fruit is a small caryopsis.</string>
+    <string name="bot_cenchrus_ciliaris_distribution">Common in warm dry parts of Africa, especially open sandy habitats; also planted as pasture and present outside Africa.</string>
+    <string name="bot_hyparrhenia_name">Common thatching grass</string>
+    <string name="bot_hyparrhenia_aliases">Hyparrhénie hérissée · chaume · thatching grass</string>
+    <string name="bot_hyparrhenia_description">Dense perennial tussock with wiry culms. The inflorescence branches into pairs of hairy racemes, each pair accompanied by a spatheole. Long bent awns extend from fertile spikelets; they are not petals.</string>
+    <string name="bot_hyparrhenia_distribution">Widespread in African grasslands and open disturbed sites, particularly familiar in southern Africa; also native in the Mediterranean and southwestern Asia.</string>
+    <string name="bot_sesamum_alatum_name">Winged-seed sesame</string>
+    <string name="bot_sesamum_alatum_aliases">Sésame de gazelle · Sesamopteris alata</string>
+    <string name="bot_sesamum_alatum_description">Annual with strongly different leaves along the stem: lower leaves are deeply divided or have three to five narrow leaflets; upper leaves are simple. Pink tubular flowers have darker lines on the lower lip. Beaked capsules contain seeds winged at both ends.</string>
+    <string name="bot_sesamum_alatum_distribution">Widespread in tropical Africa south to Namibia and South Africa; sandy roadsides, grasslands and seasonal river beds.</string>
+    <string name="bot_hibiscus_trionum_name">Flower-of-an-hour</string>
+    <string name="bot_hibiscus_trionum_aliases">Hibiscus d’Afrique · ketmie d’Afrique · bladder hibiscus</string>
+    <string name="bot_hibiscus_trionum_description">Hairy annual with deeply divided leaves. Pale yellow petals have a dark purple base around the staminal column. A papery inflated, prominently veined calyx encloses the five-valved capsule. Flowers are short-lived.</string>
+    <string name="bot_hibiscus_trionum_distribution">Fields and disturbed open habitats. Native in the Mediterranean and parts of Eurasia; naturalized in much of eastern and southern Africa.</string>
+    <string name="bot_indigofera_spicata_name">Creeping indigo</string>
+    <string name="bot_indigofera_spicata_aliases">Creeping indigo · Indigofera spicata</string>
+    <string name="bot_indigofera_spicata_description">Prostrate to ascending perennial. Leaves usually bear seven leaflets, broader near the tip. Dense racemes carry small pink to reddish pea flowers; short narrow pods turn downwards. Closely related Indigofera species require additional characters for identification.</string>
+    <string name="bot_indigofera_spicata_distribution">Native across much of Africa and the Arabian Peninsula. Common in disturbed grassland, cultivated ground and fallows, often at moderate elevations.</string>
+    <string name="bot_adansonia_latin" translatable="false">Adansonia digitata</string>
+    <string name="bot_vachellia_tortilis_latin" translatable="false">Vachellia tortilis</string>
+    <string name="bot_faidherbia_latin" translatable="false">Faidherbia albida</string>
+    <string name="bot_tamarindus_latin" translatable="false">Tamarindus indica</string>
+    <string name="bot_balanites_latin" translatable="false">Balanites aegyptiaca</string>
+    <string name="bot_calotropis_latin" translatable="false">Calotropis procera</string>
+    <string name="bot_senna_italica_latin" translatable="false">Senna italica</string>
+    <string name="bot_guiera_latin" translatable="false">Guiera senegalensis</string>
+    <string name="bot_combretum_micranthum_latin" translatable="false">Combretum micranthum</string>
+    <string name="bot_ziziphus_mauritiana_latin" translatable="false">Ziziphus mauritiana</string>
+    <string name="bot_cenchrus_ciliaris_latin" translatable="false">Cenchrus ciliaris</string>
+    <string name="bot_hyparrhenia_latin" translatable="false">Hyparrhenia hirta</string>
+    <string name="bot_sesamum_alatum_latin" translatable="false">Sesamum alatum</string>
+    <string name="bot_hibiscus_trionum_latin" translatable="false">Hibiscus trionum</string>
+    <string name="bot_indigofera_spicata_latin" translatable="false">Indigofera spicata</string>
+    <string name="bot_family_Zygophyllaceae" translatable="false">Zygophyllaceae</string>
+    <string name="bot_family_Apocynaceae" translatable="false">Apocynaceae</string>
+    <string name="bot_family_Combretaceae" translatable="false">Combretaceae</string>
+    <string name="bot_family_Pedaliaceae" translatable="false">Pedaliaceae</string>
 </resources>

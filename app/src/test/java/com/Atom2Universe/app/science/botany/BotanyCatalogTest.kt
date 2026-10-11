@@ -15,7 +15,7 @@ class BotanyCatalogTest {
 
     @Test fun catalogueExtensibleEtReferencesCoherentes() {
         val c=BotanyCatalog
-        assertTrue(c.species.size>=90)
+        assertTrue(c.species.size>=105)
         assertTrue(c.species.count{"trees" in it.sectionIds}>=30)
         assertTrue(c.species.count{"shrubs" in it.sectionIds}>=25)
         assertTrue(c.species.count{"herbs" in it.sectionIds}>=35)
@@ -27,7 +27,8 @@ class BotanyCatalogTest {
             assertTrue(p.id,p.sectionIds.isNotEmpty() && p.sectionIds.all{id->c.sections.any{it.id==id}})
             assertTrue(p.id,p.sourceIds.isNotEmpty() && p.sourceIds.all{id->c.sources.any{it.id==id}})
             assertTrue(p.id,p.heightMinCm>0 && p.heightMaxCm>=p.heightMinCm)
-            assertTrue(p.id,p.flowering.isNotEmpty() && p.fruiting.isNotEmpty())
+            assertTrue(p.id,(p.flowering.isNotEmpty() && p.fruiting.isNotEmpty()) || p.phenologyNote!=0)
+            assertTrue(p.id,p.collectionIds.isNotEmpty() && p.collectionIds.all{id->c.collections.any{it.id==id}})
             assertTrue(p.id,(p.flowering+p.fruiting).all{it in 1..12})
             assertEquals(p.id,PlantView.entries.toSet(),p.captions.keys)
             assertTrue(p.id,p.look.leafCm>0 && p.look.flowerCm>0 && p.look.fruitCm>0)
@@ -86,6 +87,23 @@ class BotanyCatalogTest {
         val newPlant=BotanyCatalog.species.first().copy(id="future",familyId="FutureFamily",sectionIds=setOf("ferns"))
         assertTrue(PlantQuery(sections=setOf("ferns"),families=setOf("FutureFamily")).matches(newPlant,"Future fern"))
         assertFalse(PlantQuery(sections=setOf("trees")).matches(newPlant,"Future fern"))
+    }
+
+    @Test fun collectionsCumulablesEtSaisonsLocalesSansFauxCalendrier() {
+        val african=BotanyCatalog.species.filter{PlantQuery(collections=setOf("africa_dry")).matches(it,"")}
+        assertEquals(15,african.size)
+        for(section in listOf("trees","shrubs","herbs"))assertEquals(5,african.count{section in it.sectionIds})
+        assertTrue(african.all{it.phenologyNote!=0 && it.flowering.isEmpty() && it.fruiting.isEmpty()})
+        assertTrue(african.all{it.id in BotanyReferences.taxonPages})
+        assertEquals(105,BotanyCatalog.species.count{PlantQuery(collections=setOf("africa_dry","europe")).matches(it,"")})
+        val acacia=BotanyCatalog.get("vachellia_tortilis")!!
+        assertTrue(PlantQuery(collections=setOf("africa_dry"),leaves=setOf(LeafShape.BIPINNATE),sections=setOf("trees")).matches(acacia,""))
+        assertFalse(PlantQuery(collections=setOf("europe")).matches(acacia,""))
+        assertFalse(PlantQuery(months=setOf(1)).matches(acacia,""))
+        val shared=acacia.copy(collectionIds=setOf("africa_dry","future_collection"))
+        assertTrue(PlantQuery(collections=setOf("future_collection")).matches(shared,""))
+        val plants=listOf(acacia,BotanyCatalog.get("bellis")!!)
+        assertEquals(acacia,PlantQuery.sorted(plants,PlantSort.FLOWERING,Locale.FRENCH,{it.id},{it.id},{it.familyId}).last())
     }
 
     @Test fun leLotDeTerrainExposeSesNouveauxCaracteresAuxFiltres() {

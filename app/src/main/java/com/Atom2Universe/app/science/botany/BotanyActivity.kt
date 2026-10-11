@@ -53,6 +53,7 @@ class BotanyActivity : ThemedActivity() {
         R.string.bot_month_short_5,R.string.bot_month_short_6,R.string.bot_month_short_7,R.string.bot_month_short_8,R.string.bot_month_short_9,R.string.bot_month_short_10,R.string.bot_month_short_11,R.string.bot_month_short_12)
     private val facets by lazy {
         listOf(
+            Facet("collection",R.string.bot_collections,catalog.collections.map{it.id to it.title}){it.collectionIds},
             Facet("section",R.string.bot_explore,catalog.sections.map{it.id to it.title}){it.sectionIds},
             Facet("family",R.string.bot_family,catalog.families.map{it.id to it.name}){setOf(it.familyId)},
             Facet("leaf",R.string.bot_leaf_shape,LeafShape.entries.map{it.name to it.label}){p->p.leafShapes.map{it.name}.toSet()},
@@ -71,7 +72,8 @@ class BotanyActivity : ThemedActivity() {
     private val searchIndex by lazy {catalog.species.associate{p->
         val family=catalog.family(p.familyId)
         p.id to listOf(english,french).flatMap{r->listOf(r.getString(p.name),r.getString(p.aliases),r.getString(p.latin),r.getString(family.name),
-            if(family.aliases==0) "" else r.getString(family.aliases))}.joinToString(" ")
+            if(family.aliases==0) "" else r.getString(family.aliases)) +
+            catalog.collections.filter{it.id in p.collectionIds}.map{r.getString(it.title)}}.joinToString(" ")
     }}
 
     override fun onCreate(savedInstanceState:Bundle?) {
@@ -166,10 +168,24 @@ class BotanyActivity : ThemedActivity() {
             val found=PlantQuery.sorted(catalog.species.filter{q.matches(it,searchIndex[it.id].orEmpty())},sort,resources.configuration.locales[0],
                 {getString(it.name)},{getString(it.latin)},{getString(catalog.family(it.familyId).name)})
             results.addView(label(resources.getQuantityString(R.plurals.bot_species_count,found.size,found.size),13f).apply{accessibilityLiveRegion=View.ACCESSIBILITY_LIVE_REGION_POLITE},full())
+            catalog.collections.filter{it.id in q.collections}.forEach{
+                results.addView(label(getString(it.description),13f).apply{setTextColor(palette.secondary)},full(4))
+            }
+            if(q.months.isNotEmpty())results.addView(label(getString(R.string.bot_month_scope),12f).apply{setTextColor(palette.secondary)},full(4))
             if(found.isEmpty())results.addView(label(getString(R.string.bot_empty),15f),full())
             found.forEach{results.addView(speciesCard(it),full())}
         }
         content.addView(searchBox,full())
+        content.addView(label(getString(R.string.bot_collections),13f,true),full(4))
+        val collections=ChipGroup(this)
+        for(collection in catalog.collections) {
+            val ch=chip(getString(collection.title),collection.id in selected["collection"].orEmpty()){
+                flip("collection",collection.id);refresh()
+            }
+            controls+=ch to ("collection" to collection.id);collections.addView(ch)
+        }
+        content.addView(collections,full(0))
+        content.addView(label(getString(R.string.bot_collection_help),12f).apply{setTextColor(palette.secondary)},full(4))
         val sectionGroup=ChipGroup(this)
         for(section in catalog.sections) {
             val chip=chip(getString(section.title),section.id in selected["section"].orEmpty()){
@@ -190,7 +206,7 @@ class BotanyActivity : ThemedActivity() {
             if(filtersBuilt)return
             filtersBuilt=true
             filterPanel.addView(label(getString(R.string.bot_filter_help),13f),full())
-            for(f in facets.filter{it.key!="section"}) {
+            for(f in facets.filter{it.key!="section" && it.key!="collection"}) {
                 val offered=f.options.filter{(id,_)->catalog.species.any{id in f.present(it)}}
                 if(offered.isEmpty())continue
                 val flow=ChipGroup(this).apply{visibility=if(f.key in expanded)View.VISIBLE else View.GONE}
@@ -249,7 +265,8 @@ class BotanyActivity : ThemedActivity() {
     private inline fun <reified E:Enum<E>> enums(key:String)=enumValues<E>().filterTo(mutableSetOf()){it.name in selected[key].orEmpty()}
     private fun query()=PlantQuery(search,selected["section"].orEmpty(),selected["family"].orEmpty(),
         enums("leaf"),enums("margin"),enums("arrangement"),enums("color"),enums("flower"),enums("fruit"),enums("habitat"),
-        selected["month"].orEmpty().mapNotNull{it.toIntOrNull()}.toSet(),selected["foliage"]?.singleOrNull()?.toBooleanStrictOrNull())
+        selected["month"].orEmpty().mapNotNull{it.toIntOrNull()}.toSet(),selected["foliage"]?.singleOrNull()?.toBooleanStrictOrNull(),
+        collections=selected["collection"].orEmpty())
 
     private fun speciesCard(p:PlantSpecies)=card(getString(p.name),getString(p.latin),p,PlantView.HABIT){open("species:${p.id}")}
     private fun card(title:String,subtitle:String?,p:PlantSpecies?,view:PlantView,action:()->Unit):View {
@@ -291,6 +308,9 @@ class BotanyActivity : ThemedActivity() {
         }
     }
 
+    private fun persistence(p:PlantSpecies)=if(p.variablePersistence)R.string.bot_persistence_variable
+        else if(p.evergreen)R.string.bot_evergreen else R.string.bot_deciduous
+
     private fun showSpecies(p:PlantSpecies,back:(()->Unit)?) {
         val top=column()
         top.addView(label(getString(p.latin),17f).apply{setTypeface(typeface,Typeface.ITALIC)})
@@ -301,13 +321,14 @@ class BotanyActivity : ThemedActivity() {
         body.addView(label(getString(p.description),16f),full(4))
         body.addView(label(getString(R.string.bot_height),13f,true),full())
         body.addView(label(height(p),16f),full(2))
-        body.addView(label(getString(if(p.evergreen)R.string.bot_evergreen else R.string.bot_deciduous),14f),full(4))
+        body.addView(label(getString(persistence(p)),14f),full(4))
         heading(body,R.string.bot_ecology)
         body.addView(label(p.habitats.joinToString(" · "){getString(it.label)},15f),full(4))
         body.addView(label(getString(p.distribution),14f),full(4))
+        body.addView(label(catalog.collections.filter{it.id in p.collectionIds}.joinToString(" · "){getString(it.title)},12f).apply{setTextColor(palette.secondary)},full(4))
         heading(body,R.string.bot_calendar)
-        body.addView(calendar(p),full(4))
-        body.addView(label(getString(R.string.bot_calendar_note),12f).apply{setTextColor(palette.secondary)},full(4))
+        if(p.flowering.isNotEmpty() || p.fruiting.isNotEmpty())body.addView(calendar(p),full(4))
+        body.addView(label(getString(p.phenologyNote.takeIf{it!=0} ?: R.string.bot_calendar_note),13f).apply{setTextColor(palette.secondary)},full(4))
         val groups=catalog.groups.filter{p.id in it.members}
         if(groups.isNotEmpty()){heading(body,R.string.bot_related);groups.forEach{g->body.addView(button(getString(g.title)){open("group:${g.id}")},full(4))}}
         fiche.show(getString(p.name),top,media(p,mode),body,back)
@@ -321,7 +342,7 @@ class BotanyActivity : ThemedActivity() {
             legend.removeAllViews()
             if(!plate.marks)return
             val labels=when(plate.mode) {
-                PlantView.HABIT->listOf(p.captions.getValue(PlantView.HABIT),if(p.evergreen)R.string.bot_evergreen else R.string.bot_deciduous,R.string.bot_height)
+                PlantView.HABIT->listOf(p.captions.getValue(PlantView.HABIT),persistence(p),R.string.bot_height)
                 PlantView.LEAF->listOf(p.look.leaf.label,p.look.arrangement.label,p.look.margin.label)
                 PlantView.FLOWER->listOf(p.look.flower.label,p.look.color.label)
                 PlantView.FRUIT->listOf(p.look.fruit.label)

@@ -42,6 +42,7 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
 
     private fun habit() {
         oval(150f,287f,105f,5f,0x166a6145)
+        if(l.crown==Crown.SHRUB && l.herbDetail!=null){profiledHerb(l.herbDetail);return}
         if(l.fineShrub || species.id in setOf("cytisus","ulex","calluna","erica","rosa")) { fineShrub(); return }
         when (l.crown) {
             Crown.HERB -> herb()
@@ -105,11 +106,11 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
             repeat(4){i->val x=66f+i*55
                 at(x,271f,(i-1)*8f,.48f){leaf(l.leaf,120f)}
                 line(x,274f,x+14f,165f+i%2*20,green,1.2f)
-                at(x+14f,165f+i%2*20,0f,form.flowerScale){blossom(l.flower)}
+                at(x+14f,165f+i%2*20,0f,form.flowerScale){flowerHead()}
                 line(x,274f,x-4f,282f,l.bark,.6f)
             };return
         }
-        form.basalLeaf?.let { shape ->
+        form.basalLeaf?.takeIf{form.basalRosette}?.let { shape ->
             repeat(7){i->at(150f,275f,(i-3)*24f,.63f){leaf(shape,104f,detail=form.basalDetail)}}
         }
         repeat(if(form.branches)3 else 1){i->
@@ -117,9 +118,10 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
             val top=65f+(i%2)*24
             line(150f,274f,x,top,green,1.8f)
             repeat(4){j->val t=(j+1)/5f;val xx=150+(x-150)*t;val yy=274+(top-274)*t
-                val shape=form.stemLeaf ?: l.leaf
-                val sides=if(l.arrangement==LeafArrangement.OPPOSITE)listOf(-1,1)else listOf(if(j%2==0)-1 else 1)
-                for(side in sides)at(xx,yy,side*62f,.40f){leaf(shape,95f)}
+                val lower=!form.basalRosette && j<2 && form.basalLeaf!=null
+                val shape=if(lower)form.basalLeaf!! else form.stemLeaf ?: l.leaf
+                val sides=if(l.arrangement==LeafArrangement.OPPOSITE || lower && form.lowerLeavesOpposite)listOf(-1,1)else listOf(if(j%2==0)-1 else 1)
+                for(side in sides)at(xx,yy,side*62f,.40f){leaf(shape,95f,detail=if(lower)form.basalDetail else null)}
                 if(form.branches && j in 1..2){val side=if(j%2==0)-1 else 1
                     line(xx,yy,xx+side*28,yy-27,green,.9f)
                     at(xx+side*28,yy-27,0f,form.flowerScale*.85f){flowerHead()}
@@ -211,7 +213,9 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
             val xx=(i-2)*21f;val yy=-170f-(i%3)*23f
             line(0f,0f,xx,yy,green,1.5f)
             val blade=Path().apply{moveTo(0f,0f);quadTo(xx*2-40,-100f,xx*3-40,-150f);quadTo(xx*2-23,-75f,4f,0f);close()};path(blade,green,null)
-            if(species.id=="lolium") repeat(12){j->val sy=yy+j*7;val side=if(j%2==0) -1 else 1;line(xx,sy,xx+side*11,sy-7,green,.8f);spikelet(xx+side*8,sy-4,4f,10f)}
+            if(l.flowerDetail.cluster in setOf(FlowerCluster.BRISTLY_SPIKE,FlowerCluster.PAIRED_RACEMES)) {
+                at(xx,yy+19,0f,.37f){flowerHead()}
+            } else if(species.id=="lolium") repeat(12){j->val sy=yy+j*7;val side=if(j%2==0) -1 else 1;line(xx,sy,xx+side*11,sy-7,green,.8f);spikelet(xx+side*8,sy-4,4f,10f)}
             else repeat(9){j->val sy=yy+j*9;val side=if(j%2==0) -1 else 1;val reach=10f+j*2
                 line(xx,sy+20,xx+side*reach,sy,green,.7f)
                 if(species.id=="briza"){line(xx+side*reach,sy,xx+side*(reach+5),sy+12,green,.6f);spikelet(xx+side*(reach+5),sy+19,5f,7f)}

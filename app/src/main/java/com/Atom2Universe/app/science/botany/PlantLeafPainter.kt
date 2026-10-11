@@ -17,7 +17,8 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
     fun draw(shape: LeafShape, length: Float, margin: LeafMargin = look.margin, detail:LeafDetail?=null) {
         when (shape) {
             LeafShape.NEEDLE -> needles(length)
-            LeafShape.PINNATE, LeafShape.PALMATE, LeafShape.TRIFOLIATE -> compound(shape,length,margin,detail ?: look.leafDetail)
+            LeafShape.PINNATE, LeafShape.PALMATE, LeafShape.TRIFOLIATE, LeafShape.BIFOLIATE -> compound(shape,length,margin,detail ?: look.leafDetail)
+            LeafShape.BIPINNATE -> bipinnate(length,detail ?: look.leafDetail)
             LeafShape.DIVIDED -> divided(length)
             else -> simple(shape,length,margin,detail ?: if(shape==look.leaf)look.leafDetail else LeafDetail())
         }
@@ -61,9 +62,14 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             canvas.restore()
             brush.stroke(outline,edge,.68f)
             brush.stroke(outline,0x35798554,.25f)
-            if(detail.ciliate) for(side in listOf(-1,1)) for(i in 1..30) {
-                val t=i/32f; val x=side*halfWidth(shape,t,h,detail,margin)
-                brush.line(x,-t*h,x+side*1.7f,-t*h-1.2f,0xffb3b38b.toInt(),.42f)
+            if(detail.ciliate) {
+                // Attach hairs to the actual contour, including the sinuses of lobed blades.
+                val contour=PathMeasure(outline,true);val point=FloatArray(2)
+                repeat(if(detailed)64 else 24){i->
+                    contour.getPosTan(contour.length*(i+.5f)/(if(detailed)64 else 24),point,null)
+                    val dx=point[0];val dy=point[1]+h*.5f;val norm=hypot(dx,dy).coerceAtLeast(1f)
+                    brush.line(point[0],point[1],point[0]+dx/norm*1.7f,point[1]+dy/norm*1.7f,0xffb3b38b.toInt(),.42f)
+                }
             }
         }
     }
@@ -139,7 +145,7 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             moveTo(0f,0f)
             for(i in 0..240) {
                 val t=i/240f;val a=PI*(.07+1.86*t)
-                val lobe=(.5f+.5f*cos(t*n*2*PI).toFloat())
+                val lobe=(.5f-.5f*cos(t*n*2*PI).toFloat())
                 val secondary=if(d.subdividedLobes) 1f-.27f*lobe*(.5f+.5f*cos(t*n*12*PI).toFloat()) else 1f
                 val r=h*.47f*(1-d.lobeDepth+d.lobeDepth*lobe)*secondary
                 val tooth=if(margin==LeafMargin.SERRATE) 1f+.018f*sin(t*70*PI).toFloat() else 1f
@@ -266,6 +272,10 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             }
         }
         when {
+            d.venation==Venation.THREE_BASAL -> for(side in listOf(-1,1)) {
+                brush.stroke(Path().apply { moveTo(0f,0f);cubicTo(side*h*.42f,-h*.2f,side*h*.34f,-h*.65f,0f,-h*.94f) },light,1.1f)
+                for(i in 1..7)rib(0f,-h*i/9,side*h*.22f*sin(PI*i/9).toFloat(),-h*(i+.45f)/9,width=.45f)
+            }
             shape==LeafShape.OAK -> for(i in 0 until d.lobePairs) {
                 val step=.79f/d.lobePairs
                 val t=.08f+i*step+step*.46f
@@ -317,35 +327,53 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             tip=d.leafletTip,asymmetry=.045f)
         if(shape==LeafShape.PINNATE) {
             val terminal=look.leaflets%2==1; val pairs=look.leaflets/2
-            val end=if(terminal) .76f else .93f
+            val end=if(terminal) .76f else if(d.terminalTendril) .93f else if(d.leafletAngle!=null) .87f else .72f
             brush.line(0f,0f,0f,-length*end,edge,1.8f)
             brush.line(-.4f,0f,-.4f,-length*end,light,.65f)
             repeat(pairs) { i ->
                 val t=if(pairs==1) .45f else i/(pairs-1f)
-                val y=-length*(.23f+t*.48f)
+                val y=-length*(.23f+t*if(d.leafletAngle!=null).62f else .48f)
                 val leafletLength=length*(.28f-.055f*t)*(if(pairs>5) .8f else 1f)
-                for(side in listOf(-1,1)) brush.at(0f,y+side*length*.006f,side*(62f-13*t)) {
+                for(side in listOf(-1,1)) brush.at(0f,y+side*length*.006f,side*(d.leafletAngle ?: (62f-13*t))) {
                     simple(d.leafletShape,leafletLength,margin,leaflets,d.leafletPetiole)
                 }
             }
             if(terminal)brush.at(0f,-length*.72f) { simple(d.leafletShape,length*.28f,margin,leaflets,d.leafletPetiole) }
-            if(!terminal)brush.stroke(Path().apply { moveTo(0f,-length*.91f); cubicTo(19f,-length*1.04f,22f,-length*.88f,8f,-length*.95f) },green,1.1f)
+            if(d.terminalTendril)brush.stroke(Path().apply { moveTo(0f,-length*.91f); cubicTo(19f,-length*1.04f,22f,-length*.88f,8f,-length*.95f) },green,1.1f)
         } else {
-            val n=if(shape==LeafShape.TRIFOLIATE) 3 else look.leaflets
+            val n=if(shape==LeafShape.TRIFOLIATE) 3 else if(shape==LeafShape.BIFOLIATE) 2 else look.leaflets
             val junction=-length*.29f
             brush.line(0f,0f,0f,junction,edge,2f);brush.line(-.5f,0f,-.5f,junction,light,.65f)
             repeat(n) { i ->
-                val relative=i-(n-1)/2f; val angle=relative*if(n==3) 53f else 28f
+                val relative=i-(n-1)/2f; val angle=relative*if(n==2) 72f else if(n==3) 53f else 28f
                 val size=length*(.71f-abs(relative)*if(n==3) .13f else .08f)
                 brush.at(0f,junction,angle) {
                     val dl=if(n==3)leaflets.copy(width=.36f,tip=LeafTip.ROUNDED) else leaflets
                     // Horse chestnut leaflets broaden towards their distal half, tapering to the junction.
                     if(d.leafletWidestAboveMiddle) {
                         simple(LeafShape.OVAL,size,margin,dl,.025f)
-                    } else simple(if(n==3)LeafShape.OVAL else LeafShape.LANCE,size,margin,dl,d.leafletPetiole)
+                    } else simple(if(n==3 || n==2)LeafShape.OVAL else d.leafletShape,size,margin,dl,d.leafletPetiole)
                     if(species.id.startsWith("trifolium")) {
                         brush.stroke(Path().apply { moveTo(-size*.15f,-size*.43f); quadTo(-size*.06f,-size*.53f,0f,-size*.58f)
                             quadTo(size*.08f,-size*.53f,size*.15f,-size*.43f) },0xffb6c696.toInt(),size*.035f)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun bipinnate(length:Float,d:LeafDetail) {
+        brush.line(0f,0f,0f,-length*.91f,edge,1.7f)
+        brush.line(-.5f,0f,-.5f,-length*.91f,light,.65f)
+        repeat(d.pinnaPairs){i->val t=i/(d.pinnaPairs-1f).coerceAtLeast(1f)
+            val y=-length*(.22f+t*.64f)
+            for(side in listOf(-1,1))brush.at(0f,y,side*63f) {
+                val reach=length*(.39f-.12f*t)
+                brush.line(0f,0f,0f,-reach,edge,.7f)
+                repeat(d.pinnulePairs){j->val u=(j+1f)/(d.pinnulePairs+1)
+                    for(s in listOf(-1,1))brush.at(0f,-reach*u,s*77f) {
+                        simple(LeafShape.OVAL,reach*.22f,LeafMargin.ENTIRE,
+                            LeafDetail(width=.19f,tip=LeafTip.ROUNDED,veinPairs=3),.04f)
                     }
                 }
             }

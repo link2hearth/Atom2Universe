@@ -63,7 +63,9 @@ class BotanyRenderingTest {
             Triple("plantago_lanceolata","papaver",PlantView.FRUIT),
             Triple("cardamine","capsella",PlantView.FRUIT),Triple("ulmus_minor","fraxinus",PlantView.FRUIT),
             Triple("malva","geranium",PlantView.FRUIT),Triple("matricaria","cichorium",PlantView.FLOWER),
-            Triple("salix_alba","salix_caprea",PlantView.LEAF),Triple("malva","geranium",PlantView.LEAF))) {
+            Triple("salix_alba","salix_caprea",PlantView.LEAF),Triple("malva","geranium",PlantView.LEAF),
+            Triple("adansonia","vachellia_tortilis",PlantView.HABIT),Triple("vachellia_tortilis","faidherbia",PlantView.FRUIT),
+            Triple("calotropis","hibiscus_trionum",PlantView.FLOWER),Triple("cenchrus_ciliaris","hyparrhenia",PlantView.FLOWER))) {
             val aa=render(a,view);val bb=render(b,view)
             val ap=pixels(aa);val bp=pixels(bb)
             assertTrue("$a/$b",ap.indices.count{ap[it]!=bp[it]}>1000)
@@ -75,9 +77,9 @@ class BotanyRenderingTest {
 
     @Test fun lesProfilsDOrganesSontReutilisablesSansIdentifiantConnu() {
         for(id in listOf("papaver","viola","digitalis","corylus","pinus","plantago_major",
-            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista")) {
+            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + AfricanDrylandsCatalog.species.map{it.id}) {
             val species=BotanyCatalog.get(id)!!
-            val views=if(FieldBotanyCatalog.species.any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
+            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
             for(view in views) {
                 val original=render(id,view)
                 val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)

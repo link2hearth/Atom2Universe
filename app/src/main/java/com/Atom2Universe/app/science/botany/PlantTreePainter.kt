@@ -25,7 +25,7 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
     private val foliage=mutableListOf<Foliage>()
 
     fun draw() {
-        if(look.crown==Crown.CONICAL) conifer() else broadleaf()
+        if(form.bottleTrunk)bottleHabit() else if(look.crown==Crown.CONICAL) conifer() else broadleaf()
         // Root collar and a broken ground line finish the plate like an ink herbarium drawing.
         brush.stroke(Path().apply { moveTo(118f,282f); quadTo(147f,278f,179f,282f) },0x696a634a,.7f)
         repeat(12) { i ->
@@ -45,7 +45,8 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
             val a=PI*(.07f+.86f*i/(count-1))
             val side=if(cos(a)<0) -1 else 1
             val x=150f+cos(a).toFloat()*form.radius*(.78f+random.nextFloat()*.13f)
-            val y=middle-sin(a).toFloat()*height*.88f+(random.nextFloat()-.5f)*15f
+            val y=if(form.umbrella) middle-abs(sin(a).toFloat())*height*.25f+(random.nextFloat()-.5f)*9f
+                else middle-sin(a).toFloat()*height*.88f+(random.nextFloat()-.5f)*15f
             val startY=if(shrub) 277f else form.fork-abs(sin(a).toFloat())*(if(pine) 18f else 29f)+random.nextFloat()*22f
             val startX=if(shrub) 146f+random.nextFloat()*9 else axis(startY)
             val cx=startX+(x-startX)*.42f+side*form.crooked*.4f
@@ -64,7 +65,7 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
             foliage+=Foliage(x,y,if(pine) 25f else 24f,if(pine) 15f else 22f,random.nextInt())
         }
         // Lower shoulders of the crown must exist as branches, not disconnected decorative blobs.
-        if(!pine)for(side in listOf(-1,1))for(i in 0..1) {
+        if(!pine && !form.umbrella)for(side in listOf(-1,1))for(i in 0..1) {
             val y=middle+height*(.34f+i*.31f)
             val reach=form.radius*sqrt((1-((y-middle)/height).pow(2)).coerceAtLeast(0f))*.76f
             val x=150f+side*reach
@@ -96,14 +97,46 @@ internal class PlantTreePainter(private val canvas:Canvas,private val species:Pl
             if(norm>1f)foliage[i]=f.copy(x=150f+(f.x-150f)/norm,y=middle+(f.y-middle)/norm)
         }
         for(f in foliage) crownMass(f,true)
-        if(!shrub) trunk(form.top+24f)
+        if(!shrub && !form.bottleTrunk) trunk(form.top+24f)
         for(b in branches) branch(b)
+        if(form.bottleTrunk)bottleTrunk()
         // A rear wash ties the crown together; lighted leaf sprays conceal only the small tips.
         for((i,f) in foliage.withIndex()) {
             if(form.droop>0f) hangingTwigs(f)
             crownMass(f,false)
             if(look.thorny && i%3==0) brush.line(f.x,f.y+12,f.x+6,f.y+6,darkBark,.65f)
         }
+    }
+
+    private fun bottleHabit() {
+        val tips=listOf(61f to 111f,83f to 71f,117f to 51f,152f to 61f,185f to 49f,220f to 76f,237f to 115f)
+        val sprays=tips.mapIndexed{i,(x,y)->Foliage(x,y,27f,23f,look.seed*43+i)}
+        sprays.forEach{crownMass(it,true)}
+        tips.forEachIndexed{i,(x,y)->
+            val sx=135f+i*5;val sy=180f+(i%2)*9
+            branch(Bough(sx,sy,sx+(x-sx)*.27f,y+62f,x,y,18f-(abs(i-3))*2))
+            for(side in listOf(-1,1))branch(Bough(x,y+22,x+side*15,y+3,x+side*22,y-4,3.8f))
+        }
+        bottleTrunk()
+        sprays.forEach{crownMass(it,false)}
+    }
+
+    private fun bottleTrunk() {
+        val q=Path().apply {
+            moveTo(103f,280f);cubicTo(120f,263f,107f,207f,120f,172f)
+            quadTo(126f,155f,124f,144f);quadTo(142f,160f,151f,168f)
+            quadTo(167f,161f,178f,145f);quadTo(174f,165f,182f,181f)
+            cubicTo(196f,218f,180f,261f,196f,280f);quadTo(151f,275f,103f,280f);close()
+        }
+        brush.wash(q,105f,220f,197f,220f,intArrayOf(0xffb5aa95.toInt(),bark,darkBark))
+        brush.stroke(q,darkBark,.8f)
+        canvas.save();canvas.clipPath(q)
+        repeat(if(detailed)90 else 20){i->val y=174f+random.nextFloat()*106;val x=111f+random.nextFloat()*80
+            brush.stroke(Path().apply{moveTo(x,y);quadTo(x-2,y+4,x+1,y+8)},0x456a6757,.55f)
+            if(i%7==0)brush.line(x-3,y,x+4,y-1,0x647f7562,.6f)
+        }
+        canvas.restore()
+        for(side in listOf(-1,1))brush.stroke(Path().apply{moveTo(150f+side*23,227f);quadTo(150f+side*26,263f,150f+side*49,279f)},0xff786f5b.toInt(),.8f)
     }
 
     private fun trunk(top:Float) {

@@ -5,7 +5,7 @@ import com.Atom2Universe.app.R
 /**
  * Extension points:
  * 1. Add a PlantSpecies to an existing catalogue or append a new catalogue to species below.
- * 2. Register new family/section IDs here; pages and offered filters are derived from this data.
+ * 2. Register new family/section/collection IDs here; pages and filters are derived from this data.
  * 3. Add FR + EN resources, organ dimensions, traits and references. Variants belong in additional* fields.
  * 4. PlantGroup members are stable species IDs; a species may belong to any number of groups/sections.
  * 5. LeafDetail and TreeArchitecture refine existing shapes (lobes, veins, crown, bark, branch sprays).
@@ -14,12 +14,20 @@ import com.Atom2Universe.app.R
  * The source catalogues are authoritative; no generator or network access is needed to extend the atlas.
  */
 object BotanyCatalog {
+    val collections = listOf(
+        PlantCollection("europe", R.string.bot_collection_europe, R.string.bot_collection_europe_desc),
+        PlantCollection("africa_dry", R.string.bot_collection_africa_dry, R.string.bot_collection_africa_dry_desc),
+    )
     val sections = listOf(
         PlantSection("trees", R.string.bot_section_trees, R.string.bot_section_trees_desc),
         PlantSection("shrubs", R.string.bot_section_shrubs, R.string.bot_section_shrubs_desc),
         PlantSection("herbs", R.string.bot_section_herbs, R.string.bot_section_herbs_desc),
     )
     val families = listOf(
+        PlantFamily("Zygophyllaceae", R.string.bot_family_Zygophyllaceae, R.string.bot_family_Zygophyllaceae_desc, R.string.bot_family_Zygophyllaceae_aliases),
+        PlantFamily("Apocynaceae", R.string.bot_family_Apocynaceae, R.string.bot_family_Apocynaceae_desc, R.string.bot_family_Apocynaceae_aliases),
+        PlantFamily("Combretaceae", R.string.bot_family_Combretaceae, R.string.bot_family_Combretaceae_desc, R.string.bot_family_Combretaceae_aliases),
+        PlantFamily("Pedaliaceae", R.string.bot_family_Pedaliaceae, R.string.bot_family_Pedaliaceae_desc, R.string.bot_family_Pedaliaceae_aliases),
         PlantFamily("Fagaceae", R.string.bot_family_Fagaceae, R.string.bot_family_Fagaceae_desc, R.string.bot_family_Fagaceae_aliases),
         PlantFamily("Betulaceae", R.string.bot_family_Betulaceae, R.string.bot_family_Betulaceae_desc, R.string.bot_family_Betulaceae_aliases),
         PlantFamily("Sapindaceae", R.string.bot_family_Sapindaceae, R.string.bot_family_Sapindaceae_desc, R.string.bot_family_Sapindaceae_aliases),
@@ -52,11 +60,14 @@ object BotanyCatalog {
         PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
         PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
     val groups = listOf(
+        PlantGroup("savanna_thorns", R.string.bot_group_savanna_thorns, listOf("vachellia_tortilis","faidherbia","balanites"), R.string.bot_group_savanna_thorns_desc),
+        PlantGroup("combretaceae", R.string.bot_group_combretaceae, listOf("guiera","combretum_micranthum"), R.string.bot_group_combretaceae_desc),
+        PlantGroup("african_grasses", R.string.bot_group_african_grasses, listOf("cenchrus_ciliaris","hyparrhenia"), R.string.bot_group_african_grasses_desc),
         PlantGroup("oaks", R.string.bot_group_oaks, listOf("robur","petraea"), R.string.bot_group_oaks_desc),
         PlantGroup("beech", R.string.bot_group_beech, listOf("fagus","carpinus"), R.string.bot_group_beech_desc),
         PlantGroup("maples", R.string.bot_group_maples, listOf("campestre","platanoides","pseudoplatanus"), R.string.bot_group_maples_desc),
@@ -84,6 +95,10 @@ object BotanyCatalog {
         PlantGroup("heads", R.string.bot_group_heads, listOf("leucanthemum","matricaria","cichorium"), R.string.bot_group_heads_desc),
     )
     val sources = listOf(
+        BotanySource("sanbi", R.string.bot_source_sanbi, "https://pza.sanbi.org/"),
+        BotanySource("icraf", R.string.bot_source_icraf, "https://apps.worldagroforestry.org/treedb2/"),
+        BotanySource("fz", R.string.bot_source_fz, "https://www.zimbabweflora.co.zw/"),
+        BotanySource("prota", R.string.bot_source_prota, "https://plantuse.plantnet.org/en/PROTA"),
         BotanySource("powo", R.string.bot_source_powo, "https://powo.science.kew.org/"),
         BotanySource("tela", R.string.bot_source_tela, "https://www.tela-botanica.org/ressources/ressources-pedagogiques/"),
         BotanySource("onf", R.string.bot_source_onf, "https://www.onf.fr/"),

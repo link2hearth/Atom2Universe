@@ -3,6 +3,21 @@ package com.Atom2Universe.app.science.botany
 /** Stable taxon pages complement the general floras; adding a reference never changes the screens. */
 object BotanyReferences {
     val taxonPages: Map<String, String> = mapOf(
+        "adansonia" to "https://pza.sanbi.org/adansonia-digitata",
+        "vachellia_tortilis" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Acacia_tortilis.PDF",
+        "faidherbia" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Faidherbia_albida.PDF",
+        "tamarindus" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Tamarindus_indica.PDF",
+        "balanites" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Balanites_aegyptiaca.PDF",
+        "calotropis" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Calotropis_procera.PDF",
+        "senna_italica" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:518341-1/general-information",
+        "guiera" to "https://plantuse.plantnet.org/en/Guiera_senegalensis_%28PROTA%29",
+        "combretum_micranthum" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:170278-1/general-information",
+        "ziziphus_mauritiana" to "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Ziziphus_mauritiana.PDF",
+        "cenchrus_ciliaris" to "https://pza.sanbi.org/cenchrus-ciliaris",
+        "hyparrhenia" to "https://pza.sanbi.org/hyparrhenia-hirta",
+        "sesamum_alatum" to "https://www.zimbabweflora.co.zw/speciesdata/species.php?species_id=152520",
+        "hibiscus_trionum" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:122028-2/general-information",
+        "indigofera_spicata" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:500027-1/general-information",
         "ulmus_minor" to "https://www.worldfloraonline.org/taxon/wfo-0000416674",
         "amelanchier" to "https://www.treesandshrubsonline.org/articles/amelanchier/amelanchier-ovalis/",
         "genista" to "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Genista~tinctoria&page=nswfl",

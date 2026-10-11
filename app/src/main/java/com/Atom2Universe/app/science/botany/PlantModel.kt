@@ -5,6 +5,8 @@ import com.Atom2Universe.app.R
 
 /** Stable IDs, not positions: a new section, family or comparison is just another catalogue entry. */
 data class PlantSection(val id: String, @param:StringRes val title: Int, @param:StringRes val description: Int)
+/** Editorial collections, not exclusive native ranges. A taxon may occur in several collections. */
+data class PlantCollection(val id: String, @param:StringRes val title: Int, @param:StringRes val description: Int)
 data class PlantFamily(val id: String, @param:StringRes val name: Int, @param:StringRes val description: Int,
                        @param:StringRes val aliases: Int = 0)
 data class PlantGroup(val id: String, @param:StringRes val title: Int, val members: List<String>, @param:StringRes val differences: Int)
@@ -15,7 +17,7 @@ enum class LeafShape(val label: Int) {
     MAPLE(R.string.bot_leaf_maple), PINNATE(R.string.bot_leaf_pinnate), PALMATE(R.string.bot_leaf_palmate),
     TRIFOLIATE(R.string.bot_leaf_trifoliate), DIVIDED(R.string.bot_leaf_divided),
     NEEDLE(R.string.bot_leaf_needle), SCALE(R.string.bot_leaf_scale), LINEAR(R.string.bot_leaf_linear),
-    PALMATILOBED(R.string.bot_leaf_palmatilobed)
+    PALMATILOBED(R.string.bot_leaf_palmatilobed), BIPINNATE(R.string.bot_leaf_bipinnate), BIFOLIATE(R.string.bot_leaf_bifoliate)
 }
 enum class LeafMargin(val label: Int) {
     ENTIRE(R.string.bot_margin_entire), SERRATE(R.string.bot_margin_serrate), LOBED(R.string.bot_margin_lobed), SPINY(R.string.bot_margin_spiny)
@@ -30,7 +32,7 @@ enum class FlowerShape(val label: Int) {
     UMBEL(R.string.bot_fl_umbel), CORYMB(R.string.bot_fl_corymb), PEA(R.string.bot_fl_pea),
     BELL(R.string.bot_fl_bell), LIPPED(R.string.bot_fl_lipped), GRASS(R.string.bot_fl_grass),
     SPIKE(R.string.bot_fl_spike), PANICLE(R.string.bot_fl_panicle), APETALOUS(R.string.bot_fl_apetalous),
-    LIGULATE(R.string.bot_fl_ligulate), RACEME(R.string.bot_fl_raceme)
+    LIGULATE(R.string.bot_fl_ligulate), RACEME(R.string.bot_fl_raceme), GLOBOSE_HEAD(R.string.bot_fl_globose_head)
 }
 enum class FruitShape(val label: Int) {
     ACORN(R.string.bot_fr_acorn), NUT(R.string.bot_fr_nut), BEECH(R.string.bot_fr_beech),
@@ -39,12 +41,14 @@ enum class FruitShape(val label: Int) {
     CONE(R.string.bot_fr_cone), DRUPE(R.string.bot_fr_drupe), POME(R.string.bot_fr_pome),
     HIP(R.string.bot_fr_hip), POD(R.string.bot_fr_pod), CAPSULE(R.string.bot_fr_capsule),
     ACHENE(R.string.bot_fr_achene), GRAIN(R.string.bot_fr_grain), SCHIZOCARP(R.string.bot_fr_schizocarp),
-    BERRY(R.string.bot_fr_berry), SILIQUE(R.string.bot_fr_silique), SILICLE(R.string.bot_fr_silicle)
+    BERRY(R.string.bot_fr_berry), SILIQUE(R.string.bot_fr_silique), SILICLE(R.string.bot_fr_silicle),
+    FOLLICLE(R.string.bot_fr_follicle), INDEHISCENT(R.string.bot_fr_indehiscent)
 }
 enum class Habitat(val label: Int) {
     WOOD(R.string.bot_hab_wood), HEDGE(R.string.bot_hab_hedge), MEADOW(R.string.bot_hab_meadow),
     WET(R.string.bot_hab_wet), HEATH(R.string.bot_hab_heath), MOUNTAIN(R.string.bot_hab_mountain),
-    DISTURBED(R.string.bot_hab_disturbed), PARK(R.string.bot_hab_park)
+    DISTURBED(R.string.bot_hab_disturbed), PARK(R.string.bot_hab_park),
+    SAVANNA(R.string.bot_hab_savanna), DRY_SCRUB(R.string.bot_hab_dry_scrub)
 }
 enum class FlowerColor(val label: Int, val ink: Int) {
     WHITE(R.string.bot_color_white, 0xfff6f1df.toInt()), YELLOW(R.string.bot_color_yellow, 0xffe6be35.toInt()),
@@ -85,7 +89,10 @@ data class PlantSpecies(
     val additionalArrangements: Set<LeafArrangement> = emptySet(),
     val additionalMargins: Set<LeafMargin> = emptySet(),
     val additionalColors: Set<FlowerColor> = emptySet(),
-    val variablePersistence: Boolean = false
+    val variablePersistence: Boolean = false,
+    val collectionIds: Set<String> = setOf("europe"),
+    /** Empty month sets mean no transferable monthly calendar, not absence of flowering/fruiting. */
+    @param:StringRes val phenologyNote: Int = 0
 ) {
     val leafShapes get() = additionalLeaves + look.leaf
     val leafArrangements get() = additionalArrangements + look.arrangement

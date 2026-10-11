@@ -12,12 +12,13 @@ data class PlantQuery(
     val leaves: Set<LeafShape> = emptySet(), val margins: Set<LeafMargin> = emptySet(),
     val arrangements: Set<LeafArrangement> = emptySet(), val colors: Set<FlowerColor> = emptySet(),
     val flowers: Set<FlowerShape> = emptySet(), val fruits: Set<FruitShape> = emptySet(),
-    val habitats: Set<Habitat> = emptySet(), val months: Set<Int> = emptySet(), val evergreen: Boolean? = null
+    val habitats: Set<Habitat> = emptySet(), val months: Set<Int> = emptySet(), val evergreen: Boolean? = null,
+    val collections: Set<String> = emptySet()
 ) {
     fun matches(p: PlantSpecies, searchableText: String): Boolean {
         fun <T> permits(selected: Set<T>, actual: T) = selected.isEmpty() || actual in selected
         fun <T> overlaps(selected: Set<T>, actual: Set<T>) = selected.isEmpty() || actual.any { it in selected }
-        return (sections.isEmpty() || p.sectionIds.any { it in sections }) && permits(families, p.familyId) &&
+        return overlaps(collections,p.collectionIds) && overlaps(sections,p.sectionIds) && permits(families, p.familyId) &&
             overlaps(leaves, p.leafShapes) && overlaps(margins, p.leafMargins) && overlaps(arrangements, p.leafArrangements) &&
             overlaps(colors, p.flowerColors) && permits(flowers, p.look.flower) && permits(fruits, p.look.fruit) &&
             (habitats.isEmpty() || p.habitats.any { it in habitats }) &&

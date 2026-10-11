@@ -214,7 +214,7 @@ internal object HerbsCatalog {
             habitats = setOf(Habitat.MEADOW, Habitat.HEDGE), evergreen = false,
             look = PlantLook(Crown.HERB, LeafShape.PINNATE, LeafMargin.ENTIRE, LeafArrangement.ALTERNATE,
                 FlowerShape.PEA, FruitShape.POD, FlowerColor.PURPLE, 12.0f, 10.0f, 3.0f,
-                seed = 50, leaflets = 14,
+                seed = 50, leaflets = 14, leafDetail = LeafDetail(terminalTendril=true),
                 flowerDetail = FlowerDetail(cluster=FlowerCluster.UNILATERAL)),
             description = R.string.bot_vicia_description, distribution = R.string.bot_vicia_distribution,
             captions = mapOf(PlantView.HABIT to R.string.bot_section_herbs, PlantView.LEAF to LeafShape.PINNATE.label,

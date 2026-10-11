@@ -20,7 +20,7 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
     private val gold=0xffcfaa39.toInt()
 
     fun plate() {
-        val pendant=d.corolla in listOf(CorollaForm.FOXGLOVE,CorollaForm.HAREBELL,CorollaForm.URN)
+        val pendant=d.corolla in listOf(CorollaForm.FOXGLOVE,CorollaForm.HAREBELL,CorollaForm.URN,CorollaForm.BAOBAB,CorollaForm.SESAME)
         if(l.flower !in listOf(FlowerShape.CATKIN,FlowerShape.CONIFER,FlowerShape.GRASS,FlowerShape.SPIKE,FlowerShape.PANICLE,FlowerShape.RACEME)
             && d.cluster !in listOf(FlowerCluster.UNILATERAL,FlowerCluster.AXILLARY,FlowerCluster.RACEMOSE) && !pendant) {
             val offset=if(d.corolla==CorollaForm.COWSLIP)-25f else 0f
@@ -31,6 +31,7 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
     }
 
     fun head() {
+        if(d.cluster==FlowerCluster.BRUSH_SPIKE){brushSpike();return}
         if(d.cluster==FlowerCluster.AXILLARY){
             b.line(-84f,79f,76f,-92f,l.bark,3f)
             repeat(4){i->val x=-53f+i*34;val y=49f-i*37
@@ -40,6 +41,7 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
             };return
         }
         when(l.flower) {
+            FlowerShape.GLOBOSE_HEAD -> globoseHead()
             FlowerShape.CATKIN -> catkins()
             FlowerShape.CONIFER -> pollenCones()
             FlowerShape.CORYMB,FlowerShape.UMBEL -> flatCluster()
@@ -70,6 +72,8 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
 
     fun blossom(shape:FlowerShape=l.flower) {
         when(d.corolla) {
+            CorollaForm.BAOBAB,CorollaForm.TAMARIND,CorollaForm.SENNA,CorollaForm.CORONA,
+            CorollaForm.HIBISCUS,CorollaForm.SESAME -> PlantCorollaPainter(c,l,detailed).draw()
             CorollaForm.POPPY -> poppy()
             CorollaForm.VIOLET -> violet()
             CorollaForm.COWSLIP -> cowslip()
@@ -524,6 +528,8 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
     }
 
     private fun grassHead() {
+        if(d.cluster==FlowerCluster.BRISTLY_SPIKE){bristlySpike();return}
+        if(d.cluster==FlowerCluster.PAIRED_RACEMES){pairedRacemes();return}
         b.stroke(Path().apply{moveTo(0f,117f);quadTo(-10f,-18f,0f,-115f)},green,1.8f)
         if(d.cluster==FlowerCluster.RYEGRASS)repeat(13){i->val y=-105f+i*13;val side=if(i%2==0)-1 else 1
             b.at(side*7f,y,side*19f,.65f){spikelet(false)}
@@ -534,6 +540,69 @@ internal class PlantFlowerPainter(private val c:Canvas,species:PlantSpecies,priv
                 b.stroke(Path().apply{moveTo(x,y);quadTo(x+side*13,y+2,x+side*11,y+20)},green,.6f)
                 b.at(x+side*11,y+30,side*12f,.82f){spikelet(true)}
             } else repeat(5){j->b.at(x+(j%2)*7,y+(j/2)*7,-side*25f,.5f){spikelet(false)}}
+        }
+    }
+
+    private fun globoseHead() {
+        repeat(3){i->val x=(i-1)*61f;val y=if(i==1)-39f else 14f
+            b.line(0f,105f,x,y,green,1.3f)
+            b.at(x,y){
+                b.oval(0f,0f,27f,26f,botanicalMix(color,green,.28f))
+                repeat(if(detailed)100 else 36){j->val a=j*2.399963;val r=sqrt((j+.5f)/100)*38
+                    val xx=cos(a).toFloat()*r;val yy=sin(a).toFloat()*r
+                    b.line(xx*.5f,yy*.5f,xx,yy,0xffd2c79d.toInt(),.8f)
+                    b.oval(xx,yy,1.5f,1.5f,cream)
+                }
+            }
+        }
+    }
+
+    private fun brushSpike() {
+        b.stroke(Path().apply{moveTo(0f,117f);quadTo(-13f,0f,0f,-106f)},green,2f)
+        repeat(24){i->val y=-93f+i*6.7f;val x=-5f+sin(i*.8f)*3
+            val r=if(d.stamens>10)21f else 13f
+            b.at(x,y){
+                repeat(if(detailed)12 else 6){j->val a=j*2.399963
+                    val xx=cos(a).toFloat()*r;val yy=sin(a).toFloat()*r*.45f
+                    b.line(0f,0f,xx,yy,0xffccc3a0.toInt(),.65f);b.oval(xx,yy,1.5f,1.3f,cream)
+                }
+                if(d.stamens<=10)b.at(0f,0f,i*37f,.07f){radial()}
+            }
+        }
+        // Enlarged individual flower distinguishes small petals from protruding stamens.
+        if(d.stamens<=10)b.at(76f,66f,0f,.36f){radial()}
+    }
+
+    private fun bristlySpike() {
+        b.line(0f,121f,0f,-111f,green,1.8f)
+        repeat(23){i->val y=-99f+i*7.7f;val reach=22f*sin(PI*(i+1)/25).toFloat()
+            for(side in listOf(-1,1)) {
+                b.oval(side*5f,y,5f,7f,0xffad899e.toInt())
+                repeat(if(detailed)9 else 4){j->val x=side*(reach+8+j*.9f);val yy=y-13f-j*2.3f
+                    b.stroke(Path().apply{moveTo(side*4f,y+6);quadTo(x*.8f,y-2,x,yy)},0xffb9959e.toInt(),.6f)
+                    if(detailed && j%3==0)repeat(4){k->val t=(k+2)/6f;val bx=side*4+(x-side*4)*t;val by=y+6+(yy-y-6)*t
+                        b.line(bx,by,bx+side*3,by-3,0xffcdb7a8.toInt(),.45f)}
+                }
+            }
+        }
+    }
+
+    private fun pairedRacemes() {
+        b.line(0f,121f,0f,-107f,green,1.7f)
+        repeat(5){i->val side=if(i%2==0)-1 else 1;val x=side*(23f+i*7);val y=-70f+i*28
+            b.line(0f,y+27,x,y+16,green,.9f)
+            b.at(x,y,side*14f,.68f){
+                val spathe=Path().apply{moveTo(-5f,32f);quadTo(-16f,-4f,-5f,-24f);quadTo(6f,7f,5f,32f);close()}
+                b.fill(spathe,0xffb39171.toInt());b.stroke(spathe,ink,.6f)
+                for(s in listOf(-1,1))b.at(s*3f,7f,s*17f){
+                    b.line(0f,7f,0f,-62f,green,.8f)
+                    repeat(6){j->val yy=-j*10f
+                        b.oval(0f,yy,3.5f,7f,0xffb7b394.toInt())
+                        for(h in -2..2)b.line(h.toFloat(),yy+3,h*3f,yy-12,0xffd8d4bf.toInt(),.5f)
+                        b.stroke(Path().apply{moveTo(0f,yy-4);lineTo(s*15f,yy-24);lineTo(s*9f,yy-51)},0xff927a54.toInt(),.65f)
+                    }
+                }
+            }
         }
     }
 

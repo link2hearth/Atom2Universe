@@ -18,7 +18,9 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
     private val brown=0xff9b713f.toInt()
 
     fun plate()=b.at(150f,151f){
+        if(PlantSpecialFruitPainter(c,l,detailed).draw())return@at
         when(l.fruit){
+            FruitShape.INDEHISCENT,FruitShape.FOLLICLE -> Unit // handled by reusable special-fruit profiles
             FruitShape.ACORN -> acorns()
             FruitShape.NUT -> hazelnuts()
             FruitShape.BEECH -> beech()
@@ -178,6 +180,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
     }
     private fun samaras() {
         when(d.samara){
+            SamaraForm.FOUR_WINGS -> Unit // drawn by PlantSpecialFruitPainter before dispatch
             SamaraForm.ORBICULAR -> for(i in -1..1)b.at(i*64f,abs(i)*28f,i*17f,.78f){
                 stalk(0f,74f,0f,50f,1.6f)
                 val q=Path().apply{moveTo(0f,51f);cubicTo(-62f,42f,-65f,-58f,-15f,-58f)
