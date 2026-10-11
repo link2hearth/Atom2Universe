@@ -289,6 +289,7 @@
         <item>Cut the mushroom to see the milk before concluding: once the colour of the milk is noted, the confusion is no longer possible.</item>
         <item>The woolly milkcap irritates the gut: nausea, vomiting, diarrhoea.</item>
         <item>Three cousins of the delicious milk cap, all with coloured milk: bloody milk cap (wine-red milk), false saffron milkcap (under spruce, orange milk turning wine-purple, cap turning green), salmon milk cap (under firs, thin pale rings, never green).</item>
+        <item>Lactarius semisanguifluus: under pines; orange milk turning wine-red in 5 to 8 minutes, cap greening very quickly. The delicious milk cap keeps orange milk.</item>
     </string-array>
     <string name="myco_g_puffball_title">Puffball, or not?</string>
     <string name="myco_g_puffball_evidence">Belgian poison centre</string>
@@ -1956,6 +1957,7 @@
         <item>Both are slimy-capped boletes of pine woods, with fine yellow pores.</item>
         <item>Wikipedia (fr) says the slippery jack is edible with care (peeled cap, young ones only); the granulated bolete has a card of its own, with the more prudent status.</item>
         <item>Bovine bolete: no ring either, but very large angular pores running down the stem and a slimmer stem. Slimy spike-cap: gills, not pores, and only an indistinct ring zone (Wikipedia, en).</item>
+        <item>Velvet bolete: felted, speckled cap, no ring, slightly bluing flesh. Larch bolete: ringed stem, under larches, bright yellow to orange. Olive-brown waxy cap: gills waxy and attached; the slimy spike-cap’s gills separate easily from the cap (Wikipedia, en).</item>
     </string-array>
     <string name="myco_g_hedgehog_title">Pied-de-mouton, or terracotta hedgehog?</string>
     <string name="myco_g_hedgehog_evidence">Wikipedia</string>
@@ -2354,5 +2356,98 @@
         <item>Deadly parasol, fatal dapperling and chestnut dapperling are all small lepiotas, with brownish or red scales or pigments; the DGfM lists all three for the death-cap syndrome.</item>
         <item>Chestnut dapperling: up to 3 cm, white cap with dark red-brown scales, chestnut-brown stem, indistinct ring (Wikipedia, en).</item>
         <item>The DGfM suspects every small lepiota with brownish and red pigments of containing amatoxins; the Belgian poison centre advises against any lepiota under 10 cm.</item>
+    </string-array>
+    <string name="myco_semisanguifluus_name">Lactarius semisanguifluus</string>
+    <string name="myco_semisanguifluus_alt">Lactaire semi-sanguin</string>
+    <string name="myco_semisanguifluus_latin" translatable="false">Lactarius semisanguifluus</string>
+    <string-array name="myco_semisanguifluus_traits">
+        <item>Cap 2.5 to 7 cm, sticky, pinkish-beige or greyish-brown, sometimes lilac-tinged, with distinct zones; it turns green very quickly</item>
+        <item>Gills salmon-orange to brownish-orange</item>
+        <item>Stem 3 to 5 cm, greyish orange-pink, greening when handled, few or no pits</item>
+        <item>Orange to reddish-orange flesh; scarce orange-red milk turning wine-red in 5 to 8 minutes, then brownish-red</item>
+        <item>Mild or slightly peppery taste, faint smell</item>
+        <item>Only under pines, on chalky soil, often in grass; uncommon</item>
+    </string-array>
+    <string name="myco_semisanguifluus_note">Edible: Wikipedia (fr) calls it a good edible, the DGfM lists it (red list category 3 in Germany) and so does the VAPKO. Wikipedia (fr) separates it from the false saffron milkcap (under spruce, stem without pits, strongly greening cap) and from the delicious milk cap (brighter colours, milk staying orange); the page also names Lactarius fennoscandicus, very close and under spruce. The milk turning wine-red in minutes is what sets it apart.</string>
+    <string name="myco_grevillei_name">Larch bolete</string>
+    <string name="myco_grevillei_alt">Bolet élégant</string>
+    <string name="myco_grevillei_latin" translatable="false">Suillus grevillei</string>
+    <string-array name="myco_grevillei_traits">
+        <item>Cap 2 to 15 cm, sticky, lemon-yellow to bright orange or reddish-brown</item>
+        <item>Fine yellow pores running down the stem, olive-yellow with age</item>
+        <item>Stem 3 to 12 cm, yellow above a white then yellow ring, orange-reddish brown at the base</item>
+        <item>Soft bright yellow flesh, quickly turning cream with orange spots; mild, sweet taste</item>
+        <item>Only under larches · summer to late autumn</item>
+    </string-array>
+    <string name="myco_grevillei_note">Edible but mediocre: the DGfM and the VAPKO list it, the VAPKO adding that the cap skin must be removed. Wikipedia (fr) finds it bland and flabby and says it can be laxative for some; it advises young ones only, the stem removed, the cap peeled and a small first portion. It is hard to mix up thanks to its colours, its ringed stem and the larches (Wikipedia, fr): the other slippery boletes under larches have large pores.</string>
+    <string name="myco_variegatus_name">Velvet bolete</string>
+    <string name="myco_variegatus_alt">Bolet moucheté</string>
+    <string name="myco_variegatus_latin" translatable="false">Suillus variegatus</string>
+    <string-array name="myco_variegatus_traits">
+        <item>Cap 5 to 15 cm, dull yellow to ochre or rusty, felted and speckled with small scales, barely sticky</item>
+        <item>Fairly large pores, ochre then olive-brown</item>
+        <item>Stem 4 to 12 cm, nearly smooth, the colour of the cap or paler, no ring</item>
+        <item>Cream to yellowish flesh, which may turn slightly blue near the tubes; chlorine-like smell and taste</item>
+        <item>Only under pines, on sandy soil poor in lime</item>
+    </string-array>
+    <string name="myco_variegatus_note">Edible but mediocre: the DGfM and the VAPKO list it. Wikipedia (fr) finds the flesh flabby, the chlorine smell passing into the dish, and says it can be laxative; it advises young firm ones, the stem removed, the cap peeled and a small first portion. It strongly accumulates caesium-137 and metals (Wikipedia, fr). The bovine bolete has a plain, paler cap and a slimmer stem (Wikipedia, fr). Wikipedia (en) calls its smell and taste unpleasant.</string>
+    <string name="myco_olivaceoalbus_name">Sheathed waxy cap</string>
+    <string name="myco_olivaceoalbus_alt">Olive wax cap</string>
+    <string name="myco_olivaceoalbus_latin" translatable="false">Hygrophorus olivaceoalbus</string>
+    <string-array name="myco_olivaceoalbus_traits">
+        <item>Cap 3 to 12 cm, olive-brown to grey or sooty-brown, slimy, with dark streaks and a persistent dark boss</item>
+        <item>Gills thick, widely spaced, white, waxy</item>
+        <item>Stem 3 to 12 cm, slimy when wet, white above a ring-like zone, with ragged dark scaly bands below</item>
+        <item>Thin white flesh, no distinct smell, bland taste</item>
+        <item>Under conifers, in mountain woods, on acid ground · late summer to early winter</item>
+    </string-array>
+    <string name="myco_olivaceoalbus_note">Edible, with divided opinions on taste: the DGfM lists it; Wikipedia (en) says some remove the cap skin, advises caution, and that it is eaten more in Europe than in North America. The page says there is no risk of confusion with toxic fungi, and lists other waxy caps as look-alikes (Hygrophorus latitabundus, H. pustulatus, H. persoonii under oaks). It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_hypothejus_name">Herald of the winter</string>
+    <string name="myco_hypothejus_alt">Olive-brown waxy cap</string>
+    <string name="myco_hypothejus_latin" translatable="false">Hygrophorus hypothejus</string>
+    <string-array name="myco_hypothejus_traits">
+        <item>Cap 3 to 6 cm, yellowish to olive-brown with a dark centre, slimy, funnel-shaped with age</item>
+        <item>Gills yellow, running down the stem</item>
+        <item>Stem 4 to 7 cm, slender, bare</item>
+        <item>Pale yellow flesh turning orange-red when bruised</item>
+        <item>In pine woods, often in large groups · October and November, with the first frosts</item>
+    </string-array>
+    <string name="myco_hypothejus_note">Edible, of variable quality because some are slimy: the DGfM lists it and Wikipedia (en) says so. Wikipedia (en) names the slimy spike-cap as a look-alike: its gills separate easily from the cap, unlike the waxy gills of this species. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_fragrans_name">Clitocybe fragrans</string>
+    <string name="myco_fragrans_alt">Clitocybe fragrans</string>
+    <string name="myco_fragrans_latin" translatable="false">Clitocybe fragrans</string>
+    <string-array name="myco_fragrans_traits">
+        <item>Cap 1 to 5 cm, white and flat</item>
+        <item>Gills somewhat close, running down the stem, whitish</item>
+        <item>Stem 2 to 6 cm, thin, bare</item>
+        <item>Fragrant smell of aniseed</item>
+        <item>Broadleaf woods in Europe · August to December</item>
+    </string-array>
+    <string name="myco_fragrans_note">Toxic: the DGfM lists it for the muscarine syndrome. Wikipedia (en) gives it as edible but not recommended, some guides advising against it because it can be mistaken for deadly poisonous species, and names Clitocybe dealbata (the ivory funnel, deadly, with no aniseed smell) and the blue-green anise mushroom as look-alikes. The most prudent status is kept. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_chalciporus_name">Peppery bolete</string>
+    <string name="myco_chalciporus_alt">Bolet poivré</string>
+    <string name="myco_chalciporus_latin" translatable="false">Chalciporus piperatus</string>
+    <string-array name="myco_chalciporus_traits">
+        <item>Cap 1.5 to 9 cm, dry or slightly sticky, brownish-yellow to brownish-red</item>
+        <item>Pores slightly angular, rust-brown to reddish-brown</item>
+        <item>Stem 3 to 9 cm, red-brown over yellow, with yellow mycelium at the base, no ring</item>
+        <item>Cream flesh, bright yellow at the base of the stem; distinctly peppery taste</item>
+        <item>Under broadleaf and conifer trees · July to November</item>
+    </string-array>
+    <string name="myco_chalciporus_note">Not recommended: the VAPKO lists it, but Wikipedia (fr) says it has no food interest because of its peppery taste, and Wikipedia (en) says it is usually considered inedible and contains toxins, advising thorough cooking to reduce the risk of stomach upset. It can serve as a condiment, finely diced or dried and powdered (Wikipedia, fr). The false peppery bolete (Chalciporus pseudopiperatus) is a cryptic species: only DNA tells them apart.</string>
+    <string name="myco_l_grey_pink_stem">Greyish orange-pink stem</string>
+    <string name="myco_l_speckled_felt_cap">Felted, speckled cap</string>
+    <string name="myco_l_yellow_olive_slimy_cap">Yellow-olive, slimy cap, dark centre</string>
+    <string name="myco_l_yellow_decurrent_gills">Yellow gills running down the stem</string>
+    <string name="myco_l_small_flat_white_cap">Small, flat, white cap</string>
+    <string name="myco_l_dry_orange_brown_cap">Dry, brownish-yellow to red cap</string>
+    <string name="myco_l_rust_pores">Rust-brown pores</string>
+    <string name="myco_g_anise_title">Aniseed funnel: edible, toxic or deadly?</string>
+    <string name="myco_g_anise_evidence">DGfM, Wikipedia</string>
+    <string-array name="myco_g_anise_points">
+        <item>Blue-green anise mushroom: blue-green frosted cap, strong aniseed smell; listed edible by the DGfM and the VAPKO, but not recommended here.</item>
+        <item>Clitocybe fragrans: small, white and flat, also smelling of aniseed; the DGfM lists it for the muscarine syndrome.</item>
+        <item>Fool’s funnel: white to cream, floury smell, no aniseed smell; the DGfM lists it for the muscarine syndrome too. Wikipedia (en) says the ivory funnel (Clitocybe dealbata) is deadly and lacks the aniseed odour.</item>
+        <item>The DGfM lists Clitocybe dealbata, C. fragrans, C. rivulosa and C. suaveolens for the muscarine syndrome.</item>
     </string-array>
 </resources>

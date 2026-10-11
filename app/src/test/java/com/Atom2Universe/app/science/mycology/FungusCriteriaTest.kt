@@ -50,7 +50,7 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("virescens"), setOf("cap_GREEN", "s_no_ring", "s_no_volva", "sp_white")))
         assertTrue(FungusCriteria.matches(look("columbetta"), setOf("cap_WHITE", "stipe_WHITE", "s_no_ring", "s_no_volva")))
         // les lactaires seuls laissent couler un lait
-        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis", "sanguifluus", "deterrimus", "salmonicolor", "volemus", "piperatus", "helvus"), ids("m_latex"))
+        assertEquals(setOf("deliciosus", "torminosus", "lignyotus", "turpis", "sanguifluus", "deterrimus", "salmonicolor", "volemus", "piperatus", "helvus", "semisanguifluus"), ids("m_latex"))
         // ce que le dessin ne montre pas ne s'invente pas : pas d'aiguillons ailleurs, pas de volve chez le lot trois
         assertEquals(setOf("hydnum", "erinaceus", "imbricatus", "rufescens"), ids("u_teeth"))
         for (id in listOf("hydnum", "craterellus", "badia", "chrysenteron", "erythropus", "prunulus", "deliciosus", "torminosus", "nuda", "orellanus", "virescens", "columbetta"))
@@ -169,7 +169,7 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("vesca"), setOf("u_gills", "s_no_ring", "sp_white")))
         assertTrue(FungusCriteria.matches(look("rufescens"), setOf("u_teeth", "s_no_ring")))
         // les groupes nouveaux et agrandis
-        assertEquals(setOf("luteus", "granulatus", "bovinus", "glutinosus"), FungusCatalog.groups.first { it.id == "pinebolete" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "pinebolete" }.members.containsAll(listOf("luteus", "granulatus", "bovinus", "glutinosus")))
         assertEquals(setOf("hydnum", "rufescens"), FungusCatalog.groups.first { it.id == "hedgehog" }.members.toSet())
         assertTrue(FungusCatalog.groups.first { it.id == "milkcap" }.members.containsAll(listOf("deliciosus", "sanguifluus", "deterrimus", "salmonicolor")))
     }
@@ -184,7 +184,7 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("glutinosus"), setOf("u_gills", "sp_black")))
         assertTrue(FungusCriteria.matches(look("odora"), setOf("u_gills", "s_no_ring", "sp_white")))
         val pine = FungusCatalog.groups.first { it.id == "pinebolete" }.members.toSet()
-        assertEquals(setOf("luteus", "granulatus", "bovinus", "glutinosus"), pine)
+        assertTrue(pine.containsAll(listOf("luteus", "granulatus", "bovinus", "glutinosus")))
         assertTrue(FungusCatalog.groups.first { it.id == "entoloma" }.members.contains("decastes"))
     }
 
@@ -231,6 +231,20 @@ class FungusCriteriaTest {
         assertTrue(FungusCatalog.groups.first { it.id == "inkcap" }.members.contains("micaceus"))
         assertTrue(FungusCatalog.groups.first { it.id == "stgeorge" }.members.contains("maculatum"))
         assertTrue(FungusCatalog.groups.first { it.id == "amanita" }.members.contains("regalis"))
+    }
+
+    @Test
+    fun leLotQuatorzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("semisanguifluus"), setOf("m_latex", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("grevillei"), setOf("u_pores", "s_ring")))
+        assertTrue(FungusCriteria.matches(look("variegatus"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("olivaceoalbus"), setOf("u_gills", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("hypothejus"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("fragrans"), setOf("cap_WHITE", "w_small", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("chalciporus"), setOf("u_pores", "s_no_ring")))
+        assertEquals(setOf("odora", "fragrans", "rivulosa"), FungusCatalog.groups.first { it.id == "anise" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "pinebolete" }.members.containsAll(listOf("variegatus", "grevillei", "hypothejus")))
+        assertTrue(FungusCatalog.groups.first { it.id == "milkcap" }.members.contains("semisanguifluus"))
     }
 
     @Test

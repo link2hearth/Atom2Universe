@@ -284,6 +284,7 @@
         <item>On coupe le champignon pour voir le lait avant de conclure : une fois la couleur du lait notée, la confusion n’est plus possible.</item>
         <item>Le lactaire à toison irrite le tube digestif : nausées, vomissements, diarrhée.</item>
         <item>Trois cousins du lactaire délicieux, tous à lait coloré : lactaire sanguin (lait rouge vineux), lactaire des épicéas (sous les épicéas, lait orange qui tourne au violet vineux, chapeau qui verdit), lactaire saumon (sous les sapins, fins anneaux pâles, jamais vert).</item>
+        <item>Lactarius semisanguifluus : sous les pins ; lait orange qui devient rouge vineux en 5 à 8 minutes, chapeau qui verdit très vite. Le lactaire délicieux garde un lait orange.</item>
     </string-array>
     <string name="myco_g_puffball_title">Vesse-de-loup, ou pas ?</string>
     <string name="myco_g_puffball_evidence">Centre antipoison belge</string>
@@ -1856,6 +1857,7 @@
         <item>Tous deux sont des bolets des pinèdes, au chapeau visqueux et aux pores fins et jaunes.</item>
         <item>Wikipédia (fr) dit que la nonnette voilée se mange avec précaution (chapeau pelé, jeunes exemplaires seulement) ; le bolet granulé a sa propre fiche, avec le statut le plus prudent.</item>
         <item>Bolet des bouviers : pas d’anneau non plus, mais de très grands pores anguleux qui descendent sur le pied et un pied plus mince. Gomphide glutineux : des lames, pas de pores, et seulement une zone annulaire floue (Wikipédia, en).</item>
+        <item>Bolet moucheté : chapeau feutré et moucheté, sans anneau, chair qui bleuit un peu. Bolet élégant : pied annelé, sous les mélèzes, jaune vif à orange. Hygrophorus hypothejus : lames cireuses et attachées ; celles du gomphide glutineux se séparent facilement du chapeau (Wikipédia, en).</item>
     </string-array>
     <string name="myco_g_hedgehog_title">Pied-de-mouton, ou hydne roussissant ?</string>
     <string name="myco_g_hedgehog_evidence">Wikipédia</string>
@@ -2226,5 +2228,91 @@
         <item>La lépiote brun-incarnat, la lépiote de Josserand et la lépiote châtain sont toutes de petites lépiotes à écailles ou pigments brunâtres ou rouges ; la DGfM les liste toutes trois pour le syndrome de l’amanite phalloïde.</item>
         <item>Lépiote châtain : jusqu’à 3 cm, chapeau blanc à écailles brun rouge foncé, pied brun châtain, anneau peu net (Wikipédia, en).</item>
         <item>La DGfM soupçonne toute petite lépiote à pigments brunâtres et rouges de contenir des amatoxines ; le centre antipoison belge déconseille toute lépiote de moins de 10 cm.</item>
+    </string-array>
+    <string name="myco_semisanguifluus_name">Lactaire semi-sanguin</string>
+    <string name="myco_semisanguifluus_alt">Lactarius semisanguifluus</string>
+    <string-array name="myco_semisanguifluus_traits">
+        <item>Chapeau de 2,5 à 7 cm, visqueux, beige rosé ou brun grisâtre, parfois teinté de lilas, à zones nettes ; il verdit très vite</item>
+        <item>Lames orange saumon à orange brunâtre</item>
+        <item>Pied de 3 à 5 cm, rose orangé grisâtre, verdissant au toucher, peu ou pas de fossettes</item>
+        <item>Chair orange à orange rougeâtre ; lait peu abondant, orange rougeâtre, qui devient rouge vineux en 5 à 8 minutes puis rouge brunâtre</item>
+        <item>Saveur douce ou un peu poivrée, odeur faible</item>
+        <item>Uniquement sous les pins, sur sol calcaire, souvent dans l’herbe ; peu commun</item>
+    </string-array>
+    <string name="myco_semisanguifluus_note">Comestible : Wikipédia (fr) le dit bon comestible, la DGfM le liste (liste rouge allemande, catégorie 3) ainsi que la VAPKO. Wikipédia (fr) le sépare du lactaire des épicéas (sous les épicéas, pied sans fossettes, chapeau très verdissant) et du lactaire délicieux (couleurs plus vives, lait qui reste orange) ; la page cite aussi Lactarius fennoscandicus, très proche et sous les épicéas. Le lait qui vire au rouge vineux en quelques minutes est ce qui le distingue.</string>
+    <string name="myco_grevillei_name">Bolet élégant</string>
+    <string name="myco_grevillei_alt">Bolet jaune des mélèzes, larch bolete</string>
+    <string-array name="myco_grevillei_traits">
+        <item>Chapeau de 2 à 15 cm, visqueux, jaune citron à orange vif ou brun rougeâtre</item>
+        <item>Pores fins et jaunes, qui descendent sur le pied, jaune olive avec l’âge</item>
+        <item>Pied de 3 à 12 cm, jaune au-dessus d’un anneau blanc puis jaune, brun orangé rougeâtre à la base</item>
+        <item>Chair molle jaune vif, virant vite au crème taché d’orange ; saveur douce et sucrée</item>
+        <item>Uniquement sous les mélèzes · été à fin d’automne</item>
+    </string-array>
+    <string name="myco_grevillei_note">Comestible mais médiocre : la DGfM et la VAPKO le listent, la VAPKO ajoutant qu’il faut ôter la peau du chapeau. Wikipédia (fr) le trouve fade et flasque et dit qu’il peut être laxatif pour certains ; elle conseille les jeunes seulement, le pied ôté, le chapeau pelé et une petite première portion. Il est difficile à confondre grâce à ses couleurs, son pied annelé et les mélèzes (Wikipédia, fr) : les autres bolets visqueux sous les mélèzes ont de grands pores.</string>
+    <string name="myco_variegatus_name">Bolet moucheté</string>
+    <string name="myco_variegatus_alt">Bolet tacheté, velvet bolete</string>
+    <string-array name="myco_variegatus_traits">
+        <item>Chapeau de 5 à 15 cm, jaune terne à ocre ou rouille, feutré et moucheté de petites écailles, à peine visqueux</item>
+        <item>Pores assez grands, ocre puis brun olive</item>
+        <item>Pied de 4 à 12 cm, presque lisse, de la couleur du chapeau ou plus pâle, sans anneau</item>
+        <item>Chair crème à jaunâtre, qui peut bleuir un peu près des tubes ; odeur et saveur de chlore</item>
+        <item>Uniquement sous les pins, sur sol sableux pauvre en calcaire</item>
+    </string-array>
+    <string name="myco_variegatus_note">Comestible mais médiocre : la DGfM et la VAPKO le listent. Wikipédia (fr) lui trouve la chair flasque, l’odeur de chlore passant dans le plat, et dit qu’il peut être laxatif ; elle conseille les jeunes et fermes, le pied ôté, le chapeau pelé et une petite première portion. Il accumule fortement le césium 137 et les métaux (Wikipédia, fr). Le bolet des bouviers a un chapeau uni, plus pâle, et un pied plus mince (Wikipédia, fr). Wikipédia (en) juge son odeur et son goût désagréables.</string>
+    <string name="myco_olivaceoalbus_name">Hygrophorus olivaceoalbus</string>
+    <string name="myco_olivaceoalbus_alt">Sheathed waxy cap, olive wax cap</string>
+    <string-array name="myco_olivaceoalbus_traits">
+        <item>Chapeau de 3 à 12 cm, brun olive à gris ou brun suie, visqueux, strié de sombre, à mamelon sombre persistant</item>
+        <item>Lames épaisses, très espacées, blanches, cireuses</item>
+        <item>Pied de 3 à 12 cm, visqueux par temps humide, blanc au-dessus d’une zone annulaire, avec des bandes d’écailles sombres et déchirées en dessous</item>
+        <item>Chair blanche et mince, sans odeur nette, saveur fade</item>
+        <item>Sous les conifères, dans les bois de montagne, sur sol acide · fin d’été à début d’hiver</item>
+    </string-array>
+    <string name="myco_olivaceoalbus_note">Comestible, aux avis partagés sur le goût : la DGfM le liste ; Wikipédia (en) dit que certains ôtent la peau du chapeau, conseille la prudence, et qu’il est plus mangé en Europe qu’en Amérique du Nord. La page dit qu’il n’y a pas de risque de confusion avec des champignons toxiques, et cite d’autres hygrophores comme sosies (Hygrophorus latitabundus, H. pustulatus, H. persoonii sous les chênes). Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_hypothejus_name">Hygrophorus hypothejus</string>
+    <string name="myco_hypothejus_alt">Herald of the winter, olive-brown waxy cap</string>
+    <string-array name="myco_hypothejus_traits">
+        <item>Chapeau de 3 à 6 cm, jaunâtre à brun olive à centre sombre, visqueux, en entonnoir avec l’âge</item>
+        <item>Lames jaunes, décurrentes</item>
+        <item>Pied de 4 à 7 cm, mince, nu</item>
+        <item>Chair jaune pâle, qui vire au rouge orangé au froissement</item>
+        <item>Dans les pinèdes, souvent en grands groupes · octobre et novembre, aux premières gelées</item>
+    </string-array>
+    <string name="myco_hypothejus_note">Comestible, de qualité variable parce que certains sont visqueux : la DGfM le liste et Wikipédia (en) le dit. Wikipédia (en) cite le gomphide glutineux comme sosie : ses lames se séparent facilement du chapeau, contrairement aux lames cireuses de cette espèce. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_fragrans_name">Clitocybe fragrans</string>
+    <string name="myco_fragrans_alt">Clitocybe fragrans</string>
+    <string-array name="myco_fragrans_traits">
+        <item>Chapeau de 1 à 5 cm, blanc et plat</item>
+        <item>Lames assez serrées, décurrentes, blanchâtres</item>
+        <item>Pied de 2 à 6 cm, mince, nu</item>
+        <item>Odeur parfumée d’anis</item>
+        <item>Bois de feuillus en Europe · août à décembre</item>
+    </string-array>
+    <string name="myco_fragrans_note">Toxique : la DGfM la liste pour le syndrome muscarinien. Wikipédia (en) la donne comestible mais non recommandée, certains guides la déconseillant parce qu’on peut la prendre pour des espèces mortelles, et cite Clitocybe dealbata (mortel, sans odeur d’anis) et le clitocybe odorant comme sosies. Le statut le plus prudent est retenu. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_chalciporus_name">Bolet poivré</string>
+    <string name="myco_chalciporus_alt">Peppery bolete</string>
+    <string-array name="myco_chalciporus_traits">
+        <item>Chapeau de 1,5 à 9 cm, sec ou peu visqueux, jaune brunâtre à brun rougeâtre</item>
+        <item>Pores un peu anguleux, brun rouille à brun rougeâtre</item>
+        <item>Pied de 3 à 9 cm, brun rouge sur fond jaune, à mycélium jaune à la base, sans anneau</item>
+        <item>Chair crème, jaune vif à la base du pied ; saveur nettement poivrée</item>
+        <item>Sous les feuillus et les conifères · juillet à novembre</item>
+    </string-array>
+    <string name="myco_chalciporus_note">Non recommandé : la VAPKO le liste, mais Wikipédia (fr) dit qu’il est sans intérêt alimentaire à cause de sa saveur poivrée, et Wikipédia (en) qu’il est généralement tenu pour immangeable et contient des toxines, en conseillant une cuisson soignée contre les troubles d’estomac. Il peut servir de condiment, en petits dés ou séché et réduit en poudre (Wikipédia, fr). Le bolet faux-poivré (Chalciporus pseudopiperatus) est une espèce cryptique : seul l’ADN les sépare.</string>
+    <string name="myco_l_grey_pink_stem">Pied rose orangé grisâtre</string>
+    <string name="myco_l_speckled_felt_cap">Chapeau feutré, moucheté</string>
+    <string name="myco_l_yellow_olive_slimy_cap">Chapeau jaune olive, visqueux, centre sombre</string>
+    <string name="myco_l_yellow_decurrent_gills">Lames jaunes décurrentes</string>
+    <string name="myco_l_small_flat_white_cap">Petit chapeau blanc et plat</string>
+    <string name="myco_l_dry_orange_brown_cap">Chapeau sec, jaune brunâtre à rouge</string>
+    <string name="myco_l_rust_pores">Pores brun rouille</string>
+    <string name="myco_g_anise_title">Clitocybe à l’anis : lequel, et lequel est mortel ?</string>
+    <string name="myco_g_anise_evidence">DGfM, Wikipédia</string>
+    <string-array name="myco_g_anise_points">
+        <item>Clitocybe odorant : chapeau vert bleuâtre givré, forte odeur d’anis ; listé comestible par la DGfM et la VAPKO, mais non recommandé ici.</item>
+        <item>Clitocybe fragrans : petit, blanc et plat, lui aussi à odeur d’anis ; la DGfM le liste pour le syndrome muscarinien.</item>
+        <item>Clitocybe blanchi : blanc à crème, odeur de farine, sans odeur d’anis ; la DGfM le liste aussi pour le syndrome muscarinien. Wikipédia (en) dit que Clitocybe dealbata est mortel et n’a pas l’odeur d’anis.</item>
+        <item>La DGfM liste Clitocybe dealbata, C. fragrans, C. rivulosa et C. suaveolens pour le syndrome muscarinien.</item>
     </string-array>
 </resources>
