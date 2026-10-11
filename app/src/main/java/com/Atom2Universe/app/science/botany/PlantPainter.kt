@@ -42,7 +42,7 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
 
     private fun habit() {
         oval(150f,287f,105f,5f,0x166a6145)
-        if(species.id in setOf("cytisus","ulex","calluna","erica","rosa")) { fineShrub(); return }
+        if(l.fineShrub || species.id in setOf("cytisus","ulex","calluna","erica","rosa")) { fineShrub(); return }
         when (l.crown) {
             Crown.HERB -> herb()
             Crown.GRASS -> grass(160f,277f,.88f)
@@ -71,6 +71,7 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
     }
 
     private fun herb() {
+        if(l.herbDetail!=null) { profiledHerb(l.herbDetail); return }
         if(species.id=="trifolium_repens") {
             line(62f,273f,243f,273f,green,2.2f)
             for(i in 0..3){val x=78f+i*48
@@ -98,10 +99,43 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
         }
     }
 
+    private fun profiledHerb(form:HerbArchitecture) {
+        if(form.creeping) {
+            line(50f,274f,247f,274f,green,2f)
+            repeat(4){i->val x=66f+i*55
+                at(x,271f,(i-1)*8f,.48f){leaf(l.leaf,120f)}
+                line(x,274f,x+14f,165f+i%2*20,green,1.2f)
+                at(x+14f,165f+i%2*20,0f,form.flowerScale){blossom(l.flower)}
+                line(x,274f,x-4f,282f,l.bark,.6f)
+            };return
+        }
+        form.basalLeaf?.let { shape ->
+            repeat(7){i->at(150f,275f,(i-3)*24f,.63f){leaf(shape,104f,detail=form.basalDetail)}}
+        }
+        repeat(if(form.branches)3 else 1){i->
+            val x=if(form.branches)103f+i*47 else 150f
+            val top=65f+(i%2)*24
+            line(150f,274f,x,top,green,1.8f)
+            repeat(4){j->val t=(j+1)/5f;val xx=150+(x-150)*t;val yy=274+(top-274)*t
+                val shape=form.stemLeaf ?: l.leaf
+                val sides=if(l.arrangement==LeafArrangement.OPPOSITE)listOf(-1,1)else listOf(if(j%2==0)-1 else 1)
+                for(side in sides)at(xx,yy,side*62f,.40f){leaf(shape,95f)}
+                if(form.branches && j in 1..2){val side=if(j%2==0)-1 else 1
+                    line(xx,yy,xx+side*28,yy-27,green,.9f)
+                    at(xx+side*28,yy-27,0f,form.flowerScale*.85f){flowerHead()}
+                }
+            }
+            at(x,top,0f,form.flowerScale){flowerHead()}
+        }
+    }
+
     private fun leaves() {
         // One large diagnostic leaf plus a smaller twig showing insertion; each has an independent composition.
         at(162f,260f,5f) { leaf(l.leaf,if(l.leaf==LeafShape.NEEDLE && l.needleCount>2) 145f else 198f) }
         at(51f,275f,-14f,.54f) { twig() }
+        l.herbDetail?.let{form->form.basalLeaf?.takeIf{it!=l.leaf || form.basalDetail!=null}?.let{shape->
+            at(247f,275f,12f,.51f){leaf(shape,112f,detail=form.basalDetail)}
+        }}
         if(species.id=="campanula") at(244f,257f,18f,.52f) { leaf(LeafShape.ROUND,75f) }
         if(species.id=="abies") {
             at(245f,237f,12f) {
@@ -165,7 +199,7 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
         leafPainter.needles(length,count)
     }
 
-    private fun leaf(shape:LeafShape,length:Float,margin:LeafMargin=l.margin) = leafPainter.draw(shape,length,margin)
+    private fun leaf(shape:LeafShape,length:Float,margin:LeafMargin=l.margin,detail:LeafDetail?=null) = leafPainter.draw(shape,length,margin,detail)
 
     private val flowerPainter = PlantFlowerPainter(c,species,!compact)
     private fun flowers() = flowerPainter.plate()

@@ -27,10 +27,16 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             FruitShape.DOUBLE_SAMARA -> pairedWings()
             FruitShape.SAMARA -> samaras()
             FruitShape.CONE -> cones()
-            FruitShape.DRUPE,FruitShape.POME,FruitShape.HIP -> fleshy()
+            FruitShape.DRUPE,FruitShape.POME,FruitShape.HIP,FruitShape.BERRY -> fleshy()
             FruitShape.POD -> pods()
             FruitShape.CAPSULE -> capsule()
-            FruitShape.SCHIZOCARP -> mericarps()
+            FruitShape.SCHIZOCARP -> when(d.schizocarp){
+                SchizocarpForm.PAIRED -> mericarps()
+                SchizocarpForm.CRANESBILL -> cranesbill()
+                SchizocarpForm.WHEEL -> wheel()
+            }
+            FruitShape.SILIQUE -> silique()
+            FruitShape.SILICLE -> silicles()
             FruitShape.GRAIN -> grain()
             FruitShape.ACHENE -> achenes()
         }
@@ -172,6 +178,17 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
     }
     private fun samaras() {
         when(d.samara){
+            SamaraForm.ORBICULAR -> for(i in -1..1)b.at(i*64f,abs(i)*28f,i*17f,.78f){
+                stalk(0f,74f,0f,50f,1.6f)
+                val q=Path().apply{moveTo(0f,51f);cubicTo(-62f,42f,-65f,-58f,-15f,-58f)
+                    quadTo(-5f,-54f,0f,-37f);quadTo(5f,-54f,15f,-58f)
+                    cubicTo(65f,-58f,62f,42f,0f,51f);close()}
+                outline(q,0xffc5c393.toInt())
+                if(detailed){c.save();c.clipPath(q)
+                    repeat(26){j->val a=j*2*PI/26;b.stroke(Path().apply{moveTo(0f,-18f);quadTo(cos(a).toFloat()*28,-18f+sin(a).toFloat()*24,cos(a).toFloat()*63,sin(a).toFloat()*63)},0xff95956a.toInt(),.55f)}
+                    c.restore()}
+                body(0f,-18f,12f,17f,0xff9a9a69.toInt())
+            }
             SamaraForm.TWO_WINGS -> {
                 for(i in -1..1)b.at(i*75f,i%2*22f,i*17f,.85f){
                     for(side in listOf(-1,1)){
@@ -241,6 +258,13 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
     }
 
     private fun fleshy() {
+        if(d.raceme){
+            b.line(0f,-112f,0f,102f,green,2f)
+            repeat(9){i->val y=-80f+i*21;val x=(if(i%2==0)-1 else 1)*(28f+(i%3)*8)
+                stalk(0f,y-15f,x,y,1f);body(x,y,15f,15f*d.elongation,l.fruitColor)
+                b.oval(x-4,y-5,3f,2f,0x77eee1c1)
+            };return
+        }
         val count=d.count;val large=count<=3;val radius=if(large)28f else 16f
         repeat(count){i->val a=i*2.399963;val r=if(large)46f else sqrt(i.toFloat()/count)*68
             val x=cos(a).toFloat()*r;val y=sin(a).toFloat()*r+22f
@@ -254,7 +278,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
                 if(detailed)repeat(45){j->val t=j*2.4;val rr=sqrt(j/45f)*radius*.85f
                     b.oval(x+cos(t).toFloat()*rr,y+sin(t).toFloat()*rr,.6f,.65f,0x508f9aaf)}
             }else b.stroke(Path().apply{moveTo(x-radius*.52f,y-radius*.28f);quadTo(x-radius*.48f,y-radius*.62f,x-radius*.18f,y-radius*.62f)},botanicalMix(l.fruitColor,0xffffecd3.toInt(),.6f),1.6f)
-            if(l.fruit==FruitShape.POME)star(x,y+radius*.7f,radius*.34f)
+            if(l.fruit==FruitShape.POME || d.persistentCalyx)star(x,y+radius*.7f,radius*.34f)
             // Rosa canina sheds its reflexed sepals as the hip ripens: retain the apical scar.
             if(l.fruit==FruitShape.HIP){body(x,y+radius*d.elongation,7f,3.5f,0xff8b6847.toInt())
                 b.oval(x,y+radius*d.elongation,2.2f,1.5f,ink)}
@@ -305,6 +329,14 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
 
     private fun capsule() {
         when(d.capsule){
+            CapsuleForm.HEART -> {
+                stalk(0f,116f,0f,49f,1.8f)
+                val q=Path().apply{moveTo(0f,49f);cubicTo(-73f,26f,-58f,-63f,-20f,-45f)
+                    quadTo(-5f,-39f,0f,-20f);quadTo(5f,-39f,20f,-45f)
+                    cubicTo(58f,-63f,73f,26f,0f,49f);close()}
+                outline(q,0xffa1a470.toInt());ribs(q,15,60f,100f)
+                b.line(0f,45f,0f,-19f,ink,1f);b.line(0f,-20f,0f,-53f,green,1.5f)
+            }
             CapsuleForm.FOUR_LOBES -> {
                 stalk(0f,-112f,0f,-50f,2f)
                 repeat(4){i->b.at(0f,0f,i*90f){
@@ -346,6 +378,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
         }
     }
     private fun closedCapsule() {
+        if(d.globoseCapsule)c.scale(1f,.72f)
         stalk(0f,118f,0f,61f,2.8f)
         val poppy=d.capsule==CapsuleForm.PORICIDAL_DISC
         val h=if(poppy)58f else 66f
@@ -367,8 +400,10 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             }
             CapsuleForm.APICAL_TEETH -> {
                 body(0f,-51f,18f,9f,ink)
-                repeat(5){i->val a=i*2*PI/5;val x=cos(a).toFloat()*19;val y=-51f+sin(a).toFloat()*8
-                    val tooth=Path().apply{moveTo(x-5,y+2);lineTo(x*1.4f,y-14);lineTo(x+5,y+2);close()};outline(tooth,0xffbcb07a.toInt())}
+                repeat(d.capsuleTeeth){i->val a=i*2*PI/d.capsuleTeeth;val x=cos(a).toFloat()*19;val y=-51f+sin(a).toFloat()*8
+                    val tooth=Path().apply{moveTo(x-4,y+2)
+                        if(d.reflexedTeeth)quadTo(x*1.9f,y-20f,x*1.6f,y+6)else lineTo(x*1.4f,y-14)
+                        lineTo(x+4,y+2);close()};outline(tooth,0xffbcb07a.toInt())}
             }
             else -> {
                 // Persistent five-lobed calyx around an ovoid capsule (e.g. Digitalis).
@@ -379,6 +414,7 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
                 b.stroke(Path().apply{moveTo(0f,-65f);quadTo(-6f,-15f,0f,49f)},ink,1.1f)
             }
         }
+        if(d.globoseCapsule)c.scale(1f,1f/.72f)
     }
 
     private fun mericarps() {
@@ -392,6 +428,61 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             }
         }
         stalk(0f,112f,0f,69f,1.6f);b.line(0f,69f,-15f,-62f,0xff9c9861.toInt(),.8f);b.line(0f,69f,15f,-62f,0xff9c9861.toInt(),.8f)
+    }
+
+    private fun silique() {
+        // Two valves separate from the persistent seed-bearing septum (replum).
+        stalk(0f,117f,0f,91f,2f)
+        val septum=Path().apply{moveTo(0f,-101f);quadTo(-12f,-50f,-10f,90f);quadTo(0f,100f,10f,90f);quadTo(12f,-50f,0f,-101f);close()}
+        outline(septum,0xffcfbf86.toInt())
+        for(s in listOf(-1,1)){
+            val valve=Path().apply{moveTo(s*9f,87f);cubicTo(s*31f,26f,s*52f,-81f,s*36f,-97f)
+                cubicTo(s*69f,-65f,s*41f,40f,s*9f,87f);close()}
+            outline(valve,0xff939364.toInt())
+            repeat(14){i->body(s*5f,-74f+i*11.5f,4f,3.3f,0xffa47a43.toInt())}
+        }
+        b.line(0f,-103f,0f,93f,0xff7b8150.toInt(),.7f)
+    }
+
+    private fun silicles() {
+        b.line(0f,-109f,0f,115f,green,2f)
+        repeat(5){i->val side=if(i%2==0)-1 else 1;val y=-68f+i*35
+            b.line(0f,y+25f,side*48f,y,green,1.3f)
+            b.at(side*48f,y,side*28f,.62f){
+                val q=Path().apply{moveTo(0f,0f);lineTo(-36f,-54f);quadTo(-38f,-73f,-16f,-70f)
+                    quadTo(-5f,-68f,0f,-60f);quadTo(5f,-68f,16f,-70f)
+                    quadTo(38f,-73f,36f,-54f);close()}
+                outline(q,0xffb3b47b.toInt());b.line(0f,0f,0f,-59f,green,1f)
+                for(s in listOf(-1,1))for(j in 1..5){val yy=-12f-j*8
+                    b.line(0f,yy+10,s*(j*3+2f),yy,0xffd8d4a1.toInt(),.7f)
+                    body(s*(j*3+2f),yy,3.5f,2.4f,0xffb09b66.toInt())}
+            }
+        }
+    }
+
+    private fun cranesbill() {
+        stalk(0f,116f,0f,61f,2f)
+        for(i in -2..2)b.at(i*9f,47f,i*18f){
+            val q=Path().apply{moveTo(-4f,10f);quadTo(-22f,-12f,0f,-36f);quadTo(22f,-12f,4f,10f);close()}
+            outline(q,0xff929b63.toInt())
+        }
+        // Five mericarps remain at the base of a long, narrow beak before release.
+        for(i in -2..2){body(i*12f,39f,9f,18f,0xffa68859.toInt())
+            b.stroke(Path().apply{moveTo(i*12f,29f);quadTo(i*4f,-35f,0f,-102f)},0xff9b8d60.toInt(),2.2f)
+            b.line(i*12f,28f,i*12f,48f,cream,.55f)}
+        b.line(0f,-107f,0f,18f,ink,.7f)
+    }
+
+    private fun wheel() {
+        repeat(5){i->b.at(0f,0f,i*72f){
+            val q=Path().apply{moveTo(-10f,5f);quadTo(-42f,-35f,0f,-82f);quadTo(42f,-35f,10f,5f);close()}
+            outline(q,0xff8e9761.toInt())}}
+        repeat(11){i->b.at(0f,0f,i*360f/11){
+            val q=Path().apply{moveTo(-5f,-14f);lineTo(-17f,-54f);quadTo(0f,-65f,17f,-54f);lineTo(5f,-14f);close()}
+            outline(q,0xffb39c6c.toInt());ribs(q,6,62f,27f)
+            if(detailed)for(j in 0..4)b.line(-12f,-29f-j*5,12f,-29f-j*5,0xff998252.toInt(),.5f)
+        }}
+        body(0f,0f,14f,14f,0xffcdc399.toInt())
     }
     private fun grain() {
         c.save();c.scale(1f/d.elongation,1f)
@@ -409,6 +500,10 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
             cubicTo(w,19f,w*1.3f,-12f,w*.58f,-24f);quadTo(0f,-27f,-w*.58f,-24f);close()}
         outline(q,0xffaa9563.toInt());ribs(q,d.acheneRibs,31f,w*2,0xffd3bd86.toInt())
         if(beak)b.stroke(Path().apply{moveTo(1f,-24f);quadTo(6f,-40f,14f,-33f)},ink,1.5f)
+        if(d.pappusScales)for(i in -3..3){
+            val q=Path().apply{moveTo(i*2.5f-1,-23f);lineTo(i*3f,-29f);lineTo(i*2.5f+1,-23f);close()}
+            b.fill(q,cream);b.stroke(q,ink,.35f)
+        }
     }
     private fun achenes() {
         when(d.achene){
@@ -416,7 +511,9 @@ internal class PlantFruitPainter(private val c:Canvas,species:PlantSpecies,priva
                 val bract=Path().apply{moveTo(20f,88f);cubicTo(-2f,49f,31f,-66f,74f,-101f)
                     cubicTo(107f,-98f,91f,-28f,20f,88f);close()}
                 outline(bract,0xffb2ad73.toInt());b.stroke(Path().apply{moveTo(20f,87f);quadTo(48f,-9f,76f,-94f)},green,.9f)
-                repeat(4){i->val x=-75f+i*30;val y=10f+i%2*32;stalk(40f,-30f,x,y,1.4f);body(x,y,16f,18f,0xffa69464.toInt())}
+                repeat(4){i->val x=-75f+i*30;val y=10f+i%2*32;stalk(40f,-30f,x,y,1.4f);body(x,y,16f,18f,0xffa69464.toInt())
+                    if(d.prominentRibs)for(j in -2..2)b.stroke(Path().apply{moveTo(x+j*2f,y-16f);quadTo(x+j*8f,y,x+j*2f,y+16f)},0xff776b42.toInt(),1.1f)
+                }
             }
             AcheneForm.AGGREGATE -> {
                 stalk(0f,118f,0f,51f,2.2f);body(0f,0f,51f,51f,0xff8e9558.toInt())

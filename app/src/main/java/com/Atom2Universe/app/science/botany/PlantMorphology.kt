@@ -13,11 +13,21 @@ enum class Venation { PINNATE, PALMATE, ARCUATE, PARALLEL }
 enum class BarkSurface { FURROWED, SMOOTH, FLUTED, PAPERY, PLATED, LENTICELS }
 enum class ConiferSpray { FLAT, PENDULOUS, TUFTED }
 
+data class HerbArchitecture(
+    val basalLeaf: LeafShape? = null,
+    val basalDetail: LeafDetail? = null,
+    val stemLeaf: LeafShape? = null,
+    val creeping: Boolean = false,
+    val branches: Boolean = true,
+    val flowerScale: Float = .22f
+)
+
 /** Organ profiles are reusable by future taxa, without adding species-ID branches to the painters. */
-enum class CorollaForm { RADIAL, POPPY, VIOLET, COWSLIP, FOXGLOVE, HAREBELL, HEATHER, URN }
+enum class CorollaForm { RADIAL, POPPY, VIOLET, COWSLIP, FOXGLOVE, HAREBELL, HEATHER, URN, BIFID, MALLOW, SPEEDWELL }
 enum class FlowerCluster {
     DEFAULT, CLOVER, UNILATERAL, SMALL_UMBEL, FEW_FLOWERS, STERILE_RIM, LINDEN,
-    GLOBOSE_CATKIN, HAZEL, UPRIGHT_CATKIN, PENDANT_RACEME, RYEGRASS, COCKSFOOT, QUAKING_GRASS
+    GLOBOSE_CATKIN, HAZEL, UPRIGHT_CATKIN, PENDANT_RACEME, RYEGRASS, COCKSFOOT, QUAKING_GRASS,
+    WILLOW, AXILLARY, SIMPLE_UMBEL, RACEMOSE
 }
 data class FlowerDetail(
     val corolla: CorollaForm = CorollaForm.RADIAL,
@@ -29,11 +39,18 @@ data class FlowerDetail(
     val darkCentre: Boolean = false,
     val throatMark: Boolean = false,
     val perianth: Boolean = true,
-    val discColor: Int = 0xffd9b33c.toInt()
+    val discColor: Int = 0xffd9b33c.toInt(),
+    val notchDepth: Float = .45f,
+    val hollowReceptacle: Boolean = false,
+    val fusedCalyx: Boolean = false,
+    val female: Boolean = false,
+    val styles: Int = 0,
+    val shortStamens: Int = 0
 )
-enum class CapsuleForm { OVOID, PORICIDAL_DISC, PYXIS, THREE_VALVES, FOUR_LOBES, THREE_HORNS, COTTON, BASAL_PORES, APICAL_TEETH }
+enum class CapsuleForm { OVOID, PORICIDAL_DISC, PYXIS, THREE_VALVES, FOUR_LOBES, THREE_HORNS, COTTON, BASAL_PORES, APICAL_TEETH, HEART }
 enum class ConeForm { SPRUCE, FIR, PINE, LARCH, ALDER }
-enum class SamaraForm { SINGLE, THREE_LOBED_BRACT, TWO_WINGS }
+enum class SamaraForm { SINGLE, THREE_LOBED_BRACT, TWO_WINGS, ORBICULAR }
+enum class SchizocarpForm { PAIRED, CRANESBILL, WHEEL }
 enum class AcheneForm { SIMPLE, AGGREGATE, FOUR_NUTLETS, LINDEN, PAPPUS }
 data class FruitDetail(
     val capsule: CapsuleForm = CapsuleForm.OVOID,
@@ -49,7 +66,15 @@ data class FruitDetail(
     val podWidth: Float = 18f,
     val shortPod: Boolean = false,
     val acheneWidth: Float = 12f,
-    val acheneRibs: Int = 7
+    val acheneRibs: Int = 7,
+    val schizocarp: SchizocarpForm = SchizocarpForm.PAIRED,
+    val capsuleTeeth: Int = 5,
+    val reflexedTeeth: Boolean = false,
+    val persistentCalyx: Boolean = false,
+    val raceme: Boolean = false,
+    val pappusScales: Boolean = false,
+    val prominentRibs: Boolean = false,
+    val globoseCapsule: Boolean = false
 )
 
 data class LeafDetail(
@@ -68,7 +93,13 @@ data class LeafDetail(
     val glossy: Boolean = false,
     val leafletWidth: Float = .22f,
     val leafletPetiole: Float = .06f,
-    val leafletWidestAboveMiddle: Boolean = false
+    val leafletWidestAboveMiddle: Boolean = false,
+    val basalOffset: Float = 0f,
+    val leafletTip: LeafTip = LeafTip.ACUMINATE,
+    val leafletShape: LeafShape = LeafShape.LANCE,
+    val palmateSegments: Int = 5,
+    val petioleGlands: Boolean = false,
+    val subdividedLobes: Boolean = false
 )
 
 /** Representative free-growing adult habit, not an identification key or a fixed growth form. */

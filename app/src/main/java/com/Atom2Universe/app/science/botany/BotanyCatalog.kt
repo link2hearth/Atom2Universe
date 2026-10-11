@@ -46,8 +46,13 @@ object BotanyCatalog {
         PlantFamily("Urticaceae", R.string.bot_family_Urticaceae, R.string.bot_family_Urticaceae_desc, R.string.bot_family_Urticaceae_aliases),
         PlantFamily("Lamiaceae", R.string.bot_family_Lamiaceae, R.string.bot_family_Lamiaceae_desc, R.string.bot_family_Lamiaceae_aliases),
         PlantFamily("Poaceae", R.string.bot_family_Poaceae, R.string.bot_family_Poaceae_desc, R.string.bot_family_Poaceae_aliases),
+        PlantFamily("Ulmaceae", R.string.bot_family_Ulmaceae, R.string.bot_family_Ulmaceae_desc, R.string.bot_family_Ulmaceae_aliases),
+        PlantFamily("Rhamnaceae", R.string.bot_family_Rhamnaceae, R.string.bot_family_Rhamnaceae_desc, R.string.bot_family_Rhamnaceae_aliases),
+        PlantFamily("Brassicaceae", R.string.bot_family_Brassicaceae, R.string.bot_family_Brassicaceae_desc, R.string.bot_family_Brassicaceae_aliases),
+        PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
+        PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
@@ -68,6 +73,15 @@ object BotanyCatalog {
         PlantGroup("plantains", R.string.bot_group_plantains, listOf("plantago_lanceolata","plantago_major"), R.string.bot_group_plantains_desc),
         PlantGroup("nettles", R.string.bot_group_nettles, listOf("urtica","lamium"), R.string.bot_group_nettles_desc),
         PlantGroup("grasses", R.string.bot_group_grasses, listOf("dactylis","lolium","briza"), R.string.bot_group_grasses_desc),
+        PlantGroup("dry_oaks", R.string.bot_group_dry_oaks, listOf("quercus_ilex","quercus_pubescens","petraea"), R.string.bot_group_dry_oaks_desc),
+        PlantGroup("birches", R.string.bot_group_birches, listOf("betula","betula_pubescens"), R.string.bot_group_birches_desc),
+        PlantGroup("lindens", R.string.bot_group_lindens, listOf("tilia","tilia_platyphyllos"), R.string.bot_group_lindens_desc),
+        PlantGroup("willows", R.string.bot_group_willows, listOf("salix_alba","salix_caprea"), R.string.bot_group_willows_desc),
+        PlantGroup("hawthorns", R.string.bot_group_hawthorns, listOf("crataegus","crataegus_laevigata"), R.string.bot_group_hawthorns_desc),
+        PlantGroup("buckthorns", R.string.bot_group_buckthorns, listOf("frangula","rhamnus"), R.string.bot_group_buckthorns_desc),
+        PlantGroup("viburnums", R.string.bot_group_viburnums, listOf("viburnum","viburnum_lantana"), R.string.bot_group_viburnums_desc),
+        PlantGroup("brassicas", R.string.bot_group_brassicas, listOf("cardamine","capsella"), R.string.bot_group_brassicas_desc),
+        PlantGroup("heads", R.string.bot_group_heads, listOf("leucanthemum","matricaria","cichorium"), R.string.bot_group_heads_desc),
     )
     val sources = listOf(
         BotanySource("powo", R.string.bot_source_powo, "https://powo.science.kew.org/"),

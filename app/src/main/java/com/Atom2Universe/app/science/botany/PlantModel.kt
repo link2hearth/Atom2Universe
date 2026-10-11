@@ -14,7 +14,8 @@ enum class LeafShape(val label: Int) {
     TRIANGLE(R.string.bot_leaf_triangle), ROUND(R.string.bot_leaf_round), OAK(R.string.bot_leaf_oak),
     MAPLE(R.string.bot_leaf_maple), PINNATE(R.string.bot_leaf_pinnate), PALMATE(R.string.bot_leaf_palmate),
     TRIFOLIATE(R.string.bot_leaf_trifoliate), DIVIDED(R.string.bot_leaf_divided),
-    NEEDLE(R.string.bot_leaf_needle), SCALE(R.string.bot_leaf_scale), LINEAR(R.string.bot_leaf_linear)
+    NEEDLE(R.string.bot_leaf_needle), SCALE(R.string.bot_leaf_scale), LINEAR(R.string.bot_leaf_linear),
+    PALMATILOBED(R.string.bot_leaf_palmatilobed)
 }
 enum class LeafMargin(val label: Int) {
     ENTIRE(R.string.bot_margin_entire), SERRATE(R.string.bot_margin_serrate), LOBED(R.string.bot_margin_lobed), SPINY(R.string.bot_margin_spiny)
@@ -28,7 +29,8 @@ enum class FlowerShape(val label: Int) {
     CUP(R.string.bot_fl_cup), DAISY(R.string.bot_fl_daisy), THISTLE(R.string.bot_fl_thistle),
     UMBEL(R.string.bot_fl_umbel), CORYMB(R.string.bot_fl_corymb), PEA(R.string.bot_fl_pea),
     BELL(R.string.bot_fl_bell), LIPPED(R.string.bot_fl_lipped), GRASS(R.string.bot_fl_grass),
-    SPIKE(R.string.bot_fl_spike), PANICLE(R.string.bot_fl_panicle), APETALOUS(R.string.bot_fl_apetalous)
+    SPIKE(R.string.bot_fl_spike), PANICLE(R.string.bot_fl_panicle), APETALOUS(R.string.bot_fl_apetalous),
+    LIGULATE(R.string.bot_fl_ligulate), RACEME(R.string.bot_fl_raceme)
 }
 enum class FruitShape(val label: Int) {
     ACORN(R.string.bot_fr_acorn), NUT(R.string.bot_fr_nut), BEECH(R.string.bot_fr_beech),
@@ -36,7 +38,8 @@ enum class FruitShape(val label: Int) {
     DOUBLE_SAMARA(R.string.bot_fr_double_samara), SAMARA(R.string.bot_fr_samara),
     CONE(R.string.bot_fr_cone), DRUPE(R.string.bot_fr_drupe), POME(R.string.bot_fr_pome),
     HIP(R.string.bot_fr_hip), POD(R.string.bot_fr_pod), CAPSULE(R.string.bot_fr_capsule),
-    ACHENE(R.string.bot_fr_achene), GRAIN(R.string.bot_fr_grain), SCHIZOCARP(R.string.bot_fr_schizocarp)
+    ACHENE(R.string.bot_fr_achene), GRAIN(R.string.bot_fr_grain), SCHIZOCARP(R.string.bot_fr_schizocarp),
+    BERRY(R.string.bot_fr_berry), SILIQUE(R.string.bot_fr_silique), SILICLE(R.string.bot_fr_silicle)
 }
 enum class Habitat(val label: Int) {
     WOOD(R.string.bot_hab_wood), HEDGE(R.string.bot_hab_hedge), MEADOW(R.string.bot_hab_meadow),
@@ -65,7 +68,8 @@ data class PlantLook(
     val fruitColor: Int = 0xff97613d.toInt(), val leafColor: Int = 0xff58794c.toInt(),
     val thorny: Boolean = false, val seed: Int = 1,
     val leafDetail: LeafDetail = LeafDetail(), val architecture: TreeArchitecture? = null,
-    val flowerDetail: FlowerDetail = FlowerDetail(), val fruitDetail: FruitDetail = FruitDetail()
+    val flowerDetail: FlowerDetail = FlowerDetail(), val fruitDetail: FruitDetail = FruitDetail(),
+    val herbDetail: HerbArchitecture? = null, val fineShrub: Boolean = false
 )
 
 data class PlantSpecies(

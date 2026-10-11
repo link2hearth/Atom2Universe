@@ -60,7 +60,10 @@ class BotanyRenderingTest {
             Triple("calluna","erica",PlantView.FLOWER),Triple("viola","papaver",PlantView.FLOWER),
             Triple("digitalis","campanula",PlantView.FLOWER),Triple("castanea","aesculus",PlantView.FRUIT),
             Triple("corylus","fagus",PlantView.FRUIT),Triple("daucus","anthriscus",PlantView.FRUIT),
-            Triple("plantago_lanceolata","papaver",PlantView.FRUIT))) {
+            Triple("plantago_lanceolata","papaver",PlantView.FRUIT),
+            Triple("cardamine","capsella",PlantView.FRUIT),Triple("ulmus_minor","fraxinus",PlantView.FRUIT),
+            Triple("malva","geranium",PlantView.FRUIT),Triple("matricaria","cichorium",PlantView.FLOWER),
+            Triple("salix_alba","salix_caprea",PlantView.LEAF),Triple("malva","geranium",PlantView.LEAF))) {
             val aa=render(a,view);val bb=render(b,view)
             val ap=pixels(aa);val bp=pixels(bb)
             assertTrue("$a/$b",ap.indices.count{ap[it]!=bp[it]}>1000)
@@ -71,9 +74,11 @@ class BotanyRenderingTest {
     }
 
     @Test fun lesProfilsDOrganesSontReutilisablesSansIdentifiantConnu() {
-        for(id in listOf("papaver","viola","digitalis","corylus","pinus","plantago_major")) {
+        for(id in listOf("papaver","viola","digitalis","corylus","pinus","plantago_major",
+            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista")) {
             val species=BotanyCatalog.get(id)!!
-            for(view in listOf(PlantView.FLOWER,PlantView.FRUIT)) {
+            val views=if(FieldBotanyCatalog.species.any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
+            for(view in views) {
                 val original=render(id,view)
                 val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
                 val canvas=Canvas(future);canvas.translate(20f,20f)

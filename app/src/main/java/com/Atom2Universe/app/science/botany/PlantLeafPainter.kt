@@ -14,12 +14,12 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
     private val edge = botanicalMix(green,0xff263d2e.toInt(),.65f)
     private val light = botanicalMix(green,0xffd9d39a.toInt(),.48f)
 
-    fun draw(shape: LeafShape, length: Float, margin: LeafMargin = look.margin) {
+    fun draw(shape: LeafShape, length: Float, margin: LeafMargin = look.margin, detail:LeafDetail?=null) {
         when (shape) {
             LeafShape.NEEDLE -> needles(length)
-            LeafShape.PINNATE, LeafShape.PALMATE, LeafShape.TRIFOLIATE -> compound(shape,length,margin)
+            LeafShape.PINNATE, LeafShape.PALMATE, LeafShape.TRIFOLIATE -> compound(shape,length,margin,detail ?: look.leafDetail)
             LeafShape.DIVIDED -> divided(length)
-            else -> simple(shape,length,margin)
+            else -> simple(shape,length,margin,detail ?: if(shape==look.leaf)look.leafDetail else LeafDetail())
         }
     }
 
@@ -31,12 +31,13 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
         val stalkPath = Path().apply { moveTo(0f,0f); quadTo(-h*.018f,-stalk*.55f,0f,-stalk) }
         brush.stroke(stalkPath,edge,1.7f)
         brush.stroke(stalkPath,light,.65f)
-        if(species.id=="prunus_avium" && shape==look.leaf) {
+        if((look.leafDetail.petioleGlands || species.id=="prunus_avium") && shape==look.leaf) {
             for(side in listOf(-1,1)) brush.oval(side*1.6f,-stalk*.84f,1.5f,1.9f,0xff975342.toInt())
         }
         brush.at(0f,-stalk) {
             val outline = when(shape) {
                 LeafShape.MAPLE -> maple(h,detail,margin)
+                LeafShape.PALMATILOBED -> palmatilobed(h,detail,margin)
                 LeafShape.OAK -> oak(h,detail)
                 LeafShape.HEART -> heart(h,detail,margin)
                 LeafShape.OVAL, LeafShape.ROUND -> if(detail.base==LeafBase.CORDATE) heart(h,detail,margin) else blade(shape,h,margin,detail)
@@ -126,9 +127,26 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             }
             val asym=1+side*d.asymmetry*sin(PI*t).toFloat()
             val bend=h*.019f*sin(PI*t).toFloat()
-            path.lineTo(side*w*asym+bend,y+side*d.asymmetry*h*.18f*sin(PI*t).toFloat())
+            path.lineTo(side*w*asym+bend,y+side*d.asymmetry*h*.18f*sin(PI*t).toFloat()+
+                if(side>0) d.basalOffset*h*sin(PI*t).toFloat()*(1-t) else 0f)
         }
         path.close(); return path
+    }
+
+    private fun palmatilobed(h:Float,d:LeafDetail,margin:LeafMargin):Path {
+        val n=d.palmateSegments
+        return Path().apply {
+            moveTo(0f,0f)
+            for(i in 0..240) {
+                val t=i/240f;val a=PI*(.07+1.86*t)
+                val lobe=(.5f+.5f*cos(t*n*2*PI).toFloat())
+                val secondary=if(d.subdividedLobes) 1f-.27f*lobe*(.5f+.5f*cos(t*n*12*PI).toFloat()) else 1f
+                val r=h*.47f*(1-d.lobeDepth+d.lobeDepth*lobe)*secondary
+                val tooth=if(margin==LeafMargin.SERRATE) 1f+.018f*sin(t*70*PI).toFloat() else 1f
+                lineTo(sin(a).toFloat()*r*tooth,-h*.46f+cos(a).toFloat()*r*tooth)
+            }
+            close()
+        }
     }
 
     private fun oak(h:Float,d:LeafDetail):Path {
@@ -257,6 +275,12 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             d.venation==Venation.PARALLEL -> for(side in listOf(-1,1)) for(i in 1..3) {
                 brush.stroke(Path().apply { moveTo(0f,0f); cubicTo(side*h*.16f*i,-h*.28f,side*h*.13f*i,-h*.68f,0f,-h) },light,.68f)
             }
+            shape==LeafShape.PALMATILOBED -> {
+                repeat(d.palmateSegments){i->
+                    val a=PI*(.07+1.86*(i+.5)/d.palmateSegments)
+                    rib(0f,0f,sin(a).toFloat()*h*.45f,-h*.46f+cos(a).toFloat()*h*.45f,width=.9f)
+                }
+            }
             shape==LeafShape.MAPLE || d.venation==Venation.PALMATE -> {
                 val tips=if(d.lobePairs==1) listOf(-.57f to -.65f,0f to -1f,.55f to -.66f)
                     else listOf(-.48f to -.28f,-.62f to -.68f,0f to -1f,.59f to -.69f,.46f to -.28f)
@@ -288,10 +312,9 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
         brush.fill(midrib,light)
     }
 
-    private fun compound(shape: LeafShape,length: Float,margin: LeafMargin) {
-        val d=look.leafDetail
+    private fun compound(shape: LeafShape,length: Float,margin: LeafMargin,d:LeafDetail) {
         val leaflets=d.copy(width=d.leafletWidth,base=LeafBase.TAPERED,venation=Venation.PINNATE,
-            tip=LeafTip.ACUMINATE,asymmetry=.045f)
+            tip=d.leafletTip,asymmetry=.045f)
         if(shape==LeafShape.PINNATE) {
             val terminal=look.leaflets%2==1; val pairs=look.leaflets/2
             val end=if(terminal) .76f else .93f
@@ -302,10 +325,10 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
                 val y=-length*(.23f+t*.48f)
                 val leafletLength=length*(.28f-.055f*t)*(if(pairs>5) .8f else 1f)
                 for(side in listOf(-1,1)) brush.at(0f,y+side*length*.006f,side*(62f-13*t)) {
-                    simple(LeafShape.LANCE,leafletLength,margin,leaflets,d.leafletPetiole)
+                    simple(d.leafletShape,leafletLength,margin,leaflets,d.leafletPetiole)
                 }
             }
-            if(terminal)brush.at(0f,-length*.72f) { simple(LeafShape.LANCE,length*.28f,margin,leaflets,d.leafletPetiole) }
+            if(terminal)brush.at(0f,-length*.72f) { simple(d.leafletShape,length*.28f,margin,leaflets,d.leafletPetiole) }
             if(!terminal)brush.stroke(Path().apply { moveTo(0f,-length*.91f); cubicTo(19f,-length*1.04f,22f,-length*.88f,8f,-length*.95f) },green,1.1f)
         } else {
             val n=if(shape==LeafShape.TRIFOLIATE) 3 else look.leaflets

@@ -612,4 +612,193 @@
     <string name="bot_group_grasses">Three grasses</string>
     <string name="bot_group_grasses_desc">Cock’s-foot: dense spikelet clusters. Perennial ryegrass: spikelets attached alternately along one axis. Quaking grass: heart-shaped spikelets hanging on fine stalks.</string>
     <plurals name="bot_species_count"><item quantity="one">%1$d species</item><item quantity="other">%1$d species</item></plurals>
+    <string name="bot_quercus_ilex_latin" translatable="false">Quercus ilex</string>
+    <string name="bot_quercus_ilex_name">Holm oak</string>
+    <string name="bot_quercus_ilex_aliases">Yeuse; chêne yeuse; evergreen oak</string>
+    <string name="bot_quercus_ilex_description">Evergreen, leathery leaves are dark above and pale felted beneath. Margins range from nearly entire to spiny, especially on young shoots. Acorns sit in cups with small, appressed scales.</string>
+    <string name="bot_quercus_ilex_distribution">Dry Mediterranean woods and scrub; also occurs along the Atlantic coast and is planted elsewhere.</string>
+    <string name="bot_quercus_pubescens_latin" translatable="false">Quercus pubescens</string>
+    <string name="bot_quercus_pubescens_name">Downy oak</string>
+    <string name="bot_quercus_pubescens_aliases">Chêne blanc; white oak</string>
+    <string name="bot_quercus_pubescens_description">A spreading oak with an irregular crown. Young twigs and leaf undersides are hairy; leaves have rounded lobes and a distinct stalk. Acorns are nearly sessile or shortly stalked. Dead leaves may persist in winter.</string>
+    <string name="bot_quercus_pubescens_distribution">Warm slopes, often on limestone; frequent in southern France and locally farther north.</string>
+    <string name="bot_acer_monspessulanum_latin" translatable="false">Acer monspessulanum</string>
+    <string name="bot_acer_monspessulanum_name">Montpellier maple</string>
+    <string name="bot_acer_monspessulanum_aliases">Érable trilobé; Montpellier maple</string>
+    <string name="bot_acer_monspessulanum_description">Small, opposite, thick leaves have three usually untoothed lobes. The paired fruit wings are held close together, almost parallel. Often a small, low-branching tree.</string>
+    <string name="bot_acer_monspessulanum_distribution">Open woods and dry slopes in southern France, with scattered populations farther north.</string>
+    <string name="bot_tilia_platyphyllos_latin" translatable="false">Tilia platyphyllos</string>
+    <string name="bot_tilia_platyphyllos_name">Large-leaved lime</string>
+    <string name="bot_tilia_platyphyllos_aliases">Tilleul à larges feuilles; large leaved linden</string>
+    <string name="bot_tilia_platyphyllos_description">Large heart-shaped leaves are hairy beneath, with pale hair tufts at vein junctions. Hanging flowers share an elongated bract. The small, hard fruits have five prominent ribs.</string>
+    <string name="bot_tilia_platyphyllos_distribution">Ravine woods, cool slopes and mountains; also planted in parks and villages.</string>
+    <string name="bot_betula_pubescens_latin" translatable="false">Betula pubescens</string>
+    <string name="bot_betula_pubescens_name">Downy birch</string>
+    <string name="bot_betula_pubescens_aliases">Bouleau blanc pubescent; downy birch</string>
+    <string name="bot_betula_pubescens_description">Young shoots are hairy and usually lack the resinous warts of silver birch. Ovate leaves have rounded bases and irregular teeth. Branches tend to be less drooping; female catkins release tiny winged fruits.</string>
+    <string name="bot_betula_pubescens_distribution">Damp acidic soils, bogs, cool woods and mountains; scarce in Mediterranean regions.</string>
+    <string name="bot_populus_nigra_latin" translatable="false">Populus nigra</string>
+    <string name="bot_populus_nigra_name">Black poplar</string>
+    <string name="bot_populus_nigra_aliases">Liard; peuplier d’Italie; Lombardy poplar</string>
+    <string name="bot_populus_nigra_description">Finely toothed, triangular to diamond-shaped leaves and deeply fissured bark. Reddish male and female catkins occur on separate trees. Capsules release cottony seeds. The plate shows the spreading habit, rather than the Lombardy cultivar.</string>
+    <string name="bot_populus_nigra_distribution">Riverbanks and floodplain woods; planted hybrid poplars can be difficult to distinguish.</string>
+    <string name="bot_salix_alba_latin" translatable="false">Salix alba</string>
+    <string name="bot_salix_alba_name">White willow</string>
+    <string name="bot_salix_alba_aliases">Saule argenté; silver willow</string>
+    <string name="bot_salix_alba_description">Long, finely toothed lanceolate leaves have silky hairs, especially beneath. Catkins appear with the leaves. Male and female trees are separate; capsules release seeds with long hairs.</string>
+    <string name="bot_salix_alba_distribution">Riverbanks, ditches and floodplains across much of France.</string>
+    <string name="bot_prunus_padus_latin" translatable="false">Prunus padus</string>
+    <string name="bot_prunus_padus_name">Bird cherry</string>
+    <string name="bot_prunus_padus_aliases">Bois puant; putier; bird cherry</string>
+    <string name="bot_prunus_padus_description">Long racemes of white flowers develop into small black drupes. Alternate, toothed leaves often have two glands near the top of the stalk. The bark bears conspicuous lenticels.</string>
+    <string name="bot_prunus_padus_distribution">Cool woods, streamsides and valleys, especially in northern and eastern France and the mountains.</string>
+    <string name="bot_malus_sylvestris_latin" translatable="false">Malus sylvestris</string>
+    <string name="bot_malus_sylvestris_name">Crab apple</string>
+    <string name="bot_malus_sylvestris_aliases">Pommier des bois; wild apple</string>
+    <string name="bot_malus_sylvestris_description">A small tree with sometimes spine-tipped short shoots. Mature leaves are almost hairless beneath; pink buds open into whitish flowers. Small apples retain their calyx. Hybrids with cultivated apples complicate identification.</string>
+    <string name="bot_malus_sylvestris_distribution">Woodland edges and hedges, usually scattered across much of France.</string>
+    <string name="bot_ulmus_minor_latin" translatable="false">Ulmus minor</string>
+    <string name="bot_ulmus_minor_name">Field elm</string>
+    <string name="bot_ulmus_minor_aliases">Ormeau; smooth-leaved elm</string>
+    <string name="bot_ulmus_minor_description">Short-stalked leaves have strongly unequal bases and double teeth. Small flowers without petals appear before the leaves. Rounded samaras are notched at the tip, with the seed near the notch; suckering is frequent.</string>
+    <string name="bot_ulmus_minor_distribution">Hedges, woods and valleys; often survives as young suckers where Dutch elm disease has removed mature trees.</string>
+    <string name="bot_viburnum_lantana_latin" translatable="false">Viburnum lantana</string>
+    <string name="bot_viburnum_lantana_name">Wayfaring tree</string>
+    <string name="bot_viburnum_lantana_aliases">Mancienne; viorne mancienne; wayfaring tree</string>
+    <string name="bot_viburnum_lantana_description">Opposite, thick, wrinkled oval leaves are felted beneath. All the small flowers in the cluster are fertile. Drupes turn from green to red and then black, often at different stages within one cluster.</string>
+    <string name="bot_viburnum_lantana_distribution">Rather dry hedges and woodland edges, especially on limestone.</string>
+    <string name="bot_cornus_mas_latin" translatable="false">Cornus mas</string>
+    <string name="bot_cornus_mas_name">Cornelian cherry</string>
+    <string name="bot_cornus_mas_aliases">Cornelier; cornier; cornelian cherry</string>
+    <string name="bot_cornus_mas_description">Small yellow umbels appear before the leaves. Opposite, entire leaves have curved lateral veins. Elongated red drupes contain a hard stone. Unlike common dogwood, its flowers are yellow.</string>
+    <string name="bot_cornus_mas_distribution">Open woods, hedges and limestone slopes; also cultivated.</string>
+    <string name="bot_crataegus_laevigata_latin" translatable="false">Crataegus laevigata</string>
+    <string name="bot_crataegus_laevigata_name">Midland hawthorn</string>
+    <string name="bot_crataegus_laevigata_aliases">Épine blanche; aubépine épineuse; Crataegus oxyacantha</string>
+    <string name="bot_crataegus_laevigata_description">Leaves are shallowly lobed, mainly in their upper half. Flowers usually have two styles, sometimes three; fruits normally contain two stones. Hybridisation with common hawthorn is frequent.</string>
+    <string name="bot_crataegus_laevigata_distribution">Hedges and woods, especially in cooler temperate parts of France.</string>
+    <string name="bot_frangula_latin" translatable="false">Frangula alnus</string>
+    <string name="bot_frangula_name">Alder buckthorn</string>
+    <string name="bot_frangula_aliases">Rhamnus frangula; aulne noir; alder buckthorn</string>
+    <string name="bot_frangula_description">A thornless shrub with alternate, entire leaves and curved lateral veins. Tiny greenish five-parted flowers sit in leaf axils. Drupes turn red and then black; twigs have pale lenticels.</string>
+    <string name="bot_frangula_distribution">Damp woods and heaths, often on acidic soils; widespread outside the driest districts.</string>
+    <string name="bot_rhamnus_latin" translatable="false">Rhamnus cathartica</string>
+    <string name="bot_rhamnus_name">Purging buckthorn</string>
+    <string name="bot_rhamnus_aliases">Nerprun cathartique; common buckthorn</string>
+    <string name="bot_rhamnus_description">Shoots often end in a spine. Opposite to subopposite, sometimes alternate leaves are finely toothed, with a few strong curved veins. Greenish flowers have four parts; ripe drupes are black.</string>
+    <string name="bot_rhamnus_distribution">Hedges, scrub and open woodland, often on limestone.</string>
+    <string name="bot_salix_caprea_latin" translatable="false">Salix caprea</string>
+    <string name="bot_salix_caprea_name">Goat willow</string>
+    <string name="bot_salix_caprea_aliases">Marsault; saule des chèvres; pussy willow</string>
+    <string name="bot_salix_caprea_description">A large shrub or small tree with broad, wrinkled leaves, felted beneath. Oval male catkins turn from silver to yellow before the leaves emerge. Female plants later bear capsules with silky seeds.</string>
+    <string name="bot_salix_caprea_distribution">Woodland edges, clearings and fresh soils; tolerates drier ground than many willows.</string>
+    <string name="bot_genista_latin" translatable="false">Genista tinctoria</string>
+    <string name="bot_genista_name">Dyer’s greenweed</string>
+    <string name="bot_genista_aliases">Herbe à jaunir; dyers greenweed</string>
+    <string name="bot_genista_description">A thornless small shrub with simple lanceolate leaves. Yellow pea flowers cluster at shoot tips, followed by elongated pods. Unlike broom, its leaves remain simple.</string>
+    <string name="bot_genista_distribution">Heaths, nutrient-poor grassland and sunny woodland edges across much of France.</string>
+    <string name="bot_amelanchier_latin" translatable="false">Amelanchier ovalis</string>
+    <string name="bot_amelanchier_name">Snowy mespilus</string>
+    <string name="bot_amelanchier_aliases">Amelanchier rotundifolia; amélanchier commun; snowy mespilus</string>
+    <string name="bot_amelanchier_description">Toothed oval leaves are white-felted beneath when young. Short racemes bear flowers with five narrow, elongated white petals. Small bluish-black pome fruits retain their calyx.</string>
+    <string name="bot_amelanchier_distribution">Limestone rocks, scrub and open woods, especially in southern France and mountain districts.</string>
+    <string name="bot_vaccinium_latin" translatable="false">Vaccinium myrtillus</string>
+    <string name="bot_vaccinium_name">Bilberry</string>
+    <string name="bot_vaccinium_aliases">Brimbelle; airelle myrtille; European blueberry</string>
+    <string name="bot_vaccinium_description">A small deciduous shrub with angular green stems. Leaves are finely toothed; solitary urn-shaped flowers are pinkish to greenish. Bloom-coated blue-black berries have coloured flesh, unlike many large cultivated blueberries.</string>
+    <string name="bot_vaccinium_distribution">Acidic woodland, heaths and mountains; scarce on lowland limestone.</string>
+    <string name="bot_prunus_mahaleb_latin" translatable="false">Prunus mahaleb</string>
+    <string name="bot_prunus_mahaleb_name">St Lucie cherry</string>
+    <string name="bot_prunus_mahaleb_aliases">Bois de Sainte-Lucie; mahaleb cherry</string>
+    <string name="bot_prunus_mahaleb_description">A shrub or small tree with rounded, shiny, finely crenate leaves. Small clusters of fragrant white flowers produce pea-sized black drupes. Leaves are rounder than those of wild cherry.</string>
+    <string name="bot_prunus_mahaleb_distribution">Dry slopes, hedges and open woodland, mainly on limestone; frequent in southern and eastern France.</string>
+    <string name="bot_cichorium_latin" translatable="false">Cichorium intybus</string>
+    <string name="bot_cichorium_name">Chicory</string>
+    <string name="bot_cichorium_aliases">Barbe de capucin; chicory</string>
+    <string name="bot_cichorium_description">Stiff branching stems rise above divided basal leaves; upper leaves are smaller. Blue heads consist entirely of five-toothed strap-shaped florets. Short fruits carry minute scales, without a large feathery parachute.</string>
+    <string name="bot_cichorium_distribution">Road verges, tracksides and dry grasslands; widespread.</string>
+    <string name="bot_matricaria_latin" translatable="false">Matricaria chamomilla</string>
+    <string name="bot_matricaria_name">German chamomile</string>
+    <string name="bot_matricaria_aliases">Camomille allemande; Matricaria recutita; Chamomilla recutita; scented mayweed</string>
+    <string name="bot_matricaria_description">An aromatic annual with leaves twice divided into very fine segments. Heads have white rays and a yellow disc; the receptacle becomes conical and is hollow, as shown in section. Fruits are small and ribbed.</string>
+    <string name="bot_matricaria_distribution">Fields, waste ground and paths; frequency varies between regions.</string>
+    <string name="bot_cardamine_latin" translatable="false">Cardamine pratensis</string>
+    <string name="bot_cardamine_name">Cuckooflower</string>
+    <string name="bot_cardamine_aliases">Cressonnette; cresson des prés; lady’s smock</string>
+    <string name="bot_cardamine_description">Basal leaves have fairly rounded leaflets, while stem leaflets are narrow. Pale flowers have four petals and six stamens, two shorter than the others. Long siliques open by two valves to release the seeds.</string>
+    <string name="bot_cardamine_distribution">Damp meadows, ditches and stream margins, from lowlands to mountains.</string>
+    <string name="bot_capsella_latin" translatable="false">Capsella bursa-pastoris</string>
+    <string name="bot_capsella_name">Shepherd’s purse</string>
+    <string name="bot_capsella_aliases">Bourse à pasteur; shepherds purse</string>
+    <string name="bot_capsella_description">Rosette leaves vary from entire to deeply divided; stem leaves clasp the stem. Tiny white flowers have four petals. The lengthening raceme bears triangular, inverted heart-shaped silicles.</string>
+    <string name="bot_capsella_distribution">Gardens, fields, pavements and disturbed ground throughout France; may flower nearly year-round in mild weather.</string>
+    <string name="bot_silene_dioica_latin" translatable="false">Silene dioica</string>
+    <string name="bot_silene_dioica_name">Red campion</string>
+    <string name="bot_silene_dioica_aliases">Silène dioïque; Lychnis dioica; red campion</string>
+    <string name="bot_silene_dioica_description">A hairy plant with opposite leaves. Five deeply notched pink petals emerge from a fused calyx; male and female flowers are on separate plants. The plate shows a female flower with five styles. Capsules open by ten rolled-back teeth.</string>
+    <string name="bot_silene_dioica_distribution">Cool woodland edges, hedges and damp woods; scarcer in the dry south.</string>
+    <string name="bot_stellaria_latin" translatable="false">Rabelera holostea</string>
+    <string name="bot_stellaria_name">Greater stitchwort</string>
+    <string name="bot_stellaria_aliases">Stellaria holostea; langue d’oiseau; greater stitchwort</string>
+    <string name="bot_stellaria_description">Narrow, opposite, stalkless leaves have rough margins. Each flower has five white petals split about halfway, rather than ten petals. Capsules have six teeth. Many floras still use the name Stellaria holostea.</string>
+    <string name="bot_stellaria_distribution">Hedges, shady banks and woodland edges, often forming springtime patches.</string>
+    <string name="bot_geranium_latin" translatable="false">Geranium robertianum</string>
+    <string name="bot_geranium_name">Herb-robert</string>
+    <string name="bot_geranium_aliases">Herbe à Robert; bec de grue; herb Robert</string>
+    <string name="bot_geranium_description">Often reddish, hairy stems carry leaves deeply divided into three to five further-cut segments. Five-petalled pink flowers usually occur in pairs. The fruit has a long beak above five mericarps.</string>
+    <string name="bot_geranium_distribution">Woods, old walls, banks and shady gardens; very widespread.</string>
+    <string name="bot_malva_latin" translatable="false">Malva sylvestris</string>
+    <string name="bot_malva_name">Common mallow</string>
+    <string name="bot_malva_aliases">Grande mauve; mauve des bois; tall mallow</string>
+    <string name="bot_malva_description">Rounded leaves have five to seven lobes and crenate margins. Five notched mauve petals bear darker veins; stamens are united into a column. The flat, wheel-shaped fruit is made of mericarps arranged around the centre.</string>
+    <string name="bot_malva_distribution">Waste ground, roadsides and hedges, especially on enriched soils; widespread.</string>
+    <string name="bot_veronica_latin" translatable="false">Veronica chamaedrys</string>
+    <string name="bot_veronica_name">Germander speedwell</string>
+    <string name="bot_veronica_aliases">Fausse germandrée; germander speedwell</string>
+    <string name="bot_veronica_description">Opposite toothed leaves and two lines of hairs on the stem. Lateral racemes bear blue flowers with white throats. The corolla has four unequal lobes and two stamens; capsules are flattened and heart-shaped.</string>
+    <string name="bot_veronica_distribution">Meadows, hedges, banks and open woods; common across much of France.</string>
+    <string name="bot_potentilla_latin" translatable="false">Potentilla reptans</string>
+    <string name="bot_potentilla_name">Creeping cinquefoil</string>
+    <string name="bot_potentilla_aliases">Quintefeuille; five-finger grass; creeping cinquefoil</string>
+    <string name="bot_potentilla_description">Long runners root at their nodes. Long-stalked palmate leaves usually have five toothed leaflets. Solitary yellow flowers have five petals; many small achenes collect on the receptacle.</string>
+    <string name="bot_potentilla_distribution">Grasslands, paths, ditches and compacted ground, often damp; very widespread.</string>
+    <string name="bot_family_Ulmaceae" translatable="false">Ulmaceae</string>
+    <string name="bot_family_Ulmaceae_aliases">Ulmaceae — elm family</string>
+    <string name="bot_family_Ulmaceae_desc">Woody plants with alternate, often unequal-based toothed leaves. Elms have small flowers without petals and flat winged fruits.</string>
+    <string name="bot_family_Rhamnaceae" translatable="false">Rhamnaceae</string>
+    <string name="bot_family_Rhamnaceae_aliases">Rhamnaceae — buckthorn family</string>
+    <string name="bot_family_Rhamnaceae_desc">Mostly woody plants with small four- or five-parted flowers. Buckthorns have fleshy fruits with several stones; leaf arrangement and margins help separate genera.</string>
+    <string name="bot_family_Brassicaceae" translatable="false">Brassicaceae</string>
+    <string name="bot_family_Brassicaceae_aliases">Brassicaceae — mustard family; Cruciferae</string>
+    <string name="bot_family_Brassicaceae_desc">Flowers usually have four cross-arranged petals and six stamens, four long and two short. Fruits are siliques or silicles, with seeds attached along a persistent partition.</string>
+    <string name="bot_family_Caryophyllaceae" translatable="false">Caryophyllaceae</string>
+    <string name="bot_family_Caryophyllaceae_aliases">Caryophyllaceae — pink family</string>
+    <string name="bot_family_Caryophyllaceae_desc">Often opposite, entire leaves with swollen stem nodes. Flowers commonly have five petals, sometimes deeply split. Capsules usually open by teeth or valves.</string>
+    <string name="bot_family_Geraniaceae" translatable="false">Geraniaceae</string>
+    <string name="bot_family_Geraniaceae_aliases">Geraniaceae — cranesbill family</string>
+    <string name="bot_family_Geraniaceae_desc">Flowers usually have five petals; leaves are often palmately divided. The fruit splits into five one-seeded units associated with a long central beak.</string>
+    <string name="bot_leaf_palmatilobed">Palmately lobed blade</string>
+    <string name="bot_fl_ligulate">Head of ligulate florets</string>
+    <string name="bot_fl_raceme">Raceme</string>
+    <string name="bot_fr_berry">Berry</string>
+    <string name="bot_fr_silique">Silique (long pod with septum)</string>
+    <string name="bot_fr_silicle">Silicle (short pod with septum)</string>
+    <string name="bot_group_dry_oaks">Oaks of dry woodland</string>
+    <string name="bot_group_dry_oaks_desc">Holm oak: evergreen, thick, unlobed leaves, often spiny. Downy oak: lobed leaves and hairy young shoots and undersides. Sessile oak: lobed deciduous leaves, generally less hairy; stalks and leaf bases also matter.</string>
+    <string name="bot_group_birches">Two birches</string>
+    <string name="bot_group_birches_desc">Silver birch: warty young shoots, more triangular leaves and often drooping branchlets. Downy birch: hairy young shoots, rounder leaf bases and usually more upright branchlets. Hybrids and variable leaves can blur these distinctions.</string>
+    <string name="bot_group_lindens">Two limes</string>
+    <string name="bot_group_lindens_desc">Small-leaved lime: mostly hairless leaves with rusty hair tufts beneath and weakly ribbed fruits. Large-leaved lime: generally larger, hairier leaves with pale tufts, and hard fruits with prominent ribs. Leaf size alone is unreliable.</string>
+    <string name="bot_group_willows">White willow and goat willow</string>
+    <string name="bot_group_willows_desc">White willow: long, narrow, silky leaves; slender catkins appear with the leaves. Goat willow: broad wrinkled leaves, felted beneath; oval male catkins appear before the leaves. Female catkins differ from the male plates.</string>
+    <string name="bot_group_hawthorns">Two hawthorns</string>
+    <string name="bot_group_hawthorns_desc">Common hawthorn usually has deeply cut leaves, one style and one stone per fruit. Midland hawthorn usually has shallower lobes, two styles and two stones. Hybrids are frequent; inspect several flowers or fruits.</string>
+    <string name="bot_group_buckthorns">Alder and purging buckthorn</string>
+    <string name="bot_group_buckthorns_desc">Alder buckthorn: thornless, alternate entire leaves, five-parted flowers. Purging buckthorn: often spine-tipped shoots, opposite or subopposite toothed leaves, four-parted flowers. Both develop black fleshy fruits.</string>
+    <string name="bot_group_viburnums">Two viburnums</string>
+    <string name="bot_group_viburnums_desc">Guelder rose has lobed leaves, conspicuous sterile marginal flowers and red fruits. Wayfaring tree has unlobed felted leaves, uniformly small fertile flowers and fruits turning black.</string>
+    <string name="bot_group_brassicas">Silique and silicle</string>
+    <string name="bot_group_brassicas_desc">Cuckooflower has pale pink to white flowers and long narrow siliques. Shepherd’s purse has tiny white flowers and short triangular silicles. Both fruits open by two valves around a seed-bearing partition; neither is a legume.</string>
+    <string name="bot_group_heads">Three types of flower head</string>
+    <string name="bot_group_heads_desc">Oxeye daisy: white rays around a yellow disc, simple leaves. German chamomile: white rays and yellow disc, finely divided leaves, hollow conical receptacle. Chicory: blue head made entirely of ligulate florets, no yellow disc.</string>
 </resources>

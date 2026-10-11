@@ -28,6 +28,7 @@ internal object ShrubsCatalog {
                 FlowerShape.CORYMB, FruitShape.POME, FlowerColor.WHITE, 5.0f, 6.0f, 1.0f,
                 seed = 22, fruitColor = 0xffad3438.toInt(), thorny = true,
                 leafDetail = LeafDetail(width=.38f, lobePairs=3, lobeDepth=.60f, veinPairs=4, roundedLobes=false),
+                flowerDetail = FlowerDetail(styles=1),
                 fruitDetail = FruitDetail(count=9, elongation=1.2f)),
             description = R.string.bot_crataegus_description, distribution = R.string.bot_crataegus_distribution,
             captions = mapOf(PlantView.HABIT to R.string.bot_section_shrubs, PlantView.LEAF to LeafShape.OAK.label,

@@ -15,10 +15,10 @@ class BotanyCatalogTest {
 
     @Test fun catalogueExtensibleEtReferencesCoherentes() {
         val c=BotanyCatalog
-        assertTrue(c.species.size>=60)
-        assertTrue(c.species.count{"trees" in it.sectionIds}>=20)
-        assertTrue(c.species.count{"shrubs" in it.sectionIds}>=15)
-        assertTrue(c.species.count{"herbs" in it.sectionIds}>=25)
+        assertTrue(c.species.size>=90)
+        assertTrue(c.species.count{"trees" in it.sectionIds}>=30)
+        assertTrue(c.species.count{"shrubs" in it.sectionIds}>=25)
+        assertTrue(c.species.count{"herbs" in it.sectionIds}>=35)
         assertEquals(c.species.size,c.species.map{it.id}.toSet().size)
         assertEquals(c.families.size,c.families.map{it.id}.toSet().size)
         assertEquals(c.groups.size,c.groups.map{it.id}.toSet().size)
@@ -86,5 +86,18 @@ class BotanyCatalogTest {
         val newPlant=BotanyCatalog.species.first().copy(id="future",familyId="FutureFamily",sectionIds=setOf("ferns"))
         assertTrue(PlantQuery(sections=setOf("ferns"),families=setOf("FutureFamily")).matches(newPlant,"Future fern"))
         assertFalse(PlantQuery(sections=setOf("trees")).matches(newPlant,"Future fern"))
+    }
+
+    @Test fun leLotDeTerrainExposeSesNouveauxCaracteresAuxFiltres() {
+        val brassicas=BotanyCatalog.species.filter{PlantQuery(families=setOf("Brassicaceae")).matches(it,"")}
+        assertEquals(setOf("cardamine","capsella"),brassicas.map{it.id}.toSet())
+        assertEquals(listOf("capsella"),brassicas.filter{PlantQuery(fruits=setOf(FruitShape.SILICLE)).matches(it,"")}.map{it.id})
+        assertTrue(PlantQuery(flowers=setOf(FlowerShape.LIGULATE),colors=setOf(FlowerColor.BLUE)).matches(BotanyCatalog.get("cichorium")!!,""))
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.BERRY),evergreen=false).matches(BotanyCatalog.get("vaccinium")!!,""))
+        assertTrue(PlantQuery(margins=setOf(LeafMargin.ENTIRE),evergreen=true).matches(BotanyCatalog.get("quercus_ilex")!!,""))
+        assertTrue(PlantQuery(arrangements=setOf(LeafArrangement.ROSETTE),leaves=setOf(LeafShape.PINNATE)).matches(BotanyCatalog.get("cardamine")!!,""))
+        val fr=texts("values-fr")
+        val searchable=fr.getValue("bot_stellaria_name")+" "+fr.getValue("bot_stellaria_aliases")
+        assertTrue(PlantQuery(text="Stellaria holostea").matches(BotanyCatalog.get("stellaria")!!,searchable))
     }
 }
