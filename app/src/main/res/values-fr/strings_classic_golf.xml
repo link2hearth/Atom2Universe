@@ -28,6 +28,7 @@
     <string name="classic_putt_readout">%1$.1f m</string>
     <string name="classic_club_longer">Club plus long</string>
     <string name="classic_club_shorter">Club plus court</string>
+    <string name="classic_spin_centre">Recentrer le point d’impact</string>
     <string name="classic_spin_pad">Point d’impact sur la balle : en bas elle s’arrête vite, en haut elle roule plus loin, sur les côtés elle tourne</string>
     <string name="classic_swing_left">À gauche</string>
     <string name="classic_swing_right">À droite</string>

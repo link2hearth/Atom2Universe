@@ -87,6 +87,8 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     private var gridShown = true
     private var easy = false
     private var lieView: ClassicLieView? = null
+    private var lieAlong: ClassicLieView? = null
+    private var spinCentre: GolfIcon? = null
     private var gridButton: GolfIcon? = null
     private var recording: GolfReplayRecorder? = null
     private var lastReplay: GolfReplay? = null
@@ -156,8 +158,19 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             setOnCheckedChangeListener{_,on->easy=on;prefs.edit().putBoolean("easy",on).apply()}
         },LinearLayout.LayoutParams(-1,-2).apply{topMargin=ui.dp(6)})
         val wide=resources.configuration.screenWidthDp>=600
+        val tab=prefs.getInt("menu_tab",0).coerceIn(0,2)
+        val tabs=ui.row().apply{setPadding(0,ui.dp(14),0,ui.dp(2))}
+        listOf(R.string.golf_tab_courses,R.string.golf_tab_minigolf,R.string.golf_tab_seeds).forEachIndexed { i,label ->
+            val button=(if(i==tab)ui.primary(getString(label)){} else ui.secondary(getString(label)){prefs.edit().putInt("menu_tab",i).apply();showMenu()}).apply{
+                minWidth=0;minHeight=ui.dp(44);setPadding(ui.dp(8),ui.dp(10),ui.dp(8),ui.dp(10))
+            }
+            tabs.addView(button,LinearLayout.LayoutParams(0,-2,1f).apply{if(i>0)leftMargin=ui.dp(8)})
+        }
+        col.addView(tabs)
+        if(tab==2)col.addView(ui.primary(getString(R.string.golf_random_new)){newRandomCourse()},LinearLayout.LayoutParams(-1,-2).apply{topMargin=ui.dp(10)})
         val cards=ui.column()
-        ClassicCourses.all.chunked(if(wide)2 else 1).forEach { definitions ->
+        val shown=when(tab){0->ClassicCourses.all.filter{!it.mini};1->ClassicCourses.all.filter{it.mini};else->randomStore.all().map{ClassicCourses.random(it)}}
+        shown.chunked(if(wide)2 else 1).forEach { definitions ->
             val row=if(wide)ui.row().apply{gravity=Gravity.TOP}else cards
             definitions.forEach { definition ->
                 row.addView(courseTile(definition),LinearLayout.LayoutParams(if(wide)0 else -1,-2,if(wide)1f else 0f).apply{
@@ -173,23 +186,100 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         root.addView(ScrollView(this).apply{addView(col)},FrameLayout.LayoutParams(-1,-1))
     }
 
+    private val randomStore by lazy{RandomCourseStore(this)}
+    private fun lengthsOf(d:ClassicCourseDefinition)=if(d.random!=null)listOf(ClassicRoundLength.WHOLE)else ClassicRoundLength.STANDARD
+    private fun titleOf(d:ClassicCourseDefinition)=d.random?.let{randomName(it.seed)}?:getString(d.titleRes)
+    private fun roundTitle(d:ClassicCourseDefinition,length:ClassicRoundLength)=
+        if(d.random!=null)titleOf(d) else getString(R.string.golf_section_title,titleOf(d),getString(length.labelRes))
+    private fun holeNamesOf(d:ClassicCourseDefinition):List<String> =
+        if(d.random!=null)d.holes.map{getString(R.string.golf_random_hole,it.number)} else resources.getStringArray(d.holeNamesRes).toList()
+    /** A noun and an adjective drawn from the seed ("Golden Constellation"); the French adjective agrees with the noun. */
+    private fun randomName(seed:Long):String{
+        val nouns=resources.getStringArray(R.array.golf_random_nouns);val adjectives=resources.getStringArray(R.array.golf_random_adjectives)
+        val (n,a)=RandomGolfNames.pick(seed,nouns.size,adjectives.size)
+        val feminine=nouns[n].substringAfter('|',"")=="f"
+        val adjective=adjectives[a].let{if(feminine)it.substringAfter('|',it) else it.substringBefore('|')}
+        return getString(R.string.golf_random_name,nouns[n].substringBefore('|'),adjective)
+    }
+
+    private fun randomInfo(d:ClassicCourseDefinition):String{
+        val spec=d.random?:return ""
+        return getString(R.string.golf_random_info,resources.getStringArray(R.array.golf_random_counts)[RandomGolfSpec.HOLE_COUNTS.indexOf(spec.holeCount)],
+            d.par,resources.getStringArray(R.array.golf_random_themes)[spec.theme?.let{it.ordinal+1}?:0],spec.seed)
+    }
+
+    /** The poster of a generated course: the plan of its first hole under its name. */
+    private fun randomPoster(d:ClassicCourseDefinition):FrameLayout=FrameLayout(this).apply{
+        background=ui.shape(ui.palette.surface,22f,null);clipToOutline=true
+        addView(ClassicMap(this@ClassicGolfActivity,d.holes.first()),FrameLayout.LayoutParams(-1,-1))
+        addView(View(this@ClassicGolfActivity).apply{
+            background=android.graphics.drawable.GradientDrawable(android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM,intArrayOf(Color.TRANSPARENT,0xE6102C27.toInt()))
+        },FrameLayout.LayoutParams(-1,ui.dp(110),Gravity.BOTTOM))
+        addView(ui.column().apply{
+            setPadding(ui.dp(16),ui.dp(12),ui.dp(16),ui.dp(14))
+            addView(ui.text(titleOf(d),23f,Color.WHITE,true))
+            addView(ui.text(randomInfo(d),14f,Color.WHITE).apply{setPadding(0,ui.dp(4),0,0)})
+        },FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM))
+    }
+
+    private fun newRandomCourse(){
+        val start=randomStore.last
+        fun newSeed()=kotlin.random.Random.nextLong(100_000L,1_000_000L)
+        val col=ui.column().apply{setPadding(ui.dp(20),ui.dp(8),ui.dp(20),ui.dp(12))}
+        col.addView(ui.text(getString(R.string.golf_random_seed),14f,bold=true).apply{setPadding(0,ui.dp(8),0,ui.dp(4))})
+        val seedField=EditText(this).apply{
+            inputType=android.text.InputType.TYPE_CLASS_NUMBER;filters=arrayOf(android.text.InputFilter.LengthFilter(9));setSingleLine()
+            textSize=18f;setTextColor(ui.palette.text);setText((start?.seed?:newSeed()).toString())
+            contentDescription=getString(R.string.golf_random_seed)
+        }
+        val seedRow=ui.row()
+        seedRow.addView(seedField,LinearLayout.LayoutParams(0,-2,1f))
+        seedRow.addView(ui.secondary(getString(R.string.golf_random_roll)){seedField.setText(newSeed().toString())},LinearLayout.LayoutParams(-2,-2).apply{leftMargin=ui.dp(8)})
+        col.addView(seedRow)
+        fun picker(label:Int,items:Int,selected:Int):Spinner{
+            col.addView(ui.text(getString(label),14f,bold=true).apply{setPadding(0,ui.dp(14),0,ui.dp(2))})
+            val spinner=com.Atom2Universe.app.util.ImmersiveSpinner(this).apply{
+                contentDescription=getString(label)
+                adapter=ArrayAdapter(this@ClassicGolfActivity,R.layout.item_spinner_selected,resources.getStringArray(items)).apply{setDropDownViewResource(R.layout.item_spinner_dropdown)}
+                setSelection(selected)
+            }
+            col.addView(spinner,LinearLayout.LayoutParams(-1,ui.dp(48)))
+            return spinner
+        }
+        val counts=picker(R.string.golf_random_holes,R.array.golf_random_counts,RandomGolfSpec.HOLE_COUNTS.indexOf(start?.holeCount ?: 9).coerceAtLeast(0))
+        val themes=picker(R.string.golf_random_theme,R.array.golf_random_themes,start?.theme?.let{it.ordinal+1}?:0)
+        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(R.string.golf_random_new)
+            .setView(ScrollView(this).apply{addView(col)}).setNegativeButton(android.R.string.cancel,null)
+            .setPositiveButton(R.string.golf_random_create){_,_->
+                val seed=seedField.text.toString().toLongOrNull()?.coerceIn(0L,RandomGolfSpec.MAX_SEED)?:newSeed()
+                val spec=RandomGolfSpec(seed,RandomGolfSpec.HOLE_COUNTS[counts.selectedItemPosition],
+                    themes.selectedItemPosition.let{if(it==0)null else RandomGolfTheme.entries[it-1]})
+                randomStore.add(spec);randomStore.last=spec
+                chooseRound(ClassicCourses.random(spec),ClassicRoundLength.WHOLE)
+            }.create())
+    }
+
     private fun courseTile(definition:ClassicCourseDefinition):View {
         val tile=ui.column().apply{background=ui.shape(ui.palette.surface,22f);clipToOutline=true}
-        val poster=GolfMenus.photoCard(this,definition.id,getString(definition.titleRes))
+        val poster=if(definition.random!=null)randomPoster(definition) else GolfMenus.photoCard(this,definition.id,titleOf(definition))
         val tools=ui.row().apply{gravity=Gravity.END;setPadding(ui.dp(8),ui.dp(8),ui.dp(8),0)}
+        definition.random?.let{spec->
+            tools.addView(icon(GolfIcon.Kind.STAR,R.string.golf_random_favourite){randomStore.toggleFavourite(spec);showMenu()}.apply{highlighted=randomStore.isFavourite(spec)},
+                LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)).apply{rightMargin=ui.dp(6)})
+        }
         tools.addView(icon(GolfIcon.Kind.FLAG,R.string.classic_practice){showPractice(definition)},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)))
         tools.addView(icon(GolfIcon.Kind.CARD,R.string.golf_scorecard){showCourseRecords(definition)},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)).apply{leftMargin=ui.dp(6)})
         poster.addView(tools,FrameLayout.LayoutParams(-1,-2,Gravity.TOP))
         tile.addView(poster,LinearLayout.LayoutParams(-1,ui.dp(180)))
         val buttons=ui.row().apply{setPadding(ui.dp(10),ui.dp(10),ui.dp(10),ui.dp(10))}
-        ClassicRoundLength.entries.forEachIndexed { index,length ->
+        lengthsOf(definition).forEachIndexed { index,length ->
             val saved=getSharedPreferences(length.progressName(definition),Context.MODE_PRIVATE)
             val active=saved.getBoolean("active",false)
             val button=ui.primary(if(active)getString(R.string.golf_resume_section,getString(length.labelRes))else getString(length.labelRes)) {
                 chooseRound(definition,length)
             }.apply{
                 minWidth=0;setPadding(ui.dp(8),ui.dp(12),ui.dp(8),ui.dp(12))
-                contentDescription=getString(R.string.golf_round_accessible,getString(definition.titleRes),text)
+                contentDescription=getString(R.string.golf_round_accessible,titleOf(definition),text)
             }
             buttons.addView(button,LinearLayout.LayoutParams(0,-2,1f).apply{if(index>0)leftMargin=ui.dp(8)})
         }
@@ -199,13 +289,14 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
 
     private fun selectCourse(definition:ClassicCourseDefinition,length:ClassicRoundLength){
         course=definition;roundLength=length
+        prefs.edit().putInt("menu_tab",if(definition.random!=null)2 else if(definition.mini)1 else 0).apply()
         prefs.edit().putString("selected_course",course.id).apply()
     }
 
     private fun chooseRound(definition:ClassicCourseDefinition,length:ClassicRoundLength){
         selectCourse(definition,length)
         if(!progress.getBoolean("active",false)){startRound(false);return}
-        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(getString(R.string.golf_section_title,getString(course.titleRes),getString(length.labelRes)))
+        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(roundTitle(course,length))
             .setPositiveButton(R.string.golf_continue){_,_->startRound(true)}
             .setNeutralButton(R.string.golf_new_course){_,_->
                 showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setMessage(R.string.classic_replace)
@@ -215,19 +306,24 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
 
     private fun showCourseRecords(definition:ClassicCourseDefinition){
         val col=ui.column().apply{setPadding(ui.dp(20),ui.dp(8),ui.dp(20),ui.dp(16))}
-        ClassicRoundLength.entries.forEach { length ->
+        lengthsOf(definition).forEach { length ->
             val saved=getSharedPreferences(length.progressName(definition),Context.MODE_PRIVATE)
             val best=saved.getInt("best",0)
             col.addView(ui.text(getString(length.labelRes),19f,bold=true).apply{setPadding(0,ui.dp(14),0,ui.dp(8))})
             col.addView(ui.text(if(best>0)getString(R.string.golf_course_best,best,relative(best-length.holes(definition).sumOf{it.par}))
                 else getString(R.string.golf_no_record),15f,ui.palette.secondary))
-            val stored=saved.getString("scores","").orEmpty().split(',').mapNotNull{it.toIntOrNull()}.take(length.count)
+            val stored=saved.getString("scores","").orEmpty().split(',').mapNotNull{it.toIntOrNull()}.take(length.count(definition))
             if(stored.isNotEmpty())col.addView(ui.secondary(getString(R.string.golf_scorecard)){
                 dialog?.dismiss();selectCourse(definition,length);round=true;scores.clear();scores+=stored;scorecard(false)
             },LinearLayout.LayoutParams(-1,-2).apply{topMargin=ui.dp(8)})
         }
-        showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(getString(definition.titleRes))
-            .setView(ScrollView(this).apply{addView(col)}).setPositiveButton(R.string.golf_done,null).create())
+        val builder=com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(titleOf(definition))
+            .setView(ScrollView(this).apply{addView(col)}).setPositiveButton(R.string.golf_done,null)
+        definition.random?.let{spec->builder.setNeutralButton(R.string.golf_random_delete){_,_->
+            showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setMessage(R.string.golf_random_delete_confirm)
+                .setNegativeButton(android.R.string.cancel,null).setPositiveButton(R.string.golf_random_delete){_,_->randomStore.remove(spec);showMenu()}.create())
+        }}
+        showDialog(builder.create())
     }
 
     private fun showPractice(definition:ClassicCourseDefinition){
@@ -238,8 +334,8 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         head.addView(icon(GolfIcon.Kind.BACK,R.string.golf_back){showMenu()},LinearLayout.LayoutParams(ui.dp(48),ui.dp(48)))
         head.addView(ui.text(getString(R.string.golf_practice),23f,bold=true),LinearLayout.LayoutParams(0,-2,1f))
         col.addView(head)
-        col.addView(ui.text(getString(definition.titleRes),15f,ui.palette.secondary).apply{setPadding(ui.dp(8),ui.dp(8),0,ui.dp(10))})
-        val names=resources.getStringArray(definition.holeNamesRes)
+        col.addView(ui.text(titleOf(definition),15f,ui.palette.secondary).apply{setPadding(ui.dp(8),ui.dp(8),0,ui.dp(10))})
+        val names=holeNamesOf(definition)
         val columns=(resources.configuration.screenWidthDp/155).coerceIn(2,6)
         definition.holes.chunked(columns).forEach { holes ->
             val row=ui.row().apply{gravity=Gravity.TOP}
@@ -249,7 +345,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
                     isClickable=true;isFocusable=true
                     contentDescription=getString(R.string.classic_hole_choice,h.number,names[h.number-1],h.par,h.displayLength.roundToInt())
                     foreground=android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x40FFFFFF),null,ui.shape(Color.WHITE,18f,null))
-                    setOnClickListener{selectCourse(definition,ClassicRoundLength.FULL);round=false;scores.clear();play(h.number-1)}
+                    setOnClickListener{selectCourse(definition,lengthsOf(definition).last());round=false;scores.clear();play(h.number-1)}
                 }
                 val map=FrameLayout(this)
                 map.addView(ClassicMap(this,h),FrameLayout.LayoutParams(-1,-1))
@@ -278,8 +374,8 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
 
     private fun startRound(resume:Boolean){
         round=true; scores.clear()
-        if(resume)scores+=progress.getString("scores","").orEmpty().split(',').mapNotNull{it.toIntOrNull()}.take(roundLength.count)
-        val index=if(resume)progress.getInt("hole",roundLength.startIndex).coerceIn(roundLength.startIndex,roundLength.lastIndex) else roundLength.startIndex
+        if(resume)scores+=progress.getString("scores","").orEmpty().split(',').mapNotNull{it.toIntOrNull()}.take(roundLength.count(course))
+        val index=if(resume)progress.getInt("hole",roundLength.startIndex).coerceIn(roundLength.startIndex,roundLength.lastIndex(course)) else roundLength.startIndex
         if(!resume)progress.edit().remove("ball_x").remove("ball_z").remove("strokes").putString("scores","").putInt("hole",roundLength.startIndex).putBoolean("active",true).apply()
         play(index,resume)
     }
@@ -328,17 +424,28 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         root.addView(feedback,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER_HORIZONTAL or Gravity.TOP).apply{topMargin=ui.dp(100)})
         sceneSpinner=ProgressBar(this).also{root.addView(it,FrameLayout.LayoutParams(ui.dp(48),ui.dp(48),Gravity.CENTER))}
         // One putter, no wind, no lie to read: mini-golf shows none of the club, spin and slope controls.
-        lieView=null;spinPad=null;clubUp=null;clubDown=null;clubBadge=null;clubPicker=null;bottom=null
+        lieView=null;lieAlong=null;spinCentre=null;spinPad=null;clubUp=null;clubDown=null;clubBadge=null;clubPicker=null;bottom=null
         if(!mini) {
+            // Bottom left: the point of contact above the view from behind the ball; the slope towards the target stands upright beside the contact point.
             val dock=ui.row().apply {
-                setPadding(ui.dp(12),ui.dp(18),ui.dp(12),ui.dp(10))
+                gravity=Gravity.TOP
+                setPadding(ui.dp(10),0,ui.dp(10),ui.dp(10))
             }
-            lieView=ClassicLieView(this).also{dock.addView(it,LinearLayout.LayoutParams(ui.dp(112),ui.dp(60)))}
-            dock.addView(View(this),LinearLayout.LayoutParams(0,1,1f))
+            val stack=ui.column().apply{gravity=Gravity.CENTER_HORIZONTAL}
+            dock.addView(stack)
             spinPad=ClassicSpinPad(this,getString(R.string.classic_spin_pad)){x,y->
                 if(canSetShot()){g.setSpin(x,y);spinPad?.spinX=g.spinX;spinPad?.spinY=g.spinY;previewDirty=true;save()}
             }
-            dock.addView(spinPad,LinearLayout.LayoutParams(ui.dp(64),ui.dp(64)))
+            val centre=icon(GolfIcon.Kind.CENTER,R.string.classic_spin_centre){
+                if(canSetShot()){g.setSpin(0f,0f);spinPad?.spinX=g.spinX;spinPad?.spinY=g.spinY;previewDirty=true;save();refreshHud()}
+            }.apply{alpha=.8f;visibility=View.INVISIBLE}
+            spinCentre=centre
+            val padBox=FrameLayout(this)
+            padBox.addView(spinPad,FrameLayout.LayoutParams(ui.dp(80),ui.dp(80)))
+            padBox.addView(centre,FrameLayout.LayoutParams(ui.dp(26),ui.dp(26),Gravity.TOP or Gravity.END))
+            stack.addView(padBox,LinearLayout.LayoutParams(-2,-2).apply{bottomMargin=ui.dp(8)})
+            lieView=ClassicLieView(this,false).also{stack.addView(it,LinearLayout.LayoutParams(ui.dp(68),ui.dp(56)))}
+            lieAlong=ClassicLieView(this,true).also{dock.addView(it,LinearLayout.LayoutParams(ui.dp(56),ui.dp(88)).apply{leftMargin=ui.dp(8)})}
             val up=icon(GolfIcon.Kind.UP,R.string.classic_club_longer){stepClub(-1)}
             val down=icon(GolfIcon.Kind.DOWN,R.string.classic_club_shorter){stepClub(1)}
             val badge=ClassicClubBadge(this){chooseClub()}
@@ -350,7 +457,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
             clubPicker=picker
             root.addView(picker,FrameLayout.LayoutParams(-2,-2,Gravity.END or Gravity.TOP).apply{leftMargin=ui.dp(12);rightMargin=ui.dp(12);topMargin=ui.dp(256)})
             bottom=dock
-            root.addView(dock,FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM))
+            root.addView(dock,FrameLayout.LayoutParams(-2,-2,Gravity.BOTTOM or Gravity.START))
         }
         cameraButton=icon(GolfIcon.Kind.CAMERA,R.string.golf_live_camera){cycleLiveCamera()}.apply{alpha=.72f}
         root.addView(cameraButton,FrameLayout.LayoutParams(ui.dp(48),ui.dp(48),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=ui.dp(16)})
@@ -371,7 +478,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         if(game==null||root.width==0)return
         if(bottom==null)return
         val landscape=root.width>root.height
-        val pad=ui.dp(if(landscape)104 else 128)
+        val pad=ui.dp(if(landscape)72 else 80)
         spinPad?.let{if(it.layoutParams.height!=pad){it.layoutParams=it.layoutParams.apply{height=pad;width=pad}}}
         // The wind rose keeps the top-left corner: in landscape it sits under the back button and the picker moves beside it.
         windRose?.let{r->val lp=r.layoutParams as FrameLayout.LayoutParams;val top=ui.dp(if(landscape)62 else 112)
@@ -596,8 +703,8 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         replayButton?.visibility=if(!completed&&(choosing||pendingStrike!=null||recording!=null||swingTime>=0f))View.VISIBLE else View.GONE
         val h=g.hole
         val total=relative(scores.sum()-roundHoles.take(scores.size).sumOf{it.par})
-        label?.show(getString(if(round&&roundLength.startIndex>0)R.string.golf_hud_section else R.string.classic_hud,h.number,h.par,g.strokes,total,if(round)roundLength.count else course.holes.size,if(round)h.number-roundLength.startIndex else h.number),
-            getString(R.string.classic_hud_accessible,h.number,h.par,g.strokes,total,if(round)roundLength.count else course.holes.size,if(round)h.number-roundLength.startIndex else h.number))
+        label?.show(getString(if(round&&roundLength.startIndex>0)R.string.golf_hud_section else R.string.classic_hud,h.number,h.par,g.strokes,total,if(round)roundLength.count(course) else course.holes.size,if(round)h.number-roundLength.startIndex else h.number),
+            getString(R.string.classic_hud_accessible,h.number,h.par,g.strokes,total,if(round)roundLength.count(course) else course.holes.size,if(round)h.number-roundLength.startIndex else h.number))
         windRose?.set(g.aimAngle,g.windX,g.windZ)
         if(h.mini!=null) {
             // Only what matters on a carpet: how far the cup is, and the sand when the ball lies in it.
@@ -613,11 +720,13 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         clubBadge?.set(g.club,clubNames[g.club.ordinal],
             getString(R.string.golf_result_line,getString(R.string.classic_choose_club),getString(R.string.classic_club_choice,clubNames[g.club.ordinal],g.club.carry.roundToInt(),g.club.loft.roundToInt())))
         val ready=canSetShot()
-        lieView?.let{it.visibility=if(g.state==GolfState.READY&&g.club!=GolfClub.PUTTER)View.VISIBLE else View.INVISIBLE;if(it.visibility==View.VISIBLE)it.set(g.lieSlopeAlong,g.lieSlopeSide)}
+        val lieShown=g.state==GolfState.READY&&g.club!=GolfClub.PUTTER
+        for(view in listOf(lieView,lieAlong))view?.let{it.visibility=if(lieShown)View.VISIBLE else View.INVISIBLE;if(lieShown)it.set(g.lieSlopeAlong,g.lieSlopeSide)}
         clubBadge?.isEnabled=ready
         clubUp?.isEnabled=ready&&g.club.ordinal>0
         clubDown?.isEnabled=ready&&g.club.ordinal<GolfClub.entries.lastIndex
-        spinPad?.let{it.isEnabled=ready&&g.club!=GolfClub.PUTTER;it.spinX=g.spinX;it.spinY=g.spinY}
+        spinPad?.let{it.visibility=if(g.club==GolfClub.PUTTER)View.INVISIBLE else View.VISIBLE;it.isEnabled=ready&&g.club!=GolfClub.PUTTER;it.spinX=g.spinX;it.spinY=g.spinY}
+        spinCentre?.visibility=if(ready&&g.club!=GolfClub.PUTTER&&(g.spinX!=0f||g.spinY!=0f))View.VISIBLE else View.INVISIBLE
     }
 
     private fun chooseClub(){
@@ -637,14 +746,14 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         val g=game?:return
         if(round){
             scores+=g.strokes
-            val ed=progress.edit().putString("scores",scores.joinToString(",")).remove("ball_x").remove("ball_z").remove("strokes").putInt("hole",roundLength.nextIndex(scores.size)).putBoolean("active",!roundLength.finished(scores))
-            if(roundLength.finished(scores)){val total=scores.sum();val best=progress.getInt("best",Int.MAX_VALUE);if(total<best)ed.putInt("best",total)}
+            val ed=progress.edit().putString("scores",scores.joinToString(",")).remove("ball_x").remove("ball_z").remove("strokes").putInt("hole",roundLength.nextIndex(scores.size)).putBoolean("active",!roundLength.finished(scores,course))
+            if(roundLength.finished(scores,course)){val total=scores.sum();val best=progress.getInt("best",Int.MAX_VALUE);if(total<best)ed.putInt("best",total)}
             ed.apply()
         }
         val diff=g.strokes-g.hole.par
         val title=when{g.strokes==1->R.string.golf_result_hole_in_one;diff<=-3->R.string.golf_result_albatross;diff == -2->R.string.golf_result_eagle;diff == -1->R.string.golf_result_birdie;diff==0->R.string.golf_result_par;diff==1->R.string.golf_result_bogey;else->R.string.golf_result_double_bogey}
         val text=if(diff>2)getString(R.string.golf_result_over,diff) else getString(title)
-        val buttons=(if(round&&roundLength.finished(scores))listOf<View>(ui.primary(getString(R.string.golf_scorecard)){lastReplay=null;closeResult();scorecard(true)})
+        val buttons=(if(round&&roundLength.finished(scores,course))listOf<View>(ui.primary(getString(R.string.golf_scorecard)){lastReplay=null;closeResult();scorecard(true)})
             else listOf(ui.primary(getString(if(round)R.string.golf_next else R.string.golf_retry)){play(if(round)roundLength.nextIndex(scores.size) else g.hole.number-1)},
                 ui.secondary(getString(R.string.golf_menu)){showMenu()})).toMutableList()
         if(lastReplay!=null)buttons.add(1,icon(GolfIcon.Kind.REPLAY,R.string.golf_replay_title){requestShotReplay()}.apply{minimumHeight=ui.dp(48)})
@@ -656,7 +765,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
 
     private fun scorecard(finished:Boolean){
         val col=ui.column().apply{setPadding(ui.dp(16),ui.dp(8),ui.dp(16),ui.dp(12))}
-        col.addView(ui.text(if(round)getString(R.string.golf_section_title,getString(course.titleRes),getString(roundLength.labelRes))else getString(course.titleRes),20f,bold=true))
+        col.addView(ui.text(if(round)roundTitle(course,roundLength)else titleOf(course),20f,bold=true))
         val current=game?.takeIf{!completed}
         val displayScores=roundHoles.mapIndexed{i,h->
             if(round)scores.getOrNull(i)?:current?.takeIf{it.hole.number==h.number}?.strokes
@@ -678,9 +787,9 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
         })
         col.addView(GolfMenus.disclosure(this,getString(R.string.golf_tips)) {
             val tips=ui.column()
-            tips.addView(ui.text(getString(course.descriptionRes),15f,ui.palette.secondary))
-            val names=resources.getStringArray(course.holeNamesRes)
-            resources.getStringArray(course.tipsRes).forEachIndexed { index,tip ->
+            tips.addView(ui.text(getString(if(course.random!=null)R.string.golf_random_description else course.descriptionRes),15f,ui.palette.secondary))
+            val names=holeNamesOf(course)
+            if(course.random==null)resources.getStringArray(course.tipsRes).forEachIndexed { index,tip ->
                 tips.addView(ui.text(names[index],16f,bold=true).apply{setPadding(0,ui.dp(16),0,ui.dp(5))})
                 tips.addView(ui.text(tip,15f,ui.palette.secondary))
             }
@@ -738,7 +847,7 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     }
 
     private fun openReplay(shot:GolfReplay) {
-        val definition=ClassicCourses.all.firstOrNull{it.id==shot.course}
+        val definition=ClassicCourses.byId(shot.course)
         val base=definition?.holes?.firstOrNull{it.number==shot.hole}
         if(base==null){replayError();return}
         if(replayView!=null)return
@@ -769,15 +878,15 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
     }
 
     private fun saveReplay(shot:GolfReplay) {
-        val definition=ClassicCourses.all.firstOrNull{it.id==shot.course}?:return
+        val definition=ClassicCourses.byId(shot.course)?:return
         val name=EditText(this).apply {
             setSingleLine();filters=arrayOf(android.text.InputFilter.LengthFilter(80))
-            setText(shot.name.ifBlank{getString(R.string.golf_replay_default_name,getString(definition.titleRes),shot.hole,shot.stroke)})
+            setText(shot.name.ifBlank{getString(R.string.golf_replay_default_name,titleOf(definition),shot.hole,shot.stroke)})
             selectAll()
         }
         showDialog(com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(this).setTitle(R.string.golf_replay_name).setView(name)
             .setNegativeButton(android.R.string.cancel,null).setPositiveButton(R.string.golf_replay_save){_,_->
-                val named=shot.copy(name=name.text.toString().trim().ifBlank{getString(R.string.golf_replay_default_name,getString(definition.titleRes),shot.hole,shot.stroke)})
+                val named=shot.copy(name=name.text.toString().trim().ifBlank{getString(R.string.golf_replay_default_name,titleOf(definition),shot.hole,shot.stroke)})
                 replayIo.execute {
                     val saved=runCatching{replayStore.save(named)}
                     runOnUiThread{if(!isDestroyed){if(saved.isSuccess)Toast.makeText(this,R.string.golf_replay_saved,Toast.LENGTH_SHORT).show()else replayError()}}
@@ -796,8 +905,8 @@ class ClassicGolfActivity : ThemedActivity(), Choreographer.FrameCallback {
                     .setNegativeButton(R.string.golf_done,null)
                 if(entries.isEmpty())builder.setMessage(R.string.golf_replay_empty)
                 else builder.setItems(entries.map{entry->
-                    val definition=ClassicCourses.all.firstOrNull{it.id==entry.course}
-                    getString(R.string.golf_replay_entry,entry.name,definition?.let{getString(it.titleRes)}?:entry.course,entry.hole,
+                    val definition=ClassicCourses.byId(entry.course)
+                    getString(R.string.golf_replay_entry,entry.name,definition?.let{titleOf(it)}?:entry.course,entry.hole,
                         java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.SHORT,java.text.DateFormat.SHORT).format(java.util.Date(entry.created)))
                 }.toTypedArray()){_,index->chooseSavedReplay(entries[index])}
                 showDialog(builder.create())

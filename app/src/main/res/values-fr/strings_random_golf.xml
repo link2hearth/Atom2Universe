@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="golf_tab_courses">Parcours</string>
+    <string name="golf_tab_minigolf">Mini-golf</string>
+    <string name="golf_tab_seeds">Seeds</string>
+    <string name="golf_random_new">Nouveau parcours seed</string>
+    <string name="golf_random_title">Parcours seed</string>
+    <string name="golf_random_name">%1$s %2$s</string>
+    <string name="golf_random_favourite">Favori</string>
+    <string name="golf_random_description">Pars, longueurs, relief, obstacles et décors viennent tous de la seed.</string>
+    <string name="golf_random_round">Jouer</string>
+    <string name="golf_random_hole">Trou %1$d</string>
+    <string name="golf_random_seed">Seed</string>
+    <string name="golf_random_roll">Nouvelle seed</string>
+    <string name="golf_random_holes">Trous</string>
+    <string name="golf_random_theme">Thème</string>
+    <string name="golf_random_create">Jouer</string>
+    <string name="golf_random_delete">Supprimer</string>
+    <string name="golf_random_delete_confirm">Supprimer ce parcours et ses scores ?</string>
+    <string name="golf_random_info">%1$s · par %2$d · %3$s · #%4$d</string>
+    <string-array name="golf_random_counts"><item>3 trous</item><item>5 trous</item><item>9 trous</item><item>18 trous</item></string-array>
+    <string-array name="golf_random_themes"><item>Mélangé</item><item>Jardin</item><item>Féerique</item><item>Halloween</item><item>Noël</item><item>Archipel</item></string-array>
+    <string-array name="golf_random_nouns"><item>Constellation|f</item><item>Passerelle|f</item><item>Horizon|m</item><item>Prairie|f</item><item>Sommet|m</item><item>Vallée|f</item><item>Comète|f</item><item>Verger|m</item><item>Canyon|m</item><item>Lagune|f</item><item>Crête|f</item><item>Clairière|f</item><item>Port|m</item><item>Nébuleuse|f</item><item>Plateau|m</item><item>Dune|f</item><item>Bosquet|m</item><item>Falaise|f</item><item>Delta|m</item><item>Lande|f</item><item>Savane|f</item><item>Fjord|m</item><item>Oasis|f</item><item>Mesa|f</item><item>Atoll|m</item><item>Phare|m</item><item>Aurore|f</item><item>Citadelle|f</item><item>Jardin|m</item><item>Cascade|f</item><item>Havre|m</item><item>Île|f</item><item>Pic|m</item><item>Terrasse|f</item><item>Panorama|m</item><item>Lanterne|f</item><item>Traversée|f</item><item>Avant-poste|m</item><item>Orbite|f</item><item>Canopée|f</item></string-array>
+    <string-array name="golf_random_adjectives"><item>doré|dorée</item><item>silencieux|silencieuse</item><item>sauvage|sauvage</item><item>caché|cachée</item><item>pourpre|pourpre</item><item>gelé|gelée</item><item>brumeux|brumeuse</item><item>ancien|ancienne</item><item>argenté|argentée</item><item>émeraude|émeraude</item><item>solitaire|solitaire</item><item>venteux|venteuse</item><item>ensoleillé|ensoleillée</item><item>velouté|veloutée</item><item>lointain|lointaine</item><item>cristallin|cristalline</item><item>ambré|ambrée</item><item>errant|errante</item><item>paisible|paisible</item><item>creux|creuse</item><item>radieux|radieuse</item><item>orageux|orageuse</item><item>doux|douce</item><item>infini|infinie</item><item>crépusculaire|crépusculaire</item><item>verdoyant|verdoyante</item><item>scintillant|scintillante</item><item>âpre|âpre</item><item>secret|secrète</item><item>cosmique|cosmique</item><item>flottant|flottante</item><item>flamboyant|flamboyante</item><item>endormi|endormie</item><item>moussu|moussue</item><item>altier|altière</item><item>étoilé|étoilée</item><item>salé|salée</item><item>poussiéreux|poussiéreuse</item><item>tranquille|tranquille</item><item>majestueux|majestueuse</item></string-array>
+</resources>

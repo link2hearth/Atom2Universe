@@ -10,6 +10,8 @@ import com.Atom2Universe.app.games.golf.classic.core.ArchipelagoCourse
 import com.Atom2Universe.app.games.golf.classic.core.SnowPeaksCourse
 import com.Atom2Universe.app.games.golf.classic.core.MiniGolfCourse
 import com.Atom2Universe.app.games.golf.classic.core.MiniGolfCrazyCourse
+import com.Atom2Universe.app.games.golf.classic.core.RandomGolfGenerator
+import com.Atom2Universe.app.games.golf.classic.core.RandomGolfSpec
 
 /** Stable IDs keep saved rounds separate when more courses are added or reordered. */
 data class ClassicCourseDefinition(
@@ -19,7 +21,9 @@ data class ClassicCourseDefinition(
     val holeNamesRes: Int,
     val tipsRes: Int,
     val progressName: String,
-    val holes: List<ClassicHole>
+    val holes: List<ClassicHole>,
+    /** Set for a generated course: its title, hole names and saves come from the seed, not from resources. */
+    val random: RandomGolfSpec? = null
 ) {
     val par: Int get() = holes.sumOf { it.par }
     val length: Int get() = holes.sumOf { it.displayLength.toInt() }
@@ -55,5 +59,20 @@ object ClassicCourses {
             "classic_golf_v2_minigolf_crazy", MiniGolfCrazyCourse.holes)
     )
 
-    fun find(id: String?): ClassicCourseDefinition = all.firstOrNull { it.id == id } ?: all.first()
+    private val generated = object : LinkedHashMap<String, ClassicCourseDefinition>(8, .75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, ClassicCourseDefinition>) = size > 4
+    }
+
+    /** A generated course, built on demand: the same spec always gives the same holes. */
+    @Synchronized
+    fun random(spec: RandomGolfSpec): ClassicCourseDefinition = generated.getOrPut(spec.id) {
+        ClassicCourseDefinition(spec.id, R.string.golf_random_title, R.string.golf_random_description,
+            0, 0, spec.progressName, RandomGolfGenerator.holes(spec), spec)
+    }
+
+    /** The fixed courses and the generated ones (by their id), or null. */
+    fun byId(id: String?): ClassicCourseDefinition? =
+        all.firstOrNull { it.id == id } ?: RandomGolfSpec.parse(id)?.let { random(it) }
+
+    fun find(id: String?): ClassicCourseDefinition = byId(id) ?: all.first()
 }

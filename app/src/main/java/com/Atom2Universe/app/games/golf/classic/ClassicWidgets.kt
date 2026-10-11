@@ -19,7 +19,7 @@ import kotlin.math.*
 
 /** Tiny vector controls: no drawable or bitmap assets, with real accessible click targets. */
 internal class GolfIcon(context: Context, kind: Kind, description: String, action: () -> Unit) : View(context) {
-    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD, GRID, CAMERA, PLAY, PAUSE, SAVE, REPLAY }
+    enum class Kind { BACK, FLAG, HELP, LEFT, RIGHT, UP, DOWN, PERSON, SOUND, CARD, GRID, CAMERA, PLAY, PAUSE, SAVE, REPLAY, STAR, CENTER }
     var kind=kind; set(value) { if(field!=value){field=value;invalidate()} }
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val path = Path()
@@ -42,6 +42,22 @@ internal class GolfIcon(context: Context, kind: Kind, description: String, actio
             Kind.REPLAY -> {
                 c.drawArc(13f,13f,35f,35f,-90f,-300f,false,paint)
                 path.moveTo(25f,19f);path.lineTo(34f,18f);path.lineTo(35f,27f)
+            }
+            Kind.STAR -> {
+                for (i in 0 until 10) {
+                    val a = -PI.toFloat() / 2f + i * PI.toFloat() / 5f; val r = if (i % 2 == 0) 12f else 5f
+                    val x = 24f + r * cos(a); val y = 25f + r * sin(a)
+                    if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
+                }
+                path.close()
+                if (highlighted) { paint.style = Paint.Style.FILL; c.drawPath(path, paint); paint.style = Paint.Style.STROKE }
+            }
+            Kind.CENTER -> {
+                c.drawCircle(24f, 24f, 6f, paint)
+                for (q in 0 until 4) {
+                    val dx = cos(q * PI.toFloat() / 2f); val dy = sin(q * PI.toFloat() / 2f)
+                    c.drawLine(24f + dx * 11f, 24f + dy * 11f, 24f + dx * 16f, 24f + dy * 16f, paint)
+                }
             }
             Kind.PLAY -> { path.moveTo(19f,14f);path.lineTo(34f,24f);path.lineTo(19f,34f);path.close() }
             Kind.PAUSE -> { c.drawLine(19f,15f,19f,33f,paint);c.drawLine(29f,15f,29f,33f,paint) }

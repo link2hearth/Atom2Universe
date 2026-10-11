@@ -287,7 +287,7 @@ internal class ClassicSpinPad(context: Context, description: String, private val
     override fun onDraw(c: Canvas) {
         val cx = width / 2f; val cy = height / 2f
         val r = min(width, height) * .4f
-        val alpha = if (isEnabled) 255 else 90
+        val alpha = if (isEnabled) 215 else 90
         p.style = Paint.Style.FILL
         p.color = 0xFFF6F3E8.toInt(); p.alpha = alpha
         c.drawCircle(cx, cy, r, p)

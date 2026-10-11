@@ -28,6 +28,7 @@
     <string name="classic_putt_readout">%1$.1f m</string>
     <string name="classic_club_longer">Longer club</string>
     <string name="classic_club_shorter">Shorter club</string>
+    <string name="classic_spin_centre">Centre the contact point</string>
     <string name="classic_spin_pad">Contact point on the ball: low stops quickly, high runs further, the sides curve</string>
     <string name="classic_swing_left">Left</string>
     <string name="classic_swing_right">Right</string>
