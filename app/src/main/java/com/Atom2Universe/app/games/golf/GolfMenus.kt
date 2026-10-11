@@ -84,27 +84,35 @@ internal object GolfMenus {
         val model = GolferPreview(activity, look).apply { contentDescription = activity.getString(R.string.classic_golfer_preview) }
         val col = ui.column().apply { setPadding(ui.dp(20), ui.dp(8), ui.dp(20), ui.dp(12)) }
         col.addView(model, LinearLayout.LayoutParams(-1, ui.dp(220)))
-        fun choose(label: Int, choices: Int, selected: Int, change: (Int) -> Unit) {
-            val caption = ui.text(activity.getString(label), 14f, bold = true).apply { setPadding(0, ui.dp(12), 0, 0) }
-            val picker = com.Atom2Universe.app.util.ImmersiveSpinner(activity).apply {
-                id = View.generateViewId(); contentDescription = activity.getString(label)
-                adapter = ArrayAdapter(activity, com.Atom2Universe.app.R.layout.item_spinner_selected, activity.resources.getStringArray(choices)).apply {
-                    setDropDownViewResource(com.Atom2Universe.app.R.layout.item_spinner_dropdown)
-                }
-                setSelection(selected)
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        change(position); model.appearance = look
+        // Round buttons without words: the symbol, the number or the colour is the choice. The descriptions are for screen readers.
+        fun options(descriptions: Int, labels: List<String>, swatches: List<Int>?, selected: Int, change: (Int) -> Unit) {
+            val names = activity.resources.getStringArray(descriptions)
+            val row = ui.row().apply { gravity = Gravity.CENTER; setPadding(0, ui.dp(14), 0, 0) }
+            val buttons = ArrayList<TextView>()
+            fun paint(chosen: Int) = buttons.forEachIndexed { i, button ->
+                val on = i == chosen
+                button.background = if (swatches != null) ui.shape(swatches[i], 28f, if (on) ui.palette.accent else ui.palette.outline, if (on) 4 else 1)
+                    else ui.shape(if (on) ui.palette.accent else ui.palette.raised, 28f)
+                button.setTextColor(if (on) ui.palette.onAccent else ui.palette.text)
+                button.isSelected = on
+            }
+            names.indices.forEach { i ->
+                val button = ui.text(labels.getOrElse(i) { "" }, 24f, bold = true).apply {
+                    gravity = Gravity.CENTER; contentDescription = names[i]; isClickable = true; isFocusable = true
+                    setOnClickListener {
+                        change(i); paint(i); model.appearance = look
                         prefs.edit().putBoolean("golfer_female", look.female).putInt("golfer_outfit", look.outfit).putInt("golfer_skin", look.skin).apply()
                     }
                 }
+                buttons += button
+                row.addView(button, LinearLayout.LayoutParams(ui.dp(56), ui.dp(56)).apply { setMargins(ui.dp(6), 0, ui.dp(6), 0) })
             }
-            caption.labelFor = picker.id; col.addView(caption); col.addView(picker, LinearLayout.LayoutParams(-1, ui.dp(48)))
+            paint(selected)
+            col.addView(row)
         }
-        choose(R.string.classic_golfer_model, R.array.classic_golfer_models, if (look.female) 1 else 0) { look = look.copy(female = it == 1) }
-        choose(R.string.classic_golfer_outfit, R.array.classic_golfer_outfits, look.outfit) { look = look.copy(outfit = it) }
-        choose(R.string.classic_golfer_skin, R.array.classic_golfer_skins, look.skin) { look = look.copy(skin = it) }
+        options(R.array.classic_golfer_models, listOf("\u2642", "\u2640"), null, if (look.female) 1 else 0) { look = look.copy(female = it == 1) }
+        options(R.array.classic_golfer_outfits, listOf("1", "2", "3"), null, look.outfit) { look = look.copy(outfit = it) }
+        options(R.array.classic_golfer_skins, listOf("", "", ""), listOf(0xFFE8AD82.toInt(), 0xFFB97C55.toInt(), 0xFF754B38.toInt()), look.skin) { look = look.copy(skin = it) }
         val dialog = com.Atom2Universe.app.util.ImmersivePlatformAlertDialogBuilder(activity).setTitle(R.string.classic_golfer_title)
             .setView(ScrollView(activity).apply { addView(col) }).setPositiveButton(R.string.golf_done, null).create()
         var running = false
