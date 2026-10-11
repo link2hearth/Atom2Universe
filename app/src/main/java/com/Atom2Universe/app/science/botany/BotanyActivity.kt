@@ -367,7 +367,7 @@ class BotanyActivity : ThemedActivity() {
         fun updateLegend() {
             legend.removeAllViews()
             if(!plate.marks)return
-            val labels=when(plate.mode) {
+            val labels=if(p.look.study!=null)listOf(p.captions.getValue(plate.mode)) else when(plate.mode) {
                 PlantView.HABIT->listOf(p.captions.getValue(PlantView.HABIT),persistence(p),R.string.bot_height)
                 PlantView.LEAF->listOf(p.look.leaf.label,p.look.arrangement.label,p.look.margin.label)
                 PlantView.FLOWER->listOf(p.look.flower.label,p.look.color.label)

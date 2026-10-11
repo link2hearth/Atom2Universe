@@ -32,6 +32,7 @@ class PlantPainter(private val c: Canvas, private val species: PlantSpecies, pri
     }
 
     fun draw(mode: PlantView) {
+        l.study?.let { StudyPlantPainter(c,species,!compact).draw(mode); return }
         when (mode) {
             PlantView.HABIT -> habit()
             PlantView.LEAF -> leaves()

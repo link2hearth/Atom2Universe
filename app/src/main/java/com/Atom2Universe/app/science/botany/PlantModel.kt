@@ -48,7 +48,7 @@ enum class Habitat(val label: Int) {
     WOOD(R.string.bot_hab_wood), HEDGE(R.string.bot_hab_hedge), MEADOW(R.string.bot_hab_meadow),
     WET(R.string.bot_hab_wet), HEATH(R.string.bot_hab_heath), MOUNTAIN(R.string.bot_hab_mountain),
     DISTURBED(R.string.bot_hab_disturbed), PARK(R.string.bot_hab_park),
-    SAVANNA(R.string.bot_hab_savanna), DRY_SCRUB(R.string.bot_hab_dry_scrub)
+    SAVANNA(R.string.bot_hab_savanna), DRY_SCRUB(R.string.bot_hab_dry_scrub), CULTIVATED(R.string.bot_hab_cultivated)
 }
 enum class FlowerColor(val label: Int, val ink: Int) {
     WHITE(R.string.bot_color_white, 0xfff6f1df.toInt()), YELLOW(R.string.bot_color_yellow, 0xffe6be35.toInt()),
@@ -74,7 +74,8 @@ data class PlantLook(
     val thorny: Boolean = false, val seed: Int = 1,
     val leafDetail: LeafDetail = LeafDetail(), val architecture: TreeArchitecture? = null,
     val flowerDetail: FlowerDetail = FlowerDetail(), val fruitDetail: FruitDetail = FruitDetail(),
-    val herbDetail: HerbArchitecture? = null, val fineShrub: Boolean = false
+    val herbDetail: HerbArchitecture? = null, val fineShrub: Boolean = false,
+    val study: StudyForm? = null
 )
 
 data class PlantSpecies(

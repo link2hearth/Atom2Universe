@@ -1041,4 +1041,59 @@
     <string name="bot_life_source_tree">Open Tree · taxon and references</string>
     <string name="bot_life_source_notice">Wikidata · notice source</string>
     <string name="bot_life_source_kew">Search this taxon at Kew</string>
+    <string name="bot_collection_model_plants">Model plants and crops</string>
+    <string name="bot_collection_model_plants_desc">Detailed references linked to the living tree: a wild model herb, a tendril-bearing legume and three contrasting cereals. This thematic collection is not a native-range category.</string>
+    <string name="bot_hab_cultivated">Fields and vegetable gardens</string>
+    <string name="bot_model_crop_season">Annual crop. Flowering and grain or pod maturity depend on cultivar, sowing date and climate; a single worldwide monthly calendar would be misleading. Drawings show representative forms, not every cultivar. Insets are enlarged independently.</string>
+    <string name="bot_model_wild_season">Indicative outdoor season for temperate France; climate and germination date can shift it. An annual completing its life cycle, not a woody deciduous plant. Insets are enlarged independently.</string>
+    <string name="bot_group_model_cereals">Wheat, rice and maize</string>
+    <string name="bot_group_model_cereals_desc">Wheat bears a compact spike with several florets per spikelet. Rice bears a branched panicle with one fertile floret per spikelet and six stamens. Maize carries a terminal male tassel and separate axillary female ears. All three produce caryopses: the fruit wall adheres to the seed coat. The husks around rice grains are floral bracts, not the fruit wall.</string>
+    <string name="bot_source_umich">University of Michigan · CLIMBERS</string>
+    <string name="bot_source_efloras">eFloras · botanical floras</string>
+    <string name="bot_source_sernec">SERNEC · Flora of North America treatments</string>
+    <string name="bot_arabidopsis_name">Thale cress</string>
+    <string name="bot_arabidopsis_latin" translatable="false">Arabidopsis thaliana</string>
+    <string name="bot_arabidopsis_aliases">Mouse-ear cress · Arabette de Thalius</string>
+    <string name="bot_arabidopsis_description">Small annual with a basal rosette and slender, branching flowering stems. Basal leaves are petiolate, oval to spatulate and often toothed; the fewer stem leaves are narrower and alternate. Hairs may be simple or branched. Tiny white flowers have four petals in a cross, four sepals and six stamens, four longer and two shorter. The raceme elongates as fruits develop: narrow siliques open by two valves, leaving seeds on a central partition. A major research model; these characters alone do not identify every small white-flowered brassica.</string>
+    <string name="bot_arabidopsis_distribution">Native across much of temperate Eurasia and parts of Africa, and introduced elsewhere. Open, disturbed ground, field margins and dry sandy or stony soils; often completes its cycle before summer drought.</string>
+    <string name="bot_arabidopsis_habit">Basal rosette, slender flowering axes and ascending siliques below the younger flowers.</string>
+    <string name="bot_arabidopsis_leaf">Large basal leaf with a petiole and sparse teeth; a rosette and a narrower stem leaf are shown separately.</string>
+    <string name="bot_arabidopsis_flower">Four white petals and six stamens, including two shorter ones. The inset shows the elongating flowering raceme.</string>
+    <string name="bot_arabidopsis_fruit">Closed silique on the left; on the right, two separating valves expose the partition and numerous small seeds.</string>
+    <string name="bot_pisum_name">Garden pea</string>
+    <string name="bot_pisum_latin" translatable="false">Pisum sativum</string>
+    <string name="bot_pisum_aliases">Pea · Pois cultivé · Lathyrus oleraceus</string>
+    <string name="bot_pisum_description">Annual herb with weak stems supported by branched tendrils. Alternate leaves usually bear a few pairs of broad leaflets and end in tendrils; large leafy stipules flank the leaf base. Axillary flowers are white, pink or purple. The papilionaceous corolla has a standard, two wings and a keel of two petals; nine stamens are joined and one is free. The pod contains several seeds and can split along two sutures at maturity. Cultivars vary strongly in height, leaflets, pods and seed texture.</string>
+    <string name="bot_pisum_distribution">An ancient Old World crop now grown widely, especially in cool seasons on drained soils. The archive name Pisum sativum is retained for the living-tree link. Some current sources, including NC State, treat the same garden pea as Lathyrus oleraceus.</string>
+    <string name="bot_pisum_habit">Climbing annual: leaves and tendrils arise along a flexible stem; flowers and developing pods are axillary.</string>
+    <string name="bot_pisum_leaf">Two pairs of oval leaflets, a branched terminal tendril and two broad stipules at the base. Cultivars may have more tendrils and fewer leaflets.</string>
+    <string name="bot_pisum_flower">Papilionaceous flower: broad upper standard, two lateral wings and a lower keel. A smaller flower is shown separately.</string>
+    <string name="bot_pisum_fruit">Intact pod on the left; an opened pod on the right exposes seeds attached along one suture. Seed shape and colour vary by cultivar.</string>
+    <string name="bot_triticum_name">Bread wheat</string>
+    <string name="bot_triticum_latin" translatable="false">Triticum aestivum</string>
+    <string name="bot_triticum_aliases">Common wheat · Blé tendre · Froment</string>
+    <string name="bot_triticum_description">Annual cereal producing several tillers from the base. Jointed culms have mostly hollow internodes; alternate leaves have a sheath, a flat blade, a short membranous ligule and clasping auricles, often hairy. The terminal spike carries sessile spikelets on opposite sides of its axis. Each spikelet has several florets enclosed by glumes, lemmas and paleas. A fertile floret has three stamens and two feathery stigmas. Each grain is a caryopsis with a longitudinal ventral crease. Awn length varies greatly; the drawing represents a short-awned form.</string>
+    <string name="bot_triticum_distribution">Domesticated hexaploid wheat, widely cultivated in temperate regions and suitable uplands. Winter and spring forms differ in their seasonal requirements. Cultivation, soil conditions and cultivar strongly influence height and ear shape.</string>
+    <string name="bot_triticum_habit">Several jointed tillers, narrow sheathing leaves and upright terminal spikes.</string>
+    <string name="bot_triticum_leaf">Parallel-veined blade; enlarged junction on the right shows the sheath, short ligule and clasping hairy auricles.</string>
+    <string name="bot_triticum_flower">Main spike: alternating sessile spikelets with several florets. Enlarged open floret on the right: three stamens and two feathery stigmas.</string>
+    <string name="bot_triticum_fruit">Enlarged naked caryopsis with a ventral crease and an apical brush of hairs; a mature spike is shown at a smaller scale.</string>
+    <string name="bot_oryza_name">Asian rice</string>
+    <string name="bot_oryza_latin" translatable="false">Oryza sativa</string>
+    <string name="bot_oryza_aliases">Cultivated rice · Riz cultivé · Paddy</string>
+    <string name="bot_oryza_description">Tufted annual grass with erect, jointed culms and long, narrow leaves. The sheath–blade junction bears a conspicuous membranous ligule and small ciliate auricles. A branched terminal panicle often bends as grains mature. Each spikelet contains one fertile floret, with six stamens and two feathery stigmas, above two reduced sterile lemmas. The grain is a caryopsis enclosed by the hardened lemma and palea: together these bracts form the husk removed during dehusking. Awns and grain shape vary; an awnless form is illustrated.</string>
+    <string name="bot_oryza_distribution">Asian domesticated cereal grown widely in warm regions. Often cultivated in flooded fields, but upland systems also exist. It is distinct from African cultivated rice, Oryza glaberrima.</string>
+    <string name="bot_oryza_habit">Tuft of jointed culms, narrow leaves and loose branched panicles.</string>
+    <string name="bot_oryza_leaf">Long parallel-veined blade; inset shows the prominent pointed ligule and small hairy auricles at the top of the sheath.</string>
+    <string name="bot_oryza_flower">Branched panicle with stalked spikelets; open fertile floret on the right, with six anthers and two feathery stigmas.</string>
+    <string name="bot_oryza_fruit">Main subject: dehusked caryopsis. Right: a separate husked spikelet above a small mature panicle. Husk and grain are different structures.</string>
+    <string name="bot_zea_name">Maize</string>
+    <string name="bot_zea_latin" translatable="false">Zea mays</string>
+    <string name="bot_zea_aliases">Corn · Maïs</string>
+    <string name="bot_zea_description">Tall annual grass with a stout, pith-filled culm and broad alternate leaves arranged in two ranks. Each leaf has a clasping sheath, a short ligule and a prominent midrib. Male flowers form the terminal tassel; female flowers occupy separate ears in the leaf axils on the same plant. The silks are elongated styles and stigmas that receive airborne pollen. The mature ear bears rows of caryopses on a cob, surrounded by leafy husks. Grain colour, ear size and plant height vary greatly among cultivars.</string>
+    <string name="bot_zea_distribution">Crop domesticated in Mexico and now cultivated worldwide where seasonal warmth permits. The plate shows a conventional grain-maize form; it does not represent the full diversity of maize landraces or wild teosintes.</string>
+    <string name="bot_zea_habit">Thick jointed culm, broad leaves in two ranks, terminal male tassel, axillary female ear and basal brace roots.</string>
+    <string name="bot_zea_leaf">Broad blade with a pale midrib and parallel veins; inset shows its sheathing base and short membranous ligule.</string>
+    <string name="bot_zea_flower">Left: branched male tassel with hanging anthers. Right: female ear inside leafy husks, with a tuft of silks; these are not stamens.</string>
+    <string name="bot_zea_fruit">Main subject: mature ear with rows of grains and peeled-back husks. Right: enlarged individual caryopsis with its embryo region indicated.</string>
 </resources>

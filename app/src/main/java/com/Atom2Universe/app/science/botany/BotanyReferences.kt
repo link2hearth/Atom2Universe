@@ -3,6 +3,11 @@ package com.Atom2Universe.app.science.botany
 /** Stable taxon pages complement the general floras; adding a reference never changes the screens. */
 object BotanyReferences {
     val taxonPages: Map<String, String> = mapOf(
+        "arabidopsis" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:277970-1/general-information",
+        "pisum" to "https://climbers.lsa.umich.edu/pisum-sativum/",
+        "triticum" to "https://sernecportal.org/portal/taxa/index.php?taxon=Triticum+aestivum",
+        "oryza" to "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200025789",
+        "zea" to "https://plants.ces.ncsu.edu/plants/zea-mays/",
         "sequoiadendron" to "https://landscapeplants.oregonstate.edu/plants/sequoiadendron-giganteum",
         "sequoia" to "https://landscapeplants.oregonstate.edu/plants/sequoia-sempervirens",
         "pseudotsuga" to "https://www.srs.fs.usda.gov/pubs/misc/ag_654/volume_1/pseudotsuga/menziesii.htm",

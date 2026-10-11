@@ -73,5 +73,9 @@ class BotanyLifeIndexTest {
             assertEquals(entry.scientific,names.getValue(entry.illustratedId!!))
             assertEquals(entry,index.forIllustrated(entry.illustratedId))
         }
+        for(species in ModelPlantsCatalog.species) {
+            val entry=requireNotNull(index.forIllustrated(species.id)) { "Missing living-tree link: ${species.id}" }
+            assertEquals(species.id,index.forNode(entry.nodeId)?.illustratedId)
+        }
     }
 }

@@ -35,7 +35,7 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
 
     private fun describe() {
         contentDescription=context.getString(R.string.bot_plate_accessibility,context.getString(specimen.name),context.getString(mode.label),
-            context.getString(specimen.description))
+            context.getString(specimen.captions.getValue(mode)))
     }
     private fun clear(){ request?.cancel();request=null;requested=null;cached=null;failed=false;invalidate() }
     override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){ super.onSizeChanged(w,h,oldw,oldh);clear() }
@@ -97,7 +97,8 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
                 paint.color=0xff53604b.toInt();paint.strokeWidth=1.2f;paint.style=Paint.Style.STROKE
                 c.drawLine(25f,311f,95f,311f,paint);c.drawLine(25f,307f,25f,315f,paint);c.drawLine(95f,307f,95f,315f,paint)
                 paint.style=Paint.Style.FILL;paint.textSize=11f;paint.typeface=Typeface.create("sans-serif",Typeface.NORMAL)
-                val cmPerPixel=when(mode) {
+                val study=specimen.look.study
+                val cmPerPixel=if(study!=null) study.cmPerPixel(specimen,mode) else when(mode) {
                     PlantView.HABIT -> (specimen.heightMinCm+specimen.heightMaxCm)/2f/249f
                     PlantView.LEAF -> specimen.look.leafCm/(if(specimen.look.leaf==LeafShape.NEEDLE && specimen.look.needleCount>2)145f else 198f)
                     PlantView.FLOWER -> specimen.look.flowerCm/when(specimen.look.flower){FlowerShape.STAR,FlowerShape.CUP,FlowerShape.DAISY->124f;else->180f}
@@ -108,7 +109,7 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
                 val label=context.getString(if(cm>=100) R.string.bot_scale_m else R.string.bot_scale_cm,format.format(if(cm>=100) cm/100 else cm))
                 c.drawText(label,25f,329f,paint)
                 if(marks) {
-                    val anchors=when(mode) {
+                    val anchors=if(study!=null)listOf(study.anchor(mode)) else when(mode) {
                         PlantView.HABIT->listOf(150f to 40f,90f to 137f,155f to 263f)
                         PlantView.LEAF->listOf(166f to 99f,53f to 226f,183f to 213f)
                         PlantView.FLOWER->listOf(150f to 145f,173f to 127f)

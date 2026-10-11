@@ -15,6 +15,7 @@ import com.Atom2Universe.app.R
  */
 object BotanyCatalog {
     val collections = listOf(
+        PlantCollection("model_plants", R.string.bot_collection_model_plants, R.string.bot_collection_model_plants_desc),
         PlantCollection("north_america", R.string.bot_collection_north_america, R.string.bot_collection_north_america_desc),
         PlantCollection("europe", R.string.bot_collection_europe, R.string.bot_collection_europe_desc),
         PlantCollection("africa_dry", R.string.bot_collection_africa_dry, R.string.bot_collection_africa_dry_desc),
@@ -62,11 +63,12 @@ object BotanyCatalog {
         PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
         PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
     val groups = listOf(
+        PlantGroup("model_cereals", R.string.bot_group_model_cereals, listOf("triticum","oryza","zea"), R.string.bot_group_model_cereals_desc),
         PlantGroup("redwoods", R.string.bot_group_redwoods, listOf("sequoiadendron","sequoia","pseudotsuga"), R.string.bot_group_redwoods_desc),
         PlantGroup("prairie_heads", R.string.bot_group_prairie_heads, listOf("echinacea","rudbeckia","helianthus"), R.string.bot_group_prairie_heads_desc),
         PlantGroup("savanna_thorns", R.string.bot_group_savanna_thorns, listOf("vachellia_tortilis","faidherbia","balanites"), R.string.bot_group_savanna_thorns_desc),
@@ -99,6 +101,9 @@ object BotanyCatalog {
         PlantGroup("heads", R.string.bot_group_heads, listOf("leucanthemum","matricaria","cichorium"), R.string.bot_group_heads_desc),
     )
     val sources = listOf(
+        BotanySource("umich", R.string.bot_source_umich, "https://climbers.lsa.umich.edu/"),
+        BotanySource("efloras", R.string.bot_source_efloras, "https://www.efloras.org/"),
+        BotanySource("sernec", R.string.bot_source_sernec, "https://sernecportal.org/"),
         BotanySource("ncsu", R.string.bot_source_ncsu, "https://plants.ces.ncsu.edu/"),
         BotanySource("osu", R.string.bot_source_osu, "https://landscapeplants.oregonstate.edu/"),
         BotanySource("usfs", R.string.bot_source_usfs, "https://research.fs.usda.gov/silvics/"),

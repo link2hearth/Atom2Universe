@@ -108,7 +108,7 @@ class BotanyCatalogTest {
 
     @Test fun leLotDeTerrainExposeSesNouveauxCaracteresAuxFiltres() {
         val brassicas=BotanyCatalog.species.filter{PlantQuery(families=setOf("Brassicaceae")).matches(it,"")}
-        assertEquals(setOf("cardamine","capsella"),brassicas.map{it.id}.toSet())
+        assertEquals(setOf("cardamine","capsella","arabidopsis"),brassicas.map{it.id}.toSet())
         assertEquals(listOf("capsella"),brassicas.filter{PlantQuery(fruits=setOf(FruitShape.SILICLE)).matches(it,"")}.map{it.id})
         assertTrue(PlantQuery(flowers=setOf(FlowerShape.LIGULATE),colors=setOf(FlowerColor.BLUE)).matches(BotanyCatalog.get("cichorium")!!,""))
         assertTrue(PlantQuery(fruits=setOf(FruitShape.BERRY),evergreen=false).matches(BotanyCatalog.get("vaccinium")!!,""))
@@ -118,6 +118,18 @@ class BotanyCatalogTest {
         val searchable=fr.getValue("bot_stellaria_name")+" "+fr.getValue("bot_stellaria_aliases")
         assertTrue(PlantQuery(text="Stellaria holostea").matches(BotanyCatalog.get("stellaria")!!,searchable))
     }
+    @Test fun premierLotDeReferencesEtFiltresBotaniques() {
+        val plants=BotanyCatalog.species.filter{PlantQuery(collections=setOf("model_plants")).matches(it,"")}
+        assertEquals(setOf("arabidopsis","pisum","triticum","oryza","zea"),plants.map{it.id}.toSet())
+        assertTrue(plants.all{it.look.study!=null && it.id in BotanyReferences.taxonPages})
+        val crops=plants.filter{PlantQuery(habitats=setOf(Habitat.CULTIVATED)).matches(it,"")}
+        assertEquals(4,crops.size)
+        assertTrue(crops.all{it.flowering.isEmpty() && it.fruiting.isEmpty() && it.phenologyNote!=0})
+        assertTrue(PlantQuery(fruits=setOf(FruitShape.SILIQUE),arrangements=setOf(LeafArrangement.ROSETTE)).matches(BotanyCatalog.get("arabidopsis")!!,""))
+        assertTrue(PlantQuery(colors=setOf(FlowerColor.PURPLE),leaves=setOf(LeafShape.PINNATE)).matches(BotanyCatalog.get("pisum")!!,""))
+        assertEquals(3,plants.count{PlantQuery(fruits=setOf(FruitShape.GRAIN)).matches(it,"")})
+    }
+
     @Test fun lotNordAmericainEtCaracteresRetrouvables() {
         val plants=BotanyCatalog.species.filter{PlantQuery(collections=setOf("north_america")).matches(it,"")}
         assertEquals(15,plants.size)

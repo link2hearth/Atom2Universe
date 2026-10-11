@@ -79,9 +79,9 @@ class BotanyRenderingTest {
 
     @Test fun lesProfilsDOrganesSontReutilisablesSansIdentifiantConnu() {
         for(id in listOf("papaver","viola","digitalis","corylus","pinus","plantago_major",
-            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + (AfricanDrylandsCatalog.species + NorthAmericanCatalog.species).map{it.id}) {
+            "ulmus_minor","cardamine","capsella","cichorium","silene_dioica","malva","veronica","vaccinium","geranium","genista") + (AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species).map{it.id}) {
             val species=BotanyCatalog.get(id)!!
-            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species+NorthAmericanCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
+            val views=if((FieldBotanyCatalog.species+AfricanDrylandsCatalog.species+NorthAmericanCatalog.species+ModelPlantsCatalog.species).any{it.id==id})PlantView.entries else listOf(PlantView.FLOWER,PlantView.FRUIT)
             for(view in views) {
                 val original=render(id,view)
                 val future=Bitmap.createBitmap(340,370,Bitmap.Config.ARGB_8888)
@@ -91,5 +91,21 @@ class BotanyRenderingTest {
                 original.recycle();future.recycle()
             }
         }
+    }
+
+    @Test fun premierLotDeReferencesIllustrees() {
+        val sheet=Bitmap.createBitmap(340*4,370*5,Bitmap.Config.ARGB_8888)
+        val canvas=Canvas(sheet);canvas.drawColor(0xfff4f0e3.toInt())
+        val text=Paint(Paint.ANTI_ALIAS_FLAG).apply{color=Color.DKGRAY;textSize=15f}
+        for((row,p) in ModelPlantsCatalog.species.withIndex())for((col,view) in PlantView.entries.withIndex()) {
+            val first=render(p.id,view);val second=render(p.id,view)
+            assertArrayEquals("${p.id}/$view",pixels(first),pixels(second))
+            canvas.drawBitmap(first,col*340f,row*370f,null)
+            canvas.drawText("${p.id} / $view",col*340f+20,row*370f+355,text)
+            first.recycle();second.recycle()
+        }
+        val file=File("build/reports/botany-rendering/references-lot-1.png")
+        file.parentFile!!.mkdirs();file.outputStream().use{sheet.compress(Bitmap.CompressFormat.PNG,100,it)}
+        sheet.recycle()
     }
 }
