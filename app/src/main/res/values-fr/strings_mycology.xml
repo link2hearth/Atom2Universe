@@ -182,6 +182,7 @@
         <item>Panthère : bulbe à bord net, surmonté de bracelets ; verrues blanc pur sur brun foncé, marge striée.</item>
         <item>Tue-mouches : chapeau rouge, lames et pied blancs. Lavée par la pluie, elle ressemble à l’oronge, dont les lames et le pied sont jaunes.</item>
         <item>Amanite jonquille : jaune, à plaques blanches, anneau fragile et petit bourrelet de volve ; toxique, avec les mêmes symptômes que l’amanite panthère et l’amanite tue-mouches (Wikipédia).</item>
+        <item>Amanite royale : grand chapeau brun à verrues ocre et bulbe verruqueux ; toxique comme l’amanite tue-mouches (Wikipédia, en), dont elle a la forme sans la couleur.</item>
     </string-array>
     <string name="myco_g_oronge_title">Oronge, ou pas ?</string>
     <string name="myco_g_oronge_evidence">ANSES 2022</string>
@@ -199,6 +200,7 @@
         <item>Saint-Georges : sort au printemps. Entolome : surtout en automne, mais parfois dès l’été.</item>
         <item>L’inocybe donne des sueurs et de la salivation ; l’entolome, des vomissements et une diarrhée importante.</item>
         <item>Inocybe à lames couleur de terre : chapeau blanc de lait, soyeux, mamelonné, lames qui grisent, odeur spermatique, sporée brun tabac. Wikipédia (en) le compare au tricholome de la Saint-Georges.</item>
+        <item>Inosperma maculatum : chapeau brun fibreux et conique, lames serrées grisâtres puis brun olive, forte odeur fruitée ; toxique, avec de la muscarine comme les autres inocybes.</item>
     </string-array>
     <string name="myco_g_fairyring_title">Faux mousseron, ou pas ?</string>
     <string name="myco_g_fairyring_evidence">ANSES 2022, centre antipoison belge, Wikipédia</string>
@@ -219,12 +221,13 @@
         <item>Tricholome agrégé : pousse en touffes aux pieds soudés à la base ; les deux pages Wikipédia avertissent qu’on peut le prendre pour un entolome, et la française conseille de s’abstenir dans le doute.</item>
     </string-array>
     <string name="myco_g_inkcap_title">Coprin chevelu, ou coprin noir d’encre ?</string>
-    <string name="myco_g_inkcap_evidence">Centre antipoisons belge</string>
+    <string name="myco_g_inkcap_evidence">Centre antipoisons belge, Wikipédia</string>
     <string-array name="myco_g_inkcap_points">
         <item>Chevelu : chapeau cylindrique, blanc, couvert de mèches retroussées. Noir d’encre : chapeau ovoïde, gris, plissé.</item>
         <item>Les deux se liquéfient en encre noire, à partir des lames.</item>
         <item>Noir d’encre : jamais d’alcool pendant le repas ni dans les 72 heures qui suivent.</item>
         <item>Chevelu : sans danger avec de l’alcool, mais à manger jeune et vite, blanc à la coupe.</item>
+        <item>Coprin micacé : fauve, à granules brillants, en touffes sur le bois, lames qui se liquéfient ; Wikipédia (en) le sépare du coprin noir d’encre, plus grand, gris et sans granules. La DGfM les liste tous deux avec l’alcool.</item>
     </string-array>
     <string name="myco_g_woodtuft_title">Pholiote changeante, ou galère marginée ?</string>
     <string name="myco_g_woodtuft_evidence">Centre antipoisons belge, Wikipédia</string>
@@ -2146,5 +2149,82 @@
         <item>Ampulloclitocybe clavipes : un pied nettement bulbeux en massue, des lames très décurrentes, un chapeau gris brun, souvent olivâtre. Clitocybe nébuleux : plus sombre dans l’ensemble (Wikipédia, en).</item>
         <item>Ampulloclitocybe clavipes est inoffensif sans alcool et donne une réaction de rougeur avec ; le clitocybe nébuleux est jugé de façon inégale, la DGfM notant un soupçon de cancérogénicité ou de mutagénicité.</item>
         <item>Aucune des deux fiches ne dit de la manger.</item>
+    </string-array>
+    <string name="myco_castanea_name">Lépiote châtain</string>
+    <string name="myco_castanea_alt">Chestnut dapperling</string>
+    <string-array name="myco_castanea_traits">
+        <item>Chapeau jusqu’à 3 cm, largement en cloche à plan, blanc à écailles brun rouge foncé</item>
+        <item>Lames blanchâtres</item>
+        <item>Pied jusqu’à 8 cm, typiquement brun châtain, avec un anneau peu net</item>
+        <item>Chair blanchâtre, saveur douce</item>
+        <item>Bois de conifères et de feuillus, isolée ou en petits groupes</item>
+    </string-array>
+    <string name="myco_castanea_note">Mortelle : les sources divergent sur la cause. Wikipédia (en) dit qu’elle contient des amatoxines, potentiellement mortelles pour le foie ; la DGfM la range sous le syndrome de l’amanite phalloïde mais note que des travaux plus récents n’y trouvent pas d’amatoxines ; Wikipédia (fr) la dit moyennement toxique et déconseille de la manger. Le statut le plus prudent est retenu. La DGfM prévient que les petites lépiotes à pigments brunâtres et rouges sont soupçonnées de contenir des amatoxines ; le centre antipoison belge déconseille toute lépiote de moins de 10 cm. La page Wikipédia française est une ébauche : la description vient de Wikipédia (en).</string>
+    <string name="myco_maculatum_name">Inosperma maculatum</string>
+    <string name="myco_maculatum_alt">Frosty fibrecap, brown inocybe</string>
+    <string-array name="myco_maculatum_traits">
+        <item>Chapeau jusqu’à 8 cm, conique ou en cloche puis à large mamelon, fibreux, brun châtain et plus pâle à la marge, qui est souvent fendue ; restes blancs du voile au centre quand il est jeune</item>
+        <item>Lames serrées, blanc grisâtre puis brun olive, à arête blanche finement dentée</item>
+        <item>Pied jusqu’à 8 cm, crème puis plus brun, souvent plus épais à la base, plein puis creux</item>
+        <item>Chair blanche, saveur douce, forte odeur piquante et fruitée</item>
+        <item>Bois de feuillus ou mixtes, au pied des arbres, surtout du hêtre, sur sol calcaire · sporée brun tabac</item>
+    </string-array>
+    <string name="myco_maculatum_note">Toxique : muscarine (la DGfM et Wikipédia, en). Symptômes : salivation, larmes, urines, diarrhée, troubles digestifs et vomissements ; la mort par insuffisance respiratoire est possible (Wikipédia, en). Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM. Wikipédia (en) cite parmi ses sosies d’autres inocybes (Inocybe lacera, I. lanatodisca, I. fastigiata).</string>
+    <string name="myco_rosea_name">Mycène rose</string>
+    <string name="myco_rosea_alt">Rosy bonnet</string>
+    <string-array name="myco_rosea_traits">
+        <item>Chapeau de 2 à 6 cm, rose vif à rose pâle, avec un petit mamelon et une marge striée</item>
+        <item>Lames adnées ou échancrées, rose pâle à blanches</item>
+        <item>Pied très cassant, blanc teinté de rose</item>
+        <item>Odeur de radis</item>
+        <item>Lisières de bois de feuillus</item>
+    </string-array>
+    <string name="myco_rosea_note">Toxique : muscarine (la DGfM et Wikipédia, fr), avec transpiration, nausées et vomissements. Wikipédia (en) la liste comme vénéneuse sans nommer de toxine. Elle est proche de Mycena sororia, qu’on ne sépare qu’au microscope (Wikipédia, en).</string>
+    <string name="myco_micaceus_name">Coprin micacé</string>
+    <string name="myco_micaceus_alt">Mica cap, glistening inky cap</string>
+    <string-array name="myco_micaceus_traits">
+        <item>Chapeau de 3 à 6 cm, ovoïde puis en cloche, fauve ou jaune ocre, plus foncé au centre, avec des granules brillants comme du mica quand il est jeune</item>
+        <item>Lames serrées, blanches puis brunâtres puis noires, qui se liquéfient par le bord</item>
+        <item>Pied de 5 à 10 cm, blanchâtre, creux et fragile, sans anneau</item>
+        <item>Chair mince et blanche ; ni odeur ni saveur marquées</item>
+        <item>En touffes sur les souches et le bois pourri · printemps à début d’hiver</item>
+    </string-array>
+    <string name="myco_micaceus_note">Non recommandé avec de l’alcool : la DGfM le liste pour le syndrome de la coprine en notant seulement de faibles quantités ; Wikipédia (fr) dit que des récoltes européennes peuvent donner une légère excitation avec l’alcool, moindre que le coprin noir d’encre ; Wikipédia (en) dit qu’il n’a pas de coprine. Les deux pages le disent comestible jeune, avant la liquéfaction des lames, mais de peu d’intérêt. Le statut le plus prudent est retenu. Wikipédia (en) déconseille les récoltes en bord de route (métaux lourds) et le sépare du coprin noir d’encre, plus grand, gris et sans granules brillants.</string>
+    <string name="myco_regalis_name">Amanite royale</string>
+    <string name="myco_regalis_alt">Royal fly agaric, king fly agaric</string>
+    <string-array name="myco_regalis_traits">
+        <item>Chapeau de 10 à 25 cm, brun jaunâtre, à verrues ocre disposées en anneaux ; la peau se détache presque jusqu’au centre</item>
+        <item>Lames serrées, libres, blanches à reflet crème</item>
+        <item>Pied de 10 à 20 cm, avec un anneau et un bulbe cerclé de petites verrues jaune ocre</item>
+        <item>Chair blanchâtre, jaune doré sous la peau du chapeau ; ni odeur ni saveur marquées</item>
+        <item>Forêts de montagne sous bouleaux, pins et épicéas ; rare · Scandinavie et Europe de l’Est</item>
+    </string-array>
+    <string name="myco_regalis_note">Toxique : mêmes toxines que l’amanite tue-mouches (acide iboténique et muscimol), que la cuisson n’enlève pas ; la DGfM la liste pour le syndrome de l’amanite panthère. Wikipédia (en) rapporte trois personnes en Finlande qui l’avaient mangée pour une coulemelle et ont eu des symptômes digestifs, nerveux et cholinergiques, guéries en 4 à 24 heures. Wikipédia (fr) dit seulement qu’elle ressemble à l’amanite tue-mouches sans sa couleur et qu’elle est aussi toxique. Wikipédia (en) la sépare de l’amanite rougissante (rosit, chair blanche sous la peau) et de l’amanite panthère (chair blanche sous la peau, bulbe en coupe).</string>
+    <string name="myco_asperum_name">Echinoderma asperum</string>
+    <string name="myco_asperum_alt">Freckled dapperling, Lepiota aspera</string>
+    <string-array name="myco_asperum_traits">
+        <item>Chapeau jusqu’à 10 cm, brun rougeâtre au centre, se dissociant en écailles pyramidales dressées sur fond plus pâle</item>
+        <item>Lames blanches, libres, serrées, avec une tendance à fourcher</item>
+        <item>Pied d’environ 10 cm, plus pâle, avec de rares écailles brunes sous un grand anneau cotonneux</item>
+        <item>Chair blanche, dite à odeur de caoutchouc</item>
+        <item>Bois de feuillus, parcs et jardins à paillis de copeaux · automne</item>
+    </string-array>
+    <string name="myco_asperum_note">Toxique : la DGfM la liste pour un syndrome de type coprin avec l’alcool, dû à des inhibiteurs inconnus de l’enzyme de dégradation de l’alcool (pas de coprine) ; Wikipédia (en) la dit non recommandée, liée à une intolérance à l’alcool et peut-être vénéneuse, et rappelle qu’elle ressemble à des amanites, dont certaines mortelles. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_l_white_dark_red_scales_cap">Chapeau blanc, écailles brun rouge foncé</string>
+    <string name="myco_l_chestnut_stem">Pied brun châtain</string>
+    <string name="myco_l_conical_brown_fibrous_cap">Chapeau conique, brun fibreux</string>
+    <string name="myco_l_close_olive_grey_gills">Lames serrées, grisâtres puis brun olive</string>
+    <string name="myco_l_cream_stem_thicker_base">Pied crème, plus épais à la base</string>
+    <string name="myco_l_pink_umbonate_striate_cap">Chapeau rose, mamelonné, marge striée</string>
+    <string name="myco_l_pale_pink_gills">Lames rose pâle</string>
+    <string name="myco_l_tawny_mica_cap">Chapeau fauve, granules brillants</string>
+    <string name="myco_l_brown_ochre_warty_cap">Chapeau brun jaunâtre, verrues ocre</string>
+    <string name="myco_l_pyramid_scaly_cap">Écailles pyramidales dressées</string>
+    <string name="myco_g_smalllepiota_title">Petite lépiote : laquelle ?</string>
+    <string name="myco_g_smalllepiota_evidence">DGfM, centre antipoison belge</string>
+    <string-array name="myco_g_smalllepiota_points">
+        <item>La lépiote brun-incarnat, la lépiote de Josserand et la lépiote châtain sont toutes de petites lépiotes à écailles ou pigments brunâtres ou rouges ; la DGfM les liste toutes trois pour le syndrome de l’amanite phalloïde.</item>
+        <item>Lépiote châtain : jusqu’à 3 cm, chapeau blanc à écailles brun rouge foncé, pied brun châtain, anneau peu net (Wikipédia, en).</item>
+        <item>La DGfM soupçonne toute petite lépiote à pigments brunâtres et rouges de contenir des amatoxines ; le centre antipoison belge déconseille toute lépiote de moins de 10 cm.</item>
     </string-array>
 </resources>

@@ -104,7 +104,7 @@ class FungusCriteriaTest {
         // « sur le bois » = les touffes en bouquet sur un tronc, et les étagères
         assertEquals(
             setOf("olearius", "galerina", "mutabilis", "fasciculare", "mellea", "aegerita", "flammulina", "capnoides", "gymnopilus",
-                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus", "platyphylla", "fusipes"),
+                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus", "platyphylla", "fusipes", "micaceus"),
             ids("m_wood")
         )
         assertTrue(FungusCriteria.matches(look("flammulina"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_white", "cap_ORANGE", "u_gills", "w_medium")))
@@ -217,6 +217,20 @@ class FungusCriteriaTest {
         assertTrue(FungusCatalog.groups.first { it.id == "amanita" }.members.contains("gemmata"))
         assertTrue(FungusCatalog.groups.first { it.id == "greenforms" }.members.contains("porphyria"))
         assertTrue(FungusCatalog.groups.first { it.id == "woodtuft" }.members.contains("fusipes"))
+    }
+
+    @Test
+    fun leLotTreizeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("castanea"), setOf("c_scaly", "s_ring", "w_small", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("maculatum"), setOf("cap_BROWN", "s_no_ring", "sp_brown")))
+        assertTrue(FungusCriteria.matches(look("rosea"), setOf("u_gills", "s_no_ring", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("micaceus"), setOf("u_gills", "s_no_ring", "m_wood")))
+        assertTrue(FungusCriteria.matches(look("regalis"), setOf("s_ring", "u_gills", "sp_white")))
+        assertTrue(FungusCriteria.matches(look("asperum"), setOf("c_scaly", "s_ring", "u_gills")))
+        assertEquals(setOf("brunneoincarnata", "subincarnata", "castanea"), FungusCatalog.groups.first { it.id == "smalllepiota" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "inkcap" }.members.contains("micaceus"))
+        assertTrue(FungusCatalog.groups.first { it.id == "stgeorge" }.members.contains("maculatum"))
+        assertTrue(FungusCatalog.groups.first { it.id == "amanita" }.members.contains("regalis"))
     }
 
     @Test

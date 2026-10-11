@@ -48,7 +48,7 @@
       "id": "be", "kind": "official",
       "citation": "Centre Antipoisons (Belgique). Champignons : brochure d’information.",
       "url": "https://www.poisoncentre.be/app/uploads/2026/02/Brochure-champignons-FR.pdf",
-      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum", "hebeloma", "emetica", "formosa", "rubellus", "verna", "subincarnata", "geophylla", "vesca"]
+      "species": ["phalloides", "brunneoincarnata", "rubescens", "morchella", "virosa", "sinuatum", "nebularis", "erubescens", "rivulosa", "atramentaria", "galerina", "mutabilis", "fasciculare", "oreades", "prunulus", "torminosus", "orellanus", "virescens", "columbetta", "egg", "pardinum", "perlatum", "hebeloma", "emetica", "formosa", "rubellus", "verna", "subincarnata", "geophylla", "vesca", "castanea"]
     },
     {
       "id": "toxinfo", "kind": "official",
@@ -156,7 +156,7 @@
       "id": "dgfm2026tox", "kind": "society",
       "citation": "Deutsche Gesellschaft für Mykologie (DGfM), Fachausschuss Pilzverwertung und Toxikologie (2026). Liste der Giftpilze mit Syndromen, sortiert nach Taxa, Stand 1. Mai 2026.",
       "url": "https://www.dgfm-ev.de/files/dokumente/PSV/2026-06-01_giftpilze-nach-taxa.pdf",
-      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima", "turpis", "rubellus", "verna", "subincarnata", "geophylla", "sulphureum", "citrina", "nobilis", "gemmata", "porphyria", "moelleri", "clavipes", "helvus", "platyphylla", "fusipes", "conica"]
+      "species": ["phalloides", "virosa", "muscaria", "pantherina", "brunneoincarnata", "xanthodermus", "gyromitra", "atramentaria", "paxillus", "equestre", "orellanus", "olearius", "galerina", "fasciculare", "erubescens", "rivulosa", "satanas", "sinuatum", "pardinum", "citrinum", "morchella", "nebularis", "calopus", "brunneum", "hebeloma", "pura", "emetica", "gymnopilus", "pleurocybella", "formosa", "proxima", "turpis", "rubellus", "verna", "subincarnata", "geophylla", "sulphureum", "citrina", "nobilis", "gemmata", "porphyria", "moelleri", "clavipes", "helvus", "platyphylla", "fusipes", "conica", "castanea", "maculatum", "rosea", "micaceus", "regalis", "asperum"]
     },
     {
       "id": "mdc-velvetfoot", "kind": "official",
@@ -379,6 +379,16 @@
     { "id": "wp-fr-platyphylla", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Megacollybia platyphylla", "url": "https://fr.wikipedia.org/wiki/Megacollybia_platyphylla", "species": ["platyphylla"] },
     { "id": "wp-fr-fusipes", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Gymnopus fusipes", "url": "https://fr.wikipedia.org/wiki/Gymnopus_fusipes", "species": ["fusipes"] },
     { "id": "wp-en-fusipes", "kind": "encyclopedia", "citation": "Wikipedia (en): Gymnopus fusipes", "url": "https://en.wikipedia.org/wiki/Gymnopus_fusipes", "species": ["fusipes"] },
-    { "id": "wp-en-conica", "kind": "encyclopedia", "citation": "Wikipedia (en): Hygrocybe conica", "url": "https://en.wikipedia.org/wiki/Hygrocybe_conica", "species": ["conica"] }
+    { "id": "wp-en-conica", "kind": "encyclopedia", "citation": "Wikipedia (en): Hygrocybe conica", "url": "https://en.wikipedia.org/wiki/Hygrocybe_conica", "species": ["conica"] },
+    { "id": "wp-fr-castanea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Lepiota castanea", "url": "https://fr.wikipedia.org/wiki/Lepiota_castanea", "species": ["castanea"] },
+    { "id": "wp-en-castanea", "kind": "encyclopedia", "citation": "Wikipedia (en): Lepiota castanea", "url": "https://en.wikipedia.org/wiki/Lepiota_castanea", "species": ["castanea"] },
+    { "id": "wp-en-maculatum", "kind": "encyclopedia", "citation": "Wikipedia (en): Inosperma maculatum", "url": "https://en.wikipedia.org/wiki/Inosperma_maculatum", "species": ["maculatum"] },
+    { "id": "wp-fr-rosea", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Mycena rosea", "url": "https://fr.wikipedia.org/wiki/Mycena_rosea", "species": ["rosea"] },
+    { "id": "wp-en-rosea", "kind": "encyclopedia", "citation": "Wikipedia (en): Mycena rosea", "url": "https://en.wikipedia.org/wiki/Mycena_rosea", "species": ["rosea"] },
+    { "id": "wp-fr-micaceus", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Coprinellus micaceus", "url": "https://fr.wikipedia.org/wiki/Coprinellus_micaceus", "species": ["micaceus"] },
+    { "id": "wp-en-micaceus", "kind": "encyclopedia", "citation": "Wikipedia (en): Coprinellus micaceus", "url": "https://en.wikipedia.org/wiki/Coprinellus_micaceus", "species": ["micaceus"] },
+    { "id": "wp-fr-regalis", "kind": "encyclopedia", "citation": "Wikipédia (fr) : Amanita regalis", "url": "https://fr.wikipedia.org/wiki/Amanita_regalis", "species": ["regalis"] },
+    { "id": "wp-en-regalis", "kind": "encyclopedia", "citation": "Wikipedia (en): Amanita regalis", "url": "https://en.wikipedia.org/wiki/Amanita_regalis", "species": ["regalis"] },
+    { "id": "wp-en-asperum", "kind": "encyclopedia", "citation": "Wikipedia (en): Echinoderma asperum", "url": "https://en.wikipedia.org/wiki/Echinoderma_asperum", "species": ["asperum"] }
   ]
 }

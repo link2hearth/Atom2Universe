@@ -187,6 +187,7 @@
         <item>Panther cap: sharp-edged bulb topped with rings; pure white warts on dark brown, striate margin.</item>
         <item>Fly agaric: red cap, white gills and stem. Washed by rain, it resembles the Caesar’s mushroom, whose gills and stem are yellow.</item>
         <item>Jonquil amanita: yellow, with white plaques, a fragile ring and a small volva rim; toxic, with the same symptoms as the panther cap and the fly agaric (Wikipedia).</item>
+        <item>Royal fly agaric: big brown cap with ochre warts and a warty bulb; toxic like the fly agaric (Wikipedia, en), which it resembles without its colour.</item>
     </string-array>
     <string name="myco_g_oronge_title">Caesar’s mushroom, or not?</string>
     <string name="myco_g_oronge_evidence">ANSES 2022</string>
@@ -204,6 +205,7 @@
         <item>St George’s: appears in spring. Pinkgill: mostly autumn, but sometimes from summer.</item>
         <item>The inocybe causes sweating and salivation; the pinkgill, vomiting and heavy diarrhoea.</item>
         <item>White inocybe: milk-white, silky cap with a boss, gills that grey, spermatic smell, tobacco-brown spores. Wikipedia (en) compares it with St George’s mushroom.</item>
+        <item>Frosty fibrecap: conical fibrous brown cap, crowded gills greyish then olive-brown, strong fruity smell; toxic, with muscarine like the other inocybes.</item>
     </string-array>
     <string name="myco_g_fairyring_title">Fairy ring champignon, or not?</string>
     <string name="myco_g_fairyring_evidence">ANSES 2022, Belgian poison centre, Wikipedia</string>
@@ -224,12 +226,13 @@
         <item>Clustered domecap: grows in clumps with stems fused at the base; both Wikipedia pages warn that it can be mistaken for an entoloma, and the French one advises abstaining in doubt.</item>
     </string-array>
     <string name="myco_g_inkcap_title">Shaggy ink cap, or common ink cap?</string>
-    <string name="myco_g_inkcap_evidence">Belgian poison centre</string>
+    <string name="myco_g_inkcap_evidence">Belgian poison centre, Wikipedia</string>
     <string-array name="myco_g_inkcap_points">
         <item>Shaggy: cylindrical white cap covered in upturned fibres. Common: egg-shaped, grey, pleated cap.</item>
         <item>Both melt into black ink, starting from the gills.</item>
         <item>Common ink cap: no alcohol during the meal or in the 72 hours after.</item>
         <item>Shaggy: safe with alcohol, but eat it young and fast, white when cut.</item>
+        <item>Mica cap: tawny with shiny granules, in clusters on wood, gills dissolving; Wikipedia (en) separates it from the common ink cap, which is larger, grey and without granules. The DGfM lists both with alcohol.</item>
     </string-array>
     <string name="myco_g_woodtuft_title">Sheathed woodtuft, or funeral bell?</string>
     <string name="myco_g_woodtuft_evidence">Belgian poison centre, Wikipedia</string>
@@ -2268,5 +2271,88 @@
         <item>Club foot: a markedly bulbous, club-shaped stem, deeply running gills, a grey-brown cap, often olive-tinged. Clouded agaric: darker overall (Wikipedia, en).</item>
         <item>The club foot is harmless without alcohol and causes a flushing reaction with it; the clouded agaric is judged inconsistently, the DGfM noting a suspicion of carcinogenicity or mutagenicity.</item>
         <item>Neither has a card that says to eat it.</item>
+    </string-array>
+    <string name="myco_castanea_name">Chestnut dapperling</string>
+    <string name="myco_castanea_alt">Lépiote châtain</string>
+    <string name="myco_castanea_latin" translatable="false">Lepiota castanea</string>
+    <string-array name="myco_castanea_traits">
+        <item>Cap up to 3 cm, broadly bell-shaped to flat, white with dark red-brown scales</item>
+        <item>Gills whitish</item>
+        <item>Stem up to 8 cm, typically chestnut-brown, with an indistinct ring</item>
+        <item>Whitish flesh, mild taste</item>
+        <item>Coniferous and deciduous woods, alone or in small groups</item>
+    </string-array>
+    <string name="myco_castanea_note">Deadly: the sources disagree on the cause. Wikipedia (en) says it contains amatoxins, potentially deadly for the liver; the DGfM lists it under the death-cap syndrome but notes that more recent findings show no amatoxins; Wikipedia (fr) calls it moderately toxic and advises against eating it. The most prudent status is kept. The DGfM warns that small lepiotas with brownish and red pigments are suspected of containing amatoxins; the Belgian poison centre advises against any lepiota under 10 cm. The French Wikipedia page is a stub: the description comes from Wikipedia (en).</string>
+    <string name="myco_maculatum_name">Frosty fibrecap</string>
+    <string name="myco_maculatum_alt">Brown inocybe</string>
+    <string name="myco_maculatum_latin" translatable="false">Inosperma maculatum</string>
+    <string-array name="myco_maculatum_traits">
+        <item>Cap up to 8 cm, conical or bell-shaped then with a broad boss, fibrous, chestnut-brown and paler at the margin, which is usually split; white veil remnants in the centre when young</item>
+        <item>Gills crowded, greyish-white then olive-brown, with finely toothed white edges</item>
+        <item>Stem up to 8 cm, cream turning browner, often thicker at the base, solid then hollow</item>
+        <item>White flesh, mild taste, strong pungent fruity smell</item>
+        <item>Broadleaf or mixed woods, at the foot of trees, especially beech, on chalky soil · spore print snuff brown</item>
+    </string-array>
+    <string name="myco_maculatum_note">Toxic: muscarine (the DGfM and Wikipedia, en). Symptoms: salivation, tears, urination, diarrhoea, digestive upset and vomiting; death by respiratory failure is possible (Wikipedia, en). It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM. Wikipedia (en) names look-alikes among other inocybes (Inocybe lacera, I. lanatodisca, I. fastigiata).</string>
+    <string name="myco_rosea_name">Rosy bonnet</string>
+    <string name="myco_rosea_alt">Mycène rose</string>
+    <string name="myco_rosea_latin" translatable="false">Mycena rosea</string>
+    <string-array name="myco_rosea_traits">
+        <item>Cap 2 to 6 cm, bright to pale pink, with a small boss and a striate margin</item>
+        <item>Gills adnate or notched, pale pink to white</item>
+        <item>Stem very brittle, white with pink tints</item>
+        <item>Smell of radish</item>
+        <item>Edges of broadleaf woods</item>
+    </string-array>
+    <string name="myco_rosea_note">Toxic: muscarine (the DGfM and Wikipedia, fr), with sweating, nausea and vomiting. Wikipedia (en) lists it as poisonous without naming a toxin. It is a close relative of Mycena sororia, separable only with the microscope (Wikipedia, en).</string>
+    <string name="myco_micaceus_name">Mica cap</string>
+    <string name="myco_micaceus_alt">Glistening inky cap</string>
+    <string name="myco_micaceus_latin" translatable="false">Coprinellus micaceus</string>
+    <string-array name="myco_micaceus_traits">
+        <item>Cap 3 to 6 cm, ovoid then bell-shaped, tawny or yellow-ochre, darker at the centre, with shiny mica-like granules when young</item>
+        <item>Gills close, white then brownish then black, dissolving from the edge</item>
+        <item>Stem 5 to 10 cm, whitish, hollow and fragile, no ring</item>
+        <item>Thin white flesh; no distinctive smell or taste</item>
+        <item>In clusters on stumps and rotting wood · spring to early winter</item>
+    </string-array>
+    <string name="myco_micaceus_note">Not recommended with alcohol: the DGfM lists it for the coprine syndrome while noting only small amounts of coprine; Wikipedia (fr) says European harvests may cause mild excitation with alcohol, less than the common ink cap; Wikipedia (en) says it has no coprine. Both pages call it edible when young, before the gills dissolve, though of little interest. The most prudent status is kept. Wikipedia (en) advises against roadside harvests (heavy metals) and separates it from the common ink cap, which is larger, grey and without glistening granules.</string>
+    <string name="myco_regalis_name">Royal fly agaric</string>
+    <string name="myco_regalis_alt">Amanite royale</string>
+    <string name="myco_regalis_latin" translatable="false">Amanita regalis</string>
+    <string-array name="myco_regalis_traits">
+        <item>Cap 10 to 25 cm, yellowish-brown, with ochre warts in rings; the skin peels almost to the centre</item>
+        <item>Gills crowded, free, white with a creamy tint</item>
+        <item>Stem 10 to 20 cm, with a ring and a bulb ringed with small yellow-ochre warts</item>
+        <item>Whitish flesh, golden-yellow under the cap skin; no notable smell or taste</item>
+        <item>Mountain woods under birch, pine and spruce; rare · Scandinavia and eastern Europe</item>
+    </string-array>
+    <string name="myco_regalis_note">Toxic: same toxins as the fly agaric (ibotenic acid and muscimol), which cooking does not remove; the DGfM lists it for the panther cap syndrome. Wikipedia (en) reports three people in Finland who ate it for a parasol and had digestive, nervous and cholinergic symptoms, recovered within 4 to 24 hours. Wikipedia (fr) only says it looks like the fly agaric without its colour and is also toxic. Wikipedia (en) separates it from the blusher (stains pink, white flesh under the skin) and the panther cap (white flesh under the skin, cup-shaped bulb).</string>
+    <string name="myco_asperum_name">Freckled dapperling</string>
+    <string name="myco_asperum_alt">Lepiota aspera</string>
+    <string name="myco_asperum_latin" translatable="false">Echinoderma asperum</string>
+    <string-array name="myco_asperum_traits">
+        <item>Cap up to 10 cm, reddish-brown at the centre, breaking into erect pyramidal scales on a paler ground</item>
+        <item>Gills white, free, crowded, tending to fork</item>
+        <item>Stem about 10 cm, paler, with sparse brown scales below a large cottony ring</item>
+        <item>White flesh, said to smell of rubber</item>
+        <item>Deciduous woods, parks and gardens with wood-chip mulch · autumn</item>
+    </string-array>
+    <string name="myco_asperum_note">Toxic: the DGfM lists it for the coprinus-type syndrome with alcohol, from unknown inhibitors of the alcohol-breakdown enzyme (no coprine); Wikipedia (en) says it is not recommended, linked to alcohol intolerance and possibly poisonous, and that it looks like amanitas, some of them deadly. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_l_white_dark_red_scales_cap">White cap, dark red-brown scales</string>
+    <string name="myco_l_chestnut_stem">Chestnut-brown stem</string>
+    <string name="myco_l_conical_brown_fibrous_cap">Conical, fibrous brown cap</string>
+    <string name="myco_l_close_olive_grey_gills">Crowded gills, greyish then olive-brown</string>
+    <string name="myco_l_cream_stem_thicker_base">Cream stem, thicker at the base</string>
+    <string name="myco_l_pink_umbonate_striate_cap">Pink cap, boss, striate margin</string>
+    <string name="myco_l_pale_pink_gills">Pale pink gills</string>
+    <string name="myco_l_tawny_mica_cap">Tawny cap, shiny granules</string>
+    <string name="myco_l_brown_ochre_warty_cap">Yellowish-brown cap, ochre warts</string>
+    <string name="myco_l_pyramid_scaly_cap">Erect pyramidal scales</string>
+    <string name="myco_g_smalllepiota_title">Small lepiota: which one?</string>
+    <string name="myco_g_smalllepiota_evidence">DGfM, Belgian poison centre</string>
+    <string-array name="myco_g_smalllepiota_points">
+        <item>Deadly parasol, fatal dapperling and chestnut dapperling are all small lepiotas, with brownish or red scales or pigments; the DGfM lists all three for the death-cap syndrome.</item>
+        <item>Chestnut dapperling: up to 3 cm, white cap with dark red-brown scales, chestnut-brown stem, indistinct ring (Wikipedia, en).</item>
+        <item>The DGfM suspects every small lepiota with brownish and red pigments of containing amatoxins; the Belgian poison centre advises against any lepiota under 10 cm.</item>
     </string-array>
 </resources>
