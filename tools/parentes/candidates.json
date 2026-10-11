@@ -2863,6 +2863,11 @@
       "qid": "Q31771"
     },
     {
+      "name": "Chalciporus piperatus",
+      "en": "Peppery bolete",
+      "fr": "Bolet poivré"
+    },
+    {
       "name": "Chamaecyparis formosensis",
       "en": "Chamaecyparis formosensis",
       "fr": "Chamaecyparis formosensis",
@@ -3147,6 +3152,11 @@
       "en": "Cleora cinctaria",
       "fr": "Cleora cinctaria",
       "qid": "Q46156"
+    },
+    {
+      "name": "Clitocybe fragrans",
+      "en": "Clitocybe fragrans",
+      "fr": "Clitocybe fragrans"
     },
     {
       "name": "Clitocybe nebularis",
@@ -5499,9 +5509,19 @@
       "fr": "Hygrophore à odeur agréable"
     },
     {
+      "name": "Hygrophorus hypothejus",
+      "en": "Herald of the winter",
+      "fr": "Hygrophorus hypothejus"
+    },
+    {
       "name": "Hygrophorus marzuolus",
       "en": "March mushroom",
       "fr": "Hygrophore de mars"
+    },
+    {
+      "name": "Hygrophorus olivaceoalbus",
+      "en": "Sheathed waxy cap",
+      "fr": "Hygrophorus olivaceoalbus"
     },
     {
       "name": "Hygrophorus penarioides",
@@ -5969,6 +5989,11 @@
       "name": "Lactarius sanguifluus",
       "en": "Bloody milk cap",
       "fr": "Lactaire sanguin"
+    },
+    {
+      "name": "Lactarius semisanguifluus",
+      "en": "Lactarius semisanguifluus",
+      "fr": "Lactaire semi-sanguin"
     },
     {
       "name": "Lactarius sphagneti",
@@ -10633,9 +10658,19 @@
       "fr": "Bolet granulé"
     },
     {
+      "name": "Suillus grevillei",
+      "en": "Larch bolete",
+      "fr": "Bolet élégant"
+    },
+    {
       "name": "Suillus luteus",
       "en": "Slippery jack",
       "fr": "Nonnette voilée"
+    },
+    {
+      "name": "Suillus variegatus",
+      "en": "Velvet bolete",
+      "fr": "Bolet moucheté"
     },
     {
       "name": "Sula granti",

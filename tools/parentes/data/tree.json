@@ -178729,6 +178729,43 @@
       "species": false
     },
     {
+      "id": "ott697640",
+      "parent": "ott1005889",
+      "scientific": "Chalciporus piperatus",
+      "ott": 697640,
+      "tax_sources": [
+        "if:311021",
+        "ncbi:182633",
+        "ncbi:145387",
+        "gbif:9156243",
+        "irmng:10693469"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott697640"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_697640",
+      "requested_node_id": "ott697640"
+    },
+    {
+      "id": "ott1005889",
+      "parent": "ott1012685",
+      "scientific": "Chalciporus",
+      "ott": 1005889,
+      "tax_sources": [
+        "if:17277",
+        "ncbi:80622",
+        "gbif:2524865",
+        "irmng:1098909"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1005889"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
       "id": "ott800340",
       "parent": "mrcaott800340ott883814",
       "scientific": "Chamaecyparis formosensis",
@@ -185296,6 +185333,25 @@
       },
       "conflicts_with": {},
       "species": false
+    },
+    {
+      "id": "ott1072213",
+      "parent": "ott1012685",
+      "scientific": "Clitocybe fragrans",
+      "ott": 1072213,
+      "tax_sources": [
+        "if:232936",
+        "ncbi:230766",
+        "gbif:2531088",
+        "irmng:11432996"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1072213"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_1072213",
+      "requested_node_id": "ott1072213"
     },
     {
       "id": "ott909208",
@@ -238878,6 +238934,26 @@
       "species": false
     },
     {
+      "id": "ott115639",
+      "parent": "ott135578",
+      "scientific": "Hygrophorus hypothejus",
+      "ott": 115639,
+      "tax_sources": [
+        "if:175092",
+        "ncbi:515976",
+        "ncbi:1032765",
+        "gbif:2538748",
+        "irmng:11315452"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott115639"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_115639",
+      "requested_node_id": "ott115639"
+    },
+    {
       "id": "ott3822293",
       "parent": "ott135578",
       "scientific": "Hygrophorus marzuolus",
@@ -238894,6 +238970,25 @@
       "species": true,
       "key": "pt_species_3822293",
       "requested_node_id": "ott3822293"
+    },
+    {
+      "id": "ott820301",
+      "parent": "ott135578",
+      "scientific": "Hygrophorus olivaceoalbus",
+      "ott": 820301,
+      "tax_sources": [
+        "if:180673",
+        "ncbi:183926",
+        "gbif:2538784",
+        "irmng:10383627"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott820301"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_820301",
+      "requested_node_id": "ott820301"
     },
     {
       "id": "ott1002181",
@@ -244982,6 +245077,25 @@
       "species": true,
       "key": "pt_species_451905",
       "requested_node_id": "ott451905"
+    },
+    {
+      "id": "ott561234",
+      "parent": "mrcaott471ott5265",
+      "scientific": "Lactarius semisanguifluus",
+      "ott": 561234,
+      "tax_sources": [
+        "if:299328",
+        "ncbi:93012",
+        "gbif:5248649",
+        "irmng:11095616"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott561234"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_561234",
+      "requested_node_id": "ott561234"
     },
     {
       "id": "ott186676",
@@ -320162,6 +320276,38 @@
       "species": false
     },
     {
+      "id": "ott428804",
+      "parent": "mrcaott428804ott896824",
+      "scientific": "Suillus grevillei",
+      "ott": 428804,
+      "tax_sources": [
+        "if:282928",
+        "ncbi:5382",
+        "ncbi:1904413",
+        "gbif:5239864",
+        "irmng:10782708"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott428804"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_428804",
+      "requested_node_id": "ott428804"
+    },
+    {
+      "id": "mrcaott428804ott896824",
+      "parent": "mrcaott199372ott428804",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "pg_348@tree381": "node198677"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
       "id": "ott428806",
       "parent": "mrcaott896824ott5263066",
       "scientific": "Suillus luteus",
@@ -320194,16 +320340,23 @@
       "species": false
     },
     {
-      "id": "mrcaott428804ott896824",
-      "parent": "mrcaott199372ott428804",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
+      "id": "ott1026592",
+      "parent": "ott111533",
+      "scientific": "Suillus variegatus",
+      "ott": 1026592,
+      "tax_sources": [
+        "if:355913",
+        "ncbi:48592",
+        "gbif:7776205",
+        "irmng:11285634"
+      ],
       "supported_by": {
-        "pg_348@tree381": "node198677"
+        "ott3.7draft3": "ott1026592"
       },
       "conflicts_with": {},
-      "species": false
+      "species": true,
+      "key": "pt_species_1026592",
+      "requested_node_id": "ott1026592"
     },
     {
       "id": "ott827441",

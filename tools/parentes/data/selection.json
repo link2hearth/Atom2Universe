@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2047,
+  "candidate_count": 2054,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -5537,6 +5537,14 @@
       "label_revision": 2538977275
     },
     {
+      "name": "Chalciporus piperatus",
+      "en": "Peppery bolete",
+      "fr": "Bolet poivré",
+      "seed": false,
+      "id": "ott697640",
+      "ott": 697640
+    },
+    {
       "name": "Chamaecyparis formosensis",
       "en": "Chamaecyparis formosensis",
       "fr": "Chamaecyparis formosensis",
@@ -5991,6 +5999,14 @@
       "ott": 788407,
       "label_qid": "Q46156",
       "label_revision": 2551362302
+    },
+    {
+      "name": "Clitocybe fragrans",
+      "en": "Clitocybe fragrans",
+      "fr": "Clitocybe fragrans",
+      "seed": false,
+      "id": "ott1072213",
+      "ott": 1072213
     },
     {
       "name": "Clitocybe nebularis",
@@ -9765,12 +9781,28 @@
       "ott": 256601
     },
     {
+      "name": "Hygrophorus hypothejus",
+      "en": "Herald of the winter",
+      "fr": "Hygrophorus hypothejus",
+      "seed": false,
+      "id": "ott115639",
+      "ott": 115639
+    },
+    {
       "name": "Hygrophorus marzuolus",
       "en": "March mushroom",
       "fr": "Hygrophore de mars",
       "seed": false,
       "id": "ott3822293",
       "ott": 3822293
+    },
+    {
+      "name": "Hygrophorus olivaceoalbus",
+      "en": "Sheathed waxy cap",
+      "fr": "Hygrophorus olivaceoalbus",
+      "seed": false,
+      "id": "ott820301",
+      "ott": 820301
     },
     {
       "name": "Hygrophorus penarioides",
@@ -10480,6 +10512,14 @@
       "seed": false,
       "id": "ott451905",
       "ott": 451905
+    },
+    {
+      "name": "Lactarius semisanguifluus",
+      "en": "Lactarius semisanguifluus",
+      "fr": "Lactaire semi-sanguin",
+      "seed": false,
+      "id": "ott561234",
+      "ott": 561234
     },
     {
       "name": "Lactarius sphagneti",
@@ -18308,12 +18348,28 @@
       "ott": 773527
     },
     {
+      "name": "Suillus grevillei",
+      "en": "Larch bolete",
+      "fr": "Bolet élégant",
+      "seed": false,
+      "id": "ott428804",
+      "ott": 428804
+    },
+    {
       "name": "Suillus luteus",
       "en": "Slippery jack",
       "fr": "Nonnette voilée",
       "seed": false,
       "id": "ott428806",
       "ott": 428806
+    },
+    {
+      "name": "Suillus variegatus",
+      "en": "Velvet bolete",
+      "fr": "Bolet moucheté",
+      "seed": false,
+      "id": "ott1026592",
+      "ott": 1026592
     },
     {
       "name": "Sula granti",
