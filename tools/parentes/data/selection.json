@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2064,
+  "candidate_count": 2079,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -1471,17 +1471,6 @@
       "label_revision": 2517399329
     },
     {
-      "name": "Aequidens potaroensis",
-      "en": "Aequidens potaroensis",
-      "fr": "Aequidens potaroensis",
-      "qid": "Q130747",
-      "seed": false,
-      "id": "ott266022",
-      "ott": 266022,
-      "label_qid": "Q130747",
-      "label_revision": 2517400410
-    },
-    {
       "name": "Aequorea victoria",
       "en": "Medusa T Pasas de Verga",
       "fr": "Aequorea victoria",
@@ -2886,17 +2875,6 @@
       "label_revision": 2517829557
     },
     {
-      "name": "Amphilophus margaritifer",
-      "en": "Amphilophus margaritifer",
-      "fr": "Amphilophus margaritifer",
-      "qid": "Q136134",
-      "seed": false,
-      "id": "ott3636272",
-      "ott": 3636272,
-      "label_qid": "Q136134",
-      "label_revision": 2517829302
-    },
-    {
       "name": "Amphilophus zaliosus",
       "en": "Amphilophus zaliosus",
       "fr": "Amphilophus zaliosus",
@@ -3123,17 +3101,6 @@
       "ott": 378039,
       "label_qid": "Q26686",
       "label_revision": 2548056017
-    },
-    {
-      "name": "Angka hexops",
-      "en": "Angka hexops",
-      "fr": "Angka hexops",
-      "qid": "Q128546",
-      "seed": false,
-      "id": "ott4691843",
-      "ott": 4691843,
-      "label_qid": "Q128546",
-      "label_revision": 2533670409
     },
     {
       "name": "Anguilla anguilla",
@@ -3477,17 +3444,6 @@
       "label_revision": 2344562701
     },
     {
-      "name": "Apistogramma pleurotaenia",
-      "en": "Apistogramma pleurotaenia",
-      "fr": "Apistogramma pleurotaenia",
-      "qid": "Q128387",
-      "seed": false,
-      "id": "ott3636297",
-      "ott": 3636297,
-      "label_qid": "Q128387",
-      "label_revision": 2322442759
-    },
-    {
       "name": "Apistogramma pulchra",
       "en": "Apistogramma pulchra",
       "fr": "Apistogramma pulchra",
@@ -3532,17 +3488,6 @@
       "label_revision": 2322442457
     },
     {
-      "name": "Apistogramma rupununi",
-      "en": "Apistogramma rupununi",
-      "fr": "Apistogramma rupununi",
-      "qid": "Q128638",
-      "seed": false,
-      "id": "ott3636306",
-      "ott": 3636306,
-      "label_qid": "Q128638",
-      "label_revision": 2517390642
-    },
-    {
       "name": "Apistogramma similis",
       "en": "Apistogramma similis",
       "fr": "Apistogramma similis",
@@ -3574,17 +3519,6 @@
       "ott": 3636324,
       "label_qid": "Q128398",
       "label_revision": 2455997151
-    },
-    {
-      "name": "Apistogramma taeniata",
-      "en": "Apistogramma taeniata",
-      "fr": "Apistogramma taeniata",
-      "qid": "Q128396",
-      "seed": false,
-      "id": "ott3636283",
-      "ott": 3636283,
-      "label_qid": "Q128396",
-      "label_revision": 2322442886
     },
     {
       "name": "Apistogramma tucurui",
@@ -4024,17 +3958,6 @@
       "label_revision": 2549048264
     },
     {
-      "name": "Aspidodiadema sinuosum",
-      "en": "Aspidodiadema sinuosum",
-      "fr": "Aspidodiadema sinuosum",
-      "qid": "Q46427",
-      "seed": false,
-      "id": "ott3649489",
-      "ott": 3649489,
-      "label_qid": "Q46427",
-      "label_revision": 2516788793
-    },
-    {
       "name": "Aspidodiadema tonsum",
       "en": "Aspidodiadema tonsum",
       "fr": "Aspidodiadema tonsum",
@@ -4066,17 +3989,6 @@
       "ott": 1074909,
       "label_qid": "Q136116",
       "label_revision": 2541626487
-    },
-    {
-      "name": "Asthenosoma dilatatum",
-      "en": "Asthenosoma dilatatum",
-      "fr": "Asthenosoma dilatatum",
-      "qid": "Q82773",
-      "seed": false,
-      "id": "ott3651130",
-      "ott": 3651130,
-      "label_qid": "Q82773",
-      "label_revision": 2517078248
     },
     {
       "name": "Asthenosoma ijimai",
@@ -5238,17 +5150,6 @@
       "ott": 649208,
       "label_qid": "Q135369",
       "label_revision": 2522526000
-    },
-    {
-      "name": "Carcharhinus macrops",
-      "en": "Carcharhinus macrops",
-      "fr": "Carcharhinus macrops",
-      "qid": "Q82289",
-      "seed": false,
-      "id": "ott3594987",
-      "ott": 3594987,
-      "label_qid": "Q82289",
-      "label_revision": 2522618558
     },
     {
       "name": "Cardamine pratensis",
@@ -6971,17 +6872,6 @@
       "label_revision": 2518733685
     },
     {
-      "name": "Dasyatis geijskesi",
-      "en": "Sharpsnout stingray",
-      "fr": "Dasyatis geijskesi",
-      "qid": "Q143869",
-      "seed": false,
-      "id": "ott3594695",
-      "ott": 3594695,
-      "label_qid": "Q143869",
-      "label_revision": 2517958033
-    },
-    {
       "name": "Dasyatis izuensis",
       "en": "Dasyatis izuensis",
       "fr": "Dasyatis izuensis",
@@ -7189,17 +7079,6 @@
       "ott": 509051,
       "label_qid": "Q21053",
       "label_revision": 2534315085
-    },
-    {
-      "name": "Dicrossus gladicauda",
-      "en": "Dicrossus gladicauda",
-      "fr": "Dicrossus gladicauda",
-      "qid": "Q128299",
-      "seed": false,
-      "id": "ott3636437",
-      "ott": 3636437,
-      "label_qid": "Q128299",
-      "label_revision": 2322441071
     },
     {
       "name": "Dicrossus maculatus",
@@ -8727,17 +8606,6 @@
       "label_revision": 2322441735
     },
     {
-      "name": "Geophagus camopiensis",
-      "en": "Geophagus camopiensis",
-      "fr": "Geophagus camopiensis",
-      "qid": "Q128313",
-      "seed": false,
-      "id": "ott3636356",
-      "ott": 3636356,
-      "label_qid": "Q128313",
-      "label_revision": 2322441504
-    },
-    {
       "name": "Geophagus crassilabris",
       "en": "Geophagus crassilabris",
       "fr": "Geophagus crassilabris",
@@ -8988,17 +8856,6 @@
       "label_revision": 2516854213
     },
     {
-      "name": "Gymnocranius oblongus",
-      "en": "Gymnocranius oblongus",
-      "fr": "Gymnocranius oblongus",
-      "qid": "Q31659",
-      "seed": false,
-      "id": "ott3633226",
-      "ott": 3633226,
-      "label_qid": "Q31659",
-      "label_revision": 2516855650
-    },
-    {
       "name": "Gymnogeophagus caaguazuensis",
       "en": "Gymnogeophagus caaguazuensis",
       "fr": "Gymnogeophagus caaguazuensis",
@@ -9059,94 +8916,6 @@
       "ott": 106239
     },
     {
-      "name": "Gyptis bruneli",
-      "en": "Gyptis bruneli",
-      "fr": "Gyptis bruneli",
-      "qid": "Q38388",
-      "seed": false,
-      "id": "ott4980493",
-      "ott": 4980493,
-      "label_qid": "Q38388",
-      "label_revision": 2534489067
-    },
-    {
-      "name": "Gyptis comata",
-      "en": "Gyptis comata",
-      "fr": "Gyptis comata",
-      "qid": "Q38521",
-      "seed": false,
-      "id": "ott4980470",
-      "ott": 4980470,
-      "label_qid": "Q38521",
-      "label_revision": 2534489095
-    },
-    {
-      "name": "Gyptis crinita",
-      "en": "Gyptis crinita",
-      "fr": "Gyptis crinita",
-      "qid": "Q38381",
-      "seed": false,
-      "id": "ott4980511",
-      "ott": 4980511,
-      "label_qid": "Q38381",
-      "label_revision": 2534489060
-    },
-    {
-      "name": "Gyptis golikovi",
-      "en": "Gyptis golikovi",
-      "fr": "Gyptis golikovi",
-      "qid": "Q38514",
-      "seed": false,
-      "id": "ott64307",
-      "ott": 64307,
-      "label_qid": "Q38514",
-      "label_revision": 2534489089
-    },
-    {
-      "name": "Gyptis heteroculatus",
-      "en": "Gyptis heteroculatus",
-      "fr": "Gyptis heteroculatus",
-      "qid": "Q38376",
-      "seed": false,
-      "id": "ott4980506",
-      "ott": 4980506,
-      "label_qid": "Q38376",
-      "label_revision": 2534489052
-    },
-    {
-      "name": "Gyptis hians",
-      "en": "Gyptis hians",
-      "fr": "Gyptis hians",
-      "qid": "Q38401",
-      "seed": false,
-      "id": "ott4980515",
-      "ott": 4980515,
-      "label_qid": "Q38401",
-      "label_revision": 2534489077
-    },
-    {
-      "name": "Gyptis lobata",
-      "en": "Gyptis lobata",
-      "fr": "Gyptis lobata",
-      "qid": "Q38721",
-      "seed": false,
-      "id": "ott4980509",
-      "ott": 4980509,
-      "label_qid": "Q38721",
-      "label_revision": 2534489145
-    },
-    {
-      "name": "Gyptis lobatus",
-      "en": "Gyptis lobatus",
-      "fr": "Gyptis lobatus",
-      "qid": "Q38719",
-      "seed": false,
-      "id": "ott4980514",
-      "ott": 4980514,
-      "label_qid": "Q38719",
-      "label_revision": 2534489140
-    },
-    {
       "name": "Gyptis mackiei",
       "en": "Gyptis mackiei",
       "fr": "Gyptis mackiei",
@@ -9156,39 +8925,6 @@
       "ott": 1009760,
       "label_qid": "Q38718",
       "label_revision": 2534489134
-    },
-    {
-      "name": "Gyptis maraunibinae",
-      "en": "Gyptis maraunibinae",
-      "fr": "Gyptis maraunibinae",
-      "qid": "Q38378",
-      "seed": false,
-      "id": "ott4980520",
-      "ott": 4980520,
-      "label_qid": "Q38378",
-      "label_revision": 2534489056
-    },
-    {
-      "name": "Gyptis raluanensis",
-      "en": "Gyptis raluanensis",
-      "fr": "Gyptis raluanensis",
-      "qid": "Q38507",
-      "seed": false,
-      "id": "ott4980508",
-      "ott": 4980508,
-      "label_qid": "Q38507",
-      "label_revision": 2534489082
-    },
-    {
-      "name": "Gyptis vittata",
-      "en": "Gyptis vittata",
-      "fr": "Gyptis vittata",
-      "qid": "Q38693",
-      "seed": false,
-      "id": "ott4980518",
-      "ott": 4980518,
-      "label_qid": "Q38693",
-      "label_revision": 2534489107
     },
     {
       "name": "Gyromitra esculenta",
@@ -9403,17 +9139,6 @@
       "ott": 515709,
       "label_qid": "Q146190",
       "label_revision": 2547644946
-    },
-    {
-      "name": "Heliaster solaris",
-      "en": "Heliaster solaris",
-      "fr": "Heliaster solaris",
-      "qid": "Q150457",
-      "seed": false,
-      "id": "ott3657207",
-      "ott": 3657207,
-      "label_qid": "Q150457",
-      "label_revision": 2548709536
     },
     {
       "name": "Helichrysum arenarium",
@@ -10155,17 +9880,6 @@
       "label_revision": 2455993420
     },
     {
-      "name": "Intoshia major",
-      "en": "Intoshia major",
-      "fr": "Intoshia major",
-      "qid": "Q38739",
-      "seed": false,
-      "id": "ott3684301",
-      "ott": 3684301,
-      "label_qid": "Q38739",
-      "label_revision": 2322333333
-    },
-    {
       "name": "Intoshia variabili",
       "en": "Intoshia variabili",
       "fr": "Intoshia variabili",
@@ -10274,17 +9988,6 @@
       "ott": 775708,
       "label_qid": "Q26656",
       "label_revision": 2538974752
-    },
-    {
-      "name": "Janetaescincus veseyfitzgeraldi",
-      "en": "Vesey-Fitzgerald's Burrowing Skink",
-      "fr": "Janetaescincus veseyfitzgeraldi",
-      "qid": "Q146500",
-      "seed": false,
-      "id": "ott705817",
-      "ott": 705817,
-      "label_qid": "Q146500",
-      "label_revision": 2517971489
     },
     {
       "name": "Jordanita budensis",
@@ -10403,17 +10106,6 @@
       "ott": 22273,
       "label_qid": "Q80198",
       "label_revision": 2517014522
-    },
-    {
-      "name": "Labeo nasus",
-      "en": "Labeo nasus",
-      "fr": "Labeo nasus",
-      "qid": "Q140213",
-      "seed": false,
-      "id": "ott699264",
-      "ott": 699264,
-      "label_qid": "Q140213",
-      "label_revision": 2517913092
     },
     {
       "name": "Labeo rosae",
@@ -11008,17 +10700,6 @@
       "label_revision": 2547677473
     },
     {
-      "name": "Lethrinus amboinensis",
-      "en": "Lethrinus amboinensis",
-      "fr": "Lethrinus amboinensis",
-      "qid": "Q31404",
-      "seed": false,
-      "id": "ott3633216",
-      "ott": 3633216,
-      "label_qid": "Q31404",
-      "label_revision": 2516853898
-    },
-    {
       "name": "Lethrinus atlanticus",
       "en": "Atlantic emperor",
       "fr": "Lethrinus atlanticus",
@@ -11039,17 +10720,6 @@
       "ott": 850621,
       "label_qid": "Q31336",
       "label_revision": 2516852872
-    },
-    {
-      "name": "Lethrinus conchyliatus",
-      "en": "Lethrinus conchyliatus",
-      "fr": "Lethrinus conchyliatus",
-      "qid": "Q31399",
-      "seed": false,
-      "id": "ott177117",
-      "ott": 177117,
-      "label_qid": "Q31399",
-      "label_revision": 2516853768
     },
     {
       "name": "Lethrinus crocineus",
@@ -12011,17 +11681,6 @@
       "ott": 226198,
       "label_qid": "Q132905",
       "label_revision": 2540980684
-    },
-    {
-      "name": "Megascolides australis",
-      "en": "Megascolides australis",
-      "fr": "Megascolides australis",
-      "qid": "Q141602",
-      "seed": false,
-      "id": "ott2845779",
-      "ott": 2845779,
-      "label_qid": "Q141602",
-      "label_revision": 2541657204
     },
     {
       "name": "Melanerpes pulcher",
@@ -13398,17 +13057,6 @@
       "label_revision": 2516853066
     },
     {
-      "name": "Orectolobus hutchinsi",
-      "en": "western wobbegong",
-      "fr": "Orectolobus hutchinsi",
-      "qid": "Q31495",
-      "seed": false,
-      "id": "ott703731",
-      "ott": 703731,
-      "label_qid": "Q31495",
-      "label_revision": 2516853093
-    },
-    {
       "name": "Orectolobus japonicus",
       "en": "Japanese wobbegong",
       "fr": "Orectolobus japonicus",
@@ -13451,28 +13099,6 @@
       "ott": 798343,
       "label_qid": "Q31815",
       "label_revision": 2516855953
-    },
-    {
-      "name": "Orectolobus reticulatus",
-      "en": "Orectolobus reticulatus",
-      "fr": "Orectolobus reticulatus",
-      "qid": "Q31597",
-      "seed": false,
-      "id": "ott3594840",
-      "ott": 3594840,
-      "label_qid": "Q31597",
-      "label_revision": 2516856016
-    },
-    {
-      "name": "Orectolobus wardi",
-      "en": "northern wobbegong",
-      "fr": "Orectolobus wardi",
-      "qid": "Q31784",
-      "seed": false,
-      "id": "ott274904",
-      "ott": 274904,
-      "label_qid": "Q31784",
-      "label_revision": 2522524508
     },
     {
       "name": "Oreophrynella macconnelli",
@@ -13572,17 +13198,6 @@
       "ott": 973933,
       "label_qid": "Q23363",
       "label_revision": 2543530230
-    },
-    {
-      "name": "Osteochilus enneaporos",
-      "en": "Osteochilus enneaporos",
-      "fr": "Osteochilus enneaporos",
-      "qid": "Q80703",
-      "seed": false,
-      "id": "ott3626148",
-      "ott": 3626148,
-      "label_qid": "Q80703",
-      "label_revision": 2517062349
     },
     {
       "name": "Ostrya rehderiana",
@@ -13869,17 +13484,6 @@
       "ott": 154119,
       "label_qid": "Q31851",
       "label_revision": 2522525223
-    },
-    {
-      "name": "Parascyllium elongatum",
-      "en": "Elongate carpet shark",
-      "fr": "Parascyllium elongatum",
-      "qid": "Q31500",
-      "seed": false,
-      "id": "ott3594811",
-      "ott": 3594811,
-      "label_qid": "Q31500",
-      "label_revision": 2516853127
     },
     {
       "name": "Parascyllium ferrugineum",
@@ -14363,17 +13967,6 @@
       "label_revision": 2545767668
     },
     {
-      "name": "Phoenicolacerta laevis",
-      "en": "Phoenicolacerta laevis",
-      "fr": "Phoenicolacerta laevis",
-      "qid": "Q33141",
-      "seed": false,
-      "id": "ott656204",
-      "ott": 656204,
-      "label_qid": "Q33141",
-      "label_revision": 2516859833
-    },
-    {
       "name": "Phoenicurus ochruros",
       "en": "Black Redstart",
       "fr": "Phoenicurus ochruros",
@@ -14572,17 +14165,6 @@
       "label_revision": 2516840512
     },
     {
-      "name": "Pimelodus platicirris",
-      "en": "Pimelodus platicirris",
-      "fr": "Pimelodus platicirris",
-      "qid": "Q26950",
-      "seed": false,
-      "id": "ott3622005",
-      "ott": 3622005,
-      "label_qid": "Q26950",
-      "label_revision": 2516837555
-    },
-    {
       "name": "Pimelodus pohli",
       "en": "Pimelodus pohli",
       "fr": "Pimelodus pohli",
@@ -14592,17 +14174,6 @@
       "ott": 942902,
       "label_qid": "Q27080",
       "label_revision": 2516840498
-    },
-    {
-      "name": "Pimelodus punctatus",
-      "en": "Pimelodus punctatus",
-      "fr": "Pimelodus punctatus",
-      "qid": "Q27096",
-      "seed": false,
-      "id": "ott3622001",
-      "ott": 3622001,
-      "label_qid": "Q27096",
-      "label_revision": 2516840534
     },
     {
       "name": "Pimelodus stewarti",
@@ -15014,17 +14585,6 @@
       "label_revision": 2517957231
     },
     {
-      "name": "Polypera simushirae",
-      "en": "Polypera simushirae",
-      "fr": "Polypera simushirae",
-      "qid": "Q81388",
-      "seed": false,
-      "id": "ott3631951",
-      "ott": 3631951,
-      "label_qid": "Q81388",
-      "label_revision": 2517065134
-    },
-    {
       "name": "Polytrichum piliferum",
       "en": "Polytrichum piliferum",
       "fr": "Polytrichum piliferum",
@@ -15067,17 +14627,6 @@
       "ott": 232767,
       "label_qid": "Q82885",
       "label_revision": 2537880868
-    },
-    {
-      "name": "Porcellio ferroi",
-      "en": "Porcellio ferroi",
-      "fr": "Porcellio ferroi",
-      "qid": "Q84119",
-      "seed": false,
-      "id": "ott2992768",
-      "ott": 2992768,
-      "label_qid": "Q84119",
-      "label_revision": 2537880877
     },
     {
       "name": "Porcellio monticola",
@@ -15179,28 +14728,6 @@
       "label_revision": 2536013768
     },
     {
-      "name": "Praematoliparis anarthractae",
-      "en": "Praematoliparis anarthractae",
-      "fr": "Praematoliparis anarthractae",
-      "qid": "Q81371",
-      "seed": false,
-      "id": "ott3631944",
-      "ott": 3631944,
-      "label_qid": "Q81371",
-      "label_revision": 2517064506
-    },
-    {
-      "name": "Pratylenchus penetrans",
-      "en": "Pratylenchus penetrans",
-      "fr": "Pratylenchus penetrans",
-      "qid": "Q149049",
-      "seed": false,
-      "id": "ott725237",
-      "ott": 725237,
-      "label_qid": "Q149049",
-      "label_revision": 2534110854
-    },
-    {
       "name": "Primula stricta",
       "en": "Primula stricta",
       "fr": "Primula stricta",
@@ -15287,28 +14814,6 @@
       "ott": 3631974,
       "label_qid": "Q81342",
       "label_revision": 2517063643
-    },
-    {
-      "name": "Propimelodus araguayae",
-      "en": "Propimelodus araguayae",
-      "fr": "Propimelodus araguayae",
-      "qid": "Q26940",
-      "seed": false,
-      "id": "ott3624261",
-      "ott": 3624261,
-      "label_qid": "Q26940",
-      "label_revision": 2516837344
-    },
-    {
-      "name": "Propimelodus caesius",
-      "en": "Propimelodus caesius",
-      "fr": "Propimelodus caesius",
-      "qid": "Q26941",
-      "seed": false,
-      "id": "ott3624233",
-      "ott": 3624233,
-      "label_qid": "Q26941",
-      "label_revision": 2516837348
     },
     {
       "name": "Prosopocoilus astacoides",
@@ -15454,17 +14959,6 @@
       "label_revision": 2517065404
     },
     {
-      "name": "Psednos balushkini",
-      "en": "Psednos balushkini",
-      "fr": "Psednos balushkini",
-      "qid": "Q81385",
-      "seed": false,
-      "id": "ott3631703",
-      "ott": 3631703,
-      "label_qid": "Q81385",
-      "label_revision": 2517065050
-    },
-    {
       "name": "Psednos barnardi",
       "en": "Psednos barnardi",
       "fr": "Psednos barnardi",
@@ -15476,17 +14970,6 @@
       "label_revision": 2517063651
     },
     {
-      "name": "Psednos carolinae",
-      "en": "Psednos carolinae",
-      "fr": "Psednos carolinae",
-      "qid": "Q81327",
-      "seed": false,
-      "id": "ott3631705",
-      "ott": 3631705,
-      "label_qid": "Q81327",
-      "label_revision": 2517066396
-    },
-    {
       "name": "Psednos cathetostomus",
       "en": "Psednos cathetostomus",
       "fr": "Psednos cathetostomus",
@@ -15496,17 +14979,6 @@
       "ott": 3631704,
       "label_qid": "Q81383",
       "label_revision": 2517065020
-    },
-    {
-      "name": "Psednos christinae",
-      "en": "Psednos christinae",
-      "fr": "Psednos christinae",
-      "qid": "Q81391",
-      "seed": false,
-      "id": "ott3631696",
-      "ott": 3631696,
-      "label_qid": "Q81391",
-      "label_revision": 2517065132
     },
     {
       "name": "Psednos delawarei",
@@ -15531,17 +15003,6 @@
       "label_revision": 2517064516
     },
     {
-      "name": "Psednos gelatinosus",
-      "en": "Psednos gelatinosus",
-      "fr": "Psednos gelatinosus",
-      "qid": "Q81399",
-      "seed": false,
-      "id": "ott3631708",
-      "ott": 3631708,
-      "label_qid": "Q81399",
-      "label_revision": 2517065273
-    },
-    {
       "name": "Psednos griseus",
       "en": "Psednos griseus",
       "fr": "Psednos griseus",
@@ -15551,28 +15012,6 @@
       "ott": 3631713,
       "label_qid": "Q81337",
       "label_revision": 2517063398
-    },
-    {
-      "name": "Psednos groenlandicus",
-      "en": "Psednos groenlandicus",
-      "fr": "Psednos groenlandicus",
-      "qid": "Q81376",
-      "seed": false,
-      "id": "ott1081128",
-      "ott": 1081128,
-      "label_qid": "Q81376",
-      "label_revision": 2517064722
-    },
-    {
-      "name": "Psednos harteli",
-      "en": "Psednos harteli",
-      "fr": "Psednos harteli",
-      "qid": "Q81407",
-      "seed": false,
-      "id": "ott3631707",
-      "ott": 3631707,
-      "label_qid": "Q81407",
-      "label_revision": 2517065522
     },
     {
       "name": "Psednos islandicus",
@@ -15619,28 +15058,6 @@
       "label_revision": 2517064714
     },
     {
-      "name": "Psednos micruroides",
-      "en": "Psednos micruroides",
-      "fr": "Psednos micruroides",
-      "qid": "Q81379",
-      "seed": false,
-      "id": "ott1081096",
-      "ott": 1081096,
-      "label_qid": "Q81379",
-      "label_revision": 2517064992
-    },
-    {
-      "name": "Psednos micrurus",
-      "en": "Psednos micrurus",
-      "fr": "Psednos micrurus",
-      "qid": "Q81409",
-      "seed": false,
-      "id": "ott3631711",
-      "ott": 3631711,
-      "label_qid": "Q81409",
-      "label_revision": 2517065537
-    },
-    {
       "name": "Psednos mirabilis",
       "en": "Psednos mirabilis",
       "fr": "Psednos mirabilis",
@@ -15652,17 +15069,6 @@
       "label_revision": 2517063170
     },
     {
-      "name": "Psednos nataliae",
-      "en": "Psednos nataliae",
-      "fr": "Psednos nataliae",
-      "qid": "Q81416",
-      "seed": false,
-      "id": "ott3631712",
-      "ott": 3631712,
-      "label_qid": "Q81416",
-      "label_revision": 2517065858
-    },
-    {
       "name": "Psednos pallidus",
       "en": "Psednos pallidus",
       "fr": "Psednos pallidus",
@@ -15672,17 +15078,6 @@
       "ott": 3631701,
       "label_qid": "Q81381",
       "label_revision": 2517065045
-    },
-    {
-      "name": "Psednos sargassicus",
-      "en": "Psednos sargassicus",
-      "fr": "Psednos sargassicus",
-      "qid": "Q81339",
-      "seed": false,
-      "id": "ott3631716",
-      "ott": 3631716,
-      "label_qid": "Q81339",
-      "label_revision": 2517063568
     },
     {
       "name": "Psednos spirohira",
@@ -16147,17 +15542,6 @@
       "label_revision": 2517957484
     },
     {
-      "name": "Ptychozoon rhacophorus",
-      "en": "Sabah flying gecko",
-      "fr": "Ptychozoon rhacophorus",
-      "qid": "Q13380",
-      "seed": false,
-      "id": "ott223349",
-      "ott": 223349,
-      "label_qid": "Q13380",
-      "label_revision": 2517787219
-    },
-    {
       "name": "Puccinellia maritima",
       "en": "Puccinellia maritima",
       "fr": "Puccinellia maritima",
@@ -16595,17 +15979,6 @@
       "label_revision": 2549707707
     },
     {
-      "name": "Rhopalura elongata",
-      "en": "Rhopalura elongata",
-      "fr": "Rhopalura elongata",
-      "qid": "Q38708",
-      "seed": false,
-      "id": "ott3684296",
-      "ott": 3684296,
-      "label_qid": "Q38708",
-      "label_revision": 2322332842
-    },
-    {
       "name": "Rhopalura granosa",
       "en": "Rhopalura granosa",
       "fr": "Rhopalura granosa",
@@ -16615,17 +15988,6 @@
       "ott": 3684291,
       "label_qid": "Q38705",
       "label_revision": 2322332785
-    },
-    {
-      "name": "Rhopalura litoralis",
-      "en": "Rhopalura litoralis",
-      "fr": "Rhopalura litoralis",
-      "qid": "Q38692",
-      "seed": false,
-      "id": "ott3684290",
-      "ott": 3684290,
-      "label_qid": "Q38692",
-      "label_revision": 2455993412
     },
     {
       "name": "Rhopalura ophiocomae",
@@ -17173,6 +16535,24 @@
       "seed": false,
       "id": "ott788387",
       "ott": 788387
+    },
+    {
+      "name": "Sarcophilus harrisii",
+      "en": "Tasmanian devil",
+      "fr": "diable de Tasmanie",
+      "qid": "Q134964",
+      "seed": false,
+      "living_status_override": {
+        "name": "Sarcophilus harrisii",
+        "ott_id": 948469,
+        "reviewed": "2026-10-12",
+        "evidence_url": "https://nre.tas.gov.au/wildlife-management/fauna-of-tasmania/mammals/carnivorous-marsupials-and-bandicoots/tasmanian-devil",
+        "reason": "The pinned OTT record incorrectly carries an extinct flag. Tasmania's wildlife authority documents living Tasmanian devil populations under this exact scientific name. Only the living-status filter is corrected; the unique accepted taxon and complete version-pinned source lineage remain unchanged."
+      },
+      "id": "ott948469",
+      "ott": 948469,
+      "label_qid": "Q134964",
+      "label_revision": 2544783491
     },
     {
       "name": "Satanoperca mapiritensis",
@@ -18140,17 +17520,6 @@
       "label_revision": 2517791282
     },
     {
-      "name": "Steindachneria argentea",
-      "en": "Steindachneria argentea",
-      "fr": "Steindachneria argentea",
-      "qid": "Q136205",
-      "seed": false,
-      "id": "ott336304",
-      "ott": 336304,
-      "label_qid": "Q136205",
-      "label_revision": 2517828942
-    },
-    {
       "name": "Steindachneridion amblyurum",
       "en": "Steindachneridion amblyurum",
       "fr": "steindachneridion amblyurum",
@@ -18904,17 +18273,6 @@
       "ott": 3094652,
       "label_qid": "Q143810",
       "label_revision": 2539519029
-    },
-    {
-      "name": "Thermichthys hollisi",
-      "en": "Thermichthys hollisi",
-      "fr": "Thermichthys hollisi",
-      "qid": "Q149140",
-      "seed": false,
-      "id": "ott4134270",
-      "ott": 4134270,
-      "label_qid": "Q149140",
-      "label_revision": 2517984016
     },
     {
       "name": "Tholera cespitis",
@@ -19900,17 +19258,6 @@
       "label_revision": 2530083297
     },
     {
-      "name": "Venturia compacta",
-      "en": "Venturia compacta Wahl, 1987",
-      "fr": "Venturia compacta",
-      "qid": "Q93808",
-      "seed": false,
-      "id": "ott4557528",
-      "ott": 4557528,
-      "label_qid": "Q93808",
-      "label_revision": 2517836824
-    },
-    {
       "name": "Vestia foetida",
       "en": "Vestia foetida",
       "fr": "Vestia foetida",
@@ -19975,17 +19322,6 @@
       "ott": 906301,
       "label_qid": "Q81564",
       "label_revision": 2538691609
-    },
-    {
-      "name": "Vinciguerria nimbaria",
-      "en": "Oceanic lightfish",
-      "fr": "Vinciguerria nimbaria",
-      "qid": "Q144184",
-      "seed": false,
-      "id": "ott652358",
-      "ott": 652358,
-      "label_qid": "Q144184",
-      "label_revision": 2517960110
     },
     {
       "name": "Vulpes lagopus",
@@ -20222,6 +19558,126 @@
       "ott": 4138839,
       "label_qid": "Q26959",
       "label_revision": 2516837663
+    },
+    {
+      "name": "Giraffa camelopardalis",
+      "en": "Northern giraffe",
+      "fr": "Girafe du Nord",
+      "seed": false,
+      "id": "ott768674",
+      "ott": 768674
+    },
+    {
+      "name": "Hydrochoerus hydrochaeris",
+      "en": "Capybara",
+      "fr": "Capybara",
+      "seed": false,
+      "id": "ott744018",
+      "ott": 744018
+    },
+    {
+      "name": "Myrmecophaga tridactyla",
+      "en": "Giant anteater",
+      "fr": "Fourmilier géant",
+      "seed": false,
+      "id": "ott490538",
+      "ott": 490538
+    },
+    {
+      "name": "Bradypus variegatus",
+      "en": "Brown-throated sloth",
+      "fr": "Paresseux à gorge brune",
+      "seed": false,
+      "id": "ott273233",
+      "ott": 273233
+    },
+    {
+      "name": "Dasypus novemcinctus",
+      "en": "Nine-banded armadillo",
+      "fr": "Tatou à neuf bandes",
+      "seed": false,
+      "id": "ott796672",
+      "ott": 796672
+    },
+    {
+      "name": "Tachyglossus aculeatus",
+      "en": "Short-beaked echidna",
+      "fr": "Échidné à nez court",
+      "seed": false,
+      "id": "ott16038",
+      "ott": 16038
+    },
+    {
+      "name": "Vombatus ursinus",
+      "en": "Common wombat",
+      "fr": "Wombat commun",
+      "seed": false,
+      "id": "ott835328",
+      "ott": 835328
+    },
+    {
+      "name": "Crocuta crocuta",
+      "en": "Spotted hyena",
+      "fr": "Hyène tachetée",
+      "seed": false,
+      "id": "ott397157",
+      "ott": 397157
+    },
+    {
+      "name": "Suricata suricatta",
+      "en": "Meerkat",
+      "fr": "Suricate",
+      "seed": false,
+      "id": "ott803645",
+      "ott": 803645
+    },
+    {
+      "name": "Manis tricuspis",
+      "en": "White-bellied pangolin",
+      "fr": "Pangolin à ventre blanc",
+      "seed": false,
+      "id": "ott1079387",
+      "ott": 1079387
+    },
+    {
+      "name": "Tapirus terrestris",
+      "en": "Lowland tapir",
+      "fr": "Tapir terrestre",
+      "seed": false,
+      "id": "ott1034223",
+      "ott": 1034223
+    },
+    {
+      "name": "Ailurus fulgens",
+      "en": "Red panda",
+      "fr": "Panda roux",
+      "seed": false,
+      "id": "ott872562",
+      "ott": 872562
+    },
+    {
+      "name": "Trichechus manatus",
+      "en": "West Indian manatee",
+      "fr": "Lamantin des Caraïbes",
+      "seed": false,
+      "id": "ott226178",
+      "ott": 226178
+    },
+    {
+      "name": "Rangifer tarandus",
+      "en": "Reindeer",
+      "fr": "Renne",
+      "seed": false,
+      "id": "ott410153",
+      "ott": 410153
+    },
+    {
+      "name": "Saiga tatarica",
+      "en": "Saiga antelope",
+      "fr": "Saïga",
+      "seed": false,
+      "id": "ott274566",
+      "ott": 274566
     }
   ],
   "excluded": [
@@ -20810,10 +20266,6 @@
       "reason": "No unique accepted species in synthesis"
     },
     {
-      "name": "Sarcophilus harrisii",
-      "reason": "Extinction flag; not added to the living-species selection"
-    },
-    {
       "name": "Scinax angrensis",
       "reason": "No unique accepted species in synthesis"
     },
@@ -20930,6 +20382,22 @@
       "reason": "Extinct or fossil taxon indicated by Wikidata; outside this selection"
     },
     {
+      "name": "Mesoplodon traversii",
+      "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+    },
+    {
+      "name": "Phalanger matanim",
+      "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+    },
+    {
+      "name": "Sylvilagus cognatus",
+      "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+    },
+    {
+      "name": "Uromys siebersi",
+      "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+    },
+    {
       "name": "Esox niger",
       "reason": "Not a distinct terminal relative to the existing selection"
     },
@@ -20942,20 +20410,252 @@
       "reason": "Not a distinct terminal relative to the existing selection"
     },
     {
-      "name": "Mesoplodon traversii",
-      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
+      "name": "Aequidens potaroensis",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
     },
     {
-      "name": "Phalanger matanim",
-      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
+      "name": "Amphilophus margaritifer",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
     },
     {
-      "name": "Sylvilagus cognatus",
-      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
+      "name": "Angka hexops",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
     },
     {
-      "name": "Uromys siebersi",
-      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
+      "name": "Apistogramma pleurotaenia",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Apistogramma rupununi",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Apistogramma taeniata",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Aspidodiadema sinuosum",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Asthenosoma dilatatum",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Carcharhinus macrops",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Gyptis bruneli",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis comata",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis crinita",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis golikovi",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis heteroculatus",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis hians",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis lobata",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis lobatus",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis maraunibinae",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis raluanensis",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Gyptis vittata",
+      "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+    },
+    {
+      "name": "Intoshia major",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Osteochilus enneaporos",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Pimelodus platicirris",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Polypera simushirae",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Porcellio ferroi",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Praematoliparis anarthractae",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Psednos groenlandicus",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Psednos harteli",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Psednos micruroides",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Psednos micrurus",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Rhopalura elongata",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Rhopalura litoralis",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Venturia compacta",
+      "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+    },
+    {
+      "name": "Dasyatis geijskesi",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Dicrossus gladicauda",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Geophagus camopiensis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Gymnocranius oblongus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Heliaster solaris",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Janetaescincus veseyfitzgeraldi",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Labeo nasus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Lethrinus amboinensis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Lethrinus conchyliatus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Megascolides australis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Orectolobus hutchinsi",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Orectolobus reticulatus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Orectolobus wardi",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Parascyllium elongatum",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Phoenicolacerta laevis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Pimelodus punctatus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Pratylenchus penetrans",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Propimelodus araguayae",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Propimelodus caesius",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Psednos balushkini",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Psednos carolinae",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Psednos christinae",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Psednos gelatinosus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Psednos nataliae",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Psednos sargassicus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Ptychozoon rhacophorus",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Steindachneria argentea",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Thermichthys hollisi",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Vinciguerria nimbaria",
+      "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
     }
   ]
 }

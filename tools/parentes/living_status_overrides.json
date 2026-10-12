@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Sarcophilus harrisii",
+    "ott_id": 948469,
+    "reviewed": "2026-10-12",
+    "evidence_url": "https://nre.tas.gov.au/wildlife-management/fauna-of-tasmania/mammals/carnivorous-marsupials-and-bandicoots/tasmanian-devil",
+    "reason": "The pinned OTT record incorrectly carries an extinct flag. Tasmania's wildlife authority documents living Tasmanian devil populations under this exact scientific name. Only the living-status filter is corrected; the unique accepted taxon and complete version-pinned source lineage remain unchanged."
+  }
+]

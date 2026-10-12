@@ -45,6 +45,8 @@ def main():
         previous=json.loads((OUT/'tree.json').read_text(encoding='utf8'))
         assert about['synth_id']==previous['synth_id'],'An explicit source-version migration is required'
     resolved={};excluded=[]
+    overridefile=ROOT/'tools/parentes/living_status_overrides.json'
+    living_overrides={r['name']:r for r in json.loads(overridefile.read_text(encoding='utf8'))} if overridefile.exists() else {}
     names=list(rows)
     for offset in range(0,len(names),100):
         reply=request('tnrs/match_names',{'names':names[offset:offset+100],'do_approximate_matching':False})
@@ -55,7 +57,11 @@ def main():
                 and (m['taxon']['rank']=='species' or (row['seed'] and row['name']=='Latimeria chalumnae'))]
             reason=None
             if len(exact)!=1:reason='No unique accepted species in synthesis'
-            elif not row['seed'] and 'extinct' in exact[0].get('flags',[]):reason='Extinction flag; not added to the living-species selection'
+            elif not row['seed'] and 'extinct' in exact[0].get('flags',[]):
+                override=living_overrides.get(row['name'])
+                if override and override['ott_id']==exact[0]['ott_id'] and override.get('evidence_url') and override.get('reviewed'):
+                    row['living_status_override']=override
+                else:reason='Extinction flag; not added to the living-species selection'
             if reason:
                 if row['seed']:raise ValueError((row['name'],reason))
                 excluded.append({'name':row['name'],'reason':reason})

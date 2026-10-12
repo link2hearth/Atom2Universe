@@ -2482,19 +2482,6 @@
       }
     },
     {
-      "id": "ott266022",
-      "qid": "Q130747",
-      "revision": 2517400410,
-      "modified": "2026-07-14T13:24:00Z",
-      "key": "pt_species_266022_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott1084491",
       "qid": "Q133055",
       "revision": 2517438853,
@@ -4272,19 +4259,6 @@
       }
     },
     {
-      "id": "ott3636272",
-      "qid": "Q136134",
-      "revision": 2517829302,
-      "modified": "2026-07-15T18:24:34Z",
-      "key": "pt_species_3636272_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott1066842",
       "qid": "Q136101",
       "revision": 2517829056,
@@ -4632,19 +4606,6 @@
           "Anethum graveolens",
           "Fenouil bâtard"
         ]
-      }
-    },
-    {
-      "id": "ott4691843",
-      "qid": "Q128546",
-      "revision": 2533670409,
-      "modified": "2026-08-20T11:01:37Z",
-      "key": "pt_species_4691843_body",
-      "en": "species of arachnid",
-      "fr": "espèce d'arachnides",
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -5146,19 +5107,6 @@
       }
     },
     {
-      "id": "ott3636297",
-      "qid": "Q128387",
-      "revision": 2322442759,
-      "modified": "2025-03-10T07:12:56Z",
-      "key": "pt_species_3636297_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3636291",
       "qid": "Q128629",
       "revision": 2517390246,
@@ -5211,19 +5159,6 @@
       }
     },
     {
-      "id": "ott3636306",
-      "qid": "Q128638",
-      "revision": 2517390642,
-      "modified": "2026-07-14T12:55:15Z",
-      "key": "pt_species_3636306_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3636320",
       "qid": "Q128619",
       "revision": 2322444073,
@@ -5255,19 +5190,6 @@
       "revision": 2455997151,
       "modified": "2026-01-19T02:44:32Z",
       "key": "pt_species_3636324_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3636283",
-      "qid": "Q128396",
-      "revision": 2322442886,
-      "modified": "2025-03-10T07:13:16Z",
-      "key": "pt_species_3636283_body",
       "en": "species of fish",
       "fr": "espèce de poissons",
       "aliases": {
@@ -7658,19 +7580,6 @@
           "Carcharhinus Amblyrhynchoides",
           "Requin gracile"
         ]
-      }
-    },
-    {
-      "id": "ott3594987",
-      "qid": "Q82289",
-      "revision": 2522618558,
-      "modified": "2026-07-25T19:05:35Z",
-      "key": "pt_species_3594987_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -10100,23 +10009,6 @@
       }
     },
     {
-      "id": "ott3594695",
-      "qid": "Q143869",
-      "revision": 2517958033,
-      "modified": "2026-07-15T23:37:04Z",
-      "key": "pt_species_3594695_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [
-          "Dasyatis geijskesi"
-        ],
-        "fr": [
-          "Pastenague bécune"
-        ]
-      }
-    },
-    {
       "id": "ott61230",
       "qid": "Q143837",
       "revision": 2517957468,
@@ -10404,19 +10296,6 @@
           "Dicrocoelium Dendriticum",
           "Dicrocoelium lanceolatum"
         ]
-      }
-    },
-    {
-      "id": "ott3636437",
-      "qid": "Q128299",
-      "revision": 2322441071,
-      "modified": "2025-03-10T07:08:42Z",
-      "key": "pt_species_3636437_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -12425,19 +12304,6 @@
       }
     },
     {
-      "id": "ott3636356",
-      "qid": "Q128313",
-      "revision": 2322441504,
-      "modified": "2025-03-10T07:09:48Z",
-      "key": "pt_species_3636356_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3636360",
       "qid": "Q128365",
       "revision": 2455997140,
@@ -12764,19 +12630,6 @@
       "modified": "2026-07-13T01:32:46Z",
       "key": "pt_species_3633224_body",
       "en": "species of fish from the family Lethrinidae",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3633226",
-      "qid": "Q31659",
-      "revision": 2516855650,
-      "modified": "2026-07-13T01:37:52Z",
-      "key": "pt_species_3633226_body",
-      "en": "species of fish",
       "fr": "espèce de poissons",
       "aliases": {
         "en": [],
@@ -14053,24 +13906,6 @@
       }
     },
     {
-      "id": "ott705817",
-      "qid": "Q146500",
-      "revision": 2517971489,
-      "modified": "2026-07-16T00:09:04Z",
-      "key": "pt_species_705817_body",
-      "en": "species of reptile",
-      "fr": "espèce de reptile",
-      "aliases": {
-        "en": [
-          "Janetaescincus veseyfitzgeraldi",
-          "Vesey-Fitzgerald’s burrowing skink"
-        ],
-        "fr": [
-          "Amphiglossus veseyfitzgeraldi"
-        ]
-      }
-    },
-    {
       "id": "ott7138728",
       "qid": "Q151160",
       "revision": 2517397755,
@@ -14180,19 +14015,6 @@
         "en": [
           "Labeo altivelis"
         ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott699264",
-      "qid": "Q140213",
-      "revision": 2517913092,
-      "modified": "2026-07-15T21:41:20Z",
-      "key": "pt_species_699264_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
         "fr": []
       }
     },
@@ -14903,19 +14725,6 @@
       }
     },
     {
-      "id": "ott3633216",
-      "qid": "Q31404",
-      "revision": 2516853898,
-      "modified": "2026-07-13T01:31:39Z",
-      "key": "pt_species_3633216_body",
-      "en": "species of fish of the family Lethrinidae",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott276147",
       "qid": "Q31394",
       "revision": 2516853752,
@@ -14945,22 +14754,6 @@
           "Snubnose emperor"
         ],
         "fr": []
-      }
-    },
-    {
-      "id": "ott177117",
-      "qid": "Q31399",
-      "revision": 2516853768,
-      "modified": "2026-07-13T01:31:01Z",
-      "key": "pt_species_177117_body",
-      "en": "species of fish of the family Lethrinidae",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": [
-          "Empereur Gueule de Vin",
-          "Gueule de Vin"
-        ]
       }
     },
     {
@@ -16237,25 +16030,6 @@
           "Baleine à taquet",
           "megaptère",
           "Rorqual du Cap"
-        ]
-      }
-    },
-    {
-      "id": "ott2845779",
-      "qid": "Q141602",
-      "revision": 2541657204,
-      "modified": "2026-09-07T11:29:26Z",
-      "key": "pt_species_2845779_body",
-      "en": "species of annelid",
-      "fr": "espèce de vers",
-      "aliases": {
-        "en": [
-          "Giant Gippsland Earthworm"
-        ],
-        "fr": [
-          "Megascolides Australis",
-          "Ver de terre géant d'Australie",
-          "Ver géant de Gippsland"
         ]
       }
     },
@@ -18106,21 +17880,6 @@
       }
     },
     {
-      "id": "ott703731",
-      "qid": "Q31495",
-      "revision": 2516853093,
-      "modified": "2026-07-13T01:28:44Z",
-      "key": "pt_species_703731_body",
-      "en": "species of shark (Orectolobus hutchinsi)",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [
-          "Orectolobus hutchinsi"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott798346",
       "qid": "Q31794",
       "revision": 2522524315,
@@ -18163,21 +17922,6 @@
       "aliases": {
         "en": [
           "Orectolobus ornatus"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott274904",
-      "qid": "Q31784",
-      "revision": 2522524508,
-      "modified": "2026-07-25T14:44:01Z",
-      "key": "pt_species_274904_body",
-      "en": "species of shark (Orectolobus wardi)",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [
-          "Orectolobus wardi"
         ],
         "fr": []
       }
@@ -18296,19 +18040,6 @@
       "key": "pt_species_3265717_body",
       "en": "species of insect",
       "fr": "espèce d'insectes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3626148",
-      "qid": "Q80703",
-      "revision": 2517062349,
-      "modified": "2026-07-13T13:39:51Z",
-      "key": "pt_species_3626148_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
       "aliases": {
         "en": [],
         "fr": []
@@ -19430,22 +19161,6 @@
       }
     },
     {
-      "id": "ott656204",
-      "qid": "Q33141",
-      "revision": 2516859833,
-      "modified": "2026-07-13T01:52:25Z",
-      "key": "pt_species_656204_body",
-      "en": "species of reptile",
-      "fr": "espèce de reptiles",
-      "aliases": {
-        "en": [],
-        "fr": [
-          "Lacerta judaica",
-          "Lacerta laevis"
-        ]
-      }
-    },
-    {
       "id": "ott33133",
       "qid": "Q26755",
       "revision": 2538974785,
@@ -19786,19 +19501,6 @@
       }
     },
     {
-      "id": "ott3622005",
-      "qid": "Q26950",
-      "revision": 2516837555,
-      "modified": "2026-07-13T00:36:24Z",
-      "key": "pt_species_3622005_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott942902",
       "qid": "Q27080",
       "revision": 2516840498,
@@ -19806,19 +19508,6 @@
       "key": "pt_species_942902_body",
       "en": "species of fish",
       "fr": "espèce de poissons-chats",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3622001",
-      "qid": "Q27096",
-      "revision": 2516840534,
-      "modified": "2026-07-13T00:46:18Z",
-      "key": "pt_species_3622001_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
       "aliases": {
         "en": [],
         "fr": []
@@ -20340,19 +20029,6 @@
       }
     },
     {
-      "id": "ott3631951",
-      "qid": "Q81388",
-      "revision": 2517065134,
-      "modified": "2026-07-13T13:47:29Z",
-      "key": "pt_species_3631951_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott329312",
       "qid": "Q148994",
       "revision": 2539792252,
@@ -20403,19 +20079,6 @@
       "revision": 2537880868,
       "modified": "2026-08-29T20:45:55Z",
       "key": "pt_species_232767_body",
-      "en": "species of crustacean",
-      "fr": "espèce d'isopodes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott2992768",
-      "qid": "Q84119",
-      "revision": 2537880877,
-      "modified": "2026-08-29T20:45:57Z",
-      "key": "pt_species_2992768_body",
       "en": "species of crustacean",
       "fr": "espèce d'isopodes",
       "aliases": {
@@ -20546,32 +20209,6 @@
       }
     },
     {
-      "id": "ott3631944",
-      "qid": "Q81371",
-      "revision": 2517064506,
-      "modified": "2026-07-13T13:45:58Z",
-      "key": "pt_species_3631944_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott725237",
-      "qid": "Q149049",
-      "revision": 2534110854,
-      "modified": "2026-08-21T08:02:28Z",
-      "key": "pt_species_725237_body",
-      "en": "species of worm",
-      "fr": "espèce de nématodes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott744386",
       "qid": "Q149065",
       "revision": 2535995750,
@@ -20691,32 +20328,6 @@
       "revision": 2517063643,
       "modified": "2026-07-13T13:43:25Z",
       "key": "pt_species_3631974_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3624261",
-      "qid": "Q26940",
-      "revision": 2516837344,
-      "modified": "2026-07-13T00:35:45Z",
-      "key": "pt_species_3624261_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3624233",
-      "qid": "Q26941",
-      "revision": 2516837348,
-      "modified": "2026-07-13T00:35:46Z",
-      "key": "pt_species_3624233_body",
       "en": "species of fish",
       "fr": "espèce de poissons",
       "aliases": {
@@ -20933,19 +20544,6 @@
       }
     },
     {
-      "id": "ott3631703",
-      "qid": "Q81385",
-      "revision": 2517065050,
-      "modified": "2026-07-13T13:47:15Z",
-      "key": "pt_species_3631703_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631710",
       "qid": "Q81346",
       "revision": 2517063651,
@@ -20959,37 +20557,11 @@
       }
     },
     {
-      "id": "ott3631705",
-      "qid": "Q81327",
-      "revision": 2517066396,
-      "modified": "2026-07-13T13:50:32Z",
-      "key": "pt_species_3631705_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631704",
       "qid": "Q81383",
       "revision": 2517065020,
       "modified": "2026-07-13T13:47:09Z",
       "key": "pt_species_3631704_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631696",
-      "qid": "Q81391",
-      "revision": 2517065132,
-      "modified": "2026-07-13T13:47:29Z",
-      "key": "pt_species_3631696_body",
       "en": "species of fish",
       "fr": "espèce de poissons",
       "aliases": {
@@ -21024,50 +20596,11 @@
       }
     },
     {
-      "id": "ott3631708",
-      "qid": "Q81399",
-      "revision": 2517065273,
-      "modified": "2026-07-13T13:47:47Z",
-      "key": "pt_species_3631708_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631713",
       "qid": "Q81337",
       "revision": 2517063398,
       "modified": "2026-07-13T13:42:45Z",
       "key": "pt_species_3631713_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott1081128",
-      "qid": "Q81376",
-      "revision": 2517064722,
-      "modified": "2026-07-13T13:46:26Z",
-      "key": "pt_species_1081128_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631707",
-      "qid": "Q81407",
-      "revision": 2517065522,
-      "modified": "2026-07-13T13:48:21Z",
-      "key": "pt_species_3631707_body",
       "en": "species of fish",
       "fr": "espèce de poissons",
       "aliases": {
@@ -21128,32 +20661,6 @@
       }
     },
     {
-      "id": "ott1081096",
-      "qid": "Q81379",
-      "revision": 2517064992,
-      "modified": "2026-07-13T13:47:02Z",
-      "key": "pt_species_1081096_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631711",
-      "qid": "Q81409",
-      "revision": 2517065537,
-      "modified": "2026-07-13T13:48:22Z",
-      "key": "pt_species_3631711_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631702",
       "qid": "Q81329",
       "revision": 2517063170,
@@ -21167,37 +20674,11 @@
       }
     },
     {
-      "id": "ott3631712",
-      "qid": "Q81416",
-      "revision": 2517065858,
-      "modified": "2026-07-13T13:49:06Z",
-      "key": "pt_species_3631712_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631701",
       "qid": "Q81381",
       "revision": 2517065045,
       "modified": "2026-07-13T13:47:15Z",
       "key": "pt_species_3631701_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631716",
-      "qid": "Q81339",
-      "revision": 2517063568,
-      "modified": "2026-07-13T13:43:14Z",
-      "key": "pt_species_3631716_body",
       "en": "species of fish",
       "fr": "espèce de poissons",
       "aliases": {
@@ -21753,21 +21234,6 @@
       "aliases": {
         "en": [
           "Ptychocheilus oregonensis"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott223349",
-      "qid": "Q13380",
-      "revision": 2517787219,
-      "modified": "2026-07-15T14:51:12Z",
-      "key": "pt_species_223349_body",
-      "en": "species of gecko",
-      "fr": "espèce de geckos",
-      "aliases": {
-        "en": [
-          "Kinabalu gliding gecko"
         ],
         "fr": []
       }
@@ -22924,6 +22390,30 @@
         "fr": [
           "Saponaria officinalis",
           "saponaire officinale"
+        ]
+      }
+    },
+    {
+      "id": "ott948469",
+      "qid": "Q134964",
+      "revision": 2544783491,
+      "modified": "2026-09-12T23:42:57Z",
+      "key": "pt_species_948469_body",
+      "en": "species of carnivorous marsupial from Australia",
+      "fr": "espèce de mammifères",
+      "aliases": {
+        "en": [
+          "Sarcophilus harrisii",
+          "S. harrisii",
+          "ďábel medvědovitý",
+          "T-devil"
+        ],
+        "fr": [
+          "Sarcophilus harrisii",
+          "Sarcophilus laniarus",
+          "Sarcophile",
+          "Sarcophilus harrissii",
+          "Diable De Tasmanie"
         ]
       }
     },
@@ -24253,19 +23743,6 @@
       }
     },
     {
-      "id": "ott336304",
-      "qid": "Q136205",
-      "revision": 2517828942,
-      "modified": "2026-07-15T18:24:06Z",
-      "key": "pt_species_336304_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3622042",
       "qid": "Q26947",
       "revision": 2516837456,
@@ -25275,19 +24752,6 @@
         "en": [
           "Boisduval's Hawkmoth"
         ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4134270",
-      "qid": "Q149140",
-      "revision": 2517984016,
-      "modified": "2026-07-16T00:45:57Z",
-      "key": "pt_species_4134270_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [],
         "fr": []
       }
     },
@@ -26676,19 +26140,6 @@
       }
     },
     {
-      "id": "ott4557528",
-      "qid": "Q93808",
-      "revision": 2517836824,
-      "modified": "2026-07-15T18:38:34Z",
-      "key": "pt_species_4557528_body",
-      "en": "species of insect",
-      "fr": "espèce d'insectes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott817457",
       "qid": "Q141733",
       "revision": 2547632012,
@@ -26802,21 +26253,6 @@
           "Alpaca",
           "Vicugna pacos"
         ]
-      }
-    },
-    {
-      "id": "ott652358",
-      "qid": "Q144184",
-      "revision": 2517960110,
-      "modified": "2026-07-15T23:41:51Z",
-      "key": "pt_species_652358_body",
-      "en": "species of fish",
-      "fr": "espèce de poissons",
-      "aliases": {
-        "en": [
-          "Vinciguerria nimbaria"
-        ],
-        "fr": []
       }
     },
     {
@@ -29372,15 +28808,6 @@
       }
     },
     {
-      "id": "ott266022",
-      "qid": "Q130747",
-      "revision": 2517400410,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott1084491",
       "qid": "Q133055",
       "revision": 2517438853,
@@ -30759,15 +30186,6 @@
       }
     },
     {
-      "id": "ott3636272",
-      "qid": "Q136134",
-      "revision": 2517829302,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott1066842",
       "qid": "Q136101",
       "revision": 2517829056,
@@ -31035,15 +30453,6 @@
           "Anethum graveolens",
           "Fenouil bâtard"
         ]
-      }
-    },
-    {
-      "id": "ott4691843",
-      "qid": "Q128546",
-      "revision": 2533670409,
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -31421,15 +30830,6 @@
       }
     },
     {
-      "id": "ott3636297",
-      "qid": "Q128387",
-      "revision": 2322442759,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3636291",
       "qid": "Q128629",
       "revision": 2517390246,
@@ -31466,15 +30866,6 @@
       }
     },
     {
-      "id": "ott3636306",
-      "qid": "Q128638",
-      "revision": 2517390642,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3636320",
       "qid": "Q128619",
       "revision": 2322444073,
@@ -31496,15 +30887,6 @@
       "id": "ott3636324",
       "qid": "Q128398",
       "revision": 2455997151,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3636283",
-      "qid": "Q128396",
-      "revision": 2322442886,
       "aliases": {
         "en": [],
         "fr": []
@@ -32075,15 +31457,6 @@
       }
     },
     {
-      "id": "ott3649489",
-      "qid": "Q46427",
-      "revision": 2516788793,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3649483",
       "qid": "Q46417",
       "revision": 2516788748,
@@ -32117,17 +31490,6 @@
           "Écrevisse géante de Tasmanie",
           "Astacopsis Gouldi"
         ]
-      }
-    },
-    {
-      "id": "ott3651130",
-      "qid": "Q82773",
-      "revision": 2517078248,
-      "aliases": {
-        "en": [
-          "Asthenosoma dilatatum Mortensen, 1934"
-        ],
-        "fr": []
       }
     },
     {
@@ -33486,15 +32848,6 @@
           "Carcharhinus Amblyrhynchoides",
           "Requin gracile"
         ]
-      }
-    },
-    {
-      "id": "ott3594987",
-      "qid": "Q82289",
-      "revision": 2522618558,
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -35522,19 +34875,6 @@
       }
     },
     {
-      "id": "ott3594695",
-      "qid": "Q143869",
-      "revision": 2517958033,
-      "aliases": {
-        "en": [
-          "Dasyatis geijskesi"
-        ],
-        "fr": [
-          "Pastenague bécune"
-        ]
-      }
-    },
-    {
       "id": "ott61230",
       "qid": "Q143837",
       "revision": 2517957468,
@@ -35775,15 +35115,6 @@
           "Dicrocoelium Dendriticum",
           "Dicrocoelium lanceolatum"
         ]
-      }
-    },
-    {
-      "id": "ott3636437",
-      "qid": "Q128299",
-      "revision": 2322441071,
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -37459,15 +36790,6 @@
       }
     },
     {
-      "id": "ott3636356",
-      "qid": "Q128313",
-      "revision": 2322441504,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3636360",
       "qid": "Q128365",
       "revision": 2455997140,
@@ -37726,15 +37048,6 @@
       }
     },
     {
-      "id": "ott3633226",
-      "qid": "Q31659",
-      "revision": 2516855650,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3636347",
       "qid": "Q130751",
       "revision": 2531965447,
@@ -37771,108 +37084,9 @@
       }
     },
     {
-      "id": "ott4980493",
-      "qid": "Q38388",
-      "revision": 2534489067,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980470",
-      "qid": "Q38521",
-      "revision": 2534489095,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980511",
-      "qid": "Q38381",
-      "revision": 2534489060,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott64307",
-      "qid": "Q38514",
-      "revision": 2534489089,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980506",
-      "qid": "Q38376",
-      "revision": 2534489052,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980515",
-      "qid": "Q38401",
-      "revision": 2534489077,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980509",
-      "qid": "Q38721",
-      "revision": 2534489145,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980514",
-      "qid": "Q38719",
-      "revision": 2534489140,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott1009760",
       "qid": "Q38718",
       "revision": 2534489134,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980520",
-      "qid": "Q38378",
-      "revision": 2534489056,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980508",
-      "qid": "Q38507",
-      "revision": 2534489082,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4980518",
-      "qid": "Q38693",
-      "revision": 2534489107,
       "aliases": {
         "en": [],
         "fr": []
@@ -38098,15 +37312,6 @@
           "Artichaut de Jérusalem",
           "Helianthus tuberosus"
         ]
-      }
-    },
-    {
-      "id": "ott3657207",
-      "qid": "Q150457",
-      "revision": 2548709536,
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -38827,15 +38032,6 @@
       }
     },
     {
-      "id": "ott3684301",
-      "qid": "Q38739",
-      "revision": 2322333333,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3684307",
       "qid": "Q38391",
       "revision": 2455993399,
@@ -38964,20 +38160,6 @@
           "Ixoreus naevius",
           "Turdus naevius",
           "Zoothera naevia"
-        ]
-      }
-    },
-    {
-      "id": "ott705817",
-      "qid": "Q146500",
-      "revision": 2517971489,
-      "aliases": {
-        "en": [
-          "Janetaescincus veseyfitzgeraldi",
-          "Vesey-Fitzgerald’s burrowing skink"
-        ],
-        "fr": [
-          "Amphiglossus veseyfitzgeraldi"
         ]
       }
     },
@@ -39124,15 +38306,6 @@
         "en": [
           "Labeo altivelis"
         ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott699264",
-      "qid": "Q140213",
-      "revision": 2517913092,
-      "aliases": {
-        "en": [],
         "fr": []
       }
     },
@@ -39683,15 +38856,6 @@
       }
     },
     {
-      "id": "ott3633216",
-      "qid": "Q31404",
-      "revision": 2516853898,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott276147",
       "qid": "Q31394",
       "revision": 2516853752,
@@ -39713,18 +38877,6 @@
           "Snubnose emperor"
         ],
         "fr": []
-      }
-    },
-    {
-      "id": "ott177117",
-      "qid": "Q31399",
-      "revision": 2516853768,
-      "aliases": {
-        "en": [],
-        "fr": [
-          "Empereur Gueule de Vin",
-          "Gueule de Vin"
-        ]
       }
     },
     {
@@ -40767,21 +39919,6 @@
           "Baleine à taquet",
           "megaptère",
           "Rorqual du Cap"
-        ]
-      }
-    },
-    {
-      "id": "ott2845779",
-      "qid": "Q141602",
-      "revision": 2541657204,
-      "aliases": {
-        "en": [
-          "Giant Gippsland Earthworm"
-        ],
-        "fr": [
-          "Megascolides Australis",
-          "Ver de terre géant d'Australie",
-          "Ver géant de Gippsland"
         ]
       }
     },
@@ -42363,17 +41500,6 @@
       }
     },
     {
-      "id": "ott703731",
-      "qid": "Q31495",
-      "revision": 2516853093,
-      "aliases": {
-        "en": [
-          "Orectolobus hutchinsi"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott798346",
       "qid": "Q31794",
       "revision": 2522524315,
@@ -42415,28 +41541,6 @@
       "aliases": {
         "en": [
           "Orectolobus parvimaculatus"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3594840",
-      "qid": "Q31597",
-      "revision": 2516856016,
-      "aliases": {
-        "en": [
-          "network wobbegong"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott274904",
-      "qid": "Q31784",
-      "revision": 2522524508,
-      "aliases": {
-        "en": [
-          "Orectolobus wardi"
         ],
         "fr": []
       }
@@ -42551,15 +41655,6 @@
           "Japanese royal fern",
           "Japanese flowering fern"
         ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3626148",
-      "qid": "Q80703",
-      "revision": 2517062349,
-      "aliases": {
-        "en": [],
         "fr": []
       }
     },
@@ -42903,17 +41998,6 @@
         "fr": [
           "Requin carpette à collerette"
         ]
-      }
-    },
-    {
-      "id": "ott3594811",
-      "qid": "Q31500",
-      "revision": 2516853127,
-      "aliases": {
-        "en": [
-          "Parascyllium elongatum"
-        ],
-        "fr": []
       }
     },
     {
@@ -43514,18 +42598,6 @@
       }
     },
     {
-      "id": "ott656204",
-      "qid": "Q33141",
-      "revision": 2516859833,
-      "aliases": {
-        "en": [],
-        "fr": [
-          "Lacerta judaica",
-          "Lacerta laevis"
-        ]
-      }
-    },
-    {
       "id": "ott33133",
       "qid": "Q26755",
       "revision": 2538974785,
@@ -43809,27 +42881,9 @@
       }
     },
     {
-      "id": "ott3622005",
-      "qid": "Q26950",
-      "revision": 2516837555,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott942902",
       "qid": "Q27080",
       "revision": 2516840498,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3622001",
-      "qid": "Q27096",
-      "revision": 2516840534,
       "aliases": {
         "en": [],
         "fr": []
@@ -44285,15 +43339,6 @@
       }
     },
     {
-      "id": "ott3631951",
-      "qid": "Q81388",
-      "revision": 2517065134,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott329312",
       "qid": "Q148994",
       "revision": 2539792252,
@@ -44330,15 +43375,6 @@
       "id": "ott232767",
       "qid": "Q82885",
       "revision": 2537880868,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott2992768",
-      "qid": "Q84119",
-      "revision": 2537880877,
       "aliases": {
         "en": [],
         "fr": []
@@ -44425,24 +43461,6 @@
       "id": "ott3900446",
       "qid": "Q24216",
       "revision": 2536013768,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631944",
-      "qid": "Q81371",
-      "revision": 2517064506,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott725237",
-      "qid": "Q149049",
-      "revision": 2534110854,
       "aliases": {
         "en": [],
         "fr": []
@@ -44538,24 +43556,6 @@
       "id": "ott3631974",
       "qid": "Q81342",
       "revision": 2517063643,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3624261",
-      "qid": "Q26940",
-      "revision": 2516837344,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3624233",
-      "qid": "Q26941",
-      "revision": 2516837348,
       "aliases": {
         "en": [],
         "fr": []
@@ -44718,15 +43718,6 @@
       }
     },
     {
-      "id": "ott3631703",
-      "qid": "Q81385",
-      "revision": 2517065050,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631710",
       "qid": "Q81346",
       "revision": 2517063651,
@@ -44736,27 +43727,9 @@
       }
     },
     {
-      "id": "ott3631705",
-      "qid": "Q81327",
-      "revision": 2517066396,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631704",
       "qid": "Q81383",
       "revision": 2517065020,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631696",
-      "qid": "Q81391",
-      "revision": 2517065132,
       "aliases": {
         "en": [],
         "fr": []
@@ -44781,36 +43754,9 @@
       }
     },
     {
-      "id": "ott3631708",
-      "qid": "Q81399",
-      "revision": 2517065273,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631713",
       "qid": "Q81337",
       "revision": 2517063398,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott1081128",
-      "qid": "Q81376",
-      "revision": 2517064722,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631707",
-      "qid": "Q81407",
-      "revision": 2517065522,
       "aliases": {
         "en": [],
         "fr": []
@@ -44853,24 +43799,6 @@
       }
     },
     {
-      "id": "ott1081096",
-      "qid": "Q81379",
-      "revision": 2517064992,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631711",
-      "qid": "Q81409",
-      "revision": 2517065537,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631702",
       "qid": "Q81329",
       "revision": 2517063170,
@@ -44880,27 +43808,9 @@
       }
     },
     {
-      "id": "ott3631712",
-      "qid": "Q81416",
-      "revision": 2517065858,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3631701",
       "qid": "Q81381",
       "revision": 2517065045,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3631716",
-      "qid": "Q81339",
-      "revision": 2517063568,
       "aliases": {
         "en": [],
         "fr": []
@@ -45406,17 +44316,6 @@
       "aliases": {
         "en": [
           "Ptychocheilus oregonensis"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott223349",
-      "qid": "Q13380",
-      "revision": 2517787219,
-      "aliases": {
-        "en": [
-          "Kinabalu gliding gecko"
         ],
         "fr": []
       }
@@ -45972,27 +44871,9 @@
       }
     },
     {
-      "id": "ott3684296",
-      "qid": "Q38708",
-      "revision": 2322332842,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3684291",
       "qid": "Q38705",
       "revision": 2322332785,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3684290",
-      "qid": "Q38692",
-      "revision": 2455993412,
       "aliases": {
         "en": [],
         "fr": []
@@ -46564,6 +45445,26 @@
         "fr": [
           "Saponaria officinalis",
           "saponaire officinale"
+        ]
+      }
+    },
+    {
+      "id": "ott948469",
+      "qid": "Q134964",
+      "revision": 2544783491,
+      "aliases": {
+        "en": [
+          "Sarcophilus harrisii",
+          "S. harrisii",
+          "ďábel medvědovitý",
+          "T-devil"
+        ],
+        "fr": [
+          "Sarcophilus harrisii",
+          "Sarcophilus laniarus",
+          "Sarcophile",
+          "Sarcophilus harrissii",
+          "Diable De Tasmanie"
         ]
       }
     },
@@ -47662,15 +46563,6 @@
       }
     },
     {
-      "id": "ott336304",
-      "qid": "Q136205",
-      "revision": 2517828942,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3622042",
       "qid": "Q26947",
       "revision": 2516837456,
@@ -48498,15 +47390,6 @@
         "en": [
           "Boisduval's Hawkmoth"
         ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott4134270",
-      "qid": "Q149140",
-      "revision": 2517984016,
-      "aliases": {
-        "en": [],
         "fr": []
       }
     },
@@ -49648,15 +48531,6 @@
       }
     },
     {
-      "id": "ott4557528",
-      "qid": "Q93808",
-      "revision": 2517836824,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott817457",
       "qid": "Q141733",
       "revision": 2547632012,
@@ -49746,17 +48620,6 @@
           "Alpaca",
           "Vicugna pacos"
         ]
-      }
-    },
-    {
-      "id": "ott652358",
-      "qid": "Q144184",
-      "revision": 2517960110,
-      "aliases": {
-        "en": [
-          "Vinciguerria nimbaria"
-        ],
-        "fr": []
       }
     },
     {

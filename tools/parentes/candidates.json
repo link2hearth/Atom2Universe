@@ -9988,7 +9988,7 @@
     {
       "name": "Sarcophilus harrisii",
       "en": "Tasmanian devil",
-      "fr": "diable de Tasmanie",
+      "fr": "Diable de Tasmanie",
       "qid": "Q134964"
     },
     {
@@ -11824,6 +11824,103 @@
       "en": "Zungaropsis multimaculatus",
       "fr": "Zungaropsis multimaculatus",
       "qid": "Q26959"
+    },
+    {
+      "name": "Giraffa camelopardalis",
+      "en": "Northern giraffe",
+      "fr": "Girafe du Nord"
+    },
+    {
+      "name": "Hydrochoerus hydrochaeris",
+      "en": "Capybara",
+      "fr": "Capybara"
+    },
+    {
+      "name": "Myrmecophaga tridactyla",
+      "en": "Giant anteater",
+      "fr": "Fourmilier géant"
+    },
+    {
+      "name": "Bradypus variegatus",
+      "en": "Brown-throated sloth",
+      "fr": "Paresseux à gorge brune"
+    },
+    {
+      "name": "Dasypus novemcinctus",
+      "en": "Nine-banded armadillo",
+      "fr": "Tatou à neuf bandes"
+    },
+    {
+      "name": "Tachyglossus aculeatus",
+      "en": "Short-beaked echidna",
+      "fr": "Échidné à nez court"
+    },
+    {
+      "name": "Vombatus ursinus",
+      "en": "Common wombat",
+      "fr": "Wombat commun"
+    },
+    {
+      "name": "Crocuta crocuta",
+      "en": "Spotted hyena",
+      "fr": "Hyène tachetée"
+    },
+    {
+      "name": "Suricata suricatta",
+      "en": "Meerkat",
+      "fr": "Suricate"
+    },
+    {
+      "name": "Manis tricuspis",
+      "en": "White-bellied pangolin",
+      "fr": "Pangolin à ventre blanc"
+    },
+    {
+      "name": "Tapirus terrestris",
+      "en": "Lowland tapir",
+      "fr": "Tapir terrestre"
+    },
+    {
+      "name": "Ailurus fulgens",
+      "en": "Red panda",
+      "fr": "Panda roux"
+    },
+    {
+      "name": "Trichechus manatus",
+      "en": "West Indian manatee",
+      "fr": "Lamantin des Caraïbes"
+    },
+    {
+      "name": "Rangifer tarandus",
+      "en": "Reindeer",
+      "fr": "Renne"
+    },
+    {
+      "name": "Saiga tatarica",
+      "en": "Saiga antelope",
+      "fr": "Saïga"
     }
-  ]
+  ],
+  "editorial_additions_2026_10_12": {
+    "reason": "User-requested morphologically diverse mammal representatives; exact unique accepted terminal OpenTree identities and complete pinned lineages checked",
+    "synth_id": "opentree16.1",
+    "names": [
+      "Giraffa camelopardalis",
+      "Hydrochoerus hydrochaeris",
+      "Myrmecophaga tridactyla",
+      "Bradypus variegatus",
+      "Dasypus novemcinctus",
+      "Tachyglossus aculeatus",
+      "Vombatus ursinus",
+      "Sarcophilus harrisii",
+      "Crocuta crocuta",
+      "Suricata suricatta",
+      "Manis tricuspis",
+      "Tapirus terrestris",
+      "Ailurus fulgens",
+      "Trichechus manatus",
+      "Rangifer tarandus",
+      "Saiga tatarica"
+    ]
+  }
 }

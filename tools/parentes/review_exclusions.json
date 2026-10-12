@@ -38,5 +38,253 @@
   {
     "name": "Uromys siebersi",
     "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Aequidens potaroensis",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Amphilophus margaritifer",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Angka hexops",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Apistogramma pleurotaenia",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Apistogramma rupununi",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Apistogramma taeniata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Aspidodiadema sinuosum",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Asthenosoma dilatatum",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Carcharhinus macrops",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Gyptis bruneli",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis comata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis crinita",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis golikovi",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis heteroculatus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis hians",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis lobata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis lobatus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis maraunibinae",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis raluanensis",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Gyptis vittata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: redundant Gyptis cousins; illustrated Gyptis mackiei retained."
+  },
+  {
+    "name": "Intoshia major",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Osteochilus enneaporos",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Pimelodus platicirris",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Polypera simushirae",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Porcellio ferroi",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Praematoliparis anarthractae",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos groenlandicus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos harteli",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos micruroides",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Psednos micrurus",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Rhopalura elongata",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Rhopalura litoralis",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Venturia compacta",
+    "reason": "User-authorized editorial exclusion 2026-10-12: undocumented animal; no sufficient reliable visual sources."
+  },
+  {
+    "name": "Dasyatis geijskesi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Dicrossus gladicauda",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Geophagus camopiensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Gymnocranius oblongus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Heliaster solaris",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Janetaescincus veseyfitzgeraldi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Labeo nasus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Lethrinus amboinensis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Lethrinus conchyliatus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Megascolides australis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Orectolobus hutchinsi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Orectolobus reticulatus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Orectolobus wardi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Parascyllium elongatum",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Phoenicolacerta laevis",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Pimelodus punctatus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Pratylenchus penetrans",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Propimelodus araguayae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Propimelodus caesius",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos balushkini",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos carolinae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos christinae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos gelatinosus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos nataliae",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Psednos sargassicus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Ptychozoon rhacophorus",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Steindachneria argentea",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Thermichthys hollisi",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+  },
+  {
+    "name": "Vinciguerria nimbaria",
+    "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
   }
 ]

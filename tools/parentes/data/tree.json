@@ -7752,6 +7752,46 @@
       "git_object_sha": "b49fa3a5303b707c7c881fa06d86d9f8b36fd4d8",
       "snapshot_url": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/phylo_snapshot/tree_ot_2180@tree1.json",
       "reference_label": "RAxML_bipartitions.result.tre (Oliveros, 2021)"
+    },
+    "ot_642@tree1": {
+      "git_sha": "",
+      "study_id": "ot_642",
+      "tree_id": "tree1",
+      "git_object_sha": "72372f738513669224db12cbe48aaa14fa1431fc",
+      "snapshot_url": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/phylo_snapshot/tree_ot_642@tree1.json",
+      "reference_label": "tree1 (Delsuc, 2016)"
+    },
+    "ot_647@tree2": {
+      "git_sha": "",
+      "study_id": "ot_647",
+      "tree_id": "tree2",
+      "git_object_sha": "87153454b1d42b9cfc65c22c0ba055d11ad615ff",
+      "snapshot_url": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/phylo_snapshot/tree_ot_647@tree2.json",
+      "reference_label": "Fig. 2 (chronogram CAT-GTR-G4) (Gibb, 2015)"
+    },
+    "pg_2825@tree6572": {
+      "git_sha": "",
+      "study_id": "pg_2825",
+      "tree_id": "tree6572",
+      "git_object_sha": "6d02c31c729e4994a56f05c7fb5bc835ee84d723",
+      "snapshot_url": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/phylo_snapshot/tree_pg_2825@tree6572.json",
+      "reference_label": "tree6572 (Delsuc, 2012)"
+    },
+    "pg_2684@tree6644": {
+      "git_sha": "",
+      "study_id": "pg_2684",
+      "tree_id": "tree6644",
+      "git_object_sha": "b47ce6a68b617f4ec0f135c3281d75c35b126325",
+      "snapshot_url": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/phylo_snapshot/tree_pg_2684@tree6644.json",
+      "reference_label": "tree6644 (Koepfli, 2006)"
+    },
+    "pg_2359@tree4962": {
+      "git_sha": "",
+      "study_id": "pg_2359",
+      "tree_id": "tree4962",
+      "git_object_sha": "17564aec0ae88fba867685f8acf862933ad08d0a",
+      "snapshot_url": "https://files.opentreeoflife.org/synthesis/opentree16.1/opentree16.1/phylo_snapshot/tree_pg_2359@tree4962.json",
+      "reference_label": "tree4962 (Bärmann, 2013)"
     }
   },
   "nodes": [
@@ -110161,57 +110201,6 @@
       "species": false
     },
     {
-      "id": "ott266022",
-      "parent": "mrcaott266022ott4948881",
-      "scientific": "Aequidens potaroensis",
-      "ott": 266022,
-      "tax_sources": [
-        "ncbi:449257",
-        "gbif:5208315",
-        "irmng:11098498"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott266022"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_266022",
-      "requested_node_id": "ott266022"
-    },
-    {
-      "id": "mrcaott266022ott4948881",
-      "parent": "mrcaott266022ott687203",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node3059"
-      },
-      "conflicts_with": {
-        "ot_3067@tree1": [
-          "node415",
-          "node416"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott266022ott687203",
-      "parent": "mrcaott167686ott266022",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node3058"
-      },
-      "conflicts_with": {
-        "ot_3067@tree1": [
-          "node415"
-        ]
-      },
-      "species": false
-    },
-    {
       "id": "ott1084491",
       "parent": "mrcaott258884ott1084491",
       "scientific": "Aequorea victoria",
@@ -128684,23 +128673,6 @@
       "species": false
     },
     {
-      "id": "ott3636272",
-      "parent": "mrcaott10098ott10105",
-      "scientific": "Amphilophus margaritifer",
-      "ott": 3636272,
-      "tax_sources": [
-        "gbif:2370119",
-        "irmng:10451027"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3636272"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3636272",
-      "requested_node_id": "ott3636272"
-    },
-    {
       "id": "ott1066842",
       "parent": "mrcaott513777ott1066842",
       "scientific": "Amphilophus zaliosus",
@@ -132457,38 +132429,6 @@
       "supported_by": {
         "ot_2304@tree2": "node6526",
         "ot_311@tree1": "node49757"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott4691843",
-      "parent": "ott4691842",
-      "scientific": "Angka hexops",
-      "ott": 4691843,
-      "tax_sources": [
-        "gbif:2140715",
-        "irmng:10751552"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4691843"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4691843",
-      "requested_node_id": "ott4691843"
-    },
-    {
-      "id": "ott4691842",
-      "parent": "ott106117",
-      "scientific": "Angka",
-      "ott": 4691842,
-      "tax_sources": [
-        "gbif:2140714",
-        "irmng:1321611"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4691842"
       },
       "conflicts_with": {},
       "species": false
@@ -138732,23 +138672,6 @@
       "requested_node_id": "ott3636301"
     },
     {
-      "id": "ott3636297",
-      "parent": "mrcaott18582ott316250",
-      "scientific": "Apistogramma pleurotaenia",
-      "ott": 3636297,
-      "tax_sources": [
-        "gbif:2371229",
-        "irmng:10137039"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3636297"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3636297",
-      "requested_node_id": "ott3636297"
-    },
-    {
       "id": "ott3636291",
       "parent": "mrcaott3636291ott3636310",
       "scientific": "Apistogramma pulchra",
@@ -138842,23 +138765,6 @@
       "requested_node_id": "ott3636314"
     },
     {
-      "id": "ott3636306",
-      "parent": "mrcaott18582ott316250",
-      "scientific": "Apistogramma rupununi",
-      "ott": 3636306,
-      "tax_sources": [
-        "gbif:2371281",
-        "irmng:10944050"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3636306"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3636306",
-      "requested_node_id": "ott3636306"
-    },
-    {
       "id": "ott3636320",
       "parent": "mrcaott18582ott316250",
       "scientific": "Apistogramma similis",
@@ -138909,23 +138815,6 @@
       "species": true,
       "key": "pt_species_3636324",
       "requested_node_id": "ott3636324"
-    },
-    {
-      "id": "ott3636283",
-      "parent": "mrcaott18582ott316250",
-      "scientific": "Apistogramma taeniata",
-      "ott": 3636283,
-      "tax_sources": [
-        "gbif:2371257",
-        "irmng:10145778"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3636283"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3636283",
-      "requested_node_id": "ott3636283"
     },
     {
       "id": "ott3636278",
@@ -149124,24 +149013,6 @@
       "species": false
     },
     {
-      "id": "ott3649489",
-      "parent": "ott557022",
-      "scientific": "Aspidodiadema sinuosum",
-      "ott": 3649489,
-      "tax_sources": [
-        "worms:513015",
-        "gbif:5964597",
-        "irmng:11772402"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3649489"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3649489",
-      "requested_node_id": "ott3649489"
-    },
-    {
       "id": "ott557022",
       "parent": "ott1079505",
       "scientific": "Aspidodiadema",
@@ -149606,24 +149477,6 @@
       },
       "conflicts_with": {},
       "species": false
-    },
-    {
-      "id": "ott3651130",
-      "parent": "ott788004",
-      "scientific": "Asthenosoma dilatatum",
-      "ott": 3651130,
-      "tax_sources": [
-        "worms:513134",
-        "gbif:5965510",
-        "irmng:11726235"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3651130"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3651130",
-      "requested_node_id": "ott3651130"
     },
     {
       "id": "ott788004",
@@ -171484,24 +171337,6 @@
         ]
       },
       "species": false
-    },
-    {
-      "id": "ott3594987",
-      "parent": "mrcaott19944ott133566",
-      "scientific": "Carcharhinus macrops",
-      "ott": 3594987,
-      "tax_sources": [
-        "worms:398262",
-        "gbif:2417969",
-        "irmng:11831277"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3594987"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3594987",
-      "requested_node_id": "ott3594987"
     },
     {
       "id": "ott609020",
@@ -199797,24 +199632,6 @@
       "species": false
     },
     {
-      "id": "ott3594695",
-      "parent": "mrcaott1941ott57993",
-      "scientific": "Dasyatis geijskesi",
-      "ott": 3594695,
-      "tax_sources": [
-        "worms:271432",
-        "gbif:9456248",
-        "irmng:10160195"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3594695"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3594695",
-      "requested_node_id": "ott3594695"
-    },
-    {
       "id": "ott61230",
       "parent": "mrcaott61226ott61230",
       "scientific": "Dasyatis izuensis",
@@ -203173,22 +202990,6 @@
         ]
       },
       "species": false
-    },
-    {
-      "id": "ott3636437",
-      "parent": "ott366952",
-      "scientific": "Dicrossus gladicauda",
-      "ott": 3636437,
-      "tax_sources": [
-        "gbif:5208253"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3636437"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3636437",
-      "requested_node_id": "ott3636437"
     },
     {
       "id": "ott366952",
@@ -224308,23 +224109,6 @@
       "requested_node_id": "ott3636361"
     },
     {
-      "id": "ott3636356",
-      "parent": "mrcaott87568ott264578",
-      "scientific": "Geophagus camopiensis",
-      "ott": 3636356,
-      "tax_sources": [
-        "gbif:5208436",
-        "irmng:10148816"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3636356"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3636356",
-      "requested_node_id": "ott3636356"
-    },
-    {
       "id": "ott3636360",
       "parent": "mrcaott3636357ott3636360",
       "scientific": "Geophagus crassilabris",
@@ -231237,25 +231021,6 @@
       "requested_node_id": "ott3633224"
     },
     {
-      "id": "ott3633226",
-      "parent": "ott276156",
-      "scientific": "Gymnocranius oblongus",
-      "ott": 3633226,
-      "tax_sources": [
-        "ncbi:1871310",
-        "worms:712731",
-        "gbif:5962054",
-        "irmng:11896626"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3633226"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3633226",
-      "requested_node_id": "ott3633226"
-    },
-    {
       "id": "ott3636347",
       "parent": "mrcaott3636344ott3636347",
       "scientific": "Gymnogeophagus caaguazuensis",
@@ -231554,26 +231319,6 @@
       "species": false
     },
     {
-      "id": "ott4980493",
-      "parent": "ott1009761",
-      "scientific": "Gyptis bruneli",
-      "ott": 4980493,
-      "tax_sources": [
-        "worms:333519",
-        "gbif:5194130",
-        "irmng:11050584",
-        "irmng:11683309",
-        "irmng:11684277"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980493"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980493",
-      "requested_node_id": "ott4980493"
-    },
-    {
       "id": "ott1009761",
       "parent": "ott151154",
       "scientific": "Gyptis",
@@ -231609,137 +231354,6 @@
       "species": false
     },
     {
-      "id": "ott4980470",
-      "parent": "ott1009761",
-      "scientific": "Gyptis comata",
-      "ott": 4980470,
-      "tax_sources": [
-        "worms:333522",
-        "gbif:2309114",
-        "irmng:11683310",
-        "irmng:10918523"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980470"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980470",
-      "requested_node_id": "ott4980470"
-    },
-    {
-      "id": "ott4980511",
-      "parent": "ott1009761",
-      "scientific": "Gyptis crinita",
-      "ott": 4980511,
-      "tax_sources": [
-        "worms:333523",
-        "gbif:5194121",
-        "irmng:10240599",
-        "irmng:10232404",
-        "irmng:10985671"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980511"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980511",
-      "requested_node_id": "ott4980511"
-    },
-    {
-      "id": "ott64307",
-      "parent": "ott1009761",
-      "scientific": "Gyptis golikovi",
-      "ott": 64307,
-      "tax_sources": [
-        "ncbi:378363",
-        "worms:130153",
-        "gbif:5194138",
-        "irmng:11858880",
-        "irmng:10825165"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott64307"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_64307",
-      "requested_node_id": "ott64307"
-    },
-    {
-      "id": "ott4980506",
-      "parent": "ott1009761",
-      "scientific": "Gyptis heteroculatus",
-      "ott": 4980506,
-      "tax_sources": [
-        "worms:333525",
-        "gbif:5194132",
-        "irmng:11852491"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980506"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980506",
-      "requested_node_id": "ott4980506"
-    },
-    {
-      "id": "ott4980515",
-      "parent": "ott1009761",
-      "scientific": "Gyptis hians",
-      "ott": 4980515,
-      "tax_sources": [
-        "ncbi:1675617",
-        "worms:328189",
-        "gbif:5194141",
-        "irmng:11683985"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980515"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980515",
-      "requested_node_id": "ott4980515"
-    },
-    {
-      "id": "ott4980509",
-      "parent": "ott1009761",
-      "scientific": "Gyptis lobata",
-      "ott": 4980509,
-      "tax_sources": [
-        "worms:333526",
-        "gbif:5194123",
-        "irmng:11683311"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980509"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980509",
-      "requested_node_id": "ott4980509"
-    },
-    {
-      "id": "ott4980514",
-      "parent": "ott1009761",
-      "scientific": "Gyptis lobatus",
-      "ott": 4980514,
-      "tax_sources": [
-        "worms:333527",
-        "irmng:10240598"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980514"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980514",
-      "requested_node_id": "ott4980514"
-    },
-    {
       "id": "ott1009760",
       "parent": "ott1009761",
       "scientific": "Gyptis mackiei",
@@ -231757,60 +231371,6 @@
       "species": true,
       "key": "pt_species_1009760",
       "requested_node_id": "ott1009760"
-    },
-    {
-      "id": "ott4980520",
-      "parent": "ott1009761",
-      "scientific": "Gyptis maraunibinae",
-      "ott": 4980520,
-      "tax_sources": [
-        "worms:328191",
-        "gbif:5194155",
-        "irmng:11683987"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980520"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980520",
-      "requested_node_id": "ott4980520"
-    },
-    {
-      "id": "ott4980508",
-      "parent": "ott1009761",
-      "scientific": "Gyptis raluanensis",
-      "ott": 4980508,
-      "tax_sources": [
-        "worms:333529",
-        "gbif:5194125",
-        "irmng:11864843"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980508"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980508",
-      "requested_node_id": "ott4980508"
-    },
-    {
-      "id": "ott4980518",
-      "parent": "ott1009761",
-      "scientific": "Gyptis vittata",
-      "ott": 4980518,
-      "tax_sources": [
-        "worms:157414",
-        "gbif:5194150",
-        "irmng:11039168"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4980518"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4980518",
-      "requested_node_id": "ott4980518"
     },
     {
       "id": "ott369457",
@@ -234740,70 +234300,6 @@
       "tax_sources": [],
       "supported_by": {
         "ot_311@tree1": "node54719"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott3657207",
-      "parent": "ott258325",
-      "scientific": "Heliaster solaris",
-      "ott": 3657207,
-      "tax_sources": [
-        "worms:369070",
-        "gbif:5187695",
-        "irmng:11693450"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3657207"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3657207",
-      "requested_node_id": "ott3657207"
-    },
-    {
-      "id": "ott258325",
-      "parent": "ott258324",
-      "scientific": "Heliaster",
-      "ott": 258325,
-      "tax_sources": [
-        "ncbi:105869",
-        "worms:255070",
-        "gbif:2274394",
-        "irmng:1273172"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott258325"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott258324",
-      "parent": "mrcaott195878ott312509",
-      "scientific": "Heliasteridae",
-      "ott": 258324,
-      "tax_sources": [
-        "ncbi:105868",
-        "worms:255069",
-        "gbif:6010",
-        "irmng:110447"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott258324"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott195878ott312509",
-      "parent": "mrcaott17646ott195878",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_2678@tree6224": "node1075555"
       },
       "conflicts_with": {},
       "species": false
@@ -242028,24 +241524,6 @@
       "species": false
     },
     {
-      "id": "ott3684301",
-      "parent": "ott3684299",
-      "scientific": "Intoshia major",
-      "ott": 3684301,
-      "tax_sources": [
-        "worms:119169",
-        "gbif:2509133",
-        "irmng:11054525"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3684301"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3684301",
-      "requested_node_id": "ott3684301"
-    },
-    {
       "id": "ott3684307",
       "parent": "ott3684299",
       "scientific": "Intoshia variabili",
@@ -243072,109 +242550,6 @@
         "ott3.7draft3": "ott775713"
       },
       "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott705817",
-      "parent": "ott112649",
-      "scientific": "Janetaescincus veseyfitzgeraldi",
-      "ott": 705817,
-      "tax_sources": [
-        "ncbi:316461",
-        "gbif:2463867",
-        "irmng:10358502"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott705817"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_705817",
-      "requested_node_id": "ott705817"
-    },
-    {
-      "id": "ott112649",
-      "parent": "mrcaott112647ott745917",
-      "scientific": "Janetaescincus",
-      "ott": 112649,
-      "tax_sources": [
-        "ncbi:293413",
-        "gbif:2463864",
-        "irmng:1039868"
-      ],
-      "supported_by": {
-        "ot_1041@tree1": "node1700",
-        "ot_307@tree1": "node7112",
-        "ott3.7draft3": "ott112649",
-        "pg_2460@tree5285": "node913738"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott112647ott745917",
-      "parent": "mrcaott21441ott112647",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node1698",
-        "ot_307@tree1": "node7110",
-        "pg_2460@tree5285": "node913736"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott21441ott112647",
-      "parent": "mrcaott21441ott320985",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node1697",
-        "ot_307@tree1": "node7109",
-        "pg_2460@tree5285": "node913735"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott21441ott320985",
-      "parent": "mrcaott10869ott21441",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node1685",
-        "ot_307@tree1": "node7097",
-        "pg_2460@tree5285": "node913723"
-      },
-      "conflicts_with": {
-        "ot_505@tree1": [
-          "node50"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott10869ott21441",
-      "parent": "mrcaott5156ott10869",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_307@tree1": "node6991",
-        "pg_2460@tree5285": "node913617"
-      },
-      "conflicts_with": {
-        "ot_1041@tree1": [
-          "node1606"
-        ],
-        "ot_505@tree1": [
-          "node40"
-        ]
-      },
       "species": false
     },
     {
@@ -244515,84 +243890,6 @@
           "node18042"
         ]
       },
-      "species": false
-    },
-    {
-      "id": "ott699264",
-      "parent": "mrcaott699264ott893211",
-      "scientific": "Labeo nasus",
-      "ott": 699264,
-      "tax_sources": [
-        "ncbi:1104243",
-        "gbif:5206038",
-        "irmng:11004615"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott699264"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_699264",
-      "requested_node_id": "ott699264"
-    },
-    {
-      "id": "mrcaott699264ott893211",
-      "parent": "mrcaott699264ott699274",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node17778"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott699264ott699274",
-      "parent": "mrcaott699264ott699268",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node17777"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott699264ott699268",
-      "parent": "mrcaott699264ott1045390",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node17776"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott699264ott1045390",
-      "parent": "mrcaott73989ott699264",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node17775"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott73989ott699264",
-      "parent": "mrcaott22193ott73989",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node17765"
-      },
-      "conflicts_with": {},
       "species": false
     },
     {
@@ -249209,25 +248506,6 @@
       "requested_node_id": "ott864607"
     },
     {
-      "id": "ott3633216",
-      "parent": "ott270910",
-      "scientific": "Lethrinus amboinensis",
-      "ott": 3633216,
-      "tax_sources": [
-        "ncbi:1828435",
-        "worms:278631",
-        "gbif:2374887",
-        "irmng:10152677"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3633216"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3633216",
-      "requested_node_id": "ott3633216"
-    },
-    {
       "id": "ott270910",
       "parent": "ott489888",
       "scientific": "Lethrinus",
@@ -249390,37 +248668,6 @@
       "tax_sources": [],
       "supported_by": {
         "ot_1592@tree1": "node11712"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott177117",
-      "parent": "mrcaott177117ott270903",
-      "scientific": "Lethrinus conchyliatus",
-      "ott": 177117,
-      "tax_sources": [
-        "ncbi:475166",
-        "worms:212073",
-        "gbif:2374930",
-        "irmng:10852566"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott177117"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_177117",
-      "requested_node_id": "ott177117"
-    },
-    {
-      "id": "mrcaott177117ott270903",
-      "parent": "mrcaott177117ott225253",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1592@tree1": "node11741"
       },
       "conflicts_with": {},
       "species": false
@@ -258055,58 +257302,6 @@
           "node1019120"
         ]
       },
-      "species": false
-    },
-    {
-      "id": "ott2845779",
-      "parent": "ott666175",
-      "scientific": "Megascolides australis",
-      "ott": 2845779,
-      "tax_sources": [
-        "gbif:4813436",
-        "irmng:11270759"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott2845779"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_2845779",
-      "requested_node_id": "ott2845779"
-    },
-    {
-      "id": "ott666175",
-      "parent": "ott161092",
-      "scientific": "Megascolides",
-      "ott": 666175,
-      "tax_sources": [
-        "ncbi:914220",
-        "gbif:2307594",
-        "irmng:1051075"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott666175"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott161092",
-      "parent": "ott316449",
-      "scientific": "Megascolecidae",
-      "ott": 161092,
-      "tax_sources": [
-        "ncbi:6400",
-        "worms:22960",
-        "gbif:2254",
-        "irmng:108290"
-      ],
-      "supported_by": {
-        "ot_649@tree1": "node18",
-        "ot_650@tree1": "node19",
-        "ott3.7draft3": "ott161092"
-      },
-      "conflicts_with": {},
       "species": false
     },
     {
@@ -272917,25 +272112,6 @@
       "species": false
     },
     {
-      "id": "ott703731",
-      "parent": "mrcaott703731ott798343",
-      "scientific": "Orectolobus hutchinsi",
-      "ott": 703731,
-      "tax_sources": [
-        "ncbi:495872",
-        "worms:281929",
-        "gbif:2417554",
-        "irmng:11126280"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott703731"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_703731",
-      "requested_node_id": "ott703731"
-    },
-    {
       "id": "mrcaott703731ott798343",
       "parent": "mrcaott101591ott703731",
       "scientific": "",
@@ -273035,44 +272211,6 @@
       "species": true,
       "key": "pt_species_798343",
       "requested_node_id": "ott798343"
-    },
-    {
-      "id": "ott3594840",
-      "parent": "mrcaott101591ott274904",
-      "scientific": "Orectolobus reticulatus",
-      "ott": 3594840,
-      "tax_sources": [
-        "ncbi:1443577",
-        "worms:398231",
-        "gbif:2417551",
-        "irmng:11461573"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3594840"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3594840",
-      "requested_node_id": "ott3594840"
-    },
-    {
-      "id": "ott274904",
-      "parent": "mrcaott101591ott274904",
-      "scientific": "Orectolobus wardi",
-      "ott": 274904,
-      "tax_sources": [
-        "ncbi:582430",
-        "worms:281933",
-        "gbif:2417562",
-        "irmng:10151146"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott274904"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_274904",
-      "requested_node_id": "ott274904"
     },
     {
       "id": "ott975270",
@@ -274235,22 +273373,6 @@
       },
       "conflicts_with": {},
       "species": false
-    },
-    {
-      "id": "ott3626148",
-      "parent": "ott239839",
-      "scientific": "Osteochilus enneaporos",
-      "ott": 3626148,
-      "tax_sources": [
-        "gbif:2364346"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3626148"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3626148",
-      "requested_node_id": "ott3626148"
     },
     {
       "id": "ott550609",
@@ -276162,24 +275284,6 @@
       },
       "conflicts_with": {},
       "species": false
-    },
-    {
-      "id": "ott3594811",
-      "parent": "ott893940",
-      "scientific": "Parascyllium elongatum",
-      "ott": 3594811,
-      "tax_sources": [
-        "worms:398227",
-        "gbif:2417481",
-        "irmng:11461570"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3594811"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3594811",
-      "requested_node_id": "ott3594811"
     },
     {
       "id": "ott3594812",
@@ -279913,6 +279017,23 @@
       "requested_node_id": "ott701202"
     },
     {
+      "id": "ott3606943",
+      "parent": "ott323239",
+      "scientific": "Phalanger mimicus",
+      "ott": 3606943,
+      "tax_sources": [
+        "gbif:2440270",
+        "irmng:10274694"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott3606943"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_3606943",
+      "requested_node_id": "ott3606943"
+    },
+    {
       "id": "ott323239",
       "parent": "mrcaott44497ott277687",
       "scientific": "Phalangeridae",
@@ -279941,23 +279062,6 @@
       },
       "conflicts_with": {},
       "species": false
-    },
-    {
-      "id": "ott3606943",
-      "parent": "ott323239",
-      "scientific": "Phalanger mimicus",
-      "ott": 3606943,
-      "tax_sources": [
-        "gbif:2440270",
-        "irmng:10274694"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3606943"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3606943",
-      "requested_node_id": "ott3606943"
     },
     {
       "id": "ott660934",
@@ -280989,68 +280093,6 @@
         "ot_2014@tree2": "node1182",
         "ot_2235@tree1": "node2729",
         "ot_2499@tree1": "node54"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott656204",
-      "parent": "mrcaott357139ott656204",
-      "scientific": "Phoenicolacerta laevis",
-      "ott": 656204,
-      "tax_sources": [
-        "ncbi:575500",
-        "gbif:5789554",
-        "irmng:10641013"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott656204"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_656204",
-      "requested_node_id": "ott656204"
-    },
-    {
-      "id": "mrcaott357139ott656204",
-      "parent": "mrcaott106046ott357139",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2092@tree1": "node266"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott106046ott357139",
-      "parent": "ott357144",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2092@tree1": "node265"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott357144",
-      "parent": "mrcaott10058ott106046",
-      "scientific": "Phoenicolacerta",
-      "ott": 357144,
-      "tax_sources": [
-        "ncbi:575495",
-        "gbif:4819700",
-        "irmng:1271138"
-      ],
-      "supported_by": {
-        "ot_1041@tree1": "node3589",
-        "ot_2092@tree1": "node264",
-        "ot_307@tree1": "node2078",
-        "ott3.7draft3": "ott357144",
-        "pg_2460@tree5285": "node915523"
       },
       "conflicts_with": {},
       "species": false
@@ -284210,23 +283252,6 @@
       "species": false
     },
     {
-      "id": "ott3622005",
-      "parent": "mrcaott884ott3261",
-      "scientific": "Pimelodus platicirris",
-      "ott": 3622005,
-      "tax_sources": [
-        "gbif:2338895",
-        "irmng:10576023"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3622005"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3622005",
-      "requested_node_id": "ott3622005"
-    },
-    {
       "id": "ott942902",
       "parent": "mrcaott840989ott942902",
       "scientific": "Pimelodus pohli",
@@ -284478,36 +283503,6 @@
           "node6250"
         ]
       },
-      "species": false
-    },
-    {
-      "id": "ott3622001",
-      "parent": "mrcaott783384ott3622001",
-      "scientific": "Pimelodus punctatus",
-      "ott": 3622001,
-      "tax_sources": [
-        "ncbi:2099952",
-        "gbif:2338927",
-        "irmng:10748600"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3622001"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3622001",
-      "requested_node_id": "ott3622001"
-    },
-    {
-      "id": "mrcaott783384ott3622001",
-      "parent": "mrcaott884ott3261",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_3067@tree1": "node6262"
-      },
-      "conflicts_with": {},
       "species": false
     },
     {
@@ -288964,41 +287959,6 @@
       "species": false
     },
     {
-      "id": "ott3631951",
-      "parent": "ott3631952",
-      "scientific": "Polypera simushirae",
-      "ott": 3631951,
-      "tax_sources": [
-        "worms:282316",
-        "gbif:5201522",
-        "irmng:10577296"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631951"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631951",
-      "requested_node_id": "ott3631951"
-    },
-    {
-      "id": "ott3631952",
-      "parent": "ott577720",
-      "scientific": "Polypera",
-      "ott": 3631952,
-      "tax_sources": [
-        "ncbi:1562382",
-        "worms:270477",
-        "gbif:2336110",
-        "irmng:1306021"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631952"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
       "id": "ott577720",
       "parent": "mrcaott7508ott237344",
       "scientific": "Liparidae",
@@ -289602,23 +288562,6 @@
       "species": true,
       "key": "pt_species_232767",
       "requested_node_id": "ott232767"
-    },
-    {
-      "id": "ott2992768",
-      "parent": "ott84743",
-      "scientific": "Porcellio ferroi",
-      "ott": 2992768,
-      "tax_sources": [
-        "gbif:6284422",
-        "irmng:10217944"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott2992768"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_2992768",
-      "requested_node_id": "ott2992768"
     },
     {
       "id": "ott2992728",
@@ -290448,117 +289391,6 @@
       "species": true,
       "key": "pt_species_3900446",
       "requested_node_id": "ott3900446"
-    },
-    {
-      "id": "ott3631944",
-      "parent": "ott3631945",
-      "scientific": "Praematoliparis anarthractae",
-      "ott": 3631944,
-      "tax_sources": [
-        "worms:282342",
-        "gbif:2336129",
-        "irmng:10574827"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631944"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631944",
-      "requested_node_id": "ott3631944"
-    },
-    {
-      "id": "ott3631945",
-      "parent": "ott577720",
-      "scientific": "Praematoliparis",
-      "ott": 3631945,
-      "tax_sources": [
-        "worms:270499",
-        "gbif:2336128",
-        "irmng:1290513"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631945"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott725237",
-      "parent": "ott725248",
-      "scientific": "Pratylenchus penetrans",
-      "ott": 725237,
-      "tax_sources": [
-        "ncbi:45929",
-        "gbif:4556348",
-        "irmng:11478399",
-        "irmng:10736334"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott725237"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_725237",
-      "requested_node_id": "ott725237"
-    },
-    {
-      "id": "ott725248",
-      "parent": "ott165388",
-      "scientific": "Pratylenchus",
-      "ott": 725248,
-      "tax_sources": [
-        "ncbi:45927",
-        "gbif:2284120",
-        "irmng:1092190"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott725248"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott165388",
-      "parent": "mrcaott2229ott128245",
-      "scientific": "Pratylenchinae",
-      "ott": 165388,
-      "tax_sources": [
-        "ncbi:46005"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott165388"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott2229ott128245",
-      "parent": "mrcaott230ott2229",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_183@tree2": "node105"
-      },
-      "conflicts_with": {
-        "ot_3053@tree1": [
-          "node102",
-          "node82",
-          "node83",
-          "node84",
-          "node85"
-        ],
-        "ot_3065@tree3": [
-          "node63",
-          "node69",
-          "node71",
-          "node79",
-          "node80",
-          "node82"
-        ]
-      },
-      "species": false
     },
     {
       "id": "ott744386",
@@ -291446,55 +290278,6 @@
       },
       "conflicts_with": {},
       "species": false
-    },
-    {
-      "id": "ott3624261",
-      "parent": "ott3624232",
-      "scientific": "Propimelodus araguayae",
-      "ott": 3624261,
-      "tax_sources": [
-        "gbif:2338991"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3624261"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3624261",
-      "requested_node_id": "ott3624261"
-    },
-    {
-      "id": "ott3624232",
-      "parent": "mrcaott884ott9875",
-      "scientific": "Propimelodus",
-      "ott": 3624232,
-      "tax_sources": [
-        "worms:270528",
-        "gbif:2338986",
-        "irmng:1266539"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3624232"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott3624233",
-      "parent": "ott3624232",
-      "scientific": "Propimelodus caesius",
-      "ott": 3624233,
-      "tax_sources": [
-        "gbif:2338987",
-        "irmng:10044849"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3624233"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3624233",
-      "requested_node_id": "ott3624233"
     },
     {
       "id": "ott986650",
@@ -293014,24 +291797,6 @@
       "requested_node_id": "ott3631694"
     },
     {
-      "id": "ott3631703",
-      "parent": "ott329682",
-      "scientific": "Psednos balushkini",
-      "ott": 3631703,
-      "tax_sources": [
-        "worms:274616",
-        "gbif:2336446",
-        "irmng:10151387"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631703"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631703",
-      "requested_node_id": "ott3631703"
-    },
-    {
       "id": "ott3631710",
       "parent": "ott329682",
       "scientific": "Psednos barnardi",
@@ -293050,24 +291815,6 @@
       "requested_node_id": "ott3631710"
     },
     {
-      "id": "ott3631705",
-      "parent": "ott329682",
-      "scientific": "Psednos carolinae",
-      "ott": 3631705,
-      "tax_sources": [
-        "worms:274617",
-        "gbif:2336445",
-        "irmng:11203877"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631705"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631705",
-      "requested_node_id": "ott3631705"
-    },
-    {
       "id": "ott3631704",
       "parent": "ott329682",
       "scientific": "Psednos cathetostomus",
@@ -293084,24 +291831,6 @@
       "species": true,
       "key": "pt_species_3631704",
       "requested_node_id": "ott3631704"
-    },
-    {
-      "id": "ott3631696",
-      "parent": "ott329682",
-      "scientific": "Psednos christinae",
-      "ott": 3631696,
-      "tax_sources": [
-        "worms:127230",
-        "gbif:2336434",
-        "irmng:10149887"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631696"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631696",
-      "requested_node_id": "ott3631696"
     },
     {
       "id": "ott3631715",
@@ -293140,24 +291869,6 @@
       "requested_node_id": "ott3631700"
     },
     {
-      "id": "ott3631708",
-      "parent": "ott329682",
-      "scientific": "Psednos gelatinosus",
-      "ott": 3631708,
-      "tax_sources": [
-        "worms:274620",
-        "gbif:2336443",
-        "irmng:11336743"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631708"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631708",
-      "requested_node_id": "ott3631708"
-    },
-    {
       "id": "ott3631713",
       "parent": "ott329682",
       "scientific": "Psednos griseus",
@@ -293174,43 +291885,6 @@
       "species": true,
       "key": "pt_species_3631713",
       "requested_node_id": "ott3631713"
-    },
-    {
-      "id": "ott1081128",
-      "parent": "ott329682",
-      "scientific": "Psednos groenlandicus",
-      "ott": 1081128,
-      "tax_sources": [
-        "ncbi:446827",
-        "worms:159538",
-        "gbif:2336435",
-        "irmng:10576637"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott1081128"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_1081128",
-      "requested_node_id": "ott1081128"
-    },
-    {
-      "id": "ott3631707",
-      "parent": "ott329682",
-      "scientific": "Psednos harteli",
-      "ott": 3631707,
-      "tax_sources": [
-        "worms:159539",
-        "gbif:2336444",
-        "irmng:11254851"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631707"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631707",
-      "requested_node_id": "ott3631707"
     },
     {
       "id": "ott3631709",
@@ -293298,43 +291972,6 @@
       "requested_node_id": "ott3631695"
     },
     {
-      "id": "ott1081096",
-      "parent": "mrcaott1081094ott1081096",
-      "scientific": "Psednos micruroides",
-      "ott": 1081096,
-      "tax_sources": [
-        "ncbi:446829",
-        "worms:274625",
-        "gbif:2336437",
-        "irmng:10576639"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott1081096"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_1081096",
-      "requested_node_id": "ott1081096"
-    },
-    {
-      "id": "ott3631711",
-      "parent": "ott329682",
-      "scientific": "Psednos micrurus",
-      "ott": 3631711,
-      "tax_sources": [
-        "worms:274626",
-        "gbif:2336427",
-        "irmng:10890555"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631711"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631711",
-      "requested_node_id": "ott3631711"
-    },
-    {
       "id": "ott3631702",
       "parent": "ott329682",
       "scientific": "Psednos mirabilis",
@@ -293353,24 +291990,6 @@
       "requested_node_id": "ott3631702"
     },
     {
-      "id": "ott3631712",
-      "parent": "ott329682",
-      "scientific": "Psednos nataliae",
-      "ott": 3631712,
-      "tax_sources": [
-        "worms:274627",
-        "gbif:2336438",
-        "irmng:10448619"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631712"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631712",
-      "requested_node_id": "ott3631712"
-    },
-    {
       "id": "ott3631701",
       "parent": "ott329682",
       "scientific": "Psednos pallidus",
@@ -293387,24 +292006,6 @@
       "species": true,
       "key": "pt_species_3631701",
       "requested_node_id": "ott3631701"
-    },
-    {
-      "id": "ott3631716",
-      "parent": "ott329682",
-      "scientific": "Psednos sargassicus",
-      "ott": 3631716,
-      "tax_sources": [
-        "worms:274629",
-        "gbif:2336430",
-        "irmng:10576640"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3631716"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3631716",
-      "requested_node_id": "ott3631716"
     },
     {
       "id": "ott3631706",
@@ -296967,211 +295568,6 @@
           "node16725"
         ]
       },
-      "species": false
-    },
-    {
-      "id": "ott223349",
-      "parent": "ott563464",
-      "scientific": "Ptychozoon rhacophorus",
-      "ott": 223349,
-      "tax_sources": [
-        "ncbi:1183242",
-        "gbif:2445652",
-        "irmng:10869774"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott223349"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_223349",
-      "requested_node_id": "ott223349"
-    },
-    {
-      "id": "ott563464",
-      "parent": "mrcaott7708ott95477",
-      "scientific": "Ptychozoon",
-      "ott": 563464,
-      "tax_sources": [
-        "ncbi:1118401",
-        "gbif:2445635",
-        "irmng:1439185"
-      ],
-      "supported_by": {
-        "ot_1041@tree1": "node701",
-        "ot_307@tree1": "node944",
-        "ott3.7draft3": "ott563464",
-        "pg_2460@tree5285": "node912734"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott7708ott95477",
-      "parent": "mrcaott7708ott212506",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node700",
-        "ot_307@tree1": "node934",
-        "pg_2460@tree5285": "node912733"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott7708ott212506",
-      "parent": "mrcaott7708ott33655",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_307@tree1": "node933"
-      },
-      "conflicts_with": {
-        "ot_1041@tree1": [
-          "node688"
-        ],
-        "pg_2460@tree5285": [
-          "node912721"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott7708ott33655",
-      "parent": "mrcaott7708ott73840",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node678",
-        "ot_307@tree1": "node932",
-        "pg_2460@tree5285": "node912711"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott7708ott73840",
-      "parent": "mrcaott7708ott115205",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node674",
-        "ot_307@tree1": "node928",
-        "pg_2460@tree5285": "node912707"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott7708ott115205",
-      "parent": "mrcaott7708ott24139",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node656",
-        "ot_307@tree1": "node910",
-        "pg_2460@tree5285": "node912689"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott7708ott24139",
-      "parent": "mrcaott1771ott7708",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_307@tree1": "node828",
-        "pg_2460@tree5285": "node912688"
-      },
-      "conflicts_with": {
-        "ot_1041@tree1": [
-          "node715"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott1771ott7708",
-      "parent": "mrcaott1771ott24889",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_307@tree1": "node636"
-      },
-      "conflicts_with": {
-        "ot_1041@tree1": [
-          "node648",
-          "node649",
-          "node650"
-        ],
-        "pg_2460@tree5285": [
-          "node912829"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott1771ott24889",
-      "parent": "ott190151",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_307@tree1": "node635"
-      },
-      "conflicts_with": {
-        "ot_1041@tree1": [
-          "node648",
-          "node649",
-          "node650"
-        ],
-        "pg_2460@tree5285": [
-          "node912687",
-          "node912829"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "ott190151",
-      "parent": "mrcaott1771ott45872",
-      "scientific": "Gekkonidae",
-      "ott": 190151,
-      "tax_sources": [
-        "ncbi:8561",
-        "gbif:5666",
-        "irmng:102820"
-      ],
-      "supported_by": {
-        "ot_1041@tree1": "node646",
-        "ot_307@tree1": "node633",
-        "ott3.7draft3": "ott190151",
-        "pg_2460@tree5285": "node912686"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1771ott45872",
-      "parent": "mrcaott1771ott92703",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1041@tree1": "node548",
-        "ot_307@tree1": "node535",
-        "pg_2460@tree5285": "node912588"
-      },
-      "conflicts_with": {},
       "species": false
     },
     {
@@ -302777,24 +301173,6 @@
       "species": false
     },
     {
-      "id": "ott3684296",
-      "parent": "ott27307",
-      "scientific": "Rhopalura elongata",
-      "ott": 3684296,
-      "tax_sources": [
-        "worms:119171",
-        "gbif:2509146",
-        "irmng:11340316"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3684296"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3684296",
-      "requested_node_id": "ott3684296"
-    },
-    {
       "id": "ott27307",
       "parent": "ott3684300",
       "scientific": "Rhopalura",
@@ -302828,25 +301206,6 @@
       "species": true,
       "key": "pt_species_3684291",
       "requested_node_id": "ott3684291"
-    },
-    {
-      "id": "ott3684290",
-      "parent": "ott27307",
-      "scientific": "Rhopalura litoralis",
-      "ott": 3684290,
-      "tax_sources": [
-        "ncbi:2564003",
-        "worms:119175",
-        "gbif:2509149",
-        "irmng:10352126"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3684290"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3684290",
-      "requested_node_id": "ott3684290"
     },
     {
       "id": "ott309744",
@@ -308352,6 +306711,42 @@
           "Tn16776726"
         ]
       },
+      "species": false
+    },
+    {
+      "id": "ott948469",
+      "parent": "ott948468",
+      "scientific": "Sarcophilus harrisii",
+      "ott": 948469,
+      "tax_sources": [
+        "ncbi:9305",
+        "gbif:2435451",
+        "gbif:2435454",
+        "irmng:10955123",
+        "irmng:10991620"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott948469"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_948469",
+      "requested_node_id": "ott948469"
+    },
+    {
+      "id": "ott948468",
+      "parent": "mrcaott74729ott948469",
+      "scientific": "Sarcophilus",
+      "ott": 948468,
+      "tax_sources": [
+        "ncbi:9304",
+        "gbif:2435450",
+        "irmng:1433263"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott948468"
+      },
+      "conflicts_with": {},
       "species": false
     },
     {
@@ -318708,211 +317103,6 @@
       "species": false
     },
     {
-      "id": "ott336304",
-      "parent": "ott336303",
-      "scientific": "Steindachneria argentea",
-      "ott": 336304,
-      "tax_sources": [
-        "ncbi:500387",
-        "worms:282877",
-        "gbif:2415690",
-        "irmng:10578001"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott336304"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_336304",
-      "requested_node_id": "ott336304"
-    },
-    {
-      "id": "ott336303",
-      "parent": "ott336307",
-      "scientific": "Steindachneria",
-      "ott": 336303,
-      "tax_sources": [
-        "ncbi:500386",
-        "worms:270968",
-        "gbif:2338876",
-        "irmng:1023710",
-        "irmng:1230004"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott336303"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott336307",
-      "parent": "mrcaott30583ott336304",
-      "scientific": "Steindachneriidae",
-      "ott": 336307,
-      "tax_sources": [
-        "ncbi:500384",
-        "worms:154236"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott336307"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott30583ott336304",
-      "parent": "mrcaott9626ott30583",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_2651@tree6177": "node1055497"
-      },
-      "conflicts_with": {
-        "ot_1592@tree1": [
-          "node13964",
-          "node14151",
-          "node14152",
-          "node14153"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott9626ott30583",
-      "parent": "mrcaott9626ott89173",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1699@tree1": "node207",
-        "ot_771@tree1": "node121",
-        "pg_2651@tree6177": "node1055493"
-      },
-      "conflicts_with": {
-        "ot_1592@tree1": [
-          "node14151",
-          "node14152",
-          "node14153"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott9626ott89173",
-      "parent": "mrcaott9626ott185096",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1699@tree1": "node203",
-        "ot_771@tree1": "node120"
-      },
-      "conflicts_with": {
-        "ot_1592@tree1": [
-          "node13963",
-          "node14151",
-          "node14152",
-          "node14153",
-          "node14164",
-          "node14165",
-          "node14287"
-        ],
-        "pg_2651@tree6177": [
-          "node1055518"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott9626ott185096",
-      "parent": "mrcaott9626ott185087",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_771@tree1": "node119"
-      },
-      "conflicts_with": {
-        "ot_1592@tree1": [
-          "node13963",
-          "node14151",
-          "node14152",
-          "node14153",
-          "node14164",
-          "node14165"
-        ],
-        "pg_2576@tree5975": [
-          "node1014328"
-        ],
-        "pg_2651@tree6177": [
-          "node1055518"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott9626ott185087",
-      "parent": "mrcaott9626ott62642",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_771@tree1": "node117"
-      },
-      "conflicts_with": {
-        "ot_1592@tree1": [
-          "node13963",
-          "node14151",
-          "node14152",
-          "node14153",
-          "node14164",
-          "node14165",
-          "node14166",
-          "node14258"
-        ],
-        "pg_2576@tree5975": [
-          "node1014328"
-        ],
-        "pg_2651@tree6177": [
-          "node1055518"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott9626ott62642",
-      "parent": "mrcaott9626ott9628",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_771@tree1": "node111"
-      },
-      "conflicts_with": {
-        "ot_1592@tree1": [
-          "node13963",
-          "node14151",
-          "node14152",
-          "node14153",
-          "node14164",
-          "node14165",
-          "node14166"
-        ],
-        "ot_1699@tree1": [
-          "node194"
-        ],
-        "pg_2576@tree5975": [
-          "node1014328"
-        ],
-        "pg_2651@tree6177": [
-          "node1055492",
-          "node1055518"
-        ]
-      },
-      "species": false
-    },
-    {
       "id": "ott3622042",
       "parent": "ott605068",
       "scientific": "Steindachneridion amblyurum",
@@ -320867,22 +319057,6 @@
       "species": false
     },
     {
-      "id": "ott864604",
-      "parent": "ott644258",
-      "scientific": "Sylvilagus",
-      "ott": 864604,
-      "tax_sources": [
-        "ncbi:9987",
-        "gbif:2436839",
-        "irmng:1302953"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott864604"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
       "id": "ott956330",
       "parent": "ott864604",
       "scientific": "Sylvilagus obscurus",
@@ -320899,6 +319073,22 @@
       "species": true,
       "key": "pt_species_956330",
       "requested_node_id": "ott956330"
+    },
+    {
+      "id": "ott864604",
+      "parent": "ott644258",
+      "scientific": "Sylvilagus",
+      "ott": 864604,
+      "tax_sources": [
+        "ncbi:9987",
+        "gbif:2436839",
+        "irmng:1302953"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott864604"
+      },
+      "conflicts_with": {},
+      "species": false
     },
     {
       "id": "ott3197631",
@@ -325050,111 +323240,6 @@
       "species": true,
       "key": "pt_species_3094652",
       "requested_node_id": "ott3094652"
-    },
-    {
-      "id": "ott4134270",
-      "parent": "ott4134269",
-      "scientific": "Thermichthys hollisi",
-      "ott": 4134270,
-      "tax_sources": [
-        "worms:398418",
-        "gbif:2346147",
-        "irmng:10722399",
-        "irmng:11837323"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4134270"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4134270",
-      "requested_node_id": "ott4134270"
-    },
-    {
-      "id": "ott4134269",
-      "parent": "mrcaott61966ott565888",
-      "scientific": "Thermichthys",
-      "ott": 4134269,
-      "tax_sources": [
-        "worms:398162",
-        "gbif:2346146",
-        "irmng:1436945"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4134269"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott61966ott565888",
-      "parent": "mrcaott61966ott80330",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1091@tree1": "node2409",
-        "ot_1592@tree1": "node13720",
-        "ot_935@tree2": "node81"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott61966ott80330",
-      "parent": "ott224059",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1091@tree1": "node2405",
-        "ot_1592@tree1": "node13719",
-        "ot_935@tree2": "node65",
-        "pg_2651@tree6177": "node1055647"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott224059",
-      "parent": "ott5553749",
-      "scientific": "Ophidiiformes",
-      "ott": 224059,
-      "tax_sources": [
-        "ncbi:94929",
-        "worms:10314",
-        "gbif:1308",
-        "irmng:11712"
-      ],
-      "supported_by": {
-        "ot_1091@tree1": "node2404",
-        "ot_1592@tree1": "node13655",
-        "ot_935@tree2": "node39",
-        "ott3.7draft3": "ott224059",
-        "pg_2576@tree5975": "node1014399",
-        "pg_2651@tree6177": "node1055646"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott5553749",
-      "parent": "ott5551466",
-      "scientific": "Ophidiaria",
-      "ott": 5553749,
-      "tax_sources": [
-        "ncbi:1489873"
-      ],
-      "supported_by": {
-        "ot_1091@tree1": "node2404",
-        "ot_1592@tree1": "node13655",
-        "ot_935@tree2": "node39",
-        "ott3.7draft3": "ott5553749",
-        "pg_2576@tree5975": "node1014399",
-        "pg_2651@tree6177": "node1055646"
-      },
-      "conflicts_with": {},
-      "species": false
     },
     {
       "id": "ott572325",
@@ -333100,267 +331185,6 @@
       "species": false
     },
     {
-      "id": "ott4557528",
-      "parent": "ott406292",
-      "scientific": "Venturia compacta",
-      "ott": 4557528,
-      "tax_sources": [
-        "gbif:1287208"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott4557528"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_4557528",
-      "requested_node_id": "ott4557528"
-    },
-    {
-      "id": "ott406292",
-      "parent": "ott1015402",
-      "scientific": "Venturia",
-      "ott": 406292,
-      "tax_sources": [
-        "ncbi:92443",
-        "gbif:1287171",
-        "irmng:1322635"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott406292"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott1015402",
-      "parent": "mrcaott1153ott882233",
-      "scientific": "Dusona group",
-      "ott": 1015402,
-      "tax_sources": [
-        "ncbi:273877"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott1015402"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott882233",
-      "parent": "ott959140",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node243"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott959140",
-      "parent": "mrcaott1153ott43829",
-      "scientific": "Campopleginae",
-      "ott": 959140,
-      "tax_sources": [
-        "ncbi:65149"
-      ],
-      "supported_by": {
-        "ot_2446@tree1": "node241",
-        "ott3.7draft3": "ott959140"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott43829",
-      "parent": "mrcaott1153ott1159",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node235"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott1159",
-      "parent": "mrcaott1153ott21276",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node218"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott21276",
-      "parent": "mrcaott1153ott8591",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node201"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott8591",
-      "parent": "mrcaott1153ott51497",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node157"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott51497",
-      "parent": "mrcaott1153ott431014",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node143"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott431014",
-      "parent": "mrcaott1153ott3273",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1053@tree1": "node64"
-      },
-      "conflicts_with": {
-        "ot_2446@tree1": [
-          "node126"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott3273",
-      "parent": "mrcaott1153ott613216",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node15"
-      },
-      "conflicts_with": {
-        "ot_2715@tree1": [
-          "node10",
-          "node100",
-          "node102",
-          "node106",
-          "node15",
-          "node195",
-          "node205",
-          "node21",
-          "node23",
-          "node25",
-          "node88"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott613216",
-      "parent": "ott769762",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_2446@tree1": "node13"
-      },
-      "conflicts_with": {
-        "ot_2715@tree1": [
-          "node10",
-          "node100",
-          "node102",
-          "node106",
-          "node15",
-          "node195",
-          "node205",
-          "node21",
-          "node23",
-          "node25",
-          "node88"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "ott769762",
-      "parent": "ott678074",
-      "scientific": "Ichneumonidae",
-      "ott": 769762,
-      "tax_sources": [
-        "ncbi:7408",
-        "worms:989425",
-        "gbif:3512",
-        "irmng:104465"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott769762"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott678074",
-      "parent": "mrcaott1153ott546233",
-      "scientific": "Ichneumonoidea",
-      "ott": 678074,
-      "tax_sources": [
-        "ncbi:7401"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott678074"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott546233",
-      "parent": "mrcaott1153ott1216",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1059@tree1": "node176"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott1153ott1216",
-      "parent": "mrcaott470ott1153",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1059@tree1": "node175",
-        "pg_1563@tree6170": "node1053800"
-      },
-      "conflicts_with": {
-        "ot_1053@tree1": [
-          "node45"
-        ]
-      },
-      "species": false
-    },
-    {
       "id": "ott817457",
       "parent": "mrcaott171405ott817457",
       "scientific": "Vestia foetida",
@@ -334170,61 +331994,6 @@
       "tax_sources": [],
       "supported_by": {
         "ot_1344@Tr105486": "Tn16531703"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott652358",
-      "parent": "ott618552",
-      "scientific": "Vinciguerria nimbaria",
-      "ott": 652358,
-      "tax_sources": [
-        "ncbi:270541",
-        "worms:127303",
-        "gbif:2346841",
-        "irmng:10153615"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott652358"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_652358",
-      "requested_node_id": "ott652358"
-    },
-    {
-      "id": "ott618552",
-      "parent": "ott701557",
-      "scientific": "Vinciguerria",
-      "ott": 618552,
-      "tax_sources": [
-        "ncbi:258047",
-        "worms:126194",
-        "gbif:2346827",
-        "irmng:1117287",
-        "irmng:1034223"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott618552"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott701557",
-      "parent": "ott5521753",
-      "scientific": "Stomiiformes",
-      "ott": 701557,
-      "tax_sources": [
-        "ncbi:48438",
-        "worms:10306",
-        "gbif:774",
-        "irmng:10593"
-      ],
-      "supported_by": {
-        "ot_1592@tree1": "node14886",
-        "ott3.7draft3": "ott701557"
       },
       "conflicts_with": {},
       "species": false
@@ -336583,6 +334352,1024 @@
       ],
       "supported_by": {
         "ott3.7draft3": "ott4138838"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott768674",
+      "parent": "ott768687",
+      "scientific": "Giraffa camelopardalis",
+      "ott": 768674,
+      "tax_sources": [
+        "ncbi:9894",
+        "gbif:2441205",
+        "irmng:10874588"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott768674"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_768674",
+      "requested_node_id": "ott768674"
+    },
+    {
+      "id": "ott768687",
+      "parent": "ott768685",
+      "scientific": "Giraffa",
+      "ott": 768687,
+      "tax_sources": [
+        "ncbi:9893",
+        "gbif:7716694",
+        "irmng:1291817"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott768687"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott744018",
+      "parent": "ott744023",
+      "scientific": "Hydrochoerus hydrochaeris",
+      "ott": 744018,
+      "tax_sources": [
+        "ncbi:10149",
+        "gbif:5786666",
+        "irmng:10223073"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott744018"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_744018",
+      "requested_node_id": "ott744018"
+    },
+    {
+      "id": "ott744023",
+      "parent": "ott7067179",
+      "scientific": "Hydrochoerus",
+      "ott": 744023,
+      "tax_sources": [
+        "ncbi:10148",
+        "gbif:5429068",
+        "irmng:1315340"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott744023"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott7067179",
+      "parent": "mrcaott236057ott744018",
+      "scientific": "Hydrochaeridae",
+      "ott": 7067179,
+      "tax_sources": [
+        "ncbi:10147",
+        "gbif:5506",
+        "irmng:106625"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott7067179"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott490538",
+      "parent": "ott490533",
+      "scientific": "Myrmecophaga tridactyla",
+      "ott": 490538,
+      "tax_sources": [
+        "ncbi:71006",
+        "gbif:2436346",
+        "irmng:11271099"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott490538"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_490538",
+      "requested_node_id": "ott490538"
+    },
+    {
+      "id": "ott490533",
+      "parent": "ott847766",
+      "scientific": "Myrmecophaga",
+      "ott": 490533,
+      "tax_sources": [
+        "ncbi:71005",
+        "gbif:2436345",
+        "irmng:1060439"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott490533"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott847766",
+      "parent": "ott495016",
+      "scientific": "Myrmecophagidae",
+      "ott": 847766,
+      "tax_sources": [
+        "ncbi:9349",
+        "gbif:9619",
+        "irmng:104631"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node59",
+        "ot_1278@tree2": "node113",
+        "ot_642@tree1": "node11",
+        "ot_647@tree2": "node136",
+        "ott3.7draft3": "ott847766",
+        "pg_2825@tree6572": "node1142896"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott495016",
+      "parent": "ott495018",
+      "scientific": "Vermilingua",
+      "ott": 495016,
+      "tax_sources": [
+        "ncbi:948952"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node57",
+        "ot_1278@tree2": "node111",
+        "ot_642@tree1": "node9",
+        "ot_647@tree2": "node135",
+        "ott3.7draft3": "ott495016",
+        "pg_1428@tree2855": "node610334",
+        "pg_2825@tree6572": "node1142894"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott495018",
+      "parent": "ott847764",
+      "scientific": "Pilosa",
+      "ott": 495018,
+      "tax_sources": [
+        "ncbi:948950",
+        "gbif:1494",
+        "irmng:12364"
+      ],
+      "supported_by": {
+        "ot_1366@Tr98763": "Tn14487430",
+        "ot_642@tree1": "node8",
+        "ot_647@tree2": "node134",
+        "ott3.7draft3": "ott495018",
+        "pg_1428@tree2855": "node610330",
+        "pg_2812@tree6545": "node1135956",
+        "pg_2825@tree6572": "node1142890"
+      },
+      "conflicts_with": {
+        "ot_1278@tree1": [
+          "node9"
+        ],
+        "ot_1278@tree2": [
+          "node77"
+        ]
+      },
+      "species": false
+    },
+    {
+      "id": "ott847764",
+      "parent": "ott6520513",
+      "scientific": "Xenarthra",
+      "ott": 847764,
+      "tax_sources": [
+        "ncbi:9348",
+        "irmng:11608"
+      ],
+      "supported_by": {
+        "ot_1366@Tr98763": "Tn14487439",
+        "ott3.7draft3": "ott847764",
+        "pg_1428@tree2855": "node610328",
+        "pg_2647@tree6169": "node1053672",
+        "pg_2812@tree6545": "node1135950"
+      },
+      "conflicts_with": {
+        "ot_1278@tree1": [
+          "node10",
+          "node9"
+        ],
+        "ot_1278@tree2": [
+          "node77",
+          "node78"
+        ]
+      },
+      "species": false
+    },
+    {
+      "id": "ott273233",
+      "parent": "mrcaott527342ott726530",
+      "scientific": "Bradypus variegatus",
+      "ott": 273233,
+      "tax_sources": [
+        "ncbi:9355",
+        "gbif:2436353",
+        "irmng:10228963"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott273233"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_273233",
+      "requested_node_id": "ott273233"
+    },
+    {
+      "id": "mrcaott527342ott726530",
+      "parent": "mrcaott527342ott736497",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1278@tree1": "node3",
+        "ot_1278@tree2": "node71",
+        "ot_642@tree1": "node24",
+        "ot_647@tree2": "node153"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott527342ott736497",
+      "parent": "ott527308",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1278@tree1": "node1",
+        "ot_1278@tree2": "node69",
+        "ot_642@tree1": "node22",
+        "ot_647@tree2": "node152"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott527308",
+      "parent": "ott273225",
+      "scientific": "Bradypus",
+      "ott": 527308,
+      "tax_sources": [
+        "ncbi:9353",
+        "gbif:2436350",
+        "irmng:1360705"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node6",
+        "ot_1278@tree2": "node74",
+        "ot_642@tree1": "node20",
+        "ot_647@tree2": "node150",
+        "ott3.7draft3": "ott527308"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott273225",
+      "parent": "ott495015",
+      "scientific": "Bradypodidae",
+      "ott": 273225,
+      "tax_sources": [
+        "ncbi:9352",
+        "gbif:9418",
+        "irmng:104255"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node6",
+        "ot_1278@tree2": "node74",
+        "ot_642@tree1": "node20",
+        "ot_647@tree2": "node150",
+        "ott3.7draft3": "ott273225"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott495015",
+      "parent": "ott495018",
+      "scientific": "Folivora",
+      "ott": 495015,
+      "tax_sources": [
+        "ncbi:948953"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node8",
+        "ot_1278@tree2": "node76",
+        "ot_1366@Tr98763": "Tn14487425",
+        "ot_642@tree1": "node16",
+        "ot_647@tree2": "node144",
+        "ott3.7draft3": "ott495015",
+        "pg_1428@tree2855": "node610331",
+        "pg_2825@tree6572": "node1142891"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott796672",
+      "parent": "mrcaott796672ott4119191",
+      "scientific": "Dasypus novemcinctus",
+      "ott": 796672,
+      "tax_sources": [
+        "ncbi:9361",
+        "gbif:2440779",
+        "irmng:11260215"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott796672"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_796672",
+      "requested_node_id": "ott796672"
+    },
+    {
+      "id": "mrcaott796672ott4119191",
+      "parent": "mrcaott796672ott4119193",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1278@tree1": "node42",
+        "ot_642@tree1": "node34",
+        "ot_647@tree2": "node92"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott796672ott4119193",
+      "parent": "ott796671",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1278@tree1": "node38",
+        "ot_1278@tree2": "node102",
+        "ot_642@tree1": "node30",
+        "ot_647@tree2": "node90"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott796671",
+      "parent": "ott273244",
+      "scientific": "Dasypus",
+      "ott": 796671,
+      "tax_sources": [
+        "ncbi:9360",
+        "gbif:2440775",
+        "irmng:1356569"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node37",
+        "ot_1278@tree2": "node101",
+        "ot_642@tree1": "node28",
+        "ot_647@tree2": "node88",
+        "ott3.7draft3": "ott796671",
+        "pg_2825@tree6572": "node1142915"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott273244",
+      "parent": "ott495017",
+      "scientific": "Dasypodidae",
+      "ott": 273244,
+      "tax_sources": [
+        "ncbi:9359",
+        "gbif:9369",
+        "irmng:104715"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node37",
+        "ot_1278@tree2": "node101",
+        "ot_642@tree1": "node28",
+        "ot_647@tree2": "node88",
+        "ott3.7draft3": "ott273244",
+        "pg_2825@tree6572": "node1142915"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott495017",
+      "parent": "ott847764",
+      "scientific": "Cingulata",
+      "ott": 495017,
+      "tax_sources": [
+        "ncbi:948951",
+        "gbif:735",
+        "irmng:11227"
+      ],
+      "supported_by": {
+        "ot_1278@tree1": "node11",
+        "ot_1278@tree2": "node79",
+        "ot_642@tree1": "node27",
+        "ot_647@tree2": "node87",
+        "ott3.7draft3": "ott495017",
+        "pg_2812@tree6545": "node1135951",
+        "pg_2825@tree6572": "node1142899"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott16038",
+      "parent": "ott16047",
+      "scientific": "Tachyglossus aculeatus",
+      "ott": 16038,
+      "tax_sources": [
+        "ncbi:9261",
+        "gbif:2433378",
+        "irmng:10661674"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott16038"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_16038",
+      "requested_node_id": "ott16038"
+    },
+    {
+      "id": "ott16047",
+      "parent": "ott344064",
+      "scientific": "Tachyglossus",
+      "ott": 16047,
+      "tax_sources": [
+        "ncbi:9260",
+        "gbif:2433377",
+        "irmng:1241253"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott16047"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott344064",
+      "parent": "mrcaott79623ott962377",
+      "scientific": "Tachyglossidae",
+      "ott": 344064,
+      "tax_sources": [
+        "ncbi:9259",
+        "gbif:5941",
+        "irmng:104843"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott344064"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott835328",
+      "parent": "ott835327",
+      "scientific": "Vombatus ursinus",
+      "ott": 835328,
+      "tax_sources": [
+        "ncbi:29139",
+        "gbif:2440301",
+        "irmng:10208277"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott835328"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_835328",
+      "requested_node_id": "ott835328"
+    },
+    {
+      "id": "ott835327",
+      "parent": "ott323250",
+      "scientific": "Vombatus",
+      "ott": 835327,
+      "tax_sources": [
+        "ncbi:29138",
+        "gbif:2440300",
+        "irmng:1038014"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott835327"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott323250",
+      "parent": "mrcaott461135ott985451",
+      "scientific": "Vombatidae",
+      "ott": 323250,
+      "tax_sources": [
+        "ncbi:9338",
+        "gbif:9376",
+        "irmng:119228"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott323250",
+        "pg_2833@tree6588": "node1145558"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott397157",
+      "parent": "ott397140",
+      "scientific": "Crocuta crocuta",
+      "ott": 397157,
+      "tax_sources": [
+        "ncbi:9678",
+        "gbif:5218781",
+        "irmng:11068533",
+        "irmng:10528271"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott397157"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_397157",
+      "requested_node_id": "ott397157"
+    },
+    {
+      "id": "ott397140",
+      "parent": "mrcaott383901ott397157",
+      "scientific": "Crocuta",
+      "ott": 397140,
+      "tax_sources": [
+        "ncbi:9677",
+        "gbif:2433504",
+        "irmng:1055014"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott397140"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott383901ott397157",
+      "parent": "ott397138",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_328@tree1": "node242",
+        "pg_2684@tree6644": "node1159642"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott397138",
+      "parent": "mrcaott6940ott383901",
+      "scientific": "Hyaenidae",
+      "ott": 397138,
+      "tax_sources": [
+        "ncbi:9676",
+        "gbif:5306",
+        "irmng:104702"
+      ],
+      "supported_by": {
+        "ot_328@tree1": "node241",
+        "ott3.7draft3": "ott397138"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott803645",
+      "parent": "ott418480",
+      "scientific": "Suricata suricatta",
+      "ott": 803645,
+      "tax_sources": [
+        "ncbi:37032",
+        "gbif:2434126",
+        "irmng:11244376"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott803645"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_803645",
+      "requested_node_id": "ott803645"
+    },
+    {
+      "id": "ott418480",
+      "parent": "mrcaott6940ott803645",
+      "scientific": "Suricata",
+      "ott": 418480,
+      "tax_sources": [
+        "ncbi:37031",
+        "gbif:2434125",
+        "irmng:1298596"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott418480"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott1079387",
+      "parent": "ott644247",
+      "scientific": "Manis tricuspis",
+      "ott": 1079387,
+      "tax_sources": [
+        "ncbi:358128",
+        "gbif:5219635",
+        "irmng:11287457"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1079387"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_1079387",
+      "requested_node_id": "ott1079387"
+    },
+    {
+      "id": "ott644247",
+      "parent": "ott644249",
+      "scientific": "Manis",
+      "ott": 644247,
+      "tax_sources": [
+        "ncbi:9973",
+        "gbif:2437177",
+        "irmng:1283750"
+      ],
+      "supported_by": {
+        "ot_1366@Tr98763": "Tn14487434",
+        "ott3.7draft3": "ott644247",
+        "pg_1428@tree2855": "node610099"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott644249",
+      "parent": "ott644252",
+      "scientific": "Manidae",
+      "ott": 644249,
+      "tax_sources": [
+        "ncbi:9972",
+        "gbif:5480",
+        "irmng:104871"
+      ],
+      "supported_by": {
+        "ot_1366@Tr98763": "Tn14487434",
+        "ott3.7draft3": "ott644249",
+        "pg_1428@tree2855": "node610099"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott644252",
+      "parent": "mrcaott4697ott263949",
+      "scientific": "Pholidota",
+      "ott": 644252,
+      "tax_sources": [
+        "ncbi:9971",
+        "gbif:796",
+        "irmng:11314"
+      ],
+      "supported_by": {
+        "ot_1366@Tr98763": "Tn14487434",
+        "ott3.7draft3": "ott644252",
+        "pg_1428@tree2855": "node610099"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott1034223",
+      "parent": "ott1087514",
+      "scientific": "Tapirus terrestris",
+      "ott": 1034223,
+      "tax_sources": [
+        "ncbi:9801",
+        "gbif:2440898",
+        "irmng:10596052"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1034223"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_1034223",
+      "requested_node_id": "ott1034223"
+    },
+    {
+      "id": "ott1087514",
+      "parent": "ott1068227",
+      "scientific": "Tapirus",
+      "ott": 1087514,
+      "tax_sources": [
+        "ncbi:9800",
+        "gbif:7939585",
+        "irmng:1303166"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1087514"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott1068227",
+      "parent": "mrcaott9419ott277746",
+      "scientific": "Tapiridae",
+      "ott": 1068227,
+      "tax_sources": [
+        "ncbi:9799",
+        "gbif:9416",
+        "irmng:104854"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott1068227"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott872562",
+      "parent": "ott872565",
+      "scientific": "Ailurus fulgens",
+      "ott": 872562,
+      "tax_sources": [
+        "ncbi:9649",
+        "gbif:5219446",
+        "irmng:10861867"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott872562"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_872562",
+      "requested_node_id": "ott872562"
+    },
+    {
+      "id": "ott872565",
+      "parent": "ott827257",
+      "scientific": "Ailurus",
+      "ott": 872565,
+      "tax_sources": [
+        "ncbi:9648",
+        "gbif:3240045",
+        "irmng:1430745"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott872565"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott827257",
+      "parent": "mrcaott4697ott638813",
+      "scientific": "Ailuridae",
+      "ott": 827257,
+      "tax_sources": [
+        "ncbi:379582",
+        "gbif:9673",
+        "irmng:119711"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott827257"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott226178",
+      "parent": "ott226189",
+      "scientific": "Trichechus manatus",
+      "ott": 226178,
+      "tax_sources": [
+        "ncbi:9778",
+        "worms:159509",
+        "gbif:2435296",
+        "irmng:10966315"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott226178"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_226178",
+      "requested_node_id": "ott226178"
+    },
+    {
+      "id": "ott226189",
+      "parent": "ott226181",
+      "scientific": "Trichechus",
+      "ott": 226189,
+      "tax_sources": [
+        "ncbi:9776",
+        "worms:159504",
+        "gbif:2435291",
+        "irmng:1415557"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott226189"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott226181",
+      "parent": "ott226183",
+      "scientific": "Trichechidae",
+      "ott": 226181,
+      "tax_sources": [
+        "ncbi:9775",
+        "worms:159503",
+        "gbif:9463",
+        "irmng:105014"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott226181"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott410153",
+      "parent": "ott936000",
+      "scientific": "Rangifer tarandus",
+      "ott": 410153,
+      "tax_sources": [
+        "ncbi:9870",
+        "worms:993630",
+        "gbif:5220114",
+        "irmng:10453154"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott410153"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_410153",
+      "requested_node_id": "ott410153"
+    },
+    {
+      "id": "ott936000",
+      "parent": "mrcaott15447ott114864",
+      "scientific": "Rangifer",
+      "ott": 936000,
+      "tax_sources": [
+        "ncbi:9869",
+        "worms:993629",
+        "gbif:2440913",
+        "irmng:1020364"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott936000"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott15447ott114864",
+      "parent": "mrcaott15447ott54038",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1344@Tr105486": "Tn16531628",
+        "ot_2368@tree7": "node98"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott274566",
+      "parent": "ott274567",
+      "scientific": "Saiga tatarica",
+      "ott": 274566,
+      "tax_sources": [
+        "ncbi:34875",
+        "gbif:2441067",
+        "irmng:11113630"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott274566"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_274566",
+      "requested_node_id": "ott274566"
+    },
+    {
+      "id": "ott274567",
+      "parent": "mrcaott21273ott386540",
+      "scientific": "Saiga",
+      "ott": 274567,
+      "tax_sources": [
+        "ncbi:34874",
+        "gbif:2441066",
+        "irmng:1440783"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott274567"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott21273ott386540",
+      "parent": "mrcaott21273ott938432",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1344@Tr105486": "Tn16531781",
+        "pg_2359@tree4962": "node857973"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott21273ott938432",
+      "parent": "mrcaott21273ott40128",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1344@Tr105486": "Tn16531776",
+        "pg_2359@tree4962": "node857972"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott21273ott40128",
+      "parent": "mrcaott21273ott95603",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1344@Tr105486": "Tn16531771"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott21273ott95603",
+      "parent": "mrcaott20474ott21273",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1344@Tr105486": "Tn16531575"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott20474ott21273",
+      "parent": "mrcaott20474ott561127",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1344@Tr105486": "Tn16531815"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott20474ott561127",
+      "parent": "ott768677",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1344@Tr105486": "Tn16531596"
       },
       "conflicts_with": {},
       "species": false

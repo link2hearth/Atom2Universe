@@ -42,6 +42,13 @@ def dorsal_constraints():
                 "each articulated to the cephalothorax and separately traceable; two shorter "
                 "front pedipalps distinct from walking legs. Spread limbs naturally without overlap."
             )
+        elif "Amphibia" in lineage:
+            result[node[2]] = (
+                " Strict direct top-down dorsal view, head upward. Spread existing limbs "
+                "naturally so the feet and digits can be inspected without overlap. "
+                "Respect this species' actual limb and digit anatomy; never add limbs "
+                "to a naturally limbless amphibian."
+            )
         elif "Insecta" in lineage:
             result[node[2]] = (
                 " Strict direct top-down dorsal view. Exactly six walking legs articulated to "
@@ -73,7 +80,8 @@ def main():
     for row in read(ROOT / "tools/bestiary/illustrated_species.json")["species"]:
         used_ids.add(row["id"])
         used_scientific.add(row["scientific_name"])
-    for path in [*BUILD.glob("*manifest*.json"), *BUILD.glob("illustration_wave_*/queue.json")]:
+    for path in [*BUILD.glob("*manifest*.json"), *BUILD.glob("illustration_wave_*/queue.json"),
+                 *BUILD.glob("continuation_*/queue.json"), *BUILD.glob("continuation_*/root_*_manifest.json")]:
         rows = read(path)
         if isinstance(rows, list):
             for row in rows:
