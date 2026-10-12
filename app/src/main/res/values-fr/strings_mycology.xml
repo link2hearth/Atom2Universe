@@ -237,6 +237,7 @@
         <item>Hypholome en touffe : jaune soufre, lames jaunes puis vertes, très amer. Toxique.</item>
         <item>Armillaire : aussi en touffe sur souches et racines ; l’ANSES lui prête des troubles digestifs, même après cuisson.</item>
         <item>Collybie à pied en fuseau : en touffes sur les souches de chêne, mais à pied sans anneau, sillonné et en fuseau ; Wikipédia (fr) dit que les débutants peuvent la prendre pour une pholiote, un hypholome ou une armillaire. Toxique (DGfM).</item>
+        <item>Hypholome couleur de brique : chapeau rouge brique, lames jaunâtres puis grises, jamais vertes ; les sources se contredisent sur sa comestibilité. Wikipédia (en) met en garde contre la confusion avec des sosies mortels, dont la galère marginée.</item>
     </string-array>
     <string name="myco_g_greenforms_title">Phalloïde verte, ou pas ?</string>
     <string name="myco_g_greenforms_evidence">Centre antipoison belge, Wikipédia</string>
@@ -352,6 +353,7 @@
         <item>Le pleurote en oreille a causé au Japon, en 2004, une épidémie d’atteintes du cerveau, mortelle pour une partie des malades, surtout atteints d’insuffisance rénale ; la cause n’est pas établie.</item>
         <item>La société allemande de mycologie le range parmi les champignons toxiques (syndrome de Pleurocybella).</item>
         <item>Wikipédia (fr) : on le prend parfois pour le pleurote en huître ; il est plus blanc.</item>
+        <item>Pleurote pulmonaire : bien plus pâle et plus petit que le pleurote en huître, même goût, même bois ; Wikipédia (en) avertit que des clitocybes poussant sur le bois peuvent lui ressembler.</item>
     </string-array>
     <string name="myco_g_summercep_title">Cèpe d’été, cèpe des pins, ou bolet amer ?</string>
     <string name="myco_g_summercep_evidence">Fiches Wikipédia</string>
@@ -2419,5 +2421,47 @@
         <item>Trompette de la mort : en cornet, creuse, dessous gris lisse. Chanterelle cendrée : entonnoir percé, plis décurrents bien formés, gris bleuâtre puis gris (Wikipédia, fr).</item>
         <item>Les deux sont noires et comestibles ; la chanterelle cendrée est plus douce (Wikipédia, en).</item>
         <item>La fausse chanterelle des charbonnières est plus pâle, à pied plein et vraies lames, pousse sur sol brûlé et n’a aucune valeur culinaire (Wikipédia, fr).</item>
+    </string-array>
+    <string name="myco_sordida_name">Lépiste sordide</string>
+    <string name="myco_sordida_alt">Sordid blewit</string>
+    <string-array name="myco_sordida_traits">
+        <item>Chapeau violet clair, rose lilas ou lilas, lisse, un peu gras par temps humide</item>
+        <item>Lames échancrées et serrées, bleues comme le chapeau</item>
+        <item>Pied cylindrique, droit, lisse et fibrilleux, sans bulbe, sans anneau</item>
+        <item>Bois clairs de feuillus et de conifères, herbe des jardins, parcs, prés, gazons et bords de chemins · septembre à décembre</item>
+    </string-array>
+    <string name="myco_sordida_note">Comestible : la DGfM et la VAPKO le listent (la DGfM le signale sur la liste rouge allemande). Wikipédia (fr) ne donne pas de verdict propre et nomme les pieds-bleus avec lesquels on peut le confondre, tous comestibles : le pied bleu, à pied bleuté, et le pied violet ; celui-ci a un pied droit, sans bulbe. Elle cite aussi parmi les sosies un cortinaire violet (Cortinarius azureus), absent de cet atlas : des lames violettes ne suffisent pas à reconnaître un pied-bleu. Wikipédia (en) est une ébauche sans description, le texte suit donc la page française ; elle ne donne ni tailles, ni chair, ni sporée, et le dessin ne montre que des formes typiques.</string>
+    <string name="myco_pulmonarius_name">Pleurote pulmonaire</string>
+    <string name="myco_pulmonarius_alt">Lung oyster, Indian oyster, phoenix mushroom</string>
+    <string-array name="myco_pulmonarius_traits">
+        <item>Chapeau de 5 à plus de 20 cm, convexe puis plat, bien plus pâle et plus petit que celui du pleurote en huître</item>
+        <item>Lames blanchâtres, décurrentes</item>
+        <item>Pied court, excentré ou absent, sans anneau</item>
+        <item>Sporée blanche à jaunâtre, parfois gris lavande · odeur agréable d’anis (Wikipédia, en)</item>
+        <item>Sur bois mort, surtout de feuillus ; plus tard en été que le pleurote en huître, aime la chaleur</item>
+    </string-array>
+    <string name="myco_pulmonarius_note">Comestible : la DGfM le liste ; Wikipédia (fr) et (en) disent que son goût et sa culture sont à peu près ceux du pleurote en huître, et qu’il est le plus cultivé de ce type en Europe et en Amérique du Nord. Wikipédia (en) avertit que des clitocybes poussant sur le bois peuvent lui ressembler et que certains sont vénéneux ; elle dit aussi que le « Pleurotus sajor-caju » vendu est un autre champignon, à anneau. Aucune des deux pages ne cite de danger propre à l’espèce. L’atlas le dessine comme le pleurote en huître, en plus pâle.</string>
+    <string name="myco_sublateritium_name">Hypholome couleur de brique</string>
+    <string name="myco_sublateritium_alt">Brick cap, red woodlover</string>
+    <string-array name="myco_sublateritium_traits">
+        <item>Chapeau de 3,5 à 10 cm, rouge brique au centre à marge plus pâle, lisse, parfois avec des restes de voile au bord</item>
+        <item>Lames serrées, d’abord jaunâtres ou jaune soufre, grisâtres avec l’âge, jamais vertes</item>
+        <item>Pied jaune clair, plus foncé vers le bas</item>
+        <item>Sporée brun violacé · saveur douce de noisette, un peu amère quand il est vieux</item>
+        <item>En touffes denses sur les souches et le bois pourri de feuillus, en automne</item>
+    </string-array>
+    <string name="myco_sublateritium_note">Non recommandé : les sources se contredisent. Wikipédia (fr) le dit toxique, comestible après cuisson et non comestible dans la même page ; Wikipédia (en) dit qu’il est parfois mangé, de choix au Japon, mais souvent tenu pour non comestible ou vénéneux en Europe, et met en garde contre la confusion avec des sosies mortels, dont la galère marginée. La VAPKO signale seulement que l’hypholome en touffe peut être confondu avec lui, et il ne figure sur aucune liste de la DGfM. Statut le plus prudent retenu. Il se distingue de l’hypholome en touffe par son chapeau rouge brique et ses lames jamais vertes ; la galère marginée est dans le groupe ci-dessous.</string>
+    <string name="myco_l_blue_close_gills">Lames bleues et serrées</string>
+    <string name="myco_l_straight_stem_no_bulb">Pied droit, sans bulbe</string>
+    <string name="myco_l_flesh_pale_lilac">Chair lilas pâle</string>
+    <string name="myco_l_pale_fan_cap">Chapeau pâle, en éventail</string>
+    <string name="myco_l_brick_cap_pale_edge">Chapeau rouge brique, bord plus pâle</string>
+    <string name="myco_l_light_yellow_stem_dark_base">Pied jaune clair, plus foncé en bas</string>
+    <string name="myco_g_blewit_title">Pied bleu, ou lépiste sordide ?</string>
+    <string name="myco_g_blewit_evidence">Wikipédia</string>
+    <string-array name="myco_g_blewit_points">
+        <item>Pied bleu : chapeau lilas, lames violettes, base du pied renflée. Lépiste sordide : pied droit sans bulbe, chapeau violet clair à lilas, lames bleues.</item>
+        <item>Wikipédia (fr) dit que les pieds-bleus avec lesquels on le confond sont tous comestibles, mais cite un cortinaire violet parmi les sosies : la couleur violette seule ne suffit pas.</item>
+        <item>Les deux sont dans la liste DGfM des champignons comestibles.</item>
     </string-array>
 </resources>

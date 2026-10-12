@@ -61,7 +61,7 @@ class FungusCriteriaTest {
     fun leLotQuatreSeLitDansLeDessin() {
         // les deux formes nouvelles ne se trouvent que par leur forme
         assertEquals(setOf("perlatum", "egg", "citrinum", "gigantea"), ids("c_ball"))
-        assertEquals(setOf("ostreatus", "pleurocybella", "laetiporus", "fistulina"), ids("c_bracket"))
+        assertEquals(setOf("ostreatus", "pleurocybella", "laetiporus", "fistulina", "pulmonarius"), ids("c_bracket"))
         assertTrue(FungusCriteria.matches(look("ostreatus"), setOf("c_bracket", "m_cluster", "u_gills", "sp_white", "s_no_ring")))
         assertTrue(FungusCriteria.matches(look("perlatum"), setOf("c_ball", "u_none", "cap_WHITE", "s_no_ring", "s_no_volva")))
         assertTrue(FungusCriteria.matches(look("citrinum"), setOf("c_ball", "u_none", "cap_YELLOW", "c_scaly")))
@@ -104,7 +104,7 @@ class FungusCriteriaTest {
         // « sur le bois » = les touffes en bouquet sur un tronc, et les étagères
         assertEquals(
             setOf("olearius", "galerina", "mutabilis", "fasciculare", "mellea", "aegerita", "flammulina", "capnoides", "gymnopilus",
-                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus", "platyphylla", "fusipes", "micaceus"),
+                "ostreatus", "pleurocybella", "laetiporus", "fistulina", "erinaceus", "platyphylla", "fusipes", "micaceus", "pulmonarius", "sublateritium"),
             ids("m_wood")
         )
         assertTrue(FungusCriteria.matches(look("flammulina"), setOf("m_wood", "m_cluster", "s_no_ring", "sp_white", "cap_ORANGE", "u_gills", "w_medium")))
@@ -261,6 +261,16 @@ class FungusCriteriaTest {
         assertEquals(setOf("craterellus", "cinereus"), FungusCatalog.groups.first { it.id == "blacktrumpet" }.members.toSet())
         assertTrue(FungusCatalog.groups.first { it.id == "redrussula" }.members.contains("paludosa"))
         assertTrue(FungusCatalog.groups.first { it.id == "roughstem" }.members.containsAll(listOf("aurantiacum", "crocipodium")))
+    }
+
+    @Test
+    fun leLotSeizeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("sordida"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("pulmonarius"), setOf("m_wood", "u_gills")))
+        assertTrue(FungusCriteria.matches(look("sublateritium"), setOf("m_wood", "s_no_ring")))
+        assertEquals(setOf("nuda", "sordida"), FungusCatalog.groups.first { it.id == "blewit" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "woodtuft" }.members.contains("sublateritium"))
+        assertTrue(FungusCatalog.groups.first { it.id == "oyster" }.members.contains("pulmonarius"))
     }
 
     @Test

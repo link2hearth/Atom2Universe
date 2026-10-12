@@ -242,6 +242,7 @@
         <item>Sulphur tuft: sulphur yellow, gills yellow then green, very bitter. Toxic.</item>
         <item>Honey fungus: also in tufts on stumps and roots; ANSES links it to digestive trouble, even after cooking.</item>
         <item>Spindle shank: in clumps on oak stumps, but a ringless, grooved, spindle-shaped stem; Wikipedia (fr) says beginners may take it for a pholiota, a hypholoma or an honey fungus. Toxic (DGfM).</item>
+        <item>Brick cap: brick-red cap, gills yellowish then grey and never green; sources disagree on its edibility. Wikipedia (en) warns against confusing it with deadly look-alikes, the funeral bell among them.</item>
     </string-array>
     <string name="myco_g_greenforms_title">Green death cap, or not?</string>
     <string name="myco_g_greenforms_evidence">Belgian poison centre, Wikipedia</string>
@@ -357,6 +358,7 @@
         <item>The angel wing caused an epidemic of brain damage in Japan in 2004, fatal for some of the patients, mostly people with kidney failure; the cause is not established.</item>
         <item>The German mycological society lists it among the toxic mushrooms (Pleurocybella syndrome).</item>
         <item>Wikipedia (fr): it is sometimes mistaken for the oyster mushroom; it is whiter.</item>
+        <item>Lung oyster: much paler and smaller than the oyster mushroom, same taste and same wood; Wikipedia (en) warns that clitocybes on wood can look like it.</item>
     </string-array>
     <string name="myco_g_summercep_title">Summer bolete, pine bolete, or bitter bolete?</string>
     <string name="myco_g_summercep_evidence">Wikipedia entries</string>
@@ -2562,5 +2564,50 @@
         <item>Horn of plenty: horn-shaped, hollow, smooth grey underside. Ashen chanterelle: funnel with a hole, well-formed decurrent folds, bluish-grey then grey (Wikipedia, fr).</item>
         <item>Both are black and edible; the ashen chanterelle is milder (Wikipedia, en).</item>
         <item>The false chanterelle of the charcoal burners is paler, with a solid stem and true gills, grows on burnt ground and has no food value (Wikipedia, fr).</item>
+    </string-array>
+    <string name="myco_sordida_name">Sordid blewit</string>
+    <string name="myco_sordida_alt">Lépiste sordide</string>
+    <string name="myco_sordida_latin" translatable="false">Lepista sordida</string>
+    <string-array name="myco_sordida_traits">
+        <item>Cap light violet, lilac-pink or lilac, smooth, a little greasy in wet weather</item>
+        <item>Gills notched and crowded, blue like the cap</item>
+        <item>Stem cylindrical, straight, smooth and fibrillose, no bulb, no ring</item>
+        <item>Light woods of broadleaf trees and conifers, garden grass, parks, meadows, lawns, roadsides · September to December</item>
+    </string-array>
+    <string name="myco_sordida_note">Edible: the DGfM and the VAPKO list it (the DGfM marks it as on the German red list). Wikipedia (fr) gives no verdict of its own and names the blewits it is mistaken for, all edible: the wood blewit, with a blue stem, and the field blewit, with a violet stem; this one has a straight stem with no bulb. It also names a violet Cortinarius (Cortinarius azureus) among the look-alikes, which is not in this atlas: purple gills alone do not identify a blewit. Wikipedia (en) is a stub with no description, so the text follows the French page; sizes, flesh and spore print are not given there, and the drawing only shows typical shapes.</string>
+    <string name="myco_pulmonarius_name">Lung oyster</string>
+    <string name="myco_pulmonarius_alt">Pleurote pulmonaire</string>
+    <string name="myco_pulmonarius_latin" translatable="false">Pleurotus pulmonarius</string>
+    <string-array name="myco_pulmonarius_traits">
+        <item>Cap 5 to over 20 cm, convex then flat, much paler and smaller than the oyster mushroom</item>
+        <item>Gills whitish, decurrent</item>
+        <item>Stem short, off-centre or missing, no ring</item>
+        <item>Spore print white to greyish or lilac · pleasant anise smell (Wikipedia, en)</item>
+        <item>On dead wood, mostly broadleaf; later in summer than the oyster mushroom, preferring warmer weather</item>
+    </string-array>
+    <string name="myco_pulmonarius_note">Edible: the DGfM lists it; Wikipedia (fr) and (en) say its taste and cultivation are much the same as the oyster mushroom, and that it is the most cultivated mushroom of this kind in Europe and North America. Wikipedia (en) warns that clitocybes growing on wood can look like it and that some are poisonous; it also says the sold “Pleurotus sajor-caju” is a different mushroom with a ring. Neither page names a danger from the species itself. The atlas draws it as the oyster mushroom, only paler.</string>
+    <string name="myco_sublateritium_name">Brick cap</string>
+    <string name="myco_sublateritium_alt">Hypholome couleur de brique</string>
+    <string name="myco_sublateritium_latin" translatable="false">Hypholoma sublateritium</string>
+    <string-array name="myco_sublateritium_traits">
+        <item>Cap 3.5 to 10 cm, brick-red in the centre with a paler margin, smooth, sometimes with veil remnants at the edge</item>
+        <item>Gills crowded, yellowish or sulphur-yellow at first, greyish with age, never green</item>
+        <item>Stem light yellow, darker towards the base</item>
+        <item>Spore print purple-brown · mild nutty taste, a little bitter when old</item>
+        <item>In dense clusters on stumps and rotting broadleaf wood, in autumn</item>
+    </string-array>
+    <string name="myco_sublateritium_note">Not recommended: the sources disagree. Wikipedia (fr) calls it toxic, edible after cooking and inedible in the same page; Wikipedia (en) says it is sometimes eaten, a choice edible in Japan, but often thought inedible or poisonous in Europe, and warns against mixing it up with deadly look-alikes, naming the funeral bell. The VAPKO only warns that the sulphur tuft can be confused with it, and it is absent from the DGfM lists. Kept at the most prudent edible status. It differs from the sulphur tuft by its brick-red cap and gills that are never green; the funeral bell is in the group below.</string>
+    <string name="myco_l_blue_close_gills">Blue, crowded gills</string>
+    <string name="myco_l_straight_stem_no_bulb">Straight stem, no bulb</string>
+    <string name="myco_l_flesh_pale_lilac">Pale lilac flesh</string>
+    <string name="myco_l_pale_fan_cap">Pale, fan-shaped cap</string>
+    <string name="myco_l_brick_cap_pale_edge">Brick-red cap, paler edge</string>
+    <string name="myco_l_light_yellow_stem_dark_base">Light yellow stem, darker below</string>
+    <string name="myco_g_blewit_title">Wood blewit, or sordid blewit?</string>
+    <string name="myco_g_blewit_evidence">Wikipedia</string>
+    <string-array name="myco_g_blewit_points">
+        <item>Wood blewit: lilac cap, violet gills, a swollen base to the stem. Sordid blewit: straight stem with no bulb, light violet to lilac cap, blue gills.</item>
+        <item>Wikipedia (fr) says the blewits it is mistaken for are all edible, but names a violet Cortinarius among the look-alikes: a violet colour alone is not enough.</item>
+        <item>Both are in the DGfM list of edible mushrooms.</item>
     </string-array>
 </resources>
