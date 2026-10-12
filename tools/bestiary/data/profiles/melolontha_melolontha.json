@@ -1,0 +1,113 @@
+{
+  "id": "melolontha_melolontha",
+  "scientific": "Melolontha melolontha",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Cockchafer",
+    "fr": "Hanneton commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common cockchafer is a large European scarab beetle whose adults fly on spring evenings and whose white grubs live underground for about three years. Its mass flights, once classic in parts of Switzerland, have largely faded in recent decades.",
+      "fr": "Le hanneton commun est un grand scarabée européen dont les adultes volent les soirs de printemps et dont les vers blancs vivent sous terre pendant environ trois ans. Ses grands vols, autrefois classiques dans certaines régions de Suisse, se sont en grande partie estompés ces dernières décennies."
+    },
+    "identification": {
+      "en": "Adults are 25–30 mm long, the largest native cockchafer in Switzerland, with a dark head, a shiny black pronotum covered in short hairs and a long, flat pygidium at the tip of the abdomen. Males have longer antennae with a large fan-like club. The grub is dull white, up to about 40–46 mm, with a black abdominal tip and strong jaws, and rests curled in an arc.",
+      "fr": "L’adulte mesure 25 à 30 mm, le plus grand hanneton indigène de Suisse, avec une tête sombre, un pronotum noir luisant couvert de poils courts et un pygidium long et plat au bout de l’abdomen. Les mâles ont des antennes plus longues, terminées par une grande massue en éventail. Le ver blanc est d’un blanc mat, long d’environ 40 à 46 mm, avec le bout de l’abdomen noir et de fortes mandibules, et se tient recourbé en arc."
+    },
+    "habitat": {
+      "en": "It occurs in temperate Europe, in meadows, farmland, forest edges and suburbs, and prefers soft soil with a medium cover of vegetation for egg laying. Adults fly towards forest edges, groves and trees on rounded hilltops or ridges, guided by the silhouette of the trees.",
+      "fr": "Il vit en Europe tempérée, dans les prairies, les terres cultivées, les lisières et les banlieues, et préfère pour pondre un sol meuble à couvert végétal moyen. Les adultes volent vers les lisières, les bosquets et les arbres des sommets arrondis ou des crêtes, guidés par la silhouette des arbres."
+    },
+    "diet": {
+      "en": "Adults eat the leaves of deciduous trees, especially oaks, and also beech and larch, mostly in May. The grubs eat roots, including those of grasses, cereals and many other plants, in meadows and cultivated soil.",
+      "fr": "Les adultes mangent les feuilles d’arbres feuillus, surtout des chênes, mais aussi du hêtre et du mélèze, principalement en mai. Les vers blancs rongent les racines, notamment de graminées, de céréales et de nombreuses autres plantes, dans les prairies et les sols cultivés."
+    },
+    "behavior": {
+      "en": "Adults are nocturnal and active at dusk, flying from about mid-April for around two weeks in some Swiss valleys and on mild evenings in May, and they are attracted to lights. Grubs stay buried until pupation; on a flat surface they try to move sideways, curled up.",
+      "fr": "Les adultes sont nocturnes et actifs au crépuscule, volant dès la mi-avril pendant deux semaines environ dans certaines vallées suisses et les soirs doux de mai, et ils sont attirés par la lumière. Les vers blancs restent enterrés jusqu’à la nymphose; sur une surface plane, ils tentent d’avancer de côté, recourbés."
+    },
+    "reproduction": {
+      "en": "Females lay about 20 eggs at a time in soft soil. Grubs hatch a few weeks later and develop underground. The cycle normally lasts three years, ending in the big flights, but it can last four years in mountain regions and has occasionally shortened to two with warming. Since 2003 it no longer always follows the three-year rhythm in Valais.",
+      "fr": "Les femelles pondent environ 20 œufs à la fois dans un sol meuble. Les vers blancs naissent quelques semaines plus tard et se développent sous terre. Le cycle dure normalement trois ans et s’achève par les grands vols, mais il peut durer quatre ans en montagne et s’est parfois raccourci à deux ans avec le réchauffement. Depuis 2003, il ne suit plus toujours le rythme de trois ans en Valais."
+    },
+    "ecology": {
+      "en": "Heavy leaf-eating in May leaves oaks and larches stripped, but defoliated trees regrow replacement shoots from June and are green again in summer, with possibly some loss of growth. Grubs can damage meadows, lawns and crops. Fungi of the genus Beauveria are used against them in crops, and it is neither useful nor allowed to treat forests.",
+      "fr": "Les adultes qui dévorent le feuillage en mai laissent chênes et mélèzes dégarnis, mais les arbres défoliés refont des pousses de remplacement dès juin et reverdissent en été, avec parfois une perte de croissance. Les vers blancs peuvent abîmer prairies, pelouses et cultures. Des champignons du genre Beauveria servent à les combattre dans les cultures, alors qu’en forêt la lutte est inutile et interdite."
+    },
+    "conservation": {
+      "en": "Animal Diversity Web lists the species with no special status, but no recent global assessment was read. In Switzerland the once-classic mass flights around Basel, Bern and central Switzerland have largely disappeared or are no longer distinct, so local abundance has changed greatly.",
+      "fr": "L’Animal Diversity Web classe l’espèce sans statut particulier, mais aucune évaluation mondiale récente n’a été lue. En Suisse, les grands vols jadis classiques de Bâle, de Berne et de Suisse centrale ont largement disparu ou ne se distinguent plus, si bien que l’abondance locale a beaucoup changé."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Melolontha melolontha — Animal Diversity Web, University of Michigan",
+        "fr": "Melolontha melolontha — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Melolontha_melolontha/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Adults 25–30 mm, larvae about 40–46 mm; males have a larger fan-like antennal club; adults nocturnal and crepuscular, gather at lights; about 20 eggs at a time.",
+        "Adults eat leaves of oak, beech and other trees mainly in April–May; larvae eat roots; listed with no special status."
+      ]
+    },
+    {
+      "title": {
+        "en": "Les hannetons — Canton of Valais, agriculture service",
+        "fr": "Les hannetons — Canton du Valais, service de l’agriculture"
+      },
+      "url": "https://www.vs.ch/web/sca/hannetons",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Largest native cockchafer in Switzerland, 25–30 mm; cycle normally three years but not always since 2003; adults leave the soil from mid-April for about two weeks and fly in the evening.",
+        "Larvae damage meadows, lawns and some crops; adults can damage fruit and forest trees in cockchafer years; fungi, nematodes and bacteria approved against larvae."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cockchafers: common and forest cockchafer — Swiss Federal Institute WSL forest protection diagnosis sheet",
+        "fr": "Hannetons, hanneton commun et hanneton des bois ou du marronnier — fiche de diagnostic Protection de la forêt Suisse, WSL"
+      },
+      "url": "https://waldschutz.wsl.ch/fileadmin/user_upload/WSL/Microsite/Waldschutz-Schweiz/Diagnose_online/fr/Hannetons_hanneton_commun_et_hanneton_195.pdf",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Adults 2–3 cm eat oak leaves in May and fly towards forest edges and ridges; replacement shoots from June; grubs eat roots in meadows and fields.",
+        "Cycle three years, four in mountains, occasionally two with warming; great flights near Basel, Bern and central Switzerland have largely disappeared; Beauveria fungi in crops, no forest control."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Cycle length and flight dates come mainly from Swiss sources and vary with altitude and warming.",
+    "Animal Diversity Web gives a range that includes the United States, which was not repeated; the range is stated only as temperate Europe.",
+    "No global Red List category was read; the abundance remark applies to Switzerland only.",
+    "Wing-case colour is not described by the sources and is not stated."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

@@ -1,0 +1,94 @@
+{
+  "id": "crangon_crangon",
+  "scientific": "Crangon crangon",
+  "group": "invertebrates",
+  "name": {
+    "en": "Brown Shrimp",
+    "fr": "Crevette grise"
+  },
+  "sections": {
+    "overview": {
+      "en": "The brown shrimp, or common shrimp, is a small crustacean of European shallow coasts that buries itself in sand and is fished commercially. It is one of the most abundant animals of sandy bays and estuaries, and a key food for fish and wading birds.",
+      "fr": "La crevette grise est un petit crustacé des côtes européennes peu profondes, qui s’enfouit dans le sable et qui fait l’objet d’une pêche commerciale. C’est l’un des animaux les plus abondants des baies sableuses et des estuaires, et une proie essentielle pour les poissons et les oiseaux de rivage."
+    },
+    "identification": {
+      "en": "The body is long, thin and mottled brown, slightly flattened from top to bottom, and its colour matches the sediment. The rostrum is short and blunt, the first walking leg is subchelate (a small hook-like claw), and the telson has two pairs of lateral spines. Females grow larger than males, with a reported maximum of about 8.5–9.5 cm, rarely reached.",
+      "fr": "Le corps est long, mince et marbré de brun, un peu aplati de haut en bas, et sa couleur imite celle du sédiment. Le rostre est court et émoussé, la première patte marcheuse est subchélée (petite pince en crochet) et le telson porte deux paires d’épines latérales. Les femelles sont plus grandes que les mâles, avec un maximum signalé d’environ 8,5 à 9,5 cm, rarement atteint."
+    },
+    "habitat": {
+      "en": "It lives on sandy and muddy bottoms from the intertidal zone to about 150 m deep, in open coast, estuaries, lagoons and bays, and prefers sediment with grains of 125–710 µm. Its range runs along European coasts from the White Sea to Morocco, and into the Mediterranean and Black Seas. It tolerates a very wide range of salinity.",
+      "fr": "Elle vit sur les fonds sableux et vaseux, de la zone intertidale à environ 150 m de profondeur, en côte ouverte, estuaires, lagunes et baies, et préfère les sédiments dont les grains font 125 à 710 µm. Son aire s’étend le long des côtes européennes de la mer Blanche au Maroc, jusqu’en Méditerranée et en mer Noire. Elle supporte une très large gamme de salinité."
+    },
+    "diet": {
+      "en": "It is an omnivorous predator and scavenger that forages mostly at night. It eats polychaete worms, small fish, molluscs, small crustaceans and green seaweeds such as sea lettuce. Newly settled juveniles rely on the annual bloom of copepods.",
+      "fr": "C’est un prédateur et charognard omnivore qui s’alimente surtout la nuit. Elle mange des vers polychètes, de petits poissons, des mollusques, de petits crustacés et des algues vertes comme la laitue de mer. Les juvéniles tout juste installés dépendent de l’efflorescence annuelle de copépodes."
+    },
+    "behavior": {
+      "en": "The shrimp buries itself in 9–10 seconds by beating its abdominal limbs and sweeping sand over its back, leaving only the eyes and antennae out, to hide from predators and ambush prey. It can swim, crawl or walk. Adults move offshore from November to March to avoid low-salinity water, and young shrimps use inshore nurseries for a few weeks.",
+      "fr": "La crevette s’enfouit en 9 à 10 secondes en battant ses pattes abdominales et en rabattant le sable sur son dos, ne laissant dépasser que les yeux et les antennes, pour échapper aux prédateurs et guetter ses proies. Elle peut nager, ramper ou marcher. Les adultes gagnent le large de novembre à mars pour éviter les eaux peu salées, et les jeunes utilisent des nurseries côtières pendant quelques semaines."
+    },
+    "reproduction": {
+      "en": "Breeding is spread over much of the year, with summer eggs (up to 4,500 per female) and larger winter eggs (up to 2,800) produced from October–November; females carry them for 4 to 13 weeks depending on temperature. Planktonic larvae live 1 to 6 months, and juveniles settle from May to July. Maturity comes at 35–50 mm, and whether the species changes sex is debated.",
+      "fr": "La reproduction s’étale sur une grande partie de l’année, avec des œufs d’été (jusqu’à 4 500 par femelle) et des œufs d’hiver plus gros (jusqu’à 2 800) produits d’octobre à novembre; les femelles les portent de 4 à 13 semaines selon la température. Les larves planctoniques vivent de 1 à 6 mois, et les juvéniles se posent de mai à juillet. La maturité survient à 35–50 mm, et un éventuel changement de sexe reste débattu."
+    },
+    "ecology": {
+      "en": "Gulls, terns, redshanks, cod relatives, flatfish, gurnards and young bass eat brown shrimps, which can reach about 60 per square metre in summer peaks. Most individuals are in their first year class; the maximum age reported is about 3 years in one source and up to 5 in females in another. Black spot shell disease affects between 13% and 87% of shrimps in British sites.",
+      "fr": "Mouettes, sternes, chevaliers gambettes, gadidés, poissons plats, grondins et jeunes bars mangent la crevette grise, qui peut atteindre environ 60 individus par mètre carré lors des pics d’été. La plupart des individus ont moins d’un an; l’âge maximal signalé est d’environ 3 ans dans une source et jusqu’à 5 ans chez les femelles dans une autre. La maladie des taches noires de la carapace touche de 13 % à 87 % des crevettes selon les sites britanniques."
+    },
+    "conservation": {
+      "en": "No conservation category was found in the sources read. European landings rose from about 5,000 t in 1950 to nearly 29,000 t in 1997, taken mainly by beam trawl; about half of a catch is undersized. High fecundity and fast turnover let populations recover quickly.",
+      "fr": "Aucune catégorie de conservation n’a été trouvée dans les sources lues. Les débarquements européens sont passés d’environ 5 000 t en 1950 à près de 29 000 t en 1997, pris surtout au chalut à perche; environ la moitié d’une prise est sous-taille. Une forte fécondité et un renouvellement rapide permettent aux populations de se rétablir vite."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Brown shrimp (Crangon crangon) — MarLIN, Marine Biological Association",
+        "fr": "Crevette grise (Crangon crangon) — MarLIN, Marine Biological Association"
+      },
+      "url": "https://www.marlin.ac.uk/species/detail/2031",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Max length 8.5 cm; subchelate first walking leg, two pairs of telson spines; depth to 150 m; burial in 9–10 s; summer eggs up to 4,500, winter eggs up to 2,800; larvae 1–6 months.",
+        "Predators include gulls, terns, redshank, gadoids, flatfish, gurnards, bass; densities to 60/m²; European landings about 5,000 t (1950) to nearly 29,000 t (1997); no status given."
+      ]
+    },
+    {
+      "title": {
+        "en": "Population dynamics of the brown shrimp Crangon crangon L. in European waters — J. Campos (thesis, incl. Campos and van der Veer 2008 review)",
+        "fr": "Dynamique des populations de la crevette grise Crangon crangon L. dans les eaux européennes — J. Campos (thèse, avec la synthèse de Campos et van der Veer 2008)"
+      },
+      "url": "https://www.bio.vu.nl/thb/research/bib/Camp2009.pdf",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Range from the White Sea to Morocco, Mediterranean and Black Seas; females to 95 mm, males 75 mm, rarely reached; maturity at 35–50 mm total length.",
+        "Longevity up to 5 years in females and 4 in males, extremely rare; sex change seen in 1 of 70 males in the lab, so facultative at most."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Maximum size differs: 8.5 cm in MarLIN, 9.5 cm (females) in the thesis review; a range is given.",
+    "Maximum age differs between sources (3.3 years in MarLIN, up to 5 in females in the review); both are mentioned.",
+    "The sex-change question is unresolved in the literature; only ‘debated’ is stated.",
+    "No IUCN or national conservation category was read for this species.",
+    "The 13%–87% shell-disease range applies to British sites (Solway Firth to Poole Harbour), and landings figures come from MarLIN."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

@@ -1,0 +1,91 @@
+{
+  "id": "leopardus_braccatus",
+  "scientific": "Leopardus braccatus",
+  "group": "mammals",
+  "name": {
+    "en": "Pantanal Cat",
+    "fr": "Leopardus braccatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Pantanal cat, also called the Brazilian pampas cat or savanna pampas cat, is a small South American wild cat of open country. It was long treated as part of the widespread pampas cat, but a 2020 revision split that group into five species, and this is one of them. Much of what is known comes from the group as a whole.",
+      "fr": "Le chat du Pantanal, aussi appelé chat des pampas du Brésil ou chat des pampas de savane, est un petit félin sauvage sud-américain des milieux ouverts. On l’a longtemps rattaché au chat des pampas, très répandu, mais une révision de 2020 a scindé ce groupe en cinq espèces, dont celle-ci. Une grande partie de ce que l’on sait provient du groupe dans son ensemble."
+    },
+    "identification": {
+      "en": "A study cited by a wild cat conservation group gives averages of about 68 cm head and body, a tail of about 26 cm and a weight near 3.9 kg. Pampas cats in general look like a stocky house cat with a broad face and long hair, sometimes with a crest along the back; their coats range from yellow-white to grey-brown, plain or patterned, and melanistic forms occur.",
+      "fr": "Une étude citée par un groupe de conservation des félins sauvages donne des moyennes d’environ 68 cm pour la tête et le corps, 26 cm pour la queue et un poids proche de 3,9 kg. Les chats des pampas en général ressemblent à un chat domestique trapu, à la face large et au poil long, parfois avec une crête sur le dos; leur pelage va du jaune-blanc au gris-brun, uni ou marqué, et des formes mélaniques existent."
+    },
+    "habitat": {
+      "en": "It lives mainly in Brazil, with records in Paraguay, eastern Bolivia and Argentina, in open areas such as the Cerrado, the Pantanal, the savannas of Beni and the Chiquitano dry forest. The exact limits of its range are still uncertain, because older records were attributed to the broader pampas cat.",
+      "fr": "Il vit surtout au Brésil, avec des signalements au Paraguay, dans l’est de la Bolivie et en Argentine, dans des milieux ouverts comme le Cerrado, le Pantanal, les savanes du Beni et la forêt sèche de la Chiquitanie. Les limites exactes de son aire restent incertaines, car d’anciennes mentions étaient attribuées au chat des pampas au sens large."
+    },
+    "diet": {
+      "en": "No study specific to this species was found. Pampas cats as a group eat mainly small mammals such as rodents and hares, along with birds and occasionally lizards, and hunt mostly on the ground.",
+      "fr": "Aucune étude propre à cette espèce n’a été trouvée. Les chats des pampas, pris en groupe, mangent surtout de petits mammifères comme des rongeurs et des lièvres, ainsi que des oiseaux et parfois des lézards, et chassent surtout au sol."
+    },
+    "behavior": {
+      "en": "Pampas cats are solitary and terrestrial, active at any hour but tending to be more nocturnal. For the Pantanal cat itself, home ranges of about 19.5 to 27.7 square kilometres have been reported in Brazil.",
+      "fr": "Les chats des pampas sont solitaires et terrestres, actifs à toute heure mais plutôt nocturnes. Pour le chat du Pantanal lui-même, des domaines vitaux d’environ 19,5 à 27,7 kilomètres carrés ont été signalés au Brésil."
+    },
+    "reproduction": {
+      "en": "Almost nothing is known about breeding in the wild. Records from captive pampas cats suggest a gestation of 80–85 days and litters of one to three kittens, and these figures may not apply to this species in particular.",
+      "fr": "On ne sait presque rien de la reproduction à l’état sauvage. Des données de chats des pampas en captivité suggèrent une gestation de 80 à 85 jours et des portées de un à trois petits, et ces chiffres peuvent ne pas s’appliquer à cette espèce en particulier."
+    },
+    "ecology": {
+      "en": "As a small ground predator of rodents and birds, it takes a place among the smaller carnivores of open Neotropical habitats. In central Brazil, pampas cats are reported to hybridise with the northern tiger cat, though this record concerns the group as a whole.",
+      "fr": "Petit prédateur terrestre de rongeurs et d’oiseaux, il occupe une place parmi les petits carnivores des milieux ouverts néotropicaux. Au centre du Brésil, les chats des pampas s’hybrideraient avec le chat-tigre du Nord, mais cette observation concerne le groupe dans son ensemble."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database notes that the species has not been evaluated on the IUCN Red List. A wild cat conservation group describes it as decreasing and Vulnerable, without giving the assessment behind this. Threats named for the group include habitat loss to cropland, livestock and oil extraction, retaliation for poultry losses, road deaths and dog attacks.",
+      "fr": "La base Mammal Diversity Database note que l’espèce n’a pas été évaluée par la Liste rouge de l’UICN. Un groupe de conservation des félins sauvages la décrit comme en déclin et vulnérable, sans préciser l’évaluation correspondante. Les menaces citées pour le groupe comprennent la perte d’habitat au profit des cultures, de l’élevage et de l’extraction pétrolière, les représailles pour des pertes de volailles, les collisions routières et les attaques de chiens."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pampas cat species complex — Wild Cat Conservation",
+        "fr": "Complexe d’espèces du chat des pampas — Wild Cat Conservation"
+      },
+      "url": "https://wildcatconservation.org/wild-cats/south-america/pampas-cat-species-complex/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Five species recognised by Nascimento et al.; L. braccatus about 68.2 cm, tail 25.9 cm, 3.9 kg; open areas of Cerrado, Pantanal, Beni savannas, Chiquitano; home range 19.5–27.7 km² in Brazil; labelled decreasing and Vulnerable.",
+        "Group-level data: solitary, ground hunters, gestation 80–85 days, 1–3 kittens, threats."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pampas cat — IUCN/SSC Cat Specialist Group",
+        "fr": "Chat des pampas — groupe de spécialistes des félins UICN/SSC"
+      },
+      "url": "https://www.catsg.org/living-species-pampascat",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Pampas cat described at group level: house-cat-like with broad face and long hair, coat yellow-white to grey-brown, melanistic forms; mainly small mammals and birds; hybridises with northern tiger cat in central Brazil; gestation 80–85 days.",
+        "Its IUCN Near Threatened line concerns the broad pampas cat, not this species, and was not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Leopardus braccatus — Mammal Diversity Database",
+        "fr": "Leopardus braccatus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1005992",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Described as Felis braccata by Cope 1889; common names Pantanal cat, Brazilian pampas cat; recorded in Argentina, Bolivia, Brazil, Paraguay; IUCN not evaluated; Feijó et al. 2021 revision."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Few studies concern this species alone: diet, reproduction, behaviour and threats are given for the pampas cat group and flagged as such.",
+    "The Vulnerable label comes from a conservation group page that does not name its assessment, and the Mammal Diversity Database says the species is not evaluated on the IUCN Red List.",
+    "Species limits are recent and debated: the Cat Specialist Group had kept a single pampas cat species with subspecies in 2017.",
+    "The size figures are averages given without sample size on the page read."
+  ],
+  "reviewed": true,
+  "review_note": "Short, cautious profile because species-specific data are scarce; illustration to be checked by the owner."
+}

@@ -1,0 +1,78 @@
+{
+  "id": "rieppeleon_brevicaudatus",
+  "scientific": "Rieppeleon brevicaudatus",
+  "group": "reptiles",
+  "name": {
+    "en": "Bearded Pygmy Chameleon",
+    "fr": "Rieppeleon brevicaudatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The bearded pygmy chameleon is a tiny, short-tailed chameleon of the forests of eastern Tanzania and south-eastern Kenya. It lives close to the ground, among leaf litter and low bushes. Its scientific name means short-tailed.",
+      "fr": "Le caméléon nain barbu est un minuscule caméléon à queue courte des forêts de l’est de la Tanzanie et du sud-est du Kenya. Il vit près du sol, parmi la litière de feuilles et les buissons bas. Son nom scientifique signifie à queue courte."
+    },
+    "identification": {
+      "en": "A very small chameleon, about 8 cm long, named for its scaly throat with two chin lobes. It can change colour among brown, yellow, green, orange and black, to show stress or attract a mate. Sleeping in the open, it can flatten its body and show a side stripe that looks like a dead leaf.",
+      "fr": "Un très petit caméléon, long d’environ 8 cm, qui doit son nom à sa gorge écailleuse portant deux lobes sous le menton. Il peut passer du brun au jaune, au vert, à l’orange et au noir pour montrer son stress ou attirer un partenaire. Quand il dort à découvert, il peut aplatir son corps et laisser voir une raie latérale qui ressemble à une feuille morte."
+    },
+    "habitat": {
+      "en": "It lives in lowland forest of eastern Tanzania and south-eastern Kenya, including submontane and coastal forest, on the leafy forest floor and in low bushes. The Rondo Plateau in Tanzania is one confirmed locality, and the type locality is Derema in the Usambara Mountains.",
+      "fr": "Il vit dans la forêt de basse altitude de l’est de la Tanzanie et du sud-est du Kenya, y compris la forêt submontagnarde et côtière, sur le sol couvert de feuilles et dans les buissons bas. Le plateau de Rondo, en Tanzanie, est une localité confirmée, et la localité type est Derema, dans les monts Usambara."
+    },
+    "diet": {
+      "en": "It eats small insects, which it hunts in the leaf litter of the forest floor and in low shrubs.",
+      "fr": "Il mange de petits insectes, qu’il chasse dans la litière de feuilles et les arbustes bas."
+    },
+    "behavior": {
+      "en": "It is usually active during the day and clings to the twigs and leaves of low bushes, hunting close to the ground. Beyond this, little about its daily life is documented in the sources consulted.",
+      "fr": "Il est en général actif le jour et s’accroche aux brindilles et aux feuilles des buissons bas, chassant près du sol. Au-delà, peu d’éléments sur sa vie quotidienne sont documentés dans les sources consultées."
+    },
+    "reproduction": {
+      "en": "The Reptile Database lists the species as egg-laying. Clutch size, incubation time and age at maturity are not given in the sources consulted, so they are left out here.",
+      "fr": "La Reptile Database indique que l’espèce est ovipare. La taille des pontes, la durée d’incubation et l’âge de maturité ne figurent pas dans les sources consultées et sont donc omis ici."
+    },
+    "ecology": {
+      "en": "Its dead-leaf look helps it escape the notice of predators, and it depends on the rich leafy understorey of healthy evergreen forest, where it hunts small insects.",
+      "fr": "Son aspect de feuille morte l’aide à échapper aux prédateurs, et il dépend du sous-bois riche en feuilles d’une forêt sempervirente en bonne santé, où il chasse de petits insectes."
+    },
+    "conservation": {
+      "en": "It is classed as Least Concern on the IUCN Red List according to a conservation charity and the Reptile Database. Habitat loss and deforestation are the main threats: its estimated range covers about 163,800 square kilometres, but forest makes up less than a tenth of that area.",
+      "fr": "Il est classé en préoccupation mineure sur la Liste rouge de l’UICN d’après une association de conservation et la Reptile Database. La perte d’habitat et la déforestation sont les principales menaces : son aire estimée couvre environ 163 800 kilomètres carrés, mais la forêt en occupe moins d’un dixième."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bearded Pygmy Chameleon — World Land Trust",
+        "fr": "Caméléon nain barbu — World Land Trust"
+      },
+      "url": "https://www.worldlandtrust.org/species/bearded-pygmy-chameleon/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "About 8 cm; scaly throat with two chin lobes; colour change; dead-leaf side stripe when sleeping; lowland, submontane and coastal forest in eastern Tanzania and south-eastern Kenya; Rondo Plateau.",
+        "Diurnal; small insects; habitat loss the main threat; extent 163,800 km², forest under 10 %; Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Rieppeleon brevicaudatus — The Reptile Database",
+        "fr": "Rieppeleon brevicaudatus — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Rieppeleon/brevicaudatus",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "reproduction", "conservation"],
+      "facts": [
+        "Common name bearded pygmy chameleon; eastern Tanzania and Kenya; type locality Derema, Usambara Mts.; oviparous; etymology brevis + cauda; Least Concern badge. Diagnosis text not available on the page."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Only two readable sources; the Reptile Database page withholds its detailed description.",
+    "Clutch size, incubation and lifespan appear only in hobbyist care sheets that disagree with each other, so they are not used.",
+    "The IUCN Red List page could not be opened; Least Concern comes from the World Land Trust page and a badge on the Reptile Database page.",
+    "The 8 cm figure is a rough body length given without sample size."
+  ],
+  "reviewed": true,
+  "review_note": "Short, cautious profile based on a conservation charity and the Reptile Database; illustration to be checked by the owner."
+}

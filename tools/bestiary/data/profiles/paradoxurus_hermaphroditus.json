@@ -1,0 +1,102 @@
+{
+  "id": "paradoxurus_hermaphroditus",
+  "scientific": "Paradoxurus hermaphroditus",
+  "group": "mammals",
+  "name": {
+    "en": "Common Palm Civet",
+    "fr": "Paradoxure hermaphrodite"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common palm civet is a nocturnal, tree-dwelling carnivoran of the civet family that lives in the forests of southern and south-eastern Asia and has adapted well to gardens, plantations and villages. It eats mostly fruit despite belonging to the order Carnivora.",
+      "fr": "Le paradoxure hermaphrodite est un carnivore nocturne et arboricole de la famille des viverridés, qui vit dans les forêts du sud et du sud-est de l’Asie et s’est bien adapté aux jardins, aux plantations et aux villages. Il mange surtout des fruits, bien qu’appartenant à l’ordre des carnivores."
+    },
+    "identification": {
+      "en": "A slender civet weighing about 1.3 to 5 kg, with a head and body of roughly 43–71 cm and a tail almost as long as the body, tipped with black but without rings. The coat is short and coarse, grey to blackish, with black-tipped guard hairs, dark stripes down the back and rows of black spots along the flanks. White patches on the face give it a masked look.",
+      "fr": "Un viverridé élancé pesant environ 1,3 à 5 kg, au corps long d’environ 43 à 71 cm et à la queue presque aussi longue que le corps, terminée de noir et sans anneaux. Le pelage est court et rêche, gris à noirâtre, avec des poils de garde à pointe noire, des bandes sombres sur le dos et des rangées de taches noires sur les flancs. Des taches blanches sur la face lui donnent un air masqué."
+    },
+    "habitat": {
+      "en": "It lives in tropical and temperate forests and also in parks, suburban gardens, orchards and plantations, preferring tall trees with dense canopy and vines. It rests by day in tree hollows, rock crevices or thick foliage, and is recorded from sea level to about 2,000 m.",
+      "fr": "Il vit dans les forêts tropicales et tempérées, mais aussi dans les parcs, les jardins de banlieue, les vergers et les plantations, et préfère les grands arbres au couvert dense et aux lianes. Il se repose le jour dans des creux d’arbres, des fissures de rochers ou un feuillage épais, et il est signalé du niveau de la mer jusqu’à environ 2 000 m."
+    },
+    "diet": {
+      "en": "It is an opportunistic omnivore that leans heavily on fruit. In a secondary forest in West Java, fruit and seeds occurred in almost all droppings (97.6 %), animal remains in about a fifth. In an Indian sanctuary in winter, insects were the most frequent item in droppings, followed by fig fruit, birds and rodents.",
+      "fr": "C’est un omnivore opportuniste qui dépend largement des fruits. Dans une forêt secondaire de l’ouest de Java, fruits et graines figuraient dans presque toutes les crottes (97,6 %), les restes animaux dans environ un cinquième. Dans un sanctuaire indien en hiver, les insectes étaient l’élément le plus fréquent, suivis des figues, des oiseaux et des rongeurs."
+    },
+    "behavior": {
+      "en": "Mostly solitary and active at night, it climbs trees to feed and rests in them by day. It stalks and pounces on animal prey. It is generally silent, snarling or hissing when alarmed, and marks surfaces with scent from a gland near the base of the tail.",
+      "fr": "Surtout solitaire et actif la nuit, il grimpe aux arbres pour se nourrir et s’y repose le jour. Il traque et bondit sur ses proies animales. Il est en général silencieux, grogne ou siffle quand il est alarmé, et marque les surfaces avec l’odeur d’une glande située près de la base de la queue."
+    },
+    "reproduction": {
+      "en": "Breeding can occur year-round, with up to two litters a year. After a gestation of about two months, a litter of two to five young is born, often in a tree hollow or rock crevice. Eyes open at about 11 days, young are weaned around two months and independent at about three months, according to a university database.",
+      "fr": "La reproduction peut avoir lieu toute l’année, avec jusqu’à deux portées par an. Après une gestation d’environ deux mois naissent deux à cinq petits, souvent dans un creux d’arbre ou une fissure de rocher. Les yeux s’ouvrent vers 11 jours, le sevrage a lieu vers deux mois et l’indépendance vers trois mois, selon une base de données universitaire."
+    },
+    "ecology": {
+      "en": "By eating fruit and passing seeds, it acts as a seed disperser: seeds of at least eight plant species were found in its droppings in West Java, and palm seeds are deposited far from the parent tree. It also eats rodents, and is preyed on by large cats, big snakes and crocodiles.",
+      "fr": "En mangeant des fruits et en rejetant les graines, il disperse les semences : des graines d’au moins huit espèces de plantes ont été trouvées dans ses crottes à Java occidental, et des graines de palmiers sont déposées loin de l’arbre parent. Il mange aussi des rongeurs et a pour prédateurs de grands félins, de gros serpents et des crocodiles."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists it as Least Concern on the IUCN Red List. Animal Diversity Web reports legal protection in India and some other regions and names logging and forest clearing for oil palm plantations as threats. Taxonomy is under revision: the database now treats the species in a narrower sense than before, so older figures may cover several species.",
+      "fr": "La base Mammal Diversity Database l’indique comme préoccupation mineure sur la Liste rouge de l’UICN. Animal Diversity Web signale une protection légale en Inde et dans quelques autres régions et cite l’exploitation forestière et le défrichement pour les plantations de palmier à huile comme menaces. La taxonomie est en révision : la base traite désormais l’espèce au sens plus étroit, et des chiffres anciens peuvent couvrir plusieurs espèces."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Paradoxurus hermaphroditus — Animal Diversity Web, University of Michigan",
+        "fr": "Paradoxurus hermaphroditus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Paradoxurus_hermaphroditus/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Mass 1.3–5 kg, body 43–71 cm, tail about 48 cm; stripes, three rows of spots, white facial patches; forests, gardens, plantations; nocturnal, arboreal, scent marking.",
+        "Gestation about 60 days, litters 2–5, eyes open 11 days, weaned 2 months; seed disperser; threats logging and palm oil. Its IUCN line was not relied on."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diet of the common palm civet in Pangandaran Nature Reserve, West Java — Hayati Journal of Biosciences",
+        "fr": "Régime du paradoxure hermaphrodite dans la réserve naturelle de Pangandaran, Java occidental — Hayati Journal of Biosciences"
+      },
+      "url": "https://journal.ipb.ac.id/hayati/article/view/51767",
+      "consulted": "2026-10-12",
+      "supports": ["diet", "ecology"],
+      "facts": [
+        "125 droppings, Oct 2018–Aug 2019: fruit and seeds in 97.6 %, animal matter in 22.4 %; seeds of at least eight plant species; preliminary report."
+      ]
+    },
+    {
+      "title": {
+        "en": "Winter food habits of the common palm civet in Patna Bird Sanctuary, India — Journal of Threatened Taxa, 2019",
+        "fr": "Régime hivernal du paradoxure hermaphrodite au sanctuaire de Patna, Inde — Journal of Threatened Taxa, 2019"
+      },
+      "url": "https://threatenedtaxa.org/JoTT/article/view/4165",
+      "consulted": "2026-10-12",
+      "supports": ["diet"],
+      "facts": [
+        "112 scats, Nov 2012–Mar 2013: insects most frequent (29.46 %), then Ficus religiosa fruit (19.64 %), birds (9.82 %), rodents (6.25 %)."
+      ]
+    },
+    {
+      "title": {
+        "en": "Paradoxurus hermaphroditus — Mammal Diversity Database",
+        "fr": "Paradoxurus hermaphroditus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1006100",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "IUCN Least Concern; Indomalayan distribution; species previously included P. musangus and P. philippinensis (Veron et al. 2015 revision)."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Body length and home range figures differ inside the Animal Diversity Web page and are given here as ranges or omitted.",
+    "The IUCN Red List page could not be opened; the Least Concern category comes from the Mammal Diversity Database.",
+    "Taxonomy has changed (some populations are now treated as separate species), so older data may not apply to the species in its current narrow sense.",
+    "Reproduction data come from one university database, without regional detail."
+  ],
+  "reviewed": true,
+  "review_note": "Diet figures taken from two regional studies; illustration to be checked by the owner."
+}

@@ -1,0 +1,111 @@
+{
+  "id": "pieris_brassicae",
+  "scientific": "Pieris brassicae",
+  "group": "invertebrates",
+  "name": {
+    "en": "Large White",
+    "fr": "Piéride du chou"
+  },
+  "sections": {
+    "overview": {
+      "en": "The large white is a big white butterfly of Europe, North Africa and temperate Asia, a strong flier and migrant. Its caterpillars feed in groups on cabbage-family plants, making it a well-known garden and crop pest.",
+      "fr": "La piéride du chou est un grand papillon blanc d’Europe, d’Afrique du Nord et d’Asie tempérée, bon voilier et migrateur. Ses chenilles se nourrissent en groupe de plantes de la famille du chou, ce qui en fait un ravageur bien connu des jardins et des cultures."
+    },
+    "identification": {
+      "en": "Wingspan is about 58–63 mm in one source and 63–70 mm in another. The wings are white with black forewing tips extending down the edge; females have two black forewing spots and a hindwing spot, which males lack. The underside is creamy white. The caterpillar is yellowish green with black spots, and its eggs are yellow and skittle-shaped.",
+      "fr": "L’envergure est d’environ 58 à 63 mm selon une source et de 63 à 70 mm selon une autre. Les ailes sont blanches, avec l’apex des ailes antérieures noir se prolongeant sur le bord; les femelles portent deux taches noires aux ailes antérieures et une aux ailes postérieures, absentes chez les mâles. Le dessous est blanc crème. La chenille est jaune verdâtre tachetée de noir, et les œufs sont jaunes, en forme de quille."
+    },
+    "habitat": {
+      "en": "It breeds mainly in gardens, allotments and farmland where cabbages grow, and adults also visit meadows, heaths, parks and woodland rides. It occurs across Europe, North Africa and temperate Asia as far as the Himalayas, and was accidentally introduced to Chile.",
+      "fr": "Elle se reproduit surtout dans les jardins, les potagers et les terres cultivées où poussent des choux, et les adultes fréquentent aussi prairies, landes, parcs et allées forestières. Elle vit en Europe, en Afrique du Nord et en Asie tempérée jusqu’à l’Himalaya, et a été introduite accidentellement au Chili."
+    },
+    "diet": {
+      "en": "Caterpillars eat mainly cultivated cabbage, Brussels sprouts and oilseed rape, and also nasturtium, wild mignonette and sea-kale. Young caterpillars feed communally, starting with the outer leaves, and the species is a well-known cabbage pest.",
+      "fr": "Les chenilles mangent surtout le chou cultivé, le chou de Bruxelles et le colza, ainsi que la capucine, le réséda sauvage et le crambe maritime. Les jeunes chenilles se nourrissent en groupe, en commençant par les feuilles extérieures; l’espèce est un ravageur bien connu du chou."
+    },
+    "behavior": {
+      "en": "The species is a strong flier and strongly migratory: migrants from continental Europe often reach Britain in spring and autumn, adding to the resident population. Fully grown caterpillars wander away from the food plant to pupate, often under windowsills, eaves, fences or tree trunks.",
+      "fr": "L’espèce est bonne voilière et fortement migratrice : des migrateurs venus d’Europe continentale atteignent souvent la Grande-Bretagne au printemps et à l’automne, renforçant la population locale. Les chenilles adultes quittent la plante-hôte pour se nymphoser, souvent sous des rebords de fenêtre, des avant-toits, des clôtures ou des troncs."
+    },
+    "reproduction": {
+      "en": "Females lay yellow eggs in batches of typically 20 to 60 under cabbage leaves, hatching in about ten days. In Britain adults emerge from April, with one or sometimes two further broods, and they fly until mid-September. Chrysalises of the last brood overwinter.",
+      "fr": "Les femelles pondent des œufs jaunes, généralement par groupes de 20 à 60, sous les feuilles de chou, et ils éclosent en dix jours environ. En Grande-Bretagne, les adultes émergent dès avril, avec une ou parfois deux générations suivantes, et volent jusqu’à la mi-septembre. Les chrysalides de la dernière génération passent l’hiver."
+    },
+    "ecology": {
+      "en": "Caterpillars accumulate mustard oils from their food plants, which make them unpalatable to most predators and birds. The wasp Apanteles glomeratus parasitises young caterpillars, reportedly killing a large share of them, and Pteromalus puparum attacks freshly formed pupae.",
+      "fr": "Les chenilles accumulent les huiles de moutarde de leurs plantes-hôtes, ce qui les rend peu appétentes pour la plupart des prédateurs et des oiseaux. La guêpe Apanteles glomeratus parasite les jeunes chenilles, en tuant selon une source une grande part, et Pteromalus puparum attaque les chrysalides fraîchement formées."
+    },
+    "conservation": {
+      "en": "In Great Britain it is rated Least Concern (2022 Red List) and its European status is not threatened. Even so, UK monitoring shows abundance down 32% between 1976 and 2019 and distribution down 18% between 1973 and 2019.",
+      "fr": "En Grande-Bretagne, elle est classée « préoccupation mineure » (liste rouge 2022) et son statut européen est « non menacée ». Malgré cela, le suivi britannique montre une abondance en baisse de 32 % entre 1976 et 2019 et une répartition en baisse de 18 % entre 1973 et 2019."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Large White (Pieris brassicae) — Butterfly Conservation",
+        "fr": "Piéride du chou (Pieris brassicae) — Butterfly Conservation"
+      },
+      "url": "https://butterfly-conservation.org/butterflies/large-white",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Wingspan 58–63 mm; females have two forewing spots, males none; foodplants include cabbage, Brussels sprouts, oilseed rape, nasturtium, wild mignonette, sea-kale.",
+        "GB Red List 2022 Least Concern; European status not threatened; abundance −32% (1976–2019), distribution −18% (1973–2019)."
+      ]
+    },
+    {
+      "title": {
+        "en": "Large White Butterfly — Pieris brassicae — First Nature",
+        "fr": "Piéride du chou — Pieris brassicae — First Nature"
+      },
+      "url": "https://www.first-nature.com/insects/lb-pieris-brassicae.php",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Eggs in groups of 20 to 60, hatching in about ten days; adults emerge from April, one or two further broods, on the wing to mid-September; final-brood chrysalises overwinter.",
+        "Caterpillars feed communally and accumulate toxins that deter most predators; caterpillars wander off to pupate under windowsills and eaves."
+      ]
+    },
+    {
+      "title": {
+        "en": "Large White — Learn About Butterflies",
+        "fr": "Piéride du chou — Learn About Butterflies"
+      },
+      "url": "https://learnbutterflies.com/large-white/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Wingspan about 63 mm (male) and 70 mm (female); range Europe, North Africa, temperate Asia to the Himalayas; introduced to Chile; strongly migratory.",
+        "Mustard oils make caterpillars unpalatable; Apanteles glomeratus said to kill about 80% of larvae; Pteromalus puparum attacks fresh pupae."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Wingspan figures differ between sources (58–63 mm vs 63–70 mm); both are given.",
+    "The parasitism rate of Apanteles glomeratus (about 80%) comes from one hobbyist site and is stated only as ‘a large share’.",
+    "Brood numbers are from British data and vary elsewhere; only British figures are given.",
+    "The conservation figures are for Great Britain and Europe; no global Red List category was read."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

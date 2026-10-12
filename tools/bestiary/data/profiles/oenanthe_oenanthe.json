@@ -1,0 +1,91 @@
+{
+  "id": "oenanthe_oenanthe",
+  "scientific": "Oenanthe oenanthe",
+  "group": "birds",
+  "name": {
+    "en": "Northern Wheatear",
+    "fr": "Traquet motteux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The northern wheatear is a small, mainly ground-dwelling chat of open country, and one of the great long-distance migrants among small birds. It arrives in Britain in spring from Africa and leaves again at the end of summer.",
+      "fr": "Le traquet motteux est un petit turdidé de milieux ouverts, vivant surtout au sol, et l’un des grands migrateurs au long cours parmi les petits oiseaux. Il arrive en Grande-Bretagne au printemps depuis l’Afrique et repart à la fin de l’été."
+    },
+    "identification": {
+      "en": "About the size of a robin, an adult weighs roughly 28 g with a wing length near 10 cm. The male has a blue-grey back, black wings, a black cheek patch with a white eyestripe, and a white underside flushed orange on the breast. The female is sandy brown. Both sexes show a white rump and a black T-shaped mark on the tail in flight.",
+      "fr": "De la taille d’un rouge-gorge, l’adulte pèse environ 28 g, avec une aile d’environ 10 cm. Le mâle a le dos gris bleuté, les ailes noires, un masque noir sous un sourcil blanc, et le dessous blanc lavé d’orange sur la poitrine. La femelle est brun sable. Les deux sexes montrent en vol un croupion blanc et un T noir sur la queue."
+    },
+    "habitat": {
+      "en": "In the breeding season in Britain it is most frequent on moorland, and it is found more widely in open uplands, pasture, heathland and coasts, including Scotland’s outlying islands. Its main strongholds are in Scotland, northern and south-west England and Wales.",
+      "fr": "En période de reproduction en Grande-Bretagne, il est surtout fréquent sur les landes, et se rencontre plus largement dans les hautes terres ouvertes, les pâtures, les bruyères et sur les côtes, y compris les îles écossaises isolées. Ses bastions se situent en Écosse, dans le nord et le sud-ouest de l’Angleterre et au pays de Galles."
+    },
+    "diet": {
+      "en": "The wheatear eats insects, their larvae and other invertebrates, and it also takes berries. It feeds on the ground, where it hops or runs across short vegetation to pick up its prey.",
+      "fr": "Le traquet mange des insectes, leurs larves et d’autres invertébrés, et prend aussi des baies. Il se nourrit au sol, où il saute ou court sur la végétation rase pour saisir ses proies."
+    },
+    "behavior": {
+      "en": "It is a summer visitor to Britain that winters in Africa, arriving around March and leaving in September and October. Birds breeding in Greenland and Alaska also pass through; some fly non-stop across the Atlantic to northern Spain before continuing to West Africa. On the ground it hops or runs.",
+      "fr": "C’est un visiteur d’été en Grande-Bretagne qui hiverne en Afrique : il arrive vers mars et repart en septembre-octobre. Des oiseaux nichant au Groenland et en Alaska y transitent aussi ; certains traversent l’Atlantique d’une traite jusqu’au nord de l’Espagne avant de poursuivre vers l’Afrique de l’Ouest. Au sol, il saute ou court."
+    },
+    "reproduction": {
+      "en": "In Britain the first clutch is laid on average around 11 May, typically five or six eggs, incubated for about 14 days mainly by the female. The chicks fledge after roughly 15.5–16.5 days. There are usually two broods and occasionally three. The nest is placed in a sheltered cavity such as a rock crevice, rabbit burrow or hole in a wall.",
+      "fr": "En Grande-Bretagne, la première ponte a lieu en moyenne vers le 11 mai ; elle compte en général cinq ou six œufs, couvés environ 14 jours, surtout par la femelle. Les poussins s’envolent après 15,5 à 16,5 jours environ. Il y a d’ordinaire deux nichées, parfois trois. Le nid est placé dans une cavité abritée : fissure de rocher, terrier de lapin ou trou de mur."
+    },
+    "ecology": {
+      "en": "As an insect eater of open uplands, the wheatear feeds on ground invertebrates, and in turn it can be taken by birds of prey such as the sparrowhawk.",
+      "fr": "Mangeur d’insectes des hautes terres ouvertes, le traquet se nourrit d’invertébrés du sol et peut lui-même être capturé par des rapaces comme l’épervier d’Europe."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide. In the UK it is Amber-listed: the breeding population was about 170,000 pairs in 2016 and fell by 37% between 1995 and 2024. Numbers have also declined across Europe since 1980. A wheatear typically lives about two years, and the oldest ringed bird reached over eight.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale. Au Royaume-Uni, elle figure sur la liste ambre : la population nicheuse était d’environ 170 000 couples en 2016 et a baissé de 37 % entre 1995 et 2024. Les effectifs déclinent aussi en Europe depuis 1980. Un traquet vit en général environ deux ans, et le plus vieil oiseau bagué a dépassé huit ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Wheatear — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Traquet motteux — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/wheatear",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Adults average 28.2 g, wing 99.9 mm; first clutch average 11 May, 5–6 eggs, incubation ~14 days, fledging ~15.5–16.5 days, 2 broods; Greenland/Alaska birds pass through and some cross the Atlantic non-stop.",
+        "UK ~170,000 pairs (2016), −37% 1995–2024; Europe declining since 1980; IUCN Least Concern; typical life 2 years, record 8 y 3 m."
+      ]
+    },
+    {
+      "title": {
+        "en": "Wheatear — RSPB",
+        "fr": "Traquet motteux — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/wheatear",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "behavior", "conservation"],
+      "facts": [
+        "Male blue-grey above with black wings, white below with orange breast flush, black cheek, white rump and black T on tail; hops or runs; summer visitor wintering in central Africa.",
+        "Amber-listed in the UK."
+      ]
+    },
+    {
+      "title": {
+        "en": "Wheatear — Woodland Trust",
+        "fr": "Traquet motteux — Woodland Trust"
+      },
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/animals/birds/wheatear/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "diet", "habitat", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Eats insects, larvae, other invertebrates and berries; arrives in March, leaves September–October; nests in rock gaps, rabbit burrows or wall holes.",
+        "Predators include sparrowhawks and other birds of prey."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "UK breeding estimates differ: BTO gives about 170,000 pairs (2016), the Woodland Trust about 230,000; the BTO figure is used.",
+    "The Animal Diversity Web page for this species holds only the classification and was not used; the IUCN Red List pages could not be opened, so Least Concern is taken from the BTO page.",
+    "Breeding figures are British; wheatears from Greenland and Alaska (subspecies leucorhoa) differ in timing."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); plumage, diet and nest sites from RSPB and Woodland Trust; illustration to be checked by the owner."
+}

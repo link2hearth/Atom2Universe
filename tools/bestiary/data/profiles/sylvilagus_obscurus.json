@@ -1,0 +1,113 @@
+{
+  "id": "sylvilagus_obscurus",
+  "scientific": "Sylvilagus obscurus",
+  "group": "mammals",
+  "name": {
+    "en": "Appalachian Cottontail",
+    "fr": "Sylvilagus obscurus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Appalachian cottontail is a secretive rabbit of the Appalachian Mountains of eastern North America, living in dense shrubby and coniferous cover at higher elevations. It was described as a species only in 1992 and is very similar to the eastern cottontail.",
+      "fr": "Le sylvilagus obscurus est un lapin discret des monts Appalaches, dans l’est de l’Amérique du Nord, qui vit dans des fourrés denses et des conifères en altitude. Il n’a été décrit comme espèce qu’en 1992 et ressemble beaucoup au lapin à queue blanche de l’Est."
+    },
+    "identification": {
+      "en": "A medium-sized cottontail about 39–43 cm long, weighing roughly 0.7 to 1.5 kg depending on the source. The back is yellowish to reddish brown mixed with black, the belly whitish, and the tail fluffy and white beneath. The short, rounded ears have black front edges, and there is a small black spot between the ears but no white forehead patch; reliable identification may need skull features.",
+      "fr": "Un lapin de taille moyenne, long d’environ 39 à 43 cm, pesant de 0,7 à 1,5 kg environ selon les sources. Le dos est brun jaunâtre à roussâtre mêlé de noir, le ventre blanchâtre, et la queue touffue et blanche dessous. Les oreilles courtes et arrondies ont le bord antérieur noir, avec une petite tache noire entre elles mais sans tache blanche sur le front; une identification sûre peut exiger l’examen du crâne."
+    },
+    "habitat": {
+      "en": "It lives in dense cover of mountain laurel, rhododendron, blueberry and conifers such as red spruce, mostly above about 760 m, though it is reported lower in Tennessee and Alabama. It also uses young clearcuts and reclaimed mining land. Its range runs from northern Pennsylvania and the Hudson River area south to northern Alabama and Georgia.",
+      "fr": "Il vit dans un couvert dense de kalmia, de rhododendron, de myrtille et de conifères comme l’épicéa rouge, surtout au-dessus d’environ 760 m, bien qu’on le signale plus bas au Tennessee et en Alabama. Il utilise aussi de jeunes coupes à blanc et des terrains miniers remis en état. Son aire va du nord de la Pennsylvanie et de la région de l’Hudson jusqu’au nord de l’Alabama et de la Géorgie."
+    },
+    "diet": {
+      "en": "In summer it eats grasses, clover and other herbs, shrubs, buds, seeds and fruit, and in winter it shifts toward woody plant material. Like other rabbits, it eats its own droppings to recover nutrients.",
+      "fr": "En été, il mange des graminées, du trèfle et d’autres herbes, des arbustes, des bourgeons, des graines et des fruits, et en hiver il se tourne vers des végétaux ligneux. Comme les autres lapins, il mange ses propres crottes pour récupérer des nutriments."
+    },
+    "behavior": {
+      "en": "It rests under dense vegetation or logs by day and forages near cover after sunset, rarely entering open areas. Radio-tracking at Dolly Sods, West Virginia, gave summer home ranges of about 6–13 ha and winter ranges of about 1.5–9 ha, with winter use concentrated in evergreen cover. It escapes predators by leaping and zigzagging.",
+      "fr": "Il se repose sous une végétation dense ou des troncs le jour et se nourrit près du couvert après le coucher du soleil, entrant rarement dans les espaces ouverts. Un suivi radio à Dolly Sods, en Virginie-Occidentale, a donné des domaines vitaux d’environ 6 à 13 ha en été et de 1,5 à 9 ha en hiver, l’hiver se passant surtout sous couvert persistant. Il échappe aux prédateurs en bondissant et en zigzaguant."
+    },
+    "reproduction": {
+      "en": "The breeding season runs roughly from late winter to late summer. Females have several litters a year of three to eight young after a gestation of about 28 days, and only females care for the young in a shallow nest of fur and grass covered with leaves. Young leave the nest at about two weeks and are nearly independent after about a month.",
+      "fr": "La saison de reproduction va à peu près de la fin de l’hiver à la fin de l’été. Les femelles ont plusieurs portées par an de trois à huit petits après une gestation d’environ 28 jours, et seules elles s’occupent des jeunes, dans un nid peu profond de poils et d’herbe recouvert de feuilles. Les jeunes quittent le nid vers deux semaines et sont presque indépendants vers un mois."
+    },
+    "ecology": {
+      "en": "It is prey for owls, hawks, foxes and dogs, and it spreads seeds by eating fruit. In areas heavily disturbed by people, it appears to be displaced by the eastern cottontail.",
+      "fr": "Il est la proie de hiboux, de buses, de renards et de chiens, et il disperse des graines en mangeant des fruits. Dans les zones très perturbées par l’homme, il semble être supplanté par le lapin à queue blanche de l’Est."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists it as Near Threatened on the IUCN Red List. In Alabama it is poorly known and of high conservation concern, hunting does not seem to threaten it, but habitat fragmentation and development do. Its need for extensive unbroken forest and displacement by the eastern cottontail are the main limits noted in Virginia.",
+      "fr": "La base Mammal Diversity Database l’indique comme quasi menacé sur la Liste rouge de l’UICN. En Alabama, il est mal connu et suscite une forte préoccupation de conservation; la chasse ne semble pas le menacer, mais la fragmentation et l’aménagement de son habitat, si. Son besoin de vastes forêts continues et son remplacement par le lapin à queue blanche de l’Est sont les principales limites relevées en Virginie."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sylvilagus obscurus — Animal Diversity Web, University of Michigan",
+        "fr": "Sylvilagus obscurus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Sylvilagus_obscurus/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "behavior", "reproduction", "ecology", "habitat"],
+      "facts": [
+        "Length 38.6–43 cm, 0.8–1.0 kg; black-edged ears, no white forehead spot; gestation 28 days; young leave nest at 12–14 days; prey of owls, hawks, dogs, foxes."
+      ]
+    },
+    {
+      "title": {
+        "en": "Appalachian cottontail — Virginia Department of Wildlife Resources",
+        "fr": "Lapin des Appalaches — département des ressources fauniques de Virginie"
+      },
+      "url": "https://dwr.virginia.gov/wildlife/information/appalachian-cottontail/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "390–410 mm, 0.9–1.5 kg; secretive, forest dweller; 3–4 litters of 4–8 young a year; needs extensive forest; probably displaced by eastern cottontail."
+      ]
+    },
+    {
+      "title": {
+        "en": "Appalachian cottontail — Outdoor Alabama",
+        "fr": "Lapin des Appalaches — Outdoor Alabama"
+      },
+      "url": "https://outdooralabama.com/rabbits/appalachian-cottontail",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "conservation"],
+      "facts": [
+        "Poorly known in Alabama, high conservation concern; hunting not a threat, habitat fragmentation is; range from west of the Hudson to northern Alabama and Georgia; summer and winter diets; skull needed for identification."
+      ]
+    },
+    {
+      "title": {
+        "en": "Seasonal home range and diurnal movements of Sylvilagus obscurus at Dolly Sods, West Virginia — Northeastern Naturalist",
+        "fr": "Domaine vital saisonnier et déplacements diurnes de Sylvilagus obscurus à Dolly Sods, Virginie-Occidentale — Northeastern Naturalist"
+      },
+      "url": "https://eaglehill.us/NENAonline/articles/NENA-14-1/19-Boyce.shtml",
+      "consulted": "2026-10-12",
+      "supports": ["behavior", "habitat"],
+      "facts": [
+        "Leaf-on home ranges 5.7–13.3 ha (n=5), leaf-off 1.5–9.0 ha (n=14); dense ericaceous shrubs and red spruce; winter use of evergreen cover."
+      ]
+    },
+    {
+      "title": {
+        "en": "Sylvilagus obscurus — Mammal Diversity Database",
+        "fr": "Sylvilagus obscurus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1001139",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Described by Chapman et al. 1992; type locality Dolly Sods, West Virginia; IUCN Near Threatened; Pennsylvania to northern Alabama."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Body weight differs between sources (0.7–1.5 kg) and is given as a rough range.",
+    "Litters per year and young per litter differ between Virginia and the other sources; a general range is given.",
+    "The IUCN Red List page could not be opened; Near Threatened comes from the Mammal Diversity Database.",
+    "Outdoor Alabama notes that the taxonomic status of the species is still debated; the question was not examined further."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a university database, two state wildlife agencies and a telemetry study; illustration to be checked by the owner."
+}

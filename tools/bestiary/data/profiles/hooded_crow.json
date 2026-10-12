@@ -1,0 +1,102 @@
+{
+  "id": "hooded_crow",
+  "scientific": "Corvus cornix",
+  "group": "birds",
+  "name": {
+    "en": "Hooded Crow",
+    "fr": "Corneille mantelée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The hooded crow is a grey-and-black crow of northern and eastern Europe. In the British Isles it is found mainly in Scotland and Ireland, and it is a close relative of the all-black carrion crow, with which it hybridises where their ranges meet.",
+      "fr": "La corneille mantelée est une corneille grise et noire du nord et de l’est de l’Europe. Dans les îles Britanniques, elle vit surtout en Écosse et en Irlande, et elle est proche parente de la corneille noire, tout en noir, avec laquelle elle s’hybride là où leurs aires se rencontrent."
+    },
+    "identification": {
+      "en": "A hooded crow weighs about 505 g and is around 48–52 cm long. Unlike the all-black carrion crow, it is a two-tone corvid: the body is grey, while the head, throat, wings and tail are black, as are the bill and legs. Hybrids show a mixture of grey and black.",
+      "fr": "Une corneille mantelée pèse environ 505 g et mesure autour de 48 à 52 cm. Contrairement à la corneille noire, toute noire, c’est un corvidé bicolore : le corps est gris, tandis que la tête, la gorge, les ailes et la queue sont noires, tout comme le bec et les pattes. Les hybrides montrent un mélange de gris et de noir."
+    },
+    "habitat": {
+      "en": "In Britain it is most frequent in bog during the breeding season. It nests in trees, on crags and even on pylons, and elsewhere in Europe it also lives in towns and cities.",
+      "fr": "En Grande-Bretagne, elle est le plus fréquente dans les tourbières pendant la saison de reproduction. Elle niche dans les arbres, sur les rochers escarpés et même sur les pylônes, et ailleurs en Europe elle vit aussi dans les villes."
+    },
+    "diet": {
+      "en": "The hooded crow is a scavenger that feeds on dead animals, and like its relative the carrion crow it is omnivorous, taking grain, invertebrates, eggs, chicks and carrion. It feeds more sociably than other crows, and groups can often be seen together in fields.",
+      "fr": "La corneille mantelée est une charognarde qui se nourrit d’animaux morts et, comme sa parente la corneille noire, elle est omnivore : grains, invertébrés, œufs, poussins et charogne. Elle se nourrit de façon plus sociable que les autres corneilles, et on voit souvent des groupes ensemble dans les champs."
+    },
+    "behavior": {
+      "en": "It is a resident species that breeds relatively early in the year. The related carrion crow is described as large, noisy, intelligent and inquisitive, building large stick nests and defending a big territory; the hooded crow, by contrast, is noted for feeding in loose groups outside the breeding season.",
+      "fr": "C’est une espèce sédentaire qui se reproduit relativement tôt dans l’année. La corneille noire, sa parente, est décrite comme grande, bruyante, intelligente et curieuse, construisant de grands nids de branchages et défendant un vaste territoire ; la corneille mantelée se distingue plutôt par son habitude de se nourrir en groupes lâches hors de la saison de reproduction."
+    },
+    "reproduction": {
+      "en": "Laying starts from March, with one brood a year. A typical clutch is three to six eggs (two to seven are recorded). The female alone incubates them for 18–19 days, and the young fledge after about 28–30 days. Breeding typically starts at two years of age.",
+      "fr": "La ponte commence dès mars, avec une nichée par an. Une couvée typique compte trois à six œufs (deux à sept ont été notés). La femelle les couve seule pendant 18 à 19 jours, et les jeunes s’envolent après environ 28 à 30 jours. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "As a scavenger the hooded crow recycles carrion and scraps. Where it meets the carrion crow, as in northern Britain, the two interbreed, and hybrids are found in the contact zone. The two forms are so close that they were long treated as a single species.",
+      "fr": "Charognarde, la corneille mantelée recycle les cadavres et les restes. Là où elle rencontre la corneille noire, comme dans le nord de la Grande-Bretagne, les deux formes se croisent, et l’on trouve des hybrides dans la zone de contact. Elles sont si proches qu’on les a longtemps traitées comme une seule espèce."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, and it is Green-listed in the UK. About 285,000 territories were estimated there in 2016 and the population is stable. The breeding range changed little (−0.4%) between 1968–72 and 2008–11, while the winter range shrank by 10.5% (1981–84 to 2007–11). The oldest ringed bird in Britain reached about 10 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, et elle figure sur la liste verte du Royaume-Uni. On y estimait environ 285 000 territoires en 2016, et la population est stable. L’aire de reproduction a peu changé (−0,4 %) entre 1968-1972 et 2008-2011, tandis que l’aire d’hivernage a reculé de 10,5 % (1981-1984 à 2007-2011). Le plus vieil oiseau bagué en Grande-Bretagne a atteint environ 10 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hooded Crow — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Corneille mantelée — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/hooded-crow",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Weight 505 g; lays from March, one brood, clutch 3–6 (2–7), incubation 18–19 days by the female, fledging 28–30 days, breeding from 2 years; hybridises with Carrion Crow.",
+        "UK 285,000 territories (2016), stable; breeding range -0.4%, winter range -10.5%; IUCN Least Concern; nests in trees, crags or pylons; record age 10 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hooded Crow — RSPB",
+        "fr": "Corneille mantelée — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hooded-crow",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Closely related to the Carrion Crow, until recently classed as the same species; hybrids show mixed grey and black; feeds on dead animals and more sociably than other crows; UK status Green."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hooded crow — Wikipedia",
+        "fr": "Corneille mantelée — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Hooded_crow",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification"],
+      "facts": [
+        "Length 48–52 cm; ash-grey body with black head, throat, wings and tail; breeds in northern and western Scotland, the Isle of Man and Ireland (secondary source, qualitative use only)."
+      ]
+    },
+    {
+      "title": {
+        "en": "Carrion Crow — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Corneille noire — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/carrion-crow",
+      "consulted": "2026-10-12",
+      "supports": ["diet", "behavior", "ecology"],
+      "facts": [
+        "Carrion Crows are omnivorous (grain, invertebrates, eggs, chicks, carrion), large, noisy and intelligent, build large stick nests and defend big territories; hybrids occur where the two overlap."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The BTO page gives no wing length, and body length (48–52 cm) comes from a Wikipedia summary that was not used as a main source; treat it as approximate.",
+    "The hooded crow’s own diet is described only as scavenging by BTO and RSPB; the omnivorous details come from the carrion crow page and are assumed to be similar.",
+    "BTO’s trend figure for 1995–2024 is listed as stable but a number without sign appears on the page; only 'stable' was used.",
+    "BTO’s carrion crow page describes the ranges of the two forms in western Scotland and Ireland in a way that conflicts with other sources; it was not used for range."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts pages (consulted 2026-10-12); RSPB used for qualitative facts; illustration to be checked by the owner."
+}

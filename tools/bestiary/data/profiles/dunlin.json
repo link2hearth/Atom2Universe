@@ -1,0 +1,91 @@
+{
+  "id": "dunlin",
+  "scientific": "Calidris alpina",
+  "group": "birds",
+  "name": {
+    "en": "Dunlin",
+    "fr": "Bécasseau variable"
+  },
+  "sections": {
+    "overview": {
+      "en": "The dunlin is a small wader and one of the most familiar shorebirds on coastal mudflats, where it gathers in flocks that can number in the thousands. Most of the dunlins seen in Britain in winter breed farther north and east.",
+      "fr": "Le bécasseau variable est un petit limicole, parmi les oiseaux de rivage les plus familiers des vasières côtières, où il se rassemble en groupes pouvant compter des milliers d’individus. La plupart des bécasseaux variables vus en Grande-Bretagne en hiver nichent plus au nord et à l’est."
+    },
+    "identification": {
+      "en": "An adult weighs about 50 g, with a wing near 119 mm. It has a long, slightly downcurved black bill and black legs. In summer the back is chestnut and the belly shows a black patch; in winter the plumage is a muted grey-brown above and white below. The sexes look alike, though females are slightly larger.",
+      "fr": "L’adulte pèse environ 50 g, avec une aile proche de 119 mm. Il a un long bec noir légèrement recourbé vers le bas et des pattes noires. En été, le dos est roux et le ventre porte une tache noire ; en hiver, le plumage est d’un gris-brun terne dessus et blanc dessous. Les sexes se ressemblent, bien que les femelles soient un peu plus grandes."
+    },
+    "habitat": {
+      "en": "It breeds on grassland, moorland and Arctic tundra. In winter it is mainly coastal, especially on estuaries, bays and mudflats, and at high tide it roosts on nearby fields, saltmarsh and shorelines. A few birds use inland sites.",
+      "fr": "Il niche dans les prairies, les landes et la toundra arctique. En hiver, il est surtout côtier, en particulier sur les estuaires, les baies et les vasières, et à marée haute il se repose sur les champs, les prés salés et les rivages voisins. Quelques oiseaux utilisent des sites à l’intérieur des terres."
+    },
+    "diet": {
+      "en": "The dunlin eats mainly invertebrates: bivalves, worms, insect larvae, small crustaceans and snails. It feeds by sight and taste with a rapid pecking motion by day, and relies more on touch, probing the mud, at night.",
+      "fr": "Le bécasseau variable mange surtout des invertébrés : bivalves, vers, larves d’insectes, petits crustacés et escargots. Le jour, il se nourrit à vue et au goût en piquant rapidement ; la nuit, il se fie davantage au toucher en sondant la vase."
+    },
+    "behavior": {
+      "en": "Dunlins are highly social and form large flocks that twist and turn in tight formation. They are migratory: breeding birds from Britain mostly move south to Europe and North Africa, while the wintering birds come mainly from eastern Europe and Russia. Males defend nesting territories with aerial displays and trilling calls.",
+      "fr": "Les bécasseaux variables sont très sociables et forment de grands groupes qui virevoltent en formation serrée. Ils sont migrateurs : les nicheurs de Grande-Bretagne descendent surtout vers l’Europe et l’Afrique du Nord, tandis que les hivernants viennent surtout d’Europe de l’Est et de Russie. Les mâles défendent leur territoire de nidification par des vols nuptiaux et des trilles."
+    },
+    "reproduction": {
+      "en": "A pair typically raises one brood a year and lays four eggs (two to four). Both sexes incubate for 21–22 days. The downy chicks leave the nest quickly and fledge after about 19–21 days. Breeding typically starts at two years of age.",
+      "fr": "Un couple élève en général une nichée par an et pond quatre œufs (deux à quatre). Les deux sexes couvent pendant 21 à 22 jours. Les poussins, couverts de duvet, quittent vite le nid et s’envolent après environ 19 à 21 jours. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "On the breeding grounds, nests are raided by weasels, Arctic foxes, jaegers and gulls; in winter, harriers, falcons and owls hunt dunlins exposed on mudflats. Because it depends on healthy estuaries, the species is considered an indicator of wetland condition.",
+      "fr": "Sur les sites de reproduction, les nids sont pillés par les belettes, les renards polaires, les labbes et les goélands ; en hiver, busards, faucons et hiboux chassent les bécasseaux exposés sur les vasières. Comme l’espèce dépend d’estuaires en bonne santé, elle est considérée comme un indicateur de l’état des zones humides."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, but it has been Red-listed in the UK since 2021. About 350,000 dunlins winter in the UK, and the winter population fell by 22% between 1998 and 2023; milder Baltic winters may keep more birds farther east. The oldest ringed bird lived over 19 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, mais elle figure sur la liste rouge du Royaume-Uni depuis 2021. Environ 350 000 bécasseaux variables hivernent au Royaume-Uni, et la population hivernale a baissé de 22 % entre 1998 et 2023 ; des hivers plus doux autour de la Baltique pourraient garder plus d’oiseaux plus à l’est. Le plus vieil oiseau bagué a vécu plus de 19 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Dunlin — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Bécasseau variable — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/dunlin",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Adults average 50 g, wing 119.2 mm; clutch typically 4, incubation 21–22 days by both sexes, fledging 19–21 days, first breeding at 2 years.",
+        "UK winter 350,000 (2012–17), -22% 1998–2023; UK Red-listed, IUCN Least Concern; winter visitors from eastern Europe and Russia; record age 19 years 3 months."
+      ]
+    },
+    {
+      "title": {
+        "en": "Dunlin — RSPB",
+        "fr": "Bécasseau variable — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/dunlin",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "behavior", "conservation"],
+      "facts": [
+        "Slightly downcurved bill, black belly patch in breeding plumage, jet-black legs; winter flocks of thousands; roosts on fields, saltmarsh and shorelines at high tide.",
+        "Added to the UK Red List in 2021; global numbers down about 20% since the early 2000s."
+      ]
+    },
+    {
+      "title": {
+        "en": "Calidris alpina — Animal Diversity Web, University of Michigan",
+        "fr": "Calidris alpina — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Calidris_alpina/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Eats bivalves, worms, insect larvae, crustaceans and snails; pecks by sight by day and probes by touch at night; males perform aerial displays with trilling calls.",
+        "Nest predators include weasels, Arctic foxes, jaegers and gulls; harriers, falcons and owls on wintering grounds; considered an indicator of healthy wetlands."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Animal Diversity Web gives a first-breeding age of 1–2 years while BTO gives 2 years; the BTO figure was used.",
+    "BTO and RSPB both describe the wintering decline; the reasons (e.g. milder Baltic winters) are a hypothesis stated by BTO, not a certainty.",
+    "Population numbers refer to the UK; the species is widespread across the northern hemisphere."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); RSPB and ADW used for qualitative facts; illustration to be checked by the owner."
+}

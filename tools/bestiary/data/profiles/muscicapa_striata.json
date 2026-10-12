@@ -1,0 +1,77 @@
+{
+  "id": "muscicapa_striata",
+  "scientific": "Muscicapa striata",
+  "group": "birds",
+  "name": {
+    "en": "Spotted Flycatcher",
+    "fr": "Gobemouche gris"
+  },
+  "sections": {
+    "overview": {
+      "en": "The spotted flycatcher is a small, grey-brown, long-winged songbird that hunts flying insects from a perch. It is one of the latest summer visitors to Britain and winters in Africa, and its numbers there have collapsed over decades.",
+      "fr": "Le gobemouche gris est un petit passereau brun-gris aux longues ailes qui chasse les insectes volants depuis un perchoir. C’est l’un des derniers visiteurs d’été en Grande-Bretagne, il hiverne en Afrique, et ses effectifs s’y sont effondrés en quelques décennies."
+    },
+    "identification": {
+      "en": "About the size of a robin, an adult weighs roughly 14.5 g and has a wing length near 86 mm. The back, head, wings and tail are grey-brown and the underparts pale buff with brown streaking on the breast; the name is a misnomer, as it is more streaked than spotted. The sexes look alike; juveniles are spotty and greyer.",
+      "fr": "De la taille d’un rouge-gorge, l’adulte pèse environ 14,5 g, avec une aile d’environ 86 mm. Le dos, la tête, les ailes et la queue sont brun-gris, le dessous beige pâle avec des stries brunes sur la poitrine; le nom est trompeur, car il est plus strié que tacheté. Les sexes se ressemblent; les jeunes sont tachetés et plus gris."
+    },
+    "habitat": {
+      "en": "It lives in woodland, mature gardens and parks with many trees, and in mature hedgerows with trees on farmland. In Britain and Ireland it breeds throughout except in the far north and west.",
+      "fr": "Il vit dans les bois, les jardins âgés et les parcs bien arborés, et dans les vieilles haies avec arbres en zone agricole. En Grande-Bretagne et en Irlande, il niche partout sauf dans l’extrême nord et l’ouest."
+    },
+    "diet": {
+      "en": "It eats flying insects such as flies, butterflies, wasps and craneflies. It watches from a high perch, darts out to catch one in the air, and often returns to the same spot.",
+      "fr": "Il mange des insectes volants comme des mouches, des papillons, des guêpes et des tipules. Il guette depuis un perchoir élevé, s’élance pour en attraper un en vol et revient souvent au même endroit."
+    },
+    "behavior": {
+      "en": "It typically arrives in late April or May and leaves in September. Birds tracked by BTO researchers have wintered as far south as Namibia, some 7,000 km from their breeding site. The call is a repetitive, high-pitched tzee and the song a series of scratchy warbles.",
+      "fr": "Il arrive en général fin avril ou en mai et repart en septembre. Des oiseaux suivis par les chercheurs du BTO ont hiverné jusqu’en Namibie, à quelque 7 000 km de leur site de nidification. Le cri est un tzii aigu et répété, et le chant une suite de gazouillis rauques."
+    },
+    "reproduction": {
+      "en": "The open cup nest is placed on ledges in and around buildings or on creepers against walls and trees. In Britain the first clutch averages 6 June, with typically two broods of four or five eggs. The female alone incubates for 13–14 days and the chicks fledge after about 13–16 days. Breeding typically starts at one year.",
+      "fr": "Le nid en coupe ouvert est placé sur des rebords dans et autour des bâtiments ou sur des plantes grimpantes contre les murs et les arbres. En Grande-Bretagne, la première ponte a lieu en moyenne le 6 juin, avec en général deux couvées de quatre ou cinq œufs. La femelle seule couve 13 à 14 jours et les poussins s’envolent après environ 13 à 16 jours. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "Birds, especially jays, cause most nest predation: in a nest-camera study they accounted for 17 of 20 events. Nests in gardens fledged about twice as many chicks as those in woodland or farmland. A typical adult lives about two years; the oldest ringed bird reached eight.",
+      "fr": "Les oiseaux, surtout les geais, causent l’essentiel de la prédation des nids : dans une étude par caméras, ils représentaient 17 des 20 cas. Les nids des jardins ont mené environ deux fois plus de poussins à l’envol que ceux des bois ou des terres agricoles. Un adulte vit en général environ deux ans; le plus âgé bagué a atteint huit ans."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes it as Least Concern, but in the UK it is Red-listed. The breeding population was about 42,000 territories in 2016 and fell by 92% between 1967 and 2024; it has also declined across Europe since 1980. Falling first-year survival seems the main driver, but the ecological cause remains uncertain.",
+      "fr": "La Liste rouge de l’UICN le classe en préoccupation mineure, mais il figure sur la liste rouge du Royaume-Uni. La population nicheuse était d’environ 42 000 territoires en 2016 et a chuté de 92 % entre 1967 et 2024; elle décline aussi en Europe depuis 1980. La baisse de la survie des jeunes la première année semble le principal moteur, mais la cause écologique reste incertaine."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Spotted Flycatcher — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Gobemouche gris — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/spotted-flycatcher",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adult 14.5 g, wing 86.4 mm; first clutch average 6 June; 2 broods; incubation 13–14 days; fledging 13–16 days; max age 8 years.",
+        "UK 42,000 territories (2016), −92% 1967–2024; Red; nest-camera study: birds 17 of 20 predation events, jays 12; garden nests fledged about twice as many chicks; tracked to Namibia."
+      ]
+    },
+    {
+      "title": {
+        "en": "Spotted Flycatcher — RSPB Birds and Wildlife",
+        "fr": "Gobemouche gris — RSPB, oiseaux et faune"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/spotted-flycatcher",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Robin-sized; grey-brown with brown streaking on buff breast; juveniles spotty; hunts flying insects from a perch; open cup nests on ledges and creepers.",
+        "Declined 88% between 1970 and 2018; UK Red List."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "BTO gives −92% for 1967–2024 and RSPB −88% for 1970–2018: different periods, both reported.",
+    "Breeding figures are British; timing and clutch size vary across the wide range. The IUCN category is quoted from the BTO page, not read from the IUCN site."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts, plumage, diet and nest sites from the RSPB (both consulted 2026-10-12); illustration to be checked by the owner."
+}

@@ -1,0 +1,96 @@
+{
+  "id": "araneus_diadematus",
+  "scientific": "Araneus diadematus",
+  "group": "invertebrates",
+  "name": {
+    "en": "European Garden Spider",
+    "fr": "Épeire diadème"
+  },
+  "sections": {
+    "overview": {
+      "en": "The garden spider, also called cross spider or diadem spider, is a familiar orb-weaving spider. It is most noticeable in autumn, when full-grown females sit at the centre of their wheel-shaped webs. Hatching in spring, it usually matures the following summer, and the females die before the new year after laying their eggs.",
+      "fr": "L’épeire diadème, aussi appelée araignée à croix, est une araignée tisserande de toiles en roue très familière. On la remarque surtout en automne, quand les femelles adultes se tiennent au centre de leur toile. Éclose au printemps, elle devient en général adulte l’été suivant, et les femelles meurent avant la fin de l’année après avoir pondu."
+    },
+    "identification": {
+      "en": "Males measure 4–8 mm and females 10–18 mm in body length; another source gives up to 20 mm for females. The abdomen has ‘shoulders’, so it is wider at the front, and ranges from pale straw to dark brown or reddish with a darker central pattern holding white markings that can form a cross. The legs are banded brown and carry many short spines.",
+      "fr": "Les mâles mesurent 4 à 8 mm et les femelles 10 à 18 mm de long; une autre source donne jusqu’à 20 mm pour les femelles. L’abdomen, muni d’« épaules », est plus large à l’avant et va du beige paille au brun foncé ou rougeâtre, avec un dessin central plus sombre portant des marques blanches qui peuvent former une croix. Les pattes sont annelées de brun et couvertes de courtes épines."
+    },
+    "habitat": {
+      "en": "In Britain it is probably the most common and widespread large spider, found in gardens, hedges, fences, scrub, woodland edges and heathland. It needs supports to anchor its web, up to about two metres above the ground, and is rarely found indoors, probably because houses are too dry. It has also been recorded across the northern United States.",
+      "fr": "En Grande-Bretagne, c’est probablement la grande araignée la plus commune et la plus répandue, présente dans les jardins, les haies, les clôtures, les broussailles, les lisières de bois et les landes. Elle a besoin de supports pour fixer sa toile, jusqu’à environ deux mètres du sol, et entre rarement dans les maisons, sans doute trop sèches. Elle est aussi signalée dans le nord des États-Unis."
+    },
+    "diet": {
+      "en": "It feeds on insects and other arthropods caught in its web. When prey struggles in the sticky spiral, the spider rushes over, wraps it in swathes of silk and bites it. The wrapped prey may be eaten at once or kept for later.",
+      "fr": "Elle se nourrit d’insectes et d’autres arthropodes pris dans sa toile. Quand une proie se débat dans la spirale collante, l’araignée accourt, l’enveloppe de soie puis la mord. La proie emballée peut être mangée aussitôt ou gardée pour plus tard."
+    },
+    "behavior": {
+      "en": "The spider builds its orb web in about half an hour, using only the sense of touch, with roughly 25 to 30 radial threads. Because dust and pollen soon dull the sticky droplets, it rebuilds the web every day or so and eats the old one to recycle the silk proteins. It usually hangs head down at the hub and, if disturbed, shakes the web to a blur.",
+      "fr": "L’araignée tisse sa toile en roue en une demi-heure environ, guidée par le seul toucher, avec quelque 25 à 30 rayons. La poussière et le pollen ternissant vite les gouttelettes collantes, elle refait sa toile tous les jours ou presque et mange l’ancienne pour recycler les protéines de la soie. Elle reste en général la tête en bas au centre et, si on la dérange, fait vibrer la toile jusqu’à la rendre floue."
+    },
+    "reproduction": {
+      "en": "Spiderlings leave the egg sac in May and cluster in a golden ball, then disperse after about a week. They overwinter half-grown, males mature in August or September and females a couple of weeks later, though in southern Britain some mature in their first year. A male announces himself by plucking the female’s web; the female lays her eggs in a sheltered spot inside a yellowish silk sac, guards it and dies before the new year.",
+      "fr": "Les jeunes quittent le cocon en mai et restent groupés en boule dorée, puis se dispersent après une semaine environ. Ils passent l’hiver à demi-taille; les mâles atteignent la maturité en août ou septembre et les femelles deux semaines plus tard, mais dans le sud de la Grande-Bretagne certains y arrivent dès la première année. Le mâle annonce sa venue en pinçant la toile de la femelle; celle-ci pond dans un abri, dans un cocon de soie jaunâtre qu’elle garde, puis meurt avant la fin de l’année."
+    },
+    "ecology": {
+      "en": "As a predator of flying insects the garden spider can help limit pest numbers. Mating is risky for the male, who must signal that he is a suitor and not a meal. Young spiders disperse by ballooning, drifting on silk threads carried by the wind.",
+      "fr": "Prédatrice d’insectes volants, l’épeire diadème peut contribuer à limiter les ravageurs. L’accouplement est risqué pour le mâle, qui doit signaler qu’il est un prétendant et non un repas. Les jeunes se dispersent en ballonnant, portés par des fils de soie que le vent emporte."
+    },
+    "conservation": {
+      "en": "No threat is reported for this common species. Animal Diversity Web lists it with no special status, but that account is not a current global assessment and no recent Red List category was read. In Britain it is among the most frequently recorded large spiders.",
+      "fr": "Aucune menace n’est signalée pour cette espèce commune. L’Animal Diversity Web la classe sans statut particulier, mais cette fiche n’est pas une évaluation mondiale récente et aucune catégorie récente de la Liste rouge n’a été lue. En Grande-Bretagne, elle fait partie des grandes araignées les plus souvent observées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Garden spider (Araneus diadematus) factsheet 4 — British Arachnological Society",
+        "fr": "Fiche n° 4 sur l’épeire diadème (Araneus diadematus) — British Arachnological Society"
+      },
+      "url": "https://britishspiders.org.uk/sites/default/files/2021-04/Garden_spider_preview_rev18.pdf",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Males 4–8 mm, females 10–18 mm; abdomen with shoulders, white cross-like marks; habitats; most common and widespread large spider in Britain.",
+        "Web built in half an hour, rebuilt daily with old silk eaten; spiderlings emerge in May; maturity Aug–Sept; female guards sac and dies before new year."
+      ]
+    },
+    {
+      "title": {
+        "en": "Araneus diadematus — Animal Diversity Web, University of Michigan",
+        "fr": "Araneus diadematus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Araneus_diadematus/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Females 6.5–20 mm, males 5.5–13 mm; 25–30 radial threads; wraps prey in silk; ballooning dispersal; feeding can help control pests.",
+        "Range given from New England across the northern U.S. to the Pacific Northwest; no special status on IUCN, U.S. Federal or CITES lists."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Body-size ranges differ between the two sources (10–18 mm vs up to 20 mm for females); both are given.",
+    "Animal Diversity Web labels the species as native to the Nearctic, which was not repeated; its origin is not discussed here.",
+    "No recent IUCN Red List category was read, so none is stated.",
+    "Life span (about a year and a half) is inferred from the British timeline of hatching in May and female death before the new year of the following year; southern populations can be faster."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

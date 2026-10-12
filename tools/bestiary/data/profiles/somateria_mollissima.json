@@ -1,0 +1,104 @@
+{
+  "id": "somateria_mollissima",
+  "scientific": "Somateria mollissima",
+  "group": "birds",
+  "name": {
+    "en": "Common Eider",
+    "fr": "Eider à duvet"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common eider is a heavy, sociable sea duck that rarely strays far from the coast. It is the heaviest duck in the United Kingdom and a strong, fast flier; its soft nest down gave the eiderdown its name.",
+      "fr": "L’eider à duvet est un canard marin lourd et grégaire qui s’éloigne rarement des côtes. C’est le plus lourd des canards du Royaume-Uni, et un voilier rapide et puissant ; le duvet dont il garnit son nid a donné son nom à l’édredon."
+    },
+    "identification": {
+      "en": "An adult weighs about 2.1 kg in Britain, with a wing length near 29 cm; males are slightly larger. The breeding male is white above and black below, with a black cap and a pale green patch on each side of the head. The female is brown with dense dark barring, a camouflage that hides her on the nest. Young males need about three years to reach full adult plumage.",
+      "fr": "En Grande-Bretagne, un adulte pèse environ 2,1 kg, avec une aile d’environ 29 cm ; les mâles sont un peu plus grands. Le mâle nuptial est blanc dessus et noir dessous, avec une calotte noire et une tache vert pâle de chaque côté de la tête. La femelle est brune, finement barrée de sombre, un camouflage qui la cache sur son nid. Les jeunes mâles mettent environ trois ans à acquérir leur plumage adulte."
+    },
+    "habitat": {
+      "en": "It is a true sea duck, usually found close to shore in sandy bays or in long lines just beyond the breaking waves, and it is rarely seen on fresh water. It nests on rocky coasts and islands, often on small islands free of mammalian predators; in Britain and Ireland it breeds mainly around northern coasts and winters further south.",
+      "fr": "C’est un vrai canard marin, que l’on trouve en général près du rivage, dans les baies sableuses ou en longues files juste au-delà des vagues, et qui fréquente rarement les eaux douces. Il niche sur les côtes rocheuses et les îles, souvent de petites îles sans prédateurs mammifères ; en Grande-Bretagne et en Irlande, il se reproduit surtout sur les côtes du nord et hiverne plus au sud."
+    },
+    "diet": {
+      "en": "The eider feeds mostly on blue mussels and other molluscs, together with crustaceans and echinoderms such as crabs and sea urchins. It dives for them, in British waters typically to about 3 m, and swallows the shells whole before crushing them in its gizzard.",
+      "fr": "L’eider se nourrit surtout de moules bleues et d’autres mollusques, ainsi que de crustacés et d’échinodermes comme les crabes et les oursins. Il plonge pour les attraper, en général jusqu’à environ 3 m dans les eaux britanniques, et avale les coquilles entières avant de les broyer dans son gésier."
+    },
+    "behavior": {
+      "en": "Eiders are very sociable, riding the swell in groups and gathering in long lines offshore. In spring the males give loud, moaning courtship calls. Ducklings leave the nest soon after hatching and often join a crèche tended by several females, which lowers the risk for each individual chick.",
+      "fr": "Les eiders sont très grégaires : ils se laissent porter par la houle en groupes et forment de longues files au large. Au printemps, les mâles émettent des cris plaintifs et sonores pendant la parade. Les canetons quittent le nid peu après l’éclosion et rejoignent souvent une crèche surveillée par plusieurs femelles, ce qui réduit le risque pour chaque jeune."
+    },
+    "reproduction": {
+      "en": "In the UK there is usually one brood a year, with a clutch of typically four to six eggs. The female lines the nest with her own down and incubates alone for 25–28 days. The downy chicks feed themselves and fledge after about 65–75 days. Breeding typically starts at three years of age.",
+      "fr": "Au Royaume-Uni, il y a en général une seule nichée par an, avec une ponte de quatre à six œufs. La femelle garnit le nid de son propre duvet et couve seule pendant 25 à 28 jours. Les poussins, couverts de duvet, se nourrissent seuls et s’envolent après environ 65 à 75 jours. La reproduction débute en général à trois ans."
+    },
+    "ecology": {
+      "en": "By eating mussels and other shellfish, eiders shape the numbers of their prey, which has brought them into conflict with mussel farmers. Gulls are major predators of eggs and ducklings, and Arctic foxes take them where they can reach the nests, which is why islands without mammals are favoured. In Shetland, predation by marine mammals such as killer whales is one suspected factor in recent declines.",
+      "fr": "En consommant moules et autres coquillages, les eiders influencent les effectifs de leurs proies, ce qui les a mis en conflit avec les mytiliculteurs. Les goélands sont de grands prédateurs des œufs et des canetons, et le renard polaire s’en prend aux nids qu’il peut atteindre, d’où la préférence pour les îles sans mammifères. Aux Shetland, la prédation par des mammifères marins comme les orques est l’un des facteurs soupçonnés dans les déclins récents."
+    },
+    "conservation": {
+      "en": "The IUCN lists the common eider as Near Threatened. The UK breeding population was about 37,000 pairs in 2012–15, and the UK wintering population fell by 32% between 1998 and 2023. It is Amber-listed in the UK, partly because of its winter concentrations, which are vulnerable to oil spills and other pollution. The oldest ringed bird reached over 35 years.",
+      "fr": "L’UICN classe l’eider à duvet comme quasi menacé. La population nicheuse britannique était d’environ 37 000 couples en 2012-2015, et la population hivernante du Royaume-Uni a diminué de 32 % entre 1998 et 2023. L’espèce figure sur la liste ambre au Royaume-Uni, en partie à cause de ses regroupements hivernaux, vulnérables aux marées noires et aux autres pollutions. Le plus vieil oiseau bagué a dépassé 35 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eider — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Eider — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/eider",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adult mass 2.13 kg, wing 290 mm; clutch 4–6 eggs; incubation 25–28 days by female; fledging 65–75 days; breeding typically at 3 years; max age 35 y 6 m.",
+        "UK ~37,000 pairs (2012–15); winter population −32% 1998–2023; IUCN Near Threatened; feeds on blue mussels diving to ~3 m; Shetland declines possibly linked to marine mammal predation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eider — RSPB",
+        "fr": "Eider — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/eider",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "UK’s heaviest duck and fastest flier; stays close to shore in bays or long lines beyond the breakers; sociable; shellfish diet conflicts with mussel farmers.",
+        "Amber-listed in the UK because of winter concentrations."
+      ]
+    },
+    {
+      "title": {
+        "en": "Somateria mollissima — Animal Diversity Web, University of Michigan",
+        "fr": "Somateria mollissima — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Somateria_mollissima/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Male plumage white above, black below, black crown, green head patch; female barred brown; males take about 3 years to reach adult plumage; prey swallowed whole and crushed in gizzard.",
+        "Female lines nest with own down and incubates alone; creching; gulls and Arctic foxes main predators, nests on islands without mammals."
+      ]
+    },
+    {
+      "title": {
+        "en": "Common Eider — Audubon Field Guide",
+        "fr": "Eider à duvet — guide Audubon"
+      },
+      "url": "https://www.audubon.org/field-guide/bird/common-eider",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Rocky coasts and shoals, rarely fresh water; moaning courtship calls; creches; first flight about 65–75 days.",
+        "IUCN Near Threatened; local concentrations vulnerable to oil spills."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Dive depth differs between sources: BTO gives about 3 m; Animal Diversity Web gives about 3–20 m. The BTO figure is used for British waters.",
+    "Animal Diversity Web’s account is a species-wide, student-written summary; its numbers were used sparingly. Weights and clutch size are British (BTO); other populations differ.",
+    "The IUCN Red List pages could not be opened; Near Threatened is taken from the BTO and Audubon pages."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); qualitative facts cross-checked with RSPB, Animal Diversity Web and Audubon; illustration to be checked by the owner."
+}

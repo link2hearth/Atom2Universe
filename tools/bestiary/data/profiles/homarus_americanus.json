@@ -1,0 +1,97 @@
+{
+  "id": "homarus_americanus",
+  "scientific": "Homarus americanus",
+  "group": "invertebrates",
+  "name": {
+    "en": "American Lobster",
+    "fr": "Homard américain"
+  },
+  "sections": {
+    "overview": {
+      "en": "The American lobster is a large marine crustacean of the north-western Atlantic and the basis of a major fishery. It lives on the sea floor, grows by moulting and is long-lived, with some animals thought to reach 100 years, although age is hard to measure.",
+      "fr": "Le homard américain est un grand crustacé marin de l’Atlantique nord-ouest, à la base d’une pêcherie majeure. Il vit sur le fond, grandit par mues et vit longtemps : certains individus atteindraient 100 ans, bien que l’âge soit difficile à mesurer."
+    },
+    "identification": {
+      "en": "It can reach about 20 kg (44 pounds), though a typical catch is far smaller, around 25 cm and 0.5 kg. It has ten legs, the first pair ending in two unequal claws: a heavy crusher and a finer-edged ripper. Live animals are olive-green or greenish-brown, sometimes speckled, and turn red only when cooked. Males have larger, stiffer first swimmerets than females.",
+      "fr": "Il peut atteindre environ 20 kg (44 livres), mais une prise typique est bien plus petite, vers 25 cm et 0,5 kg. Il a dix pattes, la première paire se terminant par deux pinces inégales : une pince broyeuse massive et une pince coupante plus fine. Vivant, il est vert olive ou brun verdâtre, parfois tacheté, et ne devient rouge qu’à la cuisson. Les mâles ont des premiers pléopodes plus grands et plus rigides que les femelles."
+    },
+    "habitat": {
+      "en": "It ranges from Labrador to Cape Hatteras, North Carolina, and is most abundant in coastal waters from Maine through New Jersey. Coastal lobsters prefer rocky areas with crevices and burrows but sometimes dig into mud, while offshore populations gather along the continental shelf edge near underwater canyons, down to about 700 m (2,300 feet).",
+      "fr": "Il vit du Labrador au cap Hatteras, en Caroline du Nord, et il est le plus abondant dans les eaux côtières du Maine au New Jersey. Les homards côtiers préfèrent les zones rocheuses riches en crevasses et en terriers, mais s’enfouissent parfois dans la vase; les populations du large se concentrent au bord du plateau continental près des canyons sous-marins, jusqu’à environ 700 m (2 300 pieds)."
+    },
+    "diet": {
+      "en": "Adults are omnivores that eat crabs, molluscs, worms, sea urchins, sea stars, fish and seaweed, and they feed mainly at night. Larvae and postlarvae eat zooplankton during their first year.",
+      "fr": "Les adultes sont omnivores et mangent crabes, mollusques, vers, oursins, étoiles de mer, poissons et algues, surtout la nuit. Les larves et postlarves se nourrissent de zooplancton durant leur première année."
+    },
+    "behavior": {
+      "en": "The lobster is mostly solitary and nocturnal, spending the day in burrows or among rocks and foraging at night. It forms social hierarchies, in which dominant males tend to secure shelter. Offshore lobsters make seasonal migrations of roughly 80–300 km in spring.",
+      "fr": "Le homard est surtout solitaire et nocturne : il passe la journée dans des terriers ou entre les rochers et cherche sa nourriture la nuit. Il forme des hiérarchies sociales, où les mâles dominants obtiennent en général les abris. Les homards du large font des migrations saisonnières d’environ 80 à 300 km au printemps."
+    },
+    "reproduction": {
+      "en": "Mating follows the female’s moult, and she can store sperm for up to a year. She carries 5,000 to more than 100,000 eggs, depending on her size, for 9 to 11 months, moving inshore in late spring or early summer to hatch them. Larvae moult four times before settling on the bottom, and lobsters moult 20 to 25 times over 5 to 8 years before they can breed and reach legal size.",
+      "fr": "L’accouplement suit la mue de la femelle, qui peut conserver le sperme jusqu’à un an. Elle porte de 5 000 à plus de 100 000 œufs, selon sa taille, pendant 9 à 11 mois, et se rapproche de la côte à la fin du printemps ou au début de l’été pour les faire éclore. Les larves muent quatre fois avant de se poser sur le fond, et le homard mue 20 à 25 fois en 5 à 8 ans avant de pouvoir se reproduire et d’atteindre la taille légale."
+    },
+    "ecology": {
+      "en": "Cod, flounder, sculpins, eels, crabs and seals eat lobsters, young ones above all, and humans are the main predator. Warm water and low oxygen caused die-offs in western Long Island Sound in 1999 and 2002, and warming in southern New England may push lobsters to cooler offshore waters.",
+      "fr": "Morues, plies, chabots, anguilles, crabes et phoques mangent les homards, surtout les jeunes, et l’être humain est le principal prédateur. L’eau chaude et le manque d’oxygène ont causé des mortalités dans l’ouest du détroit de Long Island en 1999 et 2002, et le réchauffement dans le sud de la Nouvelle-Angleterre pourrait pousser les homards vers des eaux plus fraîches du large."
+    },
+    "conservation": {
+      "en": "Animal Diversity Web lists no special status, but a 2025 stock assessment (Atlantic States Marine Fisheries Commission, as reported by NOAA) found the Gulf of Maine and Georges Bank stock not overfished though subject to overfishing, and the southern New England stock overfished and severely depleted. The 2024 U.S. commercial catch was 113 million pounds worth $720 million. Rules include a ban on landing egg-bearing females and limits on the number of traps.",
+      "fr": "L’Animal Diversity Web indique l’absence de statut particulier, mais une évaluation de 2025 (Commission des pêches maritimes des États atlantiques, rapportée par la NOAA) juge le stock du golfe du Maine et du banc Georges non surexploité mais sujet à la surpêche, et celui du sud de la Nouvelle-Angleterre surexploité et très appauvri. La prise commerciale américaine de 2024 a été de 113 millions de livres, pour 720 millions de dollars. Les règles interdisent notamment de débarquer des femelles portant des œufs et limitent le nombre de casiers."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "American Lobster (Homarus americanus) — NOAA Fisheries species page",
+        "fr": "Homard américain (Homarus americanus) — page espèce de NOAA Fisheries"
+      },
+      "url": "https://www.fisheries.noaa.gov/species/american-lobster",
+      "consulted": "2026-10-12",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Up to 44 lb, possibly 100 years; Labrador to Cape Hatteras; to 2,300 ft; offshore migrations 50–190 miles; 20–25 moults over 5–8 years; 5,000 to over 100,000 eggs carried 9–11 months.",
+        "2025 ASMFC assessment: Gulf of Maine/Georges Bank not overfished but subject to overfishing; Southern New England overfished; 2024 landings 113 million lb, $720 million."
+      ]
+    },
+    {
+      "title": {
+        "en": "Homarus americanus — Animal Diversity Web, University of Michigan",
+        "fr": "Homarus americanus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Homarus_americanus/",
+      "consulted": "2026-10-12",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Typical catch about 25 cm and 0.5 kg; greenish-brown, red only when boiled; nocturnal, burrows or rocks, social hierarchies; predators include cod, flounder, sculpins, eels, crabs, seals.",
+        "Listed with no special status; depth to 365 m is given there, versus about 700 m by NOAA."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Maximum depth differs between sources (365 m in Animal Diversity Web, 2,300 feet in NOAA); the NOAA figure is used.",
+    "Egg-carrying time is 9–11 months for NOAA and 10–11 months for Animal Diversity Web; the NOAA range is used.",
+    "Age at maturity differs (about 5 years for females in Animal Diversity Web, 5–8 years in NOAA); the NOAA range is used.",
+    "Lifespan of about 100 years is a belief of scientists, not a measured value.",
+    "The 2025 stock status is reported by NOAA; the assessment itself was not read, and no IUCN category was read."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

@@ -1,0 +1,91 @@
+{
+  "id": "pleuronectes_platessa",
+  "scientific": "Pleuronectes platessa",
+  "group": "fish",
+  "name": {
+    "en": "European Plaice",
+    "fr": "Plie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European plaice is a right-eyed flatfish of the continental shelf of north-western Europe, found from Iceland and the White Sea southward along the European coast. It is one of the best-studied fish of the North Sea and has been fished there for centuries.",
+      "fr": "La plie est un poisson plat à yeux à droite du plateau continental de l’Europe du Nord-Ouest, présent depuis l’Islande et la mer Blanche vers le sud le long des côtes européennes. C’est l’un des poissons les mieux étudiés de la mer du Nord, où on la pêche depuis des siècles."
+    },
+    "identification": {
+      "en": "The upper side is brown or greenish-brown with irregular bright red or orange spots, and the underside is white. The skin is smooth with small scales, and a bony ridge runs behind the eyes. Common length is about 40 cm, and the largest fish reach about 100 cm and 7 kg.",
+      "fr": "La face supérieure est brune ou brun verdâtre, parsemée de taches irrégulières rouge vif ou orangées, et la face inférieure est blanche. La peau est lisse, à petites écailles, et une crête osseuse court derrière les yeux. La longueur courante est d’environ 40 cm, et les plus grands individus atteignent environ 100 cm et 7 kg."
+    },
+    "habitat": {
+      "en": "It lives on sandy and muddy bottoms from the shore down to about 200 m, usually at 10–50 m, in water of 2–15 °C. Juveniles stay in shallow coastal water and outer estuaries and move deeper as they grow; in the North Sea the Wadden Sea is the most important nursery.",
+      "fr": "Elle vit sur les fonds sableux et vaseux, du rivage jusqu’à environ 200 m, le plus souvent entre 10 et 50 m, dans une eau de 2 à 15 °C. Les juvéniles restent dans les eaux côtières peu profondes et les estuaires externes, puis descendent plus profond en grandissant; en mer du Nord, la mer des Wadden est la principale nourricerie."
+    },
+    "diet": {
+      "en": "Adults feed mainly on thin-shelled molluscs and polychaete worms, taking bivalves, the siphons of buried clams and, locally, small crustaceans and brittle stars. Adults do not feed during the spawning period.",
+      "fr": "Les adultes se nourrissent surtout de mollusques à coquille mince et de vers polychètes, et consomment des bivalves, les siphons de bivalves enfouis et, localement, de petits crustacés et des ophiures. Les adultes ne s’alimentent pas pendant la période de ponte."
+    },
+    "behavior": {
+      "en": "It rests on the seabed partly buried in sediment. Tagging showed that individuals return to the same spawning and feeding areas, and adults travel between them by using tidal streams: they drift in midwater with the current and stay on the bottom when it turns.",
+      "fr": "Elle se repose sur le fond, à demi enfouie dans le sédiment. Le marquage a montré que les individus reviennent aux mêmes zones de ponte et d’alimentation, et les adultes se déplacent entre elles grâce aux courants de marée : ils dérivent en pleine eau avec le courant et restent au fond quand il s’inverse."
+    },
+    "reproduction": {
+      "en": "Spawning takes place offshore in restricted areas, peaking in early January in the eastern Channel and mid-February in the German Bight. A 35 cm female may produce 60,000–100,000 pelagic eggs of 1.7–2.2 mm. The eggs and larvae drift for three to four months; the fish settles on the bottom only after metamorphosis, when the left eye has moved to the right side. In the North Sea, males mature at two to three years and females at four to five.",
+      "fr": "La ponte a lieu au large, dans des zones restreintes, avec un pic début janvier dans l’est de la Manche et mi-février dans la baie allemande. Une femelle de 35 cm peut produire de 60 000 à 100 000 œufs pélagiques de 1,7 à 2,2 mm. Œufs et larves dérivent pendant trois à quatre mois; le poisson ne se pose au fond qu’après la métamorphose, quand l’œil gauche est passé du côté droit. En mer du Nord, les mâles mûrissent à deux ou trois ans et les femelles à quatre ou cinq ans."
+    },
+    "ecology": {
+      "en": "Plaice larvae eat small planktonic animals such as appendicularians and copepods, while older fish feed on the seabed. The eggs are eaten by other fish: many were found in herring and sprat stomachs, so egg survival varies with their abundance.",
+      "fr": "Les larves de plie mangent de petits animaux planctoniques comme les appendiculaires et les copépodes, tandis que les poissons plus âgés se nourrissent sur le fond. Les œufs sont consommés par d’autres poissons : on en a trouvé beaucoup dans l’estomac de harengs et de sprats, si bien que leur survie varie avec l’abondance de ces prédateurs."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern (assessed 2022, as reported by FishBase). It is an important commercial species, taken mostly by beam trawls in a mixed fishery with sole. In the North Sea, landings rose from about 70,000 t in the late 1950s to about 170,000 t in the late 1980s, then fell below 60,000 t by 2005, and earlier maturation has been linked to fishing pressure.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure (évaluation de 2022, d’après FishBase). C’est une espèce commerciale importante, capturée surtout au chalut à perche dans une pêcherie mixte avec la sole. En mer du Nord, les débarquements sont passés d’environ 70 000 t à la fin des années 1950 à environ 170 000 t à la fin des années 1980, puis sont tombés sous 60 000 t en 2005, et la maturation plus précoce a été reliée à la pression de pêche."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pleuronectes platessa, European plaice — FishBase",
+        "fr": "Pleuronectes platessa, plie — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Pleuronectes-platessa.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "conservation"],
+      "facts": [
+        "Max 100 cm and 7 kg, common 40 cm; 0–200 m, usually 10–50 m; 2–15 °C; mud and sand; feeds on thin-shelled molluscs and polychaetes; brown to greenish-brown upper side with red or orange spots.",
+        "IUCN Least Concern, assessed 2 June 2022; Mediterranean reports believed to be misidentified flounders."
+      ]
+    },
+    {
+      "title": {
+        "en": "ICES FishMap species factsheet: Plaice",
+        "fr": "Fiche espèce ICES FishMap : plie"
+      },
+      "url": "https://www.ices.dk/about-ICES/projects/EU-RFP/EU%20Repository/ICES%20FIshMap/ICES%20FishMap%20species%20factsheet-plaice.pdf",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Homing to spawning and feeding grounds; tidal stream transport; 35 cm female 60,000–100,000 eggs of 1.7–2.2 mm; planktonic phase 3–4 months; settles after metamorphosis; maturity 2–3 years (males), 4–5 (females).",
+        "Plaice eggs found in herring and sprat stomachs; North Sea landings about 70,000 t (late 1950s), 170,000 t (late 1980s), under 60,000 t in 2005; earlier maturation likely an evolutionary response to fishing."
+      ]
+    },
+    {
+      "title": {
+        "en": "Plaice (Pleuronectes platessa) — Habitas, Ulster Museum marine life",
+        "fr": "Plie (Pleuronectes platessa) — Habitas, vie marine du musée d’Ulster"
+      },
+      "url": "https://www.habitas.org.uk/marinelife/species.asp?item=ZG9030",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "diet", "behavior"],
+      "facts": [
+        "Lives on sand, gravel or mud at about 10–50 m; rests partly buried in the sediment; juveniles spend their first year in very shallow water near the shore."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "FishBase says Mediterranean records are likely misidentified flounders, while the ICES factsheet gives the western Mediterranean as part of the range; the text avoids stating a southern limit.",
+    "Sources disagree on daily activity: ICES calls plaice daylight feeders and Habitas says mostly active at night, so no activity time is given.",
+    "Maximum age is 50 years in the ICES and FishBase tables but a lifespan of about 20 years is often quoted elsewhere; no age is stated.",
+    "Landings figures come from a 2006 ICES factsheet and are not recent; the IUCN category comes from the FishBase page, not from the IUCN site."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

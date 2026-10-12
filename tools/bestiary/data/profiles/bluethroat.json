@@ -1,0 +1,91 @@
+{
+  "id": "bluethroat",
+  "scientific": "Luscinia svecica",
+  "group": "birds",
+  "name": {
+    "en": "Bluethroat",
+    "fr": "Gorgebleue à miroir"
+  },
+  "sections": {
+    "overview": {
+      "en": "The bluethroat is a small, shy, robin-like chat that breeds in damp scrub from Scandinavia across Siberia and winters far to the south. In Britain it is a rare vagrant, seen mostly on migration, with only occasional breeding.",
+      "fr": "La gorgebleue à miroir est un petit turdidé timide qui ressemble au rouge-gorge, nichant dans les fourrés humides de la Scandinavie à la Sibérie et hivernant très au sud. En Grande-Bretagne, c’est un visiteur rare, vu surtout en migration, qui ne s’y reproduit qu’occasionnellement."
+    },
+    "identification": {
+      "en": "About 13–14 cm long, an adult weighs roughly 17 g and has a wing length near 75 mm. The male’s bright blue throat and chest is bordered by black, white and chestnut bands, with a central spot that is white or chestnut depending on the form. Females are duller, with less blue. The upperparts are brownish grey and the tail has a rusty-red base, with a pale stripe above the eye.",
+      "fr": "Long d’environ 13 à 14 cm, l’adulte pèse à peu près 17 g, avec une aile d’environ 75 mm. La gorge et la poitrine bleu vif du mâle sont bordées de bandes noire, blanche et rousse, avec une tache centrale blanche ou rousse selon la forme. Les femelles sont plus ternes, avec moins de bleu. Le dessus est gris-brun et la queue a une base roux vif, avec un sourcil clair."
+    },
+    "habitat": {
+      "en": "It breeds in the north in Scandinavia and Siberia, extending across Asia towards the Himalayas, and in scattered parts of central and western Europe and around the Black Sea. It prefers willow thickets on damp ground and stays hidden in dense vegetation.",
+      "fr": "Il niche dans le nord, en Scandinavie et en Sibérie, jusqu’en Asie vers l’Himalaya, ainsi que par endroits en Europe centrale et occidentale et autour de la mer Noire. Il préfère les saulaies sur sol humide et reste caché dans la végétation dense."
+    },
+    "diet": {
+      "en": "It feeds mainly on insects and other invertebrates, picked from stems and leaves or from under dead leaves on the ground, and only rarely catches insects in the air. It occasionally takes snails and earthworms, and eats seeds and fruit in winter.",
+      "fr": "Il se nourrit surtout d’insectes et d’autres invertébrés, prélevés sur les tiges et les feuilles ou sous les feuilles mortes au sol, et capture rarement des insectes en vol. Il prend à l’occasion des escargots et des vers de terre, et mange des graines et des fruits en hiver."
+    },
+    "behavior": {
+      "en": "A shy, secretive bird, it often flicks into the cover of a bush, flashing the chestnut patches at the base of its tail. Western populations winter in the Mediterranean basin and northern Africa, and eastern ones in the Indian subcontinent.",
+      "fr": "Oiseau timide et discret, il se glisse souvent d’un bond dans un buisson en montrant les plages rousses à la base de sa queue. Les populations occidentales hivernent dans le bassin méditerranéen et le nord de l’Afrique, les orientales dans le sous-continent indien."
+    },
+    "reproduction": {
+      "en": "The deep cup nest of twigs, grass stems and moss, lined with animal hair, is built by the female and hidden in a grass tuft or shrub; nesting runs from May to July. There are typically one or two broods of five to seven eggs (up to nine). The female incubates for 14–15 days and the chicks fledge after about 14–15 days.",
+      "fr": "Le nid profond en coupe, fait de brindilles, de tiges d’herbe et de mousse et garni de poils d’animaux, est construit par la femelle et caché dans une touffe d’herbe ou un arbuste; la nidification s’étend de mai à juillet. Il y a en général une ou deux couvées de cinq à sept œufs (jusqu’à neuf). La femelle couve 14 à 15 jours et les poussins s’envolent après environ 14 à 15 jours."
+    },
+    "ecology": {
+      "en": "As a predominantly insect-eating bird of damp thickets, it feeds on invertebrates in the breeding season and switches partly to seeds and fruit in winter. The species shows great variation in the intensity of its blue throat and in the colour and shape of its throat spot.",
+      "fr": "Oiseau surtout insectivore des fourrés humides, il se nourrit d’invertébrés à la saison de reproduction et passe en partie aux graines et aux fruits en hiver. L’espèce présente une grande variation dans l’intensité de sa gorge bleue et dans la couleur et la forme de sa tache de gorge."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern. In the UK it is a rare vagrant, with only about 5,000 BTO records, no population estimate and occasional breeding (the latest cited in 2016); it is protected under Schedule 1 and is Amber-listed by the RSPB.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. Au Royaume-Uni, c’est un visiteur rare, avec environ 5 000 données au BTO, sans estimation de population et avec une reproduction occasionnelle (la dernière citée en 2016); il est protégé par l’annexe 1 et classé ambre par la RSPB."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bluethroat — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Gorgebleue à miroir — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/bluethroat",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adult weight 16.7 g, wing 74.8 mm; clutch typically 5–7 (5–9); incubation 14–15 days by the female; fledging 14–15 days; 1–2 broods; great variation in throat blue and spot.",
+        "UK rare vagrant, occasional breeding (latest cited 2016); Schedule 1; IUCN Least Concern; no population data."
+      ]
+    },
+    {
+      "title": {
+        "en": "Bluethroat — RSPB Birds and Wildlife",
+        "fr": "Gorgebleue à miroir — RSPB, oiseaux et faune"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/bluethroat",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior", "conservation"],
+      "facts": [
+        "Small Robin-like bird; male has bright blue throat bordered by black, white and chestnut bands; central spot white or chestnut; chestnut tail patches; secretive, flicks into cover.",
+        "UK Amber list."
+      ]
+    },
+    {
+      "title": {
+        "en": "Blue mother-in-law (bluethroat) — Notranjska Regional Park",
+        "fr": "Gorgebleue à miroir — parc régional de Notranjska"
+      },
+      "url": "https://notranjski-park.si/en/discover/encyclopedia/animal-world/birds/whips/blue-mother-in-law",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Length 13–14 cm; willow thickets on damp ground; mainly insects, rarely caught in the air, seeds and fruit in winter; nest built by the female, May–July.",
+        "Breeds in Scandinavia, Siberia and across Asia, scattered in central and western Europe; winters in Iberia, North Africa, Arabia and parts of Asia."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Notranjska park page gives the species’ habitat and diet in general terms; wintering areas differ between populations and are summarised only roughly.",
+    "BTO labels its Schedule 1 listing and a breeding-range figure ambiguously; only the Schedule 1 status and record count are used.",
+    "The IUCN category is quoted from the BTO page, not read from the IUCN site."
+  ],
+  "reviewed": true,
+  "review_note": "Breeding numbers from BTO BirdFacts, plumage from the RSPB, habitat and diet from the Notranjska Regional Park (consulted 2026-10-12); illustration to be checked by the owner."
+}

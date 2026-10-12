@@ -1,0 +1,91 @@
+{
+  "id": "hydrobates_pelagicus",
+  "scientific": "Hydrobates pelagicus",
+  "group": "birds",
+  "name": {
+    "en": "European Storm Petrel",
+    "fr": "Océanite tempête"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European storm petrel is one of the smallest seabirds of the North Atlantic. It spends nearly its whole life over the open ocean and comes ashore only in summer, at night, to nest on remote islands.",
+      "fr": "L’océanite tempête est l’un des plus petits oiseaux marins de l’Atlantique Nord. Il passe presque toute sa vie sur l’océan ouvert et ne vient à terre qu’en été, de nuit, pour nicher sur des îles isolées."
+    },
+    "identification": {
+      "en": "A bird barely larger than a house martin, about 14–18 cm long with a wingspan of 36–39 cm; adults weigh around 26 g. The plumage is dark brownish-black with a broad white patch on the rump and a pale band under each wing. The tail is short and square-ended, unlike the forked tail of Leach’s petrel, and the small bill has a tube on top.",
+      "fr": "Un oiseau à peine plus grand qu’une hirondelle de fenêtre, long d’environ 14 à 18 cm, d’une envergure de 36 à 39 cm ; l’adulte pèse environ 26 g. Le plumage est brun-noir sombre, avec une large tache blanche sur le croupion et une bande claire sous chaque aile. La queue est courte et à bout carré, contrairement à la queue fourchue de l’océanite culblanc, et le petit bec porte un tube sur le dessus."
+    },
+    "habitat": {
+      "en": "It lives almost entirely at sea. In summer it breeds on remote, small, rat-free offshore islands and a few isolated headlands on the Atlantic fringe of north and west Britain and Ireland. Outside the breeding season it is best seen from headlands in autumn, when onshore winds bring birds closer to land.",
+      "fr": "Il vit presque entièrement en mer. En été, il se reproduit sur de petites îles isolées sans rats, au large, et sur quelques promontoires isolés de la façade atlantique du nord et de l’ouest de la Grande-Bretagne et de l’Irlande. Hors saison de reproduction, on l’observe surtout depuis les caps en automne, quand les vents du large rapprochent les oiseaux de la côte."
+    },
+    "diet": {
+      "en": "It picks small fish, crustaceans and plankton from the sea surface. It feeds by fluttering low over the waves with its wings held in a V, its webbed feet pattering on the water so that it seems to run across it. A good sense of smell helps it find food over open ocean.",
+      "fr": "Il prélève à la surface de la mer de petits poissons, des crustacés et du plancton. Il se nourrit en voletant au ras des vagues, les ailes en V, ses pieds palmés battant la surface de l’eau comme s’il courait dessus. Un bon odorat l’aide à repérer la nourriture en plein océan."
+    },
+    "behavior": {
+      "en": "It visits its colonies only at night and nests underground, and it often stays at sea on bright moonlit nights, which makes it hard to see in the breeding season. From its burrow it sings a purring call mixed with grunts and squeaks. At sea it often feeds in flocks and follows ships, especially trawlers.",
+      "fr": "Il ne visite ses colonies que de nuit et niche sous terre ; il reste souvent en mer par les nuits de pleine lune, ce qui le rend difficile à observer pendant la reproduction. Depuis son terrier, il émet un ronronnement mêlé de grognements et de petits cris. En mer, il se nourrit souvent en groupes et suit les navires, surtout les chalutiers."
+    },
+    "reproduction": {
+      "en": "A pair lays a single egg, incubated by both sexes for 38–50 days. The downy chick stays in the nest for 56–73 days before fledging. There is typically one brood a year, and breeding typically starts at about four years of age. The nest is made among rocks or in a burrow.",
+      "fr": "Le couple pond un seul œuf, couvé par les deux sexes pendant 38 à 50 jours. Le poussin, couvert de duvet, reste au nid de 56 à 73 jours avant de s’envoler. Il y a en général une seule nichée par an, et la reproduction débute en moyenne vers quatre ans. Le nid est aménagé parmi les rochers ou dans un terrier."
+    },
+    "ecology": {
+      "en": "The storm petrel feeds on small animals of the surface waters and depends on healthy seas. Colonies are found mainly on islands free of rats and other mammalian predators, which threaten eggs and chicks.",
+      "fr": "L’océanite se nourrit de petits animaux des eaux de surface et dépend de mers en bonne santé. Les colonies se trouvent surtout sur des îles sans rats ni autres prédateurs mammifères, qui menacent œufs et poussins."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern, and it is Amber-listed in the UK. The UK breeding population was about 26,000 nests in 1998–2002, with an uncertain trend, though some colonies have grown, with a doubling on Mousa. It is long-lived: the oldest ringed bird reached over 38 years.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure, et elle figure sur la liste ambre au Royaume-Uni. La population nicheuse britannique était d’environ 26 000 nids en 1998-2002, avec une tendance incertaine, bien que certaines colonies aient grandi, doublant à Mousa. L’espèce vit longtemps : le plus vieil oiseau bagué a dépassé 38 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Storm Petrel — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Océanite tempête — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/storm-petrel",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Adults average 25.6 g, wing 122.6 mm; breeds on remote rat-free islands; one egg, incubation 38–50 days by both sexes, fledging 56–73 days, breeding at ~4 years.",
+        "UK ~26,000 nests (1998–2002), trend uncertain, Mousa doubled; IUCN Least Concern; UK Amber; max age 38 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Storm petrel — The Wildlife Trusts",
+        "fr": "Océanite tempête — The Wildlife Trusts"
+      },
+      "url": "https://www.wildlifetrusts.org/wildlife-explorer/birds/seabirds/storm-petrel",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "14–18 cm, wingspan 36–39 cm; takes small fish, crustaceans and plankton from the surface, pattering with wings in a V; strong sense of smell; purring song from burrow.",
+        "Nests among rocks or in burrows on islands without rats and other mammalian predators; Amber under BoCC5 (2021)."
+      ]
+    },
+    {
+      "title": {
+        "en": "Storm Petrel — RSPB",
+        "fr": "Océanite tempête — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/storm-petrel",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior", "conservation"],
+      "facts": [
+        "Looks all black with a white rump; tail not forked unlike Leach’s petrel; flutters with wings in a V, feet pattering; follows ships, especially trawlers.",
+        "Amber-listed in the UK."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The UK population estimate dates from 1998–2002 and is therefore old; the trend is described as uncertain.",
+    "Animal Diversity Web’s page for this species holds only the classification and was not used; the IUCN Red List pages could not be opened, so Least Concern is taken from the BTO page.",
+    "Animal Diversity Web and RSPB give no diet or predator details for this species; those come from the Wildlife Trusts page alone."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts and the Wildlife Trusts (consulted 2026-10-12); RSPB for appearance and behaviour; illustration to be checked by the owner."
+}

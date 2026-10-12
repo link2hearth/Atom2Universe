@@ -1,0 +1,91 @@
+{
+  "id": "numenius_arquata",
+  "scientific": "Numenius arquata",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Curlew",
+    "fr": "Courlis cendré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian curlew is the largest European wading bird, known for its long, down-curved bill and its bubbling, far-carrying call over moorland and estuaries. It is now a species of high conservation concern, with steep declines across much of its range.",
+      "fr": "Le courlis cendré est le plus grand des limicoles d’Europe, reconnaissable à son long bec courbé vers le bas et à son cri bouillonnant qui porte loin sur les landes et les estuaires. C’est aujourd’hui une espèce très préoccupante, en fort déclin sur une grande partie de son aire."
+    },
+    "identification": {
+      "en": "A curlew measures 50–60 cm, with a wingspan around 90 cm, and weighs roughly 770 g to 1 kg; females are larger than males and have longer bills. The plumage is mottled brown and grey, the legs long and bluish, and in flight a white wedge shows on the rump.",
+      "fr": "Le courlis mesure 50 à 60 cm, avec une envergure d’environ 90 cm, et pèse de 770 g à 1 kg environ ; les femelles sont plus grandes que les mâles et ont un bec plus long. Le plumage est tacheté de brun et de gris, les pattes sont longues et bleutées, et un coin blanc apparaît sur le croupion en vol."
+    },
+    "habitat": {
+      "en": "In the breeding season in Britain it is most frequent on moorland and also common in marshes, using upland rough pasture, heather moor, bogs and wet grassland. In winter it moves to the coast and nearby farmland, with the highest densities on major estuaries.",
+      "fr": "En période de reproduction en Grande-Bretagne, il est surtout fréquent sur les landes et aussi dans les marais, et occupe les pâtures d’altitude, les landes à bruyère, les tourbières et les prairies humides. En hiver, il gagne la côte et les terres agricoles voisines, avec les plus fortes densités dans les grands estuaires."
+    },
+    "diet": {
+      "en": "It finds worms, shellfish and shrimps by probing the ground with the sensitive tip of its long bill. It pinches the prey and often tosses it into the air before swallowing, because its tongue cannot reach far enough to move it.",
+      "fr": "Il trouve vers, coquillages et crevettes en sondant le sol avec l’extrémité sensible de son long bec. Il saisit sa proie du bout du bec et la lance souvent en l’air avant de l’avaler, car sa langue ne peut pas l’atteindre assez loin pour la déplacer."
+    },
+    "behavior": {
+      "en": "Its “cur-lee” and bubbling calls are heard over breeding grounds from February to July. From July many birds move to the coast, where they roost in flocks at high tide and feed on the mudflats at low tide. British winter flocks are joined by migrants from Fennoscandia.",
+      "fr": "Ses cris « cour-li » et ses trilles bouillonnants s’entendent sur les sites de nidification de février à juillet. À partir de juillet, beaucoup d’oiseaux gagnent la côte, où ils dorment en groupes à marée haute et s’alimentent sur les vasières à marée basse. Les groupes hivernants britanniques sont rejoints par des migrateurs de Fennoscandie."
+    },
+    "reproduction": {
+      "en": "In Britain the first clutch is laid on average around 2 May, typically four eggs, with one brood. The female, and occasionally the male, incubates for 27–29 days. The downy chicks run soon after hatching and fledge after 32–38 days. Breeding typically starts at two years of age.",
+      "fr": "En Grande-Bretagne, la première ponte a lieu en moyenne vers le 2 mai ; elle compte typiquement quatre œufs, pour une seule nichée. La femelle, parfois le mâle, couve pendant 27 à 29 jours. Les poussins, couverts de duvet, courent peu après l’éclosion et s’envolent après 32 à 38 jours. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "Nest predation is a major problem: egg predation caused nest failure in up to 97% of nests in a Northern Ireland study in the 1990s, and foxes were the main cause in a Breckland study. Predator control raised success in one Northumberland site, though the effect of some predators appears to depend on the place. Changing farm practices and loss of breeding and chick-rearing habitat also contribute to the decline.",
+      "fr": "La prédation des nids est un problème majeur : elle a causé l’échec de jusqu’à 97 % des nids dans une étude d’Irlande du Nord dans les années 1990, et les renards en étaient la cause principale dans une étude du Breckland. Le contrôle des prédateurs a augmenté le succès de reproduction sur un site du Northumberland, mais l’effet de certains prédateurs semble dépendre du lieu. L’évolution des pratiques agricoles et la perte d’habitats de nidification et d’élevage des jeunes aggravent aussi le déclin."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Near Threatened. The UK breeding population was about 59,000 pairs in 2016 and fell by 51% between 1995 and 2024; the UK is thought to hold over 30% of the west European population, and the species is Red-listed in the UK. A curlew typically lives about 11 years once adult, and the oldest ringed bird reached over 32.",
+      "fr": "L’UICN classe l’espèce comme quasi menacée. La population nicheuse britannique était d’environ 59 000 couples en 2016 et a diminué de 51 % entre 1995 et 2024 ; le Royaume-Uni abriterait plus de 30 % de la population d’Europe de l’Ouest, et l’espèce figure sur la liste rouge britannique. Un courlis adulte vit en général environ 11 ans, et le plus vieil oiseau bagué a dépassé 32 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Curlew — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Courlis cendré — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/curlew",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Wing 306 mm, weight 823 g; females have longer bills; first clutch average 2 May, 4 eggs, incubation 27–29 days, fledging 32–38 days; breeding at 2 years; max age 32 y 7 m.",
+        "UK 59,000 pairs (2016), −51% 1995–2024; IUCN Near Threatened; nest predation up to 97% in Northern Ireland (1993–95), foxes in Breckland."
+      ]
+    },
+    {
+      "title": {
+        "en": "Curlews — Wildfowl & Wetlands Trust",
+        "fr": "Courlis — Wildfowl & Wetlands Trust"
+      },
+      "url": "https://www.wwt.org.uk/wildlife/curlews/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Length 50–60 cm, wingspan 90 cm, 770 g–1 kg; prey pincered and tossed before swallowing; threats: predation, changing farm practices, habitat loss.",
+        "UK holds over 30% of west European breeding population; Red-listed in UK; IUCN Near Threatened."
+      ]
+    },
+    {
+      "title": {
+        "en": "Curlew — RSPB",
+        "fr": "Courlis cendré — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/curlew",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "reproduction", "conservation"],
+      "facts": [
+        "Largest European wader; down-curved bill, bubbling call; breeds on rough pasture, moorland and bog; winters on estuaries, mudflats and farmland.",
+        "Red-listed in the UK since 2015; big declines in breeding numbers and range."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "UK breeding estimates differ: BTO gives about 59,000 pairs (2016), WWT about 66,000; the BTO figure is used.",
+    "The IUCN Red List pages could not be opened; Near Threatened is taken from the BTO and WWT pages.",
+    "Breeding figures are British; timing and clutch size vary across the wide range. Animal Diversity Web’s page for this species holds only the classification and was not used."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts and WWT (consulted 2026-10-12); RSPB used for habitat and status; illustration to be checked by the owner."
+}

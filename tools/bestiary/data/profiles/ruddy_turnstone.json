@@ -1,0 +1,90 @@
+{
+  "id": "ruddy_turnstone",
+  "scientific": "Arenaria interpres",
+  "group": "birds",
+  "name": {
+    "en": "Ruddy Turnstone",
+    "fr": "Tournepierre à collier"
+  },
+  "sections": {
+    "overview": {
+      "en": "The ruddy turnstone is a stocky, colourful shorebird that takes its name from its habit of flipping over stones and seaweed to find food. It breeds in the Arctic and winters on coasts across much of the world.",
+      "fr": "Le tournepierre à collier est un limicole trapu et coloré, dont le nom vient de son habitude de retourner pierres et algues pour trouver sa nourriture. Il niche dans l’Arctique et hiverne sur les côtes d’une grande partie du monde."
+    },
+    "identification": {
+      "en": "A small, robust wader, smaller than a Redshank, weighing roughly 95–125 g with a wing of about 157 mm. It has chestnut and black upperparts, a black-and-white head, white underparts, orange legs and a short, slightly upturned black bill. The sexes look alike.",
+      "fr": "Petit limicole robuste, plus petit qu’un chevalier gambette, pesant environ 95 à 125 g avec une aile d’environ 157 mm. Il a le dessus roux et noir, la tête noir et blanc, le dessous blanc, les pattes orange et un bec noir court, légèrement relevé. Les sexes se ressemblent."
+    },
+    "habitat": {
+      "en": "It breeds on Arctic tundra and does not nest in Britain. In winter it uses almost any coastal habitat, with a preference for rocky shores, but also sandy beaches and estuaries.",
+      "fr": "Il niche dans la toundra arctique et ne se reproduit pas en Grande-Bretagne. En hiver, il fréquente presque tous les milieux côtiers, avec une préférence pour les rivages rocheux, mais aussi les plages de sable et les estuaires."
+    },
+    "diet": {
+      "en": "It flips small stones on the tideline to find small crustaceans and insects, and is famously indiscriminate about what it eats. It also takes molluscs, worms and carrion, and can open barnacles and bivalves with its stout bill.",
+      "fr": "Il retourne de petites pierres sur la laisse de mer pour trouver de petits crustacés et des insectes, et il est réputé pour manger de tout. Il prend aussi des mollusques, des vers et des charognes, et peut ouvrir balanes et bivalves avec son bec robuste."
+    },
+    "behavior": {
+      "en": "Turnstones spend much of their time creeping and fluttering over rocks, turning things over as they go. Outside the breeding season they form flocks, often mixed with other shorebirds. Summering birds in Britain are usually young individuals that have not reached breeding condition.",
+      "fr": "Les tournepierres passent beaucoup de temps à se faufiler et à voleter sur les rochers, en retournant ce qu’ils trouvent. Hors saison de reproduction, ils forment des groupes, souvent mêlés à d’autres limicoles. Les oiseaux qui passent l’été en Grande-Bretagne sont en général de jeunes individus n’ayant pas atteint l’état reproducteur."
+    },
+    "reproduction": {
+      "en": "A pair typically raises one brood a year, laying four eggs (sometimes three to five). The female mainly incubates them for 22–24 days. The precocial chicks fledge after about 19–21 days. Breeding typically starts at two years of age.",
+      "fr": "Un couple élève en général une nichée par an et pond quatre œufs (parfois trois à cinq). La femelle les couve surtout pendant 22 à 24 jours. Les poussins, nidifuges, s’envolent après environ 19 à 21 jours. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "On the breeding grounds, jaegers, gulls, ravens and foxes take mostly eggs and young; adults are rarely caught, mainly by falcons and owls. The turnstone in turn preys on large numbers of insects on the tundra and of crustaceans and molluscs on the shore.",
+      "fr": "Sur les sites de reproduction, labbes, goélands, grands corbeaux et renards prennent surtout les œufs et les jeunes ; les adultes sont rarement capturés, surtout par les faucons et les hiboux. Le tournepierre, de son côté, consomme beaucoup d’insectes dans la toundra et de crustacés et de mollusques sur le rivage."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, but it is Amber-listed in the UK. About 43,000 turnstones winter in the UK (2012–17); numbers fell by 17% between 1998 and 2023, but the long decline since the mid-1980s has levelled off. Threats include coastal habitat change and disturbance. The oldest ringed bird reached 20 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, mais elle figure sur la liste orange du Royaume-Uni. Environ 43 000 tournepierres hivernent au Royaume-Uni (2012-2017) ; leurs effectifs ont baissé de 17 % entre 1998 et 2023, mais le long déclin depuis le milieu des années 1980 s’est stabilisé. Les menaces comprennent la modification des habitats côtiers et le dérangement. Le plus vieil oiseau bagué a atteint 20 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Turnstone — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Tournepierre à collier — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/turnstone",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Adults 94–125 g, wing about 157 mm; clutch 4 (3–5), incubation 22–24 days mainly by the female, fledging 19–21 days; breeding from 2 years.",
+        "UK winter about 43,000 (2012–17), -17% 1998–2023, long-term decline levelled; Amber-listed; IUCN Least Concern; record age 20 years; flips stones for small crustaceans and insects."
+      ]
+    },
+    {
+      "title": {
+        "en": "Turnstone — RSPB",
+        "fr": "Tournepierre à collier — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/turnstone",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior"],
+      "facts": [
+        "Smaller than a Redshank; chestnut and black upperparts, white underparts, orange legs; spends most of its time creeping and fluttering over rocks, turning over stones."
+      ]
+    },
+    {
+      "title": {
+        "en": "Arenaria interpres — Animal Diversity Web, University of Michigan",
+        "fr": "Arenaria interpres — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Arenaria_interpres/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Eats insects and spiders in summer, crustaceans, molluscs and worms on the coast, also carrion and eggs; opens bivalves and barnacles; social outside the breeding season.",
+        "Eggs and chicks taken by jaegers, glaucous gulls, ravens and foxes; adults rarely by falcons and owls; threats include coastal habitat alteration and disturbance."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The BTO page gives an overall adult mean of 107.7 g but sex averages of about 130 g, which are inconsistent; only the 94–125 g range was used.",
+    "Animal Diversity Web gives a much wider weight range (84–190 g) covering the whole species; it was not used.",
+    "Population figures refer to wintering birds in the UK; the species is found on coasts worldwide."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); RSPB and ADW used for qualitative facts; illustration to be checked by the owner."
+}

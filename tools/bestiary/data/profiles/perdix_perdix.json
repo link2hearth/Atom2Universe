@@ -1,0 +1,91 @@
+{
+  "id": "perdix_perdix",
+  "scientific": "Perdix perdix",
+  "group": "birds",
+  "name": {
+    "en": "Grey Partridge",
+    "fr": "Perdrix grise"
+  },
+  "sections": {
+    "overview": {
+      "en": "The grey partridge is a plump, ground-living gamebird of European farmland. Once very common and widespread, it has suffered serious declines across most of its range and is now a conservation concern in the UK.",
+      "fr": "La perdrix grise est un gallinacé rond qui vit au sol dans les campagnes d’Europe. Autrefois très commune et très répandue, elle a connu de graves déclins sur la plus grande partie de son aire et suscite aujourd’hui de l’inquiétude au Royaume-Uni."
+    },
+    "identification": {
+      "en": "An adult weighs about 390 g with a wing length near 16 cm. The plumage is finely barred grey and brown, with an orange face and throat, chestnut bars on the flanks and a chestnut tail. Males are larger and usually show a U-shaped chestnut patch on the belly; females are duller, with a smaller patch or none.",
+      "fr": "L’adulte pèse environ 390 g, avec une aile d’environ 16 cm. Le plumage est finement barré de gris et de brun, avec le visage et la gorge orange, des barres marron sur les flancs et une queue marron. Les mâles sont plus grands et portent généralement une tache marron en fer à cheval sur le ventre ; les femelles sont plus ternes, avec une tache plus petite ou absente."
+    },
+    "habitat": {
+      "en": "It is a resident, sedentary bird of lowland farmland, most frequent on arable land in the breeding season. It needs open fields for feeding by day and dense cover to hide in and nest. Chicks depend on cover and on invertebrates, even on rough grazing on hill farms in north-east England.",
+      "fr": "C’est un oiseau résident et sédentaire des campagnes de plaine, surtout fréquent sur les terres cultivées en période de reproduction. Il lui faut des champs ouverts pour se nourrir le jour et un couvert dense pour se cacher et nicher. Les poussins dépendent du couvert et des invertébrés, jusque dans les pâturages rudes de fermes de montagne du nord-est de l’Angleterre."
+    },
+    "diet": {
+      "en": "Adults eat mainly seeds, grain, leaves, roots and shoots, with cereals important in the warmer months. Chicks, in contrast, need protein and feed on insects, including sawfly larvae in a north-east England study, and aphids.",
+      "fr": "Les adultes mangent surtout des graines, des grains, des feuilles, des racines et des pousses, les céréales comptant beaucoup dans les mois chauds. Les poussins, eux, ont besoin de protéines et se nourrissent d’insectes, dont des larves de tenthrèdes dans une étude du nord-est de l’Angleterre, et de pucerons."
+    },
+    "behavior": {
+      "en": "A strictly ground-living bird, it spends the non-breeding season in groups called coveys, usually of 6 to 15 birds and sometimes up to 25, often made up of relatives. Members feed and roost together and keep watch for danger. When threatened, the birds run or fly low and fast, and their bodies can look like clods of earth.",
+      "fr": "Oiseau strictement terrestre, elle passe la saison hors reproduction en groupes appelés compagnies, d’ordinaire de 6 à 15 oiseaux, parfois jusqu’à 25, souvent formés de parents. Les membres se nourrissent et dorment ensemble et guettent le danger. Menacés, les oiseaux courent ou volent bas et vite, et leur corps peut ressembler à une motte de terre."
+    },
+    "reproduction": {
+      "en": "In the UK there is typically one brood a year, with a very large clutch of 13–16 eggs, sometimes more than 20. The female alone incubates for 23–25 days. The downy chicks leave the nest at once and can fly short distances at about two weeks old. Breeding typically starts at one year of age.",
+      "fr": "Au Royaume-Uni, il y a en général une seule nichée par an, avec une très grosse ponte de 13 à 16 œufs, parfois plus de 20. La femelle couve seule pendant 23 à 25 jours. Les poussins, couverts de duvet, quittent le nid aussitôt et volent sur de courtes distances vers l’âge de deux semaines. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "Birds of prey such as goshawks and sparrowhawks, and ground predators such as foxes, take adults, eggs and chicks, and higher predation lowers nest success and winter survival. The main driver of decline is agricultural intensification, especially the loss of chick food through pesticide and herbicide use. The birds also disperse seeds in their droppings.",
+      "fr": "Des rapaces comme l’autour des palombes et l’épervier d’Europe, ainsi que des prédateurs terrestres comme le renard, prennent adultes, œufs et poussins, et une prédation accrue réduit le succès des nids et la survie hivernale. La principale cause du déclin est l’intensification agricole, surtout la disparition de la nourriture des poussins sous l’effet des pesticides et des herbicides. Les oiseaux dispersent aussi des graines par leurs fientes."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide, but it has declined across Europe. In the UK it is Red-listed: the breeding population was about 37,000 territories in 2016 and fell by 93% between 1967 and 2024. It typically lives about three years once adult, and the oldest ringed bird reached over five.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais elle a décliné dans toute l’Europe. Au Royaume-Uni, elle figure sur la liste rouge : la population nicheuse était d’environ 37 000 territoires en 2016 et a chuté de 93 % entre 1967 et 2024. Elle vit en général environ trois ans une fois adulte, et le plus vieil oiseau bagué a dépassé cinq ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grey Partridge — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Perdrix grise — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/grey-partridge",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "About 390 g, wing 161 mm; clutch 13–16 eggs (up to 29); incubation 23–25 days by female; chicks fledge about 14–16 days; breeding at 1 year.",
+        "UK ~37,000 territories (2016), −93% 1967–2024; Red-listed; Europe declining; IUCN Least Concern; decline driven by agricultural intensification reducing chick food; max age 5 y 2 m."
+      ]
+    },
+    {
+      "title": {
+        "en": "Grey Partridge — RSPB",
+        "fr": "Perdrix grise — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/grey-partridge",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior", "conservation"],
+      "facts": [
+        "Orange face, chestnut tail, strictly a ground bird; coveys of 6 to 15 outside breeding season.",
+        "Red-listed in the UK; once very common and widespread but seriously declined across most of its range."
+      ]
+    },
+    {
+      "title": {
+        "en": "Perdix perdix — Animal Diversity Web, University of Michigan",
+        "fr": "Perdix perdix — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Perdix_perdix/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "ecology"],
+      "facts": [
+        "Finely barred grey plumage, male U-shaped chestnut belly patch, orange head and throat; eats grains, seeds, leaves and shoots, chicks eat insects and aphids; coveys up to 25.",
+        "Predators include goshawk, sparrowhawk and foxes; seeds dispersed in droppings. Account includes introduced North American populations, so only qualitative facts were used."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Animal Diversity Web account mixes native European data with introduced North American populations and contains inconsistent numbers; only qualitative facts were used from it.",
+    "Clutch size ranges differ (BTO: typically 13–16, up to 29; Animal Diversity Web: 9–20); the British figures are used.",
+    "The IUCN Red List pages could not be opened; Least Concern is taken from the BTO page."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); plumage, diet and predators from RSPB and Animal Diversity Web; illustration to be checked by the owner."
+}

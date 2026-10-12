@@ -1,0 +1,78 @@
+{
+  "id": "zeus_faber",
+  "scientific": "Zeus faber",
+  "group": "fish",
+  "name": {
+    "en": "John Dory",
+    "fr": "Saint-Pierre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The John Dory is a marine fish with an extremely flattened body and a large mouth that shoots forward to catch prey. It lives near the bottom in warm and temperate seas and is known from the eastern Atlantic, the Mediterranean, the Indian Ocean and the western Pacific.",
+      "fr": "Le saint-pierre est un poisson marin au corps extrêmement aplati et à la grande bouche qui se projette vers l’avant pour saisir ses proies. Il vit près du fond dans les mers chaudes et tempérées, et se rencontre dans l’Atlantique oriental, la Méditerranée, l’océan Indien et le Pacifique occidental."
+    },
+    "identification": {
+      "en": "The body is deep, very compressed and covered with minute scales. The dorsal fin has 9–11 long spines whose membranes extend into trailing filaments, and large bony plates sit at the bases of the dorsal and anal fins. Each side carries a large dark spot ringed with a lighter band. Common length is about 40 cm, with a maximum of about 90 cm.",
+      "fr": "Le corps est haut, très comprimé et couvert de minuscules écailles. La nageoire dorsale compte 9 à 11 longues épines dont les membranes se prolongent en filaments flottants, et de grandes plaques osseuses se trouvent à la base des nageoires dorsale et anale. Chaque flanc porte une grande tache sombre entourée d’un anneau plus clair. La longueur courante est d’environ 40 cm, pour un maximum d’environ 90 cm."
+    },
+    "habitat": {
+      "en": "It occurs from 5 to 400 m deep, usually at 50–150 m. In the eastern Atlantic it ranges from Norway to South Africa, and it also lives in the Mediterranean and Black Sea.",
+      "fr": "Il vit entre 5 et 400 m de profondeur, le plus souvent entre 50 et 150 m. Dans l’Atlantique oriental, il va de la Norvège à l’Afrique du Sud, et il habite aussi la Méditerranée et la mer Noire."
+    },
+    "diet": {
+      "en": "It feeds mostly on schooling bony fishes, and sometimes on cephalopods and crustaceans. It approaches prey head-on, then shoots out its protrusible jaws to seize it.",
+      "fr": "Il se nourrit surtout de poissons osseux grégaires, et parfois de céphalopodes et de crustacés. Il s’approche de sa proie de face, puis projette ses mâchoires protractiles pour la saisir."
+    },
+    "behavior": {
+      "en": "John Dories are usually solitary and live near the sea bed. Little is known about their behaviour in the wild, and what is recorded mainly concerns the way they approach prey.",
+      "fr": "Les saints-pierres sont généralement solitaires et vivent près du fond. On sait peu de choses de leur comportement dans la nature, et ce qui est connu concerne surtout leur façon d’approcher leurs proies."
+    },
+    "reproduction": {
+      "en": "In the north-eastern Atlantic spawning takes place at the end of winter and the start of spring, and earlier in the Mediterranean; off Australia it occurs in summer and early autumn. The eggs are pelagic. Maturity is reached at about four years, at roughly 35 cm.",
+      "fr": "Dans l’Atlantique nord-est, la ponte a lieu à la fin de l’hiver et au début du printemps, et plus tôt en Méditerranée; au large de l’Australie, elle se déroule en été et au début de l’automne. Les œufs sont pélagiques. La maturité est atteinte vers quatre ans, à environ 35 cm."
+    },
+    "ecology": {
+      "en": "The John Dory is a predator of fish living close to the bottom, and its reported maximum age is 12 years. DNA barcoding suggests that populations in Europe and those in South Africa and Australasia belong to two distinct species.",
+      "fr": "Le saint-pierre est un prédateur de poissons vivant près du fond, et son âge maximal rapporté est de 12 ans. Le codage ADN suggère que les populations d’Europe et celles d’Afrique du Sud et d’Australasie appartiennent à deux espèces distinctes."
+    },
+    "conservation": {
+      "en": "The IUCN classed the species as Data Deficient in 2013 (as reported by FishBase), meaning that too little is known to judge its risk. Its biology is still poorly documented, and the possible split into two species complicates any global assessment.",
+      "fr": "L’UICN classait l’espèce en données insuffisantes en 2013 (d’après FishBase), ce qui signifie qu’on en sait trop peu pour juger son risque. Sa biologie reste mal documentée, et la possible séparation en deux espèces complique toute évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Zeus faber, John dory — FishBase",
+        "fr": "Zeus faber, saint-pierre — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Zeus-faber.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Max 90 cm TL, common 40 cm, max age 12 years; 5–400 m, usually 50–150 m; 9–11 dorsal spines; large dark spot with light ring; mainly schooling bony fishes.",
+        "Spawning end of winter and start of spring in the NE Atlantic, earlier in the Mediterranean; pelagic eggs; maturity at 4 years (Lm 35.1 cm); IUCN Data Deficient, assessed 20 May 2013."
+      ]
+    },
+    {
+      "title": {
+        "en": "John Dory, Zeus faber — Fishes of Australia (Museums Victoria)",
+        "fr": "Saint-Pierre, Zeus faber — Fishes of Australia (Museums Victoria)"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/1492",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Very compressed body, large protrusible mouth, spine membranes extending past the tips, bony bucklers at fin bases; approaches prey head-on then shoots out its jaws.",
+        "Little known of its biology, usually solitary near the bottom; spawns in summer and early autumn; DNA barcoding indicates two distinct species (Europe versus South Africa and Australasia)."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Maximum length differs between sources: 90 cm in FishBase (worldwide) and 66 cm in Fishes of Australia (Australian waters); the text gives the larger figure and says it is a maximum.",
+    "The IUCN category is taken from the FishBase page; the IUCN site could not be opened.",
+    "Spawning seasons depend on the region; only the seasons named in the two sources are given."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}
