@@ -2153,13 +2153,15 @@
         <item>Sickener and beechwood sickener (toxic): white gills and white stem, peppery taste; the DGfM lists both for a gastrointestinal syndrome.</item>
         <item>Shrimp russula (edible): wine-purple cap, gills cream then yellowing, smell of crab or shrimp. Wikipedia (en) says the sickener always has a white stem and white gills.</item>
         <item>Wikipedia (en) lists the sickener and the beechwood sickener as look-alikes of the gilded brittlegill; the sources read give no further field rule, and some close species are separated only by the microscope.</item>
+        <item>Russula paludosa: blood red, pink or purple cap, crowded cream-then-yellow gills; Wikipedia (en) says it is easily mistaken for the sickener, which is poisonous.</item>
     </string-array>
-    <string name="myco_g_roughstem_title">Birch bolete, or orange birch bolete?</string>
+    <string name="myco_g_roughstem_title">Rough-stemmed boletes: which one?</string>
     <string name="myco_g_roughstem_evidence">Wikipedia</string>
     <string-array name="myco_g_roughstem_points">
         <item>Birch bolete: tan to dark brown cap, whitish flesh almost unchanging. Orange birch bolete: ochre-orange cap, flesh turning grey-violet, stem covered with dense black tufts.</item>
         <item>Both grow under birch and have a stem covered with dark scales.</item>
         <item>Both must be well cooked: raw or undercooked rough-stemmed boletes upset the stomach (Wikipedia, fr). Other rough-stemmed boletes exist, and the sources read give no simple rule to separate them all.</item>
+        <item>Orange oak bolete: brick-red cap, scales turning white, reddish, then black, flesh turning grey-violet, under oaks (Wikipedia, fr). Cracked bolete: cracked cap, yellow pores and stem, fine yellowish scales (Wikipedia, fr).</item>
     </string-array>
     <string name="myco_gemmata_name">Jonquil amanita</string>
     <string name="myco_gemmata_alt">Amanite jonquille</string>
@@ -2449,5 +2451,116 @@
         <item>Clitocybe fragrans: small, white and flat, also smelling of aniseed; the DGfM lists it for the muscarine syndrome.</item>
         <item>Fool’s funnel: white to cream, floury smell, no aniseed smell; the DGfM lists it for the muscarine syndrome too. Wikipedia (en) says the ivory funnel (Clitocybe dealbata) is deadly and lacks the aniseed odour.</item>
         <item>The DGfM lists Clitocybe dealbata, C. fragrans, C. rivulosa and C. suaveolens for the muscarine syndrome.</item>
+    </string-array>
+    <string name="myco_integra_name">Entire russula</string>
+    <string name="myco_integra_alt">Russule intègre</string>
+    <string name="myco_integra_latin" translatable="false">Russula integra</string>
+    <string-array name="myco_integra_traits">
+        <item>Cap 6 to 15 cm, shiny, usually brown with violet, purple, yellow or green tints, nearly spherical then flat or depressed</item>
+        <item>Gills thin, well spaced, crumbly, white then bright yellow</item>
+        <item>Stem 5 to 12 cm, thick and white, spotted yellow or rusty with age</item>
+        <item>Very firm white flesh, mild sweet taste, crunchy</item>
+        <item>Scattered under conifers, often mountain spruce and fir woods</item>
+    </string-array>
+    <string name="myco_integra_note">Not recommended: the DGfM and the VAPKO list it, and it is widely eaten in northern Europe and good when young (Wikipedia). But Wikipedia (en) lists it as not recommended, and both pages quote an 1878 study saying poisonings were once frequent: long cooking removes the toxic properties, quick methods such as roasting do not. The most prudent status is kept. Similar species of unknown edibility look like it; Wikipedia (en) names Russula mustelina.</string>
+    <string name="myco_paludosa_name">Russula paludosa</string>
+    <string name="myco_paludosa_alt">Russula paludosa</string>
+    <string name="myco_paludosa_latin" translatable="false">Russula paludosa</string>
+    <string-array name="myco_paludosa_traits">
+        <item>Cap 6 to 20 cm, convex to depressed, mostly blood red, pink, crimson or purple, sometimes with a yellowish or orange centre</item>
+        <item>Gills crowded, cream then yellow, sometimes reddish at the edges</item>
+        <item>Stem 5 to 15 cm, white, sometimes tinged pink, slightly club-shaped</item>
+        <item>White flesh, mild taste, no smell, soon soft and greyish</item>
+        <item>Coniferous woods and peat bogs, especially under pines; locally very common</item>
+    </string-array>
+    <string name="myco_paludosa_note">Edible: the DGfM and the VAPKO list it, and Wikipedia (en) says it is a common sight in Finnish markets. Wikipedia (en) warns that it can easily be mistaken for the sickener, which is poisonous: see the group. It has no French Wikipedia page and no English common name: the text comes from Wikipedia (en) and the DGfM.</string>
+    <string name="myco_decolorans_name">Graying russula</string>
+    <string name="myco_decolorans_alt">Russula decolorans</string>
+    <string name="myco_decolorans_latin" translatable="false">Russula decolorans</string>
+    <string-array name="myco_decolorans_traits">
+        <item>Cap up to 15 cm, red to orange, sticky when moist, convex to flat or depressed</item>
+        <item>Gills pale, turning yellowish, sometimes staining greyish</item>
+        <item>Stem up to 12 cm, bare</item>
+        <item>White flesh that blackens when bruised; mild taste and smell</item>
+        <item>Mixed woods and under conifers, alone or in groups</item>
+    </string-array>
+    <string name="myco_decolorans_note">Edible: the DGfM and the VAPKO list it. Wikipedia (en) advises against eating wild ones because of look-alikes of unknown edibility, without naming them; its flesh blackens when bruised. The red cap and the blackening are what the page gives. It has no French Wikipedia page: the text comes from Wikipedia (en) and the DGfM; the page is short.</string>
+    <string name="myco_aurantiacum_name">Red-capped scaber stalk</string>
+    <string name="myco_aurantiacum_alt">Bolet orangé des chênes</string>
+    <string name="myco_aurantiacum_latin" translatable="false">Leccinum aurantiacum</string>
+    <string-array name="myco_aurantiacum_traits">
+        <item>Cap 4 to 15 cm, velvety, brick-red to orange-brown, the skin often overhanging the tubes</item>
+        <item>Pores whitish then ochre to ochre-brown</item>
+        <item>Stem 8 to 16 cm, covered in scales that turn from white to reddish and then black</item>
+        <item>White flesh turning blue-grey, then greyish-violet, then blackish when cut; mild taste, faint smell</item>
+        <item>Under broadleaf trees, especially oaks</item>
+    </string-array>
+    <string name="myco_aurantiacum_note">Edible when thoroughly cooked: the DGfM lists it (as Leccinum quercinum, with this name as synonym). Wikipedia (fr) calls it good, throws away the fibrous stem and keeps young caps, and warns that raw or undercooked it upsets the stomach; Wikipedia (en) says it must be cooked thoroughly, not parboiled, that Leccinum species are considered by some possibly unsafe and that one death has been linked to this species. Look-alikes under other trees: Leccinum albostipitatum (poplars, white scales), L. versipelle (birches), L. vulpinum and L. piceinum (pines and spruces, no food interest).</string>
+    <string name="myco_cinereus_name">Ashen chanterelle</string>
+    <string name="myco_cinereus_alt">Chanterelle cendrée</string>
+    <string name="myco_cinereus_latin" translatable="false">Craterellus cinereus</string>
+    <string-array name="myco_cinereus_traits">
+        <item>Cap 2 to 6 cm, funnel-shaped with a hole in the centre, black when young then greyish-black, very lobed edge</item>
+        <item>Folds, not true gills: decurrent, often joined, bluish-grey then grey</item>
+        <item>Stem 2 to 5 cm, hollow, curved and grooved, fan-shaped under the folds</item>
+        <item>Very thin, black, elastic flesh; mild taste, faint smell of mirabelle plum</item>
+        <item>Broadleaf woods, chestnut groves, chalky soil · late summer to autumn</item>
+    </string-array>
+    <string name="myco_cinereus_note">Edible: the DGfM and the VAPKO list it; Wikipedia (fr) calls it well regarded and says the flesh withstands long cooking, Wikipedia (en) that it is milder than the horn of plenty. The horn of plenty is hollow and horn-shaped with a smooth underside; the false chanterelle of the charcoal burners (Faerberia carbonaria) is paler, with a solid stem and true gills, on burnt ground and with no food value (Wikipedia, fr).</string>
+    <string name="myco_pruinatus_name">Matte bolete</string>
+    <string name="myco_pruinatus_alt">Bolet pruineux</string>
+    <string name="myco_pruinatus_latin" translatable="false">Xerocomellus pruinatus</string>
+    <string-array name="myco_pruinatus_traits">
+        <item>Cap 4 to 12 cm, dry or velvety, brownish to blackish, often mauve near the edge, little cracked</item>
+        <item>Pores the colour of the tubes, golden-yellow then olive-yellow, bluish when pressed</item>
+        <item>Stem 3 to 10 cm, bright yellow when young, turning reddish to red, bruising blue easily</item>
+        <item>Firm bright yellow flesh, weakly bluing, slowly; mild sweet taste</item>
+        <item>Under conifers and broadleaf trees, mostly beech, on acid soils · September to November</item>
+    </string-array>
+    <string name="myco_pruinatus_note">Edible after cooking: the DGfM and the VAPKO list it; Wikipedia (fr) advises removing the stem and choosing young firm ones. Look-alikes (Wikipedia, fr): the red-cracking bolete (usually a reddish zone in the flesh and no bluing), the bay bolete (no red or mauve, brown stem), the cisalpine bolete (no food interest), Hortiboletus engelii. The English page is nearly empty: the text comes from Wikipedia (fr) and the lists.</string>
+    <string name="myco_rubellus_b_name">Ruby bolete</string>
+    <string name="myco_rubellus_b_alt">Bolet framboise</string>
+    <string name="myco_rubellus_b_latin" translatable="false">Hortiboletus rubellus</string>
+    <string-array name="myco_rubellus_b_traits">
+        <item>Cap 3 to 12 cm, felted, bright red and paler at the edge, finely cracked when mature</item>
+        <item>Pores yellow then olive-yellow, usually bluish when bruised</item>
+        <item>Stem 3 to 10 cm, yellow or red, often bulbous; small red or orange dots at the very base</item>
+        <item>Whitish to pale yellow flesh, sometimes slightly bluish under the cap; mild taste</item>
+        <item>Under broadleaf trees, in parks, gardens, clearings and roadsides, on chalky soil</item>
+    </string-array>
+    <string name="myco_rubellus_b_note">Not recommended: the DGfM lists it and Wikipedia (fr) calls it edible after cooking, young firm ones with the stem removed, but to be avoided in urban areas where it absorbs pollutants; Wikipedia (en) says edible but often maggoty, poor, listed as not recommended and its edibility questioned. The most prudent status is kept. Wikipedia (fr) separates it from several small boletes of no food interest, Xerocomellus ripariellus and X. redeuilhii among them.</string>
+    <string name="myco_crocipodium_name">Leccinellum crocipodium</string>
+    <string name="myco_crocipodium_alt">Bolet craquelé</string>
+    <string name="myco_crocipodium_latin" translatable="false">Leccinellum crocipodium</string>
+    <string-array name="myco_crocipodium_traits">
+        <item>Cap brown, yellow-brown to cinnamon, velvety, often cracked or tessellated at maturity</item>
+        <item>Pores small, sulphur yellow to beige, turning olive and ochre-brown when pressed</item>
+        <item>Stem fusoid, ribbed, whitish to sulphur yellow, with fine yellowish to orange scales</item>
+        <item>Whitish flesh turning pinkish or salmon, then reddish-violet and blackish when cut; mild or sweet taste</item>
+        <item>Under oaks, sometimes beech · June to September</item>
+    </string-array>
+    <string name="myco_crocipodium_note">Edible when cooked: the DGfM lists it. Wikipedia (fr) calls its edibility medium, says the fibrous stem is thrown away and only young caps kept, and warns of stomach upset if raw or undercooked. Look-alikes (Wikipedia, fr): Leccinellum pseudoscabrum (whitish pores), L. lepidum and L. corsicum (darker caps, autumn and winter, edible) and the Butyriboletus, taken for it because of the stem network. The English page is nearly empty: the description comes from Wikipedia (fr).</string>
+    <string name="myco_l_brown_violet_shiny_cap">Shiny brown cap with violet tints</string>
+    <string name="myco_l_far_yellowing_gills">Spaced gills, yellowing</string>
+    <string name="myco_l_red_pink_purple_cap">Red, pink or purple cap</string>
+    <string name="myco_l_flesh_blackens">Flesh blackening when bruised</string>
+    <string name="myco_l_brick_red_felt_cap">Brick-red, velvety cap</string>
+    <string name="myco_l_stem_yellow_red">Stem yellow, turning red</string>
+    <string name="myco_l_bright_red_felt_cap">Bright red, felted cap</string>
+    <string name="myco_l_yellow_scaly_stem">Yellowish stem with fine scales</string>
+    <string name="myco_l_flesh_pink_violet_black">Flesh pink, then violet, then black</string>
+    <string name="myco_g_redbolete_title">Small red-stemmed boletes: which one?</string>
+    <string name="myco_g_redbolete_evidence">Wikipedia</string>
+    <string-array name="myco_g_redbolete_points">
+        <item>Matte bolete: dry dark cap with mauve edge, pores bluing, stem yellow turning red. Ruby bolete: bright red felted cap, small red dots at the stem base. Red-cracking bolete: usually a reddish zone in the flesh and no bluing. Bay bolete: brown stem, no red or mauve (Wikipedia, fr).</item>
+        <item>The sources read separate them by small features and name several look-alikes of no food interest; they are not told apart by a single rule.</item>
+        <item>Edibility differs: the bay bolete is good, the red-cracking and matte boletes are edible after cooking, the ruby bolete is not recommended here.</item>
+    </string-array>
+    <string name="myco_g_blacktrumpet_title">Horn of plenty, or ashen chanterelle?</string>
+    <string name="myco_g_blacktrumpet_evidence">Wikipedia</string>
+    <string-array name="myco_g_blacktrumpet_points">
+        <item>Horn of plenty: horn-shaped, hollow, smooth grey underside. Ashen chanterelle: funnel with a hole, well-formed decurrent folds, bluish-grey then grey (Wikipedia, fr).</item>
+        <item>Both are black and edible; the ashen chanterelle is milder (Wikipedia, en).</item>
+        <item>The false chanterelle of the charcoal burners is paler, with a solid stem and true gills, grows on burnt ground and has no food value (Wikipedia, fr).</item>
     </string-array>
 </resources>

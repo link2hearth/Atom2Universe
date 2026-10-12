@@ -2039,13 +2039,15 @@
         <item>Russule émétique et Russula nobilis (toxiques) : lames et pied blancs, saveur poivrée ; la DGfM les liste toutes deux pour un syndrome gastro-intestinal.</item>
         <item>Russule xérampéline (comestible) : chapeau rouge vineux à pourpre, lames crème puis jaunissantes, odeur de crabe ou de crevette. Wikipédia (en) dit que la russule émétique a toujours le pied et les lames blancs.</item>
         <item>Wikipédia (en) cite la russule émétique et Russula nobilis parmi les sosies de la russule dorée ; les sources lues ne donnent pas d’autre règle de terrain, et certaines espèces proches ne se séparent qu’au microscope.</item>
+        <item>Russula paludosa : chapeau rouge sang, rose ou pourpre, lames serrées crème puis jaunes ; Wikipédia (en) dit qu’on la prend facilement pour la russule émétique, vénéneuse.</item>
     </string-array>
-    <string name="myco_g_roughstem_title">Bolet rude, ou bolet orangé des bouleaux ?</string>
+    <string name="myco_g_roughstem_title">Bolets rudes : lequel ?</string>
     <string name="myco_g_roughstem_evidence">Wikipédia</string>
     <string-array name="myco_g_roughstem_points">
         <item>Bolet rude : chapeau brun clair à brun foncé, chair blanchâtre presque inchangée. Bolet orangé des bouleaux : chapeau ocre orangé, chair qui vire au gris violet, pied couvert de mèches noires denses.</item>
         <item>Tous deux poussent sous les bouleaux et ont un pied couvert d’écailles sombres.</item>
         <item>Tous deux se mangent bien cuits : crus ou mal cuits, les bolets rudes donnent des troubles digestifs (Wikipédia, fr). D’autres bolets rudes existent, et les sources lues ne donnent pas de règle simple pour les séparer tous.</item>
+        <item>Bolet orangé des chênes : chapeau rouge brique, écailles passant du blanc au rougeâtre puis au noir, chair virant au gris violet, sous les chênes (Wikipédia, fr). Bolet craquelé : chapeau craquelé, pores et pied jaunes, fines écailles jaunâtres (Wikipédia, fr).</item>
     </string-array>
     <string name="myco_gemmata_name">Amanite jonquille</string>
     <string name="myco_gemmata_alt">Jonquil amanita, gemmed amanita</string>
@@ -2314,5 +2316,108 @@
         <item>Clitocybe fragrans : petit, blanc et plat, lui aussi à odeur d’anis ; la DGfM le liste pour le syndrome muscarinien.</item>
         <item>Clitocybe blanchi : blanc à crème, odeur de farine, sans odeur d’anis ; la DGfM le liste aussi pour le syndrome muscarinien. Wikipédia (en) dit que Clitocybe dealbata est mortel et n’a pas l’odeur d’anis.</item>
         <item>La DGfM liste Clitocybe dealbata, C. fragrans, C. rivulosa et C. suaveolens pour le syndrome muscarinien.</item>
+    </string-array>
+    <string name="myco_integra_name">Russule intègre</string>
+    <string name="myco_integra_alt">Entire russula</string>
+    <string-array name="myco_integra_traits">
+        <item>Chapeau de 6 à 15 cm, luisant, généralement brun à reflets violets, pourpres, jaunes ou verts, presque sphérique puis plan ou déprimé</item>
+        <item>Lames minces, espacées, friables, blanches puis jaune vif</item>
+        <item>Pied de 5 à 12 cm, épais et blanc, taché de jaune ou de rouille avec l’âge</item>
+        <item>Chair blanche très ferme, saveur douce et sucrée, croquante</item>
+        <item>Isolée sous les conifères, souvent dans les forêts de montagne d’épicéas et de sapins</item>
+    </string-array>
+    <string name="myco_integra_note">Non recommandée : la DGfM et la VAPKO la listent, et elle est très mangée en Europe du Nord, bonne jeune (Wikipédia). Mais Wikipédia (en) la range parmi les non recommandées, et les deux pages citent une étude de 1878 selon laquelle les intoxications étaient autrefois fréquentes : une longue cuisson en retire les propriétés toxiques, pas les méthodes rapides comme le grill. Le statut le plus prudent est retenu. Des espèces proches de comestibilité inconnue lui ressemblent ; Wikipédia (en) cite Russula mustelina.</string>
+    <string name="myco_paludosa_name">Russula paludosa</string>
+    <string name="myco_paludosa_alt">Russula paludosa</string>
+    <string-array name="myco_paludosa_traits">
+        <item>Chapeau de 6 à 20 cm, convexe à déprimé, surtout rouge sang, rose, cramoisi ou pourpre, parfois à centre jaunâtre ou orangé</item>
+        <item>Lames serrées, crème puis jaunes, parfois rougeâtres à l’arête</item>
+        <item>Pied de 5 à 15 cm, blanc, parfois teinté de rose, un peu en massue</item>
+        <item>Chair blanche, saveur douce, sans odeur, vite molle et grisâtre</item>
+        <item>Bois de conifères et tourbières, surtout sous les pins ; très commune par endroits</item>
+    </string-array>
+    <string name="myco_paludosa_note">Comestible : la DGfM et la VAPKO la listent, et Wikipédia (en) dit qu’on la voit souvent sur les marchés finlandais. Wikipédia (en) prévient qu’on peut facilement la prendre pour la russule émétique, vénéneuse : voir le groupe. Il n’existe ni page Wikipédia française ni nom anglais courant : le texte vient de Wikipédia (en) et de la DGfM.</string>
+    <string name="myco_decolorans_name">Russula decolorans</string>
+    <string name="myco_decolorans_alt">Graying russula</string>
+    <string-array name="myco_decolorans_traits">
+        <item>Chapeau jusqu’à 15 cm, rouge à orangé, visqueux par temps humide, convexe à plan ou déprimé</item>
+        <item>Lames pâles, devenant jaunâtres, parfois tachées de gris</item>
+        <item>Pied jusqu’à 12 cm, nu</item>
+        <item>Chair blanche qui noircit au froissement ; saveur et odeur douces</item>
+        <item>Bois mixtes et sous les conifères, isolée ou en groupes</item>
+    </string-array>
+    <string name="myco_decolorans_note">Comestible : la DGfM et la VAPKO la listent. Wikipédia (en) déconseille de manger des exemplaires sauvages à cause de sosies de comestibilité inconnue, sans les nommer ; sa chair noircit au froissement. Le chapeau rouge et le noircissement sont ce que donne la page. Il n’existe pas de page Wikipédia française : le texte vient de Wikipédia (en) et de la DGfM ; la page est courte.</string>
+    <string name="myco_aurantiacum_name">Bolet orangé des chênes</string>
+    <string name="myco_aurantiacum_alt">Bolet des chênes, red-capped scaber stalk</string>
+    <string-array name="myco_aurantiacum_traits">
+        <item>Chapeau de 4 à 15 cm, velouté, rouge brique à brun orangé, la peau débordant souvent sur les tubes</item>
+        <item>Pores blanchâtres puis ocre à brun ocre</item>
+        <item>Pied de 8 à 16 cm, couvert d’écailles qui passent du blanc au rougeâtre puis au noir</item>
+        <item>Chair blanche virant au gris bleu, puis gris violet, puis noirâtre à la coupe ; saveur douce, odeur faible</item>
+        <item>Sous les feuillus, surtout les chênes</item>
+    </string-array>
+    <string name="myco_aurantiacum_note">Comestible bien cuit : la DGfM le liste (sous le nom Leccinum quercinum, celui-ci en synonyme). Wikipédia (fr) le dit bon, jette le pied fibreux et garde les jeunes chapeaux, et avertit que cru ou mal cuit il donne des troubles digestifs ; Wikipédia (en) dit qu’il faut le cuire à fond, sans le blanchir, que des Leccinum sont tenus par certains pour peut-être dangereux et qu’un décès a été lié à cette espèce. Sosies sous d’autres arbres : Leccinum albostipitatum (peupliers, écailles blanches), L. versipelle (bouleaux), L. vulpinum et L. piceinum (pins et épicéas, sans intérêt alimentaire).</string>
+    <string name="myco_cinereus_name">Chanterelle cendrée</string>
+    <string name="myco_cinereus_alt">Black chanterelle, ashen chanterelle</string>
+    <string-array name="myco_cinereus_traits">
+        <item>Chapeau de 2 à 6 cm, en entonnoir percé au centre, noir quand il est jeune puis gris noirâtre, bord très lobé</item>
+        <item>Plis, pas de vraies lames : décurrents, souvent anastomosés, gris bleuâtre puis gris</item>
+        <item>Pied de 2 à 5 cm, creux, courbé et sillonné, évasé en éventail sous les plis</item>
+        <item>Chair très mince, noire, élastique ; saveur douce, faible odeur de mirabelle</item>
+        <item>Bois de feuillus, châtaigneraies, sol calcaire · fin d’été à automne</item>
+    </string-array>
+    <string name="myco_cinereus_note">Comestible : la DGfM et la VAPKO la listent ; Wikipédia (fr) la dit réputée et à chair supportant une longue cuisson, Wikipédia (en) plus douce que la trompette de la mort. La trompette de la mort est creuse, en cornet, à dessous lisse ; la fausse chanterelle des charbonnières (Faerberia carbonaria) est plus pâle, à pied plein et vraies lames, sur sol brûlé et sans valeur culinaire (Wikipédia, fr).</string>
+    <string name="myco_pruinatus_name">Bolet pruineux</string>
+    <string name="myco_pruinatus_alt">Matte bolete</string>
+    <string-array name="myco_pruinatus_traits">
+        <item>Chapeau de 4 à 12 cm, sec ou velouté, brunâtre à noirâtre, souvent mauve près du bord, peu craquelé</item>
+        <item>Pores de la couleur des tubes, jaune d’or puis jaune olive, qui bleuissent à la pression</item>
+        <item>Pied de 3 à 10 cm, jaune vif quand il est jeune, virant au rougeâtre puis au rouge, bleuissant facilement</item>
+        <item>Chair jaune vif et ferme, bleuissant faiblement, lentement ; saveur douce et sucrée</item>
+        <item>Sous conifères et feuillus, surtout le hêtre, sur sols acides · septembre à novembre</item>
+    </string-array>
+    <string name="myco_pruinatus_note">Comestible après cuisson : la DGfM et la VAPKO le listent ; Wikipédia (fr) conseille d’ôter le pied et de choisir des jeunes et fermes. Sosies (Wikipédia, fr) : le bolet à chair jaune (en général une zone rougeâtre dans la chair, sans bleuissement), le bolet bai (sans rouge ni mauve, pied brun), le bolet cisalpin (sans intérêt alimentaire), Hortiboletus engelii. La page anglaise est presque vide : le texte vient de Wikipédia (fr) et des listes.</string>
+    <string name="myco_rubellus_b_name">Bolet framboise</string>
+    <string name="myco_rubellus_b_alt">Bolet rougeâtre, ruby bolete</string>
+    <string-array name="myco_rubellus_b_traits">
+        <item>Chapeau de 3 à 12 cm, feutré, rouge vif et plus pâle au bord, finement craquelé à maturité</item>
+        <item>Pores jaunes puis jaune olive, généralement bleuissant au froissement</item>
+        <item>Pied de 3 à 10 cm, jaune ou rouge, souvent bulbeux ; petits points rouge sang ou orangés à la toute base</item>
+        <item>Chair blanchâtre à jaune pâle, parfois à peine bleuâtre sous le chapeau ; saveur douce</item>
+        <item>Sous les feuillus, dans les parcs, jardins, clairières et bords de routes, sur sol calcaire</item>
+    </string-array>
+    <string name="myco_rubellus_b_note">Non recommandé : la DGfM le liste et Wikipédia (fr) le dit comestible après cuisson, jeune et ferme, le pied ôté, mais à éviter en zone urbaine où il absorbe les polluants ; Wikipédia (en) le dit comestible mais souvent véreux, de piètre qualité, classé non recommandé et à la comestibilité contestée. Le statut le plus prudent est retenu. Wikipédia (fr) le sépare de plusieurs petits bolets sans intérêt alimentaire, dont Xerocomellus ripariellus et X. redeuilhii.</string>
+    <string name="myco_crocipodium_name">Bolet craquelé</string>
+    <string name="myco_crocipodium_alt">Bolet noircissant, Leccinellum crocipodium</string>
+    <string-array name="myco_crocipodium_traits">
+        <item>Chapeau brun, brun jaune à cannelle, velouté, souvent craquelé ou tesselé à maturité</item>
+        <item>Pores petits, jaune soufre à beige, qui virent à l’olive et au brun ocre à la pression</item>
+        <item>Pied fusiforme, côtelé, blanchâtre à jaune soufre, à fines écailles jaunâtres à orangées</item>
+        <item>Chair blanchâtre virant au rosé ou saumon, puis violet rougeâtre et noirâtre à la coupe ; saveur douce ou sucrée</item>
+        <item>Sous les chênes, parfois sous le hêtre · juin à septembre</item>
+    </string-array>
+    <string name="myco_crocipodium_note">Comestible cuit : la DGfM le liste. Wikipédia (fr) lui donne une comestibilité moyenne, dit que le pied fibreux est jeté et que seuls les jeunes chapeaux sont gardés, et avertit de troubles digestifs cru ou mal cuit. Sosies (Wikipédia, fr) : Leccinellum pseudoscabrum (pores blanchâtres), L. lepidum et L. corsicum (chapeaux plus foncés, automne et hiver, comestibles) et les Butyriboletus, pris pour lui à cause du réseau du pied. La page anglaise est presque vide : la description vient de Wikipédia (fr).</string>
+    <string name="myco_l_brown_violet_shiny_cap">Chapeau brun luisant, reflets violets</string>
+    <string name="myco_l_far_yellowing_gills">Lames espacées, qui jaunissent</string>
+    <string name="myco_l_red_pink_purple_cap">Chapeau rouge, rose ou pourpre</string>
+    <string name="myco_l_flesh_blackens">Chair qui noircit au froissement</string>
+    <string name="myco_l_brick_red_felt_cap">Chapeau rouge brique, velouté</string>
+    <string name="myco_l_stem_yellow_red">Pied jaune virant au rouge</string>
+    <string name="myco_l_bright_red_felt_cap">Chapeau rouge vif, feutré</string>
+    <string name="myco_l_yellow_scaly_stem">Pied jaunâtre à fines écailles</string>
+    <string name="myco_l_flesh_pink_violet_black">Chair rosée, puis violette, puis noire</string>
+    <string name="myco_g_redbolete_title">Petits bolets à pied rouge : lequel ?</string>
+    <string name="myco_g_redbolete_evidence">Wikipédia</string>
+    <string-array name="myco_g_redbolete_points">
+        <item>Bolet pruineux : chapeau sec et sombre à bord mauve, pores bleuissants, pied jaune virant au rouge. Bolet framboise : chapeau rouge vif feutré, petits points rouges à la base du pied. Bolet à chair jaune : en général une zone rougeâtre dans la chair, sans bleuissement. Bolet bai : pied brun, ni rouge ni mauve (Wikipédia, fr).</item>
+        <item>Les sources lues les séparent par de petits caractères et citent plusieurs sosies sans intérêt alimentaire ; aucune règle unique ne les distingue.</item>
+        <item>La comestibilité diffère : le bolet bai est bon, le bolet à chair jaune et le bolet pruineux sont comestibles cuits, le bolet framboise est non recommandé ici.</item>
+    </string-array>
+    <string name="myco_g_blacktrumpet_title">Trompette de la mort, ou chanterelle cendrée ?</string>
+    <string name="myco_g_blacktrumpet_evidence">Wikipédia</string>
+    <string-array name="myco_g_blacktrumpet_points">
+        <item>Trompette de la mort : en cornet, creuse, dessous gris lisse. Chanterelle cendrée : entonnoir percé, plis décurrents bien formés, gris bleuâtre puis gris (Wikipédia, fr).</item>
+        <item>Les deux sont noires et comestibles ; la chanterelle cendrée est plus douce (Wikipédia, en).</item>
+        <item>La fausse chanterelle des charbonnières est plus pâle, à pied plein et vraies lames, pousse sur sol brûlé et n’a aucune valeur culinaire (Wikipédia, fr).</item>
     </string-array>
 </resources>

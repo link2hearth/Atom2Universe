@@ -197,8 +197,8 @@ class FungusCriteriaTest {
         assertTrue(FungusCriteria.matches(look("agathosmus"), setOf("u_gills", "sp_white")))
         assertTrue(FungusCriteria.matches(look("marzuolus"), setOf("u_gills", "s_no_ring")))
         assertTrue(FungusCriteria.matches(look("excoriata"), setOf("s_ring", "u_gills", "c_scaly")))
-        assertEquals(setOf("aurea", "emetica", "nobilis", "xerampelina"), FungusCatalog.groups.first { it.id == "redrussula" }.members.toSet())
-        assertEquals(setOf("scabrum", "versipelle"), FungusCatalog.groups.first { it.id == "roughstem" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "redrussula" }.members.containsAll(listOf("aurea", "emetica", "nobilis", "xerampelina")))
+        assertTrue(FungusCatalog.groups.first { it.id == "roughstem" }.members.containsAll(listOf("scabrum", "versipelle")))
         assertTrue(FungusCatalog.groups.first { it.id == "parasol" }.members.contains("excoriata"))
     }
 
@@ -245,6 +245,22 @@ class FungusCriteriaTest {
         assertEquals(setOf("odora", "fragrans", "rivulosa"), FungusCatalog.groups.first { it.id == "anise" }.members.toSet())
         assertTrue(FungusCatalog.groups.first { it.id == "pinebolete" }.members.containsAll(listOf("variegatus", "grevillei", "hypothejus")))
         assertTrue(FungusCatalog.groups.first { it.id == "milkcap" }.members.contains("semisanguifluus"))
+    }
+
+    @Test
+    fun leLotQuinzeSeLitDansLeDessin() {
+        assertTrue(FungusCriteria.matches(look("integra"), setOf("cap_BROWN", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("paludosa"), setOf("cap_RED", "u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("decolorans"), setOf("u_gills", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("aurantiacum"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("cinereus"), setOf("cap_BLACK", "w_small")))
+        assertTrue(FungusCriteria.matches(look("pruinatus"), setOf("u_pores", "s_no_ring")))
+        assertTrue(FungusCriteria.matches(look("rubellus_b"), setOf("cap_RED", "u_pores")))
+        assertTrue(FungusCriteria.matches(look("crocipodium"), setOf("u_pores", "s_no_ring")))
+        assertEquals(setOf("chrysenteron", "pruinatus", "rubellus_b", "badia"), FungusCatalog.groups.first { it.id == "redbolete" }.members.toSet())
+        assertEquals(setOf("craterellus", "cinereus"), FungusCatalog.groups.first { it.id == "blacktrumpet" }.members.toSet())
+        assertTrue(FungusCatalog.groups.first { it.id == "redrussula" }.members.contains("paludosa"))
+        assertTrue(FungusCatalog.groups.first { it.id == "roughstem" }.members.containsAll(listOf("aurantiacum", "crocipodium")))
     }
 
     @Test
