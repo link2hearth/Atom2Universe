@@ -1002,8 +1002,6 @@
     <string name="animal_illustrated_lethrinus_borbonicus_latin" formatted="false">Lethrinus borbonicus</string>
     <string name="animal_illustrated_rhaphidura_leucopygialis_name" formatted="false">Martinet leucopyge</string>
     <string name="animal_illustrated_rhaphidura_leucopygialis_latin" formatted="false">Rhaphidura leucopygialis</string>
-    <string name="animal_illustrated_aerodramus_fuciphagus_name" formatted="false">Salangane à nid blanc</string>
-    <string name="animal_illustrated_aerodramus_fuciphagus_latin" formatted="false">Aerodramus fuciphagus</string>
     <string name="animal_illustrated_lethrinus_crocineus_name" formatted="false">Lethrinus crocineus</string>
     <string name="animal_illustrated_lethrinus_crocineus_latin" formatted="false">Lethrinus crocineus</string>
     <string name="animal_illustrated_lethrinus_enigmaticus_name" formatted="false">Lethrinus enigmaticus</string>
@@ -1026,8 +1024,6 @@
     <string name="animal_illustrated_cheilotrema_saturnum_latin" formatted="false">Cheilotrema saturnum</string>
     <string name="animal_illustrated_hypsurus_caryi_name" formatted="false">Hypsurus caryi</string>
     <string name="animal_illustrated_hypsurus_caryi_latin" formatted="false">Hypsurus caryi</string>
-    <string name="animal_illustrated_aerodramus_bartschi_name" formatted="false">Salangane de Guam</string>
-    <string name="animal_illustrated_aerodramus_bartschi_latin" formatted="false">Aerodramus bartschi</string>
     <string name="animal_illustrated_crotalus_aquilus_name" formatted="false">Crotalus aquilus</string>
     <string name="animal_illustrated_crotalus_aquilus_latin" formatted="false">Crotalus aquilus</string>
     <string name="animal_illustrated_hydrophis_viperinus_name" formatted="false">Hydrophis viperina</string>
@@ -1062,10 +1058,6 @@
     <string name="animal_illustrated_pseudoplatystoma_magdaleniatum_latin" formatted="false">Pseudoplatystoma magdaleniatum</string>
     <string name="animal_illustrated_sorubim_elongatus_name" formatted="false">Sorubim elongatus</string>
     <string name="animal_illustrated_sorubim_elongatus_latin" formatted="false">Sorubim elongatus</string>
-    <string name="animal_illustrated_aerodramus_infuscatus_name" formatted="false">Salangane des Moluques</string>
-    <string name="animal_illustrated_aerodramus_infuscatus_latin" formatted="false">Aerodramus infuscatus</string>
-    <string name="animal_illustrated_aerodramus_maximus_name" formatted="false">Salangane à nid noir</string>
-    <string name="animal_illustrated_aerodramus_maximus_latin" formatted="false">Aerodramus maximus</string>
     <string name="animal_illustrated_sphinx_canadensis_name" formatted="false">Sphinx canadensis</string>
     <string name="animal_illustrated_sphinx_canadensis_latin" formatted="false">Sphinx canadensis</string>
     <string name="animal_illustrated_sphinx_sequoiae_name" formatted="false">Sphinx sequoiae</string>
@@ -1078,20 +1070,12 @@
     <string name="animal_illustrated_sorubim_cuspicaudus_latin" formatted="false">Sorubim cuspicaudus</string>
     <string name="animal_illustrated_sorubim_trigonocephalus_name" formatted="false">Sorubim trigonocephalus</string>
     <string name="animal_illustrated_sorubim_trigonocephalus_latin" formatted="false">Sorubim trigonocephalus</string>
-    <string name="animal_illustrated_aerodramus_hirundinaceus_name" formatted="false">Salangane de montagne</string>
-    <string name="animal_illustrated_aerodramus_hirundinaceus_latin" formatted="false">Aerodramus hirundinaceus</string>
-    <string name="animal_illustrated_aerodramus_nuditarsus_name" formatted="false">Salangane de Salomonsen</string>
-    <string name="animal_illustrated_aerodramus_nuditarsus_latin" formatted="false">Aerodramus nuditarsus</string>
     <string name="animal_illustrated_lintneria_separatus_name" formatted="false">Lintneria separatus</string>
     <string name="animal_illustrated_lintneria_separatus_latin" formatted="false">Lintneria separatus</string>
     <string name="animal_illustrated_pimelodus_pohli_name" formatted="false">Pimelodus pohli</string>
     <string name="animal_illustrated_pimelodus_pohli_latin" formatted="false">Pimelodus pohli</string>
     <string name="animal_illustrated_pimelodus_stewarti_name" formatted="false">Pimelodus stewarti</string>
     <string name="animal_illustrated_pimelodus_stewarti_latin" formatted="false">Pimelodus stewarti</string>
-    <string name="animal_illustrated_aerodramus_ocistus_name" formatted="false">Salangane des Marquises</string>
-    <string name="animal_illustrated_aerodramus_ocistus_latin" formatted="false">Aerodramus ocistus</string>
-    <string name="animal_illustrated_aerodramus_pelewensis_name" formatted="false">Salangane des Palau</string>
-    <string name="animal_illustrated_aerodramus_pelewensis_latin" formatted="false">Aerodramus pelewensis</string>
     <string name="animal_illustrated_melanerpes_pulcher_name" formatted="false">Pic splendide</string>
     <string name="animal_illustrated_melanerpes_pulcher_latin" formatted="false">Melanerpes pulcher</string>
     <string name="animal_illustrated_accipiter_meyerianus_name" formatted="false">Autour de Meyer</string>
@@ -1136,18 +1120,12 @@
     <string name="animal_illustrated_apocheima_hispidaria_latin" formatted="false">Apocheima hispidaria</string>
     <string name="animal_illustrated_aerodramus_germani_name" formatted="false">Salangane de German</string>
     <string name="animal_illustrated_aerodramus_germani_latin" formatted="false">Aerodramus germani</string>
-    <string name="animal_illustrated_aerodramus_papuensis_name" formatted="false">Salangane papoue</string>
-    <string name="animal_illustrated_aerodramus_papuensis_latin" formatted="false">Aerodramus papuensis</string>
     <string name="animal_illustrated_aerodramus_orientalis_name" formatted="false">Salangane de Mayr</string>
     <string name="animal_illustrated_aerodramus_orientalis_latin" formatted="false">Aerodramus orientalis</string>
     <string name="animal_illustrated_orectolobus_parvimaculatus_name" formatted="false">Orectolobus parvimaculatus</string>
     <string name="animal_illustrated_orectolobus_parvimaculatus_latin" formatted="false">Orectolobus parvimaculatus</string>
     <string name="animal_illustrated_orectolobus_floridus_name" formatted="false">Orectolobus floridus</string>
     <string name="animal_illustrated_orectolobus_floridus_latin" formatted="false">Orectolobus floridus</string>
-    <string name="animal_illustrated_aerodramus_sawtelli_name" formatted="false">Salangane de Sawtell</string>
-    <string name="animal_illustrated_aerodramus_sawtelli_latin" formatted="false">Aerodramus sawtelli</string>
-    <string name="animal_illustrated_aerodramus_terraereginae_name" formatted="false">Salangane d’Australie</string>
-    <string name="animal_illustrated_aerodramus_terraereginae_latin" formatted="false">Aerodramus terraereginae</string>
     <string name="animal_illustrated_calponia_harrisonfordi_name" formatted="false">Araignee de Harrison Ford</string>
     <string name="animal_illustrated_calponia_harrisonfordi_latin" formatted="false">Calponia harrisonfordi</string>
     <string name="animal_illustrated_zosterops_griseovirescens_name" formatted="false">Zostérops d’Annobon</string>

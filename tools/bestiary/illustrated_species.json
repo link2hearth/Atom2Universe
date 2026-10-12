@@ -4811,14 +4811,6 @@
       "image": "rhaphidura_leucopygialis.webp"
     },
     {
-      "id": "aerodramus_fuciphagus",
-      "scientific_name": "Aerodramus fuciphagus",
-      "name_en": "Edible-nest Swiftlet",
-      "name_fr": "Salangane à nid blanc",
-      "group": "birds",
-      "image": "aerodramus_fuciphagus.webp"
-    },
-    {
       "id": "lethrinus_crocineus",
       "scientific_name": "Lethrinus crocineus",
       "name_en": "Yellowtail emperor",
@@ -4905,14 +4897,6 @@
       "name_fr": "Hypsurus caryi",
       "group": "fish",
       "image": "hypsurus_caryi.webp"
-    },
-    {
-      "id": "aerodramus_bartschi",
-      "scientific_name": "Aerodramus bartschi",
-      "name_en": "Mariana Swiftlet",
-      "name_fr": "Salangane de Guam",
-      "group": "birds",
-      "image": "aerodramus_bartschi.webp"
     },
     {
       "id": "crotalus_aquilus",
@@ -5051,22 +5035,6 @@
       "image": "sorubim_elongatus.webp"
     },
     {
-      "id": "aerodramus_infuscatus",
-      "scientific_name": "Aerodramus infuscatus",
-      "name_en": "Moluccan Swiftlet",
-      "name_fr": "Salangane des Moluques",
-      "group": "birds",
-      "image": "aerodramus_infuscatus.webp"
-    },
-    {
-      "id": "aerodramus_maximus",
-      "scientific_name": "Aerodramus maximus",
-      "name_en": "Black-nest Swiftlet",
-      "name_fr": "Salangane à nid noir",
-      "group": "birds",
-      "image": "aerodramus_maximus.webp"
-    },
-    {
       "id": "sphinx_canadensis",
       "scientific_name": "Sphinx canadensis",
       "name_en": "Canadian sphinx",
@@ -5115,22 +5083,6 @@
       "image": "sorubim_trigonocephalus.webp"
     },
     {
-      "id": "aerodramus_hirundinaceus",
-      "scientific_name": "Aerodramus hirundinaceus",
-      "name_en": "Mountain Swiftlet",
-      "name_fr": "Salangane de montagne",
-      "group": "birds",
-      "image": "aerodramus_hirundinaceus.webp"
-    },
-    {
-      "id": "aerodramus_nuditarsus",
-      "scientific_name": "Aerodramus nuditarsus",
-      "name_en": "Bare-legged Swiftlet",
-      "name_fr": "Salangane de Salomonsen",
-      "group": "birds",
-      "image": "aerodramus_nuditarsus.webp"
-    },
-    {
       "id": "lintneria_separatus",
       "scientific_name": "Lintneria separatus",
       "name_en": "Separated sphinx",
@@ -5153,22 +5105,6 @@
       "name_fr": "Pimelodus stewarti",
       "group": "fish",
       "image": "pimelodus_stewarti.webp"
-    },
-    {
-      "id": "aerodramus_ocistus",
-      "scientific_name": "Aerodramus ocistus",
-      "name_en": "Marquesan swiftlet",
-      "name_fr": "Salangane des Marquises",
-      "group": "birds",
-      "image": "aerodramus_ocistus.webp"
-    },
-    {
-      "id": "aerodramus_pelewensis",
-      "scientific_name": "Aerodramus pelewensis",
-      "name_en": "Palau Swiftlet",
-      "name_fr": "Salangane des Palau",
-      "group": "birds",
-      "image": "aerodramus_pelewensis.webp"
     },
     {
       "id": "melanerpes_pulcher",
@@ -5347,14 +5283,6 @@
       "image": "aerodramus_germani.webp"
     },
     {
-      "id": "aerodramus_papuensis",
-      "scientific_name": "Aerodramus papuensis",
-      "name_en": "Three-toed Swiftlet",
-      "name_fr": "Salangane papoue",
-      "group": "birds",
-      "image": "aerodramus_papuensis.webp"
-    },
-    {
       "id": "aerodramus_orientalis",
       "scientific_name": "Aerodramus orientalis",
       "name_en": "Mayr's Swiftlet",
@@ -5377,22 +5305,6 @@
       "name_fr": "Orectolobus floridus",
       "group": "fish",
       "image": "orectolobus_floridus.webp"
-    },
-    {
-      "id": "aerodramus_sawtelli",
-      "scientific_name": "Aerodramus sawtelli",
-      "name_en": "Atiu Swiftlet",
-      "name_fr": "Salangane de Sawtell",
-      "group": "birds",
-      "image": "aerodramus_sawtelli.webp"
-    },
-    {
-      "id": "aerodramus_terraereginae",
-      "scientific_name": "Aerodramus terraereginae",
-      "name_en": "Australian Swiftlet",
-      "name_fr": "Salangane d’Australie",
-      "group": "birds",
-      "image": "aerodramus_terraereginae.webp"
     },
     {
       "id": "calponia_harrisonfordi",

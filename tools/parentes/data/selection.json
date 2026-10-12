@@ -1482,17 +1482,6 @@
       "label_revision": 2517438853
     },
     {
-      "name": "Aerodramus bartschi",
-      "en": "Mariana Swiftlet",
-      "fr": "Salangane de Guam",
-      "qid": "Q27581",
-      "seed": false,
-      "id": "ott534820",
-      "ott": 534820,
-      "label_qid": "Q27581",
-      "label_revision": 2533963184
-    },
-    {
       "name": "Aerodramus francicus",
       "en": "Mascarene swiftlet",
       "fr": "Salangane des Mascareignes",
@@ -1502,17 +1491,6 @@
       "ott": 534816,
       "label_qid": "Q27540",
       "label_revision": 2538977188
-    },
-    {
-      "name": "Aerodramus fuciphagus",
-      "en": "Edible-nest Swiftlet",
-      "fr": "Salangane à nid blanc",
-      "qid": "Q31801",
-      "seed": false,
-      "id": "ott534806",
-      "ott": 534806,
-      "label_qid": "Q31801",
-      "label_revision": 2538977281
     },
     {
       "name": "Aerodramus germani",
@@ -1526,61 +1504,6 @@
       "label_revision": 2538977185
     },
     {
-      "name": "Aerodramus hirundinaceus",
-      "en": "Mountain Swiftlet",
-      "fr": "Salangane de montagne",
-      "qid": "Q27361",
-      "seed": false,
-      "id": "ott3595833",
-      "ott": 3595833,
-      "label_qid": "Q27361",
-      "label_revision": 2538977163
-    },
-    {
-      "name": "Aerodramus infuscatus",
-      "en": "Moluccan Swiftlet",
-      "fr": "Salangane des Moluques",
-      "qid": "Q27542",
-      "seed": false,
-      "id": "ott3595842",
-      "ott": 3595842,
-      "label_qid": "Q27542",
-      "label_revision": 2538977191
-    },
-    {
-      "name": "Aerodramus maximus",
-      "en": "Black-nest Swiftlet",
-      "fr": "Salangane à nid noir",
-      "qid": "Q27459",
-      "seed": false,
-      "id": "ott65399",
-      "ott": 65399,
-      "label_qid": "Q27459",
-      "label_revision": 2538977178
-    },
-    {
-      "name": "Aerodramus nuditarsus",
-      "en": "Bare-legged Swiftlet",
-      "fr": "Salangane de Salomonsen",
-      "qid": "Q27548",
-      "seed": false,
-      "id": "ott3595840",
-      "ott": 3595840,
-      "label_qid": "Q27548",
-      "label_revision": 2538977194
-    },
-    {
-      "name": "Aerodramus ocistus",
-      "en": "Marquesan swiftlet",
-      "fr": "Salangane des Marquises",
-      "qid": "Q27565",
-      "seed": false,
-      "id": "ott3595841",
-      "ott": 3595841,
-      "label_qid": "Q27565",
-      "label_revision": 2538977203
-    },
-    {
       "name": "Aerodramus orientalis",
       "en": "Mayr's Swiftlet",
       "fr": "Salangane de Mayr",
@@ -1590,50 +1513,6 @@
       "ott": 3595845,
       "label_qid": "Q27457",
       "label_revision": 2538977173
-    },
-    {
-      "name": "Aerodramus papuensis",
-      "en": "Three-toed Swiftlet",
-      "fr": "Salangane papoue",
-      "qid": "Q27560",
-      "seed": false,
-      "id": "ott543182",
-      "ott": 543182,
-      "label_qid": "Q27560",
-      "label_revision": 2538977201
-    },
-    {
-      "name": "Aerodramus pelewensis",
-      "en": "Palau Swiftlet",
-      "fr": "Salangane des Palau",
-      "qid": "Q27456",
-      "seed": false,
-      "id": "ott3595843",
-      "ott": 3595843,
-      "label_qid": "Q27456",
-      "label_revision": 2533963132
-    },
-    {
-      "name": "Aerodramus sawtelli",
-      "en": "Atiu Swiftlet",
-      "fr": "Salangane de Cook",
-      "qid": "Q27464",
-      "seed": false,
-      "id": "ott65384",
-      "ott": 65384,
-      "label_qid": "Q27464",
-      "label_revision": 2538977184
-    },
-    {
-      "name": "Aerodramus terraereginae",
-      "en": "Australian Swiftlet",
-      "fr": "Salangane d'Australie",
-      "qid": "Q26464",
-      "seed": false,
-      "id": "ott423342",
-      "ott": 423342,
-      "label_qid": "Q26464",
-      "label_revision": 2538974706
     },
     {
       "name": "Aethalura punctulata",
@@ -20656,6 +20535,50 @@
     {
       "name": "Vinciguerria nimbaria",
       "reason": "User-authorized editorial exclusion 2026-10-13: owner discarded the drawing and authorized removing the 29 remaining unillustrated animals."
+    },
+    {
+      "name": "Aerodramus bartschi",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus fuciphagus",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus hirundinaceus",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus infuscatus",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus maximus",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus nuditarsus",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus ocistus",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus papuensis",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus pelewensis",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus sawtelli",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aerodramus terraereginae",
+      "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
     }
   ]
 }

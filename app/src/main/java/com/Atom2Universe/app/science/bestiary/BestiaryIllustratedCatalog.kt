@@ -3551,13 +3551,6 @@ internal object BestiaryIllustratedCatalog {
             references = emptyList()
         ),
         AnimalSpecies(
-            id = "aerodramus_fuciphagus", scientific = "Aerodramus fuciphagus",
-            name = R.string.animal_illustrated_aerodramus_fuciphagus_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_fuciphagus_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
             id = "lethrinus_crocineus", scientific = "Lethrinus crocineus",
             name = R.string.animal_illustrated_lethrinus_crocineus_name, group = "fish",
             description = null, identification = null, habitat = null, diet = null, behavior = null,
@@ -3632,13 +3625,6 @@ internal object BestiaryIllustratedCatalog {
             name = R.string.animal_illustrated_hypsurus_caryi_name, group = "fish",
             description = null, identification = null, habitat = null, diet = null, behavior = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_hypsurus_caryi_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
-            id = "aerodramus_bartschi", scientific = "Aerodramus bartschi",
-            name = R.string.animal_illustrated_aerodramus_bartschi_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_bartschi_latin,
             references = emptyList()
         ),
         AnimalSpecies(
@@ -3764,20 +3750,6 @@ internal object BestiaryIllustratedCatalog {
             references = emptyList()
         ),
         AnimalSpecies(
-            id = "aerodramus_infuscatus", scientific = "Aerodramus infuscatus",
-            name = R.string.animal_illustrated_aerodramus_infuscatus_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_infuscatus_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
-            id = "aerodramus_maximus", scientific = "Aerodramus maximus",
-            name = R.string.animal_illustrated_aerodramus_maximus_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_maximus_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
             id = "sphinx_canadensis", scientific = "Sphinx canadensis",
             name = R.string.animal_illustrated_sphinx_canadensis_name, group = "invertebrates",
             description = null, identification = null, habitat = null, diet = null, behavior = null,
@@ -3820,20 +3792,6 @@ internal object BestiaryIllustratedCatalog {
             references = emptyList()
         ),
         AnimalSpecies(
-            id = "aerodramus_hirundinaceus", scientific = "Aerodramus hirundinaceus",
-            name = R.string.animal_illustrated_aerodramus_hirundinaceus_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_hirundinaceus_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
-            id = "aerodramus_nuditarsus", scientific = "Aerodramus nuditarsus",
-            name = R.string.animal_illustrated_aerodramus_nuditarsus_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_nuditarsus_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
             id = "lintneria_separatus", scientific = "Lintneria separatus",
             name = R.string.animal_illustrated_lintneria_separatus_name, group = "invertebrates",
             description = null, identification = null, habitat = null, diet = null, behavior = null,
@@ -3852,20 +3810,6 @@ internal object BestiaryIllustratedCatalog {
             name = R.string.animal_illustrated_pimelodus_stewarti_name, group = "fish",
             description = null, identification = null, habitat = null, diet = null, behavior = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_pimelodus_stewarti_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
-            id = "aerodramus_ocistus", scientific = "Aerodramus ocistus",
-            name = R.string.animal_illustrated_aerodramus_ocistus_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_ocistus_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
-            id = "aerodramus_pelewensis", scientific = "Aerodramus pelewensis",
-            name = R.string.animal_illustrated_aerodramus_pelewensis_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_pelewensis_latin,
             references = emptyList()
         ),
         AnimalSpecies(
@@ -4026,13 +3970,6 @@ internal object BestiaryIllustratedCatalog {
             references = emptyList()
         ),
         AnimalSpecies(
-            id = "aerodramus_papuensis", scientific = "Aerodramus papuensis",
-            name = R.string.animal_illustrated_aerodramus_papuensis_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_papuensis_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
             id = "aerodramus_orientalis", scientific = "Aerodramus orientalis",
             name = R.string.animal_illustrated_aerodramus_orientalis_name, group = "birds",
             description = null, identification = null, habitat = null, diet = null, behavior = null,
@@ -4051,20 +3988,6 @@ internal object BestiaryIllustratedCatalog {
             name = R.string.animal_illustrated_orectolobus_floridus_name, group = "fish",
             description = null, identification = null, habitat = null, diet = null, behavior = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_orectolobus_floridus_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
-            id = "aerodramus_sawtelli", scientific = "Aerodramus sawtelli",
-            name = R.string.animal_illustrated_aerodramus_sawtelli_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_sawtelli_latin,
-            references = emptyList()
-        ),
-        AnimalSpecies(
-            id = "aerodramus_terraereginae", scientific = "Aerodramus terraereginae",
-            name = R.string.animal_illustrated_aerodramus_terraereginae_name, group = "birds",
-            description = null, identification = null, habitat = null, diet = null, behavior = null,
-            sourceUrl = null, sourceTitle = null, latin = R.string.animal_illustrated_aerodramus_terraereginae_latin,
             references = emptyList()
         ),
         AnimalSpecies(

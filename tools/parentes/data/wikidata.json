@@ -2497,24 +2497,6 @@
       }
     },
     {
-      "id": "ott534820",
-      "qid": "Q27581",
-      "revision": 2533963184,
-      "modified": "2026-08-21T01:06:00Z",
-      "key": "pt_species_534820_body",
-      "en": "species of swiftlet in the Apodidae family",
-      "fr": "espèce d'oiseaux",
-      "aliases": {
-        "en": [
-          "Aerodramus bartschi"
-        ],
-        "fr": [
-          "Aerodramus bartschi",
-          "Collocalia bartschi"
-        ]
-      }
-    },
-    {
       "id": "ott534816",
       "qid": "Q27540",
       "revision": 2538977188,
@@ -2531,26 +2513,6 @@
           "Salangane à croupion gris",
           "Petite hirondelle",
           "Collocalia francica"
-        ]
-      }
-    },
-    {
-      "id": "ott534806",
-      "qid": "Q31801",
-      "revision": 2538977281,
-      "modified": "2026-09-01T07:57:00Z",
-      "key": "pt_species_534806_body",
-      "en": "species of bird",
-      "fr": "espèce d'oiseaux",
-      "aliases": {
-        "en": [
-          "Aerodramus fuciphagus",
-          "white-nest swiftlet"
-        ],
-        "fr": [
-          "Aerodramus fuciphagus",
-          "Hirundo fuciphaga",
-          "Collocalia fuciphaga"
         ]
       }
     },
@@ -2573,96 +2535,6 @@
       }
     },
     {
-      "id": "ott3595833",
-      "qid": "Q27361",
-      "revision": 2538977163,
-      "modified": "2026-09-01T07:56:26Z",
-      "key": "pt_species_3595833_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus hirundinaceus"
-        ],
-        "fr": [
-          "Aerodramus hirundinaceus"
-        ]
-      }
-    },
-    {
-      "id": "ott3595842",
-      "qid": "Q27542",
-      "revision": 2538977191,
-      "modified": "2026-09-01T07:56:35Z",
-      "key": "pt_species_3595842_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus infuscatus",
-          "Halmaheran swiflet"
-        ],
-        "fr": [
-          "Aerodramus infuscatus"
-        ]
-      }
-    },
-    {
-      "id": "ott65399",
-      "qid": "Q27459",
-      "revision": 2538977178,
-      "modified": "2026-09-01T07:56:30Z",
-      "key": "pt_species_65399_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus maximus"
-        ],
-        "fr": [
-          "Aerodramus maximus",
-          "Collocalia maxima"
-        ]
-      }
-    },
-    {
-      "id": "ott3595840",
-      "qid": "Q27548",
-      "revision": 2538977194,
-      "modified": "2026-09-01T07:56:36Z",
-      "key": "pt_species_3595840_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus nuditarsus"
-        ],
-        "fr": [
-          "Aerodramus nuditarsus",
-          "Collocalia nuditarsus"
-        ]
-      }
-    },
-    {
-      "id": "ott3595841",
-      "qid": "Q27565",
-      "revision": 2538977203,
-      "modified": "2026-09-01T07:56:38Z",
-      "key": "pt_species_3595841_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus ocistus",
-          "Marquesan Swiftlet"
-        ],
-        "fr": [
-          "Collocalia ocista",
-          "Aerodramus ocistus"
-        ]
-      }
-    },
-    {
       "id": "ott3595845",
       "qid": "Q27457",
       "revision": 2538977173,
@@ -2678,78 +2550,6 @@
           "Collocalia lowi orientalis",
           "Collocalia orientalis",
           "Aerodramus orientalis"
-        ]
-      }
-    },
-    {
-      "id": "ott543182",
-      "qid": "Q27560",
-      "revision": 2538977201,
-      "modified": "2026-09-01T07:56:37Z",
-      "key": "pt_species_543182_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus papuensis"
-        ],
-        "fr": [
-          "Collocalia papuensis",
-          "Aerodramus papuensis"
-        ]
-      }
-    },
-    {
-      "id": "ott3595843",
-      "qid": "Q27456",
-      "revision": 2533963132,
-      "modified": "2026-08-21T01:05:51Z",
-      "key": "pt_species_3595843_body",
-      "en": "swift species",
-      "fr": "espèce d'oiseaux de la famille des Apodidae.",
-      "aliases": {
-        "en": [
-          "Aerodramus pelewensis"
-        ],
-        "fr": [
-          "Aerodramus pelewensis"
-        ]
-      }
-    },
-    {
-      "id": "ott65384",
-      "qid": "Q27464",
-      "revision": 2538977184,
-      "modified": "2026-09-01T07:56:31Z",
-      "key": "pt_species_65384_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus sawtelli"
-        ],
-        "fr": [
-          "Aerodramus sawtelli",
-          "Collocalia sawtelli"
-        ]
-      }
-    },
-    {
-      "id": "ott423342",
-      "qid": "Q26464",
-      "revision": 2538974706,
-      "modified": "2026-09-01T07:49:29Z",
-      "key": "pt_species_423342_body",
-      "en": "species of bird",
-      "fr": "oiseau",
-      "aliases": {
-        "en": [
-          "Aerodramus terraereginae"
-        ],
-        "fr": [
-          "Cypselus terraereginae",
-          "Aerodramus terraereginae",
-          "Salangane d’Australie"
         ]
       }
     },
@@ -28819,20 +28619,6 @@
       }
     },
     {
-      "id": "ott534820",
-      "qid": "Q27581",
-      "revision": 2533963184,
-      "aliases": {
-        "en": [
-          "Aerodramus bartschi"
-        ],
-        "fr": [
-          "Aerodramus bartschi",
-          "Collocalia bartschi"
-        ]
-      }
-    },
-    {
       "id": "ott534816",
       "qid": "Q27540",
       "revision": 2538977188,
@@ -28845,22 +28631,6 @@
           "Salangane à croupion gris",
           "Petite hirondelle",
           "Collocalia francica"
-        ]
-      }
-    },
-    {
-      "id": "ott534806",
-      "qid": "Q31801",
-      "revision": 2538977281,
-      "aliases": {
-        "en": [
-          "Aerodramus fuciphagus",
-          "white-nest swiftlet"
-        ],
-        "fr": [
-          "Aerodramus fuciphagus",
-          "Hirundo fuciphaga",
-          "Collocalia fuciphaga"
         ]
       }
     },
@@ -28879,76 +28649,6 @@
       }
     },
     {
-      "id": "ott3595833",
-      "qid": "Q27361",
-      "revision": 2538977163,
-      "aliases": {
-        "en": [
-          "Aerodramus hirundinaceus"
-        ],
-        "fr": [
-          "Aerodramus hirundinaceus"
-        ]
-      }
-    },
-    {
-      "id": "ott3595842",
-      "qid": "Q27542",
-      "revision": 2538977191,
-      "aliases": {
-        "en": [
-          "Aerodramus infuscatus",
-          "Halmaheran swiflet"
-        ],
-        "fr": [
-          "Aerodramus infuscatus"
-        ]
-      }
-    },
-    {
-      "id": "ott65399",
-      "qid": "Q27459",
-      "revision": 2538977178,
-      "aliases": {
-        "en": [
-          "Aerodramus maximus"
-        ],
-        "fr": [
-          "Aerodramus maximus",
-          "Collocalia maxima"
-        ]
-      }
-    },
-    {
-      "id": "ott3595840",
-      "qid": "Q27548",
-      "revision": 2538977194,
-      "aliases": {
-        "en": [
-          "Aerodramus nuditarsus"
-        ],
-        "fr": [
-          "Aerodramus nuditarsus",
-          "Collocalia nuditarsus"
-        ]
-      }
-    },
-    {
-      "id": "ott3595841",
-      "qid": "Q27565",
-      "revision": 2538977203,
-      "aliases": {
-        "en": [
-          "Aerodramus ocistus",
-          "Marquesan Swiftlet"
-        ],
-        "fr": [
-          "Collocalia ocista",
-          "Aerodramus ocistus"
-        ]
-      }
-    },
-    {
       "id": "ott3595845",
       "qid": "Q27457",
       "revision": 2538977173,
@@ -28960,62 +28660,6 @@
           "Collocalia lowi orientalis",
           "Collocalia orientalis",
           "Aerodramus orientalis"
-        ]
-      }
-    },
-    {
-      "id": "ott543182",
-      "qid": "Q27560",
-      "revision": 2538977201,
-      "aliases": {
-        "en": [
-          "Aerodramus papuensis"
-        ],
-        "fr": [
-          "Collocalia papuensis",
-          "Aerodramus papuensis"
-        ]
-      }
-    },
-    {
-      "id": "ott3595843",
-      "qid": "Q27456",
-      "revision": 2533963132,
-      "aliases": {
-        "en": [
-          "Aerodramus pelewensis"
-        ],
-        "fr": [
-          "Aerodramus pelewensis"
-        ]
-      }
-    },
-    {
-      "id": "ott65384",
-      "qid": "Q27464",
-      "revision": 2538977184,
-      "aliases": {
-        "en": [
-          "Aerodramus sawtelli"
-        ],
-        "fr": [
-          "Aerodramus sawtelli",
-          "Collocalia sawtelli"
-        ]
-      }
-    },
-    {
-      "id": "ott423342",
-      "qid": "Q26464",
-      "revision": 2538974706,
-      "aliases": {
-        "en": [
-          "Aerodramus terraereginae"
-        ],
-        "fr": [
-          "Cypselus terraereginae",
-          "Aerodramus terraereginae",
-          "Salangane d’Australie"
         ]
       }
     },
