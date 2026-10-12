@@ -29,7 +29,9 @@ class MycologyLifeIndex(tree: LifeTree, latinById: Map<String, String>) {
             "Inocybe erubescens" to "Inosperma erubescens",
             "Lactarius volemus" to "Lactifluus volemus",
             "Lactarius piperatus" to "Lactifluus piperatus",
-            "Inocybe maculata" to "Inosperma maculatum"
+            "Inocybe maculata" to "Inosperma maculatum",
+            "Cantharellus cinereus" to "Craterellus cinereus",
+            "Leccinum crocipodium" to "Leccinellum crocipodium"
         )
     }
 }

@@ -3432,6 +3432,11 @@
       "qid": "Q20857"
     },
     {
+      "name": "Cantharellus cinereus",
+      "en": "Ashen chanterelle",
+      "fr": "Chanterelle cendrée"
+    },
+    {
       "name": "Craterellus cornucopioides",
       "en": "Horn of plenty",
       "fr": "Trompette de la mort"
@@ -6158,6 +6163,16 @@
       "en": "Laurus nobilis",
       "fr": "Laurus nobilis",
       "qid": "Q26006"
+    },
+    {
+      "name": "Leccinum crocipodium",
+      "en": "Leccinellum crocipodium",
+      "fr": "Bolet craquelé"
+    },
+    {
+      "name": "Leccinum aurantiacum",
+      "en": "Red-capped scaber stalk",
+      "fr": "Bolet orangé des chênes"
     },
     {
       "name": "Leccinum scabrum",
@@ -9774,6 +9789,11 @@
       "fr": "Russule charbonnière"
     },
     {
+      "name": "Russula decolorans",
+      "en": "Graying russula",
+      "fr": "Russula decolorans"
+    },
+    {
       "name": "Russula emetica",
       "en": "The sickener",
       "fr": "Russule émétique"
@@ -9783,6 +9803,11 @@
       "en": "Russula grisescens",
       "fr": "Russula grisescens",
       "qid": "Q80460"
+    },
+    {
+      "name": "Russula integra",
+      "en": "Entire russula",
+      "fr": "Russule intègre"
     },
     {
       "name": "Russula laricina",
@@ -9817,6 +9842,11 @@
       "en": "Russula pallidospora",
       "fr": "Russula pallidospora",
       "qid": "Q80466"
+    },
+    {
+      "name": "Russula paludosa",
+      "en": "Russula paludosa",
+      "fr": "Russula paludosa"
     },
     {
       "name": "Russula pseudodelica",
@@ -11672,6 +11702,11 @@
       "name": "Xerocomellus chrysenteron",
       "en": "Red-cracking bolete",
       "fr": "Bolet à chair jaune"
+    },
+    {
+      "name": "Xerocomellus pruinatus",
+      "en": "Matte bolete",
+      "fr": "Bolet pruineux"
     },
     {
       "name": "Xysticus lanio",

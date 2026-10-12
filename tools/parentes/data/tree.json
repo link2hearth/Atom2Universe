@@ -192489,6 +192489,26 @@
       "species": false
     },
     {
+      "id": "ott274618",
+      "parent": "ott558122",
+      "scientific": "Cantharellus cinereus",
+      "ott": 274618,
+      "tax_sources": [
+        "if:197287",
+        "ncbi:1010609",
+        "gbif:5249528",
+        "gbif:7881633",
+        "irmng:10981062"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott274618"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_274618",
+      "requested_node_id": "ott274618"
+    },
+    {
       "id": "ott194353",
       "parent": "ott940452",
       "scientific": "Craterellus cornucopioides",
@@ -247529,6 +247549,69 @@
       "species": false
     },
     {
+      "id": "ott5304068",
+      "parent": "mrcaott168215ott5304068",
+      "scientific": "Leccinum crocipodium",
+      "ott": 5304068,
+      "tax_sources": [
+        "if:333003",
+        "irmng:11395447"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott5304068"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_5304068",
+      "requested_node_id": "ott5304068"
+    },
+    {
+      "id": "mrcaott168215ott5304068",
+      "parent": "mrcaott168215ott198880",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1141@Tr88900": "Tn13088188"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott168215ott198880",
+      "parent": "ott1012685",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1141@Tr88900": "Tn13088184"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "ott52649",
+      "parent": "ott1012685",
+      "scientific": "Leccinum aurantiacum",
+      "ott": 52649,
+      "tax_sources": [
+        "if:101071",
+        "ncbi:121017",
+        "ncbi:121046",
+        "ncbi:196695",
+        "gbif:2524513",
+        "irmng:10380134",
+        "irmng:11049228"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott52649"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_52649",
+      "requested_node_id": "ott52649"
+    },
+    {
       "id": "ott168215",
       "parent": "mrcaott168215ott742580",
       "scientific": "Leccinum scabrum",
@@ -247583,30 +247666,6 @@
       "tax_sources": [],
       "supported_by": {
         "ot_1141@Tr88900": "Tn13088126"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott168215ott5304068",
-      "parent": "mrcaott168215ott198880",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1141@Tr88900": "Tn13088188"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott168215ott198880",
-      "parent": "ott1012685",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "ot_1141@Tr88900": "Tn13088184"
       },
       "conflicts_with": {},
       "species": false
@@ -306063,6 +306122,25 @@
       "species": false
     },
     {
+      "id": "ott760937",
+      "parent": "ott1012685",
+      "scientific": "Russula decolorans",
+      "ott": 760937,
+      "tax_sources": [
+        "if:217638",
+        "ncbi:152956",
+        "gbif:2551479",
+        "irmng:10388762"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott760937"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_760937",
+      "requested_node_id": "ott760937"
+    },
+    {
       "id": "ott760929",
       "parent": "ott1012685",
       "scientific": "Russula emetica",
@@ -306080,6 +306158,24 @@
       "species": true,
       "key": "pt_species_760929",
       "requested_node_id": "ott760929"
+    },
+    {
+      "id": "ott41736",
+      "parent": "ott1012685",
+      "scientific": "Russula integra",
+      "ott": 41736,
+      "tax_sources": [
+        "if:182048",
+        "ncbi:131543",
+        "gbif:8894724"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott41736"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_41736",
+      "requested_node_id": "ott41736"
     },
     {
       "id": "ott185643",
@@ -306230,6 +306326,25 @@
       "species": true,
       "key": "pt_species_965280",
       "requested_node_id": "ott965280"
+    },
+    {
+      "id": "ott965278",
+      "parent": "ott1012685",
+      "scientific": "Russula paludosa",
+      "ott": 965278,
+      "tax_sources": [
+        "if:206457",
+        "ncbi:176813",
+        "gbif:2551201",
+        "irmng:11332112"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott965278"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_965278",
+      "requested_node_id": "ott965278"
     },
     {
       "id": "ott3806072",
@@ -334706,6 +334821,26 @@
       },
       "conflicts_with": {},
       "species": false
+    },
+    {
+      "id": "ott789635",
+      "parent": "ott1012685",
+      "scientific": "Xerocomellus pruinatus",
+      "ott": 789635,
+      "tax_sources": [
+        "if:511898",
+        "ncbi:73892",
+        "ncbi:318599",
+        "gbif:2519584",
+        "irmng:10644859"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott789635"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_789635",
+      "requested_node_id": "ott789635"
     },
     {
       "id": "ott3548820",

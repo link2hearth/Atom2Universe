@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2054,
+  "candidate_count": 2061,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -6477,6 +6477,14 @@
       "label_revision": 2537859605
     },
     {
+      "name": "Cantharellus cinereus",
+      "en": "Ashen chanterelle",
+      "fr": "Chanterelle cendrée",
+      "seed": false,
+      "id": "ott274618",
+      "ott": 274618
+    },
+    {
       "name": "Craterellus cornucopioides",
       "en": "Horn of plenty",
       "fr": "Trompette de la mort",
@@ -10797,6 +10805,22 @@
       "ott": 571537,
       "label_qid": "Q26006",
       "label_revision": 2550037620
+    },
+    {
+      "name": "Leccinum crocipodium",
+      "en": "Leccinellum crocipodium",
+      "fr": "Bolet craquelé",
+      "seed": false,
+      "id": "ott5304068",
+      "ott": 5304068
+    },
+    {
+      "name": "Leccinum aurantiacum",
+      "en": "Red-capped scaber stalk",
+      "fr": "Bolet orangé des chênes",
+      "seed": false,
+      "id": "ott52649",
+      "ott": 52649
     },
     {
       "name": "Leccinum scabrum",
@@ -16882,12 +16906,28 @@
       "ott": 611410
     },
     {
+      "name": "Russula decolorans",
+      "en": "Graying russula",
+      "fr": "Russula decolorans",
+      "seed": false,
+      "id": "ott760937",
+      "ott": 760937
+    },
+    {
       "name": "Russula emetica",
       "en": "The sickener",
       "fr": "Russule émétique",
       "seed": false,
       "id": "ott760929",
       "ott": 760929
+    },
+    {
+      "name": "Russula integra",
+      "en": "Entire russula",
+      "fr": "Russule intègre",
+      "seed": false,
+      "id": "ott41736",
+      "ott": 41736
     },
     {
       "name": "Russula laricina",
@@ -16948,6 +16988,14 @@
       "ott": 965280,
       "label_qid": "Q80466",
       "label_revision": 2537479605
+    },
+    {
+      "name": "Russula paludosa",
+      "en": "Russula paludosa",
+      "fr": "Russula paludosa",
+      "seed": false,
+      "id": "ott965278",
+      "ott": 965278
     },
     {
       "name": "Russula pseudodelica",
@@ -20032,6 +20080,14 @@
       "seed": false,
       "id": "ott3835402",
       "ott": 3835402
+    },
+    {
+      "name": "Xerocomellus pruinatus",
+      "en": "Matte bolete",
+      "fr": "Bolet pruineux",
+      "seed": false,
+      "id": "ott789635",
+      "ott": 789635
     },
     {
       "name": "Xysticus lanio",
