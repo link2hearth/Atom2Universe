@@ -2710,50 +2710,11 @@
       }
     },
     {
-      "id": "ott5516742",
-      "qid": "Q26112",
-      "revision": 2535761926,
-      "modified": "2026-08-24T10:24:57Z",
-      "key": "pt_species_5516742_body",
-      "en": "species of plant, endemic to Fiji",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott627550",
       "qid": "Q26113",
       "revision": 2535761929,
       "modified": "2026-08-24T10:24:57Z",
       "key": "pt_species_627550_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott627544",
-      "qid": "Q26105",
-      "revision": 2535761920,
-      "modified": "2026-08-24T10:24:56Z",
-      "key": "pt_species_627544_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott5516735",
-      "qid": "Q48266",
-      "revision": 2535761935,
-      "modified": "2026-08-24T10:24:58Z",
-      "key": "pt_species_5516735_body",
       "en": "species of plant",
       "fr": "espèce de plantes",
       "aliases": {
@@ -3124,21 +3085,6 @@
       }
     },
     {
-      "id": "ott386093",
-      "qid": "Q143657",
-      "revision": 2537167262,
-      "modified": "2026-08-27T20:01:47Z",
-      "key": "pt_species_386093_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [
-          "long-stamen chive"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott748370",
       "qid": "Q23400",
       "revision": 2552071035,
@@ -3234,491 +3180,6 @@
       }
     },
     {
-      "id": "ott138839",
-      "qid": "Q136410",
-      "revision": 2537125665,
-      "modified": "2026-08-27T17:17:59Z",
-      "key": "pt_species_138839_body",
-      "en": "species of plant",
-      "fr": "plante du type Aloe",
-      "aliases": {
-        "en": [
-          "Uitenhage aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996800",
-      "qid": "Q151265",
-      "revision": 2537124676,
-      "modified": "2026-08-27T17:12:36Z",
-      "key": "pt_species_3996800_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996872",
-      "qid": "Q151249",
-      "revision": 2537124673,
-      "modified": "2026-08-27T17:12:35Z",
-      "key": "pt_species_3996872_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott312977",
-      "qid": "Q149183",
-      "revision": 2537114717,
-      "modified": "2026-08-27T16:27:56Z",
-      "key": "pt_species_312977_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996703",
-      "qid": "Q148414",
-      "revision": 2537114709,
-      "modified": "2026-08-27T16:27:53Z",
-      "key": "pt_species_3996703_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996783",
-      "qid": "Q3634",
-      "revision": 2537123777,
-      "modified": "2026-08-27T17:07:54Z",
-      "key": "pt_species_3996783_body",
-      "en": "species of plant",
-      "fr": "espèce de plante de la famille des Xanthorrhoeaceae",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997031",
-      "qid": "Q3652",
-      "revision": 2537123789,
-      "modified": "2026-08-27T17:07:56Z",
-      "key": "pt_species_3997031_body",
-      "en": "species of plant",
-      "fr": "espèce de plante de la famille des Xanthorrhoeaceae",
-      "aliases": {
-        "en": [
-          "Fraserburg aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996897",
-      "qid": "Q3633",
-      "revision": 2537123779,
-      "modified": "2026-08-27T17:07:55Z",
-      "key": "pt_species_3996897_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996866",
-      "qid": "Q3641",
-      "revision": 2537123782,
-      "modified": "2026-08-27T17:07:55Z",
-      "key": "pt_species_3996866_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996890",
-      "qid": "Q3654",
-      "revision": 2537123788,
-      "modified": "2026-08-27T17:07:56Z",
-      "key": "pt_species_3996890_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott1073843",
-      "qid": "Q140933",
-      "revision": 2537125703,
-      "modified": "2026-08-27T17:18:10Z",
-      "key": "pt_species_1073843_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [
-          "Clanwilliam Aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996826",
-      "qid": "Q146409",
-      "revision": 2537125752,
-      "modified": "2026-08-27T17:18:20Z",
-      "key": "pt_species_3996826_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996732",
-      "qid": "Q24121",
-      "revision": 2537124823,
-      "modified": "2026-08-27T17:13:26Z",
-      "key": "pt_species_3996732_body",
-      "en": "species of the genus Aloe",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996944",
-      "qid": "Q23964",
-      "revision": 2537124822,
-      "modified": "2026-08-27T17:13:25Z",
-      "key": "pt_species_3996944_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997017",
-      "qid": "Q24326",
-      "revision": 2537124824,
-      "modified": "2026-08-27T17:13:27Z",
-      "key": "pt_species_3997017_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996723",
-      "qid": "Q82315",
-      "revision": 2537124861,
-      "modified": "2026-08-27T17:13:44Z",
-      "key": "pt_species_3996723_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996687",
-      "qid": "Q82331",
-      "revision": 2537124869,
-      "modified": "2026-08-27T17:13:47Z",
-      "key": "pt_species_3996687_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996984",
-      "qid": "Q82341",
-      "revision": 2537124874,
-      "modified": "2026-08-27T17:13:49Z",
-      "key": "pt_species_3996984_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996973",
-      "qid": "Q82324",
-      "revision": 2537124868,
-      "modified": "2026-08-27T17:13:47Z",
-      "key": "pt_species_3996973_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996994",
-      "qid": "Q82326",
-      "revision": 2537124865,
-      "modified": "2026-08-27T17:13:45Z",
-      "key": "pt_species_3996994_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997083",
-      "qid": "Q82318",
-      "revision": 2537124862,
-      "modified": "2026-08-27T17:13:44Z",
-      "key": "pt_species_3997083_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott259115",
-      "qid": "Q135018",
-      "revision": 2547649598,
-      "modified": "2026-09-19T03:54:33Z",
-      "key": "pt_species_259115_body",
-      "en": "species of plant",
-      "fr": "plante de la famille des Xanthorrhoeaceae",
-      "aliases": {
-        "en": [
-          "soap aloe",
-          "zebra aloe",
-          "African aloe",
-          "broadleaf aloe"
-        ],
-        "fr": [
-          "Aloès maculé"
-        ]
-      }
-    },
-    {
-      "id": "ott3996849",
-      "qid": "Q82338",
-      "revision": 2537124872,
-      "modified": "2026-08-27T17:13:48Z",
-      "key": "pt_species_3996849_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996802",
-      "qid": "Q82343",
-      "revision": 2537124873,
-      "modified": "2026-08-27T17:13:48Z",
-      "key": "pt_species_3996802_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997066",
-      "qid": "Q82333",
-      "revision": 2537124871,
-      "modified": "2026-08-27T17:13:48Z",
-      "key": "pt_species_3997066_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996815",
-      "qid": "Q82317",
-      "revision": 2537124864,
-      "modified": "2026-08-27T17:13:45Z",
-      "key": "pt_species_3996815_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996915",
-      "qid": "Q93644",
-      "revision": 2537118030,
-      "modified": "2026-08-27T16:41:26Z",
-      "key": "pt_species_3996915_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997037",
-      "qid": "Q93653",
-      "revision": 2537118038,
-      "modified": "2026-08-27T16:41:28Z",
-      "key": "pt_species_3997037_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996943",
-      "qid": "Q93621",
-      "revision": 2537118027,
-      "modified": "2026-08-27T16:41:25Z",
-      "key": "pt_species_3996943_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott598202",
-      "qid": "Q151228",
-      "revision": 2537124671,
-      "modified": "2026-08-27T17:12:35Z",
-      "key": "pt_species_598202_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [
-          "Cape speckled aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997112",
-      "qid": "Q93641",
-      "revision": 2537118029,
-      "modified": "2026-08-27T16:41:26Z",
-      "key": "pt_species_3997112_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996942",
-      "qid": "Q93405",
-      "revision": 2537117995,
-      "modified": "2026-08-27T16:41:08Z",
-      "key": "pt_species_3996942_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996861",
-      "qid": "Q93409",
-      "revision": 2537117999,
-      "modified": "2026-08-27T16:41:09Z",
-      "key": "pt_species_3996861_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997105",
-      "qid": "Q93403",
-      "revision": 2537117985,
-      "modified": "2026-08-27T16:41:07Z",
-      "key": "pt_species_3997105_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996955",
-      "qid": "Q129528",
-      "revision": 2537125653,
-      "modified": "2026-08-27T17:17:55Z",
-      "key": "pt_species_3996955_body",
-      "en": "species of plant",
-      "fr": "plante du type Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott598210",
-      "qid": "Q146366",
-      "revision": 2537125747,
-      "modified": "2026-08-27T17:18:20Z",
-      "key": "pt_species_598210_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [
-          "Rock aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3996987",
       "qid": "Q140021",
       "revision": 2537125692,
@@ -3730,64 +3191,6 @@
         "en": [
           "Spiral aloe"
         ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott598206",
-      "qid": "Q148622",
-      "revision": 2537114715,
-      "modified": "2026-08-27T16:27:55Z",
-      "key": "pt_species_598206_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [
-          "Mbashe aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott368255",
-      "qid": "Q141131",
-      "revision": 2537125712,
-      "modified": "2026-08-27T17:18:12Z",
-      "key": "pt_species_368255_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott25399",
-      "qid": "Q24380",
-      "revision": 2537124826,
-      "modified": "2026-08-27T17:13:27Z",
-      "key": "pt_species_25399_body",
-      "en": "medicinal aloe",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [
-          "Fynbos aloe"
-        ],
-        "fr": [
-          "Aloe Succotrina"
-        ]
-      }
-    },
-    {
-      "id": "ott3996793",
-      "qid": "Q148533",
-      "revision": 2537114713,
-      "modified": "2026-08-27T16:27:54Z",
-      "key": "pt_species_3996793_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
         "fr": []
       }
     },
@@ -3806,19 +3209,6 @@
           "Aloès vera",
           "Aloe Vera"
         ]
-      }
-    },
-    {
-      "id": "ott3997094",
-      "qid": "Q141032",
-      "revision": 2537125710,
-      "modified": "2026-08-27T17:18:12Z",
-      "key": "pt_species_3997094_body",
-      "en": "species of plant",
-      "fr": "plante du genre Aloe",
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -10406,19 +9796,6 @@
       }
     },
     {
-      "id": "ott252082",
-      "qid": "Q80223",
-      "revision": 2535859432,
-      "modified": "2026-08-24T16:44:12Z",
-      "key": "pt_species_252082_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott845045",
       "qid": "Q21187",
       "revision": 2548870237,
@@ -14877,97 +14254,6 @@
         "fr": [
           "Lilium columbianum"
         ]
-      }
-    },
-    {
-      "id": "ott884626",
-      "qid": "Q143686",
-      "revision": 2537079369,
-      "modified": "2026-08-27T13:45:34Z",
-      "key": "pt_species_884626_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott880771",
-      "qid": "Q149248",
-      "revision": 2537079384,
-      "modified": "2026-08-27T13:45:36Z",
-      "key": "pt_species_880771_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott73804",
-      "qid": "Q143662",
-      "revision": 2537079361,
-      "modified": "2026-08-27T13:45:32Z",
-      "key": "pt_species_73804_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott73808",
-      "qid": "Q143740",
-      "revision": 2537079373,
-      "modified": "2026-08-27T13:45:35Z",
-      "key": "pt_species_73808_body",
-      "en": "Lily species",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott700363",
-      "qid": "Q141789",
-      "revision": 2537079347,
-      "modified": "2026-08-27T13:45:30Z",
-      "key": "pt_species_700363_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott203219",
-      "qid": "Q141803",
-      "revision": 2537079354,
-      "modified": "2026-08-27T13:45:31Z",
-      "key": "pt_species_203219_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott167402",
-      "qid": "Q141821",
-      "revision": 2537079357,
-      "modified": "2026-08-27T13:45:31Z",
-      "key": "pt_species_167402_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -22934,21 +22220,6 @@
       }
     },
     {
-      "id": "ott326639",
-      "qid": "Q148619",
-      "revision": 2536477874,
-      "modified": "2026-08-26T02:55:11Z",
-      "key": "pt_species_326639_body",
-      "en": "species of plant",
-      "fr": "espèce de plantes",
-      "aliases": {
-        "en": [],
-        "fr": [
-          "Solanum malacoxylon"
-        ]
-      }
-    },
-    {
       "id": "ott378964",
       "qid": "Q23501",
       "revision": 2547649593,
@@ -26411,6 +25682,24 @@
         "en": [],
         "fr": []
       }
+    },
+    {
+      "id": "ott164209",
+      "qid": "Q156918",
+      "revision": 2553001845,
+      "modified": "2026-10-04T10:27:24Z",
+      "key": "pt_species_164209_body",
+      "en": "species of plant",
+      "fr": "arbre commun dans les régions tempérées (Salix)",
+      "aliases": {
+        "en": [
+          "white willow",
+          "golden willow"
+        ],
+        "fr": [
+          "saule blanc"
+        ]
+      }
     }
   ],
   "labels": [
@@ -28789,15 +28078,6 @@
       }
     },
     {
-      "id": "ott5516742",
-      "qid": "Q26112",
-      "revision": 2535761926,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott627550",
       "qid": "Q26113",
       "revision": 2535761929,
@@ -28807,54 +28087,9 @@
       }
     },
     {
-      "id": "ott627544",
-      "qid": "Q26105",
-      "revision": 2535761920,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott5516765",
       "qid": "Q48302",
       "revision": 2535761942,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott5516746",
-      "qid": "Q48269",
-      "revision": 2535761937,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott6124707",
-      "qid": "Q35973",
-      "revision": 2535761931,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott5516795",
-      "qid": "Q48271",
-      "revision": 2535761940,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott5516735",
-      "qid": "Q48266",
-      "revision": 2535761935,
       "aliases": {
         "en": [],
         "fr": []
@@ -29151,17 +28386,6 @@
       }
     },
     {
-      "id": "ott386093",
-      "qid": "Q143657",
-      "revision": 2537167262,
-      "aliases": {
-        "en": [
-          "long-stamen chive"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott748370",
       "qid": "Q23400",
       "revision": 2552071035,
@@ -29241,347 +28465,6 @@
       }
     },
     {
-      "id": "ott138839",
-      "qid": "Q136410",
-      "revision": 2537125665,
-      "aliases": {
-        "en": [
-          "Uitenhage aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996800",
-      "qid": "Q151265",
-      "revision": 2537124676,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996872",
-      "qid": "Q151249",
-      "revision": 2537124673,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott312977",
-      "qid": "Q149183",
-      "revision": 2537114717,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996703",
-      "qid": "Q148414",
-      "revision": 2537114709,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996783",
-      "qid": "Q3634",
-      "revision": 2537123777,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997031",
-      "qid": "Q3652",
-      "revision": 2537123789,
-      "aliases": {
-        "en": [
-          "Fraserburg aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996897",
-      "qid": "Q3633",
-      "revision": 2537123779,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996866",
-      "qid": "Q3641",
-      "revision": 2537123782,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996890",
-      "qid": "Q3654",
-      "revision": 2537123788,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott1073843",
-      "qid": "Q140933",
-      "revision": 2537125703,
-      "aliases": {
-        "en": [
-          "Clanwilliam Aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996826",
-      "qid": "Q146409",
-      "revision": 2537125752,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996732",
-      "qid": "Q24121",
-      "revision": 2537124823,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996944",
-      "qid": "Q23964",
-      "revision": 2537124822,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997017",
-      "qid": "Q24326",
-      "revision": 2537124824,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996723",
-      "qid": "Q82315",
-      "revision": 2537124861,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996687",
-      "qid": "Q82331",
-      "revision": 2537124869,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996984",
-      "qid": "Q82341",
-      "revision": 2537124874,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996973",
-      "qid": "Q82324",
-      "revision": 2537124868,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996994",
-      "qid": "Q82326",
-      "revision": 2537124865,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997083",
-      "qid": "Q82318",
-      "revision": 2537124862,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott259115",
-      "qid": "Q135018",
-      "revision": 2547649598,
-      "aliases": {
-        "en": [
-          "soap aloe",
-          "zebra aloe",
-          "African aloe",
-          "broadleaf aloe"
-        ],
-        "fr": [
-          "Aloès maculé"
-        ]
-      }
-    },
-    {
-      "id": "ott3996849",
-      "qid": "Q82338",
-      "revision": 2537124872,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996802",
-      "qid": "Q82343",
-      "revision": 2537124873,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997066",
-      "qid": "Q82333",
-      "revision": 2537124871,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996815",
-      "qid": "Q82317",
-      "revision": 2537124864,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996915",
-      "qid": "Q93644",
-      "revision": 2537118030,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997037",
-      "qid": "Q93653",
-      "revision": 2537118038,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996943",
-      "qid": "Q93621",
-      "revision": 2537118027,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott598202",
-      "qid": "Q151228",
-      "revision": 2537124671,
-      "aliases": {
-        "en": [
-          "Cape speckled aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997112",
-      "qid": "Q93641",
-      "revision": 2537118029,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996942",
-      "qid": "Q93405",
-      "revision": 2537117995,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996861",
-      "qid": "Q93409",
-      "revision": 2537117999,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3997105",
-      "qid": "Q93403",
-      "revision": 2537117985,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3996955",
-      "qid": "Q129528",
-      "revision": 2537125653,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott598210",
-      "qid": "Q146366",
-      "revision": 2537125747,
-      "aliases": {
-        "en": [
-          "Rock aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott3996987",
       "qid": "Q140021",
       "revision": 2537125692,
@@ -29589,48 +28472,6 @@
         "en": [
           "Spiral aloe"
         ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott598206",
-      "qid": "Q148622",
-      "revision": 2537114715,
-      "aliases": {
-        "en": [
-          "Mbashe aloe"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott368255",
-      "qid": "Q141131",
-      "revision": 2537125712,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott25399",
-      "qid": "Q24380",
-      "revision": 2537124826,
-      "aliases": {
-        "en": [
-          "Fynbos aloe"
-        ],
-        "fr": [
-          "Aloe Succotrina"
-        ]
-      }
-    },
-    {
-      "id": "ott3996793",
-      "qid": "Q148533",
-      "revision": 2537114713,
-      "aliases": {
-        "en": [],
         "fr": []
       }
     },
@@ -29645,15 +28486,6 @@
           "Aloès vera",
           "Aloe Vera"
         ]
-      }
-    },
-    {
-      "id": "ott3997094",
-      "qid": "Q141032",
-      "revision": 2537125710,
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -35027,54 +33859,9 @@
       }
     },
     {
-      "id": "ott3943356",
-      "qid": "Q148451",
-      "revision": 2535859497,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott596665",
       "qid": "Q146117",
       "revision": 2535859475,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott85724",
-      "qid": "Q148528",
-      "revision": 2535859499,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3943382",
-      "qid": "Q148423",
-      "revision": 2535859494,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3943358",
-      "qid": "Q148433",
-      "revision": 2535859495,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott252082",
-      "qid": "Q80223",
-      "revision": 2535859432,
       "aliases": {
         "en": [],
         "fr": []
@@ -38771,69 +37558,6 @@
       }
     },
     {
-      "id": "ott884626",
-      "qid": "Q143686",
-      "revision": 2537079369,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott880771",
-      "qid": "Q149248",
-      "revision": 2537079384,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott73804",
-      "qid": "Q143662",
-      "revision": 2537079361,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott73808",
-      "qid": "Q143740",
-      "revision": 2537079373,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott700363",
-      "qid": "Q141789",
-      "revision": 2537079347,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott203219",
-      "qid": "Q141803",
-      "revision": 2537079354,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott167402",
-      "qid": "Q141821",
-      "revision": 2537079357,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott426441",
       "qid": "Q134876",
       "revision": 2549055878,
@@ -40464,30 +39188,6 @@
       }
     },
     {
-      "id": "ott558367",
-      "qid": "Q146125",
-      "revision": 2535866498,
-      "aliases": {
-        "en": [
-          "Pitcher plant"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott37790",
-      "qid": "Q150513",
-      "revision": 2535866543,
-      "aliases": {
-        "en": [
-          "N. merrilliana"
-        ],
-        "fr": [
-          "N. merrilliana"
-        ]
-      }
-    },
-    {
       "id": "ott610896",
       "qid": "Q132973",
       "revision": 2535864874,
@@ -40498,26 +39198,6 @@
         "fr": [
           "Nepenthes Rajah"
         ]
-      }
-    },
-    {
-      "id": "ott232983",
-      "qid": "Q140953",
-      "revision": 2535866407,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott23907",
-      "qid": "Q150501",
-      "revision": 2535866533,
-      "aliases": {
-        "en": [
-          "Pitcher plant"
-        ],
-        "fr": []
       }
     },
     {
@@ -45695,26 +44375,6 @@
       }
     },
     {
-      "id": "ott121213",
-      "qid": "Q148963",
-      "revision": 2536464240,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott326639",
-      "qid": "Q148619",
-      "revision": 2536477874,
-      "aliases": {
-        "en": [],
-        "fr": [
-          "Solanum malacoxylon"
-        ]
-      }
-    },
-    {
       "id": "ott378964",
       "qid": "Q23501",
       "revision": 2547649593,
@@ -45773,15 +44433,6 @@
       }
     },
     {
-      "id": "ott835545",
-      "qid": "Q148419",
-      "revision": 2552328935,
-      "aliases": {
-        "en": [],
-        "fr": []
-      }
-    },
-    {
       "id": "ott494835",
       "qid": "Q10998",
       "revision": 2551333340,
@@ -45798,15 +44449,6 @@
           "tubercule",
           "Solanum tuberosum"
         ]
-      }
-    },
-    {
-      "id": "ott503660",
-      "qid": "Q33400",
-      "revision": 2536464232,
-      "aliases": {
-        "en": [],
-        "fr": []
       }
     },
     {
@@ -48554,6 +47196,20 @@
       "aliases": {
         "en": [],
         "fr": []
+      }
+    },
+    {
+      "id": "ott164209",
+      "qid": "Q156918",
+      "revision": 2553001845,
+      "aliases": {
+        "en": [
+          "white willow",
+          "golden willow"
+        ],
+        "fr": [
+          "saule blanc"
+        ]
       }
     }
   ]

@@ -30,11 +30,13 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
     private var requested:PlantImageKey?=null
     private var failed=false
     private val scrollListener=ViewTreeObserver.OnScrollChangedListener { requestIfVisible() }
+    val herbarium: Boolean get() = PlantHerbarium.hasPlate(specimen.id, mode)
 
     init { importantForAccessibility=IMPORTANT_FOR_ACCESSIBILITY_YES; describe() }
 
     private fun describe() {
-        contentDescription=context.getString(R.string.bot_plate_accessibility,context.getString(specimen.name),context.getString(mode.label),
+        contentDescription=if(herbarium) context.getString(R.string.bot_herbarium_accessibility,context.getString(specimen.name)) else
+            context.getString(R.string.bot_plate_accessibility,context.getString(specimen.name),context.getString(mode.label),
             context.getString(specimen.captions.getValue(mode)))
     }
     private fun clear(){ request?.cancel();request=null;requested=null;cached=null;failed=false;invalidate() }
@@ -82,6 +84,17 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
         if(width<=0 || height<=0) return
         requestIfVisible()
         val c=canvas
+            if(herbarium) {
+                c.drawColor(0xfff4f0e3.toInt())
+                val image=cached
+                if(image!=null) {
+                    val factor=min(width.toFloat()/image.width,height.toFloat()/image.height)
+                    val w=image.width*factor;val h=image.height*factor
+                    c.drawBitmap(image,null,RectF((width-w)/2,(height-h)/2,(width+w)/2,(height+h)/2),paint)
+                }
+                // No generated plate receives vector scale bars, numbers or leader lines.
+                return
+            }
             c.drawColor(0xfff4f0e3.toInt())
             val factor=min(width/300f,height/(if(compact) 302f else 340f))
             c.save();c.translate((width-300f*factor)/2,0f);c.scale(factor,factor)

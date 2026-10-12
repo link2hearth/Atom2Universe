@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2079,
+  "candidate_count": 2169,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -684,6 +684,7 @@
       "en": "Thale cress",
       "fr": "Arabette des dames",
       "seed": true,
+      "taxonomy_context": "Land plants",
       "id": "ott309263",
       "ott": 309263,
       "label_qid": "Q158695",
@@ -694,6 +695,7 @@
       "en": "English oak",
       "fr": "Chêne pédonculé",
       "seed": true,
+      "taxonomy_context": "Land plants",
       "id": "ott239659",
       "ott": 239659,
       "label_qid": "Q165145",
@@ -704,6 +706,7 @@
       "en": "Sunflower",
       "fr": "Tournesol",
       "seed": true,
+      "taxonomy_context": "Land plants",
       "id": "ott515712",
       "ott": 515712,
       "label_qid": "Q171497",
@@ -714,6 +717,7 @@
       "en": "Pea",
       "fr": "Pois cultivé",
       "seed": true,
+      "taxonomy_context": "Land plants",
       "id": "ott359905",
       "ott": 359905,
       "label_qid": "Q25237",
@@ -754,6 +758,7 @@
       "en": "Scots pine",
       "fr": "Pin sylvestre",
       "seed": true,
+      "taxonomy_context": "Land plants",
       "id": "ott568619",
       "ott": 568619,
       "label_qid": "Q133128",
@@ -1233,6 +1238,7 @@
       "en": "Acer platanoides",
       "fr": "érable plane",
       "qid": "Q26745",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott948919",
       "ott": 948919,
@@ -1244,6 +1250,7 @@
       "en": "Acer pseudoplatanus",
       "fr": "érable sycomore",
       "qid": "Q156944",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott948911",
       "ott": 948911,
@@ -1266,6 +1273,7 @@
       "en": "Achillea millefolium",
       "fr": "Achillée millefeuille",
       "qid": "Q25408",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott828103",
       "ott": 828103,
@@ -1668,17 +1676,6 @@
       "label_revision": 2537205101
     },
     {
-      "name": "Aglaia amplexicaulis",
-      "en": "Aglaia amplexicaulis",
-      "fr": "Aglaia amplexicaulis",
-      "qid": "Q26112",
-      "seed": false,
-      "id": "ott5516742",
-      "ott": 5516742,
-      "label_qid": "Q26112",
-      "label_revision": 2535761926
-    },
-    {
       "name": "Aglaia archboldiana",
       "en": "Aglaia archboldiana",
       "fr": "Aglaia archboldiana",
@@ -1688,17 +1685,6 @@
       "ott": 627550,
       "label_qid": "Q26113",
       "label_revision": 2535761929
-    },
-    {
-      "name": "Aglaia basiphylla",
-      "en": "Aglaia basiphylla",
-      "fr": "Aglaia basiphylla",
-      "qid": "Q26105",
-      "seed": false,
-      "id": "ott627544",
-      "ott": 627544,
-      "label_qid": "Q26105",
-      "label_revision": 2535761920
     },
     {
       "name": "Aglaia evansensis",
@@ -1712,54 +1698,11 @@
       "label_revision": 2535761942
     },
     {
-      "name": "Aglaia fragilis",
-      "en": "Aglaia fragilis",
-      "fr": "Aglaia fragilis",
-      "qid": "Q48269",
-      "seed": false,
-      "id": "ott5516746",
-      "ott": 5516746,
-      "label_qid": "Q48269",
-      "label_revision": 2535761937
-    },
-    {
-      "name": "Aglaia gracilis",
-      "en": "Aglaia gracilis",
-      "fr": "Aglaia gracilis",
-      "qid": "Q35973",
-      "seed": false,
-      "id": "ott6124707",
-      "ott": 6124707,
-      "label_qid": "Q35973",
-      "label_revision": 2535761931
-    },
-    {
-      "name": "Aglaia saltatorum",
-      "en": "Aglaia saltatorum",
-      "fr": "Aglaia saltatorum",
-      "qid": "Q48271",
-      "seed": false,
-      "id": "ott5516795",
-      "ott": 5516795,
-      "label_qid": "Q48271",
-      "label_revision": 2535761940
-    },
-    {
-      "name": "Aglaia unifolia",
-      "en": "Aglaia unifolia",
-      "fr": "Aglaia unifolia",
-      "qid": "Q48266",
-      "seed": false,
-      "id": "ott5516735",
-      "ott": 5516735,
-      "label_qid": "Q48266",
-      "label_revision": 2535761935
-    },
-    {
       "name": "Agrimonia eupatoria",
       "en": "Agrimonia eupatoria",
       "fr": "Agrimonia eupatoria",
       "qid": "Q156865",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott852855",
       "ott": 852855,
@@ -1804,6 +1747,7 @@
       "en": "Ajuga reptans",
       "fr": "Bugle rampante",
       "qid": "Q157249",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott11338",
       "ott": 11338,
@@ -1925,6 +1869,7 @@
       "en": "Allium ampeloprasum",
       "fr": "poireau perpétuel",
       "qid": "Q148995",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott748378",
       "ott": 748378,
@@ -1936,6 +1881,7 @@
       "en": "onion",
       "fr": "Oignon",
       "qid": "Q23485",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott781600",
       "ott": 781600,
@@ -1947,6 +1893,7 @@
       "en": "Welsh onion",
       "fr": "ciboule",
       "qid": "Q27938",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott856720",
       "ott": 856720,
@@ -1954,21 +1901,11 @@
       "label_revision": 2549640581
     },
     {
-      "name": "Allium macrostemon",
-      "en": "Allium macrostemon",
-      "fr": "Allium macrostemon",
-      "qid": "Q143657",
-      "seed": false,
-      "id": "ott386093",
-      "ott": 386093,
-      "label_qid": "Q143657",
-      "label_revision": 2537167262
-    },
-    {
       "name": "Allium sativum",
       "en": "Allium sativum",
       "fr": "ail",
       "qid": "Q23400",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott748370",
       "ott": 748370,
@@ -1980,6 +1917,7 @@
       "en": "Allium ursinum",
       "fr": "ail des ours",
       "qid": "Q130882",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott748364",
       "ott": 748364,
@@ -2002,407 +1940,12 @@
       "en": "Alnus glutinosa",
       "fr": "Alnus glutinosa",
       "qid": "Q156904",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott791130",
       "ott": 791130,
       "label_qid": "Q156904",
       "label_revision": 2547643784
-    },
-    {
-      "name": "Aloe africana",
-      "en": "Aloe africana",
-      "fr": "Aloe africana",
-      "qid": "Q136410",
-      "seed": false,
-      "id": "ott138839",
-      "ott": 138839,
-      "label_qid": "Q136410",
-      "label_revision": 2537125665
-    },
-    {
-      "name": "Aloe albovestita",
-      "en": "Aloe albovestita",
-      "fr": "Aloe albovestita",
-      "qid": "Q151265",
-      "seed": false,
-      "id": "ott3996800",
-      "ott": 3996800,
-      "label_qid": "Q151265",
-      "label_revision": 2537124676
-    },
-    {
-      "name": "Aloe alexandrei",
-      "en": "Aloe alexandrei",
-      "fr": "Aloe alexandrei",
-      "qid": "Q151249",
-      "seed": false,
-      "id": "ott3996872",
-      "ott": 3996872,
-      "label_qid": "Q151249",
-      "label_revision": 2537124673
-    },
-    {
-      "name": "Aloe arenicola",
-      "en": "Aloe arenicola",
-      "fr": "Aloe arenicola",
-      "qid": "Q149183",
-      "seed": false,
-      "id": "ott312977",
-      "ott": 312977,
-      "label_qid": "Q149183",
-      "label_revision": 2537114717
-    },
-    {
-      "name": "Aloe broomii",
-      "en": "Aloe broomii",
-      "fr": "Aloe broomii",
-      "qid": "Q148414",
-      "seed": false,
-      "id": "ott3996703",
-      "ott": 3996703,
-      "label_qid": "Q148414",
-      "label_revision": 2537114709
-    },
-    {
-      "name": "Aloe cheranganiensis",
-      "en": "Aloe cheranganiensis",
-      "fr": "Aloe cheranganiensis",
-      "qid": "Q3634",
-      "seed": false,
-      "id": "ott3996783",
-      "ott": 3996783,
-      "label_qid": "Q3634",
-      "label_revision": 2537123777
-    },
-    {
-      "name": "Aloe chlorantha",
-      "en": "Aloe chlorantha",
-      "fr": "Aloe chlorantha",
-      "qid": "Q3652",
-      "seed": false,
-      "id": "ott3997031",
-      "ott": 3997031,
-      "label_qid": "Q3652",
-      "label_revision": 2537123789
-    },
-    {
-      "name": "Aloe christianii",
-      "en": "Aloe christianii",
-      "fr": "Aloe christianii",
-      "qid": "Q3633",
-      "seed": false,
-      "id": "ott3996897",
-      "ott": 3996897,
-      "label_qid": "Q3633",
-      "label_revision": 2537123779
-    },
-    {
-      "name": "Aloe chrysostachys",
-      "en": "Aloe chrysostachys",
-      "fr": "Aloe chrysostachys",
-      "qid": "Q3641",
-      "seed": false,
-      "id": "ott3996866",
-      "ott": 3996866,
-      "label_qid": "Q3641",
-      "label_revision": 2537123782
-    },
-    {
-      "name": "Aloe citrea",
-      "en": "Aloe citrea",
-      "fr": "Aloe citrea",
-      "qid": "Q3654",
-      "seed": false,
-      "id": "ott3996890",
-      "ott": 3996890,
-      "label_qid": "Q3654",
-      "label_revision": 2537123788
-    },
-    {
-      "name": "Aloe comosa",
-      "en": "Aloe comosa",
-      "fr": "Aloe comosa",
-      "qid": "Q140933",
-      "seed": false,
-      "id": "ott1073843",
-      "ott": 1073843,
-      "label_qid": "Q140933",
-      "label_revision": 2537125703
-    },
-    {
-      "name": "Aloe cryptopoda",
-      "en": "Aloe cryptopoda",
-      "fr": "Aloe cryptopoda",
-      "qid": "Q146409",
-      "seed": false,
-      "id": "ott3996826",
-      "ott": 3996826,
-      "label_qid": "Q146409",
-      "label_revision": 2537125752
-    },
-    {
-      "name": "Aloe hoffmannii",
-      "en": "Aloe hoffmannii",
-      "fr": "Aloe hoffmannii",
-      "qid": "Q24121",
-      "seed": false,
-      "id": "ott3996732",
-      "ott": 3996732,
-      "label_qid": "Q24121",
-      "label_revision": 2537124823
-    },
-    {
-      "name": "Aloe irafensis",
-      "en": "Aloe irafensis",
-      "fr": "Aloe irafensis",
-      "qid": "Q23964",
-      "seed": false,
-      "id": "ott3996944",
-      "ott": 3996944,
-      "label_qid": "Q23964",
-      "label_revision": 2537124822
-    },
-    {
-      "name": "Aloe jawiyon",
-      "en": "Aloe jawiyon",
-      "fr": "Aloe jawiyon",
-      "qid": "Q24326",
-      "seed": false,
-      "id": "ott3997017",
-      "ott": 3997017,
-      "label_qid": "Q24326",
-      "label_revision": 2537124824
-    },
-    {
-      "name": "Aloe lucile-allorgeae",
-      "en": "Aloe lucile-allorgeae",
-      "fr": "Aloe lucile-allorgeae",
-      "qid": "Q82315",
-      "seed": false,
-      "id": "ott3996723",
-      "ott": 3996723,
-      "label_qid": "Q82315",
-      "label_revision": 2537124861
-    },
-    {
-      "name": "Aloe luntii",
-      "en": "Aloe luntii",
-      "fr": "Aloe luntii",
-      "qid": "Q82331",
-      "seed": false,
-      "id": "ott3996687",
-      "ott": 3996687,
-      "label_qid": "Q82331",
-      "label_revision": 2537124869
-    },
-    {
-      "name": "Aloe macleayi",
-      "en": "Aloe macleayi",
-      "fr": "Aloe macleayi",
-      "qid": "Q82341",
-      "seed": false,
-      "id": "ott3996984",
-      "ott": 3996984,
-      "label_qid": "Q82341",
-      "label_revision": 2537124874
-    },
-    {
-      "name": "Aloe macrocarpa",
-      "en": "Aloe macrocarpa",
-      "fr": "Aloe macrocarpa",
-      "qid": "Q82324",
-      "seed": false,
-      "id": "ott3996973",
-      "ott": 3996973,
-      "label_qid": "Q82324",
-      "label_revision": 2537124868
-    },
-    {
-      "name": "Aloe macroclada",
-      "en": "Aloe macroclada",
-      "fr": "Aloe macroclada",
-      "qid": "Q82326",
-      "seed": false,
-      "id": "ott3996994",
-      "ott": 3996994,
-      "label_qid": "Q82326",
-      "label_revision": 2537124865
-    },
-    {
-      "name": "Aloe macrosiphon",
-      "en": "Aloe macrosiphon",
-      "fr": "Aloe macrosiphon",
-      "qid": "Q82318",
-      "seed": false,
-      "id": "ott3997083",
-      "ott": 3997083,
-      "label_qid": "Q82318",
-      "label_revision": 2537124862
-    },
-    {
-      "name": "Aloe maculata",
-      "en": "Aloe maculata",
-      "fr": "Aloe maculata",
-      "qid": "Q135018",
-      "seed": false,
-      "id": "ott259115",
-      "ott": 259115,
-      "label_qid": "Q135018",
-      "label_revision": 2547649598
-    },
-    {
-      "name": "Aloe mayottensis",
-      "en": "Aloe mayottensis",
-      "fr": "Aloe mayottensis",
-      "qid": "Q82338",
-      "seed": false,
-      "id": "ott3996849",
-      "ott": 3996849,
-      "label_qid": "Q82338",
-      "label_revision": 2537124872
-    },
-    {
-      "name": "Aloe mcloughlinii",
-      "en": "Aloe mcloughlinii",
-      "fr": "Aloe mcloughlinii",
-      "qid": "Q82343",
-      "seed": false,
-      "id": "ott3996802",
-      "ott": 3996802,
-      "label_qid": "Q82343",
-      "label_revision": 2537124873
-    },
-    {
-      "name": "Aloe medishiana",
-      "en": "Aloe medishiana",
-      "fr": "Aloe medishiana",
-      "qid": "Q82333",
-      "seed": false,
-      "id": "ott3997066",
-      "ott": 3997066,
-      "label_qid": "Q82333",
-      "label_revision": 2537124871
-    },
-    {
-      "name": "Aloe megalocarpa",
-      "en": "Aloe megalocarpa",
-      "fr": "Aloe megalocarpa",
-      "qid": "Q82317",
-      "seed": false,
-      "id": "ott3996815",
-      "ott": 3996815,
-      "label_qid": "Q82317",
-      "label_revision": 2537124864
-    },
-    {
-      "name": "Aloe mendesii",
-      "en": "Aloe mendesii",
-      "fr": "Aloe mendesii",
-      "qid": "Q93644",
-      "seed": false,
-      "id": "ott3996915",
-      "ott": 3996915,
-      "label_qid": "Q93644",
-      "label_revision": 2537118030
-    },
-    {
-      "name": "Aloe metallica",
-      "en": "Aloe metallica",
-      "fr": "Aloe metallica",
-      "qid": "Q93653",
-      "seed": false,
-      "id": "ott3997037",
-      "ott": 3997037,
-      "label_qid": "Q93653",
-      "label_revision": 2537118038
-    },
-    {
-      "name": "Aloe micracantha",
-      "en": "Aloe micracantha",
-      "fr": "Aloe micracantha",
-      "qid": "Q93621",
-      "seed": false,
-      "id": "ott3996943",
-      "ott": 3996943,
-      "label_qid": "Q93621",
-      "label_revision": 2537118027
-    },
-    {
-      "name": "Aloe microstigma",
-      "en": "Aloe microstigma",
-      "fr": "Aloe microstigma",
-      "qid": "Q151228",
-      "seed": false,
-      "id": "ott598202",
-      "ott": 598202,
-      "label_qid": "Q151228",
-      "label_revision": 2537124671
-    },
-    {
-      "name": "Aloe milne-redheadii",
-      "en": "Aloe milne-redheadii",
-      "fr": "Aloe milne-redheadii",
-      "qid": "Q93641",
-      "seed": false,
-      "id": "ott3997112",
-      "ott": 3997112,
-      "label_qid": "Q93641",
-      "label_revision": 2537118029
-    },
-    {
-      "name": "Aloe modesta",
-      "en": "Aloe modesta",
-      "fr": "Aloe modesta",
-      "qid": "Q93405",
-      "seed": false,
-      "id": "ott3996942",
-      "ott": 3996942,
-      "label_qid": "Q93405",
-      "label_revision": 2537117995
-    },
-    {
-      "name": "Aloe monotropa",
-      "en": "Aloe monotropa",
-      "fr": "Aloe monotropa",
-      "qid": "Q93409",
-      "seed": false,
-      "id": "ott3996861",
-      "ott": 3996861,
-      "label_qid": "Q93409",
-      "label_revision": 2537117999
-    },
-    {
-      "name": "Aloe monticola",
-      "en": "Aloe monticola",
-      "fr": "Aloe monticola",
-      "qid": "Q93403",
-      "seed": false,
-      "id": "ott3997105",
-      "ott": 3997105,
-      "label_qid": "Q93403",
-      "label_revision": 2537117985
-    },
-    {
-      "name": "Aloe namorokaensis",
-      "en": "Aloe namorokaensis",
-      "fr": "Aloe namorokaensis",
-      "qid": "Q129528",
-      "seed": false,
-      "id": "ott3996955",
-      "ott": 3996955,
-      "label_qid": "Q129528",
-      "label_revision": 2537125653
-    },
-    {
-      "name": "Aloe petricola",
-      "en": "Aloe petricola",
-      "fr": "Aloe petricola",
-      "qid": "Q146366",
-      "seed": false,
-      "id": "ott598210",
-      "ott": 598210,
-      "label_qid": "Q146366",
-      "label_revision": 2537125747
     },
     {
       "name": "Aloe polyphylla",
@@ -2416,70 +1959,16 @@
       "label_revision": 2537125692
     },
     {
-      "name": "Aloe reynoldsii",
-      "en": "Aloe reynoldsii",
-      "fr": "Aloe reynoldsii",
-      "qid": "Q148622",
-      "seed": false,
-      "id": "ott598206",
-      "ott": 598206,
-      "label_qid": "Q148622",
-      "label_revision": 2537114715
-    },
-    {
-      "name": "Aloe sinkatana",
-      "en": "Aloe sinkatana",
-      "fr": "Aloe sinkatana",
-      "qid": "Q141131",
-      "seed": false,
-      "id": "ott368255",
-      "ott": 368255,
-      "label_qid": "Q141131",
-      "label_revision": 2537125712
-    },
-    {
-      "name": "Aloe succotrina",
-      "en": "Aloe succotrina",
-      "fr": "Aloe succotrina",
-      "qid": "Q24380",
-      "seed": false,
-      "id": "ott25399",
-      "ott": 25399,
-      "label_qid": "Q24380",
-      "label_revision": 2537124826
-    },
-    {
-      "name": "Aloe vaombe",
-      "en": "Aloe vaombe",
-      "fr": "Aloe vaombe",
-      "qid": "Q148533",
-      "seed": false,
-      "id": "ott3996793",
-      "ott": 3996793,
-      "label_qid": "Q148533",
-      "label_revision": 2537114713
-    },
-    {
       "name": "Aloe vera",
       "en": "Aloe vera",
       "fr": "Aloe vera",
       "qid": "Q80079",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott62303",
       "ott": 62303,
       "label_qid": "Q80079",
       "label_revision": 2550694446
-    },
-    {
-      "name": "Aloe wildii",
-      "en": "Aloe wildii",
-      "fr": "Aloe wildii",
-      "qid": "Q141032",
-      "seed": false,
-      "id": "ott3997094",
-      "ott": 3997094,
-      "label_qid": "Q141032",
-      "label_revision": 2537125710
     },
     {
       "name": "Alstonia scholaris",
@@ -2799,6 +2288,7 @@
       "en": "Ananas comosus",
       "fr": "Ananas comosus",
       "qid": "Q1493",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott627039",
       "ott": 627039,
@@ -2964,6 +2454,7 @@
       "en": "Anemone sylvestris",
       "fr": "Anémone sauvage",
       "qid": "Q157358",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott977458",
       "ott": 977458,
@@ -2975,6 +2466,7 @@
       "en": "Anethum graveolens",
       "fr": "aneth",
       "qid": "Q26686",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott378039",
       "ott": 378039,
@@ -3162,6 +2654,7 @@
       "en": "Antirrhinum majus",
       "fr": "Muflier à grandes fleurs",
       "qid": "Q156843",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott596457",
       "ott": 596457,
@@ -3503,6 +2996,7 @@
       "en": "peanut",
       "fr": "arachide",
       "qid": "Q37383",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott39541",
       "ott": 39541,
@@ -3613,6 +3107,7 @@
       "en": "Areca catechu",
       "fr": "Palmier à bétel",
       "qid": "Q156969",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott180819",
       "ott": 180819,
@@ -3720,6 +3215,7 @@
       "en": "Armoracia rusticana",
       "fr": "raifort",
       "qid": "Q26545",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott309283",
       "ott": 309283,
@@ -3962,6 +3458,7 @@
       "en": "Avena sativa",
       "fr": "avoine cultivée",
       "qid": "Q12104",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott790381",
       "ott": 790381,
@@ -4050,6 +3547,7 @@
       "en": "Barbarea vulgaris",
       "fr": "Barbarea vulgaris",
       "qid": "Q157285",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott35910",
       "ott": 35910,
@@ -4094,6 +3592,7 @@
       "en": "Bellis perennis",
       "fr": "pâquerette",
       "qid": "Q26158",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott792843",
       "ott": 792843,
@@ -4182,6 +3681,7 @@
       "en": "Betula pendula",
       "fr": "Bouleau verruqueux",
       "qid": "Q156895",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott267719",
       "ott": 267719,
@@ -4461,6 +3961,7 @@
       "en": "Bowiea volubilis",
       "fr": "Bowiea volubilis",
       "qid": "Q140288",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott47209",
       "ott": 47209,
@@ -4560,6 +4061,7 @@
       "en": "Brassica oleracea",
       "fr": "Brassica olearacea",
       "qid": "Q146212",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott833642",
       "ott": 833642,
@@ -4571,6 +4073,7 @@
       "en": "Brassica rapa",
       "fr": "Brassica rapa",
       "qid": "Q3384",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott833632",
       "ott": 833632,
@@ -4692,6 +4195,7 @@
       "en": "Buxus sempervirens",
       "fr": "Buxus sempervirens",
       "qid": "Q27344",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1000252",
       "ott": 1000252,
@@ -4802,6 +4306,7 @@
       "en": "Calluna vulgaris",
       "fr": "Calluna vulgaris",
       "qid": "Q26615",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1080794",
       "ott": 1080794,
@@ -4862,6 +4367,7 @@
       "en": "Camellia sinensis",
       "fr": "théier",
       "qid": "Q101815",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1058509",
       "ott": 1058509,
@@ -4884,6 +4390,7 @@
       "en": "Campanula rotundifolia",
       "fr": "Campanule à feuilles rondes",
       "qid": "Q27989",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott667590",
       "ott": 667590,
@@ -4969,6 +4476,7 @@
       "en": "Capsella bursa-pastoris",
       "fr": "Capsella bursa-pastoris",
       "qid": "Q27264",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott833644",
       "ott": 833644,
@@ -4980,6 +4488,7 @@
       "en": "Capsicum annuum",
       "fr": "Capsicum annuum",
       "qid": "Q1380",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott473836",
       "ott": 473836,
@@ -5035,6 +4544,7 @@
       "en": "Cardamine pratensis",
       "fr": "Cardamine des prés",
       "qid": "Q27490",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott609020",
       "ott": 609020,
@@ -5101,6 +4611,7 @@
       "en": "Carum carvi",
       "fr": "Carvi",
       "qid": "Q26811",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott498463",
       "ott": 498463,
@@ -5134,6 +4645,7 @@
       "en": "Castanea sativa",
       "fr": "châtaignier commun",
       "qid": "Q22699",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1028994",
       "ott": 1028994,
@@ -5200,6 +4712,7 @@
       "en": "Centaurea cyanus",
       "fr": "bleuet des champs",
       "qid": "Q156921",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott18501",
       "ott": 18501,
@@ -5587,6 +5100,7 @@
       "en": "cicer arietinum",
       "fr": "pois chiche",
       "qid": "Q81375",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott612429",
       "ott": 612429,
@@ -5752,6 +5266,7 @@
       "en": "pomelo",
       "fr": "Citrus maxima",
       "qid": "Q80024",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott838646",
       "ott": 838646,
@@ -5825,6 +5340,7 @@
       "en": "Clivia miniata",
       "fr": "Clivia miniata",
       "qid": "Q149094",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott512516",
       "ott": 512516,
@@ -5891,6 +5407,7 @@
       "en": "Cocos nucifera",
       "fr": "cocotier",
       "qid": "Q13187",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott366250",
       "ott": 366250,
@@ -5913,6 +5430,7 @@
       "en": "Coffea arabica",
       "fr": "Coffea arabica",
       "qid": "Q47685",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1001050",
       "ott": 1001050,
@@ -6056,6 +5574,7 @@
       "en": "Convallaria majalis",
       "fr": "Muguet de mai",
       "qid": "Q101711",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1088891",
       "ott": 1088891,
@@ -6184,6 +5703,7 @@
       "en": "Corylus avellana",
       "fr": "Corylus avellana",
       "qid": "Q124969",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott424336",
       "ott": 424336,
@@ -6195,6 +5715,7 @@
       "en": "Corylus colurna",
       "fr": "Noisetier de Byzance",
       "qid": "Q148939",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott182954",
       "ott": 182954,
@@ -6494,6 +6015,7 @@
       "en": "Cucumis melo",
       "fr": "melon",
       "qid": "Q81602",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1006256",
       "ott": 1006256,
@@ -6505,6 +6027,7 @@
       "en": "Cucumis sativus",
       "fr": "concombre",
       "qid": "Q23425",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1006246",
       "ott": 1006246,
@@ -7019,6 +6542,7 @@
       "en": "Digitalis grandiflora",
       "fr": "Digitale à grandes fleurs",
       "qid": "Q157085",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott982770",
       "ott": 982770,
@@ -7224,17 +6748,6 @@
       "label_revision": 2547191072
     },
     {
-      "name": "Drosera andersoniana",
-      "en": "Drosera andersoniana",
-      "fr": "Drosera andersoniana",
-      "qid": "Q148451",
-      "seed": false,
-      "id": "ott3943356",
-      "ott": 3943356,
-      "label_qid": "Q148451",
-      "label_revision": 2535859497
-    },
-    {
       "name": "Drosera capillaris",
       "en": "Drosera capillaris",
       "fr": "Drosera capillaris",
@@ -7244,50 +6757,6 @@
       "ott": 596665,
       "label_qid": "Q146117",
       "label_revision": 2535859475
-    },
-    {
-      "name": "Drosera dielsiana",
-      "en": "Drosera dielsiana",
-      "fr": "Drosera dielsiana",
-      "qid": "Q148528",
-      "seed": false,
-      "id": "ott85724",
-      "ott": 85724,
-      "label_qid": "Q148528",
-      "label_revision": 2535859499
-    },
-    {
-      "name": "Drosera graniticola",
-      "en": "Drosera graniticola",
-      "fr": "Drosera graniticola",
-      "qid": "Q148423",
-      "seed": false,
-      "id": "ott3943382",
-      "ott": 3943382,
-      "label_qid": "Q148423",
-      "label_revision": 2535859494
-    },
-    {
-      "name": "Drosera heterophylla",
-      "en": "Drosera heterophylla",
-      "fr": "Drosera heterophylla",
-      "qid": "Q148433",
-      "seed": false,
-      "id": "ott3943358",
-      "ott": 3943358,
-      "label_qid": "Q148433",
-      "label_revision": 2535859495
-    },
-    {
-      "name": "Drosera indica",
-      "en": "Drosera indica",
-      "fr": "Drosera indica",
-      "qid": "Q80223",
-      "seed": false,
-      "id": "ott252082",
-      "ott": 252082,
-      "label_qid": "Q80223",
-      "label_revision": 2535859432
     },
     {
       "name": "Drosera rotundifolia",
@@ -8168,6 +7637,7 @@
       "en": "Ficus carica",
       "fr": "Ficus carica",
       "qid": "Q36146",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott658505",
       "ott": 658505,
@@ -8179,6 +7649,7 @@
       "en": "Filipendula vulgaris",
       "fr": "Filipendula vulgaris",
       "qid": "Q148961",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott208011",
       "ott": 208011,
@@ -8217,6 +7688,7 @@
       "en": "Frangula alnus",
       "fr": "Bourdaine",
       "qid": "Q146136",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott714690",
       "ott": 714690,
@@ -8250,6 +7722,7 @@
       "en": "Fraxinus excelsior",
       "fr": "Frêne élevé",
       "qid": "Q156907",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott671802",
       "ott": 671802,
@@ -8610,6 +8083,7 @@
       "en": "soybean",
       "fr": "soja",
       "qid": "Q11006",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott681762",
       "ott": 681762,
@@ -8651,6 +8125,7 @@
       "en": "Gossypium hirsutum",
       "fr": "Gossypium hirsutum",
       "qid": "Q133481",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott854480",
       "ott": 854480,
@@ -9277,6 +8752,7 @@
       "en": "Hordeum vulgare",
       "fr": "orge commune",
       "qid": "Q11577",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott657948",
       "ott": 657948,
@@ -9884,6 +9360,7 @@
       "en": "Juglans regia",
       "fr": "noyer commun",
       "qid": "Q46871",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott138717",
       "ott": 138717,
@@ -9906,6 +9383,7 @@
       "en": "Juniperus communis",
       "fr": "Genévrier commun",
       "qid": "Q26325",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott582859",
       "ott": 582859,
@@ -10247,6 +9725,7 @@
       "en": "Larix decidua",
       "fr": "Mélèze d'Europe",
       "qid": "Q146048",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott693251",
       "ott": 693251,
@@ -10324,6 +9803,7 @@
       "en": "Lathyrus japonicus",
       "fr": "Gesse maritime",
       "qid": "Q21125",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott136999",
       "ott": 136999,
@@ -10379,6 +9859,7 @@
       "en": "Laurus nobilis",
       "fr": "Laurus nobilis",
       "qid": "Q26006",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott571537",
       "ott": 571537,
@@ -10704,6 +10185,7 @@
       "en": "Leucanthemum vulgare",
       "fr": "marguerite commune",
       "qid": "Q27164",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott371806",
       "ott": 371806,
@@ -10726,6 +10208,7 @@
       "en": "Levisticum officinale",
       "fr": "Livèche",
       "qid": "Q27615",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott130944",
       "ott": 130944,
@@ -10810,83 +10293,6 @@
       "label_revision": 2537289030
     },
     {
-      "name": "Lilium concolor",
-      "en": "Lilium concolor",
-      "fr": "Lilium concolor",
-      "qid": "Q143686",
-      "seed": false,
-      "id": "ott884626",
-      "ott": 884626,
-      "label_qid": "Q143686",
-      "label_revision": 2537079369
-    },
-    {
-      "name": "Lilium humboldtii",
-      "en": "Lilium humboldtii",
-      "fr": "Lilium humboldtii",
-      "qid": "Q149248",
-      "seed": false,
-      "id": "ott880771",
-      "ott": 880771,
-      "label_qid": "Q149248",
-      "label_revision": 2537079384
-    },
-    {
-      "name": "Lilium maculatum",
-      "en": "Lilium maculatum",
-      "fr": "Lilium maculatum",
-      "qid": "Q143662",
-      "seed": false,
-      "id": "ott73804",
-      "ott": 73804,
-      "label_qid": "Q143662",
-      "label_revision": 2537079361
-    },
-    {
-      "name": "Lilium medeoloides",
-      "en": "Lilium medeoloides",
-      "fr": "Lilium medeoloides",
-      "qid": "Q143740",
-      "seed": false,
-      "id": "ott73808",
-      "ott": 73808,
-      "label_qid": "Q143740",
-      "label_revision": 2537079373
-    },
-    {
-      "name": "Lilium michauxii",
-      "en": "Lilium michauxii",
-      "fr": "Lilium michauxii",
-      "qid": "Q141789",
-      "seed": false,
-      "id": "ott700363",
-      "ott": 700363,
-      "label_qid": "Q141789",
-      "label_revision": 2537079347
-    },
-    {
-      "name": "Lilium michiganense",
-      "en": "Lilium michiganense",
-      "fr": "Lilium michiganense",
-      "qid": "Q141803",
-      "seed": false,
-      "id": "ott203219",
-      "ott": 203219,
-      "label_qid": "Q141803",
-      "label_revision": 2537079354
-    },
-    {
-      "name": "Lilium tsingtauense",
-      "en": "Lilium tsingtauense",
-      "fr": "Lilium tsingtauense",
-      "qid": "Q141821",
-      "seed": false,
-      "id": "ott167402",
-      "ott": 167402,
-      "label_qid": "Q141821",
-      "label_revision": 2537079357
-    },
-    {
       "name": "Limnognathia maerski",
       "en": "Limnognathia maerski",
       "fr": "Limnognathia maerski",
@@ -10946,6 +10352,7 @@
       "en": "Linaria vulgaris",
       "fr": "Linaria vulgaris",
       "qid": "Q157078",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott989669",
       "ott": 989669,
@@ -11341,6 +10748,7 @@
       "en": "Malva sylvestris",
       "fr": "Grande mauve",
       "qid": "Q156835",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott121966",
       "ott": 121966,
@@ -11459,6 +10867,7 @@
       "en": "Medicago minima",
       "fr": "Medicago minima",
       "qid": "Q144139",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott374489",
       "ott": 374489,
@@ -11731,6 +11140,7 @@
       "en": "Mespilus germanica",
       "fr": "néflier",
       "qid": "Q146186",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott941737",
       "ott": 941737,
@@ -12003,6 +11413,7 @@
       "en": "Musa acuminata",
       "fr": "Musa acuminata",
       "qid": "Q132970",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott207474",
       "ott": 207474,
@@ -12206,6 +11617,7 @@
       "en": "Nasturtium officinale",
       "fr": "cresson de fontaine",
       "qid": "Q150452",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott556245",
       "ott": 556245,
@@ -12345,28 +11757,6 @@
       "label_revision": 2535866509
     },
     {
-      "name": "Nepenthes macrophylla",
-      "en": "Nepenthes macrophylla",
-      "fr": "Nepenthes macrophylla",
-      "qid": "Q146125",
-      "seed": false,
-      "id": "ott558367",
-      "ott": 558367,
-      "label_qid": "Q146125",
-      "label_revision": 2535866498
-    },
-    {
-      "name": "Nepenthes merrilliana",
-      "en": "Nepenthes merrilliana",
-      "fr": "Nepenthes merrilliana",
-      "qid": "Q150513",
-      "seed": false,
-      "id": "ott37790",
-      "ott": 37790,
-      "label_qid": "Q150513",
-      "label_revision": 2535866543
-    },
-    {
       "name": "Nepenthes rajah",
       "en": "Nepenthes rajah",
       "fr": "Nepenthes rajah",
@@ -12376,28 +11766,6 @@
       "ott": 610896,
       "label_qid": "Q132973",
       "label_revision": 2535864874
-    },
-    {
-      "name": "Nepenthes spathulata",
-      "en": "Nepenthes spathulata",
-      "fr": "Nepenthes spathulata",
-      "qid": "Q140953",
-      "seed": false,
-      "id": "ott232983",
-      "ott": 232983,
-      "label_qid": "Q140953",
-      "label_revision": 2535866407
-    },
-    {
-      "name": "Nepenthes veitchii",
-      "en": "Nepenthes veitchii",
-      "fr": "Nepenthes veitchii",
-      "qid": "Q150501",
-      "seed": false,
-      "id": "ott23907",
-      "ott": 23907,
-      "label_qid": "Q150501",
-      "label_revision": 2535866533
     },
     {
       "name": "Nephele comma",
@@ -12800,6 +12168,7 @@
       "en": "Olea europaea",
       "fr": "olivier européen",
       "qid": "Q37083",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott23729",
       "ott": 23729,
@@ -13017,6 +12386,7 @@
       "en": "marjoram",
       "fr": "Origanum majorana",
       "qid": "Q22694",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott61897",
       "ott": 61897,
@@ -13641,6 +13011,7 @@
       "en": "Persea americana",
       "fr": "avocatier",
       "qid": "Q37153",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott913249",
       "ott": 913249,
@@ -13696,6 +13067,7 @@
       "en": "parsley",
       "fr": "persil",
       "qid": "Q25284",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott2485",
       "ott": 2485,
@@ -13883,6 +13255,7 @@
       "en": "date palm",
       "fr": "Phoenix dactylifera",
       "qid": "Q25292",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott789008",
       "ott": 789008,
@@ -14125,6 +13498,7 @@
       "en": "Pinus pinea",
       "fr": "Pin parasol",
       "qid": "Q106094",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott568639",
       "ott": 568639,
@@ -14191,6 +13565,7 @@
       "en": "Plantago major",
       "fr": "Grand plantain",
       "qid": "Q157154",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott122965",
       "ott": 122965,
@@ -14479,6 +13854,7 @@
       "en": "Populus tremula",
       "fr": "Tremble",
       "qid": "Q146110",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott839584",
       "ott": 839584,
@@ -14776,6 +14152,7 @@
       "en": "Prunus armeniaca",
       "fr": "abricotier",
       "qid": "Q37453",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott217632",
       "ott": 217632,
@@ -14798,6 +14175,7 @@
       "en": "Prunus persica",
       "fr": "pêcher",
       "qid": "Q13189",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott259054",
       "ott": 259054,
@@ -15216,6 +14594,7 @@
       "en": "Pseudotsuga menziesii",
       "fr": "Pseudotsuga menziesii",
       "qid": "Q156687",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1075713",
       "ott": 1075713,
@@ -15469,6 +14848,7 @@
       "en": "Pulsatilla pratensis",
       "fr": "Pulsatilla pratensis",
       "qid": "Q148936",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott209719",
       "ott": 209719,
@@ -15491,6 +14871,7 @@
       "en": "pomegranate",
       "fr": "grenadier commun",
       "qid": "Q13188",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott646814",
       "ott": 646814,
@@ -15590,6 +14971,7 @@
       "en": "Pyrus communis",
       "fr": "poirier commun",
       "qid": "Q146281",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott972654",
       "ott": 972654,
@@ -15653,6 +15035,7 @@
       "en": "Raphanus raphanistrum",
       "fr": "Raphanus raphanistrum",
       "qid": "Q28017",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott376999",
       "ott": 376999,
@@ -15917,6 +15300,7 @@
       "en": "Ribes alpinum",
       "fr": "Ribes alpinum",
       "qid": "Q149260",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1034763",
       "ott": 1034763,
@@ -16005,6 +15389,7 @@
       "en": "Rosa canina",
       "fr": "Rosa canina",
       "qid": "Q146066",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott333885",
       "ott": 333885,
@@ -16038,6 +15423,7 @@
       "en": "Rosa multiflora",
       "fr": "Rosa multiflora",
       "qid": "Q133617",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott908464",
       "ott": 908464,
@@ -16335,6 +15721,7 @@
       "en": "Salix repens",
       "fr": "Salix repens",
       "qid": "Q28141",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott989627",
       "ott": 989627,
@@ -16368,6 +15755,7 @@
       "en": "Sambucus nigra",
       "fr": "Sambucus nigra",
       "qid": "Q22701",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1042130",
       "ott": 1042130,
@@ -16401,6 +15789,7 @@
       "en": "Saponaria officinalis",
       "fr": "Saponaire officinale",
       "qid": "Q156841",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott842209",
       "ott": 842209,
@@ -16765,6 +16154,7 @@
       "en": "Secale cereale",
       "fr": "seigle",
       "qid": "Q12099",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott553015",
       "ott": 553015,
@@ -16853,6 +16243,7 @@
       "en": "Silene latifolia",
       "fr": "Silene latifolia",
       "qid": "Q27624",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott609504",
       "ott": 609504,
@@ -16864,6 +16255,7 @@
       "en": "Sinapis alba",
       "fr": "Sinapis alba",
       "qid": "Q146202",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott359058",
       "ott": 359058,
@@ -16948,32 +16340,11 @@
       "label_revision": 2541671537
     },
     {
-      "name": "Solanum abutiloides",
-      "en": "Solanum abutiloides",
-      "fr": "Solanum abutiloides",
-      "qid": "Q148963",
-      "seed": false,
-      "id": "ott121213",
-      "ott": 121213,
-      "label_qid": "Q148963",
-      "label_revision": 2536464240
-    },
-    {
-      "name": "Solanum glaucophyllum",
-      "en": "Solanum glaucophyllum",
-      "fr": "Solanum glaucophyllum",
-      "qid": "Q148619",
-      "seed": false,
-      "id": "ott326639",
-      "ott": 326639,
-      "label_qid": "Q148619",
-      "label_revision": 2536477874
-    },
-    {
       "name": "Solanum lycopersicum",
       "en": "tomato",
       "fr": "tomate",
       "qid": "Q23501",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott378964",
       "ott": 378964,
@@ -16985,6 +16356,7 @@
       "en": "Solanum melongena",
       "fr": "aubergine",
       "qid": "Q7540",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott494843",
       "ott": 494843,
@@ -16996,6 +16368,7 @@
       "en": "Solanum nigrum",
       "fr": "morelle noire",
       "qid": "Q146400",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott494831",
       "ott": 494831,
@@ -17003,37 +16376,16 @@
       "label_revision": 2548930766
     },
     {
-      "name": "Solanum pseudolulo",
-      "en": "Solanum pseudolulo",
-      "fr": "Solanum pseudolulo",
-      "qid": "Q148419",
-      "seed": false,
-      "id": "ott835545",
-      "ott": 835545,
-      "label_qid": "Q148419",
-      "label_revision": 2552328935
-    },
-    {
       "name": "Solanum tuberosum",
       "en": "potato",
       "fr": "pomme de terre",
       "qid": "Q10998",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott494835",
       "ott": 494835,
       "label_qid": "Q10998",
       "label_revision": 2551333340
-    },
-    {
-      "name": "Solanum vescum",
-      "en": "Solanum vescum",
-      "fr": "Solanum vescum",
-      "qid": "Q33400",
-      "seed": false,
-      "id": "ott503660",
-      "ott": 503660,
-      "label_qid": "Q33400",
-      "label_revision": 2536464232
     },
     {
       "name": "Solea solea",
@@ -17095,6 +16447,7 @@
       "en": "Sorbus aucuparia",
       "fr": "Sorbus aucuparia",
       "qid": "Q146198",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott217673",
       "ott": 217673,
@@ -17106,6 +16459,7 @@
       "en": "Sorbus intermedia",
       "fr": "Sorbus intermedia",
       "qid": "Q27980",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott317926",
       "ott": 317926,
@@ -17949,6 +17303,7 @@
       "en": "Tamarindus indica",
       "fr": "Tamarinier",
       "qid": "Q80235",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott812370",
       "ott": 812370,
@@ -18213,6 +17568,7 @@
       "en": "Thymus vulgaris",
       "fr": "Thymus vulgaris",
       "qid": "Q148668",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott907458",
       "ott": 907458,
@@ -18235,6 +17591,7 @@
       "en": "Tilia platyphyllos",
       "fr": "Tilleul à grandes feuilles",
       "qid": "Q156831",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1067735",
       "ott": 1067735,
@@ -18506,6 +17863,7 @@
       "en": "Trigonella foenum-graecum",
       "fr": "Fenugrec",
       "qid": "Q133205",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1007994",
       "ott": 1007994,
@@ -18880,6 +18238,7 @@
       "en": "Tussilago farfara",
       "fr": "Tussilage",
       "qid": "Q26302",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1069824",
       "ott": 1069824,
@@ -19097,6 +18456,7 @@
       "en": "Vaccinium vitis-idaea",
       "fr": "airelle rouge",
       "qid": "Q93235",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott242921",
       "ott": 242921,
@@ -19163,6 +18523,7 @@
       "en": "Viburnum opulus",
       "fr": "Viorne obier",
       "qid": "Q156928",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott117453",
       "ott": 117453,
@@ -19174,6 +18535,7 @@
       "en": "Vicia sativa",
       "fr": "Vesce commune",
       "qid": "Q157071",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1056096",
       "ott": 1056096,
@@ -19185,6 +18547,7 @@
       "en": "Vicia sepium",
       "fr": "Vesce des haies",
       "qid": "Q148570",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott719855",
       "ott": 719855,
@@ -19366,6 +18729,7 @@
       "en": "ginger",
       "fr": "gingembre",
       "qid": "Q35625",
+      "taxonomy_context": "Land plants",
       "seed": false,
       "id": "ott1063866",
       "ott": 1063866,
@@ -19557,6 +18921,823 @@
       "seed": false,
       "id": "ott274566",
       "ott": 274566
+    },
+    {
+      "name": "Digitalis purpurea",
+      "en": "Common foxglove",
+      "fr": "Digitale pourpre",
+      "seed": true,
+      "taxonomy_context": "Land plants",
+      "id": "ott75205",
+      "ott": 75205
+    },
+    {
+      "name": "Daucus carota",
+      "en": "Wild carrot",
+      "fr": "Carotte sauvage",
+      "seed": true,
+      "taxonomy_context": "Land plants",
+      "id": "ott372836",
+      "ott": 372836
+    },
+    {
+      "name": "Urtica dioica",
+      "en": "Stinging nettle",
+      "fr": "Grande ortie",
+      "seed": true,
+      "taxonomy_context": "Land plants",
+      "id": "ott267705",
+      "ott": 267705
+    },
+    {
+      "name": "Lolium perenne",
+      "en": "Perennial ryegrass",
+      "fr": "Ivraie vivace",
+      "seed": true,
+      "taxonomy_context": "Land plants",
+      "id": "ott135774",
+      "ott": 135774
+    },
+    {
+      "name": "Abies alba",
+      "en": "Silver fir",
+      "fr": "Sapin pectiné",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott887363",
+      "ott": 887363
+    },
+    {
+      "name": "Acer campestre",
+      "en": "Field maple",
+      "fr": "Érable champêtre",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott506137",
+      "ott": 506137
+    },
+    {
+      "name": "Acer monspessulanum",
+      "en": "Montpellier maple",
+      "fr": "Érable de Montpellier",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott636269",
+      "ott": 636269
+    },
+    {
+      "name": "Acer saccharum",
+      "en": "Sugar maple",
+      "fr": "Érable à sucre",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott948916",
+      "ott": 948916
+    },
+    {
+      "name": "Adansonia digitata",
+      "en": "African baobab",
+      "fr": "Baobab africain",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott659136",
+      "ott": 659136
+    },
+    {
+      "name": "Aesculus hippocastanum",
+      "en": "Horse chestnut",
+      "fr": "Marronnier d’Inde",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott404238",
+      "ott": 404238
+    },
+    {
+      "name": "Amelanchier ovalis",
+      "en": "Snowy mespilus",
+      "fr": "Amélanchier à feuilles ovales",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott554519",
+      "ott": 554519
+    },
+    {
+      "name": "Anthriscus sylvestris",
+      "en": "Cow parsley",
+      "fr": "Cerfeuil sauvage",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott1074874",
+      "ott": 1074874
+    },
+    {
+      "name": "Arctostaphylos uva-ursi",
+      "en": "Bearberry",
+      "fr": "Busserole",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott100960",
+      "ott": 100960
+    },
+    {
+      "name": "Balanites aegyptiaca",
+      "en": "Desert date",
+      "fr": "Dattier du désert",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott389934",
+      "ott": 389934
+    },
+    {
+      "name": "Betula pubescens",
+      "en": "Downy birch",
+      "fr": "Bouleau pubescent",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott456846",
+      "ott": 456846
+    },
+    {
+      "name": "Briza media",
+      "en": "Quaking grass",
+      "fr": "Brize intermédiaire",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott672",
+      "ott": 672
+    },
+    {
+      "name": "Calotropis procera",
+      "en": "Sodom apple",
+      "fr": "Pommier de Sodome",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott920658",
+      "ott": 920658
+    },
+    {
+      "name": "Carpinus betulus",
+      "en": "European hornbeam",
+      "fr": "Charme commun",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott466468",
+      "ott": 466468
+    },
+    {
+      "name": "Cenchrus ciliaris",
+      "en": "Buffel grass",
+      "fr": "Herbe à buffle",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott738444",
+      "ott": 738444
+    },
+    {
+      "name": "Centaurea jacea",
+      "en": "Brown knapweed",
+      "fr": "Centaurée jacée",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott242075",
+      "ott": 242075
+    },
+    {
+      "name": "Cichorium intybus",
+      "en": "Chicory",
+      "fr": "Chicorée sauvage",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott692350",
+      "ott": 692350
+    },
+    {
+      "name": "Combretum micranthum",
+      "en": "Kinkeliba",
+      "fr": "Kinkéliba",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott140228",
+      "ott": 140228
+    },
+    {
+      "name": "Cornus mas",
+      "en": "Cornelian cherry",
+      "fr": "Cornouiller mâle",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott148277",
+      "ott": 148277
+    },
+    {
+      "name": "Cornus sanguinea",
+      "en": "Common dogwood",
+      "fr": "Cornouiller sanguin",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott21994",
+      "ott": 21994
+    },
+    {
+      "name": "Cornus sericea",
+      "en": "Red-osier dogwood",
+      "fr": "Cornouiller stolonifère",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott55325",
+      "ott": 55325
+    },
+    {
+      "name": "Crataegus laevigata",
+      "en": "Midland hawthorn",
+      "fr": "Aubépine à deux styles",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott547115",
+      "ott": 547115
+    },
+    {
+      "name": "Crataegus monogyna",
+      "en": "Common hawthorn",
+      "fr": "Aubépine monogyne",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott653070",
+      "ott": 653070
+    },
+    {
+      "name": "Cytisus scoparius",
+      "en": "Common broom",
+      "fr": "Genêt à balais",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott91393",
+      "ott": 91393
+    },
+    {
+      "name": "Dactylis glomerata",
+      "en": "Cock’s-foot",
+      "fr": "Dactyle aggloméré",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott83469",
+      "ott": 83469
+    },
+    {
+      "name": "Echinacea purpurea",
+      "en": "Purple coneflower",
+      "fr": "Échinacée pourpre",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott87526",
+      "ott": 87526
+    },
+    {
+      "name": "Erica cinerea",
+      "en": "Bell heather",
+      "fr": "Bruyère cendrée",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott100329",
+      "ott": 100329
+    },
+    {
+      "name": "Eschscholzia californica",
+      "en": "California poppy",
+      "fr": "Pavot de Californie",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott438086",
+      "ott": 438086
+    },
+    {
+      "name": "Euonymus europaeus",
+      "en": "European spindle",
+      "fr": "Fusain d’Europe",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott806632",
+      "ott": 806632
+    },
+    {
+      "name": "Fagus sylvatica",
+      "en": "European beech",
+      "fr": "Hêtre commun",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott774712",
+      "ott": 774712
+    },
+    {
+      "name": "Faidherbia albida",
+      "en": "Apple-ring acacia",
+      "fr": "Acacia blanc",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott8883",
+      "ott": 8883
+    },
+    {
+      "name": "Ficaria verna",
+      "en": "Lesser celandine",
+      "fr": "Ficaire printanière",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott829312",
+      "ott": 829312
+    },
+    {
+      "name": "Genista tinctoria",
+      "en": "Dyer’s greenweed",
+      "fr": "Genêt des teinturiers",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott554261",
+      "ott": 554261
+    },
+    {
+      "name": "Geranium robertianum",
+      "en": "Herb-robert",
+      "fr": "Géranium herbe-à-Robert",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott435815",
+      "ott": 435815
+    },
+    {
+      "name": "Guiera senegalensis",
+      "en": "Guiera",
+      "fr": "Guiera du Sénégal",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott140222",
+      "ott": 140222
+    },
+    {
+      "name": "Hibiscus trionum",
+      "en": "Flower-of-an-hour",
+      "fr": "Ketmie trifoliée",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott120915",
+      "ott": 120915
+    },
+    {
+      "name": "Hyparrhenia hirta",
+      "en": "Common thatching grass",
+      "fr": "Barbon hérissé",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott931573",
+      "ott": 931573
+    },
+    {
+      "name": "Ilex aquifolium",
+      "en": "Common holly",
+      "fr": "Houx commun",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott670988",
+      "ott": 670988
+    },
+    {
+      "name": "Indigofera spicata",
+      "en": "Creeping indigo",
+      "fr": "Indigotier rampant",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott768126",
+      "ott": 768126
+    },
+    {
+      "name": "Lamium album",
+      "en": "White dead-nettle",
+      "fr": "Lamier blanc",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott332796",
+      "ott": 332796
+    },
+    {
+      "name": "Ligustrum vulgare",
+      "en": "Wild privet",
+      "fr": "Troène commun",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott597434",
+      "ott": 597434
+    },
+    {
+      "name": "Lotus corniculatus",
+      "en": "Common bird’s-foot trefoil",
+      "fr": "Lotier corniculé",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott183572",
+      "ott": 183572
+    },
+    {
+      "name": "Lupinus polyphyllus",
+      "en": "Large-leaved lupin",
+      "fr": "Lupin à folioles nombreuses",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott1030439",
+      "ott": 1030439
+    },
+    {
+      "name": "Malus sylvestris",
+      "en": "Crab apple",
+      "fr": "Pommier sauvage",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott731565",
+      "ott": 731565
+    },
+    {
+      "name": "Matricaria chamomilla",
+      "en": "German chamomile",
+      "fr": "Matricaire camomille",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott145582",
+      "ott": 145582
+    },
+    {
+      "name": "Papaver rhoeas",
+      "en": "Common poppy",
+      "fr": "Coquelicot",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott867221",
+      "ott": 867221
+    },
+    {
+      "name": "Picea abies",
+      "en": "Norway spruce",
+      "fr": "Épicéa commun",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott517943",
+      "ott": 517943
+    },
+    {
+      "name": "Plantago lanceolata",
+      "en": "Ribwort plantain",
+      "fr": "Plantain lancéolé",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott376074",
+      "ott": 376074
+    },
+    {
+      "name": "Populus nigra",
+      "en": "Black poplar",
+      "fr": "Peuplier noir",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott8848",
+      "ott": 8848
+    },
+    {
+      "name": "Potentilla reptans",
+      "en": "Creeping cinquefoil",
+      "fr": "Potentille rampante",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott902635",
+      "ott": 902635
+    },
+    {
+      "name": "Primula veris",
+      "en": "Cowslip",
+      "fr": "Primevère officinale",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott596319",
+      "ott": 596319
+    },
+    {
+      "name": "Prunus avium",
+      "en": "Wild cherry",
+      "fr": "Merisier",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott162547",
+      "ott": 162547
+    },
+    {
+      "name": "Prunus mahaleb",
+      "en": "St Lucie cherry",
+      "fr": "Cerisier de Sainte-Lucie",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott1012886",
+      "ott": 1012886
+    },
+    {
+      "name": "Prunus padus",
+      "en": "Bird cherry",
+      "fr": "Cerisier à grappes",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott1004570",
+      "ott": 1004570
+    },
+    {
+      "name": "Prunus spinosa",
+      "en": "Blackthorn",
+      "fr": "Prunellier",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott470244",
+      "ott": 470244
+    },
+    {
+      "name": "Quercus ilex",
+      "en": "Holm oak",
+      "fr": "Chêne vert",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott272692",
+      "ott": 272692
+    },
+    {
+      "name": "Quercus petraea",
+      "en": "Sessile oak",
+      "fr": "Chêne sessile",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott516540",
+      "ott": 516540
+    },
+    {
+      "name": "Quercus pubescens",
+      "en": "Downy oak",
+      "fr": "Chêne pubescent",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott426505",
+      "ott": 426505
+    },
+    {
+      "name": "Quercus rubra",
+      "en": "Northern red oak",
+      "fr": "Chêne rouge d’Amérique",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott791115",
+      "ott": 791115
+    },
+    {
+      "name": "Ranunculus acris",
+      "en": "Meadow buttercup",
+      "fr": "Renoncule âcre",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott387818",
+      "ott": 387818
+    },
+    {
+      "name": "Rhamnus cathartica",
+      "en": "Purging buckthorn",
+      "fr": "Nerprun purgatif",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott904368",
+      "ott": 904368
+    },
+    {
+      "name": "Rhododendron catawbiense",
+      "en": "Catawba rhododendron",
+      "fr": "Rhododendron de Catawba",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott645684",
+      "ott": 645684
+    },
+    {
+      "name": "Rosa virginiana",
+      "en": "Virginia rose",
+      "fr": "Rosier de Virginie",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott333898",
+      "ott": 333898
+    },
+    {
+      "name": "Rudbeckia hirta",
+      "en": "Black-eyed Susan",
+      "fr": "Rudbeckie hérissée",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott837485",
+      "ott": 837485
+    },
+    {
+      "name": "Salix alba",
+      "en": "Salix alba",
+      "fr": "Salix alba",
+      "qid": "Q156918",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott164209",
+      "ott": 164209,
+      "label_qid": "Q156918",
+      "label_revision": 2553001845
+    },
+    {
+      "name": "Salix caprea",
+      "en": "Goat willow",
+      "fr": "Saule marsault",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott218600",
+      "ott": 218600
+    },
+    {
+      "name": "Salvia pratensis",
+      "en": "Meadow sage",
+      "fr": "Sauge des prés",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott816902",
+      "ott": 816902
+    },
+    {
+      "name": "Senna italica",
+      "en": "Senegal senna",
+      "fr": "Séné du Sénégal",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott808756",
+      "ott": 808756
+    },
+    {
+      "name": "Sequoia sempervirens",
+      "en": "Coast redwood",
+      "fr": "Séquoia toujours vert",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott538150",
+      "ott": 538150
+    },
+    {
+      "name": "Sequoiadendron giganteum",
+      "en": "Giant sequoia",
+      "fr": "Séquoia géant",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott810380",
+      "ott": 810380
+    },
+    {
+      "name": "Sesamum alatum",
+      "en": "Winged-seed sesame",
+      "fr": "Sésame ailé",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott645082",
+      "ott": 645082
+    },
+    {
+      "name": "Silene dioica",
+      "en": "Red campion",
+      "fr": "Compagnon rouge",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott64114",
+      "ott": 64114
+    },
+    {
+      "name": "Stellaria holostea",
+      "en": "Greater stitchwort",
+      "fr": "Stellaire holostée",
+      "taxonomy_context": "Land plants",
+      "atlas_scientific": "Rabelera holostea",
+      "synonym_evidence": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A307758-2",
+      "accepted_name_evidence": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A77205026-1",
+      "reviewed": "2026-10-13",
+      "seed": false,
+      "id": "ott292275",
+      "ott": 292275
+    },
+    {
+      "name": "Tilia cordata",
+      "en": "Small-leaved lime",
+      "fr": "Tilleul à petites feuilles",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott218598",
+      "ott": 218598
+    },
+    {
+      "name": "Trifolium pratense",
+      "en": "Red clover",
+      "fr": "Trèfle des prés",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott839027",
+      "ott": 839027
+    },
+    {
+      "name": "Trifolium repens",
+      "en": "White clover",
+      "fr": "Trèfle blanc",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott116218",
+      "ott": 116218
+    },
+    {
+      "name": "Ulex europaeus",
+      "en": "Common gorse",
+      "fr": "Ajonc d’Europe",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott1056067",
+      "ott": 1056067
+    },
+    {
+      "name": "Ulmus minor",
+      "en": "Field elm",
+      "fr": "Orme champêtre",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott1029242",
+      "ott": 1029242
+    },
+    {
+      "name": "Vaccinium corymbosum",
+      "en": "Highbush blueberry",
+      "fr": "Myrtillier en corymbe",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott567253",
+      "ott": 567253
+    },
+    {
+      "name": "Vaccinium myrtillus",
+      "en": "Bilberry",
+      "fr": "Myrtille",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott817730",
+      "ott": 817730
+    },
+    {
+      "name": "Vachellia tortilis",
+      "en": "Umbrella thorn",
+      "fr": "Acacia parasol",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott581630",
+      "ott": 581630
+    },
+    {
+      "name": "Veronica chamaedrys",
+      "en": "Germander speedwell",
+      "fr": "Véronique petit-chêne",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott131111",
+      "ott": 131111
+    },
+    {
+      "name": "Viburnum lantana",
+      "en": "Wayfaring tree",
+      "fr": "Viorne lantane",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott572547",
+      "ott": 572547
+    },
+    {
+      "name": "Vicia cracca",
+      "en": "Tufted vetch",
+      "fr": "Vesce cracca",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott539541",
+      "ott": 539541
+    },
+    {
+      "name": "Viola odorata",
+      "en": "Sweet violet",
+      "fr": "Violette odorante",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott1039231",
+      "ott": 1039231
+    },
+    {
+      "name": "Ziziphus mauritiana",
+      "en": "Indian jujube",
+      "fr": "Jujubier de Mauritanie",
+      "taxonomy_context": "Land plants",
+      "seed": false,
+      "id": "ott556043",
+      "ott": 556043
     }
   ],
   "excluded": [
@@ -20133,10 +20314,6 @@
       "reason": "No unique accepted species in synthesis"
     },
     {
-      "name": "Salix alba",
-      "reason": "No unique accepted species in synthesis"
-    },
-    {
       "name": "Salmo pallaryi",
       "reason": "Extinction flag; not added to the living-species selection"
     },
@@ -20237,6 +20414,10 @@
       "reason": "No unique accepted species in synthesis"
     },
     {
+      "name": "Rabelera holostea",
+      "reason": "No unique accepted species in synthesis"
+    },
+    {
       "name": "Cyprinus yilongensis",
       "qid": "Q136098",
       "revision": 2517829048,
@@ -20275,18 +20456,6 @@
     {
       "name": "Uromys siebersi",
       "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
-    },
-    {
-      "name": "Esox niger",
-      "reason": "Not a distinct terminal relative to the existing selection"
-    },
-    {
-      "name": "Lates angustifrons",
-      "reason": "Taxon absent or not uniquely placed in synthesis"
-    },
-    {
-      "name": "Narcissus pseudonarcissus",
-      "reason": "Not a distinct terminal relative to the existing selection"
     },
     {
       "name": "Aequidens potaroensis",
@@ -20579,6 +20748,290 @@
     {
       "name": "Aerodramus terraereginae",
       "reason": "Editorial removal requested by the owner after deleting the bestiary illustration; excluded from the bestiary and living-tree selection."
+    },
+    {
+      "name": "Aglaia amplexicaulis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aglaia basiphylla",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aglaia fragilis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aglaia gracilis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aglaia saltatorum",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aglaia unifolia",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Allium macrostemon",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe africana",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe albovestita",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe alexandrei",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe arenicola",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe broomii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe cheranganiensis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe chlorantha",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe christianii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe chrysostachys",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe citrea",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe comosa",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe cryptopoda",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe hoffmannii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe irafensis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe jawiyon",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe lucile-allorgeae",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe luntii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe macleayi",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe macrocarpa",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe macroclada",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe macrosiphon",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe maculata",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe mayottensis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe mcloughlinii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe medishiana",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe megalocarpa",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe mendesii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe metallica",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe micracantha",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe microstigma",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe milne-redheadii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe modesta",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe monotropa",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe monticola",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe namorokaensis",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe petricola",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe reynoldsii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe sinkatana",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe succotrina",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe vaombe",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Aloe wildii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Drosera andersoniana",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Drosera dielsiana",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Drosera graniticola",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Drosera heterophylla",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Drosera indica",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Lilium concolor",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Lilium humboldtii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Lilium maculatum",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Lilium medeoloides",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Lilium michauxii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Lilium michiganense",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Lilium tsingtauense",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Nepenthes macrophylla",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Nepenthes merrilliana",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Nepenthes spathulata",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Nepenthes veitchii",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Solanum abutiloides",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Solanum glaucophyllum",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Solanum pseudolulo",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Solanum vescum",
+      "reason": "User-authorized editorial exclusion 2026-10-13: redundant botanical cousins; preserve representative forms and all atlas taxa, with exact source ancestry."
+    },
+    {
+      "name": "Esox niger",
+      "reason": "Not a distinct terminal relative to the existing selection"
+    },
+    {
+      "name": "Lates angustifrons",
+      "reason": "Taxon absent or not uniquely placed in synthesis"
+    },
+    {
+      "name": "Narcissus pseudonarcissus",
+      "reason": "Not a distinct terminal relative to the existing selection"
     }
   ]
 }

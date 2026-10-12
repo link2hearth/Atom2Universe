@@ -8,7 +8,7 @@
     1000,
     1500
   ],
-  "scope": "Candidate sample only; not a full Wikidata export. Names must be accepted by OpenTree before inclusion.",
+  "scope": "Candidate sample only; not a full Wikidata export. Names must be accepted by OpenTree before inclusion. Atlas botanical taxa added by editorial request 2026-10-13; only unique accepted source lineages may be included.",
   "candidates": [
     {
       "name": "Abarema obovalis",
@@ -27,6 +27,12 @@
       "en": "Abelmoschus esculentus",
       "fr": "gombo",
       "qid": "Q80531"
+    },
+    {
+      "name": "Abies alba",
+      "en": "Silver fir",
+      "fr": "Sapin pectiné",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Abies nordmanniana",
@@ -143,22 +149,42 @@
       "qid": "Q128037"
     },
     {
+      "name": "Acer campestre",
+      "en": "Field maple",
+      "fr": "Érable champêtre",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Acer japonicum",
       "en": "Acer japonicum",
       "fr": "érable du Japon",
       "qid": "Q149269"
     },
     {
+      "name": "Acer monspessulanum",
+      "en": "Montpellier maple",
+      "fr": "Érable de Montpellier",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Acer platanoides",
       "en": "Acer platanoides",
       "fr": "érable plane",
-      "qid": "Q26745"
+      "qid": "Q26745",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Acer pseudoplatanus",
       "en": "Acer pseudoplatanus",
       "fr": "érable sycomore",
-      "qid": "Q156944"
+      "qid": "Q156944",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Acer saccharum",
+      "en": "Sugar maple",
+      "fr": "Érable à sucre",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Achatina fulica",
@@ -176,7 +202,8 @@
       "name": "Achillea millefolium",
       "en": "Achillea millefolium",
       "fr": "Achillée millefeuille",
-      "qid": "Q25408"
+      "qid": "Q25408",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Acicula fusca",
@@ -225,6 +252,12 @@
       "en": "Common Sandpiper",
       "fr": "Chevalier guignette",
       "qid": "Q18850"
+    },
+    {
+      "name": "Adansonia digitata",
+      "en": "African baobab",
+      "fr": "Baobab africain",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Adansonia perrieri",
@@ -413,6 +446,12 @@
       "qid": "Q26464"
     },
     {
+      "name": "Aesculus hippocastanum",
+      "en": "Horse chestnut",
+      "fr": "Marronnier d’Inde",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Aethalura punctulata",
       "en": "Aethalura punctulata",
       "fr": "Aethalura punctulata",
@@ -562,7 +601,8 @@
       "name": "Agrimonia eupatoria",
       "en": "Agrimonia eupatoria",
       "fr": "Agrimonia eupatoria",
-      "qid": "Q156865"
+      "qid": "Q156865",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Agriopis marginaria",
@@ -589,10 +629,16 @@
       "qid": "Q33602"
     },
     {
+      "name": "Ailurus fulgens",
+      "en": "Red panda",
+      "fr": "Panda roux"
+    },
+    {
       "name": "Ajuga reptans",
       "en": "Ajuga reptans",
       "fr": "Bugle rampante",
-      "qid": "Q157249"
+      "qid": "Q157249",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Alauda arvensis",
@@ -664,19 +710,22 @@
       "name": "Allium ampeloprasum",
       "en": "Allium ampeloprasum",
       "fr": "poireau perpétuel",
-      "qid": "Q148995"
+      "qid": "Q148995",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Allium cepa",
       "en": "onion",
       "fr": "Oignon",
-      "qid": "Q23485"
+      "qid": "Q23485",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Allium fistulosum",
       "en": "Welsh onion",
       "fr": "ciboule",
-      "qid": "Q27938"
+      "qid": "Q27938",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Allium macrostemon",
@@ -688,13 +737,15 @@
       "name": "Allium sativum",
       "en": "Allium sativum",
       "fr": "ail",
-      "qid": "Q23400"
+      "qid": "Q23400",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Allium ursinum",
       "en": "Allium ursinum",
       "fr": "ail des ours",
-      "qid": "Q130882"
+      "qid": "Q130882",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Allobates wayuu",
@@ -712,7 +763,8 @@
       "name": "Alnus glutinosa",
       "en": "Alnus glutinosa",
       "fr": "Alnus glutinosa",
-      "qid": "Q156904"
+      "qid": "Q156904",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Aloe africana",
@@ -976,7 +1028,8 @@
       "name": "Aloe vera",
       "en": "Aloe vera",
       "fr": "Aloe vera",
-      "qid": "Q80079"
+      "qid": "Q80079",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Aloe wildii",
@@ -1110,6 +1163,12 @@
       "qid": "Q22718"
     },
     {
+      "name": "Amelanchier ovalis",
+      "en": "Snowy mespilus",
+      "fr": "Amélanchier à feuilles ovales",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Ammandra decasperma",
       "en": "Ammandra decasperma",
       "fr": "Ammandra decasperma",
@@ -1220,7 +1279,8 @@
       "name": "Ananas comosus",
       "en": "Ananas comosus",
       "fr": "Ananas comosus",
-      "qid": "Q1493"
+      "qid": "Q1493",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Anartia amathea",
@@ -1334,13 +1394,15 @@
       "name": "Anemone sylvestris",
       "en": "Anemone sylvestris",
       "fr": "Anémone sauvage",
-      "qid": "Q157358"
+      "qid": "Q157358",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Anethum graveolens",
       "en": "Anethum graveolens",
       "fr": "aneth",
-      "qid": "Q26686"
+      "qid": "Q26686",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Angka hexops",
@@ -1469,6 +1531,12 @@
       "qid": "Q37207"
     },
     {
+      "name": "Anthriscus sylvestris",
+      "en": "Cow parsley",
+      "fr": "Cerfeuil sauvage",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Anthus pratensis",
       "en": "Meadow Pipit",
       "fr": "Pipit farlouse",
@@ -1478,7 +1546,8 @@
       "name": "Antirrhinum majus",
       "en": "Antirrhinum majus",
       "fr": "Muflier à grandes fleurs",
-      "qid": "Q156843"
+      "qid": "Q156843",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Apamea zeta",
@@ -1685,10 +1754,17 @@
       "qid": "Q31866"
     },
     {
+      "name": "Arabidopsis thaliana",
+      "en": "Thale cress",
+      "fr": "Arabette de Thalius",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Arachis hypogaea",
       "en": "peanut",
       "fr": "arachide",
-      "qid": "Q37383"
+      "qid": "Q37383",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Araniella displicata",
@@ -1757,6 +1833,12 @@
       "qid": "Q143596"
     },
     {
+      "name": "Arctostaphylos uva-ursi",
+      "en": "Bearberry",
+      "fr": "Busserole",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Ardea cinerea",
       "en": "Grey Heron",
       "fr": "héron cendré",
@@ -1772,7 +1854,8 @@
       "name": "Areca catechu",
       "en": "Areca catechu",
       "fr": "Palmier à bétel",
-      "qid": "Q156969"
+      "qid": "Q156969",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Arenaria interpres",
@@ -1837,7 +1920,8 @@
       "name": "Armoracia rusticana",
       "en": "Armoracia rusticana",
       "fr": "raifort",
-      "qid": "Q26545"
+      "qid": "Q26545",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Arnoglossus scapha",
@@ -2011,7 +2095,8 @@
       "name": "Avena sativa",
       "en": "Avena sativa",
       "fr": "avoine cultivée",
-      "qid": "Q12104"
+      "qid": "Q12104",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Avicularia metallica",
@@ -2056,6 +2141,12 @@
       "qid": "Q18700"
     },
     {
+      "name": "Balanites aegyptiaca",
+      "en": "Desert date",
+      "fr": "Dattier du désert",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Balantidium coli",
       "en": "Balantidium coli",
       "fr": "Balantidium coli",
@@ -2077,7 +2168,8 @@
       "name": "Barbarea vulgaris",
       "en": "Barbarea vulgaris",
       "fr": "Barbarea vulgaris",
-      "qid": "Q157285"
+      "qid": "Q157285",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Barbus altianalis",
@@ -2125,7 +2217,8 @@
       "name": "Bellis perennis",
       "en": "Bellis perennis",
       "fr": "pâquerette",
-      "qid": "Q26158"
+      "qid": "Q26158",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Bertholletia excelsa",
@@ -2173,7 +2266,14 @@
       "name": "Betula pendula",
       "en": "Betula pendula",
       "fr": "Bouleau verruqueux",
-      "qid": "Q156895"
+      "qid": "Q156895",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Betula pubescens",
+      "en": "Downy birch",
+      "fr": "Bouleau pubescent",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Biastes truncatus",
@@ -2329,7 +2429,8 @@
       "name": "Bowiea volubilis",
       "en": "Bowiea volubilis",
       "fr": "Bowiea volubilis",
-      "qid": "Q140288"
+      "qid": "Q140288",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Brachycereus nesioticus",
@@ -2362,6 +2463,11 @@
       "qid": "Q135160"
     },
     {
+      "name": "Bradypus variegatus",
+      "en": "Brown-throated sloth",
+      "fr": "Paresseux à gorge brune"
+    },
+    {
       "name": "Branta bernicla",
       "en": "Brant Goose",
       "fr": "bernache cravant",
@@ -2383,19 +2489,27 @@
       "name": "Brassica oleracea",
       "en": "Brassica oleracea",
       "fr": "Brassica olearacea",
-      "qid": "Q146212"
+      "qid": "Q146212",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Brassica rapa",
       "en": "Brassica rapa",
       "fr": "Brassica rapa",
-      "qid": "Q3384"
+      "qid": "Q3384",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Briza maxima",
       "en": "Briza maxima",
       "fr": "Grande brize",
       "qid": "Q140178"
+    },
+    {
+      "name": "Briza media",
+      "en": "Quaking grass",
+      "fr": "Brize intermédiaire",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Brocchinia reducta",
@@ -2467,7 +2581,8 @@
       "name": "Buxus sempervirens",
       "en": "Buxus sempervirens",
       "fr": "Buxus sempervirens",
-      "qid": "Q27344"
+      "qid": "Q27344",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Cacajao ayresi",
@@ -2533,7 +2648,8 @@
       "name": "Calluna vulgaris",
       "en": "Calluna vulgaris",
       "fr": "Calluna vulgaris",
-      "qid": "Q26615"
+      "qid": "Q26615",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Calocedrus macrolepis",
@@ -2545,6 +2661,12 @@
       "name": "Calocybe gambosa",
       "en": "St George’s mushroom",
       "fr": "Tricholome de la Saint-Georges"
+    },
+    {
+      "name": "Calotropis procera",
+      "en": "Sodom apple",
+      "fr": "Pommier de Sodome",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Calponia harrisonfordi",
@@ -2567,7 +2689,8 @@
       "name": "Camellia sinensis",
       "en": "Camellia sinensis",
       "fr": "théier",
-      "qid": "Q101815"
+      "qid": "Q101815",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Camelus bactrianus",
@@ -2579,7 +2702,8 @@
       "name": "Campanula rotundifolia",
       "en": "Campanula rotundifolia",
       "fr": "Campanule à feuilles rondes",
-      "qid": "Q27989"
+      "qid": "Q27989",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Canarium luzonicum",
@@ -2623,6 +2747,11 @@
       "fr": "Girolle"
     },
     {
+      "name": "Cantharellus cinereus",
+      "en": "Ashen chanterelle",
+      "fr": "Chanterelle cendrée"
+    },
+    {
       "name": "Caprimulgus europaeus",
       "en": "European Nightjar",
       "fr": "Engoulevent d'Europe",
@@ -2638,13 +2767,15 @@
       "name": "Capsella bursa-pastoris",
       "en": "Capsella bursa-pastoris",
       "fr": "Capsella bursa-pastoris",
-      "qid": "Q27264"
+      "qid": "Q27264",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Capsicum annuum",
       "en": "Capsicum annuum",
       "fr": "Capsicum annuum",
-      "qid": "Q1380"
+      "qid": "Q1380",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Capsicum pubescens",
@@ -2686,7 +2817,8 @@
       "name": "Cardamine pratensis",
       "en": "Cardamine pratensis",
       "fr": "Cardamine des prés",
-      "qid": "Q27490"
+      "qid": "Q27490",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Cardium costatum",
@@ -2731,6 +2863,12 @@
       "qid": "Q130893"
     },
     {
+      "name": "Carpinus betulus",
+      "en": "European hornbeam",
+      "fr": "Charme commun",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Carukia barnesi",
       "en": "Carukia barnesi",
       "fr": "Carukia barnesi",
@@ -2740,7 +2878,8 @@
       "name": "Carum carvi",
       "en": "Carum carvi",
       "fr": "Carvi",
-      "qid": "Q26811"
+      "qid": "Q26811",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Cassia aldabrensis",
@@ -2758,7 +2897,8 @@
       "name": "Castanea sativa",
       "en": "Castanea sativa",
       "fr": "châtaignier commun",
-      "qid": "Q22699"
+      "qid": "Q22699",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Castor canadensis",
@@ -2791,10 +2931,23 @@
       "qid": "Q79803"
     },
     {
+      "name": "Cenchrus ciliaris",
+      "en": "Buffel grass",
+      "fr": "Herbe à buffle",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Centaurea cyanus",
       "en": "Centaurea cyanus",
       "fr": "bleuet des champs",
-      "qid": "Q156921"
+      "qid": "Q156921",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Centaurea jacea",
+      "en": "Brown knapweed",
+      "fr": "Centaurée jacée",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Centaurium erythraea",
@@ -3031,7 +3184,14 @@
       "name": "Cicer arietinum",
       "en": "cicer arietinum",
       "fr": "pois chiche",
-      "qid": "Q81375"
+      "qid": "Q81375",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Cichorium intybus",
+      "en": "Chicory",
+      "fr": "Chicorée sauvage",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Ciconia ciconia",
@@ -3127,7 +3287,8 @@
       "name": "Citrus maxima",
       "en": "pomelo",
       "fr": "Citrus maxima",
-      "qid": "Q80024"
+      "qid": "Q80024",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Citrus × limon",
@@ -3182,7 +3343,8 @@
       "name": "Clivia miniata",
       "en": "Clivia miniata",
       "fr": "Clivia miniata",
-      "qid": "Q149094"
+      "qid": "Q149094",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Clostridium tyrobutyricum",
@@ -3218,7 +3380,8 @@
       "name": "Cocos nucifera",
       "en": "Cocos nucifera",
       "fr": "cocotier",
-      "qid": "Q13187"
+      "qid": "Q13187",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Coddia rudis",
@@ -3230,7 +3393,8 @@
       "name": "Coffea arabica",
       "en": "Coffea arabica",
       "fr": "Coffea arabica",
-      "qid": "Q47685"
+      "qid": "Q47685",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Coffea canephora",
@@ -3287,6 +3451,12 @@
       "qid": "Q26026"
     },
     {
+      "name": "Combretum micranthum",
+      "en": "Kinkeliba",
+      "fr": "Kinkéliba",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Combretum paniculatum",
       "en": "Combretum paniculatum",
       "fr": "Combretum paniculatum",
@@ -3308,7 +3478,8 @@
       "name": "Convallaria majalis",
       "en": "Convallaria majalis",
       "fr": "Muguet de mai",
-      "qid": "Q101711"
+      "qid": "Q101711",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Coprinellus micaceus",
@@ -3336,6 +3507,24 @@
       "en": "Chestnut sac-winged bat",
       "fr": "Cormura brevirostris",
       "qid": "Q135150"
+    },
+    {
+      "name": "Cornus mas",
+      "en": "Cornelian cherry",
+      "fr": "Cornouiller mâle",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Cornus sanguinea",
+      "en": "Common dogwood",
+      "fr": "Cornouiller sanguin",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Cornus sericea",
+      "en": "Red-osier dogwood",
+      "fr": "Cornouiller stolonifère",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Coronidium boormanii",
@@ -3387,13 +3576,15 @@
       "name": "Corylus avellana",
       "en": "Corylus avellana",
       "fr": "Corylus avellana",
-      "qid": "Q124969"
+      "qid": "Q124969",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Corylus colurna",
       "en": "Corylus colurna",
       "fr": "Noisetier de Byzance",
-      "qid": "Q148939"
+      "qid": "Q148939",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Coryphaena hippurus",
@@ -3432,9 +3623,16 @@
       "qid": "Q20857"
     },
     {
-      "name": "Cantharellus cinereus",
-      "en": "Ashen chanterelle",
-      "fr": "Chanterelle cendrée"
+      "name": "Crataegus laevigata",
+      "en": "Midland hawthorn",
+      "fr": "Aubépine à deux styles",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Crataegus monogyna",
+      "en": "Common hawthorn",
+      "fr": "Aubépine monogyne",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Craterellus cornucopioides",
@@ -3513,6 +3711,11 @@
       "qid": "Q140051"
     },
     {
+      "name": "Crocuta crocuta",
+      "en": "Spotted hyena",
+      "fr": "Hyène tachetée"
+    },
+    {
       "name": "Crotalus aquilus",
       "en": "Querétaro dusky rattlesnake",
       "fr": "Crotalus aquilus",
@@ -3576,13 +3779,15 @@
       "name": "Cucumis melo",
       "en": "Cucumis melo",
       "fr": "melon",
-      "qid": "Q81602"
+      "qid": "Q81602",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Cucumis sativus",
       "en": "Cucumis sativus",
       "fr": "concombre",
-      "qid": "Q23425"
+      "qid": "Q23425",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Culex pipiens",
@@ -3704,6 +3909,18 @@
       "qid": "Q31797"
     },
     {
+      "name": "Cytisus scoparius",
+      "en": "Common broom",
+      "fr": "Genêt à balais",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Dactylis glomerata",
+      "en": "Cock’s-foot",
+      "fr": "Dactyle aggloméré",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Dallia pectoralis",
       "en": "Alaska blackfish",
       "fr": "Dallia pectoralis",
@@ -3776,10 +3993,21 @@
       "qid": "Q151206"
     },
     {
+      "name": "Dasypus novemcinctus",
+      "en": "Nine-banded armadillo",
+      "fr": "Tatou à neuf bandes"
+    },
+    {
       "name": "Dasyurus spartacus",
       "en": "Bronze quoll",
       "fr": "Dasyurus spartacus",
       "qid": "Q133184"
+    },
+    {
+      "name": "Daucus carota",
+      "en": "Wild carrot",
+      "fr": "Carotte sauvage",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Deileptenia ribeata",
@@ -3929,7 +4157,14 @@
       "name": "Digitalis grandiflora",
       "en": "Digitalis grandiflora",
       "fr": "Digitale à grandes fleurs",
-      "qid": "Q157085"
+      "qid": "Q157085",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Digitalis purpurea",
+      "en": "Common foxglove",
+      "fr": "Digitale pourpre",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Dillenia indica",
@@ -4104,6 +4339,12 @@
       "en": "Great diving beetle",
       "fr": "Dytique bordé",
       "qid": "Q20851"
+    },
+    {
+      "name": "Echinacea purpurea",
+      "en": "Purple coneflower",
+      "fr": "Échinacée pourpre",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Echinocactus horizonthalonius",
@@ -4302,6 +4543,12 @@
       "qid": "Q21122"
     },
     {
+      "name": "Erica cinerea",
+      "en": "Bell heather",
+      "fr": "Bruyère cendrée",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Erinaceus europaeus",
       "en": "European hedgehog",
       "fr": "hérisson commun",
@@ -4378,6 +4625,12 @@
       "en": "Escherichia coli",
       "fr": "Escherichia coli",
       "qid": "Q25419"
+    },
+    {
+      "name": "Eschscholzia californica",
+      "en": "California poppy",
+      "fr": "Pavot de Californie",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Escobaria missouriensis",
@@ -4468,6 +4721,12 @@
       "en": "Eumorpha labruscae",
       "fr": "Eumorpha labruscae",
       "qid": "Q150451"
+    },
+    {
+      "name": "Euonymus europaeus",
+      "en": "European spindle",
+      "fr": "Fusain d’Europe",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Eupackardia calleta",
@@ -4578,6 +4837,18 @@
       "qid": "Q149219"
     },
     {
+      "name": "Fagus sylvatica",
+      "en": "European beech",
+      "fr": "Hêtre commun",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Faidherbia albida",
+      "en": "Apple-ring acacia",
+      "fr": "Acacia blanc",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Falcipennis canadensis",
       "en": "Falcipennis canadensis",
       "fr": "Tétras du Canada",
@@ -4602,6 +4873,12 @@
       "qid": "Q26490"
     },
     {
+      "name": "Ficaria verna",
+      "en": "Lesser celandine",
+      "fr": "Ficaire printanière",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Ficedula hypoleuca",
       "en": "European Pied Flycatcher",
       "fr": "Gobemouche noir",
@@ -4611,13 +4888,15 @@
       "name": "Ficus carica",
       "en": "Ficus carica",
       "fr": "Ficus carica",
-      "qid": "Q36146"
+      "qid": "Q36146",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Filipendula vulgaris",
       "en": "Filipendula vulgaris",
       "fr": "Filipendula vulgaris",
-      "qid": "Q148961"
+      "qid": "Q148961",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Fistulina hepatica",
@@ -4645,7 +4924,8 @@
       "name": "Frangula alnus",
       "en": "Frangula alnus",
       "fr": "Bourdaine",
-      "qid": "Q146136"
+      "qid": "Q146136",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Frankliniella occidentalis",
@@ -4663,7 +4943,8 @@
       "name": "Fraxinus excelsior",
       "en": "Fraxinus excelsior",
       "fr": "Frêne élevé",
-      "qid": "Q156907"
+      "qid": "Q156907",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Fringilla coelebs",
@@ -4779,6 +5060,12 @@
       "qid": "Q18834"
     },
     {
+      "name": "Genista tinctoria",
+      "en": "Dyer’s greenweed",
+      "fr": "Genêt des teinturiers",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Geophagus argyrostictus",
       "en": "Geophagus argyrostictus",
       "fr": "Geophagus argyrostictus",
@@ -4857,16 +5144,28 @@
       "qid": "Q21190"
     },
     {
+      "name": "Geranium robertianum",
+      "en": "Herb-robert",
+      "fr": "Géranium herbe-à-Robert",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Gerris lacustris",
       "en": "Gerris lacustris",
       "fr": "Gerris lacustris",
       "qid": "Q20863"
     },
     {
+      "name": "Giraffa camelopardalis",
+      "en": "Northern giraffe",
+      "fr": "Girafe du Nord"
+    },
+    {
       "name": "Glycine max",
       "en": "soybean",
       "fr": "soja",
-      "qid": "Q11006"
+      "qid": "Q11006",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Gollumjapyx smeagol",
@@ -4889,7 +5188,8 @@
       "name": "Gossypium hirsutum",
       "en": "Gossypium hirsutum",
       "fr": "Gossypium hirsutum",
-      "qid": "Q133481"
+      "qid": "Q133481",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Grus grus",
@@ -4908,6 +5208,12 @@
       "en": "Guianacara sphenozona",
       "fr": "Guianacara sphenozona",
       "qid": "Q130753"
+    },
+    {
+      "name": "Guiera senegalensis",
+      "en": "Guiera",
+      "fr": "Guiera du Sénégal",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Gulo gulo",
@@ -5212,6 +5518,12 @@
       "qid": "Q146102"
     },
     {
+      "name": "Helianthus annuus",
+      "en": "Common sunflower",
+      "fr": "Tournesol",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Helianthus tuberosus",
       "en": "Helianthus tuberosus",
       "fr": "topinambour",
@@ -5320,6 +5632,12 @@
       "qid": "Q144267"
     },
     {
+      "name": "Hibiscus trionum",
+      "en": "Flower-of-an-hour",
+      "fr": "Ketmie trifoliée",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Himantopus leucocephalus",
       "en": "Pied Stilt",
       "fr": "Échasse d'Australie",
@@ -5419,7 +5737,8 @@
       "name": "Hordeum vulgare",
       "en": "Hordeum vulgare",
       "fr": "orge commune",
-      "qid": "Q11577"
+      "qid": "Q11577",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Horneophyton lignieri",
@@ -5479,6 +5798,11 @@
       "en": "European Storm Petrel",
       "fr": "Océanite tempête",
       "qid": "Q27461"
+    },
+    {
+      "name": "Hydrochoerus hydrochaeris",
+      "en": "Capybara",
+      "fr": "Capybara"
     },
     {
       "name": "Hydrophasianus chirurgus",
@@ -5595,6 +5919,12 @@
       "qid": "Q146264"
     },
     {
+      "name": "Hyparrhenia hirta",
+      "en": "Common thatching grass",
+      "fr": "Barbon hérissé",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Hyperprosopon argenteum",
       "en": "Hyperprosopon argenteum",
       "fr": "Hyperprosopon argenteum",
@@ -5688,6 +6018,12 @@
       "qid": "Q143809"
     },
     {
+      "name": "Ilex aquifolium",
+      "en": "Common holly",
+      "fr": "Houx commun",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Illawarra wisharti",
       "en": "Illawarra wisharti",
       "fr": "Illawarra wisharti",
@@ -5698,6 +6034,12 @@
       "en": "Illicium anisatum",
       "fr": "Badiane japonaise",
       "qid": "Q27019"
+    },
+    {
+      "name": "Indigofera spicata",
+      "en": "Creeping indigo",
+      "fr": "Indigotier rampant",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Infundibulicybe geotropa",
@@ -5727,15 +6069,15 @@
       "fr": "Inocybe à lames couleur de terre"
     },
     {
+      "name": "Inocybe maculata",
+      "en": "Frosty fibrecap",
+      "fr": "Inosperma maculatum"
+    },
+    {
       "name": "Inocybe tricolor",
       "en": "Inocybe tricolor",
       "fr": "Inocybe tricolor",
       "qid": "Q76840"
-    },
-    {
-      "name": "Inocybe maculata",
-      "en": "Frosty fibrecap",
-      "fr": "Inosperma maculatum"
     },
     {
       "name": "Intoshia linei",
@@ -5861,7 +6203,8 @@
       "name": "Juglans regia",
       "en": "Juglans regia",
       "fr": "noyer commun",
-      "qid": "Q46871"
+      "qid": "Q46871",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Juncus maritimus",
@@ -5873,7 +6216,8 @@
       "name": "Juniperus communis",
       "en": "Juniperus communis",
       "fr": "Genévrier commun",
-      "qid": "Q26325"
+      "qid": "Q26325",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Jynx torquilla",
@@ -5991,6 +6335,11 @@
       "qid": "Q80742"
     },
     {
+      "name": "Lactarius piperatus",
+      "en": "Peppery milk cap",
+      "fr": "Lactaire poivré"
+    },
+    {
       "name": "Lactarius salmonicolor",
       "en": "Salmon milk cap",
       "fr": "Lactaire saumon"
@@ -6029,20 +6378,15 @@
       "qid": "Q23637"
     },
     {
+      "name": "Lactarius volemus",
+      "en": "Weeping milk cap",
+      "fr": "Lactaire à lait abondant"
+    },
+    {
       "name": "Lactarius zonarioides",
       "en": "Lactarius zonarioides",
       "fr": "Lactarius zonarioides",
       "qid": "Q80701"
-    },
-    {
-      "name": "Lactarius piperatus",
-      "en": "Peppery milk cap",
-      "fr": "Lactaire poivré"
-    },
-    {
-      "name": "Lactarius volemus",
-      "en": "Weeping milk cap",
-      "fr": "Lactaire à lait abondant"
     },
     {
       "name": "Lactobacillus acidophilus",
@@ -6080,6 +6424,12 @@
       "qid": "Q19055"
     },
     {
+      "name": "Lamium album",
+      "en": "White dead-nettle",
+      "fr": "Lamier blanc",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Lanius collurio",
       "en": "Red-backed Shrike",
       "fr": "Pie-grièche écorcheur",
@@ -6089,7 +6439,8 @@
       "name": "Larix decidua",
       "en": "Larix decidua",
       "fr": "Mélèze d'Europe",
-      "qid": "Q146048"
+      "qid": "Q146048",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Larus argentatus",
@@ -6137,7 +6488,8 @@
       "name": "Lathyrus japonicus",
       "en": "Lathyrus japonicus",
       "fr": "Gesse maritime",
-      "qid": "Q21125"
+      "qid": "Q21125",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Latrodectus geometricus",
@@ -6167,17 +6519,18 @@
       "name": "Laurus nobilis",
       "en": "Laurus nobilis",
       "fr": "Laurus nobilis",
-      "qid": "Q26006"
-    },
-    {
-      "name": "Leccinum crocipodium",
-      "en": "Leccinellum crocipodium",
-      "fr": "Bolet craquelé"
+      "qid": "Q26006",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Leccinum aurantiacum",
       "en": "Red-capped scaber stalk",
       "fr": "Bolet orangé des chênes"
+    },
+    {
+      "name": "Leccinum crocipodium",
+      "en": "Leccinellum crocipodium",
+      "fr": "Bolet craquelé"
     },
     {
       "name": "Leccinum scabrum",
@@ -6374,7 +6727,8 @@
       "name": "Leucanthemum vulgare",
       "en": "Leucanthemum vulgare",
       "fr": "marguerite commune",
-      "qid": "Q27164"
+      "qid": "Q27164",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Leucocarbo carunculatus",
@@ -6386,7 +6740,8 @@
       "name": "Levisticum officinale",
       "en": "Levisticum officinale",
       "fr": "Livèche",
-      "qid": "Q27615"
+      "qid": "Q27615",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Libellula axilena",
@@ -6417,6 +6772,12 @@
       "en": "rosy boa",
       "fr": "Lichanura trivirgata",
       "qid": "Q19075"
+    },
+    {
+      "name": "Ligustrum vulgare",
+      "en": "Wild privet",
+      "fr": "Troène commun",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Lilium cernuum",
@@ -6506,7 +6867,8 @@
       "name": "Linaria vulgaris",
       "en": "Linaria vulgaris",
       "fr": "Linaria vulgaris",
-      "qid": "Q157078"
+      "qid": "Q157078",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Lintneria eremitus",
@@ -6557,6 +6919,12 @@
       "qid": "Q25601"
     },
     {
+      "name": "Lolium perenne",
+      "en": "Perennial ryegrass",
+      "fr": "Ivraie vivace",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Lonchura punctulata",
       "en": "Lonchura punctulata",
       "fr": "Capucin damier",
@@ -6579,6 +6947,12 @@
       "en": "Lophopyxis maingayi",
       "fr": "Lophopyxidaceae",
       "qid": "Q132699"
+    },
+    {
+      "name": "Lotus corniculatus",
+      "en": "Common bird’s-foot trefoil",
+      "fr": "Lotier corniculé",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Loxia curvirostra",
@@ -6615,6 +6989,12 @@
       "en": "Woodlark",
       "fr": "Alouette lulu",
       "qid": "Q26969"
+    },
+    {
+      "name": "Lupinus polyphyllus",
+      "en": "Large-leaved lupin",
+      "fr": "Lupin à folioles nombreuses",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Luscinia megarhynchos",
@@ -6769,10 +7149,17 @@
       "qid": "Q131173"
     },
     {
+      "name": "Malus sylvestris",
+      "en": "Crab apple",
+      "fr": "Pommier sauvage",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Malva sylvestris",
       "en": "Malva sylvestris",
       "fr": "Grande mauve",
-      "qid": "Q156835"
+      "qid": "Q156835",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Mammillaria bocasana",
@@ -6797,6 +7184,11 @@
       "en": "Manduca florestan",
       "fr": "Manduca florestan",
       "qid": "Q143884"
+    },
+    {
+      "name": "Manis tricuspis",
+      "en": "White-bellied pangolin",
+      "fr": "Pangolin à ventre blanc"
     },
     {
       "name": "Marasmius oreades",
@@ -6834,10 +7226,17 @@
       "qid": "Q93600"
     },
     {
+      "name": "Matricaria chamomilla",
+      "en": "German chamomile",
+      "fr": "Matricaire camomille",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Medicago minima",
       "en": "Medicago minima",
       "fr": "Medicago minima",
-      "qid": "Q144139"
+      "qid": "Q144139",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Mediothele australis",
@@ -6998,7 +7397,8 @@
       "name": "Mespilus germanica",
       "en": "Mespilus germanica",
       "fr": "néflier",
-      "qid": "Q146186"
+      "qid": "Q146186",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Metasequoia glyptostroboides",
@@ -7171,7 +7571,8 @@
       "name": "Musa acuminata",
       "en": "Musa acuminata",
       "fr": "Musa acuminata",
-      "qid": "Q132970"
+      "qid": "Q132970",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Musa balbisiana",
@@ -7262,6 +7663,11 @@
       "qid": "Q146042"
     },
     {
+      "name": "Myrmecophaga tridactyla",
+      "en": "Giant anteater",
+      "fr": "Fourmilier géant"
+    },
+    {
       "name": "Mytilus edulis",
       "en": "Mytilus edulis",
       "fr": "moule commune",
@@ -7319,7 +7725,8 @@
       "name": "Nasturtium officinale",
       "en": "Nasturtium officinale",
       "fr": "cresson de fontaine",
-      "qid": "Q150452"
+      "qid": "Q150452",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Nasua nasua",
@@ -7655,7 +8062,8 @@
       "name": "Olea europaea",
       "en": "Olea europaea",
       "fr": "olivier européen",
-      "qid": "Q37083"
+      "qid": "Q37083",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Omphalotus olearius",
@@ -7798,7 +8206,8 @@
       "name": "Origanum majorana",
       "en": "marjoram",
       "fr": "Origanum majorana",
-      "qid": "Q22694"
+      "qid": "Q22694",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Ornithorhynchus anatinus",
@@ -7967,6 +8376,12 @@
       "en": "tiger",
       "fr": "tigre",
       "qid": "Q19939"
+    },
+    {
+      "name": "Papaver rhoeas",
+      "en": "Common poppy",
+      "fr": "Coquelicot",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Papilio aegeus",
@@ -8187,7 +8602,8 @@
       "name": "Persea americana",
       "en": "Persea americana",
       "fr": "avocatier",
-      "qid": "Q37153"
+      "qid": "Q37153",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Persicaria capitata",
@@ -8217,7 +8633,8 @@
       "name": "Petroselinum crispum",
       "en": "parsley",
       "fr": "persil",
-      "qid": "Q25284"
+      "qid": "Q25284",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Phaeocollybia christinae",
@@ -8355,7 +8772,8 @@
       "name": "Phoenix dactylifera",
       "en": "date palm",
       "fr": "Phoenix dactylifera",
-      "qid": "Q25292"
+      "qid": "Q25292",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Phyllium bioculatum",
@@ -8410,6 +8828,12 @@
       "en": "Eurasian Magpie",
       "fr": "pie bavarde",
       "qid": "Q25307"
+    },
+    {
+      "name": "Picea abies",
+      "en": "Norway spruce",
+      "fr": "Épicéa commun",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Picea glauca",
@@ -8511,7 +8935,8 @@
       "name": "Pinus pinea",
       "en": "Pinus pinea",
       "fr": "Pin parasol",
-      "qid": "Q106094"
+      "qid": "Q106094",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Pinus strobus",
@@ -8523,7 +8948,8 @@
       "name": "Pinus sylvestris",
       "en": "Pinus sylvestris",
       "fr": "Pin sylvestre",
-      "qid": "Q133128"
+      "qid": "Q133128",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Pipistrellus raceyi",
@@ -8541,7 +8967,8 @@
       "name": "Pisum sativum",
       "en": "Pisum sativum",
       "fr": "pois",
-      "qid": "Q25237"
+      "qid": "Q25237",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Pithecheirops otion",
@@ -8556,10 +8983,17 @@
       "qid": "Q146224"
     },
     {
+      "name": "Plantago lanceolata",
+      "en": "Ribwort plantain",
+      "fr": "Plantain lancéolé",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Plantago major",
       "en": "Plantago major",
       "fr": "Grand plantain",
-      "qid": "Q157154"
+      "qid": "Q157154",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Plantago maritima",
@@ -8733,10 +9167,17 @@
       "qid": "Q148994"
     },
     {
+      "name": "Populus nigra",
+      "en": "Black poplar",
+      "fr": "Peuplier noir",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Populus tremula",
       "en": "Populus tremula",
       "fr": "Tremble",
-      "qid": "Q146110"
+      "qid": "Q146110",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Porcellio albinus",
@@ -8799,6 +9240,12 @@
       "qid": "Q76941"
     },
     {
+      "name": "Potentilla reptans",
+      "en": "Creeping cinquefoil",
+      "fr": "Potentille rampante",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Pradosia atroviolacea",
       "en": "Pradosia atroviolacea",
       "fr": "Pradosia atroviolacea",
@@ -8845,6 +9292,12 @@
       "en": "Primula stricta",
       "fr": "Primula stricta",
       "qid": "Q149065"
+    },
+    {
+      "name": "Primula veris",
+      "en": "Cowslip",
+      "fr": "Primevère officinale",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Prionace glauca",
@@ -8946,7 +9399,20 @@
       "name": "Prunus armeniaca",
       "en": "Prunus armeniaca",
       "fr": "abricotier",
-      "qid": "Q37453"
+      "qid": "Q37453",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Prunus avium",
+      "en": "Wild cherry",
+      "fr": "Merisier",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Prunus mahaleb",
+      "en": "St Lucie cherry",
+      "fr": "Cerisier de Sainte-Lucie",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Prunus maximowiczii",
@@ -8955,10 +9421,23 @@
       "qid": "Q139964"
     },
     {
+      "name": "Prunus padus",
+      "en": "Bird cherry",
+      "fr": "Cerisier à grappes",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Prunus persica",
       "en": "Prunus persica",
       "fr": "pêcher",
-      "qid": "Q13189"
+      "qid": "Q13189",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Prunus spinosa",
+      "en": "Blackthorn",
+      "fr": "Prunellier",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Psalmopoeus irminia",
@@ -9246,7 +9725,8 @@
       "name": "Pseudotsuga menziesii",
       "en": "Pseudotsuga menziesii",
       "fr": "Pseudotsuga menziesii",
-      "qid": "Q156687"
+      "qid": "Q156687",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Psilocybe puberula",
@@ -9390,7 +9870,8 @@
       "name": "Pulsatilla pratensis",
       "en": "Pulsatilla pratensis",
       "fr": "Pulsatilla pratensis",
-      "qid": "Q148936"
+      "qid": "Q148936",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Puma concolor",
@@ -9402,7 +9883,8 @@
       "name": "Punica granatum",
       "en": "pomegranate",
       "fr": "grenadier commun",
-      "qid": "Q13188"
+      "qid": "Q13188",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Pusa sibirica",
@@ -9462,7 +9944,44 @@
       "name": "Pyrus communis",
       "en": "Pyrus communis",
       "fr": "poirier commun",
-      "qid": "Q146281"
+      "qid": "Q146281",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Quercus ilex",
+      "en": "Holm oak",
+      "fr": "Chêne vert",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Quercus petraea",
+      "en": "Sessile oak",
+      "fr": "Chêne sessile",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Quercus pubescens",
+      "en": "Downy oak",
+      "fr": "Chêne pubescent",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Quercus robur",
+      "en": "Pedunculate oak",
+      "fr": "Chêne pédonculé",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Quercus rubra",
+      "en": "Northern red oak",
+      "fr": "Chêne rouge d’Amérique",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Rabelera holostea",
+      "en": "Greater stitchwort",
+      "fr": "Stellaire holostée",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Raja binoculata",
@@ -9494,16 +10013,28 @@
       "qid": "Q27465"
     },
     {
+      "name": "Rangifer tarandus",
+      "en": "Reindeer",
+      "fr": "Renne"
+    },
+    {
       "name": "Ranitomeya imitator",
       "en": "Mimic poison frog",
       "fr": "Ranitomeya imitator",
       "qid": "Q146330"
     },
     {
+      "name": "Ranunculus acris",
+      "en": "Meadow buttercup",
+      "fr": "Renoncule âcre",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Raphanus raphanistrum",
       "en": "Raphanus raphanistrum",
       "fr": "Raphanus raphanistrum",
-      "qid": "Q28017"
+      "qid": "Q28017",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Rattus rattus",
@@ -9554,6 +10085,12 @@
       "qid": "Q151230"
     },
     {
+      "name": "Rhamnus cathartica",
+      "en": "Purging buckthorn",
+      "fr": "Nerprun purgatif",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Rhaphidura leucopygialis",
       "en": "Silver-rumped Spinetail",
       "fr": "Martinet leucopyge",
@@ -9600,6 +10137,12 @@
       "en": "Rhipsalis pilocarpa",
       "fr": "Rhipsalis pilocarpa",
       "qid": "Q136307"
+    },
+    {
+      "name": "Rhododendron catawbiense",
+      "en": "Catawba rhododendron",
+      "fr": "Rhododendron de Catawba",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Rhodospirillum rubrum",
@@ -9671,7 +10214,8 @@
       "name": "Ribes alpinum",
       "en": "Ribes alpinum",
       "fr": "Ribes alpinum",
-      "qid": "Q149260"
+      "qid": "Q149260",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Riccia fluitans",
@@ -9719,7 +10263,8 @@
       "name": "Rosa canina",
       "en": "Rosa canina",
       "fr": "Rosa canina",
-      "qid": "Q146066"
+      "qid": "Q146066",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Rosa cymosa",
@@ -9737,13 +10282,20 @@
       "name": "Rosa multiflora",
       "en": "Rosa multiflora",
       "fr": "Rosa multiflora",
-      "qid": "Q133617"
+      "qid": "Q133617",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Rosa pendulina",
       "en": "Rosa pendulina",
       "fr": "rosier des Alpes",
       "qid": "Q102088"
+    },
+    {
+      "name": "Rosa virginiana",
+      "en": "Virginia rose",
+      "fr": "Rosier de Virginie",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Rosmarinus officinalis",
@@ -9774,6 +10326,12 @@
       "en": "Roystonea oleracea",
       "fr": "Roystonea oleracea",
       "qid": "Q141233"
+    },
+    {
+      "name": "Rudbeckia hirta",
+      "en": "Black-eyed Susan",
+      "fr": "Rudbeckie hérissée",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Rumex acetosa",
@@ -9909,6 +10467,11 @@
       "qid": "Q135368"
     },
     {
+      "name": "Saiga tatarica",
+      "en": "Saiga antelope",
+      "fr": "Saïga"
+    },
+    {
       "name": "Salamandra salamandra",
       "en": "fire salamander",
       "fr": "Salamandra salamandra",
@@ -9924,13 +10487,21 @@
       "name": "Salix alba",
       "en": "Salix alba",
       "fr": "Salix alba",
-      "qid": "Q156918"
+      "qid": "Q156918",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Salix caprea",
+      "en": "Goat willow",
+      "fr": "Saule marsault",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Salix repens",
       "en": "Salix repens",
       "fr": "Salix repens",
-      "qid": "Q28141"
+      "qid": "Q28141",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Salmo nigripinnis",
@@ -9951,10 +10522,17 @@
       "qid": "Q143525"
     },
     {
+      "name": "Salvia pratensis",
+      "en": "Meadow sage",
+      "fr": "Sauge des prés",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Sambucus nigra",
       "en": "Sambucus nigra",
       "fr": "Sambucus nigra",
-      "qid": "Q22701"
+      "qid": "Q22701",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Sansevieria forskaliana",
@@ -9978,7 +10556,8 @@
       "name": "Saponaria officinalis",
       "en": "Saponaria officinalis",
       "fr": "Saponaire officinale",
-      "qid": "Q156841"
+      "qid": "Q156841",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Sarcodon imbricatus",
@@ -10192,7 +10771,8 @@
       "name": "Secale cereale",
       "en": "Secale cereale",
       "fr": "seigle",
-      "qid": "Q12099"
+      "qid": "Q12099",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Sedum acre",
@@ -10213,10 +10793,28 @@
       "qid": "Q139902"
     },
     {
+      "name": "Senna italica",
+      "en": "Senegal senna",
+      "fr": "Séné du Sénégal",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Senna siamea",
       "en": "Senna siamea",
       "fr": "Senna siamea",
       "qid": "Q36154"
+    },
+    {
+      "name": "Sequoia sempervirens",
+      "en": "Coast redwood",
+      "fr": "Séquoia toujours vert",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Sequoiadendron giganteum",
+      "en": "Giant sequoia",
+      "fr": "Séquoia géant",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Serrasalmus elongatus",
@@ -10237,6 +10835,12 @@
       "qid": "Q48455"
     },
     {
+      "name": "Sesamum alatum",
+      "en": "Winged-seed sesame",
+      "fr": "Sésame ailé",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Setchellanthus caeruleus",
       "en": "Setchellanthus caeruleus",
       "fr": "Setchellanthus caeruleus",
@@ -10249,16 +10853,24 @@
       "qid": "Q26171"
     },
     {
+      "name": "Silene dioica",
+      "en": "Red campion",
+      "fr": "Compagnon rouge",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Silene latifolia",
       "en": "Silene latifolia",
       "fr": "Silene latifolia",
-      "qid": "Q27624"
+      "qid": "Q27624",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Sinapis alba",
       "en": "Sinapis alba",
       "fr": "Sinapis alba",
-      "qid": "Q146202"
+      "qid": "Q146202",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Sinapis arvensis",
@@ -10324,19 +10936,22 @@
       "name": "Solanum lycopersicum",
       "en": "tomato",
       "fr": "tomate",
-      "qid": "Q23501"
+      "qid": "Q23501",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Solanum melongena",
       "en": "Solanum melongena",
       "fr": "aubergine",
-      "qid": "Q7540"
+      "qid": "Q7540",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Solanum nigrum",
       "en": "Solanum nigrum",
       "fr": "morelle noire",
-      "qid": "Q146400"
+      "qid": "Q146400",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Solanum pseudolulo",
@@ -10348,7 +10963,8 @@
       "name": "Solanum tuberosum",
       "en": "potato",
       "fr": "pomme de terre",
-      "qid": "Q10998"
+      "qid": "Q10998",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Solanum vescum",
@@ -10390,13 +11006,15 @@
       "name": "Sorbus aucuparia",
       "en": "Sorbus aucuparia",
       "fr": "Sorbus aucuparia",
-      "qid": "Q146198"
+      "qid": "Q146198",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Sorbus intermedia",
       "en": "Sorbus intermedia",
       "fr": "Sorbus intermedia",
-      "qid": "Q27980"
+      "qid": "Q27980",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Sorubim cuspicaudus",
@@ -10585,6 +11203,16 @@
       "qid": "Q27081"
     },
     {
+      "name": "Stellaria holostea",
+      "en": "Greater stitchwort",
+      "fr": "Stellaire holostée",
+      "taxonomy_context": "Land plants",
+      "atlas_scientific": "Rabelera holostea",
+      "synonym_evidence": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A307758-2",
+      "accepted_name_evidence": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A77205026-1",
+      "reviewed": "2026-10-13"
+    },
+    {
       "name": "Stellifer stellifer",
       "en": "Stellifer stellifer",
       "fr": "Stellifer stellifer",
@@ -10724,6 +11352,11 @@
       "qid": "Q115487"
     },
     {
+      "name": "Suricata suricatta",
+      "en": "Meerkat",
+      "fr": "Suricate"
+    },
+    {
       "name": "Sutorectus tentaculatus",
       "en": "cobbler wobbegong",
       "fr": "Sutorectus tentaculatus",
@@ -10844,6 +11477,11 @@
       "qid": "Q25421"
     },
     {
+      "name": "Tachyglossus aculeatus",
+      "en": "Short-beaked echidna",
+      "fr": "Échidné à nez court"
+    },
+    {
       "name": "Tacinga funalis",
       "en": "Tacinga funalis",
       "fr": "Tacinga funalis",
@@ -10889,7 +11527,8 @@
       "name": "Tamarindus indica",
       "en": "Tamarindus indica",
       "fr": "Tamarinier",
-      "qid": "Q80235"
+      "qid": "Q80235",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Tanacetum vulgare",
@@ -10908,6 +11547,11 @@
       "en": "Mauritian Tomb Bat",
       "fr": "Taphien de Maurice",
       "qid": "Q76818"
+    },
+    {
+      "name": "Tapirus terrestris",
+      "en": "Lowland tapir",
+      "fr": "Tapir terrestre"
     },
     {
       "name": "Tawa hallae",
@@ -11063,7 +11707,8 @@
       "name": "Thymus vulgaris",
       "en": "Thymus vulgaris",
       "fr": "Thymus vulgaris",
-      "qid": "Q148668"
+      "qid": "Q148668",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Thyreobaeus scutiger",
@@ -11084,10 +11729,17 @@
       "qid": "Q136165"
     },
     {
+      "name": "Tilia cordata",
+      "en": "Small-leaved lime",
+      "fr": "Tilleul à petites feuilles",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Tilia platyphyllos",
       "en": "Tilia platyphyllos",
       "fr": "Tilleul à grandes feuilles",
-      "qid": "Q156831"
+      "qid": "Q156831",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Timalia pileata",
@@ -11192,6 +11844,11 @@
       "qid": "Q135020"
     },
     {
+      "name": "Trichechus manatus",
+      "en": "West Indian manatee",
+      "fr": "Lamantin des Caraïbes"
+    },
+    {
       "name": "Trichiocercus sparshalli",
       "en": "Trichiocercus sparshalli",
       "fr": "Trichiocercus sparshalli",
@@ -11241,10 +11898,23 @@
       "qid": "Q25816"
     },
     {
+      "name": "Trifolium pratense",
+      "en": "Red clover",
+      "fr": "Trèfle des prés",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Trifolium repens",
+      "en": "White clover",
+      "fr": "Trèfle blanc",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Trigonella foenum-graecum",
       "en": "Trigonella foenum-graecum",
       "fr": "Fenugrec",
-      "qid": "Q133205"
+      "qid": "Q133205",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Trimeresurus insularis",
@@ -11466,7 +12136,8 @@
       "name": "Tussilago farfara",
       "en": "Tussilago farfara",
       "fr": "Tussilage",
-      "qid": "Q26302"
+      "qid": "Q26302",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Tuta absoluta",
@@ -11508,6 +12179,18 @@
       "en": "Udea lutealis",
       "fr": "Udea lutealis",
       "qid": "Q146209"
+    },
+    {
+      "name": "Ulex europaeus",
+      "en": "Common gorse",
+      "fr": "Ajonc d’Europe",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Ulmus minor",
+      "en": "Field elm",
+      "fr": "Orme champêtre",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Umbrina cirrosa",
@@ -11576,6 +12259,12 @@
       "qid": "Q33609"
     },
     {
+      "name": "Urtica dioica",
+      "en": "Stinging nettle",
+      "fr": "Grande ortie",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Urtica urens",
       "en": "Urtica urens",
       "fr": "Urtica urens",
@@ -11594,6 +12283,18 @@
       "qid": "Q36737"
     },
     {
+      "name": "Vaccinium corymbosum",
+      "en": "Highbush blueberry",
+      "fr": "Myrtillier en corymbe",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Vaccinium myrtillus",
+      "en": "Bilberry",
+      "fr": "Myrtille",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Vaccinium ovalifolium",
       "en": "Vaccinium ovalifolium",
       "fr": "Vaccinium ovalifolium",
@@ -11603,7 +12304,14 @@
       "name": "Vaccinium vitis-idaea",
       "en": "Vaccinium vitis-idaea",
       "fr": "airelle rouge",
-      "qid": "Q93235"
+      "qid": "Q93235",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Vachellia tortilis",
+      "en": "Umbrella thorn",
+      "fr": "Acacia parasol",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Vanda coerulea",
@@ -11630,6 +12338,12 @@
       "qid": "Q93808"
     },
     {
+      "name": "Veronica chamaedrys",
+      "en": "Germander speedwell",
+      "fr": "Véronique petit-chêne",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Vestia foetida",
       "en": "Vestia foetida",
       "fr": "Vestia foetida",
@@ -11642,22 +12356,37 @@
       "qid": "Q135183"
     },
     {
+      "name": "Viburnum lantana",
+      "en": "Wayfaring tree",
+      "fr": "Viorne lantane",
+      "taxonomy_context": "Land plants"
+    },
+    {
       "name": "Viburnum opulus",
       "en": "Viburnum opulus",
       "fr": "Viorne obier",
-      "qid": "Q156928"
+      "qid": "Q156928",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Vicia cracca",
+      "en": "Tufted vetch",
+      "fr": "Vesce cracca",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Vicia sativa",
       "en": "Vicia sativa",
       "fr": "Vesce commune",
-      "qid": "Q157071"
+      "qid": "Q157071",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Vicia sepium",
       "en": "Vicia sepium",
       "fr": "Vesce des haies",
-      "qid": "Q148570"
+      "qid": "Q148570",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Vicugna pacos",
@@ -11676,6 +12405,17 @@
       "en": "Sinoto's Lorikeet",
       "fr": "Vini sinotoi",
       "qid": "Q149034"
+    },
+    {
+      "name": "Viola odorata",
+      "en": "Sweet violet",
+      "fr": "Violette odorante",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Vombatus ursinus",
+      "en": "Common wombat",
+      "fr": "Wombat commun"
     },
     {
       "name": "Vulpes lagopus",
@@ -11787,7 +12527,14 @@
       "name": "Zingiber officinale",
       "en": "ginger",
       "fr": "gingembre",
-      "qid": "Q35625"
+      "qid": "Q35625",
+      "taxonomy_context": "Land plants"
+    },
+    {
+      "name": "Ziziphus mauritiana",
+      "en": "Indian jujube",
+      "fr": "Jujubier de Mauritanie",
+      "taxonomy_context": "Land plants"
     },
     {
       "name": "Zoarces viviparus",
@@ -11824,81 +12571,6 @@
       "en": "Zungaropsis multimaculatus",
       "fr": "Zungaropsis multimaculatus",
       "qid": "Q26959"
-    },
-    {
-      "name": "Giraffa camelopardalis",
-      "en": "Northern giraffe",
-      "fr": "Girafe du Nord"
-    },
-    {
-      "name": "Hydrochoerus hydrochaeris",
-      "en": "Capybara",
-      "fr": "Capybara"
-    },
-    {
-      "name": "Myrmecophaga tridactyla",
-      "en": "Giant anteater",
-      "fr": "Fourmilier géant"
-    },
-    {
-      "name": "Bradypus variegatus",
-      "en": "Brown-throated sloth",
-      "fr": "Paresseux à gorge brune"
-    },
-    {
-      "name": "Dasypus novemcinctus",
-      "en": "Nine-banded armadillo",
-      "fr": "Tatou à neuf bandes"
-    },
-    {
-      "name": "Tachyglossus aculeatus",
-      "en": "Short-beaked echidna",
-      "fr": "Échidné à nez court"
-    },
-    {
-      "name": "Vombatus ursinus",
-      "en": "Common wombat",
-      "fr": "Wombat commun"
-    },
-    {
-      "name": "Crocuta crocuta",
-      "en": "Spotted hyena",
-      "fr": "Hyène tachetée"
-    },
-    {
-      "name": "Suricata suricatta",
-      "en": "Meerkat",
-      "fr": "Suricate"
-    },
-    {
-      "name": "Manis tricuspis",
-      "en": "White-bellied pangolin",
-      "fr": "Pangolin à ventre blanc"
-    },
-    {
-      "name": "Tapirus terrestris",
-      "en": "Lowland tapir",
-      "fr": "Tapir terrestre"
-    },
-    {
-      "name": "Ailurus fulgens",
-      "en": "Red panda",
-      "fr": "Panda roux"
-    },
-    {
-      "name": "Trichechus manatus",
-      "en": "West Indian manatee",
-      "fr": "Lamantin des Caraïbes"
-    },
-    {
-      "name": "Rangifer tarandus",
-      "en": "Reindeer",
-      "fr": "Renne"
-    },
-    {
-      "name": "Saiga tatarica",
-      "en": "Saiga antelope",
-      "fr": "Saïga"
     }
   ],
   "editorial_additions_2026_10_12": {

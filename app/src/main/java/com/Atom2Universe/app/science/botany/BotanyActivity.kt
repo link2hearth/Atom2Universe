@@ -371,9 +371,13 @@ class BotanyActivity : ThemedActivity() {
         val box=column()
         val plate=PlantPlateView(this,p,initial).apply{marks=this@BotanyActivity.marks}
         val legend=column()
+        val markToggle=CheckBox(this).apply{text=getString(R.string.bot_marks);setTextColor(palette.text);isChecked=marks}
+        val plateNote=label(getString(R.string.bot_plate_note),11.5f).apply{setTextColor(palette.secondary)}
         fun updateLegend() {
             legend.removeAllViews()
-            if(!plate.marks)return
+            markToggle.visibility=if(plate.herbarium)View.GONE else View.VISIBLE
+            plateNote.text=getString(if(plate.herbarium)R.string.bot_herbarium_note else R.string.bot_plate_note)
+            if(plate.herbarium || !plate.marks)return
             val labels=if(p.look.study!=null)listOf(p.captions.getValue(plate.mode)) else when(plate.mode) {
                 PlantView.HABIT->listOf(p.captions.getValue(PlantView.HABIT),persistence(p),R.string.bot_height)
                 PlantView.LEAF->listOf(p.look.leaf.label,p.look.arrangement.label,p.look.margin.label)
@@ -383,12 +387,12 @@ class BotanyActivity : ThemedActivity() {
             labels.forEachIndexed{i,res->legend.addView(label(getString(R.string.bot_legend_format,i+1,getString(res)),12f),full(2))}
         }
         if(allowModes)box.addView(viewBar(initial){v->mode=v;plate.mode=v;updateLegend()},full(0))
-        box.addView(CheckBox(this).apply{text=getString(R.string.bot_marks);setTextColor(palette.text);isChecked=marks
+        box.addView(markToggle.apply{
             setOnCheckedChangeListener{_,checked->marks=checked;plate.marks=checked;updateLegend()}},full(0))
-        val frame=FitFrame(this,340f/300f,dp(460)).apply{addView(plate,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))}
+        val frame=FitFrame(this,if(p.id in PlantHerbarium.speciesIds)1.5f else 340f/300f,dp(460)).apply{addView(plate,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))}
         box.addView(frame,if(fiche.wide)LinearLayout.LayoutParams(-1,0,1f) else full(4))
         box.addView(legend,full(2));updateLegend()
-        box.addView(label(getString(R.string.bot_plate_note),11.5f).apply{setTextColor(palette.secondary)},full(4))
+        box.addView(plateNote,full(4))
         return box
     }
 

@@ -15,10 +15,11 @@ class BotanyLifeIndexTest {
 
     @Test fun chaquePlanteDuSousArbrePossedeUneReferenceUnique() {
         val index=index()
-        assertEquals(526,index.entries.size)
+        assertTrue(index.entries.size>=BotanyCatalog.species.size)
         assertEquals(tree.descendants(BotanyLifeIndex.GREEN_ROOT).map{it.id}.toSet(),index.entries.map{it.nodeId}.toSet())
-        assertEquals(526,index.entries.map{it.nodeId}.distinct().size)
-        assertEquals(523,index.entries.count{"ott56610" in it.lineage})
+        assertEquals(index.entries.size,index.entries.map{it.nodeId}.distinct().size)
+        assertTrue(index.entries.any{"ott56610" in it.lineage})
+        assertTrue(index.entries.any{"ott56610" !in it.lineage})
         for(entry in index.entries) {
             assertTrue(tree.nodes.getValue(entry.nodeId).species)
             assertEquals(entry,index.forNode(entry.nodeId))
@@ -32,11 +33,15 @@ class BotanyLifeIndexTest {
     }
 
     @Test fun correspondancesExactesEtNavigationDansLesDeuxSens() {
-        val index=index(mapOf("robur" to "Quercus robur","other_oak" to "Quercus petraea","helianthus" to "Helianthus annuus"))
+        val index=index(mapOf("robur" to "Quercus robur","other_oak" to "Quercus petraea","absent_oak" to "Quercus fictitia","helianthus" to "Helianthus annuus"))
         assertEquals("robur",index.forNode("ott239659")?.illustratedId)
         assertEquals("ott239659",index.forIllustrated("robur")?.nodeId)
         assertEquals("ott515712",index.forIllustrated("helianthus")?.nodeId)
-        assertNull(index.forIllustrated("other_oak"))
+        val otherOak=requireNotNull(index.forIllustrated("other_oak"))
+        assertNotEquals("ott239659",otherOak.nodeId)
+        assertEquals("Quercus petraea",otherOak.scientific)
+        assertEquals("other_oak",index.forNode(otherOak.nodeId)?.illustratedId)
+        assertNull(index.forIllustrated("absent_oak"))
         assertNull(index.forNode("unknown"))
         assertNull(index.forNode(tree.root))
         assertNull(index.forNode("ott309263")?.illustratedId)
@@ -67,13 +72,15 @@ class BotanyLifeIndexTest {
         val names=BotanyCatalog.species.associate{it.id to texts.getValue(resourceNames.getValue(it.latin))}
         val index=index(names)
         val matches=index.entries.filter{it.illustratedId!=null}
-        assertTrue(matches.size>=30)
+        assertEquals(names.keys,matches.map{it.illustratedId!!}.toSet())
         assertEquals(matches.size,matches.map{it.illustratedId}.distinct().size)
         for(entry in matches) {
-            assertEquals(entry.scientific,names.getValue(entry.illustratedId!!))
+            val atlasName=names.getValue(entry.illustratedId!!)
+            // Kew documents this homotypic synonym; OTT retains the older genus name.
+            assertEquals(entry.scientific,if(atlasName=="Rabelera holostea") "Stellaria holostea" else atlasName)
             assertEquals(entry,index.forIllustrated(entry.illustratedId))
         }
-        for(species in ModelPlantsCatalog.species+NightshadesCatalog.species+OrchardCatalog.species+FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species) {
+        for(species in BotanyCatalog.species) {
             val entry=requireNotNull(index.forIllustrated(species.id)) { "Missing living-tree link: ${species.id}" }
             assertEquals(species.id,index.forNode(entry.nodeId)?.illustratedId)
         }

@@ -20,13 +20,11 @@
     }
   ],
   "modifications": [
-    "Selection of 1826 terminal species",
+    "Selection of 1848 terminal species",
     "Union of full source lineages; no edges rewired",
     "Original EN/FR seed names and group articles; additional Wikidata labels, short descriptions and aliases matched by scientific name",
     "Unary nodes may be hidden only in the view",
-    "No dates or branch lengths imported",
-    "2026-10-12: owner-authorized removal of 22 undocumented animals and 11 unillustrated Gyptis cousins; Gyptis mackiei retained. Original topology preserved for remaining selection; orphan branches pruned.",
-    "2026-10-13: owner-authorized removal of 29 animals whose rejected drawings were discarded. Remaining selected animal species all have a bestiary profile and image; topology preserved and orphan branches pruned."
+    "No dates or branch lengths imported"
   ],
   "selection_report": "selection.json",
   "reviewed_exceptions": [
@@ -35,6 +33,6 @@
     "Synechococcus elongatus excluded because it is suppressed in synthesis; Nostoc commune selected instead",
     "Escherichia coli OTT query maps to an unnamed synthetic MRCA; source-node identity and requested taxon identity both retained"
   ],
-  "selection_sha256": "9cf1b741731dfd1c65a921df3b20400c7e292140046e771bc3058e4b0ccbb51b",
-  "tree_sha256": "7d37a9c4c2c2b65323ae95bf12f4d9ab4f01e875939f76ce30b235738edc28b4"
+  "selection_sha256": "9ccd4272010c3be193d1b3aa78b90a6ba6942cc1f079547f3c73e383dd53c174",
+  "tree_sha256": "61b5e766186e33c164998ef537533f2c0de579a33fcbb9588252a41fd327512e"
 }

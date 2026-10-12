@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bot_herbarium_accessibility">Planche botanique de %1$s, avec un sujet principal et des détails d’organes agrandis.</string>
+    <string name="bot_herbarium_note">Illustration botanique avec détails agrandis à différentes échelles. Formes et couleurs variables dans la nature.</string>
     <string name="bot_plate_loading">Dessin…</string>
     <string name="bot_plate_unavailable">Illustration indisponible</string>
     <string name="bot_title">Atlas botanique</string>

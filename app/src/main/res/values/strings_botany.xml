@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bot_herbarium_accessibility">Botanical plate of %1$s, with a main specimen and enlarged organ details.</string>
+    <string name="bot_herbarium_note">Botanical illustration with enlarged details at different scales. Forms and colours vary in nature.</string>
     <string name="bot_plate_loading">Drawing…</string>
     <string name="bot_plate_unavailable">Illustration unavailable</string>
     <string name="bot_title">Botanical atlas</string>

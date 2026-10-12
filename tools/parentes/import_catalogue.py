@@ -40,6 +40,8 @@ def main():
     if candidatefile.exists():
         for entry in json.loads(candidatefile.read_text(encoding='utf8'))['candidates']:
             rows.setdefault(entry['name'],dict(entry,seed=False))
+            if entry.get('taxonomy_context'):
+                rows[entry['name']]['taxonomy_context']=entry['taxonomy_context']
     about=request('tree_of_life/about',{})
     if (OUT/'tree.json').exists():
         previous=json.loads((OUT/'tree.json').read_text(encoding='utf8'))
@@ -48,8 +50,15 @@ def main():
     overridefile=ROOT/'tools/parentes/living_status_overrides.json'
     living_overrides={r['name']:r for r in json.loads(overridefile.read_text(encoding='utf8'))} if overridefile.exists() else {}
     names=list(rows)
-    for offset in range(0,len(names),100):
-        reply=request('tnrs/match_names',{'names':names[offset:offset+100],'do_approximate_matching':False})
+    botanical=[name for name in names if rows[name].get('taxonomy_context')=='Land plants']
+    botanical_set=set(botanical)
+    remaining=[name for name in names if name not in botanical_set]
+    batches=[(remaining[offset:offset+100],None) for offset in range(0,len(remaining),100)]
+    batches += [(botanical[offset:offset+100],'Land plants') for offset in range(0,len(botanical),100)]
+    for batch_index,(batch,context) in enumerate(batches):
+        body={'names':batch,'do_approximate_matching':False}
+        if context:body['context_name']=context
+        reply=request('tnrs/match_names',body)
         for result in reply['results']:
             row=rows[result['name']]
             exact=[m['taxon'] for m in result['matches'] if not m['is_approximate_match'] and not m['is_synonym']
@@ -66,7 +75,7 @@ def main():
                 if row['seed']:raise ValueError((row['name'],reason))
                 excluded.append({'name':row['name'],'reason':reason})
             else:resolved[row['name']]=exact[0]
-        print('Resolved names',min(offset+100,len(names)),'/',len(names),flush=True)
+        print('Resolved batch',batch_index+1,'/',len(batches),flush=True)
     reviewfile=ROOT/'tools/parentes/review_exclusions.json'
     if reviewfile.exists():
         for record in json.loads(reviewfile.read_text(encoding='utf8')):
@@ -90,6 +99,8 @@ def main():
         if reply:
             assert reply['synth_id']==about['synth_id'],'Source changed during import'
             chain=[reply]+reply['lineage'];chainids={n['node_id'] for n in reply['lineage']}
+            if row.get('taxonomy_context')=='Land plants':
+                assert 'ott361838' in chainids,('Atlas taxon outside green plants',name)
             if reply['node_id'] in selected:reason='Another selected species resolves to the same source node'
             elif reply['node_id'] in ancestors_of_selected or chainids & selected:reason='Not a distinct terminal relative to the existing selection'
         if reason:
@@ -111,6 +122,15 @@ def main():
         accepted.append(dict(row,id=reply['node_id'],ott=taxon['ott_id']))
         if count%100==0:print('Imported lineages',count,'/',len(resolved),flush=True)
     assert len(accepted)>=sum(r['seed'] for r in rows.values())
+    # Keep established source ordering stable when changing only the editorial selection.
+    if (OUT/'tree.json').exists():
+        prior=json.loads((OUT/'tree.json').read_text(encoding='utf8'))
+        prior_order={n['id']:i for i,n in enumerate(prior['nodes'])}
+        nodes=dict(sorted(nodes.items(),key=lambda item:prior_order.get(item[0],len(prior_order))))
+        sources={**{key:sources[key] for key in prior['source_id_map'] if key in sources},
+                 **sources}
+        prior_species={n['scientific']:i for i,n in enumerate(prior['nodes']) if n['species']}
+        accepted.sort(key=lambda row:prior_species.get(row['name'],len(prior['nodes'])))
     catalogue={'schema':1,'retrieved':'2026-10-05','synth_id':about['synth_id'],'taxonomy_version':about['taxonomy_version'],
         'source_created':about['date_created'],'root':about['root']['node_id'],'source_id_map':sources,'nodes':list(nodes.values())}
     (OUT/'tree.json').write_text(json.dumps(catalogue,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
