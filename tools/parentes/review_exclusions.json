@@ -22,5 +22,21 @@
     "qid": "Q146475",
     "revision": 2517970477,
     "reason": "Extinct or fossil taxon indicated by Wikidata; outside this selection"
+  },
+  {
+    "name": "Mesoplodon traversii",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Phalanger matanim",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Sylvilagus cognatus",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
+  },
+  {
+    "name": "Uromys siebersi",
+    "reason": "Editorial source-gap exclusion: rare species lacks sufficient reliable documentation; do not re-import into selected taxonomy."
   }
 ]

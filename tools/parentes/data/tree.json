@@ -259504,120 +259504,6 @@
       "species": false
     },
     {
-      "id": "ott346599",
-      "parent": "mrcaott6470ott346599",
-      "scientific": "Mesoplodon traversii",
-      "ott": 346599,
-      "tax_sources": [
-        "ncbi:200929",
-        "worms:254993",
-        "gbif:2440407",
-        "irmng:10923485"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott346599"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_346599",
-      "requested_node_id": "ott346599"
-    },
-    {
-      "id": "mrcaott6470ott346599",
-      "parent": "ott276848",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_1927@tree6215": "node1073976",
-        "pg_2587@tree5998": "node1019064"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "ott276848",
-      "parent": "mrcaott6470ott575100",
-      "scientific": "Mesoplodon",
-      "ott": 276848,
-      "tax_sources": [
-        "ncbi:9757",
-        "worms:137034",
-        "gbif:2440393",
-        "irmng:1434749",
-        "irmng:11083593"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott276848",
-        "pg_1927@tree6215": "node1073974",
-        "pg_2587@tree5998": "node1019063"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott6470ott575100",
-      "parent": "mrcaott6470ott800311",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_1927@tree6215": "node1073968",
-        "pg_2587@tree5998": "node1019061"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott6470ott800311",
-      "parent": "mrcaott6470ott1003906",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_1927@tree6215": "node1073966",
-        "pg_2587@tree5998": "node1019060"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott6470ott1003906",
-      "parent": "ott276849",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_1927@tree6215": "node1073962"
-      },
-      "conflicts_with": {
-        "pg_2587@tree5998": [
-          "node1019059"
-        ]
-      },
-      "species": false
-    },
-    {
-      "id": "ott276849",
-      "parent": "mrcaott5269ott6470",
-      "scientific": "Ziphiidae",
-      "ott": 276849,
-      "tax_sources": [
-        "ncbi:9756",
-        "worms:136986",
-        "gbif:5316",
-        "gbif:3240210",
-        "irmng:104714"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott276849",
-        "pg_1927@tree6215": "node1073960",
-        "pg_2587@tree5998": "node1019058"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
       "id": "ott941737",
       "parent": "ott941733",
       "scientific": "Mespilus germanica",
@@ -280025,47 +279911,6 @@
       "species": true,
       "key": "pt_species_701202",
       "requested_node_id": "ott701202"
-    },
-    {
-      "id": "ott3606945",
-      "parent": "mrcaott3606942ott3606945",
-      "scientific": "Phalanger matanim",
-      "ott": 3606945,
-      "tax_sources": [
-        "gbif:2440281",
-        "irmng:11305883"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3606945"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3606945",
-      "requested_node_id": "ott3606945"
-    },
-    {
-      "id": "mrcaott3606942ott3606945",
-      "parent": "mrcaott44500ott3606942",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_2833@tree6588": "node1145429"
-      },
-      "conflicts_with": {},
-      "species": false
-    },
-    {
-      "id": "mrcaott44500ott3606942",
-      "parent": "ott323239",
-      "scientific": "",
-      "ott": null,
-      "tax_sources": [],
-      "supported_by": {
-        "pg_2833@tree6588": "node1145428"
-      },
-      "conflicts_with": {},
-      "species": false
     },
     {
       "id": "ott323239",
@@ -321022,22 +320867,6 @@
       "species": false
     },
     {
-      "id": "ott3611210",
-      "parent": "ott864604",
-      "scientific": "Sylvilagus cognatus",
-      "ott": 3611210,
-      "tax_sources": [
-        "gbif:2436882"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3611210"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3611210",
-      "requested_node_id": "ott3611210"
-    },
-    {
       "id": "ott864604",
       "parent": "ott644258",
       "scientific": "Sylvilagus",
@@ -332222,22 +332051,6 @@
       "species": true,
       "key": "pt_species_3608790",
       "requested_node_id": "ott3608790"
-    },
-    {
-      "id": "ott3608785",
-      "parent": "ott449054",
-      "scientific": "Uromys siebersi",
-      "ott": 3608785,
-      "tax_sources": [
-        "gbif:4264977"
-      ],
-      "supported_by": {
-        "ott3.7draft3": "ott3608785"
-      },
-      "conflicts_with": {},
-      "species": true,
-      "key": "pt_species_3608785",
-      "requested_node_id": "ott3608785"
     },
     {
       "id": "ott872567",

@@ -82,8 +82,14 @@ def load_records():
     source = (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/AnimalCatalog.kt").read_text(encoding="utf-8")
     initial = re.findall(r'AnimalSpecies\("([a-z][a-z0-9_]*)", "([^"]+)"', source)
     detailed = {animal_id: scientific for animal_id, scientific in initial}
+    # Draft profile files may be written by another editorial task. They must
+    # not hide an illustrated entry until the detailed native entry is published.
+    published_source = (ROOT / "app/src/main/java/com/Atom2Universe/app/science/bestiary/BestiaryEncyclopediaCatalog.kt").read_text(encoding="utf-8")
+    published_ids = set(re.findall(r'id = "([a-z][a-z0-9_]*)"', published_source))
     for profile in (ROOT / "tools/bestiary/data/profiles").glob("*.json"):
         value = json.loads(profile.read_text(encoding="utf-8-sig"))
+        if value["id"] not in published_ids:
+            continue
         prior = detailed.get(value["id"])
         if prior is not None and prior != value["scientific"]:
             raise ValueError(f"Detailed profile id has a different scientific name: {value['id']}")

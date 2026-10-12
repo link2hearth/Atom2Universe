@@ -1609,6 +1609,1110 @@
       "name_fr": "Tramea lacerata",
       "group": "invertebrates",
       "image": "tramea_lacerata.webp"
+    },
+    {
+      "id": "antechinus_swainsonii",
+      "scientific_name": "Antechinus swainsonii",
+      "name_en": "Dusky antechinus",
+      "name_fr": "Antechinus swainsonii",
+      "group": "mammals",
+      "image": "antechinus_swainsonii.webp"
+    },
+    {
+      "id": "dasyurus_spartacus",
+      "scientific_name": "Dasyurus spartacus",
+      "name_en": "Bronze quoll",
+      "name_fr": "Dasyurus spartacus",
+      "group": "mammals",
+      "image": "dasyurus_spartacus.webp"
+    },
+    {
+      "id": "pseudantechinus_bilarni",
+      "scientific_name": "Pseudantechinus bilarni",
+      "name_en": "Sandstone Dibbler",
+      "name_fr": "Pseudantechinus bilarni",
+      "group": "mammals",
+      "image": "pseudantechinus_bilarni.webp"
+    },
+    {
+      "id": "pseudantechinus_mimulus",
+      "scientific_name": "Pseudantechinus mimulus",
+      "name_en": "Alexandria false antechinus",
+      "name_fr": "Pseudantechinus mimulus",
+      "group": "mammals",
+      "image": "pseudantechinus_mimulus.webp"
+    },
+    {
+      "id": "pseudantechinus_roryi",
+      "scientific_name": "Pseudantechinus roryi",
+      "name_en": "Rory Cooper's False Antechinus",
+      "name_fr": "Pseudantechinus roryi",
+      "group": "mammals",
+      "image": "pseudantechinus_roryi.webp"
+    },
+    {
+      "id": "pseudantechinus_woolleyae",
+      "scientific_name": "Pseudantechinus woolleyae",
+      "name_en": "Woolley's False Antechinus",
+      "name_fr": "Pseudantechinus woolleyae",
+      "group": "mammals",
+      "image": "pseudantechinus_woolleyae.webp"
+    },
+    {
+      "id": "sminthopsis_bindi",
+      "scientific_name": "Sminthopsis bindi",
+      "name_en": "Kakadu dunnart",
+      "name_fr": "Sminthopsis bindi",
+      "group": "mammals",
+      "image": "sminthopsis_bindi.webp"
+    },
+    {
+      "id": "sminthopsis_douglasi",
+      "scientific_name": "Sminthopsis douglasi",
+      "name_en": "Julia Creek Dunnart",
+      "name_fr": "Sminthopsis douglasi",
+      "group": "mammals",
+      "image": "sminthopsis_douglasi.webp"
+    },
+    {
+      "id": "sminthopsis_hirtipes",
+      "scientific_name": "Sminthopsis hirtipes",
+      "name_en": "Hairy-footed Dunnart",
+      "name_fr": "Sminthopsis hirtipes",
+      "group": "mammals",
+      "image": "sminthopsis_hirtipes.webp"
+    },
+    {
+      "id": "sminthopsis_macroura",
+      "scientific_name": "Sminthopsis macroura",
+      "name_en": "Stripe-faced Dunnart",
+      "name_fr": "Sminthopsis macroura",
+      "group": "mammals",
+      "image": "sminthopsis_macroura.webp"
+    },
+    {
+      "id": "sminthopsis_psammophila",
+      "scientific_name": "Sminthopsis psammophila",
+      "name_en": "sandhill dunnart",
+      "name_fr": "Souris marsupiale du désert",
+      "group": "mammals",
+      "image": "sminthopsis_psammophila.webp"
+    },
+    {
+      "id": "coleura_afra",
+      "scientific_name": "Coleura afra",
+      "name_en": "African sheath-tailed bat",
+      "name_fr": "Coleura afra",
+      "group": "mammals",
+      "image": "coleura_afra.webp"
+    },
+    {
+      "id": "cormura_brevirostris",
+      "scientific_name": "Cormura brevirostris",
+      "name_en": "Chestnut sac-winged bat",
+      "name_fr": "Cormura brevirostris",
+      "group": "mammals",
+      "image": "cormura_brevirostris.webp"
+    },
+    {
+      "id": "taphozous_mauritianus",
+      "scientific_name": "Taphozous mauritianus",
+      "name_en": "Mauritian Tomb Bat",
+      "name_fr": "Taphien de Maurice",
+      "group": "mammals",
+      "image": "taphozous_mauritianus.webp"
+    },
+    {
+      "id": "ia_io",
+      "scientific_name": "Ia io",
+      "name_en": "Great evening bat",
+      "name_fr": "Ia io",
+      "group": "mammals",
+      "image": "ia_io.webp"
+    },
+    {
+      "id": "pipistrellus_raceyi",
+      "scientific_name": "Pipistrellus raceyi",
+      "name_en": "Pipistrellus raceyi",
+      "name_fr": "Pipistrellus raceyi",
+      "group": "mammals",
+      "image": "pipistrellus_raceyi.webp"
+    },
+    {
+      "id": "molossus_sinaloae",
+      "scientific_name": "Molossus sinaloae",
+      "name_en": "Sinaloan Mastiff Bat",
+      "name_fr": "Molossus sinaloae",
+      "group": "mammals",
+      "image": "molossus_sinaloae.webp"
+    },
+    {
+      "id": "liomys_adspersus",
+      "scientific_name": "Liomys adspersus",
+      "name_en": "Panamanian spiny pocket mouse",
+      "name_fr": "Liomys adspersus",
+      "group": "mammals",
+      "image": "liomys_adspersus.webp"
+    },
+    {
+      "id": "monticolomys_koopmani",
+      "scientific_name": "Monticolomys koopmani",
+      "name_en": "Monticolomys koopmani",
+      "name_fr": "Monticolomys koopmani",
+      "group": "mammals",
+      "image": "monticolomys_koopmani.webp"
+    },
+    {
+      "id": "homo_sapiens",
+      "scientific_name": "Homo sapiens",
+      "name_en": "Human",
+      "name_fr": "Humain",
+      "group": "mammals",
+      "image": "homo_sapiens.webp"
+    },
+    {
+      "id": "cacajao_ayresi",
+      "scientific_name": "Cacajao ayresi",
+      "name_en": "Aracá uakari",
+      "name_fr": "Uakari d’Ayres",
+      "group": "mammals",
+      "image": "cacajao_ayresi.webp"
+    },
+    {
+      "id": "plecturocebus_vieirai",
+      "scientific_name": "Plecturocebus vieirai",
+      "name_en": "Vieira’s titi",
+      "name_fr": "Titi de Vieira",
+      "group": "mammals",
+      "image": "plecturocebus_vieirai.webp"
+    },
+    {
+      "id": "neamblysomus_gunningi",
+      "scientific_name": "Neamblysomus gunningi",
+      "name_en": "Gunning’s golden mole",
+      "name_fr": "Taupe dorée de Gunning",
+      "group": "mammals",
+      "image": "neamblysomus_gunningi.webp"
+    },
+    {
+      "id": "hyladelphys_kalinowskii",
+      "scientific_name": "Hyladelphys kalinowskii",
+      "name_en": "Kalinowski’s mouse opossum",
+      "name_fr": "Opossum-souris de Kalinowski",
+      "group": "mammals",
+      "image": "hyladelphys_kalinowskii.webp"
+    },
+    {
+      "id": "lepilemur_milanoii",
+      "scientific_name": "Lepilemur milanoii",
+      "name_en": "Daraina sportive lemur",
+      "name_fr": "Lépilémur de Daraina",
+      "group": "mammals",
+      "image": "lepilemur_milanoii.webp"
+    },
+    {
+      "id": "phyllotis_osgoodi",
+      "scientific_name": "Phyllotis osgoodi",
+      "name_en": "Osgood’s leaf-eared mouse",
+      "name_fr": "Phyllotis d’Osgood",
+      "group": "mammals",
+      "image": "phyllotis_osgoodi.webp"
+    },
+    {
+      "id": "platyrrhinus_helleri",
+      "scientific_name": "Platyrrhinus helleri",
+      "name_en": "Heller’s broad-nosed bat",
+      "name_fr": "Sténoderme de Heller",
+      "group": "mammals",
+      "image": "platyrrhinus_helleri.webp"
+    },
+    {
+      "id": "pygoderma_bilabiatum",
+      "scientific_name": "Pygoderma bilabiatum",
+      "name_en": "Ipanema bat",
+      "name_fr": "Pygoderme d’Ipanema",
+      "group": "mammals",
+      "image": "pygoderma_bilabiatum.webp"
+    },
+    {
+      "id": "scleronycteris_ega",
+      "scientific_name": "Scleronycteris ega",
+      "name_en": "Ega long-tongued bat",
+      "name_fr": "Scleronyctère d’Ega",
+      "group": "mammals",
+      "image": "scleronycteris_ega.webp"
+    },
+    {
+      "id": "notomys_fuscus",
+      "scientific_name": "Notomys fuscus",
+      "name_en": "Dusky hopping mouse",
+      "name_fr": "Notomys fuscus",
+      "group": "mammals",
+      "image": "notomys_fuscus.webp"
+    },
+    {
+      "id": "pachyuromys_duprasi",
+      "scientific_name": "Pachyuromys duprasi",
+      "name_en": "Fat-tailed gerbil",
+      "name_fr": "Gerbille à grosse queue",
+      "group": "mammals",
+      "image": "pachyuromys_duprasi.webp"
+    },
+    {
+      "id": "paucidentomys_vermidax",
+      "scientific_name": "Paucidentomys vermidax",
+      "name_en": "Edented Sulawesi rat",
+      "name_fr": "Rat édenté de Sulawesi",
+      "group": "mammals",
+      "image": "paucidentomys_vermidax.webp"
+    },
+    {
+      "id": "pithecheirops_otion",
+      "scientific_name": "Pithecheirops otion",
+      "name_en": "Bornean pithecheirops",
+      "name_fr": "Pithecheirops de Bornéo",
+      "group": "mammals",
+      "image": "pithecheirops_otion.webp"
+    },
+    {
+      "id": "pseudomys_johnsoni",
+      "scientific_name": "Pseudomys johnsoni",
+      "name_en": "Central pebble-mound mouse",
+      "name_fr": "Souris à monticules de pierres du Centre",
+      "group": "mammals",
+      "image": "pseudomys_johnsoni.webp"
+    },
+    {
+      "id": "rattus_tiomanicus",
+      "scientific_name": "Rattus tiomanicus",
+      "name_en": "Malayan field rat",
+      "name_fr": "Rat des champs malais",
+      "group": "mammals",
+      "image": "rattus_tiomanicus.webp"
+    },
+    {
+      "id": "saxatilomys_paulinae",
+      "scientific_name": "Saxatilomys paulinae",
+      "name_en": "Paulina's limestone rat",
+      "name_fr": "Rat des karsts de Paulina",
+      "group": "mammals",
+      "image": "saxatilomys_paulinae.webp"
+    },
+    {
+      "id": "sommeromys_macrorhinos",
+      "scientific_name": "Sommeromys macrorhinos",
+      "name_en": "Sommer's Sulawesi rat",
+      "name_fr": "Rat de Sulawesi de Sommer",
+      "group": "mammals",
+      "image": "sommeromys_macrorhinos.webp"
+    },
+    {
+      "id": "uromys_emmae",
+      "scientific_name": "Uromys emmae",
+      "name_en": "Emma's giant rat",
+      "name_fr": "Rat géant d'Emma",
+      "group": "mammals",
+      "image": "uromys_emmae.webp"
+    },
+    {
+      "id": "anoura_geoffroyi",
+      "scientific_name": "Anoura geoffroyi",
+      "name_en": "Geoffroy's tailless bat",
+      "name_fr": "Anoura de Geoffroy",
+      "group": "mammals",
+      "image": "anoura_geoffroyi.webp"
+    },
+    {
+      "id": "ariteus_flavescens",
+      "scientific_name": "Ariteus flavescens",
+      "name_en": "Jamaican fig-eating bat",
+      "name_fr": "Arite de la Jamaïque",
+      "group": "mammals",
+      "image": "ariteus_flavescens.webp"
+    },
+    {
+      "id": "artibeus_anderseni",
+      "scientific_name": "Artibeus anderseni",
+      "name_en": "Andersen's fruit-eating bat",
+      "name_fr": "Artibée d'Andersen",
+      "group": "mammals",
+      "image": "artibeus_anderseni.webp"
+    },
+    {
+      "id": "brachyphylla_nana",
+      "scientific_name": "Brachyphylla nana",
+      "name_en": "Cuban fruit-eating bat",
+      "name_fr": "Brachyphylle de Cuba",
+      "group": "mammals",
+      "image": "brachyphylla_nana.webp"
+    },
+    {
+      "id": "macrophyllum_macrophyllum",
+      "scientific_name": "Macrophyllum macrophyllum",
+      "name_en": "Long-legged bat",
+      "name_fr": "Grand phyllostome",
+      "group": "mammals",
+      "image": "macrophyllum_macrophyllum.webp"
+    },
+    {
+      "id": "mesophylla_macconnelli",
+      "scientific_name": "Mesophylla macconnelli",
+      "name_en": "MacConnell's bat",
+      "name_fr": "Chauve-souris de MacConnell",
+      "group": "mammals",
+      "image": "mesophylla_macconnelli.webp"
+    },
+    {
+      "id": "platalina_genovensium",
+      "scientific_name": "Platalina genovensium",
+      "name_en": "Peruvian long-tongued bat",
+      "name_fr": "Chauve-souris à long museau du Pérou",
+      "group": "mammals",
+      "image": "platalina_genovensium.webp"
+    },
+    {
+      "id": "leopardus_braccatus",
+      "scientific_name": "Leopardus braccatus",
+      "name_en": "Leopardus braccatus",
+      "name_fr": "Leopardus braccatus",
+      "group": "mammals",
+      "image": "leopardus_braccatus.webp"
+    },
+    {
+      "id": "pardofelis_marmorata",
+      "scientific_name": "Pardofelis marmorata",
+      "name_en": "Pardofelis marmorata",
+      "name_fr": "Chat marbré",
+      "group": "mammals",
+      "image": "pardofelis_marmorata.webp"
+    },
+    {
+      "id": "mustela_lutreola",
+      "scientific_name": "Mustela lutreola",
+      "name_en": "Mustela lutreola",
+      "name_fr": "Mustela lutreola",
+      "group": "mammals",
+      "image": "mustela_lutreola.webp"
+    },
+    {
+      "id": "petrogale_assimilis",
+      "scientific_name": "Petrogale assimilis",
+      "name_en": "Allied rock-wallaby",
+      "name_fr": "Petrogale assimilis",
+      "group": "mammals",
+      "image": "petrogale_assimilis.webp"
+    },
+    {
+      "id": "sylvilagus_obscurus",
+      "scientific_name": "Sylvilagus obscurus",
+      "name_en": "Appalachian cottontail",
+      "name_fr": "Sylvilagus obscurus",
+      "group": "mammals",
+      "image": "sylvilagus_obscurus.webp"
+    },
+    {
+      "id": "allenopithecus_nigroviridis",
+      "scientific_name": "Allenopithecus nigroviridis",
+      "name_en": "Allen's swamp monkey",
+      "name_fr": "Cercopithèque noir et vert",
+      "group": "mammals",
+      "image": "allenopithecus_nigroviridis.webp"
+    },
+    {
+      "id": "cercopithecus_lomamiensis",
+      "scientific_name": "Cercopithecus lomamiensis",
+      "name_en": "Lesula",
+      "name_fr": "Lesula",
+      "group": "mammals",
+      "image": "cercopithecus_lomamiensis.webp"
+    },
+    {
+      "id": "rhinopithecus_avunculus",
+      "scientific_name": "Rhinopithecus avunculus",
+      "name_en": "Rhinopithecus avunculus",
+      "name_fr": "Rhinopithèque du Tonkin",
+      "group": "mammals",
+      "image": "rhinopithecus_avunculus.webp"
+    },
+    {
+      "id": "eidolon_dupreanum",
+      "scientific_name": "Eidolon dupreanum",
+      "name_en": "Roussette paillée malgache",
+      "name_fr": "Eidolon dupreanum",
+      "group": "mammals",
+      "image": "eidolon_dupreanum.webp"
+    },
+    {
+      "id": "pteropus_aruensis",
+      "scientific_name": "Pteropus aruensis",
+      "name_en": "Aru Flying Fox",
+      "name_fr": "Pteropus aruensis",
+      "group": "mammals",
+      "image": "pteropus_aruensis.webp"
+    },
+    {
+      "id": "pteropus_rufus",
+      "scientific_name": "Pteropus rufus",
+      "name_en": "Madagascar flying fox",
+      "name_fr": "Renard volant de Madagascar",
+      "group": "mammals",
+      "image": "pteropus_rufus.webp"
+    },
+    {
+      "id": "pteropus_seychellensis",
+      "scientific_name": "Pteropus seychellensis",
+      "name_en": "Seychelles fruit bat",
+      "name_fr": "Roussette des Seychelles",
+      "group": "mammals",
+      "image": "pteropus_seychellensis.webp"
+    },
+    {
+      "id": "ochotona_alpina",
+      "scientific_name": "Ochotona alpina",
+      "name_en": "Alpine pika",
+      "name_fr": "Ochotona alpina",
+      "group": "mammals",
+      "image": "ochotona_alpina.webp"
+    },
+    {
+      "id": "ochotona_koslowi",
+      "scientific_name": "Ochotona koslowi",
+      "name_en": "Koslov's pika",
+      "name_fr": "Pika de Kozlov",
+      "group": "mammals",
+      "image": "ochotona_koslowi.webp"
+    },
+    {
+      "id": "phalanger_mimicus",
+      "scientific_name": "Phalanger mimicus",
+      "name_en": "Southern common cuscus",
+      "name_fr": "Couscous commun du Sud",
+      "group": "mammals",
+      "image": "phalanger_mimicus.webp"
+    },
+    {
+      "id": "paradoxurus_hermaphroditus",
+      "scientific_name": "Paradoxurus hermaphroditus",
+      "name_en": "Paradoxurus hermaphroditus",
+      "name_fr": "Paradoxurus hermaphroditus",
+      "group": "mammals",
+      "image": "paradoxurus_hermaphroditus.webp"
+    },
+    {
+      "id": "eurycea_nana",
+      "scientific_name": "Eurycea nana",
+      "name_en": "San Marcos Salamander",
+      "name_fr": "Eurycea nana",
+      "group": "amphibians",
+      "image": "eurycea_nana.webp"
+    },
+    {
+      "id": "eurycea_sosorum",
+      "scientific_name": "Eurycea sosorum",
+      "name_en": "Barton Springs Salamander",
+      "name_fr": "Eurycea sosorum",
+      "group": "amphibians",
+      "image": "eurycea_sosorum.webp"
+    },
+    {
+      "id": "adelphobates_quinquevittatus",
+      "scientific_name": "Adelphobates quinquevittatus",
+      "name_en": "Adelphobates quinquevittatus",
+      "name_fr": "Adelphobates quinquevittatus",
+      "group": "amphibians",
+      "image": "adelphobates_quinquevittatus.webp"
+    },
+    {
+      "id": "phyllobates_aurotaenia",
+      "scientific_name": "Phyllobates aurotaenia",
+      "name_en": "Kokoe Poison Frog",
+      "name_fr": "Phyllobates aurotaenia",
+      "group": "amphibians",
+      "image": "phyllobates_aurotaenia.webp"
+    },
+    {
+      "id": "rieppeleon_brevicaudatus",
+      "scientific_name": "Rieppeleon brevicaudatus",
+      "name_en": "Bearded Pygmy Chameleon",
+      "name_fr": "Rieppeleon brevicaudatus",
+      "group": "reptiles",
+      "image": "rieppeleon_brevicaudatus.webp"
+    },
+    {
+      "id": "trimeresurus_insularis",
+      "scientific_name": "Trimeresurus insularis",
+      "name_en": "White-lipped Island Pit Viper",
+      "name_fr": "Trimeresurus insularis",
+      "group": "reptiles",
+      "image": "trimeresurus_insularis.webp"
+    },
+    {
+      "id": "accipiter_minullus",
+      "scientific_name": "Accipiter minullus",
+      "name_en": "Little Sparrowhawk",
+      "name_fr": "Épervier minule",
+      "group": "birds",
+      "image": "accipiter_minullus.webp"
+    },
+    {
+      "id": "accipiter_tachiro",
+      "scientific_name": "Accipiter tachiro",
+      "name_en": "African Goshawk",
+      "name_fr": "Autour tachiro",
+      "group": "birds",
+      "image": "accipiter_tachiro.webp"
+    },
+    {
+      "id": "pterocles_exustus",
+      "scientific_name": "Pterocles exustus",
+      "name_en": "Chestnut-bellied Sandgrouse",
+      "name_fr": "Ganga à ventre brun",
+      "group": "birds",
+      "image": "pterocles_exustus.webp"
+    },
+    {
+      "id": "pterocles_namaqua",
+      "scientific_name": "Pterocles namaqua",
+      "name_en": "Namaqua Sandgrouse",
+      "name_fr": "Ganga namaqua",
+      "group": "birds",
+      "image": "pterocles_namaqua.webp"
+    },
+    {
+      "id": "numenius_madagascariensis",
+      "scientific_name": "Numenius madagascariensis",
+      "name_en": "Far Eastern Curlew",
+      "name_fr": "Courlis de Sibérie",
+      "group": "birds",
+      "image": "numenius_madagascariensis.webp"
+    },
+    {
+      "id": "numenius_tahitiensis",
+      "scientific_name": "Numenius tahitiensis",
+      "name_en": "Bristle-thighed Curlew",
+      "name_fr": "Courlis d’Alaska",
+      "group": "birds",
+      "image": "numenius_tahitiensis.webp"
+    },
+    {
+      "id": "stercorarius_antarcticus",
+      "scientific_name": "Stercorarius antarcticus",
+      "name_en": "Brown Skua",
+      "name_fr": "Labbe antarctique",
+      "group": "birds",
+      "image": "stercorarius_antarcticus.webp"
+    },
+    {
+      "id": "turdus_atrogularis",
+      "scientific_name": "Turdus atrogularis",
+      "name_en": "Black-throated Thrush",
+      "name_fr": "Grive à gorge noire",
+      "group": "birds",
+      "image": "turdus_atrogularis.webp"
+    },
+    {
+      "id": "calandrella_brachydactyla",
+      "scientific_name": "Calandrella brachydactyla",
+      "name_en": "Greater Short-toed Lark",
+      "name_fr": "Alouette calandrelle",
+      "group": "birds",
+      "image": "calandrella_brachydactyla.webp"
+    },
+    {
+      "id": "urocissa_caerulea",
+      "scientific_name": "Urocissa caerulea",
+      "name_en": "Taiwan Blue Magpie",
+      "name_fr": "Pirolle de Taïwan",
+      "group": "birds",
+      "image": "urocissa_caerulea.webp"
+    },
+    {
+      "id": "meleagris_ocellata",
+      "scientific_name": "Meleagris ocellata",
+      "name_en": "Ocellated Turkey",
+      "name_fr": "Dindon ocellé",
+      "group": "birds",
+      "image": "meleagris_ocellata.webp"
+    },
+    {
+      "id": "cypsiurus_balasiensis",
+      "scientific_name": "Cypsiurus balasiensis",
+      "name_en": "Asian Palm Swift",
+      "name_fr": "Martinet batassia",
+      "group": "birds",
+      "image": "cypsiurus_balasiensis.webp"
+    },
+    {
+      "id": "apus_pacificus",
+      "scientific_name": "Apus pacificus",
+      "name_en": "Pacific Swift",
+      "name_fr": "Martinet de Sibérie",
+      "group": "birds",
+      "image": "apus_pacificus.webp"
+    },
+    {
+      "id": "alcedo_meninting",
+      "scientific_name": "Alcedo meninting",
+      "name_en": "Blue-eared Kingfisher",
+      "name_fr": "Martin-pêcheur méninting",
+      "group": "birds",
+      "image": "alcedo_meninting.webp"
+    },
+    {
+      "id": "halcyon_cyanoventris",
+      "scientific_name": "Halcyon cyanoventris",
+      "name_en": "Javan Kingfisher",
+      "name_fr": "Martin-chasseur de Java",
+      "group": "birds",
+      "image": "halcyon_cyanoventris.webp"
+    },
+    {
+      "id": "macropygia_emiliana",
+      "scientific_name": "Macropygia emiliana",
+      "name_en": "ruddy cuckoo-dove",
+      "name_fr": "Phasianelle rousse",
+      "group": "birds",
+      "image": "macropygia_emiliana.webp"
+    },
+    {
+      "id": "synchiropus_splendidus",
+      "scientific_name": "Synchiropus splendidus",
+      "name_en": "Mandarinfish",
+      "name_fr": "Poisson mandarin",
+      "group": "fish",
+      "image": "synchiropus_splendidus.webp"
+    },
+    {
+      "id": "zeus_faber",
+      "scientific_name": "Zeus faber",
+      "name_en": "John Dory",
+      "name_fr": "Saint-Pierre",
+      "group": "fish",
+      "image": "zeus_faber.webp"
+    },
+    {
+      "id": "mullus_surmuletus",
+      "scientific_name": "Mullus surmuletus",
+      "name_en": "Striped red mullet",
+      "name_fr": "Rouget-barbet de roche",
+      "group": "fish",
+      "image": "mullus_surmuletus.webp"
+    },
+    {
+      "id": "acanthaster_planci",
+      "scientific_name": "Acanthaster planci",
+      "name_en": "Crown-of-thorns starfish",
+      "name_fr": "Étoile couronne d’épines",
+      "group": "invertebrates",
+      "image": "acanthaster_planci.webp"
+    },
+    {
+      "id": "astacopsis_gouldi",
+      "scientific_name": "Astacopsis gouldi",
+      "name_en": "Tasmanian giant freshwater crayfish",
+      "name_fr": "Écrevisse géante de Tasmanie",
+      "group": "invertebrates",
+      "image": "astacopsis_gouldi.webp"
+    },
+    {
+      "id": "aedes_vexans",
+      "scientific_name": "Aedes vexans",
+      "name_en": "Inland floodwater mosquito",
+      "name_fr": "Aedes vexans",
+      "group": "invertebrates",
+      "image": "aedes_vexans.webp"
+    },
+    {
+      "id": "anopheles_gambiae",
+      "scientific_name": "Anopheles gambiae",
+      "name_en": "African malaria mosquito",
+      "name_fr": "Anopheles gambiae",
+      "group": "invertebrates",
+      "image": "anopheles_gambiae.webp"
+    },
+    {
+      "id": "brachypelma_boehmei",
+      "scientific_name": "Brachypelma boehmei",
+      "name_en": "Mexican fireleg tarantula",
+      "name_fr": "Brachypelma boehmei",
+      "group": "invertebrates",
+      "image": "brachypelma_boehmei.webp"
+    },
+    {
+      "id": "carukia_barnesi",
+      "scientific_name": "Carukia barnesi",
+      "name_en": "Irukandji jellyfish",
+      "name_fr": "Méduse Irukandji",
+      "group": "invertebrates",
+      "image": "carukia_barnesi.webp"
+    },
+    {
+      "id": "cerastoderma_edule",
+      "scientific_name": "Cerastoderma edule",
+      "name_en": "Common cockle",
+      "name_fr": "Coque commune",
+      "group": "invertebrates",
+      "image": "cerastoderma_edule.webp"
+    },
+    {
+      "id": "crangon_crangon",
+      "scientific_name": "Crangon crangon",
+      "name_en": "Brown shrimp",
+      "name_fr": "Crevette grise",
+      "group": "invertebrates",
+      "image": "crangon_crangon.webp"
+    },
+    {
+      "id": "crocothemis_sanguinolenta",
+      "scientific_name": "Crocothemis sanguinolenta",
+      "name_en": "Little scarlet dragonfly",
+      "name_fr": "Crocothémis écarlate",
+      "group": "invertebrates",
+      "image": "crocothemis_sanguinolenta.webp"
+    },
+    {
+      "id": "empusa_pennata",
+      "scientific_name": "Empusa pennata",
+      "name_en": "Conehead mantis",
+      "name_fr": "Empuse pennée",
+      "group": "invertebrates",
+      "image": "empusa_pennata.webp"
+    },
+    {
+      "id": "gerris_lacustris",
+      "scientific_name": "Gerris lacustris",
+      "name_en": "Common pond skater",
+      "name_fr": "Gerris des étangs",
+      "group": "invertebrates",
+      "image": "gerris_lacustris.webp"
+    },
+    {
+      "id": "melolontha_melolontha",
+      "scientific_name": "Melolontha melolontha",
+      "name_en": "Common cockchafer",
+      "name_fr": "Hanneton commun",
+      "group": "invertebrates",
+      "image": "melolontha_melolontha.webp"
+    },
+    {
+      "id": "riftia_pachyptila",
+      "scientific_name": "Riftia pachyptila",
+      "name_en": "Giant tubeworm",
+      "name_fr": "Ver géant des sources hydrothermales",
+      "group": "invertebrates",
+      "image": "riftia_pachyptila.webp"
+    },
+    {
+      "id": "triops_longicaudatus",
+      "scientific_name": "Triops longicaudatus",
+      "name_en": "Summer tadpole shrimp",
+      "name_fr": "Triops à longue queue",
+      "group": "invertebrates",
+      "image": "triops_longicaudatus.webp"
+    },
+    {
+      "id": "scathophaga_stercoraria",
+      "scientific_name": "Scathophaga stercoraria",
+      "name_en": "Yellow dung fly",
+      "name_fr": "Scatophage du fumier",
+      "group": "invertebrates",
+      "image": "scathophaga_stercoraria.webp"
+    },
+    {
+      "id": "mya_arenaria",
+      "scientific_name": "Mya arenaria",
+      "name_en": "Soft-shell clam",
+      "name_fr": "Mye des sables",
+      "group": "invertebrates",
+      "image": "mya_arenaria.webp"
+    },
+    {
+      "id": "ancistrus_cirrhosus",
+      "scientific_name": "Ancistrus cirrhosus",
+      "name_en": "Ancistrus cirrhosus",
+      "name_fr": "Ancistrus cirrhosus",
+      "group": "fish",
+      "image": "ancistrus_cirrhosus.webp"
+    },
+    {
+      "id": "brachyistius_frenatus",
+      "scientific_name": "Brachyistius frenatus",
+      "name_en": "Kelp perch",
+      "name_fr": "Brachyistius frenatus",
+      "group": "fish",
+      "image": "brachyistius_frenatus.webp"
+    },
+    {
+      "id": "elops_lacerta",
+      "scientific_name": "Elops lacerta",
+      "name_en": "West African ladyfish",
+      "name_fr": "Elops lacerta",
+      "group": "fish",
+      "image": "elops_lacerta.webp"
+    },
+    {
+      "id": "elops_senegalensis",
+      "scientific_name": "Elops senegalensis",
+      "name_en": "Senegalese ladyfish",
+      "name_fr": "Elops senegalensis",
+      "group": "fish",
+      "image": "elops_senegalensis.webp"
+    },
+    {
+      "id": "labeo_altivelis",
+      "scientific_name": "Labeo altivelis",
+      "name_en": "Manyame labeo",
+      "name_fr": "Labeo altivelis",
+      "group": "fish",
+      "image": "labeo_altivelis.webp"
+    },
+    {
+      "id": "lethrinus_atlanticus",
+      "scientific_name": "Lethrinus atlanticus",
+      "name_en": "Atlantic emperor",
+      "name_fr": "Lethrinus atlanticus",
+      "group": "fish",
+      "image": "lethrinus_atlanticus.webp"
+    },
+    {
+      "id": "lethrinus_laticaudis",
+      "scientific_name": "Lethrinus laticaudis",
+      "name_en": "grass emperor",
+      "name_fr": "Lethrinus laticaudis",
+      "group": "fish",
+      "image": "lethrinus_laticaudis.webp"
+    },
+    {
+      "id": "neolamprologus_brichardi",
+      "scientific_name": "Neolamprologus brichardi",
+      "name_en": "Princess cichlid",
+      "name_fr": "Neolamprologus brichardi",
+      "group": "fish",
+      "image": "neolamprologus_brichardi.webp"
+    },
+    {
+      "id": "orectolobus_maculatus",
+      "scientific_name": "Orectolobus maculatus",
+      "name_en": "spotted wobbegong",
+      "name_fr": "Orectolobus maculatus",
+      "group": "fish",
+      "image": "orectolobus_maculatus.webp"
+    },
+    {
+      "id": "parascyllium_variolatum",
+      "scientific_name": "Parascyllium variolatum",
+      "name_en": "necklace carpetshark",
+      "name_fr": "Parascyllium variolatum",
+      "group": "fish",
+      "image": "parascyllium_variolatum.webp"
+    },
+    {
+      "id": "pinguipes_brasilianus",
+      "scientific_name": "Pinguipes brasilianus",
+      "name_en": "Brazilian sandperch",
+      "name_fr": "Pinguipes brasilianus",
+      "group": "fish",
+      "image": "pinguipes_brasilianus.webp"
+    },
+    {
+      "id": "pleuronectes_platessa",
+      "scientific_name": "Pleuronectes platessa",
+      "name_en": "European plaice",
+      "name_fr": "Plie",
+      "group": "fish",
+      "image": "pleuronectes_platessa.webp"
+    },
+    {
+      "id": "prototroctes_maraena",
+      "scientific_name": "Prototroctes maraena",
+      "name_en": "Australian grayling",
+      "name_fr": "Prototroctes maraena",
+      "group": "fish",
+      "image": "prototroctes_maraena.webp"
+    },
+    {
+      "id": "schilbe_mystus",
+      "scientific_name": "Schilbe mystus",
+      "name_en": "African Butter Catfish",
+      "name_fr": "Schilbe mystus",
+      "group": "fish",
+      "image": "schilbe_mystus.webp"
+    },
+    {
+      "id": "sphyraena_obtusata",
+      "scientific_name": "Sphyraena obtusata",
+      "name_en": "Obtuse barracuda",
+      "name_fr": "Sphyraena obtusata",
+      "group": "fish",
+      "image": "sphyraena_obtusata.webp"
+    },
+    {
+      "id": "latimeria_chalumnae",
+      "scientific_name": "Latimeria chalumnae",
+      "name_en": "West Indian Ocean coelacanth",
+      "name_fr": "Cœlacanthe africain",
+      "group": "fish",
+      "image": "latimeria_chalumnae.webp"
+    },
+    {
+      "id": "accipiter_soloensis",
+      "scientific_name": "Accipiter soloensis",
+      "name_en": "Chinese Sparrowhawk",
+      "name_fr": "Épervier de Horsfield",
+      "group": "birds",
+      "image": "accipiter_soloensis.webp"
+    },
+    {
+      "id": "hirundapus_caudacutus",
+      "scientific_name": "Hirundapus caudacutus",
+      "name_en": "White-throated Needletail",
+      "name_fr": "Martinet épineux",
+      "group": "birds",
+      "image": "hirundapus_caudacutus.webp"
+    },
+    {
+      "id": "lagopus_leucura",
+      "scientific_name": "Lagopus leucura",
+      "name_en": "White-tailed Ptarmigan",
+      "name_fr": "Lagopède à queue blanche",
+      "group": "birds",
+      "image": "lagopus_leucura.webp"
+    },
+    {
+      "id": "rhyticeros_undulatus",
+      "scientific_name": "Rhyticeros undulatus",
+      "name_en": "Wreathed Hornbill",
+      "name_fr": "Calao festonné",
+      "group": "birds",
+      "image": "rhyticeros_undulatus.webp"
+    },
+    {
+      "id": "nesolagus_netscheri",
+      "scientific_name": "Nesolagus netscheri",
+      "name_en": "Sumatran striped rabbit",
+      "name_fr": "Nesolagus netscheri",
+      "group": "mammals",
+      "image": "nesolagus_netscheri.webp"
+    },
+    {
+      "id": "protochromys_fellowsi",
+      "scientific_name": "Protochromys fellowsi",
+      "name_en": "Papuan mosaic-tailed rat",
+      "name_fr": "Rat mosaïque de Papouasie",
+      "group": "mammals",
+      "image": "protochromys_fellowsi.webp"
+    },
+    {
+      "id": "pseudantechinus_macdonnellensis",
+      "scientific_name": "Pseudantechinus macdonnellensis",
+      "name_en": "Fat-tailed False Antechinus",
+      "name_fr": "Pseudantechinus macdonnellensis",
+      "group": "mammals",
+      "image": "pseudantechinus_macdonnellensis.webp"
+    },
+    {
+      "id": "spalax_microphthalmus",
+      "scientific_name": "Spalax microphthalmus",
+      "name_en": "Greater blind mole-rat",
+      "name_fr": "Grand spalax",
+      "group": "mammals",
+      "image": "spalax_microphthalmus.webp"
+    },
+    {
+      "id": "uromys_imperator",
+      "scientific_name": "Uromys imperator",
+      "name_en": "Emperor giant rat",
+      "name_fr": "Uromys empereur",
+      "group": "mammals",
+      "image": "uromys_imperator.webp"
+    },
+    {
+      "id": "uromys_porculus",
+      "scientific_name": "Uromys porculus",
+      "name_en": "Guadalcanal giant rat",
+      "name_fr": "Rat géant de Guadalcanal",
+      "group": "mammals",
+      "image": "uromys_porculus.webp"
+    },
+    {
+      "id": "amphioctopus_marginatus",
+      "scientific_name": "Amphioctopus marginatus",
+      "name_en": "Veined octopus",
+      "name_fr": "Pieuvre veinée",
+      "group": "invertebrates",
+      "image": "amphioctopus_marginatus.webp"
+    },
+    {
+      "id": "buccinum_undatum",
+      "scientific_name": "Buccinum undatum",
+      "name_en": "Common whelk",
+      "name_fr": "Buccin commun",
+      "group": "invertebrates",
+      "image": "buccinum_undatum.webp"
+    },
+    {
+      "id": "triplofusus_giganteus",
+      "scientific_name": "Triplofusus giganteus",
+      "name_en": "Horse conch",
+      "name_fr": "Conque cheval",
+      "group": "invertebrates",
+      "image": "triplofusus_giganteus.webp"
+    },
+    {
+      "id": "latrodectus_geometricus",
+      "scientific_name": "Latrodectus geometricus",
+      "name_en": "Brown widow spider",
+      "name_fr": "Veuve brune",
+      "group": "invertebrates",
+      "image": "latrodectus_geometricus.webp"
+    },
+    {
+      "id": "masturus_lanceolatus",
+      "scientific_name": "Masturus lanceolatus",
+      "name_en": "Sharptail mola",
+      "name_fr": "Masturus lanceolatus",
+      "group": "fish",
+      "image": "masturus_lanceolatus.webp"
+    },
+    {
+      "id": "mullus_barbatus",
+      "scientific_name": "Mullus barbatus",
+      "name_en": "Red mullet",
+      "name_fr": "Rouget de vase",
+      "group": "fish",
+      "image": "mullus_barbatus.webp"
+    },
+    {
+      "id": "orectolobus_ornatus",
+      "scientific_name": "Orectolobus ornatus",
+      "name_en": "ornate wobbegong",
+      "name_fr": "Orectolobus ornatus",
+      "group": "fish",
+      "image": "orectolobus_ornatus.webp"
+    },
+    {
+      "id": "furcifer_lateralis",
+      "scientific_name": "Furcifer lateralis",
+      "name_en": "Carpet Chameleon",
+      "name_fr": "Furcifer lateralis",
+      "group": "reptiles",
+      "image": "furcifer_lateralis.webp"
+    },
+    {
+      "id": "crotalus_simus",
+      "scientific_name": "Crotalus simus",
+      "name_en": "Middle American Rattlesnake",
+      "name_fr": "Crotalus simus",
+      "group": "reptiles",
+      "image": "crotalus_simus.webp"
+    },
+    {
+      "id": "cerastes_gasperettii",
+      "scientific_name": "Cerastes gasperettii",
+      "name_en": "Arabian Horned Viper",
+      "name_fr": "Cerastes gasperettii",
+      "group": "reptiles",
+      "image": "cerastes_gasperettii.webp"
     }
   ]
 }

@@ -219,7 +219,10 @@ def write_illustration_wave_tracking(destination, root, initial_by_scientific, e
             queue = queue.get("items", [])
         if not isinstance(queue, list) or not queue:
             continue
-        reviews_raw = read_json(wave / "art_review.json", [])
+        review_path = wave / "reviews.json"
+        if not review_path.exists():
+            review_path = wave / "art_review.json"
+        reviews_raw = read_json(review_path, [])
         if isinstance(reviews_raw, dict):
             reviews_raw = reviews_raw.get("items", [])
         reviews = {r.get("id"): r for r in reviews_raw if isinstance(r, dict) and r.get("id")}

@@ -12189,17 +12189,6 @@
       "label_revision": 2533934605
     },
     {
-      "name": "Mesoplodon traversii",
-      "en": "spade-toothed whale",
-      "fr": "Baleine à bec de Travers",
-      "qid": "Q27929",
-      "seed": false,
-      "id": "ott346599",
-      "ott": 346599,
-      "label_qid": "Q27929",
-      "label_revision": 2516842894
-    },
-    {
       "name": "Mespilus germanica",
       "en": "Mespilus germanica",
       "fr": "néflier",
@@ -14273,17 +14262,6 @@
       "ott": 701202,
       "label_qid": "Q25625",
       "label_revision": 2542486823
-    },
-    {
-      "name": "Phalanger matanim",
-      "en": "Telefomin cuscus",
-      "fr": "Phalanger matanim",
-      "qid": "Q135157",
-      "seed": false,
-      "id": "ott3606945",
-      "ott": 3606945,
-      "label_qid": "Q135157",
-      "label_revision": 2517816009
     },
     {
       "name": "Phalanger mimicus",
@@ -18488,17 +18466,6 @@
       "label_revision": 2538974824
     },
     {
-      "name": "Sylvilagus cognatus",
-      "en": "Manzano mountain cottontail",
-      "fr": "Sylvilagus cognatus",
-      "qid": "Q139772",
-      "seed": false,
-      "id": "ott3611210",
-      "ott": 3611210,
-      "label_qid": "Q139772",
-      "label_revision": 2517909128
-    },
-    {
       "name": "Sylvilagus obscurus",
       "en": "Appalachian cottontail",
       "fr": "Sylvilagus obscurus",
@@ -19845,17 +19812,6 @@
       "label_revision": 2517815547
     },
     {
-      "name": "Uromys siebersi",
-      "en": "Great Key Island giant rat",
-      "fr": "Uromys siebersi",
-      "qid": "Q146471",
-      "seed": false,
-      "id": "ott3608785",
-      "ott": 3608785,
-      "label_qid": "Q146471",
-      "label_revision": 2517970918
-    },
-    {
       "name": "Ursus arctos",
       "en": "brown bear",
       "fr": "Ours brun",
@@ -20984,6 +20940,22 @@
     {
       "name": "Narcissus pseudonarcissus",
       "reason": "Not a distinct terminal relative to the existing selection"
+    },
+    {
+      "name": "Mesoplodon traversii",
+      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
+    },
+    {
+      "name": "Phalanger matanim",
+      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
+    },
+    {
+      "name": "Sylvilagus cognatus",
+      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
+    },
+    {
+      "name": "Uromys siebersi",
+      "reason": "Removed by editorial decision: rare species has insufficient reliable documentation for this taxonomy selection."
     }
   ]
 }

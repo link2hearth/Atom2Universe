@@ -19279,23 +19279,6 @@
       }
     },
     {
-      "id": "ott3606945",
-      "qid": "Q135157",
-      "revision": 2517816009,
-      "modified": "2026-07-15T17:54:19Z",
-      "key": "pt_species_3606945_body",
-      "en": "species of mammal",
-      "fr": "espèce de mammifères",
-      "aliases": {
-        "en": [
-          "Phalanger matanim"
-        ],
-        "fr": [
-          "Couscous De Telefomin"
-        ]
-      }
-    },
-    {
       "id": "ott3606943",
       "qid": "Q135148",
       "revision": 2517815669,
@@ -24639,21 +24622,6 @@
       }
     },
     {
-      "id": "ott3611210",
-      "qid": "Q139772",
-      "revision": 2517909128,
-      "modified": "2026-07-15T21:33:14Z",
-      "key": "pt_species_3611210_body",
-      "en": "species of mammal",
-      "fr": "espèce d'animaux",
-      "aliases": {
-        "en": [
-          "Sylvilagus cognatus"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott956330",
       "qid": "Q139716",
       "revision": 2517910781,
@@ -26551,21 +26519,6 @@
       "aliases": {
         "en": [
           "Uromys porculus"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3608785",
-      "qid": "Q146471",
-      "revision": 2517970918,
-      "modified": "2026-07-16T00:07:43Z",
-      "key": "pt_species_3608785_body",
-      "en": "species of mammal",
-      "fr": "espèce d'animaux",
-      "aliases": {
-        "en": [
-          "Uromys siebersi"
         ],
         "fr": []
       }
@@ -41018,21 +40971,6 @@
       }
     },
     {
-      "id": "ott346599",
-      "qid": "Q27929",
-      "revision": 2516842894,
-      "aliases": {
-        "en": [
-          "Mesoplodon traversii"
-        ],
-        "fr": [
-          "Mesoplodon traversii",
-          "Mésoplodon De Bahamonde",
-          "Mésoplodon De Travers"
-        ]
-      }
-    },
-    {
       "id": "ott941737",
       "qid": "Q146186",
       "revision": 2542560922,
@@ -43435,19 +43373,6 @@
           "Karuhiruhi",
           "Cormoran varie",
           "Phalacrocorax varius"
-        ]
-      }
-    },
-    {
-      "id": "ott3606945",
-      "qid": "Q135157",
-      "revision": 2517816009,
-      "aliases": {
-        "en": [
-          "Phalanger matanim"
-        ],
-        "fr": [
-          "Couscous De Telefomin"
         ]
       }
     },
@@ -48054,17 +47979,6 @@
       }
     },
     {
-      "id": "ott3611210",
-      "qid": "Q139772",
-      "revision": 2517909128,
-      "aliases": {
-        "en": [
-          "Sylvilagus cognatus"
-        ],
-        "fr": []
-      }
-    },
-    {
       "id": "ott956330",
       "qid": "Q139716",
       "revision": 2517910781,
@@ -49596,17 +49510,6 @@
       "aliases": {
         "en": [
           "Uromys porculus"
-        ],
-        "fr": []
-      }
-    },
-    {
-      "id": "ott3608785",
-      "qid": "Q146471",
-      "revision": 2517970918,
-      "aliases": {
-        "en": [
-          "Uromys siebersi"
         ],
         "fr": []
       }
