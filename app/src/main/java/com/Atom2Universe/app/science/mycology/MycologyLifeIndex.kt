@@ -31,7 +31,8 @@ class MycologyLifeIndex(tree: LifeTree, latinById: Map<String, String>) {
             "Lactarius piperatus" to "Lactifluus piperatus",
             "Inocybe maculata" to "Inosperma maculatum",
             "Cantharellus cinereus" to "Craterellus cinereus",
-            "Leccinum crocipodium" to "Leccinellum crocipodium"
+            "Leccinum crocipodium" to "Leccinellum crocipodium",
+            "Hypholoma lateritium" to "Hypholoma sublateritium"
         )
     }
 }

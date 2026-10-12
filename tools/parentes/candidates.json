@@ -5611,6 +5611,11 @@
       "fr": "Hypholome en touffe"
     },
     {
+      "name": "Hypholoma lateritium",
+      "en": "Brick cap",
+      "fr": "Hypholome couleur de brique"
+    },
+    {
       "name": "Hypomecis roboraria",
       "en": "Hypomecis roboraria",
       "fr": "Hypomecis roboraria",
@@ -6251,6 +6256,11 @@
       "name": "Lepista nuda",
       "en": "Wood blewit",
       "fr": "Pied bleu"
+    },
+    {
+      "name": "Lepista sordida",
+      "en": "Sordid blewit",
+      "fr": "Lépiste sordide"
     },
     {
       "name": "Leptinotarsa decemlineata",
@@ -8644,6 +8654,11 @@
       "name": "Pleurotus ostreatus",
       "en": "Oyster mushroom",
       "fr": "Pleurote en huître"
+    },
+    {
+      "name": "Pleurotus pulmonarius",
+      "en": "Lung oyster",
+      "fr": "Pleurote pulmonaire"
     },
     {
       "name": "Plocosperma buxifolium",

@@ -240004,6 +240004,27 @@
       "requested_node_id": "ott600624"
     },
     {
+      "id": "ott595647",
+      "parent": "ott221808",
+      "scientific": "Hypholoma lateritium",
+      "ott": 595647,
+      "tax_sources": [
+        "if:455825",
+        "ncbi:71945",
+        "ncbi:2082196",
+        "gbif:2533424",
+        "irmng:10402770",
+        "irmng:10783441"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott595647"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_595647",
+      "requested_node_id": "ott595647"
+    },
+    {
       "id": "ott689415",
       "parent": "mrcaott689415ott7144851",
       "scientific": "Hypomecis roboraria",
@@ -248793,6 +248814,54 @@
       "tax_sources": [],
       "supported_by": {
         "ot_1100@tree1": "node561"
+      },
+      "conflicts_with": {
+        "ot_1784@Tr106951": [
+          "Tn16776016"
+        ]
+      },
+      "species": false
+    },
+    {
+      "id": "ott154545",
+      "parent": "mrcaott154545ott729386",
+      "scientific": "Lepista sordida",
+      "ott": 154545,
+      "tax_sources": [
+        "if:299524",
+        "ncbi:123925",
+        "ncbi:1882436",
+        "gbif:5242097",
+        "irmng:11349631"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott154545"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_154545",
+      "requested_node_id": "ott154545"
+    },
+    {
+      "id": "mrcaott154545ott729386",
+      "parent": "mrcaott38795ott154545",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1100@tree1": "node566"
+      },
+      "conflicts_with": {},
+      "species": false
+    },
+    {
+      "id": "mrcaott38795ott154545",
+      "parent": "mrcaott38795ott207782",
+      "scientific": "",
+      "ott": null,
+      "tax_sources": [],
+      "supported_by": {
+        "ot_1100@tree1": "node562"
       },
       "conflicts_with": {
         "ot_1784@Tr106951": [
@@ -288064,6 +288133,26 @@
       },
       "conflicts_with": {},
       "species": false
+    },
+    {
+      "id": "ott17230",
+      "parent": "ott581152",
+      "scientific": "Pleurotus pulmonarius",
+      "ott": 17230,
+      "tax_sources": [
+        "if:143543",
+        "ncbi:28995",
+        "ncbi:518765",
+        "gbif:2526548",
+        "irmng:10650402"
+      ],
+      "supported_by": {
+        "ott3.7draft3": "ott17230"
+      },
+      "conflicts_with": {},
+      "species": true,
+      "key": "pt_species_17230",
+      "requested_node_id": "ott17230"
     },
     {
       "id": "ott590765",

@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-05",
   "synth_id": "opentree16.1",
-  "candidate_count": 2061,
+  "candidate_count": 2064,
   "accepted": [
     {
       "name": "Homo sapiens",
@@ -9950,6 +9950,14 @@
       "ott": 600624
     },
     {
+      "name": "Hypholoma lateritium",
+      "en": "Brick cap",
+      "fr": "Hypholome couleur de brique",
+      "seed": false,
+      "id": "ott595647",
+      "ott": 595647
+    },
+    {
       "name": "Hypomecis roboraria",
       "en": "Hypomecis roboraria",
       "fr": "Hypomecis roboraria",
@@ -10946,6 +10954,14 @@
       "seed": false,
       "id": "ott1080645",
       "ott": 1080645
+    },
+    {
+      "name": "Lepista sordida",
+      "en": "Sordid blewit",
+      "fr": "Lépiste sordide",
+      "seed": false,
+      "id": "ott154545",
+      "ott": 154545
     },
     {
       "name": "Leptinotarsa decemlineata",
@@ -14911,6 +14927,14 @@
       "seed": false,
       "id": "ott581149",
       "ott": 581149
+    },
+    {
+      "name": "Pleurotus pulmonarius",
+      "en": "Lung oyster",
+      "fr": "Pleurote pulmonaire",
+      "seed": false,
+      "id": "ott17230",
+      "ott": 17230
     },
     {
       "name": "Plocosperma buxifolium",
