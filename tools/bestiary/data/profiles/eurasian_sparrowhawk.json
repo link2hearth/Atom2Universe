@@ -1,0 +1,77 @@
+{
+  "id": "eurasian_sparrowhawk",
+  "scientific": "Accipiter nisus",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Sparrowhawk",
+    "fr": "Épervier d’Europe"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian sparrowhawk is one of the smallest diurnal birds of prey in Europe. It is a secretive hunter of small birds, and the female is much larger than the male.",
+      "fr": "L’épervier d’Europe est l’un des plus petits rapaces diurnes d’Europe. C’est un chasseur discret d’oiseaux de petite taille, dont la femelle est nettement plus grande que le mâle."
+    },
+    "identification": {
+      "en": "In Britain a male weighs about 150 g and has a wing near 198 mm, while a female weighs about 266 g with a wing near 234 mm. The male has a blue-grey back and fine reddish barring below; the female is brown or grey-brown above with brown barring. Both have short, rounded wings, a long tail, long legs and a sharply hooked bill.",
+      "fr": "En Grande-Bretagne, le mâle pèse environ 150 g avec une aile d’environ 198 mm, et la femelle environ 266 g avec une aile d’environ 234 mm. Le mâle a le dos gris bleuté et le dessous finement barré de roux; la femelle est brune ou gris-brun dessus, barrée de brun dessous. Tous deux ont des ailes courtes et arrondies, une longue queue, de longues pattes et un bec fortement crochu."
+    },
+    "habitat": {
+      "en": "In Britain the sparrowhawk breeds mostly in deciduous and coniferous woodland, and it prefers varied woodland. In lowland England it also uses hedges as cover for hunting.",
+      "fr": "En Grande-Bretagne, l’épervier niche surtout dans les bois de feuillus et de conifères, et préfère les boisements variés. Dans les plaines anglaises, il utilise aussi les haies comme couvert pour chasser."
+    },
+    "diet": {
+      "en": "It feeds mainly on small birds, which can make up most of its diet, especially ground-feeding species such as finches, thrushes and warblers. It occasionally takes small mammals. Males take lighter prey than the larger females, and birds are often plucked at a regular post.",
+      "fr": "Il se nourrit surtout de petits oiseaux, qui peuvent constituer l’essentiel de son régime, en particulier des espèces qui cherchent leur nourriture au sol comme les pinsons, les grives et les fauvettes. Il prend parfois de petits mammifères. Les mâles capturent des proies plus légères que les femelles, plus grandes, et plument souvent leurs proies à un poste régulier."
+    },
+    "behavior": {
+      "en": "The sparrowhawk is solitary and territorial. It hunts by dashing out from cover or from a hidden perch to chase prey low and fast, and its flight alternates flapping with short glides. It also visits garden bird feeders in search of prey.",
+      "fr": "L’épervier est solitaire et territorial. Il chasse en jaillissant d’un couvert ou d’un perchoir caché pour poursuivre sa proie en vol rapide et bas, et son vol alterne battements et courtes glissades. Il visite aussi les mangeoires des jardins à la recherche de proies."
+    },
+    "reproduction": {
+      "en": "In Britain a typical clutch is four or five eggs, incubated by the female for about 33 days. The chicks fledge at around 28 days, and birds usually first breed at one year old. The male courts with aerial displays and does most of the early hunting for the family.",
+      "fr": "En Grande-Bretagne, une couvée compte typiquement quatre ou cinq œufs, couvés par la femelle pendant environ 33 jours. Les jeunes prennent leur envol vers 28 jours, et les oiseaux se reproduisent en général pour la première fois à un an. Le mâle fait sa cour par des parades aériennes et assure l’essentiel de la chasse pour la famille au début."
+    },
+    "ecology": {
+      "en": "As a predator of small birds and mammals, the sparrowhawk helps regulate their numbers. Adults have few natural enemies, though the northern goshawk sometimes raids nests. The species also carries blood parasites such as avian malaria.",
+      "fr": "Prédateur de petits oiseaux et de petits mammifères, l’épervier contribue à réguler leurs effectifs. Les adultes ont peu d’ennemis naturels, bien que l’autour des palombes attaque parfois les nids. L’espèce héberge aussi des parasites sanguins comme ceux du paludisme aviaire."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide, and in the UK it is Amber-listed. The UK breeding population was estimated at about 31,000 pairs in 2016. The oldest ringed bird reached 17 years.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, et elle figure sur la liste ambre au Royaume-Uni. La population nicheuse britannique était estimée à environ 31 000 couples en 2016. Le plus vieil oiseau bagué a atteint 17 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sparrowhawk — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Épervier d’Europe — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/sparrowhawk",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Male 151 g, wing 198 mm; female 266 g, wing 234 mm; clutch typically 4–5; incubation about 33 days; fledging about 28 days; first breeding at 1 year.",
+        "UK 31,000 pairs (2016); Amber-listed in the UK; IUCN Least Concern; longevity record 17 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Accipiter nisus — Animal Diversity Web, University of Michigan",
+        "fr": "Accipiter nisus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Accipiter_nisus/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Small birds make up most of the diet; ambush hunting from a hidden perch; solitary and territorial; males court with aerial displays.",
+        "Few predators (goshawk sometimes raids nests); hosts blood parasites including avian malaria. Conservation status of this page not used."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Animal Diversity Web gives lighter male weights (110–196 g) than the BTO ringing data; the BTO British figures were used.",
+    "Weights, clutch and timings are for Britain; they vary across the very wide range."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); ADW used for qualitative facts; illustration checked against the sources (adult male-type plumage)."
+}

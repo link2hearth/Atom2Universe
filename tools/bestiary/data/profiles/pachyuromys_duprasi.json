@@ -1,0 +1,78 @@
+{
+  "id": "pachyuromys_duprasi",
+  "scientific": "Pachyuromys duprasi",
+  "group": "mammals",
+  "name": {
+    "en": "Fat-tailed Gerbil",
+    "fr": "Gerbille à grosse queue"
+  },
+  "sections": {
+    "overview": {
+      "en": "The fat-tailed gerbil is a small rodent of the northern Sahara and the only species in its genus. It was first described in 1880 from Laghouat, in Algeria. It is listed as Least Concern and is best known for its short, swollen tail.",
+      "fr": "La gerbille à grosse queue est un petit rongeur du nord du Sahara et la seule espèce de son genre. Elle a été décrite pour la première fois en 1880 à Laghouat, en Algérie. Elle est classée en préoccupation mineure et se reconnaît surtout à sa queue courte et renflée."
+    },
+    "identification": {
+      "en": "A round-bodied gerbil with a head and body of about 108 mm and a weight near 36 g. The long, fluffy fur is grey to tan, with a white belly and feet. The eyes are large and oval and the pink ears sit low on the head. The tail is shorter than the body, thick and club-shaped, without a tuft, and stores fat and water.",
+      "fr": "Gerbille au corps rond, avec une tête et un corps d’environ 108 mm et un poids proche de 36 g. Le pelage long et duveteux est gris à brun clair, avec un ventre et des pattes blancs. Les yeux sont grands et ovales et les oreilles roses sont placées bas sur la tête. La queue, plus courte que le corps, est épaisse et en massue, sans pinceau, et sert de réserve de graisse et d’eau."
+    },
+    "habitat": {
+      "en": "It lives in sand sheets with some vegetation, and sometimes in rocky desert. The Mammal Diversity Database gives its range as the northern Sahara from Western Sahara and Morocco to northern Egypt, while Animal Diversity Web describes it mainly west of the Nile Delta, into Libya, Tunisia and Algeria. It digs burrows up to about 1 m deep and sometimes uses those of other rodents.",
+      "fr": "Elle vit dans les étendues de sable portant un peu de végétation, et parfois dans le désert rocheux. La Mammal Diversity Database donne comme aire le nord du Sahara, du Sahara occidental et du Maroc jusqu’au nord de l’Égypte, tandis que l’Animal Diversity Web la décrit surtout à l’ouest du delta du Nil, jusqu’en Libye, en Tunisie et en Algérie. Elle creuse des terriers jusqu’à environ 1 m de profondeur et utilise parfois ceux d’autres rongeurs."
+    },
+    "diet": {
+      "en": "In the wild it is mostly insectivorous, but it also eats plants, such as the desert shrubs Anabasis articulata and Artemisia monosperma.",
+      "fr": "À l’état sauvage, elle est surtout insectivore, mais elle mange aussi des plantes, comme les arbustes du désert Anabasis articulata et Artemisia monosperma."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal, though often active at dusk, and spends much of its life in burrows. It is found in colonies but can also live alone. Males mark territory with scent glands on the belly. It is docile when handled and rarely bites, but can be aggressive toward others of its own species.",
+      "fr": "Elle est surtout nocturne, bien que souvent active au crépuscule, et passe une grande partie de sa vie dans des terriers. On la trouve en colonies mais elle peut aussi vivre seule. Les mâles marquent leur territoire avec des glandes odorantes du ventre. Elle est docile quand on la manipule et mord rarement, mais peut se montrer agressive envers ses congénères."
+    },
+    "reproduction": {
+      "en": "Gestation lasts 19–22 days and a litter holds 3–9 young, 4.5 on average; up to three litters a year are possible. Young are born blind and naked, are cared for by the female alone and are weaned at 3–4 weeks. Maturity comes at 3–6 months. Much of this information comes from captive animals and mostly from the Egyptian subspecies.",
+      "fr": "La gestation dure 19 à 22 jours et une portée compte 3 à 9 petits, 4,5 en moyenne; jusqu’à trois portées par an sont possibles. Les petits naissent aveugles et nus, sont soignés par la seule femelle et sevrés à 3-4 semaines. La maturité vient à 3 à 6 mois. Une grande partie de ces données provient d’animaux captifs et surtout de la sous-espèce égyptienne."
+    },
+    "ecology": {
+      "en": "Its digging may aerate desert soil, and it probably affects local insect and plant populations. Birds are likely predators, but predation is poorly documented. The pale fur and the burrowing habit may help it avoid predators.",
+      "fr": "Ses terriers peuvent aérer le sol du désert, et elle influence probablement les populations locales d’insectes et de plantes. Les oiseaux sont des prédateurs probables, mais la prédation est mal documentée. Son pelage clair et sa vie souterraine peuvent l’aider à échapper aux prédateurs."
+    },
+    "conservation": {
+      "en": "It is listed as Least Concern on the IUCN Red List. The sources read give no population estimate and no specific threat for wild animals.",
+      "fr": "Elle est classée en préoccupation mineure sur la Liste rouge de l’UICN. Les sources lues ne donnent ni estimation de population ni menace précise pour les animaux sauvages."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pachyuromys duprasi — Animal Diversity Web, University of Michigan",
+        "fr": "Pachyuromys duprasi — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pachyuromys_duprasi/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Head-body about 108 mm, tail about 58 mm, about 36.5 g; sand sheets and rocky deserts; burrows about 1 m deep; mostly insectivorous in the wild.",
+        "Gestation 19–22 days, litters 3–9 (average 4.5), weaning at 3–4 weeks; most information comes from the Egyptian subspecies."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pachyuromys duprasi — Mammal Diversity Database",
+        "fr": "Pachyuromys duprasi — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1002904",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Described by Lataste in 1880, type locality Laghouat, Algeria; range northern Sahara from Western Sahara and Morocco to northern Egypt; IUCN Least Concern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Only two sources were fully readable; field studies of the wild animal are scarce and most details come from a university database.",
+    "The IUCN Red List pages could not be opened; Least Concern comes from the Mammal Diversity Database and the date of the assessment was not checked.",
+    "Reproduction figures are largely from captive animals and mostly from the Egyptian subspecies, and wild breeding may differ.",
+    "The range differs between sources (Western Sahara to Egypt in the Mammal Diversity Database, Egypt to Algeria in Animal Diversity Web)."
+  ],
+  "reviewed": true,
+  "review_note": "Based on a university database and the Mammal Diversity Database; illustration to be checked by the owner."
+}

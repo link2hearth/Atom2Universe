@@ -1,0 +1,79 @@
+{
+  "id": "eidolon_helvum",
+  "scientific": "Eidolon helvum",
+  "group": "mammals",
+  "name": {
+    "en": "Straw-coloured Fruit Bat",
+    "fr": "Roussette paillée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The straw-coloured fruit bat is one of the largest fruit bats of Africa and the most widespread. It roosts in very large colonies, makes long migrations and is listed as Near Threatened.",
+      "fr": "La roussette paillée est l’une des plus grandes chauves-souris frugivores d’Afrique et la plus répandue. Elle dort en très grandes colonies, effectue de longues migrations et elle est classée quasi menacée."
+    },
+    "identification": {
+      "en": "A large bat with a body of about 14–21 cm and a weight of 230–350 g, males being slightly bigger. The neck and back are straw-coloured and the underside a duller brown or grey. The wings are long and narrow, built for long flights, and the head is large and pointed with big eyes and no white facial markings. Wingspan is given as up to about 75 cm in one source and up to one metre in another.",
+      "fr": "Grande chauve-souris au corps d’environ 14 à 21 cm et pesant de 230 à 350 g, les mâles étant un peu plus grands. La nuque et le dos sont jaune paille et le dessous d’un brun ou d’un gris plus terne. Les ailes sont longues et étroites, faites pour les longs vols, et la tête est grande et pointue, avec de grands yeux et sans marque faciale blanche. L’envergure est donnée jusqu’à environ 75 cm dans une source et jusqu’à un mètre dans une autre."
+    },
+    "habitat": {
+      "en": "It lives across most of sub-Saharan Africa and in the south-west of the Arabian Peninsula, in forest and savanna from coastal forest to dry regions, and from sea level to about 2,000 m. Tropical forest is its prime habitat because of the abundant food. It roosts mainly in tall trees and sometimes in caves, and also uses towns and farmland.",
+      "fr": "Elle vit dans la majeure partie de l’Afrique subsaharienne et dans le sud-ouest de la péninsule Arabique, en forêt et en savane, des forêts côtières aux régions sèches, et du niveau de la mer à environ 2 000 m. La forêt tropicale est son habitat de prédilection grâce à l’abondance de nourriture. Elle dort surtout dans de grands arbres et parfois dans des grottes, et fréquente aussi les villes et les terres cultivées."
+    },
+    "diet": {
+      "en": "It sucks the juice from fruit and spits out the pulp. Reported foods include mangoes, dates, figs, pawpaws and avocados, as well as the flowers of baobab, Borassus palms and silk-cotton trees. It also chews soft wood and bark, apparently for moisture. It feeds in the open upper canopy and can eat a large quantity in a night.",
+      "fr": "Elle suce le jus des fruits et recrache la pulpe. Parmi les aliments signalés figurent mangues, dattes, figues, papayes et avocats, ainsi que les fleurs du baobab, des palmiers Borassus et des fromagers. Elle mâche aussi du bois tendre et de l’écorce, apparemment pour l’humidité. Elle se nourrit dans la strate haute et dégagée de la canopée et peut manger beaucoup en une nuit."
+    },
+    "behavior": {
+      "en": "It is social and nocturnal: colonies rest in trees by day and leave the roost at night in small groups, flying in straight lines and at greater heights than other fruit bats. It forages up to about 30 km from the roost and is noisy, chattering in the roost and while eating. It is a long-distance migrant: every year millions gather at Kasanka National Park in Zambia, and it holds the longest migration recorded for an African mammal.",
+      "fr": "Elle est sociale et nocturne : les colonies se reposent dans les arbres le jour et quittent le dortoir la nuit par petits groupes, volant en ligne droite et plus haut que les autres roussettes. Elle s’alimente jusqu’à environ 30 km du dortoir et est bruyante, bavardant au dortoir et en mangeant. C’est une grande migratrice : chaque année, des millions d’individus se rassemblent au parc national de Kasanka, en Zambie, et elle détient la plus longue migration enregistrée pour un mammifère africain."
+    },
+    "reproduction": {
+      "en": "It breeds once a year, with mating from April to June, and most populations show delayed implantation, so that births come in February and March. A single young of about 50 g is usual; it cannot fly at birth and only the female cares for it. The sources disagree on the total length of gestation (nine months or about 275 days).",
+      "fr": "Elle se reproduit une fois par an, avec des accouplements d’avril à juin, et la plupart des populations présentent une implantation retardée, si bien que les naissances ont lieu en février et mars. Un seul petit d’environ 50 g est la règle; il ne vole pas à la naissance et seule la femelle s’en occupe. Les sources ne s’accordent pas sur la durée totale de la gestation (neuf mois ou environ 275 jours)."
+    },
+    "ecology": {
+      "en": "By visiting flowers it pollinates trees of the mulberry and silk-cotton families, and by carrying fruit it disperses seeds. Owls, eagles, buzzards, snakes and civets prey on it, and it is eaten by people in parts of West and Central Africa. Where colonies roost near orchards it can be a crop pest.",
+      "fr": "En visitant les fleurs, elle pollinise des arbres des familles des moracées et des bombacacées, et en transportant des fruits, elle disperse des graines. Hiboux, aigles, buses, serpents et civettes la chassent, et elle est mangée par l’humain dans certaines régions d’Afrique de l’Ouest et d’Afrique centrale. Là où les colonies dorment près de vergers, elle peut être un ravageur de cultures."
+    },
+    "conservation": {
+      "en": "It is listed as Near Threatened. Bushmeat hunting is a main cause of local declines in West and Central Africa, and deforestation is the greatest threat overall. In some areas bats are seen as pests and their roosts are destroyed. Reports of colony size vary widely, from tens of thousands to millions, and one source calls the species very abundant.",
+      "fr": "Elle est classée quasi menacée. La chasse pour la viande est une cause majeure de déclin local en Afrique de l’Ouest et centrale, et la déforestation est la plus grande menace d’ensemble. Dans certaines régions, ces chauves-souris sont vues comme des nuisibles et leurs dortoirs sont détruits. Les effectifs des colonies varient beaucoup selon les rapports, de dizaines de milliers à des millions, et une source qualifie l’espèce de très abondante."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eidolon helvum — Animal Diversity Web, University of Michigan",
+        "fr": "Eidolon helvum — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Eidolon_helvum/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Head-body 143–215 mm, 230–350 g, wingspan up to 762 mm; sea level to 2,000 m; forages about 30 km; mating April–June, delayed implantation, births February–March, one young of about 50 g.",
+        "Pollinates Moraceae and Bombacaceae; predators owls, eagles, snakes, civets. Gestation (9 months or 275 days) and colony sizes are inconsistent within the page."
+      ]
+    },
+    {
+      "title": {
+        "en": "Straw-coloured Fruit Bat — World Land Trust",
+        "fr": "Roussette paillée — World Land Trust"
+      },
+      "url": "https://www.worldlandtrust.org/species/straw-coloured-fruit-bat/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "conservation"],
+      "facts": [
+        "Wingspan up to one metre, up to 350 g; Kasanka National Park gathering; furthest recorded migration of any African mammal; feeds in the open upper canopy.",
+        "Near Threatened; bushmeat harvesting in West and Central Africa; deforestation the greatest threat; roosts destroyed where bats are seen as pests."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List pages could not be opened; Near Threatened comes from the World Land Trust page and the date of the assessment was not checked.",
+    "Wingspan is given as up to 762 mm by Animal Diversity Web and up to one metre by the World Land Trust.",
+    "Gestation is given as nine months and as about 275 days in the same page; only the delayed implantation and the birth months are stated here.",
+    "Colony sizes differ widely (100,000–1,000,000 in one source, up to 100 in another, millions at Kasanka) and no figure is given for typical colonies."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a university database and a conservation charity, with some inconsistencies noted; illustration to be checked by the owner."
+}

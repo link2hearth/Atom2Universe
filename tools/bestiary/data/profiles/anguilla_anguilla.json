@@ -1,0 +1,92 @@
+{
+  "id": "anguilla_anguilla",
+  "scientific": "Anguilla anguilla",
+  "group": "fish",
+  "name": {
+    "en": "European Eel",
+    "fr": "Anguille européenne"
+  },
+  "sections": {
+    "overview": {
+      "en": "The European eel is a snake-like fish that spends most of its life in rivers, lakes and coastal waters of Europe and North Africa, then crosses the Atlantic to spawn once and die. Its life cycle makes it a long-distance migrant, and it is now Critically Endangered.",
+      "fr": "L’anguille européenne est un poisson serpentiforme qui passe l’essentiel de sa vie dans les rivières, les lacs et les eaux côtières d’Europe et d’Afrique du Nord, puis traverse l’Atlantique pour se reproduire une seule fois avant de mourir. Grande migratrice, elle est aujourd’hui en danger critique d’extinction."
+    },
+    "identification": {
+      "en": "The body is long and snake-like, with the dorsal and anal fins running into the tail fin and no pelvic fins. Females are much larger than males, reaching up to about 133 cm and 6.6 kg, whereas males stop near 122 cm. Eels change form with age: transparent leaf-shaped larvae, then 6–8 cm glass eels, then pigmented yellow eels and finally silver eels with enlarged eyes.",
+      "fr": "Le corps est long et serpentiforme, les nageoires dorsale et anale se prolongeant jusqu’à la caudale, sans nageoires pelviennes. Les femelles sont bien plus grandes que les mâles, jusqu’à environ 133 cm et 6,6 kg, contre environ 122 cm au maximum pour les mâles. L’anguille change d’aspect avec l’âge : larves transparentes en forme de feuille, civelles de 6 à 8 cm, anguilles jaunes pigmentées, puis anguilles argentées aux yeux agrandis."
+    },
+    "habitat": {
+      "en": "It is native to the Atlantic coasts from Scandinavia to Morocco and to the Baltic, Mediterranean and Black Sea basins, from streams to large rivers, lakes and brackish coastal waters. It has been recorded from the surface down to about 700 m, and it spawns in the Sargasso Sea in the western Atlantic.",
+      "fr": "Elle est native des côtes atlantiques de la Scandinavie au Maroc et des bassins de la Baltique, de la Méditerranée et de la mer Noire, des ruisseaux aux grands fleuves, lacs et eaux côtières saumâtres. On l’a observée de la surface jusqu’à environ 700 m, et elle se reproduit dans la mer des Sargasses, à l’ouest de l’Atlantique."
+    },
+    "diet": {
+      "en": "Feeding eels eat a broad range of bottom animals such as aquatic invertebrates, small crustaceans, insect larvae and worms, together with carrion and detritus. The larvae’s food is unknown, since no gut contents have ever been found, and silver eels stop feeding as they start their migration.",
+      "fr": "Les anguilles en croissance mangent une grande variété d’animaux du fond : invertébrés aquatiques, petits crustacés, larves d’insectes et vers, ainsi que des charognes et des débris. Le régime des larves est inconnu, car on n’a jamais trouvé de contenu stomacal, et les anguilles argentées cessent de se nourrir quand elles entament leur migration."
+    },
+    "behavior": {
+      "en": "The eel lives on the bottom and is essentially solitary, with no sign of schooling. It hides under rocks and burrows into sand. Silver eels travel roughly 5,000–6,000 km to the Sargasso Sea and, during this journey, move between about 200 m at night and 600 m by day, possibly to avoid predators.",
+      "fr": "L’anguille vit près du fond et est essentiellement solitaire, sans signe de comportement en banc. Elle se cache sous les pierres et s’enfouit dans le sable. Les anguilles argentées parcourent environ 5 000 à 6 000 km jusqu’à la mer des Sargasses et, pendant ce voyage, passent d’environ 200 m la nuit à 600 m le jour, peut-être pour échapper aux prédateurs."
+    },
+    "reproduction": {
+      "en": "The eel breeds once and dies. Spawning is believed to take place in the Sargasso Sea between March and June, but it has never been observed directly. The larvae drift with ocean currents toward Europe for about a year, become glass eels and enter estuaries. The yellow, feeding stage lasts about 6–12 years in males and 9–20 years in females.",
+      "fr": "L’anguille ne se reproduit qu’une fois, puis meurt. La ponte aurait lieu dans la mer des Sargasses entre mars et juin, mais elle n’a jamais été observée directement. Les larves dérivent avec les courants vers l’Europe pendant environ un an, deviennent civelles et gagnent les estuaires. Le stade jaune, où elle se nourrit, dure environ 6 à 12 ans chez les mâles et 9 à 20 ans chez les femelles."
+    },
+    "ecology": {
+      "en": "Eels are prey for herons, cormorants and large predatory fish, and their migrations carry nutrients between marine and freshwater ecosystems. They host the swim-bladder nematode Anguillicola crassus. Because they are fatty and feed on the bottom of inland waters, they tend to accumulate pollutants.",
+      "fr": "Les anguilles sont la proie de hérons, de cormorans et de grands poissons prédateurs, et leurs migrations transportent des nutriments entre milieux marins et d’eau douce. Elles hébergent le nématode de la vessie natatoire Anguillicola crassus. Riches en graisses et se nourrissant sur le fond des eaux continentales, elles accumulent facilement les polluants."
+    },
+    "conservation": {
+      "en": "The species is Critically Endangered on the IUCN Red List (assessed in 2018) and is listed in CITES Appendix II. ICES describes its status as critical: glass eel and yellow eel recruitment fell strongly from 1980 to 2011 and remains very low. In 2020 glass eel recruitment was provisionally 0.5% of its 1960–1979 level in the North Sea index area and 6.5% elsewhere in Europe. ICES advises reducing all human impacts, including fishing, hydropower, pumping stations and pollution, to as close to zero as possible.",
+      "fr": "L’espèce est en danger critique d’extinction sur la Liste rouge de l’UICN (évaluation de 2018) et figure à l’annexe II de la CITES. Le CIEM juge son état critique : le recrutement en civelles et en anguilles jaunes a fortement chuté de 1980 à 2011 et reste très faible. En 2020, le recrutement de civelles était provisoirement de 0,5 % de son niveau de 1960-1979 dans la zone « mer du Nord » et de 6,5 % ailleurs en Europe. Le CIEM recommande de réduire au plus près de zéro tous les impacts humains, dont la pêche, l’hydroélectricité, les stations de pompage et la pollution."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Anguilla anguilla, European eel — FishBase",
+        "fr": "Anguilla anguilla, anguille européenne — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Anguilla-anguilla.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Max 133 cm TL (female), 122 cm (male), 6.6 kg; depth 0–700 m; spawning in the Sargasso Sea believed March–June, never observed; silver eels migrate 5,000–6,000 km, 200 m at night and 600 m by day.",
+        "Yellow stage 6–12 years (males) and 9–20 years (females); Critically Endangered, assessed 7 November 2018; CITES Appendix II."
+      ]
+    },
+    {
+      "title": {
+        "en": "Anguilla anguilla — Animal Diversity Web, University of Michigan",
+        "fr": "Anguilla anguilla — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Anguilla_anguilla/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Leptocephali transparent and leaf-shaped, gut contents never found; solitary, no schooling; semelparous; larvae drift up to a year to Europe.",
+        "Prey of herons, cormorants and large fish; host of the nematode Anguillicola crassus; moves nutrients between marine and freshwater systems. Its statement that eels are not threatened contradicts its own Critically Endangered line and was not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "European eel (Anguilla anguilla) throughout its natural range — ICES Advice 2020, ele.2737.nea",
+        "fr": "Anguille européenne (Anguilla anguilla) sur toute son aire naturelle — avis du CIEM 2020, ele.2737.nea"
+      },
+      "url": "https://www.dafv.de/images/dafv/Dokumente/ICES_Advice_Eel_2020.pdf",
+      "consulted": "2026-10-12",
+      "supports": ["conservation"],
+      "facts": [
+        "Status remains critical; glass eel and yellow eel recruitment strongly declined from 1980 to 2011.",
+        "2020 glass eel recruitment 0.5% (North Sea, provisional) and 6.5% (elsewhere Europe, provisional) of 1960–1979; advice to reduce all anthropogenic impacts to as close to zero as possible."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Larval drift duration differs between sources (about one year in Animal Diversity Web, 7–11 months and up to three years in FishBase); the text says about a year.",
+    "Egg numbers are not given because Animal Diversity Web’s figure is extrapolated from the Japanese eel.",
+    "The IUCN Red List page could not be opened; the category and date come from FishBase.",
+    "ICES recruitment percentages are from the 2020 advice and are provisional; later advice has updated them. Animal Diversity Web’s claim that the eel is mainly diurnal was not used."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from FishBase, Animal Diversity Web and the ICES 2020 advice; illustration to be checked by the owner."
+}

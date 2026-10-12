@@ -1,0 +1,91 @@
+{
+  "id": "dytiscus_marginalis",
+  "scientific": "Dytiscus marginalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Great Diving Beetle",
+    "fr": "Dytique bordé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The great diving beetle is one of the largest beetles of Britain and Ireland and a fierce predator of still fresh water. It lives in the water as both larva and adult, yet it flies at night to colonise new ponds.",
+      "fr": "Le dytique bordé est l’un des plus grands coléoptères de Grande-Bretagne et d’Irlande, et un redoutable prédateur des eaux douces calmes. Il vit dans l’eau aussi bien à l’état de larve que d’adulte, mais vole la nuit pour coloniser de nouvelles mares."
+    },
+    "identification": {
+      "en": "Adults are about 3 cm long, with a dark olive-brown, almond-shaped body flattened from top to bottom. The pronotum, the plate behind the head, is bordered all round with yellow, and the wing cases have a brownish-yellow edge. Females usually have ribbed wing cases while males have smooth ones, although some mainland European females are smooth.",
+      "fr": "Les adultes mesurent environ 3 cm, avec un corps brun olive foncé, en forme d’amande et aplati de haut en bas. Le pronotum, la plaque derrière la tête, est entièrement bordé de jaune, et les élytres ont un bord jaune brunâtre. Les femelles ont en général des élytres striés et les mâles des élytres lisses, mais certaines femelles d’Europe continentale sont lisses."
+    },
+    "habitat": {
+      "en": "It lives in still or very slow-flowing fresh water with plenty of submerged vegetation. It is native to the Palearctic, across Europe, Asia and northern Africa.",
+      "fr": "Il vit dans les eaux douces stagnantes ou très lentes, riches en végétation immergée. Il est originaire de la région paléarctique, en Europe, en Asie et en Afrique du Nord."
+    },
+    "diet": {
+      "en": "Adults and larvae are both predators. They eat other water insects, tadpoles and very small fish, hunting among submerged plants.",
+      "fr": "Les adultes comme les larves sont des prédateurs. Ils mangent d’autres insectes aquatiques, des têtards et de très petits poissons, en chassant parmi les plantes immergées."
+    },
+    "behavior": {
+      "en": "The adult comes to the surface from time to time and pushes out the tip of its abdomen to renew an air supply kept under its wing cases. It is a strong flier, mostly at night. When seized, it releases a foul-smelling fluid containing benzoic acid and related compounds.",
+      "fr": "L’adulte monte de temps en temps à la surface et sort l’extrémité de son abdomen pour renouveler la réserve d’air gardée sous ses élytres. C’est un bon voilier, surtout la nuit. Quand on le saisit, il émet un liquide malodorant contenant de l’acide benzoïque et des composés voisins."
+    },
+    "reproduction": {
+      "en": "Females lay eggs singly in submerged plant stems in early spring, and the eggs take about 18 days to hatch. The larvae grow quickly, reach about 5 cm, and by late summer leave the water to pupate in damp soil at the water’s edge. Young adults usually emerge in mid-autumn but stay buried through the winter.",
+      "fr": "Les femelles pondent leurs œufs un à un dans des tiges de plantes immergées au début du printemps, et ils éclosent en 18 jours environ. Les larves grandissent vite, atteignent environ 5 cm et, à la fin de l’été, quittent l’eau pour se nymphoser dans la terre humide au bord de l’eau. Les jeunes adultes émergent en général à la mi-automne mais restent enfouis tout l’hiver."
+    },
+    "ecology": {
+      "en": "Despite its soft body, the larva can tackle large prey such as young newts, froglets and small fish. The adult flies to colonise new ponds, and newly created garden ponds are often reached in their first year.",
+      "fr": "Malgré son corps mou, la larve peut s’attaquer à de grosses proies comme de jeunes tritons, des grenouillettes et de petits poissons. L’adulte vole pour coloniser de nouvelles mares, et les mares de jardin récentes sont souvent atteintes dès leur première année."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was found. In Britain the species is described as quite common and widespread, and the Animal Diversity Web lists no special protection status, while noting that European specialists are seeking protection beyond limits on collecting.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée. En Grande-Bretagne, l’espèce est décrite comme assez commune et répandue, et l’Animal Diversity Web n’indique aucun statut de protection particulier, tout en signalant que des spécialistes européens cherchent une protection allant au-delà de la limitation des prélèvements."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Great Diving Beetle, Dytiscus marginalis — NatureSpot (Leicestershire and Rutland wildlife)",
+        "fr": "Dytique bordé, Dytiscus marginalis — NatureSpot (faune de Leicestershire et Rutland)"
+      },
+      "url": "https://www.naturespot.org/species/great-diving-beetle",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "About 3 cm; dark olive-brown almond-shaped body, pronotum bordered with yellow; females ribbed, males smooth wing cases; still or slow fresh water with vegetation.",
+        "Predator as adult and larva (water insects, tadpoles, small fish); adults renew air under the wings; fly to colonise ponds; larvae need damp soil to pupate; quite common and widespread in Britain."
+      ]
+    },
+    {
+      "title": {
+        "en": "Dytiscus marginalis, Great Diving Beetle — First Nature",
+        "fr": "Dytiscus marginalis, dytique bordé — First Nature"
+      },
+      "url": "https://www.first-nature.com/insects/c-dytiscus-marginalis.php",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "One of the largest beetles of Britain and Ireland; elytra dark brown with olive tinge and yellowish border; some mainland European females smooth.",
+        "Eggs laid singly in submerged stems in early spring, about 18 days to hatch; larva about 5 cm tackles newts, froglets, small fish; pupation in wet marginal soil; strong night fliers colonising garden ponds. Its family line (Lucanidae) is wrong and was ignored."
+      ]
+    },
+    {
+      "title": {
+        "en": "Dytiscus marginalis — Animal Diversity Web, University of Michigan",
+        "fr": "Dytiscus marginalis — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Dytiscus_marginalis/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "conservation"],
+      "facts": [
+        "Palearctic: Europe, Asia and northern Africa; ejects a foul-smelling liquid when seized, with benzoic acid and related compounds.",
+        "No special status listed; European scientists seek protection beyond limiting collection. Its listed mass (30 g) and hibernation-under-stones statement were not used, as they conflict with other sources."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List page could not be opened and no global category is stated; the Animal Diversity Web status line may be out of date.",
+    "Size, life-cycle timing and abundance come mostly from British sources; mainland populations may differ.",
+    "The Animal Diversity Web page says adults hibernate under stones, while British pages say young adults stay buried in wet soil; the second version is used."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

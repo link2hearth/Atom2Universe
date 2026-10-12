@@ -1,0 +1,77 @@
+{
+  "id": "eurasian_oystercatcher",
+  "scientific": "Haematopus ostralegus",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Oystercatcher",
+    "fr": "Huîtrier pie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian oystercatcher is a large, stocky black-and-white wader that is a familiar sight on shores and estuaries. It is also an adaptable bird: over the last fifty years some have begun to breed inland, even on urban rooftops.",
+      "fr": "L’huîtrier pie est un grand limicole trapu, noir et blanc, bien connu des rivages et des estuaires. C’est aussi un oiseau adaptable : depuis une cinquantaine d’années, certains nichent à l’intérieur des terres, voire sur des toits en ville."
+    },
+    "identification": {
+      "en": "The plumage is black and white, with a long orange-red bill and pinkish-red legs. In flight it shows a broad white wing stripe, a black tail and a white rump that extends in a V between the wings. British adults average about 546 g (465–640 g) and have a wing length of 251–275 mm.",
+      "fr": "Le plumage est noir et blanc, avec un long bec orange-rouge et des pattes rose rougeâtre. En vol, il montre une large barre alaire blanche, une queue noire et un croupion blanc qui remonte en V entre les ailes. Les adultes britanniques pèsent en moyenne environ 546 g (465–640 g) et ont une aile de 251 à 275 mm."
+    },
+    "habitat": {
+      "en": "In Britain breeding birds are most frequent on estuaries and also common on open shore, but many nest inland, especially in northern Britain, along rivers and in wet meadows. In winter it occupies rocky and estuarine shores, with the largest concentrations on major estuaries.",
+      "fr": "En Grande-Bretagne, les nicheurs sont les plus fréquents dans les estuaires et aussi sur le rivage ouvert, mais beaucoup nichent à l’intérieur, surtout dans le nord, le long des rivières et dans les prairies humides. En hiver, il occupe les rivages rocheux et les estuaires, avec les plus fortes concentrations dans les grands estuaires."
+    },
+    "diet": {
+      "en": "It eats cockles and mussels, which it prises open or hammers open with its strong bill. In winter on The Wash, birds rely heavily on cockles and blue mussels.",
+      "fr": "Il se nourrit de coques et de moules, qu’il ouvre en les forçant ou en les martelant de son bec robuste. En hiver dans le Wash, les oiseaux dépendent fortement des coques et des moules bleues."
+    },
+    "behavior": {
+      "en": "From autumn, oystercatchers gather in large flocks along the shore, and on the British east coast resident birds are joined by others from Norway. Morecambe Bay holds the most wintering birds in the UK, about 40,000 counted at high-tide roosts in a recent winter. Ringing shows little exchange between the Atlantic and continental populations.",
+      "fr": "Dès l’automne, les huîtriers se rassemblent en grandes troupes le long du rivage, et sur la côte est de la Grande-Bretagne, les oiseaux locaux sont rejoints par d’autres venus de Norvège. La baie de Morecambe accueille le plus d’hivernants du Royaume-Uni, environ 40 000 comptés aux dortoirs de marée haute lors d’un hiver récent. Le baguage montre peu d’échanges entre les populations atlantique et continentale."
+    },
+    "reproduction": {
+      "en": "In Britain the average first clutch date is 19 May. The typical clutch is two or three eggs, incubated by both sexes for 24–27 days. The chicks are downy and active from hatching and fledge after 34–37 days. There is one brood a year, and breeding typically starts at age four.",
+      "fr": "En Grande-Bretagne, la première ponte a lieu en moyenne le 19 mai. La ponte compte en général deux ou trois œufs, couvés par les deux sexes pendant 24 à 27 jours. Les poussins, duveteux et actifs dès l’éclosion, s’envolent après 34 à 37 jours. Il n’y a qu’une couvée par an, et la reproduction commence en général à quatre ans."
+    },
+    "ecology": {
+      "en": "Because it eats cockles, the oystercatcher is vulnerable where cockle beds are overfished. In the Netherlands, shellfisheries have been linked to lower winter survival. Inland, a 95% decline between 1990 and 2015 at one Perthshire study site was attributed to land-use change.",
+      "fr": "Comme il mange des coques, l’huîtrier est vulnérable là où les gisements de coques sont surexploités. Aux Pays-Bas, la pêche aux coquillages a été liée à une baisse de la survie hivernale. À l’intérieur des terres, un déclin de 95 % entre 1990 et 2015 sur un site d’étude du Perthshire a été attribué à l’évolution de l’usage des terres."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as Near Threatened globally, and it is Amber-listed in the UK. The UK breeding population was 96,000 pairs in 2016 and fell by 23% between 1995 and 2024; the main causes of the recent decline are unclear. A bird that reaches breeding age lives about 12 years; the oldest ringed bird passed 41.",
+      "fr": "L’UICN le classe « quasi menacé » à l’échelle mondiale, et il figure sur la liste ambre du Royaume-Uni. La population nicheuse britannique était de 96 000 couples en 2016 et a diminué de 23 % entre 1995 et 2024; les causes du déclin récent restent mal connues. Un oiseau qui atteint l’âge adulte vit environ 12 ans; le plus âgé bagué a dépassé 41 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oystercatcher — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Huîtrier pie — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/oystercatcher",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adults average 546 g, wing 251–275 mm; clutch 2–3 eggs, incubation 24–27 days, fledging 34–37 days; first clutch about 19 May.",
+        "UK 96,000 pairs (2016), −23% (1995–2024); IUCN Near Threatened; shellfisheries linked to Dutch declines; record age 41 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Oystercatcher — RSPB Birds & Wildlife",
+        "fr": "Huîtrier pie — RSPB Birds & Wildlife"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/oystercatcher",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Orange-red bill, reddish-pink legs, white V on the back in flight; eats cockles and mussels, vulnerable if cockle beds are overfished.",
+        "Inland breeding over the last 50 years; Morecambe Bay about 40,000 at roosts; UK Amber; average life about 12 years."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The record age differs between sources (BTO: 41 years; RSPB: 43); the text says “passed 41”.",
+    "Figures are British; the species breeds across Europe and Asia and the global IUCN category is quoted from the BTO page without an assessment date."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page, feeding and habitat notes from the RSPB page (consulted 2026-10-12); illustration to be checked by the owner."
+}

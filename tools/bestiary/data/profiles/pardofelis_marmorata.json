@@ -1,0 +1,103 @@
+{
+  "id": "pardofelis_marmorata",
+  "scientific": "Pardofelis marmorata",
+  "group": "mammals",
+  "name": {
+    "en": "Marbled Cat",
+    "fr": "Chat marbré"
+  },
+  "sections": {
+    "overview": {
+      "en": "The marbled cat is a small forest cat of South and South-East Asia, about the size of a house cat, with a long tail and a coat marked like that of a clouded leopard. It is rarely seen and poorly studied, and is listed as Near Threatened.",
+      "fr": "Le chat marbré est un petit félin forestier d’Asie du Sud et du Sud-Est, de la taille d’un chat domestique, à la longue queue et au pelage marqué comme celui d’une panthère nébuleuse. Il est rarement vu et peu étudié, et il est classé quasi menacé."
+    },
+    "identification": {
+      "en": "A cat with a body of 45–61 cm, a tail of 35–55 cm and a weight of 2.4–5 kg. The coat is yellowish brown with large blotches, paler in the centre and outlined in black, and black lines on the head, neck and back. The tail is spotted, black at the tip and usually held horizontally when walking. The ears are short and rounded, the feet large and the canines big for its size. Young are mottled brown until about four months.",
+      "fr": "Félin au corps de 45 à 61 cm, à la queue de 35 à 55 cm et pesant de 2,4 à 5 kg. Le pelage est brun jaunâtre, avec de grandes taches plus pâles au centre et cernées de noir, et des lignes noires sur la tête, le cou et le dos. La queue est tachetée, noire à l’extrémité, et le plus souvent tenue à l’horizontale pendant la marche. Les oreilles sont courtes et arrondies, les pieds grands et les canines grosses pour sa taille. Les jeunes sont tachetés de brun jusque vers quatre mois."
+    },
+    "habitat": {
+      "en": "It depends on forest and has not been found inside oil palm plantations. It is recorded in mixed deciduous-evergreen forest, secondary and logged forest, from sea level to about 3,000 m. Its range runs from the eastern Himalayan foothills through mainland South-East Asia to Sumatra and Borneo; its presence in Bangladesh and Bhutan is uncertain.",
+      "fr": "Il dépend de la forêt et n’a pas été trouvé dans les plantations de palmiers à huile. On le signale en forêt mixte de feuillus caducs et sempervirents, en forêt secondaire et exploitée, du niveau de la mer à environ 3 000 m. Son aire va des contreforts de l’est de l’Himalaya à l’Asie du Sud-Est continentale, puis à Sumatra et à Bornéo; sa présence au Bangladesh et au Bhoutan est incertaine."
+    },
+    "diet": {
+      "en": "Its diet is poorly known. Birds, up to the size of a pheasant, are thought to be the main prey, along with tree squirrels, tree shrews, rodents, small primates, fruit bats, lizards, frogs and insects. This rests on few observations, such as a cat seen stalking birds in the canopy.",
+      "fr": "Son régime est mal connu. Les oiseaux, jusqu’à la taille d’un faisan, seraient les proies principales, avec les écureuils arboricoles, les tupaïes, les rongeurs, les petits primates, les roussettes, les lézards, les grenouilles et les insectes. Cela repose sur peu d’observations, comme celle d’un chat guettant des oiseaux dans la canopée."
+    },
+    "behavior": {
+      "en": "It is solitary and a skilled climber, able to come down tree trunks head first, but it is not limited to trees and also walks on the ground. It was long thought to be nocturnal, yet camera traps and sightings show activity by day as well as by night. One radio-collared female in Thailand used a range of about 5.3 km², a single animal that cannot stand for the species.",
+      "fr": "Il est solitaire et excellent grimpeur, capable de descendre les troncs la tête la première, mais il ne vit pas qu’en haut des arbres et marche aussi au sol. On l’a longtemps cru nocturne, mais pièges photographiques et observations montrent une activité de jour comme de nuit. Une femelle munie d’un collier émetteur en Thaïlande occupait un domaine d’environ 5,3 km², un seul animal qui ne peut représenter l’espèce."
+    },
+    "reproduction": {
+      "en": "Nearly everything known comes from captivity: gestation of 66–82 days and litters of 2–4 kittens, usually two. Eyes open at about 16 days, kittens walk at about 22 days, eat solid food around 59 days and females mature at 21–22 months. The female raises the young alone. Breeding has not been documented in the wild.",
+      "fr": "Presque tout ce que l’on sait vient de la captivité : une gestation de 66 à 82 jours et des portées de 2 à 4 petits, le plus souvent deux. Les yeux s’ouvrent vers 16 jours, les petits marchent vers 22 jours, mangent de la nourriture solide vers 59 jours et la maturité survient à 21-22 mois. La femelle élève seule les jeunes. La reproduction n’a pas été documentée dans la nature."
+    },
+    "ecology": {
+      "en": "It is a predator of birds and small mammals. No predator of the marbled cat is documented. In three Sabah study areas in Borneo, camera traps gave densities of 7.1 (upland primary forest), 10.5 (logged lowland forest) and 19.6 (lowland primary forest) animals per 100 km²; the authors suggest these may be at the high end of the species’ abundance.",
+      "fr": "C’est un prédateur d’oiseaux et de petits mammifères. Aucun prédateur du chat marbré n’est documenté. Dans trois zones d’étude du Sabah, à Bornéo, les pièges photographiques ont donné des densités de 7,1 (forêt primaire de montagne), 10,5 (forêt exploitée de plaine) et 19,6 (forêt primaire de plaine) individus pour 100 km²; les auteurs pensent qu’elles se situent peut-être dans le haut de la fourchette de l’espèce."
+    },
+    "conservation": {
+      "en": "It is listed as Near Threatened since 2015, having been Vulnerable in 2008; this change does not mean its numbers have risen or its threats lessened, as the species is still poorly studied. Forest loss is the main threat, and indiscriminate snaring is probably a major one. It is in CITES Appendix I.",
+      "fr": "Il est classé quasi menacé depuis 2015, après avoir été vulnérable en 2008; ce changement ne signifie pas que ses effectifs ont augmenté ni que les menaces ont reculé, l’espèce restant peu étudiée. La perte de forêt est la principale menace, et le piégeage au collet sans discernement en est probablement une autre importante. Il figure à l’annexe I de la CITES."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pardofelis marmorata — Animal Diversity Web, University of Michigan",
+        "fr": "Pardofelis marmorata — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pardofelis_marmorata/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Head-body 45–61 cm, tail 35–55 cm, 2.4–5 kg; marbled coat; sea level to 3,000 m; diet mostly birds and arboreal small mammals; one radio-collared female with a 5.3 km² range; captive gestation 66–82 days, 2–4 kittens, maturity 21–22 months.",
+        "CITES Appendix I. Its status line (Vulnerable) and its population figure (about 10,000) are dated and were not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "First estimates of marbled cat population density from Bornean primary and selectively logged forest — PLOS ONE (Hearn et al. 2016)",
+        "fr": "Premières estimations de la densité du chat marbré en forêt primaire et exploitée de Bornéo — PLOS ONE (Hearn et al. 2016)"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0151046",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Densities per 100 km²: Danum Valley 19.57, Tabin 10.45, Tawau Hills 7.10; not recorded in oil palm plantations; adept climber, descends trunks head first; tail held horizontally.",
+        "Diet unknown, arboreal prey assumed; threats forest loss and indiscriminate snaring."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pardofelis marmorata — Mammal Diversity Database",
+        "fr": "Pardofelis marmorata — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1006011",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "conservation"],
+      "facts": [
+        "IUCN status Near Threatened; countries from India and Nepal to Indonesia (Sumatra and Kalimantan) and Brunei, with Bangladesh and Bhutan uncertain."
+      ]
+    },
+    {
+      "title": {
+        "en": "Wildlife of RER: the marbled cat — Restorasi Ekosistem Riau",
+        "fr": "La faune du RER : le chat marbré — Restorasi Ekosistem Riau"
+      },
+      "url": "https://www.rekoforest.org/field-stories/wildlife-of-rer-marbled-cat/",
+      "consulted": "2026-10-12",
+      "supports": ["behavior", "conservation"],
+      "facts": [
+        "Vulnerable in 2008, Near Threatened in 2015, with a warning that this does not show higher numbers; daytime activity in recent studies; CITES Appendix I."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List pages could not be opened; Near Threatened comes from the Mammal Diversity Database and a field-station page (which dates the change to 2015), and the exact date of the current assessment was not checked.",
+    "Home range comes from one animal and is given as 5.3 km² by Animal Diversity Web and 5.8 km² elsewhere.",
+    "The diet is unknown in detail; the prey list is partly inferred from few observations.",
+    "Reproductive data are from captive animals; Animal Diversity Web also lists a population estimate of about 10,000 which was not used."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a university database, a Bornean camera-trap study, the Mammal Diversity Database and a field-station page; illustration to be checked by the owner."
+}

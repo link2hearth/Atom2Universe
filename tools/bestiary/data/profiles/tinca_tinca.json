@@ -1,0 +1,79 @@
+{
+  "id": "tinca_tinca",
+  "scientific": "Tinca tinca",
+  "group": "fish",
+  "name": {
+    "en": "Tench",
+    "fr": "Tanche"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tench is a thickset freshwater fish of the carp family that lives in still, weedy waters across most of Europe and western Asia. It is a slow, bottom-dwelling species, tolerant of poor oxygen, and has been introduced to many other regions.",
+      "fr": "La tanche est un poisson d’eau douce trapu, de la famille des carpes, qui vit dans les eaux calmes et herbeuses de la plus grande partie de l’Europe et de l’Asie occidentale. C’est une espèce lente, vivant près du fond, qui tolère le manque d’oxygène, et qui a été introduite dans de nombreuses autres régions."
+    },
+    "identification": {
+      "en": "A medium-sized, thickset fish with a large head, a blunt snout, small orange-red eyes and one small barbel at each corner of the mouth. The fins are thick and rounded, the scales very small and covered in heavy mucus. The colour ranges from dark olive to golden. Mature males have larger pelvic fins, whose second ray is thickened. The common length is about 20 cm, and the maximum is about 70 cm and 7.5 kg.",
+      "fr": "Poisson trapu de taille moyenne, à grosse tête, museau obtus, petits yeux rouge orangé et un petit barbillon à chaque coin de la bouche. Les nageoires sont épaisses et arrondies, les écailles très petites et couvertes d’un épais mucus. La couleur va de l’olive foncé au doré. Les mâles matures ont des nageoires pelviennes plus grandes, dont le deuxième rayon est épaissi. La longueur courante est d’environ 20 cm et le maximum d’environ 70 cm et 7,5 kg."
+    },
+    "habitat": {
+      "en": "It prefers still or slow water with a muddy bottom and abundant plants, typically shallow, densely vegetated lakes and backwaters, and avoids fast current. It is native to most of Europe, apart from Ireland, northern Scandinavia and parts of the Balkans, and eastward to western Siberia. Adults tolerate low oxygen and often spend the winter buried in mud.",
+      "fr": "Elle préfère les eaux calmes ou lentes à fond vaseux et riches en plantes, typiquement des lacs peu profonds et des bras morts très végétalisés, et évite le courant fort. Elle est native de la plus grande partie de l’Europe, sauf l’Irlande, le nord de la Scandinavie et une partie des Balkans, et vers l’est jusqu’à la Sibérie occidentale. Les adultes tolèrent le manque d’oxygène et passent souvent l’hiver enfouis dans la vase."
+    },
+    "diet": {
+      "en": "Adults feed on the bottom, mainly on molluscs, other benthic animals and plant material, together with detritus. Elsewhere they are described as eating aquatic insects and small crustaceans, and the young take smaller prey such as microcrustaceans and midge larvae.",
+      "fr": "Les adultes se nourrissent sur le fond, surtout de mollusques, d’autres animaux benthiques et de matière végétale, ainsi que de débris. D’autres descriptions mentionnent des insectes aquatiques et de petits crustacés, et les jeunes consomment des proies plus petites comme des microcrustacés et des larves de chironomes."
+    },
+    "behavior": {
+      "en": "The tench is nocturnal and finds food more by taste and smell than by sight, which helps it in murky water. It is slow-growing and long-lived, and may reach 20 years or more, although longevity figures in the sources come from introduced populations.",
+      "fr": "La tanche est nocturne et repère sa nourriture plus par le goût et l’odorat que par la vue, ce qui l’aide en eau trouble. Sa croissance est lente et elle vit longtemps, parfois 20 ans ou plus, bien que les chiffres de longévité des sources viennent de populations introduites."
+    },
+    "reproduction": {
+      "en": "Males mature at 2–3 years and females at 3–7 years. Spawning takes place from May to September, in dense vegetation at about 19–20 °C. Females lay sticky eggs in several batches over roughly two months, and the eggs hatch in a few days. The larvae stay attached to plants for several days.",
+      "fr": "Les mâles mûrissent à 2-3 ans et les femelles à 3-7 ans. La ponte a lieu de mai à septembre, dans une végétation dense, vers 19-20 °C. Les femelles pondent des œufs collants en plusieurs lots sur environ deux mois, et les œufs éclosent en quelques jours. Les larves restent accrochées aux plantes pendant plusieurs jours."
+    },
+    "ecology": {
+      "en": "As a bottom feeder of weedy shallows, the tench eats molluscs and other benthic animals and depends on vegetation for spawning. Introduced outside Europe, for example to Tasmania in 1876, it has become established in places; in Australia’s Murray–Darling Basin it is now declining and rare.",
+      "fr": "Se nourrissant sur le fond des eaux peu profondes envahies d’herbiers, la tanche mange des mollusques et d’autres animaux benthiques et dépend de la végétation pour frayer. Introduite hors d’Europe, par exemple en Tasmanie en 1876, elle s’y est installée par endroits ; dans le bassin Murray-Darling, en Australie, elle est aujourd’hui en déclin et rare."
+    },
+    "conservation": {
+      "en": "The tench is Least Concern on the IUCN Red List (assessed in 2022). It is widespread and often introduced, so it is not considered at risk across its range.",
+      "fr": "La tanche est classée en préoccupation mineure sur la Liste rouge de l’UICN (évaluation de 2022). Elle est répandue et souvent introduite ; elle n’est donc pas considérée comme menacée sur l’ensemble de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tinca tinca, Tench — FishBase",
+        "fr": "Tinca tinca, tanche — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Tinca-tinca.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "reproduction", "conservation"],
+      "facts": [
+        "Max 70 cm SL, 7.5 kg; males mature at 2–3 years, females at 3–7; native to most of Europe except Ireland, Scandinavia north of 61°30’N and parts of the Balkans, east to western Siberia.",
+        "Shallow vegetated lakes and backwaters; tolerates low oxygen, overwinters in mud; diet mainly molluscs, detritus and plants; spawns May–September at 19–20 °C; Least Concern, assessed 27 October 2022."
+      ]
+    },
+    {
+      "title": {
+        "en": "Tench — Murray-Darling Basin Authority fish fact sheet",
+        "fr": "Tanche — fiche poisson de l’autorité du bassin Murray-Darling"
+      },
+      "url": "https://www.mdb.fish/fish-fact-sheets/tench",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Large head, blunt snout, small orange-red eyes, one barbel at each mouth corner, thick rounded fins, very small scales with heavy mucus; mature males have enlarged pelvic fins; nocturnal, relies on taste and smell; lives 20–30 years (Australian data).",
+        "Introduced to Tasmania in 1876; declining and rare in parts of the Murray–Darling Basin. This is an introduced-range source, so size and longevity figures from it were not used as native-range values."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The second source describes introduced Australian populations; appearance and diet follow it, but its size and longevity figures are not used as native values.",
+    "FishBase gives both 70 cm SL and 84 cm TL as maxima; the text uses 70 cm.",
+    "Fecundity figures were not included because only the Australian source gives them.",
+    "The IUCN Red List page could not be opened; the Least Concern category and date are taken from FishBase."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from FishBase and the Murray-Darling Basin Authority sheet; illustration to be checked by the owner."
+}

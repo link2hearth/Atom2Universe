@@ -1,0 +1,92 @@
+{
+  "id": "pelophylax_esculentus",
+  "scientific": "Pelophylax esculentus",
+  "group": "amphibians",
+  "name": {
+    "en": "Edible Frog",
+    "fr": "Grenouille verte"
+  },
+  "sections": {
+    "overview": {
+      "en": "The edible frog is a green water frog of central and north-eastern Europe. It is not a true species in the usual sense but a fertile hybrid between the pool frog and the marsh frog, which keeps going by mating with one of its parents.",
+      "fr": "La grenouille verte est une grenouille aquatique verte d’Europe centrale et du nord-est. Ce n’est pas une espèce au sens habituel mais un hybride fertile de la grenouille de Lessona et de la grenouille rieuse, qui se perpétue en s’accouplant avec l’un de ses parents."
+    },
+    "identification": {
+      "en": "It reaches up to 12 cm but is mostly under 10 cm, females being larger. The back is light to dark green or brownish with dark spots, often with a light green stripe down the middle, and the backs of the thighs are yellowish or orange with dark bars. The skin is usually smooth and the hind legs long and well webbed. Males have grey nuptial pads on the thumbs and white to grey vocal sacs.",
+      "fr": "Elle atteint 12 cm au plus mais mesure le plus souvent moins de 10 cm, les femelles étant plus grandes. Le dos est vert clair à foncé ou brunâtre, tacheté de sombre, souvent avec une raie vert clair au milieu, et l’arrière des cuisses est jaunâtre ou orange avec des barres sombres. La peau est le plus souvent lisse et les pattes postérieures sont longues et bien palmées. Les mâles ont des callosités nuptiales grises sur les pouces et des sacs vocaux blancs à gris."
+    },
+    "habitat": {
+      "en": "It uses many sun-exposed waters with well-overgrown margins and shallows, from woodland ponds to ditches, lakes and rivers, sometimes in brackish water. It ranges across mid and north-eastern Europe as far as Russia. Introduced colonies in southern England probably all came from releases.",
+      "fr": "Elle fréquente de nombreuses eaux ensoleillées aux berges et aux hauts-fonds bien végétalisés, des mares en forêt aux fossés, lacs et rivières, parfois en eau saumâtre. Son aire couvre l’Europe centrale et du nord-est jusqu’en Russie. Les petites colonies du sud de l’Angleterre proviennent probablement toutes de lâchers."
+    },
+    "diet": {
+      "en": "In mixed water frog populations studied in Serbia, insects made up about 88% of the prey items found in stomachs, mostly Hymenoptera, beetles, Lepidoptera and flies. Frogs are opportunistic hunters and their diet varies from site to site. It forages on land mainly at night.",
+      "fr": "Dans des populations mixtes de grenouilles vertes étudiées en Serbie, les insectes représentaient environ 88 % des proies trouvées dans les estomacs, surtout des hyménoptères, des coléoptères, des lépidoptères et des mouches. Ces grenouilles chassent de façon opportuniste et leur régime varie d’un site à l’autre. Elle chasse à terre, surtout la nuit."
+    },
+    "behavior": {
+      "en": "It stays mostly in water and basks a lot. It is mainly active by day but also at night during the breeding season, when males call in dense groups, chiefly in the evening, with grunting or rattling notes. It usually hibernates in soil on land, sometimes underwater, and young frogs can travel several kilometres.",
+      "fr": "Elle reste surtout dans l’eau et se prélasse beaucoup au soleil. Elle est surtout active le jour mais aussi la nuit pendant la reproduction, quand les mâles chantent en groupes denses, surtout le soir, par des notes grognantes ou crépitantes. Elle hiberne le plus souvent dans le sol, sur terre, parfois sous l’eau, et les jeunes peuvent parcourir plusieurs kilomètres."
+    },
+    "reproduction": {
+      "en": "Frogs leave hibernation from about mid-March and eggs are laid from April to mid-July, mostly around mid-May. A female lays 3,000 to 8,000 eggs per season. Tadpoles need two to four months to develop, most transforming between mid-August and mid-September, and frogs mature after two to three years.",
+      "fr": "Les grenouilles sortent d’hibernation vers la mi-mars et les œufs sont pondus d’avril à la mi-juillet, surtout vers la mi-mai. Une femelle pond de 3 000 à 8 000 œufs par saison. Les têtards mettent deux à quatre mois à se développer, la plupart se métamorphosant entre la mi-août et la mi-septembre, et les grenouilles mûrissent après deux à trois ans."
+    },
+    "ecology": {
+      "en": "The edible frog reproduces by hybridogenesis: it passes on one parental genome unchanged and so needs a parent species to mate with. In the common arrangement it mates with the pool frog, in another with the marsh frog. Some populations are made up only of hybrids, with diploid and triploid frogs together.",
+      "fr": "La grenouille verte se reproduit par hybridogenèse : elle transmet intact le génome d’un seul parent et a donc besoin d’une espèce parente pour s’accoupler. Dans le cas courant, elle s’accouple avec la grenouille de Lessona, dans un autre avec la grenouille rieuse. Certaines populations ne comptent que des hybrides, diploïdes et triploïdes réunis."
+    },
+    "conservation": {
+      "en": "It is often the most numerous green frog where it occurs. The sources read give no Red List category for this hybrid. In Serbia, mixed populations of the three water frog forms are rare and only found along the Danube.",
+      "fr": "Elle est souvent la grenouille verte la plus nombreuse là où elle vit. Les sources lues ne donnent pas de catégorie de la Liste rouge pour cet hybride. En Serbie, les populations mixtes des trois formes de grenouilles vertes sont rares et ne se trouvent que le long du Danube."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pelophylax esculentus — Edible Frog, species account (Naturalis Biodiversity Center, reptiles and amphibians)",
+        "fr": "Pelophylax esculentus — grenouille verte, fiche d’espèce (Naturalis Biodiversity Center, reptiles et amphibiens)"
+      },
+      "url": "https://reptiles-and-amphibians.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=98994",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Up to 12 cm, mostly under 10 cm; colour and thigh markings; males with grey nuptial pads and vocal sacs; eggs April–mid-July, 3,000–8,000 per season; maturity 2–3 years; hibernates mostly in soil.",
+        "Often the most numerous green frog; range mid and north-east Europe to Russia; colonies in southern England probably introduced."
+      ]
+    },
+    {
+      "title": {
+        "en": "Crossing experiment and population model of edible frogs (Christiansen) — BMC Evolutionary Biology, 2009",
+        "fr": "Expérience de croisement et modèle de population chez les grenouilles vertes (Christiansen) — BMC Evolutionary Biology, 2009"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2709657",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "ecology"],
+      "facts": [
+        "P. esculentus (LR) is a hybrid of the pool frog (P. lessonae) and the lake frog (P. ridibundus); in the LE system it transmits clonal R gametes and mates with P. lessonae; in the RE system it mates with P. ridibundus.",
+        "All-hybrid populations occur, with triploid LLR and LRR frogs letting them persist without the parent species."
+      ]
+    },
+    {
+      "title": {
+        "en": "Diet patterns of water green frogs (Pelophylax esculentus complex) in mixed population systems in Serbia — Acta Herpetologica, 2024",
+        "fr": "Régimes alimentaires des grenouilles vertes (complexe Pelophylax esculentus) dans des populations mixtes en Serbie — Acta Herpetologica, 2024"
+      },
+      "url": "https://oaj.fupress.net/index.php/ah/article/view/13529",
+      "consulted": "2026-10-12",
+      "supports": ["diet", "conservation"],
+      "facts": [
+        "221 adult frogs, 1,477 prey items: insects 88%; Hymenoptera 28%, Coleoptera 18%, Lepidoptera 17%, Diptera 11%; opportunistic foragers, diet varies by site.",
+        "Mixed populations of the three taxa occur only along the Danube in Serbia, where they are rare."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "No Red List category for Pelophylax esculentus could be read: the Wikipedia page only cites an assessment of a parent species, and the IUCN site is inaccessible.",
+    "Size differs between sources (Naturalis: up to 12 cm, mostly under 10 cm; Wikipedia: females 5–9 cm, males 6–11 cm); the text follows Naturalis.",
+    "The diet figures come from Serbian mixed populations of the whole water frog complex, not only from the hybrid.",
+    "The text calls the animal a hybrid rather than a species, as the sources do; its taxonomic treatment varies between authors."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the Naturalis account and the two papers named above; illustration to be checked by the owner."
+}

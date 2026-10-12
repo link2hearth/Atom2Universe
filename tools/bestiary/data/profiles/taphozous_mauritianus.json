@@ -1,0 +1,91 @@
+{
+  "id": "taphozous_mauritianus",
+  "scientific": "Taphozous mauritianus",
+  "group": "mammals",
+  "name": {
+    "en": "Mauritian Tomb Bat",
+    "fr": "Taphien de Maurice"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Mauritian tomb bat is an insect-eating bat of Africa south of the Sahara and of several Indian Ocean islands. It is named after the island of Mauritius, where the first specimen was collected, and is listed as Least Concern.",
+      "fr": "Le taphien de Maurice est une chauve-souris insectivore d’Afrique au sud du Sahara et de plusieurs îles de l’océan Indien. Il doit son nom à l’île Maurice, où le premier spécimen a été collecté, et il est classé en préoccupation mineure."
+    },
+    "identification": {
+      "en": "A small bat with a forearm of 60–66 mm and a weight of about 20–36 g. The back fur is short, sleek and mixed grey and the underside is entirely white. The wings are long, narrow and pale, with shortened tips that help the bat crawl when the wings are folded. Males have a dark spot on the chin.",
+      "fr": "Petite chauve-souris à l’avant-bras de 60 à 66 mm et pesant environ 20 à 36 g. Le pelage du dos est court, lisse et d’un gris mélangé, et le dessous est entièrement blanc. Les ailes sont longues, étroites et pâles, avec des extrémités raccourcies qui aident la chauve-souris à ramper quand les ailes sont repliées. Les mâles ont une tache sombre sur le menton."
+    },
+    "habitat": {
+      "en": "It prefers moist, open country and savanna receiving at least about 500 mm of rain a year; in drier areas it is recorded near swamps and rivers. It also occurs in forest and along watercourses. The Mammal Diversity Database gives its range as South Africa to Sudan and Somalia and to Senegal, plus Madagascar and islands such as Mauritius, Réunion and Aldabra.",
+      "fr": "Il préfère les terrains humides et dégagés et les savanes recevant au moins environ 500 mm de pluie par an; dans les régions plus sèches, on le note près des marais et des rivières. Il vit aussi en forêt et le long des cours d’eau. La Mammal Diversity Database donne comme aire l’Afrique du Sud jusqu’au Soudan, à la Somalie et au Sénégal, ainsi que Madagascar et des îles comme Maurice, la Réunion et Aldabra."
+    },
+    "diet": {
+      "en": "It feeds on flying insects, with moths as the staple and termites and butterflies as additions. It starts hunting once it is fully dark, spots prey over open ground and never flies above treetop height. It makes dives of up to 10 m, calling faster as it dives, and sometimes darts out of its roost by day to catch passing prey.",
+      "fr": "Il se nourrit d’insectes volants, avec les papillons de nuit comme base et des termites et papillons de jour en complément. Il chasse dès que la nuit est tout à fait tombée, repère ses proies au-dessus de terrain dégagé et ne vole jamais plus haut que la cime des arbres. Il pique jusqu’à 10 m en accélérant ses cris, et s’élance parfois de son perchoir de jour pour attraper une proie qui passe."
+    },
+    "behavior": {
+      "en": "It roosts in the open but out of direct sun, on the outside of walls under eaves or on large tree trunks and palm trunks, choosing spots that allow a clear take-off; it does not use dark hollows or roofs as many bats do. Colonies are small, usually about five and at most about thirty. Roosts are reused year after year. Seasonal movements are suspected but not proven.",
+      "fr": "Il dort à découvert mais à l’abri du soleil direct, sur l’extérieur des murs sous les avant-toits ou sur de gros troncs d’arbres et de palmiers, en choisissant des endroits qui dégagent l’envol; il n’utilise pas les creux sombres ni les toits comme beaucoup de chauves-souris. Les colonies sont petites, le plus souvent d’environ cinq individus et au plus d’une trentaine. Les gîtes sont réutilisés d’année en année. Des déplacements saisonniers sont soupçonnés mais non prouvés."
+    },
+    "reproduction": {
+      "en": "A single young is born at a time, and the female raises it alone, the young clinging to her belly until it can fly. Gestation is about two months. The timing is not settled: one source gives two birth periods a year, November–December and February–April, while another gives different months.",
+      "fr": "Un seul petit naît à la fois, et la femelle l’élève seule, le petit restant accroché à son ventre jusqu’à ce qu’il sache voler. La gestation dure environ deux mois. Le calendrier n’est pas établi : une source donne deux périodes de naissance par an, novembre-décembre et février-avril, une autre des mois différents."
+    },
+    "ecology": {
+      "en": "By eating large numbers of insects it helps control pests. Snakes and owls prey on it. It can carry parasites of the genus Anchitrema, which may pass between bats sharing the same roost.",
+      "fr": "En mangeant beaucoup d’insectes, il contribue à limiter les ravageurs. Serpents et rapaces nocturnes le chassent. Il peut héberger des parasites du genre Anchitrema, qui peuvent passer d’une chauve-souris à l’autre dans un même gîte."
+    },
+    "conservation": {
+      "en": "It is listed as Least Concern, as it is widespread across Africa and nearby islands. The sources read name no specific threat. As it depends on exposed roost sites, the loss of suitable walls and trees could matter locally, but this has not been measured.",
+      "fr": "Il est classé en préoccupation mineure, car il est répandu dans toute l’Afrique et sur les îles voisines. Les sources lues ne citent aucune menace précise. Comme il dépend de gîtes exposés, la perte de murs et d’arbres adaptés pourrait compter localement, mais cela n’a pas été mesuré."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Taphozous mauritianus — Animal Diversity Web, University of Michigan",
+        "fr": "Taphozous mauritianus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Taphozous_mauritianus/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Forearm 61–66 mm, 20–36 g; savanna with at least 500 mm of rain; moths staple, dives up to 10 m; gestation about 2 months, single young; predators snakes and owls; Anchitrema parasites.",
+        "Birth timing conflicts across studies."
+      ]
+    },
+    {
+      "title": {
+        "en": "Mauritian tomb bat (Taphozous mauritianus) — EcoSolutions",
+        "fr": "Taphien de Maurice (Taphozous mauritianus) — EcoSolutions"
+      },
+      "url": "https://admin.ecosolutions.co.za/bats-and-bat-boxes/bat-species/mauritian-tomb-bat-taphozous-mauritianus",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "behavior", "reproduction"],
+      "facts": [
+        "Forearm 60–66 mm, 27–36 g; males have a dark chin spot; roosts on outside of walls under eaves and on large trunks, not in roofs; colonies usually about 5, up to about 30.",
+        "One young, two birth periods (November–December, February–April); seasonal movements suspected but unproven."
+      ]
+    },
+    {
+      "title": {
+        "en": "Taphozous mauritianus — Mammal Diversity Database",
+        "fr": "Taphozous mauritianus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1004825/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Type locality the island of Mauritius; range from South Africa to Sudan, Somalia and Senegal plus islands; IUCN status Least Concern."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List pages could not be opened; Least Concern comes from the Mammal Diversity Database and the date of the assessment was not checked.",
+    "Birth timing differs between studies and regions and the figures given are indicative only.",
+    "Sources disagree on ear shape (erect and triangular in one, lying flat in the other), so none is stated.",
+    "Lifespan and the extent of movements are unknown; threats are not described in the sources read."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a university database, a bat-box specialist page and the Mammal Diversity Database; illustration to be checked by the owner."
+}

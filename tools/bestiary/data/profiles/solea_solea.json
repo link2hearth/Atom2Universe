@@ -1,0 +1,92 @@
+{
+  "id": "solea_solea",
+  "scientific": "Solea solea",
+  "group": "fish",
+  "name": {
+    "en": "Common Sole",
+    "fr": "Sole commune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common sole is a flatfish of the eastern Atlantic and the Mediterranean that lives half buried on sandy and muddy seabeds. Its young grow up in shallow coastal nurseries, and it is a commercially valuable species for the countries around the southern North Sea.",
+      "fr": "La sole commune est un poisson plat de l’Atlantique oriental et de la Méditerranée qui vit à demi enfoui sur les fonds sableux et vaseux. Ses jeunes grandissent dans des nourriceries côtières peu profondes, et c’est une espèce de grande valeur commerciale pour les pays du sud de la mer du Nord."
+    },
+    "identification": {
+      "en": "The body is oval and strongly flattened, with both eyes on the right side of the head. The eyed side is greyish to reddish brown with large diffuse dark blotches, while the underside is white. The pectoral fin on the eyed side has a dark spot on its outer half. It reaches about 70 cm at most and is commonly 15–45 cm.",
+      "fr": "Le corps est ovale et très aplati, avec les deux yeux sur le côté droit de la tête. Le côté oculaire est brun grisâtre à rougeâtre, marqué de grandes taches sombres diffuses, tandis que la face inférieure est blanche. La nageoire pectorale du côté oculaire porte une tache sombre sur sa moitié externe. Elle atteint environ 70 cm au maximum et mesure couramment 15 à 45 cm."
+    },
+    "habitat": {
+      "en": "It lives in the eastern Atlantic from Norway’s Trondheim Fjord south to Senegal, in the North Sea and the western Baltic, and throughout the Mediterranean. It stays on sandy and muddy bottoms, usually at 10–60 m and down to about 150 m, and moves into deeper water in winter.",
+      "fr": "Elle vit dans l’Atlantique oriental, du fjord de Trondheim, en Norvège, jusqu’au Sénégal, en mer du Nord et dans l’ouest de la Baltique, ainsi que dans toute la Méditerranée. Elle reste sur les fonds sableux et vaseux, le plus souvent entre 10 et 60 m et jusqu’à environ 150 m, et gagne des eaux plus profondes en hiver."
+    },
+    "diet": {
+      "en": "Adults feed at night on the seabed, taking mainly polychaete worms, molluscs and small crustaceans found in the sand and mud.",
+      "fr": "Les adultes se nourrissent la nuit sur le fond marin, en prenant surtout des vers polychètes, des mollusques et de petits crustacés présents dans le sable et la vase."
+    },
+    "behavior": {
+      "en": "Adults burrow into sandy and muddy bottoms and usually live alone. After settling, juveniles move little and stay in the same nursery area, a shallow, muddy-to-sandy coastal zone.",
+      "fr": "Les adultes s’enfouissent dans les fonds sableux et vaseux et vivent le plus souvent seuls. Après leur installation, les juvéniles se déplacent peu et restent dans la même nourricerie, une zone côtière peu profonde au fond vaseux à sableux."
+    },
+    "reproduction": {
+      "en": "It spawns in batches in shallow coastal water at 6–12 °C, mainly from February to May, and starts to breed at 3–5 years of age, at about 25–30 cm. In the southern North Sea, eggs hatch from early April to mid-May. The pelagic larval phase lasts about 34 days, and the young settle in nurseries between mid-May and mid-June.",
+      "fr": "Elle pond par lots en eau côtière peu profonde, entre 6 et 12 °C, surtout de février à mai, et commence à se reproduire à 3-5 ans, vers 25-30 cm. Dans le sud de la mer du Nord, les œufs éclosent de début avril à la mi-mai. La phase larvaire pélagique dure environ 34 jours, et les jeunes s’installent dans les nourriceries entre la mi-mai et la mi-juin."
+    },
+    "ecology": {
+      "en": "In the southern North Sea, young sole depend on shallow coastal nurseries such as the Belgian coast, the Eems–Dollard estuary and the Wadden Sea, the most important nursery area. As a bottom predator, the sole feeds on worms, molluscs and small crustaceans. Its life cycle therefore ties offshore spawning to these sheltered coastal habitats.",
+      "fr": "Dans le sud de la mer du Nord, les jeunes soles dépendent de nourriceries côtières peu profondes comme la côte belge, l’estuaire de l’Ems-Dollard et la mer des Wadden, la plus importante. Prédatrice du fond, la sole se nourrit de vers, de mollusques et de petits crustacés. Son cycle de vie relie donc la ponte au large à ces habitats côtiers abrités."
+    },
+    "conservation": {
+      "en": "The IUCN Red List lists the species as Data Deficient (assessed in 2014). It is commercially valuable in the southern North Sea, where there is a risk of unsustainable exploitation and large bycatch of undersized juveniles, so management focuses on reducing that bycatch.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en données insuffisantes (évaluation de 2014). Elle a une grande valeur commerciale dans le sud de la mer du Nord, où existent un risque de surexploitation et de fortes captures accessoires de juvéniles sous-taille ; la gestion vise donc à réduire ces captures."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Solea solea, Common sole — FishBase",
+        "fr": "Solea solea, sole commune — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Solea-solea.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Max 70 cm SL, common 35 cm; eastern Atlantic from Trondheim Fjord to Senegal, North Sea, Mediterranean; 0–150 m, usually 10–60 m; adults burrow, solitary, deeper in winter; feed at night on worms, molluscs, crustaceans.",
+        "Batch spawner at 6–12 °C mainly February–May; maturity at 3–5 years; Wadden Sea the most important nursery; Data Deficient, assessed 15 July 2014."
+      ]
+    },
+    {
+      "title": {
+        "en": "Validating a biophysical dispersal model with the early life-history traits of common sole (Solea solea L.) — PLOS ONE, 2021",
+        "fr": "Validation d’un modèle biophysique de dispersion avec les traits de vie précoces de la sole commune (Solea solea L.) — PLOS ONE, 2021"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8457496/",
+      "consulted": "2026-10-12",
+      "supports": ["reproduction", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Hatching between early April and mid-May; pelagic larval duration 34.5 ± 2.7 days; settlement mid-May to mid-June in shallow nurseries (Belgian coast, Eems–Dollard, Suffolk); juveniles limited movement and high residency.",
+        "Commercially valuable for southern North Sea states, risk of unsustainable exploitation, large undersized juvenile bycatch."
+      ]
+    },
+    {
+      "title": {
+        "en": "Solea vulgaris Quensel, 1806 — FAO species description (French page)",
+        "fr": "Solea vulgaris Quensel, 1806 — fiche descriptive de la FAO"
+      },
+      "url": "https://www.fao.org/fi/static-media/FI/CDrom/ARTFIMED/ArtFiWeb/descript/Species/SOLSOVUL.HTML",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "reproduction"],
+      "facts": [
+        "Both eyes on the right side; eyed side greyish-brown to reddish with large diffuse dark blotches; pectoral fin with a dark spot on its outer half; maximum 70 cm, common 15–45 cm.",
+        "Feeds on polychaetes, molluscs and small crustaceans; maturity at 3–5 years (about 25 cm). The old name Solea vulgaris is a synonym of Solea solea."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "FishBase calls the species oceanodromous while the 2021 study describes adults as non-migratory; the text avoids claiming either.",
+    "Maximum age is not given: FishBase reports 26 years and the ICES FishMap factsheet could not be read.",
+    "Spawning season varies with region (FishBase: mainly February–May; FAO: January to August in the Mediterranean); the text gives the main FishBase period.",
+    "The IUCN Red List page could not be opened; the Data Deficient category and date are taken from FishBase."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from FishBase, the PLOS ONE study and the FAO description; illustration to be checked by the owner."
+}

@@ -1,0 +1,78 @@
+{
+  "id": "sepia_officinalis",
+  "scientific": "Sepia officinalis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Cuttlefish",
+    "fr": "Seiche commune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common cuttlefish is a cephalopod mollusc of the eastern Atlantic and the Mediterranean. It lives close to the seabed, hunts by ambush and can change its skin colour and texture within seconds. It breeds once and then dies, usually at about two years of age.",
+      "fr": "La seiche commune est un mollusque céphalopode de l’Atlantique oriental et de la Méditerranée. Elle vit près du fond, chasse à l’affût et peut changer la couleur et la texture de sa peau en quelques secondes. Elle ne se reproduit qu’une fois, puis meurt, en général vers deux ans."
+    },
+    "identification": {
+      "en": "The mantle usually measures 30–49 cm depending on the region, with a record of 60 cm, and the body weighs 2–4 kg. An oblong internal shell, the cuttlebone, lies in the mantle. Pigment cells (chromatophores) and light-reflecting cells (leucophores and iridophores) let the skin change; the usual colour is mottled black or brown.",
+      "fr": "Le manteau mesure en général 30 à 49 cm selon la région, avec un record de 60 cm, et l’animal pèse 2 à 4 kg. Une coquille interne oblongue, l’os de seiche, se trouve dans le manteau. Des cellules pigmentaires (chromatophores) et des cellules réfléchissant la lumière (leucophores et iridophores) permettent à la peau de changer; la couleur habituelle est marbrée de noir ou de brun."
+    },
+    "habitat": {
+      "en": "It lives in the eastern North Atlantic, the English Channel and the Mediterranean, with populations along West Africa as far south as South Africa. It occupies sandy or muddy bottoms from shallow water to 200 m deep, staying inshore in spring and summer and moving to 100–200 m in autumn and winter.",
+      "fr": "Elle vit dans l’Atlantique nord-est, la Manche et la Méditerranée, avec des populations le long de l’Afrique de l’Ouest jusqu’en Afrique du Sud. Elle occupe les fonds sableux ou vaseux, de la faible profondeur à 200 m, restant près de la côte au printemps et en été, puis gagnant 100 à 200 m en automne et en hiver."
+    },
+    "diet": {
+      "en": "Crustaceans and fish form the bulk of the diet, with some gastropods, nemertean worms, polychaetes and other cuttlefish. It is an ambush predator that either shoots out its two long tentacles or pounces on prey.",
+      "fr": "Crustacés et poissons forment l’essentiel du régime, avec quelques gastéropodes, némertes, polychètes et autres seiches. C’est un prédateur à l’affût qui projette ses deux longs tentacules ou bondit sur sa proie."
+    },
+    "behavior": {
+      "en": "Mostly nocturnal, it spends most of its time on the seafloor and buries itself in sand by day. It changes skin pattern within seconds to blend in, flees by jet propulsion through its siphon and releases ink when threatened. It is solitary except when mating.",
+      "fr": "Surtout nocturne, elle passe l’essentiel de son temps sur le fond et s’enfouit dans le sable le jour. Elle change de motif cutané en quelques secondes pour se fondre dans le décor, fuit par propulsion à réaction par son siphon et libère de l’encre en cas de menace. Elle est solitaire, sauf à l’accouplement."
+    },
+    "reproduction": {
+      "en": "Spawning takes place in shallow, warmer water in spring and summer; courting males display coloured bands. A female carries from 150 to 4,000 eggs, each 6–9 mm, laid in clusters on seaweed, shells and other supports. Eggs hatch in 30–90 days depending on temperature. In the English Channel the life cycle lasts two years, though a small share of males mature at one year; both sexes die after breeding.",
+      "fr": "La ponte a lieu en eau peu profonde et plus chaude, au printemps et en été; les mâles en parade montrent des bandes colorées. Une femelle porte de 150 à 4 000 œufs de 6 à 9 mm, déposés en grappes sur des algues, des coquilles et d’autres supports. Ils éclosent en 30 à 90 jours selon la température. En Manche, le cycle de vie dure deux ans, bien qu’une petite part des mâles mûrisse à un an; les deux sexes meurent après la reproduction."
+    },
+    "ecology": {
+      "en": "The common cuttlefish is an active consumer with a broad, flexible niche. It is preyed on by large fish, sharks, dolphins, toothed whales and seals, and defends itself by camouflage, ink and rapid jet escapes.",
+      "fr": "La seiche commune est une consommatrice active à la niche large et souple. Elle est la proie de grands poissons, de requins, de dauphins, de cétacés à dents et de phoques, et se défend par le camouflage, l’encre et des fuites rapides à réaction."
+    },
+    "conservation": {
+      "en": "The species is believed to be abundant and not threatened with extinction, but fishing is near the maximum sustainable yield. In the English Channel the stock is considered fully exploited, and in 2010–2011 animals matured at a smaller size than in the 1990s, possibly linked to fishing effort and warming seas.",
+      "fr": "L’espèce est jugée abondante et non menacée d’extinction, mais la pêche approche du rendement maximal soutenable. En Manche, le stock est considéré comme pleinement exploité, et en 2010-2011 les animaux mûrissaient à une taille plus petite que dans les années 1990, peut-être en lien avec l’effort de pêche et le réchauffement des eaux."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sepia officinalis — Animal Diversity Web, University of Michigan",
+        "fr": "Sepia officinalis — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Sepia_officinalis/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Mantle 30–49 cm (record 60 cm), 2–4 kg; cuttlebone; chromatophores, leucophores, iridophores; sandy or muddy bottoms to 200 m; inshore in spring and summer, 100–200 m in autumn and winter.",
+        "Eats crustaceans and fish; ambush hunter; semelparous; 150–4,000 eggs of 6–9 mm, hatching in 30–90 days; believed abundant, fishing near maximum sustainable yield. The account lists no IUCN evaluation."
+      ]
+    },
+    {
+      "title": {
+        "en": "Stock structure of the English Channel common cuttlefish Sepia officinalis during the reproduction period — Journal of the Marine Biological Association of the UK, 2015",
+        "fr": "Structure du stock de seiche commune de la Manche Sepia officinalis pendant la période de reproduction — Journal of the Marine Biological Association of the UK, 2015"
+      },
+      "url": "https://borea.mnhn.fr/en/stock-structure-english-channel-common-cuttlefish-sepia-officinalis-linnaeus-1758-during",
+      "consulted": "2026-10-12",
+      "supports": ["reproduction", "conservation"],
+      "facts": [
+        "Dies after one reproductive season; two-year cycle with a small share of males maturing at one year; stock considered fully exploited.",
+        "2010–2011 size at maturity smaller than in the 1990s; fishing effort and sea surface temperature suggested as drivers."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List page could not be opened during research, so no global category is stated.",
+    "Reproductive timing and life span differ between populations; the two-year cycle is from the English Channel.",
+    "Egg counts and hatching times are given as ranges by one source."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

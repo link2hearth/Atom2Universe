@@ -1,0 +1,91 @@
+{
+  "id": "turdus_philomelos",
+  "scientific": "Turdus philomelos",
+  "group": "birds",
+  "name": {
+    "en": "Song Thrush",
+    "fr": "Grive musicienne"
+  },
+  "sections": {
+    "overview": {
+      "en": "The song thrush is a medium-sized thrush known for its loud, musical song, often delivered at first light and at dusk. It is also famous for smashing snails on a stone to get at the soft body inside.",
+      "fr": "La grive musicienne est une grive de taille moyenne connue pour son chant sonore et mélodieux, souvent lancé à l’aube et au crépuscule. Elle est aussi célèbre pour briser les escargots sur une pierre afin d’en extraire le corps mou."
+    },
+    "identification": {
+      "en": "About 20–23.5 cm long, smaller and browner than a mistle thrush, and smaller than a blackbird. British adults weigh about 75 g and have a wing near 119 mm. The upperparts are warm brown and the creamy breast is speckled with small, upside-down heart-shaped spots.",
+      "fr": "Longue d’environ 20 à 23,5 cm, plus petite et plus brune que la grive draine, et plus petite qu’un merle. Les adultes britanniques pèsent environ 75 g, avec une aile voisine de 119 mm. Le dessus est brun chaud et la poitrine crème est mouchetée de petites taches en forme de cœur renversé."
+    },
+    "habitat": {
+      "en": "In Britain it is most frequent in deciduous woodland, and is also common in scrub, villages and conifer woods. It has adapted to using parks and gardens for feeding and breeding. In winter it may join mixed thrush flocks in fields and orchards.",
+      "fr": "En Grande-Bretagne, elle est la plus fréquente dans les bois de feuillus, et aussi courante dans les broussailles, les villages et les bois de conifères. Elle s’est adaptée aux parcs et aux jardins pour se nourrir et nicher. En hiver, elle peut rejoindre des groupes mixtes de grives dans les champs et les vergers."
+    },
+    "diet": {
+      "en": "It is omnivorous, eating mainly snails and earthworms, plus soft fruit and berries. It breaks snail shells against a favourite stone, called an anvil; broken shells beside a stone or wall reveal its presence. Nestlings are fed mostly worms, slugs and insect larvae.",
+      "fr": "Elle est omnivore, mangeant surtout des escargots et des vers de terre, ainsi que des fruits mous et des baies. Elle brise les coquilles d’escargot contre une pierre favorite, appelée enclume; des coquilles cassées au pied d’une pierre ou d’un mur trahissent sa présence. Les poussins reçoivent surtout des vers, des limaces et des larves d’insectes."
+    },
+    "behavior": {
+      "en": "The song is made of short phrases, each repeated two or three times, which earned it the old name “thricecock”. It sings at dawn and as darkness falls. The species is a partial migrant: some northern European birds winter in Britain and Ireland, others go farther south.",
+      "fr": "Le chant est fait de courtes phrases répétées deux ou trois fois chacune, ce qui lui a valu l’ancien nom de « thricecock » (trois fois coq). Elle chante à l’aube et à la tombée de la nuit. L’espèce est partiellement migratrice : certains oiseaux du nord de l’Europe hivernent en Grande-Bretagne et en Irlande, d’autres vont plus au sud."
+    },
+    "reproduction": {
+      "en": "The female builds a cup nest lined with mud and dry grass, usually in a bush or tree, and lays typically 4 glossy blue eggs lightly spotted with black or purple. She incubates for about 14 days; the chicks fledge after about 14 days. Two or three broods a year are normal. Breeding typically starts at one year.",
+      "fr": "La femelle construit un nid en coupe tapissé de boue et d’herbe sèche, en général dans un buisson ou un arbre, et pond typiquement 4 œufs bleu brillant légèrement tachetés de noir ou de pourpre. Elle couve environ 14 jours; les poussins s’envolent après environ 14 jours. Deux ou trois couvées par an sont normales. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "Adults are taken by cats, little owls and sparrowhawks; magpies, jays and grey squirrels raid eggs and nestlings. Earthworm availability, which depends on soil conditions such as field drainage, affects how well thrushes can feed.",
+      "fr": "Les adultes sont capturés par les chats, les chevêches et les éperviers; pies, geais et écureuils gris pillent œufs et poussins. La disponibilité des vers de terre, qui dépend de l’état des sols comme le drainage des champs, influe sur les possibilités de nourrissage des grives."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern, and Europe holds an estimated 40–71 million birds. In the UK, about 1.3 million territories were estimated in 2016, but numbers fell by 45% between 1967 and 2024 and the species is Amber-listed. Suspected causes include loss of hedgerows and changes in farming.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure, et l’Europe abrite entre 40 et 71 millions d’oiseaux. Au Royaume-Uni, environ 1,3 million de territoires étaient estimés en 2016, mais les effectifs ont baissé de 45 % entre 1967 et 2024 et l’espèce est sur la liste orange. Les causes soupçonnées incluent la disparition des haies et l’évolution de l’agriculture."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Song Thrush — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Grive musicienne — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/song-thrush",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Mean weight 75 g, wing 119.1 mm; clutch typically 4 eggs; incubation about 14 days; fledging about 14 days; partial migrant; earthworm availability linked to field drainage.",
+        "UK 1.3 million territories (2016; key-stats says 1 million); −45% 1967–2024; UK Amber; IUCN Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Song Thrush — RSPB",
+        "fr": "Grive musicienne — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/song-thrush",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "conservation"],
+      "facts": [
+        "Warm brown upperparts, heart-shaped spots on a creamy breast, smaller than a blackbird; eats mainly snails smashed on a stone; song phrases repeated two or three times (‘thricecock’).",
+        "Amber-listed; numbers fallen significantly on farmland and in towns."
+      ]
+    },
+    {
+      "title": {
+        "en": "Song thrush — Wikipedia",
+        "fr": "Grive musicienne — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Song_thrush",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "diet", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "20–23.5 cm; earthworms, snails and soft fruit; mud-lined cup nest, 4–5 glossy blue eggs, 2–3 broods; predators include cats, little owls, sparrowhawks, magpies, jays and grey squirrels.",
+        "Europe 40–71 million birds; suspected causes of decline include hedgerow loss and autumn sowing."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The BTO page gives 1.3 million UK territories in the population section and 1 million in its key-stats box; the dated (2016) figure is used.",
+    "Wikipedia gives 4–5 eggs per clutch while BTO reports a typical 4 (mean 4.1); the BTO value is used.",
+    "Causes of decline are described as suspected, not proven; the Wikipedia statement is attributed as such."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); description and behaviour from RSPB; Wikipedia for nest, predators and decline hypotheses; illustration to be checked by the owner."
+}

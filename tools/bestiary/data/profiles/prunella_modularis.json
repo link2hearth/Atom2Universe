@@ -1,0 +1,90 @@
+{
+  "id": "prunella_modularis",
+  "scientific": "Prunella modularis",
+  "group": "birds",
+  "name": {
+    "en": "Dunnock",
+    "fr": "Accenteur mouchet"
+  },
+  "sections": {
+    "overview": {
+      "en": "The dunnock is a small, unobtrusive brown-and-grey bird that creeps about under hedges and shrubs. Behind its modest looks lies one of the most complicated mating systems found among birds.",
+      "fr": "L’accenteur mouchet est un petit oiseau brun et gris, discret, qui se faufile sous les haies et les buissons. Derrière son allure modeste se cache l’un des systèmes d’appariement les plus compliqués que l’on connaisse chez les oiseaux."
+    },
+    "identification": {
+      "en": "About 13–14.5 cm long, roughly the size of a house sparrow, and weighing about 21 g. The back is brown streaked with black, the head and breast are grey, the legs pinkish and the bill is thin and pointed, unlike a sparrow’s. The sexes look alike; juveniles are browner and less grey.",
+      "fr": "Long d’environ 13 à 14,5 cm, à peu près comme un moineau domestique, pour un poids d’environ 21 g. Le dos est brun strié de noir, la tête et la poitrine sont grises, les pattes rosâtres et le bec fin et pointu, contrairement à celui d’un moineau. Les sexes se ressemblent; les jeunes sont plus bruns et moins gris."
+    },
+    "habitat": {
+      "en": "It lives in much of Europe and south-west Asia. In Britain it is most frequent in villages, and is also common in gardens, scrub, farmland, woodland and towns, wherever dense low vegetation gives cover.",
+      "fr": "Il vit dans une grande partie de l’Europe et du sud-ouest de l’Asie. En Grande-Bretagne, il est le plus fréquent dans les villages, et aussi courant dans les jardins, les broussailles, les terres agricoles, les bois et les villes, partout où une végétation basse et dense offre un abri."
+    },
+    "diet": {
+      "en": "It feeds mainly on spiders and insects, which it finds by hopping on the ground, and eats seeds as well. It sometimes visits feeders but more often picks up spilt food beneath them.",
+      "fr": "Il se nourrit surtout d’araignées et d’insectes, qu’il trouve en sautillant au sol, et mange aussi des graines. Il visite parfois les mangeoires, mais ramasse plus souvent la nourriture tombée en dessous."
+    },
+    "behavior": {
+      "en": "Shy and secretive, it creeps through undergrowth in a mouse-like way, often flicking its wings. Males sing a loud, squeaky warble from high perches, mostly from March to May, and rival males flick their wings and call loudly.",
+      "fr": "Timide et discret, il se glisse dans les broussailles à la manière d’une souris, en agitant souvent les ailes. Les mâles chantent un gazouillis fort et criard depuis des perchoirs élevés, surtout de mars à mai, et les mâles rivaux battent des ailes et crient fort."
+    },
+    "reproduction": {
+      "en": "Both males and females may mate with several partners, so a female can be helped by two males to raise her chicks. The cup nest is built low in dense shrubs and holds typically 4–5 unspotted blue eggs, incubated by the female for 14–15 days. Chicks fledge after 12–14.5 days. Breeding typically starts at one year.",
+      "fr": "Mâles et femelles peuvent s’accoupler avec plusieurs partenaires, si bien qu’une femelle peut être aidée par deux mâles pour élever ses poussins. Le nid en coupe, bâti bas dans les buissons denses, contient en général 4 à 5 œufs bleus non tachetés, couvés par la femelle pendant 14 à 15 jours. Les jeunes s’envolent après 12 à 14,5 jours. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "A ground-feeding insect and seed eater, the dunnock depends on dense low cover. Natural food, especially seed, runs short in late winter, and from mid-February dunnocks on farmland turn to feeding stations.",
+      "fr": "Mangeur d’insectes et de graines au sol, l’accenteur dépend d’un couvert bas et dense. La nourriture naturelle, surtout les graines, se raréfie à la fin de l’hiver, et à partir de la mi-février les accenteurs des terres agricoles se tournent vers les points d’alimentation."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern. In the UK it is Amber-listed: about 2.5 million territories were estimated in 2016, and numbers fell by 43% between 1967 and 2024, with the sharpest drop from the mid-1970s to the mid-1980s and a partial recovery since. The oldest ringed bird lived over 10 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. Au Royaume-Uni, elle est sur la liste orange : environ 2,5 millions de territoires étaient estimés en 2016, et les effectifs ont baissé de 43 % entre 1967 et 2024, avec la chute la plus forte du milieu des années 1970 au milieu des années 1980 et un rétablissement partiel depuis. Le plus vieil oiseau bagué a dépassé 10 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Dunnock — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Accenteur mouchet — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/dunnock",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Mean weight 21.2 g, wing 69.9 mm; clutch typically 4–5; incubation 14–15 days by the female; fledging 12–14.5 days; both sexes mate with several partners; seed depleted in late winter, farmland feeding stations used from mid-February.",
+        "UK 2.5 million territories (2016; key-stats box says 3 million); −43% 1967–2024; UK Amber; IUCN Least Concern; maximum age 10 years 7 months."
+      ]
+    },
+    {
+      "title": {
+        "en": "Dunnock — RSPB",
+        "fr": "Accenteur mouchet — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/dunnock",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction"],
+      "facts": [
+        "Brown-and-grey bird, sparrow-sized, grey chest and head, streaky brown back, pinkish legs and a thinner bill than a house sparrow’s; juveniles less grey.",
+        "Mainly spiders and insects found while hopping on the ground; shy and mouse-like, wing-flicking; complex breeding partnerships in which two males may help raise chicks; cup nest in dense shrubs."
+      ]
+    },
+    {
+      "title": {
+        "en": "Dunnock — Wikipedia",
+        "fr": "Accenteur mouchet — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Dunnock",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "reproduction"],
+      "facts": [
+        "13–14.5 cm; native to much of Europe and south-west Asia; polyandry, polygyny and monogamy all occur; nest of twigs and moss lined with soft material; 3–5 unspotted blue eggs."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The BTO page gives 2.5 million UK territories in the population section and 3 million in its key-stats box; the dated (2016) figure is used.",
+    "‘Seeds’ in the diet is inferred from the BTO remark on seed depletion in late winter; no source gives a full diet breakdown.",
+    "Breeding figures are British; clutch size of 3–5 in Wikipedia is consistent with BTO’s typical 4–5."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); description, diet and behaviour from RSPB; Wikipedia only for length and range; illustration to be checked by the owner."
+}

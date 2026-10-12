@@ -1,0 +1,115 @@
+{
+  "id": "red_backed_shrike",
+  "scientific": "Lanius collurio",
+  "group": "birds",
+  "name": {
+    "en": "Red-backed Shrike",
+    "fr": "Pie-grièche écorcheur"
+  },
+  "sections": {
+    "overview": {
+      "en": "The red-backed shrike is a small songbird that hunts like a bird of prey from perches and impales its catches on thorns. It breeds across much of Europe and migrates to southern Africa, but has almost vanished as a breeding bird in Britain.",
+      "fr": "La pie-grièche écorcheur est un petit passereau qui chasse comme un rapace depuis des perchoirs et empale ses captures sur des épines. Elle niche dans une grande partie de l’Europe et migre vers l’Afrique australe, mais a presque disparu comme nicheuse en Grande-Bretagne."
+    },
+    "identification": {
+      "en": "A little larger but slimmer than a house sparrow, an adult weighs about 28 g with a wing near 95 mm. The male has a bluish-grey head, a black mask, a bright chestnut back and a thick black bill. Shrikes typically perch in the open.",
+      "fr": "Un peu plus grande mais plus mince qu’un moineau domestique, l’adulte pèse environ 28 g avec une aile d’environ 95 mm. Le mâle a la tête gris bleuté, un masque noir, le dos châtain vif et un bec noir épais. Les pies-grièches se perchent en général à découvert."
+    },
+    "habitat": {
+      "en": "It favours semi-open landscapes with hedges and thorny bushes beside insect-rich grassland, ideally sunny places with short or bare ground where prey can be reached. In Sweden, territories were small, about 0.5–1 hectare, with plenty of well-spread perches.",
+      "fr": "Elle affectionne les paysages semi-ouverts de haies et de buissons épineux voisins de prairies riches en insectes, de préférence des lieux ensoleillés au sol ras ou nu où les proies restent accessibles. En Suède, les territoires étaient petits, d’environ 0,5 à 1 hectare, avec beaucoup de perchoirs bien répartis."
+    },
+    "diet": {
+      "en": "Its prey is mostly small and medium-sized insects, which are also what the chicks are fed, together with some small vertebrates. Shrikes take their catches to a larder, where they impale them on a thorn or wedge them into branches to store them for later.",
+      "fr": "Ses proies sont surtout des insectes petits et moyens, qui servent aussi à nourrir les jeunes, avec quelques petits vertébrés. Les pies-grièches rapportent leurs captures à un garde-manger, où elles les empalent sur une épine ou les coincent dans les branches pour les conserver."
+    },
+    "behavior": {
+      "en": "Shrikes watch for prey from the tops of bushes, fence posts and wires. The red-backed shrike is a long-distance migrant: late-spring arrivals may wait for food to become available in the African wet season before crossing the Sahara. In Britain it is now a scarce passage visitor, mostly in May–June and August–October.",
+      "fr": "Les pies-grièches guettent leurs proies depuis le sommet des buissons, les piquets de clôture et les fils. La pie-grièche écorcheur est une migratrice au long cours : les arrivées de fin de printemps peuvent attendre que la nourriture soit disponible dans la saison des pluies africaine avant de traverser le Sahara. En Grande-Bretagne, elle n’est plus qu’un visiteur de passage rare, surtout en mai-juin et août-octobre."
+    },
+    "reproduction": {
+      "en": "A clutch is typically four to six eggs, incubated by the female for about 14 days. The chicks hatch naked and fledge at 14–15 days. There is usually one brood a season, occasionally two. Nests are placed low in thorny shrubs; in a Turkish study blackberry was the most common nest site.",
+      "fr": "Une couvée compte typiquement quatre à six œufs, couvés par la femelle pendant environ 14 jours. Les poussins naissent nus et volent à 14-15 jours. Il y a en général une couvée par saison, parfois deux. Les nids sont placés bas dans des buissons épineux; dans une étude turque, la ronce était le site le plus fréquent."
+    },
+    "ecology": {
+      "en": "The shrike depends on thorny cover and insect-rich open ground close together. Nest predation was the main cause of nest failure in a study in northern Turkey. Intensive farming that removes insect-rich grassland next to hedges is expected to cause long-term declines.",
+      "fr": "La pie-grièche dépend d’un couvert épineux et d’un terrain ouvert riche en insectes situés à proximité l’un de l’autre. La prédation des nids était la principale cause d’échec dans une étude menée dans le nord de la Turquie. L’agriculture intensive, qui supprime les prairies riches en insectes à côté des haies, devrait entraîner des déclins à long terme."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide. In the UK it is Red-listed and legally protected, with about three breeding pairs in 2013–17 after it became effectively extinct as a breeder in 1989. Its British breeding range contracted by 88% between 1968–72 and 2008–11.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale. Au Royaume-Uni, elle figure sur la liste rouge et est protégée par la loi, avec environ trois couples nicheurs en 2013-2017, après avoir pratiquement disparu comme nicheuse en 1989. Son aire de reproduction britannique s’est réduite de 88 % entre 1968-1972 et 2008-2011."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red-backed Shrike — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Pie-grièche écorcheur — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/red-backed-shrike",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Adults 28.5 g, wing 95.5 mm; clutch typically 4–6; incubation about 14 days; fledging 14–15 days; usually one brood, occasionally two.",
+        "UK 3 pairs (2013–17), effectively extinct as a breeder in 1989, breeding range −88.3% (1968–72 to 2008–11); Red-listed; IUCN Least Concern; scarce passage visitor."
+      ]
+    },
+    {
+      "title": {
+        "en": "Red-backed Shrike — RSPB Bird Guide",
+        "fr": "Pie-grièche écorcheur — guide des oiseaux de la RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/red-backed-shrike",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "behavior", "diet", "conservation"],
+      "facts": [
+        "Male: bluish-grey head, black mask, chestnut back, thick black bill; perches on bush tops, posts and wires; impales catches in a larder.",
+        "Almost extinct as a UK breeder; Red-listed and Schedule 1."
+      ]
+    },
+    {
+      "title": {
+        "en": "Maßnahmenblatt Neuntöter (Lanius collurio) — Hessian Agency for Nature Conservation (HLNUG)",
+        "fr": "Fiche de mesures Pie-grièche écorcheur (Lanius collurio) — agence hessoise de la nature (HLNUG)"
+      },
+      "url": "https://www.hlnug.de/fileadmin/dokumente/naturschutz/artenschutz/steckbriefe/Voegel/Massnahmenblaetter/Mb_Neuntoeter.pdf",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "diet", "reproduction", "ecology"],
+      "facts": [
+        "Semi-open landscapes with hedges and thorny bushes beside grassland; sunny sites; prey of small vertebrates and many insects, also for chicks; nest in low thorny shrubs.",
+        "Intensive farming and loss of insect-rich grassland next to hedges give a negative long-term trend."
+      ]
+    },
+    {
+      "title": {
+        "en": "The Red-backed Shrike in southeastern Sweden: habitat and territory — Ornis Scandinavica",
+        "fr": "La pie-grièche écorcheur dans le sud-est de la Suède : habitat et territoire — Ornis Scandinavica"
+      },
+      "url": "https://journals.lub.lu.se/os/article/view/23012",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "ecology"],
+      "facts": [
+        "Territories about 0.5–1 ha; open sunny areas with well-spread perches were important."
+      ]
+    },
+    {
+      "title": {
+        "en": "Breeding biology of the red-backed shrike in the Kızılırmak Delta, Turkey — Turkish Journal of Zoology",
+        "fr": "Biologie de reproduction de la pie-grièche écorcheur dans le delta du Kızılırmak, Turquie — Turkish Journal of Zoology"
+      },
+      "url": "https://journals.tubitak.gov.tr/zoology/vol40/iss4/3",
+      "consulted": "2026-10-12",
+      "supports": ["reproduction", "ecology"],
+      "facts": [
+        "Blackberry was the nest site in 66% of nests; nest predation the main cause of failure; six second broods documented."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Only the abstracts of the Swedish and Turkish studies were read; the Turkish and Swedish figures are local.",
+    "BTO’s weights and breeding figures come from British ringing and nest records, but the species breeds mainly on the continent.",
+    "The Hessian leaflet gives no clutch or timing figures; those come from BTO."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); RSPB, the Hessian conservation leaflet and two papers used for qualitative facts; illustration (adult male) checked against sources."
+}

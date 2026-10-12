@@ -1,0 +1,90 @@
+{
+  "id": "rissa_tridactyla",
+  "scientific": "Rissa tridactyla",
+  "group": "birds",
+  "name": {
+    "en": "Black-legged Kittiwake",
+    "fr": "Mouette tridactyle"
+  },
+  "sections": {
+    "overview": {
+      "en": "The black-legged kittiwake is a medium-sized, strictly maritime gull that spends most of its life at sea and comes ashore to nest in noisy cliff colonies. It is Britain’s most numerous gull, but its numbers have fallen steeply.",
+      "fr": "La mouette tridactyle est un goéland de taille moyenne, strictement marin, qui passe l’essentiel de sa vie en mer et ne vient à terre que pour nicher dans des colonies bruyantes sur les falaises. Elle est la mouette la plus nombreuse de Grande-Bretagne, mais ses effectifs ont fortement chuté."
+    },
+    "identification": {
+      "en": "An adult is 38–40 cm long with a white head and body, a mid-grey back and wings, a dark eye, a small yellow bill and long black legs. The wing tips are solid black, as if dipped in ink, with no white spots. Adults weigh about 310–434 g, and young birds take three years to reach full adult plumage.",
+      "fr": "L’adulte mesure 38 à 40 cm, avec la tête et le corps blancs, le dos et les ailes gris moyen, l’œil sombre, un petit bec jaune et de longues pattes noires. Le bout des ailes est entièrement noir, comme trempé dans l’encre, sans taches blanches. Les adultes pèsent environ 310 à 434 g, et les jeunes mettent trois ans à acquérir le plumage adulte complet."
+    },
+    "habitat": {
+      "en": "It breeds mainly on rocky sea cliffs, also on buildings and bridges: more than 1,000 pairs nest on window ledges and bridges along the River Tyne. In Britain the main strongholds are in Scotland, notably Orkney and Shetland, and densities are highest on the east coast from Flamborough Head to Orkney.",
+      "fr": "Elle se reproduit surtout sur les falaises rocheuses côtières, mais aussi sur des bâtiments et des ponts : plus de 1 000 couples nichent sur les rebords de fenêtres et les ponts le long de la Tyne. En Grande-Bretagne, ses bastions se situent en Écosse, notamment aux Orcades et aux Shetland, et les densités sont les plus fortes sur la côte est, de Flamborough Head aux Orcades."
+    },
+    "diet": {
+      "en": "It feeds mainly on sandeels and other shoaling fish caught at sea. Unlike related gulls, it does not scavenge from chip shops. It is a surface feeder that takes small fish and invertebrates.",
+      "fr": "Elle se nourrit surtout de lançons et d’autres poissons grégaires capturés en mer. Contrairement aux goélands apparentés, elle ne fouille pas les déchets des friteries. C’est un oiseau qui pêche en surface de petits poissons et des invertébrés."
+    },
+    "behavior": {
+      "en": "After breeding it moves out onto the high seas of the Atlantic for the winter and is rarely seen from land. It flies with tern-like wingbeats and can land on narrow ledges in strong wind. At the nest it faces the cliff, so that its tail projects over the edge.",
+      "fr": "Après la reproduction, elle gagne le grand large de l’Atlantique pour l’hiver et se voit rarement depuis la terre. Elle vole à coups d’ailes rappelant ceux d’une sterne et sait se poser sur d’étroites corniches par grand vent. Au nid, elle fait face à la falaise, de sorte que sa queue dépasse dans le vide."
+    },
+    "reproduction": {
+      "en": "A pair raises one brood a year. The typical clutch is two eggs (one to three), incubated by both sexes for about 25–32 days. The downy chicks are semi-precocial and fledge after roughly 33–54 days. Breeding typically starts at age four. Males tend to reuse the same nest site each year.",
+      "fr": "Un couple élève une seule couvée par an. La ponte compte en général deux œufs (un à trois), couvés par les deux sexes pendant environ 25 à 32 jours. Les poussins, duveteux et semi-nidifuges, s’envolent après 33 à 54 jours environ. La reproduction commence en général à quatre ans. Les mâles réutilisent souvent le même site de nid chaque année."
+    },
+    "ecology": {
+      "en": "Breeding success in Britain is probably linked to sandeel numbers, which are affected by fisheries and by sea surface temperatures. Kittiwakes often depend on one main food source, so a shortage of that prey can hit them hard. Their colonies are often shared with guillemots and razorbills.",
+      "fr": "Le succès de reproduction en Grande-Bretagne est probablement lié aux effectifs de lançons, eux-mêmes touchés par la pêche et par la température de surface de la mer. Les mouettes tridactyles dépendent souvent d’une seule source principale de nourriture, si bien qu’une pénurie de cette proie peut les frapper durement. Leurs colonies sont souvent partagées avec des guillemots et des pingouins."
+    },
+    "conservation": {
+      "en": "The BTO lists the species as Vulnerable globally on the IUCN Red List and Red-listed in the UK. The UK breeding population was 205,000 pairs in 2015, and the British breeding population has nearly halved since the 1970s. A bird that reaches breeding age lives about 12 years; the oldest ringed bird reached over 28.",
+      "fr": "Le BTO indique que l’espèce est classée « vulnérable » à l’échelle mondiale sur la Liste rouge de l’UICN et figure sur la liste rouge britannique. La population nicheuse du Royaume-Uni était de 205 000 couples en 2015, et la population nicheuse britannique a presque diminué de moitié depuis les années 1970. Un oiseau qui atteint l’âge adulte vit environ 12 ans; le plus âgé bagué a dépassé 28 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Kittiwake — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Mouette tridactyle — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/kittiwake",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adults 310–434 g; clutch typically 2, incubation 25–32 days, fledging 33–54 days; breeding from age 4; full plumage at 3 years.",
+        "UK 205,000 pairs (2015), nearly halved since the 1970s; UK Red; IUCN Vulnerable; productivity linked to sandeels; record age 28 years 6 months."
+      ]
+    },
+    {
+      "title": {
+        "en": "Kittiwake — RSPB Birds & Wildlife",
+        "fr": "Mouette tridactyle — RSPB Birds & Wildlife"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/kittiwake",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology"],
+      "facts": [
+        "38–40 cm; grey back, black wing tips like dipped in ink, yellow bill, long black legs; sandeels; mostly at sea; River Tyne more than 1,000 pairs.",
+        "Colonies often include guillemots and razorbills; Red-listed in the UK after serious declines."
+      ]
+    },
+    {
+      "title": {
+        "en": "Rissa tridactyla (black-legged kittiwake) — Animal Diversity Web, University of Michigan",
+        "fr": "Rissa tridactyla (mouette tridactyle) — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Rissa_tridactyla/",
+      "consulted": "2026-10-12",
+      "supports": ["diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "Surface feeder on small fish and invertebrates; tern-like wingbeat; faces the cliff with the tail over the edge; males reuse the same nest site.",
+        "The account dates from 1999 and gives Least Concern, which is out of date; the IUCN category was taken from the BTO page instead."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The ADW account (1999) gives a Least Concern status that conflicts with the BTO’s Vulnerable listing; the BTO listing is more recent and is the one used, but the assessment year was not stated on the page.",
+    "Incubation is given as 25–32 days (BTO) against about 25 days (ADW); the range was used. Figures are British."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page, appearance and colonies from the RSPB page, behaviour from ADW (consulted 2026-10-12); illustration to be checked by the owner."
+}

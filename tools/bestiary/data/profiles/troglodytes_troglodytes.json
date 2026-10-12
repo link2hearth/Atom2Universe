@@ -1,0 +1,77 @@
+{
+  "id": "troglodytes_troglodytes",
+  "scientific": "Troglodytes troglodytes",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Wren",
+    "fr": "Troglodyte mignon"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian wren is a tiny, round songbird and one of the most numerous breeding birds in Britain. It is often heard before it is seen: a male defends his territory with a song far louder than his body size suggests.",
+      "fr": "Le troglodyte mignon est un minuscule passereau arrondi, parmi les oiseaux nicheurs les plus nombreux de Grande-Bretagne. On l’entend souvent avant de le voir : le mâle défend son territoire par un chant bien plus puissant que sa taille ne le laisse penser."
+    },
+    "identification": {
+      "en": "An adult weighs about 10 g and has a wing length near 49 mm. The plumage is brown with dark barring on the wings, tail and underparts, a pale stripe above the eye and a paler throat. The short tail is often held upright. The sexes look alike; juveniles are darker.",
+      "fr": "L’adulte pèse environ 10 g, avec une aile d’environ 49 mm. Son plumage est brun, barré de sombre sur les ailes, la queue et le dessous, avec un sourcil clair et une gorge plus pâle. La queue courte est souvent relevée. Les sexes se ressemblent; les jeunes sont plus sombres."
+    },
+    "habitat": {
+      "en": "In Britain it is most frequent in deciduous woodland, but it also lives in scrub, pastoral farmland, villages, towns and conifer woods. It favours dense vegetation close to the ground, where it forages and finds nest sites.",
+      "fr": "En Grande-Bretagne, il est le plus fréquent dans les bois de feuillus, mais vit aussi dans les broussailles, les prairies d’élevage, les villages, les villes et les bois de conifères. Il préfère la végétation dense près du sol, où il chasse et trouve ses sites de nid."
+    },
+    "diet": {
+      "en": "The wren forages mostly on the ground, picking up insects and their larvae, spiders and millipedes. Beside water it may also take aquatic invertebrates.",
+      "fr": "Le troglodyte cherche surtout sa nourriture au sol : insectes et leurs larves, araignées et mille-pattes. Au bord de l’eau, il peut aussi prendre des invertébrés aquatiques."
+    },
+    "behavior": {
+      "en": "Males use song to establish and defend territories, often singing from low perches. A male also builds several domed nests of moss, grass and twigs, frequently in holes; these are known as cock nests.",
+      "fr": "Les mâles établissent et défendent leur territoire par le chant, souvent depuis des perchoirs bas. Chaque mâle construit aussi plusieurs nids en dôme de mousse, d’herbe et de brindilles, souvent dans des cavités; on les appelle « nids de mâle »."
+    },
+    "reproduction": {
+      "en": "In Britain, laying begins on average in early May. A clutch is typically five or six eggs, incubated by the female for 16–18 days. The chicks are downy and helpless, and fledge after roughly 14.5–18 days. The female usually raises the brood. Breeding typically starts at one year of age.",
+      "fr": "En Grande-Bretagne, la ponte commence en moyenne début mai. Une couvée compte en général cinq ou six œufs, couvés par la femelle pendant 16 à 18 jours. Les poussins, couverts de duvet et sans défense, s’envolent après environ 14,5 à 18 jours. La femelle élève généralement la nichée. La reproduction débute en général à un an."
+    },
+    "ecology": {
+      "en": "Wrens help regulate insect populations and are themselves prey for domestic cats and for birds such as jays and magpies; crows and jays also raid nests. The common cuckoo sometimes parasitises wren nests.",
+      "fr": "Les troglodytes contribuent à réguler les populations d’insectes et sont eux-mêmes la proie des chats domestiques et d’oiseaux comme les geais et les pies; corneilles et geais pillent aussi les nids. Le coucou gris parasite parfois les nids de troglodyte."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern. The UK breeding population was estimated at 11 million territories in 2016 and has risen by 127% since 1967, though numbers fall after severe winters and then recover. A wren typically lives about two years; the oldest recorded in Britain reached over seven.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. La population nicheuse britannique était estimée à 11 millions de territoires en 2016 et a augmenté de 127 % depuis 1967, mais ses effectifs chutent après les hivers rigoureux avant de se rétablir. Un troglodyte vit en général environ deux ans; le plus âgé enregistré en Grande-Bretagne a dépassé sept ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Wren — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Troglodyte — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/wren",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "reproduction", "conservation"],
+      "facts": [
+        "Adults average 9.9 g with wing 48.8 mm; clutch typically 5–6 eggs; incubation 16–18 days; fledging 14.5–18 days.",
+        "UK 11 million territories (2016), +127% 1967–2024, declines after cold winters; IUCN global Least Concern; record age 7 years 3 months."
+      ]
+    },
+    {
+      "title": {
+        "en": "Troglodytes troglodytes — Animal Diversity Web, University of Michigan",
+        "fr": "Troglodytes troglodytes — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Troglodytes_troglodytes/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "diet", "behavior", "ecology"],
+      "facts": [
+        "Ground-foraging insectivore (insects, larvae, millipedes, spiders); males sing to defend territory and build several domed nests of moss, feathers, twigs and grass.",
+        "Predators include domestic cats, jays and magpies; the common cuckoo parasitises nests. The account predates the split of the North American wrens, so only generic facts were used."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Animal Diversity Web account was written before the North American winter and Pacific wrens were separated from the Eurasian wren; its numeric data were therefore not used.",
+    "Breeding figures are British; timing and clutch size vary across the wide range."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); ADW used only for qualitative facts; illustration to be checked by the owner."
+}

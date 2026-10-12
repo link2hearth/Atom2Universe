@@ -1,0 +1,91 @@
+{
+  "id": "eurasian_hobby",
+  "scientific": "Falco subbuteo",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Hobby",
+    "fr": "Faucon hobereau"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian hobby is a small falcon and a superb aerial hunter. It chases dragonflies and even swallows through the air with fast, agile flight, and spends the winter in Africa.",
+      "fr": "Le faucon hobereau est un petit faucon et un remarquable chasseur aérien. Il poursuit libellules et même hirondelles en plein vol, d’un vol rapide et agile, et passe l’hiver en Afrique."
+    },
+    "identification": {
+      "en": "About the size of a kestrel, 29–36 cm long with a wingspan of 74–84 cm; British adults weigh around 211 g. The upperparts are slate-grey, the underparts whitish with dark streaks, with white cheeks, a black moustache and rufous thighs and undertail. In flight the long, pointed wings look scythe-shaped, like a large swift. Juveniles are browner and lack the red.",
+      "fr": "De la taille d’un faucon crécerelle, il mesure 29 à 36 cm pour 74 à 84 cm d’envergure; les adultes britanniques pèsent environ 211 g. Le dessus est gris ardoise, le dessous blanchâtre strié de sombre, avec des joues blanches, une moustache noire et des culottes et un dessous de queue roux. En vol, les longues ailes pointues dessinent une faux, comme un grand martinet. Les jeunes sont plus bruns et n’ont pas de roux."
+    },
+    "habitat": {
+      "en": "It lives in open countryside such as lowland farmland, wetlands and heathland, often with scattered small woods. In Britain it was once mostly a bird of southern England but is spreading northwards.",
+      "fr": "Il vit en campagne ouverte : terres agricoles de plaine, zones humides et landes, souvent parsemées de petits bois. En Grande-Bretagne, il était surtout présent dans le sud de l’Angleterre, mais il progresse vers le nord."
+    },
+    "diet": {
+      "en": "It eats large flying insects such as dragonflies, and small birds, especially swallows and martins. It often eats small prey on the wing, passing it from its talons to its beak in flight.",
+      "fr": "Il mange de grands insectes volants comme les libellules, ainsi que de petits oiseaux, surtout des hirondelles. Il consomme souvent ses petites proies en vol, les passant de ses serres à son bec."
+    },
+    "behavior": {
+      "en": "The hobby hunts in fast, high-speed aerial chases and can accelerate quickly, and it often soars high. It is relatively secretive when breeding. It is a summer visitor to Britain, usually arriving from late April, with the last birds leaving in October.",
+      "fr": "Le hobereau chasse par poursuites aériennes rapides et peut accélérer vivement, et il plane souvent très haut. Il est assez discret pendant la nidification. Visiteur d’été en Grande-Bretagne, il arrive en général à partir de fin avril, et les derniers oiseaux partent en octobre."
+    },
+    "reproduction": {
+      "en": "A clutch is typically 2–3 eggs, incubated for about 28 days mainly by the female, and a single brood is raised. Chicks fledge after roughly 30–34 days. Eggs are laid between June and August, usually in an old nest built by crows. Breeding typically starts at two years of age.",
+      "fr": "Une ponte compte en général 2 à 3 œufs, couvés environ 28 jours surtout par la femelle, et une seule couvée est élevée. Les jeunes s’envolent après 30 à 34 jours environ. Les œufs sont pondus entre juin et août, le plus souvent dans un ancien nid de corvidé. La reproduction débute en général à deux ans."
+    },
+    "ecology": {
+      "en": "As a predator of dragonflies and of hirundines, the hobby is tied to rich insect and bird populations over open country. It relies on nests built by other birds, such as crows, rather than building its own.",
+      "fr": "Prédateur de libellules et d’hirondelles, le hobereau dépend d’une abondance d’insectes et d’oiseaux en milieu ouvert. Il utilise des nids construits par d’autres oiseaux, comme les corneilles, au lieu de bâtir le sien."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern. The UK breeding population was estimated at 2,050 pairs in 2016; it is Green-listed and legally protected from disturbance at the nest. The oldest ringed bird recorded in Britain lived over 14 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. La population nicheuse britannique était estimée à 2 050 couples en 2016; l’espèce est sur la liste verte et légalement protégée contre le dérangement au nid. Le plus vieil oiseau bagué enregistré en Grande-Bretagne a dépassé 14 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Hobby — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Faucon hobereau — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/hobby",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Mean weight 211 g; clutch typically 2–3 eggs; incubation about 28 days; fledging 29.5–34 days; summer visitor from late April to October; breeding typically from age 2.",
+        "UK 2,050 pairs (2016); UK Green; IUCN Least Concern; maximum age 14 years 10 months."
+      ]
+    },
+    {
+      "title": {
+        "en": "Hobby — RSPB",
+        "fr": "Faucon hobereau — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/hobby",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "conservation"],
+      "facts": [
+        "Slate-grey upperparts, streaked buff underparts, white cheeks with black moustache, russet thighs and undertail; scythe-shaped like a large swift in flight.",
+        "Hunts swallows, martins and dragonflies in fast aerial chases, transferring prey from talons to beak in flight; spreading northwards; Schedule 1, UK Green."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eurasian hobby — Wikipedia",
+        "fr": "Faucon hobereau — Wikipédia"
+      },
+      "url": "https://en.wikipedia.org/wiki/Eurasian_hobby",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "reproduction", "ecology"],
+      "facts": [
+        "29–36 cm, wingspan 74–84 cm; typically nests in old nests of crows or rooks; 2–3 eggs laid June–August, one brood.",
+        "Migrates to Africa; IUCN Least Concern (BirdLife International 2021)."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The BTO page gives both ‘stable’ and ‘−15%’ for the UK trend 1995–2024, so no trend is stated.",
+    "Fledging is 29.5–34 days typically (observed range 27–37); rounded to roughly 30–34 days.",
+    "Wikipedia is used only for size and the use of old crow nests; figures on breeding are from BTO (Britain)."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12), plumage and hunting from RSPB; Wikipedia only for size and nest sites; illustration to be checked by the owner."
+}

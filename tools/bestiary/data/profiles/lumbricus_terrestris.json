@@ -1,0 +1,92 @@
+{
+  "id": "lumbricus_terrestris",
+  "scientific": "Lumbricus terrestris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Earthworm",
+    "fr": "Lombric terrestre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common earthworm, also called night crawler in North America, is one of the largest earthworms of Europe. It is an epi-anecic species: it lives in a deep, mostly vertical burrow and comes to the surface to feed. It is hermaphroditic, yet each worm still needs a partner to reproduce.",
+      "fr": "Le lombric terrestre, aussi appelé « night crawler » en Amérique du Nord, est l’un des plus grands vers de terre d’Europe. C’est une espèce épi-anécique : elle vit dans un terrier profond, surtout vertical, et monte à la surface pour se nourrir. Elle est hermaphrodite, mais chaque ver a tout de même besoin d’un partenaire pour se reproduire."
+    },
+    "identification": {
+      "en": "It measures roughly 9 to 30 cm, and the largest individuals are reported at up to 35 cm when stretched in motion. The back is brownish to purplish red and the underside yellow-orange, and the tail end is flattened and paddle-shaped, which lets the worm grip its burrow walls.",
+      "fr": "Il mesure environ 9 à 30 cm, et les plus grands individus atteindraient 35 cm en extension. Le dos est brun à rouge pourpre et le dessous jaune orangé; l’extrémité de la queue est aplatie en palette, ce qui permet au ver de s’agripper aux parois de son terrier."
+    },
+    "habitat": {
+      "en": "It prefers undisturbed soil and is common in lawns and grassland. Its permanent burrow normally reaches 1 to 2 m deep, though one source gives up to 2.5 m. On a very thin topsoil over an inert subsoil in north-west England, worms built shallow U-shaped burrows only about 0.11 m deep and still formed a breeding population.",
+      "fr": "Il préfère les sols peu perturbés et abonde dans les pelouses et les prairies. Son terrier permanent atteint normalement 1 à 2 m de profondeur, une source allant jusqu’à 2,5 m. Sur une très mince couche de terre au-dessus d’un sous-sol inerte, dans le nord-ouest de l’Angleterre, des vers ont creusé des galeries en U de seulement 0,11 m environ et y ont formé une population qui se reproduit."
+    },
+    "diet": {
+      "en": "It feeds mainly on fallen leaves and other decaying plant material, and takes in soil and plant litter as it digs. It is a detritivore that emerges at night.",
+      "fr": "Il se nourrit surtout de feuilles tombées et d’autres matières végétales en décomposition, et avale de la terre et des débris végétaux en creusant. C’est un détritivore qui sort la nuit."
+    },
+    "behavior": {
+      "en": "It emerges mostly at night and anchors itself in its burrow with its broadened tail. It builds small turret-like mounds, called middens, at the burrow entrance. Its burrowing is flexible: in shallow soil it adapts the shape of the burrow rather than going down into hostile subsoil.",
+      "fr": "Il sort surtout la nuit et s’ancre dans son terrier grâce à sa queue élargie. À l’entrée du terrier, il édifie de petits monticules en forme de tourelle, appelés middens. Sa façon de creuser est souple : en sol mince, il adapte la forme de la galerie plutôt que de s’enfoncer dans un sous-sol hostile."
+    },
+    "reproduction": {
+      "en": "Mating takes place on the surface in wet weather, with two worms lying head to tail, and can last up to four hours. Each worm produces on average about 38 cocoons per year according to one source. Individuals typically mature within a year and may live up to about six years.",
+      "fr": "L’accouplement a lieu à la surface par temps humide, les deux vers étant placés tête-bêche, et peut durer jusqu’à quatre heures. Chaque ver produit en moyenne environ 38 cocons par an selon une source. Les individus mûrissent en général en un an et peuvent vivre jusqu’à six ans environ."
+    },
+    "ecology": {
+      "en": "By eating and expelling mineral and organic matter, it aerates and turns over the soil. Densities of 20 to 40 worms per square metre are reported in an average British lawn, and up to 70 per square metre elsewhere, giving this species one of the largest animal biomasses per hectare on land.",
+      "fr": "En ingérant puis en rejetant de la matière minérale et organique, il aère et brasse le sol. On cite 20 à 40 vers par mètre carré dans une pelouse britannique moyenne, et jusqu’à 70 par mètre carré ailleurs, ce qui place l’espèce parmi celles de plus forte biomasse animale par hectare sur terre."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was found. In Britain it is described as common and widespread, though badly under-recorded.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée. En Grande-Bretagne, l’espèce est décrite comme commune et répandue, mais très insuffisamment recensée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Earthworm, Lumbricus terrestris — NatureSpot (Leicestershire and Rutland wildlife)",
+        "fr": "Lombric terrestre, Lumbricus terrestris — NatureSpot (faune de Leicestershire et Rutland)"
+      },
+      "url": "https://www.naturespot.org/node/2100",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Britain’s largest earthworm, up to 35 cm when moving; brownish to purplish red above, yellow-orange below, paddle-shaped tail end used to grip the burrow.",
+        "Surface mating in wet weather, head to tail, up to 4 hours; 20–40 worms per square metre in an average lawn; common, widespread and badly under-recorded in Britain."
+      ]
+    },
+    {
+      "title": {
+        "en": "Night crawler (Lumbricus terrestris) — Molecular Expressions, Florida State University",
+        "fr": "Lombric terrestre (Lumbricus terrestris) — Molecular Expressions, université d’État de Floride"
+      },
+      "url": "https://micro.magnet.fsu.edu/optics/olympusmicd/galleries/brightfield/lumbricus.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "90–300 mm long; burrows up to 2.5 m; middens at tunnel entrances; detritivore that aerates soil; up to 70 per square metre.",
+        "Hermaphroditic with obligate sexual reproduction; about 38 cocoons per year; matures in a year and lives up to 6 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Behavioural flexibility in Lumbricus terrestris burrowing — Butt and Nuutinen, European Journal of Soil Biology, 2024 (abstract)",
+        "fr": "Souplesse du comportement de creusement chez Lumbricus terrestris — Butt et Nuutinen, European Journal of Soil Biology, 2024 (résumé)"
+      },
+      "url": "https://knowledge.lancashire.ac.uk/50302",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "behavior"],
+      "facts": [
+        "Epi-anecic species normally living in a 1–2 m deep vertical burrow.",
+        "On topsoil under 0.15 m over inert subsoil, mean burrow depth was about 0.11 m after four days, unchanged after 14 months; adults, juveniles and hatchlings found after five years; worms made U-shaped burrows in lab boxes."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Maximum length and burrow depth differ between sources (9–30 cm up to 35 cm stretched; 1–2 m up to 2.5 m); ranges are given.",
+    "Lifespan (up to 6 years), cocoon number (average 38 per year) and density (20–40 up to 70 per square metre) each come from one source and vary with soil and climate.",
+    "The IUCN Red List page could not be opened and no global conservation status is stated; the British description of the species as common comes from a local recording site.",
+    "Native versus introduced status outside Europe is not covered."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

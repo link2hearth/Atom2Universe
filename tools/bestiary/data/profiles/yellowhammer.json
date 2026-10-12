@@ -1,0 +1,78 @@
+{
+  "id": "yellowhammer",
+  "scientific": "Emberiza citrinella",
+  "group": "birds",
+  "name": {
+    "en": "Yellowhammer",
+    "fr": "Bruant jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "The yellowhammer is a bright, seed-eating bunting of hedgerows and farmland. Once widespread across Britain, it has declined sharply and is now Red-listed in the UK.",
+      "fr": "Le bruant jaune est un bruant vif et granivore des haies et des terres agricoles. Autrefois répandu dans toute la Grande-Bretagne, il a fortement décliné et figure aujourd’hui sur la liste rouge britannique."
+    },
+    "identification": {
+      "en": "In Britain an adult weighs about 26 g and has a wing near 86 mm. The male has a bright yellow head and underparts, a brown back streaked with black and a chestnut rump; the female is a paler, more subtle version. In flight, white outer tail feathers show, and the bill is short and greyish.",
+      "fr": "En Grande-Bretagne, un adulte pèse environ 26 g, avec une aile d’environ 86 mm. Le mâle a la tête et le dessous d’un jaune vif, le dos brun strié de noir et le croupion roux; la femelle en est une version plus pâle et plus discrète. En vol, les plumes externes blanches de la queue se voient, et le bec est court et grisâtre."
+    },
+    "habitat": {
+      "en": "It stays on farms all year, especially mixed and arable farmland, and nests in thick hedges, often alongside ditches. In Britain it is found mainly in the Midlands, southern, eastern and western England, west Wales and eastern Scotland.",
+      "fr": "Il reste toute l’année dans les fermes, surtout les exploitations mixtes et de grandes cultures, et niche dans les haies épaisses, souvent le long de fossés. En Grande-Bretagne, on le trouve surtout dans les Midlands, le sud, l’est et l’ouest de l’Angleterre, l’ouest du pays de Galles et l’est de l’Écosse."
+    },
+    "diet": {
+      "en": "Adults eat mainly seeds picked up on the ground, and winter seed supplies are especially important in late winter. The chicks are fed mostly insects and spiders, so invertebrates are essential in the breeding season.",
+      "fr": "Les adultes mangent surtout des graines ramassées au sol, et les réserves de graines hivernales sont particulièrement importantes en fin d’hiver. Les poussins sont nourris surtout d’insectes et d’araignées, si bien que les invertébrés sont essentiels pendant la reproduction."
+    },
+    "behavior": {
+      "en": "The yellowhammer is largely sedentary: its winter and breeding distributions in Britain are almost identical. Males sing from exposed perches, often on top of a hedge or bush.",
+      "fr": "Le bruant jaune est en grande partie sédentaire : en Grande-Bretagne, ses aires d’hiver et de reproduction sont presque identiques. Les mâles chantent depuis des perchoirs bien visibles, souvent au sommet d’une haie ou d’un buisson."
+    },
+    "reproduction": {
+      "en": "In Britain a clutch is typically three or four eggs, incubated by the female for about 13 days. The chicks fledge after roughly 14 days. Birds typically first breed at one year old.",
+      "fr": "En Grande-Bretagne, une couvée compte typiquement trois ou quatre œufs, couvés par la femelle pendant environ 13 jours. Les jeunes s’envolent après environ 14 jours. Les oiseaux se reproduisent en général pour la première fois à un an."
+    },
+    "ecology": {
+      "en": "The species depends on hedgerows for nesting and on farmland seeds and insects for food, so changes in farming affect it directly. Its decline in Britain is attributed mainly to a lack of food and nesting habitat.",
+      "fr": "L’espèce dépend des haies pour nicher et des graines et insectes des terres agricoles pour se nourrir, si bien que l’évolution de l’agriculture l’affecte directement. Son déclin en Grande-Bretagne est attribué surtout au manque de nourriture et de sites de nidification."
+    },
+    "conservation": {
+      "en": "The IUCN lists the species as Least Concern worldwide, but in the UK it is Red-listed. The British breeding population was about 700,000 territories in 2016 and fell by 68% between 1967 and 2024, with the breeding range shrinking by 23%. A typical breeding-age bird lives about three years, and the oldest ringed one nearly 12.",
+      "fr": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais au Royaume-Uni elle figure sur la liste rouge. La population nicheuse britannique était d’environ 700 000 territoires en 2016 et a diminué de 68 % entre 1967 et 2024, son aire de reproduction se réduisant de 23 %. Un oiseau en âge de se reproduire vit en général environ trois ans, et le plus vieil oiseau bagué près de 12 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Yellowhammer — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Bruant jaune — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/yellowhammer",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adults 25.9 g, wing 85.7 mm; clutch typically 3–4; incubation about 13 days; fledging about 14 days; first breeding at 1 year; largely sedentary.",
+        "UK about 700,000 territories (2016), −68% 1967–2024, range −23%; Red-listed in the UK; IUCN Least Concern; record age nearly 12 years; typical life expectancy 3 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Yellowhammer — RSPB Bird Guide",
+        "fr": "Bruant jaune — guide des oiseaux de la RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/yellowhammer",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Male yellow head and underparts, chestnut rump, white outer tail feathers, short greyish bill; sings from tops of hedges; resident on mixed and arable farms; nests in thick hedges.",
+        "Adults eat mainly seeds, chicks insects and spiders; Red-listed; decline mainly from lack of food and nesting habitat."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The RSPB page gives the decline as 61% for 1967–2020 while BTO gives 68% for 1967–2024; the BTO figure with its longer period is used.",
+    "Animal Diversity Web’s page for this species holds only classification, so it was not used.",
+    "Figures are British; the species ranges across Eurasia."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers taken from the BTO BirdFacts page (consulted 2026-10-12); RSPB used for qualitative facts; illustration (adult male) checked against sources."
+}

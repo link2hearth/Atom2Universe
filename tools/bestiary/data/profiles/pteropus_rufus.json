@@ -1,0 +1,91 @@
+{
+  "id": "pteropus_rufus",
+  "scientific": "Pteropus rufus",
+  "group": "mammals",
+  "name": {
+    "en": "Madagascar Flying Fox",
+    "fr": "Renard volant de Madagascar"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Madagascar flying fox is the largest bat of Madagascar and is found nowhere else. It is a fruit bat that roosts in groups in trees and is listed as Vulnerable, mainly because of hunting and the loss of its forest.",
+      "fr": "Le renard volant de Madagascar est la plus grande chauve-souris de Madagascar et n’existe nulle part ailleurs. C’est une roussette qui dort en groupes dans les arbres et elle est classée vulnérable, surtout à cause de la chasse et de la perte de sa forêt."
+    },
+    "identification": {
+      "en": "A large bat with a body about 24–25 cm long, a wingspan of roughly 1.2 m and a mass of 500–750 g, males being heavier than females. It has a long pointed muzzle, pointed ears, large eyes and no obvious tail. The upper body is yellowish brown, the underside dark brown, the face and throat seal-brown and the neck yellowish to reddish brown.",
+      "fr": "Grande chauve-souris au corps long d’environ 24 à 25 cm, d’une envergure d’environ 1,2 m et pesant de 500 à 750 g, les mâles étant plus lourds que les femelles. Elle a un long museau pointu, des oreilles pointues, de grands yeux et pas de queue apparente. Le dessus du corps est brun jaunâtre, le dessous brun foncé, la face et la gorge brun phoque et la nuque brun jaunâtre à roussâtre."
+    },
+    "habitat": {
+      "en": "It lives only in Madagascar. It is described as roosting mainly in humid coastal forest on sandy soil, from sea level to about 800 m. In the Mangoro valley, in the centre-east, roosts were in small, isolated fragments of degraded humid forest of 2.2–28.7 ha and in two Eucalyptus plantations, all outside protected areas.",
+      "fr": "Il vit uniquement à Madagascar. Il dort surtout dans la forêt humide littorale sur sol sableux, du niveau de la mer à environ 800 m. Dans la vallée du Mangoro, au centre-est, les dortoirs se trouvaient dans de petits fragments isolés de forêt humide dégradée de 2,2 à 28,7 ha et dans deux plantations d’eucalyptus, tous hors des aires protégées."
+    },
+    "diet": {
+      "en": "It mostly chews fruit to drink the juice and spits out the dry pulp and seeds. It also eats pollen and leaves, and sometimes insects. In the Mangoro valley, droppings contained remains of native forest trees, cultivated fruits and Eucalyptus flowers, so it can feed in landscapes changed by people.",
+      "fr": "Il mâche surtout les fruits pour en boire le jus et recrache la pulpe sèche et les graines. Il mange aussi du pollen et des feuilles, et parfois des insectes. Dans la vallée du Mangoro, ses fientes contenaient des restes d’arbres forestiers indigènes, de fruits cultivés et de fleurs d’eucalyptus : il peut donc se nourrir dans des paysages transformés par l’humain."
+    },
+    "behavior": {
+      "en": "It roosts in groups of hundreds to thousands, often at the same site all year, but is very sensitive to disturbance and may move away. Numbers at a roost vary a lot from month to month: in the Mangoro valley only two of six sites held bats at every visit. In the mating season, dominant males defend territories on the roost trees. It relies mainly on scent and sound rather than echolocation.",
+      "fr": "Il dort en groupes de plusieurs centaines à plusieurs milliers d’individus, souvent au même endroit toute l’année, mais il est très sensible au dérangement et peut partir ailleurs. Les effectifs d’un dortoir varient beaucoup d’un mois à l’autre : dans la vallée du Mangoro, seuls deux sites sur six abritaient des chauves-souris à chaque visite. À la saison des amours, les mâles dominants défendent des territoires sur les arbres du dortoir. Il se repère surtout par l’odorat et le son plutôt que par écholocation."
+    },
+    "reproduction": {
+      "en": "Mating takes place in April–May, with males gripping the female’s scruff. Gestation is given as 100–150 days, and delayed implantation is possible. Usually a single pup is born, around October, and is nursed for four to five months. Both sexes mature at 1.5 to 2 years. Three Mangoro roosts were occupied only from September to March, possibly as nursery roosts.",
+      "fr": "L’accouplement a lieu en avril-mai, le mâle saisissant la femelle par la nuque. La gestation est donnée pour 100 à 150 jours, et une implantation retardée est possible. Un seul petit naît en général, vers octobre, et il est allaité quatre à cinq mois. Les deux sexes sont matures à 1,5 à 2 ans. Trois dortoirs du Mangoro n’étaient occupés que de septembre à mars, peut-être comme dortoirs de maternité."
+    },
+    "ecology": {
+      "en": "It is an important seed disperser for many plants of the coastal forests, and the only fruit-eater there able to carry seeds over long distances, which may help link forest fragments. Pollen found on its body suggests it also pollinates some plants. Young that fall from the roost are taken by the Madagascar harrier-hawk.",
+      "fr": "C’est un disséminateur de graines important pour de nombreuses plantes des forêts littorales, et le seul frugivore de ces forêts capable de transporter des graines sur de longues distances, ce qui peut aider à relier les fragments de forêt. Le pollen trouvé sur son corps laisse penser qu’il pollinise aussi certaines plantes. Les jeunes tombés du dortoir sont capturés par le gymnogène de Madagascar."
+    },
+    "conservation": {
+      "en": "It is listed as Vulnerable on the IUCN Red List. Hunting for bushmeat was found at three of the Mangoro roosts, and fire and forest clearance are widespread; the authors of that study noted that no conservation plan existed for the species. Hunting also targets roosts and feeding trees elsewhere, and only some roosts are formally protected.",
+      "fr": "Il est classé vulnérable sur la Liste rouge de l’UICN. La chasse pour la viande a été constatée à trois des dortoirs du Mangoro, et le feu et les défrichements y sont répandus; les auteurs de cette étude notaient qu’aucun plan de conservation n’existait pour l’espèce. La chasse vise aussi des dortoirs et des arbres fruitiers ailleurs, et seuls certains dortoirs sont protégés officiellement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pteropus rufus — Animal Diversity Web, University of Michigan",
+        "fr": "Pteropus rufus — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pteropus_rufus/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Body 24.3–25.2 cm, wingspan 122–125 cm, 500–750 g; roosts in groups of hundreds to thousands; mating April–May, gestation 100–150 days, one pup around October, nursing 4–5 months, maturity 1.5–2 years.",
+        "Only long-distance frugivore in the littoral forest; hunted for bushmeat. Its status line (Least Concern 1996, then Vulnerable) and its population figures are dated and were not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Not rare, but threatened: the endemic Madagascar flying fox Pteropus rufus in a fragmented landscape (Jenkins et al., Oryx 2007, abstract)",
+        "fr": "Pas rare mais menacé : le renard volant endémique de Madagascar Pteropus rufus dans un paysage fragmenté (Jenkins et al., Oryx 2007, résumé)"
+      },
+      "url": "https://zenodo.org/records/13407794",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Six roosts monitored over 12 months in the Mangoro valley; two in Eucalyptus, six in forest fragments of 2.2–28.7 ha; numbers varied between months; three sites occupied September–March.",
+        "Hunting at three roosts; fire and clearance widespread; no conservation plan; Vulnerable. Only the abstract was readable (DOI 10.1017/S0030605307001883)."
+      ]
+    },
+    {
+      "title": {
+        "en": "Pteropus rufus — Mammal Diversity Database",
+        "fr": "Pteropus rufus — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1004496",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Endemic to Madagascar; described by Geoffroy Saint-Hilaire in 1803; IUCN status Vulnerable."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List pages could not be opened; the Vulnerable category comes from the Mammal Diversity Database and the 2007 Oryx abstract, and the date of the current assessment was not checked.",
+    "Animal Diversity Web gives a gestation of 100–150 days and notes that delayed implantation is possible; the timing of reproduction is thinly documented.",
+    "No current population estimate is given: the figures found in Animal Diversity Web are old and were not used.",
+    "The elevation and habitat description (humid coastal forest, up to 800 m) comes from Animal Diversity Web only; the Mangoro roosts were in degraded mid-elevation forest and plantations."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked between a university database, the abstract of a field study and the Mammal Diversity Database; illustration to be checked by the owner."
+}

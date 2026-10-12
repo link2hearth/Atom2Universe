@@ -1,0 +1,105 @@
+{
+  "id": "lasius_niger",
+  "scientific": "Lasius niger",
+  "group": "invertebrates",
+  "name": {
+    "en": "Black Garden Ant",
+    "fr": "Fourmi noire des jardins"
+  },
+  "sections": {
+    "overview": {
+      "en": "The black garden ant is the familiar small dark ant of lawns, paths and pavements in Europe. Its colonies are led by a queen that is exceptionally long-lived for an insect, with lifespans of 20 years and more reported, while workers live for a much shorter and more variable time.",
+      "fr": "La fourmi noire des jardins est la petite fourmi sombre bien connue des pelouses, des allées et des trottoirs d’Europe. Ses colonies sont dirigées par une reine d’une longévité exceptionnelle pour un insecte, avec des durées de vie de 20 ans et plus signalées, tandis que les ouvrières vivent bien moins longtemps et de façon plus variable."
+    },
+    "identification": {
+      "en": "Workers are small, about 3 to 5 mm long, and dark brown to almost black. The winged females seen during swarms are larger, up to about 9 mm, while winged males measure about 3.5 to 4.5 mm.",
+      "fr": "Les ouvrières sont petites, d’environ 3 à 5 mm, brun foncé à presque noires. Les femelles ailées observées lors des essaimages sont plus grandes, jusqu’à 9 mm environ, tandis que les mâles ailés mesurent à peu près 3,5 à 4,5 mm."
+    },
+    "habitat": {
+      "en": "It is common in built-up areas and often found in drier places. Nests lie in the ground, in lawns, flower pots, compost bins and among plant roots, often under rocks or paving. The main sign of a nest is a small heap of fine soil at the surface.",
+      "fr": "Elle est commune dans les zones bâties et souvent présente dans les endroits plutôt secs. Les nids se trouvent dans le sol, dans les pelouses, les pots de fleurs, les composteurs et parmi les racines, souvent sous des pierres ou des dalles. Le signe principal d’un nid est un petit tas de terre fine à la surface."
+    },
+    "diet": {
+      "en": "It eats other invertebrates and collects honeydew, the sugary liquid excreted by aphids and some other sap-feeding insects. Workers can often be seen tending aphids.",
+      "fr": "Elle mange d’autres invertébrés et récolte le miellat, le liquide sucré excrété par les pucerons et quelques autres insectes suceurs de sève. On voit souvent les ouvrières s’occuper de pucerons."
+    },
+    "behavior": {
+      "en": "Colonies hold many hundreds to thousands of ants, and large nests can pass 20,000. Ants may guard aphids from ladybirds and other predators to protect their honeydew supply. Young queens and males swarm in warm, humid weather, mainly from July to August, and swarms occur over several weeks rather than on a single day.",
+      "fr": "Les colonies comptent de plusieurs centaines à des milliers de fourmis, et les grands nids peuvent dépasser 20 000 individus. Les fourmis peuvent protéger les pucerons des coccinelles et d’autres prédateurs pour préserver leur réserve de miellat. Les jeunes reines et les mâles essaiment par temps chaud et humide, surtout de juillet à août, sur plusieurs semaines plutôt qu’en une seule journée."
+    },
+    "reproduction": {
+      "en": "During the nuptial flight a queen usually mates with several males and stores enough sperm to lay fertilised eggs for the rest of her life. Males live only a day or two afterwards. The queen then chews off her wings, digs an underground chamber, lays her first eggs and raises them without feeding for weeks, until her first workers can forage.",
+      "fr": "Lors du vol nuptial, une reine s’accouple en général avec plusieurs mâles et conserve assez de spermatozoïdes pour pondre des œufs fécondés jusqu’à la fin de sa vie. Les mâles ne survivent qu’un ou deux jours. La reine s’arrache ensuite les ailes, creuse une chambre souterraine, pond ses premiers œufs et les élève en jeûnant pendant des semaines, jusqu’à ce que ses premières ouvrières puissent chercher de la nourriture."
+    },
+    "ecology": {
+      "en": "In gardens the ants prey on other invertebrates and, by protecting aphids, can raise plant damage; they do little direct harm to plants. Their excavated soil can bury low plants and disturb the roots of potted plants. The Royal Horticultural Society advises tolerating them as part of garden biodiversity.",
+      "fr": "Dans les jardins, ces fourmis chassent d’autres invertébrés et, en protégeant les pucerons, peuvent accroître les dégâts sur les plantes; elles nuisent peu directement aux végétaux. La terre qu’elles rejettent peut recouvrir les plantes basses et perturber les racines en pot. La Royal Horticultural Society conseille de les tolérer comme part de la biodiversité du jardin."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was found. The species is common and widespread in gardens and built-up areas of Europe, and no threat has been identified in the sources consulted.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée. L’espèce est commune et répandue dans les jardins et les zones bâties d’Europe, et aucune menace n’est mentionnée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "When and why winged ants swarm — Natural History Museum, London",
+        "fr": "Quand et pourquoi les fourmis ailées essaiment — Natural History Museum, Londres"
+      },
+      "url": "https://www.nhm.ac.uk/discover/when-why-winged-ants-swarm-nuptial-flight.html",
+      "consulted": "2026-10-12",
+      "supports": ["behavior", "reproduction", "ecology"],
+      "facts": [
+        "Swarms July–August in hot, humid weather, from June to early September, over several weeks; males live a day or two; queen usually mates with several males and stores sperm for life.",
+        "After mating the queen chews off her wings, digs a chamber and raises the first workers without eating for weeks; large nests hold more than 20,000 workers; queens up to about 15 years in the wild, 28 in captivity."
+      ]
+    },
+    {
+      "title": {
+        "en": "Ants — Royal Horticultural Society",
+        "fr": "Les fourmis — Royal Horticultural Society"
+      },
+      "url": "https://www.rhs.org.uk/biodiversity/ants",
+      "consulted": "2026-10-12",
+      "supports": ["habitat", "diet", "behavior", "ecology", "conservation"],
+      "facts": [
+        "Nests of many hundreds, sometimes thousands, in lawns, pots, compost bins and among roots; ants eat invertebrates and collect honeydew and may guard aphids from ladybirds.",
+        "Soil excavation can bury low plants and disturb pot roots; ants are best tolerated as part of garden biodiversity."
+      ]
+    },
+    {
+      "title": {
+        "en": "Black Garden Ant — Gedling Conservation Trust",
+        "fr": "Fourmi noire des jardins — Gedling Conservation Trust"
+      },
+      "url": "https://www.gedlingconservationtrust.org/?p=11656",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "conservation"],
+      "facts": [
+        "Body length 3–5 mm, dark brown almost black; winged females up to 9 mm, winged males 3.5–4.5 mm.",
+        "Often in drier areas and common in built-up areas; nests under rocks; often seen farming aphids."
+      ]
+    },
+    {
+      "title": {
+        "en": "Worker lifespan is an adaptive trait during colony establishment in the long-lived ant Lasius niger — Kramer, Schaible and Scheuerlein, Experimental Gerontology, 2016 (abstract)",
+        "fr": "La durée de vie des ouvrières est un trait adaptatif lors de l’établissement de la colonie chez la fourmi longévive Lasius niger — Kramer, Schaible et Scheuerlein, Experimental Gerontology, 2016 (résumé)"
+      },
+      "url": "https://www.demogr.mpg.de/en/publications_databases_6118/publications_1904/journal_articles/worker_lifespan_is_an_adaptive_trait_during_colony_establishment_in_the_long_lived_ant_lasius_niger_5674",
+      "consulted": "2026-10-12",
+      "supports": ["overview"],
+      "facts": [
+        "Queens reach extraordinary lifespans of 20 years and more; worker lifespan is short and variable."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Queen lifespan differs between sources: about 15 years in the wild and 28 in captivity (museum), 20 years and more (paper); a record of 28–29 years is often quoted but was not confirmed in a page read.",
+    "Whether a nest holds one queen or several is not settled in the sources read, so it is not stated; colony size is given as a broad range.",
+    "Worker lifespan figures vary widely and are not given.",
+    "The IUCN Red List page could not be opened and no global conservation status is stated.",
+    "Geographic scope of the habitat and size information is mainly the United Kingdom."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers copied from the sources named above; illustration to be checked by the owner."
+}

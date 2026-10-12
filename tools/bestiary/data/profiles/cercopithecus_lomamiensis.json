@@ -1,0 +1,103 @@
+{
+  "id": "cercopithecus_lomamiensis",
+  "scientific": "Cercopithecus lomamiensis",
+  "group": "mammals",
+  "name": {
+    "en": "Lesula",
+    "fr": "Lesula"
+  },
+  "sections": {
+    "overview": {
+      "en": "The lesula is a guenon of the central Congo forests, described as a new species only in 2012. The first one noticed by scientists was a young pet in the town of Opala in 2007; fieldwork then found it living wild in a forest block that had hardly been explored. It is listed as Vulnerable.",
+      "fr": "Le lesula est un cercopithèque des forêts du centre du Congo, décrit comme une espèce nouvelle seulement en 2012. Le premier repéré par les scientifiques était un jeune animal de compagnie, à Opala en 2007; des recherches sur le terrain l’ont ensuite trouvé à l’état sauvage dans un bloc forestier à peine exploré. Il est classé vulnérable."
+    },
+    "identification": {
+      "en": "A medium-sized, slim monkey. Measured adult males had a body of 47–65 cm and weighed 4.0–7.1 kg, but only a few animals were measured and no adult female was. It has a long grizzled blond mane, a black back banded with amber, and an amber patch brightest at the base of the tail. Throat and chest are yellowish buff, shoulders and limbs black, thighs silvery grey and the tail black beyond its amber base. The bare face is pale pinkish grey to tan with a cream stripe down the nose, and adult males have a bright blue scrotum and perineum.",
+      "fr": "Singe de taille moyenne et mince. Les mâles adultes mesurés avaient un corps de 47 à 65 cm et pesaient de 4,0 à 7,1 kg, mais peu d’animaux ont été mesurés et aucune femelle adulte. Il porte une longue crinière blonde grisonnante, un dos noir annelé d’ambre et une plaque ambrée très vive à la base de la queue. La gorge et la poitrine sont jaune chamois, les épaules et les membres noirs, les cuisses gris argenté et la queue noire au-delà de sa base ambrée. La face nue est gris rosé pâle à brun clair avec une raie crème sur le nez, et les mâles adultes ont un scrotum et un périnée bleu vif."
+    },
+    "habitat": {
+      "en": "It lives in mature upland evergreen humid forest, including forests dominated by Gilbertiodendron, at 400–715 m. It was seen less often in regrowth near villages and never in seasonally flooded forest or savanna gallery forest. Its known range covers about 17,000 km² in central Congo, between the middle Lomami River in the east and the upper Tshuapa River in the west.",
+      "fr": "Il vit dans la forêt humide sempervirente mature des terres hautes, y compris les forêts dominées par Gilbertiodendron, entre 400 et 715 m. On l’a vu moins souvent dans les recrûs près des villages et jamais en forêt inondée en saison ni en forêt-galerie de savane. Son aire connue couvre environ 17 000 km² dans le centre du Congo, entre le cours moyen du Lomami à l’est et le haut Tshuapa à l’ouest."
+    },
+    "diet": {
+      "en": "It eats leaf stalks, ripe and unripe fruit, flower buds and growing shoots of two ground-living herbs of the arrowroot family, and also picks up food dropped by other primates feeding above. The full diet and its seasonal changes have not been documented.",
+      "fr": "Il mange des pétioles, des fruits mûrs ou verts, des boutons floraux et des jeunes pousses de deux herbes terrestres de la famille des marantacées, et ramasse aussi la nourriture que laissent tomber d’autres primates qui se nourrissent plus haut. Le régime complet et ses variations saisonnières n’ont pas été documentés."
+    },
+    "behavior": {
+      "en": "It is semi-terrestrial: of 48 animals seen, about a third were on the ground when first met, and fleeing animals often ran along the ground. It was usually met alone or in groups of up to five, and in 11 of 19 encounters it was with other monkeys. At dawn, low booming calls given in bouts of two or three are heard over long distances; the callers were almost certainly males.",
+      "fr": "Il est semi-terrestre : sur 48 animaux observés, environ un tiers étaient au sol lors de la première rencontre, et les animaux en fuite couraient souvent par terre. On l’a rencontré le plus souvent seul ou en groupes d’au plus cinq individus, et dans 11 rencontres sur 19 il était avec d’autres singes. À l’aube, des cris graves en bouffées de deux ou trois détonations s’entendent de loin; les émetteurs étaient presque certainement des mâles."
+    },
+    "reproduction": {
+      "en": "Almost nothing is documented about its breeding in the wild: season, gestation, litter and lifespan are all unknown. The only detail reported is that young are pale blond overall and that the amber patch on the back appears within their first three months.",
+      "fr": "On ne sait presque rien de sa reproduction à l’état sauvage : saison, gestation, nombre de petits et longévité sont inconnus. Le seul détail rapporté est que les jeunes sont blond pâle et que la plaque ambrée du dos apparaît au cours des trois premiers mois."
+    },
+    "ecology": {
+      "en": "It often travels with other monkeys, such as Wolf’s mona monkey, the red-tailed monkey and the red colobus. The only recorded predation was one attack by a crowned eagle. Its ecological role has not been studied.",
+      "fr": "Il accompagne souvent d’autres singes, comme le mone de Wolf, le singe à queue rousse et le colobe bai. La seule prédation notée est une attaque d’un aigle couronné. Son rôle écologique n’a pas été étudié."
+    },
+    "conservation": {
+      "en": "It is listed as Vulnerable. The main threat is bushmeat hunting, which has grown over the past decade and feeds city markets such as Kindu and Kisangani; its range was not yet logged or mined when it was described. It was the least often seen primate in the surveys, though the authors called it not uncommon in its range. Population size has not been estimated, and a protected area of about 9,000 km² was proposed in 2012.",
+      "fr": "Il est classé vulnérable. La principale menace est la chasse pour la viande, en hausse depuis dix ans, qui alimente les marchés urbains comme Kindu et Kisangani; son aire n’était alors ni exploitée pour le bois ni minée. Il était le primate le moins souvent vu lors des relevés, bien que les auteurs le jugent non rare dans son aire. La taille de la population n’a pas été estimée, et une aire protégée d’environ 9 000 km² était proposée en 2012."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lesula: a new species of Cercopithecus monkey endemic to the Democratic Republic of Congo (Hart et al., PLOS ONE 2012)",
+        "fr": "Lesula : une nouvelle espèce de cercopithèque endémique de la République démocratique du Congo (Hart et al., PLOS ONE 2012)"
+      },
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0044271",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology", "conservation"],
+      "facts": [
+        "Adult males 47–65 cm, 4.0–7.1 kg (two adult males measured); coat, bare face and blue scrotum; 400–715 m; about 17,000 km² between the Lomami and the upper Tshuapa; 17 of 48 animals first seen on the ground.",
+        "Boom chorus at dawn; one crowned eagle attack; hunting for Kindu and Kisangani markets; provisional Vulnerable; population not estimated; proposed 9,000 km² protected area."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cercopithecus lomamiensis — Animal Diversity Web, University of Michigan",
+        "fr": "Cercopithecus lomamiensis — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Cercopithecus_lomamiensis/",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "diet", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Breeding, lifespan and mature female size undocumented; sister species is the owl-faced monkey.",
+        "Bushmeat hunting is the main threat. Its status line (not yet assessed) is out of date and was not used."
+      ]
+    },
+    {
+      "title": {
+        "en": "Cercopithecus lomamiensis — Mammal Diversity Database",
+        "fr": "Cercopithecus lomamiensis — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000572",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "habitat", "conservation"],
+      "facts": [
+        "Endemic to the Democratic Republic of the Congo; type locality on the west bank of the Lomami River; IUCN status Vulnerable."
+      ]
+    },
+    {
+      "title": {
+        "en": "New Monkey Species from Congo: Cercopithecus lomamiensis — Sci.News",
+        "fr": "Nouvelle espèce de singe au Congo : Cercopithecus lomamiensis — Sci.News"
+      },
+      "url": "https://www.sci.news/biology/article00589.html",
+      "consulted": "2026-10-12",
+      "supports": ["overview"],
+      "facts": [
+        "First known animal was a captive juvenile seen in 2007 at a school director’s compound in Opala; announced in 2012."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The IUCN Red List pages could not be opened; the Vulnerable category comes from the Mammal Diversity Database and the date of the assessment was not checked.",
+    "Body measurements come from very few animals (two adult males, two subadult females); the true range of size is not known.",
+    "Reproduction and lifespan are not documented for this species and none were inferred from relatives.",
+    "Figures on range and hunting date from 2012 and may have changed."
+  ],
+  "reviewed": true,
+  "review_note": "Based on the original description, a university database and the Mammal Diversity Database; illustration to be checked by the owner."
+}

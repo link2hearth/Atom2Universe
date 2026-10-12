@@ -1,0 +1,91 @@
+{
+  "id": "northern_fulmar",
+  "scientific": "Fulmarus glacialis",
+  "group": "birds",
+  "name": {
+    "en": "Northern Fulmar",
+    "fr": "Fulmar boréal"
+  },
+  "sections": {
+    "overview": {
+      "en": "The northern fulmar looks like a stocky gull but belongs to the tubenoses, the group that includes albatrosses. It spends most of its life at sea and is famous for spitting foul-smelling stomach oil at intruders.",
+      "fr": "Le fulmar boréal ressemble à un goéland trapu, mais appartient aux procellariiformes, le groupe qui comprend les albatros. Il passe l’essentiel de sa vie en mer et est célèbre pour cracher sur les intrus une huile stomacale nauséabonde."
+    },
+    "identification": {
+      "en": "A seabird 45–50 cm long with a wingspan of 102–112 cm. British adults weigh about 770 g and have a wing about 330 mm long. The typical bird is light grey above and white below, with a thick yellow bill whose nostrils form a tube on top. Dark and intermediate colour forms also occur, mainly in Arctic populations.",
+      "fr": "Oiseau marin de 45 à 50 cm pour 102 à 112 cm d’envergure. Les adultes britanniques pèsent environ 770 g, avec une aile d’environ 330 mm. L’oiseau typique est gris clair dessus et blanc dessous, avec un gros bec jaune dont les narines forment un tube sur le dessus. Des formes sombres et intermédiaires existent aussi, surtout dans les populations arctiques."
+    },
+    "habitat": {
+      "en": "It feeds over continental-shelf waters from the Arctic to temperate seas, rarely more than 100 km from shore. It breeds on sea cliffs, in Britain around the coasts of Scotland, Wales, Ireland and parts of England where suitable cliffs exist.",
+      "fr": "Il se nourrit au-dessus des eaux des plateaux continentaux, de l’Arctique aux mers tempérées, rarement à plus de 100 km des côtes. Il niche sur les falaises marines, en Grande-Bretagne autour des côtes d’Écosse, du pays de Galles, d’Irlande et de certaines parties de l’Angleterre où l’on trouve des falaises adaptées."
+    },
+    "diet": {
+      "en": "It eats fish, squid and large zooplankton such as amphipods, mostly caught at the surface. It is also an opportunistic scavenger of discarded fish and carrion, and often follows fishing boats.",
+      "fr": "Il mange des poissons, des calmars et un gros zooplancton comme les amphipodes, surtout capturés en surface. C’est aussi un charognard opportuniste, qui profite des rejets de poisson et des cadavres et suit souvent les bateaux de pêche."
+    },
+    "behavior": {
+      "en": "It flies low over the water with stiff wingbeats and long glides. At the nest it defends itself and its site by spitting oil. Young birds spend their first four or five years at sea before visiting colonies.",
+      "fr": "Il vole bas au-dessus de l’eau, par battements raides et longs vols planés. Au nid, il se défend, lui et son site, en crachant son huile. Les jeunes passent leurs quatre ou cinq premières années en mer avant de visiter les colonies."
+    },
+    "reproduction": {
+      "en": "A pair lays a single egg, incubated for 52–53 days with both sexes taking turns. The chick fledges after about 46–51 days. Fulmars first breed at around nine years of age, and many pairs reuse the same nest site year after year.",
+      "fr": "Un couple pond un seul œuf, couvé 52 à 53 jours, les deux sexes se relayant. Le poussin s’envole après 46 à 51 jours environ. Les fulmars se reproduisent pour la première fois vers neuf ans, et beaucoup de couples réutilisent le même site de nid d’année en année."
+    },
+    "ecology": {
+      "en": "Fulmars nest in colonies, often mixed with other seabirds such as kittiwakes. On land, foxes and introduced rats can prey on them. They benefit from fishery discards, which may have helped the North Atlantic population to expand over the past two centuries.",
+      "fr": "Les fulmars nichent en colonies, souvent mêlées à d’autres oiseaux marins comme les mouettes tridactyles. À terre, les renards et les rats introduits peuvent les attaquer. Ils profitent des rejets de la pêche, ce qui a peut-être aidé la population de l’Atlantique Nord à s’étendre ces deux derniers siècles."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classes the species as Least Concern. The UK breeding population was about 350,000 pairs in 2015; it rose 77% between the 1969–70 and 1985–88 censuses, then fell slightly after the early 2000s, and it is Amber-listed. Fulmars are very long-lived: the oldest ringed bird exceeded 41 years.",
+      "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. La population nicheuse britannique était d’environ 350 000 couples en 2015; elle a augmenté de 77 % entre les recensements de 1969-1970 et de 1985-1988, puis a légèrement diminué à partir du début des années 2000, et l’espèce est sur la liste orange. Les fulmars vivent très longtemps : le plus vieil oiseau bagué a dépassé 41 ans."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Fulmar — BTO BirdFacts, British Trust for Ornithology",
+        "fr": "Fulmar boréal — BirdFacts du BTO, British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/understanding-birds/birdfacts/fulmar",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "behavior", "reproduction", "conservation"],
+      "facts": [
+        "Mean weight 772 g, wing 332 mm; clutch 1 egg; incubation 52–53 days shared by both sexes; fledging 46–51 days; first breeding at 9 years; maximum age 41 years 11 months.",
+        "UK 350,000 pairs (2015); +77% between 1969–70 and 1985–88 censuses, slight decline since early 2000s; UK Amber; IUCN Least Concern."
+      ]
+    },
+    {
+      "title": {
+        "en": "Fulmar — RSPB",
+        "fr": "Fulmar boréal — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/fulmar",
+      "consulted": "2026-10-12",
+      "supports": ["overview", "identification", "habitat", "behavior", "ecology"],
+      "facts": [
+        "Gull-like grey and white seabird related to albatrosses; yellow beak with raised nostrils on top; spits foul-smelling oil at intruders; breeds on cliff faces.",
+        "North Atlantic populations expanded over the last 250 years."
+      ]
+    },
+    {
+      "title": {
+        "en": "Fulmarus glacialis — Animal Diversity Web, University of Michigan",
+        "fr": "Fulmarus glacialis — Animal Diversity Web, université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Fulmarus_glacialis/",
+      "consulted": "2026-10-12",
+      "supports": ["identification", "habitat", "diet", "behavior", "reproduction", "ecology"],
+      "facts": [
+        "45–50 cm, wingspan 102–112 cm; colour morphs; diet of fish, squid, amphipods and fishery discards; stiff wingbeats and glides; red and Arctic foxes and introduced rats prey at colonies; mixed colonies.",
+        "Population expansion possibly linked to fish discards. The account’s IUCN status and some breeding figures were not relied on."
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Incubation (52–53 days at BTO versus 47–53 days at ADW) and fledging (46–51 versus 49–58 days) differ between sources; the BTO figures, based on British data, are used.",
+    "The BTO text and key-stats panel disagree about population change; the text (JNCC 2022) is followed.",
+    "Colour forms (dark morphs) are described by ADW for Arctic populations; British birds are mostly the light form."
+  ],
+  "reviewed": true,
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12); size, diet and ecology from ADW and RSPB; illustration to be checked by the owner."
+}
