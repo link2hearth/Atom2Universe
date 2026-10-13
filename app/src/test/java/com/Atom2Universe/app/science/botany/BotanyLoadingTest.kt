@@ -46,6 +46,17 @@ class BotanyLoadingTest {
         assertEquals(768,PlantImageStore.edge(2000f,false))
     }
 
+    @Test fun imageEtCroquisDePortNePartagentPasLeCache()=runBlocking {
+        val store=PlantImageStore(render={_,_->Bitmap.createBitmap(12,12,Bitmap.Config.ARGB_8888)})
+        val habit=key()
+        val image=habit.copy(image=true)
+        val drawing=store.load(plant,habit)
+        val plate=store.load(plant,image)
+        assertNotSame(drawing,plate)
+        assertSame(drawing,store.peek(habit))
+        assertSame(plate,store.peek(image))
+    }
+
     @Test fun changerDePageAnnuleLesDessinsEnAttenteEtNePubliePasLesAnciens()=runBlocking {
         val started=CountDownLatch(1)
         val release=CountDownLatch(1)

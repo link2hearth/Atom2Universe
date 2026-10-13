@@ -370,6 +370,7 @@ class BotanyActivity : ThemedActivity() {
     private fun media(p:PlantSpecies,initial:PlantView,allowModes:Boolean=true):View {
         val box=column()
         val plate=PlantPlateView(this,p,initial).apply{marks=this@BotanyActivity.marks}
+        val frame=FitFrame(this,340f/300f,dp(460)).apply{addView(plate,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))}
         val legend=column()
         val markToggle=CheckBox(this).apply{text=getString(R.string.bot_marks);setTextColor(palette.text);isChecked=marks}
         val plateNote=label(getString(R.string.bot_plate_note),11.5f).apply{setTextColor(palette.secondary)}
@@ -377,6 +378,7 @@ class BotanyActivity : ThemedActivity() {
             legend.removeAllViews()
             markToggle.visibility=if(plate.herbarium)View.GONE else View.VISIBLE
             plateNote.text=getString(if(plate.herbarium)R.string.bot_herbarium_note else R.string.bot_plate_note)
+            frame.ratio=if(plate.herbarium)1.5f else 340f/300f
             if(plate.herbarium || !plate.marks)return
             val labels=if(p.look.study!=null)listOf(p.captions.getValue(plate.mode)) else when(plate.mode) {
                 PlantView.HABIT->listOf(p.captions.getValue(PlantView.HABIT),persistence(p),R.string.bot_height)
@@ -386,21 +388,28 @@ class BotanyActivity : ThemedActivity() {
             }
             labels.forEachIndexed{i,res->legend.addView(label(getString(R.string.bot_legend_format,i+1,getString(res)),12f),full(2))}
         }
-        if(allowModes)box.addView(viewBar(initial){v->mode=v;plate.mode=v;updateLegend()},full(0))
+        val imageAction:(()->Unit)?=if(PlantHerbarium.hasPlate(p.id)) ({plate.image=true;updateLegend()}) else null
+        if(allowModes)box.addView(viewBar(initial,imageAction){v->mode=v;plate.image=false;plate.mode=v;updateLegend()},full(0))
         box.addView(markToggle.apply{
             setOnCheckedChangeListener{_,checked->marks=checked;plate.marks=checked;updateLegend()}},full(0))
-        val frame=FitFrame(this,if(p.id in PlantHerbarium.speciesIds)1.5f else 340f/300f,dp(460)).apply{addView(plate,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))}
         box.addView(frame,if(fiche.wide)LinearLayout.LayoutParams(-1,0,1f) else full(4))
         box.addView(legend,full(2));updateLegend()
         box.addView(plateNote,full(4))
         return box
     }
 
-    private fun viewBar(initial:PlantView,action:(PlantView)->Unit):View {
+    private fun viewBar(initial:PlantView,onImage:(()->Unit)?=null,action:(PlantView)->Unit):View {
         val r=row();val buttons=mutableMapOf<PlantView,Button>()
+        var imageButton:Button?=null
         PlantView.entries.forEach{v->
-            val b=button(getString(v.label),v==initial){buttons.forEach{(k,b)->style(b,k==v)};action(v)}
+            val b=button(getString(v.label),v==initial){buttons.forEach{(k,b)->style(b,k==v)};imageButton?.let{style(it,false)};action(v)}
             buttons[v]=b;r.addView(b,wrap())
+        }
+        if(onImage!=null) {
+            imageButton=button(getString(R.string.bot_view_image)) {
+                buttons.values.forEach{style(it,false)};imageButton?.let{style(it,true)};onImage()
+            }
+            r.addView(imageButton,wrap())
         }
         return horizontal(r)
     }

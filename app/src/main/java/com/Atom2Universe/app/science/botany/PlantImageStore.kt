@@ -9,14 +9,14 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 
-internal data class PlantImageKey(val id:String,val mode:PlantView,val edge:Int,val compact:Boolean)
+internal data class PlantImageKey(val id:String,val mode:PlantView,val edge:Int,val compact:Boolean,val image:Boolean=false)
 
 /** CPU rasterization never runs in View.onDraw. At most two jobs allocate a raster at once. */
 internal class PlantImageStore(
     private val dispatcher:CoroutineDispatcher=Dispatchers.Default.limitedParallelism(2),
     maxBytes:Int=12*1024*1024,
     private val render:(PlantSpecies,PlantImageKey)->Bitmap={species,key->
-        if (PlantHerbarium.hasPlate(key.id, key.mode)) PlantHerbarium.decode(key) else
+        if (key.image && PlantHerbarium.hasPlate(key.id)) PlantHerbarium.decode(key) else
         Bitmap.createBitmap(key.edge,key.edge,Bitmap.Config.ARGB_8888).also { bitmap->
             val canvas=Canvas(bitmap);canvas.scale(key.edge/300f,key.edge/300f)
             PlantPainter(canvas,species,key.compact).draw(key.mode)

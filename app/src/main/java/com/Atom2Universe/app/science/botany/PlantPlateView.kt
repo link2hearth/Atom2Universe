@@ -22,6 +22,8 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
         set(value) { if(field != value) { field=value; clear(); describe() } }
     var marks = true
         set(value) { if(field != value) { field=value; invalidate() } }
+    var image = false
+        set(value) { if(field != value) { field=value; clear(); describe() } }
     private var cached: Bitmap? = null
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val visibleRect=Rect()
@@ -30,7 +32,7 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
     private var requested:PlantImageKey?=null
     private var failed=false
     private val scrollListener=ViewTreeObserver.OnScrollChangedListener { requestIfVisible() }
-    val herbarium: Boolean get() = PlantHerbarium.hasPlate(specimen.id, mode)
+    val herbarium: Boolean get() = image && PlantHerbarium.hasPlate(specimen.id)
 
     init { importantForAccessibility=IMPORTANT_FOR_ACCESSIBILITY_YES; describe() }
 
@@ -62,7 +64,7 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
             return
         }
         val factor=min(width/300f,height/(if(compact)302f else 340f))
-        val key=PlantImageKey(specimen.id,mode,PlantImageStore.edge(300*factor,compact),compact)
+        val key=PlantImageKey(specimen.id,mode,PlantImageStore.edge(300*factor,compact),compact,herbarium)
         if(requested==key)return
         request?.cancel();requested=key;cached=PlantImageStore.shared.peek(key);failed=false
         invalidate()

@@ -258,7 +258,9 @@ internal fun Dialog.useFullScreenWindow(background: Int = Color.TRANSPARENT) {
  * jamais plus large que [maxWidth]. Si la hauteur est imposée (colonne de gauche d'un écran large), le dessin
  * s'y inscrit et se centre ; sinon il suit la largeur.
  */
-class FitFrame(context: Context, private val ratio: Float, private val maxWidth: Int) : FrameLayout(context) {
+class FitFrame(context: Context, ratio: Float, private val maxWidth: Int) : FrameLayout(context) {
+    var ratio: Float = ratio
+        set(value) { require(value > 0f); if(field != value) { field=value; requestLayout() } }
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         val wMode = MeasureSpec.getMode(widthSpec)
         val hMode = MeasureSpec.getMode(heightSpec)
