@@ -24,6 +24,12 @@ object BotanyReferences {
         "espadaea_amoena" to listOf("https://www.bgbm.org/sites/default/files/2024-05/flora_de_la_republica_de_cuba_fasciculo_10-4_goetzeaceae.pdf"),
         "aglaia_evansensis" to listOf("https://repository.si.edu/handle/10088/27075", "https://powo.science.kew.org/taxon/577076-1"),
         "ipomoea_pulcherrima" to listOf("https://pmc.ncbi.nlm.nih.gov/articles/PMC7298354/", "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:129629-2"),
+        "chamaecrista_aldabrensis" to listOf("https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers12-09/010052287.pdf", "https://powo.science.kew.org/taxon/329389-2"),
+        "aglaia_archboldiana" to listOf("https://repository.si.edu/bitstreams/039aaa4f-2d36-43a5-b2fb-727a660a919a/download", "https://powo.science.kew.org/taxon/331328-2"),
+        "syzygium_phaeophyllum" to listOf("https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:602081-1/general-information", "https://hbs.bpbmwebdata.org/pubs-online/pdf/bull141.pdf"),
+        "erythrina_atitlanensis" to listOf("https://www.worldfloraonline.org/taxon/wfo-0000164362", "https://science.mnhn.fr/institution/mnhn/collection/p/item/p00708422", "https://www.worldfloraonline.org/taxon/wfo-4000013970"),
+        "pierrebraunia_bahiensis" to listOf("https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:1141536-2/general-information", "https://oro.open.ac.uk/54427/2/340732_vol2.pdf", "https://www.dkg.eu/wp-content/uploads/2022/03/kuas_2006_7_opt.pdf"),
+        "rauhocereus_riosaniensis" to listOf("https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:217892-2/general-information", "https://www.minam.gob.pe/diversidadbiologica/wp-content/uploads/sites/21/2014/02/document.pdf"),
         "vachellia_anegadensis" to listOf("https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:60441188-2/general-information", "https://www.anbg.gov.au/jmiller/factsheets/AllSpecies/anagadensis.htm"),
         "acacia_mathuataensis" to listOf("https://science.mnhn.fr/institution/mnhn/collection/p/item/p00641583", "https://www.publish.csiro.au/pc/acc/PC14920/PC14920_AC.pdf"),
         "ambrella_longituba" to listOf("https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1602122/full", "https://www.aos.org/explore/ambrella", "https://science.mnhn.fr/institution/mnhn/collection/p/item/p00098892"),
@@ -540,6 +546,12 @@ object BotanyReferences {
         "jupunba_obovalis" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:132569-2/general-information",
         "espadaea_amoena" to "https://www.bgbm.org/sites/default/files/2024-05/flora_de_la_republica_de_cuba_fasciculo_10-4_goetzeaceae.pdf",
         "aglaia_evansensis" to "https://repository.si.edu/handle/10088/27075",
-        "ipomoea_pulcherrima" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:129629-2"
+        "ipomoea_pulcherrima" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:129629-2",
+        "chamaecrista_aldabrensis" to "https://powo.science.kew.org/taxon/329389-2",
+        "aglaia_archboldiana" to "https://powo.science.kew.org/taxon/331328-2",
+        "syzygium_phaeophyllum" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:602081-1/general-information",
+        "erythrina_atitlanensis" to "https://www.worldfloraonline.org/taxon/wfo-0000164362",
+        "pierrebraunia_bahiensis" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:1141536-2/general-information",
+        "rauhocereus_riosaniensis" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:217892-2/general-information"
     )
 }

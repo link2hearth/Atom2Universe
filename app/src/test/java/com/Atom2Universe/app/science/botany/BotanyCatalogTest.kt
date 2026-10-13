@@ -7,6 +7,11 @@ import java.util.Locale
 import javax.xml.parsers.DocumentBuilderFactory
 
 class BotanyCatalogTest {
+    @Test fun familleAbsenteNeFaitPasPlanterLeModule() {
+        assertEquals("unexpected_family",BotanyCatalog.family("unexpected_family").id)
+        assertEquals(com.Atom2Universe.app.R.string.bot_family_unknown,BotanyCatalog.family("unexpected_family").name)
+    }
+
     @Test fun deuxLotsPrairiesHaiesSources() {
         assertEquals(10,MeadowFlowersCatalog.species.size)
         assertEquals(10,HedgerowDiversityCatalog.species.size)

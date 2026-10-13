@@ -59,6 +59,8 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
             "Abarema obovalis" -> "Jupunba obovalis"
             // The Pradosia revision treats the tree label P. atroviolacea as P. grisebachii.
             "Pradosia atroviolacea" -> "Pradosia grisebachii"
+            // POWO accepts Chamaecrista aldabrensis for the tree's Cassia name.
+            "Cassia aldabrensis" -> "Chamaecrista aldabrensis"
             else -> name
         }
     }
