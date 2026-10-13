@@ -83,7 +83,7 @@ internal object PlantHerbarium {
         "satureja_hortensis", "rumex_acetosa", "spinacia_oleracea", "sphagnum_capillifolium", "fragaria_iturupensis",
         "arenga_wightii", "androlepis_skinneri", "syzygium_aromaticum", "sedum_acre", "tectona_grandis",
         "volvox_carteri", "chlamydomonas_reinhardtii", "aegagropila_linnaei", "hylocereus_costaricensis", "ariocarpus_scaphirostrus",
-        "echinopsis_macrogona", "scilla_morrisii", "heliamphora_chimantensis", "sphagnum_fuscum", "sphagnum_cuspidatum")
+        "echinopsis_macrogona", "scilla_morrisii", "heliamphora_chimantensis", "sphagnum_fuscum", "sphagnum_cuspidatum", "anthemis_glaberrima", "peganum_harmala", "plantago_maritima", "plantago_media", "persicaria_capitata", "prunus_maximowiczii", "psychotria_viridis", "puccinellia_maritima", "rhinanthus_minor", "rhus_typhina", "rosa_moschata", "salvadora_persica", "tanacetum_vulgare", "urtica_urens", "vaccinium_ovalifolium", "syzygium_jambos", "streblus_asper", "hyophorbe_amaricaulis", "rhipsalis_pilocarpa", "haraella_retrocalla")
 
     fun hasPlate(id: String) = id in speciesIds
 

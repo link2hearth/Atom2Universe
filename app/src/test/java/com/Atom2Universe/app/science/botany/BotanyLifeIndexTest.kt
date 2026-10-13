@@ -89,7 +89,7 @@ class BotanyLifeIndexTest {
             val entry=requireNotNull(index.forIllustrated(species.id)) { "Missing living-tree link: ${species.id}" }
             assertEquals(species.id,index.forNode(entry.nodeId)?.illustratedId)
         }
-        for(species in PriorityTreeCatalogHerbariumLot39.species) {
+        for(species in PriorityTreeCatalogHerbariumLot39.species + PriorityTreeCatalogHerbariumLot40.species) {
             val entry=requireNotNull(index.forIllustrated(species.id)) { "Missing living-tree link: ${species.id}" }
             assertEquals(species.id,index.forNode(entry.nodeId)?.illustratedId)
         }
