@@ -147,8 +147,13 @@ object BotanyCatalog {
         PlantFamily("Buxbaumiaceae",R.string.bot_family_Buxbaumiaceae,R.string.bot_family_Buxbaumiaceae_desc,R.string.bot_family_Buxbaumiaceae_aliases),
         PlantFamily("Malpighiaceae",R.string.bot_family_Malpighiaceae,R.string.bot_family_Malpighiaceae_desc,R.string.bot_family_Malpighiaceae_aliases),
         PlantFamily("Lentibulariaceae",R.string.bot_family_Lentibulariaceae,R.string.bot_family_Lentibulariaceae_desc,R.string.bot_family_Lentibulariaceae_aliases),
+        PlantFamily("Myrtaceae",R.string.bot_family_Myrtaceae,R.string.bot_family_Myrtaceae_desc,R.string.bot_family_Myrtaceae_aliases),
+        PlantFamily("Sphagnaceae",R.string.bot_family_Sphagnaceae,R.string.bot_family_Sphagnaceae_desc,R.string.bot_family_Sphagnaceae_aliases),
+        PlantFamily("Volvocaceae",R.string.bot_family_Volvocaceae,R.string.bot_family_Volvocaceae_desc,R.string.bot_family_Volvocaceae_aliases),
+        PlantFamily("Chlamydomonadaceae",R.string.bot_family_Chlamydomonadaceae,R.string.bot_family_Chlamydomonadaceae_desc,R.string.bot_family_Chlamydomonadaceae_aliases),
+        PlantFamily("Cladophoraceae",R.string.bot_family_Cladophoraceae,R.string.bot_family_Cladophoraceae_desc,R.string.bot_family_Cladophoraceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species + PriorityTreeCatalogHerbariumLot33.species + PriorityTreeCatalogHerbariumLot34.species + PriorityTreeCatalogHerbariumLot35.species + PriorityTreeCatalogHerbariumLot36.species + PriorityTreeCatalogHerbariumLot37.species + PriorityTreeCatalogHerbariumLot38.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species + PriorityTreeCatalogHerbariumLot33.species + PriorityTreeCatalogHerbariumLot34.species + PriorityTreeCatalogHerbariumLot35.species + PriorityTreeCatalogHerbariumLot36.species + PriorityTreeCatalogHerbariumLot37.species + PriorityTreeCatalogHerbariumLot38.species + PriorityTreeCatalogHerbariumLot39.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
@@ -258,5 +263,6 @@ object BotanyCatalog {
         BotanySource("davy2001",R.string.bot_source_davy2001,"https://besjournals.onlinelibrary.wiley.com/"),
         BotanySource("pubmed_ruta",R.string.bot_source_pubmed_ruta,"https://pubmed.ncbi.nlm.nih.gov/17303046/"),
         BotanySource("cpn",R.string.bot_source_cpn,"https://cpn.carnivorousplants.org/"),
+        BotanySource("phycology",R.string.bot_source_phycology,"https://cfb.unh.edu/phycokey/"),
     )
 }

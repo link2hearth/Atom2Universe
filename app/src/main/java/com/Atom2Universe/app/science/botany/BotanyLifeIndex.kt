@@ -36,10 +36,17 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
         // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77182814-1/general-information
         // Opuntia helleri is a synonym of the accepted Opuntia galapageia var. helleri.
         // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:175098-2
+        // Hylocereus costaricensis is a homotypic synonym of Selenicereus costaricensis.
+        // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:125384-2
+        // The tree spelling Ariocarpus scaphirostris is an orthographic variant;
+        // POWO and IPNI retain the accepted spelling scaphirostrus.
+        // https://powo.science.kew.org/taxon/19065-2 https://www.ipni.org/n/19065-2
         internal fun treeScientificName(name:String):String = when(name) {
             "Rabelera holostea" -> "Stellaria holostea"
             "Dracaena pethera" -> "Sansevieria kirkii"
             "Opuntia helleri" -> "Opuntia galapageia var. helleri"
+            "Hylocereus costaricensis" -> "Selenicereus costaricensis"
+            "Ariocarpus scaphirostris" -> "Ariocarpus scaphirostrus"
             else -> name
         }
     }
