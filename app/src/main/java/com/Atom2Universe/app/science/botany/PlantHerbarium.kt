@@ -71,7 +71,11 @@ internal object PlantHerbarium {
         "aristotelia_serrata", "aztekium_ritteri", "bauhinia_racemosa", "bidens_cernua", "briza_maxima",
         "chamaecyparis_formosensis", "combretum_paniculatum", "cylindropuntia_bigelovii", "cylindropuntia_leptocaulis", "dianthus_gratianopolitanus",
         "dipterocarpus_alatus", "dracaena_braunii", "enterolobium_cyclocarpum", "euphorbia_abdelkuri", "fagopyrum_tataricum",
-        "juncus_maritimus", "kalmia_cuneata", "marchantia_polymorpha", "echinocereus_dasyacanthus", "hibiscus_insularis")
+        "juncus_maritimus", "kalmia_cuneata", "marchantia_polymorpha", "echinocereus_dasyacanthus", "hibiscus_insularis",
+        "austrotaxus_spicata", "carex_curvula", "desfontainia_spinosa", "diselma_archeri", "euphorbia_dulcis",
+        "heliamphora_nutans", "hylocomium_splendens", "iberis_amara", "ipomoea_alba", "knautia_arvensis",
+        "leucaena_leucocephala", "lepidium_latifolium", "lepidium_virginicum", "lycium_chinense", "mammillaria_bombycina",
+        "mirabilis_jalapa", "nesocodon_mauritianus", "notobasis_syriaca", "oenothera_biennis", "orthotrichum_anomalum")
 
     fun hasPlate(id: String) = id in speciesIds
 

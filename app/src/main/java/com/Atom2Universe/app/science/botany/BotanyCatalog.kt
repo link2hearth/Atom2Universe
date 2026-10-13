@@ -134,8 +134,17 @@ object BotanyCatalog {
         PlantFamily("Ochnaceae",R.string.bot_family_Ochnaceae,R.string.bot_family_Ochnaceae_desc,R.string.bot_family_Ochnaceae_aliases),
         PlantFamily("Scheuchzeriaceae",R.string.bot_family_Scheuchzeriaceae,R.string.bot_family_Scheuchzeriaceae_desc,R.string.bot_family_Scheuchzeriaceae_aliases),
         PlantFamily("Osmundaceae",R.string.bot_family_Osmundaceae,R.string.bot_family_Osmundaceae_desc,R.string.bot_family_Osmundaceae_aliases),
+        PlantFamily("Taxaceae",R.string.bot_family_Taxaceae,R.string.bot_family_Taxaceae_desc,R.string.bot_family_Taxaceae_aliases),
+        PlantFamily("Columelliaceae",R.string.bot_family_Columelliaceae,R.string.bot_family_Columelliaceae_desc,R.string.bot_family_Columelliaceae_aliases),
+        PlantFamily("Cyperaceae",R.string.bot_family_Cyperaceae,R.string.bot_family_Cyperaceae_desc,R.string.bot_family_Cyperaceae_aliases),
+        PlantFamily("Sarraceniaceae",R.string.bot_family_Sarraceniaceae,R.string.bot_family_Sarraceniaceae_desc,R.string.bot_family_Sarraceniaceae_aliases),
+        PlantFamily("Hylocomiaceae",R.string.bot_family_Hylocomiaceae,R.string.bot_family_Hylocomiaceae_desc,R.string.bot_family_Hylocomiaceae_aliases),
+        PlantFamily("Orthotrichaceae",R.string.bot_family_Orthotrichaceae,R.string.bot_family_Orthotrichaceae_desc,R.string.bot_family_Orthotrichaceae_aliases),
+        PlantFamily("Onagraceae",R.string.bot_family_Onagraceae,R.string.bot_family_Onagraceae_desc,R.string.bot_family_Onagraceae_aliases),
+        PlantFamily("Nyctaginaceae",R.string.bot_family_Nyctaginaceae,R.string.bot_family_Nyctaginaceae_desc,R.string.bot_family_Nyctaginaceae_aliases),
+        PlantFamily("Caprifoliaceae",R.string.bot_family_Caprifoliaceae,R.string.bot_family_Caprifoliaceae_desc,R.string.bot_family_Caprifoliaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species + PriorityTreeCatalogHerbariumLot33.species + PriorityTreeCatalogHerbariumLot34.species + PriorityTreeCatalogHerbariumLot35.species + PriorityTreeCatalogHerbariumLot36.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species + PriorityTreeCatalogHerbariumLot33.species + PriorityTreeCatalogHerbariumLot34.species + PriorityTreeCatalogHerbariumLot35.species + PriorityTreeCatalogHerbariumLot36.species + PriorityTreeCatalogHerbariumLot37.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
@@ -224,5 +233,10 @@ object BotanyCatalog {
         BotanySource("auckland",R.string.bot_source_auckland,"https://www.nzplants.auckland.ac.nz/"),
         BotanySource("naturalis",R.string.bot_source_naturalis,"https://repository.naturalis.nl/"),
         BotanySource("norfolk",R.string.bot_source_norfolk,"https://norfolkislandnationalpark.gov.au/discover/nature/plants/phillip-island-hibiscus/"),
+        BotanySource("anbg",R.string.bot_source_anbg,"https://www.anbg.gov.au/gnp/gnp11/diselma-archeri.html"),
+        BotanySource("flora_israel",R.string.bot_source_flora_israel,"https://flora.org.il/en/plants/NOTSYR/"),
+        BotanySource("bryological",R.string.bot_source_bryological,"https://www.britishbryologicalsociety.org.uk/learning/species-finder/orthotrichum-anomalum/"),
+        BotanySource("nzflora",R.string.bot_source_nzflora,"https://www.nzflora.info/factsheet/Taxon/Hylocomium-splendens.html"),
+        BotanySource("mobot",R.string.bot_source_mobot,"https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?cv=5&isprofile=0&lo=1&taxonid=279304"),
     )
 }
