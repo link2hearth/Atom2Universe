@@ -194,6 +194,15 @@
     <string name="bot_family_Aquifoliaceae_desc">Dans cet atlas : le houx, aux feuilles coriaces persistantes et fruits rouges sur les pieds femelles.</string>
     <string name="bot_family_Buxaceae_desc">Dans cet atlas : le buis, aux petites feuilles opposées et aux fleurs discrètes sans pétales.</string>
     <string name="bot_family_Fabaceae_desc">Les espèces représentées possèdent des fleurs papilionacées et des fruits de type gousse.</string>
+    <string name="bot_family_Dioncophyllaceae" translatable="false">Dioncophyllaceae</string>
+    <string name="bot_family_Dioncophyllaceae_desc">Famille tropicale monotypique de lianes, qui comprend Dioncophyllum thollonii, non carnivore.</string>
+    <string name="bot_family_Dioncophyllaceae_aliases">Dioncophyllacées</string>
+    <string name="bot_family_Guamatelaceae" translatable="false">Guamatelaceae</string>
+    <string name="bot_family_Guamatelaceae_desc">Famille centraméricaine monotypique de sous-arbrisseaux, représentée par Guamatela tuerckheimii.</string>
+    <string name="bot_family_Guamatelaceae_aliases">Guamatelacées</string>
+    <string name="bot_family_Mniaceae" translatable="false">Mniaceae</string>
+    <string name="bot_family_Mniaceae_desc">Famille de mousses à tiges feuillées et sporophytes bien visibles.</string>
+    <string name="bot_family_Mniaceae_aliases">Mniacées</string>
     <string name="bot_family_Ericaceae_desc">Dans cet atlas : callune et bruyère, petits ligneux de terrains acides, à feuilles réduites.</string>
     <string name="bot_family_Asteraceae_desc">Ce qui ressemble à une fleur est un capitule regroupant de nombreuses petites fleurs.</string>
     <string name="bot_family_Papaveraceae_desc">Dans cet atlas : le coquelicot, à quatre pétales, nombreuses étamines et capsule percée de pores.</string>

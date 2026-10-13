@@ -207,6 +207,15 @@
     <string name="bot_family_Buxaceae" translatable="false">Buxaceae</string>
     <string name="bot_family_Buxaceae_desc">In this atlas: box, with small opposite leaves and inconspicuous flowers without petals.</string>
     <string name="bot_family_Fabaceae" translatable="false">Fabaceae</string>
+    <string name="bot_family_Dioncophyllaceae" translatable="false">Dioncophyllaceae</string>
+    <string name="bot_family_Dioncophyllaceae_desc">A monotypic tropical family of lianas, including the non-carnivorous Dioncophyllum thollonii.</string>
+    <string name="bot_family_Dioncophyllaceae_aliases">Dioncophyll family</string>
+    <string name="bot_family_Guamatelaceae" translatable="false">Guamatelaceae</string>
+    <string name="bot_family_Guamatelaceae_desc">A monotypic Central American family of low shrubs, represented by Guamatela tuerckheimii.</string>
+    <string name="bot_family_Guamatelaceae_aliases">Guamatela family</string>
+    <string name="bot_family_Mniaceae" translatable="false">Mniaceae</string>
+    <string name="bot_family_Mniaceae_desc">A family of mosses with leafy shoots and conspicuous sporophytes.</string>
+    <string name="bot_family_Mniaceae_aliases">Mnium moss family</string>
     <string name="bot_family_Fabaceae_desc">The species shown have pea flowers and pods.</string>
     <string name="bot_family_Ericaceae" translatable="false">Ericaceae</string>
     <string name="bot_family_Ericaceae_desc">In this atlas: heather and bell heather, small woody plants of acid ground with reduced leaves.</string>

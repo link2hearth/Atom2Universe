@@ -51,6 +51,10 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
             "Abarema turbinata" -> "Jupunba turbinata"
             // POWO accepts Melocactus lemarii for the tree's spelling lemairei.
             "Melocactus lemairei" -> "Melocactus lemarii"
+            // POWO accepts Vachellia anegadensis for the tree's Acacia name.
+            "Acacia anegadensis" -> "Vachellia anegadensis"
+            // POWO accepts Ruizia parviflora; Trochetia parviflora is a synonym.
+            "Trochetia parviflora" -> "Ruizia parviflora"
             else -> name
         }
     }
