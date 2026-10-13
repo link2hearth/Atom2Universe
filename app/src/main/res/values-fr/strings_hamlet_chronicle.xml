@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_chronicle_title">Gazette du village</string>
+    <string name="hamlet_chronicle_empty">L’histoire de ton village s’écrira ici au fil de son développement.</string>
+    <string name="hamlet_chronicle_date">%1$s · %2$s</string>
+    <string name="hamlet_chronicle_welcome">Un nouveau village commence. Installe-toi !</string>
+    <string name="hamlet_chronicle_level">Ton village a atteint le niveau %1$d.</string>
+    <string name="hamlet_chronicle_delivery">%1$s a récupéré une commande à l’atelier %2$s.</string>
+    <string name="hamlet_chronicle_gift">Un cadeau du village a été ouvert.</string>
+    <string name="hamlet_chronicle_expansion">Tes frontières couvrent maintenant %1$d cases de côté.</string>
+    <string name="hamlet_chronicle_hall">La halle du village a atteint le rang %1$d.</string>
+    <string name="hamlet_chronicle_realm">Un nouveau royaume a été fondé : %1$s.</string>
+    <string name="hamlet_chronicle_visit">Tu as rendu visite à %1$s.</string>
+    <string name="hamlet_chronicle_order">Tu as passé une commande chez %1$s.</string>
+    <string name="hamlet_chronicle_pickup">Tu as récupéré ta commande chez %1$s.</string>
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_realms_title">My realms</string>
+    <string name="hamlet_realms_default_name">Realm %1$d</string>
+    <string name="hamlet_realms_shared">Your coins, heroes, quests and research travel with you. Each realm keeps its own buildings, crops, paths and borders. Crops and construction continue while you explore another realm.</string>
+    <string name="hamlet_realms_summary">Realm %1$d · Hall %2$d · %3$d × %4$d plots · %5$d buildings</string>
+    <string name="hamlet_realms_current">You are here</string>
+    <string name="hamlet_realms_travel">Travel here</string>
+    <string name="hamlet_realms_rename">Rename realm</string>
+    <string name="hamlet_realms_close">Back to village</string>
+    <string name="hamlet_realms_save">Save name</string>
+    <string name="hamlet_realms_found_title">Found Realm %1$d</string>
+    <string name="hamlet_realms_found_explain">Start a fresh village with its own hall, cottage and fields. Your previous realms stay exactly where you left them.</string>
+    <string name="hamlet_realms_requirement">Level %1$d · %2$s coins</string>
+    <string name="hamlet_realms_creative_free">Free in creative mode · Keep founding new realms as you wish.</string>
+    <string name="hamlet_realms_found">Found this realm</string>
+    <string name="hamlet_realms_template">Starting terrain</string>
+    <string name="hamlet_realms_template_starter">Starter village · hall, cottage and fields</string>
+    <string name="hamlet_realms_template_empty">Blank canvas · hall and maximum land</string>
+    <string name="hamlet_realms_template_showcase">Showcase village · furnished neighbourhoods</string>
+    <string name="hamlet_realms_export">Export world</string>
+    <string name="hamlet_realms_import">Import world</string>
+    <string name="hamlet_realms_export_ok">All your realms and progress were exported.</string>
+    <string name="hamlet_realms_import_ok">World imported. All realms are ready to explore.</string>
+    <string name="hamlet_realms_import_confirm">This will replace the current world. Export it first if you want to keep both.</string>
+    <string name="hamlet_realms_import_legacy_confirm">This file comes from the original HTML game. Review these conversion notes before importing.</string>
+    <string name="hamlet_realms_import_size">The world file is too large. Maximum: 16 MiB.</string>
+    <string name="hamlet_realms_import_format">This file is not a complete valid Hamlet world.</string>
+    <string name="hamlet_realms_import_version">This world uses an unsupported save version.</string>
+    <string name="hamlet_realms_import_objects">An object identifier is missing, duplicated or invalid.</string>
+    <string name="hamlet_realms_import_unknown_object">This world contains an object that this version cannot import.</string>
+    <string name="hamlet_realms_import_unknown_crop">This world contains an unknown crop or a crop in an incompatible field.</string>
+    <string name="hamlet_realms_import_geometry">Some objects overlap, lie outside the map or use invalid terrain limits.</string>
+    <string name="hamlet_realms_import_paths">Some ground tiles are duplicated or invalid.</string>
+    <string name="hamlet_realms_import_hall">Every realm must contain exactly one hall.</string>
+    <string name="hamlet_realms_import_realms">The realm list contains missing or duplicated realm numbers.</string>
+    <string name="hamlet_realms_import_legacy_layout">The original 6 × 6 castle becomes a centred 4 × 4 hall. Buildings, fields, paths, coins and progress are retained; native timers and building rules apply.</string>
+    <string name="hamlet_realms_import_legacy_social">The original simulated friends and orders placed in their villages are not transferred. Local neighbours are recreated. Orders in your own workshops are retained.</string>
+    <string name="hamlet_realms_import_legacy_presentation">The old camera position and news feed are not transferred.</string>
+    <string name="hamlet_realms_import_legacy_quests">Quest progress is matched by objective. The order of later quests differs; old social quests restart at the next village objective, and the gem-spending quest becomes free workshop activity.</string>
+    <string name="hamlet_realms_import_detail">%1$s\n%2$s</string>
+    <string name="hamlet_realms_file_error">The file could not be read or written. Your current world is unchanged.</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_price_free">Gratuit</string>
+    <string name="hamlet_creative_dashboard">MON HAMEAU · MODE LIBRE\nConstruction gratuite · Tout débloqué\n%1$d habitants · Bonheur %2$d%%</string>
+    <string name="hamlet_worlds">Tes villages</string>
+    <string name="hamlet_worlds_help">Tu disposes de deux villages séparés. La progression utilise les pièces et les déblocages. Le mode libre ouvre tout et permet de construire gratuitement. Chaque village conserve sa propre sauvegarde.</string>
+    <string name="hamlet_progression_world">Ouvrir le village en progression</string>
+    <string name="hamlet_creative_world">Ouvrir le village libre</string>
+    <string name="hamlet_creative_badge"> · Mode libre</string>
+</resources>

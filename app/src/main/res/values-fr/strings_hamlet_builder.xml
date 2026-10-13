@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_builder_tools">Outils de construction</string>
+    <string name="hamlet_builder_recent">Récents</string>
+    <string name="hamlet_builder_recent_empty">Les neuf dernières pièces choisies apparaîtront ici.</string>
+    <string name="hamlet_builder_undo">Annuler</string>
+    <string name="hamlet_builder_copy">Copier une pièce</string>
+    <string name="hamlet_builder_redesign">Réaménager</string>
+    <string name="hamlet_builder_bulldoze">Bulldozer</string>
+    <string name="hamlet_builder_fill">Remplir une zone</string>
+    <string name="hamlet_builder_flood">Inonder les terres libres</string>
+    <string name="hamlet_builder_drain">Assécher les eaux</string>
+    <string name="hamlet_builder_flood_confirm">Transformer gratuitement toutes les cases d’herbe libres en eau ? Bâtiments et chemins restent en place. Cette action peut être annulée.</string>
+    <string name="hamlet_builder_drain_confirm">Assécher gratuitement le royaume ? L’eau sous les bateaux sera conservée. Cette action peut être annulée.</string>
+    <string name="hamlet_builder_terrain_result">%1$d cases modifiées.</string>
+    <string name="hamlet_builder_undo_hint">Annuler rembourse seulement le coût payé, sans rembobiner récoltes ni combats. Un achat déjà utilisé ou ayant permis une récompense réclamée est protégé.</string>
+    <string name="hamlet_builder_bulldoze_hint">Glisse pour retirer pièces et chemins. La halle est protégée. Annuler restaure tout le geste si le produit des ventes reste disponible. Deux doigts déplacent la vue.</string>
+    <string name="hamlet_builder_copy_hint">Touche un bâtiment, un décor ou un chemin pour choisir la même pièce. Les copies gardent leur prix de construction habituel.</string>
+    <string name="hamlet_builder_redesign_hint">Glisse une pièce pour la déplacer. Touche-la pour ses actions. Glisse sur le sol vide ou utilise deux doigts pour déplacer la vue.</string>
+    <string name="hamlet_builder_fill_hint">Touche une zone vide continue pour la peindre. Chaque case garde son prix habituel ; le remplissage s’arrête si les fonds manquent. Annuler retire tout le remplissage.</string>
+    <string name="hamlet_msg_undo_empty">Aucune action de construction à annuler.</string>
+    <string name="hamlet_msg_undo_blocked">L’emplacement d’origine a changé. Cette action ne peut pas être annulée sans risque.</string>
+    <string name="hamlet_msg_undo_progress">Cette construction a déjà servi ou permis une progression réclamée. Déplace-la ou revends-la.</string>
+    <string name="hamlet_msg_undo_funds">Garde assez de pièces et de gemmes pour reprendre la vente ou sa récompense de niveau avant d’annuler.</string>
+    <string name="hamlet_msg_undone">Action de construction annulée.</string>
+    <string name="hamlet_msg_copied">Pièce choisie : %1$s</string>
+    <string name="hamlet_msg_copy_empty">Touche une pièce ou un chemin peint pour le copier.</string>
+    <string name="hamlet_msg_move_blocked">Pas assez de place ici. La pièce reste à son emplacement d’origine.</string>
+    <string name="hamlet_msg_fill_done">Zone remplie. Tu peux annuler tout le remplissage.</string>
+    <string name="hamlet_msg_fill_empty">Cette zone ne peut pas recevoir le sol choisi.</string>
+</resources>

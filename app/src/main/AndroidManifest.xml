@@ -1020,6 +1020,10 @@
             android:name=".games.farm.FarmActivity"
             android:exported="false"
             android:label="@string/farm_title" />
+        <activity
+            android:name=".games.hamlet.HamletActivity"
+            android:exported="false"
+            android:label="@string/hamlet_title" />
     </application>
 
 </manifest>

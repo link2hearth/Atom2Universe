@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_builder_tools">Building tools</string>
+    <string name="hamlet_builder_recent">Recent</string>
+    <string name="hamlet_builder_recent_empty">Your last nine chosen pieces will appear here.</string>
+    <string name="hamlet_builder_undo">Undo</string>
+    <string name="hamlet_builder_copy">Copy a piece</string>
+    <string name="hamlet_builder_redesign">Rearrange</string>
+    <string name="hamlet_builder_bulldoze">Bulldozer</string>
+    <string name="hamlet_builder_fill">Fill an area</string>
+    <string name="hamlet_builder_flood">Flood empty land</string>
+    <string name="hamlet_builder_drain">Drain water</string>
+    <string name="hamlet_builder_flood_confirm">Turn all empty grass into water for free? Buildings and paths stay in place. You can undo this action.</string>
+    <string name="hamlet_builder_drain_confirm">Drain the realm for free? Water underneath boats will be preserved. You can undo this action.</string>
+    <string name="hamlet_builder_terrain_result">%1$d tiles changed.</string>
+    <string name="hamlet_builder_undo_hint">Undo refunds only what you paid. It never rewinds harvests or battles. A purchase already used or involved in claimed progress is protected.</string>
+    <string name="hamlet_builder_bulldoze_hint">Drag to remove pieces and paths. The hall is protected. Undo restores a whole stroke, provided its sale proceeds are still available. Use two fingers to move around.</string>
+    <string name="hamlet_builder_copy_hint">Tap a building, decoration or path to select the same piece. Copies use the usual construction price.</string>
+    <string name="hamlet_builder_redesign_hint">Drag a piece to move it. Tap for its actions. Drag empty ground or use two fingers to move the view.</string>
+    <string name="hamlet_builder_fill_hint">Tap a connected empty area to paint it. Each tile costs the usual price; painting stops when funds run out. Undo reverses the entire fill.</string>
+    <string name="hamlet_msg_undo_empty">There is no construction action to undo.</string>
+    <string name="hamlet_msg_undo_blocked">The original space has changed. This action cannot be safely undone.</string>
+    <string name="hamlet_msg_undo_progress">This construction has already been used or contributed to claimed progress. Move or sell it instead.</string>
+    <string name="hamlet_msg_undo_funds">Keep enough coins and gems to reverse the sale or its level reward before undoing.</string>
+    <string name="hamlet_msg_undone">Construction action undone.</string>
+    <string name="hamlet_msg_copied">Selected: %1$s</string>
+    <string name="hamlet_msg_copy_empty">Tap a piece or a painted path to copy it.</string>
+    <string name="hamlet_msg_move_blocked">No space here. The piece stays in its original position.</string>
+    <string name="hamlet_msg_fill_done">Area filled. You can undo the entire fill.</string>
+    <string name="hamlet_msg_fill_empty">This area cannot be filled with the selected ground.</string>
+</resources>

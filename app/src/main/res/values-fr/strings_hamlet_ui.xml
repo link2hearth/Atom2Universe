@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_title">Mon hameau</string>
+    <string name="hamlet_description">Construis un village, cultive ses champs et accueille ses habitants</string>
+    <string name="hamlet_home">Centrer</string>
+    <string name="hamlet_stats">Niveau %1$d · %2$d pièces · %3$d gemmes · %4$d habitants</string>
+    <string name="hamlet_build">Construire</string>
+    <string name="hamlet_gift">Cadeau du jour</string>
+    <string name="hamlet_quest">Quête</string>
+    <string name="hamlet_land">Agrandir le terrain</string>
+    <string name="hamlet_hall">Améliorer la halle</string>
+    <string name="hamlet_hint">Touche un bâtiment pour ses actions · Construis pour agrandir le village</string>
+    <string name="hamlet_selected">%1$s · %2$s</string>
+    <string name="hamlet_placing">Déplace le bâtiment fantôme, puis valide son emplacement</string>
+    <string name="hamlet_brushing">Glisse sur le village pour peindre le sol</string>
+    <string name="hamlet_rotate">Tourner</string>
+    <string name="hamlet_confirm">Poser</string>
+    <string name="hamlet_cancel">Annuler</string>
+    <string name="hamlet_harvest">Récolter</string>
+    <string name="hamlet_collect">Percevoir l’impôt</string>
+    <string name="hamlet_accept">Accepter la commande</string>
+    <string name="hamlet_decline">Refuser</string>
+    <string name="hamlet_deliver">Livrer la commande</string>
+    <string name="hamlet_plant">Planter</string>
+    <string name="hamlet_move">Déplacer</string>
+    <string name="hamlet_sell">Vendre</string>
+    <string name="hamlet_sell_confirm">Vendre %1$s pour %2$d pièces ?</string>
+    <string name="hamlet_catalog_item">%1$s · %2$s · Niveau %3$d</string>
+    <string name="hamlet_price_coins">%1$d pièces</string>
+    <string name="hamlet_price_gems">%1$d gemmes</string>
+    <string name="hamlet_crop_item">%1$s · %2$d pièces · %3$s</string>
+    <string name="hamlet_gift_wait">Ton prochain cadeau sera prêt dans %1$s</string>
+    <string name="hamlet_quests_done">Toutes les quêtes sont terminées</string>
+    <string name="hamlet_quest_detail">%1$s
+
+%2$s
+
+Progression : %3$d/%4$d
+Récompense : %5$d pièces · %6$d gemmes</string>
+    <string name="hamlet_claim">Récupérer</string>
+    <string name="hamlet_land_max">Ton village a atteint sa taille maximale.</string>
+    <string name="hamlet_land_confirm">Agrandir le village pour %1$d pièces ?</string>
+    <string name="hamlet_hall_max">La halle ne peut plus être améliorée.</string>
+    <string name="hamlet_hall_confirm">Améliorer la halle au niveau %1$d pour %2$d pièces ? Le village passera à %3$d cases.</string>
+    <string name="hamlet_duration_hours">%1$dh %2$02dmin</string>
+    <string name="hamlet_duration_minutes">%1$d min</string>
+    <string name="hamlet_status_none">Calme</string>
+    <string name="hamlet_status_building">En construction</string>
+    <string name="hamlet_status_growing">En croissance</string>
+    <string name="hamlet_status_ripe">Prêt à récolter</string>
+    <string name="hamlet_status_withered">Flétri</string>
+    <string name="hamlet_status_tax">Impôt disponible</string>
+    <string name="hamlet_status_order_new">Nouvelle commande</string>
+    <string name="hamlet_status_order_busy">Commande en cours</string>
+    <string name="hamlet_status_order_done">Commande prête</string>
+    <string name="hamlet_status_gift">Cadeau du jour disponible</string>
+    <string name="hamlet_msg_poor">Tu n’as pas assez de pièces.</string>
+    <string name="hamlet_msg_poor_gems">Tu n’as pas assez de gemmes.</string>
+    <string name="hamlet_msg_withered">La culture a fané avant la récolte.</string>
+    <string name="hamlet_msg_built">%1$s est terminé.</string>
+    <string name="hamlet_msg_order_new">Un visiteur a passé commande à %1$s.</string>
+    <string name="hamlet_msg_picked_up">%1$s a récupéré la commande.</string>
+    <string name="hamlet_msg_quest_done">Quête terminée. Récupère ta récompense.</string>
+</resources>

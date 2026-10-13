@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_chronicle_title">Village news</string>
+    <string name="hamlet_chronicle_empty">Your village’s story will appear here as it grows.</string>
+    <string name="hamlet_chronicle_date">%1$s · %2$s</string>
+    <string name="hamlet_chronicle_welcome">A new village begins. Make yourself at home!</string>
+    <string name="hamlet_chronicle_level">Your village reached level %1$d.</string>
+    <string name="hamlet_chronicle_delivery">%1$s collected an order from %2$s.</string>
+    <string name="hamlet_chronicle_gift">A village gift was opened.</string>
+    <string name="hamlet_chronicle_expansion">Your borders now span %1$d tiles.</string>
+    <string name="hamlet_chronicle_hall">The village hall reached rank %1$d.</string>
+    <string name="hamlet_chronicle_realm">A new realm was founded: %1$s.</string>
+    <string name="hamlet_chronicle_visit">You visited %1$s.</string>
+    <string name="hamlet_chronicle_order">You placed an order with %1$s.</string>
+    <string name="hamlet_chronicle_pickup">You collected your order from %1$s.</string>
+</resources>

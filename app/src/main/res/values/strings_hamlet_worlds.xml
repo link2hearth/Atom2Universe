@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_price_free">Free</string>
+    <string name="hamlet_creative_dashboard">HAMLET · CREATIVE\nFree building · Everything unlocked\n%1$d residents · Happiness %2$d%%</string>
+    <string name="hamlet_worlds">Your villages</string>
+    <string name="hamlet_worlds_help">You have two separate villages. Progression uses coins and unlocks. Creative mode unlocks everything and lets you build for free. Each village keeps its own save.</string>
+    <string name="hamlet_progression_world">Open progression village</string>
+    <string name="hamlet_creative_world">Open creative village</string>
+    <string name="hamlet_creative_badge"> · Creative</string>
+</resources>

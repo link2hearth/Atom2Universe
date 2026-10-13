@@ -129,6 +129,14 @@ object GamesCatalog {
             activityClass = com.Atom2Universe.app.games.farm.FarmActivity::class.java
         ),
         HubTile(
+            id = "hamlet",
+            titleRes = R.string.hamlet_title,
+            descriptionRes = R.string.hamlet_description,
+            iconRes = android.R.drawable.ic_menu_myplaces,
+            defaultColorRes = R.color.game_tile_caves,
+            activityClass = com.Atom2Universe.app.games.hamlet.HamletActivity::class.java
+        ),
+        HubTile(
             id = "roguelike",
             titleRes = R.string.roguelike_title,
             descriptionRes = R.string.roguelike_description,

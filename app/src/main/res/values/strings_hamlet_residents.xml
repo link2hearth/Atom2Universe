@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_n_c_oats">Oats</string>
+    <string name="hamlet_n_c_turnips">Turnips</string>
+    <string name="hamlet_role_resident">resident</string>
+    <string name="hamlet_role_farmer">farmer</string>
+    <string name="hamlet_role_artisan">artisan</string>
+    <string name="hamlet_role_guard">guard</string>
+    <string name="hamlet_role_shepherd">shepherd</string>
+    <string name="hamlet_resident_name">%1$s · %2$s</string>
+    <string name="hamlet_resident_story">Our village happiness is %1$d%%. Flowers, different decorations and services make our home more welcoming. Have a look at today’s requests to help the village grow.</string>
+</resources>

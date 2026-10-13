@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_realms_title">Mes royaumes</string>
+    <string name="hamlet_realms_default_name">Royaume %1$d</string>
+    <string name="hamlet_realms_shared">Tes pièces, héros, quêtes et recherches te suivent. Chaque royaume conserve ses bâtiments, cultures, chemins et frontières. Les cultures et constructions avancent pendant que tu explores un autre royaume.</string>
+    <string name="hamlet_realms_summary">Royaume %1$d · Halle %2$d · %3$d × %4$d cases · %5$d bâtiments</string>
+    <string name="hamlet_realms_current">Tu es ici</string>
+    <string name="hamlet_realms_travel">Voyager ici</string>
+    <string name="hamlet_realms_rename">Renommer le royaume</string>
+    <string name="hamlet_realms_close">Retour au village</string>
+    <string name="hamlet_realms_save">Enregistrer le nom</string>
+    <string name="hamlet_realms_found_title">Fonder le Royaume %1$d</string>
+    <string name="hamlet_realms_found_explain">Commence un nouveau village avec sa halle, sa chaumière et ses champs. Tes royaumes précédents restent tels que tu les as laissés.</string>
+    <string name="hamlet_realms_requirement">Niveau %1$d · %2$s pièces</string>
+    <string name="hamlet_realms_creative_free">Gratuit en mode créatif · Fonde autant de royaumes que tu le souhaites.</string>
+    <string name="hamlet_realms_found">Fonder ce royaume</string>
+    <string name="hamlet_realms_template">Terrain de départ</string>
+    <string name="hamlet_realms_template_starter">Village classique · halle, chaumière et champs</string>
+    <string name="hamlet_realms_template_empty">Terrain vierge · halle et surface maximale</string>
+    <string name="hamlet_realms_template_showcase">Village témoin · quartiers déjà aménagés</string>
+    <string name="hamlet_realms_export">Exporter le monde</string>
+    <string name="hamlet_realms_import">Importer un monde</string>
+    <string name="hamlet_realms_export_ok">Tous tes royaumes et ta progression ont été exportés.</string>
+    <string name="hamlet_realms_import_ok">Monde importé. Tous les royaumes sont prêts à être explorés.</string>
+    <string name="hamlet_realms_import_confirm">Cela remplacera le monde actuel. Exporte-le avant si tu souhaites conserver les deux.</string>
+    <string name="hamlet_realms_import_legacy_confirm">Ce fichier vient du jeu HTML original. Vérifie ces informations de conversion avant de l\'importer.</string>
+    <string name="hamlet_realms_import_size">Le fichier est trop volumineux. Maximum : 16 Mio.</string>
+    <string name="hamlet_realms_import_format">Ce fichier ne contient pas un monde Hamlet complet et valide.</string>
+    <string name="hamlet_realms_import_version">Cette version de sauvegarde n\'est pas prise en charge.</string>
+    <string name="hamlet_realms_import_objects">Un identifiant d\'objet est absent, répété ou invalide.</string>
+    <string name="hamlet_realms_import_unknown_object">Ce monde contient un objet que cette version ne peut pas importer.</string>
+    <string name="hamlet_realms_import_unknown_crop">Ce monde contient une culture inconnue ou un champ incompatible avec sa culture.</string>
+    <string name="hamlet_realms_import_geometry">Des objets se chevauchent, dépassent la carte ou utilisent des limites de terrain invalides.</string>
+    <string name="hamlet_realms_import_paths">Des cases de sol sont répétées ou invalides.</string>
+    <string name="hamlet_realms_import_hall">Chaque royaume doit contenir exactement une halle.</string>
+    <string name="hamlet_realms_import_realms">La liste des royaumes contient des numéros absents ou répétés.</string>
+    <string name="hamlet_realms_import_legacy_layout">Le château original de 6 × 6 cases devient une halle centrée de 4 × 4 cases. Les bâtiments, champs, chemins, pièces et la progression sont conservés ; les durées et règles natives s\'appliquent.</string>
+    <string name="hamlet_realms_import_legacy_social">Les anciens amis simulés et commandes placées dans leurs villages ne sont pas transférés. Les voisins locaux sont recréés. Les commandes de tes propres ateliers sont conservées.</string>
+    <string name="hamlet_realms_import_legacy_presentation">L\'ancienne position de caméra et le fil d\'actualités ne sont pas transférés.</string>
+    <string name="hamlet_realms_import_legacy_quests">La progression des quêtes est associée par objectif. Leur ordre change ensuite ; les anciennes quêtes sociales reprennent au prochain objectif du village et la dépense de gemmes devient une activité gratuite à l\'atelier.</string>
+    <string name="hamlet_realms_import_detail">%1$s\n%2$s</string>
+    <string name="hamlet_realms_file_error">Impossible de lire ou écrire ce fichier. Ton monde actuel est inchangé.</string>
+</resources>
