@@ -39,7 +39,19 @@ internal object PlantHerbarium {
         "dactylis", "cornus", "cytisus", "erica", "betula", "alnus", "campestre", "sorbus", "picea", "rosa",
         "arabidopsis", "sequoiadendron", "sequoia", "acer_saccharum", "vaccinium_corymbosum",
         "cornus_sericea", "eschscholzia", "lupinus_polyphyllus", "carpinus", "rudbeckia",
-        "pseudotsuga", "rosa_virginiana", "pisum")
+        "pseudotsuga", "rosa_virginiana", "pisum",
+        "vicia", "buxus", "platanoides", "pseudoplatanus", "fraxinus", "tilia", "populus",
+        "oryza", "zea", "triticum", "melongena", "nigrum",
+        "cicuta_virosa", "ipomoea_batatas", "chenopodium_quinoa", "coffea_canephora", "coffea_liberica", "illicium_anisatum",
+        "ginkgo_biloba", "pteridium_aquilinum", "cannabis_sativa", "carica_papaya", "anacardium_occidentale", "arum_italicum",
+        "abelmoschus_esculentus", "acer_japonicum", "actinidia_kolomikta", "agave_deserti", "aloe_polyphylla", "arctium_lappa",
+        "alcea_rosea", "alisma_plantago_aquatica", "artemisia_absinthium", "artemisia_vulgaris", "chelidonium_majus", "cymbopogon_citratus",
+        "abies_nordmanniana", "agave_victoriae_reginae", "artocarpus_altilis", "betula_papyrifera", "capsicum_pubescens", "aeonium_ciliatum",
+        "arctium_minus", "agave_filifera", "armeria_maritima", "bertholletia_excelsa", "cirsium_vulgare", "drosera_rotundifolia",
+        "acoelorraphe_wrightii", "adoxa_moschatellina", "adansonia_perrieri", "afzelia_africana", "agathis_robusta", "alstonia_scholaris",
+        "abies_yuanbaoshanensis", "ammi_majus", "cuminum_cyminum", "anemarrhena_asphodeloides", "ansellia_africana", "arbutus_canariensis",
+        "agave_fourcroydes", "agave_shawii", "hedera_helix", "agrostis_gigantea", "adansonia_suarezensis", "anthemis_arvensis",
+        "anchusa_arvensis", "artemisia_maritima", "asarum_europaeum", "astrophytum_caput_medusae", "brocchinia_reducta", "cestrum_nocturnum")
 
     fun hasPlate(id: String) = id in speciesIds
 

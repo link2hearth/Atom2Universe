@@ -83,4 +83,15 @@
     <string name="plant_group_Equisetidae">Horsetails are a fern-related lineage, although they have jointed stems and reduced leaves rather than broad fronds. Their stems perform much of the photosynthesis; spores form in terminal strobili. These spore-bearing structures are not seed cones, and a horsetail produces neither seeds nor true fruits.</string>
     <string name="plant_group_Polypodiidae">Leptosporangiate ferns form their sporangia from a single initial cell. A thin wall and often a specialized annulus help release spores. This contrasts with fern lineages having thicker, differently developing sporangia; frond outline alone cannot identify the subclass.</string>
     <string name="plant_group_Ginkgoidae">Only Ginkgo biloba survives today in this lineage, which has a diverse fossil record. Fan-shaped leaves with repeatedly forked veins contrast with typical conifer needles. Its fleshy outer seed coat may resemble a fruit, but there is no enclosing ovary: Ginkgo is a gymnosperm.</string>
+    <string name="bot_group_coffee_species">Coffee species</string>
+    <string name="bot_group_coffee_species_desc">Compare Arabica, Robusta coffee (Coffea canephora) and Liberica: leaves and fruit size vary, while paired leaves, axillary flowers and two-seeded drupes are shared genus traits.</string>
+    <string name="bot_group_artemisia_pair">Wormwood and mugwort</string>
+    <string name="bot_group_artemisia_pair_desc">Both are aromatic Artemisia perennials with divided leaves and small flower heads. Wormwood is silvery on both sides and has drooping spherical heads; mugwort has green upper leaf surfaces, white felted undersides and narrow panicles. Use several characters together for identification.</string>
+
+    <string name="bot_group_burdock_thistle_pair">Burdocks and thistles</string>
+    <string name="bot_group_burdock_thistle_pair_desc">Burdocks (Arctium) have globose heads with hooked burr bracts and lack the continuously spiny, winged stems of spear thistle (Cirsium vulgare). Compare the leaves and involucres: burrs cling to fur, while thistle achenes have a feathery pappus.</string>
+    <string name="bot_group_agave_forms">Agave forms and uses</string>
+    <string name="bot_group_agave_forms_desc">Compare drought-adapted agaves with very different leaf outlines: Shaw’s broad, strongly toothed coastal rosette and henequen’s long fibre-bearing leaves. The comparison is for morphology and use, not a guide to safe harvesting.</string>
+    <string name="bot_group_toxic_berries">Poisonous berries</string>
+    <string name="bot_group_toxic_berries_desc">Compare two unrelated plants whose berries are not edible: ivy bears dark blue-black clusters, while night-blooming cestrum bears pale berries. Colour alone is not a safe field identification or edibility test.</string>
 </resources>

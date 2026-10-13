@@ -1685,4 +1685,516 @@
     <string name="bot_barbarea_vulgaris_leaf">Limbe lyré continu à grand lobe terminal.</string>
     <string name="bot_barbarea_vulgaris_flower">Fleurs jaunes à quatre pétales en grappe terminale.</string>
     <string name="bot_barbarea_vulgaris_fruit">Silique allongée à deux valves autour d’une cloison portant les graines.</string>
+    <string name="bot_family_Convolvulaceae" translatable="false">Convolvulaceae</string>
+    <string name="bot_family_Convolvulaceae_desc">Liserons, ipomées et patates douces : feuilles souvent alternes et fleurs en entonnoir.</string>
+    <string name="bot_family_Convolvulaceae_aliases">Famille des liserons</string>
+    <string name="bot_family_Amaranthaceae" translatable="false">Amaranthaceae</string>
+    <string name="bot_family_Amaranthaceae_desc">Amarantes, quinoa et proches de la betterave ; petites fleurs souvent groupées en amas denses.</string>
+    <string name="bot_family_Amaranthaceae_aliases">Famille des amarantes ; anciennes Chenopodiaceae pour certains genres</string>
+    <string name="bot_family_Schisandraceae" translatable="false">Schisandraceae</string>
+    <string name="bot_family_Schisandraceae_desc">Famille comprenant des ligneux aromatiques, dont les badianiers du genre Illicium.</string>
+    <string name="bot_family_Schisandraceae_aliases">Famille des schisandres et badianiers</string>
+    <string name="bot_cicuta_virosa_name">Ciguë vireuse</string>
+    <string name="bot_cicuta_virosa_latin" translatable="false">Cicuta virosa</string>
+    <string name="bot_cicuta_virosa_aliases">ciguë aquatique ; cowbane</string>
+    <string name="bot_cicuta_virosa_description">Vivace très toxique des zones humides, à tige lisse et creuse, feuilles finement découpées et ombelles composées blanches. Le rhizome court a une moelle cloisonnée et des racines fibreuses ou tubéreuses. Toute la plante est dangereuse ; sa ressemblance avec des Apiacées comestibles rend l’identification occasionnelle risquée.</string>
+    <string name="bot_cicuta_virosa_distribution">Hémisphère Nord subarctique et tempéré ; marais, tourbières et rives humides.</string>
+    <string name="bot_cicuta_virosa_habit">Herbe dressée de marais, à feuilles divisées et ombelles terminales.</string>
+    <string name="bot_cicuta_virosa_leaf">Feuille pennée à folioles étroites fortement dentées.</string>
+    <string name="bot_cicuta_virosa_flower">Petites fleurs blanches réunies en ombelles composées.</string>
+    <string name="bot_cicuta_virosa_fruit">Deux méricarpes et rhizome cloisonné montrés séparément ; toutes les parties sont toxiques.</string>
+    <string name="bot_ipomoea_batatas_name">Patate douce</string>
+    <string name="bot_ipomoea_batatas_latin" translatable="false">Ipomoea batatas</string>
+    <string name="bot_ipomoea_batatas_aliases">patate douce ; ipomée patate</string>
+    <string name="bot_ipomoea_batatas_description">Ipomée tropicale vivace rampante, à feuilles alternes en cœur ou palmées et fleurs en entonnoir. Ses organes de réserve comestibles sont des racines renflées, contrairement aux tubercules de tige de la pomme de terre commune (Solanum tuberosum). La forme des feuilles varie selon les cultivars.</string>
+    <string name="bot_ipomoea_batatas_distribution">Originaire des régions tropicales d’Amérique ; largement cultivée sous les climats chauds.</string>
+    <string name="bot_ipomoea_batatas_habit">Liane rampante avec des racines de réserve sous la souche.</string>
+    <string name="bot_ipomoea_batatas_leaf">Feuille alterne en cœur à nervures rayonnantes ; des formes lobées existent.</string>
+    <string name="bot_ipomoea_batatas_flower">Corolle en entonnoir à cinq lobes, souvent lavande pâle ou blanche.</string>
+    <string name="bot_ipomoea_batatas_fruit">Racine de réserve renflée, et non tubercule de tige ; la fructification varie en culture.</string>
+    <string name="bot_chenopodium_quinoa_name">Quinoa</string>
+    <string name="bot_chenopodium_quinoa_latin" translatable="false">Chenopodium quinoa</string>
+    <string name="bot_chenopodium_quinoa_aliases">quinua ; quinoa des Andes</string>
+    <string name="bot_chenopodium_quinoa_description">Annuelle andine de la famille des Amaranthaceae, dite pseudo-céréale car ce n’est pas une graminée. Les feuilles alternes sont souvent larges et dentées en bas, plus étroites en haut ; de minuscules fleurs forment des panicules terminales et latérales denses. Les graines sont consommées comme une céréale et leur couleur varie selon les cultivars.</string>
+    <string name="bot_chenopodium_quinoa_distribution">Originaire des Andes, de l’Équateur au nord-ouest de l’Argentine ; désormais cultivée dans le monde.</string>
+    <string name="bot_chenopodium_quinoa_habit">Annuelle dressée portant des panicules ramifiées terminales.</string>
+    <string name="bot_chenopodium_quinoa_leaf">Feuille inférieure large, anguleuse et parfois dentée.</string>
+    <string name="bot_chenopodium_quinoa_flower">Fleurs minuscules groupées en amas ramifiés denses.</string>
+    <string name="bot_chenopodium_quinoa_fruit">Petits fruits contenant une graine ; le grain consommé n’est pas un caryopse de graminée.</string>
+    <string name="bot_coffea_canephora_name">Caféier robusta</string>
+    <string name="bot_coffea_canephora_latin" translatable="false">Coffea canephora</string>
+    <string name="bot_coffea_canephora_aliases">robusta ; caféier canephora</string>
+    <string name="bot_coffea_canephora_description">Arbuste ou petit arbre tropical persistant à feuilles opposées brillantes, stipules interpétiolaires et petites fleurs blanches en groupes axillaires. Les drupes rouges contiennent généralement deux graines. Le robusta est un type de café cultivé principalement associé à cette espèce.</string>
+    <string name="bot_coffea_canephora_distribution">Afrique tropicale occidentale et centrale ; cultivé dans les régions tropicales.</string>
+    <string name="bot_coffea_canephora_habit">Arbuste ou petit arbre persistant à branches opposées étagées.</string>
+    <string name="bot_coffea_canephora_leaf">Feuilles elliptiques opposées à bord ondulé et stipule entre les pétioles.</string>
+    <string name="bot_coffea_canephora_flower">Fleurs tubulaires blanches groupées près des aisselles foliaires.</string>
+    <string name="bot_coffea_canephora_fruit">Drupe rouge contenant deux graines de café.</string>
+    <string name="bot_coffea_liberica_name">Caféier libérica</string>
+    <string name="bot_coffea_liberica_latin" translatable="false">Coffea liberica</string>
+    <string name="bot_coffea_liberica_aliases">caféier du Liberia</string>
+    <string name="bot_coffea_liberica_description">Caféier persistant à grandes feuilles coriaces elliptiques, au bord ondulé. Les fleurs blanches parfumées forment des groupes axillaires ; la drupe rouge, relativement grande, contient généralement deux graines. Taille des feuilles et des fruits variable : ces caractères ne suffisent pas à identifier tout café cultivé.</string>
+    <string name="bot_coffea_liberica_distribution">Originaire d’Afrique tropicale occidentale ; cultivé dans les régions tropicales d’Afrique et d’Asie du Sud-Est.</string>
+    <string name="bot_coffea_liberica_habit">Arbre persistant à grandes feuilles et groupes de fleurs axillaires.</string>
+    <string name="bot_coffea_liberica_leaf">Grande feuille elliptique coriace, à bord ondulé et nervures saillantes.</string>
+    <string name="bot_coffea_liberica_flower">Fleurs blanches en étoile, parfumées et groupées à l’aisselle des feuilles.</string>
+    <string name="bot_coffea_liberica_fruit">Grande drupe rouge ouverte montrant ses deux graines.</string>
+    <string name="bot_illicium_anisatum_name">Badianier du Japon</string>
+    <string name="bot_illicium_anisatum_latin" translatable="false">Illicium anisatum</string>
+    <string name="bot_illicium_anisatum_aliases">anis étoilé japonais ; faux anis étoilé toxique</string>
+    <string name="bot_illicium_anisatum_description">Arbuste ou petit arbre persistant d’Asie orientale, à feuilles alternes brillantes, fleurs crème à nombreux tépales et fruit étoilé formé de follicules. Cette espèce est toxique. Son fruit séché peut ressembler au badianier de Chine alimentaire dans le commerce ; une image ou un simple examen visuel ne permet pas d’authentifier une épice transformée. Ne jamais utiliser cette planche pour identifier un aliment.</string>
+    <string name="bot_illicium_anisatum_distribution">Originaire du Japon, de Corée et de Taïwan ; cultivé ailleurs.</string>
+    <string name="bot_illicium_anisatum_habit">Ligneux persistant à feuilles alternes et fleurs axillaires.</string>
+    <string name="bot_illicium_anisatum_leaf">Feuille simple elliptique brillante, à bord entier légèrement ondulé.</string>
+    <string name="bot_illicium_anisatum_flower">Fleur crème à nombreux tépales pétaloïdes.</string>
+    <string name="bot_illicium_anisatum_fruit">Fruit étoilé toxique ; ne pas l’utiliser comme épice ni identifier un aliment avec cette image.</string>
+    <string name="bot_fr_spores">Sores / spores</string>
+    <string name="bot_fr_seed">Graine nue (pas un fruit)</string>
+    <string name="bot_family_Ginkgoaceae" translatable="false">Ginkgoaceae</string>
+    <string name="bot_family_Ginkgoaceae_desc">Ancienne famille de gymnospermes, représentée aujourd’hui par le ginkgo.</string>
+    <string name="bot_family_Ginkgoaceae_aliases">Famille des ginkgos</string>
+    <string name="bot_family_Dennstaedtiaceae" translatable="false">Dennstaedtiaceae</string>
+    <string name="bot_family_Dennstaedtiaceae_desc">Famille de fougères comprenant la fougère aigle ; les frondes portent des sores et se reproduisent par spores.</string>
+    <string name="bot_family_Dennstaedtiaceae_aliases">Famille des fougères aigles</string>
+    <string name="bot_family_Cannabaceae" translatable="false">Cannabaceae</string>
+    <string name="bot_family_Cannabaceae_desc">Famille comprenant le chanvre et le houblon ; fleurs petites, feuilles parfois palmées et divisées.</string>
+    <string name="bot_family_Cannabaceae_aliases">Famille du chanvre</string>
+    <string name="bot_family_Caricaceae" translatable="false">Caricaceae</string>
+    <string name="bot_family_Caricaceae_desc">Famille tropicale du papayer, aux grandes feuilles lobées et aux baies charnues.</string>
+    <string name="bot_family_Caricaceae_aliases">Famille des papayers</string>
+    <string name="bot_family_Anacardiaceae" translatable="false">Anacardiaceae</string>
+    <string name="bot_family_Anacardiaceae_desc">Famille de l’anacardier et des sumacs, souvent des arbres ou arbustes aux fruits très variés.</string>
+    <string name="bot_family_Anacardiaceae_aliases">Famille des anacardiers et sumacs</string>
+    <string name="bot_family_Araceae" translatable="false">Araceae</string>
+    <string name="bot_family_Araceae_desc">Aracées : de petites fleurs sont portées sur un spadice charnu, souvent en partie entouré d’une spathe.</string>
+    <string name="bot_family_Araceae_aliases">Famille des aracées ; famille des arums</string>
+    <string name="bot_fern_spore_note">Les fougères ne produisent ni fleurs, ni fruits, ni graines ; les spores se forment dans des sores sur les frondes adultes, selon le climat.</string>
+    <string name="bot_ginkgo_biloba_name">Ginkgo</string>
+    <string name="bot_ginkgo_biloba_latin" translatable="false">Ginkgo biloba</string>
+    <string name="bot_ginkgo_biloba_aliases">arbre aux quarante écus ; ginkgo</string>
+    <string name="bot_ginkgo_biloba_description">Gymnosperme caduc généralement dioïque, à pousses longues et courtes portant des feuilles en éventail aux nervures plusieurs fois bifurquées. Les arbres mâles portent des chatons polliniques ; les arbres femelles forment des graines nues à enveloppe charnue, et non un vrai fruit. Les graines peuvent être toxiques si elles sont mal préparées.</string>
+    <string name="bot_ginkgo_biloba_distribution">Originaire de Chine ; largement planté dans les régions tempérées.</string>
+    <string name="bot_ginkgo_biloba_habit">Arbre caduc à branches irrégulières et feuilles groupées sur de courts rameaux.</string>
+    <string name="bot_ginkgo_biloba_leaf">Feuille en éventail, souvent bilobée, à nervures plusieurs fois bifurquées.</string>
+    <string name="bot_ginkgo_biloba_flower">Chaton pollinique mâle ; les organes mâles et femelles sont sur des arbres distincts.</string>
+    <string name="bot_ginkgo_biloba_fruit">Graine nue femelle à enveloppe charnue : ce n’est pas un fruit ; les graines crues peuvent être toxiques.</string>
+    <string name="bot_pteridium_aquilinum_name">Fougère aigle</string>
+    <string name="bot_pteridium_aquilinum_latin" translatable="false">Pteridium aquilinum</string>
+    <string name="bot_pteridium_aquilinum_aliases">fougère aigle ; grande fougère</string>
+    <string name="bot_pteridium_aquilinum_description">Fougère rhizomateuse à grandes frondes triangulaires divisées deux ou trois fois. Les sores forment une ligne presque continue le long des segments fertiles, protégée par le bord replié de la feuille. Elle ne produit ni fleurs, ni fruits, ni graines. La fougère aigle contient des composés toxiques : ne pas la considérer comme alimentaire.</string>
+    <string name="bot_pteridium_aquilinum_distribution">Presque cosmopolite dans les régions tempérées et tropicales ; bois ouverts, landes et terrains remaniés.</string>
+    <string name="bot_pteridium_aquilinum_habit">Grande fronde isolée issue d’un long rhizome rampant.</string>
+    <string name="bot_pteridium_aquilinum_leaf">Limbe triangulaire divisé deux ou trois fois en nombreuses pinnules.</string>
+    <string name="bot_pteridium_aquilinum_flower">Pas de fleurs : cette fougère se reproduit par spores.</string>
+    <string name="bot_pteridium_aquilinum_fruit">Sores marginaux et sporanges ; aucun fruit ni graine.</string>
+    <string name="bot_cannabis_sativa_name">Chanvre</string>
+    <string name="bot_cannabis_sativa_latin" translatable="false">Cannabis sativa</string>
+    <string name="bot_cannabis_sativa_aliases">chanvre ; cannabis</string>
+    <string name="bot_cannabis_sativa_description">Herbe annuelle à tiges anguleuses et feuilles palmées divisées en folioles étroites à dents grossières. Les plantes sont généralement mâles ou femelles, mais certaines formes portent les deux sexes. Les fleurs femelles sont compactes et les fleurs mâles en panicules plus lâches. Le fruit est un petit akène.</string>
+    <string name="bot_cannabis_sativa_distribution">Originaire d’Asie centrale jusqu’au Xinjiang et au Pakistan ; cultivé et naturalisé largement.</string>
+    <string name="bot_cannabis_sativa_habit">Grande herbe annuelle à tige dressée ramifiée et feuillée.</string>
+    <string name="bot_cannabis_sativa_leaf">Feuille palmée divisée en folioles étroites fortement dentées.</string>
+    <string name="bot_cannabis_sativa_flower">Groupe compact de fleurs femelles ; les sexes sont généralement séparés.</string>
+    <string name="bot_cannabis_sativa_fruit">Petit akène dur à surface marbrée et réticulée.</string>
+    <string name="bot_carica_papaya_name">Papayer</string>
+    <string name="bot_carica_papaya_latin" translatable="false">Carica papaya</string>
+    <string name="bot_carica_papaya_aliases">papaye ; papayer tropical</string>
+    <string name="bot_carica_papaya_description">Arbre tropical à bois tendre, souvent formé d’un tronc unique non ramifié couronné de très grandes feuilles palmées lobées. Les fleurs peuvent être mâles, femelles ou bisexuées selon le plant et le cultivar. La baie charnue contient de nombreuses graines noires dans une cavité centrale.</string>
+    <string name="bot_carica_papaya_distribution">Originaire du sud du Mexique au Venezuela ; cultivé dans les régions tropicales.</string>
+    <string name="bot_carica_papaya_habit">Tronc tendre généralement unique et non ramifié, terminé par une couronne de grandes feuilles.</string>
+    <string name="bot_carica_papaya_leaf">Très grande feuille palmée lobée portée par un long pétiole.</string>
+    <string name="bot_carica_papaya_flower">Fleur femelle pâle sur un pédoncule court ; la forme varie selon les plants.</string>
+    <string name="bot_carica_papaya_fruit">Baie charnue ouverte dans la longueur, avec de nombreuses graines au centre.</string>
+    <string name="bot_anacardium_occidentale_name">Anacardier</string>
+    <string name="bot_anacardium_occidentale_latin" translatable="false">Anacardium occidentale</string>
+    <string name="bot_anacardium_occidentale_aliases">pommier-cajou ; cajou</string>
+    <string name="bot_anacardium_occidentale_description">Arbre tropical persistant à couronne étalée, feuilles alternes coriaces et panicules terminales. Le vrai fruit, en forme de rein, est attaché à un pédoncule renflé et coloré appelé pomme de cajou. La coque de la noix contient une résine caustique et doit être transformée avant consommation.</string>
+    <string name="bot_anacardium_occidentale_distribution">Originaire d’Amérique tropicale ; cultivé largement sous les tropiques.</string>
+    <string name="bot_anacardium_occidentale_habit">Arbre persistant à large couronne étalée.</string>
+    <string name="bot_anacardium_occidentale_leaf">Feuille simple alterne coriace, elliptique à obovale.</string>
+    <string name="bot_anacardium_occidentale_flower">Petites fleurs à cinq pétales en panicule terminale ramifiée.</string>
+    <string name="bot_anacardium_occidentale_fruit">Noix en forme de rein, vrai fruit, attachée sous la pomme de cajou renflée.</string>
+    <string name="bot_arum_italicum_name">Arum d’Italie</string>
+    <string name="bot_arum_italicum_latin" translatable="false">Arum italicum</string>
+    <string name="bot_arum_italicum_aliases">arum d’Italie ; gouet d’Italie</string>
+    <string name="bot_arum_italicum_description">Vivace tubéreuse des bois à feuilles en fer de flèche, souvent marquées de nervures pâles. Les fleurs minuscules occupent la base d’un spadice charnu partiellement enfermé dans une spathe claire ; plus tard vient un épi de baies orange-rouge. Toutes les parties sont toxiques à l’ingestion et peuvent irriter la peau ou les yeux.</string>
+    <string name="bot_arum_italicum_distribution">Europe et région méditerranéenne jusqu’en Irak ; également naturalisé ou cultivé ailleurs.</string>
+    <string name="bot_arum_italicum_habit">Petite vivace tubéreuse à feuilles basales et spathe solitaire.</string>
+    <string name="bot_arum_italicum_leaf">Feuille en fer de flèche à nervures pâles ramifiées.</string>
+    <string name="bot_arum_italicum_flower">Spadice portant les fleurs femelles sous les fleurs mâles, dans une spathe.</string>
+    <string name="bot_arum_italicum_fruit">Stade ultérieur : épi de baies orange-rouge, toxiques à l’ingestion.</string>
+    <string name="bot_family_Actinidiaceae">Actinidiacées</string>
+    <string name="bot_family_Actinidiaceae_desc">Famille de lianes ligneuses et de petits arbres, connue notamment par le genre Actinidia.</string>
+    <string name="bot_family_Actinidiaceae_aliases">Actinidiacées; famille des actinidias</string>
+    <string name="bot_abelmoschus_esculentus_name">Gombo</string>
+    <string name="bot_abelmoschus_esculentus_latin" translatable="false">Abelmoschus esculentus</string>
+    <string name="bot_abelmoschus_esculentus_aliases">gombo ; okra ; bamia</string>
+    <string name="bot_abelmoschus_esculentus_description">Culture tropicale annuelle de la famille des mauves. Ses feuilles palmées accompagnent de grandes fleurs jaunes à cœur rouge sombre ; les jeunes capsules côtelées sont récoltées comme légume.</string>
+    <string name="bot_abelmoschus_esculentus_distribution">Originaire d’Inde selon Kew ; largement cultivé aujourd’hui dans les régions tropicales et chaudes.</string>
+    <string name="bot_abelmoschus_esculentus_habit">Herbe annuelle dressée et ramifiée, à feuilles alternes lobées.</string>
+    <string name="bot_abelmoschus_esculentus_leaf">Feuille palmée lobée à bord denté.</string>
+    <string name="bot_abelmoschus_esculentus_flower">Grande fleur jaune de type hibiscus, à cœur rouge sombre.</string>
+    <string name="bot_abelmoschus_esculentus_fruit">Jeune capsule comestible, allongée et côtelée longitudinalement.</string>
+    <string name="bot_acer_japonicum_name">Érable japonais à feuilles rondes</string>
+    <string name="bot_acer_japonicum_latin" translatable="false">Acer japonicum</string>
+    <string name="bot_acer_japonicum_aliases">érable à feuilles rondes ; érable pleine lune</string>
+    <string name="bot_acer_japonicum_description">Érable caduc du Japon, à feuilles opposées arrondies et profondément découpées en lobes larges et pointus. De petites fleurs rougeâtres paraissent au printemps, puis des samares doubles.</string>
+    <string name="bot_acer_japonicum_distribution">Originaire du Japon et du sud des îles Kouriles ; planté comme arbre ornemental en climat tempéré.</string>
+    <string name="bot_acer_japonicum_habit">Petit arbre caduc à couronne large.</string>
+    <string name="bot_acer_japonicum_leaf">Feuille arrondie divisée en sept à onze lobes profonds et pointus.</string>
+    <string name="bot_acer_japonicum_flower">Petites grappes pendantes de fleurs rouge violacé.</string>
+    <string name="bot_acer_japonicum_fruit">Samares doubles ailées, typiques des érables.</string>
+    <string name="bot_actinidia_kolomikta_name">Vigne kolomikta</string>
+    <string name="bot_actinidia_kolomikta_latin" translatable="false">Actinidia kolomikta</string>
+    <string name="bot_actinidia_kolomikta_aliases">vigne kolomikta ; kiwi arctique ; actinidier panaché</string>
+    <string name="bot_actinidia_kolomikta_description">Liane ligneuse volubile à feuilles ovales dentées, souvent tachées de blanc et de rose vers leur extrémité. Les petites fleurs parfumées sont suivies, sur les pieds femelles pollinisés, de petites baies vertes comestibles.</string>
+    <string name="bot_actinidia_kolomikta_distribution">Extrême-Orient russe, nord-est et centre de la Chine, nord et centre du Japon.</string>
+    <string name="bot_actinidia_kolomikta_habit">Liane ligneuse caduque qui s’enroule autour de ses supports.</string>
+    <string name="bot_actinidia_kolomikta_leaf">Feuille ovale dentée, parfois panachée de blanc et de rose à maturité.</string>
+    <string name="bot_actinidia_kolomikta_flower">Petite fleur blanche portant de nombreuses étamines.</string>
+    <string name="bot_actinidia_kolomikta_fruit">Petite baie verte à nombreuses graines sombres, sur les pieds femelles pollinisés.</string>
+    <string name="bot_agave_deserti_name">Agave du désert</string>
+    <string name="bot_agave_deserti_latin" translatable="false">Agave deserti</string>
+    <string name="bot_agave_deserti_aliases">agave du désert ; amul</string>
+    <string name="bot_agave_deserti_description">Petit agave désertique à croissance très lente, en rosette compacte de feuilles presque droites, bleu gris, dentées sur les bords et terminées par une épine. À maturité, une grande hampe ramifiée porte des fleurs jaunes ; la rosette meurt après la floraison.</string>
+    <string name="bot_agave_deserti_distribution">Originaire du sud de la Californie et du nord de la Basse-Californie, sur sols désertiques rocheux ou graveleux.</string>
+    <string name="bot_agave_deserti_habit">Rosette compacte sans tige ; la plante adulte émet une grande hampe florale ramifiée.</string>
+    <string name="bot_agave_deserti_leaf">Feuille charnue presque droite, bleu gris, à dents marginales et épine terminale.</string>
+    <string name="bot_agave_deserti_flower">Fleurs jaunes réunies en groupes sur une grande inflorescence ramifiée.</string>
+    <string name="bot_agave_deserti_fruit">Capsule sèche contenant des graines plates et noires.</string>
+    <string name="bot_aloe_polyphylla_name">Aloès spiralé</string>
+    <string name="bot_aloe_polyphylla_latin" translatable="false">Aloe polyphylla</string>
+    <string name="bot_aloe_polyphylla_aliases">aloès spiralé ; kharatsa</string>
+    <string name="bot_aloe_polyphylla_description">Succulente sans tige endémique des monts Maluti au Lesotho. Ses nombreuses feuilles épaisses et dentées forment une rosette en spirale ; une hampe porte des fleurs tubulaires rose corail. Cette espèce d’altitude n’est pas un aloès désertique.</string>
+    <string name="bot_aloe_polyphylla_distribution">Endémique des monts Maluti, au Lesotho, en Afrique australe.</string>
+    <string name="bot_aloe_polyphylla_habit">Aloès de montagne sans tige, formant une seule rosette spiralée.</string>
+    <string name="bot_aloe_polyphylla_leaf">Feuille épaisse bleu vert, dentée sur les bords et terminée par une pointe sombre.</string>
+    <string name="bot_aloe_polyphylla_flower">Fleurs tubulaires rose corail le long d’une hampe centrale.</string>
+    <string name="bot_aloe_polyphylla_fruit">Capsule sèche à trois loges contenant des graines sombres.</string>
+    <string name="bot_arctium_lappa_name">Grande bardane</string>
+    <string name="bot_arctium_lappa_latin" translatable="false">Arctium lappa</string>
+    <string name="bot_arctium_lappa_aliases">grande bardane ; bardane comestible ; gobo</string>
+    <string name="bot_arctium_lappa_description">Grande bisannuelle ramifiée aux feuilles en cœur, pâles et cotonneuses au revers, et aux capitules pourpres arrondis. Les capitules mûrs deviennent des fruits crochus qui s’accrochent aux poils et aux vêtements. Sa racine pivotante est cultivée et consommée dans certaines cuisines.</string>
+    <string name="bot_arctium_lappa_distribution">Originaire des régions tempérées d’Eurasie ; naturalisée dans de nombreuses autres régions.</string>
+    <string name="bot_arctium_lappa_habit">Herbe bisannuelle élevée et ramifiée, souvent dans les lieux perturbés ou ombragés.</string>
+    <string name="bot_arctium_lappa_leaf">Grande feuille en cœur, à revers pâle et cotonneux.</string>
+    <string name="bot_arctium_lappa_flower">Fleurs pourpres en capitule arrondi entouré de bractées crochues.</string>
+    <string name="bot_arctium_lappa_fruit">Capitule mûr en boule crochue ; les akènes se dispersent en s’accrochant.</string>
+    <string name="bot_family_Alismataceae">Alismatacées</string>
+    <string name="bot_family_Alismataceae_desc">Famille de plantes surtout aquatiques, aux petites fleurs et aux akènes disposés en couronne.</string>
+    <string name="bot_family_Alismataceae_aliases">Alismatacées; famille des plantains d’eau</string>
+    <string name="bot_alcea_rosea_name">Rose trémière</string>
+    <string name="bot_alcea_rosea_latin" translatable="false">Alcea rosea</string>
+    <string name="bot_alcea_rosea_aliases">rose trémière ; passerose</string>
+    <string name="bot_alcea_rosea_description">Grande bisannuelle ou vivace de courte durée, issue d’un cultigène associé à la Türkiye. De grandes fleurs simples se succèdent le long d’une tige dressée au-dessus de feuilles palmées ; le fruit sec se divise en quartiers.</string>
+    <string name="bot_alcea_rosea_distribution">Cultivée comme ornementale dans le monde entier ; Kew indique un cultigène originaire de Türkiye.</string>
+    <string name="bot_alcea_rosea_habit">Grande bisannuelle dressée à hampe florale unique.</string>
+    <string name="bot_alcea_rosea_leaf">Grande feuille arrondie peu profondément découpée en lobes palmés.</string>
+    <string name="bot_alcea_rosea_flower">Grande fleur en entonnoir, à cinq pétales et colonne staminale centrale.</string>
+    <string name="bot_alcea_rosea_fruit">Schizocarpe sec et rond se séparant en quartiers.</string>
+    <string name="bot_alisma_plantago_aquatica_name">Plantain d’eau commun</string>
+    <string name="bot_alisma_plantago_aquatica_latin" translatable="false">Alisma plantago-aquatica</string>
+    <string name="bot_alisma_plantago_aquatica_aliases">plantain d’eau commun ; alisma commun</string>
+    <string name="bot_alisma_plantago_aquatica_description">Vivace semi-aquatique des eaux peu profondes et des marais, sans lien avec les plantains du genre Plantago. Une rosette de feuilles longuement pétiolées porte une grande panicule aérienne de petites fleurs blanches verticillées. L’ingestion de grandes quantités peut être nocive.</string>
+    <string name="bot_alisma_plantago_aquatica_distribution">Eurasie tempérée et Afrique du Nord jusqu’en Tanzanie ; bords d’étangs, fossés et eaux lentes.</string>
+    <string name="bot_alisma_plantago_aquatica_habit">Herbe rhizomateuse de marais, enracinée en eau peu profonde ou dans la vase fertile.</string>
+    <string name="bot_alisma_plantago_aquatica_leaf">Feuille ovale à long pétiole, parcourue de fortes nervures basales.</string>
+    <string name="bot_alisma_plantago_aquatica_flower">Petite fleur blanche à trois pétales, sur une panicule ramifiée et verticillée.</string>
+    <string name="bot_alisma_plantago_aquatica_fruit">Couronne de petits akènes ridés autour du réceptacle.</string>
+    <string name="bot_artemisia_absinthium_name">Grande absinthe</string>
+    <string name="bot_artemisia_absinthium_latin" translatable="false">Artemisia absinthium</string>
+    <string name="bot_artemisia_absinthium_aliases">grande absinthe ; absinthe</string>
+    <string name="bot_artemisia_absinthium_description">Vivace aromatique aux feuilles finement divisées, argentées, et à nombreux petits capitules jaunes pendants en panicule ramifiée. Les extraits contenant de la thuyone peuvent être toxiques ; cette illustration sert à l’identification, pas à la préparation ou à l’usage.</string>
+    <string name="bot_artemisia_absinthium_distribution">Originaire d’Europe, d’Afrique du Nord et des régions tempérées jusqu’en Sibérie et dans l’ouest de l’Himalaya.</string>
+    <string name="bot_artemisia_absinthium_habit">Touffe vivace ramifiée, à tiges et feuillage gris argenté finement velus.</string>
+    <string name="bot_artemisia_absinthium_leaf">Feuille aromatique argentée, deux fois pennatiséquée.</string>
+    <string name="bot_artemisia_absinthium_flower">Petit capitule sphérique pendant, formé de fleurons tubulaires jaunes.</string>
+    <string name="bot_artemisia_absinthium_fruit">Très petit akène sec, typique des Astéracées.</string>
+    <string name="bot_artemisia_vulgaris_name">Armoise commune</string>
+    <string name="bot_artemisia_vulgaris_latin" translatable="false">Artemisia vulgaris</string>
+    <string name="bot_artemisia_vulgaris_aliases">armoise commune ; armoise vulgaire</string>
+    <string name="bot_artemisia_vulgaris_description">Grande vivace rhizomateuse aux feuilles profondément divisées, vertes et presque glabres dessus, mais feutrées de blanc gris dessous. De minuscules capitules pâles forment des panicules étroites. Elle peut être confondue avec la grande absinthe, dont le feuillage est plus uniformément argenté.</string>
+    <string name="bot_artemisia_vulgaris_distribution">Originaire de l’Eurasie tempérée jusqu’en Indochine et d’Afrique du Nord ; introduite ailleurs.</string>
+    <string name="bot_artemisia_vulgaris_habit">Grande vivace ramifiée qui s’étend par des rhizomes.</string>
+    <string name="bot_artemisia_vulgaris_leaf">Feuille profondément divisée, verte dessus et feutrée de blanc dessous.</string>
+    <string name="bot_artemisia_vulgaris_flower">Minuscules fleurons tubulaires pâles en panicules étroites ramifiées.</string>
+    <string name="bot_artemisia_vulgaris_fruit">Akène minuscule formé après la floraison.</string>
+    <string name="bot_chelidonium_majus_name">Grande chélidoine</string>
+    <string name="bot_chelidonium_majus_latin" translatable="false">Chelidonium majus</string>
+    <string name="bot_chelidonium_majus_aliases">grande chélidoine ; herbe aux verrues</string>
+    <string name="bot_chelidonium_majus_description">Vivace des bois aux feuilles pennatiséquées bleu vert et aux bouquets de fleurs jaunes à quatre pétales. Les tiges cassées exsudent un latex orange caractéristique. La plante est toxique : ne pas toucher le latex ni ingérer aucune partie.</string>
+    <string name="bot_chelidonium_majus_distribution">Originaire de Macaronésie, d’Europe à la Sibérie occidentale, du bassin méditerranéen au nord de l’Iran ; introduite ailleurs.</string>
+    <string name="bot_chelidonium_majus_habit">Vivace délicate et ramifiée des bois ombragés et des lieux perturbés.</string>
+    <string name="bot_chelidonium_majus_leaf">Feuille bleu vert divisée en lobes pennés arrondis.</string>
+    <string name="bot_chelidonium_majus_flower">Petite fleur jaune vif à quatre pétales et nombreuses étamines.</string>
+    <string name="bot_chelidonium_majus_fruit">Longue capsule étroite ; le latex orange apparaît à la cassure de la tige.</string>
+    <string name="bot_cymbopogon_citratus_name">Citronnelle de cuisine</string>
+    <string name="bot_cymbopogon_citratus_latin" translatable="false">Cymbopogon citratus</string>
+    <string name="bot_cymbopogon_citratus_aliases">citronnelle de cuisine ; verveine des Indes ; lemongrass</string>
+    <string name="bot_cymbopogon_citratus_description">Graminée vivace aromatique en touffe, cultivée pour ses feuilles au parfum citronné et ses gaines basales pâles utilisées en cuisine et en boisson. À distinguer de la citronnelle de Java, Cymbopogon nardus, espèce proche.</string>
+    <string name="bot_cymbopogon_citratus_distribution">Aire d’origine indiquée par Kew : sud de l’Inde et Sri Lanka ; cultivée dans les régions tropicales.</string>
+    <string name="bot_cymbopogon_citratus_habit">Touffe persistante dense, aux longues feuilles et aux gaines basales imbriquées.</string>
+    <string name="bot_cymbopogon_citratus_leaf">Longue feuille étroite et aromatique à nervures parallèles.</string>
+    <string name="bot_cymbopogon_citratus_flower">Panicule lâche, ramifiée et retombante, rarement visible sur les plantes cultivées.</string>
+    <string name="bot_cymbopogon_citratus_fruit">Petit caryopse, comme chez les autres graminées.</string>
+
+    <string name="bot_family_Crassulaceae">Crassulacées</string>
+    <string name="bot_family_Crassulaceae_desc">Famille de plantes succulentes aux feuilles charnues, souvent réunies en rosettes; les fleurs sont généralement pentamères.</string>
+    <string name="bot_family_Crassulaceae_aliases">Crassulacées; famille des orpins</string>
+    <string name="bot_abies_nordmanniana_name">Sapin de Nordmann</string>
+    <string name="bot_abies_nordmanniana_latin" translatable="false">Abies nordmanniana</string>
+    <string name="bot_abies_nordmanniana_aliases">Sapin de Nordmann; sapin du Caucase</string>
+    <string name="bot_abies_nordmanniana_description">Sapin caucasien à couronne conique étagée et aiguilles aplaties, luisantes dessus et marquées de deux bandes stomatiques pâles dessous. Ses cônes dressés se désagrègent sur l’arbre.</string>
+    <string name="bot_abies_nordmanniana_distribution">Originaire du nord-est de la Turquie jusqu’au Caucase occidental; largement planté comme arbre d’ornement et sapin de Noël.</string>
+    <string name="bot_abies_nordmanniana_habit">Grand conifère persistant à tronc droit et branches disposées en étages.</string>
+    <string name="bot_abies_nordmanniana_leaf">Aiguilles plates, vert foncé luisant dessus, pâles dessous avec deux bandes stomatiques.</string>
+    <string name="bot_abies_nordmanniana_flower">Les cônes mâles polliniques et les cônes femelles dressés sont distincts sur le même arbre.</string>
+    <string name="bot_abies_nordmanniana_fruit">Le cône dressé se désagrège sur la branche et laisse son axe central.</string>
+    <string name="bot_agave_victoriae_reginae_name">Agave de la reine Victoria</string>
+    <string name="bot_agave_victoriae_reginae_latin" translatable="false">Agave victoriae-reginae</string>
+    <string name="bot_agave_victoriae_reginae_aliases">Agave de la reine Victoria; agave royal</string>
+    <string name="bot_agave_victoriae_reginae_description">Petit agave mexicain à croissance lente, formant une rosette compacte de feuilles rigides vert sombre marquées de lignes blanches. Les bords sont lisses et chaque feuille porte une pointe terminale. La rosette adulte émet une haute hampe puis meurt.</string>
+    <string name="bot_agave_victoriae_reginae_distribution">Originaire du nord-est du Mexique, surtout des milieux rocheux arides.</string>
+    <string name="bot_agave_victoriae_reginae_habit">Rosette solitaire compacte; la hampe florale dépasse largement la hauteur des feuilles.</string>
+    <string name="bot_agave_victoriae_reginae_leaf">Feuilles rigides sombres à marques blanches, bords lisses et épine terminale.</string>
+    <string name="bot_agave_victoriae_reginae_flower">Fleurs crème regroupées sur une haute hampe ramifiée.</string>
+    <string name="bot_agave_victoriae_reginae_fruit">Après la floraison, des capsules sèches renferment des graines sombres.</string>
+    <string name="bot_artocarpus_altilis_name">Arbre à pain</string>
+    <string name="bot_artocarpus_altilis_latin" translatable="false">Artocarpus altilis</string>
+    <string name="bot_artocarpus_altilis_aliases">Arbre à pain; fruit à pain</string>
+    <string name="bot_artocarpus_altilis_description">Arbre tropical persistant aux grandes feuilles profondément lobées, portant des inflorescences mâles et femelles distinctes. Les fleurs femelles fusionnent en un gros fruit composé riche en amidon. Les cultivars sans graines sont courants, mais des formes à graines sont aussi cultivées.</string>
+    <string name="bot_artocarpus_altilis_distribution">Origine incertaine; cultivé dans les régions tropicales, notamment dans le Pacifique et les Caraïbes.</string>
+    <string name="bot_artocarpus_altilis_habit">Arbre persistant à large couronne, portant les fruits sur les branches et le tronc.</string>
+    <string name="bot_artocarpus_altilis_leaf">Grande feuille alternée à lobes profonds et arrondis, à nervation palmée marquée.</string>
+    <string name="bot_artocarpus_altilis_flower">Les fleurs mâles forment des épis allongés pendants; les femelles une tête arrondie.</string>
+    <string name="bot_artocarpus_altilis_fruit">Syncarpe à surface réticulée; les cultivars alimentaires peuvent être sans graines.</string>
+    <string name="bot_betula_papyrifera_name">Bouleau à papier</string>
+    <string name="bot_betula_papyrifera_latin" translatable="false">Betula papyrifera</string>
+    <string name="bot_betula_papyrifera_aliases">Bouleau à papier; bouleau canotier</string>
+    <string name="bot_betula_papyrifera_description">Bouleau nord-américain reconnaissable à son écorce claire qui se détache en fines couches papyracées et à ses feuilles ovales doublement dentées. Les chatons mâles pendent; les chatons femelles plus petits produisent de minuscules nucules ailées.</string>
+    <string name="bot_betula_papyrifera_distribution">Originaire d’une grande partie du nord et du centre de l’Amérique du Nord, du Canada au nord des États-Unis.</string>
+    <string name="bot_betula_papyrifera_habit">Arbre caduc élancé à écorce blanche se détachant en lambeaux papyracés.</string>
+    <string name="bot_betula_papyrifera_leaf">Feuille ovale pointue à bord doublement denté.</string>
+    <string name="bot_betula_papyrifera_flower">Chatons mâles pendants et chatons femelles plus petits apparaissent sur le même arbre.</string>
+    <string name="bot_betula_papyrifera_fruit">De petites nucules ailées sont libérées par le chaton fructifère qui se désagrège.</string>
+    <string name="bot_capsicum_pubescens_name">Piment rocoto</string>
+    <string name="bot_capsicum_pubescens_latin" translatable="false">Capsicum pubescens</string>
+    <string name="bot_capsicum_pubescens_aliases">Rocoto; piment manzano</string>
+    <string name="bot_capsicum_pubescens_description">Piment vivace souvent cultivé en arbuste ramifié. L’espèce se reconnaît à ses tiges et feuilles pubescentes, ses fleurs violettes à anthères violettes et ses graines sombres. La forme et la couleur des fruits mûrs varient selon les cultivars.</string>
+    <string name="bot_capsicum_pubescens_distribution">Originaire des Andes du Pérou et de la Bolivie; cultivé ailleurs dans les climats frais d’altitude.</string>
+    <string name="bot_capsicum_pubescens_habit">Piment vivace ramifié, souvent à base ligneuse.</string>
+    <string name="bot_capsicum_pubescens_leaf">Feuille largement ovale couverte d’une pubescence douce.</string>
+    <string name="bot_capsicum_pubescens_flower">La corolle et les anthères violettes caractérisent les fleurs.</string>
+    <string name="bot_capsicum_pubescens_fruit">Piments de forme arrondie ou allongée selon les cultivars; graines sombres à maturité.</string>
+    <string name="bot_aeonium_ciliatum_name">Aeonium cilié</string>
+    <string name="bot_aeonium_ciliatum_latin" translatable="false">Aeonium ciliatum</string>
+    <string name="bot_aeonium_ciliatum_aliases">Aeonium cilié</string>
+    <string name="bot_aeonium_ciliatum_description">Arbuste succulent ramifié endémique de Tenerife, avec des rosettes terminales sur des tiges ligneuses. Les feuilles charnues portent de fins cils sur leurs bords. Les pousses florifères adultes produisent des grappes ramifiées de petites fleurs jaunes étoilées.</string>
+    <string name="bot_aeonium_ciliatum_distribution">Endémique de Tenerife, dans les îles Canaries.</string>
+    <string name="bot_aeonium_ciliatum_habit">Des tiges ligneuses ramifiées portent des rosettes arrondies à leurs extrémités.</string>
+    <string name="bot_aeonium_ciliatum_leaf">Feuille charnue en spatule, bordée de fins cils évoquant des cils.</string>
+    <string name="bot_aeonium_ciliatum_flower">Panicule ramifiée de petites fleurs jaunes en étoile à cinq pointes.</string>
+    <string name="bot_aeonium_ciliatum_fruit">Des follicules secs se forment après la floraison.</string>
+
+    <string name="bot_family_Plumbaginaceae">Plumbaginacées</string>
+    <string name="bot_family_Plumbaginaceae_desc">Famille de plantes des côtes et milieux secs, comprenant l’armérie maritime; ses petites fleurs sont souvent réunies en têtes compactes.</string>
+    <string name="bot_family_Plumbaginaceae_aliases">Plumbaginacées; famille des lilas de mer</string>
+    <string name="bot_family_Lecythidaceae">Lecythidacées</string>
+    <string name="bot_family_Lecythidaceae_desc">Famille surtout tropicale d’arbres et d’arbustes; plusieurs portent des capsules ligneuses, dont l’arbre à noix du Brésil.</string>
+    <string name="bot_family_Lecythidaceae_aliases">Lecythidacées; famille de la noix du Brésil</string>
+    <string name="bot_family_Droseraceae">Droséracées</string>
+    <string name="bot_family_Droseraceae_desc">Famille de plantes herbacées carnivores aux feuilles glanduleuses qui capturent de petits animaux; les droséras forment souvent des rosettes basales.</string>
+    <string name="bot_family_Droseraceae_aliases">Droséracées; famille des droséras</string>
+    <string name="bot_arctium_minus_name">Petite bardane</string>
+    <string name="bot_arctium_minus_latin" translatable="false">Arctium minus</string>
+    <string name="bot_arctium_minus_aliases">Petite bardane; bardane mineure</string>
+    <string name="bot_arctium_minus_description">Bardane bisannuelle à tiges florifères ramifiées, grandes feuilles inférieures et capitules ovoïdes généralement plus petits que ceux de la grande bardane. Les bractées crochues forment des fruits accrochants après la floraison.</string>
+    <string name="bot_arctium_minus_distribution">Originaire d’Europe et du nord-ouest de l’Afrique jusqu’à l’Afghanistan; introduite dans de nombreuses autres régions.</string>
+    <string name="bot_arctium_minus_habit">La tige florifère dressée de deuxième année part d’une rosette basale.</string>
+    <string name="bot_arctium_minus_leaf">Large feuille inférieure au revers pâle; la forme et la taille changent le long de la tige.</string>
+    <string name="bot_arctium_minus_flower">Les fleurons violets sont regroupés dans un petit capitule entouré de bractées crochues.</string>
+    <string name="bot_arctium_minus_fruit">Les akènes mûrissent dans le capitule crochu; chaque graine porte une courte aigrette.</string>
+    <string name="bot_agave_filifera_name">Agave filifère</string>
+    <string name="bot_agave_filifera_latin" translatable="false">Agave filifera</string>
+    <string name="bot_agave_filifera_aliases">Agave filifère; agave à fils</string>
+    <string name="bot_agave_filifera_description">Succulente mexicaine compacte aux feuilles étroites et rigides, dont les bords portent souvent des filaments blancs bouclés; chaque feuille se termine par une pointe acérée. La rosette adulte émet une hampe ramifiée puis meurt.</string>
+    <string name="bot_agave_filifera_distribution">Originaire du centre du Mexique, de Querétaro à l’État de México.</string>
+    <string name="bot_agave_filifera_habit">Rosette compacte, solitaire ou produisant lentement des rejets; hampe haute à maturité.</string>
+    <string name="bot_agave_filifera_leaf">Feuille verte étroite et rigide, à fils blancs bouclés sur les bords et épine terminale.</string>
+    <string name="bot_agave_filifera_flower">Fleurs crème à jaunes groupées sur une hampe ramifiée.</string>
+    <string name="bot_agave_filifera_fruit">Après la floraison, les capsules sèches contiennent des graines sombres.</string>
+    <string name="bot_armeria_maritima_name">Armérie maritime</string>
+    <string name="bot_armeria_maritima_latin" translatable="false">Armeria maritima</string>
+    <string name="bot_armeria_maritima_aliases">Gazon d’Espagne; armérie maritime</string>
+    <string name="bot_armeria_maritima_description">Petite vivace persistante des côtes, formant un coussin compact de feuilles basales étroites et de hampes nues terminées par des têtes arrondies de petites fleurs roses. Elle tolère les milieux exposés et salés.</string>
+    <string name="bot_armeria_maritima_distribution">Originaire des régions subarctiques et tempérées de l’hémisphère Nord, surtout sur les côtes.</string>
+    <string name="bot_armeria_maritima_habit">Un coussin bas et dense émet des hampes florales nues au-dessus du feuillage.</string>
+    <string name="bot_armeria_maritima_leaf">Les feuilles linéaires étroites forment une touffe basale.</string>
+    <string name="bot_armeria_maritima_flower">Les petites fleurs roses à cinq pièces sont réunies en tête globuleuse entourée de bractées papyracées.</string>
+    <string name="bot_armeria_maritima_fruit">Une petite capsule sèche se forme dans la tête florale persistante.</string>
+    <string name="bot_bertholletia_excelsa_name">Noyer du Brésil</string>
+    <string name="bot_bertholletia_excelsa_latin" translatable="false">Bertholletia excelsa</string>
+    <string name="bot_bertholletia_excelsa_aliases">Noyer du Brésil; châtaignier du Brésil</string>
+    <string name="bot_bertholletia_excelsa_description">Très grand arbre persistant d’Amazonie, à feuilles simples et fleurs pâles. Ses grosses capsules pyxides ligneuses et dures contiennent de nombreuses graines comestibles appelées noix du Brésil. L’arbre est surtout récolté pour ses graines et les populations sauvages sont vulnérables.</string>
+    <string name="bot_bertholletia_excelsa_distribution">Originaire des forêts tropicales humides d’Amérique du Sud, surtout du bassin amazonien.</string>
+    <string name="bot_bertholletia_excelsa_habit">Très grand arbre émergent persistant, à tronc droit et large couronne haute.</string>
+    <string name="bot_bertholletia_excelsa_leaf">Feuille elliptique entière, pétiolée et parcourue de fines nervures latérales.</string>
+    <string name="bot_bertholletia_excelsa_flower">Les fleurs pâles ont des pétales en capuchon et de nombreuses étamines.</string>
+    <string name="bot_bertholletia_excelsa_fruit">Une grosse pyxide ligneuse renferme plusieurs graines anguleuses.</string>
+    <string name="bot_cirsium_vulgare_name">Chardon vulgaire</string>
+    <string name="bot_cirsium_vulgare_latin" translatable="false">Cirsium vulgare</string>
+    <string name="bot_cirsium_vulgare_aliases">Chardon vulgaire; chardon lancéolé</string>
+    <string name="bot_cirsium_vulgare_description">Chardon bisannuel à feuilles profondément lobées et piquantes; les tiges portent des ailes épineuses discontinues qui descendent des feuilles. Les capitules violets ont des bractées étroites terminées par une épine; les akènes portent une aigrette plumeuse.</string>
+    <string name="bot_cirsium_vulgare_distribution">Originaire d’Europe et du nord-ouest de l’Afrique jusqu’à l’Asie tempérée; introduit dans de nombreuses régions.</string>
+    <string name="bot_cirsium_vulgare_habit">Tige bisannuelle ramifiée, à ailes foliaires épineuses et plusieurs capitules violets.</string>
+    <string name="bot_cirsium_vulgare_leaf">Feuille profondément découpée, à lobes et bords munis d’épines acérées.</string>
+    <string name="bot_cirsium_vulgare_flower">Les fleurons violets dépassent des bractées involucrales denses et épineuses.</string>
+    <string name="bot_cirsium_vulgare_fruit">Akène muni d’une aigrette plumeuse favorisant la dispersion par le vent.</string>
+    <string name="bot_drosera_rotundifolia_name">Rossolis à feuilles rondes</string>
+    <string name="bot_drosera_rotundifolia_latin" translatable="false">Drosera rotundifolia</string>
+    <string name="bot_drosera_rotundifolia_aliases">Rossolis à feuilles rondes; droséra à feuilles rondes</string>
+    <string name="bot_drosera_rotundifolia_description">Minuscule vivace carnivore des tourbières pauvres en nutriments. Les feuilles rondes de la rosette basale portent des tentacules rouges terminés par des glandes à mucilage collant qui piègent de petits insectes. Une hampe fine et nue porte une grappe unilatérale de petites fleurs blanches ou roses.</string>
+    <string name="bot_drosera_rotundifolia_distribution">Originaire des régions tempérées et subarctiques de l’hémisphère Nord, avec quelques populations plus au sud.</string>
+    <string name="bot_drosera_rotundifolia_habit">Très petite rosette basale surmontée d’une fine hampe florale.</string>
+    <string name="bot_drosera_rotundifolia_leaf">Feuille ronde couverte de tentacules glanduleux rouges terminés par des gouttelettes collantes.</string>
+    <string name="bot_drosera_rotundifolia_flower">Petites fleurs blanches à roses, à cinq pétales, en grappe unilatérale.</string>
+    <string name="bot_drosera_rotundifolia_fruit">Une capsule sèche libère de nombreuses graines minuscules après la floraison.</string>
+
+    <string name="bot_family_Araucariaceae">Araucariacées</string>
+    <string name="bot_family_Araucariaceae_desc">Famille ancienne de conifères comprenant de grands arbres, aux feuilles coriaces souvent larges et aux pousses reproductrices portant des cônes.</string>
+    <string name="bot_family_Araucariaceae_aliases">Araucariacées; famille des araucarias</string>
+    <string name="bot_acoelorraphe_wrightii_name">Palmier des Everglades</string>
+    <string name="bot_acoelorraphe_wrightii_latin" translatable="false">Acoelorraphe wrightii</string>
+    <string name="bot_acoelorraphe_wrightii_aliases">Palmier des Everglades; palmier paurotis</string>
+    <string name="bot_acoelorraphe_wrightii_description">Palmier cespiteux des milieux tropicaux et subtropicaux humides, à plusieurs troncs fins et couronnes arrondies de feuilles palmées profondément divisées. Les pétioles portent des épines brun orangé; les petites drupes mûrissent du vert au sombre.</string>
+    <string name="bot_acoelorraphe_wrightii_distribution">Originaire du sud de la Floride et des Caraïbes jusqu’à la Colombie, en passant par le sud du Mexique.</string>
+    <string name="bot_acoelorraphe_wrightii_habit">Palmier cespiteux à plusieurs troncs en canne, en terrain humide.</string>
+    <string name="bot_acoelorraphe_wrightii_leaf">Feuille palmée en éventail, à segments étroits et pétiole épineux.</string>
+    <string name="bot_acoelorraphe_wrightii_flower">Des grappes ramifiées de petites fleurs pâles émergent parmi les palmes.</string>
+    <string name="bot_acoelorraphe_wrightii_fruit">Les petites drupes arrondies passent du vert au presque noir en mûrissant.</string>
+    <string name="bot_adoxa_moschatellina_name">Moschatelline</string>
+    <string name="bot_adoxa_moschatellina_latin" translatable="false">Adoxa moschatellina</string>
+    <string name="bot_adoxa_moschatellina_aliases">Moschatelline; herbe musquée</string>
+    <string name="bot_adoxa_moschatellina_description">Minuscule herbacée rhizomateuse de printemps des bois humides et ombragés. Elle porte deux feuilles basales divisées à long pétiole, deux feuilles caulinaires opposées et une tête de cinq fleurs très caractéristique : quatre fleurs à cinq pièces regardent vers l’extérieur et une fleur à quatre pièces occupe le sommet.</string>
+    <string name="bot_adoxa_moschatellina_distribution">Originaire des régions tempérées de l’hémisphère Nord.</string>
+    <string name="bot_adoxa_moschatellina_habit">Une fine pousse printanière solitaire émerge d’un rhizome souterrain.</string>
+    <string name="bot_adoxa_moschatellina_leaf">Les feuilles basales à long pétiole sont divisées en folioles trilobées; les feuilles caulinaires plus petites sont opposées et divisées.</string>
+    <string name="bot_adoxa_moschatellina_flower">Cinq fleurs forment une tête compacte en cube : quatre fleurs à cinq pièces sont latérales et une fleur à quatre pièces se trouve au sommet.</string>
+    <string name="bot_adoxa_moschatellina_fruit">De petites drupes sombres se développent après la brève floraison printanière.</string>
+    <string name="bot_adansonia_perrieri_name">Baobab de Perrier</string>
+    <string name="bot_adansonia_perrieri_latin" translatable="false">Adansonia perrieri</string>
+    <string name="bot_adansonia_perrieri_aliases">Baobab de Perrier</string>
+    <string name="bot_adansonia_perrieri_description">Baobab caduc endémique du nord de Madagascar, au tronc massif renflé et aux branches hautes clairsemées. Ses grandes fleurs pendantes peuvent apparaître lorsque l’arbre est sans feuilles; feuilles palmées composées et fruits oblongs sont montrés séparément.</string>
+    <string name="bot_adansonia_perrieri_distribution">Endémique du nord de Madagascar.</string>
+    <string name="bot_adansonia_perrieri_habit">Un tronc massif en bouteille porte une couronne haute et clairsemée.</string>
+    <string name="bot_adansonia_perrieri_leaf">Feuille palmée composée de plusieurs folioles étroites.</string>
+    <string name="bot_adansonia_perrieri_flower">La grande fleur pendante a des pétales pâles et de longues étamines nombreuses.</string>
+    <string name="bot_adansonia_perrieri_fruit">Le fruit oblong à coque dure renferme une pulpe sèche pâle et des graines sombres.</string>
+    <string name="bot_afzelia_africana_name">Afzélia africain</string>
+    <string name="bot_afzelia_africana_latin" translatable="false">Afzelia africana</string>
+    <string name="bot_afzelia_africana_aliases">Afzélia africain; papao; doussié</string>
+    <string name="bot_afzelia_africana_description">Grand arbre des savanes et forêts claires d’Afrique de l’Ouest, à feuilles paripennées. Ses fleurs parfumées ont un pétale pâle marqué de rouge; les gousses ligneuses sombres s’ouvrent sur des graines noires brillantes à arille orange.</string>
+    <string name="bot_afzelia_africana_distribution">Originaire de l’Afrique tropicale de l’Ouest jusqu’à l’Ouganda.</string>
+    <string name="bot_afzelia_africana_habit">Arbre caduc à large couronne des savanes et forêts sèches.</string>
+    <string name="bot_afzelia_africana_leaf">Feuille paripennée composée de paires opposées de larges folioles ovales.</string>
+    <string name="bot_afzelia_africana_flower">La fleur parfumée présente un pétale pâle marqué de rouge parmi des pièces florales verdâtres.</string>
+    <string name="bot_afzelia_africana_fruit">La gousse ligneuse sombre contient des graines noires brillantes attachées à des arilles orange.</string>
+    <string name="bot_agathis_robusta_name">Kauri du Queensland</string>
+    <string name="bot_agathis_robusta_latin" translatable="false">Agathis robusta</string>
+    <string name="bot_agathis_robusta_aliases">Kauri du Queensland; kauri à écorce lisse</string>
+    <string name="bot_agathis_robusta_description">Très grand conifère persistant de l’est de l’Australie et de Nouvelle-Guinée, à tronc droit, écorce lisse s’exfoliant et feuilles larges opposées. Les cônes mâles polliniques sont allongés; les cônes femelles sont arrondis et se désagrègent à maturité.</string>
+    <string name="bot_agathis_robusta_distribution">Originaire de l’est du Queensland, de Nouvelle-Guinée et de l’archipel Bismarck.</string>
+    <string name="bot_agathis_robusta_habit">Énorme conifère persistant à tronc droit et large couronne haute.</string>
+    <string name="bot_agathis_robusta_leaf">Les feuilles larges et coriaces sont opposées par paires sur le rameau.</string>
+    <string name="bot_agathis_robusta_flower">Les cônes mâles polliniques sont cylindriques et distincts des cônes femelles.</string>
+    <string name="bot_agathis_robusta_fruit">Le cône femelle arrondi libère une graine ailée lorsque ses écailles se séparent.</string>
+    <string name="bot_alstonia_scholaris_name">Alstonia scolaire</string>
+    <string name="bot_alstonia_scholaris_latin" translatable="false">Alstonia scholaris</string>
+    <string name="bot_alstonia_scholaris_aliases">Alstonia scolaire; arbre du diable; saptaparni</string>
+    <string name="bot_alstonia_scholaris_description">Grand arbre tropical persistant aux feuilles coriaces entières réunies en verticilles de quatre à huit, et aux grappes terminales denses de fleurs crème-blanc parfumées. Les longues gousses folliculaires par paires libèrent de nombreuses graines soyeuses; les parties blessées exsudent un latex laiteux.</string>
+    <string name="bot_alstonia_scholaris_distribution">Originaire des régions tropicales et subtropicales d’Asie jusqu’au nord de l’Australie.</string>
+    <string name="bot_alstonia_scholaris_habit">Grand arbre persistant à couronne étagée et feuilles regroupées près des extrémités des pousses.</string>
+    <string name="bot_alstonia_scholaris_leaf">Les feuilles coriaces à bord entier forment des verticilles de quatre à huit.</string>
+    <string name="bot_alstonia_scholaris_flower">De nombreuses petites fleurs crème-blanc parfumées forment des grappes terminales denses.</string>
+    <string name="bot_alstonia_scholaris_fruit">Les longues gousses étroites par paires s’ouvrent pour libérer des graines soyeuses.</string>
+    <string name="bot_family_Orchidaceae" translatable="false">Orchidaceae</string>
+    <string name="bot_family_Orchidaceae_desc">Orchidées : les fleurs ont un labelle et une colonne caractéristiques ; de nombreuses espèces sont épiphytes.</string>
+    <string name="bot_family_Orchidaceae_aliases">Famille des orchidées</string>
+    <string name="bot_abies_yuanbaoshanensis_name">Sapin du Yuanbaoshan</string>
+    <string name="bot_abies_yuanbaoshanensis_latin" translatable="false">Abies yuanbaoshanensis</string>
+    <string name="bot_abies_yuanbaoshanensis_aliases">Sapin du Yuanbaoshan</string>
+    <string name="bot_abies_yuanbaoshanensis_description">Sapin à couronne étroite connu uniquement du mont Yuanbao, au Guangxi (Chine). Ses cônes dressés et ses aiguilles aplaties fixées individuellement sont typiques des Abies ; l’espèce est classée en danger critique.</string>
+    <string name="bot_abies_yuanbaoshanensis_distribution">Endémique du nord du Guangxi, en Chine.</string>
+    <string name="bot_abies_yuanbaoshanensis_habit">Conifère persistant à tronc droit et couronne pyramidale étroite.</string>
+    <string name="bot_abies_yuanbaoshanensis_leaf">Les aiguilles courtes et aplaties sont insérées une à une sur le rameau, et non en faisceaux comme chez les pins.</string>
+    <string name="bot_abies_yuanbaoshanensis_flower">Les cônes polliniques et les cônes à graines sont des structures reproductrices distinctes du même arbre.</string>
+    <string name="bot_abies_yuanbaoshanensis_fruit">Les cônes ligneux dressés se désarticulent sur l’arbre à maturité.</string>
+    <string name="bot_ammi_majus_name">Ammi élevé</string>
+    <string name="bot_ammi_majus_latin" translatable="false">Ammi majus</string>
+    <string name="bot_ammi_majus_aliases">Ammi élevé ; fleur d’évêque ; faux cerfeuil d’âne</string>
+    <string name="bot_ammi_majus_description">Apiacée annuelle ou bisannuelle aux feuilles finement divisées et aux larges ombelles composées blanches à nombreux rayons. Elle peut rappeler d’autres ombellifères blanches ; sa sève peut provoquer une réaction cutanée phototoxique au soleil.</string>
+    <string name="bot_ammi_majus_distribution">Originaire du bassin méditerranéen jusqu’à l’Asie occidentale ; introduit et cultivé ailleurs.</string>
+    <string name="bot_ammi_majus_habit">Herbe dressée et ramifiée portant de larges ombelles planes.</string>
+    <string name="bot_ammi_majus_leaf">Les feuilles sont pennées et divisées ; leurs segments sont dentés en bas et plus étroits vers le haut.</string>
+    <string name="bot_ammi_majus_flower">De nombreuses petites fleurs blanches sont réunies en ombelles composées à nombreux rayons.</string>
+    <string name="bot_ammi_majus_fruit">Le fruit sec se sépare en deux petits méricarpes côtelés.</string>
+    <string name="bot_cuminum_cyminum_name">Cumin</string>
+    <string name="bot_cuminum_cyminum_latin" translatable="false">Cuminum cyminum</string>
+    <string name="bot_cuminum_cyminum_aliases">Cumin ; cumin blanc</string>
+    <string name="bot_cuminum_cyminum_description">Petite plante annuelle d’Asie occidentale, cultivée pour ses fruits séchés aromatiques employés comme épice. Elle se distingue de l’ammi élevé par sa taille compacte, son feuillage filiforme et ses fruits étroits fortement côtelés.</string>
+    <string name="bot_cuminum_cyminum_distribution">Originaire de l’Irak à l’Afghanistan ; largement cultivé.</string>
+    <string name="bot_cuminum_cyminum_habit">Petite annuelle buissonnante aux feuilles fines et aux ombelles délicates.</string>
+    <string name="bot_cuminum_cyminum_leaf">Les feuilles sont plusieurs fois divisées en segments très étroits et filiformes.</string>
+    <string name="bot_cuminum_cyminum_flower">De petites ombelles composées portent des fleurs blanches à rose pâle.</string>
+    <string name="bot_cuminum_cyminum_fruit">Les fruits étroits ont des côtes longitudinales saillantes ; séchés, ils constituent l’épice cumin.</string>
+    <string name="bot_anemarrhena_asphodeloides_name">Anemarrhena</string>
+    <string name="bot_anemarrhena_asphodeloides_latin" translatable="false">Anemarrhena asphodeloides</string>
+    <string name="bot_anemarrhena_asphodeloides_aliases">Anemarrhena ; zhi mu</string>
+    <string name="bot_anemarrhena_asphodeloides_description">Vivace rhizomateuse de Chine septentrionale et de Mongolie. Ses longues feuilles basales en forme d’herbe contrastent avec une hampe florale plus haute et sans feuilles ; le rhizome épais conserve des restes fibreux de gaines.</string>
+    <string name="bot_anemarrhena_asphodeloides_distribution">Originaire de Mongolie et des régions nord, centre et est de la Chine.</string>
+    <string name="bot_anemarrhena_asphodeloides_habit">Touffe de feuilles basales arquées et hampe florale dressée distincte.</string>
+    <string name="bot_anemarrhena_asphodeloides_leaf">Les longues feuilles étroites partent de la base et présentent une nervation parallèle.</string>
+    <string name="bot_anemarrhena_asphodeloides_flower">De petites fleurs pâles, rosées à blanchâtres et à six pièces, longent la hampe sans feuilles.</string>
+    <string name="bot_anemarrhena_asphodeloides_fruit">Une capsule sèche succède à la floraison ; le rhizome vivace porte des nœuds rapprochés marqués par les feuilles.</string>
+    <string name="bot_ansellia_africana_name">Ansellie léopard</string>
+    <string name="bot_ansellia_africana_latin" translatable="false">Ansellia africana</string>
+    <string name="bot_ansellia_africana_aliases">Ansellie léopard ; ansellie africaine</string>
+    <string name="bot_ansellia_africana_description">Orchidée épiphyte robuste de l’Afrique tropicale, à pseudobulbes fusiformes groupés, feuilles rubanées et panicules ramifiées de fleurs jaunes marquées de taches brunes ou pourpres.</string>
+    <string name="bot_ansellia_africana_distribution">Originaire des régions tropicales et australes d’Afrique.</string>
+    <string name="bot_ansellia_africana_habit">Épiphyte en touffe fixée par des racines aériennes apparentes.</string>
+    <string name="bot_ansellia_africana_leaf">Plusieurs feuilles longues et coriaces poussent au sommet de chaque pseudobulbe.</string>
+    <string name="bot_ansellia_africana_flower">Des panicules ramifiées portent des fleurs jaunes ponctuées de sombre, avec un labelle d’orchidée.</string>
+    <string name="bot_ansellia_africana_fruit">Une capsule étroite se forme après la pollinisation et libère ensuite des graines minuscules.</string>
+    <string name="bot_arbutus_canariensis_name">Arbousier des Canaries</string>
+    <string name="bot_arbutus_canariensis_latin" translatable="false">Arbutus canariensis</string>
+    <string name="bot_arbutus_canariensis_aliases">Arbousier des Canaries ; madroño canario</string>
+    <string name="bot_arbutus_canariensis_description">Arbre persistant endémique des Canaries, à feuilles finement dentées, écorce rougeâtre qui s’exfolie, fleurs pendantes en clochettes et fruits orange granuleux. Proche de l’arbousier commun, il s’en distingue notamment par ses fruits mûrs orange.</string>
+    <string name="bot_arbutus_canariensis_distribution">Endémique des îles Canaries.</string>
+    <string name="bot_arbutus_canariensis_habit">Petit arbre persistant à couronne étalée et écorce rougeâtre qui s’exfolie.</string>
+    <string name="bot_arbutus_canariensis_leaf">Les feuilles coriaces lancéolées à elliptiques ont un bord finement en dents de scie.</string>
+    <string name="bot_arbutus_canariensis_flower">Des fleurs pâles en forme d’urne pendent en grappes aux rameaux.</string>
+    <string name="bot_arbutus_canariensis_fruit">Le fruit mûr, rond et orange, est couvert de petites aspérités granuleuses ; il est comestible.</string>
+    <string name="bot_family_Araliaceae">Araliacées</string><string name="bot_family_Araliaceae_desc">Famille du lierre et du ginseng : plantes souvent ligneuses, à feuilles alternes et petites fleurs réunies en ombelles ou en têtes ; fruits souvent en baies.</string><string name="bot_family_Araliaceae_aliases">Araliacées ; famille du lierre ; famille du ginseng</string>
+    <string name="bot_agave_fourcroydes_name">Hénéquen</string><string name="bot_agave_fourcroydes_latin">Agave fourcroydes</string><string name="bot_agave_fourcroydes_aliases">Hénéquen ; sisal du Yucatán</string>
+    <string name="bot_agave_fourcroydes_description">Grande succulente persistante en rosette, aux feuilles rigides en glaive, dentées sur les bords et terminées par une épine. À maturité, elle émet une haute hampe ramifiée. L’hénéquen est surtout cultivé pour les fibres résistantes extraites des feuilles. La planche montre la floraison, avec des détails séparés de feuille et de fibre.</string><string name="bot_agave_fourcroydes_distribution">Originaire du Mexique et d’Amérique centrale ; largement cultivé, notamment dans la péninsule du Yucatán.</string><string name="bot_agave_fourcroydes_habit">Grande rosette vivace ; les individus adultes produisent une haute panicule florale.</string><string name="bot_agave_fourcroydes_leaf">Feuilles longues, rigides et lancéolées, bordées de dents et terminées par une forte épine ; elles sont récoltées pour leur fibre.</string><string name="bot_agave_fourcroydes_flower">De nombreuses fleurs jaunâtres sont portées sur les ramifications d’une haute panicule.</string><string name="bot_agave_fourcroydes_fruit">Le fruit est une capsule sèche ; le détail met en évidence la fibre utile de la feuille.</string>
+    <string name="bot_agave_shawii_name">Agave de Shaw</string><string name="bot_agave_shawii_latin">Agave shawii</string><string name="bot_agave_shawii_aliases">Agave de Shaw ; agave côtier</string>
+    <string name="bot_agave_shawii_description">Agave côtier compact formant une rosette dense de feuilles charnues et larges, munies de dents marquées et d’une épine terminale sombre. La hampe florale adulte dépasse largement la rosette et porte des fleurs jaunes. Son habitat littoral restreint rend les populations sauvages sensibles du point de vue de la conservation.</string><string name="bot_agave_shawii_distribution">Littoral du sud de la Californie et du nord-ouest de la Basse-Californie, ainsi que des îles voisines.</string><string name="bot_agave_shawii_habit">Rosette succulente basse et persistante ; la panicule des plantes en fleur s’élève bien au-dessus du feuillage.</string><string name="bot_agave_shawii_leaf">Feuilles larges et épaisses, à dents marginales courbes et épine terminale robuste.</string><string name="bot_agave_shawii_flower">Fleurs jaunes portées par une inflorescence haute et ramifiée.</string><string name="bot_agave_shawii_fruit">Une capsule sèche succède à la floraison ; la plante meurt généralement après cet unique épisode de floraison.</string>
+    <string name="bot_hedera_helix_name">Lierre grimpant</string><string name="bot_hedera_helix_latin">Hedera helix</string><string name="bot_hedera_helix_aliases">Lierre commun ; lierre des arbres</string>
+    <string name="bot_hedera_helix_description">Liane ligneuse persistante qui s’attache aux supports grâce à des crampons racinaires. Les pousses juvéniles portent des feuilles alternes palmées et lobées ; les rameaux adultes florifères ont des feuilles entières et des têtes arrondies de petites fleurs verdâtres. Des baies bleu-noir mûrissent ensuite. Les baies et d’autres parties peuvent provoquer une intoxication : ne pas confondre le lierre avec des plantes grimpantes comestibles.</string><string name="bot_hedera_helix_distribution">Originaire d’une grande partie de l’Europe et du bassin méditerranéen jusqu’à l’Iran ; planté et naturalisé ailleurs.</string><string name="bot_hedera_helix_habit">Plante ligneuse persistante grimpante ou couvre-sol ; les rameaux adultes florifères s’agrippent moins et portent des feuilles entières.</string><string name="bot_hedera_helix_leaf">Feuilles juvéniles alternes et palmées, lobées ; sur les rameaux florifères adultes, elles sont alternes et entières.</string><string name="bot_hedera_helix_flower">Petites fleurs jaune verdâtre réunies en ombelles denses et arrondies, en automne.</string><string name="bot_hedera_helix_fruit">Baies arrondies mûrissant en bleu-noir ; non comestibles, elles peuvent provoquer des troubles digestifs.</string>
+    <string name="bot_agrostis_gigantea_name">Agrostide géante</string><string name="bot_agrostis_gigantea_latin">Agrostis gigantea</string><string name="bot_agrostis_gigantea_aliases">Agrostide rouge ; redtop</string>
+    <string name="bot_agrostis_gigantea_description">Grande graminée vivace qui s’étend par des rhizomes rampants et produit des pousses feuillées. Ses feuilles plates et étroites se dressent sous une vaste panicule ouverte, finement ramifiée, portant de minuscules épillets. Les rhizomes et l’inflorescence aérée aident à la distinguer des agrostides cespiteuses à panicule serrée.</string><string name="bot_agrostis_gigantea_distribution">Originaire des régions tempérées d’Europe et d’Asie ; introduite dans de nombreuses autres régions.</string><string name="bot_agrostis_gigantea_habit">Graminée vivace rhizomateuse, formant souvent des colonies lâches ; les tiges florifères peuvent dépasser un mètre.</string><string name="bot_agrostis_gigantea_leaf">Feuilles plates et étroites insérées sur des gaines ; une petite ligule apparaît à la jonction du limbe et de la gaine.</string><string name="bot_agrostis_gigantea_flower">Une panicule ample et ouverte porte de nombreux petits épillets à une fleur.</string><string name="bot_agrostis_gigantea_fruit">Chaque épillet produit un petit caryopse, fruit typique des graminées.</string>
+    <string name="bot_adansonia_suarezensis_name">Baobab de Suarez</string><string name="bot_adansonia_suarezensis_latin">Adansonia suarezensis</string><string name="bot_adansonia_suarezensis_aliases">Baobab de Suarez ; baobab du nord</string>
+    <string name="bot_adansonia_suarezensis_description">Baobab rare endémique du nord de Madagascar. Comme les autres baobabs, c’est un grand arbre caduc en saison sèche, à tronc massif, feuilles palmées et grandes fleurs, suivies d’un fruit à coque ligneuse. La silhouette générale des baobabs est bien connue, mais les proportions exactes et certains détails d’organes varient selon l’espèce : la planche est donc schématique à l’échelle spécifique.</string><string name="bot_adansonia_suarezensis_distribution">Endémique du nord de Madagascar, dans la végétation tropicale saisonnièrement sèche.</string><string name="bot_adansonia_suarezensis_habit">Arbre à tronc massif, caduc en saison sèche ; les états fleuri et défeuillé surviennent à des périodes différentes.</string><string name="bot_adansonia_suarezensis_leaf">Feuilles divisées en plusieurs folioles palmées, caduques durant la saison sèche.</string><string name="bot_adansonia_suarezensis_flower">Grandes fleurs pâles portées par de longs pédoncules ; celles des baobabs sont éphémères.</string><string name="bot_adansonia_suarezensis_fruit">Fruit oblong à coque ligneuse dure, contenant une pulpe sèche et de nombreuses graines.</string>
+    <string name="bot_anthemis_arvensis_name">Camomille des champs</string><string name="bot_anthemis_arvensis_latin">Anthemis arvensis</string><string name="bot_anthemis_arvensis_aliases">Camomille sauvage ; camomille des blés</string>
+    <string name="bot_anthemis_arvensis_description">Herbacée annuelle ou de courte durée, à feuilles aromatiques très découpées et capitules en marguerite. Les fleurs ligulées blanches entourent un disque jaune ; en vieillissant, le réceptacle devient nettement conique et porte des écailles pâles entre les fleurs. Ces écailles aident à la distinguer de la matricaire inodore, qui en est dépourvue.</string><string name="bot_anthemis_arvensis_distribution">Originaire d’Europe, d’Afrique du Nord et d’Asie tempérée ; introduite hors de cette aire.</string><string name="bot_anthemis_arvensis_habit">Herbacée annuelle ou de courte durée, souvent ramifiée, portant un ou plusieurs capitules au sommet des tiges feuillées.</string><string name="bot_anthemis_arvensis_leaf">Feuilles alternes, finement divisées en segments étroits.</string><string name="bot_anthemis_arvensis_flower">Fleurs ligulées blanches autour d’un disque jaune ; réceptacle conique portant des écailles pâles entre les fleurs.</string><string name="bot_anthemis_arvensis_fruit">Petits akènes secs se développant sur le réceptacle conique.</string>
+    <string name="bot_family_Boraginaceae">Boraginacées</string><string name="bot_family_Boraginaceae_desc">Famille de la bourrache : plantes généralement hérissées, à feuilles alternes et souvent à fleurs bleues tubulaires; les lobes et les écailles de la gorge aident à distinguer les genres.</string><string name="bot_family_Boraginaceae_aliases">Boraginacées ; famille de la bourrache et des myosotis</string>
+    <string name="bot_family_Aristolochiaceae">Aristolochiacées</string><string name="bot_family_Aristolochiaceae_desc">Famille des aristoloches : herbes souvent rhizomateuses ou lianes, avec des fleurs tubulaires ou trilobées caractéristiques. Certaines lignées contiennent des acides aristolochiques toxiques.</string><string name="bot_family_Aristolochiaceae_aliases">Aristolochiacées ; famille des aristoloches</string>
+    <string name="bot_family_Cactaceae">Cactacées</string><string name="bot_family_Cactaceae_desc">Famille des cactus : les tiges succulentes stockent l’eau et portent des aréoles, structures spécialisées d’où naissent épines, fleurs et rameaux; les vraies feuilles sont souvent réduites ou absentes.</string><string name="bot_family_Cactaceae_aliases">Cactacées ; famille des cactus</string>
+    <string name="bot_collection_tropical_america">Amérique tropicale</string><string name="bot_collection_tropical_america_desc">Quelques espèces tropicales américaines, du Mexique et de l’Amérique centrale au nord des Andes et au bouclier des Guyanes.</string>
+    <string name="bot_anchusa_arvensis_name">Buglosse des champs</string><string name="bot_anchusa_arvensis_latin">Anchusa arvensis</string><string name="bot_anchusa_arvensis_aliases">Buglosse des champs ; petite buglosse</string><string name="bot_anchusa_arvensis_description">Herbacée annuelle couverte de soies raides, à feuilles alternes et étroites, aux bords ondulés ou légèrement dentés. Les grappes florales enroulées s’allongent au fil de l’épanouissement; chaque petite corolle bleue a un tube nettement coudé et des lobes inégaux. Quatre nucules rugueuses lui succèdent. Le tube courbé et les lobes irréguliers aident à la distinguer des autres buglosses.</string><string name="bot_anchusa_arvensis_distribution">Originaire d’Europe; introduite dans de nombreuses régions tempérées.</string><string name="bot_anchusa_arvensis_habit">Herbacée annuelle généralement ramifiée, haute de 15 à 60 cm, couverte de soies étalées.</string><string name="bot_anchusa_arvensis_leaf">Feuilles alternes, étroites et lancéolées, hérissées, à bord ondulé; les supérieures embrassent la tige.</string><string name="bot_anchusa_arvensis_flower">Petites fleurs bleues en grappes enroulées; le tube de la corolle est nettement coudé et ses lobes sont inégaux.</string><string name="bot_anchusa_arvensis_fruit">Chaque fleur forme quatre nucules rugueuses, obliquement ovoïdes.</string>
+    <string name="bot_artemisia_maritima_name">Armoise maritime</string><string name="bot_artemisia_maritima_latin">Artemisia maritima</string><string name="bot_artemisia_maritima_aliases">Armoise maritime; sea wormwood</string><string name="bot_artemisia_maritima_description">Sous-arbrisseau vivace aromatique des côtes du nord et de l’ouest de l’Europe. Ses feuilles très divisées sont densément couvertes de poils et paraissent argentées; de petits capitules jaune brun se regroupent sur les rameaux florifères. Plusieurs armoises aromatiques se ressemblent : la couleur et l’odeur ne suffisent pas à identifier une espèce.</string><string name="bot_artemisia_maritima_distribution">Originaire du nord et de l’ouest de l’Europe, notamment des régions côtières atlantiques et baltiques.</string><string name="bot_artemisia_maritima_habit">Sous-arbrisseau vivace compact, souvent haut de 50 cm à 1 m, aux rameaux argentés.</string><string name="bot_artemisia_maritima_leaf">Feuilles aromatiques très découpées en segments étroits couverts de poils, d’aspect argenté.</string><string name="bot_artemisia_maritima_flower">De minuscules fleurons tubulaires jaune brun forment des capitules penchés, regroupés sur les tiges florifères.</string><string name="bot_artemisia_maritima_fruit">De petits akènes secs se développent dans les capitules mûrs.</string>
+    <string name="bot_asarum_europaeum_name">Asaret d’Europe</string><string name="bot_asarum_europaeum_latin">Asarum europaeum</string><string name="bot_asarum_europaeum_aliases">Asaret d’Europe; gingembre sauvage d’Europe</string><string name="bot_asarum_europaeum_description">Petite vivace persistante des sous-bois, qui s’étend par un rhizome rampant. Ses feuilles brillantes, longuement pétiolées, sont réniformes à largement cordées. Les fleurs solitaires brun rouge foncé restent près du sol, sous le feuillage; leur tube floral trilobé est inhabituel et facile à manquer. Son nom anglais de « wild ginger » n’en fait pas un gingembre alimentaire.</string><string name="bot_asarum_europaeum_distribution">Originaire d’Europe jusqu’à la Sibérie centrale.</string><string name="bot_asarum_europaeum_habit">Vivace tapissante à rhizome rampant; les feuilles poussent par petits groupes le long de ses extensions.</string><string name="bot_asarum_europaeum_leaf">Feuille brillante, réniforme ou cordée, portée par un long pétiole près du sol forestier.</string><string name="bot_asarum_europaeum_flower">Fleur solitaire au ras du sol, à calice sombre trilobé formant un court tube en cruche.</string><string name="bot_asarum_europaeum_fruit">Une capsule coriace se développe près du sol après la floraison.</string>
+    <string name="bot_astrophytum_caput_medusae_name">Astrophytum tête-de-Méduse</string><string name="bot_astrophytum_caput_medusae_latin">Astrophytum caput-medusae</string><string name="bot_astrophytum_caput_medusae_aliases">Tête-de-Méduse; cactus tête-de-Méduse</string><string name="bot_astrophytum_caput_medusae_description">Cactus tubéreux très singulier du nord-est du Mexique. Au lieu d’un corps côtelé classique, il porte un petit caudex basal et de longs tubercules de tige étroits et effilés, rayonnant comme des serpents. Chaque tubercule porte une aréole vers son extrémité et est presque dépourvu d’épines. De grandes fleurs jaunes naissent sur les tubercules adultes; ces longues projections sont des tiges modifiées, pas des feuilles.</string><string name="bot_astrophytum_caput_medusae_distribution">Endémique du nord-est du Mexique, dans les États de Nuevo León et de Tamaulipas.</string><string name="bot_astrophytum_caput_medusae_habit">Petit cactus tubéreux à caudex basal et longs tubercules de tige rayonnants.</string><string name="bot_astrophytum_caput_medusae_leaf">Il n’a pas de vraies feuilles; les longues projections sont des tubercules de tige succulents, avec des aréoles près de leur extrémité.</string><string name="bot_astrophytum_caput_medusae_flower">Une grande fleur jaune à cœur orangé rouge apparaît près du caudex, sur un tubercule adulte.</string><string name="bot_astrophytum_caput_medusae_fruit">Une petite capsule écailleuse suit la floraison et contient des graines sombres.</string>
+    <string name="bot_brocchinia_reducta_name">Brocchinie carnivore</string><string name="bot_brocchinia_reducta_latin">Brocchinia reducta</string><string name="bot_brocchinia_reducta_aliases">Brocchinie réduite; broméliacée carnivore</string><string name="bot_brocchinia_reducta_description">Broméliacée terrestre des hauts plateaux du bouclier des Guyanes. Ses feuilles étroites et dressées se chevauchent pour former une cuve persistante qui retient l’eau; les surfaces internes cireuses et des écailles absorbantes aident à piéger les insectes et à prélever leurs nutriments. La carnivorie est documentée chez cette espèce. Une hampe florale lâche et ramifiée s’élève au-dessus de la rosette.</string><string name="bot_brocchinia_reducta_distribution">Originaire du bouclier des Guyanes, notamment des savanes humides, tourbières et pentes rocheuses de tepuis au Venezuela et en Guyana.</string><string name="bot_brocchinia_reducta_habit">Vivace terrestre en rosette, haute d’environ 20 à 60 cm en fleur, des milieux ouverts d’altitude humides.</string><string name="bot_brocchinia_reducta_leaf">Les feuilles étroites et dressées se chevauchent à la base pour retenir l’eau de pluie; leur face interne est cireuse et porte des écailles absorbantes.</string><string name="bot_brocchinia_reducta_flower">Une panicule lâche et ramifiée porte de petites fleurs jaune pâle au-dessus de la rosette.</string><string name="bot_brocchinia_reducta_fruit">Une capsule sèche se forme après la floraison.</string>
+    <string name="bot_cestrum_nocturnum_name">Cestre nocturne</string><string name="bot_cestrum_nocturnum_latin">Cestrum nocturnum</string><string name="bot_cestrum_nocturnum_aliases">Cestre nocturne; jasmin de nuit</string><string name="bot_cestrum_nocturnum_description">Arbuste tropical persistant, sans parenté avec les vrais jasmins. Ses feuilles alternes brillantes et lancéolées accompagnent des bouquets de longues fleurs tubulaires blanc verdâtre, très parfumées la nuit. De petites baies pâles apparaissent ensuite. Les baies sont toxiques; le nom courant « jasmin de nuit » ne doit pas être confondu avec un jasmin comestible.</string><string name="bot_cestrum_nocturnum_distribution">Originaire du Mexique au Venezuela; largement cultivé et naturalisé dans les régions tropicales et subtropicales.</string><string name="bot_cestrum_nocturnum_habit">Arbuste tropical persistant et ramifié, généralement haut de 1 à 3 m.</string><string name="bot_cestrum_nocturnum_leaf">Feuilles simples alternes, brillantes et lancéolées, à bord entier.</string><string name="bot_cestrum_nocturnum_flower">Bouquets de longues fleurs tubulaires blanc verdâtre, s’ouvrant surtout la nuit et très parfumées.</string><string name="bot_cestrum_nocturnum_fruit">Petites baies pâles après la floraison; elles sont toxiques et ne doivent pas être consommées.</string>
 </resources>

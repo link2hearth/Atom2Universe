@@ -32,7 +32,7 @@ internal class PlantFruitPainter(private val c:Canvas,private val species:PlantS
         // A winglike supporting bract is separate from the nutlet's pericarp.
         if(d.samara==SamaraForm.THREE_LOBED_BRACT){samaras();return@at}
         when(l.fruit){
-            FruitShape.MULTIPLE,FruitShape.SYCONIUM,FruitShape.INDEHISCENT,FruitShape.FOLLICLE -> Unit // handled by reusable special-fruit profiles
+            FruitShape.MULTIPLE,FruitShape.SYCONIUM,FruitShape.INDEHISCENT,FruitShape.FOLLICLE,FruitShape.SPORES,FruitShape.SEED -> Unit // handled by reusable special-fruit profiles
             FruitShape.ACORN -> acorns()
             FruitShape.NUT -> hazelnuts()
             FruitShape.BEECH -> beech()

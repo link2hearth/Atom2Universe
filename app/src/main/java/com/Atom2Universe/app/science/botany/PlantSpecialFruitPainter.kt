@@ -14,6 +14,8 @@ internal class PlantSpecialFruitPainter(private val c:Canvas,private val l:Plant
 
     fun draw():Boolean {
         when {
+            l.fruit==FruitShape.SPORES -> sori()
+            l.fruit==FruitShape.SEED -> nakedSeed()
             d.achene==AcheneForm.SILKY_CLUSTER -> silkyCluster()
             l.fruit==FruitShape.INDEHISCENT -> woodyFruit()
             l.fruit==FruitShape.FOLLICLE -> follicle()
@@ -30,6 +32,27 @@ internal class PlantSpecialFruitPainter(private val c:Canvas,private val l:Plant
     private fun wash(q:Path,color:Int=brown) {
         b.wash(q,-40f,-45f,45f,45f,intArrayOf(botanicalMix(color,cream,.5f),color,botanicalMix(color,ink,.35f)))
         b.stroke(q,ink,.7f)
+    }
+    private fun sori() {
+        val blade=Path().apply{moveTo(-105f,0f);quadTo(0f,-66f,105f,0f);quadTo(0f,65f,-105f,0f);close()}
+        wash(blade,0xff718052.toInt())
+        b.line(-100f,0f,100f,0f,0xff65734c.toInt(),1.5f)
+        repeat(13){i->val x=-88f+i*14.6f;val y=-(63f-abs(x)*.58f)
+            b.line(x,0f,x*.98f,y,0xff89936b.toInt(),.8f)
+            b.oval(x*.99f,y+3f,2.3f,3.8f,0xff95623b.toInt())
+            b.oval(x*.99f,y+3f,1.1f,2.3f,0xffb98953.toInt())
+        }
+        b.line(-105f,1f,-101f,8f,ink,1.1f);b.line(105f,1f,101f,8f,ink,1.1f)
+    }
+    private fun nakedSeed() {
+        val q=Path().apply{moveTo(-42f,-91f);cubicTo(-102f,-36f,-67f,78f,0f,94f)
+            cubicTo(67f,78f,102f,-36f,42f,-91f);quadTo(0f,-111f,-42f,-91f);close()}
+        wash(q,0xffb9a64f.toInt())
+        c.save();c.clipPath(q)
+        b.oval(0f,2f,31f,53f,0xffd1bd65.toInt())
+        b.line(-25f,-20f,25f,-20f,0xffe4d791.toInt(),1.3f)
+        b.line(-21f,34f,21f,34f,0xffa68e4e.toInt(),.9f)
+        c.restore()
     }
     private fun oval(x:Float,y:Float,rx:Float,ry:Float,color:Int=brown) {
         wash(Path().apply{addOval(x-rx,y-ry,x+rx,y+ry,Path.Direction.CW)},color)

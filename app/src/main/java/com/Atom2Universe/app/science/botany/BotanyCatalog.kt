@@ -29,6 +29,7 @@ object BotanyCatalog {
         PlantCollection("north_america", R.string.bot_collection_north_america, R.string.bot_collection_north_america_desc),
         PlantCollection("europe", R.string.bot_collection_europe, R.string.bot_collection_europe_desc),
         PlantCollection("africa_dry", R.string.bot_collection_africa_dry, R.string.bot_collection_africa_dry_desc),
+        PlantCollection("tropical_america", R.string.bot_collection_tropical_america, R.string.bot_collection_tropical_america_desc),
     )
     val sections = listOf(
         PlantSection("trees", R.string.bot_section_trees, R.string.bot_section_trees_desc),
@@ -45,6 +46,11 @@ object BotanyCatalog {
         PlantFamily("Juglandaceae",R.string.bot_family_Juglandaceae,R.string.bot_family_Juglandaceae_desc,R.string.bot_family_Juglandaceae_aliases),
         PlantFamily("Moraceae",R.string.bot_family_Moraceae,R.string.bot_family_Moraceae_desc,R.string.bot_family_Moraceae_aliases),
         PlantFamily("Grossulariaceae",R.string.bot_family_Grossulariaceae,R.string.bot_family_Grossulariaceae_desc,R.string.bot_family_Grossulariaceae_aliases),
+        PlantFamily("Crassulaceae",R.string.bot_family_Crassulaceae,R.string.bot_family_Crassulaceae_desc,R.string.bot_family_Crassulaceae_aliases),
+        PlantFamily("Plumbaginaceae",R.string.bot_family_Plumbaginaceae,R.string.bot_family_Plumbaginaceae_desc,R.string.bot_family_Plumbaginaceae_aliases),
+        PlantFamily("Lecythidaceae",R.string.bot_family_Lecythidaceae,R.string.bot_family_Lecythidaceae_desc,R.string.bot_family_Lecythidaceae_aliases),
+        PlantFamily("Droseraceae",R.string.bot_family_Droseraceae,R.string.bot_family_Droseraceae_desc,R.string.bot_family_Droseraceae_aliases),
+        PlantFamily("Araucariaceae",R.string.bot_family_Araucariaceae,R.string.bot_family_Araucariaceae_desc,R.string.bot_family_Araucariaceae_aliases),
 
         PlantFamily("Theaceae", R.string.bot_family_Theaceae, R.string.bot_family_Theaceae_desc, R.string.bot_family_Theaceae_aliases),
         PlantFamily("Lythraceae", R.string.bot_family_Lythraceae, R.string.bot_family_Lythraceae_desc, R.string.bot_family_Lythraceae_aliases),
@@ -78,6 +84,8 @@ object BotanyCatalog {
         PlantFamily("Fabaceae", R.string.bot_family_Fabaceae, R.string.bot_family_Fabaceae_desc, R.string.bot_family_Fabaceae_aliases),
         PlantFamily("Ericaceae", R.string.bot_family_Ericaceae, R.string.bot_family_Ericaceae_desc, R.string.bot_family_Ericaceae_aliases),
         PlantFamily("Asteraceae", R.string.bot_family_Asteraceae, R.string.bot_family_Asteraceae_desc, R.string.bot_family_Asteraceae_aliases),
+        PlantFamily("Actinidiaceae", R.string.bot_family_Actinidiaceae, R.string.bot_family_Actinidiaceae_desc, R.string.bot_family_Actinidiaceae_aliases),
+        PlantFamily("Alismataceae", R.string.bot_family_Alismataceae, R.string.bot_family_Alismataceae_desc, R.string.bot_family_Alismataceae_aliases),
         PlantFamily("Papaveraceae", R.string.bot_family_Papaveraceae, R.string.bot_family_Papaveraceae_desc, R.string.bot_family_Papaveraceae_aliases),
         PlantFamily("Ranunculaceae", R.string.bot_family_Ranunculaceae, R.string.bot_family_Ranunculaceae_desc, R.string.bot_family_Ranunculaceae_aliases),
         PlantFamily("Primulaceae", R.string.bot_family_Primulaceae, R.string.bot_family_Primulaceae_desc, R.string.bot_family_Primulaceae_aliases),
@@ -93,8 +101,22 @@ object BotanyCatalog {
         PlantFamily("Brassicaceae", R.string.bot_family_Brassicaceae, R.string.bot_family_Brassicaceae_desc, R.string.bot_family_Brassicaceae_aliases),
         PlantFamily("Caryophyllaceae", R.string.bot_family_Caryophyllaceae, R.string.bot_family_Caryophyllaceae_desc, R.string.bot_family_Caryophyllaceae_aliases),
         PlantFamily("Geraniaceae", R.string.bot_family_Geraniaceae, R.string.bot_family_Geraniaceae_desc, R.string.bot_family_Geraniaceae_aliases),
+        PlantFamily("Convolvulaceae", R.string.bot_family_Convolvulaceae, R.string.bot_family_Convolvulaceae_desc, R.string.bot_family_Convolvulaceae_aliases),
+        PlantFamily("Amaranthaceae", R.string.bot_family_Amaranthaceae, R.string.bot_family_Amaranthaceae_desc, R.string.bot_family_Amaranthaceae_aliases),
+        PlantFamily("Schisandraceae", R.string.bot_family_Schisandraceae, R.string.bot_family_Schisandraceae_desc, R.string.bot_family_Schisandraceae_aliases),
+        PlantFamily("Ginkgoaceae", R.string.bot_family_Ginkgoaceae, R.string.bot_family_Ginkgoaceae_desc, R.string.bot_family_Ginkgoaceae_aliases),
+        PlantFamily("Dennstaedtiaceae", R.string.bot_family_Dennstaedtiaceae, R.string.bot_family_Dennstaedtiaceae_desc, R.string.bot_family_Dennstaedtiaceae_aliases),
+        PlantFamily("Cannabaceae", R.string.bot_family_Cannabaceae, R.string.bot_family_Cannabaceae_desc, R.string.bot_family_Cannabaceae_aliases),
+        PlantFamily("Caricaceae", R.string.bot_family_Caricaceae, R.string.bot_family_Caricaceae_desc, R.string.bot_family_Caricaceae_aliases),
+        PlantFamily("Anacardiaceae", R.string.bot_family_Anacardiaceae, R.string.bot_family_Anacardiaceae_desc, R.string.bot_family_Anacardiaceae_aliases),
+        PlantFamily("Araceae", R.string.bot_family_Araceae, R.string.bot_family_Araceae_desc, R.string.bot_family_Araceae_aliases),
+        PlantFamily("Orchidaceae", R.string.bot_family_Orchidaceae, R.string.bot_family_Orchidaceae_desc, R.string.bot_family_Orchidaceae_aliases),
+        PlantFamily("Araliaceae", R.string.bot_family_Araliaceae, R.string.bot_family_Araliaceae_desc, R.string.bot_family_Araliaceae_aliases),
+        PlantFamily("Boraginaceae", R.string.bot_family_Boraginaceae, R.string.bot_family_Boraginaceae_desc, R.string.bot_family_Boraginaceae_aliases),
+        PlantFamily("Aristolochiaceae", R.string.bot_family_Aristolochiaceae, R.string.bot_family_Aristolochiaceae_desc, R.string.bot_family_Aristolochiaceae_aliases),
+        PlantFamily("Cactaceae", R.string.bot_family_Cactaceae, R.string.bot_family_Cactaceae_desc, R.string.bot_family_Cactaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
@@ -110,6 +132,11 @@ object BotanyCatalog {
         PlantGroup("useful_organs", R.string.bot_group_useful_organs, listOf("camellia_sinensis","gossypium_hirsutum","punica_granatum","persea_americana","laurus_nobilis"), R.string.bot_group_useful_organs_desc),
         PlantGroup("food_organs", R.string.bot_group_food_organs, listOf("allium_cepa","brassica_oleracea","cucumis_sativus","glycine_max","arachis"), R.string.bot_group_food_organs_desc),
         PlantGroup("orchard_fruits", R.string.bot_group_orchard, listOf("olea","coffea","persica","armeniaca","citrus_maxima"), R.string.bot_group_orchard_desc),
+        PlantGroup("coffee_species", R.string.bot_group_coffee_species, listOf("coffea","coffea_canephora","coffea_liberica"), R.string.bot_group_coffee_species_desc),
+        PlantGroup("artemisia_pair", R.string.bot_group_artemisia_pair, listOf("artemisia_absinthium","artemisia_vulgaris"), R.string.bot_group_artemisia_pair_desc),
+        PlantGroup("burdock_thistle_pair", R.string.bot_group_burdock_thistle_pair, listOf("arctium_lappa","arctium_minus","cirsium_vulgare"), R.string.bot_group_burdock_thistle_pair_desc),
+        PlantGroup("agave_forms", R.string.bot_group_agave_forms, listOf("agave_fourcroydes","agave_shawii","agave_filifera","agave_victoriae_reginae"), R.string.bot_group_agave_forms_desc),
+        PlantGroup("toxic_berries", R.string.bot_group_toxic_berries, listOf("hedera_helix","cestrum_nocturnum"), R.string.bot_group_toxic_berries_desc),
         PlantGroup("nightshade_organs", R.string.bot_group_nightshade_organs, listOf("lycopersicum","tuberosum","melongena","capsicum","nigrum"), R.string.bot_group_nightshade_organs_desc),
         PlantGroup("model_cereals", R.string.bot_group_model_cereals, listOf("triticum","oryza","zea"), R.string.bot_group_model_cereals_desc),
         PlantGroup("redwoods", R.string.bot_group_redwoods, listOf("sequoiadendron","sequoia","pseudotsuga"), R.string.bot_group_redwoods_desc),

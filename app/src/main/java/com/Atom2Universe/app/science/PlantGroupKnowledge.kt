@@ -20,15 +20,18 @@ import com.Atom2Universe.app.science.botany.BotanyCatalog
  */
 object PlantGroupKnowledge {
     private val orderFamilies = mapOf(
-        "Ericales" to listOf("Theaceae", "Ericaceae", "Primulaceae"),
+        "Alismatales" to listOf("Alismataceae"),
+        "Ericales" to listOf("Theaceae", "Ericaceae", "Primulaceae", "Actinidiaceae", "Lecythidaceae"),
         "Myrtales" to listOf("Lythraceae", "Combretaceae"),
         "Laurales" to listOf("Lauraceae"),
-        "Asparagales" to listOf("Amaryllidaceae", "Asphodelaceae", "Asparagaceae"),
+        "Asparagales" to listOf("Amaryllidaceae", "Asphodelaceae", "Asparagaceae", "Orchidaceae"),
         "Cucurbitales" to listOf("Cucurbitaceae"),
         "Gentianales" to listOf("Rubiaceae", "Apocynaceae"),
         "Sapindales" to listOf("Rutaceae", "Sapindaceae"),
         "Solanales" to listOf("Solanaceae"),
-        "Pinales" to listOf("Pinaceae"),
+        "Boraginales" to listOf("Boraginaceae"),
+        "Piperales" to listOf("Aristolochiaceae"),
+        "Pinales" to listOf("Pinaceae", "Araucariaceae"),
         "Cupressales" to listOf("Cupressaceae"),
         "Zygophyllales" to listOf("Zygophyllaceae"),
         "Lamiales" to listOf("Oleaceae", "Pedaliaceae", "Plantaginaceae", "Lamiaceae"),
@@ -44,14 +47,14 @@ object PlantGroupKnowledge {
         "Fabales" to listOf("Fabaceae"),
         "Asterales" to listOf("Asteraceae", "Campanulaceae"),
         "Ranunculales" to listOf("Ranunculaceae", "Papaveraceae"),
-        "Apiales" to listOf("Apiaceae"),
+        "Apiales" to listOf("Apiaceae", "Araliaceae"),
         "Poales" to listOf("Poaceae", "Bromeliaceae"),
         "Brassicales" to listOf("Brassicaceae"),
-        "Caryophyllales" to listOf("Caryophyllaceae"),
+        "Caryophyllales" to listOf("Caryophyllaceae", "Plumbaginaceae", "Droseraceae", "Cactaceae"),
         "Geraniales" to listOf("Geraniaceae"),
         "Zingiberales" to listOf("Musaceae", "Zingiberaceae"),
         "Arecales" to listOf("Arecaceae"),
-        "Saxifragales" to listOf("Grossulariaceae"),
+        "Saxifragales" to listOf("Grossulariaceae", "Crassulaceae"),
     )
     private val familyOrders = orderFamilies.flatMap { (order, families) -> families.map { it to order } }.toMap()
     private val clades = mapOf(
@@ -161,6 +164,7 @@ object PlantGroupKnowledge {
 
     /** Explicit, individually checked URLs: APweb filenames are not uniform. */
     private val orderPages = mapOf(
+        "Alismatales" to "alismatalesweb.htm",
         "Ericales" to "ericalesweb.htm", "Myrtales" to "myrtalesweb2.htm",
         "Laurales" to "lauralesweb.htm", "Asparagales" to "asparagalesweb.htm",
         "Cucurbitales" to "cucurbitalesweb.htm", "Gentianales" to "gentianalesweb.htm",

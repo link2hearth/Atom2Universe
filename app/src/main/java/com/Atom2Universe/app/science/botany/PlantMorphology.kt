@@ -9,7 +9,7 @@ package com.Atom2Universe.app.science.botany
 enum class LeafBase { TAPERED, ROUNDED, CORDATE, AURICLED }
 enum class LeafTip { POINTED, ACUMINATE, ROUNDED, NOTCHED }
 enum class LeafTeeth { AUTO, DOUBLE, CRENATE, WAVY }
-enum class Venation { PINNATE, PALMATE, ARCUATE, PARALLEL, THREE_BASAL }
+enum class Venation { PINNATE, PALMATE, ARCUATE, PARALLEL, THREE_BASAL, DICHOTOMOUS }
 enum class BarkSurface { FURROWED, SMOOTH, FLUTED, PAPERY, PLATED, LENTICELS }
 enum class ConiferSpray { FLAT, PENDULOUS, TUFTED, AWL }
 

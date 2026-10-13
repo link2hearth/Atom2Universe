@@ -298,6 +298,22 @@ internal class PlantLeafPainter(private val canvas: Canvas, private val species:
             d.venation==Venation.PARALLEL -> for(side in listOf(-1,1)) for(i in 1..3) {
                 brush.stroke(Path().apply { moveTo(0f,0f); cubicTo(side*h*.16f*i,-h*.28f,side*h*.13f*i,-h*.68f,0f,-h) },light,.68f)
             }
+            d.venation==Venation.DICHOTOMOUS -> {
+                var paths=listOf(0f to 0f)
+                repeat(6) { level ->
+                    val next=mutableListOf<Pair<Float,Float>>()
+                    val advance=h*.135f
+                    val spread=h*.105f
+                    paths.forEach { (x,y) ->
+                        val left=(x-spread) to (y-advance)
+                        val right=(x+spread) to (y-advance)
+                        brush.stroke(Path().apply{moveTo(x,y);quadTo(x-spread*.2f,y-advance*.55f,left.first,left.second)},light,.62f)
+                        brush.stroke(Path().apply{moveTo(x,y);quadTo(x+spread*.2f,y-advance*.55f,right.first,right.second)},light,.62f)
+                        next+=left;next+=right
+                    }
+                    paths=next
+                }
+            }
             shape==LeafShape.PALMATILOBED -> {
                 repeat(d.palmateSegments){i->
                     val a=PI*(.07+1.86*(i+.5)/d.palmateSegments)

@@ -43,7 +43,7 @@ enum class FruitShape(val label: Int) {
     HIP(R.string.bot_fr_hip), POD(R.string.bot_fr_pod), CAPSULE(R.string.bot_fr_capsule),
     ACHENE(R.string.bot_fr_achene), GRAIN(R.string.bot_fr_grain), SCHIZOCARP(R.string.bot_fr_schizocarp),
     BERRY(R.string.bot_fr_berry), SILIQUE(R.string.bot_fr_silique), SILICLE(R.string.bot_fr_silicle),
-    FOLLICLE(R.string.bot_fr_follicle), INDEHISCENT(R.string.bot_fr_indehiscent)
+    FOLLICLE(R.string.bot_fr_follicle), INDEHISCENT(R.string.bot_fr_indehiscent), SPORES(R.string.bot_fr_spores), SEED(R.string.bot_fr_seed)
 }
 enum class Habitat(val label: Int) {
     WOOD(R.string.bot_hab_wood), HEDGE(R.string.bot_hab_hedge), MEADOW(R.string.bot_hab_meadow),
