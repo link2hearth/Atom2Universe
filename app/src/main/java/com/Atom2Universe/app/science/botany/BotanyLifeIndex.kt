@@ -47,6 +47,10 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
             "Opuntia helleri" -> "Opuntia galapageia var. helleri"
             "Hylocereus costaricensis" -> "Selenicereus costaricensis"
             "Ariocarpus scaphirostris" -> "Ariocarpus scaphirostrus"
+            // POWO treats Abarema turbinata as a synonym of Jupunba turbinata.
+            "Abarema turbinata" -> "Jupunba turbinata"
+            // POWO accepts Melocactus lemarii for the tree's spelling lemairei.
+            "Melocactus lemairei" -> "Melocactus lemarii"
             else -> name
         }
     }
