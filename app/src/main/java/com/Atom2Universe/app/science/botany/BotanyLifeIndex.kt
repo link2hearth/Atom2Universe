@@ -29,11 +29,14 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
 
     companion object {
         const val GREEN_ROOT="ott361838"
-        // Kew POWO: Stellaria holostea L. is a homotypic synonym of Rabelera holostea.
+        // Kew POWO: reviewed accepted-name matches for retained source-tree terminal names.
+        // Rabelera holostea is a synonym of Stellaria holostea (OTT 3.7draft3).
         // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:307758-2
-        // OTT 3.7draft3 retains Stellaria holostea (ott292275); the atlas uses the accepted name.
+        // Sansevieria kirkii is a synonym of Dracaena pethera (accepted by POWO).
+        // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77182814-1/general-information
         internal fun treeScientificName(name:String):String = when(name) {
             "Rabelera holostea" -> "Stellaria holostea"
+            "Dracaena pethera" -> "Sansevieria kirkii"
             else -> name
         }
     }

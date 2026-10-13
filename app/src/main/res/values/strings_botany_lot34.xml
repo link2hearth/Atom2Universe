@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bot_family_Scheuchzeriaceae" translatable="false">Scheuchzeria family</string>
+    <string name="bot_family_Scheuchzeriaceae_desc">Rhizomatous wetland monocots with narrow sheathing leaves and small flowers that form three follicles.</string>
+    <string name="bot_family_Scheuchzeriaceae_aliases">Scheuchzeria family</string>
+    <string name="bot_family_Osmundaceae" translatable="false">Royal fern family</string>
+    <string name="bot_family_Osmundaceae_desc">Large terrestrial ferns with robust rhizomes, spreading fronds and conspicuous separate fertile frond portions.</string>
+    <string name="bot_family_Osmundaceae_aliases">Royal fern family</string>
+    <string name="bot_source_bsbi" translatable="false">Botanical Society of Britain and Ireland</string>
+    <string name="bot_source_aos" translatable="false">American Orchid Society</string>
+    <string name="bot_pinus_palustris_name">Longleaf pine</string>
+    <string name="bot_pinus_palustris_latin" translatable="false">Pinus palustris</string>
+    <string name="bot_pinus_palustris_aliases">longleaf pine; longleaf yellow pine</string>
+    <string name="bot_pinus_palustris_description">An evergreen pine of the southeastern Coastal Plain, often with a tall clear trunk and open crown. Its exceptionally long needles occur three per fascicle; the large, prickly cones mature after pollination in a separate season.</string>
+    <string name="bot_pinus_palustris_distribution">Southeastern United States, from the coastal plain of Virginia south to Florida and west toward eastern Texas; chiefly sandy, fire-influenced pine habitats.</string>
+    <string name="bot_pinus_palustris_habit">Open-crowned pine with a tall straight trunk</string>
+    <string name="bot_pinus_palustris_leaf">Three very long needles per fascicle</string>
+    <string name="bot_pinus_palustris_flower">Separate pollen and seed cones</string>
+    <string name="bot_pinus_palustris_fruit">Large woody cone with prickly scales</string>
+    <string name="bot_erica_cinerea_name">Bell heather</string>
+    <string name="bot_erica_cinerea_latin" translatable="false">Erica cinerea</string>
+    <string name="bot_erica_cinerea_aliases">bell heather; Scotch heather</string>
+    <string name="bot_erica_cinerea_description">A low evergreen heath shrub with many fine branches and tiny narrow leaves in whorls of three. Its pink to purple urn-shaped flowers are borne in leafy clusters; each flower forms a small capsule.</string>
+    <string name="bot_erica_cinerea_distribution">Atlantic western Europe, especially dry acidic heaths and open moorland; locally on rocky ground.</string>
+    <string name="bot_erica_cinerea_habit">Low, densely branched evergreen shrub</string>
+    <string name="bot_erica_cinerea_leaf">Minute needlelike leaves in whorls of three</string>
+    <string name="bot_erica_cinerea_flower">Pink-purple urn-shaped flowers</string>
+    <string name="bot_erica_cinerea_fruit">Small dry capsule</string>
+    <string name="bot_scheuchzeria_palustris_name">Rannoch-rush</string>
+    <string name="bot_scheuchzeria_palustris_latin" translatable="false">Scheuchzeria palustris</string>
+    <string name="bot_scheuchzeria_palustris_aliases">rannoch-rush; pod grass</string>
+    <string name="bot_scheuchzeria_palustris_description">A small rhizomatous bog perennial with erect, narrow, sheathing leaves. Its inconspicuous green flowers have six tepals; the fruit separates into three spreading follicles, a useful distinction from sedges.</string>
+    <string name="bot_scheuchzeria_palustris_distribution">Circumboreal in the Northern Hemisphere, in nutrient-poor peat bogs, fens and wet Sphagnum communities.</string>
+    <string name="bot_scheuchzeria_palustris_habit">Small erect herb from a creeping rhizome</string>
+    <string name="bot_scheuchzeria_palustris_leaf">Alternate linear leaves with basal sheaths</string>
+    <string name="bot_scheuchzeria_palustris_flower">Tiny green flower with six tepals</string>
+    <string name="bot_scheuchzeria_palustris_fruit">Three spreading follicles</string>
+    <string name="bot_musa_basjoo_name">Hardy banana</string>
+    <string name="bot_musa_basjoo_latin" translatable="false">Musa basjoo</string>
+    <string name="bot_musa_basjoo_aliases">hardy banana; Japanese fiber banana</string>
+    <string name="bot_musa_basjoo_description">A large rhizomatous herb whose apparent trunk is a pseudostem formed by overlapping leaf sheaths. The broad blades tear readily in wind; a hanging inflorescence bears flowers under purple bracts, followed by seedy, generally inedible berries.</string>
+    <string name="bot_musa_basjoo_distribution">Native to southern Sichuan, China; widely cultivated as an ornamental, including in Japan.</string>
+    <string name="bot_musa_basjoo_habit">Tall clump with a sheathed pseudostem</string>
+    <string name="bot_musa_basjoo_leaf">Huge broad blade with a strong midrib</string>
+    <string name="bot_musa_basjoo_flower">Hanging inflorescence with purple bracts</string>
+    <string name="bot_musa_basjoo_fruit">Elongate berry containing many hard seeds</string>
+    <string name="bot_lilium_columbianum_name">Columbia lily</string>
+    <string name="bot_lilium_columbianum_latin" translatable="false">Lilium columbianum</string>
+    <string name="bot_lilium_columbianum_aliases">Columbia lily; tiger lily of the West</string>
+    <string name="bot_lilium_columbianum_description">A bulbous western North American lily with an erect stem and narrow leaves often arranged in whorls. Its orange, dark-spotted flowers nod and have strongly recurved tepals; an erect capsule follows flowering.</string>
+    <string name="bot_lilium_columbianum_distribution">Western North America, from British Columbia through the Pacific Northwest to California and inland mountain regions; open woods and meadows.</string>
+    <string name="bot_lilium_columbianum_habit">Erect bulbous lily with a leafy stem</string>
+    <string name="bot_lilium_columbianum_leaf">Narrow leaves in distinct whorls</string>
+    <string name="bot_lilium_columbianum_flower">Nodding orange flower with dark spots</string>
+    <string name="bot_lilium_columbianum_fruit">Upright three-valved capsule</string>
+    <string name="bot_lilium_cernuum_name">Nodding lily</string>
+    <string name="bot_lilium_cernuum_latin" translatable="false">Lilium cernuum</string>
+    <string name="bot_lilium_cernuum_aliases">nodding lily</string>
+    <string name="bot_lilium_cernuum_description">A slender bulbous lily with scattered narrow leaves and one or several nodding flowers. The pink to purple tepals are dark-spotted and roll back markedly; the fruit is an upright capsule.</string>
+    <string name="bot_lilium_cernuum_distribution">Northeastern China, Korea and the Russian Far East, in grassy openings and woodland margins.</string>
+    <string name="bot_lilium_cernuum_habit">Slender erect lily from a scaly bulb</string>
+    <string name="bot_lilium_cernuum_leaf">Scattered narrow leaves along the stem</string>
+    <string name="bot_lilium_cernuum_flower">Nodding recurved pink-purple spotted flower</string>
+    <string name="bot_lilium_cernuum_fruit">Upright three-valved capsule</string>
+    <string name="bot_erythronium_pluriflorum_name">Many-flowered fawn lily</string>
+    <string name="bot_erythronium_pluriflorum_latin" translatable="false">Erythronium pluriflorum</string>
+    <string name="bot_erythronium_pluriflorum_aliases">many-flowered fawn lily</string>
+    <string name="bot_erythronium_pluriflorum_description">A small spring geophyte of the central Sierra Nevada, arising from a deep bulb. Each flowering shoot usually carries two smooth green basal leaves and may bear several nodding golden flowers with recurved tepals.</string>
+    <string name="bot_erythronium_pluriflorum_distribution">High-elevation central Sierra Nevada, California, in moist meadows and open subalpine sites after snowmelt.</string>
+    <string name="bot_erythronium_pluriflorum_habit">Small spring herb from a deep bulb</string>
+    <string name="bot_erythronium_pluriflorum_leaf">Pair of smooth, broad basal leaves</string>
+    <string name="bot_erythronium_pluriflorum_flower">Several nodding golden flowers</string>
+    <string name="bot_erythronium_pluriflorum_fruit">Three-valved capsule</string>
+    <string name="bot_erythronium_citrinum_name">Lemon fawn lily</string>
+    <string name="bot_erythronium_citrinum_latin" translatable="false">Erythronium citrinum</string>
+    <string name="bot_erythronium_citrinum_aliases">lemon fawn lily; citrine erythronium</string>
+    <string name="bot_erythronium_citrinum_description">A bulbous spring perennial with two mottled basal leaves and one to a few pale cream flowers, often yellow at the base. The tepals reflex at maturity; populations may intergrade with related western Erythronium, so identification can require locality and floral details.</string>
+    <string name="bot_erythronium_citrinum_distribution">Klamath-Siskiyou region of northern California and southwestern Oregon, often on serpentine or rocky soils.</string>
+    <string name="bot_erythronium_citrinum_habit">Small spring herb arising from a bulb</string>
+    <string name="bot_erythronium_citrinum_leaf">Two mottled basal leaves</string>
+    <string name="bot_erythronium_citrinum_flower">Cream flower with a yellow base and recurved tepals</string>
+    <string name="bot_erythronium_citrinum_fruit">Three-valved capsule</string>
+    <string name="bot_vanda_coerulea_name">Blue vanda</string>
+    <string name="bot_vanda_coerulea_latin" translatable="false">Vanda coerulea</string>
+    <string name="bot_vanda_coerulea_aliases">blue vanda</string>
+    <string name="bot_vanda_coerulea_description">An epiphytic orchid with a short monopodial stem, leathery strap leaves and aerial roots. Large flat blue-violet flowers bear tessellated darker veins and a notably small lip; spikes may carry many flowers.</string>
+    <string name="bot_vanda_coerulea_distribution">From northeastern India through Myanmar and northern Thailand to southern Yunnan and Indo-China; often on exposed trees at about 900–1500 m.</string>
+    <string name="bot_vanda_coerulea_habit">Epiphytic orchid with short upright stem and aerial roots</string>
+    <string name="bot_vanda_coerulea_leaf">Leathery strap leaf with a strong sheath</string>
+    <string name="bot_vanda_coerulea_flower">Large flat blue flower with small lip</string>
+    <string name="bot_vanda_coerulea_fruit">Slender dry orchid capsule</string>
+    <string name="bot_herminium_monorchis_name">Musk orchid</string>
+    <string name="bot_herminium_monorchis_latin" translatable="false">Herminium monorchis</string>
+    <string name="bot_herminium_monorchis_aliases">musk orchid; one-bulb orchid</string>
+    <string name="bot_herminium_monorchis_description">A small, glabrous terrestrial orchid with two or three bluish-green basal leaves and a slender, often one-sided spike of tiny yellow-green flowers. Each flower has a three-lobed lip, a loose hood and no spur; underground tubers connect by slender stolons.</string>
+    <string name="bot_herminium_monorchis_distribution">Temperate Eurasia to the Himalaya, in short grassland and calcareous turf; habitat varies across its broad range.</string>
+    <string name="bot_herminium_monorchis_habit">Small slender orchid with basal leaves</string>
+    <string name="bot_herminium_monorchis_leaf">Two or three elliptic basal leaves</string>
+    <string name="bot_herminium_monorchis_flower">Tiny yellow-green flower with three-lobed lip, no spur</string>
+    <string name="bot_herminium_monorchis_fruit">Small tuber connected by a slender stolon</string>
+    <string name="bot_epipactis_atrorubens_name">Dark-red helleborine</string>
+    <string name="bot_epipactis_atrorubens_latin" translatable="false">Epipactis atrorubens</string>
+    <string name="bot_epipactis_atrorubens_aliases">dark-red helleborine; red helleborine</string>
+    <string name="bot_epipactis_atrorubens_description">A rhizomatous terrestrial orchid, usually 25–80 cm tall, with stem leaves often in two ranks and a many-flowered, commonly one-sided raceme. The brown-red to purple flowers are short-haired and often vanilla-scented; fruits are capsules.</string>
+    <string name="bot_epipactis_atrorubens_distribution">Europe to western and central Asia, especially open pine woods and dry calcareous grassland from lowlands to subalpine elevations.</string>
+    <string name="bot_epipactis_atrorubens_habit">Erect leafy orchid arising from a rhizome</string>
+    <string name="bot_epipactis_atrorubens_leaf">Stem leaves often arranged in two ranks</string>
+    <string name="bot_epipactis_atrorubens_flower">One-sided raceme of reddish-purple flowers</string>
+    <string name="bot_epipactis_atrorubens_fruit">Ribbed capsule</string>
+    <string name="bot_neuwiedia_griffithii_name">Griffith’s neuwiedia</string>
+    <string name="bot_neuwiedia_griffithii_latin" translatable="false">Neuwiedia griffithii</string>
+    <string name="bot_neuwiedia_griffithii_aliases">Griffith’s neuwiedia</string>
+    <string name="bot_neuwiedia_griffithii_description">A robust terrestrial apostasioid orchid with a stout rhizome and several large plicate leaves. Its pale flowers retain three free, functional stamens rather than the single fused column typical of most orchids; this family-level feature is diagnostic.</string>
+    <string name="bot_neuwiedia_griffithii_distribution">Southeast Asian Malesia, reported from the Malay Peninsula, Sumatra and Vietnam; shaded humid forest.</string>
+    <string name="bot_neuwiedia_griffithii_habit">Rhizomatous terrestrial orchid with erect pleated leaves</string>
+    <string name="bot_neuwiedia_griffithii_leaf">Large lanceolate leaf with conspicuous pleats</string>
+    <string name="bot_neuwiedia_griffithii_flower">Pale flower with three separate fertile stamens</string>
+    <string name="bot_neuwiedia_griffithii_fruit">Ovoid dry capsule</string>
+    <string name="bot_narcissus_poeticus_name">Poet’s daffodil</string>
+    <string name="bot_narcissus_poeticus_latin" translatable="false">Narcissus poeticus</string>
+    <string name="bot_narcissus_poeticus_aliases">poet’s daffodil; pheasant’s-eye narcissus</string>
+    <string name="bot_narcissus_poeticus_description">A bulbous perennial with several narrow basal leaves and usually one flower per scape. Six white tepals surround a very short yellow corona with a conspicuous red crenulate rim; all parts, especially bulbs, contain toxic alkaloids.</string>
+    <string name="bot_narcissus_poeticus_distribution">Central and southeastern Europe, especially damp meadows and mountain grassland; widely planted and locally naturalised elsewhere.</string>
+    <string name="bot_narcissus_poeticus_habit">Bulbous spring herb with a leafless flower stalk</string>
+    <string name="bot_narcissus_poeticus_leaf">Narrow blue-green basal leaves</string>
+    <string name="bot_narcissus_poeticus_flower">White flower with a tiny red-rimmed corona</string>
+    <string name="bot_narcissus_poeticus_fruit">Three-valved capsule</string>
+    <string name="bot_sansevieria_kirkii_name">Kirkii’s dracaena</string>
+    <string name="bot_sansevieria_kirkii_latin" translatable="false">Dracaena pethera</string>
+    <string name="bot_sansevieria_kirkii_aliases">Sansevieria kirkii; Kirkii’s sansevieria</string>
+    <string name="bot_sansevieria_kirkii_description">A stemless rhizomatous succulent now accepted as Dracaena pethera; Sansevieria kirkii is a synonym retained here to match the tree terminal. One to three rigid leathery leaves form a basal rosette, with conspicuously wavy, sometimes reddish margins; pale tubular flowers give way to orange-red berries.</string>
+    <string name="bot_sansevieria_kirkii_distribution">Eastern and southeastern tropical Africa, in seasonally dry woodland and scrub; cultivated elsewhere.</string>
+    <string name="bot_sansevieria_kirkii_habit">Stemless rhizomatous rosette of rigid leaves</string>
+    <string name="bot_sansevieria_kirkii_leaf">Thick strap leaf with wavy, often reddish margin</string>
+    <string name="bot_sansevieria_kirkii_flower">Pale long-tubed flowers in a dense cluster</string>
+    <string name="bot_sansevieria_kirkii_fruit">Orange-red globose berry</string>
+    <string name="bot_dasylirion_acrotrichum_name">Sotol</string>
+    <string name="bot_dasylirion_acrotrichum_latin" translatable="false">Dasylirion acrotrichum</string>
+    <string name="bot_dasylirion_acrotrichum_aliases">sotol; Mexican grass tree</string>
+    <string name="bot_dasylirion_acrotrichum_description">A slow-growing, usually solitary plant with a short woody stem and a dense spherical rosette of long narrow leaves. Margins bear small hooked teeth; mature plants send up a tall, narrow panicle of clustered pale flowers and later dry capsules.</string>
+    <string name="bot_dasylirion_acrotrichum_distribution">Central Mexico, particularly upland semiarid scrub and rocky slopes; widely cultivated in dry gardens.</string>
+    <string name="bot_dasylirion_acrotrichum_habit">Short woody trunk crowned by a dense spherical rosette</string>
+    <string name="bot_dasylirion_acrotrichum_leaf">Narrow rigid leaf with hooked marginal teeth</string>
+    <string name="bot_dasylirion_acrotrichum_flower">Tall panicle with pale clustered flowers</string>
+    <string name="bot_dasylirion_acrotrichum_fruit">Small dry capsule</string>
+    <string name="bot_liriope_muscari_name">Lilyturf</string>
+    <string name="bot_liriope_muscari_latin" translatable="false">Liriope muscari</string>
+    <string name="bot_liriope_muscari_aliases">lilyturf; monkey grass</string>
+    <string name="bot_liriope_muscari_description">An evergreen rhizomatous perennial forming dense clumps of arching, grasslike leaves. Upright spikes carry many small violet flowers with six tepals; rounded fruits mature dark purple to black.</string>
+    <string name="bot_liriope_muscari_distribution">Native to China and Taiwan; commonly cultivated as a groundcover in shaded gardens.</string>
+    <string name="bot_liriope_muscari_habit">Dense basal clump with short rhizomes</string>
+    <string name="bot_liriope_muscari_leaf">Narrow arching strap leaves</string>
+    <string name="bot_liriope_muscari_flower">Erect spike of small violet six-part flowers</string>
+    <string name="bot_liriope_muscari_fruit">Dark purple-black berry</string>
+    <string name="bot_puya_alpestris_name">Alpine puya</string>
+    <string name="bot_puya_alpestris_latin" translatable="false">Puya alpestris</string>
+    <string name="bot_puya_alpestris_aliases">alpine puya; sapphire tower</string>
+    <string name="bot_puya_alpestris_description">A large terrestrial bromeliad forming a basal rosette of stiff, spiny, grey-green leaves. Its tall branched inflorescence bears distinctive turquoise to blue-green flowers; the species is closely related to other Chilean Puyas, so flower colour alone should not be used for identification.</string>
+    <string name="bot_puya_alpestris_distribution">Central Chile, on dry rocky slopes and scrub at foothill to montane elevations.</string>
+    <string name="bot_puya_alpestris_habit">Large basal rosette with a tall flowering stalk</string>
+    <string name="bot_puya_alpestris_leaf">Rigid grey-green leaf with hooked marginal spines</string>
+    <string name="bot_puya_alpestris_flower">Turquoise-blue flower on a branched stalk</string>
+    <string name="bot_puya_alpestris_fruit">Dry three-valved capsule</string>
+    <string name="bot_roystonea_oleracea_name">Cabbage royal palm</string>
+    <string name="bot_roystonea_oleracea_latin" translatable="false">Roystonea oleracea</string>
+    <string name="bot_roystonea_oleracea_aliases">cabbage royal palm; Caribbean royal palm</string>
+    <string name="bot_roystonea_oleracea_description">A towering solitary palm with a smooth grey trunk ringed by leaf scars and a conspicuous green crownshaft. Large pinnate fronds form the crown; cream inflorescences emerge below the crownshaft, followed by purplish-black single-seeded fruits.</string>
+    <string name="bot_roystonea_oleracea_distribution">Lesser Antilles south through Trinidad to northern Venezuela and northeastern Colombia; planted widely in the tropics.</string>
+    <string name="bot_roystonea_oleracea_habit">Very tall solitary palm with smooth ringed trunk</string>
+    <string name="bot_roystonea_oleracea_leaf">Large pinnate frond with leaflets in two planes</string>
+    <string name="bot_roystonea_oleracea_flower">Cream branched inflorescence below crownshaft</string>
+    <string name="bot_roystonea_oleracea_fruit">Small oblong purplish-black drupe</string>
+    <string name="bot_howea_forsteriana_name">Kentia palm</string>
+    <string name="bot_howea_forsteriana_latin" translatable="false">Howea forsteriana</string>
+    <string name="bot_howea_forsteriana_aliases">kentia palm; thatch palm</string>
+    <string name="bot_howea_forsteriana_description">A solitary, slow-growing palm with a slender ring-scarred trunk and a crown of arching pinnate fronds. Branched inflorescences emerge below the leaves; the ovoid fruits ripen from green to reddish brown.</string>
+    <string name="bot_howea_forsteriana_distribution">Endemic to Lord Howe Island, where it grows in lowland and montane forest; extensively cultivated as an indoor palm.</string>
+    <string name="bot_howea_forsteriana_habit">Solitary slender-trunked palm</string>
+    <string name="bot_howea_forsteriana_leaf">Arching pinnate frond with drooping narrow leaflets</string>
+    <string name="bot_howea_forsteriana_flower">Branched clusters of small yellowish flowers</string>
+    <string name="bot_howea_forsteriana_fruit">Ovoid reddish-brown mature fruit</string>
+    <string name="bot_osmunda_japonica_name">Japanese royal fern</string>
+    <string name="bot_osmunda_japonica_latin" translatable="false">Osmunda japonica</string>
+    <string name="bot_osmunda_japonica_aliases">Japanese royal fern; Asian royal fern</string>
+    <string name="bot_osmunda_japonica_description">A robust terrestrial fern with an erect or short-creeping rhizome and large twice-pinnate fronds. Sterile fronds have broad toothed pinnules; fertile fronds bear narrow contracted pinnae densely covered with sporangia and shed them after spore release.</string>
+    <string name="bot_osmunda_japonica_distribution">Eastern and southeastern Asia, in forests, wet stream margins, open slopes and grasslands from lowlands to mountains.</string>
+    <string name="bot_osmunda_japonica_habit">Clump of large bipinnate sterile and fertile fronds</string>
+    <string name="bot_osmunda_japonica_leaf">Broad pinnule with a finely toothed margin</string>
+    <string name="bot_osmunda_japonica_flower">Fertile pinna densely covered in sporangia</string>
+    <string name="bot_osmunda_japonica_fruit">Spores released from contracted fertile segments</string>
+</resources>
