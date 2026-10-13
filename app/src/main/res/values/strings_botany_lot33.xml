@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bot_family_Zosteraceae" translatable="false">Eelgrass family</string>
+    <string name="bot_family_Zosteraceae_desc">Marine submerged flowering plants with creeping rhizomes and ribbon-like leaves; flowers occur on flattened spadices.</string>
+    <string name="bot_family_Zosteraceae_aliases">Eelgrass family</string>
+    <string name="bot_family_Iridaceae" translatable="false">Iris family</string>
+    <string name="bot_family_Iridaceae_desc">Monocot herbs, often rhizomatous or bulbous, with sword-like leaves and flowers of three sepals and three petals.</string>
+    <string name="bot_family_Iridaceae_aliases">Iris family</string>
+    <string name="bot_family_Welwitschiaceae" translatable="false">Welwitschia family</string>
+    <string name="bot_family_Welwitschiaceae_desc">An ancient gymnosperm family represented by Welwitschia, a desert plant with two persistent leaves and separate male and female cones.</string>
+    <string name="bot_family_Welwitschiaceae_aliases">Welwitschia family</string>
+    <string name="bot_family_Equisetaceae" translatable="false">Horsetail family</string>
+    <string name="bot_family_Equisetaceae_desc">Living horsetails are rhizomatous plants with jointed, ribbed stems and terminal spore-bearing strobili; they have no flowers or seeds.</string>
+    <string name="bot_family_Equisetaceae_aliases">Horsetail family</string>
+    <string name="bot_family_Nepenthaceae" translatable="false">Tropical pitcher-plant family</string>
+    <string name="bot_family_Nepenthaceae_desc">Carnivorous tropical vines with leaf-tip tendrils ending in fluid-filled pitfall pitchers; flowers are small and unisexual.</string>
+    <string name="bot_family_Nepenthaceae_aliases">Tropical pitcher-plant family</string>
+    <string name="bot_dracaena_fragrans_name">Corn plant</string>
+    <string name="bot_dracaena_fragrans_latin" translatable="false">Dracaena fragrans</string>
+    <string name="bot_dracaena_fragrans_aliases">Corn plant</string>
+    <string name="bot_dracaena_fragrans_description">A cane-forming shrub or small tree with ringed stems and dense terminal tufts of arching, strap-like leaves. Branched clusters of white, pink-striped flowers are intensely fragrant, especially at night; orange-red berries follow.</string>
+    <string name="bot_dracaena_fragrans_distribution">Tropical Africa; commonly cultivated elsewhere.</string>
+    <string name="bot_dracaena_fragrans_habit">Habit: branched cane with terminal leaf tufts</string>
+    <string name="bot_dracaena_fragrans_leaf">Leaf: broad strap leaf</string>
+    <string name="bot_dracaena_fragrans_flower">Flower: fragrant white flower with pink lines</string>
+    <string name="bot_dracaena_fragrans_fruit">Fruit: orange-red berry</string>
+    <string name="bot_lemna_minor_name">Common duckweed</string>
+    <string name="bot_lemna_minor_latin" translatable="false">Lemna minor</string>
+    <string name="bot_lemna_minor_aliases">Common duckweed</string>
+    <string name="bot_lemna_minor_description">A minute free-floating aquatic plant made of one or several flat oval fronds, each usually bearing a single dangling root. Tiny flowers are rarely produced; the plant most often spreads by budding daughter fronds.</string>
+    <string name="bot_lemna_minor_distribution">Quiet, nutrient-rich fresh waters across much of the temperate world; widely distributed.</string>
+    <string name="bot_lemna_minor_habit">Floating frond with one root</string>
+    <string name="bot_lemna_minor_leaf">Flat oval frond</string>
+    <string name="bot_lemna_minor_flower">Rare minute flower</string>
+    <string name="bot_lemna_minor_fruit">Small one-seeded fruit</string>
+    <string name="bot_zostera_marina_name">Eelgrass</string>
+    <string name="bot_zostera_marina_latin" translatable="false">Zostera marina</string>
+    <string name="bot_zostera_marina_aliases">Eelgrass</string>
+    <string name="bot_zostera_marina_description">A fully submerged marine flowering plant, not a seaweed. Long ribbon-like leaves arise from a creeping rhizome rooted in sediment. Reproductive shoots carry a flattened spadix enclosed by a sheath, with alternating male and female flowers; fruits are small nutlets.</string>
+    <string name="bot_zostera_marina_distribution">Temperate marine coasts of the Northern Hemisphere, rooted in shallow sandy or muddy seabeds.</string>
+    <string name="bot_zostera_marina_habit">Submerged rhizome and leafy shoots</string>
+    <string name="bot_zostera_marina_leaf">Ribbon leaf with parallel veins</string>
+    <string name="bot_zostera_marina_flower">Enclosed spadix with tiny flowers</string>
+    <string name="bot_zostera_marina_fruit">Small seed-bearing nutlet</string>
+    <string name="bot_iris_pseudacorus_name">Yellow flag iris</string>
+    <string name="bot_iris_pseudacorus_latin" translatable="false">Iris pseudacorus</string>
+    <string name="bot_iris_pseudacorus_aliases">Yellow flag iris</string>
+    <string name="bot_iris_pseudacorus_description">A rhizomatous wetland perennial with upright sword-shaped leaves arranged in fans. The large yellow iris flowers have three broad, downward-spreading outer tepals marked by fine brown-purple veins and three smaller inner tepals. Capsules contain many flattened seeds. Rhizomes and other tissues are poisonous; the species can be invasive outside its native range.</string>
+    <string name="bot_iris_pseudacorus_distribution">Native through Europe, western Asia and north-western Africa; naturalised and invasive in some regions beyond its range.</string>
+    <string name="bot_iris_pseudacorus_habit">Fan of sword-shaped leaves and rhizome</string>
+    <string name="bot_iris_pseudacorus_leaf">Flat sword leaf</string>
+    <string name="bot_iris_pseudacorus_flower">Yellow flower with veined outer tepals</string>
+    <string name="bot_iris_pseudacorus_fruit">Three-angled capsule and flat seeds</string>
+    <string name="bot_yucca_pallida_name">Pale yucca</string>
+    <string name="bot_yucca_pallida_latin" translatable="false">Yucca pallida</string>
+    <string name="bot_yucca_pallida_aliases">Pale yucca</string>
+    <string name="bot_yucca_pallida_description">A stemless or nearly stemless yucca forming loose colonies of pale blue-green rosettes. The stiff leaves are narrow and toothed with small marginal prickles; an erect branched panicle bears pale bell-shaped flowers, followed by dry capsules.</string>
+    <string name="bot_yucca_pallida_distribution">Native to north-central Texas in the United States, on limestone prairie and rocky soils.</string>
+    <string name="bot_yucca_pallida_habit">Colony of pale rosettes with flower stalk</string>
+    <string name="bot_yucca_pallida_leaf">Glaucous leaf with tiny marginal teeth</string>
+    <string name="bot_yucca_pallida_flower">Pendant six-tepaled flower</string>
+    <string name="bot_yucca_pallida_fruit">Dry capsule with seeds</string>
+    <string name="bot_dracaena_reflexa_name">Song of India</string>
+    <string name="bot_dracaena_reflexa_latin" translatable="false">Dracaena reflexa</string>
+    <string name="bot_dracaena_reflexa_aliases">Song of India</string>
+    <string name="bot_dracaena_reflexa_description">A much-branched evergreen shrub or small tree with slender cane-like stems and short, narrow leaves clustered toward shoot tips. The leaves commonly angle or curve back from the stem. Small fragrant flowers occur in terminal panicles and are followed by rounded orange to red berries. Leaf form varies among accepted varieties.</string>
+    <string name="bot_dracaena_reflexa_distribution">Native to north-eastern Mozambique and western Indian Ocean islands, including Madagascar, Mauritius and Réunion.</string>
+    <string name="bot_dracaena_reflexa_habit">Branched shrub with leafy shoot tips</string>
+    <string name="bot_dracaena_reflexa_leaf">Narrow recurved leaf</string>
+    <string name="bot_dracaena_reflexa_flower">Small flowers in terminal panicle</string>
+    <string name="bot_dracaena_reflexa_fruit">Rounded orange-red berry</string>
+    <string name="bot_musa_balbisiana_name">Wild banana</string>
+    <string name="bot_musa_balbisiana_latin" translatable="false">Musa balbisiana</string>
+    <string name="bot_musa_balbisiana_aliases">Wild banana</string>
+    <string name="bot_musa_balbisiana_description">A very large rhizomatous herb whose apparent trunk is a pseudostem of overlapping leaf sheaths. Broad leaves tear readily along their parallel veins. The pendant inflorescence has large dark bracts; fruits are angular and filled with hard black seeds, unlike the mostly seedless cultivated dessert bananas.</string>
+    <string name="bot_musa_balbisiana_distribution">Native from tropical South and Southeast Asia through southern China; cultivated and naturalised in warmer regions.</string>
+    <string name="bot_musa_balbisiana_habit">Pseudostem and pendant inflorescence</string>
+    <string name="bot_musa_balbisiana_leaf">Broad leaf with parallel veins</string>
+    <string name="bot_musa_balbisiana_flower">Dark bracted banana inflorescence</string>
+    <string name="bot_musa_balbisiana_fruit">Seed-filled wild banana fruit</string>
+    <string name="bot_phoenix_canariensis_name">Canary Island date palm</string>
+    <string name="bot_phoenix_canariensis_latin" translatable="false">Phoenix canariensis</string>
+    <string name="bot_phoenix_canariensis_aliases">Canary Island date palm</string>
+    <string name="bot_phoenix_canariensis_description">A massive solitary palm with a stout trunk patterned by diamond-shaped leaf-base scars and a crown of arching pinnate fronds. Leaflets are narrow and stiff, with sharp basal spines. Branched inflorescences emerge among the leaves; female plants produce clusters of orange date-like drupes, generally smaller and less fleshy than dates of Phoenix dactylifera.</string>
+    <string name="bot_phoenix_canariensis_distribution">Endemic to the Canary Islands; widely planted in warm regions.</string>
+    <string name="bot_phoenix_canariensis_habit">Solitary palm with scarred trunk and crown</string>
+    <string name="bot_phoenix_canariensis_leaf">Pinnate frond with sharp basal spines</string>
+    <string name="bot_phoenix_canariensis_flower">Branched palm inflorescence</string>
+    <string name="bot_phoenix_canariensis_fruit">Cluster of orange drupes</string>
+    <string name="bot_pinus_strobus_name">Eastern white pine</string>
+    <string name="bot_pinus_strobus_latin" translatable="false">Pinus strobus</string>
+    <string name="bot_pinus_strobus_aliases">Eastern white pine</string>
+    <string name="bot_pinus_strobus_description">A tall, straight-trunked pine with an open crown in maturity. Soft slender needles occur in bundles of five and have fine white stomatal lines. Long, narrow, slightly curved seed cones hang from branches; pollen cones form clusters near shoot bases.</string>
+    <string name="bot_pinus_strobus_distribution">Eastern North America, from Newfoundland and the Great Lakes region south through the Appalachians.</string>
+    <string name="bot_pinus_strobus_habit">Tall open-crowned pine</string>
+    <string name="bot_pinus_strobus_leaf">Five-needle fascicle</string>
+    <string name="bot_pinus_strobus_flower">Long pendant seed cone</string>
+    <string name="bot_pinus_strobus_fruit">Cluster of pollen cones</string>
+    <string name="bot_pinus_edulis_name">Colorado pinyon</string>
+    <string name="bot_pinus_edulis_latin" translatable="false">Pinus edulis</string>
+    <string name="bot_pinus_edulis_aliases">Colorado pinyon</string>
+    <string name="bot_pinus_edulis_description">A short, slow-growing, often multi-trunked pine with a broad irregular crown. Stout needles are borne in pairs and persist for several years. Rounded seed cones mature over two seasons and release large edible pine nuts; cone crops vary greatly from year to year.</string>
+    <string name="bot_pinus_edulis_distribution">Native to the Colorado Plateau and adjacent dry uplands of the south-western United States.</string>
+    <string name="bot_pinus_edulis_habit">Low, irregularly crowned pinyon pine</string>
+    <string name="bot_pinus_edulis_leaf">Two-needle fascicle</string>
+    <string name="bot_pinus_edulis_flower">Rounded seed cone</string>
+    <string name="bot_pinus_edulis_fruit">Large edible pine seeds</string>
+    <string name="bot_picea_abies_name">Norway spruce</string>
+    <string name="bot_picea_abies_latin" translatable="false">Picea abies</string>
+    <string name="bot_picea_abies_aliases">Norway spruce</string>
+    <string name="bot_picea_abies_description">A tall evergreen conifer with a straight trunk, conical crown and distinctly drooping branchlets. Sharp four-sided needles attach singly around the twig on small woody pegs. Long cylindrical seed cones hang downward and fall intact after releasing winged seeds.</string>
+    <string name="bot_picea_abies_distribution">Native to northern and central Europe, with natural range extending into the Alps and western Russia.</string>
+    <string name="bot_picea_abies_habit">Conical spruce with drooping branchlets</string>
+    <string name="bot_picea_abies_leaf">Single four-angled needles on pegs</string>
+    <string name="bot_picea_abies_flower">Long pendant seed cone</string>
+    <string name="bot_picea_abies_fruit">Small pollen cones</string>
+    <string name="bot_larix_decidua_name">European larch</string>
+    <string name="bot_larix_decidua_latin" translatable="false">Larix decidua</string>
+    <string name="bot_larix_decidua_aliases">European larch</string>
+    <string name="bot_larix_decidua_description">A deciduous conifer with an open, tiered crown and short spur shoots. Soft needles are borne singly on long shoots but in dense rosettes on short shoots, turning golden before falling in autumn. Small female cones stand upright on branches and persist after opening.</string>
+    <string name="bot_larix_decidua_distribution">Native to the Alps and other central European mountain ranges; planted widely elsewhere.</string>
+    <string name="bot_larix_decidua_habit">Open tiered tree with needle rosettes</string>
+    <string name="bot_larix_decidua_leaf">Needles clustered on a short shoot</string>
+    <string name="bot_larix_decidua_flower">Small upright woody cone</string>
+    <string name="bot_larix_decidua_fruit">Small male pollen cones</string>
+    <string name="bot_pseudotsuga_menziesii_name">Douglas-fir</string>
+    <string name="bot_pseudotsuga_menziesii_latin" translatable="false">Pseudotsuga menziesii</string>
+    <string name="bot_pseudotsuga_menziesii_aliases">Douglas-fir</string>
+    <string name="bot_pseudotsuga_menziesii_description">A very tall evergreen conifer with a straight trunk and conical crown, becoming broader with age. Flattened, soft needles attach singly around the twig. The pendant seed cone is distinctive for long three-pointed bracts that protrude beyond its scales.</string>
+    <string name="bot_pseudotsuga_menziesii_distribution">Western North America, from British Columbia to California and the Rocky Mountains.</string>
+    <string name="bot_pseudotsuga_menziesii_habit">Tall conical evergreen tree</string>
+    <string name="bot_pseudotsuga_menziesii_leaf">Flattened single needles around twig</string>
+    <string name="bot_pseudotsuga_menziesii_flower">Pendant cone with three-pointed bracts</string>
+    <string name="bot_pseudotsuga_menziesii_fruit">Small pollen cones</string>
+    <string name="bot_taxodium_distichum_name">Bald cypress</string>
+    <string name="bot_taxodium_distichum_latin" translatable="false">Taxodium distichum</string>
+    <string name="bot_taxodium_distichum_aliases">Bald cypress</string>
+    <string name="bot_taxodium_distichum_description">A large deciduous conifer with a swollen, fluted or buttressed trunk and fine feathery shoots. Flat linear leaves are arranged in two ranks and fall in autumn. Trees in or near water may form woody upward-growing root knees (pneumatophores). Rounded seed cones and slender pollen-cone clusters are separate reproductive structures.</string>
+    <string name="bot_taxodium_distichum_distribution">Native to the south-eastern and east-central United States and parts of Mexico and Guatemala, especially floodplains and swamps.</string>
+    <string name="bot_taxodium_distichum_habit">Deciduous conifer with buttressed base and knees</string>
+    <string name="bot_taxodium_distichum_leaf">Two-ranked feathery shoot</string>
+    <string name="bot_taxodium_distichum_flower">Rounded seed cone</string>
+    <string name="bot_taxodium_distichum_fruit">Dangling pollen-cone cluster</string>
+    <string name="bot_dendrocalamus_giganteus_name">Giant bamboo</string>
+    <string name="bot_dendrocalamus_giganteus_latin" translatable="false">Dendrocalamus giganteus</string>
+    <string name="bot_dendrocalamus_giganteus_aliases">Giant bamboo</string>
+    <string name="bot_dendrocalamus_giganteus_description">A giant clump-forming tropical bamboo with short pachymorph rhizomes and exceptionally tall, thick, hollow culms divided by prominent nodes. Branches and large lanceolate leaves are concentrated higher on the culms. The inconspicuous flowers are grass spikelets and flowering is infrequent; fruit is a caryopsis.</string>
+    <string name="bot_dendrocalamus_giganteus_distribution">Native from eastern India and the eastern Himalaya to southern China and mainland Southeast Asia.</string>
+    <string name="bot_dendrocalamus_giganteus_habit">Clump of tall jointed culms</string>
+    <string name="bot_dendrocalamus_giganteus_leaf">Broad lanceolate blade with parallel veins</string>
+    <string name="bot_dendrocalamus_giganteus_flower">Branching inflorescence with spikelets</string>
+    <string name="bot_dendrocalamus_giganteus_fruit">Small grass caryopsis</string>
+    <string name="bot_puya_raimondii_name">Queen of the Andes</string>
+    <string name="bot_puya_raimondii_latin" translatable="false">Puya raimondii</string>
+    <string name="bot_puya_raimondii_aliases">Queen of the Andes</string>
+    <string name="bot_puya_raimondii_description">A giant high-Andean bromeliad forming a dense rosette of stiff, sharply spined leaves. After many decades it sends up a massive branched inflorescence several metres tall, flowers once, sets capsules and dies (monocarpic). Its unusually delayed flowering and restricted high-elevation habitat make it vulnerable to disturbance.</string>
+    <string name="bot_puya_raimondii_distribution">High-Andean puna of Peru and Bolivia.</string>
+    <string name="bot_puya_raimondii_habit">Giant spiny rosette with towering flowering spike</string>
+    <string name="bot_puya_raimondii_leaf">Rigid leaf with sharp marginal spines</string>
+    <string name="bot_puya_raimondii_flower">Small six-tepaled flower</string>
+    <string name="bot_puya_raimondii_fruit">Dry capsule with fine seeds</string>
+    <string name="bot_puya_chilensis_name">Chilean puya</string>
+    <string name="bot_puya_chilensis_latin" translatable="false">Puya chilensis</string>
+    <string name="bot_puya_chilensis_aliases">Chilean puya</string>
+    <string name="bot_puya_chilensis_description">A large terrestrial bromeliad with a dense rosette of long, stiff, grey-green leaves edged by strong recurved spines. The branched flowering stalk bears greenish-yellow tubular flowers with three sepals and three petals; dry capsules contain seeds. The hooked spines can entangle animals, though reports of animal trapping are anecdotal and should not be treated as a reliable diagnostic trait.</string>
+    <string name="bot_puya_chilensis_distribution">Central Chile, mainly coastal and seasonally dry scrub.</string>
+    <string name="bot_puya_chilensis_habit">Spiny rosette and tall flowering stalk</string>
+    <string name="bot_puya_chilensis_leaf">Leaf margin with recurved hooks</string>
+    <string name="bot_puya_chilensis_flower">Green-yellow tubular flower</string>
+    <string name="bot_puya_chilensis_fruit">Dry capsule with seeds</string>
+    <string name="bot_welwitschia_mirabilis_name">Welwitschia</string>
+    <string name="bot_welwitschia_mirabilis_latin" translatable="false">Welwitschia mirabilis</string>
+    <string name="bot_welwitschia_mirabilis_aliases">Welwitschia</string>
+    <string name="bot_welwitschia_mirabilis_description">An exceptionally long-lived gymnosperm with a short, woody, unbranched trunk and only two persistent strap-shaped leaves. The leaves continue growing from their bases and split into ragged ribbons at their ends. Male and female reproductive cones occur on separate plants; it has no flowers or true fruits.</string>
+    <string name="bot_welwitschia_mirabilis_distribution">Arid fog-desert of south-western Angola and north-western Namibia.</string>
+    <string name="bot_welwitschia_mirabilis_habit">Short trunk bearing two long ribbon leaves</string>
+    <string name="bot_welwitschia_mirabilis_leaf">Broad strap leaf splitting into ribbons</string>
+    <string name="bot_welwitschia_mirabilis_flower">Female seed cone</string>
+    <string name="bot_welwitschia_mirabilis_fruit">Male pollen-cone branch</string>
+    <string name="bot_equisetum_palustre_name">Marsh horsetail</string>
+    <string name="bot_equisetum_palustre_latin" translatable="false">Equisetum palustre</string>
+    <string name="bot_equisetum_palustre_aliases">Marsh horsetail</string>
+    <string name="bot_equisetum_palustre_description">A rhizomatous spore-bearing plant with hollow, ribbed, jointed green stems. Sterile shoots carry whorls of slender branches at the nodes; fertile shoots bear a terminal strobilus of sporangia and are generally unbranched. It has no flowers, seeds or fruits. The species contains toxic alkaloids and is a livestock hazard in contaminated forage.</string>
+    <string name="bot_equisetum_palustre_distribution">Temperate Northern Hemisphere, especially marshes, wet meadows and fens.</string>
+    <string name="bot_equisetum_palustre_habit">Jointed shoots with whorled branches and strobilus</string>
+    <string name="bot_equisetum_palustre_leaf">Sheath teeth at a stem node</string>
+    <string name="bot_equisetum_palustre_flower">Terminal spore-bearing strobilus</string>
+    <string name="bot_equisetum_palustre_fruit">Whorled branches at a node</string>
+    <string name="bot_nepenthes_rajah_name">Giant montane pitcher plant</string>
+    <string name="bot_nepenthes_rajah_latin" translatable="false">Nepenthes rajah</string>
+    <string name="bot_nepenthes_rajah_aliases">Giant montane pitcher plant</string>
+    <string name="bot_nepenthes_rajah_description">A terrestrial carnivorous pitcher plant with a scrambling stem and leathery leaves whose tendrils terminate in large urn-shaped traps. The lower pitchers may hold several litres; a ridged, toothed peristome surrounds the opening and a lid bears nectar glands beneath. Its flowers are small and borne in a raceme; the species is endangered and listed in CITES Appendix I.</string>
+    <string name="bot_nepenthes_rajah_distribution">Endemic to high-elevation sites on Mount Kinabalu and Mount Tambuyukon, Sabah, Borneo.</string>
+    <string name="bot_nepenthes_rajah_habit">Terrestrial rosette with large ground pitchers</string>
+    <string name="bot_nepenthes_rajah_leaf">Leaf blade and terminal tendril</string>
+    <string name="bot_nepenthes_rajah_flower">Urn-shaped pitcher with lid and ribbed lip</string>
+    <string name="bot_nepenthes_rajah_fruit">Dry capsule after flowering</string>
+    <string name="bot_collection_tree_diversity">Tree of Life — global plant diversity</string>
+    <string name="bot_collection_tree_diversity_desc">Selected plant lineages from marine meadows and temperate forests to deserts and tropical mountains.</string>
+</resources>

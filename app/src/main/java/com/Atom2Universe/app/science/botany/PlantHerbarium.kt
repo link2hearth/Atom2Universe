@@ -55,7 +55,11 @@ internal object PlantHerbarium {
         "astrophytum_ornatum", "calocedrus_macrolepis", "centaurium_erythraea", "cereus_jamacaru", "cyclamen_coum",
         "cunninghamia_lanceolata", "dillenia_indica", "dieffenbachia_seguine", "dracaena_cinnabari", "euterpe_oleracea",
         "euphorbia_cyparissias", "euphorbia_hirta", "eryngium_maritimum", "echinocactus_horizonthalonius", "echinopsis_pachanoi",
-        "fagopyrum_esculentum", "fagus_grandifolia", "galium_verum", "picea_glauca", "nuphar_lutea")
+        "fagopyrum_esculentum", "fagus_grandifolia", "galium_verum", "picea_glauca", "nuphar_lutea",
+        "dracaena_fragrans", "lemna_minor", "zostera_marina", "iris_pseudacorus", "yucca_pallida",
+        "dracaena_reflexa", "musa_balbisiana", "phoenix_canariensis", "pinus_strobus", "pinus_edulis",
+        "picea_abies", "larix_decidua", "pseudotsuga_menziesii", "taxodium_distichum", "dendrocalamus_giganteus",
+        "puya_raimondii", "puya_chilensis", "welwitschia_mirabilis", "equisetum_palustre", "nepenthes_rajah")
 
     fun hasPlate(id: String) = id in speciesIds
 

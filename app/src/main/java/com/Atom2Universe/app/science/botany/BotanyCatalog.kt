@@ -30,6 +30,7 @@ object BotanyCatalog {
         PlantCollection("europe", R.string.bot_collection_europe, R.string.bot_collection_europe_desc),
         PlantCollection("africa_dry", R.string.bot_collection_africa_dry, R.string.bot_collection_africa_dry_desc),
         PlantCollection("tropical_america", R.string.bot_collection_tropical_america, R.string.bot_collection_tropical_america_desc),
+        PlantCollection("tree_diversity", R.string.bot_collection_tree_diversity, R.string.bot_collection_tree_diversity_desc),
     )
     val sections = listOf(
         PlantSection("trees", R.string.bot_section_trees, R.string.bot_section_trees_desc),
@@ -120,8 +121,13 @@ object BotanyCatalog {
         PlantFamily("Euphorbiaceae",R.string.bot_family_Euphorbiaceae,R.string.bot_family_Euphorbiaceae_desc,R.string.bot_family_Euphorbiaceae_aliases),
         PlantFamily("Polygonaceae",R.string.bot_family_Polygonaceae,R.string.bot_family_Polygonaceae_desc,R.string.bot_family_Polygonaceae_aliases),
         PlantFamily("Nymphaeaceae",R.string.bot_family_Nymphaeaceae,R.string.bot_family_Nymphaeaceae_desc,R.string.bot_family_Nymphaeaceae_aliases),
+        PlantFamily("Zosteraceae",R.string.bot_family_Zosteraceae,R.string.bot_family_Zosteraceae_desc,R.string.bot_family_Zosteraceae_aliases),
+        PlantFamily("Iridaceae",R.string.bot_family_Iridaceae,R.string.bot_family_Iridaceae_desc,R.string.bot_family_Iridaceae_aliases),
+        PlantFamily("Welwitschiaceae",R.string.bot_family_Welwitschiaceae,R.string.bot_family_Welwitschiaceae_desc,R.string.bot_family_Welwitschiaceae_aliases),
+        PlantFamily("Equisetaceae",R.string.bot_family_Equisetaceae,R.string.bot_family_Equisetaceae_desc,R.string.bot_family_Equisetaceae_aliases),
+        PlantFamily("Nepenthaceae",R.string.bot_family_Nepenthaceae,R.string.bot_family_Nepenthaceae_desc,R.string.bot_family_Nepenthaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species + PriorityTreeCatalogHerbariumLot33.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
