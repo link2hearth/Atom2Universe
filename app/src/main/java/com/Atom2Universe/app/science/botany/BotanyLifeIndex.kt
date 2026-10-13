@@ -55,6 +55,10 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
             "Acacia anegadensis" -> "Vachellia anegadensis"
             // POWO accepts Ruizia parviflora; Trochetia parviflora is a synonym.
             "Trochetia parviflora" -> "Ruizia parviflora"
+            // POWO accepts Jupunba obovalis; Abarema obovalis is a homotypic synonym.
+            "Abarema obovalis" -> "Jupunba obovalis"
+            // The Pradosia revision treats the tree label P. atroviolacea as P. grisebachii.
+            "Pradosia atroviolacea" -> "Pradosia grisebachii"
             else -> name
         }
     }
