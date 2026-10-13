@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="bot_family_Gentianaceae">Gentianacées</string>
+    <string name="bot_family_Gentianaceae_desc">Les gentianacées ont souvent des feuilles opposées et des fleurs régulières à corolle soudée ; leurs fruits sont fréquemment des capsules.</string>
+    <string name="bot_family_Gentianaceae_aliases">Gentianacées</string>
+    <string name="bot_family_Dilleniaceae">Dilléniacées</string>
+    <string name="bot_family_Dilleniaceae_desc">Arbres et arbustes tropicaux, souvent à feuilles dentées fortement nervurées et étamines nombreuses ; les sépales persistants peuvent entourer les fruits.</string>
+    <string name="bot_family_Dilleniaceae_aliases">Dilléniacées</string>
+    <string name="bot_family_Euphorbiaceae">Euphorbiacées</string>
+    <string name="bot_family_Euphorbiaceae_desc">Famille très diverse ; chez les Euphorbia, les fleurs sont réunies en cyathe et le latex est souvent blanc.</string>
+    <string name="bot_family_Euphorbiaceae_aliases">Euphorbiacées</string>
+    <string name="bot_family_Polygonaceae">Polygonacées</string>
+    <string name="bot_family_Polygonaceae_desc">Souvent reconnaissables à leurs nœuds renflés et à leurs petites fleurs ; les fruits sont fréquemment des akènes à trois angles.</string>
+    <string name="bot_family_Polygonaceae_aliases">Polygonacées</string>
+    <string name="bot_family_Nymphaeaceae">Nymphéacées</string>
+    <string name="bot_family_Nymphaeaceae_desc">Herbacées aquatiques rhizomateuses à feuilles flottantes ou émergentes et fleurs solitaires au-dessus ou à la surface de l’eau.</string>
+    <string name="bot_family_Nymphaeaceae_aliases">Nymphéacées</string>
+    <string name="bot_astrophytum_ornatum_name">Astrophytum orné</string>
+    <string name="bot_astrophytum_ornatum_latin" translatable="false">Astrophytum ornatum</string>
+    <string name="bot_astrophytum_ornatum_aliases">cactus étoilé ; bonnet d’évêque</string>
+    <string name="bot_astrophytum_ornatum_description">Cactus solitaire bleu-vert, de globuleux aplati à brièvement colonnaire. Ses 5 à 8 côtes portent des aréoles marquées de mouchetures laineuses blanches et des épines robustes ; les fleurs jaune pâle naissent au sommet.</string>
+    <string name="bot_astrophytum_ornatum_distribution">Originaire du nord-est du Mexique, de Coahuila et San Luis Potosí vers Veracruz ; pousse dans les broussailles sèches et les pentes rocheuses.</string>
+    <string name="bot_astrophytum_ornatum_habit">Cactus côtelé à aréoles blanches et épines</string>
+    <string name="bot_astrophytum_ornatum_leaf">Côte et aréole laineuse</string>
+    <string name="bot_astrophytum_ornatum_flower">Fleur jaune pâle</string>
+    <string name="bot_astrophytum_ornatum_fruit">Fruit ovoïde et graines sombres</string>
+    <string name="bot_calocedrus_macrolepis_name">Calocèdre à grandes écailles</string>
+    <string name="bot_calocedrus_macrolepis_latin" translatable="false">Calocedrus macrolepis</string>
+    <string name="bot_calocedrus_macrolepis_aliases">calocèdre de Chine</string>
+    <string name="bot_calocedrus_macrolepis_description">Conifère persistant à tronc droit et cime étroite. Ses rameaux aplatis portent des feuilles opposées en écailles ; les petits cônes femelles ont quatre écailles principales et les cônes polliniques sont groupés.</string>
+    <string name="bot_calocedrus_macrolepis_distribution">Originaire du sud de la Chine et de Hainan jusqu’au nord de l’Indochine, notamment au Laos, au Myanmar, en Thaïlande et au Vietnam.</string>
+    <string name="bot_calocedrus_macrolepis_habit">Conifère persistant conique</string>
+    <string name="bot_calocedrus_macrolepis_leaf">Rameau aplati à feuilles en écailles</string>
+    <string name="bot_calocedrus_macrolepis_flower">Cône femelle à quatre écailles</string>
+    <string name="bot_calocedrus_macrolepis_fruit">Groupe de cônes polliniques</string>
+    <string name="bot_centaurium_erythraea_name">Petite centaurée</string>
+    <string name="bot_centaurium_erythraea_latin" translatable="false">Centaurium erythraea</string>
+    <string name="bot_centaurium_erythraea_aliases">petite centaurée commune</string>
+    <string name="bot_centaurium_erythraea_description">Petite gentianacée annuelle ou bisannuelle, souvent en rosette basale, à tiges dressées parfois ramifiées. Les feuilles opposées accompagnent des bouquets terminaux de fleurs roses à cinq lobes ; le fruit est une capsule étroite contenant de très petites graines.</string>
+    <string name="bot_centaurium_erythraea_distribution">Originaire d’une grande partie de l’Europe, d’Afrique du Nord et d’Asie occidentale ; introduite dans de nombreuses régions tempérées.</string>
+    <string name="bot_centaurium_erythraea_habit">Rosette basale et tiges fleuries</string>
+    <string name="bot_centaurium_erythraea_leaf">Feuilles opposées</string>
+    <string name="bot_centaurium_erythraea_flower">Fleur rose à cinq lobes</string>
+    <string name="bot_centaurium_erythraea_fruit">Capsule étroite</string>
+    <string name="bot_cereus_jamacaru_name">Mandacaru</string>
+    <string name="bot_cereus_jamacaru_latin" translatable="false">Cereus jamacaru</string>
+    <string name="bot_cereus_jamacaru_aliases">mandacaru ; cardeiro</string>
+    <string name="bot_cereus_jamacaru_description">Cactus arborescent colonnaire des régions brésiliennes à saison sèche, aux tiges dressées ramifiées et à plusieurs côtes saillantes portant aréoles et épines. Ses grandes fleurs blanches s’ouvrent la nuit ; les fruits oblongs rouges renferment une pulpe blanche et des graines sombres.</string>
+    <string name="bot_cereus_jamacaru_distribution">Originaire du centre et de l’est du Brésil, notamment de la Caatinga et d’autres milieux à saison sèche.</string>
+    <string name="bot_cereus_jamacaru_habit">Cactus colonnaire ramifié</string>
+    <string name="bot_cereus_jamacaru_leaf">Côte à aréoles et épines</string>
+    <string name="bot_cereus_jamacaru_flower">Grande fleur blanche nocturne</string>
+    <string name="bot_cereus_jamacaru_fruit">Fruit rouge à pulpe blanche</string>
+    <string name="bot_cyclamen_coum_name">Cyclamen de Cos</string>
+    <string name="bot_cyclamen_coum_latin" translatable="false">Cyclamen coum</string>
+    <string name="bot_cyclamen_coum_aliases">cyclamen de Cos ; cyclamen à feuilles rondes</string>
+    <string name="bot_cyclamen_coum_description">Petite vivace tubéreuse dont les feuilles arrondies, réniformes, portent souvent des dessins argentés. Les fleurs à pédoncule court ont cinq pétales arrondis réfléchis vers le haut, souvent roses à base plus sombre ; le pédoncule fructifère s’enroule vers le sol.</string>
+    <string name="bot_cyclamen_coum_distribution">Originaire du sud-est de l’Europe, du Caucase et de l’Asie occidentale jusqu’à Israël ; fleurit pendant la saison fraîche.</string>
+    <string name="bot_cyclamen_coum_habit">Tubercule, feuilles marbrées et fleurs réfléchies</string>
+    <string name="bot_cyclamen_coum_leaf">Feuille arrondie marbrée</string>
+    <string name="bot_cyclamen_coum_flower">Fleur à cinq pétales réfléchis</string>
+    <string name="bot_cyclamen_coum_fruit">Pédoncule enroulé et capsule</string>
+    <string name="bot_cunninghamia_lanceolata_name">Cunninghamia de Chine</string>
+    <string name="bot_cunninghamia_lanceolata_latin" translatable="false">Cunninghamia lanceolata</string>
+    <string name="bot_cunninghamia_lanceolata_aliases">sapin de Chine</string>
+    <string name="bot_cunninghamia_lanceolata_description">Grand conifère persistant à tronc droit et cime conique large. Des feuilles linéaires rigides et piquantes s’insèrent en spirale autour des rameaux ; les cônes femelles sont arrondis à largement ovoïdes, à larges écailles imbriquées, et les cônes polliniques sont groupés.</string>
+    <string name="bot_cunninghamia_lanceolata_distribution">Originaire du centre et du sud de la Chine, jusqu’au nord du Vietnam ; largement cultivé ailleurs.</string>
+    <string name="bot_cunninghamia_lanceolata_habit">Grand conifère conique</string>
+    <string name="bot_cunninghamia_lanceolata_leaf">Feuilles pointues en spirale</string>
+    <string name="bot_cunninghamia_lanceolata_flower">Cône femelle arrondi</string>
+    <string name="bot_cunninghamia_lanceolata_fruit">Cônes polliniques sur rameau</string>
+    <string name="bot_dillenia_indica_name">Pomme-éléphant</string>
+    <string name="bot_dillenia_indica_latin" translatable="false">Dillenia indica</string>
+    <string name="bot_dillenia_indica_aliases">pomme-éléphant ; chulta</string>
+    <string name="bot_dillenia_indica_description">Arbre tropical persistant aux grandes feuilles alternes, fortement nervurées et dentées. Les fleurs blanches solitaires ont de nombreux pétales et étamines ; après floraison, les sépales persistants s’épaississent et entourent les fruits groupés.</string>
+    <string name="bot_dillenia_indica_distribution">Originaire du sous-continent indien et de l’Asie du Sud-Est continentale ; cultivé dans les jardins tropicaux et pour ses fruits.</string>
+    <string name="bot_dillenia_indica_habit">Arbre persistant à large cime</string>
+    <string name="bot_dillenia_indica_leaf">Grande feuille dentée</string>
+    <string name="bot_dillenia_indica_flower">Fleur blanche à nombreuses étamines</string>
+    <string name="bot_dillenia_indica_fruit">Fruit entouré de sépales charnus</string>
+    <string name="bot_dieffenbachia_seguine_name">Dieffenbachia seguine</string>
+    <string name="bot_dieffenbachia_seguine_latin" translatable="false">Dieffenbachia seguine</string>
+    <string name="bot_dieffenbachia_seguine_aliases">canne des muets ; dieffenbachia tacheté</string>
+    <string name="bot_dieffenbachia_seguine_description">Herbacée tropicale persistante et dressée, à tiges épaisses marquées de cicatrices foliaires et à grandes feuilles alternes. L’inflorescence est un spadice crème partiellement enveloppé par une spathe verte ; les baies mûrissent en orange-rouge. La sève et les tissus contiennent des cristaux irritants d’oxalate de calcium et sont toxiques.</string>
+    <string name="bot_dieffenbachia_seguine_distribution">Originaire des Caraïbes et de l’Amérique tropicale ; largement cultivée comme plante d’intérieur.</string>
+    <string name="bot_dieffenbachia_seguine_habit">Herbacée tropicale à tiges en canne</string>
+    <string name="bot_dieffenbachia_seguine_leaf">Grande feuille marbrée</string>
+    <string name="bot_dieffenbachia_seguine_flower">Spadice dans sa spathe verte</string>
+    <string name="bot_dieffenbachia_seguine_fruit">Grappe de baies orange-rouge</string>
+    <string name="bot_dracaena_cinnabari_name">Dragonnier de Socotra</string>
+    <string name="bot_dracaena_cinnabari_latin" translatable="false">Dracaena cinnabari</string>
+    <string name="bot_dracaena_cinnabari_aliases">arbre au sang-dragon ; dragonnier de Socotra</string>
+    <string name="bot_dracaena_cinnabari_description">Arbre persistant endémique, à tronc robuste et cime en parasol formée de branches plusieurs fois divisées. Les feuilles linéaires rigides sont groupées à l’extrémité des branches ; les inflorescences ramifiées portent des fleurs pâles puis des baies charnues orange-rouge.</string>
+    <string name="bot_dracaena_cinnabari_distribution">Endémique de Socotra, au Yémen, sur les plateaux rocheux et pentes montagneuses ; l’évaluation UICN de 2004 la classait Vulnérable.</string>
+    <string name="bot_dracaena_cinnabari_habit">Arbre endémique à cime en parasol</string>
+    <string name="bot_dracaena_cinnabari_leaf">Feuilles terminales en épée</string>
+    <string name="bot_dracaena_cinnabari_flower">Inflorescence ramifiée pâle</string>
+    <string name="bot_dracaena_cinnabari_fruit">Baies charnues orange-rouge</string>
+    <string name="bot_euterpe_oleracea_name">Palmier açaï</string>
+    <string name="bot_euterpe_oleracea_latin" translatable="false">Euterpe oleracea</string>
+    <string name="bot_euterpe_oleracea_aliases">açaï ; palmier assai</string>
+    <string name="bot_euterpe_oleracea_description">Palmier grêle cespiteux, à plusieurs tiges annelées et feuilles pennées arquées. Les inflorescences ramifiées émergent sous la couronne et portent de petites fleurs ; les fruits mûrs sont des drupes rondes violet sombre, à grosse graine et pulpe comestible mince, généralement transformée.</string>
+    <string name="bot_euterpe_oleracea_distribution">Originaire du bassin amazonien du nord de l’Amérique du Sud, surtout des forêts inondables et des estuaires.</string>
+    <string name="bot_euterpe_oleracea_habit">Touffe de palmiers grêles</string>
+    <string name="bot_euterpe_oleracea_leaf">Feuille palmée pennée</string>
+    <string name="bot_euterpe_oleracea_flower">Grappe florale ramifiée</string>
+    <string name="bot_euterpe_oleracea_fruit">Drupes violet sombre</string>
+    <string name="bot_euphorbia_cyparissias_name">Euphorbe petit-cyprès</string>
+    <string name="bot_euphorbia_cyparissias_latin" translatable="false">Euphorbia cyparissias</string>
+    <string name="bot_euphorbia_cyparissias_aliases">euphorbe petit-cyprès</string>
+    <string name="bot_euphorbia_cyparissias_description">Vivace rhizomateuse formant des touffes denses de tiges grêles dressées. Ses nombreuses feuilles linéaires étroites lui donnent une silhouette de cyprès ; les structures terminales jaune-vert sont des cyathes, petits ensembles floraux dans un involucre. Le latex blanc peut irriter la peau et les yeux.</string>
+    <string name="bot_euphorbia_cyparissias_distribution">Originaire d’Europe et d’Asie occidentale ; introduite et localement envahissante dans certaines régions d’Amérique du Nord.</string>
+    <string name="bot_euphorbia_cyparissias_habit">Tiges fleuries fines en touffe</string>
+    <string name="bot_euphorbia_cyparissias_leaf">Feuilles linéaires étroites</string>
+    <string name="bot_euphorbia_cyparissias_flower">Cyathe jaune-vert</string>
+    <string name="bot_euphorbia_cyparissias_fruit">Capsule trilobée</string>
+    <string name="bot_euphorbia_hirta_name">Euphorbe hirsute</string>
+    <string name="bot_euphorbia_hirta_latin" translatable="false">Euphorbia hirta</string>
+    <string name="bot_euphorbia_hirta_aliases">herbe à l’asthme ; euphorbe hirsute</string>
+    <string name="bot_euphorbia_hirta_description">Petite annuelle à tiges rougeâtres velues, généralement couchées ou ascendantes. Les feuilles oblongues opposées peuvent porter une tache centrale sombre ; les cyathes compacts sont groupés à l’aisselle des feuilles puis donnent de petites capsules trilobées. Son latex est irritant ; les noms d’usage ne garantissent pas une innocuité médicinale.</string>
+    <string name="bot_euphorbia_hirta_distribution">Originaire des régions tropicales et subtropicales d’Amérique, aujourd’hui pantropicale et répandue dans les régions chaudes.</string>
+    <string name="bot_euphorbia_hirta_habit">Annuelle velue couchée à ascendante</string>
+    <string name="bot_euphorbia_hirta_leaf">Feuilles opposées parfois tachées</string>
+    <string name="bot_euphorbia_hirta_flower">Cyathes axillaires groupés</string>
+    <string name="bot_euphorbia_hirta_fruit">Capsule trilobée velue</string>
+    <string name="bot_eryngium_maritimum_name">Panicaut maritime</string>
+    <string name="bot_eryngium_maritimum_latin" translatable="false">Eryngium maritimum</string>
+    <string name="bot_eryngium_maritimum_aliases">panicaut maritime ; chardon bleu des dunes</string>
+    <string name="bot_eryngium_maritimum_description">Vivace robuste du littoral, à souche profonde et feuilles glauques, rigides et épineuses. Ses tiges ramifiées portent des capitules arrondis de petites fleurs bleues entourés de bractées rigides et piquantes ; le fruit sec se sépare en deux méricarpes.</string>
+    <string name="bot_eryngium_maritimum_distribution">Originaire des côtes atlantiques et méditerranéennes d’Europe et d’Afrique du Nord, jusqu’en Asie occidentale ; caractéristique des dunes littorales.</string>
+    <string name="bot_eryngium_maritimum_habit">Vivace littorale glauque</string>
+    <string name="bot_eryngium_maritimum_leaf">Feuille rigide et épineuse</string>
+    <string name="bot_eryngium_maritimum_flower">Tête bleue à bractées piquantes</string>
+    <string name="bot_eryngium_maritimum_fruit">Méricarpes par paire</string>
+    <string name="bot_echinocactus_horizonthalonius_name">Cactus à griffes d’aigle</string>
+    <string name="bot_echinocactus_horizonthalonius_latin" translatable="false">Echinocactus horizonthalonius</string>
+    <string name="bot_echinocactus_horizonthalonius_aliases">cactus à griffes d’aigle ; coussin du diable</string>
+    <string name="bot_echinocactus_horizonthalonius_description">Petit cactus bleu-vert globuleux aplati, aux côtes nettes et aréoles espacées. Ses épines robustes et courbes évoquent des griffes ; des fleurs roses à magenta apparaissent au sommet, puis de petits fruits rougeâtres à écailles laineuses.</string>
+    <string name="bot_echinocactus_horizonthalonius_distribution">Originaire des régions arides du sud-ouest des États-Unis et du nord du Mexique, sur calcaires et pentes rocheuses.</string>
+    <string name="bot_echinocactus_horizonthalonius_habit">Cactus côtelé aplati</string>
+    <string name="bot_echinocactus_horizonthalonius_leaf">Épines courbes et aréoles</string>
+    <string name="bot_echinocactus_horizonthalonius_flower">Fleur rose-magenta terminale</string>
+    <string name="bot_echinocactus_horizonthalonius_fruit">Fruit rouge à écailles laineuses</string>
+    <string name="bot_echinopsis_pachanoi_name">Cactus San Pedro</string>
+    <string name="bot_echinopsis_pachanoi_latin" translatable="false">Echinopsis pachanoi</string>
+    <string name="bot_echinopsis_pachanoi_aliases">San Pedro ; wachuma ; Trichocereus pachanoi</string>
+    <string name="bot_echinopsis_pachanoi_description">Cactus colonnaire dressé à croissance rapide, formant plusieurs tiges bleu-vert, généralement à 6–8 côtes larges et petites aréoles à épines courtes. De grandes fleurs blanches s’ouvrent la nuit ; des fruits ovoïdes verts se développent ensuite. « San Pedro » désigne aussi des cactus apparentés et ne suffit donc pas à identifier l’espèce.</string>
+    <string name="bot_echinopsis_pachanoi_distribution">Originaire des Andes d’Équateur et du Pérou ; largement cultivé hors de son aire naturelle.</string>
+    <string name="bot_echinopsis_pachanoi_habit">Cactus colonnaire bleu-vert</string>
+    <string name="bot_echinopsis_pachanoi_leaf">Côte large et aréole à épines courtes</string>
+    <string name="bot_echinopsis_pachanoi_flower">Grande fleur blanche nocturne</string>
+    <string name="bot_echinopsis_pachanoi_fruit">Fruit ovoïde vert et graines</string>
+    <string name="bot_fagopyrum_esculentum_name">Sarrasin commun</string>
+    <string name="bot_fagopyrum_esculentum_latin" translatable="false">Fagopyrum esculentum</string>
+    <string name="bot_fagopyrum_esculentum_aliases">sarrasin ; blé noir</string>
+    <string name="bot_fagopyrum_esculentum_description">Plante annuelle cultivée, à tiges rougeâtres ramifiées, feuilles alternes triangulaires et bouquets lâches de petites fleurs blanches ou roses. Son fruit sec est un akène caractéristique à trois angles contenant une graine ; la plante est récoltée comme pseudo-céréale, mais n’est pas une graminée.</string>
+    <string name="bot_fagopyrum_esculentum_distribution">Cultivé dans le monde entier ; domestiqué en Asie orientale tempérée et dans la région himalayenne.</string>
+    <string name="bot_fagopyrum_esculentum_habit">Annuelle fleurie ramifiée</string>
+    <string name="bot_fagopyrum_esculentum_leaf">Feuille triangulaire cordée</string>
+    <string name="bot_fagopyrum_esculentum_flower">Bouquet de fleurs blanc-rose</string>
+    <string name="bot_fagopyrum_esculentum_fruit">Akène à trois angles</string>
+    <string name="bot_fagus_grandifolia_name">Hêtre d’Amérique</string>
+    <string name="bot_fagus_grandifolia_latin" translatable="false">Fagus grandifolia</string>
+    <string name="bot_fagus_grandifolia_aliases">hêtre d’Amérique</string>
+    <string name="bot_fagus_grandifolia_description">Grand arbre caduc d’Amérique du Nord, à écorce lisse gris pâle et cime étalée. Les feuilles ovales alternes portent des nervures latérales droites terminées par les dents ; les chatons mâles pendent aux rameaux, tandis que des cupules épineuses à quatre valves contiennent deux faînes à trois angles.</string>
+    <string name="bot_fagus_grandifolia_distribution">Originaire de l’est de l’Amérique du Nord, du sud du Canada à l’est des États-Unis.</string>
+    <string name="bot_fagus_grandifolia_habit">Arbre étalé à écorce lisse</string>
+    <string name="bot_fagus_grandifolia_leaf">Feuille ovale à nervures droites</string>
+    <string name="bot_fagus_grandifolia_flower">Chaton et fleur femelle de hêtre</string>
+    <string name="bot_fagus_grandifolia_fruit">Cupule épineuse et faînes triangulaires</string>
+    <string name="bot_galium_verum_name">Gaillet jaune</string>
+    <string name="bot_galium_verum_latin" translatable="false">Galium verum</string>
+    <string name="bot_galium_verum_aliases">gaillet jaune</string>
+    <string name="bot_galium_verum_description">Vivace à tiges grêles dressées et feuilles étroites disposées en verticilles bien visibles. Des panicules lâches portent de nombreuses petites fleurs jaunes à quatre lobes ; le fruit se sépare en deux nucules lisses et arrondies.</string>
+    <string name="bot_galium_verum_distribution">Originaire d’Europe et d’Asie tempérée ; présente dans les prairies sèches, les dunes et les broussailles ouvertes.</string>
+    <string name="bot_galium_verum_habit">Tiges dressées à panicules jaunes</string>
+    <string name="bot_galium_verum_leaf">Verticille de feuilles étroites</string>
+    <string name="bot_galium_verum_flower">Fleur jaune à quatre lobes</string>
+    <string name="bot_galium_verum_fruit">Deux nucules lisses</string>
+    <string name="bot_picea_glauca_name">Épinette blanche</string>
+    <string name="bot_picea_glauca_latin" translatable="false">Picea glauca</string>
+    <string name="bot_picea_glauca_aliases">épinette blanche ; épicéa blanc</string>
+    <string name="bot_picea_glauca_description">Conifère persistant boréal, à tronc droit et cime conique symétrique. Les aiguilles rigides à quatre angles sont fixées une par une tout autour du rameau et portent des lignes stomatiques pâles ; les cônes femelles pendants sont étroits, à écailles minces arrondies.</string>
+    <string name="bot_picea_glauca_distribution">Originaire du Canada et de l’Alaska, jusqu’au nord des États-Unis ; caractéristique des forêts boréales et montagnardes.</string>
+    <string name="bot_picea_glauca_habit">Arbre conique symétrique</string>
+    <string name="bot_picea_glauca_leaf">Aiguilles à quatre angles</string>
+    <string name="bot_picea_glauca_flower">Cône femelle étroit et pendant</string>
+    <string name="bot_picea_glauca_fruit">Cônes polliniques sur rameau</string>
+    <string name="bot_nuphar_lutea_name">Nénuphar jaune</string>
+    <string name="bot_nuphar_lutea_latin" translatable="false">Nuphar lutea</string>
+    <string name="bot_nuphar_lutea_aliases">nénuphar jaune ; faux-nénuphar</string>
+    <string name="bot_nuphar_lutea_description">Vivace aquatique ancrée par un rhizome épais et ramifié. Ses feuilles flottantes ovales ont une profonde échancrure basale où s’insère le pétiole ; les fleurs jaunes solitaires forment une coupe de sépales pétaloïdes, puis le fruit devient une capsule verte en forme de bouteille.</string>
+    <string name="bot_nuphar_lutea_distribution">Originaire d’Europe, d’Afrique du Nord et d’Asie tempérée jusqu’en Sibérie et au Xinjiang, surtout dans les eaux douces calmes ou lentes.</string>
+    <string name="bot_nuphar_lutea_habit">Rhizome, feuilles flottantes et fleurs jaunes</string>
+    <string name="bot_nuphar_lutea_leaf">Feuille échancrée à pétiole basal</string>
+    <string name="bot_nuphar_lutea_flower">Fleur jaune en coupe</string>
+    <string name="bot_nuphar_lutea_fruit">Capsule verte en bouteille</string>
+</resources>
