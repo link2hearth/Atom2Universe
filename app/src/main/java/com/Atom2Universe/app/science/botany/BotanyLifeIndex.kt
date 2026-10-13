@@ -18,7 +18,7 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
             val lineage=tree.pathTo(node.id,GREEN_ROOT).drop(1)
             Entry(node.id,node.scientific,lineage,
                 lineage.map{tree.nodes.getValue(it).scientific}.firstOrNull{it.endsWith("aceae")},
-                names[node.scientific]?.singleOrNull()?.key)
+                names[treeScientificName(node.scientific)]?.singleOrNull()?.key)
         }
         byNode=entries.associateBy{it.nodeId}
         byIllustrated=entries.filter{it.illustratedId!=null}.associateBy{it.illustratedId!!}
@@ -34,9 +34,12 @@ class BotanyLifeIndex(val tree:LifeTree, illustratedNames:Map<String,String>) {
         // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:307758-2
         // Sansevieria kirkii is a synonym of Dracaena pethera (accepted by POWO).
         // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77182814-1/general-information
+        // Opuntia helleri is a synonym of the accepted Opuntia galapageia var. helleri.
+        // https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:175098-2
         internal fun treeScientificName(name:String):String = when(name) {
             "Rabelera holostea" -> "Stellaria holostea"
             "Dracaena pethera" -> "Sansevieria kirkii"
+            "Opuntia helleri" -> "Opuntia galapageia var. helleri"
             else -> name
         }
     }

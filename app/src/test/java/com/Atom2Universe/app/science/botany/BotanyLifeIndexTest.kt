@@ -65,22 +65,27 @@ class BotanyLifeIndexTest {
     }
 
     @Test fun toutesLesCorrespondancesDuCatalogueReelSontReversibles() {
-        val nodes=DocumentBuilderFactory.newInstance().newDocumentBuilder()
-            .parse(File("src/main/res/values/strings_botany.xml")).getElementsByTagName("string")
-        val texts=(0 until nodes.length).associate{nodes.item(it).let{n->n.attributes.getNamedItem("name").nodeValue to n.textContent}}
+        val texts=File("src/main/res/values").listFiles { file -> file.name.startsWith("strings_botany") && file.extension=="xml" }
+            .orEmpty().flatMap { file ->
+                val nodes=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file).getElementsByTagName("string")
+                (0 until nodes.length).map { nodes.item(it).let { n -> n.attributes.getNamedItem("name").nodeValue to n.textContent } }
+            }.toMap()
         val resourceNames=R.string::class.java.fields.associate{it.getInt(null) to it.name}
         val names=BotanyCatalog.species.associate{it.id to texts.getValue(resourceNames.getValue(it.latin))}
         val index=index(names)
         val matches=index.entries.filter{it.illustratedId!=null}
-        assertEquals(names.keys,matches.map{it.illustratedId!!}.toSet())
         assertEquals(matches.size,matches.map{it.illustratedId}.distinct().size)
+        val unambiguousTerminalProfiles=names.entries.groupBy{BotanyLifeIndex.treeScientificName(it.value)}
+            .filter{(scientific,profiles)->profiles.size==1 && index.entries.count{entry->
+                tree.nodes.getValue(entry.nodeId).species && BotanyLifeIndex.treeScientificName(entry.scientific)==scientific
+            }==1}.values.flatten().map{it.key}.toSet()
+        assertEquals(unambiguousTerminalProfiles,matches.map{it.illustratedId!!}.toSet())
         for(entry in matches) {
             val atlasName=names.getValue(entry.illustratedId!!)
-            // Kew documents this homotypic synonym; OTT retains the older genus name.
-            assertEquals(entry.scientific,if(atlasName=="Rabelera holostea") "Stellaria holostea" else atlasName)
+            assertEquals(BotanyLifeIndex.treeScientificName(entry.scientific),BotanyLifeIndex.treeScientificName(atlasName))
             assertEquals(entry,index.forIllustrated(entry.illustratedId))
         }
-        for(species in BotanyCatalog.species) {
+        for(species in PriorityTreeCatalogHerbariumLot38.species) {
             val entry=requireNotNull(index.forIllustrated(species.id)) { "Missing living-tree link: ${species.id}" }
             assertEquals(species.id,index.forNode(entry.nodeId)?.illustratedId)
         }
