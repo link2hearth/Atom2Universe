@@ -126,10 +126,12 @@ object BotanyCatalog {
         PlantFamily("Welwitschiaceae",R.string.bot_family_Welwitschiaceae,R.string.bot_family_Welwitschiaceae_desc,R.string.bot_family_Welwitschiaceae_aliases),
         PlantFamily("Equisetaceae",R.string.bot_family_Equisetaceae,R.string.bot_family_Equisetaceae_desc,R.string.bot_family_Equisetaceae_aliases),
         PlantFamily("Nepenthaceae",R.string.bot_family_Nepenthaceae,R.string.bot_family_Nepenthaceae_desc,R.string.bot_family_Nepenthaceae_aliases),
+        PlantFamily("Passifloraceae",R.string.bot_family_Passifloraceae,R.string.bot_family_Passifloraceae_desc,R.string.bot_family_Passifloraceae_aliases),
+        PlantFamily("Ochnaceae",R.string.bot_family_Ochnaceae,R.string.bot_family_Ochnaceae_desc,R.string.bot_family_Ochnaceae_aliases),
         PlantFamily("Scheuchzeriaceae",R.string.bot_family_Scheuchzeriaceae,R.string.bot_family_Scheuchzeriaceae_desc,R.string.bot_family_Scheuchzeriaceae_aliases),
         PlantFamily("Osmundaceae",R.string.bot_family_Osmundaceae,R.string.bot_family_Osmundaceae_desc,R.string.bot_family_Osmundaceae_aliases),
     )
-    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species + PriorityTreeCatalogHerbariumLot33.species + PriorityTreeCatalogHerbariumLot34.species
+    val species = TreesCatalog.species + ShrubsCatalog.species + HerbsCatalog.species + FieldBotanyCatalog.species + AfricanDrylandsCatalog.species + NorthAmericanCatalog.species + ModelPlantsCatalog.species + NightshadesCatalog.species + OrchardCatalog.species + FoodCropsCatalog.species + UsefulPlantsCatalog.species + AromaticsCatalog.species + CropDiversityCatalog.species + MonocotFormsCatalog.species + WoodyFruitsCatalog.species + MeadowFlowersCatalog.species + HedgerowDiversityCatalog.species + PriorityTreeCatalog.species + PriorityTreeCatalogNext.species + PriorityTreeCatalogFinal.species + PriorityTreeCatalogPlants.species + PriorityTreeCatalogHerbarium.species + PriorityTreeCatalogHerbariumNext.species + PriorityTreeCatalogHerbariumMore.species + PriorityTreeCatalogHerbariumLot29.species + PriorityTreeCatalogHerbariumLot30.species + PriorityTreeCatalogHerbariumLot31.species + PriorityTreeCatalogHerbariumLot32.species + PriorityTreeCatalogHerbariumLot33.species + PriorityTreeCatalogHerbariumLot34.species + PriorityTreeCatalogHerbariumLot35.species
     private val byId = species.associateBy { it.id }
     fun get(id: String) = byId[id]
     fun family(id: String) = families.first { it.id == id }
@@ -214,5 +216,6 @@ object BotanyCatalog {
         BotanySource("botascopia", R.string.bot_source_botascopia, "https://botascopia.inria.fr/"),
         BotanySource("bsbi",R.string.bot_source_bsbi,"https://bsbi.org/"),
         BotanySource("aos",R.string.bot_source_aos,"https://www.aos.org/"),
+        BotanySource("cambridge",R.string.bot_source_cambridge,"https://www.botanic.cam.ac.uk/"),
     )
 }

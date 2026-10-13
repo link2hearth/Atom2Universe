@@ -63,7 +63,11 @@ internal object PlantHerbarium {
         "pinus_palustris", "erica_cinerea", "scheuchzeria_palustris", "musa_basjoo", "lilium_columbianum",
         "lilium_cernuum", "erythronium_pluriflorum", "erythronium_citrinum", "vanda_coerulea", "herminium_monorchis",
         "epipactis_atrorubens", "neuwiedia_griffithii", "narcissus_poeticus", "sansevieria_kirkii", "dasylirion_acrotrichum",
-        "liriope_muscari", "puya_alpestris", "roystonea_oleracea", "howea_forsteriana", "osmunda_japonica")
+        "liriope_muscari", "puya_alpestris", "roystonea_oleracea", "howea_forsteriana", "osmunda_japonica",
+        "metasequoia_glyptostroboides", "humulus_lupulus", "passiflora_edulis", "litchi_chinensis", "helianthus_tuberosus",
+        "drosera_capillaris", "nepenthes_inermis", "hibiscus_fragilis", "pachypodium_rosulatum", "mitragyna_speciosa",
+        "narcissus_serotinus", "mammillaria_bocasana", "hippuris_vulgaris", "cyperus_alternifolius", "kalmia_microphylla",
+        "nothotsuga_longibracteata", "lophira_alata", "nerine_sarniensis", "opuntia_stricta", "passiflora_incarnata")
 
     fun hasPlate(id: String) = id in speciesIds
 

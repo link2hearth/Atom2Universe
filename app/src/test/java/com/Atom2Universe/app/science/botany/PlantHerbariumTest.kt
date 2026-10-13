@@ -15,7 +15,7 @@ import java.io.File
 class PlantHerbariumTest {
     @Test fun toutesLesPlanchesSontLisiblesCompletesEtAssocieesAuBonCatalogue() {
         val directory = File("src/main/assets/botany/herbarium")
-        assertEquals(325, PlantHerbarium.speciesIds.size)
+        assertEquals(345, PlantHerbarium.speciesIds.size)
         assertEquals(PlantHerbarium.speciesIds.map { "$it.webp" }.toSet(), directory.list()!!.toSet())
         for (id in PlantHerbarium.speciesIds) {
             assertNotNull("Missing species: $id", BotanyCatalog.get(id))
