@@ -21,7 +21,7 @@ import com.Atom2Universe.app.R
 
 /** Écran de campagne à plein écran. Le village et sa sauvegarde restent ceux du joueur. */
 internal class HamletAdventureDialog(private val context: Context, private val game: HamletGame,
-    private val haptics: Boolean = false, private val assets: HamletAssets = HamletAssets(context),
+    private val haptics: Boolean = false,
     private val onBuild: (Def) -> Unit = {}, private val onClose: () -> Unit = {},
     private val onExit: (() -> Boolean)? = null, private val effectsEnabled: Boolean = true) {
     private val a get() = game.adventure
@@ -118,7 +118,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         }.also { tabButtons.add(it) }, LinearLayout.LayoutParams(0, dp(66), 1f).apply { marginStart = dp(2); marginEnd = dp(2) })
         root.addView(tabs)
         dialog.setContentView(root, android.view.ViewGroup.LayoutParams(-1, -1))
-        dialog.setOnDismissListener { a.abandonBattle(); assets.clear(); buildingArt.clear(); onClose() }
+        dialog.setOnDismissListener { a.abandonBattle(); buildingArt.clear(); onClose() }
         dialog.show(); dialog.window?.apply { setLayout(-1, -1); setBackgroundDrawableResource(android.R.color.transparent); addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND) }
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val bars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars() or androidx.core.view.WindowInsetsCompat.Type.displayCutout())
@@ -194,8 +194,8 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         nav.addView(button(s("previous"), page > 0) { page--; selected = page * 12; render() }, LinearLayout.LayoutParams(0, -2, 1f))
         nav.addView(button(s("next"), page < a.frontier / 12 + 1) { page++; selected = page * 12; render() }, LinearLayout.LayoutParams(0, -2, 1f)); headline.addView(nav)
         if (selected != a.frontier) headline.addView(button(s("frontier_go")) { selected = a.frontier; page = selected / 12; render() })
-        val map = HamletAdventureMapView(context, assets, page, a, { s("number", it) }) { stage -> selected = stage; render() }
-        map.selected = selected; map.contentDescription = s("map_accessibility")
+        val map = HamletAdventureMapView(context, page, a, { s("number", it) }) { stage -> selected = stage; render() }
+        map.selected = selected; map.effectsEnabled = effectsEnabled; map.contentDescription = s("map_accessibility")
         headline.addView(map, LinearLayout.LayoutParams(-1, dp(180)))
         val picker = Spinner(context)
         val stages = (page * 12 until page * 12 + 12).toList()
@@ -231,7 +231,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
     private fun gather(stage: Int) {
         rows.removeAllViews()
         text(rows, s("gather_help"), true, false)
-        val view = HamletGatherView(context, assets, a.region(stage), haptics) {
+        val view = HamletGatherView(context, a.region(stage), haptics) {
             if (a.gather(stage)) { toast(s("gather_done")); selected = a.frontier; page = selected / 12; render() }
         }
         view.effectsEnabled = effectsEnabled
@@ -503,7 +503,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         val battle = a.beginBattle(mode, stage) ?: run { toast(s("not_ready")); return }
         rows.removeAllViews(); scroll.scrollTo(0, 0)
         text(rows, s("combat_header", s("mode_${mode.name.lowercase()}"), stage + 1), true, false)
-        val view = HamletBattleView(context, battle, assets, { key, args -> s(key, *args) }, haptics) { result ->
+        val view = HamletBattleView(context, battle, { key, args -> s(key, *args) }, haptics) { result ->
             if (a.settle(result)) {
                 if (haptics) root.performHapticFeedback(if (result.outcome == BattleOutcome.VICTORY) HapticFeedbackConstants.CONFIRM else HapticFeedbackConstants.CLOCK_TICK)
                 rows.removeAllViews()

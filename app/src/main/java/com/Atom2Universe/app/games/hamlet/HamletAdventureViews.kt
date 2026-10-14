@@ -2,6 +2,7 @@ package com.Atom2Universe.app.games.hamlet
 
 import android.content.Context
 import android.graphics.*
+import android.os.SystemClock
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
@@ -10,18 +11,8 @@ import kotlin.math.PI
 import kotlin.math.ceil
 import kotlin.math.sin
 
-/** Preserve the painted region's aspect ratio on phones and tablets. */
-private fun drawRegion(c: Canvas, bitmap: Bitmap?, width: Int, height: Int, paint: Paint, rect: RectF) {
-    paint.shader = null; paint.style = Paint.Style.FILL; paint.alpha = 255
-    if (bitmap == null) { c.drawColor(0xFF54845D.toInt()); return }
-    val k = maxOf(width.toFloat() / bitmap.width, height.toFloat() / bitmap.height)
-    rect.set((width - bitmap.width * k) / 2, (height - bitmap.height * k) / 2,
-        (width + bitmap.width * k) / 2, (height + bitmap.height * k) / 2)
-    c.drawBitmap(bitmap, null, rect, paint)
-}
-
 /** Peinture et animation uniquement ; la résolution du combat reste dans le moteur Kotlin pur. */
-class HamletBattleView(context: Context, val battle: HamletBattle, private val assets: HamletAssets,
+class HamletBattleView(context: Context, val battle: HamletBattle,
     private val label: (String, Array<out Any>) -> String, private val haptics: Boolean,
     private val completed: (HamletBattle) -> Unit) : View(context) {
     var speed = 1
@@ -31,7 +22,13 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
     private var attached = false
     private var finished = false
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    private val rect = RectF()
+    private val scene = HamletScene(battle.region)
+    private val foot = PointF()
+    /** Feet and depth of every fighter (and the pet, last), drawn from the back rows forward. */
+    private var order = IntArray(16)
+    private var footX = FloatArray(16)
+    private var footY = FloatArray(16)
+    private var depth = FloatArray(16)
     private val spots = HashMap<Int, PointF>()
     private val buttons = HashMap<Int, RectF>()
     private val dp = resources.displayMetrics.density
@@ -54,7 +51,6 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
     private fun art(u: BattleUnit) = if (u.heroVisual) u.sprite else if (u.summoned) HamletEnemies.SUMMON
         else HamletEnemies.visual(u.sprite, battle.region)
     init {
-        assets.get("region", battle.region)
         battle.units.forEach { HamletCharacterArt.prewarm(it.heroVisual, art(it)) }
         HamletCharacterArt.prewarm(false, HamletEnemies.SUMMON) // Summons can enter after the battle starts.
         if (battle.pet >= 0) HamletCharacterArt.prewarm(false, HamletEnemies.pet(battle.pet))
@@ -75,69 +71,46 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         backdropShade = LinearGradient(0f, 0f, 0f, h.toFloat(),
-            intArrayOf(0x8811202C.toInt(), 0x0011202C, 0xEE11202C.toInt()), floatArrayOf(0f, .45f, 1f), Shader.TileMode.CLAMP)
+            intArrayOf(0x6611202C, 0x0011202C, 0x0011202C, 0xDD11202C.toInt()), floatArrayOf(0f, .2f, .8f, 1f), Shader.TileMode.CLAMP)
+        scene.layout(w, h)
     }
     private fun text(c: Canvas, value: String, x: Float, y: Float, size: Float, color: Int, align: Paint.Align = Paint.Align.CENTER) {
         paint.color = color; paint.textSize = size * dp; paint.textAlign = align; paint.typeface = Typeface.DEFAULT_BOLD; paint.style = Paint.Style.FILL
         c.drawText(value, x, y, paint)
     }
+    /** A summon takes the first or second vanguard spot of its camp, alternately. */
+    private fun vanguard(i: Int): Int {
+        val u = battle.units[i]; var n = 0
+        for (j in 0 until i) { val o = battle.units[j]; if (o.summoned && o.enemy == u.enemy) n++ }
+        return n % 2
+    }
     override fun onDraw(c: Canvas) {
-        drawRegion(c, assets.get("region", battle.region), width, height, paint, rect)
+        val time = if (effectsEnabled) battle.time else 0f
+        scene.layout(width, height)
+        scene.drawBack(c, time)
         paint.shader = backdropShade
         c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint); paint.shader = null
-        for (u in battle.units) {
-            val column = if (u.front) 1 else 0
-            val row = if (u.front) u.slot else (u.slot - 2) % 4
-            var x = width * (if (u.enemy) 0.68f + column * -0.08f else 0.18f + column * 0.14f)
-            val y = height * (if (u.front) 0.43f + row * 0.20f else 0.32f + row * 0.135f) + if (u.summoned) 18f * dp else 0f
-            if (effectsEnabled) x += (if (u.enemy) -1 else 1) * sin((u.lunge / 0.22f) * PI).toFloat() * 22f * dp
-            val size = minOf(width * 0.21f, height * 0.27f) * (if (u.boss) 1.25f else if (u.summonLeft > 0) 0.7f else 1f)
-            spots.getOrPut(u.index) { PointF() }.set(x, y - size * 0.4f)
-            if (!u.alive) {
-                HamletCharacterArt.draw(c, u.heroVisual, art(u), x, y, size, pose = HamletCharacterArt.Pose.DOWN, mirrored = u.enemy, alpha = 95)
-                continue
-            }
-            paint.color = 0x44312D24; c.drawOval(x - size * 0.28f, y - 6f * dp, x + size * 0.28f, y + 3f * dp, paint)
-            val castEvent = battle.events.lastOrNull { it.source == u.index && it.kind == BattleEventKind.SKILL && battle.time - it.time < 0.57f }
-            val pose = when {
-                !effectsEnabled -> HamletCharacterArt.Pose.IDLE
-                u.flash > 0 -> HamletCharacterArt.Pose.HURT
-                castEvent != null -> HamletCharacterArt.Pose.CAST
-                u.lunge > 0 -> HamletCharacterArt.Pose.ATTACK
-                else -> HamletCharacterArt.Pose.IDLE
-            }
-            val poseTime = when (pose) {
-                HamletCharacterArt.Pose.HURT -> 0.16f - u.flash
-                HamletCharacterArt.Pose.CAST -> battle.time - (castEvent?.time ?: battle.time)
-                HamletCharacterArt.Pose.ATTACK -> 0.22f - u.lunge
-                else -> battle.time + u.index * 0.31f
-            }
-            HamletCharacterArt.draw(c, u.heroVisual, art(u), x, y, size, if (effectsEnabled) poseTime else 0f, pose, u.enemy,
-                fx = if (effectsEnabled) battle.time + u.index * 0.31f else 0f)
-            if (u.shield > 0) {
-                paint.color = 0x775CDBF3; paint.style = Paint.Style.STROKE; paint.strokeWidth = 2f * dp
-                c.drawOval(x - size * 0.32f, y - size * 0.88f, x + size * 0.32f, y, paint); paint.style = Paint.Style.FILL
-            }
-            if (u.stun > 0) for (i in 0..2) {
-                val angle = (if (effectsEnabled) battle.time * 4 else 0f) + i * 2.094f
-                HamletGlyphs.draw(c, "star", x + kotlin.math.cos(angle) * size * 0.2f, y - size * 0.88f + sin(angle) * 3f * dp, 6f * dp)
-            }
-            val hpY = y - size * 0.98f
-            val bar = size * 0.56f
-            paint.color = 0xCC203128.toInt(); c.drawRoundRect(x - bar / 2, hpY, x + bar / 2, hpY + 4f * dp, 2f * dp, 2f * dp, paint)
-            paint.color = if (u.enemy) 0xFFCD785A.toInt() else 0xFF91D282.toInt()
-            c.drawRoundRect(x - bar / 2, hpY, x - bar / 2 + bar * (u.hp / u.maxHp).toFloat(), hpY + 4f * dp, 2f * dp, 2f * dp, paint)
-            statusActive[0] = u.stun > 0; statusActive[1] = u.poison > 0 || u.venom > 0
-            statusActive[2] = u.buff > 0; statusActive[3] = u.weakened > 0
-            val count = statusActive.count { it }
-            var badge = 0
-            for (status in statusActive.indices) if (statusActive[status]) {
-                val bx = x + (badge++ - (count - 1) / 2f) * 24f * dp
-                paint.color = 0xDD233A42.toInt()
-                c.drawRoundRect(bx - 11f * dp, hpY + 6f * dp, bx + 11f * dp, hpY + 17f * dp, 3f * dp, 3f * dp, paint)
-                text(c, statusLabels[status], bx, hpY + 14f * dp, 7f, statusColors[status])
-            }
+        val units = battle.units
+        val count = units.size + if (battle.pet >= 0) 1 else 0
+        if (order.size < count) { order = IntArray(count + 8); footX = FloatArray(count + 8); footY = FloatArray(count + 8); depth = FloatArray(count + 8) }
+        for (i in units.indices) {
+            val u = units[i]
+            depth[i] = HamletArena.place(u.enemy, u.slot, if (u.summoned) vanguard(i) else -1, width, height, foot)
+            footX[i] = foot.x; footY[i] = foot.y
         }
+        if (battle.pet >= 0) { depth[units.size] = HamletArena.pet(width, height, foot); footX[units.size] = foot.x; footY[units.size] = foot.y }
+        for (i in 0 until count) {
+            var j = i
+            while (j > 0 && footY[order[j - 1]] > footY[i]) { order[j] = order[j - 1]; j-- }
+            order[j] = i
+        }
+        val base = HamletArena.size(width, height)
+        for (k in 0 until count) {
+            val i = order[k]
+            if (i < units.size) unit(c, units[i], footX[i], footY[i], base * depth[i])
+            else HamletCharacterArt.draw(c, false, HamletEnemies.pet(battle.pet), footX[i], footY[i], base * .5f * depth[i], time)
+        }
+        scene.drawFront(c, time)
         var warningRow = 0
         for (warning in battle.warnings()) {
             for (index in warning.targets) spots[index]?.let { p ->
@@ -173,7 +146,6 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
         }
         text(c, label("combat_clock", arrayOf(battle.time.toInt())), width / 2f, 24f * dp, 14f, 0xFFF9E7B2.toInt())
         text(c, fieldLabel, width / 2f, 40f * dp, 10f, 0xFFCBDDD0.toInt())
-        if (battle.pet >= 0) HamletCharacterArt.draw(c, false, HamletEnemies.pet(battle.pet), width * 0.1f, height * 0.86f, 40f * dp, if (effectsEnabled) battle.time else 0f)
         val heroes = party
         val spacing = width.toFloat() / maxOf(1, heroes.size)
         for ((i, u) in heroes.withIndex()) {
@@ -192,6 +164,57 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
             }
         }
     }
+    private fun unit(c: Canvas, u: BattleUnit, standX: Float, y: Float, scaled: Float) {
+        if (u.summoned && !u.alive) return
+        var x = standX
+        if (effectsEnabled) x += (if (u.enemy) -1 else 1) * sin((u.lunge / 0.22f) * PI).toFloat() * 22f * dp
+        val size = scaled * (if (u.boss) 1.25f else if (u.summonLeft > 0) 0.7f else 1f)
+        spots.getOrPut(u.index) { PointF() }.set(x, y - size * 0.4f)
+        if (!u.alive) {
+            HamletCharacterArt.draw(c, u.heroVisual, art(u), x, y, size, pose = HamletCharacterArt.Pose.DOWN, mirrored = u.enemy, alpha = 95)
+            return
+        }
+        paint.color = 0x44312D24; c.drawOval(x - size * 0.28f, y - 6f * dp, x + size * 0.28f, y + 3f * dp, paint)
+        val castEvent = battle.events.lastOrNull { it.source == u.index && it.kind == BattleEventKind.SKILL && battle.time - it.time < 0.57f }
+        val pose = when {
+            !effectsEnabled -> HamletCharacterArt.Pose.IDLE
+            u.flash > 0 -> HamletCharacterArt.Pose.HURT
+            castEvent != null -> HamletCharacterArt.Pose.CAST
+            u.lunge > 0 -> HamletCharacterArt.Pose.ATTACK
+            else -> HamletCharacterArt.Pose.IDLE
+        }
+        val poseTime = when (pose) {
+            HamletCharacterArt.Pose.HURT -> 0.16f - u.flash
+            HamletCharacterArt.Pose.CAST -> battle.time - (castEvent?.time ?: battle.time)
+            HamletCharacterArt.Pose.ATTACK -> 0.22f - u.lunge
+            else -> battle.time + u.index * 0.31f
+        }
+        HamletCharacterArt.draw(c, u.heroVisual, art(u), x, y, size, if (effectsEnabled) poseTime else 0f, pose, u.enemy,
+            fx = if (effectsEnabled) battle.time + u.index * 0.31f else 0f)
+        if (u.shield > 0) {
+            paint.color = 0x775CDBF3; paint.style = Paint.Style.STROKE; paint.strokeWidth = 2f * dp
+            c.drawOval(x - size * 0.32f, y - size * 0.88f, x + size * 0.32f, y, paint); paint.style = Paint.Style.FILL
+        }
+        if (u.stun > 0) for (i in 0..2) {
+            val angle = (if (effectsEnabled) battle.time * 4 else 0f) + i * 2.094f
+            HamletGlyphs.draw(c, "star", x + kotlin.math.cos(angle) * size * 0.2f, y - size * 0.88f + sin(angle) * 3f * dp, 6f * dp)
+        }
+        val hpY = y - size * 0.98f
+        val bar = size * 0.56f
+        paint.color = 0xCC203128.toInt(); c.drawRoundRect(x - bar / 2, hpY, x + bar / 2, hpY + 4f * dp, 2f * dp, 2f * dp, paint)
+        paint.color = if (u.enemy) 0xFFCD785A.toInt() else 0xFF91D282.toInt()
+        c.drawRoundRect(x - bar / 2, hpY, x - bar / 2 + bar * (u.hp / u.maxHp).toFloat(), hpY + 4f * dp, 2f * dp, 2f * dp, paint)
+        statusActive[0] = u.stun > 0; statusActive[1] = u.poison > 0 || u.venom > 0
+        statusActive[2] = u.buff > 0; statusActive[3] = u.weakened > 0
+        val count = statusActive.count { it }
+        var badge = 0
+        for (status in statusActive.indices) if (statusActive[status]) {
+            val bx = x + (badge++ - (count - 1) / 2f) * 24f * dp
+            paint.color = 0xDD233A42.toInt()
+            c.drawRoundRect(bx - 11f * dp, hpY + 6f * dp, bx + 11f * dp, hpY + 17f * dp, 3f * dp, 3f * dp, paint)
+            text(c, statusLabels[status], bx, hpY + 14f * dp, 7f, statusColors[status])
+        }
+    }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_UP) {
             buttons.entries.firstOrNull { it.value.contains(event.x, event.y) }?.let {
@@ -204,18 +227,24 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
     override fun performClick(): Boolean { super.performClick(); return true }
 }
 
-class HamletAdventureMapView(context: Context, private val assets: HamletAssets, var page: Int,
+class HamletAdventureMapView(context: Context, var page: Int,
     val adventure: HamletAdventure, private val number: (Int) -> String, private val select: (Int) -> Unit) : View(context) {
+    var effectsEnabled = true
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val points = ArrayList<Pair<Int, PointF>>()
-    private val destination = RectF()
+    private var scene: HamletScene? = null
+    private var sceneRegion = -1
+    private val start = SystemClock.uptimeMillis()
     private val dp = resources.displayMetrics.density
     private var layoutPage = -1
     private var layoutWidth = -1
     private var layoutHeight = -1
     var selected = adventure.frontier
     override fun onDraw(c: Canvas) {
-        drawRegion(c, assets.get("region", adventure.region(page * 12)), width, height, paint, destination)
+        val region = adventure.region(page * 12)
+        val ground = scene?.takeIf { sceneRegion == region } ?: HamletScene(region).also { scene = it; sceneRegion = region }
+        val time = if (effectsEnabled) (SystemClock.uptimeMillis() - start) / 1000f else 0f
+        ground.layout(width, height); ground.drawBack(c, time); ground.drawFront(c, time)
         paint.color = 0x66203031; c.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
         if (layoutPage != page || layoutWidth != width || layoutHeight != height) {
             points.clear(); layoutPage = page; layoutWidth = width; layoutHeight = height
@@ -253,6 +282,7 @@ class HamletAdventureMapView(context: Context, private val assets: HamletAssets,
             val stars = adventure.stars[stage] ?: 0
             for (j in 0 until stars) HamletGlyphs.draw(c, "star", p.x + (j - 1) * r * 0.55f, p.y + r * 1.4f, r * 0.44f)
         }
+        if (effectsEnabled) postInvalidateOnAnimation()
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_UP) {
@@ -266,18 +296,20 @@ class HamletAdventureMapView(context: Context, private val assets: HamletAssets,
 }
 
 /** Huit ressources à cueillir : une petite activité gratuite pour rapporter du matériel et du travail. */
-class HamletGatherView(context: Context, private val assets: HamletAssets, private val region: Int,
+class HamletGatherView(context: Context, region: Int,
     private val haptics: Boolean, private val finished: () -> Unit) : View(context) {
     var effectsEnabled = true
     var gathered = 0
         private set
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-    private val destination = RectF()
+    private val scene = HamletScene(region)
+    private val start = SystemClock.uptimeMillis()
     private val glyphs = arrayOf("log", "ore", "fruit")
     private val dp = resources.displayMetrics.density
     private val locations = arrayOf(0.22f to 0.6f, 0.64f to 0.52f, 0.42f to 0.74f, 0.8f to 0.76f, 0.32f to 0.44f, 0.6f to 0.82f, 0.82f to 0.46f, 0.18f to 0.82f)
     override fun onDraw(c: Canvas) {
-        drawRegion(c, assets.get("region", region), width, height, paint, destination)
+        val time = if (effectsEnabled) (SystemClock.uptimeMillis() - start) / 1000f else 0f
+        scene.layout(width, height); scene.drawBack(c, time); scene.drawFront(c, time)
         // Eight trail stones make this short activity's progress visible without another dialog.
         for (i in locations.indices) {
             val px = width / 2f + (i - 3.5f) * 16f * dp
@@ -294,6 +326,7 @@ class HamletGatherView(context: Context, private val assets: HamletAssets, priva
             c.drawCircle(x * width, y * height, r, paint); paint.style = Paint.Style.FILL
             HamletGlyphs.draw(c, glyphs[gathered % 3], x * width, y * height, r * 1.3f)
         }
+        if (effectsEnabled) postInvalidateOnAnimation()
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_UP && gathered < locations.size) {

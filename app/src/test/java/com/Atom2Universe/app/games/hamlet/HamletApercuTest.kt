@@ -1,13 +1,11 @@
 package com.Atom2Universe.app.games.hamlet
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.RectF
+import android.graphics.PointF
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -265,7 +263,7 @@ class HamletApercuTest {
         }
     }
 
-    @Test fun aventureAssetsEtMenus() {
+    @Test fun aventureMenus() {
         val controller = Robolectric.buildActivity(android.app.Activity::class.java).setup()
         val activity = controller.get().apply { setTheme(android.R.style.Theme_Material_Light_NoActionBar) }
         val strings = HashMap<Int, String>(); val names = HashMap<String, Int>()
@@ -285,13 +283,6 @@ class HamletApercuTest {
             override fun getIdentifier(name: String?, defType: String?, defPackage: String?) = names[name] ?: super.getIdentifier(name, defType, defPackage)
         }
         val context = object : android.content.ContextWrapper(activity) { override fun getResources() = loaded }
-        val assets = HamletAssets { File("src/main/assets/hamlet/adventure/$it.webp").inputStream() }
-        val files = File("src/main/assets/hamlet/adventure").listFiles()!!.filter { it.extension == "webp" }
-        assertTrue(files.size == 6 && files.sumOf { it.length() } < 250_000)
-        for (i in 0..5) {
-            val bmp = assets.get("region", i) ?: error("region $i")
-            assertTrue(bmp.width == 512 && bmp.height == 384)
-        }
         val game = HamletGame().apply { startNew(false) }
         fun buttons(view: android.view.View): List<android.widget.Button> = if (view is android.widget.Button) listOf(view)
             else if (view is android.view.ViewGroup) (0 until view.childCount).flatMap { buttons(view.getChildAt(it)) } else emptyList()
@@ -319,7 +310,7 @@ class HamletApercuTest {
             }
         }
         for (tab in 0..5) {
-            HamletAdventureDialog(context, game, assets = assets, onExit = { true }, effectsEnabled = false).show(tab)
+            HamletAdventureDialog(context, game, onExit = { true }, effectsEnabled = false).show(tab)
             val dialog = org.robolectric.shadows.ShadowDialog.getLatestDialog()
             val decor = dialog.window!!.decorView
             snapshot("aventure_menu_$tab", decor)
@@ -336,12 +327,12 @@ class HamletApercuTest {
         }
         game.adventure.frontier = 25; game.adventure.heroes[2].owned = true; game.adventure.heroes[4].owned = true; game.adventure.heroes[5].owned = true
         game.adventure.assign(2, 1); game.adventure.assign(4, 4); game.adventure.assign(5, 5)
-        HamletAdventureDialog(context, game, assets = assets).show(2)
+        HamletAdventureDialog(context, game).show(2)
         val teamDialog = org.robolectric.shadows.ShadowDialog.getLatestDialog(); snapshot("aventure_equipe_six", teamDialog.window!!.decorView); teamDialog.dismiss()
         // Failed saves keep Exit and the current screen available; success closes the dialog.
         var saved = false
         var attempts = 0
-        HamletAdventureDialog(context, game, assets = assets, onExit = { attempts++; saved }, effectsEnabled = false).show()
+        HamletAdventureDialog(context, game, onExit = { attempts++; saved }, effectsEnabled = false).show()
         val exitDialog = org.robolectric.shadows.ShadowDialog.getLatestDialog()
         val exit = buttons(exitDialog.window!!.decorView).first { it.text == loaded.getString(names.getValue("hamlet_ui_exit")) }
         assertTrue(exit.performClick()); assertTrue(exitDialog.isShowing && attempts == 1)
@@ -357,7 +348,7 @@ class HamletApercuTest {
         val renderer = HamletRenderer(g, art).apply { width = 1080; height = 1000; zoom = 1.5f; density = 3f; nightEnabled = false; daylight = 1f }
         renderer.centerOn(hall.x + 1f, hall.y + 11f)
         val bitmap = Bitmap.createBitmap(1080, 1000, Bitmap.Config.ARGB_8888); renderer.draw(Canvas(bitmap)); ecrire("aventure_batiments_village", bitmap)
-        assets.clear(); controller.pause().stop().destroy()
+        controller.pause().stop().destroy()
     }
 
     /** Art-only benchmark: exported frames can be opened in Aseprite/LibreSprite.
@@ -532,8 +523,42 @@ class HamletApercuTest {
         ecrire("heros_cartes", strip)
     }
 
-    private fun decor(i: Int): Bitmap? = File("src/main/assets/hamlet/adventure/region_$i.webp").takeIf { it.exists() }
-        ?.let { BitmapFactory.decodeFile(it.path) }
+    /** A battle on a region's ground: fighters on their arena spots, drawn from the back rows forward. */
+    private fun combat(region: Int, w: Int, h: Int, t: Float, heroes: IntArray, foes: IntArray, pet: Int = -1): Bitmap {
+        val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        val scene = HamletScene(region).apply { layout(w, h) }
+        scene.drawBack(c, t)
+        class Fighter(val hero: Boolean, val id: Int, val x: Float, val y: Float, val size: Float, val enemy: Boolean)
+        val fighters = ArrayList<Fighter>()
+        val p = PointF(); val base = HamletArena.size(w, h)
+        for ((slot, id) in heroes.withIndex()) { val d = HamletArena.place(false, slot, -1, w, h, p); fighters.add(Fighter(true, id, p.x, p.y, base * d, false)) }
+        for ((slot, k) in foes.withIndex()) {
+            val d = HamletArena.place(true, slot, -1, w, h, p)
+            fighters.add(Fighter(false, HamletEnemies.visual(k, region), p.x, p.y, base * d * (if (k >= 6) 1.25f else 1f), true))
+        }
+        if (pet >= 0) { val d = HamletArena.pet(w, h, p); fighters.add(Fighter(false, HamletEnemies.pet(pet), p.x, p.y, base * .5f * d, false)) }
+        for (f in fighters.sortedBy { it.y }) HamletCharacterArt.draw(c, f.hero, f.id, f.x, f.y, f.size, t, mirrored = f.enemy, fx = t)
+        scene.drawFront(c, t)
+        return bmp
+    }
+
+    /** Les six terrains animés : combat complet au téléphone et à la tablette, carte, et trois instants
+     * du décor seul pour voir ce qui bouge. */
+    @Test fun decors() {
+        for (r in 0..5) {
+            val boss = r % 2 == 1
+            ecrire("decor_telephone_$r", combat(r, 1080, 1150, 1.3f, intArrayOf(32, 8, 30, 13, 3, 20),
+                if (boss) intArrayOf(6, 0, 2) else intArrayOf(0, 3, 1, 2, 4, 5), 2))
+            ecrire("decor_tablette_$r", combat(r, 1600, 480, 1.3f, intArrayOf(32, 8, 30, 13, 3, 20),
+                if (boss) intArrayOf(0, 3, 1, 2, 4, 5) else intArrayOf(6, 0, 2), 1))
+            ecrire("decor_carte_$r", combat(r, 1080, 472, 0f, IntArray(0), IntArray(0)))
+            val strip = Bitmap.createBitmap(540 * 3, 575, Bitmap.Config.ARGB_8888)
+            val c = Canvas(strip)
+            for (k in 0..2) c.drawBitmap(Bitmap.createScaledBitmap(combat(r, 1080, 1150, 2f + k * .7f, IntArray(0), IntArray(0)), 540, 575, false), k * 540f, 0f, null)
+            ecrire("decor_animation_$r", strip)
+        }
+    }
 
     /** Le bestiaire régional : une rangée par région sur son décor (ennemis en miroir, boss agrandi),
      * quelques poses et deux scènes de combat. */
@@ -543,13 +568,12 @@ class HamletApercuTest {
         val c = Canvas(sheet)
         c.drawColor(0xFF2B3A36.toInt())
         val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textSize = 17f }
-        val filter = Paint(Paint.FILTER_BITMAP_FLAG)
         for (r in 0 until HamletEnemies.REGIONS) {
-            val bg = decor(r)
+            c.save(); c.translate(0f, r * (cell + label).toFloat())
+            HamletScene(r).apply { layout(7 * cell, cell); drawBack(c, 1.1f) }
+            c.restore()
             for (k in 0..6) {
                 val x = k * cell.toFloat(); val y = r * (cell + label).toFloat()
-                if (bg != null) c.drawBitmap(bg, Rect(bg.width * 3 / 10, bg.height * 4 / 10, bg.width * 7 / 10, bg.height * 9 / 10),
-                    RectF(x + 2, y + 2, x + cell - 2, y + cell - 2), filter)
                 c.save(); c.clipRect(x + 2, y + 2, x + cell - 2, y + cell - 2)
                 HamletCharacterArt.draw(c, false, HamletEnemies.visual(k, r), x + cell / 2f, y + cell - 22f,
                     cell * (if (k == 6) .62f else .5f), .4f, mirrored = true, fx = 1.1f)
@@ -573,20 +597,7 @@ class HamletApercuTest {
             }
         }
         ecrire("ennemis_poses", poseSheet)
-        for ((nom, r) in listOf("combat_tours" to 3, "combat_marais" to 4)) {
-            val w = 1080; val h = 520
-            val scene = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
-            val sc = Canvas(scene)
-            decor(r)?.let { val k = maxOf(w.toFloat() / it.width, h.toFloat() / it.height); sc.drawBitmap(it, null, RectF(0f, 0f, it.width * k, it.height * k), filter) }
-            val size = minOf(w * .21f, h * .27f)
-            val heroes = listOf(32, 8, 30, 13)
-            val slots = listOf(.32f to .43f, .32f to .63f, .18f to .32f, .18f to .455f)
-            for ((i, id) in heroes.withIndex()) HamletCharacterArt.draw(sc, true, id, w * slots[i].first, h * slots[i].second, size, .4f, fx = 1.2f + i)
-            val foes = listOf(6, 0, 2, 4)
-            val foeSlots = listOf(.60f to .43f, .60f to .63f, .68f to .32f, .68f to .455f)
-            for ((i, k) in foes.withIndex()) HamletCharacterArt.draw(sc, false, HamletEnemies.visual(k, r), w * foeSlots[i].first, h * foeSlots[i].second,
-                size * (if (k == 6) 1.25f else 1f), .4f, mirrored = true, fx = 1.4f + i)
-            ecrire(nom, scene)
-        }
+        for ((nom, r) in listOf("combat_tours" to 3, "combat_marais" to 4))
+            ecrire(nom, combat(r, 1080, 520, .4f, intArrayOf(32, 8, 30, 13), intArrayOf(6, 0, 2, 4)))
     }
 }
