@@ -1,0 +1,38 @@
+{
+  "id": "macaria_carbonaria",
+  "name": "Philobie enfumée",
+  "scientific": "Macaria carbonaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Netted Mountain Moth est répertorié ici sous le nom Macaria carbonaria, mais une révision moléculaire de 2024 l’a transféré dans le genre Epelis.",
+    "identification": "C’est un petit papillon de nuit géométridé ; la fiche britannique indique une envergure d’environ 23 à 25 mm.",
+    "habitat": "En Grande-Bretagne, il est connu des landes et versants montagneux des Highlands écossais ; les données européennes incluent aussi des landes et des tourbières hautes.",
+    "diet": "Les chenilles se nourrissent de busserole ; une fiche norvégienne cite aussi le romarin des marais comme plante hôte.",
+    "behavior": "Les adultes volent le jour au printemps et au début de l’été et visitent les fleurs présentes dans leur milieu.",
+    "reproduction": "Les sources consultées indiquent ses plantes hôtes larvaires, mais ne donnent ni taille de ponte ni nombre de générations vérifiés.",
+    "ecology": "Contrairement au Rannoch Looper, désormais placé dans Speranza et dont les chenilles mangent la myrtille, cette espèce est associée à la busserole et à d’autres plantes nordiques des landes et tourbières.",
+    "conservation": "Une étude écossaise de sites le décrit comme limité en Grande-Bretagne aux Highlands et signale sa faible capacité de dispersion et sa vulnérabilité aux changements d’habitat ; ces observations sont régionales et anciennes."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-carbonaria/",
+      "title": "Philobie enfumée — UKMoths"
+    },
+    {
+      "url": "https://artsdatabanken.no/arter/takson/223998/beskrivelse",
+      "title": "Epelis carbonaria — Centre norvégien d’information sur la biodiversité"
+    },
+    {
+      "url": "https://doi.org/10.1111/syen.12638",
+      "title": "Phylogénie moléculaire des Géométridés d’Europe du Nord — Systematic Entomology"
+    },
+    {
+      "url": "https://www.nature.scot/sites/default/files/2017-07/Publication%202015%20-%20Site%20Condition%20Monitoring%20of%20invertebrates%20at%20Morrone%20Birkwood%20SSSI.pdf",
+      "title": "Suivi de l’état des invertébrés du SSSI Morrone Birkwood — NatureScot, rapport 639"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/596",
+      "title": "Epelis carbonaria — Lepidoptera Mundi"
+    }
+  ]
+}

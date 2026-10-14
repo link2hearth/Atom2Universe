@@ -1,0 +1,189 @@
+{
+  "id": "luciocyprinus_langsoni",
+  "scientific": "Luciocyprinus langsoni",
+  "group": "fish",
+  "name": {
+    "en": "Shuttle-like Carp",
+    "fr": "Luciocyprinus langsoni"
+  },
+  "sections": {
+    "overview": {
+      "en": "Luciocyprinus langsoni is a freshwater carp of the cyprinid family, described from northern Vietnam and reported from China and Vietnam.",
+      "fr": "Luciocyprinus langsoni est une carpe d’eau douce de la famille des cyprinidés, décrite du nord du Vietnam et signalée en Chine et au Vietnam."
+    },
+    "identification": {
+      "en": "FishBase gives a reported maximum standard length of 79 cm and a published maximum weight of 15 kg; these are maxima, not typical adult sizes.",
+      "fr": "FishBase rapporte une longueur standard maximale de 79 cm et une masse maximale publiée de 15 kg ; ce sont des maxima, pas des tailles adultes habituelles."
+    },
+    "habitat": {
+      "en": "Available summaries place it in freshwater, in a benthopelagic environment; detailed habitat preferences were not established in the sources reviewed.",
+      "fr": "Les synthèses disponibles le situent en eau douce, dans un environnement benthopélagique ; les sources consultées ne précisent pas ses préférences fines d’habitat."
+    },
+    "diet": {
+      "en": "The reviewed sources do not report its diet.",
+      "fr": "Les sources consultées ne décrivent pas son régime."
+    },
+    "behavior": {
+      "en": "The reviewed sources do not describe its behavior.",
+      "fr": "Les sources consultées ne décrivent pas son comportement."
+    },
+    "reproduction": {
+      "en": "The reviewed sources do not describe its breeding.",
+      "fr": "Les sources consultées ne décrivent pas sa reproduction."
+    },
+    "ecology": {
+      "en": "A 2024 mitochondrial-genome study reports two named species in Luciocyprinus: this species and L. striolatus; genetic data alone do not establish their ecological differences.",
+      "fr": "Une étude de 2024 sur le génome mitochondrial rapporte deux espèces nommées dans le genre Luciocyprinus : celle-ci et L. striolatus ; les données génétiques seules n’établissent pas leurs différences écologiques."
+    },
+    "conservation": {
+      "en": "A 2025 international freshwater-fish assessment table lists it as Vulnerable. Vietnam also includes it on a priority-protection list.",
+      "fr": "Un tableau international d’évaluation des poissons d’eau douce de 2025 le classe vulnérable. Le Vietnam l’inscrit aussi sur une liste d’espèces prioritaires pour la protection."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Luciocyprinus langsoni — Eschmeyer’s Catalog of Fishes, California Academy of Sciences",
+        "fr": "Luciocyprinus langsoni — Catalogue des poissons d’Eschmeyer, California Academy of Sciences"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=3404",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The catalog records the valid name, northern Vietnamese type locality, freshwater habitat, and distribution in China and Vietnam."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 18,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Luciocyprinus langsoni — FishBase",
+        "fr": "Luciocyprinus langsoni — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/54737",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "diet",
+        "habitat",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase lists freshwater, benthopelagic habitat and published maxima of 79 cm standard length and 15 kg; its summary does not detail diet, behavior or breeding.",
+        "The concise FishBase account has no information on feeding, behavior, or reproduction; those fields remain undescribed here rather than inferred."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 25,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Complete Mitochondrial Genome of Luciocyprinus langsoni — Animals / PubMed Central",
+        "fr": "Génome mitochondrial complet de Luciocyprinus langsoni — Animals / PubMed Central"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11675621/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2024 study describes the genus as including the two reported species L. langsoni and L. striolatus and focuses on mitochondrial genetics, not comparative ecology."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 25,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Loài thủy sản nguy cấp, quý, hiếm được ưu tiên bảo vệ — National Biodiversity Conservation Agency of Vietnam",
+        "fr": "Espèces aquatiques menacées, rares et précieuses à protéger en priorité — Agence nationale vietnamienne de conservation de la biodiversité"
+      },
+      "url": "https://nbca.gov.vn/doi-tuong-bao-ton/loai-nguy-cap-quy-hiem/loai-nguy-cap-quy-hiem/loai-thuy-san-nguy-cap-quy-hiem-duoc-uu-tien-bao-ve/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Vietnamese national biodiversity authority includes Cá măng giả, Luciocyprinus langsoni, in the national list of aquatic species prioritized for protection."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 20,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Freshwater fish annex — Convention on Migratory Species, COP15 (2025)",
+        "fr": "Annexe sur les poissons d’eau douce — Convention sur les espèces migratrices, COP15 (2025)"
+      },
+      "url": "https://www.cms.int/sites/default/files/document/2025-11/cms_cop15_doc.25.6.1_annex1_freshwater-fish_e.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The CMS freshwater-fish annex reproduces an IUCN conservation-status listing of Vulnerable for L. langsoni and shows its transboundary basin and country distribution."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 22,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific natural history is very poorly represented in the accessible material reviewed; diet, behavior and reproduction are left explicitly undescribed. FishBase maxima are published extremes and should not be read as typical sizes. The conservation source is a 2025 compilation of status data and a Vietnamese list entry, not a new population survey."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the account deliberately short because accessible primary and institutional sources are sparse; cross-checked range and maxima with the California Academy of Sciences and FishBase, and kept the limited genus comparison separate from behavioral claims."
+}

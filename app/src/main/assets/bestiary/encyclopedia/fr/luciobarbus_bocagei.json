@@ -1,0 +1,30 @@
+{
+  "id": "luciobarbus_bocagei",
+  "name": "Barbeau ibérique",
+  "scientific": "Luciobarbus bocagei",
+  "group": "fish",
+  "sections": {
+    "overview": "Le Barbeau ibérique est un cyprinidé d’eau douce natif des bassins versants atlantiques de la péninsule Ibérique.",
+    "identification": "Il possède une bouche protractile tournée vers le bas, deux paires de barbillons et le dernier rayon dorsal dentelé ; les mâles développent des tubercules nuptiaux sur la tête.",
+    "habitat": "Il fréquente rivières et ruisseaux, souvent les secteurs moyens ou aval, profonds et plus lents ; il utilise aussi les retenues.",
+    "diet": "Il consomme surtout des détritus et des larves d’insectes du fond, notamment des chironomes, ainsi que d’autres petites ressources aquatiques.",
+    "behavior": "Au printemps, les adultes remontent les cours d’eau pour frayer ; l’espèce effectue aussi des déplacements au sein du réseau fluvial lorsque les conditions changent.",
+    "reproduction": "La ponte a lieu au printemps, souvent sur du gravier dans une eau assez peu profonde et plus rapide ; la femelle creuse un sillon peu profond pour les œufs.",
+    "ecology": "Une synthèse espagnole identifie Luciobarbus comizo comme son parent phylogénétique le plus proche.",
+    "conservation": "La fiche du CSIC citée rapporte une catégorie mondiale de préoccupation mineure dans l’évaluation UICN de 2008. La synthèse nationale espagnole de 2011 classe l’espèce comme vulnérable en Espagne."
+  },
+  "sources": [
+    {
+      "url": "https://www.vertebradosibericos.org/peces/lucboc.html",
+      "title": "Barbeau ibérique — Encyclopédie virtuelle des vertébrés d’Espagne, Musée national des sciences naturelles (CSIC)"
+    },
+    {
+      "url": "https://www.mitra-nature.uevora.pt/Especies-e-habitats/Peixes/Cyprinidae/Luciobarbus-bocagei",
+      "title": "Luciobarbus bocagei — Biodiversité de la Mitra, Université d’Évora"
+    },
+    {
+      "url": "https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/inventarios-nacionales/2011_doadrio_et_al_seguimiento_ictiofauna_iberica_opt_tcm30-544759.pdf",
+      "title": "Poissons continentaux d’Espagne — ministère espagnol de la Transition écologique et du Défi démographique"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "id": "lobophora_halterata",
+  "scientific": "Lobophora halterata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Seraphim",
+    "fr": "Lobophore à balanciers"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Seraphim is a geometrid moth found across parts of Europe.",
+      "fr": "La Lobophore à balanciers est une phalène présente dans plusieurs régions d’Europe."
+    },
+    "identification": {
+      "en": "The male has conspicuous lobes on the hindwings. It can be confused with the paler, more uniform Early Tooth-striped (*Trichopteryx carpinata*), which lacks its broad dark basal forewing band.",
+      "fr": "Le mâle porte des lobes bien visibles aux ailes postérieures. L’espèce peut être confondue avec *Trichopteryx carpinata*, plus claire et uniforme, qui n’a pas sa large bande sombre à la base de l’aile antérieure."
+    },
+    "habitat": {
+      "en": "In Britain, adults inhabit woodland and fly mainly in spring; larvae feed on aspen and other poplars.",
+      "fr": "En Grande-Bretagne, les adultes fréquentent les bois et volent surtout au printemps; les chenilles mangent le tremble et d’autres peupliers."
+    },
+    "diet": {
+      "en": "The caterpillars feed on aspen (*Populus tremula*) and other poplars (*Populus* spp.).",
+      "fr": "Les chenilles se nourrissent de tremble (*Populus tremula*) et d’autres peupliers (*Populus* spp.)."
+    },
+    "behavior": {
+      "en": "Adults are attracted to light, which helps explain records from moth-trapping surveys.",
+      "fr": "Les adultes sont attirés par la lumière, ce qui explique les observations issues de suivis par pièges lumineux."
+    },
+    "reproduction": {
+      "en": "The reviewed accounts describe the adult flight and larval food plants but give no egg-laying details.",
+      "fr": "Les fiches consultées décrivent le vol des adultes et les plantes nourricières des chenilles, mais ne précisent pas la ponte."
+    },
+    "ecology": {
+      "en": "Local occurrence can track the distribution of its food trees, as regional records note for aspen and poplars.",
+      "fr": "La présence locale peut suivre la répartition de ses arbres nourriciers, comme le signalent des observations régionales pour le tremble et les peupliers."
+    },
+    "conservation": {
+      "en": "A French regional database lists no threat evaluation and warns that its regional presence data have not been consolidated by experts; this is not a global assessment.",
+      "fr": "Une base régionale française ne fournit pas d’évaluation de menace et précise que les données régionales n’ont pas été consolidées par des experts; il ne s’agit pas d’une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Seraphim — UKMoths",
+        "fr": "Lobophore à balanciers — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/lobophora-halterata/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "UK account documents seasonal flight and food plants."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 8,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lobophora halterata — LepiWiki (German)",
+        "fr": "Lobophora halterata — LepiWiki (allemand)"
+      },
+      "url": "https://lepiforum.org/wiki/page/Lobophora_halterata",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "German LepiWiki records distribution and lookalike characters."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 7,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lobophora halterata — French FAUNA species reference",
+        "fr": "Lobophora halterata — référentiel espèces FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248764",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "French regional database caveats."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 4,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lobophora halterata — Lepidoptera Mundi European species page",
+        "fr": "Lobophora halterata — fiche européenne Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/426",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "European checklist entry."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 3,
+        "total": 3,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Seraphim — Somerset Moths",
+        "fr": "Lobophore à balanciers — Somerset Moths"
+      },
+      "url": "https://www.somersetmoths.org/species/lobophora-halterata",
+      "supports": [
+        "reproduction",
+        "habitat"
+      ],
+      "facts": [
+        "British regional account."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 3,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The UK flight and habitat details are regional and should not be generalized to the whole European range.",
+    "The French regional dataset is explicitly not an expert-consolidated status assessment."
+  ],
+  "review_note": "Cross-checked British field accounts, German diagnostic notes and French regional records; used Trichopteryx carpinata only as an identification comparison because its profile is absent.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,34 @@
+{
+  "id": "libellula_incesta",
+  "name": "La voluptueuse",
+  "scientific": "Libellula incesta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La Voluptueuse est une libellule d’Amérique du Nord, présente principalement dans l’est des États-Unis et le sud-est du Canada.",
+    "identification": "Les mâles adultes ont le corps bleu ardoise et la face sombre ; les femelles et les jeunes mâles sont bruns, avec une bande dorsale foncée. Chaque aile porte une tache sombre près de son bord antérieur externe. Elle ressemble à la Libellule aux ailes barrées (L. axilena), mais celle-ci s’en distingue par ses barres alaires sombres ; voir sa fiche.",
+    "habitat": "Elle fréquente les étangs et autres eaux calmes, souvent près des bois ; certaines sources régionales la signalent aussi le long de cours d’eau lents.",
+    "diet": "Les adultes capturent des insectes en vol ; les sources consultées ne précisent ni la composition de ses proies ni le régime des larves.",
+    "behavior": "Les mâles se perchent au bord de l’eau et défendent de petits territoires ; les femelles pondent dans l’eau ou sur des plantes aquatiques, parfois sous la garde du mâle.",
+    "reproduction": "Les femelles déposent leurs œufs dans l’eau ou à sa surface, souvent sur la végétation aquatique ; les références examinées ne donnent pas une durée larvaire unique pour toute l’aire.",
+    "ecology": "Parmi les trois Libellula décrites ici, son aire orientale contraste avec celle, occidentale, de L. forensis ; L. luctuosa s’étend plus largement en Amérique du Nord.",
+    "conservation": "La fiche de l’Illinois décrit l’espèce comme commune localement ; cette observation régionale n’établit pas une tendance démographique mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/slaty-skimmer",
+      "title": "Slaty Skimmer — département de la conservation du Missouri"
+    },
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfslatyskimmer.html",
+      "title": "Slaty Skimmer — département des ressources naturelles de l’Illinois"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "Liste des Odonates d’Amérique du Nord, 2024 — OdonataCentral"
+    },
+    {
+      "url": "https://www.bugguide.net/node/view/2650",
+      "title": "Slaty Skimmer — BugGuide"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "macaria_alternata",
+  "name": "Philobie alternée",
+  "scientific": "Macaria alternata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Macaria alternata est un papillon de nuit géométridé aussi appelé Sharp-angled Peacock ; il se confond facilement avec Macaria notata, la Peacock Moth, qui lui ressemble beaucoup.",
+    "identification": "Par rapport à M. notata, elle présente généralement une encoche plus profonde près de la pointe de l’aile antérieure et une bande marginale plus sombre, souvent interrompue ; les spécimens difficiles peuvent nécessiter un examen spécialisé.",
+    "habitat": "Elle fréquente les boisements de feuillus ou mixtes, les clairières et les broussailles ; les observations britanniques comprennent aussi des dunes sableuses.",
+    "diet": "Ses chenilles se nourrissent de plusieurs arbres et arbustes caducifoliés, notamment des saules, de l’aulne, du prunellier et de l’argousier.",
+    "behavior": "Les adultes sont actifs au crépuscule et attirés par les lumières.",
+    "reproduction": "En Belgique, elle présente deux générations adultes du printemps à la fin de l’été, et la chrysalide hiverne sous terre dans un cocon.",
+    "ecology": "Le nom commun et le motif alaire proche peuvent faire confondre l’espèce avec M. notata ; l’encoche plus profonde de l’aile antérieure est un indice utile sur le terrain, mais pas infaillible.",
+    "conservation": "Les sources consultées la signalent dans plusieurs pays européens, mais ne fournissent ni tendance actuelle des effectifs ni évaluation mondiale des menaces."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-alternata/",
+      "title": "Philobie alternée — UKMoths"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5190/",
+      "title": "Macaria alternata — Catalogue des Lépidoptères de Belgique"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/593",
+      "title": "Macaria alternata — Lepidoptera Mundi"
+    }
+  ]
+}

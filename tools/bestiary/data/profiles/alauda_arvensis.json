@@ -12,8 +12,8 @@
       "fr": "L’Alouette des champs est un passereau qui cherche sa nourriture au sol dans les paysages ouverts d’Europe et d’Asie tempérée, jusqu’en Afrique du Nord. Elle fréquente prairies, landes et steppes naturelles ainsi que les champs cultivés. Son plumage brun strié la camoufle au sol, tandis que le vol chanté prolongé du mâle le rend visible au-dessus du territoire. Les déplacements varient selon les régions : certaines populations restent près de leurs sites de reproduction toute l’année, tandis que celles des régions froides ou septentrionales gagnent le sud ou l’ouest en hiver."
     },
     "identification": {
-      "en": "This compact bird has streaked brown upperparts, a pale underside, marked breast and short raisable crest. The sexes look alike, though British ringing samples show males average larger. Long broad wings and white outer tail feathers show in flight. Compared with the smaller woodlark, the skylark has a longer tail and lacks its pale eyebrow. Mottled plumage conceals it as it walks and feeds among low plants; undulating flight and pale wing edges help identify it in the air. BTO live-bird measurements give mean adult mass of 39.7 g in males and 35.5 g in females; mean wing length is 114.2 mm and 104 mm respectively. These UK sample means complement the reported larger average size of males.",
-      "fr": "Cet oiseau trapu a le dessus brun strié, le dessous clair, la poitrine marquée et une courte huppe relevable. Les sexes se ressemblent, bien que les mâles soient en moyenne plus grands dans les échantillons britanniques. Les longues ailes larges et les rectrices externes blanches se remarquent en vol. Plus grande et à queue plus longue que l’Alouette lulu, elle n’a pas son sourcil pâle marqué. Son plumage moucheté la camoufle dans les herbes basses et sur le sol nu, où elle marche et se nourrit. Son vol ondulé et les bords pâles de ses ailes aident à l’identifier. Les mesures du BTO sur des oiseaux vivants donnent une masse adulte moyenne de 39,7 g chez les mâles et 35,5 g chez les femelles ; la longueur d’aile moyenne est respectivement de 114,2 mm et 104 mm. Ces moyennes britanniques précisent la taille plus élevée des mâles déjà signalée."
+      "en": "This compact bird has streaked brown upperparts, a pale underside, marked breast and short raisable crest. The sexes look alike, though British ringing samples show males average larger. Long broad wings and white outer tail feathers show in flight. Compared with the smaller woodlark, the skylark has a longer tail and lacks its pale eyebrow. Mottled plumage conceals it as it walks and feeds among low plants; undulating flight and pale wing edges help identify it in the air. BTO live-bird measurements give mean adult mass of 39.7 g in males and 35.5 g in females; mean wing length is 114.2 mm and 104 mm respectively. These UK sample means complement the reported larger average size of males. The smaller Woodlark (Lullula arborea) has a shorter tail and a pale eyebrow that meets across the nape; see its profile for the reciprocal comparison.",
+      "fr": "Cet oiseau trapu a le dessus brun strié, le dessous clair, la poitrine marquée et une courte huppe relevable. Les sexes se ressemblent, bien que les mâles soient en moyenne plus grands dans les échantillons britanniques. Les longues ailes larges et les rectrices externes blanches se remarquent en vol. Plus grande et à queue plus longue que l’Alouette lulu, elle n’a pas son sourcil pâle marqué. Son plumage moucheté la camoufle dans les herbes basses et sur le sol nu, où elle marche et se nourrit. Son vol ondulé et les bords pâles de ses ailes aident à l’identifier. Les mesures du BTO sur des oiseaux vivants donnent une masse adulte moyenne de 39,7 g chez les mâles et 35,5 g chez les femelles ; la longueur d’aile moyenne est respectivement de 114,2 mm et 104 mm. Ces moyennes britanniques précisent la taille plus élevée des mâles déjà signalée. L’Alouette lulu (Lullula arborea), plus petite, a la queue plus courte et un sourcil pâle qui se rejoint sur la nuque ; voir sa fiche pour la comparaison réciproque."
     },
     "habitat": {
       "en": "Skylarks use open ground with low or patchy vegetation: natural steppe, heath, saltmarsh and mountain grassland as well as crops and pasture. A breeding site allows movement and display but also offers cover for a shallow ground nest. Tall crops obstruct access; bare ground conceals little. Birds may leave a field as vegetation grows too high. In winter, stubbles provide spilled grain and weed seeds. The species depends on a mosaic of open ground, low cover and food rather than on one crop.",
@@ -166,6 +166,20 @@
       ],
       "facts": [
         "Cornell distinguishes leaving the nest at eight to ten days from flight at 16–20 days after hatching, and records feeding by both parents; describes open habitats, seasonal diet and song flights."
+      ]
+    },
+    {
+      "title": {
+        "en": "Woodlark — RSPB",
+        "fr": "Alouette lulu — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodlark",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "RSPB describes the Woodlark as smaller than a Skylark, with a pale eyebrow meeting across the nape and a noticeably short tail."
       ]
     }
   ],

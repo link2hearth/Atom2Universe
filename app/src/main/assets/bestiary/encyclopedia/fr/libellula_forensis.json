@@ -1,0 +1,38 @@
+{
+  "id": "libellula_forensis",
+  "name": "L’élégante",
+  "scientific": "Libellula forensis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette libellule est indigène de l’ouest de l’Amérique du Nord, où elle fréquente surtout les étangs et les lacs.",
+    "identification": "Deux taches sombres sur chacune de ses quatre ailes expliquent son nom anglais. La Libellule gracieuse (Libellula pulchella), qui lui ressemble, présente en plus des marques sombres près des extrémités des ailes. Ce bestiaire décrit aussi la Voluptueuse de l’est (L. incesta) et la Mélancolique, à répartition plus étendue (L. luctuosa).",
+    "habitat": "Les fiches de terrain la signalent dans les étangs, les lacs et les cours d’eau lents.",
+    "diet": "Les adultes capturent des insectes volants au corps mou ; les larves aquatiques tendent des embuscades à d’autres invertébrés et peuvent prendre de petits poissons ou des têtards.",
+    "behavior": "Les adultes chassent depuis un perchoir, tandis que les larves attendent le passage de proies parmi la végétation immergée et la vase.",
+    "reproduction": "Les femelles pondent en plongeant l’extrémité de l’abdomen dans les eaux peu profondes des étangs ou des lacs.",
+    "ecology": "Son aire occidentale contraste avec celle, orientale, de L. incesta, tandis que L. luctuosa occupe une plus vaste partie de l’Amérique du Nord ; toutes trois appartiennent au genre Libellula.",
+    "conservation": "La liste canadienne des Odonates de 2024 donne le rang provincial S4 pour la Colombie-Britannique ; ce rang régional n’est pas une évaluation mondiale de la population."
+  },
+  "sources": [
+    {
+      "url": "https://www.isu.edu/digitalatlas/biology/dragonflies/",
+      "title": "Eight-spotted Skimmer — atlas numérique de l’université d’État de l’Idaho"
+    },
+    {
+      "url": "https://unsm-ento.unl.edu/Odonata/lifo.html",
+      "title": "Libellula forensis — libellules du Nebraska, université du Nebraska"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "Liste des Odonates d’Amérique du Nord, 2024 — OdonataCentral"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/Canada_Odonata_Checklist_April2024.pdf",
+      "title": "Liste des Odonates du Canada — OdonataCentral"
+    },
+    {
+      "url": "https://mapress.com/zt/article/download/zootaxa.5410.1.1/52869",
+      "title": "Les libellules et demoiselles du Canada — Zootaxa 2024"
+    }
+  ]
+}

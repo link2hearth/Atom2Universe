@@ -1,0 +1,143 @@
+{
+  "id": "red_crossbill",
+  "scientific": "Loxia curvirostra",
+  "group": "birds",
+  "name": {
+    "en": "Red Crossbill",
+    "fr": "Bec-croisé des sapins"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Red Crossbill is a finch of conifer forests across the Northern Hemisphere, where it tracks changing cone crops.",
+      "fr": "Le Bec-croisé des sapins est un fringille des forêts de conifères de l’hémisphère Nord, dont il suit les variations de production des cônes."
+    },
+    "identification": {
+      "en": "Its mandible tips cross, helping it pry open cone scales; adult males are usually red, while females are greenish or yellowish.",
+      "fr": "L’extrémité de ses mandibules se croise, ce qui l’aide à ouvrir les écailles des cônes ; les mâles adultes sont généralement rouges, les femelles verdâtres ou jaunâtres."
+    },
+    "habitat": {
+      "en": "It uses natural and planted conifer woods, especially where mature cones are available.",
+      "fr": "Il fréquente les forêts de conifères naturelles ou plantées, surtout là où des cônes mûrs sont disponibles."
+    },
+    "diet": {
+      "en": "Conifer seeds are its main food, extracted from cones with the crossed bill; adults also feed seeds to their chicks.",
+      "fr": "Les graines de conifères constituent sa nourriture principale ; il les extrait des cônes avec son bec croisé et en donne aussi aux poussins."
+    },
+    "behavior": {
+      "en": "Its movements are nomadic and can carry it far from its usual range when local cone crops fail.",
+      "fr": "Ses déplacements sont nomades et peuvent l’éloigner fortement de son aire habituelle lorsque les récoltes locales de cônes manquent."
+    },
+    "reproduction": {
+      "en": "Breeding is flexible and may occur in any season when cone seeds are sufficiently abundant to support a brood.",
+      "fr": "La reproduction est flexible et peut avoir lieu en toute saison si les graines de cônes sont assez abondantes pour nourrir une nichée."
+    },
+    "ecology": {
+      "en": "Cornell notes that Red Crossbill populations form distinct ecological or vocal “types”, but whether some merit species status remains unsettled; this caution also matters when comparing it with other crossbills.",
+      "fr": "Cornell indique que les populations de Becs-croisés des sapins forment des « types » écologiques ou vocaux distincts, mais le statut d’espèce de certains reste débattu ; cette réserve compte aussi lorsqu’on les compare aux autres becs-croisés."
+    },
+    "conservation": {
+      "en": "The consulted species account describes it as widespread and not globally threatened; local populations may still differ.",
+      "fr": "La fiche consultée le décrit comme largement réparti et non menacé à l’échelle mondiale ; les situations locales peuvent toutefois différer."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Red Crossbill Overview — Cornell Lab of Ornithology",
+        "fr": "Bec-croisé des sapins — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/red_crossbill",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell describes conifer-forest use, nomadic irruptions, cone-seed dependence, flexible breeding in response to cone crops, and unresolved boundaries among ecological or vocal types."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 23,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bec-croisé des sapins — Oiseaux.net",
+        "fr": "Bec-croisé des sapins — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/bec-croise.des.sapins.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "French account describes crossed mandibles, sexual colour differences, use of conifer forests and cones, seed extraction, and widespread global status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 20,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bec-croisé des sapins — SHNA-OFAB species account",
+        "fr": "Bec-croisé des sapins — fiche de la SHNA-OFAB"
+      },
+      "url": "https://ressources.shna-ofab.fr/fr/fiches-especes/bec-croise-des-sapins-loxia-curvirostra_45_T4603.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "This French regional nature organization describes the conifer habitat and specialized cone-seed diet."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 13,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Crossbill types are differentiated in vocalizations, morphology and cone use, but their taxonomic rank is unresolved in the cited Cornell account. Cone availability and breeding timing vary among places and years."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Cornell Lab material with a French ornithological account; treated the debated status of crossbill types as uncertainty rather than settled taxonomy."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "macaria_alternata",
+  "name": "Sharp-angled Peacock",
+  "scientific": "Macaria alternata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Macaria alternata is a geometrid moth also known as the Sharp-angled Peacock; it is readily confused with its close look-alike, Macaria notata, the Peacock Moth.",
+    "identification": "Compared with M. notata, it usually has a deeper notch near the forewing tip and a darker, often broken edge band, but difficult specimens may need expert examination.",
+    "habitat": "It occurs in deciduous and mixed woodland, clearings and scrub; British records also include sand dunes.",
+    "diet": "Its caterpillars feed on several deciduous shrubs and trees, including willows, alder, blackthorn and sea-buckthorn.",
+    "behavior": "Adults are active around dusk and are attracted to lights.",
+    "reproduction": "In Belgium it has two adult generations from spring into late summer, and the pupa overwinters underground in a cocoon.",
+    "ecology": "The shared name and similar wing pattern can obscure its distinction from M. notata, so the deeper forewing notch is a useful but not infallible field clue.",
+    "conservation": "The sources consulted document it across several European countries but do not provide a current population trend or global threat assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-alternata/",
+      "title": "Sharp-angled Peacock — UKMoths"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5190/",
+      "title": "Macaria alternata — Catalogue of the Lepidoptera of Belgium"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/593",
+      "title": "Macaria alternata — Lepidoptera Mundi"
+    }
+  ]
+}

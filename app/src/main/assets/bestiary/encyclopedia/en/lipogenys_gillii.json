@@ -1,0 +1,42 @@
+{
+  "id": "lipogenys_gillii",
+  "name": "Spiny sucker eel",
+  "scientific": "Lipogenys gillii",
+  "group": "fish",
+  "sections": {
+    "overview": "*Lipogenys gillii* is a rarely seen deep-sea fish originally described from the western North Atlantic. Modern fish catalogues place it in Notacanthidae, although older works treated *Lipogenys* as its own family.",
+    "identification": "Its distinctive sucker-like mouth is one feature separating it from related deep-sea fishes.",
+    "habitat": "It lives on the seabed, recorded at about 600–2,000 m off Atlantic Canada and the United States. A specimen has also been confirmed from the Hawaiian Archipelago, but its full distribution remains unresolved.",
+    "diet": "It draws sediment into its sucker-like mouth and feeds mainly on the organic material it contains.",
+    "behavior": "It is rarely encountered, and many aspects of its biology remain poorly known.",
+    "reproduction": "The sources consulted provide too little species-specific information to describe its reproduction reliably.",
+    "ecology": "A second species in the genus, *Lipogenys hyalinumvelum*, was described from Portugal in 2024; its translucent gill-cover flap distinguishes it from *L. gillii*.",
+    "conservation": "FishBase reports no IUCN Red List evaluation for this species; lack of assessment is not evidence that it faces no risk."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/docrep/pdf/009/y4161e/y4161e05.pdf",
+      "title": "Lipogenys gillii — FAO species identification guide"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?family=Notacanthidae&tbl=species",
+      "title": "Eschmeyer’s Catalog of Fishes — Notacanthidae records"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/4506",
+      "title": "Lipogenys gillii — FishBase species summary"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jfb.15769",
+      "title": "New species of Lipogenys from Portugal — Journal of Fish Biology (2024)"
+    },
+    {
+      "url": "https://waves-vagues.dfo-mpo.gc.ca/Library/110180_P1.pdf",
+      "title": "Poissons de la côte atlantique du Canada — DFO species guide (French)"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s10228-011-0225-3",
+      "title": "Deep-sea spiny eels from Hawaii — Ichthyological Research"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "lycia_lapponaria",
+  "name": "Boarmie de Laponie",
+  "scientific": "Lycia lapponaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Lycia lapponaria est un papillon de nuit géométridé des hautes terres fraîches ; en Grande-Bretagne, il est limité aux landes humides du centre et du nord de l’Écosse.",
+    "identification": "Le mâle a les ailes antérieures blanchâtres marquées de noir et des marques rouges sur le thorax et l’abdomen, tandis que la femelle est aptère.",
+    "habitat": "Dans son aire britannique, il fréquente les landes humides où poussent la myrte des marais et les bruyères.",
+    "diet": "Les chenilles consomment plusieurs plantes des landes, dont la myrte des marais, la bruyère et la myrtille.",
+    "behavior": "Les adultes émergent au printemps ; la femelle aptère ne peut pas voler, contrairement au mâle.",
+    "reproduction": "La chrysalide hiverne et les chenilles se nourrissent durant l’été sur leurs plantes hôtes.",
+    "ecology": "Une évaluation écossaise de sites décrit ce papillon comme localisé et dépendant des tourbières qui maintiennent ses plantes nourricières larvaires.",
+    "conservation": "La même évaluation signale sa répartition britannique localisée, mais il s’agit d’une ancienne étude de sites, et non d’une évaluation mondiale récente de la Liste rouge."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/lycia-lapponaria/",
+      "title": "Boarmie de Laponie — UKMoths"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.249",
+      "title": "Boarmie de Laponie — Hantsmoths"
+    },
+    {
+      "url": "https://www.nature.scot/sites/default/files/2017-10/Publication%202017%20-%20A%20revision%20of%20invertebrate%20features%20of%20designated%20sites%20in%20Scotland.pdf",
+      "title": "Révision des espèces invertébrées des sites protégés d’Écosse — NatureScot, rapport 1007"
+    }
+  ]
+}

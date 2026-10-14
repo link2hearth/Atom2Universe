@@ -1,0 +1,163 @@
+{
+  "id": "limonia_nubeculosa",
+  "scientific": "Limonia nubeculosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common Cave Limoniid",
+    "fr": "Limonia nubeculosa"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small crane fly belongs to the family Limoniidae; adults are often found in woodland and cave entrances.",
+      "fr": "Cette petite tipule appartient à la famille des Limoniidae ; les adultes se rencontrent souvent dans les bois et près des entrées de grottes."
+    },
+    "identification": {
+      "en": "The adult is about 9–11 millimetres long, with patterned wings and three dark rings on the yellow front femora.",
+      "fr": "L’adulte mesure environ 9–11 millimètres ; ses ailes sont dessinées et ses fémurs antérieurs jaunes portent trois anneaux sombres."
+    },
+    "habitat": {
+      "en": "It occurs in wooded places and is frequently recorded in the entrance zones of caves and mines, where adults rest during the warmer part of the year.",
+      "fr": "Elle fréquente les milieux boisés et est souvent signalée dans les zones d’entrée des grottes et des mines, où les adultes se reposent pendant la saison chaude."
+    },
+    "diet": {
+      "en": "Larvae have been recorded in several kinds of decomposing material, including leaf mould and rotting wood; their precise feeding habits are not detailed here.",
+      "fr": "Les larves ont été trouvées dans diverses matières en décomposition, dont le terreau de feuilles et le bois pourri ; leur alimentation précise n’est pas détaillée ici."
+    },
+    "behavior": {
+      "en": "The adult enters caves temporarily to rest, so it is a trogloxene rather than an obligate cave species.",
+      "fr": "L’adulte entre temporairement dans les grottes pour s’y reposer : l’espèce est trogloxène, et non cavernicole obligatoire."
+    },
+    "reproduction": {
+      "en": "Larvae develop outside the adult cave-roosting sites, in wet organic material such as leaf litter or decaying wood; the sources do not give a single development schedule.",
+      "fr": "Les larves se développent hors des gîtes cavernicoles des adultes, dans des matières organiques humides comme la litière ou le bois mort ; les sources ne donnent pas de durée unique de développement."
+    },
+    "ecology": {
+      "en": "Its seasonal use of cave entrances links surface woodland habitats with underground spaces; a German cave-conservation group selected it as Cave Animal of the Year 2019.",
+      "fr": "Son usage saisonnier des entrées de grottes relie les habitats boisés de surface aux milieux souterrains ; une association allemande de protection des grottes l’a choisie comme animal cavernicole de l’année 2019."
+    },
+    "conservation": {
+      "en": "The European catalogue and regional records document a broad presence, but the sources reviewed do not establish a global population trend or conservation assessment.",
+      "fr": "Le catalogue européen et les données régionales documentent une présence étendue, mais les sources examinées n’établissent ni tendance démographique mondiale ni évaluation de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Cave Limoniid — Association of German Cave and Karst Researchers",
+        "fr": "Limonie cavernicole commune — association allemande des chercheurs sur les grottes et le karst"
+      },
+      "url": "https://hoehlentier.de/en/common-cave-limoniid/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "German cave-research association documents seasonal adult cave use and the 2019 Cave Animal of the Year designation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 17,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Limonia nubeculosa — NatureSpot species account",
+        "fr": "Limonia nubeculosa — fiche espèce NatureSpot"
+      },
+      "url": "https://www.naturespot.org/species/limonia-nubeculosa",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "British account gives adult size and femoral marks and reports larvae in rotting wood."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 14,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catalogue of the Craneflies of the World: Limonia nubeculosa — Naturalis Biodiversity Center",
+        "fr": "Catalogue mondial des tipules : Limonia nubeculosa — centre de biodiversité Naturalis"
+      },
+      "url": "https://ccw.naturalis.nl/detail.php?id=10626",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist catalogue records the species across Europe and cites larval records from leaf mould, soil, wood and fungi; substrates vary among studies."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 159,
+        "notes_words": 22,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Guide to cavernicolous species in Lorraine — French Federation of Speleology",
+        "fr": "Guide de terrain pour l’identification d’espèces cavernicoles en Lorraine — Fédération française de spéléologie"
+      },
+      "url": "https://geb.ffspeleo.fr/IMG/pdf/guidebiospeologiecpepesca4.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "French speleology field guide describes adults near cave entrances, classifies the species as trogloxene and gives its diagnostic femoral markings."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 20,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Larval habitats vary among records, including wet organic material, rotting wood and aquatic mud. Cave classifications also differ: the French field guide calls it trogloxene and the German cave association subtroglophile."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared specialist European cranefly catalogue records with British field observations and German-, French- and English-language cave accounts. Because larval substrate reports conflict or cover several habitats, the profile keeps this variation explicit. No close Limonia species profile is currently available for a reciprocal comparison."
+}

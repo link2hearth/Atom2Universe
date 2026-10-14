@@ -1,0 +1,34 @@
+{
+  "id": "lymnocryptes_minimus",
+  "name": "Jack Snipe",
+  "scientific": "Lymnocryptes minimus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Jack Snipe is a secretive migratory wader and a winter visitor to Britain.",
+    "identification": "At 17–19 cm long, it is smaller and shorter-billed than the Common Snipe, Gallinago gallinago, and often crouches in cover until approached closely.",
+    "habitat": "It breeds in wet grassland, bogs and marshes in northern Europe and Russia, then uses vegetated wetlands and flooded ground during migration and winter.",
+    "diet": "Its food includes adult and larval insects, worms, small snails, and some seeds and aquatic plant material.",
+    "behavior": "When flushed, it usually makes a short, low flight and drops back into cover, unlike the Common Snipe’s more conspicuous zigzag escape.",
+    "reproduction": "The usual clutch has four eggs, incubated by the female. It breeds in the far north during the warmer months.",
+    "ecology": "Its camouflage and habit of remaining motionless make it easy to overlook, so British records may understate how often it occurs.",
+    "conservation": "The current BTO account lists it as globally Least Concern, while the LPO identifies wetland loss and degradation and lead poisoning as pressures."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/jack-snipe",
+      "title": "Jack Snipe — BTO BirdFacts"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/becassine-sourde",
+      "title": "Bécassine sourde — Ligue pour la Protection des Oiseaux"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22693133A86640472.en",
+      "title": "Lymnocryptes minimus — IUCN Red List, BirdLife International assessment"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/jack-snipe",
+      "title": "Jack Snipe — RSPB"
+    }
+  ]
+}

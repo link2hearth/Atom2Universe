@@ -1,0 +1,170 @@
+{
+  "id": "libellula_incesta",
+  "scientific": "Libellula incesta",
+  "group": "invertebrates",
+  "name": {
+    "en": "Slaty Skimmer",
+    "fr": "La voluptueuse"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Slaty Skimmer is a North American dragonfly found mainly in the eastern United States and adjacent southeastern Canada.",
+      "fr": "La Voluptueuse est une libellule d’Amérique du Nord, présente principalement dans l’est des États-Unis et le sud-est du Canada."
+    },
+    "identification": {
+      "en": "Mature males have a slate-blue body and dark face, while females and immature males are brown with a dark dorsal stripe. Each wing has a dark spot near its outer leading edge. It resembles the Bar-winged Skimmer (L. axilena), but dark wing bars distinguish that species; see its profile.",
+      "fr": "Les mâles adultes ont le corps bleu ardoise et la face sombre ; les femelles et les jeunes mâles sont bruns, avec une bande dorsale foncée. Chaque aile porte une tache sombre près de son bord antérieur externe. Elle ressemble à la Libellule aux ailes barrées (L. axilena), mais celle-ci s’en distingue par ses barres alaires sombres ; voir sa fiche."
+    },
+    "habitat": {
+      "en": "It frequents ponds and other still waters, often near woodland; some regional accounts also record it along slow streams.",
+      "fr": "Elle fréquente les étangs et autres eaux calmes, souvent près des bois ; certaines sources régionales la signalent aussi le long de cours d’eau lents."
+    },
+    "diet": {
+      "en": "Adults catch flying insects; the sources consulted do not quantify its prey or describe the larval diet in detail.",
+      "fr": "Les adultes capturent des insectes en vol ; les sources consultées ne précisent ni la composition de ses proies ni le régime des larves."
+    },
+    "behavior": {
+      "en": "Males perch at the water’s edge and defend small territories; females lay eggs in water or on aquatic plants while males may guard them.",
+      "fr": "Les mâles se perchent au bord de l’eau et défendent de petits territoires ; les femelles pondent dans l’eau ou sur des plantes aquatiques, parfois sous la garde du mâle."
+    },
+    "reproduction": {
+      "en": "Females deposit eggs in or over water, often onto aquatic vegetation; the references reviewed do not establish one larval development time across the range.",
+      "fr": "Les femelles déposent leurs œufs dans l’eau ou à sa surface, souvent sur la végétation aquatique ; les références examinées ne donnent pas une durée larvaire unique pour toute l’aire."
+    },
+    "ecology": {
+      "en": "Among the three Libellula described here, its eastern range contrasts with western L. forensis; L. luctuosa extends farther across North America.",
+      "fr": "Parmi les trois Libellula décrites ici, son aire orientale contraste avec celle, occidentale, de L. forensis ; L. luctuosa s’étend plus largement en Amérique du Nord."
+    },
+    "conservation": {
+      "en": "The Illinois account describes the species as common locally; that regional observation does not establish a global population trend.",
+      "fr": "La fiche de l’Illinois décrit l’espèce comme commune localement ; cette observation régionale n’établit pas une tendance démographique mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Slaty Skimmer — Missouri Department of Conservation",
+        "fr": "Slaty Skimmer — département de la conservation du Missouri"
+      },
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/slaty-skimmer",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Missouri field guide describes the slate-blue mature male, striped brown female and immature male, wing spots and still-water habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 19,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Slaty Skimmer — Illinois Department of Natural Resources",
+        "fr": "Slaty Skimmer — département des ressources naturelles de l’Illinois"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfslatyskimmer.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Illinois DNR describes territorial perching, egg laying on aquatic plants, female resemblance to L. vibrans, and reports the species as common locally."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 22,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata, 2024 — OdonataCentral",
+        "fr": "Liste des Odonates d’Amérique du Nord, 2024 — OdonataCentral"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Checklist documents the eastern and southern range of L. incesta and contrasts it with western L. forensis and broadly distributed L. luctuosa."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 22,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Slaty Skimmer — BugGuide",
+        "fr": "Slaty Skimmer — BugGuide"
+      },
+      "url": "https://www.bugguide.net/node/view/2650",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "North American species account reports adult predation on flying insects and describes pond-edge territorial and egg-laying behavior."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 17,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Habitat and flight season vary regionally; the Illinois seasonal range is not generalized to the entire species. Female resemblance to L. vibrans is reported regionally and may not apply throughout the range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked two state conservation field guides, an Odonata range checklist and a North American species account. Cross-references to L. forensis and L. luctuosa distinguish same-genus profiles; the comparison with L. vibrans reflects documented identification overlap."
+}

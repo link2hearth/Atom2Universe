@@ -1,0 +1,30 @@
+{
+  "id": "libellula_luctuosa",
+  "name": "Widow Skimmer",
+  "scientific": "Libellula luctuosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Widow Skimmer is a medium-sized dragonfly, about 42–50 millimetres long, found across much of the United States and parts of southern Canada and Mexico.",
+    "identification": "Broad dark bands cover the wing bases; mature males develop a pale band near the middle of each wing. The male abdomen becomes powdery white with age, while females and young males retain brown-and-yellow markings.",
+    "habitat": "It is most often seen beside ponds and lakes, but observations also come from slow streams and nearby open ground.",
+    "diet": "Adults hunt flying insects and may pursue other dragonflies; the available references do not give a detailed account of larval prey.",
+    "behavior": "Males perch on waterside vegetation and defend territories against other dragonflies; they may also guard females during egg laying.",
+    "reproduction": "This is an aquatic-breeding dragonfly, but the species accounts reviewed do not give specific egg-laying details or a consistent larval development time.",
+    "ecology": "Its range extends more broadly across North America than those of L. forensis and L. incesta, two other Libellula described here.",
+    "conservation": "The range references document occurrence, not a current global population trend or conservation status; none is inferred here."
+  },
+  "sources": [
+    {
+      "url": "https://home.nps.gov/miss/learn/nature/widowskimmer.htm",
+      "title": "Widow Skimmer — U.S. National Park Service"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "A Checklist of North American Odonata, 2024 — OdonataCentral"
+    },
+    {
+      "url": "https://www.dragonflysocietyamericas.org/es/blog/2025/1/1/especie-del-mes",
+      "title": "Especie del mes: Libellula luctuosa — Dragonfly Society of the Americas"
+    }
+  ]
+}

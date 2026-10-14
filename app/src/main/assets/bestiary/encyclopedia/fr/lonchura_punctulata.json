@@ -1,0 +1,30 @@
+{
+  "id": "lonchura_punctulata",
+  "name": "Capucin damier",
+  "scientific": "Lonchura punctulata",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Capucin damier est un petit estrildidé d’Asie ; des populations introduites se sont établies dans certaines régions hors de son aire native.",
+    "identification": "Son dessous clair porte des marques sombres en écailles ; son bec robuste est adapté aux graines.",
+    "habitat": "Il fréquente prairies, broussailles, cultures et autres milieux semi-ouverts, souvent près des habitations.",
+    "diet": "Les graines constituent l’essentiel de son alimentation ; des observations australiennes signalent aussi du charognage occasionnel près des fermes et des déchets.",
+    "behavior": "Il recherche sa nourriture en groupe et peut former des bandes de plusieurs centaines d’individus hors de la période de reproduction.",
+    "reproduction": "Dans son aire native d’Asie du Sud-Est, il peut se reproduire toute l’année lorsque les conditions sont favorables ; les deux sexes couvent.",
+    "ecology": "Il cherche sa nourriture au sol et se suspend aussi aux tiges pour atteindre les graines.",
+    "conservation": "L’évaluation mondiale citée par Cornell le classe en préoccupation mineure et indique une tendance stable ; cela ne décrit pas chacune des populations locales introduites."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Scaly-breasted_Munia/lifehistory",
+      "title": "Scaly-breasted Munia : histoire naturelle — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://birdlife.org.au/bird-profiles/nutmeg-mannikin/",
+      "title": "Capucin damier — BirdLife Australia"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/scaly-breasted.munia.html",
+      "title": "Capucin damier — Oiseaux.net"
+    }
+  ]
+}

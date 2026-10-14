@@ -32,8 +32,8 @@
       "fr": "En Grande-Bretagne, la première ponte a lieu en moyenne vers le 30 avril ; elle compte typiquement quatre œufs, pour une seule nichée. La femelle couve seule pendant 18 à 20 jours. Les poussins, couverts de duvet, quittent le nid et s’envolent après environ 19 à 20 jours, soignés par les deux parents. La reproduction débute en général à deux ans."
     },
     "ecology": {
-      "en": "As a predator of earthworms and larvae, the snipe is part of wet-grassland food webs, and it falls prey to red foxes, carrion crows and stoats. It is also hunted for food and sport, an estimated 1.5 million birds a year in Europe. In Britain, steep declines have been noted in lowland wet grassland.",
-      "fr": "Prédatrice de vers de terre et de larves, la bécassine fait partie des chaînes alimentaires des prairies humides, et elle est la proie du renard roux, de la corneille noire et de l’hermine. Elle est aussi chassée pour la table et le sport, à raison d’environ 1,5 million d’oiseaux par an en Europe. En Grande-Bretagne, de fortes baisses ont été constatées dans les prairies humides de plaine."
+      "en": "As a predator of earthworms and larvae, the snipe is part of wet-grassland food webs, and it falls prey to red foxes, carrion crows and stoats. It is also hunted for food and sport, an estimated 1.5 million birds a year in Europe. In Britain, steep declines have been noted in lowland wet grassland. Unlike the smaller, shorter-billed Jack Snipe (Lymnocryptes minimus), it usually flies off in a conspicuous zigzag; see that profile for the reciprocal comparison.",
+      "fr": "Prédatrice de vers de terre et de larves, la bécassine fait partie des chaînes alimentaires des prairies humides, et elle est la proie du renard roux, de la corneille noire et de l’hermine. Elle est aussi chassée pour la table et le sport, à raison d’environ 1,5 million d’oiseaux par an en Europe. En Grande-Bretagne, de fortes baisses ont été constatées dans les prairies humides de plaine. Contrairement à la Bécassine sourde (Lymnocryptes minimus), plus petite et au bec plus court, elle s’envole généralement en zigzaguant de façon visible ; voir cette fiche pour la comparaison réciproque."
     },
     "conservation": {
       "en": "The IUCN lists the species as Least Concern worldwide, but numbers have declined across Europe since 1980. In the UK it is Amber-listed: about 67,000 breeding pairs in 2016, with a breeding range 31.5% smaller than in 1968–72. A snipe typically lives about three years once adult, and the oldest ringed bird exceeded 16.",
@@ -97,6 +97,20 @@
       "facts": [
         "Length about 23–28 cm, bill about 6.4 cm; probes wet soil; Northumberland diet study: earthworms about 61% and crane fly larvae about 24% by dry mass; males drum by diving, air passing through outer tail feathers; females prefer dominant males.",
         "Predators: red fox, carrion crow, ermine; hunted, about 1.5 million birds per year in Europe."
+      ]
+    },
+    {
+      "title": {
+        "en": "Jack Snipe — RSPB",
+        "fr": "Bécassine sourde — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/jack-snipe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "RSPB says the Jack Snipe is smaller and more compact than the Common Snipe, has a much shorter bill, and usually flies low and drops back into cover; Common Snipe flies off high."
       ]
     }
   ],

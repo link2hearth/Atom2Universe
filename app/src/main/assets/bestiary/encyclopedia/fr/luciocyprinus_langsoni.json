@@ -1,0 +1,38 @@
+{
+  "id": "luciocyprinus_langsoni",
+  "name": "Luciocyprinus langsoni",
+  "scientific": "Luciocyprinus langsoni",
+  "group": "fish",
+  "sections": {
+    "overview": "Luciocyprinus langsoni est une carpe d’eau douce de la famille des cyprinidés, décrite du nord du Vietnam et signalée en Chine et au Vietnam.",
+    "identification": "FishBase rapporte une longueur standard maximale de 79 cm et une masse maximale publiée de 15 kg ; ce sont des maxima, pas des tailles adultes habituelles.",
+    "habitat": "Les synthèses disponibles le situent en eau douce, dans un environnement benthopélagique ; les sources consultées ne précisent pas ses préférences fines d’habitat.",
+    "diet": "Les sources consultées ne décrivent pas son régime.",
+    "behavior": "Les sources consultées ne décrivent pas son comportement.",
+    "reproduction": "Les sources consultées ne décrivent pas sa reproduction.",
+    "ecology": "Une étude de 2024 sur le génome mitochondrial rapporte deux espèces nommées dans le genre Luciocyprinus : celle-ci et L. striolatus ; les données génétiques seules n’établissent pas leurs différences écologiques.",
+    "conservation": "Un tableau international d’évaluation des poissons d’eau douce de 2025 le classe vulnérable. Le Vietnam l’inscrit aussi sur une liste d’espèces prioritaires pour la protection."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=3404",
+      "title": "Luciocyprinus langsoni — Catalogue des poissons d’Eschmeyer, California Academy of Sciences"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/54737",
+      "title": "Luciocyprinus langsoni — FishBase"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11675621/",
+      "title": "Génome mitochondrial complet de Luciocyprinus langsoni — Animals / PubMed Central"
+    },
+    {
+      "url": "https://nbca.gov.vn/doi-tuong-bao-ton/loai-nguy-cap-quy-hiem/loai-nguy-cap-quy-hiem/loai-thuy-san-nguy-cap-quy-hiem-duoc-uu-tien-bao-ve/",
+      "title": "Espèces aquatiques menacées, rares et précieuses à protéger en priorité — Agence nationale vietnamienne de conservation de la biodiversité"
+    },
+    {
+      "url": "https://www.cms.int/sites/default/files/document/2025-11/cms_cop15_doc.25.6.1_annex1_freshwater-fish_e.pdf",
+      "title": "Annexe sur les poissons d’eau douce — Convention sur les espèces migratrices, COP15 (2025)"
+    }
+  ]
+}

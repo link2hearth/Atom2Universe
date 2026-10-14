@@ -1,0 +1,30 @@
+{
+  "id": "red_crossbill",
+  "name": "Red Crossbill",
+  "scientific": "Loxia curvirostra",
+  "group": "birds",
+  "sections": {
+    "overview": "The Red Crossbill is a finch of conifer forests across the Northern Hemisphere, where it tracks changing cone crops.",
+    "identification": "Its mandible tips cross, helping it pry open cone scales; adult males are usually red, while females are greenish or yellowish.",
+    "habitat": "It uses natural and planted conifer woods, especially where mature cones are available.",
+    "diet": "Conifer seeds are its main food, extracted from cones with the crossed bill; adults also feed seeds to their chicks.",
+    "behavior": "Its movements are nomadic and can carry it far from its usual range when local cone crops fail.",
+    "reproduction": "Breeding is flexible and may occur in any season when cone seeds are sufficiently abundant to support a brood.",
+    "ecology": "Cornell notes that Red Crossbill populations form distinct ecological or vocal “types”, but whether some merit species status remains unsettled; this caution also matters when comparing it with other crossbills.",
+    "conservation": "The consulted species account describes it as widespread and not globally threatened; local populations may still differ."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/red_crossbill",
+      "title": "Red Crossbill Overview — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/bec-croise.des.sapins.html",
+      "title": "Bec-croisé des sapins — Oiseaux.net"
+    },
+    {
+      "url": "https://ressources.shna-ofab.fr/fr/fiches-especes/bec-croise-des-sapins-loxia-curvirostra_45_T4603.html",
+      "title": "Bec-croisé des sapins — SHNA-OFAB species account"
+    }
+  ]
+}

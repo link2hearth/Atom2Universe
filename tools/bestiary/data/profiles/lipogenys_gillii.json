@@ -1,0 +1,216 @@
+{
+  "id": "lipogenys_gillii",
+  "scientific": "Lipogenys gillii",
+  "group": "fish",
+  "name": {
+    "en": "Spiny sucker eel",
+    "fr": "Lipogenys gillii"
+  },
+  "sections": {
+    "overview": {
+      "en": "*Lipogenys gillii* is a rarely seen deep-sea fish originally described from the western North Atlantic. Modern fish catalogues place it in Notacanthidae, although older works treated *Lipogenys* as its own family.",
+      "fr": "*Lipogenys gillii* est un poisson des grands fonds rarement observé, décrit à l’origine dans l’Atlantique nord-ouest. Les catalogues actuels le placent dans les Notacanthidae, alors que des ouvrages plus anciens traitaient *Lipogenys* comme une famille distincte."
+    },
+    "identification": {
+      "en": "Its distinctive sucker-like mouth is one feature separating it from related deep-sea fishes.",
+      "fr": "Sa bouche caractéristique en forme de ventouse le distingue d’autres poissons des grands fonds."
+    },
+    "habitat": {
+      "en": "It lives on the seabed, recorded at about 600–2,000 m off Atlantic Canada and the United States. A specimen has also been confirmed from the Hawaiian Archipelago, but its full distribution remains unresolved.",
+      "fr": "Il vit sur le fond, à environ 600–2,000 m au large du Canada atlantique et des États-Unis. Un spécimen a aussi été confirmé dans l’archipel d’Hawaï, mais sa répartition complète reste mal définie."
+    },
+    "diet": {
+      "en": "It draws sediment into its sucker-like mouth and feeds mainly on the organic material it contains.",
+      "fr": "Il aspire les sédiments avec sa bouche en ventouse et se nourrit principalement de la matière organique qu’ils contiennent."
+    },
+    "behavior": {
+      "en": "It is rarely encountered, and many aspects of its biology remain poorly known.",
+      "fr": "Il est rarement observé et de nombreux aspects de sa biologie restent mal connus."
+    },
+    "reproduction": {
+      "en": "The sources consulted provide too little species-specific information to describe its reproduction reliably.",
+      "fr": "Les sources consultées fournissent trop peu d’informations propres à l’espèce pour décrire sa reproduction de façon fiable."
+    },
+    "ecology": {
+      "en": "A second species in the genus, *Lipogenys hyalinumvelum*, was described from Portugal in 2024; its translucent gill-cover flap distinguishes it from *L. gillii*.",
+      "fr": "Une seconde espèce du genre, *Lipogenys hyalinumvelum*, a été décrite au Portugal en 2024; le repli translucide de son opercule la distingue de *L. gillii*."
+    },
+    "conservation": {
+      "en": "FishBase reports no IUCN Red List evaluation for this species; lack of assessment is not evidence that it faces no risk.",
+      "fr": "FishBase ne rapporte aucune évaluation de cette espèce par la Liste rouge de l’UICN; l’absence d’évaluation ne prouve pas l’absence de risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lipogenys gillii — FAO species identification guide",
+        "fr": "Lipogenys gillii — guide d’identification des espèces de la FAO"
+      },
+      "url": "https://www.fao.org/docrep/pdf/009/y4161e/y4161e05.pdf",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FAO account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 2,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Notacanthidae records",
+        "fr": "Catalogue des poissons d’Eschmeyer — notices des Notacanthidae"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?family=Notacanthidae&tbl=species",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Current fish catalogue."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 3,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lipogenys gillii — FishBase species summary",
+        "fr": "Lipogenys gillii — résumé FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/4506",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "FishBase lists no IUCN evaluation."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 5,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New species of Lipogenys from Portugal — Journal of Fish Biology (2024)",
+        "fr": "Nouvelle espèce de Lipogenys du Portugal — Journal of Fish Biology (2024)"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jfb.15769",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "2024 paper describes the congener and diagnostic opercular flap."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 9,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Poissons de la côte atlantique du Canada — DFO species guide (French)",
+        "fr": "Poissons de la côte atlantique du Canada — guide des espèces du MPO"
+      },
+      "url": "https://waves-vagues.dfo-mpo.gc.ca/Library/110180_P1.pdf",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French-language Atlantic fish guide."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 4,
+        "total": 4,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Deep-sea spiny eels from Hawaii — Ichthyological Research",
+        "fr": "Poissons épineux des grands fonds d’Hawaï — Ichthyological Research"
+      },
+      "url": "https://link.springer.com/article/10.1007/s10228-011-0225-3",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The paper documents a central-Pacific specimen of Lipogenys gillii in the Hawaiian Archipelago."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 13,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Its reported range is patchy and some sources extrapolate beyond confirmed records; the profile keeps the eastern Atlantic and Pacific occurrences distinct from the core western Atlantic account.",
+    "Reproduction and many other life-history traits remain poorly documented.",
+    "The family assignment changed between older Lipogenyidae treatments and current Notacanthidae classification."
+  ],
+  "review_note": "Cross-checked the French DFO guide and FAO account with the current Eschmeyer catalogue, FishBase and the 2024 description of a congener.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

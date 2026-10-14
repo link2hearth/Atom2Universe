@@ -1,0 +1,170 @@
+{
+  "id": "liomys_adspersus",
+  "scientific": "Liomys adspersus",
+  "group": "mammals",
+  "name": {
+    "en": "Panamanian spiny pocket mouse",
+    "fr": "Liomys adspersus"
+  },
+  "sections": {
+    "overview": {
+      "en": "The catalogue name *Liomys adspersus* is the former combination for the currently accepted *Heteromys adspersus*, a spiny pocket mouse endemic to Panama.",
+      "fr": "Le nom du catalogue, *Liomys adspersus*, est une ancienne combinaison de l’espèce aujourd’hui acceptée comme *Heteromys adspersus*, une souris à poche de Panama endémique du pays."
+    },
+    "identification": {
+      "en": "Like other Panamanian pocket mice, it has fur-lined cheek pouches, somewhat stiff dorsal hairs, dark upperparts and pale underparts.",
+      "fr": "Comme d’autres souris à poche du Panama, elle possède des abajoues garnies de poils, une pilosité dorsale un peu raide, le dessus sombre et le ventre pâle."
+    },
+    "habitat": {
+      "en": "Known mainly from central Panama’s Pacific slope, it occupies dry forest, thorn scrub and weedy fields and tolerates some disturbance.",
+      "fr": "Connue surtout du centre du Panama et de son versant pacifique, elle vit en forêt sèche, dans les fourrés épineux et les champs en friche, et tolère certaines perturbations."
+    },
+    "diet": {
+      "en": "It eats palm nuts, other seeds and plant material, as well as insects.",
+      "fr": "Elle mange des noix de palmiers, d’autres graines et des végétaux, ainsi que des insectes."
+    },
+    "behavior": {
+      "en": "It carries seeds in its cheek pouches and stores them in burrows or shallow pits; individuals are solitary, although wild home ranges may overlap.",
+      "fr": "Elle transporte les graines dans ses abajoues et les cache dans des terriers ou des fosses peu profondes; les individus sont solitaires, même si leurs domaines vitaux peuvent se chevaucher dans la nature."
+    },
+    "reproduction": {
+      "en": "Breeding is recorded from December to May in central Panama; the season may vary elsewhere.",
+      "fr": "La reproduction est signalée de décembre à mai dans le centre du Panama; sa période peut varier ailleurs."
+    },
+    "ecology": {
+      "en": "Its seed caches make it both a seed predator and a potential seed disperser when some stored seeds are not recovered. The older *Liomys* literature compares it with other spiny pocket mice, while modern classifications place it in *Heteromys*.",
+      "fr": "Ses réserves de graines en font à la fois un prédateur de graines et un disperseur potentiel lorsque certaines graines cachées ne sont pas récupérées. Les anciennes publications sur *Liomys* la comparent à d’autres souris à poche épineuses, tandis que les classifications actuelles la placent dans *Heteromys*."
+    },
+    "conservation": {
+      "en": "The 2016 IUCN assessment lists it as Least Concern, citing its distribution and habitat tolerance; local trends may differ.",
+      "fr": "L’évaluation UICN de 2016 la classe en préoccupation mineure, au vu de sa répartition et de sa tolérance de l’habitat; les tendances locales peuvent différer."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Heteromys adspersus — IUCN Red List 2016 assessment",
+        "fr": "Heteromys adspersus — évaluation 2016 de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-2.RLTS.T12073A22225128.en",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The assessment uses the currently accepted name Heteromys adspersus, summarizes range, habitat, breeding season and 2016 status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 17,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Liomys adspersus — Mammalian Species account",
+        "fr": "Liomys adspersus — fiche Mammalian Species"
+      },
+      "url": "https://academic.oup.com/mspecies/article/doi/10.1644/759/2600828",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The American Society of Mammalogists account describes diet, seed caching, solitary behavior and possible seed dispersal using the historical genus name Liomys."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 22,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Panamanian mammal fauna — Gorgas Memorial Institute (Spanish)",
+        "fr": "Faune des mammifères du Panama — Institut commémoratif Gorgas (espagnol)"
+      },
+      "url": "https://www.gorgas.gob.pa/wp-content/uploads/external/BiblioGorgas/pdf/Estado%20Actual%20de%20la%5DFauna%20de%20Mamiferos%20de%20Panama%20por%20Eustorgio%20Mendez..pdf",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The Spanish-language Panamanian overview describes cheek pouches and stiff hairs with dark dorsal and pale ventral fur in local pocket mice."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 21,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Heteromys adspersus — ASM Mammal Diversity Database",
+        "fr": "Heteromys adspersus — base taxonomique de l’ASM"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1001911/",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "MDD treats the valid taxon under Heteromys, not Liomys."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 9,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species was historically treated as Liomys adspersus; current taxonomic databases place it in Heteromys. The catalogue label is retained for the requested profile ID.",
+    "The IUCN category dates to 2016; local trends may differ.",
+    "Published natural-history observations are sparse and some behavior accounts describe captive observations."
+  ],
+  "review_note": "Cross-checked the modern Heteromys treatment against the 2004 species account and Spanish Panamanian mammal literature; retained the catalogue’s legacy ID while explaining the synonymy.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,34 @@
+{
+  "id": "limonia_nubeculosa",
+  "name": "Limonia nubeculosa",
+  "scientific": "Limonia nubeculosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette petite tipule appartient à la famille des Limoniidae ; les adultes se rencontrent souvent dans les bois et près des entrées de grottes.",
+    "identification": "L’adulte mesure environ 9–11 millimètres ; ses ailes sont dessinées et ses fémurs antérieurs jaunes portent trois anneaux sombres.",
+    "habitat": "Elle fréquente les milieux boisés et est souvent signalée dans les zones d’entrée des grottes et des mines, où les adultes se reposent pendant la saison chaude.",
+    "diet": "Les larves ont été trouvées dans diverses matières en décomposition, dont le terreau de feuilles et le bois pourri ; leur alimentation précise n’est pas détaillée ici.",
+    "behavior": "L’adulte entre temporairement dans les grottes pour s’y reposer : l’espèce est trogloxène, et non cavernicole obligatoire.",
+    "reproduction": "Les larves se développent hors des gîtes cavernicoles des adultes, dans des matières organiques humides comme la litière ou le bois mort ; les sources ne donnent pas de durée unique de développement.",
+    "ecology": "Son usage saisonnier des entrées de grottes relie les habitats boisés de surface aux milieux souterrains ; une association allemande de protection des grottes l’a choisie comme animal cavernicole de l’année 2019.",
+    "conservation": "Le catalogue européen et les données régionales documentent une présence étendue, mais les sources examinées n’établissent ni tendance démographique mondiale ni évaluation de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://hoehlentier.de/en/common-cave-limoniid/",
+      "title": "Limonie cavernicole commune — association allemande des chercheurs sur les grottes et le karst"
+    },
+    {
+      "url": "https://www.naturespot.org/species/limonia-nubeculosa",
+      "title": "Limonia nubeculosa — fiche espèce NatureSpot"
+    },
+    {
+      "url": "https://ccw.naturalis.nl/detail.php?id=10626",
+      "title": "Catalogue mondial des tipules : Limonia nubeculosa — centre de biodiversité Naturalis"
+    },
+    {
+      "url": "https://geb.ffspeleo.fr/IMG/pdf/guidebiospeologiecpepesca4.pdf",
+      "title": "Guide de terrain pour l’identification d’espèces cavernicoles en Lorraine — Fédération française de spéléologie"
+    }
+  ]
+}

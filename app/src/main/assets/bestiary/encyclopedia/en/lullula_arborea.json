@@ -1,0 +1,30 @@
+{
+  "id": "lullula_arborea",
+  "name": "Woodlark",
+  "scientific": "Lullula arborea",
+  "group": "birds",
+  "sections": {
+    "overview": "The Woodlark is a Palearctic lark found in Europe and extending east to Russia.",
+    "identification": "Compared with the Eurasian Skylark (Alauda arvensis), it is smaller and more compact, with a markedly shorter tail and a pale eyebrow that meets behind the head.",
+    "habitat": "It favors dry, well-drained open or semi-open ground with short, sparse grass, including heath, pasture and young woodland.",
+    "diet": "It takes insects and other small invertebrates especially in the warm season, and relies more on seeds in winter.",
+    "behavior": "Some birds breeding in the UK spend winter on the continent.",
+    "reproduction": "It nests on the ground; breeding generally starts earlier in southern populations than farther north, and a pair may raise two broods.",
+    "ecology": "The Eurasian Skylark is a related lark also covered in this Bestiary, but the Woodlark is smaller, shorter-tailed and more likely to use low perches.",
+    "conservation": "The consulted French account gives the global IUCN category as Least Concern; this global label does not rule out local declines."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/alouette.lulu.html",
+      "title": "Alouette lulu — Oiseaux.net"
+    },
+    {
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Alouette-lulu.pdf",
+      "title": "Cahiers d’Habitat « Oiseaux » — Alouette lulu, MNHN / ministère français"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/woodlark",
+      "title": "Woodlark — Royal Society for the Protection of Birds"
+    }
+  ]
+}

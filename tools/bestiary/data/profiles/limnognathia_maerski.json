@@ -1,0 +1,171 @@
+{
+  "id": "limnognathia_maerski",
+  "scientific": "Limnognathia maerski",
+  "group": "invertebrates",
+  "name": {
+    "en": "Maersk's micrognathozoan",
+    "fr": "Micrognathie de Maersk"
+  },
+  "sections": {
+    "overview": {
+      "en": "Limnognathia maerski is a microscopic freshwater animal and one of only two described species in the phylum Micrognathozoa; the other is L. desmeti.",
+      "fr": "Limnognathia maerski est un animal microscopique d’eau douce et l’une des deux seules espèces décrites de l’embranchement des Micrognathozoa ; l’autre est L. desmeti."
+    },
+    "identification": {
+      "en": "Adults are about 0.1–0.15 millimetres long and have a body divided into head, accordion-like thorax and abdomen. Its remarkably complex mouthparts include many tiny hardened jaw elements.",
+      "fr": "L’adulte mesure environ 0,1–0,15 millimètre et son corps comprend une tête, un thorax plissé comme un accordéon et un abdomen. Ses pièces buccales remarquablement complexes comportent de nombreux éléments mandibulaires rigides minuscules."
+    },
+    "habitat": {
+      "en": "It was first found among submerged moss at a cold spring on Disko Island, Greenland; later records include cold freshwater habitats in the Pyrenees.",
+      "fr": "Elle a d’abord été trouvée parmi des mousses immergées dans une source froide de l’île de Disko, au Groenland ; d’autres signalements proviennent ensuite de milieux d’eau douce froide des Pyrénées."
+    },
+    "diet": {
+      "en": "It feeds on decomposing plant material and bacterial films, which are grasped and processed by different parts of its complex jaw apparatus.",
+      "fr": "Elle se nourrit de débris végétaux en décomposition et de biofilms bactériens, saisis puis traités par différentes parties de son complexe mandibulaire."
+    },
+    "behavior": {
+      "en": "Cilia let it glide over surfaces and swim briefly through the water; a ventral adhesive pad helps it attach to the substrate.",
+      "fr": "Des cils lui permettent de glisser sur les surfaces et de nager brièvement dans l’eau ; une ventouse ciliée ventrale l’aide à adhérer au substrat."
+    },
+    "reproduction": {
+      "en": "Only females have been found, so parthenogenesis is presumed; the reproductive cycle is not fully understood.",
+      "fr": "Seules des femelles ont été trouvées, d’où l’hypothèse d’une parthénogenèse ; le cycle reproducteur reste mal connu."
+    },
+    "ecology": {
+      "en": "In a 2025 study, the Greenland and Pyrenean populations remained within L. maerski, while the genetically distinct Crozet population was described as L. desmeti; no visible morphological difference separated them.",
+      "fr": "Dans une étude de 2025, les populations du Groenland et des Pyrénées restent attribuées à L. maerski, tandis que la population génétiquement distincte des Crozet a été décrite comme L. desmeti ; aucune différence morphologique visible ne les distinguait."
+    },
+    "conservation": {
+      "en": "Its microscopic size and scattered records make its distribution difficult to assess; the sources reviewed do not establish a global conservation status or population trend.",
+      "fr": "Sa taille microscopique et ses signalements dispersés rendent sa répartition difficile à évaluer ; les sources examinées n’établissent ni statut mondial de conservation ni tendance démographique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Phylogenomics of the rarest animals: a second species of Micrognathozoa identified by machine learning — Proceedings of the Royal Society B",
+        "fr": "Phylogénomique des animaux les plus rares : découverte par apprentissage automatique d’une deuxième espèce de Micrognathozoa — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11836703/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "2025 paper recognizes L. desmeti but retains Greenland and Pyrenees populations in L. maerski."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 14,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Detailed reconstruction of the musculature in Limnognathia maerski — Frontiers in Zoology",
+        "fr": "Reconstitution détaillée de la musculature de Limnognathia maerski — Frontiers in Zoology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4333266/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Peer-reviewed study describes jaws moving during feeding and substrate grasping, as well as ciliary locomotion."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 15,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Limnognathia maerski — World Register of Marine Species",
+        "fr": "Limnognathia maerski — registre mondial des espèces marines"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?id=1335354&p=taxdetails",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "WoRMS lists this accepted freshwater species and its moss-bearing cold spring type locality in Greenland; mature females measure about 105–152 µm."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 21,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Micrognathozoa — Lex.dk, University of Copenhagen subject contributor",
+        "fr": "Micrognathozoa — Lex.dk, contribution d’un spécialiste de l’université de Copenhague"
+      },
+      "url": "https://lex.dk/Micrognathozoa",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Danish expert account describes the species, its food (decaying plants and bacterial films), and female-only observations leading to presumed parthenogenesis."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 20,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The natural diet and reproductive mode are incompletely known; parthenogenesis is an inference from observed females, not a directly established exclusive mode. Morphology alone cannot distinguish L. maerski and L. desmeti in the 2025 study."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the 2025 Royal Society taxonomic study, a peer-reviewed study of feeding and musculature, WoRMS and a Danish expert-written overview. The relationship to the recently described L. desmeti is stated explicitly to avoid repeating obsolete claims that Micrognathozoa has only one species."
+}

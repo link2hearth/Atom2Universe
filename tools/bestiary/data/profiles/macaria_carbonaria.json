@@ -1,0 +1,191 @@
+{
+  "id": "macaria_carbonaria",
+  "scientific": "Macaria carbonaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Netted Mountain Moth",
+    "fr": "Philobie enfumée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Netted Mountain Moth is listed here as Macaria carbonaria, but a 2024 molecular revision transferred it to Epelis carbonaria.",
+      "fr": "Le Netted Mountain Moth est répertorié ici sous le nom Macaria carbonaria, mais une révision moléculaire de 2024 l’a transféré dans le genre Epelis."
+    },
+    "identification": {
+      "en": "It is a small geometrid moth; the British account gives a wingspan of about 23–25 mm.",
+      "fr": "C’est un petit papillon de nuit géométridé ; la fiche britannique indique une envergure d’environ 23 à 25 mm."
+    },
+    "habitat": {
+      "en": "In Britain it is known from Scottish Highland moorland and mountain slopes, while European records also include heathland and raised bogs.",
+      "fr": "En Grande-Bretagne, il est connu des landes et versants montagneux des Highlands écossais ; les données européennes incluent aussi des landes et des tourbières hautes."
+    },
+    "diet": {
+      "en": "The caterpillars feed on bearberry; a Norwegian account also lists bog-rosemary as a host plant.",
+      "fr": "Les chenilles se nourrissent de busserole ; une fiche norvégienne cite aussi le romarin des marais comme plante hôte."
+    },
+    "behavior": {
+      "en": "Adults fly by day in spring and early summer and visit flowers growing in the habitat.",
+      "fr": "Les adultes volent le jour au printemps et au début de l’été et visitent les fleurs présentes dans leur milieu."
+    },
+    "reproduction": {
+      "en": "The sources consulted identify its larval host plants but do not give a verified clutch size or brood count.",
+      "fr": "Les sources consultées indiquent ses plantes hôtes larvaires, mais ne donnent ni taille de ponte ni nombre de générations vérifiés."
+    },
+    "ecology": {
+      "en": "Unlike the bilberry-feeding Rannoch Looper, now placed in Speranza, this species is associated with bearberry and other northern heath or bog plants.",
+      "fr": "Contrairement au Rannoch Looper, désormais placé dans Speranza et dont les chenilles mangent la myrtille, cette espèce est associée à la busserole et à d’autres plantes nordiques des landes et tourbières."
+    },
+    "conservation": {
+      "en": "A Scottish site review describes it as confined in Britain to the Highlands and notes low dispersal and vulnerability to habitat change; these are regional, historically based observations.",
+      "fr": "Une étude écossaise de sites le décrit comme limité en Grande-Bretagne aux Highlands et signale sa faible capacité de dispersion et sa vulnérabilité aux changements d’habitat ; ces observations sont régionales et anciennes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Netted Mountain Moth — UKMoths",
+        "fr": "Philobie enfumée — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-carbonaria/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "British account: 23–25 mm wingspan, Scottish Highland moors and mountains, day-flying adults visiting flowers, and larvae feeding on bearberry."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 19,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Epelis carbonaria — Norwegian Biodiversity Information Centre",
+        "fr": "Epelis carbonaria — Centre norvégien d’information sur la biodiversité"
+      },
+      "url": "https://artsdatabanken.no/arter/takson/223998/beskrivelse",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Norwegian account gives a northern and central European range, peatland and heath habitat, and larval food plants including bog-rosemary and bearberry."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 21,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogeny of north European Geometridae — Systematic Entomology",
+        "fr": "Phylogénie moléculaire des Géométridés d’Europe du Nord — Systematic Entomology"
+      },
+      "url": "https://doi.org/10.1111/syen.12638",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Õunap et al. (2024) proposed Epelis carbonaria as the new combination, separating it from Speranza brunneata."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 16,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Site Condition Monitoring of invertebrates at Morrone Birkwood SSSI — NatureScot, report 639",
+        "fr": "Suivi de l’état des invertébrés du SSSI Morrone Birkwood — NatureScot, rapport 639"
+      },
+      "url": "https://www.nature.scot/sites/default/files/2017-07/Publication%202015%20-%20Site%20Condition%20Monitoring%20of%20invertebrates%20at%20Morrone%20Birkwood%20SSSI.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The older Scottish report describes the British species as confined to the Highlands, with poor dispersal and threats including drainage and habitat succession."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 23,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Epelis carbonaria — Lepidoptera Mundi",
+        "fr": "Epelis carbonaria — Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/596",
+      "supports": [
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "The European species account lists moorland, heathland and raised bogs and documents multilingual common names including the French Philobie enfumée."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The illustrated-species inventory retains Macaria carbonaria; recent literature uses Epelis carbonaria, and that current combination is mentioned while the inventory name remains the profile key.",
+    "The Scottish dispersal and pressure information comes from an older, site-focused assessment and does not establish current status across the full range.",
+    "Larval host lists differ among regional sources; only bearberry is consistently supported by the British and Norwegian accounts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked UK, Norwegian and pan-European species resources plus the molecular revision; reciprocal comparison with the inventory entry for the former Macaria brunneata is included."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "lonchura_punctulata",
+  "name": "Scaly-breasted Munia",
+  "scientific": "Lonchura punctulata",
+  "group": "birds",
+  "sections": {
+    "overview": "The Scaly-breasted Munia is a small Asian estrildid finch; populations introduced outside its native range are established in some places.",
+    "identification": "Its pale underparts have dark, scale-like markings; the stout bill is adapted to seeds.",
+    "habitat": "It uses grassland, scrub, crops and other semi-open places, often near people.",
+    "diet": "Seeds make up most of its usual food; Australian observations also report occasional scavenging around farms and refuse.",
+    "behavior": "It forages in groups and can gather in flocks numbering hundreds outside the breeding season.",
+    "reproduction": "In its native Southeast Asian range, it can breed throughout the year when conditions are suitable; both sexes incubate.",
+    "ecology": "It forages from the ground and also hangs from stems to reach seeds.",
+    "conservation": "The global assessment cited by Cornell lists it as Least Concern and reports a stable trend; this does not describe every local introduced population."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Scaly-breasted_Munia/lifehistory",
+      "title": "Scaly-breasted Munia Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://birdlife.org.au/bird-profiles/nutmeg-mannikin/",
+      "title": "Nutmeg Mannikin — BirdLife Australia"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/scaly-breasted.munia.html",
+      "title": "Scaly-breasted Munia — Oiseaux.net"
+    }
+  ]
+}

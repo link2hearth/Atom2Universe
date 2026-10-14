@@ -1,0 +1,147 @@
+{
+  "id": "libellula_luctuosa",
+  "scientific": "Libellula luctuosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "Widow Skimmer",
+    "fr": "La mélancolique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Widow Skimmer is a medium-sized dragonfly, about 42–50 millimetres long, found across much of the United States and parts of southern Canada and Mexico.",
+      "fr": "La Mélancolique est une libellule de taille moyenne, longue d’environ 42–50 millimètres, présente dans une grande partie des États-Unis ainsi que dans le sud du Canada et au Mexique."
+    },
+    "identification": {
+      "en": "Broad dark bands cover the wing bases; mature males develop a pale band near the middle of each wing. The male abdomen becomes powdery white with age, while females and young males retain brown-and-yellow markings.",
+      "fr": "De larges bandes sombres couvrent la base des ailes ; les mâles adultes développent une bande claire près du milieu de chaque aile. Leur abdomen devient blanchâtre et pruineux avec l’âge, tandis que les femelles et les jeunes mâles gardent des marques brunes et jaunes."
+    },
+    "habitat": {
+      "en": "It is most often seen beside ponds and lakes, but observations also come from slow streams and nearby open ground.",
+      "fr": "On l’observe surtout près des étangs et des lacs, mais elle est aussi signalée le long de cours d’eau lents et dans les espaces ouverts voisins."
+    },
+    "diet": {
+      "en": "Adults hunt flying insects and may pursue other dragonflies; the available references do not give a detailed account of larval prey.",
+      "fr": "Les adultes chassent des insectes en vol et peuvent poursuivre d’autres libellules ; les références disponibles ne détaillent pas les proies des larves."
+    },
+    "behavior": {
+      "en": "Males perch on waterside vegetation and defend territories against other dragonflies; they may also guard females during egg laying.",
+      "fr": "Les mâles se perchent sur la végétation riveraine et défendent leur territoire contre d’autres libellules ; ils peuvent aussi garder les femelles pendant la ponte."
+    },
+    "reproduction": {
+      "en": "This is an aquatic-breeding dragonfly, but the species accounts reviewed do not give specific egg-laying details or a consistent larval development time.",
+      "fr": "Cette libellule se reproduit en milieu aquatique, mais les fiches d’espèce examinées ne précisent ni le détail de la ponte ni une durée larvaire constante."
+    },
+    "ecology": {
+      "en": "Its range extends more broadly across North America than those of L. forensis and L. incesta, two other Libellula described here.",
+      "fr": "Son aire couvre une plus vaste partie de l’Amérique du Nord que celles de L. forensis et L. incesta, deux autres Libellula décrites ici."
+    },
+    "conservation": {
+      "en": "The range references document occurrence, not a current global population trend or conservation status; none is inferred here.",
+      "fr": "Les références sur la répartition documentent des présences, pas une tendance démographique ou un statut mondial de conservation actuel ; aucun statut n’en est déduit."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Widow Skimmer — U.S. National Park Service",
+        "fr": "Widow Skimmer — service des parcs nationaux des États-Unis"
+      },
+      "url": "https://home.nps.gov/miss/learn/nature/widowskimmer.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "National Park Service account describes mature male wing and abdomen colour, pond and lake habitat, perching and pursuit of other dragonflies."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 21,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata, 2024 — OdonataCentral",
+        "fr": "Liste des Odonates d’Amérique du Nord, 2024 — OdonataCentral"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Checklist documents a range broader than that of the western L. forensis and eastern L. incesta."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 16,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Especie del mes: Libellula luctuosa — Dragonfly Society of the Americas",
+        "fr": "Espèce du mois : Libellula luctuosa — société américaine des libellules"
+      },
+      "url": "https://www.dragonflysocietyamericas.org/es/blog/2025/1/1/especie-del-mes",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Spanish-language DSA account reports 42–50 mm length, broad dark wing bases, pale male wing bands and sex- and age-related colour changes."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 21,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Checklists differ slightly at range margins; regional records are not treated as a global population assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the U.S. National Park Service species page, a 2024 Odonata checklist and a Spanish-language Dragonfly Society of the Americas account. Cross-references to L. forensis and L. incesta compare range and wing markings without claiming a species-specific phylogenetic ranking."
+}

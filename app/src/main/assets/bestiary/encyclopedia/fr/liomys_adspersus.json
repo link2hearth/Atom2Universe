@@ -1,0 +1,34 @@
+{
+  "id": "liomys_adspersus",
+  "name": "Liomys adspersus",
+  "scientific": "Liomys adspersus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le nom du catalogue, *Liomys adspersus*, est une ancienne combinaison de l’espèce aujourd’hui acceptée comme *Heteromys adspersus*, une souris à poche de Panama endémique du pays.",
+    "identification": "Comme d’autres souris à poche du Panama, elle possède des abajoues garnies de poils, une pilosité dorsale un peu raide, le dessus sombre et le ventre pâle.",
+    "habitat": "Connue surtout du centre du Panama et de son versant pacifique, elle vit en forêt sèche, dans les fourrés épineux et les champs en friche, et tolère certaines perturbations.",
+    "diet": "Elle mange des noix de palmiers, d’autres graines et des végétaux, ainsi que des insectes.",
+    "behavior": "Elle transporte les graines dans ses abajoues et les cache dans des terriers ou des fosses peu profondes; les individus sont solitaires, même si leurs domaines vitaux peuvent se chevaucher dans la nature.",
+    "reproduction": "La reproduction est signalée de décembre à mai dans le centre du Panama; sa période peut varier ailleurs.",
+    "ecology": "Ses réserves de graines en font à la fois un prédateur de graines et un disperseur potentiel lorsque certaines graines cachées ne sont pas récupérées. Les anciennes publications sur *Liomys* la comparent à d’autres souris à poche épineuses, tandis que les classifications actuelles la placent dans *Heteromys*.",
+    "conservation": "L’évaluation UICN de 2016 la classe en préoccupation mineure, au vu de sa répartition et de sa tolérance de l’habitat; les tendances locales peuvent différer."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-2.RLTS.T12073A22225128.en",
+      "title": "Heteromys adspersus — évaluation 2016 de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://academic.oup.com/mspecies/article/doi/10.1644/759/2600828",
+      "title": "Liomys adspersus — fiche Mammalian Species"
+    },
+    {
+      "url": "https://www.gorgas.gob.pa/wp-content/uploads/external/BiblioGorgas/pdf/Estado%20Actual%20de%20la%5DFauna%20de%20Mamiferos%20de%20Panama%20por%20Eustorgio%20Mendez..pdf",
+      "title": "Faune des mammifères du Panama — Institut commémoratif Gorgas (espagnol)"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1001911/",
+      "title": "Heteromys adspersus — base taxonomique de l’ASM"
+    }
+  ]
+}

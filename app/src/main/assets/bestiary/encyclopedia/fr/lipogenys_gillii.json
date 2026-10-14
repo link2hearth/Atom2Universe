@@ -1,0 +1,42 @@
+{
+  "id": "lipogenys_gillii",
+  "name": "Lipogenys gillii",
+  "scientific": "Lipogenys gillii",
+  "group": "fish",
+  "sections": {
+    "overview": "*Lipogenys gillii* est un poisson des grands fonds rarement observé, décrit à l’origine dans l’Atlantique nord-ouest. Les catalogues actuels le placent dans les Notacanthidae, alors que des ouvrages plus anciens traitaient *Lipogenys* comme une famille distincte.",
+    "identification": "Sa bouche caractéristique en forme de ventouse le distingue d’autres poissons des grands fonds.",
+    "habitat": "Il vit sur le fond, à environ 600–2,000 m au large du Canada atlantique et des États-Unis. Un spécimen a aussi été confirmé dans l’archipel d’Hawaï, mais sa répartition complète reste mal définie.",
+    "diet": "Il aspire les sédiments avec sa bouche en ventouse et se nourrit principalement de la matière organique qu’ils contiennent.",
+    "behavior": "Il est rarement observé et de nombreux aspects de sa biologie restent mal connus.",
+    "reproduction": "Les sources consultées fournissent trop peu d’informations propres à l’espèce pour décrire sa reproduction de façon fiable.",
+    "ecology": "Une seconde espèce du genre, *Lipogenys hyalinumvelum*, a été décrite au Portugal en 2024; le repli translucide de son opercule la distingue de *L. gillii*.",
+    "conservation": "FishBase ne rapporte aucune évaluation de cette espèce par la Liste rouge de l’UICN; l’absence d’évaluation ne prouve pas l’absence de risque."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/docrep/pdf/009/y4161e/y4161e05.pdf",
+      "title": "Lipogenys gillii — guide d’identification des espèces de la FAO"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?family=Notacanthidae&tbl=species",
+      "title": "Catalogue des poissons d’Eschmeyer — notices des Notacanthidae"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/4506",
+      "title": "Lipogenys gillii — résumé FishBase"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jfb.15769",
+      "title": "Nouvelle espèce de Lipogenys du Portugal — Journal of Fish Biology (2024)"
+    },
+    {
+      "url": "https://waves-vagues.dfo-mpo.gc.ca/Library/110180_P1.pdf",
+      "title": "Poissons de la côte atlantique du Canada — guide des espèces du MPO"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s10228-011-0225-3",
+      "title": "Poissons épineux des grands fonds d’Hawaï — Ichthyological Research"
+    }
+  ]
+}

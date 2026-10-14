@@ -1,0 +1,34 @@
+{
+  "id": "macaria_brunneata",
+  "name": "Arpenteuse brune",
+  "scientific": "Macaria brunneata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Rannoch Looper est un papillon de nuit géométridé répertorié ici sous le nom Macaria brunneata ; une révision moléculaire de 2024 l’a transféré dans le genre Speranza.",
+    "identification": "En Grande-Bretagne, les adultes volent le jour et se reposent souvent les ailes fermées, à la manière d’un papillon diurne.",
+    "habitat": "En Grande-Bretagne, il est associé aux boisements matures du centre de l’Écosse, même si des migrateurs occasionnels sont observés plus au sud.",
+    "diet": "Les chenilles se nourrissent de myrtille, Vaccinium myrtillus.",
+    "behavior": "En Grande-Bretagne, les adultes apparaissent en juin et juillet et volent de jour.",
+    "reproduction": "Les fiches disponibles indiquent la myrtille comme plante nourricière des chenilles, mais ne précisent ni la taille des pontes ni le nombre de générations.",
+    "ecology": "Les anciennes listes regroupaient l’espèce avec Epelis carbonaria dans Macaria, mais la taxonomie moléculaire récente les place dans des genres distincts.",
+    "conservation": "Butterfly Conservation attribue au Rannoch Looper une priorité moyenne dans sa stratégie écossaise ; il s’agit d’une priorité régionale de planification, et non d’une catégorie mondiale de Liste rouge."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-brunneata/",
+      "title": "Rannoch Looper — UKMoths"
+    },
+    {
+      "url": "https://doi.org/10.1111/syen.12638",
+      "title": "Phylogénie moléculaire des Géométridés d’Europe du Nord — Systematic Entomology"
+    },
+    {
+      "url": "https://butterfly-conservation.org/sites/default/files/2024-02/Scotland%20Conservation%20Strategy%202025.pdf",
+      "title": "Stratégie de conservation de l’Écosse — Butterfly Conservation"
+    },
+    {
+      "url": "https://iriisphytoprotection.qc.ca/fr/insectes-et-autres-invertebres/ravageur/arpenteuse-brune",
+      "title": "Arpenteuse brune — IRIIS, MAPAQ"
+    }
+  ]
+}
