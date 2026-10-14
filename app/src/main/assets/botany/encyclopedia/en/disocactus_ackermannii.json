@@ -1,0 +1,14 @@
+{
+  "id": "disocactus_ackermannii",
+  "sections": [
+    {"title": "Form and habitat", "text": "An epiphytic cactus from southern Mexico, adapted to seasonally dry forest. Its flattened, wavy stems are about 10–70 cm long and 5–7 cm wide."},
+    {"title": "Flowering and fruit", "text": "It bears large red flowers on the flattened stems, followed by fruit. Cultivated plants form trailing clumps about 20–40 cm tall."},
+    {"title": "Edibility", "text": "The taxonomic and horticultural sources consulted do not report established food use; this does not establish that its fruit is edible."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A50425940-2/general-information"},
+    {"title": "KPU Plant Database", "url": "https://plantdatabase.kpu.ca/PlantPrint/dihy"},
+    {"title": "World Flora Online", "url": "https://www.worldfloraonline.org/taxon/wfo-0000652208"}
+  ],
+  "related": []
+}

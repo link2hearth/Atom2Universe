@@ -1,0 +1,13 @@
+{
+  "id": "echinocactus_horizonthalonius",
+  "sections": [
+    {"title": "Port et milieu", "text": "Cactus globuleux à aplati des déserts du Chihuahua, du sud-ouest des États-Unis et du nord du Mexique. Les tiges atteignent généralement 10 à 15 cm de diamètre et sont côtelées, avec de fortes épines."},
+    {"title": "Floraison", "text": "Des fleurs roses apparaissent au sommet de la tige ; elles mesurent environ 4 à 7 cm de long. La croissance lente et la distribution limitée rendent la plante vulnérable à la collecte."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est établi dans les références consultées."}
+  ],
+  "sources": [
+    {"title": "SEINet — Echinocactus horizonthalonius", "url": "https://swbiodiversity.org/seinet/taxa/index.php?taxon=3423"},
+    {"title": "NatureServe Explorer", "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.155968/Echinocactus_horizonthalonius"}
+  ],
+  "related": ["echinocereus_dasyacanthus", "echinopsis_macrogona"]
+}

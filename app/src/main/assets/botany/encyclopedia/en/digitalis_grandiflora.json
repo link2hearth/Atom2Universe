@@ -1,0 +1,14 @@
+{
+  "id": "digitalis_grandiflora",
+  "sections": [
+    {"title": "Form and habitat", "text": "This perennial foxglove grows in open woodland and woodland margins of central and eastern Europe. It forms a clump about 60–90 cm tall and 30–45 cm wide."},
+    {"title": "Flowering", "text": "In summer, cream-yellow tubular flowers with brown veins inside open along an upright stem. They are paler than those of the common foxglove (Digitalis purpurea)."},
+    {"title": "Toxicity", "text": "Like other foxgloves, it contains cardiac glycosides and must not be eaten. All parts are considered poisonous."}
+  ],
+  "sources": [
+    {"title": "Missouri Botanical Garden — Plant Finder", "url": "https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?isprofile=0&st=2&taxonid=287003"},
+    {"title": "Michigan State University — MISIN", "url": "https://learn.misin.msu.edu/webapp/facts/detail/?cname=Yellow+foxglove&id=157&project=misin"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/60453625-2"}
+  ],
+  "related": ["digitalis"]
+}

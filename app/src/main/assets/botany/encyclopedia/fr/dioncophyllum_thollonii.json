@@ -1,0 +1,14 @@
+{
+  "id": "dioncophyllum_thollonii",
+  "sections": [
+    {"title": "Port et répartition", "text": "Liane ligneuse rare des forêts tropicales humides d’Afrique centrale et occidentale. Ses tiges grimpent dans la végétation à l’aide de crochets foliaires."},
+    {"title": "Feuilles et graines", "text": "Les feuilles changent de forme au cours du développement ; certaines feuilles de la plante adulte portent des crochets. Les graines sont munies d’ailes membraneuses qui facilitent leur dispersion."},
+    {"title": "Mode de vie", "text": "Malgré son nom parfois rapproché des plantes carnivores, Dioncophyllum thollonii n’est pas carnivore. Les pièges foliaires décrits chez une autre espèce de la famille ne doivent pas lui être attribués."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A111557-1/general-information"},
+    {"title": "Étude sur les mécanismes foliaires — Phytochemistry", "url": "https://www.sciencedirect.com/science/article/abs/pii/S0031942299005439"},
+    {"title": "Étude sur les graines ailées — PLOS ONE", "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0140653"}
+  ],
+  "related": []
+}

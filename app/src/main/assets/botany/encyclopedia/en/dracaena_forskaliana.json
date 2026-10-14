@@ -1,0 +1,12 @@
+{
+  "id": "dracaena_forskaliana",
+  "sections": [
+    {"title": "Form and range", "text": "A stemless perennial native to tropical Africa and the Arabian Peninsula. It forms a rosette of upright, rigid, narrow leaves up to about 60–65 cm long."},
+    {"title": "Flowers and fruit", "text": "The flower stalk can exceed 75 cm and bears pale flowers. The fruits are globose berries about 7–10 mm in diameter."},
+    {"title": "Edibility", "text": "No reliable food use is reported by the taxonomic source consulted."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A77183292-1/general-information"}
+  ],
+  "related": ["dracaena_cinnabari", "dracaena_fragrans", "dracaena_reflexa"]
+}

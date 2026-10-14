@@ -1,0 +1,12 @@
+{
+  "id": "dracaena_forskaliana",
+  "sections": [
+    {"title": "Port et répartition", "text": "Vivace sans tige apparente, originaire d’Afrique tropicale et de la péninsule Arabique. Elle forme une rosette de feuilles dressées, rigides et étroites, longues jusqu’à environ 60–65 cm."},
+    {"title": "Floraison et fruits", "text": "La hampe florale peut dépasser 75 cm et porte des fleurs pâles. Les fruits sont des baies globuleuses d’environ 7 à 10 mm de diamètre."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est indiqué par la source taxonomique consultée."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A77183292-1/general-information"}
+  ],
+  "related": ["dracaena_cinnabari", "dracaena_fragrans", "dracaena_reflexa"]
+}

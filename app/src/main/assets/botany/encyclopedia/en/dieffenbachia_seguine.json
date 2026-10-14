@@ -1,0 +1,14 @@
+{
+  "id": "dieffenbachia_seguine",
+  "sections": [
+    {"title": "Form and habitat", "text": "A perennial herb in the humid tropical forests of Central America and northern South America. It develops upright stems and broad oval leaves; plants commonly grow to about 1 m."},
+    {"title": "Flowers and fruit", "text": "As in other aroids, tiny flowers are packed on a spadix partly enclosed by a spathe. After pollination, the inflorescence may bear orange to red berries."},
+    {"title": "Toxicity", "text": "The tissues contain needle-shaped calcium oxalate crystals (raphides) that irritate the mouth and eyes. Ingestion can cause pain and swelling; do not taste the plant or handle sap with bare hands."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A86911-1/general-information"},
+    {"title": "Oxford University — Dieffenbachia", "url": "https://herbaria.plants.ox.ac.uk/bol/plants400/Profiles/CD/Dieffenbachia"},
+    {"title": "North Carolina Extension Gardener Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/dieffenbachia-seguine/"}
+  ],
+  "related": []
+}

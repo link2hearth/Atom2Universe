@@ -1,0 +1,13 @@
+{
+  "id": "echinocereus_dasyacanthus",
+  "sections": [
+    {"title": "Form and range", "text": "A clumping cactus of the southwestern United States and northern Mexico. Its cylindrical stems are usually 11–23 cm tall and 4.5–10 cm across, sometimes larger."},
+    {"title": "Flowers and fruit", "text": "The large flowers, about 7–10 cm across, are yellow, sometimes flushed pink to magenta. Purple fruits are described as edible in historical botanical accounts; this is not advice to eat them."},
+    {"title": "Edibility", "text": "Only the fruits are documented as food; the sources do not report the stems as food."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Echinocereus dasyacanthus", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=242415245"},
+    {"title": "Britton & Rose — The Cactaceae, vol. III", "url": "https://publicationsonline.carnegiescience.edu/publications_online/cactaceae/Britton_Rose_Cactaceae_3.pdf"}
+  ],
+  "related": ["echinocactus_horizonthalonius", "echinopsis_macrogona"]
+}

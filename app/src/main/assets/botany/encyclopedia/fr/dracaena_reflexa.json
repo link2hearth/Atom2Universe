@@ -1,0 +1,14 @@
+{
+  "id": "dracaena_reflexa",
+  "sections": [
+    {"title": "Port et répartition", "text": "Arbuste ou petit arbre originaire des Mascareignes et de régions voisines de l’océan Indien. Il atteint souvent 4 à 6 m et porte des feuilles étroites en verticilles, notamment au bout des rameaux."},
+    {"title": "Floraison et fruits", "text": "Les petites fleurs parfumées sont suivies de baies orange à rouge. Cette espèce est plus compacte que le dragonnier de Socotra (D. cinnabari), qui possède une large couronne en parasol."},
+    {"title": "Comestibilité", "text": "Les références consultées ne signalent pas d’usage alimentaire établi."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A534338-1/general-information"},
+    {"title": "Bel Ombre Pedia — Mauritius", "url": "https://belombrepedia.belombre.com/en/node/475"},
+    {"title": "University of Florida IFAS Extension", "url": "https://ask.ifas.ufl.edu/publication/FP187"}
+  ],
+  "related": ["dracaena_cinnabari", "dracaena_fragrans", "dracaena_forskaliana"]
+}

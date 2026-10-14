@@ -1,0 +1,13 @@
+{
+  "id": "dracaena_fragrans",
+  "sections": [
+    {"title": "Form and habitat", "text": "A shrub or small tree of tropical Africa, 1.5–15 m tall depending on conditions. Its evergreen leaves, 20–150 cm long and 2–12 cm wide, cluster at the tops of stems."},
+    {"title": "Flowering and fruit", "text": "Fragrant cream to greenish flowers are borne in panicles. They develop into berries that ripen orange to red."},
+    {"title": "Toxicity", "text": "The plant’s saponins can be toxic to pets, including cats and dogs."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A534207-1/general-information"},
+    {"title": "ASPCA Animal Poison Control — Corn plant", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/corn-plant"}
+  ],
+  "related": ["dracaena_cinnabari", "dracaena_reflexa"]
+}

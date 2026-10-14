@@ -1,0 +1,13 @@
+{
+  "id": "echinocereus_dasyacanthus",
+  "sections": [
+    {"title": "Port et répartition", "text": "Cactus en touffe du sud-ouest des États-Unis et du nord du Mexique. Les tiges cylindriques mesurent généralement 11 à 23 cm de haut et 4,5 à 10 cm de diamètre, parfois davantage."},
+    {"title": "Fleurs et fruits", "text": "Les grandes fleurs, d’environ 7 à 10 cm, sont jaunes, parfois teintées de rose à magenta. Les fruits pourpres sont signalés comme comestibles dans les descriptions botaniques historiques ; cette mention ne constitue pas un conseil de consommation."},
+    {"title": "Comestibilité", "text": "Seuls les fruits sont documentés comme consommés ; les sources ne signalent pas un usage alimentaire des tiges."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Echinocereus dasyacanthus", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=242415245"},
+    {"title": "Britton & Rose — The Cactaceae, vol. III", "url": "https://publicationsonline.carnegiescience.edu/publications_online/cactaceae/Britton_Rose_Cactaceae_3.pdf"}
+  ],
+  "related": ["echinocactus_horizonthalonius", "echinopsis_macrogona"]
+}

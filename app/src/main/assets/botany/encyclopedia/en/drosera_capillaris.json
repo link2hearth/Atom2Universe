@@ -1,0 +1,13 @@
+{
+  "id": "drosera_capillaris",
+  "sections": [
+    {"title": "Form and habitat", "text": "A small carnivorous rosette plant of wet sandy soils and acidic bogs, from the southeastern United States to tropical America. The rosette may reach about 12 cm across."},
+    {"title": "Leaves and prey capture", "text": "The leaves bear glandular tentacles tipped with sticky droplets. Small animals caught on them are digested by the leaf, supplementing nutrients absorbed from poor soil."},
+    {"title": "Edibility", "text": "This is not eaten as a food plant; the botanical sources consulted do not document safe food use."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Drosera capillaris", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=250015187"},
+    {"title": "North Carolina Flora — Drosera capillaris", "url": "https://auth1.dpr.ncparks.gov/flora/species_account.php?id=1255"}
+  ],
+  "related": ["drosera_rotundifolia"]
+}

@@ -88,7 +88,10 @@ internal object PlantHerbarium {
         "vachellia_anegadensis", "acacia_mathuataensis", "ambrella_longituba", "dioncophyllum_thollonii", "halothamnus_glaucus", "rosa_cymosa", "nectouxia_formosa", "sclerocactus_mesae_verdae", "sphagnum_magellanicum", "gymnocalycium_calochlorum", "turbinicarpus_saueri", "turbinicarpus_gielsdorfianus", "tacinga_funalis", "tacinga_saxatilis", "melocactus_pachyacanthus", "plowmania_nyctaginoides", "halothamnus_lancifolius", "guamatela_tuerckheimii", "ruizia_parviflora", "plagiomnium_affine",
         "ambuchanania_leucobryoides", "andreaeobryum_macrosporum", "catoscopium_nigritum", "hennediella_heimii", "bryum_turbinatum", "cirriphyllum_piliferum", "pohlia_melanodon", "dictyostega_orobanchoides", "heteranthia_decipiens", "escobaria_missouriensis", "lophopyxis_maingayi", "coronidium_boormanii", "cryptocarya_nova_anglica", "pradosia_decipiens", "pradosia_kuhlmannii", "pradosia_cuatrecasasii", "pradosia_grisebachii", "jupunba_obovalis", "espadaea_amoena", "aglaia_evansensis", "ipomoea_pulcherrima", "chamaecrista_aldabrensis", "aglaia_archboldiana", "syzygium_phaeophyllum", "erythrina_atitlanensis", "pierrebraunia_bahiensis", "rauhocereus_riosaniensis")
 
-    fun hasPlate(id: String) = id in speciesIds
+    // The bundled Dracaena braunii plate depicts the unrelated trade plant D. sanderiana.
+    private val mismatchedPlates = setOf("dracaena_braunii")
+
+    fun hasPlate(id: String) = id in speciesIds && id !in mismatchedPlates
 
     fun decode(key: PlantImageKey): Bitmap {
         val assets = A2UApplication.appContext.assets

@@ -1,0 +1,14 @@
+{
+  "id": "dillenia_indica",
+  "sections": [
+    {"title": "Port et habitat", "text": "Arbre tropical des forêts humides du sous-continent indien et d’Asie du Sud-Est, souvent près des cours d’eau. Il peut atteindre une quinzaine de mètres, parfois davantage."},
+    {"title": "Fleurs et fruits", "text": "Ses grandes fleurs blanches, d’environ 15 à 20 cm, sont suivies d’un ensemble de carpelles enfermé dans des sépales charnus persistants ; l’ensemble mesure autour de 8 à 10 cm."},
+    {"title": "Usage alimentaire", "text": "Les sépales mûrs, acidulés, sont consommés localement frais ou cuits, notamment dans des préparations de fruits. Les usages concernent ces sépales et ne permettent pas de conclure que les autres parties sont comestibles."}
+  ],
+  "sources": [
+    {"title": "Oxford University — Dillenia indica", "url": "https://herbaria.plants.ox.ac.uk/bol/plants400/Profiles/cd/Dillenia"},
+    {"title": "NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/2/8/2842"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A316684-1/general-information"}
+  ],
+  "related": []
+}

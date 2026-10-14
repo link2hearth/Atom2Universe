@@ -1,0 +1,14 @@
+{
+  "id": "dipterocarpus_alatus",
+  "sections": [
+    {"title": "Form and habitat", "text": "A large tree of mainland Southeast Asian tropical forests, reaching about 40 m. It occurs in lowland humid forest and alluvial areas."},
+    {"title": "Leaves and fruit", "text": "The simple leaves are broad and alternate. The dry fruit has two greatly enlarged wing-like sepals that spin and slow its fall, aiding wind dispersal."},
+    {"title": "Uses", "text": "The timber is used in the region. The sources consulted do not document reliable food use for this species."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A320626-1"},
+    {"title": "NParks Flora & Fauna Web", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/4/0/4009"},
+    {"title": "Vietnam Academy of Forest Sciences", "url": "https://vafs.gov.vn/vn/ky-thuat-trong-cay-dau-rai/"}
+  ],
+  "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "dracaena_reflexa",
+  "sections": [
+    {"title": "Form and range", "text": "A shrub or small tree native to the Mascarenes and neighboring Indian Ocean regions. It commonly reaches 4–6 m and bears narrow leaves in whorls, especially toward branch tips."},
+    {"title": "Flowers and fruit", "text": "Small fragrant flowers are followed by orange to red berries. This species is more compact than Socotra’s dragon tree (D. cinnabari), which has a broad umbrella-shaped crown."},
+    {"title": "Edibility", "text": "The sources consulted do not report established food use."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A534338-1/general-information"},
+    {"title": "Bel Ombre Pedia — Mauritius", "url": "https://belombrepedia.belombre.com/en/node/475"},
+    {"title": "University of Florida IFAS Extension", "url": "https://ask.ifas.ufl.edu/publication/FP187"}
+  ],
+  "related": ["dracaena_cinnabari", "dracaena_fragrans", "dracaena_forskaliana"]
+}

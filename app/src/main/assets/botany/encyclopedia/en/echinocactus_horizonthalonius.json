@@ -1,0 +1,13 @@
+{
+  "id": "echinocactus_horizonthalonius",
+  "sections": [
+    {"title": "Form and habitat", "text": "A globose to flattened cactus of the Chihuahuan Desert, the southwestern United States and northern Mexico. Its ribbed stems are usually 10–15 cm across and bear strong spines."},
+    {"title": "Flowering", "text": "Pink flowers appear at the stem tip and are about 4–7 cm long. Slow growth and a limited range make the plant vulnerable to collection."},
+    {"title": "Edibility", "text": "No reliable food use is established in the references consulted."}
+  ],
+  "sources": [
+    {"title": "SEINet — Echinocactus horizonthalonius", "url": "https://swbiodiversity.org/seinet/taxa/index.php?taxon=3423"},
+    {"title": "NatureServe Explorer", "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.155968/Echinocactus_horizonthalonius"}
+  ],
+  "related": ["echinocereus_dasyacanthus", "echinopsis_macrogona"]
+}

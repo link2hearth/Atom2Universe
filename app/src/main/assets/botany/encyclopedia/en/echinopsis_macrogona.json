@@ -1,0 +1,13 @@
+{
+  "id": "echinopsis_macrogona",
+  "sections": [
+    {"title": "Form and habitat", "text": "A columnar cactus from South America, often cultivated under the name Trichocereus macrogonus. Echinopsis macrogona is accepted by some taxonomic databases, while other treatments use Trichocereus."},
+    {"title": "Stems and flowers", "text": "It forms upright, ribbed, spiny stems and produces large night-blooming flowers. The taxonomic sources consulted do not consistently support a precise maximum height for this entry."},
+    {"title": "Food use and toxicity", "text": "The consulted sources do not establish food use or a particular toxicity for this species under this name; no consumption is recommended here."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/132717-1"},
+    {"title": "Albesiano & Kiesling — Neotypification of Cereus macrogonus (Haseltonia)", "url": "https://www.cactusconservation.org/CCI/library/pdf/Albesiano_Kiesling_2012_Haseltonia_17_24-34.pdf"}
+  ],
+  "related": ["echinocactus_horizonthalonius", "echinocereus_dasyacanthus"]
+}
