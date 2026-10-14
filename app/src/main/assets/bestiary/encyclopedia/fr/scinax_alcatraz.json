@@ -1,0 +1,34 @@
+{
+  "id": "scinax_alcatraz",
+  "name": "Rainette à museau d’Alcatraz",
+  "scientific": "Scinax alcatraz",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Cette petite rainette hylide est endémique de l’Ilha dos Alcatrazes, au large du sud-est du Brésil ; ASW la classe actuellement sous Ololygon alcatraz.",
+    "identification": "Le catalogue cité documente sa localité insulaire, mais donne peu de détails d’identification.",
+    "habitat": "Elle vit dans les broméliacées de sa petite île côtière, où l’eau s’accumule entre les feuilles.",
+    "diet": "Les sources consultées portent surtout sur son aire et sa conservation et ne précisent pas de régime propre à l’espèce.",
+    "behavior": "Son chant nuptial a été décrit dans une étude publiée en 2024.",
+    "reproduction": "Cette rainette est broméligène : elle utilise les réservoirs d’eau des aisselles foliaires des broméliacées pour se reproduire.",
+    "ecology": "L’étude de 2015 la rapproche de S. arduous dans le groupe Scinax perpusillus, associé aux broméliacées.",
+    "conservation": "Un rapport de l’UICN indique que son statut est passé d’En danger critique à Vulnérable en 2020 après la protection et la gestion de son habitat."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Ololygon/Ololygon-alcatraz",
+      "title": "Amphibian Species of the World — Ololygon alcatraz"
+    },
+    {
+      "url": "https://amphibian-reptile-conservation.org/pdfs/Volume/Vol_15_no_2/ARC_15_2_%5BGeneral_Section%5D_279-288_e293.pdf",
+      "title": "Programme d’élevage en captivité de Scinax alcatraz — Amphibian & Reptile Conservation"
+    },
+    {
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2023/10/SOTWA-final-10.4.23.pdf",
+      "title": "The Impact of Conservation — État des amphibiens du monde, UICN"
+    },
+    {
+      "url": "https://projetobromelias.weebly.com/uploads/2/5/5/0/25500709/32_lacerda_2015_scinax_arduous.pdf",
+      "title": "Groupe Scinax perpusillus — redescription de S. arduous dans Zootaxa"
+    }
+  ]
+}

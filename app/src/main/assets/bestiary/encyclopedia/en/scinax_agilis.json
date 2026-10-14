@@ -1,0 +1,26 @@
+{
+  "id": "scinax_agilis",
+  "name": "Agile snouted treefrog",
+  "scientific": "Scinax agilis",
+  "group": "amphibians",
+  "sections": {
+    "overview": "The catalogue uses Scinax agilis; Amphibian Species of the World currently treats it as Ololygon agilis.",
+    "identification": "The field paper gives no diagnostic description in its abstract.",
+    "habitat": "It inhabits coastal restinga in four Brazilian states.",
+    "diet": "No species-specific diet is given in the sources consulted.",
+    "behavior": "Bromeliads were the most-used microhabitat in one Bahia study.",
+    "reproduction": "The current ASW account notes that the larva remains undescribed.",
+    "ecology": "The study links it to flooded coastal plains and their plant communities.",
+    "conservation": "The study flags local loss of restinga vegetation as a concern."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Ololygon/Ololygon-agilis",
+      "title": "Amphibian Species of the World — Ololygon agilis"
+    },
+    {
+      "url": "https://www.thebhs.org/publications/the-herpetological-bulletin/issue-number-129-autumn-2014/322-03-habitat-use-and-activity-with-new-records-of-the-agile-snouted-tree-frog-i-scinax-agilis-i-on-the-north-coast-of-bahia-brazil/file",
+      "title": "Habitat use and activity of Scinax agilis on the north coast of Bahia — Herpetological Bulletin"
+    }
+  ]
+}

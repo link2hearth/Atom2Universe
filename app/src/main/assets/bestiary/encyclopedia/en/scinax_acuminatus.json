@@ -1,0 +1,30 @@
+{
+  "id": "scinax_acuminatus",
+  "name": "Mato Grosso snouted treefrog",
+  "scientific": "Scinax acuminatus",
+  "group": "amphibians",
+  "sections": {
+    "overview": "This hylid treefrog occurs in Brazil, Paraguay, Bolivia and northern Argentina.",
+    "identification": "The Paraguayan fauna guide describes a pointed snout, rough pustular back and a total length of up to about 45 mm.",
+    "habitat": "It is reported from open, vegetated places near water, including areas around homes.",
+    "diet": "The concise species accounts consulted do not establish a species-specific diet.",
+    "behavior": "The Paraguayan guide describes it as arboreal and sometimes present in peridomestic environments.",
+    "reproduction": "A reproductive study found continuous spermatogenesis in males and females with oocytes at different stages of maturity.",
+    "ecology": "The 2023 review places it in the Scinax rostratus group.",
+    "conservation": "The sources used here document its broad range but do not establish a current population trend."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-acuminatus",
+      "title": "Amphibian Species of the World — Scinax acuminatus"
+    },
+    {
+      "url": "https://www.facen.una.py/wp-content/uploads/2024/12/Weiler-et-al.-2013-Anfibios-del-Paraguay_compressed.pdf",
+      "title": "Anfibios del Paraguay — Hylidae species account"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34190842/",
+      "title": "Gametogenesis and reproductive dynamics of Scinax acuminatus — PubMed"
+    }
+  ]
+}

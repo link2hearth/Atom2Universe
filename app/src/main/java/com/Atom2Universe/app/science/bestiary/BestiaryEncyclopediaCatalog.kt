@@ -6895,12 +6895,140 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "satanoperca_pappaterra"
         ),
         AnimalSpecies(
+            id = "schinia_rivulosa", scientific = "Schinia rivulosa",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "schinia_rivulosa"
+        ),
+        AnimalSpecies(
+            id = "scinax_acuminatus", scientific = "Scinax acuminatus",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_acuminatus"
+        ),
+        AnimalSpecies(
+            id = "scinax_agilis", scientific = "Scinax agilis",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_agilis"
+        ),
+        AnimalSpecies(
+            id = "scinax_alcatraz", scientific = "Scinax alcatraz",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_alcatraz"
+        ),
+        AnimalSpecies(
+            id = "scinax_arduous", scientific = "Scinax arduous",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_arduous"
+        ),
+        AnimalSpecies(
+            id = "scinax_constrictus", scientific = "Scinax constrictus",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_constrictus"
+        ),
+        AnimalSpecies(
+            id = "scinax_eurydice", scientific = "Scinax eurydice",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_eurydice"
+        ),
+        AnimalSpecies(
+            id = "scinax_flavoguttatus", scientific = "Scinax flavoguttatus",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_flavoguttatus"
+        ),
+        AnimalSpecies(
+            id = "scinax_funereus", scientific = "Scinax funereus",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_funereus"
+        ),
+        AnimalSpecies(
+            id = "scinax_nasicus", scientific = "Scinax nasicus",
+            name = R.string.be_encyclopedia_placeholder, group = "amphibians",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scinax_nasicus"
+        ),
+        AnimalSpecies(
+            id = "scleronycteris_ega", scientific = "Scleronycteris ega",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scleronycteris_ega"
+        ),
+        AnimalSpecies(
+            id = "scoliopteryx_libatrix", scientific = "Scoliopteryx libatrix",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scoliopteryx_libatrix"
+        ),
+        AnimalSpecies(
             id = "scolopax_rusticola", scientific = "Scolopax rusticola",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "scolopax_rusticola"
+        ),
+        AnimalSpecies(
+            id = "scolytus_mali", scientific = "Scolytus mali",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scolytus_mali"
+        ),
+        AnimalSpecies(
+            id = "scyliorhinus_canicula", scientific = "Scyliorhinus canicula",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scyliorhinus_canicula"
+        ),
+        AnimalSpecies(
+            id = "scyliorhinus_stellaris", scientific = "Scyliorhinus stellaris",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "scyliorhinus_stellaris"
+        ),
+        AnimalSpecies(
+            id = "segestria_florentina", scientific = "Segestria florentina",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "segestria_florentina"
         ),
         AnimalSpecies(
             id = "senegal_galago", scientific = "Galago senegalensis",
@@ -6917,6 +7045,22 @@ internal object BestiaryEncyclopediaCatalog {
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "sepia_officinalis"
+        ),
+        AnimalSpecies(
+            id = "serrasalmus_elongatus", scientific = "Serrasalmus elongatus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "serrasalmus_elongatus"
+        ),
+        AnimalSpecies(
+            id = "serripes_groenlandicus", scientific = "Serripes groenlandicus",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "serripes_groenlandicus"
         ),
         AnimalSpecies(
             id = "shoebill", scientific = "Balaeniceps rex",
@@ -6943,6 +7087,22 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "siamese_fighting_fish"
         ),
         AnimalSpecies(
+            id = "sminthopsis_bindi", scientific = "Sminthopsis bindi",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "sminthopsis_bindi"
+        ),
+        AnimalSpecies(
+            id = "sminthopsis_douglasi", scientific = "Sminthopsis douglasi",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "sminthopsis_douglasi"
+        ),
+        AnimalSpecies(
             id = "snowshoe_hare", scientific = "Lepus americanus",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
@@ -6950,6 +7110,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "snowshoe_hare"
         ),
+    )
+
+    private fun batch22(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "solea_solea", scientific = "Solea solea",
             name = R.string.be_encyclopedia_placeholder, group = "fish",
@@ -7110,9 +7273,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "uria_aalge"
         ),
-    )
-
-    private fun batch22(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "water_vole", scientific = "Arvicola amphibius",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -8127,13 +8287,36 @@ internal object BestiaryEncyclopediaCatalog {
         "sarcophilus_harrisii" to "Tasmanian devil",
         "satanoperca_mapiritensis" to "Satanoperca mapiritensis",
         "satanoperca_pappaterra" to "Pantanal eartheater",
+        "schinia_rivulosa" to "Ragweed flower moth",
+        "scinax_acuminatus" to "Mato Grosso snouted treefrog",
+        "scinax_agilis" to "Agile snouted treefrog",
+        "scinax_alcatraz" to "Alcatraz snouted treefrog",
+        "scinax_arduous" to "Arduous bromeliad treefrog",
+        "scinax_constrictus" to "Constricted snouted treefrog",
+        "scinax_eurydice" to "Eurydice snouted treefrog",
+        "scinax_flavoguttatus" to "Scinax flavoguttatus",
+        "scinax_funereus" to "Funereal snouted treefrog",
+        "scinax_nasicus" to "Lesser snouted treefrog",
+        "scleronycteris_ega" to "Ega long-tongued bat",
+        "scoliopteryx_libatrix" to "Herald",
         "scolopax_rusticola" to "Eurasian Woodcock",
+        "scolytus_mali" to "Large fruit-tree bark beetle",
+        "scyliorhinus_canicula" to "Small-spotted catshark",
+        "scyliorhinus_stellaris" to "Nursehound",
+        "segestria_florentina" to "Florentine tube-web spider",
         "senegal_galago" to "Senegal galago",
         "sepia_officinalis" to "Common Cuttlefish",
+        "serrasalmus_elongatus" to "Slender piranha",
+        "serripes_groenlandicus" to "Greenland smoothcockle",
         "shoebill" to "Shoebill",
         "short_eared_owl" to "Short-eared Owl",
         "siamese_fighting_fish" to "Siamese Fighting Fish",
+        "sminthopsis_bindi" to "Kakadu dunnart",
+        "sminthopsis_douglasi" to "Julia Creek dunnart",
         "snowshoe_hare" to "Snowshoe hare",
+    )
+
+    private fun namesEn11(): Map<String, String> = mapOf(
         "solea_solea" to "Common Sole",
         "somateria_mollissima" to "Common Eider",
         "south_american_coati" to "South American coati",
@@ -8154,9 +8337,6 @@ internal object BestiaryEncyclopediaCatalog {
         "tufted_duck" to "Tufted Duck",
         "turdus_philomelos" to "Song Thrush",
         "uria_aalge" to "Common Guillemot",
-    )
-
-    private fun namesEn11(): Map<String, String> = mapOf(
         "water_vole" to "Eurasian water vole",
         "western_gorilla" to "Western gorilla",
         "western_marsh_harrier" to "Western Marsh Harrier",
@@ -9061,13 +9241,36 @@ internal object BestiaryEncyclopediaCatalog {
         "sarcophilus_harrisii" to "Diable de Tasmanie",
         "satanoperca_mapiritensis" to "Satanoperca mapiritensis",
         "satanoperca_pappaterra" to "Satanoperca pappaterra",
+        "schinia_rivulosa" to "Noctuelle des ambroisies",
+        "scinax_acuminatus" to "Rainette à museau du Mato Grosso",
+        "scinax_agilis" to "Rainette agile à museau pointu",
+        "scinax_alcatraz" to "Rainette à museau d’Alcatraz",
+        "scinax_arduous" to "Rainette broméligène de Santa Teresa",
+        "scinax_constrictus" to "Rainette Scinax constrictus",
+        "scinax_eurydice" to "Rainette Eurydice",
+        "scinax_flavoguttatus" to "Scinax flavoguttatus",
+        "scinax_funereus" to "Rainette funèbre",
+        "scinax_nasicus" to "Rainette à petit museau",
+        "scleronycteris_ega" to "Scleronyctère d’Ega",
+        "scoliopteryx_libatrix" to "Découpure",
         "scolopax_rusticola" to "Bécasse des bois",
+        "scolytus_mali" to "Grand scolyte des arbres fruitiers",
+        "scyliorhinus_canicula" to "Petite roussette",
+        "scyliorhinus_stellaris" to "Scyliorhinus stellaris",
+        "segestria_florentina" to "Ségestrie florentine",
         "senegal_galago" to "Galago du Sénégal",
         "sepia_officinalis" to "Seiche commune",
+        "serrasalmus_elongatus" to "Piranha allongé",
+        "serripes_groenlandicus" to "Coque du Groenland",
         "shoebill" to "Bec-en-sabot du Nil",
         "short_eared_owl" to "Hibou des marais",
         "siamese_fighting_fish" to "Combattant siamois",
+        "sminthopsis_bindi" to "Dunnart de Kakadu",
+        "sminthopsis_douglasi" to "Dunnart de Julia Creek",
         "snowshoe_hare" to "Lièvre d’Amérique",
+    )
+
+    private fun namesFr11(): Map<String, String> = mapOf(
         "solea_solea" to "Sole commune",
         "somateria_mollissima" to "Eider à duvet",
         "south_american_coati" to "Coati roux",
@@ -9088,9 +9291,6 @@ internal object BestiaryEncyclopediaCatalog {
         "tufted_duck" to "Fuligule morillon",
         "turdus_philomelos" to "Grive musicienne",
         "uria_aalge" to "Guillemot de Troïl",
-    )
-
-    private fun namesFr11(): Map<String, String> = mapOf(
         "water_vole" to "Campagnol terrestre",
         "western_gorilla" to "Gorille de l’Ouest",
         "western_marsh_harrier" to "Busard des roseaux",

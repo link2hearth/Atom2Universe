@@ -1,0 +1,26 @@
+{
+  "id": "scleronycteris_ega",
+  "name": "Scleronyctère d’Ega",
+  "scientific": "Scleronycteris ega",
+  "group": "mammals",
+  "sections": {
+    "overview": "Scleronycteris ega est une chauve-souris néotropicale de la famille des Phyllostomidae, signalée au Brésil et au Venezuela.",
+    "identification": "Son nom anglais est Ega long-tongued bat; les données d’histoire naturelle propres à l’espèce restent rares.",
+    "habitat": "La fiche de l’UICN la décrit comme résidente des milieux forestiers.",
+    "diet": "Les sources consultées ne fournissent pas de description étayée du régime alimentaire propre à cette espèce.",
+    "behavior": "Son comportement quotidien est peu documenté.",
+    "reproduction": "Les évaluations consultées ne précisent pas les modalités de reproduction propres à l’espèce.",
+    "ecology": "L’évaluation de l’UICN demande des recherches supplémentaires sur sa répartition, son abondance, son écologie et ses menaces.",
+    "conservation": "La Liste rouge de l’UICN la classe dans la catégorie « données insuffisantes »."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004908/",
+      "title": "Scleronycteris ega — Mammal Diversity Database"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T20033A22027237.en",
+      "title": "Scleronycteris ega — IUCN Red List assessment"
+    }
+  ]
+}

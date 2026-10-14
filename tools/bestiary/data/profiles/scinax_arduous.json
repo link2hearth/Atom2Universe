@@ -1,0 +1,118 @@
+{
+  "id": "scinax_arduous",
+  "scientific": "Scinax arduous",
+  "group": "amphibians",
+  "name": {
+    "en": "Arduous bromeliad treefrog",
+    "fr": "Rainette broméligène de Santa Teresa"
+  },
+  "sections": {
+    "overview": {
+      "en": "This bromeliad frog is known from Santa Teresa, Brazil.",
+      "fr": "Cette rainette des broméliacées est connue de Santa Teresa, au Brésil."
+    },
+    "identification": {
+      "en": "A 2015 study revised its diagnosis using adult specimens.",
+      "fr": "Une étude de 2015 a révisé son diagnostic à partir d’adultes."
+    },
+    "habitat": {
+      "en": "It occupies bromeliads on rocky outcrops, in forests and gardens.",
+      "fr": "Elle occupe des broméliacées sur des rochers, en forêt et dans des jardins."
+    },
+    "diet": {
+      "en": "Its natural diet remains undescribed in the cited account.",
+      "fr": "Son régime naturel n’est pas décrit dans l’étude citée."
+    },
+    "behavior": {
+      "en": "Males call from bromeliads on rainy nights.",
+      "fr": "Les mâles chantent depuis les broméliacées les nuits pluvieuses."
+    },
+    "reproduction": {
+      "en": "Adults and tadpoles occur inside bromeliads.",
+      "fr": "Des adultes et des têtards vivent dans les broméliacées."
+    },
+    "ecology": {
+      "en": "The 2015 study places it with S. alcatraz in the bromeliad-associated Scinax perpusillus group.",
+      "fr": "L’étude de 2015 la rapproche de S. alcatraz dans le groupe Scinax perpusillus, associé aux broméliacées."
+    },
+    "conservation": {
+      "en": "The 2015 paper discusses local pressures but gives no current global status.",
+      "fr": "L’étude de 2015 évoque des pressions locales, sans donner de statut mondial actuel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "On the diagnosis and conservation of Scinax arduous — Zootaxa",
+        "fr": "Diagnostic et conservation de Scinax arduous — Zootaxa"
+      },
+      "url": "https://projetobromelias.weebly.com/uploads/2/5/5/0/25500709/32_lacerda_2015_scinax_arduous.pdf",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "The 2015 rediagnosis reports a Santa Teresa range, bromeliad use, adult calls and tadpoles, and local pressures."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 17,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Scinax perpusillus group: filling taxonomic and geographic gaps — Federal University of Viçosa repository",
+        "fr": "Groupe Scinax perpusillus : combler les lacunes taxonomiques et géographiques — dépôt de l’Université fédérale de Viçosa"
+      },
+      "url": "https://locus.ufv.br/items/3c48f511-276b-4453-9519-0a6510170993",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Portuguese-language study describes the perpusillus group as bromeliad-associated and discusses S. arduous."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The available study emphasizes Santa Teresa; it cautions that similar-looking populations elsewhere require careful taxonomic assessment. A current global conservation assessment was not located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

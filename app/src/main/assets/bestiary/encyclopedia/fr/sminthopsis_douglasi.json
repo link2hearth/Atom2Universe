@@ -1,0 +1,30 @@
+{
+  "id": "sminthopsis_douglasi",
+  "name": "Dunnart de Julia Creek",
+  "scientific": "Sminthopsis douglasi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Ce petit marsupial carnivore est endémique du Queensland.",
+    "identification": "Les documents de rétablissement consultés ne donnent pas de diagnostic de terrain synthétique.",
+    "habitat": "Il vit dans les prairies de Mitchell sur argiles fissurées du nord-ouest du Queensland.",
+    "diet": "Il est carnivore ; le plan de rétablissement ne précise pas ses proies.",
+    "behavior": "Il utilise les fissures du sol par temps sec et la végétation après la pluie.",
+    "reproduction": "Les sources consultées ne précisent pas sa reproduction.",
+    "ecology": "Il partage le genre Sminthopsis avec le dunnart de Kakadu S. bindi ; voir cette fiche.",
+    "conservation": "Classé « En danger » en Australie et au Queensland, il subit notamment les chats, le pâturage et l’acacia épineux."
+  },
+  "sources": [
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/publications/recovery/juliacreek-dunnart",
+      "title": "Gouvernement australien DCCEEW — résumé du plan de rétablissement du dunnart de Julia Creek"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000204/",
+      "title": "Mammal Diversity Database — Sminthopsis douglasi"
+    },
+    {
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/2a1a485a-5d81-41f0-9227-866bd922e14b",
+      "title": "Australian Faunal Directory via Atlas of Living Australia — Sminthopsis bindi"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "scleronycteris_ega",
+  "name": "Ega long-tongued bat",
+  "scientific": "Scleronycteris ega",
+  "group": "mammals",
+  "sections": {
+    "overview": "Scleronycteris ega is a Neotropical phyllostomid bat recorded in Brazil and Venezuela.",
+    "identification": "The English common name is Ega long-tongued bat; species-level natural-history information remains sparse.",
+    "habitat": "The IUCN account records it as resident in forest habitat.",
+    "diet": "The sources consulted do not provide a well-supported species-specific diet description.",
+    "behavior": "Its day-to-day behavior is poorly documented.",
+    "reproduction": "Species-specific breeding details are not established in the consulted assessments.",
+    "ecology": "The IUCN assessment calls for further research on its distribution, abundance, ecology and threats.",
+    "conservation": "The IUCN Red List classifies it as Data Deficient."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004908/",
+      "title": "Scleronycteris ega — Mammal Diversity Database"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T20033A22027237.en",
+      "title": "Scleronycteris ega — IUCN Red List assessment"
+    }
+  ]
+}

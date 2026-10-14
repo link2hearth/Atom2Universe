@@ -1,0 +1,119 @@
+{
+  "id": "scleronycteris_ega",
+  "scientific": "Scleronycteris ega",
+  "group": "mammals",
+  "name": {
+    "en": "Ega long-tongued bat",
+    "fr": "Scleronyctère d’Ega"
+  },
+  "sections": {
+    "overview": {
+      "en": "Scleronycteris ega is a Neotropical phyllostomid bat recorded in Brazil and Venezuela.",
+      "fr": "Scleronycteris ega est une chauve-souris néotropicale de la famille des Phyllostomidae, signalée au Brésil et au Venezuela."
+    },
+    "identification": {
+      "en": "The English common name is Ega long-tongued bat; species-level natural-history information remains sparse.",
+      "fr": "Son nom anglais est Ega long-tongued bat; les données d’histoire naturelle propres à l’espèce restent rares."
+    },
+    "habitat": {
+      "en": "The IUCN account records it as resident in forest habitat.",
+      "fr": "La fiche de l’UICN la décrit comme résidente des milieux forestiers."
+    },
+    "diet": {
+      "en": "The sources consulted do not provide a well-supported species-specific diet description.",
+      "fr": "Les sources consultées ne fournissent pas de description étayée du régime alimentaire propre à cette espèce."
+    },
+    "behavior": {
+      "en": "Its day-to-day behavior is poorly documented.",
+      "fr": "Son comportement quotidien est peu documenté."
+    },
+    "reproduction": {
+      "en": "Species-specific breeding details are not established in the consulted assessments.",
+      "fr": "Les évaluations consultées ne précisent pas les modalités de reproduction propres à l’espèce."
+    },
+    "ecology": {
+      "en": "The IUCN assessment calls for further research on its distribution, abundance, ecology and threats.",
+      "fr": "L’évaluation de l’UICN demande des recherches supplémentaires sur sa répartition, son abondance, son écologie et ses menaces."
+    },
+    "conservation": {
+      "en": "The IUCN Red List classifies it as Data Deficient.",
+      "fr": "La Liste rouge de l’UICN la classe dans la catégorie « données insuffisantes »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Scleronycteris ega — Mammal Diversity Database",
+        "fr": "Scleronycteris ega — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1004908/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "MDD lists Phyllostomidae, the English common name, and Brazil and Venezuela."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 11,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scleronycteris ega — IUCN Red List assessment",
+        "fr": "Scleronycteris ega — IUCN Red List assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T20033A22027237.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The assessment lists Data Deficient, forest habitat, and calls for research on distribution, abundance, ecology and threats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 17,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level diet, behavior and breeding observations remain sparse; avoid inferring feeding habits solely from subfamily placement."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; statements about missing detail are limited to the consulted assessments."
+}

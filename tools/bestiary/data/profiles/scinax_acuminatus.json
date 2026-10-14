@@ -1,0 +1,140 @@
+{
+  "id": "scinax_acuminatus",
+  "scientific": "Scinax acuminatus",
+  "group": "amphibians",
+  "name": {
+    "en": "Mato Grosso snouted treefrog",
+    "fr": "Rainette à museau du Mato Grosso"
+  },
+  "sections": {
+    "overview": {
+      "en": "This hylid treefrog occurs in Brazil, Paraguay, Bolivia and northern Argentina.",
+      "fr": "Cette rainette hylide est présente au Brésil, au Paraguay, en Bolivie et dans le nord de l’Argentine."
+    },
+    "identification": {
+      "en": "The Paraguayan fauna guide describes a pointed snout, rough pustular back and a total length of up to about 45 mm.",
+      "fr": "Le guide de la faune du Paraguay décrit un museau pointu, un dos rugueux couvert de pustules et une longueur totale d’environ 45 mm au maximum."
+    },
+    "habitat": {
+      "en": "It is reported from open, vegetated places near water, including areas around homes.",
+      "fr": "Elle est signalée dans des milieux ouverts et végétalisés proches de l’eau, y compris près des habitations."
+    },
+    "diet": {
+      "en": "The concise species accounts consulted do not establish a species-specific diet.",
+      "fr": "Les fiches synthétiques consultées ne précisent pas de régime alimentaire propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The Paraguayan guide describes it as arboreal and sometimes present in peridomestic environments.",
+      "fr": "Le guide paraguayen la décrit comme arboricole et parfois présente dans les milieux péri-domestiques."
+    },
+    "reproduction": {
+      "en": "A reproductive study found continuous spermatogenesis in males and females with oocytes at different stages of maturity.",
+      "fr": "Une étude reproductive a observé une spermatogenèse continue chez les mâles et des ovocytes à différents stades de maturation chez les femelles."
+    },
+    "ecology": {
+      "en": "The 2023 review places it in the Scinax rostratus group.",
+      "fr": "La révision de 2023 la place dans le groupe Scinax rostratus."
+    },
+    "conservation": {
+      "en": "The sources used here document its broad range but do not establish a current population trend.",
+      "fr": "Les sources utilisées documentent sa vaste aire, mais n’établissent pas de tendance démographique actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Amphibian Species of the World — Scinax acuminatus",
+        "fr": "Amphibian Species of the World — Scinax acuminatus"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-acuminatus",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "ASW accepts Scinax acuminatus, records four South American countries, and cites the 2023 Scinax rostratus group revision."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 17,
+        "total": 96,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Anfibios del Paraguay — Hylidae species account",
+        "fr": "Anfibios del Paraguay — fiche des Hylidae"
+      },
+      "url": "https://www.facen.una.py/wp-content/uploads/2024/12/Weiler-et-al.-2013-Anfibios-del-Paraguay_compressed.pdf",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The Spanish-language guide describes a pointed snout, pustular dorsal skin, up to about 45 mm total length, arboreal habits, and occurrence in open vegetated areas near water and in peridomestic settings."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 31,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Gametogenesis and reproductive dynamics of Scinax acuminatus — PubMed",
+        "fr": "Gametogenèse et dynamique reproductive de Scinax acuminatus — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34190842/",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "The 2021 study reports continuous spermatogenesis in sampled males and females with oocytes at different maturity stages, including post-ovulatory females."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 20,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The concise Paraguayan account provides no species-specific diet information; the profile therefore does not infer a diet from general frog biology."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

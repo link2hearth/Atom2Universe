@@ -1,0 +1,162 @@
+{
+  "id": "scinax_alcatraz",
+  "scientific": "Scinax alcatraz",
+  "group": "amphibians",
+  "name": {
+    "en": "Alcatraz snouted treefrog",
+    "fr": "Rainette à museau d’Alcatraz"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small hylid frog is endemic to Ilha dos Alcatrazes off southeastern Brazil; ASW currently places it as Ololygon alcatraz.",
+      "fr": "Cette petite rainette hylide est endémique de l’Ilha dos Alcatrazes, au large du sud-est du Brésil ; ASW la classe actuellement sous Ololygon alcatraz."
+    },
+    "identification": {
+      "en": "The cited catalogue documents its island locality but gives little identification detail.",
+      "fr": "Le catalogue cité documente sa localité insulaire, mais donne peu de détails d’identification."
+    },
+    "habitat": {
+      "en": "It inhabits bromeliads on its small offshore island, where water collects between the leaves.",
+      "fr": "Elle vit dans les broméliacées de sa petite île côtière, où l’eau s’accumule entre les feuilles."
+    },
+    "diet": {
+      "en": "The sources consulted focus on its range and conservation and do not establish a species-specific diet.",
+      "fr": "Les sources consultées portent surtout sur son aire et sa conservation et ne précisent pas de régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Its advertisement call was formally described in a 2024 study.",
+      "fr": "Son chant nuptial a été décrit dans une étude publiée en 2024."
+    },
+    "reproduction": {
+      "en": "The frog is bromeligenous, using bromeliad water-holding leaf axils for reproduction.",
+      "fr": "Cette rainette est broméligène : elle utilise les réservoirs d’eau des aisselles foliaires des broméliacées pour se reproduire."
+    },
+    "ecology": {
+      "en": "The 2015 study places it with S. arduous in the bromeliad-associated Scinax perpusillus group.",
+      "fr": "L’étude de 2015 la rapproche de S. arduous dans le groupe Scinax perpusillus, associé aux broméliacées."
+    },
+    "conservation": {
+      "en": "An IUCN report says its status improved from Critically Endangered to Vulnerable in 2020 after habitat protection and management.",
+      "fr": "Un rapport de l’UICN indique que son statut est passé d’En danger critique à Vulnérable en 2020 après la protection et la gestion de son habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Amphibian Species of the World — Ololygon alcatraz",
+        "fr": "Amphibian Species of the World — Ololygon alcatraz"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Ololygon/Ololygon-alcatraz",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "ASW accepts Ololygon alcatraz, gives the Alcatrazes type locality, and cites a 2024 advertisement-call study."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 15,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Captive breeding program for Scinax alcatraz — Amphibian & Reptile Conservation",
+        "fr": "Programme d’élevage en captivité de Scinax alcatraz — Amphibian & Reptile Conservation"
+      },
+      "url": "https://amphibian-reptile-conservation.org/pdfs/Volume/Vol_15_no_2/ARC_15_2_%5BGeneral_Section%5D_279-288_e293.pdf",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The study describes S. alcatraz as a bromeligenous island endemic and reports year-round egg laying in captivity; it discusses bromeliads as needed for breeding."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 24,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "The Impact of Conservation — State of the World's Amphibians, IUCN",
+        "fr": "The Impact of Conservation — État des amphibiens du monde, UICN"
+      },
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2023/10/SOTWA-final-10.4.23.pdf",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN report says Scinax alcatraz was downlisted from Critically Endangered in 2004 to Vulnerable in 2020 following effective habitat protection and management."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 23,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Scinax perpusillus group — Zootaxa rediagnosis of S. arduous",
+        "fr": "Groupe Scinax perpusillus — redescription de S. arduous dans Zootaxa"
+      },
+      "url": "https://projetobromelias.weebly.com/uploads/2/5/5/0/25500709/32_lacerda_2015_scinax_arduous.pdf",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2015 taxonomic paper lists both S. alcatraz and S. arduous in the Scinax perpusillus group."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 16,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The captive reproductive observations should not be read as a description of seasonal breeding in the wild; diet was not covered by the cited sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

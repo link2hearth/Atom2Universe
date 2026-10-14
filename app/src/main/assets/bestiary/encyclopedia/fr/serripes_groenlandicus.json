@@ -1,0 +1,26 @@
+{
+  "id": "serripes_groenlandicus",
+  "name": "Coque du Groenland",
+  "scientific": "Serripes groenlandicus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Serripes groenlandicus est un bivalve marin de la famille des Cardiidae.",
+    "identification": "Sa longueur habituelle est de 50 à 70 mm, jusqu’à 100 mm ; sa coquille brillante est grise à brune.",
+    "habitat": "Elle vit sur différents sédiments marins, surtout dans la zone sublittorale.",
+    "diet": "Elle se nourrit en filtrant les particules en suspension dans l’eau.",
+    "behavior": "Les fiches consultées ne décrivent pas ses déplacements ni d’autres comportements.",
+    "reproduction": "SeaLifeBase décrit des larves trochophores nageuses puis des véligères ; aucune période de ponte propre à l’espèce n’a été trouvée.",
+    "ecology": "C’est un bivalve benthique à répartition boréo-arctique, signalé dans les eaux arctiques, l’Atlantique Nord et le Pacifique Nord.",
+    "conservation": "SeaLifeBase indique que l’espèce n’a pas été évaluée par l’UICN."
+  },
+  "sources": [
+    {
+      "url": "https://www.iopan.gda.pl/projects/DBO/list/Mollusca/Serripes_groenlandicus/Serripes_groenlandicus.html",
+      "title": "Dynamic Biogeochemical Observation (DBO) — Serripes groenlandicus"
+    },
+    {
+      "url": "https://www.sealifebase.org/summary/Serripes-groenlandicus.html",
+      "title": "SeaLifeBase — fiche de la coque du Groenland"
+    }
+  ]
+}

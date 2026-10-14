@@ -1,0 +1,30 @@
+{
+  "id": "serrasalmus_elongatus",
+  "name": "Piranha allongé",
+  "scientific": "Serrasalmus elongatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce piranha au corps allongé vit dans les bassins de l’Amazone et de l’Orénoque.",
+    "identification": "Les données synthétisées par FishBase indiquent une longueur totale maximale d’environ 30 cm.",
+    "habitat": "C’est un poisson d’eau douce tropical et benthopélagique.",
+    "diet": "Les études décrivent les adultes comme spécialisés dans la consommation de nageoires et d’écailles, tout en mangeant aussi d’autres tissus de poissons et des insectes aquatiques.",
+    "behavior": "Les résumés consultés donnent peu de détails sur son comportement social ou quotidien.",
+    "reproduction": "Les résumés consultés ne donnent pas de données vérifiées sur sa reproduction.",
+    "ecology": "La consommation de nageoires et d’écailles constitue une niche alimentaire particulière parmi les piranhas.",
+    "conservation": "FishBase rapporte une évaluation mondiale UICN « Préoccupation mineure », datée de 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/11964",
+      "title": "FishBase — résumé de Serrasalmus elongatus"
+    },
+    {
+      "url": "https://doi.org/10.2307/1446694",
+      "title": "Nico & de Morales (1994), Nutrient content of piranha prey items — Copeia"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers19-12/010036914.pdf",
+      "title": "Reis, Kullander & Ferraris (dir.), Checklist of Freshwater Fishes of South and Central America — édition IRD"
+    }
+  ]
+}

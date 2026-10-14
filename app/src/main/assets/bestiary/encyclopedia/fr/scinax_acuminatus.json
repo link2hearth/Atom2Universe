@@ -1,0 +1,30 @@
+{
+  "id": "scinax_acuminatus",
+  "name": "Rainette à museau du Mato Grosso",
+  "scientific": "Scinax acuminatus",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Cette rainette hylide est présente au Brésil, au Paraguay, en Bolivie et dans le nord de l’Argentine.",
+    "identification": "Le guide de la faune du Paraguay décrit un museau pointu, un dos rugueux couvert de pustules et une longueur totale d’environ 45 mm au maximum.",
+    "habitat": "Elle est signalée dans des milieux ouverts et végétalisés proches de l’eau, y compris près des habitations.",
+    "diet": "Les fiches synthétiques consultées ne précisent pas de régime alimentaire propre à l’espèce.",
+    "behavior": "Le guide paraguayen la décrit comme arboricole et parfois présente dans les milieux péri-domestiques.",
+    "reproduction": "Une étude reproductive a observé une spermatogenèse continue chez les mâles et des ovocytes à différents stades de maturation chez les femelles.",
+    "ecology": "La révision de 2023 la place dans le groupe Scinax rostratus.",
+    "conservation": "Les sources utilisées documentent sa vaste aire, mais n’établissent pas de tendance démographique actuelle."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-acuminatus",
+      "title": "Amphibian Species of the World — Scinax acuminatus"
+    },
+    {
+      "url": "https://www.facen.una.py/wp-content/uploads/2024/12/Weiler-et-al.-2013-Anfibios-del-Paraguay_compressed.pdf",
+      "title": "Anfibios del Paraguay — fiche des Hylidae"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34190842/",
+      "title": "Gametogenèse et dynamique reproductive de Scinax acuminatus — PubMed"
+    }
+  ]
+}

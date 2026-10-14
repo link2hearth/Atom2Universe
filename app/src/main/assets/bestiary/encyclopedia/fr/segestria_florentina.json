@@ -1,0 +1,26 @@
+{
+  "id": "segestria_florentina",
+  "name": "Ségestrie florentine",
+  "scientific": "Segestria florentina",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette grande araignée méditerranéenne appartient aux Segestriidae.",
+    "identification": "Les adultes sont sombres ; leurs chélicères brillent parfois vert ou bronze.",
+    "habitat": "Elle s’abrite dans les cavités d’arbres, les fissures, les murs et les bâtiments.",
+    "diet": "Ses proies incluent coléoptères, papillons de nuit, guêpes, cloportes et araignées.",
+    "behavior": "Elle attend dans un tube relié à des fils avertisseurs, puis saisit les proies qui les touchent.",
+    "reproduction": "La femelle garde son cocon d’automne et ses petits.",
+    "ecology": "Le World Spider Catalog la signale d’Europe et d’Afrique du Nord jusqu’à la Géorgie, ainsi que comme introduite dans certaines régions d’Amérique du Sud.",
+    "conservation": "La fiche française de l’INPN classe l’espèce en « Préoccupation mineure » en France ; il s’agit d’une évaluation nationale."
+  },
+  "sources": [
+    {
+      "url": "https://inpn.mnhn.fr/explorer/especes/segestria_florentina/1165",
+      "title": "INPN — fiche de la ségestrie florentine"
+    },
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/40555/Segestria_florentina",
+      "title": "World Spider Catalog — Segestria florentina"
+    }
+  ]
+}

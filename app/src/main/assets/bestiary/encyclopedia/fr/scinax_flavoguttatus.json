@@ -1,0 +1,34 @@
+{
+  "id": "scinax_flavoguttatus",
+  "name": "Scinax flavoguttatus",
+  "scientific": "Scinax flavoguttatus",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Scinax flavoguttatus est une rainette de la région de la forêt atlantique brésilienne, connue du littoral et de montagnes voisines.",
+    "identification": "Son nom anglais est Yellowbelly Snouted Treefrog; l’espèce a été étudiée comme membre distinct du groupe Scinax catharinae.",
+    "habitat": "Les observations de terrain l’associent aux ruisseaux forestiers, où les adultes se perchent sur des feuilles ou des racines près de l’eau.",
+    "diet": "Les sources consultées ne fournissent pas de description fiable du régime alimentaire de l’adulte.",
+    "behavior": "Des mâles ont été observés en train de chanter dans la végétation riveraine, parfois près d’autres mâles chanteurs.",
+    "reproduction": "Les œufs sont déposés dans des secteurs calmes des ruisseaux et les têtards occupent des eaux courantes.",
+    "ecology": "La taxonomie actuelle d’Amphibian Species of the World emploie le nom Ololygon flavoguttata; cette fiche conserve le nom et l’identifiant du catalogue, Scinax flavoguttatus.",
+    "conservation": "Une ancienne évaluation UICN classe l’espèce en Préoccupation mineure et signale la perte d’habitat; elle ne constitue pas une estimation actuelle de la population."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Ololygon/Ololygon-flavoguttatus",
+      "title": "Ololygon flavoguttata — Amphibian Species of the World"
+    },
+    {
+      "url": "https://www.amphibiatree.org/sites/amphibiatree.org/files/LourencoETAL2009.pdf",
+      "title": "Nouvelle espèce du groupe Scinax catharinae du Minas Gerais"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2004.RLTS.T55955A11401605.en",
+      "title": "Ololygon flavoguttata — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Bibliography/C/Carvalho-e-Silva-and-Carnaval-1997-Rev.-Fr.-Aquar.-Herpetol.-24",
+      "title": "Observations sur la biologie de Scinax flavoguttatus et description de ses têtards"
+    }
+  ]
+}

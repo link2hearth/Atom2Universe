@@ -1,0 +1,142 @@
+{
+  "id": "scinax_funereus",
+  "scientific": "Scinax funereus",
+  "group": "amphibians",
+  "name": {
+    "en": "Funereal snouted treefrog",
+    "fr": "Rainette funèbre"
+  },
+  "sections": {
+    "overview": {
+      "en": "Scinax funereus is a snouted treefrog of the upper Amazon Basin, recorded in Brazil, Colombia, Ecuador and Peru.",
+      "fr": "Scinax funereus est une rainette à museau pointu du haut bassin amazonien, observée au Brésil, en Colombie, en Équateur et au Pérou."
+    },
+    "identification": {
+      "en": "Its dark markings and yellow-marked flanks help distinguish it; the common name Mossy Agile Frog is used in Ecuadorian references.",
+      "fr": "Ses marques sombres et ses flancs jaunâtres contribuent à son identification; les sources équatoriennes emploient le nom Mossy Agile Frog."
+    },
+    "habitat": {
+      "en": "Calling males have been recorded in a shallow swamp with shrubs and at the edge of a forest pool in the Ecuadorian Amazon.",
+      "fr": "Des mâles chanteurs ont été observés dans un marécage peu profond bordé d’arbustes et en lisière d’une mare forestière en Amazonie équatorienne."
+    },
+    "diet": {
+      "en": "The species-specific accounts consulted do not establish its adult diet.",
+      "fr": "Les comptes rendus propres à l’espèce consultés ne précisent pas le régime alimentaire de l’adulte."
+    },
+    "behavior": {
+      "en": "Males call after dark from leaves or shrubs; they were rarely detected at two Ecuadorian study sites.",
+      "fr": "Les mâles chantent après la tombée de la nuit depuis des feuilles ou des arbustes; ils ont été rarement détectés sur deux sites d’étude équatoriens."
+    },
+    "reproduction": {
+      "en": "The available field study describes calling males but does not document egg-laying or parental care, so those details remain uncertain.",
+      "fr": "L’étude de terrain disponible décrit des mâles chanteurs, mais ne documente ni la ponte ni les soins parentaux; ces détails restent donc incertains."
+    },
+    "ecology": {
+      "en": "Amphibian Species of the World places it in the Scinax funereus group; its described call is a single pulsed note.",
+      "fr": "Amphibian Species of the World la place dans le groupe Scinax funereus; son chant décrit consiste en une seule note pulsée."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Least Concern.",
+      "fr": "L’évaluation UICN la classe en Préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Scinax funereus — Amphibian Species of the World",
+        "fr": "Scinax funereus — Amphibian Species of the World"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-funereus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The AMNH reference records the range and group; its account does not detail adult diet or reproduction."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 17,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The advertisement call of Scinax funereus from the Ecuadorian Amazon",
+        "fr": "Le chant d’annonce de Scinax funereus en Amazonie équatorienne"
+      },
+      "url": "https://doi.org/10.11646/zootaxa.4845.1.10",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The two-site study describes colour, calling positions and a single pulsed call; detections were rare."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 15,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scinax funereus — IUCN Red List assessment",
+        "fr": "Scinax funereus — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2004.RLTS.T55956A11383897.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2004 Red List assessment classifies the species as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 15,
+        "notes_words": 11,
+        "total": 26,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding biology and adult diet are not described by the field sources consulted; rarity at two survey sites should not be treated as a range-wide population estimate."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Current AMNH taxonomy and distribution were cross-checked with a primary Ecuadorian call study and the IUCN assessment."
+}

@@ -1,0 +1,141 @@
+{
+  "id": "scinax_constrictus",
+  "scientific": "Scinax constrictus",
+  "group": "amphibians",
+  "name": {
+    "en": "Constricted snouted treefrog",
+    "fr": "Rainette Scinax constrictus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Scinax constrictus is a small hylid frog known from central Brazil, especially the Cerrado region.",
+      "fr": "Scinax constrictus est une petite rainette connue du centre du Brésil, notamment du Cerrado."
+    },
+    "identification": {
+      "en": "Its name refers to a narrow skin fold across the shoulders; adults also have a pointed snout and small tubercles on the eyelids and jaw.",
+      "fr": "Son nom fait référence à un repli cutané resserré sur les épaules; l’adulte présente aussi un museau pointu et de petits tubercules aux paupières et à la mâchoire."
+    },
+    "habitat": {
+      "en": "It is associated with open landscapes and calls from shrubs beside permanent ponds.",
+      "fr": "Elle est associée aux milieux ouverts et lance ses appels depuis des arbustes au bord de mares permanentes."
+    },
+    "diet": {
+      "en": "The species-specific sources consulted do not describe its adult diet in detail.",
+      "fr": "Les sources consultées ne décrivent pas en détail le régime alimentaire de l’adulte."
+    },
+    "behavior": {
+      "en": "Males call with the head pointed downward from marginal shrubs during the breeding period.",
+      "fr": "Pendant la période de reproduction, les mâles chantent tête dirigée vers le bas depuis les arbustes riverains."
+    },
+    "reproduction": {
+      "en": "Reproductive activity was observed from December to March; the original description recorded a clutch of dark eggs.",
+      "fr": "L’activité reproductrice a été observée de décembre à mars; la description originale signale une ponte d’œufs sombres."
+    },
+    "ecology": {
+      "en": "The original description places it in the Scinax rostratus group and distinguishes its call and morphology from the similar Scinax nebulosus.",
+      "fr": "La description originale la place dans le groupe Scinax rostratus et distingue son chant et sa morphologie de ceux de Scinax nebulosus, qui lui ressemble."
+    },
+    "conservation": {
+      "en": "Brazil’s 2018 Red Book records a Least Concern assessment from 2012; this is a dated assessment rather than a current population estimate.",
+      "fr": "Le Livre rouge brésilien de 2018 rapporte une évaluation en Préoccupation mineure datant de 2012; ce statut ancien ne constitue pas une estimation actuelle de la population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Scinax constrictus — Amphibian Species of the World",
+        "fr": "Scinax constrictus — Amphibian Species of the World"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-constrictus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The AMNH account summarizes the Brazilian range and current group placement; it gives no adult diet account."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 17,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A new Scinax of the S. rostratus group from Central Brazil",
+        "fr": "Nouvelle espèce de Scinax du groupe S. rostratus du Brésil central"
+      },
+      "url": "https://files.cercomp.ufg.br/weby/up/199/o/Lima_et_al_2004.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The original Portuguese description gives diagnostic traits, open-pond habitat and breeding observations."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 12,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Brazil Red Book of Threatened Species of the Fauna, Volume I — ICMBio",
+        "fr": "Livre rouge brésilien des espèces menacées de la faune, volume I — ICMBio"
+      },
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2018 national red book table records the species as Least Concern based on its 2012 assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 17,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Adult feeding ecology is not described in the species accounts consulted; the conservation category cited is from 2012."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The original Portuguese description, current AMNH taxonomy and Brazilian national red book were cross-checked."
+}

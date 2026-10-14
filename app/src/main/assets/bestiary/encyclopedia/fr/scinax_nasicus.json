@@ -1,0 +1,34 @@
+{
+  "id": "scinax_nasicus",
+  "name": "Rainette à petit museau",
+  "scientific": "Scinax nasicus",
+  "group": "amphibians",
+  "sections": {
+    "overview": "La Rainette à petit museau est largement répartie dans le sud de l’Amérique du Sud, de la Bolivie et du Brésil au Paraguay, à l’Uruguay et à l’Argentine.",
+    "identification": "Elle a le museau triangulaire aplati, les yeux proéminents et un motif dorsal clair variable.",
+    "habitat": "Elle fréquente des milieux ouverts ou boisés, même modifiés, souvent près de l’eau.",
+    "diet": "Les sources consultées ne détaillent pas son régime adulte.",
+    "behavior": "Les mâles chantent depuis les branches et arbustes et peuvent s’abriter sous l’écorce près de l’eau.",
+    "reproduction": "Elle pond dans l’eau où se développent les têtards; la saison varie selon les populations.",
+    "ecology": "À Corrientes, en Argentine, elle a été décrite comme une reproductrice à période prolongée, tandis que d’autres études signalent des rythmes saisonniers différents ailleurs.",
+    "conservation": "Le système argentin d’information sur la biodiversité rapporte le statut mondial Préoccupation mineure et des évaluations nationales non menacées; ces catégories concernent des échelles différentes."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-nasicus",
+      "title": "Scinax nasicus — Amphibian Species of the World"
+    },
+    {
+      "url": "https://sib.gob.ar/ficha.php?especie=ANIMALIA%2AScinax%2Anasicus",
+      "title": "Scinax nasicus — Système d’information sur la biodiversité des parcs nationaux argentins"
+    },
+    {
+      "url": "https://ve.scielo.org/scielo.php?pid=S0378-18442009000300014&script=sci_arttext",
+      "title": "Parasites et traits reproducteurs de Scinax nasicus dans une région subtropicale d’Amérique du Sud"
+    },
+    {
+      "url": "https://doi.org/10.1590/1519-6984.03616",
+      "title": "Première mention de Scinax nasicus sur le littoral brésilien et nouvelles mentions au Rio Grande do Sul"
+    }
+  ]
+}

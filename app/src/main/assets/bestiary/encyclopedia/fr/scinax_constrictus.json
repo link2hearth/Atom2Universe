@@ -1,0 +1,30 @@
+{
+  "id": "scinax_constrictus",
+  "name": "Rainette Scinax constrictus",
+  "scientific": "Scinax constrictus",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Scinax constrictus est une petite rainette connue du centre du Brésil, notamment du Cerrado.",
+    "identification": "Son nom fait référence à un repli cutané resserré sur les épaules; l’adulte présente aussi un museau pointu et de petits tubercules aux paupières et à la mâchoire.",
+    "habitat": "Elle est associée aux milieux ouverts et lance ses appels depuis des arbustes au bord de mares permanentes.",
+    "diet": "Les sources consultées ne décrivent pas en détail le régime alimentaire de l’adulte.",
+    "behavior": "Pendant la période de reproduction, les mâles chantent tête dirigée vers le bas depuis les arbustes riverains.",
+    "reproduction": "L’activité reproductrice a été observée de décembre à mars; la description originale signale une ponte d’œufs sombres.",
+    "ecology": "La description originale la place dans le groupe Scinax rostratus et distingue son chant et sa morphologie de ceux de Scinax nebulosus, qui lui ressemble.",
+    "conservation": "Le Livre rouge brésilien de 2018 rapporte une évaluation en Préoccupation mineure datant de 2012; ce statut ancien ne constitue pas une estimation actuelle de la population."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Scinax/Scinax-constrictus",
+      "title": "Scinax constrictus — Amphibian Species of the World"
+    },
+    {
+      "url": "https://files.cercomp.ufg.br/weby/up/199/o/Lima_et_al_2004.pdf",
+      "title": "Nouvelle espèce de Scinax du groupe S. rostratus du Brésil central"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "title": "Livre rouge brésilien des espèces menacées de la faune, volume I — ICMBio"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "schinia_rivulosa",
+  "name": "Ragweed flower moth",
+  "scientific": "Schinia rivulosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Schinia rivulosa is a noctuid moth known as the ragweed flower moth.",
+    "identification": "Its forewing measures about 11–14 mm and has alternating grey tones separated by narrow white lines.",
+    "habitat": "Its main range lies in eastern North America, with scattered records in southern Oregon.",
+    "diet": "The caterpillars feed on ragweeds (Ambrosia species).",
+    "behavior": "Adults fly in late summer and early autumn.",
+    "reproduction": "The regional life-history account documents the host plants of the larvae but gives no detailed account of egg-laying.",
+    "ecology": "Its larval dependence on ragweeds links the moth to these flowering plants across its range.",
+    "conservation": "The regional catalogues consulted do not provide a species-wide conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.pnwmoths.biol.wwu.edu/browse/family-noctuidae/subfamily-heliothinae/schinia/schinia-rivulosa/",
+      "title": "PNW Moths — Schinia rivulosa"
+    },
+    {
+      "url": "https://auth1.dpr.ncparks.gov/moths/view.php?MONA_number=11135.00",
+      "title": "Moths of North Carolina — Ragweed Flower Moth"
+    }
+  ]
+}

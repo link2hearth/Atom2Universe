@@ -1,0 +1,30 @@
+{
+  "id": "sminthopsis_bindi",
+  "name": "Kakadu dunnart",
+  "scientific": "Sminthopsis bindi",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Kakadu dunnart is a small dasyurid marsupial described from Australia’s Northern Territory.",
+    "identification": "The species was formally described in 1994; the database sources consulted do not summarize field marks.",
+    "habitat": "Its original description identifies it as a species of the Northern Territory’s stony woodlands.",
+    "diet": "The species accounts consulted do not establish a distinct prey list.",
+    "behavior": "Species-specific behavior is not detailed in the accounts used here.",
+    "reproduction": "The sources consulted do not provide species-specific reproductive observations.",
+    "ecology": "It shares the genus Sminthopsis with the Julia Creek dunnart S. douglasi; see that profile.",
+    "conservation": "The Mammal Diversity Database reports a global IUCN category of Near Threatened."
+  },
+  "sources": [
+    {
+      "url": "https://field.biodiversitylibrary.org/part/50867",
+      "title": "Van Dyck, Woinarski & Press (1994), The Kakadu dunnart — Biodiversity Heritage Library"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000200/",
+      "title": "Mammal Diversity Database — Sminthopsis bindi"
+    },
+    {
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/065f1da4-53cd-40b8-a396-80fa5c74dedd",
+      "title": "Australian Faunal Directory via Atlas of Living Australia — Sminthopsis douglasi"
+    }
+  ]
+}

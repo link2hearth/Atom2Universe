@@ -1,0 +1,141 @@
+{
+  "id": "sminthopsis_bindi",
+  "scientific": "Sminthopsis bindi",
+  "group": "mammals",
+  "name": {
+    "en": "Kakadu dunnart",
+    "fr": "Dunnart de Kakadu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Kakadu dunnart is a small dasyurid marsupial described from Australia’s Northern Territory.",
+      "fr": "Le dunnart de Kakadu est un petit marsupial dasyuridé décrit dans le Territoire du Nord australien."
+    },
+    "identification": {
+      "en": "The species was formally described in 1994; the database sources consulted do not summarize field marks.",
+      "fr": "L’espèce a été décrite formellement en 1994 ; les bases consultées ne résument pas de critères de reconnaissance."
+    },
+    "habitat": {
+      "en": "Its original description identifies it as a species of the Northern Territory’s stony woodlands.",
+      "fr": "Sa description originale la présente comme une espèce des boisements pierreux du Territoire du Nord."
+    },
+    "diet": {
+      "en": "The species accounts consulted do not establish a distinct prey list.",
+      "fr": "Les fiches consultées n’établissent pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is not detailed in the accounts used here.",
+      "fr": "Les sources utilisées ici ne détaillent pas son comportement propre."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide species-specific reproductive observations.",
+      "fr": "Les sources consultées ne fournissent pas d’observations reproductives propres à l’espèce."
+    },
+    "ecology": {
+      "en": "It shares the genus Sminthopsis with the Julia Creek dunnart S. douglasi; see that profile.",
+      "fr": "Il partage le genre Sminthopsis avec le dunnart de Julia Creek S. douglasi ; voir cette fiche."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports a global IUCN category of Near Threatened.",
+      "fr": "La Mammal Diversity Database rapporte une catégorie UICN mondiale « Quasi menacée »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Van Dyck, Woinarski & Press (1994), The Kakadu dunnart — Biodiversity Heritage Library",
+        "fr": "Van Dyck, Woinarski & Press (1994), The Kakadu dunnart — Biodiversity Heritage Library"
+      },
+      "url": "https://field.biodiversitylibrary.org/part/50867",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The original species description names S. bindi and describes it from the stony woodlands of the Northern Territory."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 18,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Diversity Database — Sminthopsis bindi",
+        "fr": "Mammal Diversity Database — Sminthopsis bindi"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000200/",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The database recognizes the taxon, provides its global Near Threatened category and links its original description; it supplies little species-level life-history detail."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 22,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Faunal Directory via Atlas of Living Australia — Sminthopsis douglasi",
+        "fr": "Australian Faunal Directory via Atlas of Living Australia — Sminthopsis douglasi"
+      },
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/065f1da4-53cd-40b8-a396-80fa5c74dedd",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The accepted taxon record places S. douglasi in the genus Sminthopsis, supporting this reciprocal genus-level reference."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 16,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "This concise account omits dietary and reproductive detail because the consulted species-level records provide little information."
+  ],
+  "review_note": "Used the original taxonomic description, current mammal database and Australian Faunal Directory; the comparison with S. douglasi concerns genus and documented habitat only.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

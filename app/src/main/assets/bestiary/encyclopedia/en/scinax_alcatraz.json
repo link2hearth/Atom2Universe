@@ -1,0 +1,34 @@
+{
+  "id": "scinax_alcatraz",
+  "name": "Alcatraz snouted treefrog",
+  "scientific": "Scinax alcatraz",
+  "group": "amphibians",
+  "sections": {
+    "overview": "This small hylid frog is endemic to Ilha dos Alcatrazes off southeastern Brazil; ASW currently places it as Ololygon alcatraz.",
+    "identification": "The cited catalogue documents its island locality but gives little identification detail.",
+    "habitat": "It inhabits bromeliads on its small offshore island, where water collects between the leaves.",
+    "diet": "The sources consulted focus on its range and conservation and do not establish a species-specific diet.",
+    "behavior": "Its advertisement call was formally described in a 2024 study.",
+    "reproduction": "The frog is bromeligenous, using bromeliad water-holding leaf axils for reproduction.",
+    "ecology": "The 2015 study places it with S. arduous in the bromeliad-associated Scinax perpusillus group.",
+    "conservation": "An IUCN report says its status improved from Critically Endangered to Vulnerable in 2020 after habitat protection and management."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Hylidae/Ololygon/Ololygon-alcatraz",
+      "title": "Amphibian Species of the World — Ololygon alcatraz"
+    },
+    {
+      "url": "https://amphibian-reptile-conservation.org/pdfs/Volume/Vol_15_no_2/ARC_15_2_%5BGeneral_Section%5D_279-288_e293.pdf",
+      "title": "Captive breeding program for Scinax alcatraz — Amphibian & Reptile Conservation"
+    },
+    {
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2023/10/SOTWA-final-10.4.23.pdf",
+      "title": "The Impact of Conservation — State of the World's Amphibians, IUCN"
+    },
+    {
+      "url": "https://projetobromelias.weebly.com/uploads/2/5/5/0/25500709/32_lacerda_2015_scinax_arduous.pdf",
+      "title": "Scinax perpusillus group — Zootaxa rediagnosis of S. arduous"
+    }
+  ]
+}

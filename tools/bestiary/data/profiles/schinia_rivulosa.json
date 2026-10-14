@@ -1,0 +1,118 @@
+{
+  "id": "schinia_rivulosa",
+  "scientific": "Schinia rivulosa",
+  "group": "invertebrates",
+  "name": {
+    "en": "Ragweed flower moth",
+    "fr": "Noctuelle des ambroisies"
+  },
+  "sections": {
+    "overview": {
+      "en": "Schinia rivulosa is a noctuid moth known as the ragweed flower moth.",
+      "fr": "Schinia rivulosa est un papillon de nuit de la famille des Noctuidae, appelé ragweed flower moth en anglais."
+    },
+    "identification": {
+      "en": "Its forewing measures about 11–14 mm and has alternating grey tones separated by narrow white lines.",
+      "fr": "Son aile antérieure mesure environ 11–14 mm et présente des tons gris alternés séparés par de fines lignes blanches."
+    },
+    "habitat": {
+      "en": "Its main range lies in eastern North America, with scattered records in southern Oregon.",
+      "fr": "Son aire principale se trouve dans l’est de l’Amérique du Nord, avec quelques mentions isolées dans le sud de l’Oregon."
+    },
+    "diet": {
+      "en": "The caterpillars feed on ragweeds (Ambrosia species).",
+      "fr": "Les chenilles se nourrissent d’ambroisies (espèces du genre Ambrosia)."
+    },
+    "behavior": {
+      "en": "Adults fly in late summer and early autumn.",
+      "fr": "Les adultes volent à la fin de l’été et au début de l’automne."
+    },
+    "reproduction": {
+      "en": "The regional life-history account documents the host plants of the larvae but gives no detailed account of egg-laying.",
+      "fr": "La fiche régionale documente les plantes hôtes des chenilles, mais ne détaille pas la ponte."
+    },
+    "ecology": {
+      "en": "Its larval dependence on ragweeds links the moth to these flowering plants across its range.",
+      "fr": "La dépendance des chenilles aux ambroisies relie ce papillon à ces plantes à fleurs dans son aire de répartition."
+    },
+    "conservation": {
+      "en": "The regional catalogues consulted do not provide a species-wide conservation assessment.",
+      "fr": "Les catalogues régionaux consultés ne donnent pas d’évaluation de conservation à l’échelle de l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "PNW Moths — Schinia rivulosa",
+        "fr": "PNW Moths — Schinia rivulosa"
+      },
+      "url": "https://www.pnwmoths.biol.wwu.edu/browse/family-noctuidae/subfamily-heliothinae/schinia/schinia-rivulosa/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "WWU reports the moth’s size, range, host plants and flight season."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 11,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Moths of North Carolina — Ragweed Flower Moth",
+        "fr": "Moths of North Carolina — Ragweed Flower Moth"
+      },
+      "url": "https://auth1.dpr.ncparks.gov/moths/view.php?MONA_number=11135.00",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "North Carolina government catalogue lists Schinia rivulosa as a noctuid moth and provides regional records, but no global status assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 55,
+        "notes_words": 20,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "Biology beyond the larval host and adult flight period is not detailed in the cited regional accounts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

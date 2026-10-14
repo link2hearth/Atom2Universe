@@ -1,0 +1,119 @@
+{
+  "id": "segestria_florentina",
+  "scientific": "Segestria florentina",
+  "group": "invertebrates",
+  "name": {
+    "en": "Florentine tube-web spider",
+    "fr": "Ségestrie florentine"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large Mediterranean spider belongs to Segestriidae.",
+      "fr": "Cette grande araignée méditerranéenne appartient aux Segestriidae."
+    },
+    "identification": {
+      "en": "Adults are dark; chelicerae may shine green or bronze.",
+      "fr": "Les adultes sont sombres ; leurs chélicères brillent parfois vert ou bronze."
+    },
+    "habitat": {
+      "en": "It shelters in tree hollows, crevices, walls and buildings.",
+      "fr": "Elle s’abrite dans les cavités d’arbres, les fissures, les murs et les bâtiments."
+    },
+    "diet": {
+      "en": "Prey include beetles, moths, wasps, woodlice and spiders.",
+      "fr": "Ses proies incluent coléoptères, papillons de nuit, guêpes, cloportes et araignées."
+    },
+    "behavior": {
+      "en": "It waits in a tubular retreat on radiating signal threads, then strikes passing prey.",
+      "fr": "Elle attend dans un tube relié à des fils avertisseurs, puis saisit les proies qui les touchent."
+    },
+    "reproduction": {
+      "en": "The female guards her autumn egg sac and young.",
+      "fr": "La femelle garde son cocon d’automne et ses petits."
+    },
+    "ecology": {
+      "en": "The World Spider Catalog records it from Europe and North Africa east to Georgia, and as introduced in parts of South America.",
+      "fr": "Le World Spider Catalog la signale d’Europe et d’Afrique du Nord jusqu’à la Géorgie, ainsi que comme introduite dans certaines régions d’Amérique du Sud."
+    },
+    "conservation": {
+      "en": "The French INPN account lists the species as Least Concern in France; this is a national assessment.",
+      "fr": "La fiche française de l’INPN classe l’espèce en « Préoccupation mineure » en France ; il s’agit d’une évaluation nationale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "INPN — Florentine tube-web spider species account",
+        "fr": "INPN — fiche de la ségestrie florentine"
+      },
+      "url": "https://inpn.mnhn.fr/explorer/especes/segestria_florentina/1165",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French national natural-history account gives measurements, habitats, prey, hunting, egg-sac season and national status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 14,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "World Spider Catalog — Segestria florentina",
+        "fr": "World Spider Catalog — Segestria florentina"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/40555/Segestria_florentina",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Bern-based catalog summarizes accepted name and worldwide distribution, including introduced South American records."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 14,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation category cited here applies to France, not to the species worldwide."
+  ],
+  "review_note": "Cross-checked the French INPN species account with the World Spider Catalog; retained the national scope of the INPN status.",
+  "reviewed": true,
+  "source_audit_version": 1
+}
