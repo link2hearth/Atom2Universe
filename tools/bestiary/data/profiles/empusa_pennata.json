@@ -1,0 +1,195 @@
+{
+  "id": "empusa_pennata",
+  "scientific": "Empusa pennata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Conehead Mantis",
+    "fr": "Empuse commune"
+  },
+  "sections": {
+    "overview": {
+      "en": "Empusa pennata is a Mediterranean mantis recorded across western Mediterranean Europe and North Africa.",
+      "fr": "Empusa pennata est une mante méditerranéenne signalée dans l’ouest du bassin méditerranéen, en Europe et en Afrique du Nord."
+    },
+    "identification": {
+      "en": "At 50–67 mm long, it has a distinctive raised, cone-like head; males have comb-like antennae, unlike the shorter thread-like antennae of females.",
+      "fr": "Longue de 50 à 67 mm, elle porte une tête caractéristique surmontée d’une coiffe conique ; les antennes du mâle sont pectinées, celles de la femelle plus courtes et filiformes."
+    },
+    "habitat": {
+      "en": "In France it occupies warm Mediterranean scrub, grasses and shrubs, generally in lowland or foothill settings.",
+      "fr": "En France, elle fréquente les garrigues chaudes, les herbes et les arbustes méditerranéens, surtout en plaine et sur les premiers reliefs."
+    },
+    "diet": {
+      "en": "It ambushes small prey, especially flies, and catches flying insects with its spiny raptorial forelegs.",
+      "fr": "Elle chasse à l’affût de petites proies, surtout des mouches, qu’elle saisit en vol avec ses pattes ravisseuses épineuses."
+    },
+    "behavior": {
+      "en": "The mantis remains camouflaged among vegetation and becomes active in sunshine; disturbed males may fly short distances.",
+      "fr": "Cette mante se camoufle dans la végétation et reprend son activité au soleil ; les mâles dérangés peuvent s’envoler sur de courtes distances."
+    },
+    "reproduction": {
+      "en": "Egg-laying takes place in summer, and the young hatch during that season before passing winter as nymphs in vegetation.",
+      "fr": "La ponte a lieu en été et les jeunes éclosent durant cette saison, puis passent l’hiver à l’état de nymphes dans la végétation."
+    },
+    "ecology": {
+      "en": "The species’ Mediterranean distribution and warm, dry habitat preference are consistent across the French and Portuguese accounts consulted.",
+      "fr": "Les fiches française et portugaise consultées concordent sur sa répartition méditerranéenne et sa préférence pour les milieux chauds et secs."
+    },
+    "conservation": {
+      "en": "The 2023 global assessment shown by the French species portal is Least Concern; that portal also reports a regional Endangered listing for Poitou-Charentes.",
+      "fr": "L’évaluation mondiale de 2023 affichée par le portail français classe l’espèce en « Préoccupation mineure » ; ce portail signale aussi un classement régional « En danger » en Poitou-Charentes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Empusa pennata — FAUNA species profile",
+        "fr": "Empusa pennata — fiche espèce FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/65827",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French regional species profile gives size, diagnostic features, habitat, seasonal biology and global and regional status."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Empusa pennata — University of Évora Virtual Biodiversity Museum",
+        "fr": "Empusa pennata — Museu Virtual da Biodiversidade, Universidade de Évora"
+      },
+      "url": "https://museubiodiversidade.uevora.pt/elenco-de-especies/biodiversidade-actual/animais/artropodes/insectos/empusa-pennata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Portuguese university account reports hot dry Mediterranean scrub, small prey and western Mediterranean occurrence."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Empuse commune — Biodiv.SONE",
+        "fr": "Empuse commune — Biodiv.SONE"
+      },
+      "url": "https://biodiv.sone.fr/spip.php?article1229=&tri_exp=oid",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French naturalist account describes ambush feeding on flies and the seasonal egg and nymph cycle."
+      ],
+      "prose_claims": [
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "INPN records and conservation status — Empusa pennata",
+        "fr": "Données de l’INPN et statut de conservation — Empusa pennata"
+      },
+      "url": "https://inpn.mnhn.fr/espece/cd_nom/65827/tab/fiche",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The referenced national inventory is the basis for the portal’s 2023 global category and French regional listing."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "No close mantid species appears among the current catalogue profiles; the Poitou-Charentes category is local and is not generalized to the species worldwide."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "enallagma_signatum",
+  "name": "Agrion orangé",
+  "scientific": "Enallagma signatum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Enallagma signatum est un agrion de l’est de l’Amérique du Nord dont le mâle adulte est nettement orangé.",
+    "identification": "L’adulte mesure 25 à 38 mm ; le mâle a les yeux et le thorax orange et l’abdomen noir barré d’orange, tandis que la femelle varie.",
+    "habitat": "Elle fréquente les lacs, étangs et cours d’eau lents à plantes flottantes, surtout les nénuphars.",
+    "diet": "Les fiches consultées ne donnent pas de liste de proies propre à cette espèce.",
+    "behavior": "Dans l’Illinois, l’espèce est active près du crépuscule et les couples volent près de l’eau.",
+    "reproduction": "Le mâle accompagne la femelle qui pond dans les plantes aquatiques.",
+    "ecology": "Comparez Enallagma annexum et E. carunculatum : le mâle adulte d’E. signatum est orangé.",
+    "conservation": "Le département des Ressources naturelles de l’Illinois le décrit comme commun et indigène dans cet État ; cette donnée régionale n’est pas une évaluation mondiale de population."
+  },
+  "sources": [
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdamselflies/family-coenagrionidae/wadforangebluet.html",
+      "title": "Agrion orangé — département des Ressources naturelles de l’Illinois"
+    },
+    {
+      "url": "https://savoirs.quebec/vivant/enallagma-signatum",
+      "title": "Enallagma signatum — Savoirs.Québec"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2018.pdf",
+      "title": "Liste des odonates nord-américains — Odonata Central"
+    }
+  ]
+}

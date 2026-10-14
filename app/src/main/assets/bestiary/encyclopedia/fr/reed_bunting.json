@@ -1,0 +1,26 @@
+{
+  "id": "reed_bunting",
+  "name": "Bruant des roseaux",
+  "scientific": "Emberiza schoeniclus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Bruant des roseaux est un passereau du genre Emberiza présent toute l’année en Grande-Bretagne et en Irlande.",
+    "identification": "En plumage nuptial, le mâle a la tête noire et une moustache blanche; la femelle est plus brune, et les deux sexes montrent des rectrices externes blanches.",
+    "habitat": "Il niche surtout dans les roselières et autres zones humides à végétation émergente dense.",
+    "diet": "Il mange des insectes pendant la reproduction et des graines en hiver, et nourrit aussi ses jeunes d’invertébrés.",
+    "behavior": "Les populations nordiques migrent vers le sud en hiver, et les oiseaux peuvent rejoindre des bandes mixtes de fringilles et de bruants.",
+    "reproduction": "La ponte compte généralement quatre ou cinq œufs, couvés par la femelle pendant environ douze à treize jours.",
+    "ecology": "Son régime saisonnier relie les zones humides de nidification aux terres agricoles où il s’alimente en hiver.",
+    "conservation": "Il est mondialement classé Préoccupation mineure, mais figure en liste orange au Royaume-Uni, où l’intensification agricole a réduit les ressources alimentaires hivernales."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/reed-bunting",
+      "title": "Bruant des roseaux — BTO BirdFacts"
+    },
+    {
+      "url": "https://professionnels.ofb.fr/sites/default/files/pdf-especes/Bruant_roseaux-E.schoeniclus.pdf",
+      "title": "Bruant des roseaux — Office français de la biodiversité"
+    }
+  ]
+}

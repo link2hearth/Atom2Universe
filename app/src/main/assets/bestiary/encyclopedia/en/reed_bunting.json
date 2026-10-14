@@ -1,0 +1,26 @@
+{
+  "id": "reed_bunting",
+  "name": "Reed Bunting",
+  "scientific": "Emberiza schoeniclus",
+  "group": "birds",
+  "sections": {
+    "overview": "The reed bunting is a passerine of genus Emberiza found across Britain and Ireland throughout the year.",
+    "identification": "Breeding males have a black head and white moustachial stripe; females are browner, and both sexes show white outer tail feathers.",
+    "habitat": "It breeds chiefly in reedbeds and other wetlands with dense emergent vegetation.",
+    "diet": "It eats insects during breeding and seeds in winter, also feeding invertebrates to its young.",
+    "behavior": "Northern populations migrate south in winter, and birds may join mixed flocks of finches and buntings.",
+    "reproduction": "The usual clutch contains four or five eggs, incubated by the female for about twelve to thirteen days.",
+    "ecology": "Its seasonal diet connects wetland breeding habitat with winter feeding in farmland.",
+    "conservation": "It is globally Least Concern but Amber-listed in the United Kingdom, where agricultural intensification reduced winter food availability."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/reed-bunting",
+      "title": "Reed Bunting — BTO BirdFacts"
+    },
+    {
+      "url": "https://professionnels.ofb.fr/sites/default/files/pdf-especes/Bruant_roseaux-E.schoeniclus.pdf",
+      "title": "Bruant des roseaux — Office français de la biodiversité"
+    }
+  ]
+}

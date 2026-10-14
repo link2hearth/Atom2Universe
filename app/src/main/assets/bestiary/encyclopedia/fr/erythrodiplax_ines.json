@@ -1,0 +1,38 @@
+{
+  "id": "erythrodiplax_ines",
+  "name": "Erythrodiplax ines",
+  "scientific": "Erythrodiplax ines",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette libellule de la famille des Libellulidés a une proche congénère, Erythrodiplax media, également présentée ici.",
+    "identification": "ITIS reconnaît Erythrodiplax ines comme espèce ; des publications anciennes emploient aussi la combinaison E. connata ines, ce qui invite à vérifier les noms des mentions historiques.",
+    "habitat": "À Napo, le relevé la signale près de cours d’eau marécageux d’altitude.",
+    "diet": "Les relevés de présence consultés ne décrivent pas le régime alimentaire de cette espèce.",
+    "behavior": "L’inventaire de terrain cité rapporte des observations, pas un comportement propre à l’espèce.",
+    "reproduction": "Les sources consultées ici ne précisent ni son comportement reproducteur ni son cycle de vie.",
+    "ecology": "Ce relevé ne teste pas son écologie ; comparons-la à E. media seulement par les milieux signalés.",
+    "conservation": "Une évaluation régionale colombienne classe E. ines en préoccupation mineure ; cette catégorie locale ne vaut pas évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt%3Bjsessionid%3DFFA0D7F870E0C0112588EDC638D65955?search_topic=TSN&search_value=593161",
+      "title": "Rapport ITIS : Erythrodiplax ines"
+    },
+    {
+      "url": "https://dragonflyfund.org/wp-content/uploads/2024/06/IDF_Report_150_Schorr_von_Ellenrieder_et_al_2020.pdf",
+      "title": "Odonates récoltés dans la province de Napo, en Équateur, en janvier 2020"
+    },
+    {
+      "url": "https://www.si.edu/es/object/erythrodiplax-ines%3Anmnhentomology_9235589",
+      "title": "Erythrodiplax ines Ris, 1911 — Musée national d’histoire naturelle Smithsonian"
+    },
+    {
+      "url": "https://sedici.unlp.edu.ar/bitstream/handle/10915/119007/Tesis.pdf-PDFA.pdf?isAllowed=y&sequence=1",
+      "title": "Erythrodiplax ines Ris"
+    },
+    {
+      "url": "https://ri.conicet.gov.ar/bitstream/handle/11336/256145/CONICET_Digital_Nro.87af211c-7fc5-4c18-a97a-61cc43f2f1f3_B.pdf?isAllowed=y&sequence=2",
+      "title": "Libellules de Colombie : évaluation régionale"
+    }
+  ]
+}

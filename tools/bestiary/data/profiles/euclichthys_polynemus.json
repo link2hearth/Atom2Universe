@@ -1,0 +1,145 @@
+{
+  "id": "euclichthys_polynemus",
+  "scientific": "Euclichthys polynemus",
+  "group": "fish",
+  "name": {
+    "en": "Eucla cod",
+    "fr": "Morue d’Eucla"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eucla cod is a deepwater gadiform in the family Euclichthyidae. A 2020 revision recognizes it alongside two close relatives, E. microdorsalis and E. robertsi, ending the family’s long treatment as a single-species group.",
+      "fr": "La morue d’Eucla est un gadiforme des grands fonds de la famille des Euclichthyidae. Une révision de 2020 la reconnaît avec deux proches parentes, E. microdorsalis et E. robertsi, mettant fin au traitement historique de cette famille comme groupe monospécifique."
+    },
+    "identification": {
+      "en": "Two close-set dorsal fins, a raised anal-fin lobe, long pelvic rays and no chin barbel distinguish it from morid cods.",
+      "fr": "Deux nageoires dorsales presque jointives, un lobe anal élevé, de longs rayons pelviens et l’absence de barbillon mentonnier la distinguent des moridés."
+    },
+    "habitat": {
+      "en": "It inhabits upper continental slopes off Australia and New Zealand, at about 250–800 m in the New Zealand guide.",
+      "fr": "Elle vit sur le haut des talus continentaux d’Australie et de Nouvelle-Zélande, à environ 250–800 m selon le guide néo-zélandais."
+    },
+    "diet": {
+      "en": "The available New Zealand guide does not describe specific prey or feeding habits.",
+      "fr": "Le guide néo-zélandais disponible ne décrit ni proies particulières ni habitudes alimentaires."
+    },
+    "behavior": {
+      "en": "It probably lives near the bottom and is rarely caught in abundance.",
+      "fr": "Elle vit probablement près du fond et est rarement abondante dans les captures."
+    },
+    "reproduction": {
+      "en": "Its reproductive biology remains poorly known in the sources consulted.",
+      "fr": "Sa biologie reproductrice reste mal connue dans les sources consultées."
+    },
+    "ecology": {
+      "en": "The family revision suggests early juveniles remain pelagic offshore, while adults live close to the seabed; this ontogenetic shift is known from limited available material.",
+      "fr": "La révision de la famille suggère que les jeunes stades restent pélagiques au large, tandis que les adultes vivent près du fond ; ce changement au cours du développement repose sur un matériel disponible limité."
+    },
+    "conservation": {
+      "en": "The taxonomic and identification sources consulted do not give a species-specific global conservation assessment.",
+      "fr": "Les sources taxonomiques et d’identification consultées ne donnent pas d’évaluation mondiale de conservation propre à l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "ITIS Report: Euclichthys polynemus",
+        "fr": "Rapport ITIS : Euclichthys polynemus"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=550695",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS recognizes Euclichthys polynemus McCulloch, 1926 as a valid species."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 10,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of the fish family Euclichthyidae with two new Western Pacific species",
+        "fr": "Révision de la famille de poissons Euclichthyidae et description de deux espèces nouvelles du Pacifique occidental"
+      },
+      "url": "https://www.mapress.com/zt/article/view/zootaxa.4758.2.2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The 2020 revision recognizes three allopatric Euclichthys species, including E. polynemus in western and southern Australia and New Zealand; it reports early juveniles pelagic and adults benthopelagic."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 27,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New Zealand Aquatic Environment and Biodiversity Report 68: Eucla cod",
+        "fr": "Rapport néo-zélandais sur les milieux aquatiques et la biodiversité 68 : morue d’Eucla"
+      },
+      "url": "https://webstatic.niwa.co.nz/library/NZAEBR68.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The guide records diagnostic fins, barbel absence and depth; it says ecology is poorly known."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 15,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Available biological material remains limited; the guide describes diet and reproduction as unknown, and no global conservation assessment was found in sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the 2020 family revision to correct the formerly common claim that Euclichthyidae was monotypic; relatives are named explicitly, and guide-based depth values are matched in both languages."
+}

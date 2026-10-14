@@ -1,0 +1,121 @@
+{
+  "id": "elops_machnata",
+  "scientific": "Elops machnata",
+  "group": "fish",
+  "name": {
+    "en": "Tenpounder",
+    "fr": "Élope machnata"
+  },
+  "sections": {
+    "overview": {
+      "en": "Elops machnata is a tropical Indo-West Pacific ladyfish, related to West African E. lacerta and E. senegalensis.",
+      "fr": "Elops machnata est un poisson tropical de l’Indo-Pacifique occidental, apparenté aux espèces ouest-africaines E. lacerta et E. senegalensis."
+    },
+    "identification": {
+      "en": "It has an elongated body, a gular plate and an upper jaw extending behind the eye.",
+      "fr": "Son corps est allongé, sa plaque gulare est présente et sa mâchoire supérieure dépasse l’œil."
+    },
+    "habitat": {
+      "en": "It frequents coastal marine waters and enters lagoons and estuaries.",
+      "fr": "Il fréquente les eaux marines côtières et pénètre dans les lagunes et les estuaires."
+    },
+    "diet": {
+      "en": "Young and adults feed on small fish and crustaceans.",
+      "fr": "Les jeunes et les adultes mangent de petits poissons et des crustacés."
+    },
+    "behavior": {
+      "en": "Its transparent larvae migrate from offshore spawning areas towards inshore and brackish waters.",
+      "fr": "Ses larves transparentes migrent des zones de ponte au large vers les eaux côtières et saumâtres."
+    },
+    "reproduction": {
+      "en": "Spawning probably occurs at sea, although the available sources give no precise season.",
+      "fr": "La ponte aurait lieu en mer, mais les sources disponibles ne précisent pas de saison."
+    },
+    "ecology": {
+      "en": "It shares a coastal-pelagic lifestyle with E. lacerta and E. senegalensis but occupies a different ocean region.",
+      "fr": "Elle partage le mode de vie pélagique côtier d’E. lacerta et d’E. senegalensis, mais occupe une autre région océanique."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern, assessed in 2016.",
+      "fr": "FishBase indique la catégorie mondiale Préoccupation mineure de l’UICN, selon l’évaluation de 2016."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Elops machnata — FishBase",
+        "fr": "Elops machnata — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Elops-machnata.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports Indo-West Pacific distribution, coastal and estuarine use, diet, sea spawning, and Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 112,
+        "notes_words": 16,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO field identification guide to marine resources in Kenya",
+        "fr": "Guide FAO d’identification des ressources marines du Kenya"
+      },
+      "url": "https://www.fao.org/4/i2741e/i2741e.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "FAO describes its fusiform form, extended upper jaw, gular plate and coastal lagoon habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 14,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

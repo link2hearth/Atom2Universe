@@ -1,0 +1,26 @@
+{
+  "id": "enallagma_carunculatum",
+  "name": "Tule Bluet",
+  "scientific": "Enallagma carunculatum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Tule Bluet is a widespread North American damselfly associated with vegetated lakes, ponds and slow rivers.",
+    "identification": "Adults are about 26–37 mm long; males are blue and black, females greener, and the male’s middle abdominal segments carry relatively extensive black markings.",
+    "habitat": "It is reported along lakes, ponds and slow rivers with aquatic vegetation, and is especially frequent in the western counties of Nebraska.",
+    "diet": "In Illinois, Mayflies and small flies are reported as common prey; the larvae also feed among aquatic vegetation.",
+    "behavior": "Pairs may remain in tandem during oviposition, while females place eggs at or below the water surface in aquatic plants.",
+    "reproduction": "Illinois observations report pairs mating for about 20 minutes before females lay eggs in or near aquatic vegetation.",
+    "ecology": "Compare Enallagma annexum, which is mostly blue, and Enallagma signatum, whose mature males are orange.",
+    "conservation": "The Nebraska account calls it common in western counties; this is a local observation, not a range-wide trend."
+  },
+  "sources": [
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdamselflies/family-coenagrionidae/wadftulebluet.html",
+      "title": "Tule Bluet — Illinois Department of Natural Resources"
+    },
+    {
+      "url": "https://unsm-ento.unl.edu/Odonata/enca.html",
+      "title": "Tule Bluet — Nebraska Dragonflies and Damselflies"
+    }
+  ]
+}

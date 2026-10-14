@@ -1,0 +1,175 @@
+{
+  "id": "enallagma_annexum",
+  "scientific": "Enallagma annexum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Northern Bluet",
+    "fr": "Agrion d’Amérique"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Northern Bluet is a widespread North American damselfly, ranging across much of the Nearctic.",
+      "fr": "L’Agrion d’Amérique est une demoiselle largement répandue en Amérique du Nord, dans une grande partie de la région néarctique."
+    },
+    "identification": {
+      "en": "Adults are about 29–40 mm long; the abdomen is mostly blue with black markings, but close inspection may be needed to separate it from similar bluets.",
+      "fr": "L’adulte mesure environ 29 à 40 mm ; l’abdomen est surtout bleu avec des marques noires, mais un examen attentif peut être nécessaire pour le distinguer de bluets proches."
+    },
+    "habitat": {
+      "en": "It uses still waters such as ponds; Virginia records cited by the state atlas are from high-elevation beaver ponds.",
+      "fr": "Elle fréquente les eaux calmes, notamment les étangs ; les données de Virginie concernent des étangs de castors d’altitude."
+    },
+    "diet": {
+      "en": "The species accounts consulted give no prey list for the Northern Bluet.",
+      "fr": "Les fiches consultées ne donnent pas de liste de proies pour l’Agrion d’Amérique."
+    },
+    "behavior": {
+      "en": "Similar bluets can require close examination to identify reliably.",
+      "fr": "Des bluets proches peuvent exiger un examen attentif pour être identifiés sûrement."
+    },
+    "reproduction": {
+      "en": "The consulted accounts provide flight dates but little detail on courtship or egg-laying.",
+      "fr": "Les fiches consultées indiquent des périodes de vol, mais peu de détails sur la parade ou la ponte."
+    },
+    "ecology": {
+      "en": "Compare Enallagma carunculatum and Enallagma signatum: the former has more black on the male abdomen, while the latter is orange.",
+      "fr": "Comparez Enallagma carunculatum et Enallagma signatum : le premier a davantage de noir sur l’abdomen du mâle, tandis que le second est orangé."
+    },
+    "conservation": {
+      "en": "NatureServe ranks the species globally secure (G5); that broad rank does not mean every local population is equally common.",
+      "fr": "NatureServe classe l’espèce globalement comme sûre (G5) ; cette catégorie générale ne signifie pas que toutes les populations locales sont aussi abondantes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Northern Bluet — Virginia Lepidoptera and Odonata Web Atlas",
+        "fr": "Agrion d’Amérique — atlas odonatologique de Virginie"
+      },
+      "url": "https://www.vararespecies.org/specie/Enallagma%20annexum",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "Virginia atlas account describes adult size, blue-and-black appearance, similar species and local habitat.",
+        "The Virginia atlas species account does not provide prey information."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Enallagma annexum — NatureServe Explorer",
+        "fr": "Enallagma annexum — NatureServe Explorer"
+      },
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.788336/Enallagma_annexum",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "NatureServe describes its Nearctic distribution, accepted distinction from Eurasian Enallagma cyathigerum and global G5 rank."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Tule Bluet comparison — Nebraska Dragonflies and Damselflies",
+        "fr": "Comparaison avec l’Agrion de la tule — Nebraska Dragonflies and Damselflies"
+      },
+      "url": "https://unsm-ento.unl.edu/Odonata/enca.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Nebraska university account describes the Tule Bluet’s stronger black abdominal pattern, supporting comparison with the mostly blue Northern Bluet."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The cross-reference to Enallagma carunculatum is reciprocal in the companion draft; no other matching damselfly profile was found in the existing catalogue."
+}

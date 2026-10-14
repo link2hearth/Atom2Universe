@@ -1,0 +1,38 @@
+{
+  "id": "erythemis_vesiculosa",
+  "name": "Great Pondhawk",
+  "scientific": "Erythemis vesiculosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Great Pondhawk is a large green skimmer found across the Americas, from the southern United States south into South America.",
+    "identification": "The adult is mostly green with dark bands across the abdomen, a combination that helps distinguish it from other pondhawks.",
+    "habitat": "It is associated with ponds and other still waters; a Florida university account notes it in many parts of the state and in numbers during migration in south Florida.",
+    "diet": "Like other dragonflies, adults are aerial predators; the reviewed species sources do not provide a full prey list specific to this pondhawk.",
+    "behavior": "In an Amazonian campina study, this species was observed flying over open patches rather than concentrating in shaded parts of the sampled foraging habitat.",
+    "reproduction": "The sources consulted identify its aquatic habitat but do not report species-specific courtship or egg-laying observations.",
+    "ecology": "Its open-area flight was linked in the Amazon study to behavioral and thermoregulatory differences among dragonflies, rather than to a demonstrated exclusive habitat requirement.",
+    "conservation": "A 2007 IUCN assessment is reported as Least Concern in the species records consulted; the date matters because it is not a recent population survey."
+  },
+  "sources": [
+    {
+      "url": "https://gardeningsolutions.ifas.ufl.edu/design/gardening-with-wildlife/dragonflies/",
+      "title": "Dragonflies — UF/IFAS Gardening Solutions"
+    },
+    {
+      "url": "https://natuurtijdschriften.nl/pub/592240",
+      "title": "Amazonian Campina dragonfly assemblage — Odonatologica"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2018.pdf",
+      "title": "Checklist of North American Odonata — Odonata Central"
+    },
+    {
+      "url": "https://files.ufgd.edu.br/arquivos/arquivos/78/MESTRADO-DOUTORADO-ENTOMOLOGIA/Disserta%C3%A7%C3%B5es%20Defendidas/Marciel%20Elio%20Rodrigues.pdf",
+      "title": "Erythemis vesiculosa — IUCN status in Brazilian odonate account"
+    },
+    {
+      "url": "https://www.fws.gov/species/great-pondhawk-erythemis-vesiculosa",
+      "title": "Erythemis vesiculosa — field account"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "esox_americanus",
+  "name": "Redfin pickerel",
+  "scientific": "Esox americanus",
+  "group": "fish",
+  "sections": {
+    "overview": "This North American pike is treated as two subspecies: redfin pickerel (Esox americanus americanus) and grass pickerel (Esox americanus vermiculatus). Their ranges meet and intergrade in parts of the Gulf drainage, so the common name alone may not identify the form.",
+    "identification": "The two pickerels can be separated by fin colour and other anatomical characters: redfin pickerel has reddish fins, whereas grass pickerel has dusky yellow-green fins; consult a regional key where they overlap.",
+    "habitat": "It uses shallow, slow or still freshwater with dense aquatic vegetation, including marshes, backwaters, ponds and quiet stream pools.",
+    "diet": "Young fish take small invertebrates, while adults feed mainly on fish and also take crayfish and aquatic insect larvae.",
+    "behavior": "It is a slow-growing ambush predator that hunts from cover among aquatic plants.",
+    "reproduction": "Spawning takes place in shallow, vegetated waters in late winter or early spring; eggs are scattered among plants and adults do not guard them.",
+    "ecology": "Its native range includes eastern North America and parts of the Gulf and lower Mississippi drainages; the U.S. Fish and Wildlife Service also notes introductions beyond that native range, where impacts may differ from those in its home waters.",
+    "conservation": "Canada lists the grass pickerel subspecies as Special Concern; this national assessment applies to that subspecies and should not be generalized to all populations of E. americanus."
+  },
+  "sources": [
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/management-plans/grass-pickerel.html",
+      "title": "Grass Pickerel: Species at Risk Management Plan"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Esox_americanus/",
+      "title": "Esox americanus — Animal Diversity Web"
+    },
+    {
+      "url": "https://www.fws.gov/media/ecological-risk-screening-summary-redfin-pickerel-esox-americanus",
+      "title": "Redfin Pickerel Ecological Risk Screening Summary"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "erythrodiplax_gomesi",
+  "name": "Gomes’ Dragonlet",
+  "scientific": "Erythrodiplax gomesi",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Erythrodiplax gomesi is a Brazilian dragonfly first described from Pirassununga, São Paulo. A 2023 survey recorded it for the first time in Minas Gerais.",
+    "identification": "The taxonomic sources confirm the accepted species name and its placement among libellulid dragonflies, but the brief online records reviewed do not provide a usable field diagnosis.",
+    "habitat": "The 2023 Minas Gerais record came from Sempre-Vivas National Park, a highland landscape containing Cerrado, gallery forest and rocky-field vegetation; the paper does not assign the species to one of those habitats.",
+    "diet": "The cited species records provide no prey information specific to Erythrodiplax gomesi.",
+    "behavior": "The 2023 park inventory records the species but gives no species-specific behavioral details.",
+    "reproduction": "The cited records give no species-specific breeding information.",
+    "ecology": "A recent Brazilian inventory calls it a generalist that is often overlooked in collections, while also emphasizing persistent gaps in South American odonate distribution data.",
+    "conservation": "GBIF currently displays the global IUCN category Data Deficient. Brazil’s 2014 national assessment listed Least Concern; the scopes and dates differ."
+  },
+  "sources": [
+    {
+      "url": "https://portal.ifs.ifsuldeminas.edu.br/arquivos/artigo.lib%C3%A9lulas.sempreVivas.pdf",
+      "title": "Odonata from Sempre-Vivas National Park, Minas Gerais, Brazil"
+    },
+    {
+      "url": "https://www.gbif.org/es/taxon/3BDR6",
+      "title": "Erythrodiplax gomesi — GBIF taxon page"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=593159",
+      "title": "Erythrodiplax gomesi — ITIS report"
+    },
+    {
+      "url": "https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/livro_vermelho_2018_vol1.pdf",
+      "title": "Brazilian Red Book of Threatened Species — Odonata listings"
+    }
+  ]
+}

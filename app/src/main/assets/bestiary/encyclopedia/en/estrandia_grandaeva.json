@@ -1,0 +1,38 @@
+{
+  "id": "estrandia_grandaeva",
+  "name": "Ancient sheetweaver",
+  "scientific": "Estrandia grandaeva",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This accepted sheet-web spider belongs to the family Linyphiidae, with a broad catalogued range but patchy regional records.",
+    "identification": "It is minute: the European spider catalogue gives adult body lengths of about 2.5 mm for males and 2.4–2.8 mm for females; identification relies on adult genital characters in specialist keys.",
+    "habitat": "Alberta survey records place it in varied wooded settings, including aspen–birch forest, black spruce, open burns and lake shores; these are regional collection habitats, not a full ecological profile.",
+    "diet": "The species-specific sources consulted do not describe its prey or feeding ecology.",
+    "behavior": "Species-specific activity and web-use behaviour are not detailed in the catalogues and regional records consulted.",
+    "reproduction": "The sources consulted do not report a species-specific reproductive cycle.",
+    "ecology": "Its broad mapped distribution contrasts with sparse regional documentation. The Northwest Territories entry reports no published territorial records and assigns no regional status.",
+    "conservation": "The Northwest Territories lists its regional status as Undetermined; this reflects limited regional information and is not a global threat category."
+  },
+  "sources": [
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/22007",
+      "title": "World Spider Catalog: Estrandia grandaeva"
+    },
+    {
+      "url": "https://araneae.nmbe.ch/data/3320/Estrandia_grandaeva?lang=de",
+      "title": "Estrandia grandaeva — Spiders of Europe"
+    },
+    {
+      "url": "https://www.albertaparks.ca/media/3194851/holmbergandbuckle2008spidersbirchmountainswildlandpark-dec2008-final.pdf",
+      "title": "Spiders of Birch Mountains Wildland Park"
+    },
+    {
+      "url": "https://www.gov.nt.ca/species-search/estrandia-grandaeva",
+      "title": "Estrandia grandaeva — Northwest Territories Species Search"
+    },
+    {
+      "url": "https://www.btb.termiumplus.gc.ca/tpv2alpha/alpha-eng.html?i=&index=ent&lang=eng&srchtxt=ESTRANDIA+GRANDAEVA",
+      "title": "TERMIUM Plus: Estrandia grandaeva"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "id": "reed_bunting",
+  "scientific": "Emberiza schoeniclus",
+  "group": "birds",
+  "name": {
+    "en": "Reed Bunting",
+    "fr": "Bruant des roseaux"
+  },
+  "sections": {
+    "overview": {
+      "en": "The reed bunting is a passerine of genus Emberiza found across Britain and Ireland throughout the year.",
+      "fr": "Le Bruant des roseaux est un passereau du genre Emberiza présent toute l’année en Grande-Bretagne et en Irlande."
+    },
+    "identification": {
+      "en": "Breeding males have a black head and white moustachial stripe; females are browner, and both sexes show white outer tail feathers.",
+      "fr": "En plumage nuptial, le mâle a la tête noire et une moustache blanche; la femelle est plus brune, et les deux sexes montrent des rectrices externes blanches."
+    },
+    "habitat": {
+      "en": "It breeds chiefly in reedbeds and other wetlands with dense emergent vegetation.",
+      "fr": "Il niche surtout dans les roselières et autres zones humides à végétation émergente dense."
+    },
+    "diet": {
+      "en": "It eats insects during breeding and seeds in winter, also feeding invertebrates to its young.",
+      "fr": "Il mange des insectes pendant la reproduction et des graines en hiver, et nourrit aussi ses jeunes d’invertébrés."
+    },
+    "behavior": {
+      "en": "Northern populations migrate south in winter, and birds may join mixed flocks of finches and buntings.",
+      "fr": "Les populations nordiques migrent vers le sud en hiver, et les oiseaux peuvent rejoindre des bandes mixtes de fringilles et de bruants."
+    },
+    "reproduction": {
+      "en": "The usual clutch contains four or five eggs, incubated by the female for about twelve to thirteen days.",
+      "fr": "La ponte compte généralement quatre ou cinq œufs, couvés par la femelle pendant environ douze à treize jours."
+    },
+    "ecology": {
+      "en": "Its seasonal diet connects wetland breeding habitat with winter feeding in farmland.",
+      "fr": "Son régime saisonnier relie les zones humides de nidification aux terres agricoles où il s’alimente en hiver."
+    },
+    "conservation": {
+      "en": "It is globally Least Concern but Amber-listed in the United Kingdom, where agricultural intensification reduced winter food availability.",
+      "fr": "Il est mondialement classé Préoccupation mineure, mais figure en liste orange au Royaume-Uni, où l’intensification agricole a réduit les ressources alimentaires hivernales."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Reed Bunting — BTO BirdFacts",
+        "fr": "Bruant des roseaux — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/reed-bunting",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BTO ecological data."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 197,
+        "notes_words": 3,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bruant des roseaux — Office français de la biodiversité",
+        "fr": "Bruant des roseaux — Office français de la biodiversité"
+      },
+      "url": "https://professionnels.ofb.fr/sites/default/files/pdf-especes/Bruant_roseaux-E.schoeniclus.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "OFB species sheet describes French reedbed habitat and seasonal diet."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 10,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

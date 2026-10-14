@@ -1,0 +1,26 @@
+{
+  "id": "elops_senegalensis",
+  "name": "Élope du Sénégal",
+  "scientific": "Elops senegalensis",
+  "group": "fish",
+  "sections": {
+    "overview": "Elops senegalensis est un poisson côtier ouest-africain du genre Elops et une proche parente d’E. lacerta.",
+    "identification": "Il porte 11 à 15 branchiospines sur l’arc inférieur et 92 à 100 écailles latérales, contrairement à E. lacerta.",
+    "habitat": "Il fréquente les eaux côtières de l’Atlantique oriental, de la Mauritanie jusqu’à la République démocratique du Congo.",
+    "diet": "Ses proies signalées comprennent les poissons et les crevettes.",
+    "behavior": "Ce poisson pélagique côtier fréquente le littoral et peut remonter les rivières à marée.",
+    "reproduction": "Le guide régional signale une ponte en mer et un stade larvaire leptocéphale transparent chez les Elops côtiers.",
+    "ecology": "Elle partage les réseaux alimentaires côtiers ouest-africains avec E. lacerta; E. machnata est une espèce apparentée de l’Indo-Pacifique occidental.",
+    "conservation": "FishBase indique la catégorie mondiale Données insuffisantes de l’UICN, selon l’évaluation de 2019."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/5023",
+      "title": "Elops senegalensis — FishBase"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers21-03/010034145.pdf",
+      "title": "Poissons d’eau douce et saumâtre d’Afrique de l’Ouest — IRD"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "estrandia_grandaeva",
+  "name": "Linyphie séculaire",
+  "scientific": "Estrandia grandaeva",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette araignée à toile en nappe reconnue appartient aux Linyphiidae ; son aire cataloguée est vaste, mais les mentions régionales restent lacunaires.",
+    "identification": "C’est une araignée minuscule : le catalogue européen indique une longueur adulte d’environ 2,5 mm chez le mâle et de 2,4 à 2,8 mm chez la femelle ; l’identification repose sur les caractères génitaux des adultes dans les clés spécialisées.",
+    "habitat": "Des relevés de l’Alberta la situent dans divers milieux boisés, dont des forêts de peupliers et bouleaux, des pessières noires, des brûlis ouverts et des rives de lac ; ce sont des habitats de collecte régionaux, pas un profil écologique complet.",
+    "diet": "Les sources consultées propres à l’espèce ne décrivent ni ses proies ni son alimentation.",
+    "behavior": "L’activité et l’usage de la toile propres à l’espèce ne sont pas détaillés dans les catalogues et relevés régionaux consultés.",
+    "reproduction": "Les sources consultées ne décrivent pas de cycle reproducteur propre à l’espèce.",
+    "ecology": "Son aire cartographiée étendue contraste avec une documentation régionale lacunaire. La fiche des Territoires du Nord-Ouest ne relève aucune mention publiée dans le territoire et ne lui attribue pas de statut régional.",
+    "conservation": "Les Territoires du Nord-Ouest indiquent un statut régional indéterminé ; cela reflète le manque d’information locale et ne constitue pas une catégorie mondiale de menace."
+  },
+  "sources": [
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/22007",
+      "title": "World Spider Catalog : Estrandia grandaeva"
+    },
+    {
+      "url": "https://araneae.nmbe.ch/data/3320/Estrandia_grandaeva?lang=de",
+      "title": "Estrandia grandaeva — Araignées d’Europe"
+    },
+    {
+      "url": "https://www.albertaparks.ca/media/3194851/holmbergandbuckle2008spidersbirchmountainswildlandpark-dec2008-final.pdf",
+      "title": "Araignées du parc naturel de Birch Mountains"
+    },
+    {
+      "url": "https://www.gov.nt.ca/species-search/estrandia-grandaeva",
+      "title": "Estrandia grandaeva — recherche sur les espèces des Territoires du Nord-Ouest"
+    },
+    {
+      "url": "https://www.btb.termiumplus.gc.ca/tpv2alpha/alpha-eng.html?i=&index=ent&lang=eng&srchtxt=ESTRANDIA+GRANDAEVA",
+      "title": "TERMIUM Plus : Estrandia grandaeva"
+    }
+  ]
+}

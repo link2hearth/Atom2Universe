@@ -1,0 +1,38 @@
+{
+  "id": "eidolon_dupreanum",
+  "name": "Madagascan Straw-coloured Fruit Bat",
+  "scientific": "Eidolon dupreanum",
+  "group": "mammals",
+  "sections": {
+    "overview": "Eidolon dupreanum is a large fruit bat endemic to Madagascar and assessed as Vulnerable. It is a congener of the African straw-coloured fruit bat E. helvum; see that profile for its widespread continental relative.",
+    "identification": "Regional accounts describe a large pteropodid with reported body mass around 250–340 g; they provide fewer field marks than measurements.",
+    "habitat": "It occurs on Madagascar and has been documented roosting in caves, rocky cliffs and, occasionally, dense tree foliage.",
+    "diet": "A study in eastern Madagascar found a diet composed mainly of fruit, with Eucalyptus flowers also consumed.",
+    "behavior": "Researchers identify it as cave-dwelling and capture it at cave mouths around dusk and dawn; detailed movement data remain limited.",
+    "reproduction": "Field monitoring recorded lactating females in November and December and estimated annual female fecundity at about 0.23 young per female.",
+    "ecology": "By eating fruit, it moves seeds between feeding and roosting sites; the diet study also found some evidence that gut passage can improve seed germination.",
+    "conservation": "The global assessment is Vulnerable. Surveys in northern Madagascar associated recent hunting evidence at roosts with declines in a monitored colony, while emphasizing cave disturbance risks."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004388/",
+      "title": "Eidolon dupreanum — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.madagasikara-voakajy.org/42-the-ecology-and-conservation-of-malagasy-bats/file",
+      "title": "The Ecology and Conservation of Malagasy Bats"
+    },
+    {
+      "url": "https://www.persee.fr/doc/revec_0249-7395_2007_num_62_2_1361",
+      "title": "The feeding ecology of Eidolon dupreanum in eastern Madagascar"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6959543/",
+      "title": "Population trends for two Malagasy fruit bats"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1365-2028.2008.01015.x",
+      "title": "Hunting and cave disturbance threaten bats in Ankarana"
+    }
+  ]
+}

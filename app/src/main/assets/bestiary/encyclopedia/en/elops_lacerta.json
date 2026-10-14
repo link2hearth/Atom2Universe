@@ -1,0 +1,26 @@
+{
+  "id": "elops_lacerta",
+  "name": "West African Ladyfish",
+  "scientific": "Elops lacerta",
+  "group": "fish",
+  "sections": {
+    "overview": "Elops lacerta is a West African ladyfish in genus Elops and is often confused with its close relative E. senegalensis.",
+    "identification": "It has an elongated silvery body, 17–19 lower-arch gill rakers and 72–83 lateral-line scales.",
+    "habitat": "It lives in shallow West African coastal waters and enters brackish lagoons and tidal rivers.",
+    "diet": "It eats small fish, crustaceans and molluscs, with insects also reported for larger individuals.",
+    "behavior": "Juveniles occur in lagoons, while adults use estuarine, riverine and coastal waters.",
+    "reproduction": "Spawning is reported to take place at sea.",
+    "ecology": "It is a coastal predator; its close Atlantic congener E. senegalensis overlaps its range, while E. machnata lives in the Indo-West Pacific.",
+    "conservation": "FishBase reports a global IUCN category of Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/4959",
+      "title": "Elops lacerta — FishBase"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers21-03/010034145.pdf",
+      "title": "Fresh and brackish water fishes of West Africa — IRD"
+    }
+  ]
+}

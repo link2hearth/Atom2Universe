@@ -1,0 +1,34 @@
+{
+  "id": "erythrodiplax_media",
+  "name": "Media dragonlet",
+  "scientific": "Erythrodiplax media",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This Libellulidae dragonfly is a close congener of Erythrodiplax ines, covered in the adjacent profile.",
+    "identification": "In southern Brazilian Campos, researchers found that body morphology differed among coastal, highland and steppic grassland populations; this variation means habitat should be considered when comparing specimens.",
+    "habitat": "A study examined the species in three types of southern Brazilian Campos grassland. A separate study observed it at wetland sites in Maranhão; these are documented study settings, not an exhaustive range of habitats.",
+    "diet": "The cited habitat and territorial studies do not report a species-specific diet.",
+    "behavior": "In a Brazilian assemblage study, males were highly aggressive and showed strong territorial fidelity near water; individuals apparently lost their territories after staying away from water for at least one day.",
+    "reproduction": "The studies cited here focus on morphology, habitat or territoriality and do not establish the species’ breeding cycle.",
+    "ecology": "The grassland comparison linked morphological variation to vegetation structure; the contrast with E. ines reflects the different sites documented for each species, not a fixed ecological separation.",
+    "conservation": "The cited local ecological studies do not provide a global conservation assessment for E. media."
+  },
+  "sources": [
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=593172",
+      "title": "ITIS Report: Erythrodiplax media"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34228314/",
+      "title": "Morphological variation of Erythrodiplax media among grassland types"
+    },
+    {
+      "url": "https://natuurtijdschriften.nl/pub/592630/OJIOS2008037003003.pdf",
+      "title": "Residence and territorial characteristics of Libellulidae species in a Neotropical assemblage"
+    },
+    {
+      "url": "https://www.scielo.br/j/aa/a/VKvbVHZL9jWz5NwYzNY73Zj/",
+      "title": "Territorial behaviour of Erythrodiplax media in Maranhão"
+    }
+  ]
+}

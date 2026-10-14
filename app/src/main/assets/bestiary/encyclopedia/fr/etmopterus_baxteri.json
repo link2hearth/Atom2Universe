@@ -1,0 +1,38 @@
+{
+  "id": "etmopterus_baxteri",
+  "name": "Requin-lanterne de Baxter",
+  "scientific": "Etmopterus baxteri",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce sagre des grands fonds figure sous le nom Etmopterus baxteri dans le registre néo-zélandais des organismes, tandis que le catalogue australien CAAB traite ce nom comme synonyme d’E. granulosus à la suite d’une révision taxonomique. Il faut donc tenir compte du nom utilisé dans les anciennes études écologiques.",
+    "identification": "Le guide néo-zélandais décrit un requin trapu, uniformément sombre, aux denticules dermiques disposés sans ordre ; il le distingue d’E. lucifer, aux denticules en rangées, et d’E. pusillus, à la peau plus lisse.",
+    "habitat": "Les mentions le situent autour de la Nouvelle-Zélande et de l’Australie, sur les talus continentaux profonds, jusqu’à environ 1500 m selon le guide néo-zélandais.",
+    "diet": "Une étude au large de la Tasmanie a trouvé que les poissons osseux constituaient ses principales proies, les céphalopodes étant également fréquents et les crustacés secondaires ; ces résultats concernent la population australienne étudiée.",
+    "behavior": "Le guide ne décrit pas son activité.",
+    "reproduction": "Le guide ne précise pas sa reproduction.",
+    "ecology": "Ce prédateur des talus profonds apparaît comme capture non ciblée dans les pêcheries néo-zélandaises ; cela documente une interaction avec la pêche, pas une tendance de population.",
+    "conservation": "Le rapport halieutique documente des captures accessoires, mais n’évalue ni le statut mondial de conservation ni la tendance de population de ce requin."
+  },
+  "sources": [
+    {
+      "url": "https://www.nzor.org.nz/names/6a0cc6de-545e-43af-95f6-a214062004d0",
+      "title": "Registre néo-zélandais des organismes : Etmopterus baxteri"
+    },
+    {
+      "url": "https://www.cmar.csiro.au/data/caab/taxon_report.cfm?caab_code=37020021",
+      "title": "Rapport taxonomique CAAB : Etmopterus granulosus"
+    },
+    {
+      "url": "https://webstatic.niwa.co.nz/library/NZAEBR68.pdf",
+      "title": "Rapport néo-zélandais sur les milieux aquatiques et la biodiversité 68 : poissons profonds"
+    },
+    {
+      "url": "https://academic.oup.com/icesjms/article/68/1/157/629079",
+      "title": "Écologie alimentaire du sagre de Baxter Etmopterus baxteri au large de la Tasmanie"
+    },
+    {
+      "url": "https://docs.niwa.co.nz/library/public/NZAEBR-138.pdf",
+      "title": "Captures accessoires et rejets dans les pêcheries néo-zélandaises à la palangre ciblant la lingue"
+    }
+  ]
+}

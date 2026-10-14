@@ -1,0 +1,34 @@
+{
+  "id": "erythrodiplax_media",
+  "name": "Erythrodiplax media",
+  "scientific": "Erythrodiplax media",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette libellule des Libellulidés est une proche congénère d’Erythrodiplax ines, décrite dans la fiche voisine.",
+    "identification": "Dans les Campos du sud du Brésil, les chercheurs ont observé des différences morphologiques entre populations des prairies côtières, d’altitude et steppiques ; le milieu doit donc être pris en compte lors de comparaisons entre spécimens.",
+    "habitat": "Une étude a examiné l’espèce dans trois types de prairie des Campos du sud du Brésil. Une autre l’a observée dans des zones humides du Maranhão ; ces sites documentés ne représentent pas nécessairement tous ses habitats.",
+    "diet": "Les études d’habitat et de territorialité citées ne décrivent pas de régime alimentaire propre à l’espèce.",
+    "behavior": "Dans une étude d’assemblage au Brésil, les mâles se montraient très agressifs et fidèles à leur territoire près de l’eau ; ils semblaient perdre ce territoire après une absence d’au moins un jour.",
+    "reproduction": "Les études citées portent sur la morphologie, l’habitat ou la territorialité et ne précisent pas le cycle reproducteur de l’espèce.",
+    "ecology": "La comparaison des prairies reliait la variation morphologique à la structure de la végétation ; le contraste avec E. ines reflète les sites différents documentés pour chaque espèce, pas une séparation écologique absolue.",
+    "conservation": "Les études écologiques locales citées ne donnent pas d’évaluation mondiale de la conservation d’E. media."
+  },
+  "sources": [
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=593172",
+      "title": "Rapport ITIS : Erythrodiplax media"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34228314/",
+      "title": "Variation morphologique d’Erythrodiplax media selon les types de prairie"
+    },
+    {
+      "url": "https://natuurtijdschriften.nl/pub/592630/OJIOS2008037003003.pdf",
+      "title": "Résidence et caractéristiques territoriales de Libellulidés dans un assemblage néotropical"
+    },
+    {
+      "url": "https://www.scielo.br/j/aa/a/VKvbVHZL9jWz5NwYzNY73Zj/",
+      "title": "Comportement territorial d’Erythrodiplax media au Maranhão"
+    }
+  ]
+}

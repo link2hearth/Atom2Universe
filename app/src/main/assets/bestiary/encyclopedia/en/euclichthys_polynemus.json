@@ -1,0 +1,30 @@
+{
+  "id": "euclichthys_polynemus",
+  "name": "Eucla cod",
+  "scientific": "Euclichthys polynemus",
+  "group": "fish",
+  "sections": {
+    "overview": "The Eucla cod is a deepwater gadiform in the family Euclichthyidae. A 2020 revision recognizes it alongside two close relatives, E. microdorsalis and E. robertsi, ending the family’s long treatment as a single-species group.",
+    "identification": "Two close-set dorsal fins, a raised anal-fin lobe, long pelvic rays and no chin barbel distinguish it from morid cods.",
+    "habitat": "It inhabits upper continental slopes off Australia and New Zealand, at about 250–800 m in the New Zealand guide.",
+    "diet": "The available New Zealand guide does not describe specific prey or feeding habits.",
+    "behavior": "It probably lives near the bottom and is rarely caught in abundance.",
+    "reproduction": "Its reproductive biology remains poorly known in the sources consulted.",
+    "ecology": "The family revision suggests early juveniles remain pelagic offshore, while adults live close to the seabed; this ontogenetic shift is known from limited available material.",
+    "conservation": "The taxonomic and identification sources consulted do not give a species-specific global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=550695",
+      "title": "ITIS Report: Euclichthys polynemus"
+    },
+    {
+      "url": "https://www.mapress.com/zt/article/view/zootaxa.4758.2.2",
+      "title": "Revision of the fish family Euclichthyidae with two new Western Pacific species"
+    },
+    {
+      "url": "https://webstatic.niwa.co.nz/library/NZAEBR68.pdf",
+      "title": "New Zealand Aquatic Environment and Biodiversity Report 68: Eucla cod"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "elops_lacerta",
+  "name": "Élope d’Afrique occidentale",
+  "scientific": "Elops lacerta",
+  "group": "fish",
+  "sections": {
+    "overview": "Elops lacerta est un poisson côtier ouest-africain du genre Elops, souvent confondu avec sa proche parente E. senegalensis.",
+    "identification": "Son corps est allongé et argenté; il porte 17 à 19 branchiospines sur l’arc inférieur et 72 à 83 écailles latérales.",
+    "habitat": "Il vit dans les eaux côtières peu profondes d’Afrique de l’Ouest et pénètre dans les lagunes saumâtres et les rivières à marée.",
+    "diet": "Il mange de petits poissons, des crustacés et des mollusques; des insectes sont aussi signalés chez les grands individus.",
+    "behavior": "Les jeunes fréquentent les lagunes, tandis que les adultes occupent les eaux côtières, fluviales et estuariennes.",
+    "reproduction": "La ponte est signalée en mer.",
+    "ecology": "C’est un prédateur côtier; sa congénère atlantique E. senegalensis partage son aire, tandis qu’E. machnata vit dans l’Indo-Pacifique occidental.",
+    "conservation": "FishBase indique la catégorie mondiale Préoccupation mineure de l’UICN."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/4959",
+      "title": "Elops lacerta — FishBase"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers21-03/010034145.pdf",
+      "title": "Poissons d’eau douce et saumâtre d’Afrique de l’Ouest — IRD"
+    }
+  ]
+}

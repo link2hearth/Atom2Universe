@@ -1,0 +1,30 @@
+{
+  "id": "empis_opaca",
+  "name": "Empis opaca dance fly",
+  "scientific": "Empis opaca",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Empis opaca is a European dance fly in the family Empididae and genus Empis.",
+    "identification": "Adults are about six to ten millimetres long, with reddish legs and four dark thoracic stripes that distinguish them from Empis livida.",
+    "habitat": "It is reported along hedgerows and woodland edges and occurs in cooler parts of Europe.",
+    "diet": "Adults prey on other insects and also take nectar from flowers.",
+    "behavior": "Males may present a dead insect as a nuptial gift, which the female eats during mating.",
+    "reproduction": "Field accounts report that females may reject males without a prey gift; egg and larval biology remain poorly documented in the sources used.",
+    "ecology": "It is mainly recorded from April to early June, and its spring adults hunt insects and visit flowers.",
+    "conservation": "NatureSpot describes it as fairly common in England and Wales, with fewer records from Scotland, but this is not a Europe-wide trend assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.naturespot.org/species/empis-opaca",
+      "title": "Empis opaca — NatureSpot"
+    },
+    {
+      "url": "https://rcin.org.pl/Content/51351/PDF/WA058_61096_P256-T49_Fragm-Faun-Nr-1.pdf",
+      "title": "Morphology, biology, phenology and occurrence of Empis in Poland"
+    },
+    {
+      "url": "https://science.mnhn.fr/taxon/species/empis/opaca",
+      "title": "Empis opaca — Muséum national d’Histoire naturelle"
+    }
+  ]
+}

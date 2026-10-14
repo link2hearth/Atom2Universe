@@ -1,0 +1,30 @@
+{
+  "id": "ero_aphana",
+  "name": "Araignée pirate à quatre bosses",
+  "scientific": "Ero aphana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le World Spider Catalog classe Ero aphana dans la famille des araignées pirates, les Mimetidae.",
+    "identification": "Le mâle mesure environ 2,5 mm et la femelle 3,0 à 4,2 mm ; l’abdomen porte quatre bosses, mais les pièces génitales distinguent les Ero proches.",
+    "habitat": "Elle fréquente les buissons des zones chaudes, notamment les lisières ; les données françaises incluent aussi végétation et milieux rocheux.",
+    "diet": "Les Mimetidae chassent d’autres araignées à toile et s’introduisent dans leur réseau avant d’attaquer.",
+    "behavior": "La fiche régionale décrit les Mimetidae avançant sur la toile de l’hôte et saisissant leurs proies avec leurs pattes épineuses.",
+    "reproduction": "ODIN rapporte un cycle annuel, des adultes du printemps à l’été et des cocons suspendus contenant jusqu’à une dizaine d’œufs.",
+    "ecology": "Quatre bosses abdominales la distinguent de plusieurs Ero qui en ont deux ; l’examen génital aide à la séparer d’E. tuberculata.",
+    "conservation": "La plateforme régionale indique « Préoccupation mineure » en Normandie ; cette évaluation est régionale et non mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://araneae.nmbe.ch/data/190/Ero_aphana",
+      "title": "Ero aphana — Spiders of Europe"
+    },
+    {
+      "url": "https://odin.anbdd.fr/espece/903",
+      "title": "Araignée pirate — ODIN Normandie"
+    },
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/28049/Ero_aphana",
+      "title": "Ero aphana — World Spider Catalog"
+    }
+  ]
+}

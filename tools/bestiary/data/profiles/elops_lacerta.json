@@ -1,0 +1,122 @@
+{
+  "id": "elops_lacerta",
+  "scientific": "Elops lacerta",
+  "group": "fish",
+  "name": {
+    "en": "West African Ladyfish",
+    "fr": "Élope d’Afrique occidentale"
+  },
+  "sections": {
+    "overview": {
+      "en": "Elops lacerta is a West African ladyfish in genus Elops and is often confused with its close relative E. senegalensis.",
+      "fr": "Elops lacerta est un poisson côtier ouest-africain du genre Elops, souvent confondu avec sa proche parente E. senegalensis."
+    },
+    "identification": {
+      "en": "It has an elongated silvery body, 17–19 lower-arch gill rakers and 72–83 lateral-line scales.",
+      "fr": "Son corps est allongé et argenté; il porte 17 à 19 branchiospines sur l’arc inférieur et 72 à 83 écailles latérales."
+    },
+    "habitat": {
+      "en": "It lives in shallow West African coastal waters and enters brackish lagoons and tidal rivers.",
+      "fr": "Il vit dans les eaux côtières peu profondes d’Afrique de l’Ouest et pénètre dans les lagunes saumâtres et les rivières à marée."
+    },
+    "diet": {
+      "en": "It eats small fish, crustaceans and molluscs, with insects also reported for larger individuals.",
+      "fr": "Il mange de petits poissons, des crustacés et des mollusques; des insectes sont aussi signalés chez les grands individus."
+    },
+    "behavior": {
+      "en": "Juveniles occur in lagoons, while adults use estuarine, riverine and coastal waters.",
+      "fr": "Les jeunes fréquentent les lagunes, tandis que les adultes occupent les eaux côtières, fluviales et estuariennes."
+    },
+    "reproduction": {
+      "en": "Spawning is reported to take place at sea.",
+      "fr": "La ponte est signalée en mer."
+    },
+    "ecology": {
+      "en": "It is a coastal predator; its close Atlantic congener E. senegalensis overlaps its range, while E. machnata lives in the Indo-West Pacific.",
+      "fr": "C’est un prédateur côtier; sa congénère atlantique E. senegalensis partage son aire, tandis qu’E. machnata vit dans l’Indo-Pacifique occidental."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern.",
+      "fr": "FishBase indique la catégorie mondiale Préoccupation mineure de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Elops lacerta — FishBase",
+        "fr": "Elops lacerta — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/4959",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the coastal range, identification counts, diet, sea spawning, and Least Concern status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 14,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fresh and brackish water fishes of West Africa — IRD",
+        "fr": "Poissons d’eau douce et saumâtre d’Afrique de l’Ouest — IRD"
+      },
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers21-03/010034145.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The regional guide compares E. lacerta with E. senegalensis and describes its coastal and lagoon life."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 16,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}
