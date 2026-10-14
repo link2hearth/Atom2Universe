@@ -1,0 +1,13 @@
+{
+  "id": "syzygium_phaeophyllum",
+  "sections": [
+    {"title": "Arbre rare des Fidji", "text": "Syzygium phaeophyllum est un arbre sempervirent peu connu, signalé sur Taveuni, aux Fidji, dans une forêt tropicale humide. La collection d’origine décrit un arbre d’environ 6 m, à écorce lisse et rameaux bruns, rigides et cylindriques ; l’espèce n’est connue que par de très rares récoltes anciennes."},
+    {"title": "Feuilles et données disponibles", "text": "Ses feuilles elliptiques et coriaces mesurent environ 6–8 × 2,5–4 cm ; leur base se rétrécit légèrement et leur sommet est pointu. Les pétioles aplatis mesurent environ 6 à 10 mm. Les sources consultées ne documentent pas de manière fiable ses fleurs, ses fruits ni des usages alimentaires propres à l’espèce ; aucune caractéristique d’autres Syzygium n’est extrapolée."},
+    {"title": "Planche", "text": "La planche limitée au feuillage convient : elle montre les feuilles elliptiques et coriaces ainsi que le rameau brun, sans représenter des fleurs ou fruits non documentés."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Syzygium phaeophyllum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:602081-1"},
+    {"title": "Merrill & Perry — Smith: Pacific Island Plants, IV (Journal of the Arnold Arboretum 26, 1945)", "url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Journal_of_the_Arnold_Arboretum_vol_26.pdf"}
+  ],
+  "related": ["syzygium_aqueum", "syzygium_aromaticum", "syzygium_jambos", "syzygium_malaccense"]
+}

@@ -1,0 +1,36 @@
+{
+  "id": "sphagnum_magellanicum",
+  "sections": [
+    {
+      "title": "Port et couleur",
+      "text": "La sphaigne de Magellan forme des pousses robustes et des coussins denses, bas à modérément élevés. Sa couleur va du vert à l’ombre au rose, rouge ou violacé en milieu ouvert ; les coussins rouges de la planche correspondent à cette gamme caractéristique."
+    },
+    {
+      "title": "Nom et habitat",
+      "text": "L’espèce vit dans les tourbières. Son nom a été appliqué largement dans les ouvrages anciens, mais les travaux taxonomiques récents restreignent S. magellanicum au sens strict au sud de l’Amérique du Sud ; les plantes de l’hémisphère Nord autrefois incluses sont traitées comme d’autres espèces. Une planche seule ne suffit pas à confirmer l’identité d’un spécimen."
+    },
+    {
+      "title": "Usages et sécurité",
+      "text": "Elle contribue à la formation de la tourbe et à la rétention de l’eau. Ce n’est pas une plante alimentaire ; éviter de récolter les sphaignes sauvages dans les tourbières naturelles."
+    }
+  ],
+  "sources": [
+    {
+      "title": "World Flora Online — Sphagnum magellanicum",
+      "url": "https://www.worldfloraonline.org/taxon/wfo-0001189800"
+    },
+    {
+      "title": "Johnson et al. — Taxonomic revision of Sphagnum magellanicum complex",
+      "url": "https://www.osti.gov/servlets/purl/1960677"
+    },
+    {
+      "title": "NERC — Handbook of European Sphagna",
+      "url": "https://nora.nerc.ac.uk/id/eprint/5242/1/Handbook_Euro_Sphagna.pdf"
+    }
+  ],
+  "related": [
+    "sphagnum_capillifolium",
+    "sphagnum_cuspidatum",
+    "sphagnum_fuscum"
+  ]
+}

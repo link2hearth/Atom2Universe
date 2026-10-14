@@ -1,0 +1,14 @@
+{
+  "id": "syzygium_jambos",
+  "sections": [
+    {"title": "Arbre et fleurs", "text": "Syzygium jambos, le pommier-rose, est un petit arbre sempervirent qui atteint environ 10 m et forme une cime dense et étalée. Ses feuilles opposées sont luisantes et peuvent mesurer 9 à 26 cm de long. Les grands bouquets de fleurs blanches en pompon mesurent 5 à 10 cm de large et portent de nombreuses étamines saillantes."},
+    {"title": "Fruit et alimentation", "text": "Le fruit blanchâtre à jaune, rond ou ovoïde, mesure environ 2,5 à 5 cm de large, sent souvent l’eau de rose et contient un noyau. Il se consomme cru ou cuit. Il se distingue de S. malaccense, à fruits rouges, et de S. aqueum, la pomme d’eau plus petite."},
+    {"title": "Planche", "text": "La planche montre les étamines crème et les fruits pâles au parfum de rose qui distinguent ce pommier-rose de ses proches."}
+  ],
+  "sources": [
+    {"title": "NParks Flora & Fauna Web — Syzygium jambos", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/1/3161"},
+    {"title": "National Tropical Botanical Garden — Syzygium jambos", "url": "https://www.ntbg.org/database/plants/detail/Syzygium-jambos"},
+    {"title": "James Cook University — Syzygium jambos", "url": "https://www.jcu.edu.au/discover-nature-at-jcu/plants/plants-on-cairns-campus/syzygium-jambos"}
+  ],
+  "related": ["syzygium_aqueum", "syzygium_aromaticum", "syzygium_malaccense", "syzygium_phaeophyllum"]
+}

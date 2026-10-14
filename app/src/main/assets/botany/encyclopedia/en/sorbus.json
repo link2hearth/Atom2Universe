@@ -1,0 +1,30 @@
+{
+  "id": "sorbus",
+  "sections": [
+    {
+      "title": "The plate and the genus",
+      "text": "The plate shows the rowan, Sorbus aucuparia: a deciduous tree that can reach about 15 m, with pinnate leaves, clusters of creamy-white flowers and orange-red pomes around 8–10 mm across. The genus Sorbus includes other forms, including simple-leaved whitebeams."
+    },
+    {
+      "title": "Fruit and use",
+      "text": "Rowan fruits are bitter and sour raw but are used cooked, for example in jelly. This food use applies to S. aucuparia and should not be generalized to every species called Sorbus."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Woodland Trust — Rowan (Sorbus aucuparia)",
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/rowan/"
+    },
+    {
+      "title": "University College Cork — Sorbus aucuparia",
+      "url": "https://www.ucc.ie/en/tree-explorers/trees/a-z/sorbusaucuparia/"
+    },
+    {
+      "title": "Kew POWO — Sorbus aucuparia",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:741641-1"
+    }
+  ],
+  "related": [
+    "sorbus_intermedia"
+  ]
+}

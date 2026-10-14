@@ -1,0 +1,36 @@
+{
+  "id": "sphagnum_capillifolium",
+  "sections": [
+    {
+      "title": "Form and colour",
+      "text": "Red bog-moss forms slender shoots in low patches or small hummocks. Plants are often red, but may be mixed red and green; shoots are small, and the branch leaves are roughly 1 mm long."
+    },
+    {
+      "title": "Habitat and identification",
+      "text": "It grows in acidic bogs, heaths and wet woodland. Colour and growth form vary, and separating Sphagnum species can require microscopic characters; the plate’s compact red cushions are consistent with the species but are not by themselves diagnostic."
+    },
+    {
+      "title": "Use and safety",
+      "text": "Like other peat mosses, it contributes to peat formation and stores water. It is not presented here as food; harvesting wild bog moss can damage sensitive peatland habitat."
+    }
+  ],
+  "sources": [
+    {
+      "title": "British and Irish Bryological Society — Sphagnum capillifolium",
+      "url": "https://www.bibsbryology.org/learning/species-finder/sphagnum-capillifolium/"
+    },
+    {
+      "title": "British Bryological Society — Sphagnum capillifolium field sheet",
+      "url": "https://www.britishbryologicalsociety.org.uk/wp-content/uploads/2020/12/Sphagnum-capillifolium-subsp.-capillifolium-rubellum.pdf"
+    },
+    {
+      "title": "JNCC — Sphagnum habitats in upland vegetation",
+      "url": "https://data.jncc.gov.uk/data/a17ab353-f5be-49ea-98f1-8633229779a1/IllustratedGuideBritishUplandVegetation-2004.pdf"
+    }
+  ],
+  "related": [
+    "sphagnum_cuspidatum",
+    "sphagnum_fuscum",
+    "sphagnum_magellanicum"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "syzygium_aqueum",
+  "sections": [
+    {"title": "Tree and flowers", "text": "Syzygium aqueum, the water apple, is a small evergreen tropical tree, typically 5–10 m tall with a 5–8 m spreading crown. Its opposite leaves are leathery; fluffy white flowers, about 2.5–3.5 cm wide, carry many long stamens."},
+    {"title": "Fruit and food", "text": "The glossy, waxy, pear-shaped fruit is about 5 cm long, with crisp, watery white flesh and sometimes a few small seeds. It is eaten fresh or preserved. Compared with S. malaccense, its fruit is smaller and usually paler; S. jambos bears rose-scented yellowish fruit."},
+    {"title": "Plate", "text": "The plate shows the opposite leaves, fluffy flowers and pale pink, bell-shaped fruit characteristic of cultivated water apples."}
+  ],
+  "sources": [
+    {"title": "NParks Flora & Fauna Web — Syzygium aqueum", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/1/3153"},
+    {"title": "Plants of the World Online — Syzygium aqueum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:601415-1/general-information"},
+    {"title": "USDA GRIN-Global — Syzygium aqueum", "url": "https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=50068"}
+  ],
+  "related": ["syzygium_aromaticum", "syzygium_jambos", "syzygium_malaccense", "syzygium_phaeophyllum"]
+}

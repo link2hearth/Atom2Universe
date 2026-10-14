@@ -1,0 +1,28 @@
+{
+  "id": "spinacia_oleracea",
+  "sections": [
+    {
+      "title": "Growth and leaves",
+      "text": "Common spinach is an annual or biennial herb, typically about 25–50 cm tall. It forms a rosette of long-stalked, triangular to oval leaves; its small greenish flowers appear on a flowering stem."
+    },
+    {
+      "title": "Food and safety",
+      "text": "The leaves are widely eaten raw or cooked. Kew records the species as a food plant; the sources consulted do not support a specific toxicity claim for this concise account."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Kew POWO — Spinacia oleracea",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:167384-1/general-information"
+    },
+    {
+      "title": "RHS — Spinacia oleracea",
+      "url": "https://www.rhs.org.uk/plants/105498/spinacia-oleracea/details"
+    },
+    {
+      "title": "University of Florida IFAS — Spinach",
+      "url": "https://gardeningsolutions.ifas.ufl.edu/mastergardener/resources/plantid/vegetables/spinach/"
+    }
+  ],
+  "related": []
+}

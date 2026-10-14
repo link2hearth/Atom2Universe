@@ -1,0 +1,34 @@
+{
+  "id": "sinapis_alba",
+  "sections": [
+    {
+      "title": "Port et identification",
+      "text": "La moutarde blanche est une Brassicacée annuelle et rude au toucher, généralement haute d’environ 50 à 100 cm. Ses feuilles inférieures sont lobées ; ses fleurs jaunes à quatre pétales donnent des siliques hérissées, terminées par un bec aplati sans graines."
+    },
+    {
+      "title": "Graines et usages",
+      "text": "Les graines jaune pâle, d’environ 2 à 3 mm, sont cultivées puis broyées ou mélangées pour produire le condiment moutarde. La moutarde est un allergène alimentaire reconnu ; les sources consultées ne permettent pas de considérer la plante comme sans risque pour tous."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Flora of North America — Sinapis alba",
+      "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200009674"
+    },
+    {
+      "title": "RHS — Sinapis alba",
+      "url": "https://www.rhs.org.uk/plants/157229/sinapis-alba/details"
+    },
+    {
+      "title": "PROSEA — Sinapis alba",
+      "url": "https://plantuse.plantnet.org/en/Sinapis_alba_%28PROSEA%29"
+    },
+    {
+      "title": "EFSA — Scientific Opinion on allergenic foods and ingredients",
+      "url": "https://www.efsa.europa.eu/sites/default/files/consultation/140523.pdf"
+    }
+  ],
+  "related": [
+    "sinapis_arvensis"
+  ]
+}

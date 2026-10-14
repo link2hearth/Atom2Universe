@@ -1,0 +1,13 @@
+{
+  "id": "syzygium_phaeophyllum",
+  "sections": [
+    {"title": "A rare Fijian tree", "text": "Syzygium phaeophyllum is a poorly known evergreen tree recorded from Taveuni, Fiji, in wet tropical forest. The original collection described a tree about 6 m tall with smooth bark and stiff, round brown twigs; it is known from very few historical collections."},
+    {"title": "Leaves and evidence", "text": "Its leathery elliptic leaves are about 6–8 × 2.5–4 cm, tapering near the base and pointed at the tip; flattened leaf stalks measure about 6–10 mm. Reliable species-specific details of its flowers, fruit and food uses were not found, so none are inferred from other Syzygium."},
+    {"title": "Plate", "text": "The foliage-only plate is appropriate: it shows the elliptic, leathery leaves and brown twig, while avoiding an unsupported flower or fruit depiction."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Syzygium phaeophyllum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:602081-1"},
+    {"title": "Merrill & Perry — Smith: Pacific Island Plants, IV (Journal of the Arnold Arboretum 26, 1945)", "url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Journal_of_the_Arnold_Arboretum_vol_26.pdf"}
+  ],
+  "related": ["syzygium_aqueum", "syzygium_aromaticum", "syzygium_jambos", "syzygium_malaccense"]
+}

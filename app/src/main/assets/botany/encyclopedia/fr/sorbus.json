@@ -1,0 +1,30 @@
+{
+  "id": "sorbus",
+  "sections": [
+    {
+      "title": "Planche et genre",
+      "text": "La planche représente le sorbier des oiseleurs, Sorbus aucuparia : un arbre caduc pouvant atteindre environ 15 m, aux feuilles pennées, aux bouquets de fleurs blanc crème et aux fruits rouges orangés d’environ 8 à 10 mm. Le genre Sorbus comprend aussi d’autres formes, dont des alisiers à feuilles simples."
+    },
+    {
+      "title": "Fruits et usages",
+      "text": "Les fruits du sorbier sont amers et acides crus, mais s’emploient cuits, par exemple en gelée. Cet usage alimentaire concerne S. aucuparia et ne doit pas être généralisé à toutes les espèces appelées Sorbus."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Woodland Trust — Rowan (Sorbus aucuparia)",
+      "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/rowan/"
+    },
+    {
+      "title": "University College Cork — Sorbus aucuparia",
+      "url": "https://www.ucc.ie/en/tree-explorers/trees/a-z/sorbusaucuparia/"
+    },
+    {
+      "title": "Kew POWO — Sorbus aucuparia",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:741641-1"
+    }
+  ],
+  "related": [
+    "sorbus_intermedia"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "sorbus_intermedia",
+  "sections": [
+    {
+      "title": "Port et feuilles",
+      "text": "L’alisier de Suède, traditionnellement nommé Sorbus intermedia et traité par Kew sous le nom Hedlundia intermedia (également publié comme Scandosorbus intermedia), est un arbre caduc généralement haut d’environ 6 à 12 m. Ses larges feuilles peu lobées ont un revers pâle et tomenteux, contrairement aux feuilles pennées du sorbier des oiseleurs (Sorbus aucuparia)."
+    },
+    {
+      "title": "Fleurs et fruits",
+      "text": "Des corymbes plats de fleurs blanches sont suivis de fruits rouges semblables à de petites pommes, d’environ 1,3 cm de long. La planche montre les feuilles simples et lobées ainsi que les fleurs en corymbes typiques de l’alisier de Suède."
+    },
+    {
+      "title": "Usages et sécurité",
+      "text": "Cette espèce est cultivée comme arbre d’ornement et d’alignement. Les sources consultées ne permettent pas d’établir un usage alimentaire de ses fruits."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Trees and Shrubs Online — Scandosorbus intermedia",
+      "url": "https://www.treesandshrubsonline.org/articles/scandosorbus/scandosorbus-intermedia/"
+    },
+    {
+      "title": "Kew POWO — Hedlundia intermedia",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:77371592-1/general-information"
+    },
+    {
+      "title": "Sennikov — Scandosorbus, a new generic name for Sorbus intermedia",
+      "url": "https://doi.org/10.5735/085.055.0413"
+    }
+  ],
+  "related": [
+    "sorbus"
+  ]
+}

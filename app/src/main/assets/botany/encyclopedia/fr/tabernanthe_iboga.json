@@ -1,0 +1,14 @@
+{
+  "id": "tabernanthe_iboga",
+  "sections": [
+    {"title": "Arbuste et fleurs", "text": "Tabernanthe iboga est un arbuste sempervirent du sous-bois d’Afrique centrale, haut d’environ 4 m, qui contient un latex blanc et porte des feuilles opposées à bord entier. Ses petites fleurs crème présentent des marques rougeâtres à violacées dans la corolle."},
+    {"title": "Fruit et chimie des racines", "text": "La baie lisse mesure environ 3 à 6 cm ; mûre, elle est jaune à rouge et contient de nombreuses graines dans une pulpe blanche. L’écorce de la racine renferme plusieurs alcaloïdes, dont l’ibogaïne ; cette substance psychoactive puissante n’est pas un aliment."},
+    {"title": "Sécurité", "text": "Des rapports cliniques et toxicologiques associent l’exposition à l’ibogaïne à un allongement de l’intervalle QT et à des arythmies potentiellement mortelles. Les fleurs pâles et le fruit jaune-orangé de la planche concordent avec les descriptions botaniques ; aucune préparation ni dose n’est suggérée."}
+  ],
+  "sources": [
+    {"title": "World Flora Online — Tabernanthe iboga (description de la Flore du Gabon)", "url": "https://www.worldfloraonline.org/taxon/wfo-0000320183"},
+    {"title": "PROTA — Tabernanthe iboga", "url": "https://plantuse.plantnet.org/en/Tabernanthe_iboga_%28PROTA%29"},
+    {"title": "RIVM — Évaluation des risques des préparations à base de Tabernanthe iboga", "url": "https://www.rivm.nl/bibliotheek/rapporten/2024-0030.pdf"}
+  ],
+  "related": []
+}

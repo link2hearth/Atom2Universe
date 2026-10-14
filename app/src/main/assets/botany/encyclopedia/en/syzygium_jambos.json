@@ -1,0 +1,14 @@
+{
+  "id": "syzygium_jambos",
+  "sections": [
+    {"title": "Tree and flowers", "text": "Syzygium jambos, the rose apple, is a small evergreen tree that reaches about 10 m and forms a dense, spreading crown. Its opposite leaves are glossy and can be 9–26 cm long. Large, pom-pom-like flower clusters are 5–10 cm wide and have many conspicuous stamens."},
+    {"title": "Fruit and food", "text": "The whitish to yellow, round or egg-shaped fruit is about 2.5–5 cm wide, often smells of rosewater and contains a stone. The fruit is eaten raw or cooked. It is distinct from red-fruited S. malaccense and the smaller water apple, S. aqueum."},
+    {"title": "Plate", "text": "The plate shows the creamy flower stamens and pale, rose-scented fruit used to distinguish this rose apple from its close relatives."}
+  ],
+  "sources": [
+    {"title": "NParks Flora & Fauna Web — Syzygium jambos", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/3/1/3161"},
+    {"title": "National Tropical Botanical Garden — Syzygium jambos", "url": "https://www.ntbg.org/database/plants/detail/Syzygium-jambos"},
+    {"title": "James Cook University — Syzygium jambos", "url": "https://www.jcu.edu.au/discover-nature-at-jcu/plants/plants-on-cairns-campus/syzygium-jambos"}
+  ],
+  "related": ["syzygium_aqueum", "syzygium_aromaticum", "syzygium_malaccense", "syzygium_phaeophyllum"]
+}
