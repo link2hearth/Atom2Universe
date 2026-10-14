@@ -1,0 +1,141 @@
+{
+  "id": "protanguilla_palau",
+  "scientific": "Protanguilla palau",
+  "group": "fish",
+  "name": {
+    "en": "Palauan primitive cave eel",
+    "fr": "Protanguilla palau"
+  },
+  "sections": {
+    "overview": {
+      "en": "Protanguilla palau is a small eel discovered in a submerged reef cave in Palau; it is the sole known species of its family, Protanguillidae.",
+      "fr": "Protanguilla palau est une petite anguille découverte dans une grotte submergée de récif à Palau; c’est la seule espèce connue de sa famille, les Protanguillidae."
+    },
+    "identification": {
+      "en": "Its anatomy combines traits seen in living eels with features otherwise known from fossil eels, which led researchers to describe a new family and a deeply branching eel lineage.",
+      "fr": "Son anatomie associe des caractères observés chez les anguilles actuelles à d’autres surtout connus chez des anguilles fossiles; les chercheurs ont ainsi décrit une nouvelle famille et une lignée ancienne d’anguilles."
+    },
+    "habitat": {
+      "en": "The type specimens came from a fringing-reef cave about 35 m deep in Palau, in the western Pacific.",
+      "fr": "Les spécimens ayant servi à sa description provenaient d’une grotte de récif frangeant située à environ 35 m de profondeur à Palau, dans le Pacifique occidental."
+    },
+    "diet": {
+      "en": "The original description does not establish what this eel eats in the wild.",
+      "fr": "La description originale ne précise pas ce que cette anguille mange dans la nature."
+    },
+    "behavior": {
+      "en": "Its known records are from a marine cave; the available description does not provide a detailed account of its daily behavior.",
+      "fr": "Les observations connues proviennent d’une grotte marine; la description disponible ne détaille pas son comportement quotidien."
+    },
+    "reproduction": {
+      "en": "Reproductive biology remains undocumented in the sources consulted.",
+      "fr": "La biologie de la reproduction n’est pas documentée dans les sources consultées."
+    },
+    "ecology": {
+      "en": "Phylogenetic analyses place it as a very early-diverging branch among living true eels; “living fossil” is a popular shorthand, not a literal claim that the species has remained unchanged.",
+      "fr": "Les analyses phylogénétiques la placent sur une branche très ancienne parmi les anguilles actuelles; « fossile vivant » est une formule populaire, non l’affirmation littérale que l’espèce serait restée inchangée."
+    },
+    "conservation": {
+      "en": "The IUCN Red List assessment published in 2019 classified the species as Data Deficient, reflecting limited information for assessing its extinction risk.",
+      "fr": "L’évaluation de la Liste rouge de l’UICN publiée en 2019 classe l’espèce en Données insuffisantes, faute d’informations permettant d’estimer son risque d’extinction."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A ‘living fossil’ eel from an undersea cave in Palau — Proceedings of the Royal Society B",
+        "fr": "Une anguille « fossile vivant » découverte dans une grotte sous-marine à Palau — Proceedings of the Royal Society B"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3259923/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Original description: anatomy, phylogeny, and limited cave records."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 8,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Palauan primitive cave eel — Smithsonian Ocean",
+        "fr": "Anguille primitive des grottes de Palau — Smithsonian Ocean"
+      },
+      "url": "https://ocean.si.edu/ocean-life/fish/palauan-primitive-cave-eel-protanguilla-palau-living-fossil",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The Smithsonian account summarizes discovery in a Palauan reef cave and the taxonomic significance of the find."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 17,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Protanguilla palau — IUCN Red List assessment",
+        "fr": "Protanguilla palau — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T103707334A103708468.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The linked Red List assessment reports that the species was assessed in 2019."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 13,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Few specimens and observations are known; the original taxonomic paper is not a full ecological or life-history study."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The phrase ‘living fossil’ is qualified and not used to imply evolutionary stasis."
+}

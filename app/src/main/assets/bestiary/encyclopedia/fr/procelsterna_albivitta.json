@@ -1,0 +1,30 @@
+{
+  "id": "procelsterna_albivitta",
+  "name": "Noddi gris",
+  "scientific": "Procelsterna albivitta",
+  "group": "birds",
+  "sections": {
+    "overview": "Le noddi gris est un petit oiseau marin du Pacifique, de la famille des sternes. Une étude phylogénétique le place comme espèce sœur du noddi bleu, également traité ici sous le nom de Procelsterna cerulea.",
+    "identification": "Il a le dos gris et les ailes plus foncées, avec la tête et le dessous nettement plus pâles que le noddi bleu.",
+    "habitat": "Il cherche sa nourriture dans les eaux côtières et niche sur des îles isolées du Pacifique, notamment sur des corniches rocheuses ou dans des endroits abrités au sol.",
+    "diet": "Il consomme de petits poissons et des invertébrés marins, notamment des crustacés et des calmars.",
+    "behavior": "Il recherche ses proies en volant sur place ou en plongeant le bec près de la surface de la mer.",
+    "reproduction": "Il niche au sol ou sur des corniches rocheuses et pond un seul œuf.",
+    "ecology": "Ses colonies insulaires et son alimentation près des côtes relient les sites de nidification au milieu marin tropical environnant.",
+    "conservation": "BirdLife classe le noddi gris en « Préoccupation mineure » ; l’effectif reste incertain car les estimations sont regroupées avec celles du noddi bleu."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/grey-noddy-anous-albivittus",
+      "title": "Noddi gris — BirdLife DataZone"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ibi.12363",
+      "title": "Phylogénie moléculaire et systématique des noddis bleus et gris — Ibis"
+    },
+    {
+      "url": "https://manu.pf/un-oiseau/noddi-gris/",
+      "title": "Noddi gris — Manu, oiseaux de Polynésie française"
+    }
+  ]
+}

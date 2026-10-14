@@ -1,0 +1,166 @@
+{
+  "id": "psednos_griseus",
+  "scientific": "Psednos griseus",
+  "group": "fish",
+  "name": {
+    "en": "Grey snailfish",
+    "fr": "Limace de mer grise"
+  },
+  "sections": {
+    "overview": {
+      "en": "This marine snailfish of the eastern Pacific is recorded from Isla Guadalupe, Mexico.",
+      "fr": "Cette limace de mer du Pacifique oriental est signalée autour de l’île Guadalupe, au Mexique."
+    },
+    "identification": {
+      "en": "Its description characterizes the skin as uniformly pale gray; the scientific name griseus refers to this coloration.",
+      "fr": "La description caractérise sa peau comme uniformément gris pâle ; le nom scientifique griseus fait référence à cette coloration."
+    },
+    "habitat": {
+      "en": "It is a deep-water fish, but the reported collection was made in midwater and does not establish a precise depth range for the living fish.",
+      "fr": "C’est un poisson des eaux profondes, mais le spécimen a été recueilli en pleine eau ; cette donnée ne fixe pas la profondeur exacte de vie de l’espèce."
+    },
+    "diet": {
+      "en": "The consulted species accounts provide no diet data.",
+      "fr": "Les fiches consultées ne donnent pas de données sur son régime alimentaire."
+    },
+    "behavior": {
+      "en": "No species-specific behavior is described in the consulted accounts.",
+      "fr": "Les sources consultées ne décrivent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The consulted accounts do not document its reproduction.",
+      "fr": "Les sources consultées ne documentent pas sa reproduction."
+    },
+    "ecology": {
+      "en": "The type account is based on one specimen, so the species’ ecology remains very poorly known. Its congener P. delawarei is recorded in the Northwest Atlantic near Cape Cod, unlike this eastern-Pacific species.",
+      "fr": "La description repose sur un seul spécimen type ; l’écologie de l’espèce reste donc très mal connue. Son congénère P. delawarei est signalé dans l’Atlantique Nord-Ouest, près du cap Cod, contrairement à cette espèce du Pacifique oriental."
+    },
+    "conservation": {
+      "en": "The consulted FishBase page does not report an IUCN assessment.",
+      "fr": "La fiche FishBase consultée ne rapporte pas d’évaluation UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase",
+        "fr": "species summary"
+      },
+      "url": "https://www.fishbase.se/summary/Psednos-griseus.html",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists Isla Guadalupe and gray skin; no IUCN assessment is listed."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 12,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scripps Institution of Oceanography",
+        "fr": "type catalog"
+      },
+      "url": "https://scripps.ucsd.edu/marine-vertebrate-collection/special-collections/type-catalog",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The type catalog reports one midwater-collected holotype."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 7,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "CONABIO Enciclovida",
+        "fr": "Baboso gris"
+      },
+      "url": "https://enciclovida.mx/especies/287890-psednos-griseus",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Enciclovida gives the Spanish common name Baboso gris."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 8,
+        "total": 8,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos delawarei species summary",
+        "fr": "FishBase — résumé de Psednos delawarei"
+      },
+      "url": "https://fishbase.se/summary/59832",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos delawarei as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 14,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Do not treat the stated sampling-depth span in secondary databases as the fish’s actual depth range: the type was taken in a midwater trawl over very deep bottom. Its ecology remains uncertain given the single type record."
+  ],
+  "review_note": "Kept the entry concise because published species-specific observations are sparse. Cross-checked taxonomic identity and locality across taxonomic and species accounts; unsupported life-history details are left unstated.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

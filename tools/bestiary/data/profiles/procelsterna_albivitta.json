@@ -1,0 +1,145 @@
+{
+  "id": "procelsterna_albivitta",
+  "scientific": "Procelsterna albivitta",
+  "group": "birds",
+  "name": {
+    "en": "Grey noddy",
+    "fr": "Noddi gris"
+  },
+  "sections": {
+    "overview": {
+      "en": "The grey noddy is a small Pacific seabird in the tern family. Molecular phylogeny places it as the sister species of the blue noddy, listed separately here as Procelsterna cerulea.",
+      "fr": "Le noddi gris est un petit oiseau marin du Pacifique, de la famille des sternes. Une étude phylogénétique le place comme espèce sœur du noddi bleu, également traité ici sous le nom de Procelsterna cerulea."
+    },
+    "identification": {
+      "en": "It has a grey back and darker wings, with a much paler head and underside than the blue noddy.",
+      "fr": "Il a le dos gris et les ailes plus foncées, avec la tête et le dessous nettement plus pâles que le noddi bleu."
+    },
+    "habitat": {
+      "en": "It forages in coastal waters and nests on remote Pacific islands, including rocky ledges and sheltered ground.",
+      "fr": "Il cherche sa nourriture dans les eaux côtières et niche sur des îles isolées du Pacifique, notamment sur des corniches rocheuses ou dans des endroits abrités au sol."
+    },
+    "diet": {
+      "en": "It takes small fish and marine invertebrates, including crustaceans and squid.",
+      "fr": "Il consomme de petits poissons et des invertébrés marins, notamment des crustacés et des calmars."
+    },
+    "behavior": {
+      "en": "It searches for prey by hovering or dipping close to the sea surface.",
+      "fr": "Il recherche ses proies en volant sur place ou en plongeant le bec près de la surface de la mer."
+    },
+    "reproduction": {
+      "en": "It nests on the ground or on rocky ledges and lays a single egg.",
+      "fr": "Il niche au sol ou sur des corniches rocheuses et pond un seul œuf."
+    },
+    "ecology": {
+      "en": "Its island colonies and nearshore feeding connect nesting sites with the surrounding tropical marine environment.",
+      "fr": "Ses colonies insulaires et son alimentation près des côtes relient les sites de nidification au milieu marin tropical environnant."
+    },
+    "conservation": {
+      "en": "BirdLife assesses the grey noddy as Least Concern; its population total is uncertain because estimates are combined with those of the blue noddy.",
+      "fr": "BirdLife classe le noddi gris en « Préoccupation mineure » ; l’effectif reste incertain car les estimations sont regroupées avec celles du noddi bleu."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Grey Noddy — BirdLife DataZone",
+        "fr": "Noddi gris — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/grey-noddy-anous-albivittus",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife treats the grey noddy as Anous albivittus, describes island and coastal marine habitat and single-egg ground or rocky nesting, and reports Least Concern with population estimates combined with A. ceruleus."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 31,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogeny and systematics of Blue and Grey Noddies — Ibis",
+        "fr": "Phylogénie moléculaire et systématique des noddis bleus et gris — Ibis"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ibi.12363",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The study’s mitochondrial and nuclear phylogeny identifies Procelsterna albivitta and P. cerulea as sister species and proposes placing both in Anous."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 21,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Noddi gris — Manu, birds of French Polynesia",
+        "fr": "Noddi gris — Manu, oiseaux de Polynésie française"
+      },
+      "url": "https://manu.pf/un-oiseau/noddi-gris/",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The French Polynesian conservation account distinguishes the grey noddy from the blue noddy by its paler, larger appearance and lists fish, crustaceans and cephalopods in its diet."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 27,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalogue retains Procelsterna albivitta, while BirdLife uses Anous albivittus; taxonomic combinations vary among lists. The article supports the sister-species relation to the blue noddy, whose own draft cross-references this fiche."
+  ],
+  "review_note": "Cross-referenced the blue noddy draft in the same batch; reciprocal species relationship is supported by a molecular phylogeny. Kept the catalogue scientific name while noting BirdLife’s Anous combination.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

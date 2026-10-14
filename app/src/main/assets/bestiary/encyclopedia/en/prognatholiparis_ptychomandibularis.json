@@ -1,0 +1,34 @@
+{
+  "id": "prognatholiparis_ptychomandibularis",
+  "name": "Wrinkle-jaw snailfish",
+  "scientific": "Prognatholiparis ptychomandibularis",
+  "group": "fish",
+  "sections": {
+    "overview": "This little-known snailfish is the sole described species of the genus Prognatholiparis.",
+    "identification": "Its lower jaw projects beyond the upper jaw, and conspicuous folds of skin mark the snout and underside of the jaw.",
+    "habitat": "It is known from the Aleutian Islands in the northeast Pacific; records place it on the seabed at moderate depth.",
+    "diet": "The only reported stomach observation found ostracods and stones, too little evidence to define its usual diet.",
+    "behavior": "The consulted account gives no species-specific behavioral details.",
+    "reproduction": "The consulted account gives no species-specific reproductive details.",
+    "ecology": "It is a marine, bottom-associated fish, and the known record base is exceptionally sparse.",
+    "conservation": "FishBase reports Data Deficient in the IUCN assessment it cites, dated 2009."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/58835",
+      "title": "Prognatholiparis ptychomandibularis — FishBase"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/49139",
+      "title": "Prognatholiparis ptychomandibularis — original species description, Biodiversity Heritage Library"
+    },
+    {
+      "url": "https://fishdb.sinica.edu.tw/eng/chinesequer2.php?D1=&R1=&T1=&cn=&dere=desc&fm=&gc=&orderby=family_name&page=733&pz=20&vn=",
+      "title": "Taiwan Fish Database — species record"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?family=Liparidae&tbl=genus",
+      "title": "Eschmeyer’s Catalog of Fishes — Prognatholiparis"
+    }
+  ]
+}

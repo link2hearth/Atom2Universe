@@ -1,0 +1,30 @@
+{
+  "id": "prototroctes_maraena",
+  "name": "Prototrocte austral",
+  "scientific": "Prototroctes maraena",
+  "group": "fish",
+  "sections": {
+    "overview": "Prototroctes maraena est un poisson élancé et argenté endémique du sud-est de l’Australie.",
+    "identification": "Ses nageoires ont des rayons mous, sans épines.",
+    "habitat": "Les adultes vivent dans les rivières et ruisseaux d’eau douce ; les larves et les juvéniles fréquentent les estuaires et les eaux côtières.",
+    "diet": "L’autorité des pêches du Victoria décrit un régime probablement omnivore, comprenant des larves d’insectes, de petits crustacés et des végétaux.",
+    "behavior": "Son cycle de vie comprend des déplacements entre l’eau douce et la mer.",
+    "reproduction": "La ponte a lieu en eau douce ; les premiers stades dérivent vers l’aval avant que les juvéniles ne remontent le cours d’eau.",
+    "ecology": "Les obstacles aux déplacements et la modification des débits peuvent perturber cette migration et constituent des pressions reconnues.",
+    "conservation": "L’espèce est classée Vulnérable à l’échelle nationale en Australie et En danger dans la Nouvelle-Galles du Sud."
+  },
+  "sources": [
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/recovery-plans/national-recovery-plan-australian-grayling-prototroctes-maraena",
+      "title": "National Recovery Plan for the Australian Grayling — Australian Government DCCEEW"
+    },
+    {
+      "url": "https://vfa.vic.gov.au/education/fish-species/australian-grayling",
+      "title": "Australian Grayling — Victorian Fisheries Authority"
+    },
+    {
+      "url": "https://www.dpird.nsw.gov.au/dpi/fishing/estuary-asset-protection-program/threatened-species-resilience/australian-grayling",
+      "title": "Australian Grayling — NSW Department of Primary Industries and Regional Development"
+    }
+  ]
+}

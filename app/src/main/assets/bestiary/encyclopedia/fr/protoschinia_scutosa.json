@@ -1,0 +1,30 @@
+{
+  "id": "protoschinia_scutosa",
+  "name": "Noctuelle de la luzerne",
+  "scientific": "Protoschinia scutosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Protoschinia scutosa est une noctuelle présente dans les régions chaudes de l’Holarctique, avec des observations occasionnelles plus au nord.",
+    "identification": "Elle appartient aux Noctuidae. Des sources spécialisées emploient pour cette espèce les noms Protoschinia scutosa et Schinia scutosa.",
+    "habitat": "Elle est associée aux milieux chauds et secs, notamment aux steppes où poussent des armoises.",
+    "diet": "Les chenilles se nourrissent surtout d’Artemisia (armoise et absinthe), des plantes de la famille des Astéracées.",
+    "behavior": "Dans certaines régions, les adultes peuvent voler en plusieurs générations du printemps à l’automne; le calendrier varie selon la région et le climat.",
+    "reproduction": "Les sources examinées décrivent les plantes hôtes des chenilles, mais ne donnent pas de synthèse cohérente sur la ponte ou l’hivernation à l’échelle de l’espèce.",
+    "ecology": "Ses chenilles dépendent surtout des armoises, ce qui relie la noctuelle aux milieux ouverts et secs où poussent ces plantes hôtes.",
+    "conservation": "Les sources consultées ne fournissent pas d’évaluation mondiale de conservation pour cette noctuelle."
+  },
+  "sources": [
+    {
+      "url": "https://www.pyrgus.de/Protoschinia_en.html",
+      "title": "Protoschinia — Lépidoptères européens et leur écologie"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Protoschinia_scutosa",
+      "title": "Protoschinia scutosa — LepiWiki"
+    },
+    {
+      "url": "https://dbif.brc.ac.uk/interactions.aspx?hostid=5292&insectid=7146",
+      "title": "Base de données des insectes et de leurs plantes hôtes : Protoschinia scutosa"
+    }
+  ]
+}

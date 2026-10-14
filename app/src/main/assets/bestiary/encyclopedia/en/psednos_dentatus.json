@@ -1,0 +1,34 @@
+{
+  "id": "psednos_dentatus",
+  "name": "Toothed snailfish",
+  "scientific": "Psednos dentatus",
+  "group": "fish",
+  "sections": {
+    "overview": "A marine snailfish in Liparidae, it is known from off northern Chile in the southeastern Pacific.",
+    "identification": "The original description notes unusually large, narrow teeth that curve inward; its name refers to this distinctive dentition.",
+    "habitat": "The known specimen came from about 800 m depth above a much deeper seafloor; this single record does not define the species’ full depth range.",
+    "diet": "The consulted sources do not report what it eats.",
+    "behavior": "No species-specific behavioral observations are reported in the consulted accounts.",
+    "reproduction": "The consulted sources provide no reproductive observations.",
+    "ecology": "The species is known from a single type specimen, leaving its ecology largely undocumented. Its eastern-Pacific congener P. cathetostomus is named for its nearly vertical mouth and jaw, rather than the unusual teeth emphasized here.",
+    "conservation": "The consulted FishBase page lists it as not evaluated by the IUCN."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/59793",
+      "title": "FishBase"
+    },
+    {
+      "url": "https://scripps.ucsd.edu/marine-vertebrate-collection/special-collections/type-catalog",
+      "title": "Scripps Institution of Oceanography"
+    },
+    {
+      "url": "https://www.mapress.com/zootaxa/2005f/zt01019p025.pdf",
+      "title": "Zootaxa"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59798",
+      "title": "FishBase — Psednos cathetostomus species summary"
+    }
+  ]
+}

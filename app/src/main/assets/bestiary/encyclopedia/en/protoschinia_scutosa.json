@@ -1,0 +1,30 @@
+{
+  "id": "protoschinia_scutosa",
+  "name": "Spotted clover moth",
+  "scientific": "Protoschinia scutosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Protoschinia scutosa is a noctuid moth found across warm parts of the Holarctic, with occasional records farther north.",
+    "identification": "It is a member of Noctuidae. Specialist moth accounts use both Protoschinia scutosa and Schinia scutosa for this species.",
+    "habitat": "It is associated with warm, dry habitats, including steppe-like areas with Artemisia.",
+    "diet": "The caterpillars feed mainly on Artemisia (mugworts and wormwoods), in the daisy family.",
+    "behavior": "Adults may fly in several generations from spring to autumn in parts of its range; timing varies with region and climate.",
+    "reproduction": "The reviewed sources describe the larval host plants but do not give a consistent species-wide account of egg laying or overwintering.",
+    "ecology": "Its caterpillars depend chiefly on mugworts and wormwoods, linking the moth to open, dry plant communities where these hosts grow.",
+    "conservation": "The sources consulted do not provide a global conservation assessment for this moth."
+  },
+  "sources": [
+    {
+      "url": "https://www.pyrgus.de/Protoschinia_en.html",
+      "title": "Protoschinia — European Lepidoptera and their ecology"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Protoschinia_scutosa",
+      "title": "Protoschinia scutosa — LepiWiki"
+    },
+    {
+      "url": "https://dbif.brc.ac.uk/interactions.aspx?hostid=5292&insectid=7146",
+      "title": "Database of Insects and their Food Plants: Protoschinia scutosa"
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "id": "psednos_islandicus",
+  "scientific": "Psednos islandicus",
+  "group": "fish",
+  "name": {
+    "en": "Icelandic snailfish",
+    "fr": "Limace de mer islandaise"
+  },
+  "sections": {
+    "overview": {
+      "en": "A marine snailfish in the family Liparidae, it is known from the northeast Atlantic south of Iceland.",
+      "fr": "Limace de mer de la famille des Liparidés, elle est connue dans l’Atlantique Nord-Est, au sud de l’Islande."
+    },
+    "identification": {
+      "en": "The species description notes pale skin, an unpigmented head beneath the skin, and a steeply angled mouth.",
+      "fr": "La description de l’espèce signale une peau pâle, une tête non pigmentée sous la peau et une bouche fortement inclinée."
+    },
+    "habitat": {
+      "en": "FishBase reports a bathydemersal, deep-water occurrence; the source gives a depth range, but this entry avoids treating sparse records as a full ecological limit.",
+      "fr": "FishBase la décrit comme une espèce profonde vivant près du fond ; bien que la source fournisse une profondeur, cette fiche évite d’en faire une limite écologique complète à partir de données rares."
+    },
+    "diet": {
+      "en": "The consulted species accounts do not describe its diet.",
+      "fr": "Les fiches consultées ne décrivent pas son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is not reported in the consulted accounts.",
+      "fr": "Les sources consultées ne rapportent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "No species-specific reproductive information is given in the consulted sources.",
+      "fr": "Les sources consultées ne donnent pas d’information reproductive propre à l’espèce."
+    },
+    "ecology": {
+      "en": "The published record is sparse, and the consulted sources provide little ecological information beyond its locality and deep-water association. P. cathetostomus is a congener from the eastern Pacific, described with a similarly steeply angled mouth. P. spirohira is another northeast-Atlantic congener, recorded west of northern Spain; its description emphasizes a coiled intestine.",
+      "fr": "Les données publiées sont rares ; les sources consultées apportent peu d’informations écologiques au-delà de sa localité et de son association aux eaux profondes. P. cathetostomus est un congénère du Pacifique oriental, décrit avec une bouche tout aussi fortement inclinée. P. spirohira est un autre congénère de l’Atlantique Nord-Est, signalé à l’ouest du nord de l’Espagne ; sa description souligne un intestin enroulé."
+    },
+    "conservation": {
+      "en": "FishBase lists the species as not evaluated by the IUCN.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée par l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase",
+        "fr": "species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59797",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "FishBase reports a marine, bathydemersal Liparidae south of Iceland."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 9,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS",
+        "fr": "taxonomic report"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=644407",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The consulted source records few species-specific biological details."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 8,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase",
+        "fr": "Liparidae accepted names"
+      },
+      "url": "https://fishbase.se/summary/FamilySummary.php?ID=615",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "ITIS verifies the species as valid in family Liparidae."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 20,
+        "notes_words": 9,
+        "total": 29,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos cathetostomus species summary",
+        "fr": "FishBase — résumé de Psednos cathetostomus"
+      },
+      "url": "https://www.fishbase.se/summary/59798",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos cathetostomus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 14,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos spirohira species summary",
+        "fr": "FishBase — résumé de Psednos spirohira"
+      },
+      "url": "https://www.fishbase.se/summary/59796",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos spirohira as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 14,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The reported depth interval is omitted because a sparse collection record should not be presented as a complete range. The French common name is a descriptive rendering, not an attested standardized vernacular."
+  ],
+  "review_note": "Kept the entry concise because published species-specific observations are sparse. Cross-checked taxonomic identity and locality across taxonomic and species accounts; unsupported life-history details are left unstated.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

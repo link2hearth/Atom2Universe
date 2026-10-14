@@ -1,0 +1,30 @@
+{
+  "id": "protanguilla_palau",
+  "name": "Palauan primitive cave eel",
+  "scientific": "Protanguilla palau",
+  "group": "fish",
+  "sections": {
+    "overview": "Protanguilla palau is a small eel discovered in a submerged reef cave in Palau; it is the sole known species of its family, Protanguillidae.",
+    "identification": "Its anatomy combines traits seen in living eels with features otherwise known from fossil eels, which led researchers to describe a new family and a deeply branching eel lineage.",
+    "habitat": "The type specimens came from a fringing-reef cave about 35 m deep in Palau, in the western Pacific.",
+    "diet": "The original description does not establish what this eel eats in the wild.",
+    "behavior": "Its known records are from a marine cave; the available description does not provide a detailed account of its daily behavior.",
+    "reproduction": "Reproductive biology remains undocumented in the sources consulted.",
+    "ecology": "Phylogenetic analyses place it as a very early-diverging branch among living true eels; “living fossil” is a popular shorthand, not a literal claim that the species has remained unchanged.",
+    "conservation": "The IUCN Red List assessment published in 2019 classified the species as Data Deficient, reflecting limited information for assessing its extinction risk."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3259923/",
+      "title": "A ‘living fossil’ eel from an undersea cave in Palau — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://ocean.si.edu/ocean-life/fish/palauan-primitive-cave-eel-protanguilla-palau-living-fossil",
+      "title": "Palauan primitive cave eel — Smithsonian Ocean"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T103707334A103708468.en",
+      "title": "Protanguilla palau — IUCN Red List assessment"
+    }
+  ]
+}

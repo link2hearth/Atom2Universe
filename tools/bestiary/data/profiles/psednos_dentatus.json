@@ -1,0 +1,166 @@
+{
+  "id": "psednos_dentatus",
+  "scientific": "Psednos dentatus",
+  "group": "fish",
+  "name": {
+    "en": "Toothed snailfish",
+    "fr": "Limace de mer dentée"
+  },
+  "sections": {
+    "overview": {
+      "en": "A marine snailfish in Liparidae, it is known from off northern Chile in the southeastern Pacific.",
+      "fr": "Limace de mer de la famille des Liparidés, elle est connue au large du nord du Chili, dans le Pacifique Sud-Est."
+    },
+    "identification": {
+      "en": "The original description notes unusually large, narrow teeth that curve inward; its name refers to this distinctive dentition.",
+      "fr": "La description originale signale des dents inhabituellement grandes et étroites, recourbées vers l’intérieur ; son nom fait référence à cette dentition particulière."
+    },
+    "habitat": {
+      "en": "The known specimen came from about 800 m depth above a much deeper seafloor; this single record does not define the species’ full depth range.",
+      "fr": "Le spécimen connu a été recueilli vers 800 m au-dessus d’un fond beaucoup plus profond ; cette observation unique ne définit pas toute l’amplitude bathymétrique de l’espèce."
+    },
+    "diet": {
+      "en": "The consulted sources do not report what it eats.",
+      "fr": "Les sources consultées ne précisent pas son alimentation."
+    },
+    "behavior": {
+      "en": "No species-specific behavioral observations are reported in the consulted accounts.",
+      "fr": "Les sources consultées ne rapportent pas d’observations comportementales propres à l’espèce."
+    },
+    "reproduction": {
+      "en": "The consulted sources provide no reproductive observations.",
+      "fr": "Les sources consultées ne fournissent pas d’observations sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The species is known from a single type specimen, leaving its ecology largely undocumented. Its eastern-Pacific congener P. cathetostomus is named for its nearly vertical mouth and jaw, rather than the unusual teeth emphasized here.",
+      "fr": "L’espèce n’est connue que par un spécimen type, ce qui laisse son écologie largement inconnue. Son congénère du Pacifique oriental, P. cathetostomus, est nommé pour sa bouche et sa mâchoire presque verticales, plutôt que pour des dents particulières."
+    },
+    "conservation": {
+      "en": "The consulted FishBase page lists it as not evaluated by the IUCN.",
+      "fr": "La fiche FishBase consultée indique qu’elle n’a pas été évaluée par l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase",
+        "fr": "species summary"
+      },
+      "url": "https://fishbase.se/summary/59793",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase lists Chile, unusual teeth and no IUCN evaluation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 9,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scripps Institution of Oceanography",
+        "fr": "type catalog"
+      },
+      "url": "https://scripps.ucsd.edu/marine-vertebrate-collection/special-collections/type-catalog",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The unique holotype was taken near Chile at about 800 m."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 11,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Zootaxa",
+        "fr": "comparison in a Liparidae species description"
+      },
+      "url": "https://www.mapress.com/zootaxa/2005f/zt01019p025.pdf",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "A taxonomic comparison notes its absent coronal pore."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 8,
+        "total": 8,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos cathetostomus species summary",
+        "fr": "FishBase — résumé de Psednos cathetostomus"
+      },
+      "url": "https://www.fishbase.se/summary/59798",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos cathetostomus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 14,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The single-record basis is emphasized; the capture depth is not treated as a complete habitat range. The French common name is a descriptive translation rather than an attested standardized vernacular."
+  ],
+  "review_note": "Kept the entry concise because published species-specific observations are sparse. Cross-checked taxonomic identity and locality across taxonomic and species accounts; unsupported life-history details are left unstated.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

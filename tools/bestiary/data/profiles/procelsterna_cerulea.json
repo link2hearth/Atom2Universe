@@ -1,0 +1,166 @@
+{
+  "id": "procelsterna_cerulea",
+  "scientific": "Procelsterna cerulea",
+  "group": "birds",
+  "name": {
+    "en": "Blue noddy",
+    "fr": "Noddi bleu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The blue noddy is a Pacific seabird in the tern family. Molecular phylogeny places it as the sister species of the grey noddy, listed separately here as Procelsterna albivitta.",
+      "fr": "Le noddi bleu est un oiseau marin du Pacifique, de la famille des sternes. Une étude phylogénétique le place comme espèce sœur du noddi gris, également traité ici sous le nom de Procelsterna albivitta."
+    },
+    "identification": {
+      "en": "Adults are blue-grey overall, with a partial white eye-ring, a short slender bill and a shallowly forked tail; the grey noddy is paler, especially on the head and underside.",
+      "fr": "Les adultes sont entièrement gris bleuté, avec un demi-cercle blanc autour de l’œil, un bec court et fin et une queue légèrement fourchue ; le noddi gris est plus pâle, surtout sur la tête et le dessous."
+    },
+    "habitat": {
+      "en": "It breeds on remote Pacific islands and usually remains near its colonies in coastal waters.",
+      "fr": "Il se reproduit sur des îles isolées du Pacifique et reste généralement près de ses colonies, dans les eaux côtières."
+    },
+    "diet": {
+      "en": "It catches small fish near the surface and also takes squid, crustaceans and insects.",
+      "fr": "Il capture de petits poissons près de la surface et consomme aussi des calmars, des crustacés et des insectes."
+    },
+    "behavior": {
+      "en": "It feeds by hover-dipping or surface-dipping, often near other seabirds.",
+      "fr": "Il s’alimente en volant sur place ou en plongeant le bec à la surface, souvent à proximité d’autres oiseaux marins."
+    },
+    "reproduction": {
+      "en": "It nests in island colonies, using cavities or crevices in lava in Hawai‘i; breeding details are not well known.",
+      "fr": "Il niche en colonies insulaires et utilise notamment les cavités ou fissures de lave à Hawaï ; sa reproduction reste mal connue."
+    },
+    "ecology": {
+      "en": "Its nearshore feeding and island nesting tie its life cycle to tropical Pacific coasts and colonies.",
+      "fr": "Son alimentation côtière et sa nidification insulaire lient son cycle de vie aux côtes et colonies du Pacifique tropical."
+    },
+    "conservation": {
+      "en": "The Hawai‘i wildlife authority reports a global IUCN category of Least Concern.",
+      "fr": "L’autorité de la faune d’Hawaï rapporte un statut UICN mondial de « Préoccupation mineure ». "
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Blue-gray Noddy — Hawai‘i Division of Forestry and Wildlife",
+        "fr": "Noddi bleu-gris — Hawai‘i Division of Forestry and Wildlife"
+      },
+      "url": "https://dlnr.hawaii.gov/wildlife/birds/blue-gray-noddy/",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Hawai‘i’s wildlife account describes the blue-grey plumage, near-surface feeding, small prey, lava-crevice nesting and Least Concern status; it notes limited breeding data."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 22,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogeny and systematics of Blue and Grey Noddies — Ibis",
+        "fr": "Phylogénie moléculaire et systématique des noddis bleus et gris — Ibis"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ibi.12363",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The study’s mitochondrial and nuclear phylogeny identifies Procelsterna cerulea and P. albivitta as sister species and proposes placing both in Anous."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 21,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Noddi gris — Manu, birds of French Polynesia",
+        "fr": "Noddi gris — Manu, oiseaux de Polynésie française"
+      },
+      "url": "https://manu.pf/un-oiseau/noddi-gris/",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Manu’s French Polynesian species account compares the grey and blue noddies, identifying the grey species as paler and somewhat larger."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue Noddy — Oiseaux.net",
+        "fr": "Noddi bleu — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/birds/blue.noddy.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Oiseaux.net records the Blue Noddy as Anous ceruleus in Laridae and describes marine habitats and its Pacific distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 18,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalogue retains Procelsterna cerulea, while BirdLife and many current checklists use Anous ceruleus; taxonomic combinations vary among lists. The article supports the sister-species relation to the grey noddy, whose own draft cross-references this fiche."
+  ],
+  "review_note": "Cross-referenced the grey noddy draft in the same batch; reciprocal species relationship is supported by a molecular phylogeny. Kept the catalogue scientific name and its historic combination.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,34 @@
+{
+  "id": "prosopocoilus_astacoides",
+  "name": "Lucane astacoïde",
+  "scientific": "Prosopocoilus astacoides",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Prosopocoilus astacoides est un lucane asiatique décrit en plusieurs sous-espèces, dont le statut a fait débat.",
+    "identification": "Il appartient aux Lucanidae, la famille des lucanes. Une étude taxonomique a relevé des différences morphologiques et génétiques marquées entre certaines populations rattachées à son groupe de sous-espèces.",
+    "habitat": "Les mentions publiées de ses sous-espèces couvrent des régions d’Asie du Sud et du Sud-Est, dont le nord-est de l’Inde, le Myanmar, Java et Sumatra; elles ne définissent pas une aire uniforme pour toutes les populations.",
+    "diet": "Les sources consultées ici ne précisent pas le régime de l’espèce à l’état sauvage.",
+    "behavior": "Les sources consultées documentent peu son comportement sauvage; les observations en élevage ne suffisent pas à décrire toute son histoire naturelle.",
+    "reproduction": "Une étude d’élevage sur la sous-espèce blanchardi a mesuré l’accouplement et la ponte, mais ces conditions ne déterminent pas le calendrier reproducteur des populations sauvages.",
+    "ecology": "Certaines formes autrefois incluses dans P. astacoides ont été élevées au rang d’espèce, tandis que des travaux génétiques interrogent les limites d’autres formes; les noms de sous-espèces demandent donc de la prudence.",
+    "conservation": "Une étude coréenne qualifie la sous-espèce blanchardi d’espèce menacée; cette évaluation ne doit pas être étendue à toute l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://tb.plazi.org/GgServer/html/A41687E4FFE7C95A5FCB5765FF01760F",
+      "title": "Notes sur Prosopocoilus de Chine et description de deux espèces nouvelles"
+    },
+    {
+      "url": "https://taieol.tw/pages/245352",
+      "title": "Encyclopédie taïwanaise du vivant : Prosopocoilus astacoides"
+    },
+    {
+      "url": "https://doi.org/10.5656/KSAE.2021.11.0.050",
+      "title": "Ponte chez Prosopocoilus astacoides blanchardi, une sous-espèce menacée"
+    },
+    {
+      "url": "https://www.dbpia.co.kr/journal/detail?nodeId=T13434052",
+      "title": "Étude phylogénétique du groupe Prosopocoilus astacoides"
+    }
+  ]
+}

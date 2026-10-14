@@ -1,0 +1,34 @@
+{
+  "id": "procelsterna_cerulea",
+  "name": "Blue noddy",
+  "scientific": "Procelsterna cerulea",
+  "group": "birds",
+  "sections": {
+    "overview": "The blue noddy is a Pacific seabird in the tern family. Molecular phylogeny places it as the sister species of the grey noddy, listed separately here as Procelsterna albivitta.",
+    "identification": "Adults are blue-grey overall, with a partial white eye-ring, a short slender bill and a shallowly forked tail; the grey noddy is paler, especially on the head and underside.",
+    "habitat": "It breeds on remote Pacific islands and usually remains near its colonies in coastal waters.",
+    "diet": "It catches small fish near the surface and also takes squid, crustaceans and insects.",
+    "behavior": "It feeds by hover-dipping or surface-dipping, often near other seabirds.",
+    "reproduction": "It nests in island colonies, using cavities or crevices in lava in Hawai‘i; breeding details are not well known.",
+    "ecology": "Its nearshore feeding and island nesting tie its life cycle to tropical Pacific coasts and colonies.",
+    "conservation": "The Hawai‘i wildlife authority reports a global IUCN category of Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://dlnr.hawaii.gov/wildlife/birds/blue-gray-noddy/",
+      "title": "Blue-gray Noddy — Hawai‘i Division of Forestry and Wildlife"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ibi.12363",
+      "title": "Molecular phylogeny and systematics of Blue and Grey Noddies — Ibis"
+    },
+    {
+      "url": "https://manu.pf/un-oiseau/noddi-gris/",
+      "title": "Noddi gris — Manu, birds of French Polynesia"
+    },
+    {
+      "url": "https://www.oiseaux.net/birds/blue.noddy.html",
+      "title": "Blue Noddy — Oiseaux.net"
+    }
+  ]
+}

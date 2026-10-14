@@ -1,0 +1,147 @@
+{
+  "id": "psednos_barnardi",
+  "scientific": "Psednos barnardi",
+  "group": "fish",
+  "name": {
+    "en": "Blackchin dwarf snailfish",
+    "fr": "Psednos barnardi"
+  },
+  "sections": {
+    "overview": {
+      "en": "Psednos barnardi is a small snailfish (family Liparidae) known from the northwest atlantic, off new england.",
+      "fr": "Psednos barnardi est un petit poisson-limace (famille des Liparidae) connu dans northwest atlantic, off new england."
+    },
+    "identification": {
+      "en": "It has 39–41 dorsal soft rays, 47 vertebrae and black skin on the chin and lower jaw. P. andriashevi also has 47 vertebrae but 42 rays. P. anoderkes has 37 rays and 42 vertebrae.",
+      "fr": "Il a 39 à 41 rayons dorsaux mous, 47 vertèbres et la peau noire au menton et à la mâchoire inférieure. P. andriashevi a aussi 47 vertèbres, mais 42 rayons. P. anoderkes a 37 rayons et 42 vertèbres."
+    },
+    "habitat": {
+      "en": "The reported depth is 750–1,368 m.",
+      "fr": "La profondeur rapportée est de 750–1,368 m."
+    },
+    "diet": {
+      "en": "The species account and original description do not report a species-specific diet.",
+      "fr": "La fiche d’espèce et la description originale ne rapportent pas de régime alimentaire propre à l’espèce."
+    },
+    "behavior": {
+      "en": "No behavior is described in the species account.",
+      "fr": "La fiche d’espèce ne décrit pas de comportement."
+    },
+    "reproduction": {
+      "en": "The reviewed species sources do not describe reproduction.",
+      "fr": "Les sources consultées sur l’espèce ne décrivent pas sa reproduction."
+    },
+    "ecology": {
+      "en": "The known records are sparse; the reported maximum is 3.4 cm standard length.",
+      "fr": "Les données disponibles sont rares ; la taille maximale rapportée est de 3.4 cm standard length."
+    },
+    "conservation": {
+      "en": "FishBase reports it as not evaluated on the IUCN Red List.",
+      "fr": "FishBase indique qu’il n’a pas été évalué par la Liste rouge de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Psednos barnardi — FishBase species account",
+        "fr": "Psednos barnardi — fiche FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/59947",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives depth/maximum-size records and its global assessment category."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 66,
+        "notes_words": 9,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A review of the genus Psednos — Chernova (2001)",
+        "fr": "A review of the genus Psednos — Chernova (2001)"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/38831",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Original description supplies taxonomy and diagnostic data; it is not a natural-history account."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 13,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Psednos anoderkes — species account",
+        "fr": "Psednos anoderkes — species account — fiche taxonomique"
+      },
+      "url": "https://www.fishbase.se/summary/59833",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "FishBase summary supports one cited comparison of diagnostic counts."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.en.3",
+        "identification.fr.2",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 9,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural-history data are sparse and largely limited to the original taxonomic material and later records.",
+    "Depth, range and maximum-size values reflect published records, not necessarily full species limits."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase species records and their cited taxonomic descriptions; linked the three Psednos accounts through diagnostic counts only. Natural-history sources were not available in multiple languages for this poorly documented deep-water genus."
+}

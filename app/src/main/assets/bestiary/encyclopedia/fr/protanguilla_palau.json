@@ -1,0 +1,30 @@
+{
+  "id": "protanguilla_palau",
+  "name": "Protanguilla palau",
+  "scientific": "Protanguilla palau",
+  "group": "fish",
+  "sections": {
+    "overview": "Protanguilla palau est une petite anguille découverte dans une grotte submergée de récif à Palau; c’est la seule espèce connue de sa famille, les Protanguillidae.",
+    "identification": "Son anatomie associe des caractères observés chez les anguilles actuelles à d’autres surtout connus chez des anguilles fossiles; les chercheurs ont ainsi décrit une nouvelle famille et une lignée ancienne d’anguilles.",
+    "habitat": "Les spécimens ayant servi à sa description provenaient d’une grotte de récif frangeant située à environ 35 m de profondeur à Palau, dans le Pacifique occidental.",
+    "diet": "La description originale ne précise pas ce que cette anguille mange dans la nature.",
+    "behavior": "Les observations connues proviennent d’une grotte marine; la description disponible ne détaille pas son comportement quotidien.",
+    "reproduction": "La biologie de la reproduction n’est pas documentée dans les sources consultées.",
+    "ecology": "Les analyses phylogénétiques la placent sur une branche très ancienne parmi les anguilles actuelles; « fossile vivant » est une formule populaire, non l’affirmation littérale que l’espèce serait restée inchangée.",
+    "conservation": "L’évaluation de la Liste rouge de l’UICN publiée en 2019 classe l’espèce en Données insuffisantes, faute d’informations permettant d’estimer son risque d’extinction."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3259923/",
+      "title": "Une anguille « fossile vivant » découverte dans une grotte sous-marine à Palau — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://ocean.si.edu/ocean-life/fish/palauan-primitive-cave-eel-protanguilla-palau-living-fossil",
+      "title": "Anguille primitive des grottes de Palau — Smithsonian Ocean"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T103707334A103708468.en",
+      "title": "Protanguilla palau — évaluation de la Liste rouge de l’UICN"
+    }
+  ]
+}

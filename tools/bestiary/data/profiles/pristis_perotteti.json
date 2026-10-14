@@ -1,0 +1,166 @@
+{
+  "id": "pristis_perotteti",
+  "scientific": "Pristis perotteti",
+  "group": "fish",
+  "name": {
+    "en": "Largetooth sawfish",
+    "fr": "Poisson-scie à grandes dents"
+  },
+  "sections": {
+    "overview": {
+      "en": "The catalogue name Pristis perotteti is now treated as a synonym of Pristis pristis, the largetooth sawfish; this entry therefore describes that currently recognized species rather than a separate taxon.",
+      "fr": "Le nom du catalogue, Pristis perotteti, est aujourd’hui traité comme un synonyme de Pristis pristis, le poisson-scie à grandes dents ; cette fiche décrit donc l’espèce actuellement reconnue, et non un taxon distinct."
+    },
+    "identification": {
+      "en": "This is a ray, not a shark: its flattened head and long, toothed rostrum give sawfishes their distinctive outline.",
+      "fr": "C’est une raie, et non un requin : sa tête aplatie et son long rostre denté donnent aux poissons-scies leur silhouette caractéristique."
+    },
+    "habitat": {
+      "en": "It occurs in tropical river systems and estuaries. Adults also use coastal waters.",
+      "fr": "Il fréquente les rivières tropicales et les estuaires. Les adultes utilisent aussi les eaux côtières."
+    },
+    "diet": {
+      "en": "It feeds on fishes and bottom-dwelling invertebrates, using its saw to disturb sediment or strike at prey.",
+      "fr": "Il se nourrit de poissons et d’invertébrés du fond, et utilise son rostre pour remuer le sédiment ou frapper ses proies."
+    },
+    "behavior": {
+      "en": "The long rostrum is a hunting tool as well as a conspicuous identifying feature.",
+      "fr": "Le long rostre est un outil de chasse autant qu’un signe d’identification visible."
+    },
+    "reproduction": {
+      "en": "Its life history is poorly known; Australian accounts describe slow maturation and low reproductive output.",
+      "fr": "Son cycle de vie est mal connu ; les sources australiennes décrivent une maturation lente et une faible production de jeunes."
+    },
+    "ecology": {
+      "en": "Its use of rivers, estuaries and coastal waters links freshwater and marine ecosystems.",
+      "fr": "Sa fréquentation des rivières, des estuaires et des eaux côtières relie les écosystèmes d’eau douce et marins."
+    },
+    "conservation": {
+      "en": "The global assessment of Pristis pristis is Critically Endangered; entanglement in fishing gear and loss or alteration of habitat are major concerns.",
+      "fr": "L’évaluation mondiale de Pristis pristis le classe « En danger critique » ; les captures dans les engins de pêche et la perte ou la modification de l’habitat sont des préoccupations majeures."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pristis pristis — IUCN Red List",
+        "fr": "Pristis pristis — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T18584848A58336780.en",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN assessment treats Pristis perotteti as a synonym of P. pristis and assesses the accepted species as Critically Endangered."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 20,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Largetooth Sawfish — Florida Museum, Discover Fishes",
+        "fr": "Poisson-scie à grandes dents — Florida Museum, Discover Fishes"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/largetooth-sawfish/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The museum describes sawfishes as rays with long toothed rostra, occurring in shallow marine, estuarine and freshwater habitats; the rostrum stuns fish and disturbs prey on the bottom."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 28,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Freshwater sawfish — Australian Department of Climate Change, Energy, the Environment and Water",
+        "fr": "Poisson-scie d’eau douce — Ministère australien du Changement climatique, de l’Énergie, de l’Environnement et de l’Eau"
+      },
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/action-plan/freshwater-sawfish",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The Australian government account describes juveniles in freshwater, feeding on fishes and benthic invertebrates, and a poorly understood life history with late maturity and low fecundity."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 26,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pez sierra — Oceanogràfic Valencia",
+        "fr": "Poisson-scie — Oceanogràfic Valencia"
+      },
+      "url": "https://www.oceanografic.org/especie/pez-sierra/",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The Spanish-language aquarium account identifies the sawfish as a ray and says it uses its saw to stir the seabed or stun fish and crustaceans."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 25,
+        "total": 25,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalog retains the historical name P. perotteti although the current IUCN taxonomic treatment groups it under P. pristis. Information on ecology and status is therefore presented for the accepted species."
+  ],
+  "review_note": "Verified the inventory ID/group and checked IUCN taxonomy against Florida Museum and Australian government material, with a Spanish-language aquarium source for feeding. The account avoids treating P. perotteti as a separate currently accepted species.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

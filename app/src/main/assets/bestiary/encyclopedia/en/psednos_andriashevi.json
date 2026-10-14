@@ -1,0 +1,30 @@
+{
+  "id": "psednos_andriashevi",
+  "name": "Andriashev’s dwarf snailfish",
+  "scientific": "Psednos andriashevi",
+  "group": "fish",
+  "sections": {
+    "overview": "Psednos andriashevi is a small snailfish (family Liparidae) known from the northeast atlantic, west of ireland.",
+    "identification": "It has no coronal pore, 42 dorsal soft rays and 47 vertebrae. P. anoderkes has 37 rays and 42 vertebrae. P. barnardi has 39–41 rays and 47 vertebrae, plus a black chin.",
+    "habitat": "It is a marine midwater fish, with records reported to 800 m.",
+    "diet": "The species account and original description do not report a species-specific diet.",
+    "behavior": "No behavior is described in the species account.",
+    "reproduction": "The reviewed species sources do not describe reproduction.",
+    "ecology": "The known records are sparse; the reported maximum is 5.3 cm standard length.",
+    "conservation": "FishBase reports it as Data Deficient on the IUCN Red List."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/59948",
+      "title": "Psednos andriashevi — FishBase species account"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/38831",
+      "title": "A review of the genus Psednos — Chernova (2001)"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59947",
+      "title": "Psednos anoderkes — species account"
+    }
+  ]
+}

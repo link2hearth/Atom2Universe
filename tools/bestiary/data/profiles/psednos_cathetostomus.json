@@ -1,0 +1,191 @@
+{
+  "id": "psednos_cathetostomus",
+  "scientific": "Psednos cathetostomus",
+  "group": "fish",
+  "name": {
+    "en": "Doormouth snailfish",
+    "fr": "Limace de mer à bouche verticale"
+  },
+  "sections": {
+    "overview": {
+      "en": "A small marine snailfish in the family Liparidae, it is known from the eastern Pacific off Mexico and the United States.",
+      "fr": "Petite limace de mer de la famille des Liparidés, elle est connue dans le Pacifique oriental, au large du Mexique et des États-Unis."
+    },
+    "identification": {
+      "en": "Its mouth and lower jaw are unusually steeply angled; the species name refers to this nearly vertical profile.",
+      "fr": "Sa bouche et sa mâchoire inférieure sont inclinées de façon marquée ; son nom spécifique évoque ce profil presque vertical."
+    },
+    "habitat": {
+      "en": "Records place it in deep water, but collection depths are difficult to interpret because specimens were taken in midwater above very deep seafloor.",
+      "fr": "Les données la situent en eaux profondes, mais les profondeurs de capture sont difficiles à interpréter : les spécimens ont été recueillis en pleine eau au-dessus de fonds très profonds."
+    },
+    "diet": {
+      "en": "The consulted species accounts do not document its diet.",
+      "fr": "Les fiches consultées ne documentent pas son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Species-specific behavior has not been described in the consulted accounts.",
+      "fr": "Les sources consultées ne décrivent pas de comportement propre à cette espèce."
+    },
+    "reproduction": {
+      "en": "The consulted accounts provide no species-specific reproductive information.",
+      "fr": "Les sources consultées ne donnent pas d’information reproductive propre à cette espèce."
+    },
+    "ecology": {
+      "en": "Only a few specimens are reported, so its ecology remains poorly known. Like P. islandicus, it is described with a sharply angled mouth; P. islandicus is recorded south of Iceland in the northeast Atlantic, while this species is eastern Pacific. P. dentatus is another eastern-Pacific congener, distinguished in its description by unusually large, inward-curving teeth.",
+      "fr": "Seuls quelques spécimens sont signalés ; son écologie reste donc mal connue. Comme P. islandicus, elle est décrite avec une bouche très inclinée ; P. islandicus est signalée au sud de l’Islande, dans l’Atlantique Nord-Est, tandis que cette espèce vient du Pacifique oriental. P. dentatus est un autre congénère du Pacifique oriental ; sa description souligne ses dents inhabituellement grandes et recourbées vers l’intérieur."
+    },
+    "conservation": {
+      "en": "The consulted FishBase page lists the species as not evaluated by the IUCN.",
+      "fr": "La fiche FishBase consultée indique que l’espèce n’a pas été évaluée par l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase",
+        "fr": "species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59798",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase classifies it as a marine Liparidae fish and lists no IUCN evaluation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 13,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BOEM",
+        "fr": "deep-sea fish checklist"
+      },
+      "url": "https://espis.boem.gov/Final%20Reports/4996.pdf",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Only three specimens are reported; capture-depth data are unclear."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 9,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS",
+        "fr": "taxonomic report"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=644400",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS recognizes Psednos cathetostomus Chernova and Stein, 2002 as a valid species in Liparidae."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos islandicus species summary",
+        "fr": "FishBase — résumé de Psednos islandicus"
+      },
+      "url": "https://www.fishbase.se/summary/59797",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos islandicus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 14,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos dentatus species summary",
+        "fr": "FishBase — résumé de Psednos dentatus"
+      },
+      "url": "https://fishbase.se/summary/59793",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos dentatus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 14,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The reported maximum size and exact depth are omitted because measurement conventions and midwater sampling make them easy to misstate. English and French common names are descriptive renderings; the sources do not establish a standardized French name."
+  ],
+  "review_note": "Kept the entry concise because published species-specific observations are sparse. Cross-checked taxonomic identity and locality across taxonomic and species accounts; unsupported life-history details are left unstated.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

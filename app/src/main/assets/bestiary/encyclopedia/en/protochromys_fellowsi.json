@@ -1,0 +1,30 @@
+{
+  "id": "protochromys_fellowsi",
+  "name": "Papuan mosaic-tailed rat",
+  "scientific": "Protochromys fellowsi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Protochromys fellowsi is a murid rodent endemic to the mountains of Papua New Guinea and the only known species in its genus.",
+    "identification": "It is medium-sized, long-tailed and has dense, soft fur; its pale incisors and skull traits help distinguish its genus from related mosaic-tailed rats.",
+    "habitat": "Records come from high montane forests of Papua New Guinea’s Central Cordillera, at roughly two and a half kilometres elevation.",
+    "diet": "Examination of preserved specimens found mushroom material in the stomachs, evidence that fungi are an important food; the small sample does not define its full diet.",
+    "behavior": "Few localities are documented; this may partly reflect difficulty detecting it.",
+    "reproduction": "No reproductive observations are reported here.",
+    "ecology": "The species was originally described in Melomys but is now placed in its own genus, Protochromys; this taxonomic change reflects distinctive anatomical traits.",
+    "conservation": "The Mammal Diversity Database reports a Least Concern IUCN assessment; the limited field records still leave aspects of its ecology poorly known."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1206/635.1",
+      "title": "Systematic reviews of New Guinea Coccymys and ‘Melomys’ albidens — American Museum of Natural History Bulletin"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003263/",
+      "title": "Mammal Diversity Database: Protochromys fellowsi"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=970886",
+      "title": "ITIS: Protochromys fellowsi"
+    }
+  ]
+}

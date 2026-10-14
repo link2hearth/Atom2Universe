@@ -1,0 +1,34 @@
+{
+  "id": "protobothrops_mangshanensis",
+  "name": "Vipère de Mangshan",
+  "scientific": "Protobothrops mangshanensis",
+  "group": "reptiles",
+  "sections": {
+    "overview": "La vipère de Mangshan est un serpent venimeux limité à une petite région des monts Nanling, dans le sud de la Chine.",
+    "identification": "Elle appartient aux Viperidae, sous-famille des Crotalinae, qui regroupe les vipères à fossettes.",
+    "habitat": "Les sources la situent dans les forêts subtropicales humides autour du mont Mang et des secteurs voisins des Nanling, au Hunan et au Guangdong.",
+    "diet": "Les sources utilisées ici ne donnent pas assez d’informations propres à l’espèce pour résumer de façon fiable son régime dans la nature.",
+    "behavior": "Une étude par télémétrie documente son activité saisonnière et l’usage de l’habitat, mais cette fiche ne généralise pas ses résultats au-delà des serpents suivis et du site étudié.",
+    "reproduction": "Les sources consultées ne permettent pas de décrire sa reproduction avec assez de précision dans cette fiche.",
+    "ecology": "Son aire restreinte et les pressions sur son habitat rendent importante la protection des forêts restantes; les prélèvements pour le commerce d’animaux sauvages ont aussi été identifiés comme une menace.",
+    "conservation": "L’UICN la classe En danger. La Chine l’inscrit aussi parmi les espèces sauvages bénéficiant du plus haut niveau de protection nationale."
+  },
+  "sources": [
+    {
+      "url": "https://www.cambridge.org/core/journals/oryx/article/population-status-distribution-and-conservation-needs-of-the-endangered-mangshan-pit-viper-protobothrops-mangshanensis-of-china/FF6D297B4215317EF2FCF8E992B49062",
+      "title": "Statut, répartition et besoins de conservation de la vipère de Mangshan — Oryx"
+    },
+    {
+      "url": "https://lhsr.sh.gov.cn/gjzdbhysdwml/",
+      "title": "Liste nationale des espèces sauvages protégées — gouvernement municipal de Shanghai"
+    },
+    {
+      "url": "https://www.kiz.ac.cn/gre/gre1/gre14/201710/P020171024410267867684.pdf",
+      "title": "Sélection saisonnière du microhabitat par la vipère de Mangshan, espèce en danger critique"
+    },
+    {
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1058430",
+      "title": "ITIS : Protobothrops mangshanensis"
+    }
+  ]
+}

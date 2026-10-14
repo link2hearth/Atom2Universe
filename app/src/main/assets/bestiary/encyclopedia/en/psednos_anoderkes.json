@@ -1,0 +1,30 @@
+{
+  "id": "psednos_anoderkes",
+  "name": "Upward-looking dwarf snailfish",
+  "scientific": "Psednos anoderkes",
+  "group": "fish",
+  "sections": {
+    "overview": "Psednos anoderkes is a small snailfish (family Liparidae) known from the eastern pacific, northeast of isla guadalupe, mexico.",
+    "identification": "It has a small upward-looking eye, pale skin, 37 dorsal soft rays and 42 vertebrae. P. andriashevi has 42 rays and 47 vertebrae. P. barnardi has 39–41 rays and 47 vertebrae, with a black chin.",
+    "habitat": "It is a marine midwater fish recorded between 0 and 2036 m over deep seafloor.",
+    "diet": "The species account and original description do not report a species-specific diet.",
+    "behavior": "No behavior is described in the species account.",
+    "reproduction": "The reviewed species sources do not describe reproduction.",
+    "ecology": "The known records are sparse; the reported maximum is 2.7 cm standard length.",
+    "conservation": "FishBase reports it as not evaluated on the IUCN Red List."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/59833",
+      "title": "Psednos anoderkes — FishBase species account"
+    },
+    {
+      "url": "https://doi.org/10.1643/0045-8511(2002)002[0755:TNSOPP]2.0.CO;2",
+      "title": "Ten new species of Psednos — Chernova & Stein (2002)"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59948",
+      "title": "Psednos andriashevi — species account"
+    }
+  ]
+}

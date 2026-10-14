@@ -1,0 +1,34 @@
+{
+  "id": "pristis_perotteti",
+  "name": "Largetooth sawfish",
+  "scientific": "Pristis perotteti",
+  "group": "fish",
+  "sections": {
+    "overview": "The catalogue name Pristis perotteti is now treated as a synonym of Pristis pristis, the largetooth sawfish; this entry therefore describes that currently recognized species rather than a separate taxon.",
+    "identification": "This is a ray, not a shark: its flattened head and long, toothed rostrum give sawfishes their distinctive outline.",
+    "habitat": "It occurs in tropical river systems and estuaries. Adults also use coastal waters.",
+    "diet": "It feeds on fishes and bottom-dwelling invertebrates, using its saw to disturb sediment or strike at prey.",
+    "behavior": "The long rostrum is a hunting tool as well as a conspicuous identifying feature.",
+    "reproduction": "Its life history is poorly known; Australian accounts describe slow maturation and low reproductive output.",
+    "ecology": "Its use of rivers, estuaries and coastal waters links freshwater and marine ecosystems.",
+    "conservation": "The global assessment of Pristis pristis is Critically Endangered; entanglement in fishing gear and loss or alteration of habitat are major concerns."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T18584848A58336780.en",
+      "title": "Pristis pristis — IUCN Red List"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/largetooth-sawfish/",
+      "title": "Largetooth Sawfish — Florida Museum, Discover Fishes"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/action-plan/freshwater-sawfish",
+      "title": "Freshwater sawfish — Australian Department of Climate Change, Energy, the Environment and Water"
+    },
+    {
+      "url": "https://www.oceanografic.org/especie/pez-sierra/",
+      "title": "Pez sierra — Oceanogràfic Valencia"
+    }
+  ]
+}

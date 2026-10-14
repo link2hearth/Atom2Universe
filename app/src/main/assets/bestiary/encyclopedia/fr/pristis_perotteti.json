@@ -1,0 +1,34 @@
+{
+  "id": "pristis_perotteti",
+  "name": "Poisson-scie à grandes dents",
+  "scientific": "Pristis perotteti",
+  "group": "fish",
+  "sections": {
+    "overview": "Le nom du catalogue, Pristis perotteti, est aujourd’hui traité comme un synonyme de Pristis pristis, le poisson-scie à grandes dents ; cette fiche décrit donc l’espèce actuellement reconnue, et non un taxon distinct.",
+    "identification": "C’est une raie, et non un requin : sa tête aplatie et son long rostre denté donnent aux poissons-scies leur silhouette caractéristique.",
+    "habitat": "Il fréquente les rivières tropicales et les estuaires. Les adultes utilisent aussi les eaux côtières.",
+    "diet": "Il se nourrit de poissons et d’invertébrés du fond, et utilise son rostre pour remuer le sédiment ou frapper ses proies.",
+    "behavior": "Le long rostre est un outil de chasse autant qu’un signe d’identification visible.",
+    "reproduction": "Son cycle de vie est mal connu ; les sources australiennes décrivent une maturation lente et une faible production de jeunes.",
+    "ecology": "Sa fréquentation des rivières, des estuaires et des eaux côtières relie les écosystèmes d’eau douce et marins.",
+    "conservation": "L’évaluation mondiale de Pristis pristis le classe « En danger critique » ; les captures dans les engins de pêche et la perte ou la modification de l’habitat sont des préoccupations majeures."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T18584848A58336780.en",
+      "title": "Pristis pristis — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/largetooth-sawfish/",
+      "title": "Poisson-scie à grandes dents — Florida Museum, Discover Fishes"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/action-plan/freshwater-sawfish",
+      "title": "Poisson-scie d’eau douce — Ministère australien du Changement climatique, de l’Énergie, de l’Environnement et de l’Eau"
+    },
+    {
+      "url": "https://www.oceanografic.org/especie/pez-sierra/",
+      "title": "Poisson-scie — Oceanogràfic Valencia"
+    }
+  ]
+}

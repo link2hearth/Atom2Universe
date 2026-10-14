@@ -1,0 +1,34 @@
+{
+  "id": "prosopocoilus_astacoides",
+  "name": "Astacoides stag beetle",
+  "scientific": "Prosopocoilus astacoides",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Prosopocoilus astacoides is an Asian stag beetle with several named subspecies; its classification has been debated.",
+    "identification": "It belongs to Lucanidae, the stag beetle family. A taxonomic study found marked morphological and genetic differences among some populations assigned to its subspecies group.",
+    "habitat": "Published subspecies records span parts of South and Southeast Asia, including northeastern India, Myanmar, Java and Sumatra; these do not describe one uniform range for every population.",
+    "diet": "The sources consulted here do not establish a species-specific wild diet.",
+    "behavior": "Wild behavior is poorly documented in the sources consulted; captive observations should not be treated as a full account of its natural history.",
+    "reproduction": "Captive breeding research on the subspecies blanchardi measured mating and egg-laying, but those conditions do not establish the timing of reproduction in wild populations.",
+    "ecology": "Some forms once treated within P. astacoides have been raised to species rank, while genetic work has questioned the boundaries of others; subspecies names therefore require care.",
+    "conservation": "A Korean study describes the subspecies blanchardi as endangered; that assessment should not be generalized to the whole species."
+  },
+  "sources": [
+    {
+      "url": "https://tb.plazi.org/GgServer/html/A41687E4FFE7C95A5FCB5765FF01760F",
+      "title": "Notes on Prosopocoilus from China, with two new species"
+    },
+    {
+      "url": "https://taieol.tw/pages/245352",
+      "title": "Taiwan Encyclopedia of Life: Prosopocoilus astacoides"
+    },
+    {
+      "url": "https://doi.org/10.5656/KSAE.2021.11.0.050",
+      "title": "Oviposition in the endangered Prosopocoilus astacoides blanchardi"
+    },
+    {
+      "url": "https://www.dbpia.co.kr/journal/detail?nodeId=T13434052",
+      "title": "Phylogenetic study of the Prosopocoilus astacoides group"
+    }
+  ]
+}

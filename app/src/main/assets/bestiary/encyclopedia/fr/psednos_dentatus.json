@@ -1,0 +1,34 @@
+{
+  "id": "psednos_dentatus",
+  "name": "Limace de mer dentée",
+  "scientific": "Psednos dentatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Limace de mer de la famille des Liparidés, elle est connue au large du nord du Chili, dans le Pacifique Sud-Est.",
+    "identification": "La description originale signale des dents inhabituellement grandes et étroites, recourbées vers l’intérieur ; son nom fait référence à cette dentition particulière.",
+    "habitat": "Le spécimen connu a été recueilli vers 800 m au-dessus d’un fond beaucoup plus profond ; cette observation unique ne définit pas toute l’amplitude bathymétrique de l’espèce.",
+    "diet": "Les sources consultées ne précisent pas son alimentation.",
+    "behavior": "Les sources consultées ne rapportent pas d’observations comportementales propres à l’espèce.",
+    "reproduction": "Les sources consultées ne fournissent pas d’observations sur sa reproduction.",
+    "ecology": "L’espèce n’est connue que par un spécimen type, ce qui laisse son écologie largement inconnue. Son congénère du Pacifique oriental, P. cathetostomus, est nommé pour sa bouche et sa mâchoire presque verticales, plutôt que pour des dents particulières.",
+    "conservation": "La fiche FishBase consultée indique qu’elle n’a pas été évaluée par l’UICN."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/59793",
+      "title": "species summary"
+    },
+    {
+      "url": "https://scripps.ucsd.edu/marine-vertebrate-collection/special-collections/type-catalog",
+      "title": "type catalog"
+    },
+    {
+      "url": "https://www.mapress.com/zootaxa/2005f/zt01019p025.pdf",
+      "title": "comparison in a Liparidae species description"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59798",
+      "title": "FishBase — résumé de Psednos cathetostomus"
+    }
+  ]
+}

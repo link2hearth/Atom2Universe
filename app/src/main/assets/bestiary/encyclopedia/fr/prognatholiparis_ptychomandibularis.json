@@ -1,0 +1,34 @@
+{
+  "id": "prognatholiparis_ptychomandibularis",
+  "name": "Limace de mer à mâchoire plissée",
+  "scientific": "Prognatholiparis ptychomandibularis",
+  "group": "fish",
+  "sections": {
+    "overview": "Cette limace de mer peu connue est la seule espèce décrite du genre Prognatholiparis.",
+    "identification": "Sa mâchoire inférieure dépasse la supérieure, et des plis cutanés marqués longent le museau et le dessous de la mâchoire.",
+    "habitat": "Elle est connue des îles Aléoutiennes, dans le nord-est du Pacifique ; les données la situent près du fond, à profondeur modérée.",
+    "diet": "La seule observation publiée de contenu stomacal mentionne des ostracodes et des pierres, ce qui ne suffit pas à définir son régime habituel.",
+    "behavior": "La fiche consultée ne donne pas de détails comportementaux propres à cette espèce.",
+    "reproduction": "La fiche consultée ne donne pas de détails reproductifs propres à cette espèce.",
+    "ecology": "C’est un poisson marin associé au fond, et les données connues sont extrêmement rares.",
+    "conservation": "FishBase rapporte la catégorie « Données insuffisantes » dans l’évaluation UICN qu’il cite, datée de 2009."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/58835",
+      "title": "Prognatholiparis ptychomandibularis — FishBase"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/49139",
+      "title": "Prognatholiparis ptychomandibularis — description originale, Biodiversity Heritage Library"
+    },
+    {
+      "url": "https://fishdb.sinica.edu.tw/eng/chinesequer2.php?D1=&R1=&T1=&cn=&dere=desc&fm=&gc=&orderby=family_name&page=733&pz=20&vn=",
+      "title": "Base de données des poissons de Taïwan — fiche espèce"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?family=Liparidae&tbl=genus",
+      "title": "Catalogue des poissons d’Eschmeyer — Prognatholiparis"
+    }
+  ]
+}

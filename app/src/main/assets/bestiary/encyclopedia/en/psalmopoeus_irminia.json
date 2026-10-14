@@ -1,0 +1,26 @@
+{
+  "id": "psalmopoeus_irminia",
+  "name": "Venezuelan tiger tarantula",
+  "scientific": "Psalmopoeus irminia",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Psalmopoeus irminia is an accepted tarantula species recorded from Venezuela, Guyana and Brazil.",
+    "identification": "In the Brazilian record, a female had a dark body, orange leg stripes and two rows of orange abdominal spots.",
+    "habitat": "One Brazilian record came from a forest near the Miang River.",
+    "diet": "The field report gives no diet details.",
+    "behavior": "The female was beside a tubular silk retreat about 1.6 m above ground, extending into rock crevices.",
+    "reproduction": "Breeding details are not reported.",
+    "ecology": "It was collected in early evening; this single record does not establish its general activity pattern.",
+    "conservation": "No conservation assessment is reported."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/44467",
+      "title": "World Spider Catalog — Psalmopoeus irminia"
+    },
+    {
+      "url": "https://doi.org/10.15560/12.2.1860",
+      "title": "First record of the genus Psalmopoeus in Brazil — Check List (2016)"
+    }
+  ]
+}
