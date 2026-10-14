@@ -1,0 +1,13 @@
+{
+  "id": "adoxa_moschatellina",
+  "sections": [
+    {"title": "Port et habitat", "text": "Petite plante printanière de 5 à 15 cm, des sous-bois humides et ombragés de l’hémisphère Nord tempéré. Ses feuilles sont divisées ; la tige porte un petit groupe presque cubique de cinq fleurs verdâtres, puis des fruits charnus."},
+    {"title": "Alimentation et sécurité", "text": "Les sources consultées ne permettent pas d’établir si cette plante est comestible ou toxique."}
+  ],
+  "sources": [
+    {"title": "Adoxa moschatellina — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:148240-1"},
+    {"title": "Muskroot — Wisconsin Department of Natural Resources", "url": "https://apps.dnr.wi.gov/biodiversity/Home/detail/plants/8667"},
+    {"title": "Adoxa moschatellina — fiche RHS", "url": "https://www.rhs.org.uk/plants/458/adoxa-moschatellina/details"}
+  ],
+  "related": []
+}

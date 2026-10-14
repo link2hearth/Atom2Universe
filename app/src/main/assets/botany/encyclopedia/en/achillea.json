@@ -1,0 +1,13 @@
+{
+  "id": "achillea",
+  "sections": [
+    {"title": "Form and habitat", "text": "Achillea millefolium is a rhizomatous perennial, usually 10–100 cm tall. Its alternate leaves are finely divided, and many small flower heads form a flat-topped cluster, usually white and sometimes pinkish. It is native across temperate and subarctic parts of Eurasia and is now widespread elsewhere, growing in meadows, open ground and roadsides."},
+    {"title": "Food and toxicity", "text": "The sources consulted do not establish a reliable food use for this species. The ASPCA lists yarrow as toxic to dogs, cats and horses; that veterinary warning should not be generalized to people."}
+  ],
+  "sources": [
+    {"title": "Achillea millefolium — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A2294-2/general-information"},
+    {"title": "Achillea millefolium — Flora of North America", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200023010"},
+    {"title": "Milfoil — ASPCA Animal Poison Control", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/milfoil"},
+    {"title": "Florilèges: clé des prairies — Tela Botanica", "url": "https://www.tela-botanica.org/wp-content/uploads/2025/10/Florileges_ClePrairies.pdf"}
+  ]
+}

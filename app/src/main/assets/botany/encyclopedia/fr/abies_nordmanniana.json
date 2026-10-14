@@ -1,0 +1,13 @@
+{
+  "id": "abies_nordmanniana",
+  "sections": [
+    {"title": "Port et répartition", "text": "Grand conifère persistant originaire des montagnes, du nord de la Türkiye au Caucase occidental. En culture, sa hauteur est généralement donnée autour de 12 à 18 m ; des arbres exceptionnels dépassent 60 m dans son aire naturelle. Ses aiguilles plates vert foncé portent des bandes stomatiques pâles dessous. Aucune largeur de couronne fiable pour les arbres sauvages n’a été trouvée."},
+    {"title": "Usages et sécurité", "text": "Il est largement planté comme arbre ornemental et sapin de Noël. Les sources consultées n’établissent ni usage alimentaire ni toxicité de ses parties."}
+  ],
+  "sources": [
+    {"title": "Abies nordmanniana — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:261599-1/general-information"},
+    {"title": "Abies nordmanniana — North Carolina Extension Gardener Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/abies-nordmanniana/"},
+    {"title": "Abies nordmanniana — Oregon State University Landscape Plants", "url": "https://landscapeplants.oregonstate.edu/plants/abies-nordmanniana"}
+  ],
+  "related": ["abies_yuanbaoshanensis"]
+}

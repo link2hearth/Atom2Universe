@@ -1,0 +1,13 @@
+{
+  "id": "adansonia_suarezensis",
+  "sections": [
+    {"title": "Port et répartition", "text": "Baobab originaire du nord de Madagascar, notamment de l’extrême nord autour d’Antsiranana. Une étude scientifique récente décrit des arbres pouvant atteindre environ 25 m de haut et un tronc de 2 à 5 m de diamètre, avec une couronne caractéristique horizontale en T ou en Y. Aucun usage alimentaire n’a été vérifié."},
+    {"title": "Conservation et comparaison", "text": "Kew indique le statut UICN « en danger ». Cette espèce partage le nord de Madagascar et le genre Adansonia avec A. perrieri, que Kew classe en danger critique ; il ne faut pas attribuer à l’une les mesures ou autres caractères documentés pour l’autre."}
+  ],
+  "sources": [
+    {"title": "Adansonia suarezensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:112193-1/general-information"},
+    {"title": "Genetic diversity and conservation insights for Adansonia suarezensis in Northern Madagascar — Tree Genetics & Genomes", "url": "https://link.springer.com/article/10.1007/s11295-026-01743-y"},
+    {"title": "Adansonia perrieri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:112189-1/general-information"}
+  ],
+  "related": ["adansonia_perrieri"]
+}

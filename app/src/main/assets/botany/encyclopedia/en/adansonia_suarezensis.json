@@ -1,0 +1,13 @@
+{
+  "id": "adansonia_suarezensis",
+  "sections": [
+    {"title": "Form and range", "text": "A baobab native to northern Madagascar, especially the far north around Antsiranana. A recent peer-reviewed study describes trees up to about 25 m tall and 2–5 m in trunk diameter, with a characteristically horizontal, T- or Y-shaped crown. Edible use was not verified."},
+    {"title": "Conservation and comparison", "text": "Kew reports the IUCN status as Endangered. This species shares northern Madagascar and the genus Adansonia with A. perrieri, which Kew lists as Critically Endangered; do not transfer measurements or other traits between the species."}
+  ],
+  "sources": [
+    {"title": "Adansonia suarezensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:112193-1/general-information"},
+    {"title": "Genetic diversity and conservation insights for Adansonia suarezensis in Northern Madagascar — Tree Genetics & Genomes", "url": "https://link.springer.com/article/10.1007/s11295-026-01743-y"},
+    {"title": "Adansonia perrieri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:112189-1/general-information"}
+  ],
+  "related": ["adansonia_perrieri"]
+}

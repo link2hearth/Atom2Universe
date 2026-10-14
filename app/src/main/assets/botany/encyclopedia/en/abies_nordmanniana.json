@@ -1,0 +1,13 @@
+{
+  "id": "abies_nordmanniana",
+  "sections": [
+    {"title": "Form and range", "text": "A large evergreen conifer native to the mountains from northern Türkiye to the western Caucasus. In cultivation it is commonly listed at about 12–18 m tall; exceptional native trees exceed 60 m. Its flat, dark-green needles have pale stomatal bands underneath. A reliable crown width for wild trees was not located."},
+    {"title": "Uses and safety", "text": "It is widely grown as an ornamental and Christmas tree. The sources consulted do not establish food use or toxicity of its parts."}
+  ],
+  "sources": [
+    {"title": "Abies nordmanniana — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:261599-1/general-information"},
+    {"title": "Abies nordmanniana — North Carolina Extension Gardener Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/abies-nordmanniana/"},
+    {"title": "Abies nordmanniana — Oregon State University Landscape Plants", "url": "https://landscapeplants.oregonstate.edu/plants/abies-nordmanniana"}
+  ],
+  "related": ["abies_yuanbaoshanensis"]
+}

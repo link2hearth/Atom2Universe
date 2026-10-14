@@ -1,7 +1,7 @@
 package com.Atom2Universe.app.science.botany
 
 import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.graphics.Color
 import android.util.LruCache
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +16,8 @@ internal class PlantImageStore(
     private val dispatcher:CoroutineDispatcher=Dispatchers.Default.limitedParallelism(2),
     maxBytes:Int=12*1024*1024,
     private val render:(PlantSpecies,PlantImageKey)->Bitmap={species,key->
-        if (key.image && PlantHerbarium.hasPlate(key.id)) PlantHerbarium.decode(key) else
-        Bitmap.createBitmap(key.edge,key.edge,Bitmap.Config.ARGB_8888).also { bitmap->
-            val canvas=Canvas(bitmap);canvas.scale(key.edge/300f,key.edge/300f)
-            PlantPainter(canvas,species,key.compact).draw(key.mode)
-        }
+        if (PlantHerbarium.hasPlate(key.id)) PlantHerbarium.decode(key) else
+            Bitmap.createBitmap(key.edge,key.edge,Bitmap.Config.ARGB_8888).apply { eraseColor(Color.rgb(244,240,227)) }
     }
 ) {
     private val cache=object:LruCache<PlantImageKey,Bitmap>(maxBytes) {

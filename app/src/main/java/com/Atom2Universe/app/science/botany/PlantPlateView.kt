@@ -32,7 +32,8 @@ class PlantPlateView(context: Context, val specimen: PlantSpecies, initialMode: 
     private var requested:PlantImageKey?=null
     private var failed=false
     private val scrollListener=ViewTreeObserver.OnScrollChangedListener { requestIfVisible() }
-    val herbarium: Boolean get() = image && PlantHerbarium.hasPlate(specimen.id)
+    /** Botanical plates always use the verified herbarium asset when one exists. */
+    val herbarium: Boolean get() = PlantHerbarium.hasPlate(specimen.id)
 
     init { importantForAccessibility=IMPORTANT_FOR_ACCESSIBILITY_YES; describe() }
 

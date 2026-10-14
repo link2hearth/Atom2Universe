@@ -43,7 +43,6 @@ class BotanyActivity : ThemedActivity() {
     private var tab=Tab.EXPLORE
     private var search=""
     private var sort=PlantSort.NAME
-    private var mode=PlantView.HABIT
     private var marks=true
     private var filtersOpen=false
     private lateinit var content:LinearLayout
@@ -95,7 +94,6 @@ class BotanyActivity : ThemedActivity() {
         tab=Tab.entries.firstOrNull{it.name==(savedInstanceState?.getString("tab") ?: prefs.getString("tab",null))} ?: Tab.EXPLORE
         search=savedInstanceState?.getString("search") ?: prefs.getString("search","").orEmpty()
         sort=PlantSort.entries.firstOrNull{it.name==(savedInstanceState?.getString("sort") ?: prefs.getString("sort",null))} ?: PlantSort.NAME
-        mode=PlantView.entries.firstOrNull{it.name==(savedInstanceState?.getString("mode") ?: prefs.getString("mode",null))} ?: PlantView.HABIT
         marks=savedInstanceState?.getBoolean("marks") ?: prefs.getBoolean("marks",true)
         filtersOpen=savedInstanceState?.getBoolean("filters") ?: prefs.getBoolean("filters",false)
         for(f in facets) {
@@ -328,7 +326,7 @@ class BotanyActivity : ThemedActivity() {
                 val p=catalog.get(lesson.specimen) ?: return
                 val body=column();body.addView(label(getString(lesson.body),16f),full())
                 body.addView(button(getString(p.name)){open("species:${p.id}")},full())
-                fiche.show(getString(lesson.title),null,media(p,lesson.view,allowModes=false),body,back)
+                fiche.show(getString(lesson.title),null,media(p),body,back)
             }
         }
     }
@@ -337,101 +335,90 @@ class BotanyActivity : ThemedActivity() {
         else if(p.evergreen)R.string.bot_evergreen else R.string.bot_deciduous
 
     private fun showSpecies(p:PlantSpecies,back:(()->Unit)?) {
+        val article=runCatching {
+            BotanyEncyclopediaRepository.load(this,p.id,resources.configuration.locales[0].language)
+        }.getOrNull()
         val top=column()
+        top.addView(speciesImage(p),LinearLayout.LayoutParams(-1,dp(320)))
         top.addView(label(getString(p.latin),17f).apply{setTypeface(typeface,Typeface.ITALIC)})
         top.addView(label(getString(p.aliases),13f).apply{setTextColor(palette.secondary)},full(4))
         top.addView(button(getString(catalog.family(p.familyId).name)){open("family:${p.familyId}")},full(4))
         val body=column()
+        if(article!=null) {
+            article.sections.forEach { section ->
+                heading(body,section.title)
+                body.addView(label(section.text,15f),full(4))
+            }
+        } else {
+            heading(body,R.string.bot_traits)
+            body.addView(label(getString(p.description),16f),full(4))
+            heading(body,R.string.bot_ecology)
+            body.addView(label(p.habitats.joinToString(" · "){getString(it.label)},15f),full(4))
+            body.addView(label(getString(p.distribution),14f),full(4))
+        }
+        heading(body,R.string.bot_height)
+        body.addView(label(height(p),16f),full(2))
+        body.addView(label(getString(persistence(p)),14f),full(4))
+        if(p.flowering.isNotEmpty() || p.fruiting.isNotEmpty()) {
+            heading(body,R.string.bot_calendar)
+            body.addView(calendar(p),full(4))
+        }
+        body.addView(label(getString(p.phenologyNote.takeIf{it!=0} ?: R.string.bot_calendar_note),13f).apply{setTextColor(palette.secondary)},full(4))
         life?.index?.forIllustrated(p.id)?.let { entry ->
             body.addView(button(getString(R.string.bot_life_open_tree)){openTree(entry.nodeId)},full())
             entry.lineage.reversed().filter { PlantGroupKnowledge.hasArticle(life!!.repository.tree.nodes.getValue(it).scientific) }.forEach { ancestor ->
                 body.addView(button(getString(R.string.plant_group_group_open,life!!.repository.name(this,ancestor))){open("taxon:$ancestor")},full(3))
             }
         }
-        heading(body,R.string.bot_traits)
-        body.addView(label(getString(p.description),16f),full(4))
-        body.addView(label(getString(R.string.bot_height),13f,true),full())
-        body.addView(label(height(p),16f),full(2))
-        body.addView(label(getString(persistence(p)),14f),full(4))
-        heading(body,R.string.bot_ecology)
-        body.addView(label(p.habitats.joinToString(" · "){getString(it.label)},15f),full(4))
-        body.addView(label(getString(p.distribution),14f),full(4))
         body.addView(label(catalog.collections.filter{it.id in p.collectionIds}.joinToString(" · "){getString(it.title)},12f).apply{setTextColor(palette.secondary)},full(4))
-        heading(body,R.string.bot_calendar)
-        if(p.flowering.isNotEmpty() || p.fruiting.isNotEmpty())body.addView(calendar(p),full(4))
-        body.addView(label(getString(p.phenologyNote.takeIf{it!=0} ?: R.string.bot_calendar_note),13f).apply{setTextColor(palette.secondary)},full(4))
-        heading(body,R.string.bot_references)
-        speciesReferences(body,p)
+        val relatedIds=article?.related.orEmpty().filter{catalog.get(it)!=null}
+        if(relatedIds.isNotEmpty()) {
+            heading(body,R.string.bot_related)
+            relatedIds.forEach{id->catalog.get(id)?.let{related->body.addView(button(getString(related.name)){open("species:${related.id}")},full(4))}}
+        }
         val groups=catalog.groups.filter{p.id in it.members}
         if(groups.isNotEmpty()){heading(body,R.string.bot_related);groups.forEach{g->body.addView(button(getString(g.title)){open("group:${g.id}")},full(4))}}
-        fiche.show(getString(p.name),top,media(p,mode),body,back)
+        heading(body,R.string.bot_references)
+        if(article!=null) article.sources.forEach { source ->
+            body.addView(button(source.title){link(source.url)},full(3))
+            body.addView(label(source.url,12f).apply{setTextColor(palette.secondary);setTextIsSelectable(true)},full(3))
+        } else speciesReferences(body,p)
+        fiche.show(getString(p.name),top,null,body,back)
     }
 
-    private fun media(p:PlantSpecies,initial:PlantView,allowModes:Boolean=true):View {
-        val box=column()
-        val plate=PlantPlateView(this,p,initial).apply{marks=this@BotanyActivity.marks}
-        val frame=FitFrame(this,340f/300f,dp(460)).apply{addView(plate,FrameLayout.LayoutParams(-2,-2,Gravity.CENTER))}
-        val legend=column()
-        val markToggle=CheckBox(this).apply{text=getString(R.string.bot_marks);setTextColor(palette.text);isChecked=marks}
-        val plateNote=label(getString(R.string.bot_plate_note),11.5f).apply{setTextColor(palette.secondary)}
-        fun updateLegend() {
-            legend.removeAllViews()
-            markToggle.visibility=if(plate.herbarium)View.GONE else View.VISIBLE
-            plateNote.text=getString(if(plate.herbarium)R.string.bot_herbarium_note else R.string.bot_plate_note)
-            frame.ratio=if(plate.herbarium)1.5f else 340f/300f
-            if(plate.herbarium || !plate.marks)return
-            val labels=if(p.look.study!=null)listOf(p.captions.getValue(plate.mode)) else when(plate.mode) {
-                PlantView.HABIT->listOf(p.captions.getValue(PlantView.HABIT),persistence(p),R.string.bot_height)
-                PlantView.LEAF->listOf(p.look.leaf.label,p.look.arrangement.label,p.look.margin.label)
-                PlantView.FLOWER->listOf(p.look.flower.label,p.look.color.label)
-                PlantView.FRUIT->listOf(p.look.fruit.label)
-            }
-            labels.forEachIndexed{i,res->legend.addView(label(getString(R.string.bot_legend_format,i+1,getString(res)),12f),full(2))}
+    private fun speciesImage(p:PlantSpecies):ImageView {
+        val image=ImageView(this).apply {
+            scaleType=ImageView.ScaleType.FIT_CENTER
+            contentDescription=getString(R.string.bot_herbarium_accessibility,getString(p.name))
+            setBackgroundColor(0xfff4f0e3.toInt())
         }
-        val imageAction:(()->Unit)?=if(PlantHerbarium.hasPlate(p.id)) ({plate.image=true;updateLegend()}) else null
-        if(allowModes)box.addView(viewBar(initial,imageAction){v->mode=v;plate.image=false;plate.mode=v;updateLegend()},full(0))
-        box.addView(markToggle.apply{
-            setOnCheckedChangeListener{_,checked->marks=checked;plate.marks=checked;updateLegend()}},full(0))
-        box.addView(frame,if(fiche.wide)LinearLayout.LayoutParams(-1,0,1f) else full(4))
-        box.addView(legend,full(2));updateLegend()
-        box.addView(plateNote,full(4))
-        return box
+        if(PlantHerbarium.hasPlate(p.id)) lifecycleScope.launch {
+            val key=PlantImageKey(p.id,PlantView.HABIT,768,false,true)
+            runCatching { PlantImageStore.shared.load(p,key) }.onSuccess { bitmap -> image.setImageBitmap(bitmap) }
+        }
+        return image
     }
 
-    private fun viewBar(initial:PlantView,onImage:(()->Unit)?=null,action:(PlantView)->Unit):View {
-        val r=row();val buttons=mutableMapOf<PlantView,Button>()
-        var imageButton:Button?=null
-        PlantView.entries.forEach{v->
-            val b=button(getString(v.label),v==initial){buttons.forEach{(k,b)->style(b,k==v)};imageButton?.let{style(it,false)};action(v)}
-            buttons[v]=b;r.addView(b,wrap())
-        }
-        if(onImage!=null) {
-            imageButton=button(getString(R.string.bot_view_image)) {
-                buttons.values.forEach{style(it,false)};imageButton?.let{style(it,true)};onImage()
-            }
-            r.addView(imageButton,wrap())
-        }
-        return horizontal(r)
+    private fun media(p:PlantSpecies):View = column().apply {
+        addView(speciesImage(p),LinearLayout.LayoutParams(-1,dp(360)))
+        addView(label(getString(R.string.bot_herbarium_note),12f).apply{setTextColor(palette.secondary)},full(4))
     }
 
     private fun showGroup(g:PlantGroup,back:(()->Unit)?) {
         val body=column()
         body.addView(label(getString(R.string.bot_compare_note),13f),full())
-        val plates=mutableListOf<PlantPlateView>()
-        body.addView(viewBar(mode){v->mode=v;plates.forEach{it.mode=v}},full())
         val r=row().apply{gravity=Gravity.TOP}
         val cellWidth=dp(225)
         g.members.mapNotNull{catalog.get(it)}.forEach{p->
             val col=column()
-            val plate=PlantPlateView(this,p,mode).apply{marks=false};plates+=plate
-            col.addView(plate,LinearLayout.LayoutParams(cellWidth,dp(255)))
+            col.addView(speciesImage(p),LinearLayout.LayoutParams(cellWidth,dp(255)))
             col.addView(button(getString(p.name)){open("species:${p.id}")},full(4))
             col.addView(label(getString(p.latin),12f).apply{setTypeface(typeface,Typeface.ITALIC)},full(2))
             r.addView(col,LinearLayout.LayoutParams(cellWidth,-2).apply{marginEnd=dp(10)})
         }
         body.addView(horizontal(r),full())
         body.addView(label(getString(g.differences),16f),full())
-        body.addView(label(getString(R.string.bot_plate_note),12f),full())
+        body.addView(label(getString(R.string.bot_herbarium_note),12f),full())
         fiche.show(getString(g.title),null,null,body,back)
     }
 
@@ -652,6 +639,7 @@ class BotanyActivity : ThemedActivity() {
         return getString(R.string.bot_height_m,n.format(p.heightMinCm/100f),n.format(p.heightMaxCm/100f))
     }
     private fun heading(parent:LinearLayout,title:Int){parent.addView(label(getString(title),17f,true).apply{ViewCompat.setAccessibilityHeading(this,true)},full(18))}
+    private fun heading(parent:LinearLayout,title:String){parent.addView(label(title,17f,true).apply{ViewCompat.setAccessibilityHeading(this,true)},full(18))}
     private fun column()=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL}
     private fun row()=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
     private fun label(value:String,size:Float=15f,bold:Boolean=false)=TextView(this).apply{text=value;textSize=size;setTextColor(palette.text);if(bold)setTypeface(typeface,Typeface.BOLD)}
@@ -674,7 +662,7 @@ class BotanyActivity : ThemedActivity() {
         super.onSaveInstanceState(out)
         out.putString("life_search",lifeSearch);out.putString("life_family",lifeFamily);out.putString("life_branch",lifeBranch)
         out.putBoolean("life_latin_sort",lifeLatinSort);out.putInt("life_limit",lifeLimit)
-        out.putString("tab",tab.name);out.putString("search",search);out.putString("sort",sort.name);out.putString("mode",mode.name)
+        out.putString("tab",tab.name);out.putString("search",search);out.putString("sort",sort.name)
         out.putBoolean("marks",marks);out.putBoolean("filters",filtersOpen);out.putString("sheet",current)
         out.putStringArrayList("history",ArrayList(history));out.putStringArrayList("expanded",ArrayList(expanded));out.putInt("scroll",scroll.scrollY)
         selected.forEach{(key,value)->out.putStringArrayList("facet_$key",ArrayList(value))}
@@ -682,7 +670,7 @@ class BotanyActivity : ThemedActivity() {
     override fun onPause() {
         super.onPause()
         prefs.edit().apply{
-            putString("tab",tab.name);putString("search",search);putString("sort",sort.name);putString("mode",mode.name)
+            putString("tab",tab.name);putString("search",search);putString("sort",sort.name)
             putBoolean("marks",marks);putBoolean("filters",filtersOpen);putStringSet("expanded",expanded.toSet())
             selected.forEach{(key,value)->putStringSet("facet_$key",value.toSet())}
         }.apply()

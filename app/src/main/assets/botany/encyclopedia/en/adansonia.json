@@ -1,0 +1,17 @@
+{
+  "id": "adansonia",
+  "sections": [
+    {"title": "Form and habitat", "text": "Adansonia digitata is a deciduous African baobab usually 20–25 m tall, with a massive trunk. Its leaves are typically divided into five to seven leaflets; large white flowers hang from the branches, and the woody fruit contains seeds in a dry, floury pulp. It occurs in tropical dry woodland and savanna."},
+    {"title": "Food uses and related baobabs", "text": "The fruit pulp, leaves and seeds are used as foods in documented African food systems. Use varies by region and preparation. This widespread African species differs from A. perrieri and A. suarezensis, which are Madagascan baobabs with restricted ranges and separate conservation assessments."}
+  ],
+  "sources": [
+    {"title": "Adansonia digitata — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A558628-1/general-information"},
+    {"title": "Food and Fruit-bearing Forest Species — FAO", "url": "https://www.fao.org/docrep/015/T0006e/T0006e00.pdf"},
+    {"title": "Le baobab — CIRAD", "url": "https://publications.cirad.fr/une_notice.php?dk=531802"},
+    {"title": "Traditional food plants and fruits — FAO", "url": "https://openknowledge.fao.org/3/cc5044en/cc5044en.pdf"},
+    {"title": "Baobab leaves as food — FAO AGRIS", "url": "https://agris.fao.org/search/en/providers/122535/records/65dfcce20f3e94b9e5dc604d"},
+    {"title": "Adansonia perrieri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A112189-1/general-information"},
+    {"title": "Adansonia suarezensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A112193-1/general-information"}
+  ],
+  "related": ["adansonia_perrieri", "adansonia_suarezensis"]
+}

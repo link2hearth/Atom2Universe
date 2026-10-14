@@ -1,0 +1,13 @@
+{
+  "id": "acacia_mathuataensis",
+  "sections": [
+    {"title": "Port et répartition", "text": "Acacia fidjien décrit à partir de son spécimen type comme un arbre étalé pouvant atteindre 6 m. Le type a été récolté sur la crête du mont Numbuiloa, à Vanua Levu, vers 500–590 m. Kew indique un biome tropical humide; un document forestier régional décrit l’espèce comme peu commune et liée au secteur de la montagne. Ses fleurs ont des pétales et des étamines jaune vif. La branche illustrée évoque bien un acacia, mais les sources disponibles ne confirment pas que cette planche représente précisément l’espèce."},
+    {"title": "Usages et précautions", "text": "Les sources consultées n’établissent ni usage alimentaire ni toxicité pour cette espèce."}
+  ],
+  "sources": [
+    {"title": "Acacia mathuataensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/470852-1"},
+    {"title": "Isotype P00641583 d’Acacia mathuataensis — Muséum national d'Histoire naturelle", "url": "https://science.mnhn.fr/institution/mnhn/collection/p/item/p00641583"},
+    {"title": "Acacia mathuataensis — CSIRO Pacific Conservation Biology", "url": "https://www.publish.csiro.au/pc/acc/PC14920/PC14920_AC.pdf"},
+    {"title": "Guide forestier des espèces des Fidji", "url": "https://www.aciar.gov.au/sites/default/files/legacy/node/13315/pr16_pdf_11161.pdf"}
+  ]
+}

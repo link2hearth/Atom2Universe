@@ -1,0 +1,13 @@
+{
+  "id": "achillea",
+  "sections": [
+    {"title": "Port et habitat", "text": "Achillea millefolium est une vivace rhizomateuse généralement haute de 10–100 cm. Ses feuilles alternes sont finement découpées; de nombreux petits capitules forment un corymbe aplati, le plus souvent blanc, parfois rosé. L’espèce est indigène des régions tempérées et subarctiques d’Eurasie et s’est largement répandue ailleurs. Elle pousse dans les prairies, les terrains ouverts et les bords de route."},
+    {"title": "Alimentation et toxicité", "text": "Les sources consultées n’établissent pas d’usage alimentaire fiable pour cette espèce. L’ASPCA la signale comme toxique pour les chiens, les chats et les chevaux; cette mise en garde vétérinaire ne doit pas être extrapolée à l’humain."}
+  ],
+  "sources": [
+    {"title": "Achillea millefolium — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A2294-2/general-information"},
+    {"title": "Achillea millefolium — Flora of North America", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200023010"},
+    {"title": "Milfoil — ASPCA Animal Poison Control", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/milfoil"},
+    {"title": "Florilèges : clé des prairies — Tela Botanica", "url": "https://www.tela-botanica.org/wp-content/uploads/2025/10/Florileges_ClePrairies.pdf"}
+  ]
+}

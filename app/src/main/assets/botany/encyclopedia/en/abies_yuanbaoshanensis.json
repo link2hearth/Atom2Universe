@@ -1,0 +1,13 @@
+{
+  "id": "abies_yuanbaoshanensis",
+  "sections": [
+    {"title": "Form and range", "text": "An evergreen fir endemic to Yuanbao Shan in Guangxi, southern China, where scattered groups grow in cool, wet mixed forest. It can reach 25 m tall, with a trunk about 60 cm in diameter. Its short cylindrical cones are about 8–9 cm long; the leaves have two pale bands underneath."},
+    {"title": "Conservation and uses", "text": "The species is Critically Endangered and has a very restricted range. Food use, toxicity and other human uses were not verified."}
+  ],
+  "sources": [
+    {"title": "Abies yuanbaoshanensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:676629-1/general-information"},
+    {"title": "Abies yuanbaoshanensis — Threatened Conifers of the World, Royal Botanic Garden Edinburgh", "url": "https://threatenedconifers.rbge.org.uk/conifers/abies-yuanbaoshanensis"},
+    {"title": "Surveys funded by SOS lead to an increase of the known population of Yuanbaoshan firs — IUCN", "url": "https://iucn.org/content/surveys-funded-sos-lead-increase-known-population-yuanbaoshan-firs"}
+  ],
+  "related": ["abies_nordmanniana"]
+}

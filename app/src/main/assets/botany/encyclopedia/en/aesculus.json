@@ -1,0 +1,14 @@
+{
+  "id": "aesculus",
+  "sections": [
+    {"title": "Form and range", "text": "Aesculus hippocastanum is a large deciduous tree that can exceed 25 m. Its opposite leaves are palmately divided into five to seven toothed leaflets. Upright clusters of cream-white flowers have yellow markings that turn red after pollination; the green, spiny capsule usually contains one glossy brown seed. The species is native from the central Balkans to Türkiye and is widely planted in parks."},
+    {"title": "Toxicity and lookalikes", "text": "Horse-chestnut seeds (conkers) are not edible and can cause illness if swallowed. They are distinct from the edible sweet chestnut, Castanea sativa; the fruits have different husks and the trees belong to different families."}
+  ],
+  "sources": [
+    {"title": "Aesculus hippocastanum — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A781594-1/general-information"},
+    {"title": "Aesculus hippocastanum — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/585/aesculus-hippocastanum/details"},
+    {"title": "Marronnier d’Inde — Société nationale d’horticulture de France", "url": "https://www.snhf.org/fiche-plante/marronnier-dinde/"},
+    {"title": "Horse chestnut — Woodland Trust", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/horse-chestnut"},
+    {"title": "Poisoning by horse chestnut — Belgian Poison Centre", "url": "https://www.centreantipoisons.be/sites/default/files/imce/agc_brochure_A5_low%20FR.pdf"}
+  ]
+}
