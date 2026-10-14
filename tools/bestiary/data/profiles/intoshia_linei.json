@@ -1,0 +1,163 @@
+{
+  "id": "intoshia_linei",
+  "scientific": "Intoshia linei",
+  "group": "invertebrates",
+  "name": {
+    "en": "Orthonectid Parasite of the Red Ribbon Worm",
+    "fr": "Orthonectide parasite du némertien rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "Intoshia linei is a minute marine orthonectid parasite whose host is the ribbon worm Lineus ruber.",
+      "fr": "Intoshia linei est un minuscule parasite marin orthonectide dont l’hôte est le ver rubané Lineus ruber."
+    },
+    "identification": {
+      "en": "The adult stage consists of short-lived, ciliated males and females with an extremely simplified body plan.",
+      "fr": "Le stade adulte comprend des mâles et femelles ciliés, éphémères, au plan d’organisation extrêmement simplifié."
+    },
+    "habitat": {
+      "en": "Its parasitic plasmodia develop inside the tissues of Lineus ruber, a marine nemertean.",
+      "fr": "Ses plasmodies parasites se développent dans les tissus de Lineus ruber, un némertien marin."
+    },
+    "diet": {
+      "en": "The free-living adults lack a digestive system; the trophic plasmodial stage lives within host tissues.",
+      "fr": "Les adultes libres ne possèdent pas d’appareil digestif ; le stade nourricier plasmodial vit dans les tissus de l’hôte."
+    },
+    "behavior": {
+      "en": "When mature, males and females leave the host; observations show plasmodia can occupy several host tissues, including the nervous system.",
+      "fr": "À maturité, mâles et femelles quittent l’hôte ; les observations montrent que les plasmodies peuvent occuper plusieurs tissus, y compris le système nerveux."
+    },
+    "reproduction": {
+      "en": "The free-living sexes reproduce outside the host; comparative studies have examined how adults emerge.",
+      "fr": "Les sexes libres se reproduisent hors de l’hôte ; des études comparatives ont examiné la sortie des adultes."
+    },
+    "ecology": {
+      "en": "Its congener I. variabili parasitizes a flatworm rather than a nemertean, and researchers compare the two in studies of orthonectid genomes.",
+      "fr": "Sa congénère I. variabili parasite un ver plat plutôt qu’un némertien ; les chercheurs comparent les deux espèces dans des études sur les génomes des orthonectides."
+    },
+    "conservation": {
+      "en": "The sources reviewed are parasitology and genome studies, not population surveys, and give no conservation category.",
+      "fr": "Les sources consultées portent sur le parasitisme et le génome, non sur des suivis de population, et ne donnent pas de catégorie de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Genome of Intoshia linei Affirms Orthonectids as Highly Simplified Spiralians — Current Biology",
+        "fr": "Le génome d’Intoshia linei confirme la simplification extrême des orthonectides — Current Biology"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0960982216304584",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Genome study identifies Lineus ruber as host and summarizes the reduced, digestive-system-free adult stage of orthonectids."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 16,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cephalic region damage in Lineus ruber by Intoshia linei — Parazitologiia",
+        "fr": "Atteinte de la région céphalique de Lineus ruber par Intoshia linei — Parazitologiia"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12481610/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "habitat"
+      ],
+      "facts": [
+        "Russian-language primary study reports I. linei plasmodia in connective, reproductive, muscular and nervous tissues of infected Lineus ruber."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 18,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Analysis of possible mechanisms of orthonectid emergence from their hosts — Parazitologiia",
+        "fr": "Analyse des mécanismes possibles de sortie des orthonectides de leurs hôtes — Parazitologiia"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11605459/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Comparative study examines male and female emergence from hosts and includes I. linei and I. variabili."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 16,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Comparative analysis of mitochondrial genomes of Orthonectida — PubMed",
+        "fr": "Analyse comparative des génomes mitochondriaux des Orthonectida — PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30848356/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Comparative genomic study includes I. linei and I. variabili as separate orthonectid taxa."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 47,
+        "notes_words": 13,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Detailed feeding mechanisms of the parasitic plasmodium remain debated; conservation status and population information were not found in the reviewed sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used parasite-host primary literature and genomic research; I. variabili is compared as a congener with a different documented host, not as a sister-species claim."
+}

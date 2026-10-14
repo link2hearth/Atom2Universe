@@ -1,0 +1,26 @@
+{
+  "id": "ictiobus_cyprinellus",
+  "name": "Buffalo à grande bouche",
+  "scientific": "Ictiobus cyprinellus",
+  "group": "fish",
+  "sections": {
+    "overview": "C’est l’une des cinq espèces de meuniers Ictiobus. Il peut s’hybrider avec le Buffalo à petite bouche, Ictiobus bubalus.",
+    "identification": "Il atteint 91 cm et 36 kg; sa grande bouche n’a pas de barbillons.",
+    "habitat": "Il préfère les rivières lentes, les lacs et les réservoirs.",
+    "diet": "Il filtre de petits invertébrés.",
+    "behavior": "Les crues printanières entraînent des déplacements vers les frayères.",
+    "reproduction": "Il fraie au printemps et disperse ses œufs sur la végétation.",
+    "ecology": "Contrairement à beaucoup de meuniers, il mange du plancton et des organismes benthiques.",
+    "conservation": "En 2008, les populations canadiennes ont reçu des statuts régionaux différents."
+  },
+  "sources": [
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?SpeciesID=362",
+      "title": "Buffalo à grande bouche — base des espèces aquatiques non indigènes de l’USGS"
+    },
+    {
+      "url": "https://www.canada.ca/fr/environnement-changement-climatique/services/registre-public-especes-peril/evaluations-rapports-situations-cosepac/buffalo-grande-bouche-2009.html",
+      "title": "Buffalo à grande bouche — évaluation et rapport de situation du COSEPAC"
+    }
+  ]
+}

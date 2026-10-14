@@ -1,0 +1,30 @@
+{
+  "id": "jordanita_budensis",
+  "name": "Turquoise des Achillées",
+  "scientific": "Jordanita budensis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce papillon appartient au genre Jordanita, des Zygaenidés diurnes aux populations disjointes en Europe et en Asie.",
+    "identification": "Les adultes vert métallique ressemblent à d’autres Jordanita ; les spécialistes indiquent qu’une identification sûre peut nécessiter l’examen des genitalia.",
+    "habitat": "Il préfère les steppes ouvertes et les prairies sèches, rocailleuses et pauvres, des plaines aux versants montagnards.",
+    "diet": "Les chenilles mineuses se nourrissent d’Astéracées ; les données françaises citent Centaurea leucophaea et Artemisia alba comme plantes-hôtes.",
+    "behavior": "Les observations comportementales propres à l’espèce sont rares dans les sources consultées ; des adultes sont signalés localement au printemps.",
+    "reproduction": "Les chenilles minent les feuilles des plantes-hôtes ; une étude du genre indique que la plupart des Jordanita hivernent au stade larvaire, sans préciser ce papillon.",
+    "ecology": "Contrairement à J. globulariae, qui occupe davantage de types de milieux, J. budensis est spécialiste des steppes sèches ; les deux espèces diffèrent écologiquement.",
+    "conservation": "L’espèce est rare en Europe occidentale et centrale ; les sources consultées ne permettent pas de confirmer une catégorie mondiale de Liste rouge."
+  },
+  "sources": [
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/?e=l&id=02220",
+      "title": "Jordanita budensis — Les Carnets du Lépidoptériste Français"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9465506/",
+      "title": "Les zygènes du genre Jordanita — Ecology and Evolution"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/3927",
+      "title": "Jordanita budensis — Lepidoptera Mundi"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "larus_canus",
+  "name": "Common Gull",
+  "scientific": "Larus canus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Common Gull breeds widely across the northern Palearctic. It shares genus Larus with the Lesser Black-backed Gull and Glaucous Gull covered alongside it here.",
+    "identification": "Adults have a grey back and greenish-yellow bill and legs.",
+    "habitat": "It nests on coasts and inland, including moorland, lake shores and river banks.",
+    "diet": "Inland birds take worms and insects; coastal birds also eat crustaceans, molluscs and small fish.",
+    "behavior": "It often breeds colonially, then gathers in groups outside the nesting season.",
+    "reproduction": "Nests are usually on the ground, though trees and artificial structures can also be used.",
+    "ecology": "Its varied prey links food webs in inland fields, freshwater edges and coastal waters.",
+    "conservation": "IUCN lists it as Least Concern globally. British monitoring places the breeding population on the UK Red List."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22694308A155576460.en",
+      "title": "Larus canus — IUCN Red List"
+    },
+    {
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/oiseaux-migrateurs-migratory-bird/EnglishByTaxonomicOrder_20210325.pdf",
+      "title": "English By Taxonomic Order — Canadian migratory bird names"
+    },
+    {
+      "url": "https://www.bto.org/sites/default/files/bto-jncc-rspb-seabird-montoring-programme-annual-report-2024.pdf",
+      "title": "Common Gull species account — BTO, JNCC and RSPB Seabird Monitoring Programme 2024"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/goeland.cendre.html",
+      "title": "Goéland cendré — Oiseaux.net"
+    }
+  ]
+}

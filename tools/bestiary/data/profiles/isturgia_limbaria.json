@@ -1,0 +1,142 @@
+{
+  "id": "isturgia_limbaria",
+  "scientific": "Isturgia limbaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Frosted Yellow",
+    "fr": "Isturgia limbaria"
+  },
+  "sections": {
+    "overview": {
+      "en": "Isturgia limbaria, the Frosted Yellow, is a day-flying geometrid moth of western and central Europe, extending into parts of southern Europe.",
+      "fr": "Isturgia limbaria, appelée Frosted Yellow en anglais, est un papillon de nuit géométridé diurne d’Europe occidentale et centrale, présent aussi dans le sud."
+    },
+    "identification": {
+      "en": "Its yellow to orange-yellow wings have a contrasting chocolate-brown border, more pronounced in males; male antennae are feathered.",
+      "fr": "Ses ailes jaune à jaune orangé portent une bordure brun chocolat contrastée, plus marquée chez le mâle ; les antennes des mâles sont plumeuses."
+    },
+    "habitat": {
+      "en": "It inhabits broom-rich heathland, often on sandy soils, as well as sunny woodland edges and clearings where broom grows.",
+      "fr": "Elle fréquente les landes riches en genêts, souvent sur sols sableux, ainsi que les lisières et clairières ensoleillées où pousse le genêt."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on broom shrubs, especially Cytisus scoparius.",
+      "fr": "Ses chenilles se nourrissent de genêts, notamment Cytisus scoparius."
+    },
+    "behavior": {
+      "en": "Adults fly by day from spring into summer, with one or two generations depending on region and conditions.",
+      "fr": "Les adultes volent de jour du printemps à l’été, avec une ou deux générations selon la région et les conditions."
+    },
+    "reproduction": {
+      "en": "The species overwinters as a pupa; caterpillars develop through the warmer months.",
+      "fr": "L’espèce hiverne au stade de chrysalide ; les chenilles se développent pendant les mois chauds."
+    },
+    "ecology": {
+      "en": "Its distribution and breeding sites track broom-rich heath and scrub; no close-cousin comparison is established in the sources reviewed.",
+      "fr": "Sa répartition et ses sites de reproduction suivent les landes et broussailles riches en genêts ; les sources consultées n’établissent pas de comparaison avec un proche cousin."
+    },
+    "conservation": {
+      "en": "Loss of sandy grassland and heath through land conversion is identified as a regional pressure in central Europe.",
+      "fr": "La disparition des pelouses sableuses et des landes sous l’effet des changements d’usage des terres est signalée comme une pression régionale en Europe centrale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Isturgia limbaria — LepiWiki",
+        "fr": "Isturgia limbaria — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Isturgia_Limbaria",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "German LepiWiki documents adult appearance, taxonomic placement and occurrence records across Europe."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 12,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Isturgia limbaria — European Lepidoptera and their Ecology",
+        "fr": "Isturgia limbaria — Lépidoptères européens et leur écologie"
+      },
+      "url": "https://www.pyrgus.de/Isturgia_limbaria_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Species ecology account reports broom host plants, heath habitat, spring-summer flight, pupal overwintering and regional habitat loss."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 17,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Isturgia genus — FUNET",
+        "fr": "Genre Isturgia — FUNET"
+      },
+      "url": "https://www.nic.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/geometroidea/geometridae/ennominae/isturgia/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FUNET taxonomy lists I. limbaria within the genus Isturgia and links species-level taxonomic sources."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 14,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The number of generations and flight dates vary regionally; no contemporary global population assessment was found."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Combined German taxonomic records with a European species ecology account; kept habitat and life-cycle claims regional rather than universal."
+}

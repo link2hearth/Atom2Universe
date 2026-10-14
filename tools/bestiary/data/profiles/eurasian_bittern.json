@@ -32,8 +32,8 @@
       "fr": "Les mâles sont polygynes et peuvent s’accoupler avec plusieurs femelles, qui seules construisent le nid, couvent et élèvent les jeunes. En Grande-Bretagne, une couvée compte typiquement quatre à six œufs, couvés pendant 25 à 26 jours. Les poussins, couverts de duvet, s’envolent après environ 50 à 55 jours."
     },
     "ecology": {
-      "en": "Nests are woven into vegetation over water, and the main causes of nest loss are predation and starvation of chicks. Predators such as the Eurasian mink and the raccoon dog are known to take its nests. Because its needs cover whole reedbed ecosystems, protecting the bittern benefits many other marsh species.",
-      "fr": "Les nids sont tissés dans la végétation au-dessus de l’eau, et les principales causes de perte sont la prédation et la mort de faim des poussins. Des prédateurs comme le vison d’Europe et le chien viverrin sont connus pour s’en prendre à ses nids. Comme ses besoins couvrent des roselières entières, protéger le butor profite à beaucoup d’autres espèces des marais."
+      "en": "Nests are woven into vegetation over water, and the main causes of nest loss are predation and starvation of chicks. Predators such as the Eurasian mink and the raccoon dog are known to take its nests. Because its needs cover whole reedbed ecosystems, protecting the bittern benefits many other marsh species. The Little Bittern also uses reedbeds; see its profile for this smaller relative.",
+      "fr": "Les nids sont tissés dans la végétation au-dessus de l’eau, et les principales causes de perte sont la prédation et la mort de faim des poussins. Des prédateurs comme le vison d’Europe et le chien viverrin sont connus pour s’en prendre à ses nids. Comme ses besoins couvrent des roselières entières, protéger le butor profite à beaucoup d’autres espèces des marais. Le Blongios nain fréquente aussi les roselières ; voir sa fiche pour ce parent plus petit."
     },
     "conservation": {
       "en": "The IUCN lists the species as Least Concern worldwide, but in the UK it is Amber-listed, legally protected and scarce. Britain fell to a low of only 11 booming males in 1997, then recovered to 191 males in 2017. The oldest ringed bird reached nearly 12 years.",
@@ -80,6 +80,20 @@
         "Length 64–80 cm, wingspan 125–135 cm; diet of fish, amphibians, insects, crustaceans; freezes with neck stretched and sways; polygynous, females do all parental care.",
         "Predators include Eurasian mink and raccoon dogs; nest loss from starvation and predation; umbrella species. Its mass range (243–874 g) was not used.",
         "Total length 64–80 cm and wingspan 125–135 cm; males are larger than females."
+      ]
+    },
+    {
+      "title": {
+        "en": "Little Bittern — Office français de la biodiversité",
+        "fr": "Blongios nain — Office français de la biodiversité"
+      },
+      "url": "https://ofb.gouv.fr/especes/blongios-nain-butor-blongios-ixobrychus-minutus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "OFB describes Little Bittern reedbed habitat and lists Eurasian Bittern among species with similar habitats; OFB identifies Little Bittern as Europe’s smallest heron."
       ]
     }
   ],

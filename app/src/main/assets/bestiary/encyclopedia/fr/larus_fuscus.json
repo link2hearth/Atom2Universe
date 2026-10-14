@@ -1,0 +1,38 @@
+{
+  "id": "larus_fuscus",
+  "name": "Goéland brun",
+  "scientific": "Larus fuscus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Goéland brun niche dans une grande partie de l’Eurasie et hiverne sur les côtes et les eaux intérieures. Il partage le genre Larus avec le Goéland cendré et le Goéland bourgmestre présentés ici.",
+    "identification": "Les adultes ont de longues ailes, le dos gris foncé et les pattes jaunes. Face au pâle Larus hyperboreus, le dos sombre et les pattes jaunes sont des contrastes utiles.",
+    "habitat": "Il niche sur les falaises côtières, les dunes, les landes marécageuses et les bâtiments, puis hiverne sur les côtes, les estuaires, les lacs et les réservoirs.",
+    "diet": "Cet omnivore mange des poissons, mollusques, vers et insectes, ainsi que des charognes et des déchets alimentaires.",
+    "behavior": "C’est un migrateur partiel, qui traverse souvent les terres et suit fréquemment les bateaux de pêche ou cherche sa nourriture dans les ports et décharges.",
+    "reproduction": "Les couples nichent en colonies, généralement au sol; les deux adultes construisent le nid et couvent la ponte.",
+    "ecology": "Son comportement charognard relie les pêcheries marines, les établissements côtiers et les zones d’alimentation intérieures.",
+    "conservation": "Le programme britannique des tourbières de l’UICN classe l’espèce en catégorie Amber au Royaume-Uni, un statut régional et non mondial."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Lesser_Black-backed_Gull",
+      "title": "Goéland brun — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/oiseaux-migrateurs-migratory-bird/EnglishByTaxonomicOrder_20210325.pdf",
+      "title": "Noms anglais par ordre taxonomique — oiseaux migrateurs du Canada"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/goeland.brun.html",
+      "title": "Goéland brun — Oiseaux.net"
+    },
+    {
+      "url": "https://www.iucn-uk-peatlandprogramme.org/wildlife-explorer/seabirds/lesser-black-backed-gull",
+      "title": "Goéland brun — programme britannique des tourbières de l’UICN"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/goeland.bourgmestre.html",
+      "title": "Goéland bourgmestre — Oiseaux.net"
+    }
+  ]
+}

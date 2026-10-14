@@ -1,0 +1,170 @@
+{
+  "id": "lacantunia_enigmatica",
+  "scientific": "Lacantunia enigmatica",
+  "group": "fish",
+  "name": {
+    "en": "Chiapas Catfish",
+    "fr": "Bagre du Chiapas"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Chiapas catfish is the only described species in its own family, Lacantuniidae, and its placement among catfish lineages remains unresolved.",
+      "fr": "Ce poisson-chat du Chiapas est la seule espèce décrite de sa famille, les Lacantuniidés, et sa position parmi les lignées de poissons-chats reste incertaine."
+    },
+    "identification": {
+      "en": "It can exceed 42 cm standard length and has several unique skull, gill-arch and gas-bladder structures.",
+      "fr": "Il dépasse 42 cm de longueur standard et possède des structures singulières du crâne, des arcs branchiaux et de la vessie natatoire."
+    },
+    "habitat": {
+      "en": "It occupies deep channels and pools in the Lacantún and Lacanjá rivers, with rocks and strong eddy currents.",
+      "fr": "Il fréquente les chenaux profonds et les vasques des rivières Lacantún et Lacanjá, parmi les rochers et les forts remous."
+    },
+    "diet": {
+      "en": "Gut contents include fish, crabs, prawns and large, tough seeds.",
+      "fr": "Les contenus digestifs comprennent des poissons, crabes, crevettes et grosses graines à enveloppe dure."
+    },
+    "behavior": {
+      "en": "It has been collected at night in fast-flowing reaches and is commonly caught by local fishers.",
+      "fr": "Il a été collecté de nuit dans des tronçons rapides et est couramment capturé par les pêcheurs locaux."
+    },
+    "reproduction": {
+      "en": "Its reproductive biology remains poorly known; a Chiapas survey collected adults but no juveniles.",
+      "fr": "Sa biologie reproductive reste mal connue ; une étude au Chiapas a collecté des adultes mais aucun juvénile."
+    },
+    "ecology": {
+      "en": "Its unusual anatomy has resisted confident placement among other catfish families, so close relatives have not been identified.",
+      "fr": "Son anatomie inhabituelle empêche de le rattacher avec certitude aux autres familles de poissons-chats ; aucun proche parent n’est établi."
+    },
+    "conservation": {
+      "en": "CONABIO reports a Vulnerable global assessment and lists it as endangered under Mexican law.",
+      "fr": "La CONABIO rapporte une évaluation mondiale Vulnérable et le classe en danger selon la réglementation mexicaine."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lacantunia enigmatica — original species description, Zootaxa",
+        "fr": "Lacantunia enigmatica — description originale, Zootaxa"
+      },
+      "url": "https://www.digimorph.org/specimens/Lacantunia_enigmatica/zt01000.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Original paper establishes the unique family and species, habitat, gut contents and unresolved relationships."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 14,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bagre de Chiapas — Enciclovida / CONABIO",
+        "fr": "Bagre de Chiapas — Enciclovida / CONABIO"
+      },
+      "url": "https://enciclovida.mx/especies/29494.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "CONABIO records valid native status, global IUCN category and Mexican legal status."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 12,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Usumacinta fish survey — CONABIO project report FE001",
+        "fr": "Estudio de peces del Usumacinta — informe CONABIO FE001"
+      },
+      "url": "https://www.conabio.gob.mx/institucion/proyectos/resultados/InfFE001.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Survey found adults but no juveniles among sampled specimens."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 9,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lacantunia enigmatica — FishBase",
+        "fr": "Lacantunia enigmatica — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Lacantunia-enigmatica",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase compiles the maximum standard length, diagnostic anatomy, habitat, stomach contents and IUCN 2018 VU assessment, citing the original description."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 20,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Available field observations and life-history data remain limited; the genus-level taxonomic position remains unresolved. Mexican legal status and global IUCN category use different scopes."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the original description for morphology, gut contents and phylogenetic uncertainty, with Spanish CONABIO material for field evidence and conservation designations."
+}

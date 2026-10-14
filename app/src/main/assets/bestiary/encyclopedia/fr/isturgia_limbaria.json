@@ -1,0 +1,30 @@
+{
+  "id": "isturgia_limbaria",
+  "name": "Isturgia limbaria",
+  "scientific": "Isturgia limbaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Isturgia limbaria, appelée Frosted Yellow en anglais, est un papillon de nuit géométridé diurne d’Europe occidentale et centrale, présent aussi dans le sud.",
+    "identification": "Ses ailes jaune à jaune orangé portent une bordure brun chocolat contrastée, plus marquée chez le mâle ; les antennes des mâles sont plumeuses.",
+    "habitat": "Elle fréquente les landes riches en genêts, souvent sur sols sableux, ainsi que les lisières et clairières ensoleillées où pousse le genêt.",
+    "diet": "Ses chenilles se nourrissent de genêts, notamment Cytisus scoparius.",
+    "behavior": "Les adultes volent de jour du printemps à l’été, avec une ou deux générations selon la région et les conditions.",
+    "reproduction": "L’espèce hiverne au stade de chrysalide ; les chenilles se développent pendant les mois chauds.",
+    "ecology": "Sa répartition et ses sites de reproduction suivent les landes et broussailles riches en genêts ; les sources consultées n’établissent pas de comparaison avec un proche cousin.",
+    "conservation": "La disparition des pelouses sableuses et des landes sous l’effet des changements d’usage des terres est signalée comme une pression régionale en Europe centrale."
+  },
+  "sources": [
+    {
+      "url": "https://lepiforum.org/wiki/page/Isturgia_Limbaria",
+      "title": "Isturgia limbaria — LepiWiki"
+    },
+    {
+      "url": "https://www.pyrgus.de/Isturgia_limbaria_en.html",
+      "title": "Isturgia limbaria — Lépidoptères européens et leur écologie"
+    },
+    {
+      "url": "https://www.nic.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/geometroidea/geometridae/ennominae/isturgia/",
+      "title": "Genre Isturgia — FUNET"
+    }
+  ]
+}

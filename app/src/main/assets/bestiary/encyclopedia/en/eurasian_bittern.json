@@ -10,7 +10,7 @@
     "diet": "The bittern is a carnivore that eats mainly fish, amphibians, insects and aquatic crustaceans. It hunts in the shallow water of reedbeds.",
     "behavior": "It is highly secretive. When alarmed it stretches its neck and body upright so that its streaks line up with the reeds, and it may sway like reeds in the wind. It stalks prey slowly before striking, and the male’s boom, given in the breeding season, can carry for kilometres.",
     "reproduction": "Males are polygynous and may mate with several females, which alone build the nest, incubate and rear the young. In Britain a clutch is typically four to six eggs, incubated for 25–26 days. The chicks are downy and fledge after about 50–55 days.",
-    "ecology": "Nests are woven into vegetation over water, and the main causes of nest loss are predation and starvation of chicks. Predators such as the Eurasian mink and the raccoon dog are known to take its nests. Because its needs cover whole reedbed ecosystems, protecting the bittern benefits many other marsh species.",
+    "ecology": "Nests are woven into vegetation over water, and the main causes of nest loss are predation and starvation of chicks. Predators such as the Eurasian mink and the raccoon dog are known to take its nests. Because its needs cover whole reedbed ecosystems, protecting the bittern benefits many other marsh species. The Little Bittern also uses reedbeds; see its profile for this smaller relative.",
     "conservation": "The IUCN lists the species as Least Concern worldwide, but in the UK it is Amber-listed, legally protected and scarce. Britain fell to a low of only 11 booming males in 1997, then recovered to 191 males in 2017. The oldest ringed bird reached nearly 12 years."
   },
   "sources": [
@@ -21,6 +21,10 @@
     {
       "url": "https://animaldiversity.org/accounts/Botaurus_stellaris/",
       "title": "Botaurus stellaris — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://ofb.gouv.fr/especes/blongios-nain-butor-blongios-ixobrychus-minutus",
+      "title": "Little Bittern — Office français de la biodiversité"
     }
   ]
 }

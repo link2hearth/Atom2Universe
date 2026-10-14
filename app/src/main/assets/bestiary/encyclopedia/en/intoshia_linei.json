@@ -1,0 +1,34 @@
+{
+  "id": "intoshia_linei",
+  "name": "Orthonectid Parasite of the Red Ribbon Worm",
+  "scientific": "Intoshia linei",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Intoshia linei is a minute marine orthonectid parasite whose host is the ribbon worm Lineus ruber.",
+    "identification": "The adult stage consists of short-lived, ciliated males and females with an extremely simplified body plan.",
+    "habitat": "Its parasitic plasmodia develop inside the tissues of Lineus ruber, a marine nemertean.",
+    "diet": "The free-living adults lack a digestive system; the trophic plasmodial stage lives within host tissues.",
+    "behavior": "When mature, males and females leave the host; observations show plasmodia can occupy several host tissues, including the nervous system.",
+    "reproduction": "The free-living sexes reproduce outside the host; comparative studies have examined how adults emerge.",
+    "ecology": "Its congener I. variabili parasitizes a flatworm rather than a nemertean, and researchers compare the two in studies of orthonectid genomes.",
+    "conservation": "The sources reviewed are parasitology and genome studies, not population surveys, and give no conservation category."
+  },
+  "sources": [
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0960982216304584",
+      "title": "The Genome of Intoshia linei Affirms Orthonectids as Highly Simplified Spiralians — Current Biology"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12481610/",
+      "title": "Cephalic region damage in Lineus ruber by Intoshia linei — Parazitologiia"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11605459/",
+      "title": "Analysis of possible mechanisms of orthonectid emergence from their hosts — Parazitologiia"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30848356/",
+      "title": "Comparative analysis of mitochondrial genomes of Orthonectida — PubMed"
+    }
+  ]
+}

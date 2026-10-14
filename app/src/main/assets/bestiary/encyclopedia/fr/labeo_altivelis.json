@@ -1,0 +1,38 @@
+{
+  "id": "labeo_altivelis",
+  "name": "Labéo de Manyame",
+  "scientific": "Labeo altivelis",
+  "group": "fish",
+  "sections": {
+    "overview": "Labeo altivelis Peters, 1852 est un cyprinidé d’eau douce du genre Labeo, originaire des bassins du Zambèze et du haut Congo.",
+    "identification": "Il atteint environ 49 centimètres de longueur totale et porte une nageoire dorsale particulièrement haute, en voile, avec 14–16 rayons mous.",
+    "habitat": "Les adultes préfèrent les grands cours d’eau, mais vivent aussi dans de grands lacs et réservoirs, notamment les lacs Malawi et Moero.",
+    "diet": "Il broute les algues et le périphyton, le film d’organismes qui se développe sur les roches immergées.",
+    "behavior": "Les adultes effectuent des migrations potamodromes saisonnières du lac Moero vers le système du Luapula pour frayer.",
+    "reproduction": "La ponte se concentre en un épisode bref pendant la remontée de la rivière, appelé localement kapata dans le système Luapula–Moero.",
+    "ecology": "Des travaux génomiques récents montrent que les groupes traditionnels de Labeo ne correspondent pas toujours à des lignées évolutives ; les fiches associées de L. rosae et L. ruddi permettent de comparer leurs aires et habitats.",
+    "conservation": "Une synthèse récente de l’UICN sur les poissons d’eau douce le classe en préoccupation mineure à l’échelle mondiale, avec une tendance de population inconnue."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Labeo-altivelis",
+      "title": "Labeo altivelis — FishBase"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers14-08/25361.pdf",
+      "title": "Bassin du Zaïre — IRD"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.ympev.2025.108427",
+      "title": "Phylogénomique des Labeo africains — Molecular Phylogenetics and Evolution"
+    },
+    {
+      "url": "https://iucn.org/sites/default/files/2024-01/freshwater-fishes-of-potential-interest-for-inclusion-in-cms-information-brief.pdf",
+      "title": "Poissons d’eau douce susceptibles d’intéresser la CMS — UICN"
+    },
+    {
+      "url": "https://malawicichlids.com/mw11011a.htm",
+      "title": "Labeo altivelis — fiche d’espèce Malawi Cichlids"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "ixoreus_naevius",
+  "name": "Grive à collier",
+  "scientific": "Ixoreus naevius",
+  "group": "birds",
+  "sections": {
+    "overview": "La Grive à collier est un Turdidé du nord-ouest du Pacifique ; elle niche dans les forêts humides mûres et hiverne plus au sud.",
+    "identification": "Le mâle a la tête et le collier gris ardoise, la poitrine et les flancs orangés, ainsi qu’un sourcil orange ; la femelle est plus terne.",
+    "habitat": "Il niche dans les forêts de conifères ombragées et humides, et fréquente en hiver parcs, jardins et bois riverains.",
+    "diet": "Il glane insectes et autres arthropodes dans la litière en été, puis consomme davantage baies, fruits et glands en hiver.",
+    "behavior": "Il cherche sa nourriture au sol ; les mâles chantent pour établir leur territoire avant l’arrivée des femelles sur les sites de nidification.",
+    "reproduction": "La femelle bâtit un nid en coupe dans le sous-bois ; Cornell indique une ou deux nichées et environ 12 jours d’incubation.",
+    "ecology": "Le Rougegorge familier de la fiche existante appartient aux Muscicapidés, et non à la famille des grives, les Turdidés.",
+    "conservation": "Le Canada rapporte une préoccupation mineure mondiale en 2018, mais une diminution modérée de la population nationale depuis environ 1970."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Varied_Thrush/lifehistory",
+      "title": "Grive à collier — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://faune-especes.canada.ca/situation-oiseaux/oiseau-bird-fra.aspx?sB=VATH&sL=f&sM=a&sY=2019",
+      "title": "Grive à collier — Gouvernement du Canada, Situation des oiseaux du Canada"
+    },
+    {
+      "url": "https://a100.gov.bc.ca/pub/eswp/speciesSummary.do?id=18390",
+      "title": "Ixoreus naevius — Centre de données sur la conservation de la Colombie-Britannique"
+    },
+    {
+      "url": "https://www.audubon.org/field-guide/bird/varied-thrush?nid=4976&site=ak",
+      "title": "Grive à collier — Guide de terrain Audubon"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougegorge-familier",
+      "title": "Rougegorge familier — Ligue pour la Protection des Oiseaux"
+    }
+  ]
+}

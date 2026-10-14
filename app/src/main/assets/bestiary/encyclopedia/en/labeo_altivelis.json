@@ -1,0 +1,38 @@
+{
+  "id": "labeo_altivelis",
+  "name": "Manyame labeo",
+  "scientific": "Labeo altivelis",
+  "group": "fish",
+  "sections": {
+    "overview": "Labeo altivelis Peters, 1852 is a freshwater cyprinid of the genus Labeo, native to the Zambezi and upper Congo basins.",
+    "identification": "It reaches about 49 centimetres total length and has a conspicuously tall, sail-like dorsal fin with 14–16 soft rays.",
+    "habitat": "Adults favour large rivers but also inhabit large lakes and reservoirs, including Lake Malawi and Lake Mweru.",
+    "diet": "It grazes algae and aufwuchs, the film of organisms growing on submerged rocks.",
+    "behavior": "Adults make seasonal, potamodromous migrations from Lake Moëro into the Luapula system to spawn.",
+    "reproduction": "Spawning occurs in a short, concentrated event during the river ascent, locally known as kapata in the Luapula–Moëro system.",
+    "ecology": "Recent genomic work shows that traditional Labeo groupings do not always represent evolutionary lineages; the companion profiles of L. rosae and L. ruddi allow comparison of their ranges and habitats.",
+    "conservation": "A recent IUCN freshwater-fish summary lists it as globally Least Concern, with population trend unknown."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Labeo-altivelis",
+      "title": "Labeo altivelis — FishBase"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers14-08/25361.pdf",
+      "title": "Bassin du Zaïre — IRD"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.ympev.2025.108427",
+      "title": "Phylogenomics of African Labeo — Molecular Phylogenetics and Evolution"
+    },
+    {
+      "url": "https://iucn.org/sites/default/files/2024-01/freshwater-fishes-of-potential-interest-for-inclusion-in-cms-information-brief.pdf",
+      "title": "Freshwater fishes of potential interest for CMS — IUCN"
+    },
+    {
+      "url": "https://malawicichlids.com/mw11011a.htm",
+      "title": "Labeo altivelis — Malawi Cichlids species account"
+    }
+  ]
+}

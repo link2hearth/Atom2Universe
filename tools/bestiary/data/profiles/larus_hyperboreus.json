@@ -1,0 +1,201 @@
+{
+  "id": "larus_hyperboreus",
+  "scientific": "Larus hyperboreus",
+  "group": "birds",
+  "name": {
+    "en": "Glaucous Gull",
+    "fr": "Goéland bourgmestre"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Glaucous Gull is an Arctic-breeding gull that also nests on islands in tundra lakes. It shares genus Larus with the Common Gull and Lesser Black-backed Gull profiled here.",
+      "fr": "Le Goéland bourgmestre niche dans l’Arctique, mais aussi sur des îles de lacs de toundra. Il partage le genre Larus avec le Goéland cendré et le Goéland brun présentés ici."
+    },
+    "identification": {
+      "en": "Adults are large, bulky and very pale, with pale-grey wings, pink legs and a yellow bill; the wingtips lack black. Compared with the darker Lesser Black-backed Gull, its pale wings and pink legs are distinctive.",
+      "fr": "Les adultes sont grands, massifs et très pâles, avec des ailes gris clair, des pattes roses et un bec jaune; le bout des ailes n’est pas noir. Face au Goéland brun, plus sombre, ses ailes pâles et ses pattes roses sont distinctives."
+    },
+    "habitat": {
+      "en": "It nests on Arctic cliffs and coasts, and sometimes on remote islands in inland tundra lakes. Outside the breeding season it uses marine waters, freshwater lakes, fields and landfills.",
+      "fr": "Il niche sur les falaises et les côtes arctiques, parfois sur des îles isolées de lacs intérieurs de toundra. Hors reproduction, il fréquente les eaux marines, les lacs, les champs et les décharges."
+    },
+    "diet": {
+      "en": "This opportunistic omnivore takes marine invertebrates and fish, but also carrion, refuse, insects, berries and other birds or their eggs.",
+      "fr": "Cet omnivore opportuniste mange des invertébrés marins et des poissons, mais aussi des charognes, déchets, insectes, baies et d’autres oiseaux ou leurs œufs."
+    },
+    "behavior": {
+      "en": "Pairs may nest alone or in colonies, while nonbreeding birds gather in flocks to feed and rest. The species also follows fishing vessels and scavenges at processing plants and dumps.",
+      "fr": "Les couples peuvent nicher seuls ou en colonies, tandis que les oiseaux non nicheurs se rassemblent pour s’alimenter et se reposer. L’espèce suit aussi les bateaux de pêche et fréquente usines et décharges."
+    },
+    "reproduction": {
+      "en": "Both parents build a shallow nest and incubate a clutch of one to three eggs. Young leave the nest soon after hatching but remain nearby until they can fly.",
+      "fr": "Les deux parents construisent un nid peu profond et couvent une ponte d’un à trois œufs. Les jeunes quittent le nid peu après l’éclosion, mais restent à proximité jusqu’à leur envol."
+    },
+    "ecology": {
+      "en": "By hunting seabirds and their eggs as well as scavenging, it acts as both predator and consumer of carrion in Arctic food webs.",
+      "fr": "En chassant des oiseaux marins et leurs œufs tout en consommant des charognes, il est à la fois prédateur et charognard des réseaux arctiques."
+    },
+    "conservation": {
+      "en": "The 2018 global IUCN assessment classified it as Least Concern and reported a stable population trend.",
+      "fr": "L’évaluation mondiale de l’UICN de 2018 l’a classé en préoccupation mineure et indiquait une tendance de population stable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Glaucous Gull Life History — All About Birds, Cornell Lab of Ornithology",
+        "fr": "Biologie du Goéland bourgmestre — All About Birds, Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Glaucous_Gull/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell details Arctic nesting, varied prey, scavenging, social behavior and shared incubation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 12,
+        "total": 183,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Goéland bourgmestre — Oiseaux.net",
+        "fr": "Goéland bourgmestre — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/goeland.bourgmestre.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French account describes pale plumage, pink legs, Arctic habitats and varied food."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 12,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lesser Black-backed Gull — Oiseaux.net",
+        "fr": "Goéland brun — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/goeland.brun.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French account contrasts the dark-backed yellow-legged Lesser Black-backed Gull with the pale, pink-legged Glaucous Gull."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 30,
+        "notes_words": 16,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Larus hyperboreus — IUCN Red List",
+        "fr": "Larus hyperboreus — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22694343A132544122.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment from 2018: Least Concern; trend stable."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 8,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "English By Taxonomic Order — Canadian migratory bird names",
+        "fr": "Noms anglais par ordre taxonomique — oiseaux migrateurs du Canada"
+      },
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/oiseaux-migrateurs-migratory-bird/EnglishByTaxonomicOrder_20210325.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The bilingual federal list gives common names for the three Larus profiles in this batch."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 15,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The global IUCN category is based on a 2018 assessment; local trends and threats can differ."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the Cornell life-history account, French Oiseaux.net descriptions, the IUCN global assessment and a Canadian bilingual taxonomic list; the comparison with Larus fuscus is limited to supported plumage and leg-colour differences."
+}

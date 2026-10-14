@@ -1,0 +1,166 @@
+{
+  "id": "iphiclides_podalirius",
+  "scientific": "Iphiclides podalirius",
+  "group": "invertebrates",
+  "name": {
+    "en": "Scarce Swallowtail",
+    "fr": "Flambé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Iphiclides podalirius, the Scarce Swallowtail, is a large, long-tailed butterfly of warm parts of Europe and western Asia.",
+      "fr": "Iphiclides podalirius, le Flambé, est un grand papillon à longues queues des régions chaudes d’Europe et d’Asie occidentale."
+    },
+    "identification": {
+      "en": "Adults have pale yellow wings crossed by bold black stripes and long hindwing tails.",
+      "fr": "Les adultes ont des ailes jaune pâle barrées de noir et de longues queues aux ailes postérieures."
+    },
+    "habitat": {
+      "en": "It favours warm, open or semi-open places with shrubs, including dry slopes, woodland edges, orchards and gardens.",
+      "fr": "Il privilégie les milieux chauds, ouverts ou semi-ouverts et arbustifs, notamment les pentes sèches, lisières, vergers et jardins."
+    },
+    "diet": {
+      "en": "Caterpillars feed on woody Rosaceae, especially blackthorn and mahaleb cherry in central Europe; adults take flower nectar.",
+      "fr": "Les chenilles se nourrissent de Rosaceae ligneuses, surtout du prunellier et du cerisier de Sainte-Lucie en Europe centrale ; les adultes butinent le nectar."
+    },
+    "behavior": {
+      "en": "The butterfly is a strong flier and often glides, sometimes covering substantial distances.",
+      "fr": "Ce papillon vole avec puissance et plane fréquemment, parcourant parfois de grandes distances."
+    },
+    "reproduction": {
+      "en": "Females lay eggs singly on host shrubs; in much of central Europe, low-growing blackthorn is a major host plant.",
+      "fr": "Les femelles pondent isolément sur des arbustes nourriciers ; dans une grande partie de l’Europe centrale, le prunellier bas est une plante hôte importante."
+    },
+    "ecology": {
+      "en": "The similar Iphiclides feisthamelii replaces it across Iberia and parts of the western Mediterranean; sources differ on whether feisthamelii is a species or subspecies.",
+      "fr": "L’espèce ressemblante Iphiclides feisthamelii la remplace dans la péninsule Ibérique et une partie de la Méditerranée occidentale ; les sources divergent sur son statut d’espèce ou de sous-espèce."
+    },
+    "conservation": {
+      "en": "This profile describes a broad range; local status varies, and the sources consulted do not provide a current global category.",
+      "fr": "Cette fiche décrit une vaste aire ; le statut varie localement et les sources consultées ne donnent pas de catégorie mondiale actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Flambé — Ligue pour la Protection des Oiseaux",
+        "fr": "Flambé — Ligue pour la Protection des Oiseaux"
+      },
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/invertebres/papillons/flambe",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French LPO account describes the butterfly, regional forms, habitats and larval host plants."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 13,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Iphiclides podalirius — LepiWiki",
+        "fr": "Iphiclides podalirius — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Iphiclides_podalirius",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "German LepiWiki documents woody host plants and distribution, and notes that I. feisthamelii has sometimes been treated as a subspecies."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 20,
+        "total": 156,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Iphiclides podalirius — Butterflies of Slovakia",
+        "fr": "Iphiclides podalirius — papillons de Slovaquie"
+      },
+      "url": "https://lepidoptera.sk/sites/default/files/docs/iphiclides_podalirius.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Slovak account describes western Palearctic range, warm open and semi-open habitats, and strong gliding flight."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 15,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scarce Swallowtail — Ionian Butterfly Conservation",
+        "fr": "Flambé — Ionian Butterfly Conservation"
+      },
+      "url": "https://ionianbutterflyconservation.org/species.php?gen=Iphiclides&group=B&name=Iphiclides_podalirius&sp=podalirius",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Regional species account lists larval food plants and adult nectar sources."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The distinction and range relationship with I. feisthamelii is taxonomically unsettled in some references; regional conservation status is not summarized globally."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French, German and Slovak species accounts; treated I. feisthamelii as a close lookalike while preserving documented disagreement on rank."
+}

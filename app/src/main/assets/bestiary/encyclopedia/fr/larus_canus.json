@@ -1,0 +1,34 @@
+{
+  "id": "larus_canus",
+  "name": "Goéland cendré",
+  "scientific": "Larus canus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Goéland cendré niche dans une vaste partie du nord du Paléarctique. Il partage le genre Larus avec le Goéland brun et le Goéland bourgmestre présentés ici.",
+    "identification": "Les adultes ont le dos gris, le bec et les pattes jaune verdâtre.",
+    "habitat": "Il niche sur les côtes et à l’intérieur des terres, notamment dans les landes, près des lacs et le long des rivières.",
+    "diet": "À l’intérieur des terres, il mange vers et insectes; sur les côtes, il consomme aussi crustacés, mollusques et petits poissons.",
+    "behavior": "Il niche souvent en colonies, puis se rassemble en groupes hors de la période de reproduction.",
+    "reproduction": "Les nids se trouvent généralement au sol, mais l’espèce peut aussi utiliser des arbres ou des structures artificielles.",
+    "ecology": "Ses proies variées le relient aux réseaux alimentaires des champs, des eaux douces et des milieux côtiers.",
+    "conservation": "L’UICN la classe en préoccupation mineure à l’échelle mondiale. Le suivi britannique inscrit la population nicheuse sur la Liste rouge du Royaume-Uni."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22694308A155576460.en",
+      "title": "Larus canus — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.canada.ca/content/dam/eccc/documents/pdf/oiseaux-migrateurs-migratory-bird/EnglishByTaxonomicOrder_20210325.pdf",
+      "title": "Noms anglais par ordre taxonomique — oiseaux migrateurs du Canada"
+    },
+    {
+      "url": "https://www.bto.org/sites/default/files/bto-jncc-rspb-seabird-montoring-programme-annual-report-2024.pdf",
+      "title": "Fiche du Goéland cendré — programme de suivi des oiseaux marins BTO, JNCC et RSPB 2024"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/goeland.cendre.html",
+      "title": "Goéland cendré — Oiseaux.net"
+    }
+  ]
+}

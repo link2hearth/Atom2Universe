@@ -10,7 +10,7 @@
     "diet": "Le butor est carnivore et mange surtout des poissons, des amphibiens, des insectes et des crustacés aquatiques. Il chasse dans les eaux peu profondes des roselières.",
     "behavior": "Il est extrêmement discret. Lorsqu’il est alarmé, il étire le cou et le corps à la verticale pour que ses stries s’alignent sur les roseaux, et peut se balancer comme eux dans le vent. Il traque lentement ses proies avant de frapper, et le grondement du mâle, émis en période de reproduction, porte à plusieurs kilomètres.",
     "reproduction": "Les mâles sont polygynes et peuvent s’accoupler avec plusieurs femelles, qui seules construisent le nid, couvent et élèvent les jeunes. En Grande-Bretagne, une couvée compte typiquement quatre à six œufs, couvés pendant 25 à 26 jours. Les poussins, couverts de duvet, s’envolent après environ 50 à 55 jours.",
-    "ecology": "Les nids sont tissés dans la végétation au-dessus de l’eau, et les principales causes de perte sont la prédation et la mort de faim des poussins. Des prédateurs comme le vison d’Europe et le chien viverrin sont connus pour s’en prendre à ses nids. Comme ses besoins couvrent des roselières entières, protéger le butor profite à beaucoup d’autres espèces des marais.",
+    "ecology": "Les nids sont tissés dans la végétation au-dessus de l’eau, et les principales causes de perte sont la prédation et la mort de faim des poussins. Des prédateurs comme le vison d’Europe et le chien viverrin sont connus pour s’en prendre à ses nids. Comme ses besoins couvrent des roselières entières, protéger le butor profite à beaucoup d’autres espèces des marais. Le Blongios nain fréquente aussi les roselières ; voir sa fiche pour ce parent plus petit.",
     "conservation": "L’UICN classe l’espèce en préoccupation mineure à l’échelle mondiale, mais au Royaume-Uni elle figure sur la liste ambre, est protégée par la loi et rare. La Grande-Bretagne est tombée à seulement 11 mâles chanteurs en 1997, puis est remontée à 191 mâles en 2017. Le plus vieil oiseau bagué a atteint près de 12 ans."
   },
   "sources": [
@@ -21,6 +21,10 @@
     {
       "url": "https://animaldiversity.org/accounts/Botaurus_stellaris/",
       "title": "Botaurus stellaris — Animal Diversity Web, université du Michigan"
+    },
+    {
+      "url": "https://ofb.gouv.fr/especes/blongios-nain-butor-blongios-ixobrychus-minutus",
+      "title": "Blongios nain — Office français de la biodiversité"
     }
   ]
 }

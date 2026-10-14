@@ -1,0 +1,34 @@
+{
+  "id": "iphiclides_podalirius",
+  "name": "Scarce Swallowtail",
+  "scientific": "Iphiclides podalirius",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Iphiclides podalirius, the Scarce Swallowtail, is a large, long-tailed butterfly of warm parts of Europe and western Asia.",
+    "identification": "Adults have pale yellow wings crossed by bold black stripes and long hindwing tails.",
+    "habitat": "It favours warm, open or semi-open places with shrubs, including dry slopes, woodland edges, orchards and gardens.",
+    "diet": "Caterpillars feed on woody Rosaceae, especially blackthorn and mahaleb cherry in central Europe; adults take flower nectar.",
+    "behavior": "The butterfly is a strong flier and often glides, sometimes covering substantial distances.",
+    "reproduction": "Females lay eggs singly on host shrubs; in much of central Europe, low-growing blackthorn is a major host plant.",
+    "ecology": "The similar Iphiclides feisthamelii replaces it across Iberia and parts of the western Mediterranean; sources differ on whether feisthamelii is a species or subspecies.",
+    "conservation": "This profile describes a broad range; local status varies, and the sources consulted do not provide a current global category."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/invertebres/papillons/flambe",
+      "title": "Flambé — Ligue pour la Protection des Oiseaux"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Iphiclides_podalirius",
+      "title": "Iphiclides podalirius — LepiWiki"
+    },
+    {
+      "url": "https://lepidoptera.sk/sites/default/files/docs/iphiclides_podalirius.html",
+      "title": "Iphiclides podalirius — Butterflies of Slovakia"
+    },
+    {
+      "url": "https://ionianbutterflyconservation.org/species.php?gen=Iphiclides&group=B&name=Iphiclides_podalirius&sp=podalirius",
+      "title": "Scarce Swallowtail — Ionian Butterfly Conservation"
+    }
+  ]
+}

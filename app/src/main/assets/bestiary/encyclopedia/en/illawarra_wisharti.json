@@ -1,0 +1,34 @@
+{
+  "id": "illawarra_wisharti",
+  "name": "Illawarra Funnel-web Spider",
+  "scientific": "Illawarra wisharti",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Illawarra wisharti is an Australian funnel-web spider and the sole described species of its genus, Illawarra.",
+    "identification": "Its brown body bears distinct abdominal chevrons; males have a broad mid-ventral spine row beneath the tarsi of all four leg pairs, while females have a robust first leg with enlarged claws.",
+    "habitat": "The species is known from the Illawarra region of southern New South Wales.",
+    "diet": "The taxonomic and collection accounts reviewed here provide no species-specific prey list.",
+    "behavior": "Its species description is based on preserved specimens and does not establish a detailed activity pattern.",
+    "reproduction": "The revision describes female reproductive structures, but the sources consulted do not report clutch size or breeding season.",
+    "ecology": "It is a distinct atracid genus alongside Atrax and Hadronyche; the Australian revision diagnoses it by sex-specific leg characters rather than treating it as an Atrax species.",
+    "conservation": "The sources document a restricted regional distribution but do not provide a current species-level conservation category."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/media/Uploads/Journals/19162/1556_complete.pdf",
+      "title": "A revision of the Australian funnel-web spiders — Records of the Australian Museum"
+    },
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/19813",
+      "title": "Illawarra wisharti — World Spider Catalog"
+    },
+    {
+      "url": "https://bie.ala.org.au/species/Illawarra%2Bwisharti",
+      "title": "Illawarra wisharti — Atlas of Living Australia"
+    },
+    {
+      "url": "https://www.arachne.org.au/01_cms/details.asp?ID=2702",
+      "title": "Illawarra wisharti — Arachne Australian spider database"
+    }
+  ]
+}

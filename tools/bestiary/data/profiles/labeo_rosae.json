@@ -1,0 +1,236 @@
+{
+  "id": "labeo_rosae",
+  "scientific": "Labeo rosae",
+  "group": "fish",
+  "name": {
+    "en": "Rednose labeo",
+    "fr": "Labéo à nez rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "Labeo rosae Steindachner, 1894 is a freshwater cyprinid of the genus Labeo, native chiefly to the Lowveld river systems of southern Africa.",
+      "fr": "Labeo rosae Steindachner, 1894 est un cyprinidé d’eau douce du genre Labeo, surtout présent dans les réseaux fluviaux du Lowveld, en Afrique australe."
+    },
+    "identification": {
+      "en": "It can reach about 40 centimetres fork length; adults have a red-orange iris and conspicuous red tubercles on the snout, but eye colour alone cannot separate it from L. altivelis.",
+      "fr": "Il peut atteindre environ 40 centimètres de longueur à la fourche ; les adultes ont l’iris rouge orangé et des tubercules rouges visibles sur le museau, mais la couleur de l’œil ne suffit pas à le distinguer de L. altivelis."
+    },
+    "habitat": {
+      "en": "It occupies warm Lowveld reaches of the Limpopo, Incomati and Phongolo systems, using sandy main-channel stretches as well as dams.",
+      "fr": "Il fréquente les tronçons chauds du Lowveld dans les systèmes du Limpopo, de l’Incomati et du Phongolo, notamment les chenaux principaux sableux et les barrages."
+    },
+    "diet": {
+      "en": "Its food includes algae, detritus and small invertebrates.",
+      "fr": "Son alimentation comprend des algues, des détritus et de petits invertébrés."
+    },
+    "behavior": {
+      "en": "It is an active fish that migrates upstream in summer and may leap over obstacles while moving through swollen rivers.",
+      "fr": "C’est un poisson actif qui remonte les cours d’eau en été et peut franchir des obstacles en bondissant lorsque les rivières sont gonflées."
+    },
+    "reproduction": {
+      "en": "Its upstream summer migration is associated with breeding; published accounts report maturity from about 15 centimetres total length.",
+      "fr": "Sa migration estivale vers l’amont est liée à la reproduction ; les données publiées signalent une maturité à partir d’environ 15 centimètres de longueur totale."
+    },
+    "ecology": {
+      "en": "It shares the genus Labeo with L. altivelis and L. ruddi; recent genomic work cautions that traditional morphology-based Labeo groups do not always reflect evolutionary lineages.",
+      "fr": "Il partage le genre Labeo avec L. altivelis et L. ruddi ; une étude génomique récente indique que les groupes morphologiques traditionnels de Labeo ne reflètent pas toujours les lignées évolutives."
+    },
+    "conservation": {
+      "en": "It was assessed as Least Concern in South Africa in 2017; assessors described it as widespread and common, with threats localized at that time.",
+      "fr": "Il a été évalué en préoccupation mineure en Afrique du Sud en 2017 ; les évaluateurs le décrivaient alors comme répandu et commun, avec des menaces localisées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Labeo rosae — FishBase",
+        "fr": "Labeo rosae — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Labeo-rosae.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase reports a maximum 40 cm fork length, red-orange eye and red snout tubercles, warm river habitat, algae/detritus/small-invertebrate diet, summer upstream breeding migration, and maturity from about 15 cm total length."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 31,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red List of South African Species: Rednose Labeo",
+        "fr": "Liste rouge des espèces sud-africaines : labéo à nez rouge"
+      },
+      "url": "https://speciesstatus.sanbi.org/assessment/last-assessment/85/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "SANBI's 2017 South African assessment classified the species Least Concern and described it as widespread and common in the Lowveld; threats were localized."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 23,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Labeo rosae — IUCN Red List assessment",
+        "fr": "Labeo rosae — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T63285A100161851.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The 2017 global assessment records the species in Botswana, Eswatini, Mozambique, South Africa and Zimbabwe, notes its common occurrence in Lowveld reaches, and lists rivers and dams as habitat."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 29,
+        "total": 29,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Labeo rosae in Kruger National Park — Koedoe",
+        "fr": "Labeo rosae dans le parc national Kruger — Koedoe"
+      },
+      "url": "https://koedoe.co.za/index.php/koedoe/article/download/761/857",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "The species account describes the red-orange eye and bright red snout tubercles, active upstream summer migration, algae, diatoms, detritus and small insect larvae in its diet; it relates the species to L. altivelis."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 33,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogenomics of African Labeo — Molecular Phylogenetics and Evolution",
+        "fr": "Phylogénomique des Labeo africains — Molecular Phylogenetics and Evolution"
+      },
+      "url": "https://doi.org/10.1016/j.ympev.2025.108427",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2025 UCE-based phylogeny finds most earlier morphology-based Labeo groupings are not monophyletic."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 13,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Labeo rosae — South African Institute for Aquatic Biodiversity species card",
+        "fr": "Labeo rosae — fiche du South African Institute for Aquatic Biodiversity"
+      },
+      "url": "https://www.1ksa.org.za/species-cards/labeo-rosae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "SAIAB's species card uses the English common name Rednose labeo and lists the Limpopo, Incomati and Pongolo river basins."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sand River State of Rivers Report — South African Department of Water Affairs",
+        "fr": "Rapport sur l’état des cours d’eau du Sand — ministère sud-africain de l’Eau"
+      },
+      "url": "https://www.dwa.gov.za/iwqs/rhp/state_of_rivers/limpopo/Sand_2002_report_without_pics.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "This South African report records the Afrikaans common name Rooineus-moddervis for Labeo rosae."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "An older species account says L. rosae is related to L. altivelis, but recent phylogenomics cautions against treating traditional morphology-based Labeo groups as confirmed clades; color characters alone are not diagnostic."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the South African regional assessment and IUCN global assessment with FishBase, a historical Kruger species account, SAIAB and current phylogenomics. The conservation sentence is explicitly regional and dated."
+}

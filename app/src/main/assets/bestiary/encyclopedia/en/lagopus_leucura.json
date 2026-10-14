@@ -1,0 +1,30 @@
+{
+  "id": "lagopus_leucura",
+  "name": "White-tailed Ptarmigan",
+  "scientific": "Lagopus leucura",
+  "group": "birds",
+  "sections": {
+    "overview": "The White-tailed Ptarmigan is a small grouse of alpine tundra in western North America.",
+    "identification": "Its plumage turns brown in summer and white in winter; the tail, wings and feathered feet remain white.",
+    "habitat": "It lives above the treeline in western mountains and remains at high elevations throughout its life cycle.",
+    "diet": "Its plant-rich diet includes willow buds and twigs, leaves, flowers, berries and lichens; chicks also take insects.",
+    "behavior": "In winter it often avoids flight and shelters in snowbanks, conserving energy in its exposed mountain habitat.",
+    "reproduction": "Females make ground nests and usually lay four to seven eggs; incubation lasts about three weeks.",
+    "ecology": "In parts of the Yukon it shares alpine habitat with the larger Rock Ptarmigan, Lagopus muta.",
+    "conservation": "Cornell lists the species as low concern, while noting that unusually warm weather can stress these cold-adapted birds."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/White-tailed_Ptarmigan/",
+      "title": "White-tailed Ptarmigan — All About Birds, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Lagopus_leucura/",
+      "title": "Lagopus leucura — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://nrm.dfg.ca.gov/FileHandler.ashx?DocumentID=1697",
+      "title": "White-tailed Ptarmigan — California Wildlife Habitat Relationships, California Department of Fish and Wildlife"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "labeo_rosae",
+  "name": "Rednose labeo",
+  "scientific": "Labeo rosae",
+  "group": "fish",
+  "sections": {
+    "overview": "Labeo rosae Steindachner, 1894 is a freshwater cyprinid of the genus Labeo, native chiefly to the Lowveld river systems of southern Africa.",
+    "identification": "It can reach about 40 centimetres fork length; adults have a red-orange iris and conspicuous red tubercles on the snout, but eye colour alone cannot separate it from L. altivelis.",
+    "habitat": "It occupies warm Lowveld reaches of the Limpopo, Incomati and Phongolo systems, using sandy main-channel stretches as well as dams.",
+    "diet": "Its food includes algae, detritus and small invertebrates.",
+    "behavior": "It is an active fish that migrates upstream in summer and may leap over obstacles while moving through swollen rivers.",
+    "reproduction": "Its upstream summer migration is associated with breeding; published accounts report maturity from about 15 centimetres total length.",
+    "ecology": "It shares the genus Labeo with L. altivelis and L. ruddi; recent genomic work cautions that traditional morphology-based Labeo groups do not always reflect evolutionary lineages.",
+    "conservation": "It was assessed as Least Concern in South Africa in 2017; assessors described it as widespread and common, with threats localized at that time."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Labeo-rosae.html",
+      "title": "Labeo rosae — FishBase"
+    },
+    {
+      "url": "https://speciesstatus.sanbi.org/assessment/last-assessment/85/",
+      "title": "Red List of South African Species: Rednose Labeo"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T63285A100161851.en",
+      "title": "Labeo rosae — IUCN Red List assessment"
+    },
+    {
+      "url": "https://koedoe.co.za/index.php/koedoe/article/download/761/857",
+      "title": "Labeo rosae in Kruger National Park — Koedoe"
+    },
+    {
+      "url": "https://doi.org/10.1016/j.ympev.2025.108427",
+      "title": "Phylogenomics of African Labeo — Molecular Phylogenetics and Evolution"
+    },
+    {
+      "url": "https://www.1ksa.org.za/species-cards/labeo-rosae",
+      "title": "Labeo rosae — South African Institute for Aquatic Biodiversity species card"
+    },
+    {
+      "url": "https://www.dwa.gov.za/iwqs/rhp/state_of_rivers/limpopo/Sand_2002_report_without_pics.pdf",
+      "title": "Sand River State of Rivers Report — South African Department of Water Affairs"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "ixoreus_naevius",
+  "name": "Varied Thrush",
+  "scientific": "Ixoreus naevius",
+  "group": "birds",
+  "sections": {
+    "overview": "The Varied Thrush is a Turdidae songbird of the Pacific Northwest, breeding in wet mature forests and wintering farther south.",
+    "identification": "The male has a slate head and breast band, orange breast and flanks, and a bold orange eyebrow; females are duller.",
+    "habitat": "It breeds in shaded, humid conifer forests and uses parks, gardens and riparian woods in winter.",
+    "diet": "It gleans insects and other arthropods from leaf litter in summer, then relies more on berries, fruit and acorns in winter.",
+    "behavior": "It forages on the ground, and males sing to establish territories before females arrive on the breeding grounds.",
+    "reproduction": "The female builds a cup nest in the forest understory; Cornell reports one or two broods and about 12 days of incubation.",
+    "ecology": "The European Robin in the existing robin profile belongs to Muscicapidae, not the thrush family Turdidae.",
+    "conservation": "Canada lists the species as globally Least Concern in 2018, while its national population has declined moderately since about 1970."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Varied_Thrush/lifehistory",
+      "title": "Varied Thrush Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://faune-especes.canada.ca/situation-oiseaux/oiseau-bird-fra.aspx?sB=VATH&sL=f&sM=a&sY=2019",
+      "title": "Varied Thrush — Government of Canada, State of Canada’s Birds"
+    },
+    {
+      "url": "https://a100.gov.bc.ca/pub/eswp/speciesSummary.do?id=18390",
+      "title": "Ixoreus naevius — British Columbia Conservation Data Centre"
+    },
+    {
+      "url": "https://www.audubon.org/field-guide/bird/varied-thrush?nid=4976&site=ak",
+      "title": "Varied Thrush — Audubon Field Guide"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougegorge-familier",
+      "title": "European Robin — Ligue pour la Protection des Oiseaux"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "ixobrychus_minutus",
+  "name": "Little Bittern",
+  "scientific": "Ixobrychus minutus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Little Bittern is Europe’s smallest heron and a trans-Saharan migrant in its western Palearctic range.",
+    "identification": "Males have a black crown and back with pale wing panels; females are duller and streaked below.",
+    "habitat": "It hides among reedbeds and other dense emergent plants along lakes, marshes, ditches and river margins.",
+    "diet": "Its food varies by site and season but includes small fish, amphibians and aquatic invertebrates.",
+    "behavior": "A secretive bird, it is mainly active by day and at dusk; European populations migrate to sub-Saharan Africa.",
+    "reproduction": "It usually nests alone in dense waterside vegetation, where the nest is close to water.",
+    "ecology": "It shares reedbed habitat with the larger Eurasian Bittern (Botaurus stellaris); see that profile for a comparison.",
+    "conservation": "The global IUCN assessment published in 2019 lists it as Least Concern, with a decreasing population trend."
+  },
+  "sources": [
+    {
+      "url": "https://ofb.gouv.fr/especes/blongios-nain-butor-blongios-ixobrychus-minutus",
+      "title": "Little Bittern — Office français de la biodiversité"
+    },
+    {
+      "url": "https://birds-europe.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/taxon.php?id=130373",
+      "title": "Little Bittern — Birds of Europe (Naturalis)"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22735766A155511258.en",
+      "title": "Ixobrychus minutus — IUCN Red List assessment"
+    }
+  ]
+}

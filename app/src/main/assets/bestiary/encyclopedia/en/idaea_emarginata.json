@@ -1,0 +1,34 @@
+{
+  "id": "idaea_emarginata",
+  "name": "Small Scallop",
+  "scientific": "Idaea emarginata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Idaea emarginata, the Small Scallop, is a geometrid moth recorded widely but not commonly in England and Wales.",
+    "identification": "Its wingspan is about 22–25 mm.",
+    "habitat": "It occupies damp deciduous woodland, meadows and marshes.",
+    "diet": "The caterpillar is believed to feed on bedstraws (Galium) in the wild; Finnish records also list Galium and Plantago among its food plants.",
+    "behavior": "Adults fly after dark from June to August and may be attracted to lights, although they can also be flushed by day.",
+    "reproduction": "The species accounts consulted do not give a reliable clutch size or detailed breeding schedule.",
+    "ecology": "It belongs to Idaea, the same genus as I. flaveolaria elsewhere in this bestiary; that shared genus alone does not establish a particularly close relationship.",
+    "conservation": "The British account describes a widespread but uncommon moth; this is a regional description, not a global threat assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/idaea-emarginata/",
+      "title": "Small Scallop | Idaea emarginata — UKMoths"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Idaea_Emarginata",
+      "title": "Idaea emarginata — LepiWiki"
+    },
+    {
+      "url": "https://www.perhoset.fi/historia/sterrhinae/ida-emarginata.htm",
+      "title": "Idaea emarginata — Finnish Lepidoptera records"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000005785",
+      "title": "Idaea emarginata — Natural History Museum species dictionary"
+    }
+  ]
+}

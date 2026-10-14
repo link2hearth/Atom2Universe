@@ -1,0 +1,30 @@
+{
+  "id": "isturgia_limbaria",
+  "name": "Frosted Yellow",
+  "scientific": "Isturgia limbaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Isturgia limbaria, the Frosted Yellow, is a day-flying geometrid moth of western and central Europe, extending into parts of southern Europe.",
+    "identification": "Its yellow to orange-yellow wings have a contrasting chocolate-brown border, more pronounced in males; male antennae are feathered.",
+    "habitat": "It inhabits broom-rich heathland, often on sandy soils, as well as sunny woodland edges and clearings where broom grows.",
+    "diet": "Its caterpillars feed on broom shrubs, especially Cytisus scoparius.",
+    "behavior": "Adults fly by day from spring into summer, with one or two generations depending on region and conditions.",
+    "reproduction": "The species overwinters as a pupa; caterpillars develop through the warmer months.",
+    "ecology": "Its distribution and breeding sites track broom-rich heath and scrub; no close-cousin comparison is established in the sources reviewed.",
+    "conservation": "Loss of sandy grassland and heath through land conversion is identified as a regional pressure in central Europe."
+  },
+  "sources": [
+    {
+      "url": "https://lepiforum.org/wiki/page/Isturgia_Limbaria",
+      "title": "Isturgia limbaria — LepiWiki"
+    },
+    {
+      "url": "https://www.pyrgus.de/Isturgia_limbaria_en.html",
+      "title": "Isturgia limbaria — European Lepidoptera and their Ecology"
+    },
+    {
+      "url": "https://www.nic.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/geometroidea/geometridae/ennominae/isturgia/",
+      "title": "Isturgia genus — FUNET"
+    }
+  ]
+}

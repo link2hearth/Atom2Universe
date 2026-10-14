@@ -1,0 +1,231 @@
+{
+  "id": "labeo_ruddi",
+  "scientific": "Labeo ruddi",
+  "group": "fish",
+  "name": {
+    "en": "Silver labeo",
+    "fr": "Labéo argenté"
+  },
+  "sections": {
+    "overview": {
+      "en": "Labeo ruddi Boulenger, 1907 is a currently recognized freshwater cyprinid species in the genus Labeo.",
+      "fr": "Labeo ruddi Boulenger, 1907 est une espèce de cyprinidé d’eau douce actuellement reconnue dans le genre Labeo."
+    },
+    "identification": {
+      "en": "It reaches about 30 centimetres standard length and has 12–13 soft rays in the dorsal fin.",
+      "fr": "Il atteint environ 30 centimètres de longueur standard et possède 12–13 rayons mous à la nageoire dorsale."
+    },
+    "habitat": {
+      "en": "It favours warm, quiet or standing water in middle- and lowveld rivers, especially deep pools over muddy bottoms.",
+      "fr": "Il préfère les eaux chaudes et calmes ou stagnantes des rivières du moyen et bas veld, surtout les mares profondes aux fonds vaseux."
+    },
+    "diet": {
+      "en": "FishBase describes it as feeding on organic sediments.",
+      "fr": "FishBase indique qu’il se nourrit de sédiments organiques."
+    },
+    "behavior": {
+      "en": "During the rainy season it moves upstream through swollen rivers to breed.",
+      "fr": "Pendant la saison des pluies, il remonte les rivières en crue pour se reproduire."
+    },
+    "reproduction": {
+      "en": "The documented upstream movement is associated with breeding, but detailed spawning biology remains poorly documented.",
+      "fr": "La remontée documentée est liée à la reproduction, mais les détails de sa biologie du frai restent peu connus."
+    },
+    "ecology": {
+      "en": "It shares the genus Labeo with L. rosae and L. altivelis; the 2025 phylogenomic study cautions that older morphological groupings of African Labeo do not consistently represent evolutionary lineages.",
+      "fr": "Il partage le genre Labeo avec L. rosae et L. altivelis ; l’étude phylogénomique de 2025 indique que les anciens groupes morphologiques des Labeo africains ne correspondent pas toujours à des lignées évolutives."
+    },
+    "conservation": {
+      "en": "The IUCN lists it as globally Data Deficient, reflecting insufficient information to determine extinction risk.",
+      "fr": "L’UICN le classe en données insuffisantes à l’échelle mondiale, ce qui signifie que les informations ne permettent pas de déterminer son risque d’extinction."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Labeo ruddi — FishBase",
+        "fr": "Labeo ruddi — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Labeo-ruddi.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports the Limpopo/Incomati and Cunene distribution, 30 cm maximum standard length, 12–13 dorsal soft rays, warm quiet muddy-pool habitat, organic-sediment diet, rainy-season upstream breeding movement, and global Data Deficient status assessed in 2018."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 34,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Silver Labeo — Red List of South African Species",
+        "fr": "Labéo argenté — Liste rouge des espèces sud-africaines"
+      },
+      "url": "https://speciesstatus.sanbi.org/assessment/last-assessment/22/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "SANBI's February 2018 regional South African assessment also records Data Deficient status and says surveys no longer record fish historically found in large schools."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 24,
+        "total": 24,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogenomics of African Labeo — Molecular Phylogenetics and Evolution",
+        "fr": "Phylogénomique des Labeo africains — Molecular Phylogenetics and Evolution"
+      },
+      "url": "https://doi.org/10.1016/j.ympev.2025.108427",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2025 study analyzes African Labeo with 2,187 ultraconserved elements and finds that most previously proposed morphology-based species groups are not monophyletic."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 22,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "River Ecoclassification Manual — South African Department of Water Affairs",
+        "fr": "Manuel d’écoclassification des cours d’eau — ministère sud-africain de l’Eau"
+      },
+      "url": "https://www.dws.gov.za/wem/projects/EcoStatus/EcostatusModuleDMar07.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The South African departmental species list uses the English common name Silver labeo for Labeo ruddi."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "CAS — Eschmeyer's Catalog of Fishes: Labeo",
+        "fr": "CAS — Catalogue des poissons d’Eschmeyer : Labeo"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Labeo&tbl=species",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Catalog of Fishes lists Labeo ruddi Boulenger, 1907 as a valid species and freshwater taxon."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 16,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Labeo ruddi — IUCN Red List assessment",
+        "fr": "Labeo ruddi — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T63287A100162122.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global IUCN assessment is Data Deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 7,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sand River State of Rivers Report — South African Department of Water Affairs",
+        "fr": "Rapport sur l’état des cours d’eau du Sand — ministère sud-africain de l’Eau"
+      },
+      "url": "https://www.dwa.gov.za/iwqs/rhp/state_of_rivers/limpopo/Sand_2002_report_without_pics.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "This South African report records the Afrikaans common name Silwer-moddervis for Labeo ruddi."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is poorly documented, and a geographically separate Cunene record complicates interpretation of its range and population status; the IUCN assessment is Data Deficient."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase with the South African SANBI assessment and government fish list and the 2025 phylogenomic study. Its close comparison with L. rosae and L. altivelis is limited to clear basin, habitat and meristic contrasts; detailed reproductive biology is sparse."
+}

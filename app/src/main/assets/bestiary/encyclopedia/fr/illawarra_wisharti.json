@@ -1,0 +1,34 @@
+{
+  "id": "illawarra_wisharti",
+  "name": "Araignée à toile en entonnoir d’Illawarra",
+  "scientific": "Illawarra wisharti",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Illawarra wisharti est une araignée à toile en entonnoir australienne et la seule espèce décrite de son genre, Illawarra.",
+    "identification": "Son corps brun porte des chevrons abdominaux nets ; les mâles ont une large rangée d’épines sous les tarses des quatre paires de pattes, tandis que les femelles ont une première patte robuste aux griffes agrandies.",
+    "habitat": "L’espèce est connue dans la région d’Illawarra, au sud de la Nouvelle-Galles du Sud.",
+    "diet": "Les descriptions taxonomiques et les fiches de collections consultées ne donnent pas de liste de proies propre à l’espèce.",
+    "behavior": "Sa description repose sur des spécimens conservés et ne permet pas d’établir un rythme d’activité détaillé.",
+    "reproduction": "La révision décrit les organes reproducteurs de la femelle, mais les sources consultées ne précisent ni taille de ponte ni saison de reproduction.",
+    "ecology": "C’est un genre distinct d’Atracidae, aux côtés d’Atrax et de Hadronyche ; la révision australienne le distingue par des caractères des pattes propres à chaque sexe, au lieu de le classer dans Atrax.",
+    "conservation": "Les sources documentent une répartition régionale restreinte, mais ne donnent pas de catégorie de conservation actuelle pour l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/media/Uploads/Journals/19162/1556_complete.pdf",
+      "title": "Révision des araignées à toile en entonnoir australiennes — Records of the Australian Museum"
+    },
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/19813",
+      "title": "Illawarra wisharti — Catalogue mondial des araignées"
+    },
+    {
+      "url": "https://bie.ala.org.au/species/Illawarra%2Bwisharti",
+      "title": "Illawarra wisharti — Atlas of Living Australia"
+    },
+    {
+      "url": "https://www.arachne.org.au/01_cms/details.asp?ID=2702",
+      "title": "Illawarra wisharti — base australienne d’araignées Arachne"
+    }
+  ]
+}
