@@ -1,0 +1,14 @@
+{
+  "id": "osmunda_japonica",
+  "sections": [
+    {"title": "Port et répartition", "text": "Osmunda japonica est une fougère d’Asie orientale, aux frondes bipennées pouvant atteindre environ 150 × 50 cm. Elle pousse dans des milieux forestiers humides."},
+    {"title": "Frondes et spores", "text": "Les frondes fertiles se distinguent des frondes stériles par leurs pinnules étroites couvertes de sporanges. Les jeunes frondes sont enroulées avant leur déploiement."},
+    {"title": "Usage alimentaire", "text": "Au Japon, les jeunes pousses appelées zenmai sont consommées après cuisson. Cette donnée ne documente pas une consommation crue."}
+  ],
+  "sources": [
+    {"title": "World Flora Online — Osmunda japonica", "url": "https://www.worldfloraonline.org/taxon/wfo-0000750727"},
+    {"title": "Flora of China — Osmundaceae", "url": "https://www.iplant.cn/foc/pdf/Osmundaceae.pdf"},
+    {"title": "Japanese Standard Tables of Food Composition — zenmai", "url": "https://fooddb.mext.go.jp/details/details.pl?ITEM_NO=6_06121_7"}
+  ],
+  "related": []
+}

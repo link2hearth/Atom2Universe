@@ -1,0 +1,14 @@
+{
+  "id": "pachypodium_rosulatum",
+  "sections": [
+    {"title": "Form and habitat", "text": "Pachypodium rosulatum is a caudiciform shrub of Madagascar, adapted to dry habitats. Height and form vary among its recognised subspecies, so a single size should not be generalised."},
+    {"title": "Caudex, leaves and flowers", "text": "The swollen base and spiny branches store water. The leaves form terminal rosettes. The tubular flowers are yellow; the plate shows a form with a particularly enlarged caudex."},
+    {"title": "Comparison and edibility", "text": "P. rosulatum differs from P. baronii by its yellow rather than red flowers. No safe food use was found."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Pachypodium rosulatum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A80712-1"},
+    {"title": "Flora of Madagascar — Pachypodium rosulatum", "url": "https://www.botanywebsite.com/flora_of_madagascar/index.php?page=Pachypodium_rosulatum_subsp_rosulatum"},
+    {"title": "Revision of the genus Pachypodium", "url": "https://edepot.wur.nl/195240"}
+  ],
+  "related": ["pachypodium_baronii"]
+}

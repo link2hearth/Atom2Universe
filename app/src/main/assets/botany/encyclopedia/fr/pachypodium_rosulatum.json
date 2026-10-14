@@ -1,0 +1,14 @@
+{
+  "id": "pachypodium_rosulatum",
+  "sections": [
+    {"title": "Port et milieu", "text": "Pachypodium rosulatum est un arbuste caudiciforme de Madagascar, adapté aux milieux secs. La hauteur et la forme varient selon les sous-espèces reconnues; éviter de généraliser une taille unique."},
+    {"title": "Caudex, feuilles et fleurs", "text": "La base renflée et les branches épineuses stockent l’eau. Les feuilles forment des rosettes terminales. Les fleurs tubulaires sont jaunes; la planche montre une forme à caudex très développé."},
+    {"title": "Comparaison et comestibilité", "text": "P. rosulatum se distingue de P. baronii par ses fleurs jaunes plutôt que rouges. Aucun usage alimentaire sûr n’a été trouvé."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Pachypodium rosulatum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A80712-1"},
+    {"title": "Flora of Madagascar — Pachypodium rosulatum", "url": "https://www.botanywebsite.com/flora_of_madagascar/index.php?page=Pachypodium_rosulatum_subsp_rosulatum"},
+    {"title": "Revision of the genus Pachypodium", "url": "https://edepot.wur.nl/195240"}
+  ],
+  "related": ["pachypodium_baronii"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "pachypodium_baronii",
+  "sections": [
+    {"title": "Form and range", "text": "Pachypodium baronii is a succulent shrub endemic to northern Madagascar, with a swollen base and spiny branches. An arborescent form can reach about 5 m."},
+    {"title": "Leaves and flowers", "text": "The leaves cluster near the branch tips and are about 3–30 × 1.4–9 cm. Its red to crimson flowers distinguish it from P. rosulatum, which has yellow flowers."},
+    {"title": "Edibility", "text": "No safe food use was documented in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Botanical revision of Madagascan Pachypodium", "url": "https://protectedareas.mg/content/documents/5e4b6b67-8cce-40d9-aefa-94fd69b2a7be/ca00e3772c0d4b8e81a44da61769f058.pdf"},
+    {"title": "Phylogenetic study of Pachypodium", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3642702/"},
+    {"title": "University of Arizona Arboretum — Pachypodium baronii", "url": "https://apps.cals.arizona.edu/arboretum/taxon.aspx?id=1087"}
+  ],
+  "related": ["pachypodium_rosulatum"]
+}

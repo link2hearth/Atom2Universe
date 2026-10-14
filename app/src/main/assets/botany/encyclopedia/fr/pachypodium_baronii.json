@@ -1,0 +1,14 @@
+{
+  "id": "pachypodium_baronii",
+  "sections": [
+    {"title": "Port et répartition", "text": "Pachypodium baronii est un arbuste succulent endémique du nord de Madagascar, à base renflée et branches épineuses. Une forme arborescente peut atteindre environ 5 m."},
+    {"title": "Feuilles et fleurs", "text": "Les feuilles groupées près des extrémités des branches mesurent environ 3 à 30 × 1,4 à 9 cm. Les fleurs rouges à cramoisies le distinguent de P. rosulatum, qui a des fleurs jaunes."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire sûr n’a été documenté dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Révision botanique des Pachypodium malgaches", "url": "https://protectedareas.mg/content/documents/5e4b6b67-8cce-40d9-aefa-94fd69b2a7be/ca00e3772c0d4b8e81a44da61769f058.pdf"},
+    {"title": "Phylogenetic study of Pachypodium", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3642702/"},
+    {"title": "University of Arizona Arboretum — Pachypodium baronii", "url": "https://apps.cals.arizona.edu/arboretum/taxon.aspx?id=1087"}
+  ],
+  "related": ["pachypodium_rosulatum"]
+}
