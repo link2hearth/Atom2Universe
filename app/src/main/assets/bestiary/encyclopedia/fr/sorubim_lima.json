@@ -1,0 +1,30 @@
+{
+  "id": "sorubim_lima",
+  "name": "Silure à bec de canard",
+  "scientific": "Sorubim lima",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce silure pimelodidé largement répandu vit dans plusieurs grands bassins fluviaux d’Amérique du Sud.",
+    "identification": "FishBase lui donne le nom anglais « duckbill catfish » (silure à bec de canard).",
+    "habitat": "C’est un poisson d’eau douce vivant près du fond, signalé dans les bassins de l’Amazone, de l’Orénoque, du Paraná et du Parnaíba.",
+    "diet": "Les adultes se nourrissent surtout de poissons et de crustacés.",
+    "behavior": "Les adultes vivent en bancs et sont surtout nocturnes.",
+    "reproduction": "Les sources consultées ne donnent pas de résumé précis de la ponte ni du développement larvaire de cette espèce.",
+    "ecology": "Il cohabite avec S. elongatus ; contrairement à S. cuspicaudus, ses lobes caudaux sont arrondis, tandis que S. trigonocephalus a une tête plus triangulaire.",
+    "conservation": "FishBase indique une évaluation mondiale de l’UICN en catégorie Préoccupation mineure datant de 2018."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Sorubim-lima",
+      "title": "Sorubim lima — FishBase"
+    },
+    {
+      "url": "https://mapress.com/zootaxa/article/view/zootaxa.1422.1.1",
+      "title": "Révision systématique du genre Sorubim — Zootaxa"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Sorubim&tbl=species",
+      "title": "Catalogue des poissons d’Eschmeyer — Sorubim lima"
+    }
+  ]
+}

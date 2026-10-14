@@ -1,0 +1,30 @@
+{
+  "id": "sonorolux_fluminis",
+  "name": "Ombrine des estuaires",
+  "scientific": "Sonorolux fluminis",
+  "group": "fish",
+  "sections": {
+    "overview": "Sonorolux fluminis est un petit poisson de la famille des Sciaenidae, connu du Sarawak, à Bornéo.",
+    "identification": "Son corps est haut et arrondi, avec un museau fortement arrondi.",
+    "habitat": "Il vit dans les estuaires et les eaux saumâtres.",
+    "diet": "Les fiches de l’espèce citées ne décrivent pas son alimentation.",
+    "behavior": "Les sources consultées ne décrivent pas en détail son activité ni son comportement social.",
+    "reproduction": "Les références consultées ne fournissent pas d’information propre à sa reproduction.",
+    "ecology": "La documentation est limitée : la fiche de la FAO ne connaissait que deux spécimens, d’environ 8 cm de longueur standard chacun.",
+    "conservation": "FishBase indique une évaluation mondiale de l’UICN en catégorie Préoccupation mineure datant de 2018."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/15479",
+      "title": "Sonorolux fluminis — FishBase"
+    },
+    {
+      "url": "https://www.fao.org/4/y0770e/y0770e38.pdf",
+      "title": "Guide FAO des espèces du Pacifique centre-ouest — Sonorolux fluminis"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=22072",
+      "title": "Catalogue des poissons d’Eschmeyer — Sonorolux fluminis"
+    }
+  ]
+}

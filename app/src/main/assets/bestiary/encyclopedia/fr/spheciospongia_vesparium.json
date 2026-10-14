@@ -1,0 +1,30 @@
+{
+  "id": "spheciospongia_vesparium",
+  "name": "Éponge tête-de-bois",
+  "scientific": "Spheciospongia vesparium",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "L’éponge tête-de-bois est une grande éponge des Caraïbes et du sud de la Floride, qui forme un relief marqué sur les fonds durs peu profonds.",
+    "identification": "Dans la baie de Floride, elle peut dépasser un mètre de diamètre et représente une part importante de la biomasse des communautés d’éponges.",
+    "habitat": "Dans les Keys de Floride, elle vit sur les fonds durs côtiers, côté baie comme côté océan.",
+    "diet": "Elle se nourrit par filtration en prélevant des particules alimentaires dans l’eau environnante.",
+    "behavior": "Ses cavités internes abritent de petits animaux, notamment des crevettes pistolets.",
+    "reproduction": "Comme les autres éponges clionaïdes, elle est décrite comme ovipare : spermatozoïdes et ovules sont libérés dans l’eau, où ont lieu fécondation et développement larvaire.",
+    "ecology": "Les éponges tête-de-bois forment un relief vertical et abritent une faune interne variée, notamment des crevettes pistolets.",
+    "conservation": "Des mortalités d’éponges dans la baie de Floride ont conduit à des recherches de restauration incluant cette espèce; il s’agit d’un enjeu régional d’habitat, pas d’une catégorie mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8667908/",
+      "title": "Génome mitochondrial et rôle écologique de l’éponge tête-de-bois"
+    },
+    {
+      "url": "https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.3876",
+      "title": "Restaurer les communautés d’éponges favorise le rétablissement écologique de la baie de Floride"
+    },
+    {
+      "url": "https://scholarship.miami.edu/esploro/outputs/graduate/Characterizing-Internal-Morphology-and-Infauna-of/991032024720202976",
+      "title": "Morphologie interne et faune associée de l’éponge tête-de-bois dans les Keys de Floride"
+    }
+  ]
+}

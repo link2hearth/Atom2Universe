@@ -1,0 +1,142 @@
+{
+  "id": "spalax_microphthalmus",
+  "scientific": "Spalax microphthalmus",
+  "group": "mammals",
+  "name": {
+    "en": "Greater blind mole-rat",
+    "fr": "Grand spalax"
+  },
+  "sections": {
+    "overview": {
+      "en": "This fossorial rodent inhabits eastern European steppe and forest-steppe, with strong populations in eastern Ukraine extending east toward the Volga.",
+      "fr": "Ce rongeur fouisseur habite les steppes et steppes boisées d’Europe orientale; des populations importantes vivent dans l’est de l’Ukraine et vers la Volga."
+    },
+    "identification": {
+      "en": "Its eyes are reduced and covered by skin; powerful incisors and a reduced tail are adaptations associated with underground life.",
+      "fr": "Ses yeux réduits sont couverts par la peau; ses incisives puissantes et sa queue réduite sont liées à la vie souterraine."
+    },
+    "habitat": {
+      "en": "In eastern Ukraine it is associated with preserved steppe, meadow-steppe and open slopes of ravines.",
+      "fr": "Dans l’est de l’Ukraine, il fréquente les steppes préservées, les prairies steppiques et les versants ouverts des ravins."
+    },
+    "diet": {
+      "en": "It eats underground plant parts and may store roots and other food in burrow chambers.",
+      "fr": "Il consomme des parties souterraines de plantes et peut stocker des racines et d’autres aliments dans les chambres du terrier."
+    },
+    "behavior": {
+      "en": "It excavates long, shallow feeding tunnels and deeper chambers; juveniles may appear above ground while dispersing.",
+      "fr": "Il creuse de longs tunnels d’alimentation peu profonds et des chambres plus profondes; les jeunes peuvent sortir en surface lors de leur dispersion."
+    },
+    "reproduction": {
+      "en": "A field study in the Velikoburlutskyi Steppe reported one annual litter of one to three pups.",
+      "fr": "Une étude de terrain dans la steppe de Velikoburlutskyi rapporte une portée annuelle de un à trois petits."
+    },
+    "ecology": {
+      "en": "Its eastern Ukrainian distribution is uneven, and field studies associate it with remaining steppe patches; cultivation and fragmentation are reported pressures on steppe fauna.",
+      "fr": "Sa répartition est irrégulière dans l’est de l’Ukraine; les études de terrain l’associent aux fragments de steppe encore présents, tandis que la mise en culture et la fragmentation affectent la faune steppique."
+    },
+    "conservation": {
+      "en": "The Ukrainian museum species page assigns no conservation category; local habitat pressures should not be mistaken for a global assessment.",
+      "fr": "La fiche du musée ukrainien ne lui attribue aucune catégorie de conservation; les pressions locales sur l’habitat ne constituent pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Greater mole-rat species record — State Museum of Natural History, National Academy of Sciences of Ukraine",
+        "fr": "Fiche du grand spalax — Musée national d’histoire naturelle d’Ukraine"
+      },
+      "url": "https://dc.smnh.org/species/detail/species-628.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "The Ukrainian museum describes reduced skin-covered eyes, digging incisors and a reduced tail, reports strong populations in eastern Ukraine toward the Volga, and gives no conservation status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 27,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Current distribution and food storage of Spalax microphthalmus in eastern Ukraine",
+        "fr": "Répartition actuelle et stockage alimentaire de Spalax microphthalmus dans l’est de l’Ukraine"
+      },
+      "url": "https://www.zoology.dp.ua/z11_130.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The Ukrainian-language study reports uneven eastern distribution, activity in steppe and meadow-steppe sites, and negative effects of cultivation and fragmentation on steppe fauna."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 23,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biological characteristics, feeding and tunnel structure of the greater mole-rat",
+        "fr": "Caractéristiques biologiques, alimentation et structure des tunnels du grand spalax"
+      },
+      "url": "https://zendy.io/title/10.26565/2075-5457-2018-31-11",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The 2018 study reports underground plant feeding, tunnel and storage chambers, juvenile surface dispersal and one litter of one to three pups per year."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 24,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The museum source does not assign a conservation category; no current global assessment was confirmed for this draft.",
+    "Annual litter size comes from one regional field study and may not describe every population."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. English and Ukrainian-language museum and field sources were cross-checked; reproductive values are explicitly tied to one regional study."
+}

@@ -1,0 +1,119 @@
+{
+  "id": "sphinx_franckii",
+  "scientific": "Sphinx franckii",
+  "group": "invertebrates",
+  "name": {
+    "en": "Franck's sphinx",
+    "fr": "Sphinx de Franck"
+  },
+  "sections": {
+    "overview": {
+      "en": "Franck’s sphinx is a large moth in family Sphingidae.",
+      "fr": "Le sphinx de Franck est un grand papillon de la famille des Sphingidae."
+    },
+    "identification": {
+      "en": "Adults are grey with tan markings; females lay eggs singly.",
+      "fr": "Les adultes sont gris avec des marques beige ; les femelles pondent leurs œufs séparément."
+    },
+    "habitat": {
+      "en": "It occurs in eastern U.S. hardwood forests.",
+      "fr": "Il vit dans les forêts de feuillus de l’est des États-Unis."
+    },
+    "diet": {
+      "en": "Larvae feed on ash and fringe tree; adults take nectar.",
+      "fr": "Les chenilles mangent des frênes et le chionanthe ; les adultes prennent du nectar."
+    },
+    "behavior": {
+      "en": "Adults are mainly recorded from late spring through summer.",
+      "fr": "Les adultes sont surtout signalés de la fin du printemps à l’été."
+    },
+    "reproduction": {
+      "en": "The pupa overwinters in soil.",
+      "fr": "La chrysalide passe l’hiver dans le sol."
+    },
+    "ecology": {
+      "en": "It belongs to the same genus as the Canadian and Chisoya sphinxes.",
+      "fr": "Elle partage son genre avec les sphinx du Canada et chisoya."
+    },
+    "conservation": {
+      "en": "NatureServe gives a global rank of G4G5 and notes northern declines.",
+      "fr": "NatureServe lui attribue le rang mondial G4G5 et signale des déclins au nord."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "NatureServe Explorer — Sphinx franckii",
+        "fr": "NatureServe Explorer — Sphinx franckii"
+      },
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.112650/Sphinx_franckii",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "NatureServe reports taxonomy, eastern hardwood range, hosts, phenology, overwintering, global rank and northern range contraction."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 15,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Butterflies and Moths of North America — Franck's sphinx",
+        "fr": "Butterflies and Moths of North America — Franck's sphinx"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-franckii",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "BAMONA describes adult markings and reports eggs laid singly on host plants."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 12,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "NatureServe's detailed status assessment dates from 2015; the global rank is presented with its source's uncertainty range."
+  ],
+  "review_note": "Cross-checked conservation and life-history details against NatureServe and BAMONA; related species are linked by genus without implying close ecology.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

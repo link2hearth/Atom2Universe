@@ -1,0 +1,34 @@
+{
+  "id": "sphaerodactylus_fantasticus",
+  "name": "Sphaerodactylus fantasticus",
+  "scientific": "Sphaerodactylus fantasticus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Ce gecko des Petites Antilles est présent en Guadeloupe et sur des îles voisines, à la Dominique et à Montserrat. Son aire diffère de celle de Sphaerodactylus elegans, son congénère des Grandes Antilles.",
+    "identification": "The Reptile Database répertorie plusieurs formes nommées à répartition restreinte et indique que phyzacinus est désormais traité comme une espèce valide.",
+    "habitat": "À la Dominique, la forme nommée fuga a été signalée dans des microhabitats relativement humides de la côte occidentale.",
+    "diet": "L’étude de terrain consultée ne décrit pas de proies et n’établit pas de régime propre à l’espèce.",
+    "behavior": "L’étude citée sur la Dominique mesure la densité de population et les pertes en eau, sans fournir de description plus générale du comportement.",
+    "reproduction": "The Reptile Database indique que cette espèce est ovipare.",
+    "ecology": "Ses formes insulaires nommées ont des aires localisées; voir Sphaerodactylus elegans, un congénère originaire de Cuba et d’Hispaniola, introduit en Floride.",
+    "conservation": "La Liste rouge de Guadeloupe de 2022 classe ce gecko en Préoccupation mineure à l’échelle régionale et mondiale; cette évaluation précède la séparation actuelle de S. phyzacinus comme espèce valide."
+  },
+  "sources": [
+    {
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/fantasticus",
+      "title": "Sphaerodactylus fantasticus — The Reptile Database"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/288811015_Population_densities_and_water-loss_rates_of_Gymnophthalmus_pleii_Gymnophthalmus_underwoodi_Gymnophthalmidae_and_Sphaerodactylus_fantasticus_fuga_Sphaerodactylidae_on_Dominica_West_Indies",
+      "title": "Densités de population et pertes en eau de Sphaerodactylus fantasticus fuga à la Dominique"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/elegans",
+      "title": "Sphaerodactylus elegans — The Reptile Database"
+    },
+    {
+      "url": "https://uicn.fr/wp-content/uploads/2022/05/tableaux-liste-rouge-faune-de-guadeloupe.pdf",
+      "title": "La Liste rouge des espèces menacées en France : faune de Guadeloupe"
+    }
+  ]
+}

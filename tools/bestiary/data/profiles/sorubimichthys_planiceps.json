@@ -1,0 +1,124 @@
+{
+  "id": "sorubimichthys_planiceps",
+  "scientific": "Sorubimichthys planiceps",
+  "group": "fish",
+  "name": {
+    "en": "Firewood catfish",
+    "fr": "Silure bois de feu"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large South American catfish occurs in the Amazon and Orinoco river basins.",
+      "fr": "Ce grand poisson-chat sud-américain vit dans les bassins de l’Amazone et de l’Orénoque."
+    },
+    "identification": {
+      "en": "It has an elongated body, a flattened head and long barbels; records report up to 150 cm standard length.",
+      "fr": "Il a un corps allongé, une tête aplatie et de longs barbillons; la longueur standard rapportée atteint 150 cm."
+    },
+    "habitat": {
+      "en": "FishBase classifies it as a tropical, freshwater, demersal fish.",
+      "fr": "FishBase le classe parmi les poissons tropicaux d’eau douce vivant près du fond."
+    },
+    "diet": {
+      "en": "It feeds mainly on small fishes and invertebrates.",
+      "fr": "Il se nourrit surtout de petits poissons et d’invertébrés."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal.",
+      "fr": "Il est principalement nocturne."
+    },
+    "reproduction": {
+      "en": "The sources used here provide no species-specific account of its spawning or young.",
+      "fr": "Les sources utilisées ici ne décrivent pas la ponte ni les jeunes de cette espèce."
+    },
+    "ecology": {
+      "en": "Its large river-basin range spans the Amazon and Orinoco systems; local conservation concerns can differ between basins.",
+      "fr": "Son aire couvre les grands réseaux de l’Amazone et de l’Orénoque; les enjeux locaux de conservation peuvent varier entre bassins."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2020. The USGS profile notes an earlier report of vulnerability in the Orinoco basin.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN en Préoccupation mineure datant de 2020. La fiche de l’USGS signale une mention antérieure de vulnérabilité dans le bassin de l’Orénoque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sorubimichthys planiceps — FishBase",
+        "fr": "Sorubimichthys planiceps — FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/12145",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the Amazon–Orinoco range, tropical freshwater/demersal habitat, maximum standard length of 150 cm and global Least Concern assessment dated 2020; reproduction fields are blank."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 25,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Firewood catfish — USGS Nonindigenous Aquatic Species profile",
+        "fr": "Silure bois de feu — fiche USGS Nonindigenous Aquatic Species"
+      },
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=2565",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The USGS profile describes the flattened head and barbels, nocturnal habits, fish-and-invertebrate diet, and notes a published Orinoco-basin vulnerability report."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 20,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Global status is from the assessment dated 2020; the regional Orinoco vulnerability note is older and is not directly comparable to that global category.",
+    "Species-specific reproductive details were not found in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. FishBase and the USGS species profile were cross-checked; taxonomy and regional versus global conservation scope remain explicitly distinguished."
+}

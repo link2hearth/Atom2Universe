@@ -1,0 +1,34 @@
+{
+  "id": "sommeromys_macrorhinos",
+  "name": "Sommer’s Sulawesi rat",
+  "scientific": "Sommeromys macrorhinos",
+  "group": "mammals",
+  "sections": {
+    "overview": "Sommeromys macrorhinos is a little-known murid rodent endemic to the central highlands of Sulawesi, Indonesia.",
+    "identification": "Its notably elongated snout and slender build distinguish the genus from many other Sulawesi murids.",
+    "habitat": "It has been recorded in tropical montane forest between 1600 and 2600 metres.",
+    "diet": "The available species account describes it as insectivorous.",
+    "behavior": "It is nocturnal and uses both the ground and vegetation.",
+    "reproduction": "The sources consulted provide no detailed account of its reproduction.",
+    "ecology": "It is known from only a few mountain localities, and further surveys are needed to clarify its range and ecology.",
+    "conservation": "The Mammal Diversity Database reports the latest global IUCN category as Near Threatened."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-2.RLTS.T136642A22422120.en",
+      "title": "Sommeromys macrorhinos — IUCN Red List assessment"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003679/",
+      "title": "Sommeromys macrorhinos — Mammal Diversity Database"
+    },
+    {
+      "url": "https://ejournal.brin.go.id/treubia/article/view/10099",
+      "title": "New records of two rarely encountered endemic rats from Gunung Gandangdewata — Treubia, BRIN"
+    },
+    {
+      "url": "https://field.biodiversitylibrary.org/bibliography/178501",
+      "title": "Sulawesi rodents — Biodiversity Heritage Library"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "id": "tuatara",
+  "scientific": "Sphenodon punctatus",
+  "group": "reptiles",
+  "name": {
+    "en": "Tuatara",
+    "fr": "Tuatara"
+  },
+  "sections": {
+    "overview": {
+      "en": "The tuatara is the only living representative of Sphenodontia, an ancient reptile lineage once much more diverse.",
+      "fr": "Le tuatara est le seul représentant actuel des Sphénodontes, une ancienne lignée de reptiles autrefois bien plus diversifiée."
+    },
+    "identification": {
+      "en": "It has a spiny crest along the back, more developed in males; despite its lizard-like shape, it is not a lizard.",
+      "fr": "Une crête d’épines longe son dos et est plus développée chez le mâle ; malgré sa silhouette de lézard, ce n’en est pas un."
+    },
+    "habitat": {
+      "en": "It lives on offshore islands in coastal forest and clearings, often where seabirds have enriched the soil.",
+      "fr": "Il vit sur des îles au large, dans les forêts côtières et les clairières, souvent là où les oiseaux marins enrichissent le sol."
+    },
+    "diet": {
+      "en": "It eats invertebrates and also takes lizards and other small animals when available.",
+      "fr": "Il mange des invertébrés et capture aussi des lézards et d’autres petits animaux lorsqu’ils sont disponibles."
+    },
+    "behavior": {
+      "en": "Adults are mainly nocturnal, though they emerge by day to bask.",
+      "fr": "Les adultes sont surtout nocturnes, mais sortent aussi le jour pour se chauffer au soleil."
+    },
+    "reproduction": {
+      "en": "Females lay eggs in buried nests; reproduction is unusually slow for a reptile.",
+      "fr": "La femelle pond dans un nid enfoui ; son rythme de reproduction est particulièrement lent pour un reptile."
+    },
+    "ecology": {
+      "en": "Tuatara occur naturally only in New Zealand and are managed as one species, Sphenodon punctatus.",
+      "fr": "Le tuatara n’existe naturellement qu’en Nouvelle-Zélande et est aujourd’hui traité comme une seule espèce, Sphenodon punctatus."
+    },
+    "conservation": {
+      "en": "Conservation relies on protected island populations and preventing introduced rodents from reaching them.",
+      "fr": "Sa conservation repose sur la protection des populations insulaires et la prévention de l’arrivée de rongeurs introduits."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "New Zealand Department of Conservation — Tuatara",
+        "fr": "Department of Conservation de Nouvelle-Zélande — Tuatara"
+      },
+      "url": "https://www.doc.govt.nz/nature/native-animals/reptiles-and-frogs/tuatara/",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The Department of Conservation describes tuatara as the only surviving Sphenodontia and recognizes a single species, Sphenodon punctatus.",
+        "The agency describes active conservation management and the risk posed by introduced rodents."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 31,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "New Zealand Herpetological Society — Sphenodon punctatus",
+        "fr": "New Zealand Herpetological Society — Sphenodon punctatus"
+      },
+      "url": "https://www.reptiles.org.nz/herpetofauna/native/sphenodon-punctatus",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The society profile describes the dorsal crest, coastal forest habitat, basking, animal prey, and egg laying; it also notes the slow reproductive cycle."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 23,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older sources distinguish additional tuatara taxa; current New Zealand conservation guidance treats tuatara as one species."
+  ],
+  "review_note": "Cross-checked New Zealand conservation and herpetological society accounts; kept reproduction deliberately general.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

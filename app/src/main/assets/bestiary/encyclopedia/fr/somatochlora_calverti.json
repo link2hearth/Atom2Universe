@@ -1,0 +1,30 @@
+{
+  "id": "somatochlora_calverti",
+  "name": "Cordulie de Calvert",
+  "scientific": "Somatochlora calverti",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La cordulie de Calvert est une libellule rare à aire restreinte, signalée surtout dans le Panhandle de Floride et les États voisins du Sud-Est.",
+    "identification": "C’est une cordulie de la famille des Corduliidae.",
+    "habitat": "En Floride, des prospections ont signalé des adultes près de ruisseaux suintants et de forêts de dunes sableuses.",
+    "diet": "Les sources consultées sur l’espèce ne fournissent pas de liste vérifiée de ses proies.",
+    "behavior": "La plupart des observations de terrain concernent des adultes ; le comportement quotidien propre à l’espèce reste peu documenté.",
+    "reproduction": "Sa larve n’a pas été récoltée sur le terrain ; son microhabitat de reproduction n’est donc pas confirmé.",
+    "ecology": "Une étude récente propose les ruisseaux suintants bordés de forêt de dunes sableuses intacte comme habitat probable de reproduction, mais précise qu’il s’agit d’une hypothèse.",
+    "conservation": "La dernière évaluation UICN repérée la classe dans la catégorie « données insuffisantes »."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.48156/1388.2024.1917274",
+      "title": "Evaluation of speculated reproductive habitat for Somatochlora calverti — International Journal of Odonatology"
+    },
+    {
+      "url": "https://www.fnai.org/PDFs/publications/Somatochlora_calverti_Field_Survey_Report.pdf",
+      "title": "Calvert’s Emerald Field Survey Report — Florida Natural Areas Inventory"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-1.RLTS.T20341A80697450.en",
+      "title": "Somatochlora calverti — IUCN Red List assessment"
+    }
+  ]
+}

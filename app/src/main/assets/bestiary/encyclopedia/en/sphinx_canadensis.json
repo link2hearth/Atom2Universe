@@ -1,0 +1,34 @@
+{
+  "id": "sphinx_canadensis",
+  "name": "Canadian sphinx",
+  "scientific": "Sphinx canadensis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This North American hawk moth belongs to the family Sphingidae.",
+    "identification": "Its grey-brown wings span about 7–8.5 cm.",
+    "habitat": "It ranges across Canada and the northeastern United States.",
+    "diet": "Larvae feed on woody plants; black ash is a reported host.",
+    "behavior": "Adults fly from May to September; southern populations may have two broods.",
+    "reproduction": "The caterpillar is a hornworm and pupates after larval growth.",
+    "ecology": "The French common name is sphinx du Canada. It ranges from Canada south to Arkansas. Its congener Sphinx chisoya extends from south Texas into Mexico.",
+    "conservation": "NatureServe ranks it globally secure (G5)."
+  },
+  "sources": [
+    {
+      "url": "https://www.mothphotographersgroup.msstate.edu/species.php?phylo=890116",
+      "title": "Moth Photographers Group — Sphinx canadensis"
+    },
+    {
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/26578611/sphinx-du-canada",
+      "title": "Office québécois de la langue française — Sphinx du Canada"
+    },
+    {
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.113535/Sphinx_canadensis",
+      "title": "NatureServe Explorer — Sphinx canadensis"
+    },
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Sphinx-chisoya",
+      "title": "BAMONA — Chisoya sphinx"
+    }
+  ]
+}

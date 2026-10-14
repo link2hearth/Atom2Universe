@@ -1,0 +1,26 @@
+{
+  "id": "sorubim_elongatus",
+  "name": "Sorubim elongatus",
+  "scientific": "Sorubim elongatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Silure pimelodidé d’Amérique du Sud tropicale.",
+    "identification": "Sa tête et son corps sont particulièrement allongés, comme le rappelle son nom scientifique.",
+    "habitat": "Il fréquente les lacs de plaine inondable, les ruisseaux et les grands cours d’eau, souvent près de la végétation aquatique ou riveraine.",
+    "diet": "Les références consultées ne précisent pas son régime alimentaire naturel.",
+    "behavior": "Il semble nocturne et se regroupe le jour dans des abris le long des berges.",
+    "reproduction": "La description de l’espèce et les résumés consultés donnent peu de détails sur sa reproduction.",
+    "ecology": "Il cohabite avec S. lima dans certains bassins ; sa tête et son corps plus allongés aident à le distinguer.",
+    "conservation": "FishBase indique une évaluation mondiale de l’UICN en catégorie Préoccupation mineure datant de 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Sorubim-elongatus",
+      "title": "Sorubim elongatus — FishBase"
+    },
+    {
+      "url": "https://mapress.com/zt/article/view/zootaxa.1422.1.1",
+      "title": "Révision systématique du genre Sorubim — Zootaxa"
+    }
+  ]
+}

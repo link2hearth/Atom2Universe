@@ -1,0 +1,141 @@
+{
+  "id": "sonorolux_fluminis",
+  "scientific": "Sonorolux fluminis",
+  "group": "fish",
+  "name": {
+    "en": "Estuary croaker",
+    "fr": "Ombrine des estuaires"
+  },
+  "sections": {
+    "overview": {
+      "en": "Sonorolux fluminis is a small sciaenid fish known from Sarawak, on Borneo.",
+      "fr": "Sonorolux fluminis est un petit poisson de la famille des Sciaenidae, connu du Sarawak, à Bornéo."
+    },
+    "identification": {
+      "en": "It has a deep, rounded body and a steeply rounded snout.",
+      "fr": "Son corps est haut et arrondi, avec un museau fortement arrondi."
+    },
+    "habitat": {
+      "en": "It inhabits estuaries and brackish water.",
+      "fr": "Il vit dans les estuaires et les eaux saumâtres."
+    },
+    "diet": {
+      "en": "The cited species accounts do not describe its diet.",
+      "fr": "Les fiches de l’espèce citées ne décrivent pas son alimentation."
+    },
+    "behavior": {
+      "en": "No detailed activity or social behaviour is reported in the sources consulted.",
+      "fr": "Les sources consultées ne décrivent pas en détail son activité ni son comportement social."
+    },
+    "reproduction": {
+      "en": "The references consulted provide no species-specific breeding information.",
+      "fr": "Les références consultées ne fournissent pas d’information propre à sa reproduction."
+    },
+    "ecology": {
+      "en": "Published material is sparse: the FAO account knew only two specimens, each about 8 cm standard length.",
+      "fr": "La documentation est limitée : la fiche de la FAO ne connaissait que deux spécimens, d’environ 8 cm de longueur standard chacun."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2018.",
+      "fr": "FishBase indique une évaluation mondiale de l’UICN en catégorie Préoccupation mineure datant de 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sonorolux fluminis — FishBase",
+        "fr": "Sonorolux fluminis — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/15479",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase identifies this sciaenid as a brackish, non-migratory fish of Sarawak, Borneo, and lists Least Concern in the IUCN assessment dated 2018."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 22,
+        "total": 154,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO Western Central Pacific species guide — Sonorolux fluminis",
+        "fr": "Guide FAO des espèces du Pacifique centre-ouest — Sonorolux fluminis"
+      },
+      "url": "https://www.fao.org/4/y0770e/y0770e38.pdf",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The FAO guide describes a small, deep-bodied fish with a rounded snout; its account says only two specimens, about 8 cm standard length, were known."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 25,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Sonorolux fluminis",
+        "fr": "Catalogue des poissons d’Eschmeyer — Sonorolux fluminis"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=22072",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The California Academy of Sciences catalogue treats Sonorolux fluminis as valid, with type locality and distribution in Sarawak, Borneo, and brackish-water habitat."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 22,
+        "total": 22,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific feeding, behaviour and breeding biology remain poorly documented in these references."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

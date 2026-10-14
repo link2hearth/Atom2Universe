@@ -1,0 +1,169 @@
+{
+  "id": "sphaerodactylus_fantasticus",
+  "scientific": "Sphaerodactylus fantasticus",
+  "group": "reptiles",
+  "name": {
+    "en": "Fantastic Least Gecko",
+    "fr": "Sphaerodactylus fantasticus"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Lesser Antillean gecko occurs on Guadeloupe and nearby islands, Dominica and Montserrat. Its range differs from that of the Greater Antillean congener Sphaerodactylus elegans.",
+      "fr": "Ce gecko des Petites Antilles est présent en Guadeloupe et sur des îles voisines, à la Dominique et à Montserrat. Son aire diffère de celle de Sphaerodactylus elegans, son congénère des Grandes Antilles."
+    },
+    "identification": {
+      "en": "The Reptile Database lists several geographically restricted named forms and notes that phyzacinus is now treated as a valid species.",
+      "fr": "The Reptile Database répertorie plusieurs formes nommées à répartition restreinte et indique que phyzacinus est désormais traité comme une espèce valide."
+    },
+    "habitat": {
+      "en": "On Dominica, the named form fuga has been reported in relatively moist microhabitats along the western coast.",
+      "fr": "À la Dominique, la forme nommée fuga a été signalée dans des microhabitats relativement humides de la côte occidentale."
+    },
+    "diet": {
+      "en": "The field study reviewed here does not report prey or establish a species-specific diet.",
+      "fr": "L’étude de terrain consultée ne décrit pas de proies et n’établit pas de régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The cited Dominica study measures population density and water loss, rather than providing a broader behavioral account.",
+      "fr": "L’étude citée sur la Dominique mesure la densité de population et les pertes en eau, sans fournir de description plus générale du comportement."
+    },
+    "reproduction": {
+      "en": "The Reptile Database records it as oviparous.",
+      "fr": "The Reptile Database indique que cette espèce est ovipare."
+    },
+    "ecology": {
+      "en": "Its named island forms have localized ranges; see Sphaerodactylus elegans for a congener native to Cuba and Hispaniola and introduced in Florida.",
+      "fr": "Ses formes insulaires nommées ont des aires localisées; voir Sphaerodactylus elegans, un congénère originaire de Cuba et d’Hispaniola, introduit en Floride."
+    },
+    "conservation": {
+      "en": "The 2022 Guadeloupe Red List assigns this gecko Least Concern regionally and globally; that assessment predates the current separation of S. phyzacinus as a valid species.",
+      "fr": "La Liste rouge de Guadeloupe de 2022 classe ce gecko en Préoccupation mineure à l’échelle régionale et mondiale; cette évaluation précède la séparation actuelle de S. phyzacinus comme espèce valide."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sphaerodactylus fantasticus — The Reptile Database",
+        "fr": "Sphaerodactylus fantasticus — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/fantasticus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The database gives a Lesser Antillean distribution, records named island forms, notes phyzacinus is treated as a valid species, and lists oviparity."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 22,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Population densities and water-loss rates of Sphaerodactylus fantasticus fuga on Dominica",
+        "fr": "Densités de population et pertes en eau de Sphaerodactylus fantasticus fuga à la Dominique"
+      },
+      "url": "https://www.researchgate.net/publication/288811015_Population_densities_and_water-loss_rates_of_Gymnophthalmus_pleii_Gymnophthalmus_underwoodi_Gymnophthalmidae_and_Sphaerodactylus_fantasticus_fuga_Sphaerodactylidae_on_Dominica_West_Indies",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "diet"
+      ],
+      "facts": [
+        "The study describes S. f. fuga as a dwarf gecko of relatively mesic microhabitats on the western coast of Dominica and reports density and water-loss measurements."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 107,
+        "notes_words": 26,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sphaerodactylus elegans — The Reptile Database",
+        "fr": "Sphaerodactylus elegans — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/elegans",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The congeneric S. elegans is native to Cuba and Hispaniola and has introduced populations in Florida."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 16,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The Red List of threatened species in France: Guadeloupe fauna",
+        "fr": "La Liste rouge des espèces menacées en France : faune de Guadeloupe"
+      },
+      "url": "https://uicn.fr/wp-content/uploads/2022/05/tableaux-liste-rouge-faune-de-guadeloupe.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2022 Guadeloupe Red List table lists Sphaerodactylus fantasticus as Least Concern in Guadeloupe and globally; its taxonomy predates the current separation of S. phyzacinus."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 25,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and detailed behavior were not established by the sources used for this short account.",
+    "Current taxonomic treatment of the named island forms differs from older literature; the draft follows the cited Reptile Database.",
+    "The 2022 Red List status follows its then-current taxonomic treatment; the current separation of S. phyzacinus may warrant a reassessment of scope."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. An English taxonomic database, a Dominica field study and a French Guadeloupe Red List were cross-checked; the reciprocal S. elegans mention is geographic, not a claim of close sister relationship."
+}

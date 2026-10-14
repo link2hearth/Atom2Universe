@@ -1,0 +1,26 @@
+{
+  "id": "sorubimichthys_planiceps",
+  "name": "Silure bois de feu",
+  "scientific": "Sorubimichthys planiceps",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce grand poisson-chat sud-américain vit dans les bassins de l’Amazone et de l’Orénoque.",
+    "identification": "Il a un corps allongé, une tête aplatie et de longs barbillons; la longueur standard rapportée atteint 150 cm.",
+    "habitat": "FishBase le classe parmi les poissons tropicaux d’eau douce vivant près du fond.",
+    "diet": "Il se nourrit surtout de petits poissons et d’invertébrés.",
+    "behavior": "Il est principalement nocturne.",
+    "reproduction": "Les sources utilisées ici ne décrivent pas la ponte ni les jeunes de cette espèce.",
+    "ecology": "Son aire couvre les grands réseaux de l’Amazone et de l’Orénoque; les enjeux locaux de conservation peuvent varier entre bassins.",
+    "conservation": "FishBase rapporte une évaluation mondiale UICN en Préoccupation mineure datant de 2020. La fiche de l’USGS signale une mention antérieure de vulnérabilité dans le bassin de l’Orénoque."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/12145",
+      "title": "Sorubimichthys planiceps — FishBase"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=2565",
+      "title": "Silure bois de feu — fiche USGS Nonindigenous Aquatic Species"
+    }
+  ]
+}

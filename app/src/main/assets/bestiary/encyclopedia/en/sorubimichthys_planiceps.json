@@ -1,0 +1,26 @@
+{
+  "id": "sorubimichthys_planiceps",
+  "name": "Firewood catfish",
+  "scientific": "Sorubimichthys planiceps",
+  "group": "fish",
+  "sections": {
+    "overview": "This large South American catfish occurs in the Amazon and Orinoco river basins.",
+    "identification": "It has an elongated body, a flattened head and long barbels; records report up to 150 cm standard length.",
+    "habitat": "FishBase classifies it as a tropical, freshwater, demersal fish.",
+    "diet": "It feeds mainly on small fishes and invertebrates.",
+    "behavior": "It is mainly nocturnal.",
+    "reproduction": "The sources used here provide no species-specific account of its spawning or young.",
+    "ecology": "Its large river-basin range spans the Amazon and Orinoco systems; local conservation concerns can differ between basins.",
+    "conservation": "FishBase reports a global IUCN assessment of Least Concern from 2020. The USGS profile notes an earlier report of vulnerability in the Orinoco basin."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/12145",
+      "title": "Sorubimichthys planiceps — FishBase"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=2565",
+      "title": "Firewood catfish — USGS Nonindigenous Aquatic Species profile"
+    }
+  ]
+}

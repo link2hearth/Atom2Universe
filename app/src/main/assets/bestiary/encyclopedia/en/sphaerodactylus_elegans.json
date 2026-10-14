@@ -1,0 +1,30 @@
+{
+  "id": "sphaerodactylus_elegans",
+  "name": "Sphaerodactylus elegans",
+  "scientific": "Sphaerodactylus elegans",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Native to Cuba and Hispaniola, this gecko has also established introduced populations in Florida. Its range differs from that of its congener Sphaerodactylus fantasticus, native to the Lesser Antilles.",
+    "identification": "The Reptile Database treats the Cuban and Hispaniolan populations as distinct named subspecies.",
+    "habitat": "Florida records place it around buildings, beneath bark and in moist ground debris or rotting logs.",
+    "diet": "A Florida field account recorded ants and a fly in the stomach of one female; this is a limited observation, not a full diet study.",
+    "behavior": "It uses small sheltered spaces at ground level and has also been found on human-made structures.",
+    "reproduction": "The species is oviparous.",
+    "ecology": "Florida populations are non-native and were first recorded on Key West in the early twentieth century.",
+    "conservation": "The sources consulted document an established Florida introduction but do not provide a current global conservation category."
+  },
+  "sources": [
+    {
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/elegans",
+      "title": "Sphaerodactylus elegans — The Reptile Database"
+    },
+    {
+      "url": "https://herpconbio.org/Volume_6/Monographs/Meshaka_2011.pdf",
+      "title": "A Runaway Train in the Making: Exotic Herpetofauna of Florida"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/Sphaerodactylus/fantasticus",
+      "title": "Sphaerodactylus fantasticus — The Reptile Database"
+    }
+  ]
+}

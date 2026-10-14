@@ -1,0 +1,30 @@
+{
+  "id": "somatochlora_calverti",
+  "name": "Calvert’s emerald",
+  "scientific": "Somatochlora calverti",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Calvert’s emerald is a rare, range-restricted dragonfly recorded mainly in the Florida Panhandle and nearby southeastern states.",
+    "identification": "It is an emerald dragonfly in the family Corduliidae.",
+    "habitat": "Florida surveys have recorded adults around seepage streams and sandhill forest.",
+    "diet": "The species sources consulted do not provide a verified prey list.",
+    "behavior": "Most field records concern adults; species-specific daily behavior remains poorly documented.",
+    "reproduction": "Its nymph has not been collected in the field, so its breeding microhabitat remains unconfirmed.",
+    "ecology": "A recent review suggests seepage streams beside intact sandhill forest as likely breeding habitat, but labels this an inference.",
+    "conservation": "The latest IUCN assessment located lists it as Data Deficient."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.48156/1388.2024.1917274",
+      "title": "Evaluation of speculated reproductive habitat for Somatochlora calverti — International Journal of Odonatology"
+    },
+    {
+      "url": "https://www.fnai.org/PDFs/publications/Somatochlora_calverti_Field_Survey_Report.pdf",
+      "title": "Calvert’s Emerald Field Survey Report — Florida Natural Areas Inventory"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-1.RLTS.T20341A80697450.en",
+      "title": "Somatochlora calverti — IUCN Red List assessment"
+    }
+  ]
+}

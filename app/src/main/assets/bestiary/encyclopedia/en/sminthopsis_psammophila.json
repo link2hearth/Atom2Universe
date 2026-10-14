@@ -1,0 +1,30 @@
+{
+  "id": "sminthopsis_psammophila",
+  "name": "Sandhill Dunnart",
+  "scientific": "Sminthopsis psammophila",
+  "group": "mammals",
+  "sections": {
+    "overview": "A rare desert dunnart known from scattered sites in Australia.",
+    "identification": "Its tail is pale above, dark below and tipped with a crest of stiff black hairs.",
+    "habitat": "It favours structurally dense spinifex hummocks and long-unburned sand plains or dune slopes.",
+    "diet": "Its diet includes many ants; a comparative study also found ants important for the hairy-footed dunnart, Sminthopsis hirtipes.",
+    "behavior": "It forages mainly from dusk to dawn.",
+    "reproduction": "Wild breeding usually follows winter rains and can be delayed when food is scarce.",
+    "ecology": "Wildfire can destroy dense cover and shelter sites it needs.",
+    "conservation": "It is Endangered under Australian federal law and Vulnerable on the global IUCN Red List."
+  },
+  "sources": [
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/national-recovery-plan-sandhill-dunnart.pdf",
+      "title": "National Recovery Plan for the Sandhill Dunnart — Australian Department of Climate Change, Energy, the Environment and Water"
+    },
+    {
+      "url": "https://academic.oup.com/jmammal/article/103/5/1141/6608165",
+      "title": "Ranging, habitat selection, and foraging ecology of the sandhill dunnart — Journal of Mammalogy"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4734440/",
+      "title": "Foragers choose high-quality habitats in lean times — Journal of Animal Ecology (PMC)"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "sminthopsis_macroura",
+  "name": "Stripe-faced Dunnart",
+  "scientific": "Sminthopsis macroura",
+  "group": "mammals",
+  "sections": {
+    "overview": "Sminthopsis macroura is an Australian dasyurid marsupial.",
+    "identification": "A dark stripe runs down its face, giving it its common name.",
+    "habitat": "It occurs in dry habitats, including desert, dune, grassland and savanna.",
+    "diet": "It eats insects and may also take small vertebrates such as lizards and mice.",
+    "behavior": "It is mainly nocturnal and terrestrial, sheltering in burrows or nests made from grasses and leaves.",
+    "reproduction": "Breeding details reported by the source come from captive colonies, so they should not be treated as a field calendar.",
+    "ecology": "Its tail fat provides an energy reserve when food becomes scarce.",
+    "conservation": "The Mammal Diversity Database lists the species as Least Concern globally."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Sminthopsis_macroura/",
+      "title": "Sminthopsis macroura — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://museum.wa.gov.au/online-collections/names/sminthopsis-macroura",
+      "title": "Sminthopsis macroura — Western Australian Museum Collections"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000212/",
+      "title": "Sminthopsis macroura — Mammal Diversity Database"
+    }
+  ]
+}

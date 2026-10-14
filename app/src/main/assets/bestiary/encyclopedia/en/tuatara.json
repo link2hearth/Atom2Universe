@@ -1,0 +1,26 @@
+{
+  "id": "tuatara",
+  "name": "Tuatara",
+  "scientific": "Sphenodon punctatus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "The tuatara is the only living representative of Sphenodontia, an ancient reptile lineage once much more diverse.",
+    "identification": "It has a spiny crest along the back, more developed in males; despite its lizard-like shape, it is not a lizard.",
+    "habitat": "It lives on offshore islands in coastal forest and clearings, often where seabirds have enriched the soil.",
+    "diet": "It eats invertebrates and also takes lizards and other small animals when available.",
+    "behavior": "Adults are mainly nocturnal, though they emerge by day to bask.",
+    "reproduction": "Females lay eggs in buried nests; reproduction is unusually slow for a reptile.",
+    "ecology": "Tuatara occur naturally only in New Zealand and are managed as one species, Sphenodon punctatus.",
+    "conservation": "Conservation relies on protected island populations and preventing introduced rodents from reaching them."
+  },
+  "sources": [
+    {
+      "url": "https://www.doc.govt.nz/nature/native-animals/reptiles-and-frogs/tuatara/",
+      "title": "New Zealand Department of Conservation — Tuatara"
+    },
+    {
+      "url": "https://www.reptiles.org.nz/herpetofauna/native/sphenodon-punctatus",
+      "title": "New Zealand Herpetological Society — Sphenodon punctatus"
+    }
+  ]
+}
