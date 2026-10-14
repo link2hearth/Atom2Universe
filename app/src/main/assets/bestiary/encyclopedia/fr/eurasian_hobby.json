@@ -4,7 +4,7 @@
   "scientific": "Falco subbuteo",
   "group": "birds",
   "sections": {
-    "overview": "Le faucon hobereau est un petit faucon et un remarquable chasseur aérien. Il poursuit libellules et même hirondelles en plein vol, d’un vol rapide et agile, et passe l’hiver en Afrique.",
+    "overview": "Le faucon hobereau est un petit faucon et un remarquable chasseur aérien. Il poursuit libellules et même hirondelles en plein vol, d’un vol rapide et agile, et passe l’hiver en Afrique. À titre de comparaison, le Faucon lanier, autre Falco, atteint 52 cm et chasse surtout les oiseaux.",
     "identification": "De la taille d’un faucon crécerelle, il mesure 29 à 36 cm pour 74 à 84 cm d’envergure; les adultes britanniques pèsent environ 211 g ; les femelles sont légèrement plus grandes que les mâles, au plumage semblable. Le dessus est gris ardoise, le dessous blanchâtre strié de sombre, avec des joues blanches, une moustache noire et des culottes et un dessous de queue roux. En vol, les longues ailes pointues dessinent une faux, comme un grand martinet. Les jeunes sont plus bruns et n’ont pas de roux.",
     "habitat": "Il vit en campagne ouverte : terres agricoles de plaine, zones humides et landes, souvent parsemées de petits bois. En Grande-Bretagne, il était surtout présent dans le sud de l’Angleterre, mais il progresse vers le nord.",
     "diet": "Il mange de grands insectes volants comme les libellules, ainsi que de petits oiseaux, surtout des hirondelles. Il consomme souvent ses petites proies en vol, les passant de ses serres à son bec.",
@@ -29,6 +29,10 @@
     {
       "url": "https://perch.birdweb.org/BIRDWEB/bird/eurasian_hobby",
       "title": "Faucon hobereau — BirdWeb, Seattle Audubon"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/faucon.lanier.html",
+      "title": "Faucon lanier — Oiseaux.net"
     }
   ]
 }

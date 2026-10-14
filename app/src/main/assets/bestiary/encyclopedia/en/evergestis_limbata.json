@@ -1,0 +1,34 @@
+{
+  "id": "evergestis_limbata",
+  "name": "Border-striped Pearl",
+  "scientific": "Evergestis limbata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Evergestis limbata is a crambid moth in the genus Evergestis; its English species accounts call it the Border-striped Pearl.",
+    "identification": "The forewings show pale ground color with dark transverse markings; the adult is a small crambid moth.",
+    "habitat": "Regional British records place it in a range of habitats, though it is generally encountered singly or sparingly.",
+    "diet": "The caterpillar feeds on Brassicaceae, especially garlic mustard (Alliaria petiolata) and hedge mustard (Sisymbrium officinale).",
+    "behavior": "Adults are nocturnal moths recorded at light; the larva is seldom found despite reported host plants.",
+    "reproduction": "Available British records place adult flight in summer; the sources consulted give little species-specific detail on mating or egg laying.",
+    "ecology": "Compare Evergestis pallidata: both are brassica-feeding crambids, but pallidata has a distinct pale-and-brown wing pattern and its own host records.",
+    "conservation": "The British regional accounts describe local occurrence but do not supply a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=63.059",
+      "title": "Evergestis limbata — Hantsmoths"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Evergestis_Limbata",
+      "title": "Evergestis limbata — Lepiforum"
+    },
+    {
+      "url": "https://www.sussexmothgroup.org.uk/site/speciesAccount.php?speciesRef=63.0590",
+      "title": "Evergestis limbata — Sussex Moth Group"
+    },
+    {
+      "url": "https://ukmoths.org.uk/species/evergestis-pallidata",
+      "title": "Evergestis pallidata — UKMoths"
+    }
+  ]
+}

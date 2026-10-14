@@ -1,0 +1,30 @@
+{
+  "id": "euleia_heraclei",
+  "name": "Celery leaf-mining fly",
+  "scientific": "Euleia heraclei",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Euleia heraclei is a picture-winged fly in the family Tephritidae, found across Europe and Asia Minor.",
+    "identification": "Adults are about 5 mm long, with broad brown-banded wings; the French park account also notes blue-green eyes.",
+    "habitat": "Records and crop-host accounts associate it with Apiaceae across Europe and Asia Minor, rather than a single habitat type.",
+    "diet": "Its larvae mine leaves of celery, celeriac, parsnip, parsley, lovage and related Apiaceae.",
+    "behavior": "The larvae feed inside leaves, producing blotchy mines; adults occur during the growing season, with timing varying by region.",
+    "reproduction": "INRAE describes two generations per year: spring adults lay eggs on leaves, and a later generation follows in summer.",
+    "ecology": "Leaf mining can reduce usable foliage on cultivated hosts, and the fly also develops on wild Apiaceae such as hogweed.",
+    "conservation": "The consulted accounts treat it as a widespread agricultural pest, not as a species with a conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.rhs.org.uk/biodiversity/celery-leaf-mining-fly",
+      "title": "Celery leaf mining fly — Royal Horticultural Society"
+    },
+    {
+      "url": "https://ephytia.inra.fr/fr/C/11689/Hypp-encyclopedie-en-protection-des-plantes-Euleia-heraclei",
+      "title": "Euleia heraclei — Ephytia, INRAE"
+    },
+    {
+      "url": "https://biodiversite.ecrins-parcnational.fr/espece/216975",
+      "title": "Euleia heraclei — Parc national des Écrins biodiversity portal"
+    }
+  ]
+}

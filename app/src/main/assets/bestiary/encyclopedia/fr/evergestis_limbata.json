@@ -1,0 +1,34 @@
+{
+  "id": "evergestis_limbata",
+  "name": "Evergestis limbata",
+  "scientific": "Evergestis limbata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Evergestis limbata est un papillon crambidé du genre Evergestis, nommé « border-striped pearl » dans les sources britanniques.",
+    "identification": "Les ailes antérieures présentent un fond clair marqué de bandes transversales sombres ; l’adulte est un petit papillon crambidé.",
+    "habitat": "Les données britanniques la signalent dans divers habitats, mais généralement de façon isolée ou peu abondante.",
+    "diet": "La chenille consomme des Brassicaceae, notamment l’alliaire officinale (Alliaria petiolata) et le sisymbre officinal (Sisymbrium officinale).",
+    "behavior": "L’adulte est un papillon nocturne attiré par la lumière ; la chenille est rarement trouvée malgré les plantes-hôtes connues.",
+    "reproduction": "Les données britanniques situent le vol des adultes en été ; les sources consultées donnent peu de détails propres à l’espèce sur l’accouplement et la ponte.",
+    "ecology": "Comparez Evergestis pallidata : les deux crambidés consomment des Brassicaceae, mais pallidata possède un motif alaire différent et ses propres plantes-hôtes.",
+    "conservation": "Les fiches régionales britanniques décrivent sa présence locale sans fournir d’évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=63.059",
+      "title": "Evergestis limbata — Hantsmoths"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Evergestis_Limbata",
+      "title": "Evergestis limbata — Lepiforum"
+    },
+    {
+      "url": "https://www.sussexmothgroup.org.uk/site/speciesAccount.php?speciesRef=63.0590",
+      "title": "Evergestis limbata — Sussex Moth Group"
+    },
+    {
+      "url": "https://ukmoths.org.uk/species/evergestis-pallidata",
+      "title": "Evergestis pallidata — UKMoths"
+    }
+  ]
+}

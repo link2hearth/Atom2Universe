@@ -1,0 +1,191 @@
+{
+  "id": "evergestis_limbata",
+  "scientific": "Evergestis limbata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Border-striped Pearl",
+    "fr": "Evergestis limbata"
+  },
+  "sections": {
+    "overview": {
+      "en": "Evergestis limbata is a crambid moth in the genus Evergestis; its English species accounts call it the Border-striped Pearl.",
+      "fr": "Evergestis limbata est un papillon crambidé du genre Evergestis, nommé « border-striped pearl » dans les sources britanniques."
+    },
+    "identification": {
+      "en": "The forewings show pale ground color with dark transverse markings; the adult is a small crambid moth.",
+      "fr": "Les ailes antérieures présentent un fond clair marqué de bandes transversales sombres ; l’adulte est un petit papillon crambidé."
+    },
+    "habitat": {
+      "en": "Regional British records place it in a range of habitats, though it is generally encountered singly or sparingly.",
+      "fr": "Les données britanniques la signalent dans divers habitats, mais généralement de façon isolée ou peu abondante."
+    },
+    "diet": {
+      "en": "The caterpillar feeds on Brassicaceae, especially garlic mustard (Alliaria petiolata) and hedge mustard (Sisymbrium officinale).",
+      "fr": "La chenille consomme des Brassicaceae, notamment l’alliaire officinale (Alliaria petiolata) et le sisymbre officinal (Sisymbrium officinale)."
+    },
+    "behavior": {
+      "en": "Adults are nocturnal moths recorded at light; the larva is seldom found despite reported host plants.",
+      "fr": "L’adulte est un papillon nocturne attiré par la lumière ; la chenille est rarement trouvée malgré les plantes-hôtes connues."
+    },
+    "reproduction": {
+      "en": "Available British records place adult flight in summer; the sources consulted give little species-specific detail on mating or egg laying.",
+      "fr": "Les données britanniques situent le vol des adultes en été ; les sources consultées donnent peu de détails propres à l’espèce sur l’accouplement et la ponte."
+    },
+    "ecology": {
+      "en": "Compare Evergestis pallidata: both are brassica-feeding crambids, but pallidata has a distinct pale-and-brown wing pattern and its own host records.",
+      "fr": "Comparez Evergestis pallidata : les deux crambidés consomment des Brassicaceae, mais pallidata possède un motif alaire différent et ses propres plantes-hôtes."
+    },
+    "conservation": {
+      "en": "The British regional accounts describe local occurrence but do not supply a global conservation assessment.",
+      "fr": "Les fiches régionales britanniques décrivent sa présence locale sans fournir d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Evergestis limbata — Hantsmoths",
+        "fr": "Evergestis limbata — Hantsmoths"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=63.059",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "identification",
+        "overview",
+        "reproduction"
+      ],
+      "facts": [
+        "Hantsmoths describes adults, larval host plants and light records."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evergestis limbata — Lepiforum",
+        "fr": "Evergestis limbata — Lepiforum"
+      },
+      "url": "https://lepiforum.org/wiki/page/Evergestis_Limbata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Lepiforum lists Brassicaceae hosts and reports larvae are rarely found."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evergestis limbata — Sussex Moth Group",
+        "fr": "Evergestis limbata — Sussex Moth Group"
+      },
+      "url": "https://www.sussexmothgroup.org.uk/site/speciesAccount.php?speciesRef=63.0590",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "Sussex Moth Group provides local occurrence and habitat information."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evergestis pallidata — UKMoths",
+        "fr": "Evergestis pallidata — UKMoths"
+      },
+      "url": "https://ukmoths.org.uk/species/evergestis-pallidata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "UKMoths pallidata account supports congener comparison."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Species-specific mating and egg-laying details were not located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Reciprocal cross-reference to Evergestis pallidata compares shared brassica-feeding and distinguishing traits."
+}

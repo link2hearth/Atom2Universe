@@ -1,0 +1,116 @@
+{
+  "id": "eumorpha_fasciatus",
+  "scientific": "Eumorpha fasciatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Banded sphinx",
+    "fr": "Sphinx bandé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Eumorpha fasciatus, the banded sphinx, is a congener of E. anchemolus and E. labruscae, also covered in this set.",
+      "fr": "Eumorpha fasciatus, le sphinx bandé, est congénère d’E. anchemolus et d’E. labruscae, également présentés dans ce lot."
+    },
+    "identification": {
+      "en": "Its dark pinkish-brown wings carry pale bands and streaks, with pink patches on the hindwings; wingspan is about 8.7–9.6 cm.",
+      "fr": "Ses ailes brun rosé sombre portent des bandes et stries pâles, avec des taches roses aux postérieures; l’envergure atteint environ 8,7 à 9,6 cm."
+    },
+    "habitat": {
+      "en": "It ranges from northern Argentina through Central America and Mexico to the southern United States; far-northern records are strays.",
+      "fr": "Son aire va du nord de l’Argentine à travers l’Amérique centrale et le Mexique jusqu’au sud des États-Unis; les mentions très septentrionales sont des individus erratiques."
+    },
+    "diet": {
+      "en": "Larvae feed mainly on primrose-willows and other evening primrose family plants; adults take flower nectar.",
+      "fr": "Les chenilles se nourrissent surtout de Ludwigia et d’autres Onagraceae; les adultes consomment le nectar des fleurs."
+    },
+    "behavior": {
+      "en": "Adults begin feeding at dusk, and several regional flight periods are recorded through much of the year.",
+      "fr": "Les adultes commencent à se nourrir au crépuscule, et plusieurs périodes de vol régionales couvrent une grande partie de l’année."
+    },
+    "reproduction": {
+      "en": "Caterpillars pupate in shallow chambers or burrows in the soil; detailed egg-laying schedules are not summarized in the sources used.",
+      "fr": "Les chenilles se nymphosent dans des chambres peu profondes du sol; les sources utilisées ne précisent pas le calendrier de ponte."
+    },
+    "ecology": {
+      "en": "The three profiles are congeners, but their recorded larval hosts differ: this species uses the plant groups described above.",
+      "fr": "Les trois fiches concernent des congénères, mais leurs plantes-hôtes larvaires documentées diffèrent : cette espèce utilise les groupes indiqués plus haut."
+    },
+    "conservation": {
+      "en": "BAMONA reports a globally secure category, while noting that the species may be rare near range edges.",
+      "fr": "BAMONA indique un statut mondial sécurisé, même si l’espèce peut être rare aux marges de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Banded sphinx — Butterflies and Moths of North America",
+        "fr": "Sphinx bandé — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/species/Eumorpha-fasciatus?page=1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BAMONA account summarizes identification, wingspan, host family, nectar feeding, pupation, habitat, range, flight and global status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 16,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eumorpha fasciatus — Moth Photographers Group",
+        "fr": "Eumorpha fasciatus — Moth Photographers Group"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7865",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic and host-plant catalogue supports congeneric placement, range context, and reported larval host genera."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 14,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-referenced the three Eumorpha profiles as congeners and distinguished them by reported host families and regional ranges. Broad range maps include vagrants, and global secure categories do not imply equal local abundance."
+}

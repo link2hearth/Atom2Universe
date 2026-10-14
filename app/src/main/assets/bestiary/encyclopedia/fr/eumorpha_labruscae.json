@@ -1,0 +1,26 @@
+{
+  "id": "eumorpha_labruscae",
+  "name": "Sphinx bariolé",
+  "scientific": "Eumorpha labruscae",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Eumorpha labruscae, le sphinx bariolé, est congénère d’E. anchemolus et d’E. fasciatus, décrits dans leurs fiches.",
+    "identification": "Les ailes antérieures sont vert gris profond; les postérieures montrent des taches bleu-violet, des bordures jaunes et une marque rouge; l’envergure atteint 11 à 12 cm.",
+    "habitat": "Son aire s’étend de l’Argentine à travers l’Amérique centrale et les Caraïbes jusqu’au sud des États-Unis; les mentions du nord peuvent être erratiques.",
+    "diet": "Les chenilles utilisent notamment les lianes Vitis et Cissus; les adultes se nourrissent probablement de nectar.",
+    "behavior": "Les adultes se nourrissent probablement de nectar, tandis que les chenilles se nymphosent dans de faibles terriers souterrains.",
+    "reproduction": "Les chenilles se nymphosent dans des chambres peu profondes du sol; les sources utilisées ne précisent pas le calendrier de ponte.",
+    "ecology": "Les trois fiches concernent des congénères, mais leurs plantes-hôtes larvaires documentées diffèrent : cette espèce utilise les groupes indiqués plus haut.",
+    "conservation": "BAMONA indique un statut mondial sécurisé, même si l’espèce peut être rare aux marges de son aire."
+  },
+  "sources": [
+    {
+      "url": "https://www.butterfliesandmoths.org/node/6298",
+      "title": "Sphinx bariolé — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7866",
+      "title": "Eumorpha labruscae — Moth Photographers Group"
+    }
+  ]
+}

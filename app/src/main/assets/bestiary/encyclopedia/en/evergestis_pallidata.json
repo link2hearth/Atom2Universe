@@ -1,0 +1,34 @@
+{
+  "id": "evergestis_pallidata",
+  "name": "Purple-backed Cabbageworm",
+  "scientific": "Evergestis pallidata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Evergestis pallidata is a crambid moth known as the Purple-backed Cabbageworm. It is recorded in Europe and North America.",
+    "identification": "Adults span about 24–29 mm and have creamy pale forewings laced with dark-brown markings.",
+    "habitat": "It occurs in a range of grassland and open habitats in regional records; the sources reviewed do not define a single required habitat.",
+    "diet": "The larvae eat Brassicaceae, including winter-cress (Barbarea vulgaris). North American records list several additional mustard genera.",
+    "behavior": "Adults fly at dusk and are attracted to light; caterpillars overwinter in cocoons in the soil.",
+    "reproduction": "It generally has one generation annually, with adults recorded from late spring through summer; pupation occurs in a cocoon.",
+    "ecology": "The pale adult wings carry characteristic brown markings. Its larvae share brassica hosts with Evergestis limbata; see that profile.",
+    "conservation": "Belgian regional records document its presence, but the reviewed sources do not give a global risk category."
+  },
+  "sources": [
+    {
+      "url": "https://ukmoths.org.uk/species/evergestis-pallidata",
+      "title": "Evergestis pallidata — UKMoths"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/6435/",
+      "title": "Evergestis pallidata — Lepidoptera of Belgium"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=4897&state=CAE",
+      "title": "Evergestis pallidata — Moth Photographers Group"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Evergestis_Limbata",
+      "title": "Evergestis limbata — Lepiforum"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "eumorpha_fasciatus",
+  "name": "Banded sphinx",
+  "scientific": "Eumorpha fasciatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Eumorpha fasciatus, the banded sphinx, is a congener of E. anchemolus and E. labruscae, also covered in this set.",
+    "identification": "Its dark pinkish-brown wings carry pale bands and streaks, with pink patches on the hindwings; wingspan is about 8.7–9.6 cm.",
+    "habitat": "It ranges from northern Argentina through Central America and Mexico to the southern United States; far-northern records are strays.",
+    "diet": "Larvae feed mainly on primrose-willows and other evening primrose family plants; adults take flower nectar.",
+    "behavior": "Adults begin feeding at dusk, and several regional flight periods are recorded through much of the year.",
+    "reproduction": "Caterpillars pupate in shallow chambers or burrows in the soil; detailed egg-laying schedules are not summarized in the sources used.",
+    "ecology": "The three profiles are congeners, but their recorded larval hosts differ: this species uses the plant groups described above.",
+    "conservation": "BAMONA reports a globally secure category, while noting that the species may be rare near range edges."
+  },
+  "sources": [
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Eumorpha-fasciatus?page=1",
+      "title": "Banded sphinx — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7865",
+      "title": "Eumorpha fasciatus — Moth Photographers Group"
+    }
+  ]
+}

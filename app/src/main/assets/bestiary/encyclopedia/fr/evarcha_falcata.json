@@ -1,0 +1,34 @@
+{
+  "id": "evarcha_falcata",
+  "name": "Araignée sauteuse des bois",
+  "scientific": "Evarcha falcata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Natural History Museum répertorie Evarcha falcata comme espèce d’araignée britannique reconnue, dans la famille des Salticidae sauteuses.",
+    "identification": "Le mâle mesure environ 4,3 à 5,9 mm et la femelle 5,0 à 7,7 mm ; le mâle porte des bandes claires latérales et des marques brunes courbes, la femelle est brune à flancs pâles.",
+    "habitat": "Son aire paléarctique s’étend de l’Europe à la Chine. Elle fréquente herbes, buissons et bois ; les données tchèques incluent clairières, landes et tourbières.",
+    "diet": "Les fiches consultées ne donnent pas de liste de proies propre à E. falcata ; comme les autres araignées sauteuses, elle chasse activement au lieu de capturer ses proies dans une toile-piège.",
+    "behavior": "La base arachnologique tchèque signale l’espèce dans des milieux ouverts ou partiellement ombragés variés, sans décrire sa parade nuptiale.",
+    "reproduction": "Les fiches d’espèce examinées ne décrivent pas en détail la reproduction ni le cocon de cette araignée.",
+    "ecology": "La base tchèque signale aussi la proche Evarcha arcuata ; les deux appartiennent au même genre d’araignées sauteuses, mais les sources ne proposent pas de comparaison écologique directe.",
+    "conservation": "La Société arachnologique tchèque indique la catégorie « Préoccupation mineure » dans sa base nationale ; il s’agit d’une évaluation tchèque, non mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://araneae.nmbe.ch/data/393?lang=en",
+      "title": "Evarcha falcata — Araignées d’Europe"
+    },
+    {
+      "url": "https://www.arachnology.cz/druh/evarcha-falcata-267.html",
+      "title": "Evarcha falcata — Société arachnologique tchèque"
+    },
+    {
+      "url": "https://commanster.eu/Commanster/Invertebrates/Spiders/SpSpiders/Evarcha.falcata.html",
+      "title": "Evarcha falcata — notice naturaliste Commanster"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000008783",
+      "title": "Evarcha falcata — dictionnaire des espèces du Natural History Museum"
+    }
+  ]
+}

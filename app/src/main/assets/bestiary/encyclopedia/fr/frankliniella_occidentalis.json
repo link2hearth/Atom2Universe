@@ -1,0 +1,30 @@
+{
+  "id": "frankliniella_occidentalis",
+  "name": "Thrips californien",
+  "scientific": "Frankliniella occidentalis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le thrips californien est un très petit insecte très polyphage, originaire d’Amérique du Nord et désormais présent dans de nombreuses régions du monde.",
+    "identification": "Les adultes mesurent environ un millimètre; sous grossissement, huit segments antennaires le distinguent du Thrips tabaci, qui en possède sept.",
+    "habitat": "Il occupe les fleurs et les tissus en croissance d’un vaste éventail de plantes sauvages, potagères et ornementales, notamment sous serre.",
+    "diet": "Les larves et les adultes consomment des tissus végétaux, du pollen et des fleurs; les femelles et les nymphes peuvent aussi manger des œufs d’acariens.",
+    "behavior": "Adultes et larves restent actifs lorsque les conditions sont chaudes; sous serre, ils se réfugient dans des abris durant les périodes froides.",
+    "reproduction": "Les femelles insèrent leurs œufs dans les tissus végétaux et la reproduction peut être sexuée ou asexuée; les derniers stades immatures se nymphosent généralement dans le substrat.",
+    "ecology": "Les piqûres peuvent déformer feuilles, fleurs et fruits, et ce thrips transmet efficacement plusieurs virus végétaux entre plantes-hôtes.",
+    "conservation": "C’est un ravageur agricole et un vecteur viral important, plutôt qu’une espèce évaluée pour la conservation; sa répartition est liée au commerce mondial des plantes."
+  },
+  "sources": [
+    {
+      "url": "https://gd.eppo.int/taxon/FRANOC/datasheet",
+      "title": "Fiche Frankliniella occidentalis — base mondiale de l’OEPP"
+    },
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/19739/Biocontrol-Biologie",
+      "title": "Frankliniella occidentalis : biologie — Ephytia, INRAE"
+    },
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/19738/Biocontrol-Degats",
+      "title": "Frankliniella occidentalis : dégâts — Ephytia, INRAE"
+    }
+  ]
+}

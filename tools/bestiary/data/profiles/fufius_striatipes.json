@@ -1,0 +1,140 @@
+{
+  "id": "fufius_striatipes",
+  "scientific": "Fufius striatipes",
+  "group": "invertebrates",
+  "name": {
+    "en": "Brazilian funnel-web mygalomorph spider",
+    "fr": "Araignée mygalomorphe brésilienne"
+  },
+  "sections": {
+    "overview": {
+      "en": "Fufius striatipes is a Brazilian mygalomorph spider currently placed in the family Rhytidicolidae; it was first described as Metriura striatipes.",
+      "fr": "Fufius striatipes est une araignée mygalomorphe du Brésil actuellement placée dans les Rhytidicolidae; elle fut d’abord décrite comme Metriura striatipes."
+    },
+    "identification": {
+      "en": "The described male holotype measured 12.34 mm; its legs bear one or two dark stripes, and erect setae occur just before the fovea.",
+      "fr": "Le mâle holotype décrit mesurait 12,34 mm; ses pattes portent une ou deux bandes sombres et des soies dressées se trouvent devant la fovéa."
+    },
+    "habitat": {
+      "en": "Type specimens came from Tarumã Mirín, Amazonas, in a seasonally flooded igapó; authors cautioned that tree-climbing may have been an escape from rising water.",
+      "fr": "Les spécimens-types viennent de Tarumã Mirín, en Amazonas, dans un igapó inondé saisonnièrement; les auteurs pensent que grimper aux arbres pouvait répondre à la montée des eaux."
+    },
+    "diet": {
+      "en": "The taxonomic sources consulted do not report prey or a species-specific diet.",
+      "fr": "Les sources taxonomiques consultées ne renseignent ni les proies ni un régime alimentaire propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Field behavior has not been summarized in the available species record; habits of other mygalomorphs should not be assumed for it.",
+      "fr": "Le comportement sur le terrain n’est pas décrit dans la notice disponible; il ne faut pas lui attribuer sans preuve les habitudes d’autres mygalomorphes."
+    },
+    "reproduction": {
+      "en": "The sources identify a male type specimen but do not document courtship, egg sacs, clutch size or breeding season.",
+      "fr": "Les sources identifient un spécimen-type mâle, mais ne documentent ni parade, ni cocon d’œufs, ni taille de ponte, ni saison de reproduction."
+    },
+    "ecology": {
+      "en": "The original description compared Metriura, now synonymized with Fufius, with Linothele and considered them related but distinct.",
+      "fr": "La description originale comparait Metriura, désormais placé en synonymie avec Fufius, à Linothele et jugeait les genres apparentés mais distincts."
+    },
+    "conservation": {
+      "en": "No population estimate or conservation assessment is provided in the consulted catalog and original description.",
+      "fr": "Le catalogue et la description originale consultés ne donnent ni estimation de population ni évaluation de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Fufius striatipes — World Spider Catalog",
+        "fr": "Fufius striatipes — World Spider Catalog"
+      },
+      "url": "https://www.wsc.nmbe.ch/spec-data/15242/Fufius_striatipes",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "World Spider Catalog accepts Fufius striatipes, lists Brazil as its distribution and records its original combination Metriura striatipes."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 18,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A new genus and species of the subfamily Diplurinae",
+        "fr": "Un genre et une espèce nouveaux de la sous-famille des Diplurinae"
+      },
+      "url": "https://britishspiders.org.uk/system/files/library/140905.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Original paper describes the male type and stripes, type locality and seasonally flooded igapó collection; arboreality is uncertain."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 18,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Metriura is a junior synonym of Fufius — Zoologia",
+        "fr": "Metriura est un synonyme junior de Fufius — Zoologia"
+      },
+      "url": "https://doi.org/10.1590/S1984-46702012000600017",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "2012 taxonomic paper synonymized Metriura with Fufius and transferred the species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Taxonomic evidence is strong, but species-level natural history is exceptionally sparse. Family placement follows the current World Spider Catalog, not the original paper; diet and reproduction are left undocumented rather than inferred."
+}

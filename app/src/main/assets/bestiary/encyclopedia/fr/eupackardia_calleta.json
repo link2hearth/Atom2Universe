@@ -1,0 +1,30 @@
+{
+  "id": "eupackardia_calleta",
+  "name": "Bombyx soyeux calleta",
+  "scientific": "Eupackardia calleta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Eupackardia calleta est la seule espèce décrite de son genre, un bombyx d’Amérique du Nord et centrale appartenant aux Saturniidae.",
+    "identification": "Les adultes portent des ailes noires à lignes et taches blanches, un corps sombre marqué de rouge et une envergure de 8 à 11 cm.",
+    "habitat": "L’espèce s’étend de l’Amérique centrale au Mexique puis au sud-ouest des États-Unis, notamment en Arizona et dans le sud du Texas.",
+    "diet": "Les chenilles utilisent plusieurs plantes ligneuses, dont ceniza, frênes et troènes; une étude texane confirme l’alimentation naturelle sur Ligustrum.",
+    "behavior": "Les jeunes chenilles se nourrissent en groupe, tandis que les plus âgées sont généralement solitaires; les adultes émergent le soir.",
+    "reproduction": "Les femelles pondent des groupes d’œufs sur les feuilles-hôtes; les cocons sont fixés aux rameaux, souvent près du sol et à l’ombre.",
+    "ecology": "Ses chenilles peuvent utiliser divers arbustes et arbres de la famille des Oleaceae; l’étude texane documente une plante-hôte naturelle supplémentaire.",
+    "conservation": "Les sources consultées donnent des données de répartition et d’histoire naturelle, mais aucune évaluation mondiale officielle actuelle de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.butterfliesandmoths.org/node/6135",
+      "title": "Bombyx soyeux calleta — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://images.peabody.yale.edu/lepsoc/jls/1990s/1999/1999-53(4)133-Passoa.pdf",
+      "title": "Répartition et plantes-hôtes d’Eupackardia calleta dans le sud-est du Texas"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Eupackardia_calleta",
+      "title": "Eupackardia calleta — LepiWiki"
+    }
+  ]
+}

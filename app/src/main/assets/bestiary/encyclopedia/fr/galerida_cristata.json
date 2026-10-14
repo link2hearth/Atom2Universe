@@ -1,0 +1,30 @@
+{
+  "id": "galerida_cristata",
+  "name": "Cochevis huppé",
+  "scientific": "Galerida cristata",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Cochevis huppé vit en Eurasie et en Afrique du Nord; certaines populations nordiques migrent, tandis que beaucoup restent sédentaires.",
+    "identification": "Cette alouette brune rayée d’environ 18 cm porte une huppe pointue bien visible, des ailes larges et une queue courte arrondie.",
+    "habitat": "Elle préfère les terrains ouverts et chauds, notamment cultures, jachères, bords de route et périphéries urbaines.",
+    "diet": "Elle mange invertébrés, graines, feuilles et pousses; les végétaux prennent plus d’importance en hiver.",
+    "behavior": "Elle chante souvent depuis le sol ou un perchoir bas et reste territoriale en période de reproduction; la plupart des populations ibériques sont sédentaires.",
+    "reproduction": "Elle niche dans une dépression du sol garnie de végétaux et pond généralement trois à sept œufs; les oiseaux espagnols peuvent faire deux ou trois nichées.",
+    "ecology": "Elle fréquente les espaces agricoles ouverts et ressemble au proche Cochevis de Thékla, Galerida theklae.",
+    "conservation": "Elle est classée en préoccupation mineure dans le monde, malgré un recul européen signalé par BirdLife. En Espagne, SEO relie son déclin aux changements agricoles."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/crested-lark-galerida-cristata",
+      "title": "Cogujada común — BirdLife International DataZone"
+    },
+    {
+      "url": "https://seo.org/ave/cogujada-comun/",
+      "title": "Cogujada común — SEO/BirdLife"
+    },
+    {
+      "url": "https://atlasaves.seo.org/ave/cogujada-comun/",
+      "title": "Cogujada común — atlas español de aves reproductoras"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "exiliboa_placata",
+  "name": "Oaxacan Dwarf Boa",
+  "scientific": "Exiliboa placata",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Exiliboa placata, the Oaxacan dwarf boa, is the sole described species of its genus and is endemic to Oaxaca, Mexico.",
+    "identification": "The original paper established it as a distinct genus and species of dwarf boa; the accessible summary sources offer little field-level diagnostic detail.",
+    "habitat": "Published summaries place it in montane parts of Oaxaca, including the Sierra de Juárez and Sierra Mixe near Totontepec.",
+    "diet": "The species-specific summaries consulted provide no prey data.",
+    "behavior": "A field quotation in the Reptile Database describes a specimen lying motionless in rocky soil; broader activity is unknown.",
+    "reproduction": "A 1992 paper is devoted to descriptive and life-history notes, but its results were not accessible in the sources reviewed.",
+    "ecology": "Mexico’s 2024 inventory treats it as an endemic species; the reviewed sources provide no direct ecological comparison with another catalogued snake.",
+    "conservation": "The Mexican inventory confirms that it is endemic to Oaxaca; that distribution note is not itself a current threat assessment."
+  },
+  "sources": [
+    {
+      "url": "https://reptile-database.reptarium.cz/Exiliboa/placata",
+      "title": "Exiliboa placata — The Reptile Database"
+    },
+    {
+      "url": "https://field.biodiversitylibrary.org/bibliography/207258",
+      "title": "A new genus and species of dwarf boa from southern Mexico — Biodiversity Heritage Library"
+    },
+    {
+      "url": "https://herpetologiamexicana.org/revista-hm/index.php/HERPETOLOGIA-MEXICANA/article/download/Inventario-de-la-Herpetofauna-de-Mexico-2024-taxones-biodiversos/43",
+      "title": "Inventario de la Herpetofauna de México 2024 — Herpetología Mexicana"
+    }
+  ]
+}

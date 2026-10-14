@@ -4,14 +4,14 @@
   "scientific": "Falco subbuteo",
   "group": "birds",
   "sections": {
-    "overview": "The Eurasian hobby is a small falcon and a superb aerial hunter. It chases dragonflies and even swallows through the air with fast, agile flight, and spends the winter in Africa.",
+    "overview": "The Eurasian hobby is a small falcon and a superb aerial hunter. It chases dragonflies and even swallows through the air with fast, agile flight, and spends the winter in Africa. By comparison, the Lanner Falcon, another Falco, reaches 52 cm and mainly hunts birds.",
     "identification": "About the size of a kestrel, 29–36 cm long with a wingspan of 74–84 cm; British adults weigh around 211 g; females are slightly larger than males but otherwise similar in plumage. The upperparts are slate-grey, the underparts whitish with dark streaks, with white cheeks, a black moustache and rufous thighs and undertail. In flight the long, pointed wings look scythe-shaped, like a large swift. Juveniles are browner and lack the red.",
     "habitat": "It lives in open countryside such as lowland farmland, wetlands and heathland, often with scattered small woods. In Britain it was once mostly a bird of southern England but is spreading northwards.",
     "diet": "It eats large flying insects such as dragonflies, and small birds, especially swallows and martins. It often eats small prey on the wing, passing it from its talons to its beak in flight.",
     "behavior": "The hobby hunts in fast, high-speed aerial chases and can accelerate quickly, and it often soars high. It is relatively secretive when breeding. It is a summer visitor to Britain, usually arriving from late April, with the last birds leaving in October.",
     "reproduction": "A clutch is typically 2–3 eggs, incubated for about 28 days mainly by the female, and a single brood is raised. Chicks fledge after roughly 30–34 days. Eggs are laid between June and August, usually in an old nest built by crows. Breeding typically starts at two years of age.",
     "ecology": "As a predator of dragonflies and of hirundines, the hobby is tied to rich insect and bird populations over open country. It relies on nests built by other birds, such as crows, rather than building its own.",
-    "conservation": "The IUCN Red List classes the species as Least Concern. The UK breeding population was estimated at 2,050 pairs in 2016; it is Green-listed and legally protected from disturbance at the nest. The oldest ringed bird recorded in Britain lived over 14 years."
+    "conservation": "The IUCN Red List classes the species as Least Concern. The UK breeding population was estimated at 2 050 pairs in 2016; it is Green-listed and legally protected from disturbance at the nest. The oldest ringed bird recorded in Britain lived over 14 years."
   },
   "sources": [
     {
@@ -29,6 +29,10 @@
     {
       "url": "https://perch.birdweb.org/BIRDWEB/bird/eurasian_hobby",
       "title": "Eurasian Hobby — BirdWeb, Seattle Audubon"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/faucon.lanier.html",
+      "title": "Lanner Falcon — Oiseaux.net"
     }
   ]
 }

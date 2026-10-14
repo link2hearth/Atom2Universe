@@ -1,0 +1,201 @@
+{
+  "id": "evarcha_falcata",
+  "scientific": "Evarcha falcata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Woodland Jumping Spider",
+    "fr": "Araignée sauteuse des bois"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Natural History Museum lists Evarcha falcata as an accepted British spider species in the jumping-spider family Salticidae.",
+      "fr": "Le Natural History Museum répertorie Evarcha falcata comme espèce d’araignée britannique reconnue, dans la famille des Salticidae sauteuses."
+    },
+    "identification": {
+      "en": "Males are about 4.3–5.9 mm and females 5.0–7.7 mm; the male has pale lateral bands and curved brown markings, while the female is brown with pale sides.",
+      "fr": "Le mâle mesure environ 4,3 à 5,9 mm et la femelle 5,0 à 7,7 mm ; le mâle porte des bandes claires latérales et des marques brunes courbes, la femelle est brune à flancs pâles."
+    },
+    "habitat": {
+      "en": "Its Palearctic range extends from Europe to China. It uses grass, shrubs and woodland; Czech records include clearings, heath and bog.",
+      "fr": "Son aire paléarctique s’étend de l’Europe à la Chine. Elle fréquente herbes, buissons et bois ; les données tchèques incluent clairières, landes et tourbières."
+    },
+    "diet": {
+      "en": "Species accounts consulted do not give a prey list specific to E. falcata; as a jumping spider it hunts actively rather than trapping prey in a capture web.",
+      "fr": "Les fiches consultées ne donnent pas de liste de proies propre à E. falcata ; comme les autres araignées sauteuses, elle chasse activement au lieu de capturer ses proies dans une toile-piège."
+    },
+    "behavior": {
+      "en": "The Czech arachnological database records this species across varied open and partly shaded habitats, but does not describe its courtship behavior.",
+      "fr": "La base arachnologique tchèque signale l’espèce dans des milieux ouverts ou partiellement ombragés variés, sans décrire sa parade nuptiale."
+    },
+    "reproduction": {
+      "en": "The reviewed species accounts provide no detailed breeding or egg-sac description for this spider.",
+      "fr": "Les fiches d’espèce examinées ne décrivent pas en détail la reproduction ni le cocon de cette araignée."
+    },
+    "ecology": {
+      "en": "The Czech checklist also records the close relative Evarcha arcuata; both belong to the same jumping-spider genus, but the sources provide no direct ecological comparison.",
+      "fr": "La base tchèque signale aussi la proche Evarcha arcuata ; les deux appartiennent au même genre d’araignées sauteuses, mais les sources ne proposent pas de comparaison écologique directe."
+    },
+    "conservation": {
+      "en": "The Czech Arachnological Society reports a Least Concern category in its national database; this is a Czech assessment, not a global one.",
+      "fr": "La Société arachnologique tchèque indique la catégorie « Préoccupation mineure » dans sa base nationale ; il s’agit d’une évaluation tchèque, non mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Evarcha falcata — Spiders of Europe",
+        "fr": "Evarcha falcata — Araignées d’Europe"
+      },
+      "url": "https://araneae.nmbe.ch/data/393?lang=en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "NHM Bern account provides adult morphology, size and Palearctic range."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evarcha falcata — Czech Arachnological Society",
+        "fr": "Evarcha falcata — Société arachnologique tchèque"
+      },
+      "url": "https://www.arachnology.cz/druh/evarcha-falcata-267.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation",
+        "ecology",
+        "habitat"
+      ],
+      "facts": [
+        "Czech arachnological database reports habitat, status and national records."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evarcha falcata — Commanster natural history account",
+        "fr": "Evarcha falcata — notice naturaliste Commanster"
+      },
+      "url": "https://commanster.eu/Commanster/Invertebrates/Spiders/SpSpiders/Evarcha.falcata.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Commanster species account lists insect prey and adult phenology."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evarcha falcata — Natural History Museum species dictionary",
+        "fr": "Evarcha falcata — dictionnaire des espèces du Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000008783",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "NHM species dictionary lists the accepted taxon name."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Prey and reproductive biology are poorly documented in the accessible species-level sources; the general jumping-spider hunting description is family context."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Ecology mentions Evarcha arcuata as a close genus relative; no direct comparative study was found."
+}

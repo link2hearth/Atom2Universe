@@ -1,0 +1,165 @@
+{
+  "id": "furcifer_lateralis",
+  "scientific": "Furcifer lateralis",
+  "group": "reptiles",
+  "name": {
+    "en": "Carpet Chameleon",
+    "fr": "Caméléon tapis"
+  },
+  "sections": {
+    "overview": {
+      "en": "The carpet chameleon is native to Madagascar; its historical wide-ranging species concept was revised when southern and northwestern populations were separated as other species.",
+      "fr": "Le Caméléon tapis est originaire de Madagascar; l’ancien concept d’espèce largement répartie a été révisé après séparation des populations méridionales et nord-occidentales."
+    },
+    "identification": {
+      "en": "Adults reach 17–25 cm; males are often green with a pale flank stripe, while heavier females are more colorful.",
+      "fr": "Long de 17 à 25 cm, le mâle est souvent vert rayé; la femelle, plus lourde, est plus colorée."
+    },
+    "habitat": {
+      "en": "It inhabits trees and shrubs in humid, partly shaded areas, including gardens.",
+      "fr": "Il vit dans les arbres et arbustes des lieux humides, partiellement ombragés, y compris les jardins."
+    },
+    "diet": {
+      "en": "It catches flies, grasshoppers, crickets and larvae among foliage.",
+      "fr": "Il chasse mouches, sauterelles, grillons et larves dans le feuillage."
+    },
+    "behavior": {
+      "en": "Diurnal, it basks before hunting among vegetation.",
+      "fr": "Diurne, il se chauffe au soleil puis chasse dans les plantes."
+    },
+    "reproduction": {
+      "en": "Females bury eggs in soil; clutches contain 8–23 eggs, with up to three yearly.",
+      "fr": "Les femelles pondent dans le sol; chaque ponte compte 8–23 œufs, jusqu’à trois fois par an."
+    },
+    "ecology": {
+      "en": "Its range and taxonomic limits need care: the former southern form is now Furcifer major, and the northwestern form is F. viridis.",
+      "fr": "Son aire et ses limites taxonomiques demandent de la prudence : l’ancienne forme méridionale est désormais Furcifer major, et la forme nord-occidentale F. viridis."
+    },
+    "conservation": {
+      "en": "IUCN assessed it as Least Concern with a stable trend in 2014, but that assessment predates taxonomic revision and is marked as needing an update.",
+      "fr": "L’UICN l’a classé en préoccupation mineure avec une tendance stable en 2014, mais cette évaluation précède la révision taxonomique et doit être actualisée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Carpet Chameleon — IUCN Red List",
+        "fr": "Caméléon tapis — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2014-3.RLTS.T42696174A42695999.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "The global assessment lists Least Concern and stable in 2014, notes widespread occurrence in eastern Madagascar, and flags the assessment as needing an update after taxonomic changes."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 27,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Furcifer lateralis — Animal Diversity Web",
+        "fr": "Furcifer lateralis — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Furcifer_lateralis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "ADW reports body size, sex differences, insect diet, daily activity and egg clutches."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 13,
+        "total": 146,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Furcifer lateralis — French CITES taxon record",
+        "fr": "Furcifer lateralis — fiche taxon française CITES"
+      },
+      "url": "https://cites.application.developpement-durable.gouv.fr/viewtaxon.do?id=5004",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "French CITES record names the species, Madagascar range, French common names and Appendix II listing."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Detecting cryptic speciation in the carpet chameleon — Journal of Evolutionary Biology",
+        "fr": "Détection de spéciation cryptique chez le caméléon tapis — Journal of Evolutionary Biology"
+      },
+      "url": "https://doi.org/10.1111/j.1420-9101.2012.02528.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The 2012 revision recognized former southern and northwestern populations as Furcifer major and F. viridis, respectively."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 16,
+        "total": 108,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared a dated IUCN assessment, an Animal Diversity Web natural-history account, French CITES records and the 2012 peer-reviewed taxonomic revision. IUCN status is explicitly date-qualified because its assessment needs updating."
+}

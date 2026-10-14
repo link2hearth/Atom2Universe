@@ -1,0 +1,26 @@
+{
+  "id": "eumorpha_labruscae",
+  "name": "Gaudy sphinx",
+  "scientific": "Eumorpha labruscae",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Eumorpha labruscae, the gaudy sphinx, is a congener of E. anchemolus and E. fasciatus, described in their profiles.",
+    "identification": "The forewings are deep gray-green and the hindwings show purple-blue patches, yellow borders and a red spot; wingspan is 11–12 cm.",
+    "habitat": "Its range extends from Argentina through Central America and the Caribbean to the southern United States; northern records may be strays.",
+    "diet": "Larvae use grape-family vines including Vitis and Cissus; adults probably feed on flower nectar.",
+    "behavior": "Adults are thought to take nectar, while larvae pupate in shallow underground burrows.",
+    "reproduction": "Caterpillars pupate in shallow chambers or burrows in the soil; detailed egg-laying schedules are not summarized in the sources used.",
+    "ecology": "The three profiles are congeners, but their recorded larval hosts differ: this species uses the plant groups described above.",
+    "conservation": "BAMONA reports a globally secure category, though the species can be uncommon near range margins."
+  },
+  "sources": [
+    {
+      "url": "https://www.butterfliesandmoths.org/node/6298",
+      "title": "Gaudy sphinx — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7866",
+      "title": "Eumorpha labruscae — Moth Photographers Group"
+    }
+  ]
+}

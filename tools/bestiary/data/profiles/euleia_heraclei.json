@@ -1,0 +1,141 @@
+{
+  "id": "euleia_heraclei",
+  "scientific": "Euleia heraclei",
+  "group": "invertebrates",
+  "name": {
+    "en": "Celery leaf-mining fly",
+    "fr": "Mouche mineuse du céleri"
+  },
+  "sections": {
+    "overview": {
+      "en": "Euleia heraclei is a picture-winged fly in the family Tephritidae, found across Europe and Asia Minor.",
+      "fr": "Euleia heraclei est une mouche à ailes ornées de la famille des Tephritidae, présente en Europe et en Asie Mineure."
+    },
+    "identification": {
+      "en": "Adults are about 5 mm long, with broad brown-banded wings; the French park account also notes blue-green eyes.",
+      "fr": "Les adultes mesurent environ 5 mm et portent de larges bandes brunes aux ailes; le portail français signale aussi des yeux bleu-vert."
+    },
+    "habitat": {
+      "en": "Records and crop-host accounts associate it with Apiaceae across Europe and Asia Minor, rather than a single habitat type.",
+      "fr": "Les données et comptes rendus de plantes-hôtes l’associent aux Apiaceae en Europe et en Asie Mineure, sans la limiter à un habitat unique."
+    },
+    "diet": {
+      "en": "Its larvae mine leaves of celery, celeriac, parsnip, parsley, lovage and related Apiaceae.",
+      "fr": "Ses larves creusent des mines dans les feuilles de céleri, céleri-rave, panais, persil, livèche et autres Apiaceae."
+    },
+    "behavior": {
+      "en": "The larvae feed inside leaves, producing blotchy mines; adults occur during the growing season, with timing varying by region.",
+      "fr": "Les larves se nourrissent à l’intérieur des feuilles et y forment des mines; les adultes apparaissent durant la saison de végétation, selon la région."
+    },
+    "reproduction": {
+      "en": "INRAE describes two generations per year: spring adults lay eggs on leaves, and a later generation follows in summer.",
+      "fr": "INRAE décrit deux générations annuelles : les adultes printaniers pondent sur les feuilles, puis une seconde génération apparaît en été."
+    },
+    "ecology": {
+      "en": "Leaf mining can reduce usable foliage on cultivated hosts, and the fly also develops on wild Apiaceae such as hogweed.",
+      "fr": "Les mines foliaires peuvent réduire le feuillage utilisable des plantes cultivées; la mouche se développe aussi sur des Apiaceae sauvages comme les berces."
+    },
+    "conservation": {
+      "en": "The consulted accounts treat it as a widespread agricultural pest, not as a species with a conservation assessment.",
+      "fr": "Les comptes rendus consultés la décrivent comme un ravageur agricole répandu, et non comme une espèce évaluée pour sa conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Celery leaf mining fly — Royal Horticultural Society",
+        "fr": "Mouche mineuse du céleri — Royal Horticultural Society"
+      },
+      "url": "https://www.rhs.org.uk/biodiversity/celery-leaf-mining-fly",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "RHS describes a roughly 5 mm tephritid whose pale larvae mine leaves of celery, celeriac, parsnip, parsley, lovage and related plants, mainly May to October."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 113,
+        "notes_words": 25,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Euleia heraclei — Ephytia, INRAE",
+        "fr": "Euleia heraclei — Ephytia, INRAE"
+      },
+      "url": "https://ephytia.inra.fr/fr/C/11689/Hypp-encyclopedie-en-protection-des-plantes-Euleia-heraclei",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "INRAE reports two generations yearly, Apiaceae hosts, larval leaf mines, and occurrence in Europe and Asia Minor; it frames the species as a crop pest."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 25,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Euleia heraclei — Parc national des Écrins biodiversity portal",
+        "fr": "Euleia heraclei — portail biodiversité du Parc national des Écrins"
+      },
+      "url": "https://biodiversite.ecrins-parcnational.fr/espece/216975",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The French park portal describes wing bands, blue-green eyes, seasonal color variation and host Apiaceae including celery and hogweed."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 43,
+        "notes_words": 19,
+        "total": 62,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared English RHS guidance with French INRAE and Parc national des Écrins accounts. Host breadth and crop damage are documented; no dedicated conservation assessment was found."
+}

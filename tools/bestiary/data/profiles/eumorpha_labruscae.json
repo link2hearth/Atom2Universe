@@ -1,0 +1,116 @@
+{
+  "id": "eumorpha_labruscae",
+  "scientific": "Eumorpha labruscae",
+  "group": "invertebrates",
+  "name": {
+    "en": "Gaudy sphinx",
+    "fr": "Sphinx bariolé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Eumorpha labruscae, the gaudy sphinx, is a congener of E. anchemolus and E. fasciatus, described in their profiles.",
+      "fr": "Eumorpha labruscae, le sphinx bariolé, est congénère d’E. anchemolus et d’E. fasciatus, décrits dans leurs fiches."
+    },
+    "identification": {
+      "en": "The forewings are deep gray-green and the hindwings show purple-blue patches, yellow borders and a red spot; wingspan is 11–12 cm.",
+      "fr": "Les ailes antérieures sont vert gris profond; les postérieures montrent des taches bleu-violet, des bordures jaunes et une marque rouge; l’envergure atteint 11 à 12 cm."
+    },
+    "habitat": {
+      "en": "Its range extends from Argentina through Central America and the Caribbean to the southern United States; northern records may be strays.",
+      "fr": "Son aire s’étend de l’Argentine à travers l’Amérique centrale et les Caraïbes jusqu’au sud des États-Unis; les mentions du nord peuvent être erratiques."
+    },
+    "diet": {
+      "en": "Larvae use grape-family vines including Vitis and Cissus; adults probably feed on flower nectar.",
+      "fr": "Les chenilles utilisent notamment les lianes Vitis et Cissus; les adultes se nourrissent probablement de nectar."
+    },
+    "behavior": {
+      "en": "Adults are thought to take nectar, while larvae pupate in shallow underground burrows.",
+      "fr": "Les adultes se nourrissent probablement de nectar, tandis que les chenilles se nymphosent dans de faibles terriers souterrains."
+    },
+    "reproduction": {
+      "en": "Caterpillars pupate in shallow chambers or burrows in the soil; detailed egg-laying schedules are not summarized in the sources used.",
+      "fr": "Les chenilles se nymphosent dans des chambres peu profondes du sol; les sources utilisées ne précisent pas le calendrier de ponte."
+    },
+    "ecology": {
+      "en": "The three profiles are congeners, but their recorded larval hosts differ: this species uses the plant groups described above.",
+      "fr": "Les trois fiches concernent des congénères, mais leurs plantes-hôtes larvaires documentées diffèrent : cette espèce utilise les groupes indiqués plus haut."
+    },
+    "conservation": {
+      "en": "BAMONA reports a globally secure category, though the species can be uncommon near range margins.",
+      "fr": "BAMONA indique un statut mondial sécurisé, même si l’espèce peut être rare aux marges de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Gaudy sphinx — Butterflies and Moths of North America",
+        "fr": "Sphinx bariolé — Butterflies and Moths of North America"
+      },
+      "url": "https://www.butterfliesandmoths.org/node/6298",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BAMONA account summarizes wing pattern, size, host plants, pupation, range, flight and global status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 151,
+        "notes_words": 14,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eumorpha labruscae — Moth Photographers Group",
+        "fr": "Eumorpha labruscae — Moth Photographers Group"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=7866",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic and host-plant catalogue supports congeneric placement, range context, and reported larval host genera."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 14,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-referenced the three Eumorpha profiles as congeners and distinguished them by reported host families and regional ranges. Broad range maps include vagrants, and global secure categories do not imply equal local abundance."
+}

@@ -8,8 +8,8 @@
   },
   "sections": {
     "overview": {
-      "en": "The Eurasian hobby is a small falcon and a superb aerial hunter. It chases dragonflies and even swallows through the air with fast, agile flight, and spends the winter in Africa.",
-      "fr": "Le faucon hobereau est un petit faucon et un remarquable chasseur aérien. Il poursuit libellules et même hirondelles en plein vol, d’un vol rapide et agile, et passe l’hiver en Afrique."
+      "en": "The Eurasian hobby is a small falcon and a superb aerial hunter. It chases dragonflies and even swallows through the air with fast, agile flight, and spends the winter in Africa. By comparison, the Lanner Falcon, another Falco, reaches 52 cm and mainly hunts birds.",
+      "fr": "Le faucon hobereau est un petit faucon et un remarquable chasseur aérien. Il poursuit libellules et même hirondelles en plein vol, d’un vol rapide et agile, et passe l’hiver en Afrique. À titre de comparaison, le Faucon lanier, autre Falco, atteint 52 cm et chasse surtout les oiseaux."
     },
     "identification": {
       "en": "About the size of a kestrel, 29–36 cm long with a wingspan of 74–84 cm; British adults weigh around 211 g; females are slightly larger than males but otherwise similar in plumage. The upperparts are slate-grey, the underparts whitish with dark streaks, with white cheeks, a black moustache and rufous thighs and undertail. In flight the long, pointed wings look scythe-shaped, like a large swift. Juveniles are browner and lack the red.",
@@ -36,7 +36,7 @@
       "fr": "Prédateur de libellules et d’hirondelles, le hobereau dépend d’une abondance d’insectes et d’oiseaux en milieu ouvert. Il utilise des nids construits par d’autres oiseaux, comme les corneilles, au lieu de bâtir le sien."
     },
     "conservation": {
-      "en": "The IUCN Red List classes the species as Least Concern. The UK breeding population was estimated at 2,050 pairs in 2016; it is Green-listed and legally protected from disturbance at the nest. The oldest ringed bird recorded in Britain lived over 14 years.",
+      "en": "The IUCN Red List classes the species as Least Concern. The UK breeding population was estimated at 2 050 pairs in 2016; it is Green-listed and legally protected from disturbance at the nest. The oldest ringed bird recorded in Britain lived over 14 years.",
       "fr": "La Liste rouge de l’UICN classe l’espèce en préoccupation mineure. La population nicheuse britannique était estimée à 2 050 couples en 2016; l’espèce est sur la liste verte et légalement protégée contre le dérangement au nid. Le plus vieil oiseau bagué enregistré en Grande-Bretagne a dépassé 14 ans."
     }
   },
@@ -112,6 +112,24 @@
       "facts": [
         "Sexes have similar appearance; females are larger than males."
       ]
+    },
+    {
+      "title": {
+        "en": "Lanner Falcon — Oiseaux.net",
+        "fr": "Faucon lanier — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/faucon.lanier.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The account places Falco biarmicus in genus Falco, gives a length of 52 cm, and says its diet is mainly birds."
+      ],
+      "prose_claims": [
+        "overview.en.3",
+        "overview.fr.3"
+      ]
     }
   ],
   "uncertainties": [
@@ -120,5 +138,5 @@
     "Wikipedia is used only for size and the use of old crow nests; figures on breeding are from BTO (Britain)."
   ],
   "reviewed": true,
-  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12), plumage and hunting from RSPB; Wikipedia only for size and nest sites; illustration to be checked by the owner."
+  "review_note": "Numbers from BTO BirdFacts (consulted 2026-10-12), plumage and hunting from RSPB; Wikipedia only for size and nest sites; added a same-genus comparison with the Lanner from Oiseaux.net; illustration to be checked by the owner."
 }

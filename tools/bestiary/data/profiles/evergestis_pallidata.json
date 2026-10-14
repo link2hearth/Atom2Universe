@@ -1,0 +1,221 @@
+{
+  "id": "evergestis_pallidata",
+  "scientific": "Evergestis pallidata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Purple-backed Cabbageworm",
+    "fr": "Crambidé à dos violet"
+  },
+  "sections": {
+    "overview": {
+      "en": "Evergestis pallidata is a crambid moth known as the Purple-backed Cabbageworm. It is recorded in Europe and North America.",
+      "fr": "Evergestis pallidata est un papillon crambidé appelé Purple-backed Cabbageworm en anglais. Il est signalé en Europe et en Amérique du Nord."
+    },
+    "identification": {
+      "en": "Adults span about 24–29 mm and have creamy pale forewings laced with dark-brown markings.",
+      "fr": "L’adulte a une envergure d’environ 24 à 29 mm et des ailes antérieures crème parcourues de marques brun foncé."
+    },
+    "habitat": {
+      "en": "It occurs in a range of grassland and open habitats in regional records; the sources reviewed do not define a single required habitat.",
+      "fr": "Les données régionales la signalent dans divers milieux ouverts et prairiaux ; les sources examinées ne définissent pas un habitat unique obligatoire."
+    },
+    "diet": {
+      "en": "The larvae eat Brassicaceae, including winter-cress (Barbarea vulgaris). North American records list several additional mustard genera.",
+      "fr": "Les chenilles mangent des Brassicaceae, dont la barbarée commune (Barbarea vulgaris). Les données nord-américaines citent plusieurs autres genres de moutardes."
+    },
+    "behavior": {
+      "en": "Adults fly at dusk and are attracted to light; caterpillars overwinter in cocoons in the soil.",
+      "fr": "L’adulte vole au crépuscule et vient à la lumière ; la chenille hiverne dans un cocon au sol."
+    },
+    "reproduction": {
+      "en": "It generally has one generation annually, with adults recorded from late spring through summer; pupation occurs in a cocoon.",
+      "fr": "Elle produit généralement une génération par an, avec des adultes du printemps à l’été ; la nymphose se déroule dans un cocon."
+    },
+    "ecology": {
+      "en": "The pale adult wings carry characteristic brown markings. Its larvae share brassica hosts with Evergestis limbata; see that profile.",
+      "fr": "Les ailes pâles de l’adulte portent des marques brunes caractéristiques. Ses chenilles partagent avec Evergestis limbata les plantes-hôtes brassicacées ; voir cette fiche."
+    },
+    "conservation": {
+      "en": "Belgian regional records document its presence, but the reviewed sources do not give a global risk category.",
+      "fr": "Les données régionales belges attestent sa présence, mais les sources examinées ne donnent pas de catégorie mondiale de risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Evergestis pallidata — UKMoths",
+        "fr": "Evergestis pallidata — UKMoths"
+      },
+      "url": "https://ukmoths.org.uk/species/evergestis-pallidata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "identification",
+        "overview"
+      ],
+      "facts": [
+        "UKMoths reports wingspan, appearance and British flight period."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evergestis pallidata — Lepidoptera of Belgium",
+        "fr": "Evergestis pallidata — Lépidoptères de Belgique"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/6435/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation",
+        "diet",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Belgian catalogue reports host plants, behavior and cocoon overwintering."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evergestis pallidata — Moth Photographers Group",
+        "fr": "Evergestis pallidata — Moth Photographers Group"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=4897&state=CAE",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "overview"
+      ],
+      "facts": [
+        "North American guide gives common name and additional host genera; no conservation category is given."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Evergestis limbata — Lepiforum",
+        "fr": "Evergestis limbata — Lepiforum"
+      },
+      "url": "https://lepiforum.org/wiki/page/Evergestis_Limbata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Lepiforum entry gives host family for congener E. limbata."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            2
+          ],
+          "fr_sentence_ids": [
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Open sources differ somewhat on exact flight limits by region; details are stated as regional/general rather than universal."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Reciprocal cross-reference to Evergestis limbata highlights their shared brassica hosts and different adult appearance."
+}
