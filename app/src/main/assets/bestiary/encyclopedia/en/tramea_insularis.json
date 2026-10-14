@@ -1,0 +1,26 @@
+{
+  "id": "tramea_insularis",
+  "name": "Antillean saddlebags",
+  "scientific": "Tramea insularis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tramea insularis is a skimmer dragonfly recorded from the southern United States, Mexico and the West Indies.",
+    "identification": "It is a recognized Tramea species; the sources used here provide few species-specific diagnostic details.",
+    "habitat": "A regional French Antilles assessment suggests still coastal waters, such as lagoons and ponds behind mangroves, sometimes slightly brackish.",
+    "diet": "The sources consulted do not provide a species-specific prey account.",
+    "behavior": "The assessment describes local records as sparse and sporadic, with possible migratory movements.",
+    "reproduction": "Breeding was not confirmed in the French Antilles assessment; that regional finding should not be generalized to the whole range.",
+    "ecology": "Like T. carolina, it belongs to Tramea; the checklist places T. insularis farther south, mainly in the southern United States, Mexico and the West Indies.",
+    "conservation": "A provisional French Antilles assessment treated it as Data Deficient regionally because records and local establishment were uncertain; this is not a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "A Checklist of North American Odonata, 2024"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/281782558_Liste_Rouge_Provisoire_des_Odonates_des_Antilles_francaises",
+      "title": "Provisional Red List of Odonata of the French Antilles"
+    }
+  ]
+}

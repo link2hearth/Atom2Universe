@@ -1,0 +1,30 @@
+{
+  "id": "tringa_glareola",
+  "name": "Chevalier sylvain",
+  "scientific": "Tringa glareola",
+  "group": "birds",
+  "sections": {
+    "overview": "Le chevalier sylvain est un petit limicole migrateur qui niche dans le nord de l’Eurasie et hiverne surtout en Afrique, en Asie méridionale et en Australasie.",
+    "identification": "Il porte un dessus ponctué, des pattes jaune verdâtre, un sourcil clair et un croupion blanc carré en vol.",
+    "habitat": "Il niche dans les tourbières et marais du nord ; hors reproduction, il préfère les rives d’eau douce peu profondes, prairies humides, mares et champs inondés.",
+    "diet": "Il consomme des insectes et leurs larves, ainsi que des vers et d’autres petits animaux aquatiques.",
+    "behavior": "Il migre entre ses sites de reproduction eurasiens et ses quartiers d’hiver africains et asiatiques ; en passage, il se rassemble souvent en petites bandes.",
+    "reproduction": "Il niche au sol dans les marais et tourbières et pond généralement quatre œufs ; les deux parents couvent, puis le mâle s’occupe souvent des jeunes après le départ de la femelle.",
+    "ecology": "Le chevalier arlequin figure parmi ses proches parents du genre Tringa ; voir cette fiche pour comparer.",
+    "conservation": "BirdLife Australia indique un statut mondial UICN de Préoccupation mineure ; le RSPB le classe en catégorie Ambre au Royaume-Uni, une évaluation régionale."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.sylvain.html",
+      "title": "Oiseaux.net — Chevalier sylvain"
+    },
+    {
+      "url": "https://birdlife.org.au/bird-profiles/wood-sandpiper/",
+      "title": "BirdLife Australia — Chevalier sylvain"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/wood-sandpiper/",
+      "title": "Royal Society for the Protection of Birds — Chevalier sylvain"
+    }
+  ]
+}

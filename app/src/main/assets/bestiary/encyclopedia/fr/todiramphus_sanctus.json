@@ -1,0 +1,34 @@
+{
+  "id": "todiramphus_sanctus",
+  "name": "Martin-chasseur sacré",
+  "scientific": "Todiramphus sanctus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Martin-chasseur sacré est un martin-chasseur des bois présent en Australie et sur les îles voisines du Pacifique occidental.",
+    "identification": "Il a le dos turquoise, le dessous blanc crème, un collier clair et une bande sombre qui traverse l’œil.",
+    "habitat": "Il fréquente les boisements ouverts, les forêts d’eucalyptus et de mélaleucas, ainsi que les mangroves.",
+    "diet": "Il chasse surtout à terre des insectes, des crustacés et de petits reptiles, et ne capture qu’occasionnellement des poissons.",
+    "behavior": "Il guette depuis un perchoir dégagé, fond sur sa proie puis revient au perchoir avec elle.",
+    "reproduction": "Les deux sexes creusent un terrier de nid dans une termitière, une branche creuse ou une berge, puis se partagent la couvaison et les soins aux jeunes.",
+    "ecology": "Dans le sud-est de Sulawesi, il migre et y passe l’hiver, contrairement au Martin-chasseur à collier blanc qui y réside.",
+    "conservation": "L’évaluation mondiale de l’UICN de 2016 classe l’espèce en Préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/birds/sacred-kingfisher-todiramphus-sanctus/",
+      "title": "Sacred Kingfisher — Australian Museum"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/martin-chasseur.sacre.html",
+      "title": "Martin-chasseur sacré — Oiseaux.net"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/ibi.12688",
+      "title": "Diversification of a great speciator in Wallacea — Ibis"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22683442A92986873.en",
+      "title": "Sacred Kingfisher — IUCN Red List assessment"
+    }
+  ]
+}

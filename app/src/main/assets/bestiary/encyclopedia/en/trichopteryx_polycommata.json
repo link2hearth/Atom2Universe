@@ -1,0 +1,30 @@
+{
+  "id": "trichopteryx_polycommata",
+  "name": "Barred tooth-striped",
+  "scientific": "Trichopteryx polycommata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This geometrid moth is widespread across much of Europe and temperate Asia, reaching Japan.",
+    "identification": "The adult has a wingspan of about 33–36 mm.",
+    "habitat": "It uses open woodland, scrubby slopes and riverine woodland, often where privet grows.",
+    "diet": "The larvae feed on woody plants, especially privet and ash.",
+    "behavior": "Adults fly in early spring, mainly March and April in Britain.",
+    "reproduction": "Larvae feed in late spring, and the pupa overwinters.",
+    "ecology": "T. carpinata is a related spring moth recorded on willows and poplars; see its profile for comparison.",
+    "conservation": "The British account describes scattered local populations; this regional pattern is not a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/trichopteryx-polycommata/adult-3/",
+      "title": "Barred Tooth-striped — UKMoths"
+    },
+    {
+      "url": "https://www.pyrgus.de/Trichopteryx_polycommata.html",
+      "title": "Trichopteryx polycommata — European Lepidoptera and their ecology"
+    },
+    {
+      "url": "https://www.pyrgus.de/Trichopteryx_carpinata_en.html",
+      "title": "Trichopteryx carpinata — European Lepidoptera and their ecology, English account"
+    }
+  ]
+}

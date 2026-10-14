@@ -1,0 +1,26 @@
+{
+  "id": "trichechus_manatus",
+  "name": "West Indian manatee",
+  "scientific": "Trichechus manatus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The West Indian manatee inhabits warm coastal waters from the southeastern United States and Caribbean to northeastern Brazil.",
+    "identification": "It is a large, gray-brown aquatic mammal with foreflippers and a broad, paddle-shaped tail.",
+    "habitat": "It uses coastal, estuarine and river habitats in marine, brackish and fresh water, often where aquatic vegetation is abundant.",
+    "diet": "It is herbivorous and grazes on submerged, floating and emergent aquatic plants.",
+    "behavior": "Manatees may spend up to eight hours a day feeding and surface regularly to breathe.",
+    "reproduction": "Gestation lasts about 12–15 months, and a calf may remain dependent on its mother for one to two years.",
+    "ecology": "Two subspecies are recognized: the Florida manatee and the Antillean manatee; see the U.S. Fish and Wildlife Service account for their ranges.",
+    "conservation": "Mexico lists the Antillean subspecies as endangered under its national standard."
+  },
+  "sources": [
+    {
+      "url": "https://www.fws.gov/species/manatee-trichechus-manatus",
+      "title": "Manatee (Trichechus manatus) — U.S. Fish & Wildlife Service"
+    },
+    {
+      "url": "https://simec.conanp.gob.mx/Publicaciones2020/Publicaciones%20CONANP/Parte%202/Monitoreo/2016%20Ficha%20Manati.pdf",
+      "title": "Ficha informativa: Manatí del Caribe — CONANP"
+    }
+  ]
+}

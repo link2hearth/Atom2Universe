@@ -1,0 +1,141 @@
+{
+  "id": "triatoma_infestans",
+  "scientific": "Triatoma infestans",
+  "group": "invertebrates",
+  "name": {
+    "en": "Kissing bug",
+    "fr": "Vinchuca"
+  },
+  "sections": {
+    "overview": {
+      "en": "Triatoma infestans is a blood-feeding triatomine bug and an important vector of Chagas disease in South America.",
+      "fr": "Triatoma infestans est une punaise triatome hématophage et un important vecteur de la maladie de Chagas en Amérique du Sud."
+    },
+    "identification": {
+      "en": "Adults are brown-black, with pale transverse markings along the abdomen; females are about 25–30 mm long and males 21–26 mm.",
+      "fr": "Les adultes sont brun-noir, avec des marques transversales claires sur les côtés de l’abdomen ; les femelles mesurent environ 25–30 mm et les mâles 21–26 mm."
+    },
+    "habitat": {
+      "en": "It is mainly domestic or peridomestic, sheltering in wall cracks, thatched roofs and animal enclosures.",
+      "fr": "Elle vit surtout dans les habitations ou leurs abords, où elle se cache dans les fissures, les toits de chaume et les abris d’animaux."
+    },
+    "diet": {
+      "en": "Nymphs and adults feed on blood; after feeding, an infected bug can pass the parasite in its feces rather than through the bite itself.",
+      "fr": "Les nymphes et les adultes se nourrissent de sang ; après le repas, une punaise infectée peut transmettre le parasite par ses déjections plutôt que par la piqûre elle-même."
+    },
+    "behavior": {
+      "en": "It hides during the day and usually comes out to feed at night.",
+      "fr": "Elle se cache le jour et sort généralement la nuit pour se nourrir."
+    },
+    "reproduction": {
+      "en": "In Argentina, the egg-to-adult cycle is reported to take about eight months to one year, depending on conditions.",
+      "fr": "En Argentine, le cycle de l’œuf à l’adulte durerait environ huit mois à un an, selon les conditions."
+    },
+    "ecology": {
+      "en": "It acquires Trypanosoma cruzi from infected hosts and can spread it when feces contaminate a bite wound or mucous membrane.",
+      "fr": "Elle acquiert Trypanosoma cruzi auprès d’hôtes infectés et peut le transmettre si ses déjections contaminent une plaie de piqûre ou une muqueuse."
+    },
+    "conservation": {
+      "en": "The public-health sources consulted focus on vector control and Chagas prevention, not a conservation assessment.",
+      "fr": "Les sources de santé publique consultées portent sur la lutte antivectorielle et la prévention de Chagas, pas sur une évaluation de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Vinchuca — Argentina.gob.ar, Ministry of Health",
+        "fr": "Vinchuca — Argentina.gob.ar, ministère de la Santé"
+      },
+      "url": "https://www.argentina.gob.ar/node/430435",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Argentine health ministry identifies T. infestans as a domestic/peridomestic Chagas vector and describes its shelters, nocturnal habits and life-cycle duration."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 21,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Guía para el control vectorial de la enfermedad de Chagas — Argentina.gob.ar",
+        "fr": "Guide argentin de lutte antivectorielle contre Chagas — Argentina.gob.ar"
+      },
+      "url": "https://www.argentina.gob.ar/sites/default/files/2021/07/guia_vectorial_chagas.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The guide describes adult size and abdominal markings of T. infestans."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 11,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "How Chagas Disease Spreads — CDC",
+        "fr": "Cómo se propaga la enfermedad de Chagas — CDC"
+      },
+      "url": "https://www.cdc.gov/chagas/spreads/index.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "CDC explains that triatomine bugs acquire T. cruzi in blood meals and transmit it through feces entering a wound or mucosa."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 21,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Life-cycle duration varies with local conditions; regional control and occurrence do not by themselves establish global conservation status."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the disease-transmission route is described through contaminated feces, not as direct inoculation by the bite."
+}

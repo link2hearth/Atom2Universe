@@ -1,0 +1,119 @@
+{
+  "id": "tramea_insularis",
+  "scientific": "Tramea insularis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Antillean saddlebags",
+    "fr": "Tramea insularis"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tramea insularis is a skimmer dragonfly recorded from the southern United States, Mexico and the West Indies.",
+      "fr": "Tramea insularis est une libellule de la famille des libellulidés, signalée dans le sud des États-Unis, au Mexique et aux Antilles."
+    },
+    "identification": {
+      "en": "It is a recognized Tramea species; the sources used here provide few species-specific diagnostic details.",
+      "fr": "C’est une espèce reconnue du genre Tramea ; les sources consultées donnent peu de caractères distinctifs propres à cette espèce."
+    },
+    "habitat": {
+      "en": "A regional French Antilles assessment suggests still coastal waters, such as lagoons and ponds behind mangroves, sometimes slightly brackish.",
+      "fr": "Une évaluation régionale des Antilles françaises évoque des eaux stagnantes littorales, comme des lagunes et mares derrière les mangroves, parfois légèrement saumâtres."
+    },
+    "diet": {
+      "en": "The sources consulted do not provide a species-specific prey account.",
+      "fr": "Les sources consultées ne décrivent pas de proies propres à cette espèce."
+    },
+    "behavior": {
+      "en": "The assessment describes local records as sparse and sporadic, with possible migratory movements.",
+      "fr": "L’évaluation décrit des observations locales rares et sporadiques, avec de possibles déplacements migratoires."
+    },
+    "reproduction": {
+      "en": "Breeding was not confirmed in the French Antilles assessment; that regional finding should not be generalized to the whole range.",
+      "fr": "La reproduction n’était pas confirmée dans l’évaluation des Antilles françaises ; ce constat régional ne doit pas être étendu à toute l’aire."
+    },
+    "ecology": {
+      "en": "Like T. carolina, it belongs to Tramea; the checklist places T. insularis farther south, mainly in the southern United States, Mexico and the West Indies.",
+      "fr": "Comme T. carolina, elle appartient au genre Tramea ; la liste situe T. insularis plus au sud, surtout dans le sud des États-Unis, au Mexique et aux Antilles."
+    },
+    "conservation": {
+      "en": "A provisional French Antilles assessment treated it as Data Deficient regionally because records and local establishment were uncertain; this is not a global assessment.",
+      "fr": "Une évaluation provisoire des Antilles françaises la classait en données insuffisantes à l’échelle régionale, faute de certitude sur les observations et l’établissement local ; ce n’est pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata, 2024",
+        "fr": "Liste des Odonates nord-américains, 2024"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The checklist recognizes T. insularis and gives a North American and Caribbean range; it also lists T. carolina."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 18,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Provisional Red List of Odonata of the French Antilles",
+        "fr": "Liste rouge provisoire des Odonates des Antilles françaises"
+      },
+      "url": "https://www.researchgate.net/publication/281782558_Liste_Rouge_Provisoire_des_Odonates_des_Antilles_francaises",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Regional assessment reports habitat hypotheses, sparse records, uncertain breeding and Data Deficient status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 13,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The French Antilles source is a provisional regional assessment, not a global status evaluation; it notes uncertainty about residency and breeding."
+  ],
+  "review_note": "Concise bilingual draft based on cited specialist and institutional sources; uncertain or regional evidence is scoped explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

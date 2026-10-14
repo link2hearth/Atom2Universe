@@ -1,0 +1,30 @@
+{
+  "id": "tramea_carolina",
+  "name": "Carolina saddlebags",
+  "scientific": "Tramea carolina",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tramea carolina is a skimmer dragonfly of eastern North America.",
+    "identification": "Males have a red face and abdomen, metallic-violet forehead and dark reddish hindwing patches. Unlike T. onusta, the male has violet on the forehead.",
+    "habitat": "It uses ponds, lakes, marshes and slow streams, including temporary ponds.",
+    "diet": "Adults feed while flying over open areas; the cited state account does not specify their prey.",
+    "behavior": "Males patrol shorelines and may perch on twigs; northward migration is possible but uncertain.",
+    "reproduction": "Mating occurs in vegetation, followed by egg deposition among emergent plants.",
+    "ecology": "Like T. insularis, it belongs to Tramea; the checklist places T. insularis farther south, mainly in the southern United States, Mexico and the West Indies.",
+    "conservation": "The Wisconsin account gives a global rank of G5; this broad rank does not show that every local population is secure."
+  },
+  "sources": [
+    {
+      "url": "https://wiatri.net/inventory/odonata/SpeciesAccounts/SpeciesDetail.cfm?TaxaID=161",
+      "title": "Wisconsin Odonata Survey — Carolina Saddlebags"
+    },
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfcarolinasaddlebags.html",
+      "title": "Illinois Department of Natural Resources — Carolina saddlebags"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "A Checklist of North American Odonata, 2024"
+    }
+  ]
+}

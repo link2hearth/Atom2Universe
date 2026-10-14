@@ -1,0 +1,34 @@
+{
+  "id": "tramea_lacerata",
+  "name": "Tramea lacerata",
+  "scientific": "Tramea lacerata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tramea lacerata est une libellule largement répartie en Amérique du Nord, également signalée dans certaines îles des Caraïbes et à Hawaï.",
+    "identification": "Les taches sombres à la base des ailes postérieures forment le motif de « sacoches ».",
+    "habitat": "Elle fréquente les étangs et d’autres eaux stagnantes ou lentes.",
+    "diet": "Les adultes capturent des insectes en vol.",
+    "behavior": "Elle plane souvent et se pose rarement longtemps.",
+    "reproduction": "Elle se reproduit dans des mares temporaires ou permanentes et des fossés ; certaines populations migrent selon les saisons.",
+    "ecology": "C’est une Tramea comme T. onusta ; ses taches alaires sont sombres, tandis que celles de T. onusta sont rougeâtres.",
+    "conservation": "Le catalogue de l’Idaho indique un rang mondial G5 ; ce rang général ne renseigne pas sur les tendances locales."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Tramea_lacerata/",
+      "title": "Animal Diversity Web — Tramea lacerata"
+    },
+    {
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/black-saddlebags",
+      "title": "Missouri Department of Conservation — Black Saddlebags"
+    },
+    {
+      "url": "https://idfg.idaho.gov/species/taxa/33096",
+      "title": "Idaho Fish and Game — fiche Tramea lacerata"
+    },
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfredsaddlebags.html",
+      "title": "Illinois Department of Natural Resources — Red saddlebags"
+    }
+  ]
+}

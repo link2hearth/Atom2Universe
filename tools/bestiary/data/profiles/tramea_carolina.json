@@ -1,0 +1,145 @@
+{
+  "id": "tramea_carolina",
+  "scientific": "Tramea carolina",
+  "group": "invertebrates",
+  "name": {
+    "en": "Carolina saddlebags",
+    "fr": "Tramea carolina"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tramea carolina is a skimmer dragonfly of eastern North America.",
+      "fr": "Tramea carolina est une libellule de la famille des libellulidés, présente dans l’est de l’Amérique du Nord."
+    },
+    "identification": {
+      "en": "Males have a red face and abdomen, metallic-violet forehead and dark reddish hindwing patches. Unlike T. onusta, the male has violet on the forehead.",
+      "fr": "Le mâle a la face et l’abdomen rouges, le front violet métallique et des taches rouge sombre aux ailes postérieures. Contrairement à T. onusta, son front est violet."
+    },
+    "habitat": {
+      "en": "It uses ponds, lakes, marshes and slow streams, including temporary ponds.",
+      "fr": "Elle fréquente étangs, lacs, marais et cours d’eau lents, y compris des mares temporaires."
+    },
+    "diet": {
+      "en": "Adults feed while flying over open areas; the cited state account does not specify their prey.",
+      "fr": "Les adultes se nourrissent en vol dans les espaces ouverts ; la fiche régionale consultée ne précise pas leurs proies."
+    },
+    "behavior": {
+      "en": "Males patrol shorelines and may perch on twigs; northward migration is possible but uncertain.",
+      "fr": "Les mâles patrouillent près des rives et peuvent se poser sur des brindilles ; une migration vers le nord est possible, mais incertaine."
+    },
+    "reproduction": {
+      "en": "Mating occurs in vegetation, followed by egg deposition among emergent plants.",
+      "fr": "L’accouplement a lieu dans la végétation, puis la femelle dépose ses œufs parmi les plantes émergentes."
+    },
+    "ecology": {
+      "en": "Like T. insularis, it belongs to Tramea; the checklist places T. insularis farther south, mainly in the southern United States, Mexico and the West Indies.",
+      "fr": "Comme T. insularis, elle appartient au genre Tramea ; la liste situe T. insularis plus au sud, surtout dans le sud des États-Unis, au Mexique et aux Antilles."
+    },
+    "conservation": {
+      "en": "The Wisconsin account gives a global rank of G5; this broad rank does not show that every local population is secure.",
+      "fr": "La fiche du Wisconsin indique un rang mondial G5 ; ce rang général ne prouve pas que toutes les populations locales soient à l’abri."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Wisconsin Odonata Survey — Carolina Saddlebags",
+        "fr": "Wisconsin Odonata Survey — Tramea carolina"
+      },
+      "url": "https://wiatri.net/inventory/odonata/SpeciesAccounts/SpeciesDetail.cfm?TaxaID=161",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Account describes range, wing pattern, habitat, possible movements and a global rank."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 12,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Illinois Department of Natural Resources — Carolina saddlebags",
+        "fr": "Illinois Department of Natural Resources — Carolina saddlebags"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfcarolinasaddlebags.html",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "The state account describes adult feeding, patrols, mating and egg-laying vegetation."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 11,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata, 2024",
+        "fr": "Liste des Odonates nord-américains, 2024"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The checklist gives ranges for T. carolina and T. insularis and places both in Tramea."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 15,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Wisconsin account is regional and its possible migratory tendency is not a confirmed pattern for every population."
+  ],
+  "review_note": "Concise bilingual draft based on cited specialist and institutional sources; uncertain or regional evidence is scoped explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

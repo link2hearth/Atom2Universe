@@ -1,0 +1,141 @@
+{
+  "id": "trichopteryx_carpinata",
+  "scientific": "Trichopteryx carpinata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Early tooth-striped",
+    "fr": "Trichopteryx carpinata"
+  },
+  "sections": {
+    "overview": {
+      "en": "This geometrid moth occurs across much of Europe and eastward into Siberia.",
+      "fr": "Cette géomètre est présente dans une grande partie de l’Europe et s’étend vers l’est jusqu’en Sibérie."
+    },
+    "identification": {
+      "en": "The adult has a wingspan of about 30–34 mm and usually rather indistinct wing markings.",
+      "fr": "L’adulte a une envergure d’environ 30 à 34 mm et des dessins alaires généralement peu marqués."
+    },
+    "habitat": {
+      "en": "It occurs in woodland, clearings and wetlands where its larval food plants grow.",
+      "fr": "Elle fréquente les bois, les clairières et les zones humides où poussent ses plantes-hôtes larvaires."
+    },
+    "diet": {
+      "en": "The larvae feed on trees including willow, poplar, birch and honeysuckle.",
+      "fr": "Les chenilles se nourrissent d’arbres et d’arbustes comme les saules, les peupliers, les bouleaux et les chèvrefeuilles."
+    },
+    "behavior": {
+      "en": "Adults fly in spring, usually from April into May in Britain.",
+      "fr": "Les adultes volent au printemps, généralement d’avril à mai en Grande-Bretagne."
+    },
+    "reproduction": {
+      "en": "The larvae develop in late spring and early summer, and the pupa overwinters.",
+      "fr": "Les chenilles se développent à la fin du printemps et au début de l’été, puis la chrysalide passe l’hiver."
+    },
+    "ecology": {
+      "en": "For comparison, the related T. polycommata is recorded on privet and ash; see that profile.",
+      "fr": "À titre de comparaison, la proche T. polycommata est signalée sur le troène et le frêne ; voir cette fiche."
+    },
+    "conservation": {
+      "en": "The British account describes it as fairly common across most of the islands; it gives no global assessment.",
+      "fr": "La fiche britannique la décrit comme assez commune dans la majeure partie des îles ; elle ne donne pas d’évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Early Tooth-striped — UKMoths",
+        "fr": "Early Tooth-striped — UKMoths"
+      },
+      "url": "https://www.handeln.ukmoths.org.uk/species/trichopteryx-carpinata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "UKMoths gives adult size, spring flight, wing-marking variation and British frequency."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 11,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Trichopteryx carpinata — European Lepidoptera and their ecology",
+        "fr": "Trichopteryx carpinata — Lépidoptères européens et leur écologie"
+      },
+      "url": "https://www.pyrgus.de/Trichopteryx_carpinata_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "This English account gives range, host plants, habitat and life-cycle timing for T. carpinata."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 14,
+        "total": 130,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Trichopteryx polycommata — European Lepidoptera and their ecology, German account",
+        "fr": "Trichopteryx polycommata — Lépidoptères européens et leur écologie, fiche allemande"
+      },
+      "url": "https://www.pyrgus.de/Trichopteryx_polycommata.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The German species account identifies the moth and lists privet and ash among its host plants."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 16,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight dates and frequency refer to the British account; seasonal timing varies across the wider range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the reciprocal comparison with T. polycommata concerns host-plant records and spring flight timing."
+}

@@ -1,0 +1,141 @@
+{
+  "id": "tockus_flavirostris",
+  "scientific": "Tockus flavirostris",
+  "group": "birds",
+  "name": {
+    "en": "Eastern Yellow-billed Hornbill",
+    "fr": "Calao à bec jaune"
+  },
+  "sections": {
+    "overview": {
+      "en": "It ranges from Eritrea to north-eastern Tanzania.",
+      "fr": "Il est présent de l’Érythrée au nord-est de la Tanzanie."
+    },
+    "identification": {
+      "en": "Its pied plumage and long yellow bill are distinctive.",
+      "fr": "Son plumage pie et son long bec jaune sont caractéristiques."
+    },
+    "habitat": {
+      "en": "It occupies open thornbush savanna.",
+      "fr": "Il fréquente les savanes ouvertes à buissons épineux."
+    },
+    "diet": {
+      "en": "It eats insects, fruits and seeds.",
+      "fr": "Il mange des insectes, des fruits et des graines."
+    },
+    "behavior": {
+      "en": "It forages on the ground, often in pairs or family groups.",
+      "fr": "Il cherche sa nourriture au sol, souvent en couple ou en famille."
+    },
+    "reproduction": {
+      "en": "It nests in a tree or rock cavity; the female seals herself inside while the male feeds her through a narrow opening.",
+      "fr": "Il niche dans une cavité d’arbre ou de rocher ; la femelle s’y enferme tandis que le mâle la nourrit par une ouverture étroite."
+    },
+    "ecology": {
+      "en": "It sometimes forages beside dwarf mongooses, which may benefit from its vigilance.",
+      "fr": "Il cherche parfois sa nourriture auprès de mangoustes naines, qui peuvent bénéficier de sa vigilance."
+    },
+    "conservation": {
+      "en": "The latest global IUCN listing available in the cited assessment is Least Concern.",
+      "fr": "La dernière évaluation mondiale de l’UICN indiquée par la source le classe en Préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Eastern Yellow-billed Hornbill — IUCN Hornbill Specialist Group",
+        "fr": "Eastern Yellow-billed Hornbill — IUCN Hornbill Specialist Group"
+      },
+      "url": "https://iucnhornbills.org/eastern-yellow-billed-hornbill/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Species account covers range, appearance, savanna, diet and mongoose association."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 10,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Calao à bec jaune — Oiseaux.net",
+        "fr": "Calao à bec jaune — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/calao.a.bec.jaune.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "French species account describes cavity nesting and the female’s temporary sealing into the nest while the male provisions her."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 19,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tockus flavirostris — IUCN Red List assessment",
+        "fr": "Tockus flavirostris — IUCN Red List assessment"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22682379A92942633.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The IUCN species page shows Least Concern as the latest global assessment listed."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 13,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Red List page is linked through the assessment DOI; its record notes that the 2016 assessment is not the latest and displays a 2025 LC update."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Species range and natural history use the IUCN Hornbill Specialist Group; nest description is separately checked in French species literature; Red List wording is limited to the displayed global category."
+}

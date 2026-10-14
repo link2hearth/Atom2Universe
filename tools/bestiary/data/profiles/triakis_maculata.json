@@ -1,0 +1,119 @@
+{
+  "id": "triakis_maculata",
+  "scientific": "Triakis maculata",
+  "group": "fish",
+  "name": {
+    "en": "Spotted houndshark",
+    "fr": "Virli tacheté"
+  },
+  "sections": {
+    "overview": {
+      "en": "Triakis maculata is a demersal houndshark of the eastern Pacific, from the Galápagos and Peru to northern Chile.",
+      "fr": "Triakis maculata est un requin de fond du Pacifique oriental, des Galápagos et du Pérou jusqu’au nord du Chili."
+    },
+    "identification": {
+      "en": "It has a robust body and rounded snout; small black spots are common, especially in juveniles, but may be absent in adults.",
+      "fr": "Son corps est robuste et son museau arrondi ; de petites taches noires sont fréquentes, surtout chez les jeunes, mais peuvent manquer chez les adultes."
+    },
+    "habitat": {
+      "en": "It lives on the continental shelf, mostly inshore, at reported depths of about 10 to 200 metres.",
+      "fr": "Elle vit sur le plateau continental, surtout près des côtes, à des profondeurs signalées d’environ 10 à 200 mètres."
+    },
+    "diet": {
+      "en": "It probably feeds on benthic invertebrates, but its diet is not well documented.",
+      "fr": "Elle se nourrit probablement d’invertébrés benthiques, mais son régime est peu documenté."
+    },
+    "behavior": {
+      "en": "It is caught by artisanal fisheries in Peru.",
+      "fr": "Elle est capturée par la pêche artisanale au Pérou."
+    },
+    "reproduction": {
+      "en": "It is aplacental viviparous; sources report litters of about 14 young, with newborns about 30 to 40 centimetres long.",
+      "fr": "Elle est vivipare aplacentaire ; les sources signalent des portées d’environ 14 petits, mesurant près de 30 à 40 centimètres à la naissance."
+    },
+    "ecology": {
+      "en": "It is a shelf-associated predator; the cited sources indicate limited biological knowledge, so its ecological role should not be specified further.",
+      "fr": "C’est un prédateur associé au plateau continental ; les sources consultées soulignent le manque de données biologiques et ne permettent pas de préciser davantage son rôle écologique."
+    },
+    "conservation": {
+      "en": "The 2020 IUCN assessment, cited by the Peruvian IMARPE catalogue, classifies it as Critically Endangered.",
+      "fr": "L’évaluation UICN de 2020, citée par le catalogue péruvien de l’IMARPE, la classe « En danger critique »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "IMARPE — Ficha de especie: Tollo manchado",
+        "fr": "IMARPE — Fiche espèce : Tollo manchado"
+      },
+      "url": "https://biodiversidadacuatica.imarpe.gob.pe/Files/ExportarEspeciePdf?taxonId=246",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Peruvian marine biodiversity catalog gives names, habitat depth, morphology, reproduction, artisanal fishery and cites IUCN status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 16,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Triakis maculata summary",
+        "fr": "FishBase — fiche Triakis maculata"
+      },
+      "url": "https://www.fishbase.se/summary/Triakis-maculata.html",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Species summary reports eastern Pacific range, benthic prey as probable and limited biological details."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 14,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and life-history details remain sparse; FishBase marks the prey inference as probable. IMARPE cites the 2020 IUCN assessment; status may change in later assessments."
+  ],
+  "review_note": "Concise bilingual draft based on cited specialist and institutional sources; uncertain or regional evidence is scoped explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

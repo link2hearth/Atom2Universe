@@ -1,0 +1,34 @@
+{
+  "id": "tramea_lacerata",
+  "name": "Black saddlebags",
+  "scientific": "Tramea lacerata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tramea lacerata is a widely distributed North American skimmer, also recorded on some Caribbean islands and Hawaii.",
+    "identification": "The dark patches near the body on each hindwing create the “saddlebags” pattern.",
+    "habitat": "It is associated with ponds and other still or slow waters.",
+    "diet": "Adults catch flying insects in the air.",
+    "behavior": "It often glides and is rarely seen perching for long.",
+    "reproduction": "It breeds in temporary or permanent ponds and ditches; some populations migrate seasonally.",
+    "ecology": "It is a Tramea like T. onusta; this species has dark hindwing patches, whereas T. onusta has reddish ones.",
+    "conservation": "The cited Idaho catalog lists a global rank of G5; that broad rank does not resolve local trends."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Tramea_lacerata/",
+      "title": "Animal Diversity Web — Tramea lacerata"
+    },
+    {
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/black-saddlebags",
+      "title": "Missouri Department of Conservation — Black Saddlebags"
+    },
+    {
+      "url": "https://idfg.idaho.gov/species/taxa/33096",
+      "title": "Idaho Fish and Game — Tramea lacerata species catalog"
+    },
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfredsaddlebags.html",
+      "title": "Illinois Department of Natural Resources — Red saddlebags"
+    }
+  ]
+}

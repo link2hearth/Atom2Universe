@@ -1,0 +1,30 @@
+{
+  "id": "tockus_flavirostris",
+  "name": "Calao à bec jaune",
+  "scientific": "Tockus flavirostris",
+  "group": "birds",
+  "sections": {
+    "overview": "Il est présent de l’Érythrée au nord-est de la Tanzanie.",
+    "identification": "Son plumage pie et son long bec jaune sont caractéristiques.",
+    "habitat": "Il fréquente les savanes ouvertes à buissons épineux.",
+    "diet": "Il mange des insectes, des fruits et des graines.",
+    "behavior": "Il cherche sa nourriture au sol, souvent en couple ou en famille.",
+    "reproduction": "Il niche dans une cavité d’arbre ou de rocher ; la femelle s’y enferme tandis que le mâle la nourrit par une ouverture étroite.",
+    "ecology": "Il cherche parfois sa nourriture auprès de mangoustes naines, qui peuvent bénéficier de sa vigilance.",
+    "conservation": "La dernière évaluation mondiale de l’UICN indiquée par la source le classe en Préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://iucnhornbills.org/eastern-yellow-billed-hornbill/",
+      "title": "Eastern Yellow-billed Hornbill — IUCN Hornbill Specialist Group"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/calao.a.bec.jaune.html",
+      "title": "Calao à bec jaune — Oiseaux.net"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22682379A92942633.en",
+      "title": "Tockus flavirostris — IUCN Red List assessment"
+    }
+  ]
+}

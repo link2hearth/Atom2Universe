@@ -1,0 +1,38 @@
+{
+  "id": "tramea_onusta",
+  "name": "Red saddlebags",
+  "scientific": "Tramea onusta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tramea onusta is a skimmer dragonfly found across much of North America and into Central and South America.",
+    "identification": "The male has a red face and abdomen, with reddish patches at the hindwing bases. It differs from T. carolina by lacking a violet forehead.",
+    "habitat": "It uses ponds and shallow, vegetated lakes.",
+    "diet": "Adults hunt in open air and may target swarms of flying insects.",
+    "behavior": "In Illinois, adults are recorded from May to August.",
+    "reproduction": "Adults mate in vegetation or woody debris; in Illinois, females have been seen laying on shiny surfaces that resemble water.",
+    "ecology": "Like T. carolina, it occurs in eastern North America, but its male lacks the violet forehead described for that species. Its reddish wing patches contrast with the dark patches of T. lacerata.",
+    "conservation": "Illinois lists it as common and native; this is a local status, not a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://unsm-ento.unl.edu/Odonata/tron.html",
+      "title": "Nebraska Dragonflies and Damselflies — Red Saddlebags"
+    },
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfredsaddlebags.html",
+      "title": "Illinois Department of Natural Resources — Red saddlebags"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "A Checklist of North American Odonata, 2024"
+    },
+    {
+      "url": "https://wiatri.net/inventory/odonata/SpeciesAccounts/SpeciesDetail.cfm?TaxaID=161",
+      "title": "Wisconsin Odonata Survey — Carolina Saddlebags"
+    },
+    {
+      "url": "https://mdc.mo.gov/discover-nature/field-guide/black-saddlebags",
+      "title": "Missouri Department of Conservation — Black Saddlebags"
+    }
+  ]
+}

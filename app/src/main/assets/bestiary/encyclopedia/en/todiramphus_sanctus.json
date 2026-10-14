@@ -1,0 +1,34 @@
+{
+  "id": "todiramphus_sanctus",
+  "name": "Sacred Kingfisher",
+  "scientific": "Todiramphus sanctus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Sacred Kingfisher is a woodland kingfisher occurring in Australia and nearby western Pacific islands.",
+    "identification": "It has a turquoise back, buff-white underparts, a cream collar and a dark stripe through the eye.",
+    "habitat": "It uses open woodland, eucalyptus and paperbark forest, and mangroves.",
+    "diet": "It hunts mainly on land for insects, crustaceans and small reptiles, and only occasionally catches fish.",
+    "behavior": "It watches from an exposed perch, then swoops down and returns to the perch with its prey.",
+    "reproduction": "Both sexes excavate a nest burrow in a termite mound, hollow branch or river bank and share incubation and care of the young.",
+    "ecology": "In southeast Sulawesi it is a seasonal migrant that overwinters there, unlike the resident Collared Kingfisher.",
+    "conservation": "The 2016 global IUCN assessment lists the species as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/birds/sacred-kingfisher-todiramphus-sanctus/",
+      "title": "Sacred Kingfisher — Australian Museum"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/martin-chasseur.sacre.html",
+      "title": "Martin-chasseur sacré — Oiseaux.net"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/ibi.12688",
+      "title": "Diversification of a great speciator in Wallacea — Ibis"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22683442A92986873.en",
+      "title": "Sacred Kingfisher — IUCN Red List assessment"
+    }
+  ]
+}

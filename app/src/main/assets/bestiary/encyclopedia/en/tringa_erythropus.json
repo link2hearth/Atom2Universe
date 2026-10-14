@@ -1,0 +1,26 @@
+{
+  "id": "tringa_erythropus",
+  "name": "Spotted redshank",
+  "scientific": "Tringa erythropus",
+  "group": "birds",
+  "sections": {
+    "overview": "The spotted redshank breeds in far-northern Eurasia and winters mainly in Africa and southern Asia.",
+    "identification": "Breeding adults are black with white spots; winter birds are pale, and unlike the common redshank it has a longer, finer bill and no broad white wing-bar.",
+    "habitat": "It nests in northern bogs and marshes near taiga or wooded tundra; on passage and in winter it uses estuaries, muddy wetlands and lagoons.",
+    "diet": "It wades in shallow water for small molluscs and aquatic insects.",
+    "behavior": "It is mainly a passage migrant in Britain, though small numbers winter in western Europe.",
+    "reproduction": "It lays about four eggs in a simple ground nest near water; both adults incubate.",
+    "ecology": "Its close Tringa relatives include the greenshank, lesser yellowlegs and wood sandpiper; see their profiles for comparison.",
+    "conservation": "It is globally assessed as Least Concern, although the BTO reports declining passage counts in Britain since a late-1990s peak."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.arlequin.html",
+      "title": "Oiseaux.net — Spotted redshank"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/spotted-redshank",
+      "title": "British Trust for Ornithology — Spotted redshank"
+    }
+  ]
+}

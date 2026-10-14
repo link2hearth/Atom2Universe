@@ -1,0 +1,119 @@
+{
+  "id": "trichechus_manatus",
+  "scientific": "Trichechus manatus",
+  "group": "mammals",
+  "name": {
+    "en": "West Indian manatee",
+    "fr": "Lamantin des Antilles"
+  },
+  "sections": {
+    "overview": {
+      "en": "The West Indian manatee inhabits warm coastal waters from the southeastern United States and Caribbean to northeastern Brazil.",
+      "fr": "Le lamantin des Antilles fréquente les eaux côtières chaudes du sud-est des États-Unis et des Caraïbes jusqu’au nord-est du Brésil."
+    },
+    "identification": {
+      "en": "It is a large, gray-brown aquatic mammal with foreflippers and a broad, paddle-shaped tail.",
+      "fr": "C’est un grand mammifère aquatique brun-gris, doté de nageoires antérieures et d’une large queue en forme de palette."
+    },
+    "habitat": {
+      "en": "It uses coastal, estuarine and river habitats in marine, brackish and fresh water, often where aquatic vegetation is abundant.",
+      "fr": "Il fréquente les zones côtières, les estuaires et les rivières, en eau salée, saumâtre ou douce, souvent là où la végétation aquatique est abondante."
+    },
+    "diet": {
+      "en": "It is herbivorous and grazes on submerged, floating and emergent aquatic plants.",
+      "fr": "Il est herbivore et broute des plantes aquatiques immergées, flottantes ou émergentes."
+    },
+    "behavior": {
+      "en": "Manatees may spend up to eight hours a day feeding and surface regularly to breathe.",
+      "fr": "Les lamantins peuvent consacrer jusqu’à huit heures par jour à l’alimentation et remontent régulièrement respirer."
+    },
+    "reproduction": {
+      "en": "Gestation lasts about 12–15 months, and a calf may remain dependent on its mother for one to two years.",
+      "fr": "La gestation dure environ 12 à 15 mois, et le petit peut dépendre de sa mère pendant un à deux ans."
+    },
+    "ecology": {
+      "en": "Two subspecies are recognized: the Florida manatee and the Antillean manatee; see the U.S. Fish and Wildlife Service account for their ranges.",
+      "fr": "Deux sous-espèces sont reconnues : le lamantin de Floride et le lamantin antillais ; la fiche du U.S. Fish and Wildlife Service précise leurs aires."
+    },
+    "conservation": {
+      "en": "Mexico lists the Antillean subspecies as endangered under its national standard.",
+      "fr": "Le Mexique classe la sous-espèce antillaise comme en danger selon sa norme nationale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Manatee (Trichechus manatus) — U.S. Fish & Wildlife Service",
+        "fr": "Manatee (Trichechus manatus) — U.S. Fish & Wildlife Service"
+      },
+      "url": "https://www.fws.gov/species/manatee-trichechus-manatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "USFWS describes range, body form, feeding behavior and the Florida and Antillean subspecies."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 13,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ficha informativa: Manatí del Caribe — CONANP",
+        "fr": "Fiche d’information : lamantin des Caraïbes — CONANP"
+      },
+      "url": "https://simec.conanp.gob.mx/Publicaciones2020/Publicaciones%20CONANP/Parte%202/Monitoreo/2016%20Ficha%20Manati.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The Mexican protected-area agency describes coastal habitat, aquatic plant diet, calf care and the national listing for the Antillean subspecies."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 20,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Mexican source concerns the Antillean subspecies; its local listing should not be generalized to the Florida subspecies."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; conservation and reproduction details are attributed to the relevant subspecies or region where appropriate."
+}

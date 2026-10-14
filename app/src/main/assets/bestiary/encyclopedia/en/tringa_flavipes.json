@@ -1,0 +1,34 @@
+{
+  "id": "tringa_flavipes",
+  "name": "Lesser yellowlegs",
+  "scientific": "Tringa flavipes",
+  "group": "birds",
+  "sections": {
+    "overview": "The lesser yellowlegs breeds in boreal North America and winters from the southern United States to South America.",
+    "identification": "Its long bright-yellow legs and slender, straight bill distinguish it from many other waders; it is smaller and shorter-billed than the greater yellowlegs.",
+    "habitat": "It nests in open boreal forest near marshes and bogs, then uses a wide range of freshwater and coastal wetlands during migration and winter.",
+    "diet": "It takes aquatic and terrestrial insects, worms, small crustaceans and some small fish while foraging in shallow water and along wetland shores.",
+    "behavior": "It migrates between North American breeding grounds and wintering areas across Central and South America and the Caribbean.",
+    "reproduction": "Both parents care for the chicks, but the female usually leaves the breeding grounds before they can fly.",
+    "ecology": "It is a Tringa close relative of the spotted redshank; see that profile for comparison.",
+    "conservation": "A Chilean biodiversity assessment reports evidence of declines and identifies wetland loss, pollution, hunting and climate change as concerns; those regional findings should not be read as a current global category."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Tringa_flavipes/",
+      "title": "Animal Diversity Web — Lesser yellowlegs"
+    },
+    {
+      "url": "https://simbio.mma.gob.cl/Especies/VistaImpresion/4869",
+      "title": "SIMBIO Chile — Tringa flavipes"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/lesser-yellowlegs",
+      "title": "British Trust for Ornithology — Lesser yellowlegs"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.arlequin.html",
+      "title": "Oiseaux.net — Spotted redshank phylogeny"
+    }
+  ]
+}

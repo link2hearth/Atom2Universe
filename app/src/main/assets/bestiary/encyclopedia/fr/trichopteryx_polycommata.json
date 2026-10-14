@@ -1,0 +1,30 @@
+{
+  "id": "trichopteryx_polycommata",
+  "name": "Trichopteryx polycommata",
+  "scientific": "Trichopteryx polycommata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette géomètre est largement présente dans une grande partie de l’Europe et de l’Asie tempérée, jusqu’au Japon.",
+    "identification": "L’adulte a une envergure d’environ 33 à 36 mm.",
+    "habitat": "Elle fréquente les bois clairs, les pentes broussailleuses et les forêts riveraines, souvent là où pousse le troène.",
+    "diet": "Les chenilles se nourrissent de ligneux, surtout de troène et de frêne.",
+    "behavior": "Les adultes volent au début du printemps, surtout en mars et avril en Grande-Bretagne.",
+    "reproduction": "Les chenilles s’alimentent à la fin du printemps et la chrysalide passe l’hiver.",
+    "ecology": "T. carpinata est une proche espèce printanière signalée sur saules et peupliers ; voir sa fiche pour comparer.",
+    "conservation": "La fiche britannique décrit des populations dispersées ; cette situation régionale n’est pas une évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/trichopteryx-polycommata/adult-3/",
+      "title": "Barred Tooth-striped — UKMoths"
+    },
+    {
+      "url": "https://www.pyrgus.de/Trichopteryx_polycommata.html",
+      "title": "Trichopteryx polycommata — Lépidoptères européens et leur écologie"
+    },
+    {
+      "url": "https://www.pyrgus.de/Trichopteryx_carpinata_en.html",
+      "title": "Trichopteryx carpinata — Lépidoptères européens et leur écologie, fiche anglaise"
+    }
+  ]
+}

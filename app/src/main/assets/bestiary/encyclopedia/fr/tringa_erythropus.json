@@ -1,0 +1,26 @@
+{
+  "id": "tringa_erythropus",
+  "name": "Chevalier arlequin",
+  "scientific": "Tringa erythropus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le chevalier arlequin niche dans l’extrême nord de l’Eurasie et hiverne surtout en Afrique et en Asie méridionale.",
+    "identification": "Les adultes nuptiaux sont noirs et ponctués de blanc ; en hiver, l’oiseau est pâle et, contrairement au chevalier gambette, son bec est plus long et fin et il n’a pas de large barre alaire blanche.",
+    "habitat": "Il niche dans les tourbières et marais du nord, près de la taïga ou de la toundra boisée ; en migration et en hiver, il fréquente estuaires, zones humides vaseuses et lagunes.",
+    "diet": "Il marche dans les eaux peu profondes à la recherche de petits mollusques et d’insectes aquatiques.",
+    "behavior": "Il est surtout observé en passage au Royaume-Uni, même si de petits effectifs hivernent en Europe occidentale.",
+    "reproduction": "Il pond environ quatre œufs dans une simple dépression au sol près de l’eau ; les deux adultes couvent.",
+    "ecology": "Ses proches parents du genre Tringa comprennent le chevalier aboyeur, celui à pattes jaunes et le chevalier sylvain ; voir leurs fiches pour comparer.",
+    "conservation": "Son statut mondial est Préoccupation mineure, bien que le BTO rapporte une baisse des effectifs de passage au Royaume-Uni depuis un pic à la fin des années 1990."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.arlequin.html",
+      "title": "Oiseaux.net — Chevalier arlequin"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/spotted-redshank",
+      "title": "British Trust for Ornithology — Chevalier arlequin"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "tramea_insularis",
+  "name": "Tramea insularis",
+  "scientific": "Tramea insularis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tramea insularis est une libellule de la famille des libellulidés, signalée dans le sud des États-Unis, au Mexique et aux Antilles.",
+    "identification": "C’est une espèce reconnue du genre Tramea ; les sources consultées donnent peu de caractères distinctifs propres à cette espèce.",
+    "habitat": "Une évaluation régionale des Antilles françaises évoque des eaux stagnantes littorales, comme des lagunes et mares derrière les mangroves, parfois légèrement saumâtres.",
+    "diet": "Les sources consultées ne décrivent pas de proies propres à cette espèce.",
+    "behavior": "L’évaluation décrit des observations locales rares et sporadiques, avec de possibles déplacements migratoires.",
+    "reproduction": "La reproduction n’était pas confirmée dans l’évaluation des Antilles françaises ; ce constat régional ne doit pas être étendu à toute l’aire.",
+    "ecology": "Comme T. carolina, elle appartient au genre Tramea ; la liste situe T. insularis plus au sud, surtout dans le sud des États-Unis, au Mexique et aux Antilles.",
+    "conservation": "Une évaluation provisoire des Antilles françaises la classait en données insuffisantes à l’échelle régionale, faute de certitude sur les observations et l’établissement local ; ce n’est pas une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "Liste des Odonates nord-américains, 2024"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/281782558_Liste_Rouge_Provisoire_des_Odonates_des_Antilles_francaises",
+      "title": "Liste rouge provisoire des Odonates des Antilles françaises"
+    }
+  ]
+}

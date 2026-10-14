@@ -1,0 +1,119 @@
+{
+  "id": "trichiocercus_sparshalli",
+  "scientific": "Trichiocercus sparshalli",
+  "group": "invertebrates",
+  "name": {
+    "en": "Sparshall’s moth",
+    "fr": "Trichiocercus sparshalli"
+  },
+  "sections": {
+    "overview": {
+      "en": "Sparshall’s moth is an Australian notodontid found across several Australian states.",
+      "fr": "Le papillon de Sparshall est un notodonte présent dans plusieurs États australiens."
+    },
+    "identification": {
+      "en": "Adults span about 40 mm; females bear a tuft of hairs at the abdomen tip.",
+      "fr": "L’adulte mesure environ 40 mm d’envergure ; la femelle porte une touffe de poils au bout de l’abdomen."
+    },
+    "habitat": {
+      "en": "The species account lists host trees but does not specify a habitat type.",
+      "fr": "La fiche de l’espèce indique des arbres-hôtes, mais ne précise pas de type d’habitat."
+    },
+    "diet": {
+      "en": "Recorded larval food plants include Eucalyptus, Corymbia calophylla and Lophostemon confertus.",
+      "fr": "Les plantes-hôtes larvaires signalées comprennent Eucalyptus, Corymbia calophylla et Lophostemon confertus."
+    },
+    "behavior": {
+      "en": "Young larvae are gregarious; older ones are solitary.",
+      "fr": "Les jeunes larves sont grégaires ; les plus âgées sont solitaires."
+    },
+    "reproduction": {
+      "en": "It pupates in a cocoon in ground debris.",
+      "fr": "Elle se nymphose dans un cocon au sol."
+    },
+    "ecology": {
+      "en": "The Atlas of Living Australia recognizes T. sparshalli as an accepted moth species and maps Australian occurrence records.",
+      "fr": "L’Atlas of Living Australia reconnaît T. sparshalli comme espèce de papillon acceptée et cartographie des observations australiennes."
+    },
+    "conservation": {
+      "en": "The consulted accounts give no formal conservation assessment.",
+      "fr": "Les fiches consultées ne donnent pas d’évaluation formelle de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Sparshall’s Moth — Caterlog",
+        "fr": "Papillon de Sparshall — Caterlog"
+      },
+      "url": "https://caterlog.com.au/database/trichiocercus-sparshalli-curtis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Caterlog gives Australian range, adult traits, host plants, larval behavior and pupation; it gives no habitat type or conservation assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 20,
+        "total": 178,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Trichiocercus sparshalli — Atlas of Living Australia",
+        "fr": "Trichiocercus sparshalli — Atlas of Living Australia"
+      },
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/ee26cc24-24bb-463c-b4d1-e8d0404a3b13",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Australian Faunal Directory name is accepted; the atlas displays mapped records from multiple data sets."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 16,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited atlas map summarizes occurrence data and should not be read as a complete range survey."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; habitat association is inferred from documented host plants rather than a separate habitat survey."
+}

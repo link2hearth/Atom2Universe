@@ -1,0 +1,122 @@
+{
+  "id": "tringa_erythropus",
+  "scientific": "Tringa erythropus",
+  "group": "birds",
+  "name": {
+    "en": "Spotted redshank",
+    "fr": "Chevalier arlequin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The spotted redshank breeds in far-northern Eurasia and winters mainly in Africa and southern Asia.",
+      "fr": "Le chevalier arlequin niche dans l’extrême nord de l’Eurasie et hiverne surtout en Afrique et en Asie méridionale."
+    },
+    "identification": {
+      "en": "Breeding adults are black with white spots; winter birds are pale, and unlike the common redshank it has a longer, finer bill and no broad white wing-bar.",
+      "fr": "Les adultes nuptiaux sont noirs et ponctués de blanc ; en hiver, l’oiseau est pâle et, contrairement au chevalier gambette, son bec est plus long et fin et il n’a pas de large barre alaire blanche."
+    },
+    "habitat": {
+      "en": "It nests in northern bogs and marshes near taiga or wooded tundra; on passage and in winter it uses estuaries, muddy wetlands and lagoons.",
+      "fr": "Il niche dans les tourbières et marais du nord, près de la taïga ou de la toundra boisée ; en migration et en hiver, il fréquente estuaires, zones humides vaseuses et lagunes."
+    },
+    "diet": {
+      "en": "It wades in shallow water for small molluscs and aquatic insects.",
+      "fr": "Il marche dans les eaux peu profondes à la recherche de petits mollusques et d’insectes aquatiques."
+    },
+    "behavior": {
+      "en": "It is mainly a passage migrant in Britain, though small numbers winter in western Europe.",
+      "fr": "Il est surtout observé en passage au Royaume-Uni, même si de petits effectifs hivernent en Europe occidentale."
+    },
+    "reproduction": {
+      "en": "It lays about four eggs in a simple ground nest near water; both adults incubate.",
+      "fr": "Il pond environ quatre œufs dans une simple dépression au sol près de l’eau ; les deux adultes couvent."
+    },
+    "ecology": {
+      "en": "Its close Tringa relatives include the greenshank, lesser yellowlegs and wood sandpiper; see their profiles for comparison.",
+      "fr": "Ses proches parents du genre Tringa comprennent le chevalier aboyeur, celui à pattes jaunes et le chevalier sylvain ; voir leurs fiches pour comparer."
+    },
+    "conservation": {
+      "en": "It is globally assessed as Least Concern, although the BTO reports declining passage counts in Britain since a late-1990s peak.",
+      "fr": "Son statut mondial est Préoccupation mineure, bien que le BTO rapporte une baisse des effectifs de passage au Royaume-Uni depuis un pic à la fin des années 1990."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Oiseaux.net — Spotted redshank",
+        "fr": "Oiseaux.net — Chevalier arlequin"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/chevalier.arlequin.html",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The French species account describes seasonal plumage, wetland habitat, prey, nesting and close relatives."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 14,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Trust for Ornithology — Spotted redshank",
+        "fr": "British Trust for Ornithology — Chevalier arlequin"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/spotted-redshank",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The BTO describes range, seasonal plumage, coastal winter habitat and passage in Britain; UK passage counts have fallen since a late-1990s peak, while global status is Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 28,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The UK passage trend is regional and does not establish a global population trend."
+  ],
+  "review_note": "Cross-references name only Tringa species with a source-backed phylogenetic or identification link.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

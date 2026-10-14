@@ -1,0 +1,26 @@
+{
+  "id": "toxocara_canis",
+  "name": "Dog roundworm",
+  "scientific": "Toxocara canis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Toxocara canis is a roundworm parasite of dogs and other canids.",
+    "identification": "Its thick-shelled eggs have a pitted surface.",
+    "habitat": "Adult worms live in the small intestine of dogs, especially young dogs.",
+    "diet": "The veterinary sources consulted do not separately describe what the adult worms consume in the host intestine.",
+    "behavior": "Eggs mature in soil; ingested larvae migrate through young dogs before adults settle in the intestine.",
+    "reproduction": "Adult females lay eggs in the intestine, and puppies may also acquire larvae before birth or through milk.",
+    "ecology": "Humans are accidental hosts; larvae may migrate through tissues but do not mature.",
+    "conservation": "The cited health sources give no conservation category for the parasite."
+  },
+  "sources": [
+    {
+      "url": "https://www.cdc.gov/dpdx/toxocariasis/",
+      "title": "DPDx: Toxocariasis — U.S. Centers for Disease Control and Prevention"
+    },
+    {
+      "url": "https://www.msdmanuals.com/fr/professional/maladies-infectieuses/n%C3%A9matodes-vers-ronds/toxocarose",
+      "title": "Toxocarose — Manuel MSD professionnel"
+    }
+  ]
+}
