@@ -1,0 +1,13 @@
+{
+  "id": "picea_abies",
+  "sections": [
+    {"title": "Port et répartition", "text": "L’épicéa commun est un grand conifère européen des forêts boréales et montagnardes, pouvant atteindre environ 50 à 60 m."},
+    {"title": "Aiguilles et cônes", "text": "Les aiguilles quadrangulaires de 1 à 2,5 cm sont fixées une à une sur de petits coussinets. Les rameaux secondaires pendent. Les cônes femelles pendants mesurent environ 10 à 18 cm et tombent entiers à maturité."},
+    {"title": "Usages", "text": "Le bois est utilisé pour la construction et la fabrication de papier. La fiche catalogue « Picea » représente la même espèce, Picea abies."}
+  ],
+  "sources": [
+    {"title": "European Atlas of Forest Tree Species — Norway spruce", "url": "https://forest.jrc.ec.europa.eu/en/european-atlas/qr-trees/norway-spruce/"},
+    {"title": "US Forest Service — Picea abies", "url": "https://research.fs.usda.gov/feis/species-reviews/picabi"}
+  ],
+  "related": ["picea", "picea_glauca"]
+}

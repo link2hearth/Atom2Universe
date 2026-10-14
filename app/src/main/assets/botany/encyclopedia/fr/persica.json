@@ -1,0 +1,12 @@
+{
+  "id": "persica",
+  "sections": [
+    {"title": "Identification et port", "text": "La fiche correspond à Prunus persica, le pêcher. Cet arbre caduc étalé peut atteindre environ 6 m. Il fleurit au printemps avant l’apparition des feuilles."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles lancéolées mesurent jusqu’à 15 cm. Les fleurs roses à rouges font environ 4 cm. Le fruit est une drupe arrondie, généralement duveteuse et jaune à rougeâtre; la nectarine est une forme à peau lisse de la même espèce."},
+    {"title": "Comestibilité", "text": "La chair du fruit mûr est consommée. Le noyau dur n’est pas destiné à être mangé."}
+  ],
+  "sources": [
+    {"title": "Royal Horticultural Society — Prunus persica", "url": "https://www.rhs.org.uk/plants/156648/prunus-persica/details"}
+  ],
+  "related": ["armeniaca"]
+}

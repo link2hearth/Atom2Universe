@@ -1,0 +1,12 @@
+{
+  "id": "persica",
+  "sections": [
+    {"title": "Identification and form", "text": "This entry represents Prunus persica, the peach. This spreading deciduous tree can reach about 6 m. It flowers in spring before the leaves emerge."},
+    {"title": "Leaves, flowers and fruit", "text": "The lance-shaped leaves reach 15 cm. The pink to red flowers are about 4 cm across. The fruit is a rounded drupe, usually fuzzy and yellow to reddish; the nectarine is a smooth-skinned form of the same species."},
+    {"title": "Edibility", "text": "The flesh of the ripe fruit is eaten. The hard stone is not intended to be eaten."}
+  ],
+  "sources": [
+    {"title": "Royal Horticultural Society — Prunus persica", "url": "https://www.rhs.org.uk/plants/156648/prunus-persica/details"}
+  ],
+  "related": ["armeniaca"]
+}

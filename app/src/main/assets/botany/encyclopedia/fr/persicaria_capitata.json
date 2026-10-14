@@ -1,0 +1,13 @@
+{
+  "id": "persicaria_capitata",
+  "sections": [
+    {"title": "Port et habitat", "text": "Persicaria capitata est une plante rampante, annuelle ou vivace selon les conditions, haute de 5 à 50 cm. Elle s’enracine souvent aux nœuds et peut persister une fois installée."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles mesurent environ 1,5 à 6 × 0,6 à 3,3 cm et portent souvent une marque en V. Les inflorescences terminales arrondies, roses, mesurent environ 5 à 20 mm. Les fleurs font 2 à 3 mm et donnent un akène trigone de 1,5 à 2,2 mm."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire sûr n’a été trouvé pour cette espèce; ne pas lui attribuer les usages documentés chez d’autres Persicaria."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Persicaria capitata", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=242100091"},
+    {"title": "NSW Flora — Persicaria capitata", "url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Persicaria~capitata&page=nswfl"}
+  ],
+  "related": []
+}

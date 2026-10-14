@@ -1,0 +1,14 @@
+{
+  "id": "phoenix_canariensis",
+  "sections": [
+    {"title": "Form and range", "text": "Canary Island date palm is native to the Canary Islands and widely planted as an ornamental. Its solitary trunk, marked by leaf bases, can reach about 18–20 m."},
+    {"title": "Fronds, flowers and fruit", "text": "The pinnate fronds are about 2–6 m long; the basal leaflets are modified into spines. Plants are male or female. The oval orange fruits are about 1.5–2.3 cm long, much smaller and less fleshy than the dates of P. dactylifera."},
+    {"title": "Edibility", "text": "No reliable human food use was retained for its small fruits; do not confuse them with cultivated dates."}
+  ],
+  "sources": [
+    {"title": "Jardín Botánico de Zaragoza — Phoenix canariensis", "url": "https://www.zaragoza.es/sede/recurso/jardin-botanico/25"},
+    {"title": "Riyadh Plant Guide — Phoenix canariensis", "url": "https://www.rcrc.gov.sa/wp-content/uploads/2023/05/%D8%AF%D9%84%D9%8A%D9%84-%D9%86%D8%A8%D8%A7%D8%AA%D8%A7%D8%AA-%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_-__%D9%86%D8%B3%D8%AE%D8%A9-%D8%A7%D9%95%D9%86%D8%AC%D9%84%D9%8A%D8%B2%D9%8A%D8%A9_.pdf"},
+    {"title": "University of Florida IFAS — Phoenix canariensis", "url": "https://hort.ifas.ufl.edu/database/documents/pdf/tree_fact_sheets/PHOCANA.pdf"}
+  ],
+  "related": ["phoenix_dactylifera"]
+}

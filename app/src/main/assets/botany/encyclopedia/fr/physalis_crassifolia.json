@@ -1,0 +1,13 @@
+{
+  "id": "physalis_crassifolia",
+  "sections": [
+    {"title": "Port et habitat", "text": "Physalis crassifolia est une vivace rhizomateuse parfois suffrutescente, généralement haute de 10 à 40 cm et pouvant atteindre environ 1 m. Elle pousse sur les pentes caillouteuses, mesas, ravins et bords de routes du sud-ouest des États-Unis et du nord-ouest du Mexique."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles ovales à deltoïdes mesurent environ 0,8 à 3,3 cm, parfois davantage. Les fleurs jaunes portent des marques brunâtres. Le calice fructifère gonflé entoure une baie."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire sûr n’a été documenté pour cette espèce; ne pas déduire la comestibilité de celle d’autres Physalis."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Physalis crassifolia", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=250131475"},
+    {"title": "Flora of North America — Physalis genus", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=125280"}
+  ],
+  "related": []
+}

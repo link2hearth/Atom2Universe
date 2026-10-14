@@ -1,0 +1,12 @@
+{
+  "id": "passiflora_incarnata",
+  "sections": [
+    {"title": "Form and habitat", "text": "Maypop is a rhizomatous perennial vine native to the south-eastern United States. It climbs by tendrils and can spread along roadsides and open ground."},
+    {"title": "Leaves, flowers and fruit", "text": "The deciduous leaves are three-lobed. The white flowers with a pink-purple corona are about 2.5–7.6 cm across. The ripe yellow berry is about 2.5–7.6 cm long."},
+    {"title": "Edibility", "text": "NC State Extension lists the ripe berry as edible. That source does not recommend eating the leaves, roots or other parts."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Passiflora incarnata", "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/common-name/passion-vine/"}
+  ],
+  "related": ["passiflora_edulis", "passiflora_tarminiana"]
+}

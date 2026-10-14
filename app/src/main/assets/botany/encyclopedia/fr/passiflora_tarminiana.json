@@ -1,0 +1,15 @@
+{
+  "id": "passiflora_tarminiana",
+  "sections": [
+    {"title": "Port et répartition", "text": "Passiflora tarminiana est une liane grimpante originaire des Andes, cultivée et naturalisée ailleurs. Elle est parfois confondue avec Passiflora tripartita var. mollissima, mais le catalogue traite les deux séparément."},
+    {"title": "Fleurs et fruits", "text": "Les fleurs ouvertes mesurent environ 8 à 9 cm et leur tube floral 6 à 8 cm. Les segments rose pâle mesurent 2,5 à 4 cm; la couronne est pourpre avec des marques roses. Le fruit allongé jaune-orangé contient une pulpe et des arilles orangés."},
+    {"title": "Comestibilité", "text": "Le fruit mûr est décrit comme doux et comestible. La plante peut devenir envahissante en Nouvelle-Zélande."}
+  ],
+  "sources": [
+    {"title": "VicFlora — Passiflora tarminiana", "url": "https://vicflora.rbg.vic.gov.au/flora/taxon/fccc0ff7-1a02-4c88-9cfd-2f059d01813d"},
+    {"title": "Flora of Australia — Passiflora tarminiana", "url": "https://profiles.ala.org.au/opus/foa/profile/Passiflora%20tarminiana/publication/a991e4fb-deda-44f8-97d5-5b09b73f7a7b/file"},
+    {"title": "New Zealand Plant Conservation Network — Passiflora tarminiana", "url": "https://www.nzpcn.org.nz/flora/species/passiflora-tarminiana/"},
+    {"title": "eFloraMex — Passiflora tarminiana", "url": "https://efloramex.ib.unam.mx/cdm_dataportal/taxon/926c6751-4d53-4839-9726-4ca997570eba"}
+  ],
+  "related": ["passiflora_edulis", "passiflora_incarnata"]
+}

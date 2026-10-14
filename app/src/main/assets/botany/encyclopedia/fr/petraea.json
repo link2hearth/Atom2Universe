@@ -1,0 +1,14 @@
+{
+  "id": "petraea",
+  "sections": [
+    {"title": "Identification et port", "text": "La fiche correspond à Quercus petraea, le chêne sessile ou rouvre, un arbre caduc des bois secs à frais. Il atteint généralement 18 à 30 m et peut approcher 40 m."},
+    {"title": "Feuilles et glands", "text": "Les feuilles mesurent environ 8 à 12 cm, parfois davantage, et possèdent un pétiole distinct. Les glands sont sessiles ou presque sessiles. À la différence de Q. robur, le chêne sessile a des glands sans long pédoncule, tandis que ses feuilles ont un pétiole plus net."},
+    {"title": "Identification et comestibilité", "text": "Des formes intermédiaires et des hybridations compliquent parfois la distinction avec Q. robur. Les sources consultées ne décrivent pas ici de préparation alimentaire des glands; ne pas les consommer crus."}
+  ],
+  "sources": [
+    {"title": "FloraWeb — Quercus petraea", "url": "https://www.floraweb.de/php/artenhome.php?name-use-id=4680"},
+    {"title": "Flora of the Burren — Quercus petraea", "url": "https://flora-burren.linnaeus.naturalis.nl/linnaeus_ng/app/views/species/nsr_taxon.php?id=38371"},
+    {"title": "Centre régional de la propriété forestière — distinguer les chênes sessile et pédonculé", "url": "https://crpf-paysdelaloire.fr/sites/default/files/fiches/distinguer_les_chenes_sessile_et_pedoncule.pdf"}
+  ],
+  "related": []
+}

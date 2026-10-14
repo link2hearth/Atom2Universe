@@ -1,0 +1,12 @@
+{
+  "id": "passiflora_incarnata",
+  "sections": [
+    {"title": "Port et habitat", "text": "La passiflore incarnate est une liane vivace à rhizomes, originaire du sud-est des États-Unis. Elle grimpe grâce à des vrilles et peut coloniser les bords de chemins et les terrains ouverts."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles caduques sont trilobées. Les fleurs blanches à couronne rose-violet mesurent environ 2,5 à 7,6 cm. La baie jaune mûre mesure environ 2,5 à 7,6 cm."},
+    {"title": "Comestibilité", "text": "La baie mûre est indiquée comme comestible par NC State Extension. Cette source ne recommande pas la consommation des feuilles, racines ou autres parties."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Passiflora incarnata", "url": "https://plants.ces.ncsu.edu/plants/passiflora-incarnata/common-name/passion-vine/"}
+  ],
+  "related": ["passiflora_edulis", "passiflora_tarminiana"]
+}

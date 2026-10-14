@@ -90,8 +90,9 @@ internal object PlantHerbarium {
 
     // Exclude bundled plates with verified mismatches: D. braunii depicts D. sanderiana;
     // Iriartea deltoidea depicts blue-black fruit, unlike its documented yellow-green fruit;
-    // N. inermis depicts a prominent pitcher rim, unlike its nearly absent peristome.
-    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea", "nepenthes_inermis")
+    // N. inermis depicts a prominent pitcher rim, unlike its nearly absent peristome;
+    // P. usta depicts a self-rooted plant with red cones, unlike the parasitic species.
+    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea", "nepenthes_inermis", "parasitaxus_usta")
 
     fun hasPlate(id: String) = id in speciesIds && id !in mismatchedPlates
 

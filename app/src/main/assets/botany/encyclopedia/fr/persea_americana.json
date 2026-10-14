@@ -1,0 +1,14 @@
+{
+  "id": "persea_americana",
+  "sections": [
+    {"title": "Port et culture", "text": "L’avocatier est un arbre persistant des régions tropicales et subtropicales, souvent haut de 9 à 12 m, avec une couronne large d’environ 7,5 à 11 m. Il est cultivé dans le monde pour ses fruits."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles alternes, entières et persistantes mesurent environ 10 à 28 cm. Les petites fleurs jaune-vert sont réunies en panicules. Les avocats sont des baies pendantes de 7,5 à 20 cm, piriformes ou arrondies, à peau dont la texture et la couleur varient selon le cultivar."},
+    {"title": "Comestibilité et précautions", "text": "La pulpe mûre est consommée comme aliment; la planche montre un fruit vert piriforme, sans représenter toute la diversité variétale. Les feuilles et le noyau ne sont pas des aliments humains usuels; l’avocat peut être nocif pour certains animaux domestiques."}
+  ],
+  "sources": [
+    {"title": "University of Florida IFAS — Avocado", "url": "https://ask.ifas.ufl.edu/publication/ST435"},
+    {"title": "NC State Extension — Persea americana", "url": "https://plants.ces.ncsu.edu/plants/persea-americana/"},
+    {"title": "Royal Horticultural Society — Persea americana", "url": "https://www.rhs.org.uk/plants/21291/persea-americana/details"}
+  ],
+  "related": []
+}
