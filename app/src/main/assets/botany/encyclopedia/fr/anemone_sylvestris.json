@@ -1,0 +1,13 @@
+{
+  "id": "anemone_sylvestris",
+  "sections": [
+    {"title": "Port et habitat", "text": "Vivace rhizomateuse de 15–50 cm, indigène d’une vaste partie de l’Eurasie tempérée. Elle pousse notamment aux lisières et dans les fourrés chauds et secs. Ses feuilles basales sont profondément divisées; la fleur solitaire, d’environ 4–7 cm de diamètre, porte généralement cinq ou six sépales blancs pétaloïdes, sans vrais pétales. Les carpelles séparés mûrissent en akènes velus."},
+    {"title": "Toxicité et distinction", "text": "USDA GRIN enregistre un usage comme poison pour des mammifères, sans préciser l’exposition humaine; cela ne permet pas d’affirmer une toxicité générale pour l’humain. L’espèce se distingue d’Anemone nemorosa, également appelée anémone des bois."}
+  ],
+  "sources": [
+    {"title": "Anemone sylvestris — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A303663-2"},
+    {"title": "Anemone sylvestris — FloraWeb, Agence fédérale allemande pour la conservation de la nature", "url": "https://www.floraweb.de/php/artenhome.php?name-use-id=437"},
+    {"title": "Anemone sylvestris — flore de Vienne, Muséum d’histoire naturelle de Vienne", "url": "https://flora.nhm-wien.ac.at/Seiten-Arten/Anemone-sylvestris.htm"},
+    {"title": "Anemone sylvestris — USDA GRIN Global", "url": "https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=3405"}
+  ]
+}

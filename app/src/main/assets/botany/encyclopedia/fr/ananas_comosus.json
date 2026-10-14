@@ -1,0 +1,13 @@
+{
+  "id": "ananas_comosus",
+  "sections": [
+    {"title": "Port et culture", "text": "Broméliacée terrestre vivace formant une rosette, généralement haute et large de 1–2 m; ses feuilles rigides peuvent atteindre 1 m. L’inflorescence dense porte de nombreuses fleurs violacées. Leurs fruits se soudent avec l’axe en un syncarpe charnu couronné de feuilles, pouvant mesurer environ 30 cm. Cultigène domestiqué en Amérique du Sud et aujourd’hui cultivé sous les tropiques; son origine précise et ses ancêtres sauvages restent incertains."},
+    {"title": "Alimentation et précautions", "text": "Le fruit mûr est consommé. Kew signale qu’un fruit non mûr peut irriter la gorge et agir comme purgatif. Les marges des feuilles varient selon les cultivars, d’épineuses à presque lisses."}
+  ],
+  "sources": [
+    {"title": "Ananas comosus — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A12322-2/general-information"},
+    {"title": "Ananas comosus — Smithsonian National Museum of Natural History", "url": "https://naturalhistory2.si.edu/botany/hawaiianflora/speciesdescr.cfm?genus=Ananas&species=comosus"},
+    {"title": "Pineapple — JIRCAS Tropical Vegetables", "url": "https://www.jircas.go.jp/en/database/thaivege/009"}
+  ],
+  "related": ["androlepis_skinneri"]
+}

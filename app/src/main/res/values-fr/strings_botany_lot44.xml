@@ -21,8 +21,8 @@
     <string name="bot_ambrella_longituba_name">Ambrelle à long labelle</string>
     <string name="bot_ambrella_longituba_latin" translatable="false">Ambrella longituba</string>
     <string name="bot_ambrella_longituba_aliases">orchidée Ambrella</string>
-    <string name="bot_ambrella_longituba_description">Miniature orchidée épiphyte de Nouvelle-Guinée, reconnaissable à ses quelques feuilles plates et surtout à son labelle en tube très allongé, densément poilu à l’intérieur. La petite taille et la morphologie florale sont mieux documentées que sa variation en nature.</string>
-    <string name="bot_ambrella_longituba_distribution">Nouvelle-Guinée; épiphyte des forêts humides.</string>
+    <string name="bot_ambrella_longituba_description">Orchidée épiphyte miniature des forêts sempervirentes humides du nord de Madagascar, avec un long labelle tubulaire. Elle porte généralement cinq ou six feuilles et une inflorescence de une à trois fleurs.</string>
+    <string name="bot_ambrella_longituba_distribution">Nord de Madagascar; épiphyte des forêts sempervirentes humides.</string>
     <string name="bot_ambrella_longituba_habit">Orchidée épiphyte minuscule, formant une touffe de quelques feuilles; inflorescence de une à trois fleurs.</string>
     <string name="bot_ambrella_longituba_leaf">Environ cinq à six feuilles plates, elliptiques, rassemblées en touffe.</string>
     <string name="bot_ambrella_longituba_flower">Fleur verdâtre à labelle tubulaire pouvant mesurer environ 4,5 cm, intérieurement couvert de poils.</string>

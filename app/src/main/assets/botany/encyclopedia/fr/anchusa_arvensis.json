@@ -1,0 +1,13 @@
+{
+  "id": "anchusa_arvensis",
+  "sections": [
+    {"title": "Port et habitat", "text": "Buglosse annuelle d’Europe, généralement haute de 15–60 cm et rude au toucher par ses soies raides. Les feuilles alternes sont étroites; les petites fleurs bleues, parfois blanches, ont un tube courbé et des lobes inégaux. Chaque fleur donne quatre nucules rugueuses. Elle pousse dans les cultures, les sols sableux et les lieux perturbés; elle est naturalisée ailleurs."},
+    {"title": "Alimentation et précautions", "text": "Des alcaloïdes pyrrolizidiniques ont été détectés dans des extraits de la plante, mais les sources consultées n’établissent aucune partie comestible et ne permettent pas d’affirmation générale sur le risque d’ingestion."}
+  ],
+  "sources": [
+    {"title": "Anchusa arvensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A113196-1"},
+    {"title": "Anchusa arvensis — VicFlora, Royal Botanic Gardens Victoria", "url": "https://vicflora.rbg.vic.gov.au/flora/taxon/df4a88f5-693f-4ff9-875f-5cc12e334593"},
+    {"title": "Anchusa arvensis — Herbari Virtual Mediterrani, Université des îles Baléares", "url": "https://herbarivirtual.uib.es/es/catalunya/1517/especie/ancusa-arvense"},
+    {"title": "Alcaloïdes pyrrolizidiniques dans des extraits d’Anchusa arvensis — ScienceDirect", "url": "https://www.sciencedirect.com/science/article/pii/S0305197898000283"}
+  ]
+}

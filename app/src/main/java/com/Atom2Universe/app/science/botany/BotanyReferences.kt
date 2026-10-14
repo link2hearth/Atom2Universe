@@ -4,7 +4,7 @@ package com.Atom2Universe.app.science.botany
 object BotanyReferences {
     private val supplementaryPages=mapOf(
         "ambuchanania_leucobryoides" to listOf("https://nre.tas.gov.au/Documents/Ambuchanania%20leucobryoides%20listing%20statement.pdf", "https://www.anbg.gov.au/abrs/Mosses_online/Ambuchananiaceae.pdf", "https://doi.org/10.3732/ajb.1000055"),
-        "andreaeobryum_macrosporum" to listOf("https://www.worldfloraonline.org/taxon/wfo-4000001970", "https://a100.gov.bc.ca/pub/eswp/speciesSummary.do?id=19971"),
+        "andreaeobryum_macrosporum" to listOf("https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=101667", "https://a100.gov.bc.ca/pub/eswp/speciesSummary.do?id=19971"),
         "catoscopium_nigritum" to listOf("https://www.britishbryologicalsociety.org.uk/wp-content/uploads/2020/12/Catoscopium-nigritum.pdf"),
         "hennediella_heimii" to listOf("https://www.britishbryologicalsociety.org.uk/learning/species-finder/hennediella-heimii/"),
         "bryum_turbinatum" to listOf("https://www.worldfloraonline.org/taxon/wfo-0001177358", "https://www.britishbryologicalsociety.org.uk/"),
@@ -527,7 +527,7 @@ object BotanyReferences {
         "equisetum_palustre" to "https://powo.science.kew.org/taxon/30039890-2",
         "nepenthes_rajah" to "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:603791-1/general-information",
         "ambuchanania_leucobryoides" to "https://www.anbg.gov.au/abrs/Mosses_online/Ambuchananiaceae.pdf",
-        "andreaeobryum_macrosporum" to "https://www.worldfloraonline.org/taxon/wfo-4000001970",
+        "andreaeobryum_macrosporum" to "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=101667",
         "catoscopium_nigritum" to "https://www.britishbryologicalsociety.org.uk/wp-content/uploads/2020/12/Catoscopium-nigritum.pdf",
         "hennediella_heimii" to "https://www.britishbryologicalsociety.org.uk/learning/species-finder/hennediella-heimii/",
         "bryum_turbinatum" to "https://www.worldfloraonline.org/taxon/wfo-0001177358",

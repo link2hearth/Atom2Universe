@@ -1,0 +1,13 @@
+{
+  "id": "androlepis_skinneri",
+  "sections": [
+    {"title": "Port et habitat", "text": "Grande broméliacée épiphyte des forêts tropicales humides, indigène du sud du Mexique à l’Amérique centrale. En floraison, elle atteint environ 1–2 m; ses feuilles en rosette peuvent mesurer 80–140 cm et ont des bords fortement dentés. La longue inflorescence ramifiée porte des fleurs jaunes; les baies mûres sont crème à jaunes et mesurent environ 1–2 cm."},
+    {"title": "Usages et planche", "text": "Les sources consultées n’établissent ni usage alimentaire ni toxicité. La plante et l’inflorescence de la planche existante sont globalement plausibles, mais la baie bleu-noir représentée contredit les descriptions botaniques de fruits mûrs pâles. À la différence de l’ananas cultivé terrestre, cette espèce est épiphyte et porte de petites baies plutôt qu’un gros fruit soudé."}
+  ],
+  "sources": [
+    {"title": "Androlepis skinneri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A121948-1"},
+    {"title": "Androlepis skinneri — Manual de Flora de Costa Rica", "url": "https://www.mobot.org/Manual.Plantas/043683/S043872.html"},
+    {"title": "Androlepis skinneri — Encyclopedia of Bromeliads", "url": "https://bromeliad.nl/encyclopedia/brome.php?action=showRef&id=4350"}
+  ],
+  "related": ["ananas_comosus"]
+}

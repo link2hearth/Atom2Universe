@@ -21,8 +21,8 @@
     <string name="bot_ambrella_longituba_name">Long-tubed Ambrella</string>
     <string name="bot_ambrella_longituba_latin" translatable="false">Ambrella longituba</string>
     <string name="bot_ambrella_longituba_aliases">Ambrella orchid</string>
-    <string name="bot_ambrella_longituba_description">A miniature orchid from New Guinea, recognized by a few flat leaves and especially its exceptionally long tubular labellum, hairy inside. Size and flower structure are better documented than variation in the wild.</string>
-    <string name="bot_ambrella_longituba_distribution">New Guinea; epiphytic in humid forests.</string>
+    <string name="bot_ambrella_longituba_description">A miniature epiphytic orchid of humid evergreen forests in northern Madagascar, with a long tubular labellum. It typically bears five or six leaves and an inflorescence with one to three flowers.</string>
+    <string name="bot_ambrella_longituba_distribution">Northern Madagascar; epiphytic in humid evergreen forests.</string>
     <string name="bot_ambrella_longituba_habit">Tiny epiphytic orchid forming a tuft of a few leaves; inflorescence with one to three flowers.</string>
     <string name="bot_ambrella_longituba_leaf">About five or six flat elliptic leaves gathered in a tuft.</string>
     <string name="bot_ambrella_longituba_flower">Greenish flower with a tubular labellum up to about 4.5 cm, hairy inside.</string>

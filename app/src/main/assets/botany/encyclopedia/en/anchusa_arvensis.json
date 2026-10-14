@@ -1,0 +1,13 @@
+{
+  "id": "anchusa_arvensis",
+  "sections": [
+    {"title": "Form and habitat", "text": "A European annual bugloss, usually 15–60 cm tall and rough with stiff hairs. Its alternate leaves are narrow; small blue, occasionally white flowers have a curved tube and unequal lobes. Each flower produces four rough nutlets. It grows in crops, sandy ground and disturbed sites and is naturalised elsewhere."},
+    {"title": "Food and safety", "text": "Pyrrolizidine alkaloids have been detected in plant extracts, but the sources consulted establish no edible part and do not support a general statement about ingestion risk."}
+  ],
+  "sources": [
+    {"title": "Anchusa arvensis — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A113196-1"},
+    {"title": "Anchusa arvensis — VicFlora, Royal Botanic Gardens Victoria", "url": "https://vicflora.rbg.vic.gov.au/flora/taxon/df4a88f5-693f-4ff9-875f-5cc12e334593"},
+    {"title": "Anchusa arvensis — Herbari Virtual Mediterrani, University of the Balearic Islands", "url": "https://herbarivirtual.uib.es/es/catalunya/1517/especie/ancusa-arvense"},
+    {"title": "Pyrrolizidine alkaloids in Anchusa arvensis extracts — ScienceDirect", "url": "https://www.sciencedirect.com/science/article/pii/S0305197898000283"}
+  ]
+}

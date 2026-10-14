@@ -1,0 +1,13 @@
+{
+  "id": "androlepis_skinneri",
+  "sections": [
+    {"title": "Form and habitat", "text": "A large epiphytic bromeliad of wet tropical forests, native from southern Mexico through Central America. When flowering it reaches about 1–2 m; its rosette leaves may measure 80–140 cm and have strongly toothed margins. A long branched inflorescence bears yellow flowers; ripe berries are pale cream to yellow and about 1–2 cm across."},
+    {"title": "Uses and image note", "text": "The sources consulted establish no food use or toxicity. The plant and inflorescence in the existing plate are broadly plausible, but the dark blue-black berry shown conflicts with botanical records describing pale ripe berries. Unlike the terrestrial cultivated pineapple, this species is epiphytic and has small berries rather than a large fused fruit."}
+  ],
+  "sources": [
+    {"title": "Androlepis skinneri — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A121948-1"},
+    {"title": "Androlepis skinneri — Manual de Flora de Costa Rica", "url": "https://www.mobot.org/Manual.Plantas/043683/S043872.html"},
+    {"title": "Androlepis skinneri — Encyclopedia of Bromeliads", "url": "https://bromeliad.nl/encyclopedia/brome.php?action=showRef&id=4350"}
+  ],
+  "related": ["ananas_comosus"]
+}
