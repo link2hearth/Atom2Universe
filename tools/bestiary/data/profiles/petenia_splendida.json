@@ -1,0 +1,120 @@
+{
+  "id": "petenia_splendida",
+  "scientific": "Petenia splendida",
+  "group": "fish",
+  "name": {
+    "en": "Bay snook",
+    "fr": "Péténia splendide"
+  },
+  "sections": {
+    "overview": {
+      "en": "Petenia splendida is a Central American freshwater cichlid.",
+      "fr": "Petenia splendida est un cichlidé d’eau douce d’Amérique centrale."
+    },
+    "identification": {
+      "en": "It may reach 50 cm standard length.",
+      "fr": "Elle peut atteindre 50 cm de longueur standard."
+    },
+    "habitat": {
+      "en": "It favours lakes and slow lower river reaches with sand or mud bottoms.",
+      "fr": "Elle préfère les lacs et les cours inférieurs lents, aux fonds sableux ou vaseux."
+    },
+    "diet": {
+      "en": "FishBase reports that it feeds on fish.",
+      "fr": "FishBase indique qu’elle se nourrit de poissons."
+    },
+    "behavior": {
+      "en": "Its social and daily activity patterns remain poorly documented.",
+      "fr": "Son organisation sociale et son rythme d’activité restent peu documentés."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive information was not found.",
+      "fr": "Aucune donnée propre à sa reproduction n’a été trouvée."
+    },
+    "ecology": {
+      "en": "Its range spans Mexico, Guatemala and Belize; in Mexico it is called Tenguayaca.",
+      "fr": "Son aire couvre le Mexique, le Guatemala et le Belize ; au Mexique, on l’appelle Tenguayaca."
+    },
+    "conservation": {
+      "en": "Its 2018 IUCN assessment is Least Concern.",
+      "fr": "Son évaluation UICN de 2018 est « préoccupation mineure »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Petenia splendida summary — FishBase",
+        "fr": "Fiche Petenia splendida — FishBase"
+      },
+      "url": "https://fishbase.se/summary/26819",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Freshwater cichlid; Central American range; slow-water habitat; fish diet; Least Concern (2018)."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 12,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tenguayaca (Petenia splendida) — Enciclovida, CONABIO",
+        "fr": "Tenguayaca (Petenia splendida) — Enciclovida, CONABIO"
+      },
+      "url": "https://enciclovida.mx/especies/30043-petenia-splendida",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Mexican biodiversity portal lists the accepted scientific name, cichlid classification and Spanish common name Tenguayaca."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The consulted references are brief on species-specific behaviour and reproduction; these sections deliberately avoid inference."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an English-language fish account with the Mexican CONABIO portal; kept poorly documented behaviour and reproduction explicit and brief."
+}

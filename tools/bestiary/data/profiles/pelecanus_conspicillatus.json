@@ -1,0 +1,187 @@
+{
+  "id": "pelecanus_conspicillatus",
+  "scientific": "Pelecanus conspicillatus",
+  "group": "birds",
+  "name": {
+    "en": "Australian pelican",
+    "fr": "Pélican à lunettes"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Australian pelican is a large, mobile waterbird widespread across Australia, New Guinea and western Indonesia, with occasional records farther into the Pacific.",
+      "fr": "Le Pélican à lunettes est un grand oiseau d’eau mobile, répandu en Australie, en Nouvelle-Guinée et dans l’ouest de l’Indonésie, avec des observations occasionnelles plus loin dans le Pacifique."
+    },
+    "identification": {
+      "en": "It is mostly white with black wings and a massive pink bill and throat pouch; males are larger, with bills around 40–50 centimetres long.",
+      "fr": "Son plumage est surtout blanc avec des ailes noires, et son énorme bec rose porte une poche gulaire ; les mâles sont plus grands, avec un bec d’environ 40 à 50 centimètres."
+    },
+    "habitat": {
+      "en": "It uses inland and coastal open waters, including lakes, rivers, estuaries, swamps and lagoons, moving widely as water and food availability change.",
+      "fr": "Il fréquente les eaux libres intérieures et côtières — lacs, rivières, estuaires, marais et lagunes — et se déplace au gré de l’eau et de la nourriture disponibles."
+    },
+    "diet": {
+      "en": "Fish form most of its diet, though it also takes crustaceans and other aquatic prey; the pouch works as a short-term scoop net, not a food-storage bag.",
+      "fr": "Les poissons forment l’essentiel de son régime, mais il capture aussi des crustacés et d’autres proies aquatiques ; la poche sert d’épuisette temporaire, pas de réserve à nourriture."
+    },
+    "behavior": {
+      "en": "It often fishes cooperatively, herding fish into shallow or confined water before scooping them up; individuals can also forage alone.",
+      "fr": "Il pêche souvent en groupe, rabattant les poissons vers des eaux peu profondes ou confinées avant de les capturer ; il peut aussi se nourrir seul."
+    },
+    "reproduction": {
+      "en": "Breeding may occur at different times and depends strongly on rainfall; pairs nest colonially on islands or secluded shores and share incubation.",
+      "fr": "La reproduction peut avoir lieu à différentes saisons et dépend beaucoup des pluies ; les couples nichent en colonies sur des îles ou des rives isolées et se partagent l’incubation."
+    },
+    "ecology": {
+      "en": "It is the only pelican native to Australia and is highly nomadic, travelling long distances between wetlands.",
+      "fr": "C’est le seul pélican indigène d’Australie ; très nomade, il parcourt de longues distances entre les zones humides."
+    },
+    "conservation": {
+      "en": "It remains widespread, but breeding success and food supply depend on changing wetland conditions; the sources consulted do not establish a current population trend.",
+      "fr": "L’espèce reste largement répartie, mais le succès reproducteur et la nourriture dépendent des conditions changeantes des zones humides ; les sources consultées n’établissent pas de tendance démographique actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Australian Pelican — Australian Museum",
+        "fr": "Pélican à lunettes — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/birds/australian-pelican/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Museum account describes plumage, bill and pouch, fish diet, cooperative foraging and rainfall-linked colonial breeding."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 15,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Pelican species profile — Australian Government legislation register",
+        "fr": "Fiche espèce du Pélican à lunettes — registre législatif du gouvernement australien"
+      },
+      "url": "https://www.legislation.gov.au/F2022L00775/asmade/2022-06-15/text/original/epub/OEBPS/document_1/document_1.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Government profile documents broad range, inland/coastal wetland habitat, variable rainfall-linked breeding and climate-related concerns for food and breeding habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 19,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Pelican — Museum Victoria",
+        "fr": "Pélican à lunettes — Museum Victoria"
+      },
+      "url": "https://collections.museumsvictoria.com.au/species/8260",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Museum Victoria confirms it is the only pelican species native to Australia."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 12,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pélican à lunettes — Muséum national d’Histoire naturelle specimen catalogue",
+        "fr": "Pélican à lunettes — catalogue des spécimens du Muséum national d’Histoire naturelle"
+      },
+      "url": "https://science.mnhn.fr/institution/mnhn/collection/zo/item/mo-1991-1129?listIndex=1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "French national museum confirms the French common name and taxon identity."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Pelican — Department of Biodiversity, Conservation and Attractions, Western Australia",
+        "fr": "Pélican à lunettes — Department of Biodiversity, Conservation and Attractions, Australie-Occidentale"
+      },
+      "url": "https://www.dbca.wa.gov.au/wildlife-and-ecosystems/marine/marine-parks/fun-facts/australian-pelican",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Western Australian conservation agency describes black-and-white plumage and the large pouched bill."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 12,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding is strongly tied to local rainfall and can occur at different times of year; no single calendar applies throughout the range.",
+    "No current range-wide abundance trend was located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Australian Museum and government sources with Museum Victoria and the MNHN French specimen catalogue; the close congeners mentioned in comparisons are not currently profiled in this bestiary."
+}

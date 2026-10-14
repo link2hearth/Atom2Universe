@@ -1,0 +1,189 @@
+{
+  "id": "papilio_clytia",
+  "scientific": "Papilio clytia",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common mime",
+    "fr": "Mime commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "Papilio clytia, the Common Mime, is an Asian swallowtail whose patterned forms resemble distasteful butterflies. Some regional sources use the genus Chilasa for this species.",
+      "fr": "Papilio clytia, le Mime commun, est un papillon machaon asiatique dont les motifs ressemblent à ceux de papillons au goût désagréable. Certaines sources régionales placent cette espèce dans le genre Chilasa."
+    },
+    "identification": {
+      "en": "Adults are bluish black with pale streaks and marginal spots; the underside has yellow spots on the hindwing. Two main forms occur: a brown pattern and a contrasting black-and-white striped pattern.",
+      "fr": "Les adultes sont bleu-noir, avec des stries claires et des taches marginales ; le dessous porte des taches jaunes sur l’aile postérieure. Deux motifs principaux existent : une forme brune et une forme rayée noire et blanche."
+    },
+    "habitat": {
+      "en": "It ranges across South and Southeast Asia. In Singapore, records include forests as well as parks and gardens.",
+      "fr": "L’espèce est présente en Asie du Sud et du Sud-Est. À Singapour, elle fréquente les forêts, mais aussi les parcs et les jardins."
+    },
+    "diet": {
+      "en": "Caterpillars feed on host plants including Cinnamomum iners; host records vary among local accounts. Adults visit flowers for nectar.",
+      "fr": "Les chenilles consomment notamment Cinnamomum iners ; les plantes hôtes citées varient selon les régions. Les adultes butinent le nectar."
+    },
+    "behavior": {
+      "en": "Both sexes can show either principal wing pattern. These forms imitate distasteful danaine butterflies, including tiger and crow butterflies, which may deter predators.",
+      "fr": "Les deux sexes peuvent présenter l’un ou l’autre des principaux motifs alaires. Ces formes imitent des danaïdes au goût désagréable, dont des « tigres » et des « corbeaux », ce qui peut décourager les prédateurs."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on host plants; the larva passes through caterpillar and pupal stages before emerging as an adult. The sources consulted do not establish a single development time for the species.",
+      "fr": "Les femelles pondent sur les plantes hôtes ; la larve traverse les stades de chenille puis de chrysalide avant de devenir adulte. Les sources consultées n’établissent pas de durée de développement unique pour l’espèce."
+    },
+    "ecology": {
+      "en": "Its mimicry is notably variable for a swallowtail because both sexes can express alternate patterns. It belongs to the swallowtail family Papilionidae.",
+      "fr": "Son mimétisme présente une variation notable chez un machaon, car les deux sexes peuvent porter différents motifs. Il appartient à la famille des papilionidés."
+    },
+    "conservation": {
+      "en": "A Singapore government account calls it common locally. This local status is not a global conservation assessment, which was not located in the sources consulted.",
+      "fr": "Une fiche gouvernementale singapourienne la qualifie de commune localement. Ce statut local ne constitue pas une évaluation mondiale de conservation, que les sources consultées n’ont pas trouvée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Mime — Flora & Fauna Web, National Parks Board Singapore",
+        "fr": "Mime commun — Flora & Fauna Web, National Parks Board Singapore"
+      },
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/9/2/928",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Singapore government account gives wing markings, host plant, mimicry, habitat and local common status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 14,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Papilio clytia mimicry polymorphisms — peer-reviewed study",
+        "fr": "Polymorphisme mimétique de Papilio clytia — étude évaluée par les pairs"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7968384/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Study documents two mimicry patterns in both sexes and their resemblance to distasteful danaine butterflies."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 15,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Mime, Papilio clytia — Maharashtra Forest Department pocket guide",
+        "fr": "Mime commun, Papilio clytia — guide du service forestier du Maharashtra"
+      },
+      "url": "https://penchtigerreserve.maharashtra.gov.in/wp-content/uploads/2025/03/Final_Butterfly-pocket-guide-book.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Indian reserve guide records regional distribution, habitat, a larval host and life stages."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 13,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Papilio clytia clytia — ButterflyCircle checklist",
+        "fr": "Papilio clytia clytia — liste ButterflyCircle"
+      },
+      "url": "https://www.butterflycircle.com/checklist/showbutterfly/1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Regional butterfly checklist uses Chilasa clytia and describes host plant, early stages and mimicry."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.2",
+        "diet.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 14,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some taxonomic sources use Chilasa clytia instead of Papilio clytia.",
+    "Host records and local abundance should not be extrapolated across the whole Asian range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a Singapore government account, an Indian reserve guide and peer-reviewed research on mimicry; noted the genus-level taxonomic variation."
+}

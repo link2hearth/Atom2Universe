@@ -1,0 +1,34 @@
+{
+  "id": "parascyllium_variolatum",
+  "name": "Parascyllium variolatum",
+  "scientific": "Parascyllium variolatum",
+  "group": "fish",
+  "sections": {
+    "overview": "Le requin-carpette à collier est un petit requin benthique du sud de l’Australie, appartenant à la famille des Parascylliidae.",
+    "identification": "Il possède un corps long et mince, un large collier noir ponctué de blanc derrière la tête, ainsi que des taches claires et des nageoires marbrées de brun. Il atteint environ 92 cm, mais les individus observés sont souvent plus petits.",
+    "habitat": "Il vit autour du sud de l’Australie, de l’est du Victoria et de la Tasmanie jusqu’au sud-ouest de l’Australie-Occidentale, dans les eaux côtières tempérées, les récifs, les baies et les estuaires.",
+    "diet": "Le musée du Victoria indique qu’il se nourrit surtout de coquillages et autres mollusques.",
+    "behavior": "Il est surtout nocturne et s’abrite le jour dans des grottes, des fissures, sous des corniches ou dans les algues; il chasse après la tombée de la nuit.",
+    "reproduction": "Il est ovipare, mais les détails de sa reproduction sont peu connus.",
+    "ecology": "Son congénère P. sparsimaculatum n’est connu que par de rares observations et des eaux plus profondes au large de l’Australie-Occidentale; P. variolatum possède une aire côtière méridionale plus vaste et fréquente souvent des eaux moins profondes.",
+    "conservation": "La plus récente évaluation australienne des pêcheries le classe en préoccupation mineure et considère son stock durable; cela ne signifie pas que toutes les populations locales aient été suivies."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/fishes/varied-carpetshark-parascyllium-variolatum-dumril-1853/",
+      "title": "Requin-carpette varié — Australian Museum"
+    },
+    {
+      "url": "https://collections.museumsvictoria.com.au/species/4242",
+      "title": "Parascyllium variolatum — collections des musées du Victoria"
+    },
+    {
+      "url": "https://www.fish.gov.au/docs/SharkReport/2023_FRDC_Parascyllium_variolatum_final.pdf",
+      "title": "Requin-carpette varié — rapports australiens sur l’état des pêcheries"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/3289",
+      "title": "Requin-carpette beige — Fishes of Australia"
+    }
+  ]
+}

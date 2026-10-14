@@ -1,0 +1,26 @@
+{
+  "id": "paradarisa_consonaria",
+  "name": "Boarmie du tilleul",
+  "scientific": "Paradarisa consonaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Paradarisa consonaria, la Boarmie du tilleul, est un papillon de nuit géométridé présent dans une partie de l’Europe occidentale. Des sources plus anciennes peuvent employer le nom Ectropis consonaria.",
+    "identification": "L’adulte a une envergure d’environ 40 à 45 mm. Une tache carrée sombre sur l’aile antérieure aide à l’identification, même si l’espèce est variable et présente des formes mélaniques foncées.",
+    "habitat": "Elle est associée aux boisements. En France, elle est surtout signalée dans le nord et le centre.",
+    "diet": "Les chenilles mangent des arbres, notamment des chênes et des bouleaux.",
+    "behavior": "En Grande-Bretagne, les adultes volent surtout d’avril à juin.",
+    "reproduction": "Les chenilles se développent sur des plantes ligneuses avant la nymphose. Les sources consultées documentent les œufs et les larves, mais pas un calendrier de développement valable pour toute l’espèce.",
+    "ecology": "Comme la couleur des ailes varie, la tache carrée antérieure est plus fiable que la seule teinte générale. Les chenilles utilisent plusieurs types d’arbres plutôt qu’une plante hôte très spécialisée.",
+    "conservation": "Les sources consultées décrivent des observations régionales, mais ne permettent pas d’établir une évaluation mondiale de conservation ni une tendance démographique pour ce papillon."
+  },
+  "sources": [
+    {
+      "url": "https://www.handeln.ukmoths.org.uk/species/paradarisa-consonaria/",
+      "title": "Boarmie du tilleul, Paradarisa consonaria — UKMoths"
+    },
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?id=37250",
+      "title": "Paradarisa consonaria — Lepinet, Espace Lépidoptères"
+    }
+  ]
+}

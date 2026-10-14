@@ -1,0 +1,34 @@
+{
+  "id": "parachromis_managuensis",
+  "name": "Jaguar cichlid",
+  "scientific": "Parachromis managuensis",
+  "group": "fish",
+  "sections": {
+    "overview": "Parachromis managuensis, the Jaguar Cichlid or Jaguar Guapote, is a large freshwater fish native to the Atlantic-draining rivers and lakes of Central America.",
+    "identification": "It has a large mouth, projecting lower jaw and prominent canine-like teeth. Dark marks along the flank and spots on the fins contribute to its jaguar-like pattern.",
+    "habitat": "It occurs from the Ulúa River in Honduras south to the Matina River in Costa Rica. Accounts describe lakes, springs and ponds, often over muddy or sandy bottoms.",
+    "diet": "Adults are strongly fish-eating predators; aquatic invertebrates are an important part of the juvenile diet.",
+    "behavior": "Both parents guard the eggs and fry. It has also been introduced beyond its native range.",
+    "reproduction": "It lays batches of eggs on hard surfaces such as rocks, and both parents care for the eggs and young.",
+    "ecology": "It is one of several cichlids in the genus Parachromis. Effects on ecosystems where it is introduced remain uncertain.",
+    "conservation": "FishBase reports a global IUCN assessment of Least Concern from 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/parachromis-managuensis.html",
+      "title": "Parachromis managuensis — FishBase"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?speciesid=445",
+      "title": "Jaguar Guapote species profile — USGS Nonindigenous Aquatic Species"
+    },
+    {
+      "url": "https://www.ukdr.uplb.edu.ph/journal-articles/4255/",
+      "title": "Biological investigation of Parachromis managuensis in Taal Lake — UPLB Journals Online"
+    },
+    {
+      "url": "https://datosabiertos.unam.mx/IBUNAM%3ACNPE%3A8887",
+      "title": "Parachromis managuensis — Mexican National Fish Collection"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "parascyllium_collare",
+  "name": "Requin-carpette à collier",
+  "scientific": "Parascyllium collare",
+  "group": "fish",
+  "sections": {
+    "overview": "Parascyllium collare, le Requin-carpette à collier, est un requin de l’est australien, famille Parascylliidae.",
+    "identification": "Il est brun, avec de larges bandes et un collier sombre marqué derrière la tête.",
+    "habitat": "Il vit sur le plateau continental oriental, surtout autour de zones rocheuses au large.",
+    "diet": "L’espèce reste peu connue et les références consultées ne permettent pas d’établir précisément son régime alimentaire.",
+    "behavior": "C’est un requin associé aux fonds marins, capturé surtout comme prise accessoire dans certaines pêcheries australiennes au chalut.",
+    "reproduction": "Il est ovipare : les femelles pondent des œufs par paires et les embryons sont nourris par leur vitellus.",
+    "ecology": "Son proche parent australien, le Requin-carpette roux, Parascyllium ferrugineum, vit plus au sud et à l’ouest et porte des marques brun rouille plutôt que les bandes contrastées du Requin-carpette à collier.",
+    "conservation": "Fishes of Australia rapporte une catégorie UICN de préoccupation mineure. L’espèce est capturée comme prise accessoire et sa biologie reste incomplètement documentée."
+  },
+  "sources": [
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/3287",
+      "title": "Requin-carpette à collier — Fishes of Australia, collection nationale australienne de poissons"
+    },
+    {
+      "url": "https://fishbase.se/summary/5914",
+      "title": "Fiche Parascyllium collare — FishBase"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/3288",
+      "title": "Requin-carpette roux — Fishes of Australia"
+    }
+  ]
+}

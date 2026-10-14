@@ -1,0 +1,26 @@
+{
+  "id": "phalacrocorax_varius",
+  "name": "Cormoran varié",
+  "scientific": "Phalacrocorax varius",
+  "group": "birds",
+  "sections": {
+    "overview": "Phalacrocorax varius est le Cormoran varié d’Australie.",
+    "identification": "Il a le dos noir, le ventre blanc et le bec crochu gris.",
+    "habitat": "Il fréquente les côtes, estuaires, mangroves et zones humides de l’est.",
+    "diet": "Il mange surtout des poissons, ainsi que des crustacés et mollusques.",
+    "behavior": "Il plonge avec ses pieds palmés et étale ses ailes pour sécher.",
+    "reproduction": "Il niche en colonies ; les deux parents couvent et nourrissent les jeunes.",
+    "ecology": "P. fuscescens est limité aux côtes du sud. P. varius fréquente aussi les zones humides intérieures de l’est.",
+    "conservation": "BirdLife Australia rapporte que sa catégorie UICN mondiale est « préoccupation mineure »."
+  },
+  "sources": [
+    {
+      "url": "https://birdlife.org.au/bird-profiles/pied-cormorant/",
+      "title": "Cormoran varié — BirdLife Australia"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/wildlife-conservation-plan-for-seabirds.pdf",
+      "title": "Fiche du Cormoran de Tasmanie — Plan australien de conservation des oiseaux marins"
+    }
+  ]
+}

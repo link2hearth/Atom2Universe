@@ -1,0 +1,38 @@
+{
+  "id": "papilio_demodocus",
+  "name": "Voilier des citronniers",
+  "scientific": "Papilio demodocus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Papilio demodocus, le Voilier des citronniers, est largement répandu en Afrique subsaharienne et se rencontre aussi dans la péninsule Arabique voisine et à Socotra.",
+    "identification": "Ses ailes sombres portent des bandes et des taches jaunes marquées, avec les queues postérieures typiques des machaons. Les jeunes chenilles peuvent ressembler à des fientes d’oiseau.",
+    "habitat": "Elle fréquente de nombreux milieux d’Afrique subsaharienne, y compris les jardins et d’autres espaces modifiés par l’être humain ; l’évaluation régionale l’exclut des déserts et des milieux afro-alpins.",
+    "diet": "Les chenilles consomment diverses Rutacées, notamment des agrumes. Les adultes se nourrissent de nectar.",
+    "behavior": "Menacée, la chenille peut déployer un osmeterium, organe bifide odorant caractéristique des larves de machaons.",
+    "reproduction": "Les femelles pondent sur les plantes nourricières ; les chenilles grandissent par mues successives puis se nymphosent. La durée dépend des conditions locales.",
+    "ecology": "Comme le Papillon des vergers, Papilio aegeus, cette espèce appartient au genre Papilio et ses chenilles utilisent des Rutacées ; leurs aires et plantes hôtes documentées diffèrent, les deux ne sont donc pas interchangeables.",
+    "conservation": "L’évaluation de l’UICN de 2022 la classe en préoccupation mineure, en raison de sa vaste répartition, de l’utilisation de milieux modifiés et de plantes nourricières cultivées."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T122527216A122602926.en",
+      "title": "Papilio demodocus — évaluation de la Liste rouge de l’UICN (2022)"
+    },
+    {
+      "url": "https://www.biodiversityexplorer.info/butterflies/papilionidae/papilio_demodocus.htm",
+      "title": "Papilio demodocus — Biodiversity Explorer, Lepidopterists’ Society of Africa"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/insects/orchard-butterfly/",
+      "title": "Papillon des vergers — Australian Museum"
+    },
+    {
+      "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/aegeus.html",
+      "title": "Papilio aegeus — fiche spécialisée australienne"
+    },
+    {
+      "url": "https://www.iita.org/wp-content/uploads/2016/03/Common-butterflies-of-IITA.pdf",
+      "title": "Papillons communs de l’IITA — Voilier des citronniers"
+    }
+  ]
+}

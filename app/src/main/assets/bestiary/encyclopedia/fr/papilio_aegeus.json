@@ -10,7 +10,7 @@
     "diet": "Les chenilles mangent des agrumes et d’autres Rutacées, dont des plantes indigènes australiennes ; les hôtes relevés varient selon la région.",
     "behavior": "Les jeunes chenilles ressemblent à des fientes ; les plus âgées peuvent déployer un osmeterium rouge et malodorant si elles sont menacées, et les mâles défendent un territoire.",
     "reproduction": "Les femelles pondent sur les plantes hôtes et les chenilles traversent plusieurs stades avant la nymphose ; aucune durée unique n’est supposée pour toutes les conditions.",
-    "ecology": "Elle partage le genre Papilio avec le Machaon gracieux, P. anactus ; tous deux utilisent des agrumes, même si leurs plantes hôtes relevées ne sont pas identiques.",
+    "ecology": "Elle partage le genre Papilio avec le Machaon gracieux, P. anactus ; tous deux utilisent des agrumes, même si leurs plantes hôtes relevées ne sont pas identiques. Comme le Machaon citronnier africain, P. demodocus, ses chenilles utilisent des Rutacées ; leurs aires et plantes hôtes répertoriées diffèrent.",
     "conservation": "Elle reste largement répandue dans l’est australien et peut profiter des agrumes cultivés ; les sources consultées ne donnent ni évaluation mondiale ni tendance démographique."
   },
   "sources": [
@@ -33,6 +33,10 @@
     {
       "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/anactus.html",
       "title": "Papilio anactus — fiche spécialisée australienne"
+    },
+    {
+      "url": "https://www.biodiversityexplorer.info/butterflies/papilionidae/papilio_demodocus.htm",
+      "title": "Biodiversity Explorer : Machaon citronnier"
     }
   ]
 }

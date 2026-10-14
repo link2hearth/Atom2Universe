@@ -1,0 +1,145 @@
+{
+  "id": "paucidentomys_vermidax",
+  "scientific": "Paucidentomys vermidax",
+  "group": "mammals",
+  "name": {
+    "en": "Edented Sulawesi rat",
+    "fr": "Rat édenté de Sulawesi"
+  },
+  "sections": {
+    "overview": {
+      "en": "Paucidentomys vermidax is a highly specialized shrew-rat known from the mountains of Sulawesi, Indonesia.",
+      "fr": "Paucidentomys vermidax est un rat-musaraigne très spécialisé connu des montagnes de Sulawesi, en Indonésie."
+    },
+    "identification": {
+      "en": "Its long snout ends in unusual bicuspid upper incisors; it has no molars.",
+      "fr": "Son museau allongé porte des incisives supérieures bicuspides ; il n’a pas de molaires."
+    },
+    "habitat": {
+      "en": "Records come from montane forest on Mount Latimojong and the transition between lowland and montane forest on Mount Gandangdewata, in high-elevation habitat above about fifteen hundred metres.",
+      "fr": "Les observations proviennent de la forêt montagnarde du mont Latimojong et de la transition entre forêt de plaine et forêt montagnarde au mont Gandangdewata, en altitude au-dessus d’environ mille cinq cents mètres."
+    },
+    "diet": {
+      "en": "One examined stomach contained earthworm segments and no other food; the authors therefore proposed that it may specialize on earthworms and other soft-bodied prey.",
+      "fr": "Un estomac examiné contenait des segments de vers de terre et aucun autre aliment ; les auteurs avancent donc une possible spécialisation sur les vers et autres proies molles."
+    },
+    "behavior": {
+      "en": "Its teeth appear adapted to cut or tear soft prey before swallowing rather than to gnaw or grind, but direct behavioral observations remain sparse.",
+      "fr": "Ses dents semblent adaptées à couper ou déchirer des proies molles avant de les avaler, plutôt qu’à ronger ou broyer, mais les observations directes restent rares."
+    },
+    "reproduction": {
+      "en": "The original description did not establish its breeding season, litter size or nesting behavior.",
+      "fr": "La description originale n’a pas établi sa saison de reproduction, la taille des portées ni son comportement de nidification."
+    },
+    "ecology": {
+      "en": "The authors compare it with Rhynchomys, an ecologically similar shrew-rat from Luzon. A 2025 Indonesian survey examined local occurrence and knowledge around Gandang Dewata, but did not estimate abundance.",
+      "fr": "Les auteurs le comparent à Rhynchomys, un rat-musaraigne écologiquement semblable de Luçon. Une enquête indonésienne de 2025 a étudié sa présence et les connaissances locales autour de Gandang Dewata, sans estimer son abondance."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports the IUCN category Near Threatened; the very small known range and limited records make further survey valuable.",
+      "fr": "La Mammal Diversity Database rapporte le classement UICN « quasi menacé » ; la très petite aire connue et le faible nombre d’observations rendent de nouveaux inventaires utiles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Evolutionary novelty in a rat with no molars — Biology Letters / PubMed Central",
+        "fr": "Innovation évolutive chez un rat dépourvu de molaires — Biology Letters / PubMed Central"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3497122/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Original description records dentition, stomach contents and comparisons."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 8,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Paucidentomys vermidax — American Society of Mammalogists Mammal Diversity Database",
+        "fr": "Paucidentomys vermidax — base de diversité des mammifères de l’American Society of Mammalogists"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003607/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "ASM database confirms the current taxon, Sulawesi mountain distribution, type localities and Near Threatened IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 16,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sulawesi Barat survey of Paucidentomys vermidax — Universitas Sulawesi Barat repository (Indonesian)",
+        "fr": "Enquête sur Paucidentomys vermidax au Sulawesi occidental — dépôt de l’Université du Sulawesi occidental (indonésien)"
+      },
+      "url": "https://repository.unsulbar.ac.id/id/eprint/1757/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "A 2025 Indonesian university thesis surveys occurrence and local knowledge in villages bordering Gandang Dewata National Park; it is not a population assessment."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 23,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Dietary specialization is inferred mainly from stomach contents of one specimen, not a large feeding study.",
+    "The species' breeding biology and current population trend remain poorly known."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the peer-reviewed original description, the ASM Mammal Diversity Database, and a 2025 Indonesian-language university survey; distinguished ecological comparison with Rhynchomys from close taxonomic relationship."
+}

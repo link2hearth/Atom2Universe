@@ -1,0 +1,26 @@
+{
+  "id": "paradarisa_consonaria",
+  "name": "Square spot",
+  "scientific": "Paradarisa consonaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Paradarisa consonaria, the Square Spot, is a geometrid moth recorded in parts of western Europe. Older sources may use the combination Ectropis consonaria.",
+    "identification": "The adult wingspan is about 40–45 mm. A dark square mark on the forewing is useful for identification, although the species is variable and dark melanistic forms occur.",
+    "habitat": "It is associated with woodland. French records place it mainly in northern and central France.",
+    "diet": "The caterpillars feed on trees, including oak and birch.",
+    "behavior": "In Britain adults fly mainly from April to June.",
+    "reproduction": "The caterpillars develop on woody food plants before pupating. The sources consulted document eggs and larvae but do not establish a species-wide development schedule.",
+    "ecology": "Because wing colour varies, the square forewing mark is more dependable than overall darkness alone. The larvae use several kinds of trees rather than one narrowly specialized host.",
+    "conservation": "The consulted sources describe regional records but do not establish a global conservation assessment or population trend for this moth."
+  },
+  "sources": [
+    {
+      "url": "https://www.handeln.ukmoths.org.uk/species/paradarisa-consonaria/",
+      "title": "Square Spot, Paradarisa consonaria — UKMoths"
+    },
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?id=37250",
+      "title": "Paradarisa consonaria — Lepinet, Espace Lépidoptères"
+    }
+  ]
+}

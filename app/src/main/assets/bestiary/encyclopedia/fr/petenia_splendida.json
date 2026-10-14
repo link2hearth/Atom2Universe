@@ -1,0 +1,26 @@
+{
+  "id": "petenia_splendida",
+  "name": "Péténia splendide",
+  "scientific": "Petenia splendida",
+  "group": "fish",
+  "sections": {
+    "overview": "Petenia splendida est un cichlidé d’eau douce d’Amérique centrale.",
+    "identification": "Elle peut atteindre 50 cm de longueur standard.",
+    "habitat": "Elle préfère les lacs et les cours inférieurs lents, aux fonds sableux ou vaseux.",
+    "diet": "FishBase indique qu’elle se nourrit de poissons.",
+    "behavior": "Son organisation sociale et son rythme d’activité restent peu documentés.",
+    "reproduction": "Aucune donnée propre à sa reproduction n’a été trouvée.",
+    "ecology": "Son aire couvre le Mexique, le Guatemala et le Belize ; au Mexique, on l’appelle Tenguayaca.",
+    "conservation": "Son évaluation UICN de 2018 est « préoccupation mineure »."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/26819",
+      "title": "Fiche Petenia splendida — FishBase"
+    },
+    {
+      "url": "https://enciclovida.mx/especies/30043-petenia-splendida",
+      "title": "Tenguayaca (Petenia splendida) — Enciclovida, CONABIO"
+    }
+  ]
+}

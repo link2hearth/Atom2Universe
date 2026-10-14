@@ -1,0 +1,173 @@
+{
+  "id": "paraswammerdamia_lutarea",
+  "scientific": "Paraswammerdamia lutarea",
+  "group": "invertebrates",
+  "name": {
+    "en": "Hawthorn drab",
+    "fr": "Paraswammerdamia lutarea"
+  },
+  "sections": {
+    "overview": {
+      "en": "Paraswammerdamia lutarea is a small European ermine moth in the family Yponomeutidae. Some British sources use the name P. nebulella for this moth.",
+      "fr": "Paraswammerdamia lutarea est une petite teigne européenne de la famille des Yponomeutidae. Certaines sources britanniques emploient pour ce papillon le nom P. nebulella."
+    },
+    "identification": {
+      "en": "The adult is a greyish micro-moth with a pale, usually white head and a wingspan of about 11–14 mm.",
+      "fr": "L’adulte est un petit papillon grisâtre à tête claire, généralement blanche, d’environ 11–14 mm d’envergure."
+    },
+    "habitat": {
+      "en": "It is associated with hedgerows, woodland margins and open woodland where hawthorn and rowan grow; the available habitat records are mainly regional European accounts.",
+      "fr": "Il est associé aux haies, aux lisières et aux bois clairs où poussent aubépines et sorbiers; les données d’habitat disponibles proviennent surtout de sources régionales européennes."
+    },
+    "diet": {
+      "en": "The caterpillars feed on leaves of hawthorn and rowan, and have also been recorded on rose and some cotoneasters.",
+      "fr": "Les chenilles mangent les feuilles d’aubépine et de sorbier; elles ont aussi été signalées sur les rosiers et certains cotonéasters."
+    },
+    "behavior": {
+      "en": "Adults fly at night and may be attracted to light. The larva first feeds within leaves, then in a loose silk web.",
+      "fr": "Les adultes volent la nuit et peuvent être attirés par la lumière. La chenille commence par se nourrir à l’intérieur des feuilles, puis dans un léger réseau de soie."
+    },
+    "reproduction": {
+      "en": "In Britain, the small larva overwinters. A Central European study instead reports two generations and overwintering as a pupa, so the cycle may vary among regions or source taxon concepts.",
+      "fr": "En Grande-Bretagne, la jeune chenille hiverne. Une étude d’Europe centrale signale plutôt deux générations et un hivernage sous forme de chrysalide; le cycle peut donc varier selon les régions ou les concepts taxonomiques des sources."
+    },
+    "ecology": {
+      "en": "Its larvae feed on several Rosaceae shrubs and trees, especially hawthorn and rowan, but available accounts do not describe major economic damage.",
+      "fr": "Ses chenilles consomment plusieurs arbustes et arbres de la famille des Rosaceae, surtout l’aubépine et le sorbier; les sources disponibles ne décrivent pas de dégâts économiques majeurs."
+    },
+    "conservation": {
+      "en": "The sources consulted report it as fairly common in Britain and locally recorded in continental Europe; they do not establish a global conservation assessment.",
+      "fr": "Les sources consultées le signalent comme assez commun en Grande-Bretagne et présent localement en Europe continentale; elles ne donnent pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Paraswammerdamia lutarea — UK Species Dictionary, Natural History Museum",
+        "fr": "Paraswammerdamia lutarea — dictionnaire des espèces britanniques, Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NHMSYS0000503624",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "NHM taxonomic dictionary accepts P. lutarea and lists P. nebulella as a synonym, illustrating variation in naming."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 17,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hawthorn Drab, P. nebulella (= P. lutarea) — UKMoths",
+        "fr": "Hawthorn Drab, P. nebulella (= P. lutarea) — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/paraswammerdamia-nebulella/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "UKMoths treats P. nebulella as P. lutarea and describes adult appearance, flight, host plants and young-larva overwintering."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 17,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Puppen der mitteleuropäischen Yponomeutidae — Biologiezentrum Linz",
+        "fr": "Chrysalides des Yponomeutidae d’Europe centrale — Biologiezentrum Linz"
+      },
+      "url": "https://www.zobodat.at/pdf/LBB_0031_1_0381-0420.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "German-language regional study records larvae on Sorbus and Crataegus, leaf-skeletonizing in loose webs, two generations and overwintering as a pupa."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 20,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Leaf-mining moths of the Yponomeutinae — Leafmines UK",
+        "fr": "Mineuses de feuilles des Yponomeutinae — Leafmines UK"
+      },
+      "url": "https://leafmines.co.uk/html/Lepidoptera/P.nebulella.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Species account describes early leaf mining and subsequent feeding in a silk web."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 13,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic usage differs among databases: NHM accepts P. lutarea while UKMoths uses P. nebulella with P. lutarea as its synonym. The text flags this rather than treating the names as competing biological species.",
+    "Life-cycle accounts disagree on overwintering stage and voltinism; local conditions or source-specific taxon concepts may be involved."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Comparaison des bases du Natural History Museum avec les fiches britanniques et une étude allemande de biologie; prudence explicite sur les synonymes et le cycle saisonnier."
+}

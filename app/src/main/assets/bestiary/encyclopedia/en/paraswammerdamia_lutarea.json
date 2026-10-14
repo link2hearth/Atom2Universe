@@ -1,0 +1,34 @@
+{
+  "id": "paraswammerdamia_lutarea",
+  "name": "Hawthorn drab",
+  "scientific": "Paraswammerdamia lutarea",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Paraswammerdamia lutarea is a small European ermine moth in the family Yponomeutidae. Some British sources use the name P. nebulella for this moth.",
+    "identification": "The adult is a greyish micro-moth with a pale, usually white head and a wingspan of about 11–14 mm.",
+    "habitat": "It is associated with hedgerows, woodland margins and open woodland where hawthorn and rowan grow; the available habitat records are mainly regional European accounts.",
+    "diet": "The caterpillars feed on leaves of hawthorn and rowan, and have also been recorded on rose and some cotoneasters.",
+    "behavior": "Adults fly at night and may be attracted to light. The larva first feeds within leaves, then in a loose silk web.",
+    "reproduction": "In Britain, the small larva overwinters. A Central European study instead reports two generations and overwintering as a pupa, so the cycle may vary among regions or source taxon concepts.",
+    "ecology": "Its larvae feed on several Rosaceae shrubs and trees, especially hawthorn and rowan, but available accounts do not describe major economic damage.",
+    "conservation": "The sources consulted report it as fairly common in Britain and locally recorded in continental Europe; they do not establish a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NHMSYS0000503624",
+      "title": "Paraswammerdamia lutarea — UK Species Dictionary, Natural History Museum"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/paraswammerdamia-nebulella/",
+      "title": "Hawthorn Drab, P. nebulella (= P. lutarea) — UKMoths"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/LBB_0031_1_0381-0420.pdf",
+      "title": "Puppen der mitteleuropäischen Yponomeutidae — Biologiezentrum Linz"
+    },
+    {
+      "url": "https://leafmines.co.uk/html/Lepidoptera/P.nebulella.htm",
+      "title": "Leaf-mining moths of the Yponomeutinae — Leafmines UK"
+    }
+  ]
+}

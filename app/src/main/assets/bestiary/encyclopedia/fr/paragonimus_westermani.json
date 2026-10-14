@@ -1,0 +1,30 @@
+{
+  "id": "paragonimus_westermani",
+  "name": "Douve pulmonaire orientale",
+  "scientific": "Paragonimus westermani",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Paragonimus westermani est un ver plat parasite appelé douve pulmonaire orientale. C’est l’une des espèces de Paragonimus les plus souvent signalées dans les infections humaines.",
+    "identification": "Les adultes sont des douves robustes et ovales, longues d’environ 7,5 à 12 mm et larges de 4 à 6 mm. Leurs œufs ont une coque épaisse et un opercule visible en forme de clapet.",
+    "habitat": "L’espèce est signalée en Asie du Sud-Est et au Japon. Les vers adultes s’enkystent généralement dans les poumons d’hôtes mammifères, dont les humains.",
+    "diet": "Les sources consultées ne précisent pas son alimentation.",
+    "behavior": "Ses larves passent par un escargot d’eau douce puis un crustacé, tel qu’un crabe ou une écrevisse. Les mammifères s’infectent en consommant le crustacé cru ou insuffisamment cuit.",
+    "reproduction": "Les œufs quittent l’hôte mammifère dans les expectorations ou, après déglutition, dans les selles. Dans l’eau, ils se développent avant que les larves n’entrent chez l’escargot hôte. Le CDC décrit les douves adultes comme hermaphrodites.",
+    "ecology": "Plus de 30 espèces de Paragonimus sont connues ; P. westermani est une cause fréquente d’infection humaine en Asie.",
+    "conservation": "Aucune évaluation de conservation n’a été trouvée dans les références consultées."
+  },
+  "sources": [
+    {
+      "url": "https://www.cdc.gov/dpdx/paragonimiasis/",
+      "title": "DPDx : paragonimose — Centers for Disease Control and Prevention des États-Unis"
+    },
+    {
+      "url": "https://www.who.int/fr/publications/i/item/WHO-UCN-NTD-VVE-2021.5",
+      "title": "Parasitoses d’origine alimentaire : la paragonimose — Organisation mondiale de la Santé"
+    },
+    {
+      "url": "https://www.who.int/es/news-room/fact-sheets/detail/foodborne-trematode-infections",
+      "title": "Trematodiasis de transmisión alimentaria — Organización Mundial de la Salud"
+    }
+  ]
+}

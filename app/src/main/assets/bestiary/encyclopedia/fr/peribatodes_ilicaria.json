@@ -1,0 +1,38 @@
+{
+  "id": "peribatodes_ilicaria",
+  "name": "Boarmie de l’Yeuse",
+  "scientific": "Peribatodes ilicaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Peribatodes ilicaria est un papillon géométridé présent en Europe ; rare migrateur en Grande-Bretagne, il est établi dans certaines régions du continent.",
+    "identification": "Elle ressemble à la Boarmie rhomboïdale, P. rhomboidaria, mais présente généralement un moucheté plus marqué et contrasté.",
+    "habitat": "Elle affectionne les bois et friches broussailleuses, secs et chauds ; en France, elle est plus fréquente dans le Centre et le Sud que dans le Nord.",
+    "diet": "Ses chenilles consomment divers arbres et arbustes ; les sources françaises signalent notamment des lichens et des observations sur chêne, houx, genévrier et pin.",
+    "behavior": "Les adultes volent surtout en été ; les observations britanniques sont trop peu nombreuses pour y établir une période de vol fiable.",
+    "reproduction": "Elle a généralement une génération par an et la chenille hiverne ; une deuxième génération printanière est signalée exceptionnellement dans le sud de la France.",
+    "ecology": "La Boarmie rhomboïdale est une proche congénère et un bon élément de comparaison pour l’identification, mais les deux restent des espèces distinctes aux motifs différents.",
+    "conservation": "Un inventaire d’Île-de-France de 2022 la qualifie de menacée à l’échelle régionale. Un autre portail français indique qu’elle n’a pas été évaluée en Liste rouge ; ces sources locales ne déterminent donc pas une catégorie mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/peribatodes-ilicaria/",
+      "title": "Lydd Beauty — UKMoths"
+    },
+    {
+      "url": "https://lepinet.fr/especes/nation/lep/index.php?id=37080",
+      "title": "La Boarmie de l’Yeuse — Lepinet"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248894",
+      "title": "Peribatodes ilicaria — Observatoire FAUNA"
+    },
+    {
+      "url": "https://www.drieat.ile-de-france.developpement-durable.gouv.fr/IMG/pdf/opie_2022_rapport_inventaire_lepidopteres_buttesgreseuses_ab.pdf",
+      "title": "Inventaire des Lépidoptères des Buttes gréseuses — OPIE / DRIEAT Île-de-France"
+    },
+    {
+      "url": "https://www.papillon-poitou-charentes.org/Peribatodes-ilicaria-Geyer-1833.html",
+      "title": "Peribatodes ilicaria — Papillons de Poitou-Charentes"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "papilio_demodocus",
+  "name": "Citrus swallowtail",
+  "scientific": "Papilio demodocus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Papilio demodocus, the Citrus Swallowtail, is widespread across sub-Saharan Africa and is also recorded on nearby Arabian land and Socotra.",
+    "identification": "Its dark wings carry prominent yellow bands and spots, with the hindwing tails typical of swallowtails. Young caterpillars can resemble bird droppings.",
+    "habitat": "It occupies many sub-Saharan habitats, including gardens and other human-modified places; the regional assessment excludes deserts and Afro-alpine environments.",
+    "diet": "Caterpillars use a broad range of citrus and other Rutaceae as food plants. Adults feed on flower nectar.",
+    "behavior": "When threatened, the caterpillar can expose an osmeterium, a forked scent organ characteristic of swallowtail larvae.",
+    "reproduction": "Females lay eggs on larval food plants; caterpillars grow through successive moults and then pupate. Timing depends on local conditions.",
+    "ecology": "Like the Orchard Swallowtail, Papilio aegeus, this species belongs to Papilio and its caterpillars use Rutaceae; their ranges and recorded hosts differ, so the two are not interchangeable.",
+    "conservation": "The 2022 IUCN assessment lists it as Least Concern, citing its wide range, use of altered habitats and cultivated larval food plants."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-2.RLTS.T122527216A122602926.en",
+      "title": "Papilio demodocus — IUCN Red List assessment (2022)"
+    },
+    {
+      "url": "https://www.biodiversityexplorer.info/butterflies/papilionidae/papilio_demodocus.htm",
+      "title": "Papilio demodocus — Biodiversity Explorer, Lepidopterists’ Society of Africa"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/insects/orchard-butterfly/",
+      "title": "Orchard Butterfly — Australian Museum"
+    },
+    {
+      "url": "https://www.lepidoptera.butterflyhouse.com.au/papi/aegeus.html",
+      "title": "Papilio aegeus — specialist Australian butterfly account"
+    },
+    {
+      "url": "https://www.iita.org/wp-content/uploads/2016/03/Common-butterflies-of-IITA.pdf",
+      "title": "Common butterflies of IITA — Citrus Swallowtail"
+    }
+  ]
+}

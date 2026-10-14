@@ -1,0 +1,156 @@
+{
+  "id": "parascyllium_ferrugineum",
+  "scientific": "Parascyllium ferrugineum",
+  "group": "fish",
+  "name": {
+    "en": "Rusty carpetshark",
+    "fr": "Requin-carpette roux"
+  },
+  "sections": {
+    "overview": {
+      "en": "Parascyllium ferrugineum, the Rusty Carpetshark, is an Australian carpetshark in the family Parascylliidae, found along southern coasts.",
+      "fr": "Parascyllium ferrugineum, le Requin-carpette roux, est un requin-carpette australien de la famille des Parascylliidae, présent le long des côtes méridionales."
+    },
+    "identification": {
+      "en": "It has brown, rust-coloured saddles or spots along the body and fins. It may reach about 80 cm in total length.",
+      "fr": "Il porte des selles ou des taches brun rouille sur le corps et les nageoires. Il peut atteindre environ 80 cm de longueur totale."
+    },
+    "habitat": {
+      "en": "It occurs from Western Australia east to Victoria and Tasmania, near rocky reefs, river mouths, seagrass and algal beds, and in offshore waters.",
+      "fr": "Il est présent de l’Australie-Occidentale jusqu’au Victoria et à la Tasmanie, près des récifs rocheux, des embouchures, des herbiers et des algues, ainsi qu’au large."
+    },
+    "diet": {
+      "en": "It feeds on bottom-dwelling crustaceans and molluscs.",
+      "fr": "Il se nourrit de crustacés et de mollusques vivant sur le fond."
+    },
+    "behavior": {
+      "en": "Individuals may shelter in caves or beneath rocky ledges during the day. The species is occasionally discarded as trawl or Danish-seine bycatch.",
+      "fr": "Les individus peuvent s’abriter le jour dans des grottes ou sous des corniches rocheuses. L’espèce est parfois rejetée après une capture accessoire au chalut ou à la senne danoise."
+    },
+    "reproduction": {
+      "en": "In summer, females lay yellow egg cases with long tendrils; pups are about 17 cm long at birth.",
+      "fr": "En été, les femelles pondent des capsules jaunes munies de longues vrilles ; les jeunes mesurent environ 17 cm à la naissance."
+    },
+    "ecology": {
+      "en": "Its close relative, the Collar Carpetshark, Parascyllium collare, is concentrated farther east and has a conspicuous dark neck band. The Rusty Carpetshark ranges farther west and bears rusty-brown saddles.",
+      "fr": "Son proche parent, le Requin-carpette à collier, Parascyllium collare, est surtout présent plus à l’est et porte une bande sombre au cou. Le Requin-carpette roux s’étend plus à l’ouest et présente des selles brun rouille."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern. Bycatch is recorded, but the consulted sources do not establish a population trend.",
+      "fr": "FishBase rapporte une catégorie UICN mondiale de préoccupation mineure. Des prises accessoires sont signalées, mais les sources consultées n’établissent pas de tendance démographique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Parascyllium ferrugineum — Fishes of Australia, Australian National Fish Collection",
+        "fr": "Parascyllium ferrugineum — Fishes of Australia, collection nationale australienne de poissons"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/3288",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Fishes of Australia species entry."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 5,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parascyllium ferrugineum summary — FishBase",
+        "fr": "Fiche Parascyllium ferrugineum — FishBase"
+      },
+      "url": "https://fishbase.se/summary/Parascyllium-ferrugineum.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase size, coloration and status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 5,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Collar Carpetshark — Fishes of Australia",
+        "fr": "Requin-carpette à collier — Fishes of Australia"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/3287",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Collar Carpetshark comparison entry."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 4,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The western range limit is not fully settled in the sources; the profile states a broad documented range without implying continuous occupancy."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the Australian National Fish Collection with FishBase and added a sourced, reciprocal comparison with Parascyllium collare."
+}

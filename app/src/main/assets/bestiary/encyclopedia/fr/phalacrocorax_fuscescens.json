@@ -1,0 +1,30 @@
+{
+  "id": "phalacrocorax_fuscescens",
+  "name": "Cormoran de Tasmanie",
+  "scientific": "Phalacrocorax fuscescens",
+  "group": "birds",
+  "sections": {
+    "overview": "Phalacrocorax fuscescens, le Cormoran de Tasmanie, est un cormoran endémique du sud de l’Australie.",
+    "identification": "C’est un cormoran noir et blanc de taille moyenne à grande.",
+    "habitat": "Il s’alimente dans les eaux côtières et les baies abritées.",
+    "diet": "Il mange des poissons ; une étude a relevé surtout des proies benthiques sur un site de reproduction.",
+    "behavior": "Il plonge pour se nourrir et se repose sur des îlots au large.",
+    "reproduction": "Il niche en colonies sur des îles rocheuses et des falaises ; la saison varie selon les régions.",
+    "ecology": "Cette espèce est endémique des côtes du sud de l’Australie. P. varius fréquente aussi les zones humides intérieures de l’est.",
+    "conservation": "L’évolution de la population est incertaine ; les marées noires et déchets marins présentent des risques."
+  },
+  "sources": [
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/wildlife-conservation-plan-for-seabirds.pdf",
+      "title": "Plan de conservation des oiseaux marins — ministère australien du Climat, de l’Énergie, de l’Environnement et de l’Eau"
+    },
+    {
+      "url": "https://journals.biologists.com/bio/article/13/5/bio060336/347525/Foraging-behaviour-and-habitat-use-during-chick",
+      "title": "Comportement alimentaire et usage de l’habitat pendant l’élevage des jeunes chez le Cormoran de Tasmanie — Biology Open"
+    },
+    {
+      "url": "https://birdlife.org.au/bird-profiles/pied-cormorant/",
+      "title": "Cormoran varié — BirdLife Australia"
+    }
+  ]
+}

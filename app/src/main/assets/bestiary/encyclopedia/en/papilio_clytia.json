@@ -1,0 +1,34 @@
+{
+  "id": "papilio_clytia",
+  "name": "Common mime",
+  "scientific": "Papilio clytia",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Papilio clytia, the Common Mime, is an Asian swallowtail whose patterned forms resemble distasteful butterflies. Some regional sources use the genus Chilasa for this species.",
+    "identification": "Adults are bluish black with pale streaks and marginal spots; the underside has yellow spots on the hindwing. Two main forms occur: a brown pattern and a contrasting black-and-white striped pattern.",
+    "habitat": "It ranges across South and Southeast Asia. In Singapore, records include forests as well as parks and gardens.",
+    "diet": "Caterpillars feed on host plants including Cinnamomum iners; host records vary among local accounts. Adults visit flowers for nectar.",
+    "behavior": "Both sexes can show either principal wing pattern. These forms imitate distasteful danaine butterflies, including tiger and crow butterflies, which may deter predators.",
+    "reproduction": "Females lay eggs on host plants; the larva passes through caterpillar and pupal stages before emerging as an adult. The sources consulted do not establish a single development time for the species.",
+    "ecology": "Its mimicry is notably variable for a swallowtail because both sexes can express alternate patterns. It belongs to the swallowtail family Papilionidae.",
+    "conservation": "A Singapore government account calls it common locally. This local status is not a global conservation assessment, which was not located in the sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/9/2/928",
+      "title": "Common Mime — Flora & Fauna Web, National Parks Board Singapore"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7968384/",
+      "title": "Papilio clytia mimicry polymorphisms — peer-reviewed study"
+    },
+    {
+      "url": "https://penchtigerreserve.maharashtra.gov.in/wp-content/uploads/2025/03/Final_Butterfly-pocket-guide-book.pdf",
+      "title": "Common Mime, Papilio clytia — Maharashtra Forest Department pocket guide"
+    },
+    {
+      "url": "https://www.butterflycircle.com/checklist/showbutterfly/1",
+      "title": "Papilio clytia clytia — ButterflyCircle checklist"
+    }
+  ]
+}

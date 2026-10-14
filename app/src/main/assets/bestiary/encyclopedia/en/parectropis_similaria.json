@@ -1,0 +1,38 @@
+{
+  "id": "parectropis_similaria",
+  "name": "Brindled white-spot",
+  "scientific": "Parectropis similaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Parectropis similaria is a European geometrid moth associated with broad-leaved woodland.",
+    "identification": "The adult has densely mottled, brindled wings with a conspicuous pale patch near the outer forewing. Its wingspan is about 33–39 mm.",
+    "habitat": "It is recorded from much of Europe and locally favours deciduous or ancient woodland; records also come from gardens near wooded landscapes.",
+    "diet": "The caterpillars feed on leaves of oaks, birches, hazel and hawthorn; recorded host lists vary by region.",
+    "behavior": "Adults are mainly on the wing from late May into early July in southern Britain and are attracted to light; local flight periods can vary.",
+    "reproduction": "In the British account, the species is single-brooded and winters as a pupa.",
+    "ecology": "Its larvae use several common deciduous trees and shrubs, linking the moth to structurally varied woodland edges and broad-leaved habitats.",
+    "conservation": "Regional records show a local rather than uniformly abundant moth; the sources consulted do not provide a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12485357/",
+      "title": "The genome sequence of the Brindled White-spot moth — Genome Biology / PMC"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=70.273",
+      "title": "Parectropis similaria — Hantsmoths, Lepidoptera of Hampshire and Isle of Wight"
+    },
+    {
+      "url": "https://www.sussexmothgroup.org.uk/site/speciesAccount.php?speciesRef=70.2730",
+      "title": "Parectropis similaria — Sussex Moth Group"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Parectropis_similaria",
+      "title": "Parectropis similaria — Lepiforum / LepiWiki"
+    },
+    {
+      "url": "https://biodiv.parc-oise-paysdefrance.fr/espece/210490",
+      "title": "Parectropis similaria — Biodiv’ Oise species records"
+    }
+  ]
+}

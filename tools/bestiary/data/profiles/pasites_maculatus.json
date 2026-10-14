@@ -1,0 +1,142 @@
+{
+  "id": "pasites_maculatus",
+  "scientific": "Pasites maculatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Spotted short-horned cuckoo bee",
+    "fr": "Pasite maculé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pasites maculatus is a brood-parasitic bee in the family Apidae, reported from warm parts of the Old World.",
+      "fr": "Pasites maculatus est une abeille cleptoparasite de la famille des Apidae, signalée dans les régions chaudes de l’Ancien Monde."
+    },
+    "identification": {
+      "en": "It has largely red legs and abdomen, with conspicuous pale hair spots along the rear abdominal segments.",
+      "fr": "Ses pattes et son abdomen sont largement rouges, avec des taches nettes de poils pâles sur le bord des derniers segments."
+    },
+    "habitat": {
+      "en": "Its distribution is patchy in Europe; in Switzerland, records are concentrated in warm Valais habitats.",
+      "fr": "Sa répartition européenne est discontinue ; en Suisse, les observations se concentrent dans les milieux chauds du Valais."
+    },
+    "diet": {
+      "en": "The sources consulted focus on nest parasitism and do not document this species’ adult diet.",
+      "fr": "Les sources consultées portent sur le parasitisme des nids et ne précisent pas le régime des adultes."
+    },
+    "behavior": {
+      "en": "Females enter host nests and place eggs in brood cells; the first larval stage can kill the host offspring and competing cuckoo-bee larvae.",
+      "fr": "Les femelles pénètrent dans les nids hôtes et pondent dans les cellules ; le premier stade larvaire peut tuer la progéniture hôte et les larves concurrentes."
+    },
+    "reproduction": {
+      "en": "A detailed Pakistan study found its eggs and first instars in nests of Pseudapis diversipes, also called Nomiapis diversipes in some regional accounts.",
+      "fr": "Une étude détaillée au Pakistan a trouvé ses œufs et premiers stades dans les nids de Pseudapis diversipes, également appelée Nomiapis diversipes dans certaines sources régionales."
+    },
+    "ecology": {
+      "en": "It exploits ground-nesting Nomiinae bees such as Pseudapis/Nomiapis diversipes; the host species digs clustered cells in branching underground tunnels.",
+      "fr": "Elle exploite des abeilles terricoles des Nomiinae, comme Pseudapis/Nomiapis diversipes ; l’hôte creuse des cellules groupées dans des galeries souterraines ramifiées."
+    },
+    "conservation": {
+      "en": "The sources consulted provide no global population assessment or Red List status for this bee.",
+      "fr": "Les sources consultées ne fournissent ni évaluation mondiale de sa population ni statut sur une Liste rouge."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pasites — info fauna, Swiss Centre for the Fauna",
+        "fr": "Pasites — info fauna, Centre suisse de la faune"
+      },
+      "url": "https://www.infofauna.ch/fr/taxonomy/term/4573",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Swiss account describes red legs and abdomen, European distribution and warm Valais localities; it does not report a global conservation assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 21,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Natural history of Pasites maculatus and host Pseudapis diversipes — American Museum Novitates / Biodiversity Heritage Library",
+        "fr": "Histoire naturelle de Pasites maculatus et de l’hôte Pseudapis diversipes — American Museum Novitates / Biodiversity Heritage Library"
+      },
+      "url": "https://www.biodiversitylibrary.org/bibliography/197117",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "1986 Pakistan study records eggs and larvae in Pseudapis diversipes nests."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 11,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudapis diversipes — German wild-bee species account",
+        "fr": "Pseudapis diversipes — fiche allemande d’abeille sauvage"
+      },
+      "url": "https://www.wildbienen.de/eb-pdive.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "German-language account cross-checks ground nesting and the association with Pasites maculatus."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host names appear as Pseudapis diversipes in the primary 1986 study and Nomiapis diversipes in current regional accounts.",
+    "Reliable current global abundance and conservation status were not located."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a primary nest study with Swiss French and German wild-bee accounts. The host genus nomenclature differs between older and newer sources; no reciprocal host profile exists in the catalogue."
+}

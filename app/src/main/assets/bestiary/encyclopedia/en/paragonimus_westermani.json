@@ -1,0 +1,30 @@
+{
+  "id": "paragonimus_westermani",
+  "name": "Oriental lung fluke",
+  "scientific": "Paragonimus westermani",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Paragonimus westermani is a parasitic flatworm commonly called the Oriental Lung Fluke. It is one of the most frequently reported Paragonimus species in human infections.",
+    "identification": "Adults are robust, oval flukes about 7.5–12 mm long and 4–6 mm wide. Their eggs have a thick shell and a visible lid-like operculum.",
+    "habitat": "The species is reported from Southeast Asia and Japan. Mature worms usually become encapsulated in the lungs of mammalian hosts, including humans and other mammals.",
+    "diet": "Its exact food intake is not detailed in the sources consulted.",
+    "behavior": "Its larvae pass through a freshwater snail and then a crustacean such as a crab or crayfish. Mammals become infected when they eat the crustacean raw or insufficiently cooked.",
+    "reproduction": "Eggs leave the mammalian host in sputum or, after being swallowed, in faeces. In water they develop before larvae enter the snail host. CDC describes adult flukes as hermaphroditic.",
+    "ecology": "More than 30 species of Paragonimus are known; P. westermani is a common cause of human infection in Asia.",
+    "conservation": "No conservation assessment was located in the references consulted."
+  },
+  "sources": [
+    {
+      "url": "https://www.cdc.gov/dpdx/paragonimiasis/",
+      "title": "DPDx: Paragonimiasis — U.S. Centers for Disease Control and Prevention"
+    },
+    {
+      "url": "https://www.who.int/fr/publications/i/item/WHO-UCN-NTD-VVE-2021.5",
+      "title": "Foodborne parasitic infections: paragonimiasis — World Health Organization"
+    },
+    {
+      "url": "https://www.who.int/es/news-room/fact-sheets/detail/foodborne-trematode-infections",
+      "title": "Foodborne trematode infections — World Health Organization"
+    }
+  ]
+}

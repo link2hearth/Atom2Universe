@@ -1,0 +1,34 @@
+{
+  "id": "pareques_acuminatus",
+  "name": "Chevalier rayé",
+  "scientific": "Pareques acuminatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Le Chevalier rayé est un tambour de l’Atlantique occidental, de la famille des Sciaenidae, reconnaissable à ses rayures et à sa longue nageoire dorsale.",
+    "identification": "Les adultes sont clairs, avec plusieurs larges bandes sombres horizontales séparées par des lignes fines. Les jeunes portent une marque sombre distinctive sur le museau et entre les yeux.",
+    "habitat": "Après une révision taxonomique de 2022, P. acuminatus est reconnu de la côte atlantique des États-Unis et du golfe du Mexique; son aire chevauche celle de P. lineatus dans les Antilles et le sud des Caraïbes. Les adultes fréquentent les récifs et les fonds meubles voisins, jusqu’à environ 113 m.",
+    "diet": "La nuit, il se nourrit de crustacés, de vers polychètes, de petits poissons et de zooplancton sur les fonds sableux, vaseux ou détritiques près des récifs.",
+    "behavior": "Le jour, il s’abrite sous des corniches, parmi les rochers ou dans les crevasses récifales, puis cherche sa nourriture après la tombée de la nuit; les juvéniles s’abritent parfois en petits groupes.",
+    "reproduction": "Il pond des œufs; les sources consultées donnent peu d’autres détails sur la reproduction.",
+    "ecology": "En alternant les abris récifaux et les fonds meubles voisins pour s’alimenter, il relie les habitats rocheux et sableux. Son proche parent P. lineatus occupe le secteur méridional de l’aire du complexe.",
+    "conservation": "FishBase rapporte une évaluation mondiale UICN en préoccupation mineure, datée de 2023."
+  },
+  "sources": [
+    {
+      "url": "https://mapress.com/zt/article/view/zootaxa.5195.5.1",
+      "title": "Pareques acuminatus — révision du complexe d’espèces, Zootaxa, 2022"
+    },
+    {
+      "url": "https://biogeodb.stri.si.edu/caribbean/es/thefishes/species/3802",
+      "title": "Poissons côtiers du Grand Caraïbe — Smithsonian Tropical Research Institute (espagnol)"
+    },
+    {
+      "url": "https://fishbase.se/summary/Pareques_acuminatus.html",
+      "title": "Pareques acuminatus — FishBase"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Pareques-acuminatus-Dragonnet-968/",
+      "title": "Pareques acuminatus — DORIS, fédération française d’études et de sports sous-marins"
+    }
+  ]
+}

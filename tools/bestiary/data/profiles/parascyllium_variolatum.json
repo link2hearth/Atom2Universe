@@ -1,0 +1,169 @@
+{
+  "id": "parascyllium_variolatum",
+  "scientific": "Parascyllium variolatum",
+  "group": "fish",
+  "name": {
+    "en": "Necklace carpetshark",
+    "fr": "Parascyllium variolatum"
+  },
+  "sections": {
+    "overview": {
+      "en": "The necklace carpetshark is a small, bottom-dwelling shark of southern Australia and part of the collar-carpetshark family.",
+      "fr": "Le requin-carpette à collier est un petit requin benthique du sud de l’Australie, appartenant à la famille des Parascylliidae."
+    },
+    "identification": {
+      "en": "It has a long, slender body with a broad black collar dotted white behind the head, plus pale spots and mottled brown fins. It reaches about 92 cm, though specimens are often smaller.",
+      "fr": "Il possède un corps long et mince, un large collier noir ponctué de blanc derrière la tête, ainsi que des taches claires et des nageoires marbrées de brun. Il atteint environ 92 cm, mais les individus observés sont souvent plus petits."
+    },
+    "habitat": {
+      "en": "It occurs around southern Australia, from eastern Victoria and Tasmania westward to southwestern Western Australia, in temperate coastal waters and on reefs, in bays and estuaries.",
+      "fr": "Il vit autour du sud de l’Australie, de l’est du Victoria et de la Tasmanie jusqu’au sud-ouest de l’Australie-Occidentale, dans les eaux côtières tempérées, les récifs, les baies et les estuaires."
+    },
+    "diet": {
+      "en": "Museum Victoria reports that it feeds mainly on shellfish.",
+      "fr": "Le musée du Victoria indique qu’il se nourrit surtout de coquillages et autres mollusques."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal, sheltering by day in caves, crevices, beneath ledges or among kelp; it forages after dark.",
+      "fr": "Il est surtout nocturne et s’abrite le jour dans des grottes, des fissures, sous des corniches ou dans les algues; il chasse après la tombée de la nuit."
+    },
+    "reproduction": {
+      "en": "It is oviparous, but the details of its breeding biology are poorly known.",
+      "fr": "Il est ovipare, mais les détails de sa reproduction sont peu connus."
+    },
+    "ecology": {
+      "en": "Its close genus-mate P. sparsimaculatum is known from far fewer records and deeper water off Western Australia; P. variolatum has a much broader southern coastal range and is often found in shallower habitats.",
+      "fr": "Son congénère P. sparsimaculatum n’est connu que par de rares observations et des eaux plus profondes au large de l’Australie-Occidentale; P. variolatum possède une aire côtière méridionale plus vaste et fréquente souvent des eaux moins profondes."
+    },
+    "conservation": {
+      "en": "The most recent Australian fisheries assessment classifies it as Least Concern and Sustainable; this assessment does not mean that every local population has been monitored.",
+      "fr": "La plus récente évaluation australienne des pêcheries le classe en préoccupation mineure et considère son stock durable; cela ne signifie pas que toutes les populations locales aient été suivies."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Varied Carpetshark — Australian Museum",
+        "fr": "Requin-carpette varié — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/varied-carpetshark-parascyllium-variolatum-dumril-1853/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Australian Museum describes the collar pattern, size and southern Australian distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 11,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Parascyllium variolatum — Museums Victoria Collections",
+        "fr": "Parascyllium variolatum — collections des musées du Victoria"
+      },
+      "url": "https://collections.museumsvictoria.com.au/species/4242",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Museum account reports nocturnal sheltering, shellfish diet, oviparity and coastal reef habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 12,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Varied Carpetshark, Parascyllium variolatum — Australian Fisheries Status Reports",
+        "fr": "Requin-carpette varié — rapports australiens sur l’état des pêcheries"
+      },
+      "url": "https://www.fish.gov.au/docs/SharkReport/2023_FRDC_Parascyllium_variolatum_final.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "2023 status report says Least Concern under IUCN and Sustainable under the Australian fishery status assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 16,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ginger Carpetshark — Fishes of Australia",
+        "fr": "Requin-carpette beige — Fishes of Australia"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/3289",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Related species entry documents the restricted Western Australian range and deep upper-slope records of P. sparsimaculatum."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 16,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Depth and distribution limits vary somewhat among summaries; the text gives only the broad southern-Australian range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft comparé aux fiches Australian Museum, Museums Victoria et au rapport national 2023. Le lien avec P. sparsimaculatum est réciproque et souligne surtout leur contraste bathymétrique."
+}

@@ -1,0 +1,175 @@
+{
+  "id": "pareques_acuminatus",
+  "scientific": "Pareques acuminatus",
+  "group": "fish",
+  "name": {
+    "en": "High-hat",
+    "fr": "Chevalier rayé"
+  },
+  "sections": {
+    "overview": {
+      "en": "The high-hat is a western Atlantic drum in the croaker family Sciaenidae, notable for its striped body and elongated dorsal fin.",
+      "fr": "Le Chevalier rayé est un tambour de l’Atlantique occidental, de la famille des Sciaenidae, reconnaissable à ses rayures et à sa longue nageoire dorsale."
+    },
+    "identification": {
+      "en": "Adults are pale with several broad dark horizontal bands separated by narrow lines. Juveniles have a distinctive dark mark across the snout and between the eyes.",
+      "fr": "Les adultes sont clairs, avec plusieurs larges bandes sombres horizontales séparées par des lignes fines. Les jeunes portent une marque sombre distinctive sur le museau et entre les yeux."
+    },
+    "habitat": {
+      "en": "After a 2022 taxonomic revision, P. acuminatus is recognized from the U.S. Atlantic coast and Gulf of Mexico; it overlaps P. lineatus in the West Indies and southern Caribbean. Adults use reefs and nearby soft bottoms, to about 113 m.",
+      "fr": "Après une révision taxonomique de 2022, P. acuminatus est reconnu de la côte atlantique des États-Unis et du golfe du Mexique; son aire chevauche celle de P. lineatus dans les Antilles et le sud des Caraïbes. Les adultes fréquentent les récifs et les fonds meubles voisins, jusqu’à environ 113 m."
+    },
+    "diet": {
+      "en": "At night it feeds on crustaceans, polychaete worms, small fishes and zooplankton over sand, mud and rubble close to reefs.",
+      "fr": "La nuit, il se nourrit de crustacés, de vers polychètes, de petits poissons et de zooplancton sur les fonds sableux, vaseux ou détritiques près des récifs."
+    },
+    "behavior": {
+      "en": "It shelters by day beneath ledges, among rocks or in reef crevices, then forages after dark; juveniles sometimes shelter in small groups.",
+      "fr": "Le jour, il s’abrite sous des corniches, parmi les rochers ou dans les crevasses récifales, puis cherche sa nourriture après la tombée de la nuit; les juvéniles s’abritent parfois en petits groupes."
+    },
+    "reproduction": {
+      "en": "It is egg-laying; the sources consulted provide little further detail on spawning.",
+      "fr": "Il pond des œufs; les sources consultées donnent peu d’autres détails sur la reproduction."
+    },
+    "ecology": {
+      "en": "By moving between reef shelters and nearby soft bottoms to feed, the fish links rocky and sandy benthic habitats. Its close relative P. lineatus occupies the southern part of the complex’s range.",
+      "fr": "En alternant les abris récifaux et les fonds meubles voisins pour s’alimenter, il relie les habitats rocheux et sableux. Son proche parent P. lineatus occupe le secteur méridional de l’aire du complexe."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, assessed in 2023.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN en préoccupation mineure, datée de 2023."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pareques acuminatus — Zootaxa, 2022 species-complex revision",
+        "fr": "Pareques acuminatus — révision du complexe d’espèces, Zootaxa, 2022"
+      },
+      "url": "https://mapress.com/zt/article/view/zootaxa.5195.5.1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Primary revision redescribes P. acuminatus, revalidates P. lineatus and maps the broad geographic distinction and overlap."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 91,
+        "notes_words": 16,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peces Costeros del Gran Caribe — Smithsonian Tropical Research Institute (Spanish)",
+        "fr": "Poissons côtiers du Grand Caraïbe — Smithsonian Tropical Research Institute (espagnol)"
+      },
+      "url": "https://biogeodb.stri.si.edu/caribbean/es/thefishes/species/3802",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Spanish account describes body stripes, juvenile markings, 25 cm maximum, reef/day and soft-bottom/night habitat, and northern range following the split."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 20,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pareques acuminatus — FishBase",
+        "fr": "Pareques acuminatus — FishBase"
+      },
+      "url": "https://fishbase.se/summary/Pareques_acuminatus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase reports nocturnal feeding, oviparity and the 2023 IUCN assessment."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 10,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pareques acuminatus — DORIS, Fédération française d’études et de sports sous-marins",
+        "fr": "Pareques acuminatus — DORIS, fédération française d’études et de sports sous-marins"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Pareques-acuminatus-Dragonnet-968/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French-language underwater species account provides an independent identification comparison, including a juvenile head marking."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 14,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 2022 revision narrows the former broad species concept; older distribution summaries may include Brazilian P. lineatus.",
+    "Available reproduction information is limited to oviparity; spawning details were not established."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Sources croisées en espagnol, français et anglais, avec priorité à la révision taxonomique primaire de 2022 pour aire et distinction de P. lineatus."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "paucidentomys_vermidax",
+  "name": "Edented Sulawesi rat",
+  "scientific": "Paucidentomys vermidax",
+  "group": "mammals",
+  "sections": {
+    "overview": "Paucidentomys vermidax is a highly specialized shrew-rat known from the mountains of Sulawesi, Indonesia.",
+    "identification": "Its long snout ends in unusual bicuspid upper incisors; it has no molars.",
+    "habitat": "Records come from montane forest on Mount Latimojong and the transition between lowland and montane forest on Mount Gandangdewata, in high-elevation habitat above about fifteen hundred metres.",
+    "diet": "One examined stomach contained earthworm segments and no other food; the authors therefore proposed that it may specialize on earthworms and other soft-bodied prey.",
+    "behavior": "Its teeth appear adapted to cut or tear soft prey before swallowing rather than to gnaw or grind, but direct behavioral observations remain sparse.",
+    "reproduction": "The original description did not establish its breeding season, litter size or nesting behavior.",
+    "ecology": "The authors compare it with Rhynchomys, an ecologically similar shrew-rat from Luzon. A 2025 Indonesian survey examined local occurrence and knowledge around Gandang Dewata, but did not estimate abundance.",
+    "conservation": "The Mammal Diversity Database reports the IUCN category Near Threatened; the very small known range and limited records make further survey valuable."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3497122/",
+      "title": "Evolutionary novelty in a rat with no molars — Biology Letters / PubMed Central"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003607/",
+      "title": "Paucidentomys vermidax — American Society of Mammalogists Mammal Diversity Database"
+    },
+    {
+      "url": "https://repository.unsulbar.ac.id/id/eprint/1757/",
+      "title": "Sulawesi Barat survey of Paucidentomys vermidax — Universitas Sulawesi Barat repository (Indonesian)"
+    }
+  ]
+}

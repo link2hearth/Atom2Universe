@@ -1,0 +1,38 @@
+{
+  "id": "pelecanus_conspicillatus",
+  "name": "Australian pelican",
+  "scientific": "Pelecanus conspicillatus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Australian pelican is a large, mobile waterbird widespread across Australia, New Guinea and western Indonesia, with occasional records farther into the Pacific.",
+    "identification": "It is mostly white with black wings and a massive pink bill and throat pouch; males are larger, with bills around 40–50 centimetres long.",
+    "habitat": "It uses inland and coastal open waters, including lakes, rivers, estuaries, swamps and lagoons, moving widely as water and food availability change.",
+    "diet": "Fish form most of its diet, though it also takes crustaceans and other aquatic prey; the pouch works as a short-term scoop net, not a food-storage bag.",
+    "behavior": "It often fishes cooperatively, herding fish into shallow or confined water before scooping them up; individuals can also forage alone.",
+    "reproduction": "Breeding may occur at different times and depends strongly on rainfall; pairs nest colonially on islands or secluded shores and share incubation.",
+    "ecology": "It is the only pelican native to Australia and is highly nomadic, travelling long distances between wetlands.",
+    "conservation": "It remains widespread, but breeding success and food supply depend on changing wetland conditions; the sources consulted do not establish a current population trend."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/birds/australian-pelican/",
+      "title": "Australian Pelican — Australian Museum"
+    },
+    {
+      "url": "https://www.legislation.gov.au/F2022L00775/asmade/2022-06-15/text/original/epub/OEBPS/document_1/document_1.html",
+      "title": "Australian Pelican species profile — Australian Government legislation register"
+    },
+    {
+      "url": "https://collections.museumsvictoria.com.au/species/8260",
+      "title": "Australian Pelican — Museum Victoria"
+    },
+    {
+      "url": "https://science.mnhn.fr/institution/mnhn/collection/zo/item/mo-1991-1129?listIndex=1",
+      "title": "Pélican à lunettes — Muséum national d’Histoire naturelle specimen catalogue"
+    },
+    {
+      "url": "https://www.dbca.wa.gov.au/wildlife-and-ecosystems/marine/marine-parks/fun-facts/australian-pelican",
+      "title": "Australian Pelican — Department of Biodiversity, Conservation and Attractions, Western Australia"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "pelecanus_conspicillatus",
+  "name": "Pélican à lunettes",
+  "scientific": "Pelecanus conspicillatus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Pélican à lunettes est un grand oiseau d’eau mobile, répandu en Australie, en Nouvelle-Guinée et dans l’ouest de l’Indonésie, avec des observations occasionnelles plus loin dans le Pacifique.",
+    "identification": "Son plumage est surtout blanc avec des ailes noires, et son énorme bec rose porte une poche gulaire ; les mâles sont plus grands, avec un bec d’environ 40 à 50 centimètres.",
+    "habitat": "Il fréquente les eaux libres intérieures et côtières — lacs, rivières, estuaires, marais et lagunes — et se déplace au gré de l’eau et de la nourriture disponibles.",
+    "diet": "Les poissons forment l’essentiel de son régime, mais il capture aussi des crustacés et d’autres proies aquatiques ; la poche sert d’épuisette temporaire, pas de réserve à nourriture.",
+    "behavior": "Il pêche souvent en groupe, rabattant les poissons vers des eaux peu profondes ou confinées avant de les capturer ; il peut aussi se nourrir seul.",
+    "reproduction": "La reproduction peut avoir lieu à différentes saisons et dépend beaucoup des pluies ; les couples nichent en colonies sur des îles ou des rives isolées et se partagent l’incubation.",
+    "ecology": "C’est le seul pélican indigène d’Australie ; très nomade, il parcourt de longues distances entre les zones humides.",
+    "conservation": "L’espèce reste largement répartie, mais le succès reproducteur et la nourriture dépendent des conditions changeantes des zones humides ; les sources consultées n’établissent pas de tendance démographique actuelle."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/birds/australian-pelican/",
+      "title": "Pélican à lunettes — Australian Museum"
+    },
+    {
+      "url": "https://www.legislation.gov.au/F2022L00775/asmade/2022-06-15/text/original/epub/OEBPS/document_1/document_1.html",
+      "title": "Fiche espèce du Pélican à lunettes — registre législatif du gouvernement australien"
+    },
+    {
+      "url": "https://collections.museumsvictoria.com.au/species/8260",
+      "title": "Pélican à lunettes — Museum Victoria"
+    },
+    {
+      "url": "https://science.mnhn.fr/institution/mnhn/collection/zo/item/mo-1991-1129?listIndex=1",
+      "title": "Pélican à lunettes — catalogue des spécimens du Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://www.dbca.wa.gov.au/wildlife-and-ecosystems/marine/marine-parks/fun-facts/australian-pelican",
+      "title": "Pélican à lunettes — Department of Biodiversity, Conservation and Attractions, Australie-Occidentale"
+    }
+  ]
+}

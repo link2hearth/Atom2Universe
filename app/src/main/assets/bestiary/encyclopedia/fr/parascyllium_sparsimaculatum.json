@@ -1,0 +1,34 @@
+{
+  "id": "parascyllium_sparsimaculatum",
+  "name": "Requin-carpette beige",
+  "scientific": "Parascyllium sparsimaculatum",
+  "group": "fish",
+  "sections": {
+    "overview": "Le requin-carpette beige est un requin-carpette australien rarement observé, connu sur une courte portion de la côte d’Australie-Occidentale.",
+    "identification": "Son corps brun pâle porte quelques grandes taches rouille diffuses et une marque peu visible en forme de collier derrière les branchies. Le plus grand spécimen documenté mesurait 78 cm.",
+    "habitat": "Il est signalé au large du sud-ouest de l’Australie-Occidentale, de Fremantle au cap Leeuwin. Les trois spécimens connus proviennent de la partie supérieure du talus continental, vers 204–245 m.",
+    "diet": "Son régime alimentaire n’est pas établi; les fiches disponibles indiquent que sa biologie reste inconnue.",
+    "behavior": "Les sources consultées ne décrivent pas de comportement propre à l’espèce.",
+    "reproduction": "La fiche de la FAO le classe parmi les espèces ovipares, mais les spécimens connus ne renseignent pas son cycle reproducteur.",
+    "ecology": "C’est un parent du requin-carpette varié, P. variolatum, signalé plus largement dans les eaux côtières du sud de l’Australie. À la différence de cette espèce côtière, P. sparsimaculatum n’est connu que du haut du talus au large du sud-ouest australien.",
+    "conservation": "Son statut UICN est « données insuffisantes » : le faible nombre d’observations et l’absence de données démographiques empêchent une estimation fiable du risque."
+  },
+  "sources": [
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/3289",
+      "title": "Requin-carpette beige — Fishes of Australia, collection nationale australienne de poissons"
+    },
+    {
+      "url": "https://www.fish.gov.au/docs/SharkReport/FRDC_Parascyllium_sparsimaculatum.pdf",
+      "title": "Requin-carpette beige — rapports australiens sur l’état des pêcheries"
+    },
+    {
+      "url": "https://www.iucnssg.org/uploads/5/4/1/2/54120303/2013_-_deep%E2%80%93sea_cartilaginous_fishes_of_the_indian_ocean_-_volume_1_-_sharks.pdf",
+      "title": "Poissons cartilagineux profonds de l’océan Indien, vol. 1 — FAO/Groupe de spécialistes des requins de l’UICN"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/fishes/varied-carpetshark-parascyllium-variolatum-dumril-1853/",
+      "title": "Requin-carpette varié — Australian Museum"
+    }
+  ]
+}
