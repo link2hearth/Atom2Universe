@@ -1,0 +1,163 @@
+{
+  "id": "trogonophis_wiegmanni",
+  "scientific": "Trogonophis wiegmanni",
+  "group": "reptiles",
+  "name": {
+    "en": "Checkerboard worm lizard",
+    "fr": "Trogonophis de Wiegmann"
+  },
+  "sections": {
+    "overview": {
+      "en": "Trogonophis wiegmanni is a burrowing amphisbaenian native to the Maghreb.",
+      "fr": "Trogonophis wiegmanni est un amphisbène fouisseur indigène du Maghreb."
+    },
+    "identification": {
+      "en": "Its elongated, limbless body and small eyes beneath the skin suit an underground life.",
+      "fr": "Son corps allongé et sans membres, ainsi que ses petits yeux sous la peau, sont adaptés à la vie souterraine."
+    },
+    "habitat": {
+      "en": "It occupies soil beneath stones and other ground cover, as well as some cultivated and open habitats.",
+      "fr": "Elle vit dans des sols sous les pierres et autres abris, ainsi que dans certains milieux ouverts ou cultivés."
+    },
+    "diet": {
+      "en": "A study of one Chafarinas Islands population found insect larvae, snails, isopods, beetles and ants in its diet.",
+      "fr": "Une étude d’une population des îles Chafarinas a relevé des larves d’insectes, des escargots, des isopodes, des coléoptères et des fourmis dans son régime."
+    },
+    "behavior": {
+      "en": "It spends much of its time burrowing through soil and sheltering under stones.",
+      "fr": "Elle passe une grande partie de son temps à creuser le sol et à s’abriter sous les pierres."
+    },
+    "reproduction": {
+      "en": "It is ovoviviparous; females give birth to a small litter of two to five young.",
+      "fr": "Elle est ovovivipare ; les femelles donnent naissance à une petite portée de deux à cinq jeunes."
+    },
+    "ecology": {
+      "en": "It is endemic to the Maghreb, from Morocco through northern Algeria to northwestern Tunisia.",
+      "fr": "Elle est endémique du Maghreb, du Maroc au nord-ouest de la Tunisie en passant par le nord de l’Algérie."
+    },
+    "conservation": {
+      "en": "The IUCN account lists it as Least Concern, but that global assessment dates from 2008.",
+      "fr": "La fiche UICN la classe en préoccupation mineure, mais cette évaluation mondiale date de 2008."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Reptile Database — Trogonophis wiegmanni",
+        "fr": "The Reptile Database — Trogonophis wiegmanni"
+      },
+      "url": "https://reptile-database.reptarium.cz/Trogonophis/wiegmanni?search_param=%28%28taxon%3D%27Sauria%27%29%29",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The database lists the species in the Maghreb and describes it as ovoviviparous."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 13,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "MoroccoHerps — Culebrilla mora",
+        "fr": "MoroccoHerps — Culebrilla mora"
+      },
+      "url": "https://www.moroccoherps.com/ficha/trogonophis_wiegmanni/",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Spanish herpetology account describes its body, eyes, burrowing shelters and habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 11,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — Checkerboard Worm Lizard",
+        "fr": "Liste rouge UICN — Checkerboard Worm Lizard"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2009.RLTS.T61589A12502172.en",
+      "supports": [
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The 2008 IUCN account reports two to five young per litter and Least Concern status."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 15,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Current Zoology — Diet selection in Trogonophis wiegmanni",
+        "fr": "Current Zoology — Choix alimentaire de Trogonophis wiegmanni"
+      },
+      "url": "https://academic.oup.com/cz/article/69/4/367/6648779",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Study reports prey in one Chafarinas Islands population and cautions against treating prey selection as random."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 16,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The diet study concerns one island population; prey proportions may differ elsewhere. The IUCN assessment is old."
+  ],
+  "review_note": "Bilingual draft kept concise; species-specific limits and the scope of regional or dated evidence are stated explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

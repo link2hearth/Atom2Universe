@@ -1,0 +1,30 @@
+{
+  "id": "tympanuchus_cupido",
+  "name": "Greater prairie-chicken",
+  "scientific": "Tympanuchus cupido",
+  "group": "birds",
+  "sections": {
+    "overview": "The greater prairie-chicken is a North American grouse of open grasslands.",
+    "identification": "Males gather at open display grounds, where their courtship includes booming calls and conspicuous movements.",
+    "habitat": "It uses tall- and mixed-grass prairie, with different grass heights and cover needed for nesting, feeding and display.",
+    "diet": "Adults eat mainly plant material, while young chicks rely heavily on insects.",
+    "behavior": "Males display communally at leks, where females visit to choose mates.",
+    "reproduction": "Nesting cover is important near display grounds, and chicks leave the nest soon after hatching.",
+    "ecology": "It is one of three living species in Tympanuchus, alongside the lesser prairie-chicken and sharp-tailed grouse.",
+    "conservation": "Conversion and fragmentation of prairie have reduced populations; the Attwater’s prairie-chicken is a particularly imperiled subspecies."
+  },
+  "sources": [
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/tymp",
+      "title": "US Forest Service FEIS — Greater and lesser prairie-chickens"
+    },
+    {
+      "url": "https://www.fws.gov/species/attwaters-greater-prairie-chicken-tympanuchus-cupido-attwateri",
+      "title": "U.S. Fish and Wildlife Service — Attwater’s greater prairie-chicken"
+    },
+    {
+      "url": "https://www.canada.ca/en/environment-climate-change/services/species-risk-public-registry/cosewic-assessments-status-reports/greater-prairie-chicken-2009.html",
+      "title": "COSEWIC — Greater prairie-chicken status report"
+    }
+  ]
+}

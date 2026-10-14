@@ -1,0 +1,34 @@
+{
+  "id": "triops_cancriformis",
+  "name": "Triops crabiforme",
+  "scientific": "Triops cancriformis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Triops cancriformis est un crustacé branchiopode de l’ordre des Notostraca, communément appelé « crevette-têtard ».",
+    "identification": "Comme les autres crevettes-têtards, il a un corps couvert d’un bouclier et une longue queue fourchue, silhouette caractéristique.",
+    "habitat": "Il vit dans des mares temporaires d’eau douce qui s’assèchent périodiquement.",
+    "diet": "Les données alimentaires propres à l’espèce sont limitées ; la littérature de terrain rapporte une consommation de détritus organiques.",
+    "behavior": "Sa phase aquatique active suit le remplissage des mares ; les suivis trouvent souvent les adultes quelques semaines après leur mise en eau.",
+    "reproduction": "Les populations présentent différents modes de reproduction, et chacun peut produire des cystes dormants qui survivent à la sécheresse dans les sédiments.",
+    "ecology": "Il appartient à une lignée de Triops surtout paléarctique, tandis que la lignée proche T. longicaudatus–newberryi est principalement américaine.",
+    "conservation": "En Grande-Bretagne, il est considéré comme une espèce rare à rechercher en priorité ; cette situation régionale ne vaut pas évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3329532/",
+      "title": "Phylogénie mondiale de l’ordre des Notostraca"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2075510/",
+      "title": "Évolution récente des modes de reproduction alternatifs chez Triops cancriformis"
+    },
+    {
+      "url": "https://content.freshwaterhabitats.org.uk/2015/03/TADPOLE-SHIMP-RARE-SPECIES-RECORDING-SHEET.pdf",
+      "title": "Fiche de suivi d’une espèce rare : crevette-têtard"
+    },
+    {
+      "url": "https://dialnet.unirioja.es/descarga/articulo/4661732.pdf",
+      "title": "Première observation de Triops cancriformis au Portugal"
+    }
+  ]
+}

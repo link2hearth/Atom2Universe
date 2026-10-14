@@ -1,0 +1,144 @@
+{
+  "id": "turnix_sylvaticus",
+  "scientific": "Turnix sylvaticus",
+  "group": "birds",
+  "name": {
+    "en": "Common buttonquail",
+    "fr": "Turnix d’Andalousie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Buttonquail is a small ground-dwelling bird with a broad Old World range from Africa through Asia, historically reaching Iberia.",
+      "fr": "Le Turnix d’Andalousie est un petit oiseau terrestre à vaste aire dans l’Ancien Monde, de l’Afrique à l’Asie, qui atteignait historiquement la péninsule Ibérique."
+    },
+    "identification": {
+      "en": "It is a small, compact buttonquail; females are more brightly marked than males.",
+      "fr": "C’est un petit turnix à la silhouette compacte ; la femelle est plus vivement marquée que le mâle."
+    },
+    "habitat": {
+      "en": "Across its range it uses dry sandy ground with low scrub or grass cover. The Mediterranean form occupied coastal scrub and dry grassland.",
+      "fr": "Dans son aire, il fréquente les sols sableux secs couverts de broussailles ou d’herbes basses. La forme méditerranéenne occupait les fourrés côtiers et les prairies sèches."
+    },
+    "diet": {
+      "en": "It is omnivorous, taking insects, snails and worms as well as shoots and seeds.",
+      "fr": "Il est omnivore et consomme des insectes, des escargots et des vers, ainsi que des pousses et des graines."
+    },
+    "behavior": {
+      "en": "It is exceptionally secretive and keeps to ground cover, where its earthy plumage is hard to see.",
+      "fr": "Il est particulièrement discret et reste dans le couvert, où son plumage terreux le rend difficile à repérer."
+    },
+    "reproduction": {
+      "en": "The species is polyandrous: a female may mate with several males, and males incubate the eggs and care for the chicks.",
+      "fr": "L’espèce est polyandre : une femelle peut s’accoupler avec plusieurs mâles, qui couvent les œufs et élèvent les poussins."
+    },
+    "ecology": {
+      "en": "Turnix sylvaticus includes several subspecies; SEO/BirdLife’s account specifically describes the nominate Mediterranean form found in Spain.",
+      "fr": "Turnix sylvaticus comprend plusieurs sous-espèces ; la fiche de SEO/BirdLife décrit précisément la forme méditerranéenne nominale présente en Espagne."
+    },
+    "conservation": {
+      "en": "SEO/BirdLife reports the Andalusian form regionally extinct in Europe and a remaining population in Morocco; that regional account is not a global status statement.",
+      "fr": "SEO/BirdLife indique que la forme andalouse est régionalement éteinte en Europe et qu’une population subsiste au Maroc ; ce constat régional n’est pas un statut mondial."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common Buttonquail — Animal Diversity Web",
+        "fr": "Turnix d’Andalousie — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Turnix_sylvaticus/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The account gives its broad range, physical description, cover habitat and subspecies."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 140,
+        "notes_words": 12,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Torillo andaluz — SEO/BirdLife",
+        "fr": "Turnix d’Andalousie — SEO/BirdLife"
+      },
+      "url": "https://seo.org/ave/torillo-andaluz/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish account: Mediterranean habitat, diet, breeding and regional status."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 9,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Buttonquail — IUCN Red List assessment (2016), via Animal Diversity Web",
+        "fr": "Turnix d’Andalousie — évaluation Liste rouge UICN 2016, citée par Animal Diversity Web"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22680500A90008182.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The linked assessment has a broad species treatment, whereas SEO/BirdLife describes the Mediterranean population’s regional status."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The catalogue’s English common name follows the broad taxon; the French name and SEO/BirdLife conservation account focus on the Mediterranean nominate form."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the Andalusian form’s European status is kept separate from the broader taxon’s range."
+}

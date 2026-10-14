@@ -1,0 +1,34 @@
+{
+  "id": "trogonophis_wiegmanni",
+  "name": "Checkerboard worm lizard",
+  "scientific": "Trogonophis wiegmanni",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Trogonophis wiegmanni is a burrowing amphisbaenian native to the Maghreb.",
+    "identification": "Its elongated, limbless body and small eyes beneath the skin suit an underground life.",
+    "habitat": "It occupies soil beneath stones and other ground cover, as well as some cultivated and open habitats.",
+    "diet": "A study of one Chafarinas Islands population found insect larvae, snails, isopods, beetles and ants in its diet.",
+    "behavior": "It spends much of its time burrowing through soil and sheltering under stones.",
+    "reproduction": "It is ovoviviparous; females give birth to a small litter of two to five young.",
+    "ecology": "It is endemic to the Maghreb, from Morocco through northern Algeria to northwestern Tunisia.",
+    "conservation": "The IUCN account lists it as Least Concern, but that global assessment dates from 2008."
+  },
+  "sources": [
+    {
+      "url": "https://reptile-database.reptarium.cz/Trogonophis/wiegmanni?search_param=%28%28taxon%3D%27Sauria%27%29%29",
+      "title": "The Reptile Database — Trogonophis wiegmanni"
+    },
+    {
+      "url": "https://www.moroccoherps.com/ficha/trogonophis_wiegmanni/",
+      "title": "MoroccoHerps — Culebrilla mora"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2009.RLTS.T61589A12502172.en",
+      "title": "IUCN Red List — Checkerboard Worm Lizard"
+    },
+    {
+      "url": "https://academic.oup.com/cz/article/69/4/367/6648779",
+      "title": "Current Zoology — Diet selection in Trogonophis wiegmanni"
+    }
+  ]
+}

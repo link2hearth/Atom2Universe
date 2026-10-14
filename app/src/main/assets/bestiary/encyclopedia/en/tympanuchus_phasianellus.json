@@ -1,0 +1,26 @@
+{
+  "id": "tympanuchus_phasianellus",
+  "name": "Sharp-tailed grouse",
+  "scientific": "Tympanuchus phasianellus",
+  "group": "birds",
+  "sections": {
+    "overview": "The sharp-tailed grouse is a North American grouse found in open habitats from Alaska and Canada into parts of the western and north-central United States.",
+    "identification": "Its pointed tail and feathered legs help distinguish this grouse.",
+    "habitat": "Depending on the subspecies, it occupies grasslands, shrub-steppe, open woodland edges and brushy openings.",
+    "diet": "Its diet is largely plant-based, with insects also important for young birds.",
+    "behavior": "Males gather on open leks and perform energetic courtship displays.",
+    "reproduction": "Females nest on the ground, and the chicks leave the nest soon after hatching.",
+    "ecology": "It shares the genus Tympanuchus with the greater and lesser prairie-chickens; the sharp-tailed grouse uses a wider mix of grassland and shrub habitats.",
+    "conservation": "Canadian monitoring suggests little overall change in its population since about 1970."
+  },
+  "sources": [
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/typh",
+      "title": "US Forest Service FEIS — Sharp-tailed grouse"
+    },
+    {
+      "url": "https://wildlife-species.canada.ca/bird-status/oiseau-bird.aspx?sB=STGR&sL=e&sM=a&sY=2019",
+      "title": "Environment and Climate Change Canada — Sharp-tailed Grouse"
+    }
+  ]
+}

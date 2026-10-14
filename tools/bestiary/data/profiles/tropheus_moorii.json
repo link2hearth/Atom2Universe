@@ -1,0 +1,141 @@
+{
+  "id": "tropheus_moorii",
+  "scientific": "Tropheus moorii",
+  "group": "fish",
+  "name": {
+    "en": "Blunthead cichlid",
+    "fr": "Tropheus moorii"
+  },
+  "sections": {
+    "overview": {
+      "en": "Tropheus moorii is a cichlid endemic to Lake Tanganyika in East Africa.",
+      "fr": "Tropheus moorii est un cichlidé endémique du lac Tanganyika, en Afrique de l’Est."
+    },
+    "identification": {
+      "en": "It is a small fish with many local colour forms; colour alone should not be used to identify a separate species.",
+      "fr": "C’est un petit poisson qui présente de nombreuses formes locales de couleur ; la couleur seule ne permet pas de reconnaître une espèce distincte."
+    },
+    "habitat": {
+      "en": "It lives in freshwater along rocky shores of Lake Tanganyika.",
+      "fr": "Elle vit en eau douce le long des rives rocheuses du lac Tanganyika."
+    },
+    "diet": {
+      "en": "It grazes mainly on algae growing on rock surfaces.",
+      "fr": "Elle broute principalement les algues qui poussent sur les rochers."
+    },
+    "behavior": {
+      "en": "Adults defend individual feeding territories; observations show males occupying higher rocks than females.",
+      "fr": "Les adultes défendent des territoires alimentaires individuels ; les observations montrent les mâles occupant des rochers plus élevés que les femelles."
+    },
+    "reproduction": {
+      "en": "Females carry the developing young in the mouth for about a month after spawning.",
+      "fr": "Après la ponte, les femelles gardent les jeunes en développement dans leur bouche pendant environ un mois."
+    },
+    "ecology": {
+      "en": "Its rocky-shore grazing links it to the algae growing on Tanganyika’s littoral substrate.",
+      "fr": "Son broutage des rives rocheuses la lie aux algues qui poussent sur le substrat littoral du Tanganyika."
+    },
+    "conservation": {
+      "en": "FishBase reports a 2025 IUCN assessment of Near Threatened.",
+      "fr": "FishBase rapporte une évaluation UICN de 2025 le classant quasi menacé."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — Tropheus moorii summary",
+        "fr": "FishBase — fiche Tropheus moorii"
+      },
+      "url": "https://www.fishbase.se/summary/tropheus-moorii.html",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports Lake Tanganyika endemism, general biology and a 2025 IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 12,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Tropheus moorii ecology summary",
+        "fr": "FishBase — résumé écologique de Tropheus moorii"
+      },
+      "url": "https://fishbase.se/Ecology/Tropheus_moorii",
+      "supports": [
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The ecology summary reports algal grazing on rocky substrate."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 9,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Japanese Journal of Ichthyology — social and mating system of Tropheus moorii",
+        "fr": "Japanese Journal of Ichthyology — système social et reproducteur de Tropheus moorii"
+      },
+      "url": "https://www.jstage.jst.go.jp/article/jji1950/38/3/38_3_271/_article/-char/en",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Field study discusses local colour morphs, individual feeding territories and female mouthbrooding."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 12,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Colour forms are geographically local and should not be treated as separate taxa without taxonomic evidence."
+  ],
+  "review_note": "Bilingual draft kept concise; species-specific limits and the scope of regional or dated evidence are stated explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

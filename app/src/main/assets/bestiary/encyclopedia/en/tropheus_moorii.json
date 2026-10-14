@@ -1,0 +1,30 @@
+{
+  "id": "tropheus_moorii",
+  "name": "Blunthead cichlid",
+  "scientific": "Tropheus moorii",
+  "group": "fish",
+  "sections": {
+    "overview": "Tropheus moorii is a cichlid endemic to Lake Tanganyika in East Africa.",
+    "identification": "It is a small fish with many local colour forms; colour alone should not be used to identify a separate species.",
+    "habitat": "It lives in freshwater along rocky shores of Lake Tanganyika.",
+    "diet": "It grazes mainly on algae growing on rock surfaces.",
+    "behavior": "Adults defend individual feeding territories; observations show males occupying higher rocks than females.",
+    "reproduction": "Females carry the developing young in the mouth for about a month after spawning.",
+    "ecology": "Its rocky-shore grazing links it to the algae growing on Tanganyika’s littoral substrate.",
+    "conservation": "FishBase reports a 2025 IUCN assessment of Near Threatened."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/tropheus-moorii.html",
+      "title": "FishBase — Tropheus moorii summary"
+    },
+    {
+      "url": "https://fishbase.se/Ecology/Tropheus_moorii",
+      "title": "FishBase — Tropheus moorii ecology summary"
+    },
+    {
+      "url": "https://www.jstage.jst.go.jp/article/jji1950/38/3/38_3_271/_article/-char/en",
+      "title": "Japanese Journal of Ichthyology — social and mating system of Tropheus moorii"
+    }
+  ]
+}

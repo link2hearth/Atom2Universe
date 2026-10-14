@@ -1,0 +1,34 @@
+{
+  "id": "trogonophis_wiegmanni",
+  "name": "Trogonophis de Wiegmann",
+  "scientific": "Trogonophis wiegmanni",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Trogonophis wiegmanni est un amphisbène fouisseur indigène du Maghreb.",
+    "identification": "Son corps allongé et sans membres, ainsi que ses petits yeux sous la peau, sont adaptés à la vie souterraine.",
+    "habitat": "Elle vit dans des sols sous les pierres et autres abris, ainsi que dans certains milieux ouverts ou cultivés.",
+    "diet": "Une étude d’une population des îles Chafarinas a relevé des larves d’insectes, des escargots, des isopodes, des coléoptères et des fourmis dans son régime.",
+    "behavior": "Elle passe une grande partie de son temps à creuser le sol et à s’abriter sous les pierres.",
+    "reproduction": "Elle est ovovivipare ; les femelles donnent naissance à une petite portée de deux à cinq jeunes.",
+    "ecology": "Elle est endémique du Maghreb, du Maroc au nord-ouest de la Tunisie en passant par le nord de l’Algérie.",
+    "conservation": "La fiche UICN la classe en préoccupation mineure, mais cette évaluation mondiale date de 2008."
+  },
+  "sources": [
+    {
+      "url": "https://reptile-database.reptarium.cz/Trogonophis/wiegmanni?search_param=%28%28taxon%3D%27Sauria%27%29%29",
+      "title": "The Reptile Database — Trogonophis wiegmanni"
+    },
+    {
+      "url": "https://www.moroccoherps.com/ficha/trogonophis_wiegmanni/",
+      "title": "MoroccoHerps — Culebrilla mora"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2009.RLTS.T61589A12502172.en",
+      "title": "Liste rouge UICN — Checkerboard Worm Lizard"
+    },
+    {
+      "url": "https://academic.oup.com/cz/article/69/4/367/6648779",
+      "title": "Current Zoology — Choix alimentaire de Trogonophis wiegmanni"
+    }
+  ]
+}

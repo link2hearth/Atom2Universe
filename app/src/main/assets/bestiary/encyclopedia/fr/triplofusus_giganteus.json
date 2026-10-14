@@ -1,0 +1,30 @@
+{
+  "id": "triplofusus_giganteus",
+  "name": "Conque cheval",
+  "scientific": "Triplofusus giganteus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Triplofusus giganteus, la conque cheval, est un grand gastéropode marin prédateur de l’Atlantique occidental et du golfe du Mexique.",
+    "identification": "Sa robuste coquille peut dépasser 50 cm et est souvent orange chez les jeunes ; l’animal vivant possède un pied rouge orangé vif.",
+    "habitat": "Il vit dans les eaux marines peu profondes, de la Caroline du Nord à la péninsule du Yucatán.",
+    "diet": "Il chasse d’autres grands gastéropodes marins, notamment des buccins-tonnerre et des fasciolaires.",
+    "behavior": "Il utilise son pied musculeux pour envelopper et étouffer ses proies.",
+    "reproduction": "Les femelles pondent des capsules d’œufs caractéristiques, disposées en éventail.",
+    "ecology": "Grand prédateur des réseaux alimentaires côtiers, il est aussi très recherché pour sa coquille.",
+    "conservation": "Une étude de population rapporte un déclin associé à la collecte durable des coquilles et à la pêche commerciale, ainsi qu’à l’aménagement du littoral."
+  },
+  "sources": [
+    {
+      "url": "https://www.floridamuseum.ufl.edu/100-years/object/horse-conch/",
+      "title": "Florida Museum of Natural History — conque cheval"
+    },
+    {
+      "url": "https://shells.shellmuseum.org/shell/triplofusus-giganteus/",
+      "title": "Bailey-Matthews National Shell Museum — Triplofusus giganteus"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8985988/",
+      "title": "PLOS ONE — âge et croissance de la conque cheval de Floride"
+    }
+  ]
+}

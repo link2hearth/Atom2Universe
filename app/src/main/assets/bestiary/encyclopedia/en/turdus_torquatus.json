@@ -1,0 +1,30 @@
+{
+  "id": "turdus_torquatus",
+  "name": "Ring Ouzel",
+  "scientific": "Turdus torquatus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Ring Ouzel breeds in uplands across Europe and Central Asia, then winters farther south.",
+    "identification": "The male is dark with a bold white breast band; the female is browner, with a duller band.",
+    "habitat": "It breeds in open upland valleys and slopes, often among heather.",
+    "diet": "It eats invertebrates, including earthworms and beetles, and also takes berries.",
+    "behavior": "British birds leave after breeding and return from Africa in spring.",
+    "reproduction": "It nests on or near the ground, often in heather; a second brood may occur.",
+    "ecology": "Unlike the winter-visiting Fieldfare, it breeds in Britain in summer; see that profile for the contrast.",
+    "conservation": "It is on the UK Red List after long-term declines in breeding numbers and range."
+  },
+  "sources": [
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/ring-ouzel/",
+      "title": "Ring Ouzel — RSPB"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/ring-ouzel",
+      "title": "Ring Ouzel — BTO BirdFacts"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/grive.litorne.html",
+      "title": "Fieldfare — Oiseaux.net"
+    }
+  ]
+}

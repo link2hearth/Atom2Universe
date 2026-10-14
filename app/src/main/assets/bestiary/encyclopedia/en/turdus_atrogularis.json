@@ -1,0 +1,34 @@
+{
+  "id": "turdus_atrogularis",
+  "name": "Black-throated Thrush",
+  "scientific": "Turdus atrogularis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Black-throated Thrush breeds across eastern Eurasia and migrates south to Central and South Asia for winter.",
+    "identification": "The male has a grey back, white belly and black throat and chest; the female is brown-streaked below and lacks the male’s black throat.",
+    "habitat": "It breeds in damp coniferous and mixed forests, often with dense undergrowth; in winter it also uses scrub, river woods and parks.",
+    "diet": "It takes invertebrates in the warm season and relies heavily on berries and other fruits in winter.",
+    "behavior": "Outside the breeding season it often gathers in flocks, sometimes alongside other thrushes.",
+    "reproduction": "The regional accounts consulted focus on migration and wintering and give little detail about nesting.",
+    "ecology": "Central Asian winter flocks can include Fieldfares (T. pilaris); see that profile for this shared winter setting.",
+    "conservation": "The BTO lists it as Least Concern globally, while noting that it is a very rare vagrant in Britain."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/datthr1/RU",
+      "title": "Black-throated Thrush — eBird"
+    },
+    {
+      "url": "https://www.birds.uz/species/399",
+      "title": "Black-throated Thrush — Birds.uz, Birds of Uzbekistan"
+    },
+    {
+      "url": "https://www.ebirds.ru/article/692.htm",
+      "title": "Black-throated Thrush — Birds of Europe (Russian-language account)"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-throated-thrush",
+      "title": "Black-throated Thrush — BTO BirdFacts"
+    }
+  ]
+}

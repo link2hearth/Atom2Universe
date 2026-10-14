@@ -1,0 +1,30 @@
+{
+  "id": "turnix_sylvaticus",
+  "name": "Common buttonquail",
+  "scientific": "Turnix sylvaticus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Common Buttonquail is a small ground-dwelling bird with a broad Old World range from Africa through Asia, historically reaching Iberia.",
+    "identification": "It is a small, compact buttonquail; females are more brightly marked than males.",
+    "habitat": "Across its range it uses dry sandy ground with low scrub or grass cover. The Mediterranean form occupied coastal scrub and dry grassland.",
+    "diet": "It is omnivorous, taking insects, snails and worms as well as shoots and seeds.",
+    "behavior": "It is exceptionally secretive and keeps to ground cover, where its earthy plumage is hard to see.",
+    "reproduction": "The species is polyandrous: a female may mate with several males, and males incubate the eggs and care for the chicks.",
+    "ecology": "Turnix sylvaticus includes several subspecies; SEO/BirdLife’s account specifically describes the nominate Mediterranean form found in Spain.",
+    "conservation": "SEO/BirdLife reports the Andalusian form regionally extinct in Europe and a remaining population in Morocco; that regional account is not a global status statement."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Turnix_sylvaticus/",
+      "title": "Common Buttonquail — Animal Diversity Web"
+    },
+    {
+      "url": "https://seo.org/ave/torillo-andaluz/",
+      "title": "Torillo andaluz — SEO/BirdLife"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22680500A90008182.en",
+      "title": "Common Buttonquail — IUCN Red List assessment (2016), via Animal Diversity Web"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "id": "troglodiplura_lowryi",
+  "scientific": "Troglodiplura lowryi",
+  "group": "invertebrates",
+  "name": {
+    "en": "Nullarbor cave trapdoor spider",
+    "fr": "Mygale cavernicole du Nullarbor"
+  },
+  "sections": {
+    "overview": {
+      "en": "Troglodiplura lowryi is a cave-dwelling mygalomorph spider endemic to the Nullarbor Plain of southern Australia.",
+      "fr": "Troglodiplura lowryi est une mygale cavernicole endémique de la plaine de Nullarbor, dans le sud de l’Australie."
+    },
+    "identification": {
+      "en": "It is an unusually cave-adapted spider, but its original taxonomic study was hampered by fragmentary or juvenile museum material.",
+      "fr": "C’est une araignée fortement adaptée à la vie cavernicole, mais son étude taxonomique initiale a été compliquée par des spécimens de musée fragmentaires ou juvéniles."
+    },
+    "habitat": {
+      "en": "Known records place it in caves on the Nullarbor Plain.",
+      "fr": "Les observations connues la situent dans des grottes de la plaine de Nullarbor."
+    },
+    "diet": {
+      "en": "Reliable species-specific information about its prey was not available in the sources consulted.",
+      "fr": "Les sources consultées ne fournissent pas d’information fiable propre à l’espèce sur ses proies."
+    },
+    "behavior": {
+      "en": "Its cave ecology remains poorly known, in part because adult specimens have been scarce in collections.",
+      "fr": "Son écologie cavernicole reste mal connue, notamment parce que les collections comportent peu de spécimens adultes."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not describe its courtship, egg-laying or development.",
+      "fr": "Les sources consultées ne décrivent ni sa parade, ni sa ponte, ni son développement."
+    },
+    "ecology": {
+      "en": "It is one of the most strongly cave-adapted mygalomorph spiders known.",
+      "fr": "C’est l’une des mygales les plus spécialisées pour la vie souterraine parmi celles connues."
+    },
+    "conservation": {
+      "en": "An Australian government draft assessment proposed classifying it as data deficient for federal threatened-species listing; that was a consultation proposal, not a final status in the cited source.",
+      "fr": "Un projet d’évaluation du gouvernement australien proposait de la considérer comme « données insuffisantes » pour la liste fédérale des espèces menacées ; la source citée présente une consultation, pas un statut final."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Systematics and phylogenetic position of Troglodiplura",
+        "fr": "Systématique et position phylogénétique de Troglodiplura"
+      },
+      "url": "https://ro.ecu.edu.au/ecuworkspost2013/9348/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The 2020 peer-reviewed revision describes T. lowryi as cave-endemic on the Nullarbor Plain, highly troglomorphic, and difficult to classify because available museum material was fragmentary, degraded or juvenile."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 28,
+        "total": 184,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Government consultation — Nullarbor cave trapdoor spider",
+        "fr": "Consultation du gouvernement australien — mygale cavernicole du Nullarbor"
+      },
+      "url": "https://consult.dcceew.gov.au/species-listing-eligibility-and-conservation-actions-nullarbor-cave-trapdoor-spider-troglodiplur",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The government consultation page presents a draft data-deficient eligibility recommendation and states that it is a draft assessment for public consultation."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 21,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Australian Antarctic Data Centre — Taxon Profile: Troglodiplura lowryi",
+        "fr": "Australian Antarctic Data Centre — fiche taxonomique : Troglodiplura lowryi"
+      },
+      "url": "https://data.aad.gov.au/aadc/biodiversity/taxon_profile.cfm?taxon_id=66819",
+      "supports": [
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The taxon profile provides nomenclatural and distribution metadata but no species-specific diet or reproductive account; these details remain undocumented in the consulted sources."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 23,
+        "total": 75,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The draft Australian assessment is explicitly a consultation proposal and must not be presented as a completed statutory listing decision.",
+    "Diet and reproduction are stated as unreported in consulted sources, not as biologically absent."
+  ],
+  "review_note": "The 2020 revision added congeners, so no outdated claim that T. lowryi is the sole species of Troglodiplura is made.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,166 @@
+{
+  "id": "turdus_pilaris",
+  "scientific": "Turdus pilaris",
+  "group": "birds",
+  "name": {
+    "en": "Fieldfare",
+    "fr": "Grive litorne"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Fieldfare breeds across northern Eurasia and many populations migrate southwest for winter.",
+      "fr": "La Grive litorne niche dans le nord de l’Eurasie et de nombreuses populations migrent vers le sud-ouest pour l’hiver."
+    },
+    "identification": {
+      "en": "Its grey head and rump, chestnut back, black tail and spotted pale breast make it distinctive among thrushes.",
+      "fr": "Sa tête et son croupion gris, son dos roux, sa queue noire et sa poitrine claire tachetée la distinguent des autres grives."
+    },
+    "habitat": {
+      "en": "It breeds in open woodland and wooded edges, then uses fields, pasture, orchards and hedges while migrating or wintering.",
+      "fr": "Elle niche dans les bois clairs et leurs lisières, puis fréquente champs, prairies, vergers et haies en migration ou en hivernage."
+    },
+    "diet": {
+      "en": "It eats invertebrates in the breeding season and relies more on berries and fallen fruit in winter.",
+      "fr": "Elle mange des invertébrés pendant la reproduction et dépend davantage des baies et des fruits tombés en hiver."
+    },
+    "behavior": {
+      "en": "In winter it often travels and feeds in noisy flocks; a harsh repeated “chak” call can reveal it.",
+      "fr": "En hiver, elle se déplace et se nourrit souvent en groupes bruyants ; son cri rauque et répété « chak » peut la signaler."
+    },
+    "reproduction": {
+      "en": "It commonly nests in loose colonies, building a tree nest in which the female lays about five or six eggs.",
+      "fr": "Elle niche souvent en colonies lâches ; la femelle pond généralement cinq ou six œufs dans un nid construit dans un arbre."
+    },
+    "ecology": {
+      "en": "In Central Asia, winter flocks may include Black-throated Thrushes (T. atrogularis); see that profile for the shared flocking record. The Ring Ouzel is another Turdus, but a UK summer breeder; see its profile for the contrast.",
+      "fr": "En Asie centrale, les groupes hivernants peuvent comprendre des grives à gorge noire (T. atrogularis) ; voir cette fiche pour cette association. Le merle à plastron est un autre Turdus, mais un nicheur estival au Royaume-Uni ; voir sa fiche pour comparer."
+    },
+    "conservation": {
+      "en": "In Britain it is a regular winter visitor and is on the RSPB’s UK Red List of Birds of Conservation Concern.",
+      "fr": "En Grande-Bretagne, c’est un visiteur hivernal régulier, inscrit sur la liste rouge britannique des oiseaux de préoccupation de conservation de la RSPB."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Fieldfare — Oiseaux.net",
+        "fr": "Grive litorne — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/grive.litorne.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "French account: range, plumage, habitat, diet and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 8,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fieldfare — RSPB",
+        "fr": "Grive litorne — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/fieldfare",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "RSPB describes its plumage, noisy winter flocks, call, British winter-visiting behavior and UK Red List status."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 85,
+        "notes_words": 16,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-throated Thrush — Birds of Europe, Russian-language account",
+        "fr": "Grive à gorge noire — Birds of Europe, fiche en russe"
+      },
+      "url": "https://www.ebirds.ru/article/692.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The account says Central Asian winter flocks of Black-throated Thrush may contain Fieldfares."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 13,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ring Ouzel — RSPB",
+        "fr": "Merle à plastron — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/ring-ouzel/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "RSPB describes the Ring Ouzel as a migratory UK summer breeder that nests in uplands."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 15,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Breeding information is general across the range; the conservation status quoted is UK-specific."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the mutual Turdus references compare documented mixed winter flocks and UK seasonal status."
+}

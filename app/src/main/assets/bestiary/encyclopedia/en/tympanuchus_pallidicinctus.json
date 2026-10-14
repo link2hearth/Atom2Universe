@@ -1,0 +1,30 @@
+{
+  "id": "tympanuchus_pallidicinctus",
+  "name": "Lesser prairie-chicken",
+  "scientific": "Tympanuchus pallidicinctus",
+  "group": "birds",
+  "sections": {
+    "overview": "The lesser prairie-chicken is a grouse native to the southern and central High Plains of the United States.",
+    "identification": "It is a ground-dwelling bird with barred brown-and-buff plumage; displaying males raise neck feathers and inflate air sacs.",
+    "habitat": "It favors shortgrass prairie interspersed with shrubs, including sand-sagebrush and shinnery-oak grasslands.",
+    "diet": "Adults eat seeds and green plant parts, while chicks depend strongly on insects.",
+    "behavior": "Males gather at leks to display and attract females.",
+    "reproduction": "Females nest on the ground in grass cover, so suitable nesting vegetation near display and feeding areas matters.",
+    "ecology": "It is a close relative of the greater prairie-chicken, but generally uses shorter, shrub-mixed prairie.",
+    "conservation": "Maintaining extensive native shrub-grassland is central to its conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.fws.gov/species/lesser-prairie-chicken-tympanuchus-pallidicinctus",
+      "title": "U.S. Fish and Wildlife Service — Lesser prairie-chicken"
+    },
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/tymp",
+      "title": "US Forest Service FEIS — Greater and lesser prairie-chickens"
+    },
+    {
+      "url": "https://www.usgs.gov/publications/effects-management-practices-grassland-birds-lesser-prairie-chicken-tympanuchus",
+      "title": "U.S. Geological Survey — Lesser prairie-chicken habitat management"
+    }
+  ]
+}

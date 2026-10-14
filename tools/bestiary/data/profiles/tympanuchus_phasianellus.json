@@ -1,0 +1,121 @@
+{
+  "id": "tympanuchus_phasianellus",
+  "scientific": "Tympanuchus phasianellus",
+  "group": "birds",
+  "name": {
+    "en": "Sharp-tailed grouse",
+    "fr": "Tétras à queue fine"
+  },
+  "sections": {
+    "overview": {
+      "en": "The sharp-tailed grouse is a North American grouse found in open habitats from Alaska and Canada into parts of the western and north-central United States.",
+      "fr": "Le tétras à queue fine est un gallinacé nord-américain des milieux ouverts, présent de l’Alaska et du Canada jusqu’à une partie de l’ouest et du centre-nord des États-Unis."
+    },
+    "identification": {
+      "en": "Its pointed tail and feathered legs help distinguish this grouse.",
+      "fr": "Sa queue pointue et ses pattes emplumées aident à reconnaître ce gallinacé."
+    },
+    "habitat": {
+      "en": "Depending on the subspecies, it occupies grasslands, shrub-steppe, open woodland edges and brushy openings.",
+      "fr": "Selon la sous-espèce, il fréquente prairies, steppes arbustives, lisières boisées ouvertes et clairières broussailleuses."
+    },
+    "diet": {
+      "en": "Its diet is largely plant-based, with insects also important for young birds.",
+      "fr": "Son régime est surtout végétal ; les insectes comptent aussi dans l’alimentation des jeunes."
+    },
+    "behavior": {
+      "en": "Males gather on open leks and perform energetic courtship displays.",
+      "fr": "Les mâles se réunissent sur des leks dégagés et y exécutent des parades énergiques."
+    },
+    "reproduction": {
+      "en": "Females nest on the ground, and the chicks leave the nest soon after hatching.",
+      "fr": "Les femelles nichent au sol et les poussins quittent le nid peu après l’éclosion."
+    },
+    "ecology": {
+      "en": "It shares the genus Tympanuchus with the greater and lesser prairie-chickens; the sharp-tailed grouse uses a wider mix of grassland and shrub habitats.",
+      "fr": "Il partage le genre Tympanuchus avec les tétras des prairies et des prairies nains ; le tétras à queue fine utilise un éventail plus large de milieux herbeux et arbustifs."
+    },
+    "conservation": {
+      "en": "Canadian monitoring suggests little overall change in its population since about 1970.",
+      "fr": "Le suivi canadien indique peu de changement global de ses effectifs depuis environ 1970."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "US Forest Service FEIS — Sharp-tailed grouse",
+        "fr": "US Forest Service FEIS — Tétras à queue fine"
+      },
+      "url": "https://research.fs.usda.gov/feis/species-reviews/typh",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "ecology"
+      ],
+      "facts": [
+        "The review covers range, habitat, leks and seasonal diet."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 9,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Environment and Climate Change Canada — Sharp-tailed Grouse",
+        "fr": "Environnement et Changement climatique Canada — Tétras à queue fine"
+      },
+      "url": "https://wildlife-species.canada.ca/bird-status/oiseau-bird.aspx?sB=STGR&sL=e&sM=a&sY=2019",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The Canadian account describes the range and reports little overall population change since about 1970."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 79,
+        "notes_words": 15,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Conservation sentence is regional and does not claim a uniform trend across the full range."
+  ],
+  "review_note": "Avoids a global trend summary because regional data differ; emphasizes habitat mosaic and shared genus.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

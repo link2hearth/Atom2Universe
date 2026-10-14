@@ -1,0 +1,30 @@
+{
+  "id": "tuta_absoluta",
+  "name": "Tomato leafminer",
+  "scientific": "Tuta absoluta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The tomato leafminer is a small moth whose larvae damage tomato plants.",
+    "identification": "The larvae make conspicuous mines in leaves and can also bore into stems and fruit.",
+    "habitat": "It is closely associated with tomato crops, although other cultivated solanaceous plants can also be affected.",
+    "diet": "Larvae feed within plant tissues, especially tomato leaves and fruit.",
+    "behavior": "The larval stages remain concealed in mines or galleries, which can make early damage easy to overlook.",
+    "reproduction": "Its development is strongly affected by temperature, so generation time varies with conditions.",
+    "ecology": "EPPO currently uses the combination Phthorimaea absoluta, while Tuta absoluta remains widely used in agricultural sources.",
+    "conservation": "It is an agricultural pest rather than a species assessed here for wildlife conservation."
+  },
+  "sources": [
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/5150/Tomate-Tuta-absoluta",
+      "title": "INRAE ePhytia — Tomato leafminer"
+    },
+    {
+      "url": "https://gd.eppo.int/taxon/GNORAB",
+      "title": "EPPO Global Database — Phthorimaea absoluta"
+    },
+    {
+      "url": "https://prod.senasica.gob.mx/SIRVEF/ContenidoPublico/Fichas%20tecnicas/Ficha%20T%C3%A9cnica%20Palomilla%20del%20tomate.pdf",
+      "title": "SENASICA — Tomato moth technical sheet"
+    }
+  ]
+}

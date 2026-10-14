@@ -1,0 +1,30 @@
+{
+  "id": "turdus_torquatus",
+  "name": "Merle à plastron",
+  "scientific": "Turdus torquatus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Merle à plastron niche dans les montagnes d’Europe et d’Asie centrale, puis hiverne plus au sud.",
+    "identification": "Le mâle est sombre avec un large plastron blanc ; la femelle est plus brune et son plastron moins net.",
+    "habitat": "Il niche dans les vallées et sur les pentes ouvertes d’altitude, souvent dans la bruyère.",
+    "diet": "Il mange des invertébrés, dont des vers de terre et des coléoptères, ainsi que des baies.",
+    "behavior": "Les oiseaux britanniques partent après la reproduction et reviennent d’Afrique au printemps.",
+    "reproduction": "Il niche au sol ou près du sol, souvent dans la bruyère ; une seconde couvée est possible.",
+    "ecology": "Contrairement à la Grive litorne, visiteuse hivernale, il niche au Royaume-Uni en été ; voir cette fiche pour comparer.",
+    "conservation": "Il figure sur la liste rouge britannique après un recul durable des effectifs nicheurs et de son aire."
+  },
+  "sources": [
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/ring-ouzel/",
+      "title": "Merle à plastron — RSPB"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/ring-ouzel",
+      "title": "Merle à plastron — BTO BirdFacts"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/grive.litorne.html",
+      "title": "Grive litorne — Oiseaux.net"
+    }
+  ]
+}

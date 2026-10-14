@@ -1,0 +1,141 @@
+{
+  "id": "trogonoptera_brookiana",
+  "scientific": "Trogonoptera brookiana",
+  "group": "invertebrates",
+  "name": {
+    "en": "Rajah Brooke's birdwing",
+    "fr": "Trogonoptera brookiana"
+  },
+  "sections": {
+    "overview": {
+      "en": "Trogonoptera brookiana is a large birdwing butterfly native to parts of Southeast Asia.",
+      "fr": "Trogonoptera brookiana est un grand papillon ornithoptère indigène de certaines régions d’Asie du Sud-Est."
+    },
+    "identification": {
+      "en": "Its dark wings have striking metallic-green markings.",
+      "fr": "Ses ailes sombres portent des marques vert métallique très visibles."
+    },
+    "habitat": {
+      "en": "It is associated mainly with primary forest across the Malay Peninsula, Borneo and Sumatra.",
+      "fr": "Elle est surtout associée aux forêts primaires de la péninsule Malaise, de Bornéo et de Sumatra."
+    },
+    "diet": {
+      "en": "In Peninsular Malaysia, Aristolochia foveolata is reported as a host plant for the subspecies albescens.",
+      "fr": "Dans la péninsule Malaise, Aristolochia foveolata est signalée comme plante hôte de la sous-espèce albescens."
+    },
+    "behavior": {
+      "en": "Males of the subspecies albescens gather at riverbanks and mineral-rich puddles; this behavior is not described for every population.",
+      "fr": "Les mâles de la sous-espèce albescens se rassemblent au bord des rivières et sur des flaques riches en minéraux ; ce comportement n’est pas documenté pour toutes les populations."
+    },
+    "reproduction": {
+      "en": "The sources consulted focus on host plants and male behavior and give few species-specific details on egg laying.",
+      "fr": "Les sources consultées portent surtout sur les plantes hôtes et le comportement des mâles, et donnent peu de détails propres à l’espèce sur la ponte."
+    },
+    "ecology": {
+      "en": "MyBIS lists Troides brookiana as a synonym; the inventory name Trogonoptera brookiana is retained here.",
+      "fr": "MyBIS indique Troides brookiana comme synonyme ; le nom de l’inventaire, Trogonoptera brookiana, est conservé ici."
+    },
+    "conservation": {
+      "en": "The 2018 IUCN assessment lists it as Least Concern, while noting habitat loss and collection as pressures.",
+      "fr": "L’évaluation UICN de 2018 la classe en préoccupation mineure, tout en signalant la perte d’habitat et les prélèvements comme pressions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "IUCN Red List — Rajah Brooke’s Birdwing",
+        "fr": "Liste rouge UICN — Rajah Brooke’s Birdwing"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-1.RLTS.T91184152A91184305.en",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment describes the range, forest association, Least Concern status and habitat-loss pressures."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 13,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Monitoring male puddling in Rajah Brooke’s Birdwing — Peer-reviewed study",
+        "fr": "Suivi des rassemblements de mâles de Rajah Brooke — étude scientifique"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5726648/",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Study describes black and metallic-green adults, the albescens host plant and male puddling behavior."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 14,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Malaysia Biodiversity Information System — Trogonoptera brookiana",
+        "fr": "Système malaisien d’information sur la biodiversité — Trogonoptera brookiana"
+      },
+      "url": "https://www.mybis.gov.my/sp/35204",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "MyBIS accepts Trogonoptera brookiana and lists Troides brookiana as a synonym."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 11,
+        "total": 42,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The host-plant and puddling observations cited here concern the Malaysian subspecies albescens, not necessarily all populations."
+  ],
+  "review_note": "Bilingual draft kept concise; species-specific limits and the scope of regional or dated evidence are stated explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

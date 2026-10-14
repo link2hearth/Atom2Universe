@@ -1,0 +1,26 @@
+{
+  "id": "trogloraptor_marchingtoni",
+  "name": "Araignée raptor des grottes",
+  "scientific": "Trogloraptor marchingtoni",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Trogloraptor marchingtoni est une araignée cavernicole et le représentant décrit de sa famille, les Trogloraptoridae.",
+    "identification": "Elle est jaune-brun, de petite taille, et porte des extrémités de pattes flexibles en forme de crochets.",
+    "habitat": "Elle est surtout connue dans des grottes profondes de l’Oregon, notamment dans le monument et la réserve des Oregon Caves.",
+    "diet": "Ses proies naturelles restent inconnues ; des araignées gardées en captivité n’ont pas mangé les papillons, grillons ou autres araignées proposés dans un compte rendu.",
+    "behavior": "Quelques fils de soie pendent des plafonds des grottes ; les chercheurs supposent que l’araignée pourrait s’y suspendre et saisir des proies en vol.",
+    "reproduction": "Les sources consultées ne décrivent pas les accouplements ni la ponte de cette espèce.",
+    "ecology": "Ses extrémités de pattes crochues pourraient aider à saisir les proies, mais leur rôle exact et son écologie alimentaire restent incertains.",
+    "conservation": "La source du parc décrit une aire connue limitée aux grottes, sans fournir de catégorie officielle de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.nps.gov/articles/000/trogloraptor.htm",
+      "title": "National Park Service des États-Unis — Trogloraptor"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3428790/",
+      "title": "Une famille nouvelle et remarquable d’araignées cavernicoles du nord-ouest Pacifique"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "tunga_penetrans",
+  "name": "Puce chique",
+  "scientific": "Tunga penetrans",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tunga penetrans est une puce qui provoque la tungose chez l’humain et d’autres animaux.",
+    "identification": "La petite femelle adulte reste incrustée dans la peau, le plus souvent aux pieds.",
+    "habitat": "Ses stades immatures se développent dans des sols secs et ombragés des régions tropicales et subtropicales.",
+    "diet": "Les deux sexes prennent des repas de sang ; seules les femelles fécondées pénètrent dans la peau de l’hôte.",
+    "behavior": "Après avoir pénétré la peau, la femelle reste en partie exposée par une petite ouverture, où elle se nourrit et produit des œufs.",
+    "reproduction": "La femelle incrustée libère ses œufs dans l’environnement ; les larves s’y nourrissent de débris organiques avant la nymphose.",
+    "ecology": "La tungose est une zoonose qui touche les humains et les animaux.",
+    "conservation": "L’OMS présente la tungose comme un problème de santé zoonotique."
+  },
+  "sources": [
+    {
+      "url": "https://www.cdc.gov/dpdx/tungiasis/",
+      "title": "CDC DPDx — Tungose"
+    },
+    {
+      "url": "https://www.who.int/fr/news-room/fact-sheets/detail/tungiasis",
+      "title": "Organisation mondiale de la Santé — Tungose"
+    }
+  ]
+}

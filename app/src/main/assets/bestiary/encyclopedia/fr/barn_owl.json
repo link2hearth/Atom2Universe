@@ -1,0 +1,30 @@
+{
+  "id": "barn_owl",
+  "name": "Effraie des clochers",
+  "scientific": "Tyto alba",
+  "group": "birds",
+  "sections": {
+    "overview": "L’effraie des clochers est une chouette claire, surtout nocturne, qui chasse dans les milieux ouverts.",
+    "identification": "Son disque facial en forme de cœur, ses yeux sombres et son dessous clair la distinguent.",
+    "habitat": "Elle chasse dans les terres agricoles, prairies et zones humides, et se repose ou niche souvent dans les granges, greniers et clochers.",
+    "diet": "En Europe, les petits mammifères, notamment les campagnols, constituent l’essentiel de ses proies.",
+    "behavior": "Elle peut localiser ses proies au son et rejette les éléments indigestes sous forme de pelotes.",
+    "reproduction": "Elle niche dans des cavités sombres ou des bâtiments, et le nombre d’œufs peut varier selon la nourriture disponible.",
+    "ecology": "Sa dépendance aux petits mammifères la relie aux mosaïques agricoles ouvertes et aux prairies.",
+    "conservation": "La fermeture des accès aux vieilles granges et aux clochers peut supprimer des sites de nidification ; des cavités adaptées et des nichoirs peuvent aider localement."
+  },
+  "sources": [
+    {
+      "url": "https://www.nhm.ac.uk/discover/barn-owl-tyto-alba.html",
+      "title": "Natural History Museum — Effraie des clochers"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rapaces/effraie-des-clochers",
+      "title": "LPO — Effraie des clochers"
+    },
+    {
+      "url": "https://alsace.lpo.fr/index.php/actions-par-espece/effraie-des-clochers",
+      "title": "LPO Alsace — Suivi de l’Effraie des clochers"
+    }
+  ]
+}

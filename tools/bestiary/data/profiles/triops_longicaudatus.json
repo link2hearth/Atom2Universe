@@ -1,0 +1,141 @@
+{
+  "id": "triops_longicaudatus",
+  "scientific": "Triops longicaudatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Summer tadpole shrimp",
+    "fr": "Triops à longue queue"
+  },
+  "sections": {
+    "overview": {
+      "en": "Triops longicaudatus is a notostracan branchiopod crustacean, known as the summer tadpole shrimp.",
+      "fr": "Triops longicaudatus est un crustacé branchiopode notostracé, appelé « crevette-têtard d’été » en anglais."
+    },
+    "identification": {
+      "en": "Its body is brown to greyish yellow and resembles a tadpole beneath a broad dorsal shield.",
+      "fr": "Son corps brun à jaune grisâtre rappelle un têtard sous un large bouclier dorsal."
+    },
+    "habitat": {
+      "en": "It inhabits warm, temporary freshwater pools, often with muddy or sandy bottoms.",
+      "fr": "Il fréquente des mares temporaires d’eau douce et chaude, souvent à fond vaseux ou sableux."
+    },
+    "diet": {
+      "en": "It is omnivorous, feeding on detritus as well as insect larvae and small zooplankton.",
+      "fr": "Il est omnivore et consomme des détritus, des larves d’insectes et de petits organismes du zooplancton."
+    },
+    "behavior": {
+      "en": "It forages on the pool bottom by day and tends to bury itself in the sediment at night.",
+      "fr": "Il cherche sa nourriture au fond des mares le jour et tend à s’enfouir dans les sédiments la nuit."
+    },
+    "reproduction": {
+      "en": "Its dormant eggs or cysts can remain in dried pool sediment and hatch after water returns.",
+      "fr": "Ses œufs ou cystes dormants peuvent rester dans les sédiments d’une mare asséchée et éclore au retour de l’eau."
+    },
+    "ecology": {
+      "en": "It belongs to a mainly American lineage, unlike the largely Palearctic T. cancriformis lineage.",
+      "fr": "Il appartient à une lignée surtout américaine, contrairement à celle de T. cancriformis, principalement paléarctique."
+    },
+    "conservation": {
+      "en": "The Spanish government account warns that released captive animals or cysts could affect native aquatic communities; it is not a global status assessment.",
+      "fr": "La fiche du gouvernement espagnol avertit que le relâcher d’animaux élevés en captivité ou de cystes pourrait affecter les communautés aquatiques locales ; elle ne constitue pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Animal Diversity Web — Triops longicaudatus",
+        "fr": "Animal Diversity Web — Triops longicaudatus"
+      },
+      "url": "https://animaldiversity.org/accounts/Triops_longicaudatus/",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The University of Michigan account describes body form, omnivorous feeding, daytime bottom-foraging and nocturnal burial."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 15,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Toward a Global Phylogeny of the “Living Fossil” Crustacean Order of the Notostraca",
+        "fr": "Phylogénie mondiale de l’ordre des Notostraca"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3329532/",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The molecular study places the T. longicaudatus–newberryi lineage mainly in the Americas and contrasts it with the Palearctic T. cancriformis lineage."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 21,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Triops longicaudatus — Spanish Ministry for the Ecological Transition",
+        "fr": "Triops longicaudatus — ministère espagnol de la Transition écologique"
+      },
+      "url": "https://www.miteco.gob.es/content/dam/miteco/es/biodiversidad/temas/conservacion-de-especies/triops_longicaudatus_2013_tcm30-69909.pdf",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "La ficha oficial española describe el hábitat temporal, los huevos resistentes y el riesgo potencial de liberar animales o quistes en ecosistemas ibéricos."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 23,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Spanish risk statement concerns potential introductions in the Iberian Peninsula, not a global conservation category."
+  ],
+  "review_note": "The comparison with T. cancriformis uses the molecularly supported broad lineage distinction; reproductive systems are not simplified because Triops taxonomy is complex.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

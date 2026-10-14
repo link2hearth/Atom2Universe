@@ -1,0 +1,34 @@
+{
+  "id": "turdus_atrogularis",
+  "name": "Grive à gorge noire",
+  "scientific": "Turdus atrogularis",
+  "group": "birds",
+  "sections": {
+    "overview": "La Grive à gorge noire niche dans l’est de l’Eurasie et migre vers l’Asie centrale et méridionale pour l’hiver.",
+    "identification": "Le mâle a le dos gris, le ventre blanc et la gorge et la poitrine noires ; la femelle est striée de brun dessous et n’a pas la gorge noire du mâle.",
+    "habitat": "Elle niche dans des forêts humides de conifères ou mixtes, souvent à sous-bois dense ; en hiver, elle fréquente aussi les fourrés, les bois riverains et les parcs.",
+    "diet": "Elle consomme des invertébrés pendant la saison chaude et se nourrit beaucoup de baies et d’autres fruits en hiver.",
+    "behavior": "Hors de la saison de reproduction, elle se rassemble souvent en groupes, parfois avec d’autres grives.",
+    "reproduction": "Les fiches régionales consultées portent surtout sur la migration et l’hivernage et donnent peu de détails sur la nidification.",
+    "ecology": "En Asie centrale, les groupes hivernants peuvent comprendre des litornes (T. pilaris) ; voir cette fiche pour ce contexte commun.",
+    "conservation": "Le BTO la classe en préoccupation mineure à l’échelle mondiale, tout en la signalant comme visiteuse très rare en Grande-Bretagne."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/datthr1/RU",
+      "title": "Grive à gorge noire — eBird"
+    },
+    {
+      "url": "https://www.birds.uz/species/399",
+      "title": "Grive à gorge noire — Birds.uz, oiseaux d’Ouzbékistan"
+    },
+    {
+      "url": "https://www.ebirds.ru/article/692.htm",
+      "title": "Grive à gorge noire — Birds of Europe (fiche en russe)"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-throated-thrush",
+      "title": "Grive à gorge noire — BTO BirdFacts"
+    }
+  ]
+}

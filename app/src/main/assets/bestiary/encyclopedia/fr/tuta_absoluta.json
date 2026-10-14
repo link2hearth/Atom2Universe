@@ -1,0 +1,30 @@
+{
+  "id": "tuta_absoluta",
+  "name": "Mineuse de la tomate",
+  "scientific": "Tuta absoluta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La mineuse de la tomate est un petit papillon dont les larves endommagent les plants de tomate.",
+    "identification": "Les larves creusent des mines visibles dans les feuilles et peuvent aussi pénétrer dans les tiges et les fruits.",
+    "habitat": "Elle est étroitement associée aux cultures de tomate, mais d’autres solanacées cultivées peuvent aussi être atteintes.",
+    "diet": "Les larves se nourrissent dans les tissus végétaux, notamment les feuilles et les fruits de tomate.",
+    "behavior": "Les stades larvaires restent dissimulés dans des mines ou des galeries, ce qui peut rendre les premiers dégâts difficiles à repérer.",
+    "reproduction": "Son développement dépend fortement de la température ; la durée d’une génération varie donc selon les conditions.",
+    "ecology": "L’OEPP emploie actuellement le nom Phthorimaea absoluta, tandis que Tuta absoluta reste courant dans les sources agricoles.",
+    "conservation": "C’est un ravageur agricole, et non une espèce traitée ici sous l’angle de la conservation de la faune sauvage."
+  },
+  "sources": [
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/5150/Tomate-Tuta-absoluta",
+      "title": "INRAE ePhytia — Mineuse de la tomate"
+    },
+    {
+      "url": "https://gd.eppo.int/taxon/GNORAB",
+      "title": "Base de données mondiale de l’OEPP — Phthorimaea absoluta"
+    },
+    {
+      "url": "https://prod.senasica.gob.mx/SIRVEF/ContenidoPublico/Fichas%20tecnicas/Ficha%20T%C3%A9cnica%20Palomilla%20del%20tomate.pdf",
+      "title": "SENASICA — Fiche technique de la palomilla del tomate"
+    }
+  ]
+}
