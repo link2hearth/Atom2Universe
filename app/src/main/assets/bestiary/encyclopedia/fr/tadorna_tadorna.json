@@ -1,0 +1,30 @@
+{
+  "id": "tadorna_tadorna",
+  "name": "Tadorne de Belon",
+  "scientific": "Tadorna tadorna",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Tadorne de Belon est un grand oiseau d’eau coloré des zones humides côtières et continentales d’Eurasie.",
+    "identification": "Il présente un corps surtout blanc, une bande pectorale rousse, une tête vert sombre et un bec rouge ; les sexes ont un plumage proche.",
+    "habitat": "Il privilégie les zones humides salées ou saumâtres, comme les vasières, estuaires et lagunes côtières peu profondes ; il fréquente aussi des lacs salés intérieurs.",
+    "diet": "Il consomme surtout des mollusques et autres invertébrés aquatiques, mais aussi des végétaux.",
+    "behavior": "Hors reproduction, les tadornes se rassemblent en groupes et de nombreux oiseaux européens rejoignent des sites de mue après la nidification.",
+    "reproduction": "Les couples sont monogames et territoriaux ; le nid est souvent installé dans une cavité, et les poussins le quittent rapidement pour rejoindre des groupes familiaux d’alimentation.",
+    "ecology": "Sa consommation d’invertébrés des vasières le relie étroitement aux milieux intertidaux et estuariens productifs.",
+    "conservation": "L’évaluation mondiale de l’UICN la classe en Préoccupation mineure et indique une tendance d’effectif à la hausse (évaluation de 2019)."
+  },
+  "sources": [
+    {
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Tadorne-debelon.pdf",
+      "title": "MNHN / INPN — Cahiers d’Habitat : Tadorne de Belon"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22680024A154560262.en",
+      "title": "Liste rouge de l’UICN — Tadorne de Belon"
+    },
+    {
+      "url": "https://www.birdlife.at/voegel/brandgans/",
+      "title": "BirdLife Österreich — Tadorne de Belon"
+    }
+  ]
+}

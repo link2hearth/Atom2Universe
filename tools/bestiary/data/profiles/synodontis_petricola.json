@@ -1,0 +1,141 @@
+{
+  "id": "synodontis_petricola",
+  "scientific": "Synodontis petricola",
+  "group": "fish",
+  "name": {
+    "en": "Dwarf Lake Synodontis",
+    "fr": "Synodontis des rochers"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small mochokid catfish is native to Lake Tanganyika, where it is endemic to the lake basin.",
+      "fr": "Ce petit poisson-chat mochokidé est originaire du lac Tanganyika, dont il est endémique."
+    },
+    "identification": {
+      "en": "Its spotted pattern varies considerably, so spot size and spacing alone are not reliable identifiers.",
+      "fr": "Son motif de taches varie beaucoup : leur taille et leur espacement ne suffisent donc pas à l’identifier."
+    },
+    "habitat": {
+      "en": "It is recorded from the rocky littoral of Lake Tanganyika.",
+      "fr": "Il est signalé dans les zones rocheuses littorales du lac Tanganyika."
+    },
+    "diet": {
+      "en": "Studies summarized in a taxonomic revision report algae and small invertebrates in adult diets; juveniles feed mainly on tiny invertebrates.",
+      "fr": "Une révision taxonomique rapporte que les adultes consomment des algues et de petits invertébrés, tandis que les jeunes mangent surtout de minuscules invertébrés."
+    },
+    "behavior": {
+      "en": "The taxonomic revision summarizes feeding observations but provides little broader behavioral detail for this species.",
+      "fr": "La révision taxonomique résume des observations alimentaires, mais donne peu de détails plus généraux sur le comportement de cette espèce."
+    },
+    "reproduction": {
+      "en": "The 2006 taxonomic revision found no published account of this species’ spawning behavior.",
+      "fr": "La révision taxonomique de 2006 ne trouvait pas de description publiée du comportement de ponte de cette espèce."
+    },
+    "ecology": {
+      "en": "The adjacent catalogue entry for Synodontis grandiops needs a taxonomic caveat: a 2024 revision treats that name as a junior synonym of S. multipunctatus, while retaining S. petricola as distinct.",
+      "fr": "La fiche voisine de Synodontis grandiops demande une précision taxonomique : une révision de 2024 traite ce nom comme un synonyme plus récent de S. multipunctatus, tout en maintenant S. petricola comme espèce distincte."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN category of Least Concern for this species.",
+      "fr": "FishBase indique pour cette espèce le statut mondial UICN de préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Taxonomic revision of Lake Tanganyikan Synodontis — Florida Museum of Natural History",
+        "fr": "Taxonomic revision of Lake Tanganyikan Synodontis — Florida Museum of Natural History"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/bulletin/vol46no4lores.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The revision reports substantial variation in S. petricola spot size and spacing; it describes adult algae and small-invertebrate feeding and says spawning behavior was unknown."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 25,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revised taxonomy of Synodontis catfishes from the Lake Tanganyika basin — Zoological Journal of the Linnean Society",
+        "fr": "Revised taxonomy of Synodontis catfishes from the Lake Tanganyika basin — Zoological Journal of the Linnean Society"
+      },
+      "url": "https://academic.oup.com/zoolinnean/article/202/3/zlae130/7877276",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2024 revision recognizes S. petricola and places S. grandiops in synonymy with S. multipunctatus."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 15,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Synodontis petricola — FishBase summary",
+        "fr": "Synodontis petricola — FishBase summary"
+      },
+      "url": "https://www.fishbase.se/summary/Synodontis-petricola.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records the species from Lake Tanganyika and reports its global IUCN category as Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 16,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific behavioral and reproductive observations remain sparse in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the Synodontis grandiops comparison is a taxonomic clarification based on the 2024 revision, not a claim that the two names denote distinct current species."
+}

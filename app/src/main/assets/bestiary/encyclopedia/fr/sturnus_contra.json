@@ -1,0 +1,38 @@
+{
+  "id": "sturnus_contra",
+  "name": "Étourneau pie d’Asie",
+  "scientific": "Sturnus contra",
+  "group": "birds",
+  "sections": {
+    "overview": "L’étourneau pie d’Asie est un passereau noir et blanc originaire d’Asie du Sud et du Sud-Est.",
+    "identification": "Son plumage oppose le noir et le blanc ; la peau nue autour des yeux est orange.",
+    "habitat": "Il fréquente les terres agricoles ouvertes, les champs humides, les villages et les zones urbaines.",
+    "diet": "Il cherche surtout au sol des insectes et d’autres petites ressources alimentaires.",
+    "behavior": "Hors de la période de reproduction, il se rassemble souvent en bandes bruyantes et peut chercher sa nourriture près du bétail.",
+    "reproduction": "Les couples construisent un nid en dôme à entrée latérale, souvent dans un arbre ou sur une structure humaine.",
+    "ecology": "Certaines références le placent dans Gracupica sous le nom G. contra ; d’autres, plus anciennes ou encore utilisées, gardent Sturnus contra.",
+    "conservation": "L’évaluation UICN citée classe l’espèce en Préoccupation mineure ; elle date de 2016."
+  },
+  "sources": [
+    {
+      "url": "https://www.nies.go.jp/biodiversity/invasive/DB/detail/20330e.html",
+      "title": "Institut national d’études environnementales du Japon — Sturnus contra"
+    },
+    {
+      "url": "https://faunaofindia.nic.in/PDFVolumes/occpapers/044/index.pdf",
+      "title": "Fauna of India — Régime alimentaire des mainates indiens"
+    },
+    {
+      "url": "https://www.entomoljournal.com/archives/2018/vol6issue1/PartJ/5-6-67-108.pdf",
+      "title": "Journal of Entomology and Zoology Studies — Nidification de l’étourneau pie d’Asie"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T103890729A118852226.en",
+      "title": "Liste rouge de l’UICN — Gracupica contra"
+    },
+    {
+      "url": "https://thbif.onep.go.th/taxons/detail/39060",
+      "title": "Thailand Biodiversity Information Facility — Sturnus contra"
+    }
+  ]
+}

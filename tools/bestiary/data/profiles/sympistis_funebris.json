@@ -1,0 +1,118 @@
+{
+  "id": "sympistis_funebris",
+  "scientific": "Sympistis funebris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Funereal moth",
+    "fr": "Sympiste des airelles"
+  },
+  "sections": {
+    "overview": {
+      "en": "Sympistis funebris is a noctuid moth of boreal and alpine regions.",
+      "fr": "Sympistis funebris est un papillon noctuide des régions boréales et alpines."
+    },
+    "identification": {
+      "en": "It is a small, dark moth; its forewing is about 11–12 mm long.",
+      "fr": "C’est un petit papillon sombre, dont l’aile antérieure mesure environ 11–12 mm."
+    },
+    "habitat": {
+      "en": "It occurs in high-elevation alpine meadows and heathlands of western North America, and has a broader Holarctic range.",
+      "fr": "Il fréquente les pelouses alpines et landes d’altitude de l’ouest de l’Amérique du Nord, et possède une aire holarctique plus vaste."
+    },
+    "diet": {
+      "en": "The caterpillars feed on shrubs and trees including bilberries (Vaccinium), birches (Betula) and crowberries (Empetrum).",
+      "fr": "Les chenilles se nourrissent notamment d’arbustes et d’arbres tels que les airelles (Vaccinium), les bouleaux (Betula) et les camarines (Empetrum)."
+    },
+    "behavior": {
+      "en": "Adults fly by day and visit flowers; in the Pacific Northwest they are recorded mainly in July and August.",
+      "fr": "Les adultes volent de jour et butinent les fleurs ; dans le Nord-Ouest pacifique, ils sont surtout observés en juillet et août."
+    },
+    "reproduction": {
+      "en": "The regional account documents larval host plants but gives no further detail on egg-laying or development.",
+      "fr": "La fiche régionale indique des plantes hôtes des chenilles, sans détailler la ponte ni le développement."
+    },
+    "ecology": {
+      "en": "Its larval hosts and flower-visiting adults connect it to alpine heath and meadow vegetation.",
+      "fr": "Ses plantes hôtes larvaires et ses adultes floricoles l’associent à la végétation des landes et pelouses alpines."
+    },
+    "conservation": {
+      "en": "The French observatory reports Least Concern in Europe; this regional status is not a global assessment.",
+      "fr": "L’observatoire français indique la catégorie Préoccupation mineure en Europe ; ce statut régional n’est pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "PNW Moths — Sympistis funebris",
+        "fr": "PNW Moths — Sympistis funebris"
+      },
+      "url": "https://www.pnwmoths.biol.wwu.edu/browse/family-noctuidae/subfamily-oncocnemidinae/sympistis/sympistis-funebris/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Western Washington University describes a small dark moth of alpine meadows and heaths, with an 11–12 mm forewing, and its boreal North American range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 24,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Observatoire des papillons — Sympistis funebris",
+        "fr": "Observatoire des papillons — Sympistis funebris"
+      },
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=249718&module=fiche",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The French observatory lists Vaccinium, Betula and Empetrum as larval hosts; adults forage by day, and the European category is Least Concern."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 22,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The PNW Moths account states that larval foodplants were not known to its authors; the French observatory supplies host records. A Europe-wide status is not equivalent to a global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

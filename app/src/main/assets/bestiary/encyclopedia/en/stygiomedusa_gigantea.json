@@ -1,0 +1,30 @@
+{
+  "id": "stygiomedusa_gigantea",
+  "name": "Giant phantom jelly",
+  "scientific": "Stygiomedusa gigantea",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The giant phantom jelly is a large scyphozoan of the deep open ocean.",
+    "identification": "Its bell can exceed one metre across, with four ribbon-like oral arms reaching about ten metres.",
+    "habitat": "It has been observed from near the surface to about 6700 metres, across oceans except the Arctic.",
+    "diet": "Its likely prey include plankton and small fishes, which its broad oral arms can hold.",
+    "behavior": "It is rarely seen; a 2019 dataset compiled just over a century of sparse observations.",
+    "reproduction": "The consulted field accounts do not describe its reproductive cycle.",
+    "ecology": "A fish has been filmed sheltering among its oral arms, an unusual deep-sea association.",
+    "conservation": "The sources describe its rarity of observation but provide no global threat assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.mbari.org/animal/giant-phantom-jelly/",
+      "title": "MBARI — Giant phantom jelly"
+    },
+    {
+      "url": "https://obis.org/dataset/9dda6bd7-c159-44ba-aa3f-6c01914d7f78",
+      "title": "OBIS — In situ observations of Stygiomedusa gigantea"
+    },
+    {
+      "url": "https://www.nationalgeographic.fr/animaux/2023/02/un-specimen-rare-de-meduse-geante-apercu-en-antarctique",
+      "title": "National Geographic France — Rare giant phantom jelly observation"
+    }
+  ]
+}

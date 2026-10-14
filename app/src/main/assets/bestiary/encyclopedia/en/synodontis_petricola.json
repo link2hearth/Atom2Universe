@@ -1,0 +1,30 @@
+{
+  "id": "synodontis_petricola",
+  "name": "Dwarf Lake Synodontis",
+  "scientific": "Synodontis petricola",
+  "group": "fish",
+  "sections": {
+    "overview": "This small mochokid catfish is native to Lake Tanganyika, where it is endemic to the lake basin.",
+    "identification": "Its spotted pattern varies considerably, so spot size and spacing alone are not reliable identifiers.",
+    "habitat": "It is recorded from the rocky littoral of Lake Tanganyika.",
+    "diet": "Studies summarized in a taxonomic revision report algae and small invertebrates in adult diets; juveniles feed mainly on tiny invertebrates.",
+    "behavior": "The taxonomic revision summarizes feeding observations but provides little broader behavioral detail for this species.",
+    "reproduction": "The 2006 taxonomic revision found no published account of this species’ spawning behavior.",
+    "ecology": "The adjacent catalogue entry for Synodontis grandiops needs a taxonomic caveat: a 2024 revision treats that name as a junior synonym of S. multipunctatus, while retaining S. petricola as distinct.",
+    "conservation": "FishBase reports a global IUCN category of Least Concern for this species."
+  },
+  "sources": [
+    {
+      "url": "https://www.floridamuseum.ufl.edu/bulletin/vol46no4lores.pdf",
+      "title": "Taxonomic revision of Lake Tanganyikan Synodontis — Florida Museum of Natural History"
+    },
+    {
+      "url": "https://academic.oup.com/zoolinnean/article/202/3/zlae130/7877276",
+      "title": "Revised taxonomy of Synodontis catfishes from the Lake Tanganyika basin — Zoological Journal of the Linnean Society"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Synodontis-petricola.html",
+      "title": "Synodontis petricola — FishBase summary"
+    }
+  ]
+}

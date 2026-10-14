@@ -1,0 +1,145 @@
+{
+  "id": "sylvia_communis",
+  "scientific": "Sylvia communis",
+  "group": "birds",
+  "name": {
+    "en": "Common Whitethroat",
+    "fr": "Fauvette grisette"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common whitethroat is a migratory songbird that breeds across much of Europe and western Asia and winters in sub-Saharan Africa.",
+      "fr": "La Fauvette grisette est un passereau migrateur qui niche dans une grande partie de l’Europe et de l’Asie occidentale, puis hiverne au sud du Sahara."
+    },
+    "identification": {
+      "en": "Its white throat and rusty edges on the wing feathers help distinguish it from other small warblers.",
+      "fr": "Sa gorge blanche et les bordures rousses de ses plumes alaires aident à la distinguer des autres petites fauvettes."
+    },
+    "habitat": {
+      "en": "It favors open or semi-open places with low, dense shrubs and taller grasses.",
+      "fr": "Elle préfère les milieux ouverts ou semi-ouverts où se mêlent buissons bas et denses et herbes plus hautes."
+    },
+    "diet": {
+      "en": "It eats mostly insects and other small invertebrates during breeding, adding berries later in the year.",
+      "fr": "Elle mange surtout des insectes et d’autres petits invertébrés pendant la reproduction, puis complète son régime avec des baies plus tard dans l’année."
+    },
+    "behavior": {
+      "en": "Males often sing from an exposed perch above the scrub.",
+      "fr": "Les mâles chantent souvent depuis un perchoir dégagé au-dessus des buissons."
+    },
+    "reproduction": {
+      "en": "It builds a low nest in dense vegetation; both parents incubate and feed the young.",
+      "fr": "Elle construit un nid bas dans la végétation dense ; les deux parents couvent et nourrissent les jeunes."
+    },
+    "ecology": {
+      "en": "It is a long-distance migrant, and its breeding habitat depends on maintaining early scrub growth and field-edge vegetation.",
+      "fr": "C’est une migratrice au long cours, dont l’habitat de nidification dépend du maintien des jeunes fourrés et de la végétation des lisières."
+    },
+    "conservation": {
+      "en": "In France it is listed as Near Threatened among breeding birds, with long-term decline and marked fluctuations reported.",
+      "fr": "En France, elle est classée Quasi menacée parmi les oiseaux nicheurs ; un déclin à long terme et de fortes fluctuations sont signalés."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cahiers d’Habitat — Fauvette grisette — MNHN/INPN",
+        "fr": "Cahiers d’Habitat — Fauvette grisette — MNHN/INPN"
+      },
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Fauvette-grisette.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "French national natural history account covers identification, range, migration, wintering and shrub habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 13,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fauvette grisette — LPO Normandie",
+        "fr": "Fauvette grisette — LPO Normandie"
+      },
+      "url": "https://normandie.lpo.fr/oiseaux-de-normandie/inventaire-oiseaux-de-normandie-effectifs-et-populations/fauvette-grisette/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Regional bird conservation account gives habitat, diet, nesting, singing and France red-list trend."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 13,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Whitethroat — Oiseaux.net",
+        "fr": "Common Whitethroat — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/fauvette.grisette.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Species account describes its trans-Saharan migration, seasonal diet and active, vocal behavior."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 12,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation statement is specific to France; regional classifications and trends need not match the global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French national habitat guidance and LPO monitoring with an ornithological species account; no closely related warbler profile was available for a useful mutual link."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "syrrhaptes_paradoxus",
+  "name": "Pallas’s Sandgrouse",
+  "scientific": "Syrrhaptes paradoxus",
+  "group": "birds",
+  "sections": {
+    "overview": "Pallas’s sandgrouse is an Asian sandgrouse of open, dry country, with a range centred on Central Asia.",
+    "identification": "It is a slender, pigeon-sized bird with sandy, dark-speckled plumage, a black belly and a long pointed tail.",
+    "habitat": "It favours sparsely vegetated semi-deserts, deserts and dry steppe on varied open soils.",
+    "diet": "Seeds form the main part of its diet; it also takes plant shoots, leaves and flowers, with insects reported only rarely.",
+    "behavior": "It is a mobile species that can erupt beyond its usual range, sometimes reaching western and northern Europe.",
+    "reproduction": "It nests on the ground; the Russian species account describes a typical clutch of three eggs.",
+    "ecology": "Access to waterholes is important in its dry habitats, and flocks regularly visit them to drink.",
+    "conservation": "A Russian regional account reports declines in parts of Kazakhstan and Kyrgyzstan, but those local notes do not establish a global trend."
+  },
+  "sources": [
+    {
+      "url": "https://www.egir.ru/bird/134.html",
+      "title": "Pallas’s Sandgrouse — Birds of Russia and Adjacent Regions"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/pallass-sandgrouse",
+      "title": "Pallas’s Sandgrouse — British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.ebirds.ru/vid/210.htm",
+      "title": "Syrrhaptes paradoxus — Birds of European Russia"
+    }
+  ]
+}

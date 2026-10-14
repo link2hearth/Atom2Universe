@@ -1,0 +1,30 @@
+{
+  "id": "suricata_suricatta",
+  "name": "Suricate",
+  "scientific": "Suricata suricatta",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le suricate est une petite mangouste originaire des milieux secs et ouverts d’Afrique australe.",
+    "identification": "Il a un corps fin, un pelage clair marqué de bandes dorsales plus sombres, et se tient souvent debout pour surveiller les alentours.",
+    "habitat": "Il fréquente les milieux arides et ouverts et vit dans des réseaux de terriers souterrains à plusieurs entrées.",
+    "diet": "Son régime est surtout composé d’insectes, mais il capture aussi d’autres petits animaux, notamment des scorpions et des lézards.",
+    "behavior": "Les groupes cherchent leur nourriture de façon coordonnée ; des sentinelles lancent des cris d’alarme à l’approche d’un prédateur.",
+    "reproduction": "Les groupes sont généralement organisés autour d’un couple reproducteur dominant, même si d’autres femelles peuvent aussi se reproduire.",
+    "ecology": "Ses terriers offrent un refuge et la vigilance collective réduit le risque de prédation pendant que les membres du groupe cherchent leur nourriture.",
+    "conservation": "Il est classé en Préoccupation mineure à l’échelle mondiale par l’UICN ; des populations locales peuvent décliner pendant les sécheresses."
+  },
+  "sources": [
+    {
+      "url": "https://www.sanbi.org/animal-of-the-week/meerkat/",
+      "title": "Meerkat — SANBI"
+    },
+    {
+      "url": "https://www.mnhn.fr/fr/suricate",
+      "title": "Suricate — Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Suricata_suricatta/",
+      "title": "Meerkat — Animal Diversity Web"
+    }
+  ]
+}

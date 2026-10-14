@@ -1,0 +1,34 @@
+{
+  "id": "sula_granti",
+  "name": "Fou de Grant",
+  "scientific": "Sula granti",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Fou de Grant est un oiseau marin du Pacifique oriental, aujourd’hui reconnu comme distinct du Fou masqué.",
+    "identification": "Les adultes sont surtout blancs, avec les ailes et la queue sombres ; le bec orange rosé aide à le distinguer du Fou masqué au bec jaune.",
+    "habitat": "Il cherche sa nourriture au-dessus des eaux tropicales du large et niche sur des îles éloignées, notamment aux Galápagos.",
+    "diet": "C’est un prédateur piscivore qui capture ses proies en plongeant dans la mer.",
+    "behavior": "Il passe une grande partie de son temps en mer et revient sur les îles pour se reproduire.",
+    "reproduction": "Il niche au sol dégagé ou sur des falaises d’îles océaniques.",
+    "ecology": "Le Fou de Grant était autrefois traité comme une sous-espèce du Fou masqué ; des études appuient sa reconnaissance comme espèce distincte.",
+    "conservation": "L’évaluation mondiale de l’UICN le classe en Préoccupation mineure, tout en signalant une tendance démographique à la baisse."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2018-2.RLTS.T22728990A132659882.en",
+      "title": "Nazca Booby — IUCN Red List assessment"
+    },
+    {
+      "url": "https://datazone.darwinfoundation.org/en/checklist/?species=16141",
+      "title": "Galapagos Species Database — Charles Darwin Foundation"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/nazca.booby.html",
+      "title": "Nazca Booby — Oiseaux.net"
+    },
+    {
+      "url": "https://ocean.si.edu/ocean-life/seabirds/meet-booby-family",
+      "title": "Meet the Booby Family — Smithsonian Ocean"
+    }
+  ]
+}

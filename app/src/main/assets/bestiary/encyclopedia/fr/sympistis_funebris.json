@@ -1,0 +1,26 @@
+{
+  "id": "sympistis_funebris",
+  "name": "Sympiste des airelles",
+  "scientific": "Sympistis funebris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Sympistis funebris est un papillon noctuide des régions boréales et alpines.",
+    "identification": "C’est un petit papillon sombre, dont l’aile antérieure mesure environ 11–12 mm.",
+    "habitat": "Il fréquente les pelouses alpines et landes d’altitude de l’ouest de l’Amérique du Nord, et possède une aire holarctique plus vaste.",
+    "diet": "Les chenilles se nourrissent notamment d’arbustes et d’arbres tels que les airelles (Vaccinium), les bouleaux (Betula) et les camarines (Empetrum).",
+    "behavior": "Les adultes volent de jour et butinent les fleurs ; dans le Nord-Ouest pacifique, ils sont surtout observés en juillet et août.",
+    "reproduction": "La fiche régionale indique des plantes hôtes des chenilles, sans détailler la ponte ni le développement.",
+    "ecology": "Ses plantes hôtes larvaires et ses adultes floricoles l’associent à la végétation des landes et pelouses alpines.",
+    "conservation": "L’observatoire français indique la catégorie Préoccupation mineure en Europe ; ce statut régional n’est pas une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.pnwmoths.biol.wwu.edu/browse/family-noctuidae/subfamily-oncocnemidinae/sympistis/sympistis-funebris/",
+      "title": "PNW Moths — Sympistis funebris"
+    },
+    {
+      "url": "https://oreina.org/artemisiae/observatoire/index.php?action=fiche&d=hetero&id=249718&module=fiche",
+      "title": "Observatoire des papillons — Sympistis funebris"
+    }
+  ]
+}

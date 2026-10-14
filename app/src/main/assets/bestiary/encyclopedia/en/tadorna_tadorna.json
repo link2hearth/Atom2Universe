@@ -1,0 +1,30 @@
+{
+  "id": "tadorna_tadorna",
+  "name": "Common shelduck",
+  "scientific": "Tadorna tadorna",
+  "group": "birds",
+  "sections": {
+    "overview": "The common shelduck is a large, colourful waterfowl of coastal and inland wetlands across Eurasia.",
+    "identification": "It has a mainly white body, chestnut breast band, dark green head and red bill; the sexes are similar in plumage.",
+    "habitat": "It favours saline and brackish wetlands, including mudflats, estuaries and shallow coastal lakes; it also uses inland saline lakes.",
+    "diet": "It feeds mainly on molluscs and other aquatic invertebrates, with plant material also included in its diet.",
+    "behavior": "Outside breeding, shelducks gather in flocks and many European birds assemble at moulting sites after breeding.",
+    "reproduction": "Pairs are monogamous and territorial; nests are often placed in cavities, and chicks soon leave the nest to feed with family groups.",
+    "ecology": "Its feeding on mudflat invertebrates links it closely to productive intertidal and estuarine wetlands.",
+    "conservation": "The global IUCN assessment lists it as Least Concern and reports an increasing population trend (2019 assessment)."
+  },
+  "sources": [
+    {
+      "url": "https://inpn.mnhn.fr/docs/cahab/fiches/Tadorne-debelon.pdf",
+      "title": "MNHN / INPN — Cahiers d’Habitat: Tadorne de Belon"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T22680024A154560262.en",
+      "title": "IUCN Red List — Common Shelduck"
+    },
+    {
+      "url": "https://www.birdlife.at/voegel/brandgans/",
+      "title": "BirdLife Österreich — Brandgans"
+    }
+  ]
+}

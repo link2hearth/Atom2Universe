@@ -1,0 +1,34 @@
+{
+  "id": "synodontis_grandiops",
+  "name": "Bigeye cuckoo catfish",
+  "scientific": "Synodontis grandiops",
+  "group": "fish",
+  "sections": {
+    "overview": "Synodontis grandiops is a Tanganyika catfish described in 2006, but a 2024 revision treats it as a synonym of S. multipunctatus.",
+    "identification": "The original description emphasized its relatively large eye and spotted body; FishBase retains it as a separate species account.",
+    "habitat": "The original species account places it in Lake Tanganyika, over littoral-to-bottom shell, sand and mud habitats.",
+    "diet": "Its diet is poorly documented; the original account suggested small snails based on other Tanganyika Synodontis.",
+    "behavior": "Detailed behavior and reproduction are not established in the cited species account.",
+    "reproduction": "The sources consulted do not provide species-specific reproductive observations under this name.",
+    "ecology": "The 2024 revision recognizes S. petricola as a distinct Tanganyika species; it also found broad overlap between S. grandiops and S. multipunctatus, leading to synonymy.",
+    "conservation": "FishBase lists the separate-name account as Not Evaluated; that entry predates the 2024 synonymy and is not a status assessment for S. multipunctatus."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=69381",
+      "title": "Eschmeyer's Catalog of Fishes — Synodontis grandiops"
+    },
+    {
+      "url": "https://doi.org/10.1093/zoolinnean/zlae130",
+      "title": "Revised taxonomy of Lake Tanganyika Synodontis — Zoological Journal of the Linnean Society"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Synodontis-grandiops",
+      "title": "FishBase — Synodontis grandiops"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/bulletin/vol46no4lores.pdf",
+      "title": "Wright and Page — Taxonomic Revision of Lake Tanganyikan Synodontis"
+    }
+  ]
+}

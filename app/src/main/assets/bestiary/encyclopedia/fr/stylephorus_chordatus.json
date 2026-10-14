@@ -1,0 +1,30 @@
+{
+  "id": "stylephorus_chordatus",
+  "name": "Poisson aux yeux tubulaires",
+  "scientific": "Stylephorus chordatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Le poisson aux yeux tubulaires est rare et vit en profondeur ; c’est l’unique espèce actuelle de sa famille.",
+    "identification": "Il possède des yeux tubulaires, des mâchoires protractiles et des rayons inférieurs de la queue extrêmement allongés.",
+    "habitat": "Il vit entre les zones méso- et bathypélagique et est signalé vers 300–800 mètres dans les mers tropicales et tempérées.",
+    "diet": "Il se nourrit de petits crustacés, notamment des copépodes.",
+    "behavior": "Il pourrait nager la tête en haut pour se nourrir ; certaines observations suggèrent des déplacements quotidiens en profondeur.",
+    "reproduction": "Sa reproduction est mal connue.",
+    "ecology": "Les listes de poissons en espagnol l’appellent ojibrotado ; les références anglaises utilisent tube-eye.",
+    "conservation": "La fiche FAO consultée ne signale pas de pêche ciblant cette espèce discrète."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/docrep/pdf/009/x2401e/x2401e43.pdf",
+      "title": "FAO — Poissons osseux de l’Atlantique centre-ouest : Tube-eyes"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Stylephorus_chordatus.html",
+      "title": "FishBase — Stylephorus chordatus"
+    },
+    {
+      "url": "https://www.drna.pr.gov/wp-content/uploads/2015/04/Vol.10-Nomenclatura-de-los-organismos-acu%C3%A1ticos-y-marinos-de-PR-e-Islas-V%C3%ADrgenes.pdf",
+      "title": "Puerto Rico DRNA — Nomenclature des organismes aquatiques et marins"
+    }
+  ]
+}

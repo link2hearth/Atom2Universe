@@ -1,0 +1,188 @@
+{
+  "id": "sturnus_contra",
+  "scientific": "Sturnus contra",
+  "group": "birds",
+  "name": {
+    "en": "Asian pied starling",
+    "fr": "Étourneau pie d’Asie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Asian pied starling is a black-and-white songbird native to South and Southeast Asia.",
+      "fr": "L’étourneau pie d’Asie est un passereau noir et blanc originaire d’Asie du Sud et du Sud-Est."
+    },
+    "identification": {
+      "en": "It has contrasting black and white plumage and bare orange skin around the eyes.",
+      "fr": "Son plumage oppose le noir et le blanc ; la peau nue autour des yeux est orange."
+    },
+    "habitat": {
+      "en": "It uses open farmland, wet fields, villages and urban areas.",
+      "fr": "Il fréquente les terres agricoles ouvertes, les champs humides, les villages et les zones urbaines."
+    },
+    "diet": {
+      "en": "It forages mainly on the ground for insects and other small food items.",
+      "fr": "Il cherche surtout au sol des insectes et d’autres petites ressources alimentaires."
+    },
+    "behavior": {
+      "en": "Outside the breeding period it often gathers in noisy flocks and may feed near grazing cattle.",
+      "fr": "Hors de la période de reproduction, il se rassemble souvent en bandes bruyantes et peut chercher sa nourriture près du bétail."
+    },
+    "reproduction": {
+      "en": "Pairs build domed nests with a side entrance, often on trees or human structures.",
+      "fr": "Les couples construisent un nid en dôme à entrée latérale, souvent dans un arbre ou sur une structure humaine."
+    },
+    "ecology": {
+      "en": "Some authorities place it in Gracupica as G. contra; older and other lists retain Sturnus contra.",
+      "fr": "Certaines références le placent dans Gracupica sous le nom G. contra ; d’autres, plus anciennes ou encore utilisées, gardent Sturnus contra."
+    },
+    "conservation": {
+      "en": "The cited IUCN assessment lists the species as Least Concern; it dates from 2016.",
+      "fr": "L’évaluation UICN citée classe l’espèce en Préoccupation mineure ; elle date de 2016."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "National Institute for Environmental Studies, Japan — Sturnus contra",
+        "fr": "Institut national d’études environnementales du Japon — Sturnus contra"
+      },
+      "url": "https://www.nies.go.jp/biodiversity/invasive/DB/detail/20330e.html",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The Japanese national institute lists Sturnus contra and Gracupica contra as names for the species and summarizes its natural Asian range and habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 23,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fauna of India — Food habits of Indian mynas",
+        "fr": "Fauna of India — Régime alimentaire des mainates indiens"
+      },
+      "url": "https://faunaofindia.nic.in/PDFVolumes/occpapers/044/index.pdf",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The Indian natural-history account describes Sturnus contra as resident with local seasonal movements, social and mainly insectivorous, foraging on open farmland and around livestock."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 24,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Journal of Entomology and Zoology Studies — Nesting ecology of Asian pied starling",
+        "fr": "Journal of Entomology and Zoology Studies — Nidification de l’étourneau pie d’Asie"
+      },
+      "url": "https://www.entomoljournal.com/archives/2018/vol6issue1/PartJ/5-6-67-108.pdf",
+      "supports": [
+        "reproduction",
+        "identification"
+      ],
+      "facts": [
+        "A field study in Ludhiana describes nest shape and structures used for nesting; the Thai biodiversity profile supplies plumage and bare-part characters."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 22,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — Gracupica contra",
+        "fr": "Liste rouge de l’UICN — Gracupica contra"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T103890729A118852226.en",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "The cited assessment gives Least Concern and uses Gracupica contra; it was last assessed in 2016."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 16,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Thailand Biodiversity Information Facility — Sturnus contra",
+        "fr": "Thailand Biodiversity Information Facility — Sturnus contra"
+      },
+      "url": "https://thbif.onep.go.th/taxons/detail/39060",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The Thai biodiversity record uses the genus Gracupica and describes the black-and-white plumage and orange eye-ring."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 16,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The scientific name is retained to match the project inventory; classification varies among taxonomic authorities."
+  ],
+  "review_note": "Cross-checked Japanese, Indian, Thai and IUCN records; kept the older project name while noting the alternate genus.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

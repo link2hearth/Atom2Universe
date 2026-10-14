@@ -1,0 +1,26 @@
+{
+  "id": "synchiropus_splendidus",
+  "name": "Poisson mandarin",
+  "scientific": "Synchiropus splendidus",
+  "group": "fish",
+  "sections": {
+    "overview": "Le poisson mandarin est un petit dragonnet vivement coloré, originaire du Pacifique occidental.",
+    "identification": "Son corps bleu porte des marques orange, rouges et jaunes ; le premier rayon dorsal des mâles est nettement plus long.",
+    "habitat": "Il vit dans les récifs coralliens et lagons peu profonds, souvent sur des fonds vaseux mêlés de corail et de débris, vers 1 à 18 m de profondeur.",
+    "diet": "Il consomme de petits invertébrés benthiques, notamment de minuscules crustacés et des vers parmi les organismes du récif.",
+    "behavior": "Il se déplace près du récif, souvent en couple ou en petits groupes, et est également prélevé pour l’aquariophilie marine.",
+    "reproduction": "La nuit, des couples s’élèvent au-dessus du récif et libèrent ovules et spermatozoïdes dans l’eau.",
+    "ecology": "Son alimentation repose sur de petites proies du récif, tandis que la ponte a lieu brièvement en pleine eau au-dessus de celui-ci.",
+    "conservation": "FishBase rapporte une évaluation mondiale de l’UICN en catégorie Préoccupation mineure, datée de 2018."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/12644",
+      "title": "FishBase — Synchiropus splendidus"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Synchiropus_splendidus/",
+      "title": "Animal Diversity Web — Synchiropus splendidus"
+    }
+  ]
+}

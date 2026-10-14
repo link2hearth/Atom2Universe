@@ -1,0 +1,30 @@
+{
+  "id": "suricata_suricatta",
+  "name": "Meerkat",
+  "scientific": "Suricata suricatta",
+  "group": "mammals",
+  "sections": {
+    "overview": "The meerkat is a small mongoose native to the dry open regions of southern Africa.",
+    "identification": "It has a slender body, pale coat with darker bands across the back, and often stands upright while watching.",
+    "habitat": "It uses arid open country and lives in underground burrow systems with multiple entrances.",
+    "diet": "Its diet is mainly insects, but it also takes other small animals, including scorpions and lizards.",
+    "behavior": "Groups forage cooperatively, with sentinels giving alarm calls when predators approach.",
+    "reproduction": "Groups are usually centered on a dominant breeding pair, although other females may also breed.",
+    "ecology": "Its burrows provide refuge and its cooperative vigilance helps reduce the risk of predation while group members forage.",
+    "conservation": "It is listed as Least Concern in the global IUCN assessment; local populations may decline during droughts."
+  },
+  "sources": [
+    {
+      "url": "https://www.sanbi.org/animal-of-the-week/meerkat/",
+      "title": "Meerkat — SANBI"
+    },
+    {
+      "url": "https://www.mnhn.fr/fr/suricate",
+      "title": "Suricate — Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Suricata_suricatta/",
+      "title": "Meerkat — Animal Diversity Web"
+    }
+  ]
+}

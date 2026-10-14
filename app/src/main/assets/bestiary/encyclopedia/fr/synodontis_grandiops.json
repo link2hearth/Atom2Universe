@@ -1,0 +1,34 @@
+{
+  "id": "synodontis_grandiops",
+  "name": "Synodontis à grands yeux",
+  "scientific": "Synodontis grandiops",
+  "group": "fish",
+  "sections": {
+    "overview": "Synodontis grandiops est un poisson-chat du Tanganyika décrit en 2006, mais une révision de 2024 le traite comme synonyme de S. multipunctatus.",
+    "identification": "La description originale soulignait son œil relativement grand et son corps tacheté ; FishBase conserve une fiche sous ce nom comme espèce distincte.",
+    "habitat": "La fiche historique de l’espèce la situe dans le lac Tanganyika, des zones littorales aux fonds de coquilles, sable et vase.",
+    "diet": "Son régime est peu documenté ; la fiche originale évoquait de petits gastéropodes par comparaison avec d’autres Synodontis du Tanganyika.",
+    "behavior": "Le comportement et la reproduction ne sont pas détaillés dans la fiche d’espèce citée.",
+    "reproduction": "Les sources consultées ne fournissent pas d’observations reproductives propres à cette espèce sous ce nom.",
+    "ecology": "La révision de 2024 maintient S. petricola comme espèce distincte du Tanganyika ; elle relève aussi un fort chevauchement entre S. grandiops et S. multipunctatus, conduisant à la synonymie.",
+    "conservation": "FishBase indique « non évalué » dans sa fiche sous ce nom ; cette entrée précède la synonymie de 2024 et n’évalue pas le statut de S. multipunctatus."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=69381",
+      "title": "Catalogue des poissons d’Eschmeyer — Synodontis grandiops"
+    },
+    {
+      "url": "https://doi.org/10.1093/zoolinnean/zlae130",
+      "title": "Révision taxonomique des Synodontis du Tanganyika — Zoological Journal of the Linnean Society"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Synodontis-grandiops",
+      "title": "FishBase — Synodontis grandiops"
+    },
+    {
+      "url": "https://www.floridamuseum.ufl.edu/bulletin/vol46no4lores.pdf",
+      "title": "Wright et Page — Révision taxonomique des Synodontis du Tanganyika"
+    }
+  ]
+}

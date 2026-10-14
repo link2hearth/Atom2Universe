@@ -1,0 +1,38 @@
+{
+  "id": "sturnus_contra",
+  "name": "Asian pied starling",
+  "scientific": "Sturnus contra",
+  "group": "birds",
+  "sections": {
+    "overview": "The Asian pied starling is a black-and-white songbird native to South and Southeast Asia.",
+    "identification": "It has contrasting black and white plumage and bare orange skin around the eyes.",
+    "habitat": "It uses open farmland, wet fields, villages and urban areas.",
+    "diet": "It forages mainly on the ground for insects and other small food items.",
+    "behavior": "Outside the breeding period it often gathers in noisy flocks and may feed near grazing cattle.",
+    "reproduction": "Pairs build domed nests with a side entrance, often on trees or human structures.",
+    "ecology": "Some authorities place it in Gracupica as G. contra; older and other lists retain Sturnus contra.",
+    "conservation": "The cited IUCN assessment lists the species as Least Concern; it dates from 2016."
+  },
+  "sources": [
+    {
+      "url": "https://www.nies.go.jp/biodiversity/invasive/DB/detail/20330e.html",
+      "title": "National Institute for Environmental Studies, Japan — Sturnus contra"
+    },
+    {
+      "url": "https://faunaofindia.nic.in/PDFVolumes/occpapers/044/index.pdf",
+      "title": "Fauna of India — Food habits of Indian mynas"
+    },
+    {
+      "url": "https://www.entomoljournal.com/archives/2018/vol6issue1/PartJ/5-6-67-108.pdf",
+      "title": "Journal of Entomology and Zoology Studies — Nesting ecology of Asian pied starling"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T103890729A118852226.en",
+      "title": "IUCN Red List — Gracupica contra"
+    },
+    {
+      "url": "https://thbif.onep.go.th/taxons/detail/39060",
+      "title": "Thailand Biodiversity Information Facility — Sturnus contra"
+    }
+  ]
+}

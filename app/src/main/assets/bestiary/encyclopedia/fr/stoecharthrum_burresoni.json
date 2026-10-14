@@ -1,0 +1,26 @@
+{
+  "id": "stoecharthrum_burresoni",
+  "name": "Orthonectide de Burreson",
+  "scientific": "Stoecharthrum burresoni",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "ITIS reconnaît cette espèce comme valide dans le genre d’orthonectides Stoecharthrum.",
+    "identification": "La description originale rapporte des individus de 300–365 μm de long, avec 40–46 anneaux de cellules épidermiques.",
+    "habitat": "Il a été trouvé chez Ascidia callosa sur des pontons flottants à Roche Harbor, dans l’État de Washington.",
+    "diet": "L’alimentation est inconnue.",
+    "behavior": "Son comportement est peu connu.",
+    "reproduction": "L’étude originale signale des ovocytes serrés et, chez certains individus, du sperme ou ses précurseurs.",
+    "ecology": "Contrairement à S. fosterae chez Mytilus trossulus, S. burresoni parasite une ascidie et est plus court, avec moins d’anneaux cellulaires et d’ovocytes.",
+    "conservation": "Aucune évaluation de conservation propre à l’espèce n’a été trouvée ; la description vient d’un seul site."
+  },
+  "sources": [
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/287036.pdf",
+      "title": "Three new species of Stoecharthrum (phylum Orthonectida) — description originale"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=696255&source=to_print",
+      "title": "Stoecharthrum burresoni — fiche ITIS"
+    }
+  ]
+}

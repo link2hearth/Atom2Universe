@@ -1,0 +1,140 @@
+{
+  "id": "tachyglossus_aculeatus",
+  "scientific": "Tachyglossus aculeatus",
+  "group": "mammals",
+  "name": {
+    "en": "Short-beaked echidna",
+    "fr": "Échidné à nez court"
+  },
+  "sections": {
+    "overview": {
+      "en": "The short-beaked echidna is an Australian egg-laying mammal, or monotreme.",
+      "fr": "L’échidné à nez court est un mammifère australien ovipare, ou monotrème."
+    },
+    "identification": {
+      "en": "It has a long snout, short limbs and a spiny back.",
+      "fr": "Il a un long museau, des membres courts et le dos épineux."
+    },
+    "habitat": {
+      "en": "It occurs throughout Australia, including Tasmania, in habitats from woodland and heath to grassland and arid country.",
+      "fr": "Il vit dans toute l’Australie, Tasmanie comprise, des forêts et landes aux prairies et zones arides."
+    },
+    "diet": {
+      "en": "It opens ant and termite nests and catches prey with its sticky tongue.",
+      "fr": "Il ouvre les nids de fourmis et de termites et capture ses proies avec sa langue collante."
+    },
+    "behavior": {
+      "en": "Its claws help it dig into insect nests.",
+      "fr": "Ses griffes l’aident à creuser les nids d’insectes."
+    },
+    "reproduction": {
+      "en": "One egg is laid and hatches after about 10 days; the young suckles in the pouch, then in a burrow.",
+      "fr": "Un œuf est pondu et éclot après environ 10 jours ; le jeune tète dans la poche, puis dans un terrier."
+    },
+    "ecology": {
+      "en": "By feeding on ants and termites, it is an insectivore adapted to forage in nests and soil.",
+      "fr": "En consommant fourmis et termites, c’est un insectivore adapté à la recherche de proies dans les nids et le sol."
+    },
+    "conservation": {
+      "en": "It remains widespread but is less common in Sydney than before, according to the Australian Museum.",
+      "fr": "Elle reste répandue mais est moins commune à Sydney qu’autrefois, selon l’Australian Museum."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Australian Museum — Short-beaked Echidna",
+        "fr": "Australian Museum — Échidné à nez court"
+      },
+      "url": "https://australian.museum/learn/animals/mammals/short-beaked-echidna/",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Museum account: echidna is an Australian monotreme; it has spines, eats ants and termites, lays one egg and is less common in Sydney than before."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 25,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Université de Lille — Echidna and insectivorous diet",
+        "fr": "Université de Lille — Échidné et régime insectivore"
+      },
+      "url": "https://3dnum.univ-lille.fr/ressources-pedagogiques/biologie-animale/dents-et-regimes-alimentaires-des-mammiferes/regime-alimentaire/regime-insectivore/fiche-echidne",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The university uses the echidna as an example of an insectivorous mammal."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 12,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Mammalian Species — Tachyglossus aculeatus",
+        "fr": "Mammalian Species — Tachyglossus aculeatus"
+      },
+      "url": "https://doi.org/10.1093/mspecies/sez012",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "This peer-reviewed species account reviews the short-beaked echidna's Australian distribution and varied habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 13,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "The conservation sentence reports a local observation from Sydney and should not be interpreted as a national population trend."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

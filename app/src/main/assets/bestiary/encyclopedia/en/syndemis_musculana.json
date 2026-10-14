@@ -1,0 +1,30 @@
+{
+  "id": "syndemis_musculana",
+  "name": "Dark-barred twist",
+  "scientific": "Syndemis musculana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Syndemis musculana is a tortrix moth recorded across Europe, including Britain and Ireland.",
+    "identification": "Its grey forewings vary from pale to brownish grey and may have faint or indistinct markings; wingspan is 15–22 mm.",
+    "habitat": "In Britain and Ireland it occurs in varied settings, including woodland, moorland and mountain habitats.",
+    "diet": "The caterpillars are highly polyphagous and feed on many plants; British records include bramble, birch and oak.",
+    "behavior": "Adults fly in late afternoon and evening in May and June in Britain, and can come to light after dusk.",
+    "reproduction": "Larvae feed from leaves spun or folded around them, then overwinter fully grown before pupating in spring.",
+    "ecology": "Its broad larval diet lets it use trees, shrubs, herbs and grasses rather than a single host plant.",
+    "conservation": "A French regional records portal says the species has not been assessed in a regional red list; this is not a global status assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/syndemis-musculana/distribution-map/",
+      "title": "UKMoths — Dark-barred Twist"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/247712",
+      "title": "FAUNA — Syndemis musculana"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?e=&id=47290",
+      "title": "Les Carnets du Lépidoptériste Français — Syndemis musculana"
+    }
+  ]
+}

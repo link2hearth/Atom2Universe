@@ -1,0 +1,34 @@
+{
+  "id": "tabanus_sudeticus",
+  "name": "Taon des Sudètes",
+  "scientific": "Tabanus sudeticus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Une étude tchèque n’a signalé cette espèce dans les Bílé Karpaty que dans d’anciens relevés.",
+    "identification": "En Grande-Bretagne, c’est le plus grand Tabanidae : son corps mesure environ 25 à 30 mm et son envergure peut atteindre 50 mm.",
+    "habitat": "La fiche consultée la situe surtout dans l’ouest de la Grande-Bretagne et la signale comme très rare en Irlande du Nord.",
+    "diet": "Comme chez les autres Tabanidae, les femelles adultes prennent des repas de sang pour produire leurs œufs.",
+    "behavior": "La source britannique indique que cette très grande espèce pique rarement les humains, contrairement aux taons plus petits et familiers.",
+    "reproduction": "Une étude menée sur des femelles en Croatie orientale a examiné spécifiquement le cycle gonotrophique de l’espèce.",
+    "ecology": "Les larves des Tabanidae se développent en milieu humide.",
+    "conservation": "La source ne précise pas de statut propre à T. sudeticus."
+  },
+  "sources": [
+    {
+      "url": "https://www.iucn-uk-peatlandprogramme.org/species-showcase-tabanid-flies",
+      "title": "Espèces à l’honneur : les Tabanidae — IUCN UK Peatland Programme"
+    },
+    {
+      "url": "https://publikacie.uke.sav.sk/node/2761",
+      "title": "Research of the gonotrophic cycle of Tabanus sudeticus — Académie slovaque des sciences"
+    },
+    {
+      "url": "https://atlas.biodiversite-auvergne-rhone-alpes.fr/espece/22354",
+      "title": "Tabanus sudeticus — Atlas Biodiv’AURA"
+    },
+    {
+      "url": "https://www.muni.cz/en/research/publications/1203578",
+      "title": "Les taons des Bílé Karpaty — Université Masaryk"
+    }
+  ]
+}

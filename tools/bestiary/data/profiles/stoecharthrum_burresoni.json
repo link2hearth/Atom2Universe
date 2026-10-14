@@ -1,0 +1,119 @@
+{
+  "id": "stoecharthrum_burresoni",
+  "scientific": "Stoecharthrum burresoni",
+  "group": "invertebrates",
+  "name": {
+    "en": "Burreson's orthonectid",
+    "fr": "Orthonectide de Burreson"
+  },
+  "sections": {
+    "overview": {
+      "en": "ITIS lists this as a valid species of the orthonectid genus Stoecharthrum.",
+      "fr": "ITIS reconnaît cette espèce comme valide dans le genre d’orthonectides Stoecharthrum."
+    },
+    "identification": {
+      "en": "The original description reports specimens 300–365 μm long, with 40–46 epidermal cell rings.",
+      "fr": "La description originale rapporte des individus de 300–365 μm de long, avec 40–46 anneaux de cellules épidermiques."
+    },
+    "habitat": {
+      "en": "It was found in Ascidia callosa from floating docks at Roche Harbor, Washington.",
+      "fr": "Il a été trouvé chez Ascidia callosa sur des pontons flottants à Roche Harbor, dans l’État de Washington."
+    },
+    "diet": {
+      "en": "Diet is undescribed.",
+      "fr": "L’alimentation est inconnue."
+    },
+    "behavior": {
+      "en": "Its behavior is unknown.",
+      "fr": "Son comportement est peu connu."
+    },
+    "reproduction": {
+      "en": "The original study reports tightly grouped oocytes and sperm or its precursors in some specimens.",
+      "fr": "L’étude originale signale des ovocytes serrés et, chez certains individus, du sperme ou ses précurseurs."
+    },
+    "ecology": {
+      "en": "Unlike S. fosterae in Mytilus trossulus, S. burresoni infects an ascidian and is shorter, with fewer cell rings and oocytes.",
+      "fr": "Contrairement à S. fosterae chez Mytilus trossulus, S. burresoni parasite une ascidie et est plus court, avec moins d’anneaux cellulaires et d’ovocytes."
+    },
+    "conservation": {
+      "en": "No species-level conservation assessment was found; the description is from one locality.",
+      "fr": "Aucune évaluation de conservation propre à l’espèce n’a été trouvée ; la description vient d’un seul site."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Three new species of Stoecharthrum (phylum Orthonectida) — original description",
+        "fr": "Three new species of Stoecharthrum (phylum Orthonectida) — description originale"
+      },
+      "url": "https://www.vliz.be/imisdocs/publications/287036.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Kozloff's 1993 description reports the host, locality, measurements and comparison with S. fosterae."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 13,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Stoecharthrum burresoni — ITIS Report",
+        "fr": "Stoecharthrum burresoni — fiche ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=696255&source=to_print",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS records the species as valid in the orthonectid family Rhopaluridae."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 11,
+        "total": 34,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The original author examined very few parasitized ascidians and could not find further infected specimens; ecological prevalence is unknown."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; comparison with S. fosterae follows the original description and emphasizes the different hosts."
+}
