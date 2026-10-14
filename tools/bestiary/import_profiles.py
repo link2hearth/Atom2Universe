@@ -92,19 +92,29 @@ def android_text(text):
 
 
 def generate(records):
+    resource_groups = {
+        "a_c": lambda record: record["id"][0] <= "c",
+        "d_l": lambda record: "d" <= record["id"][0] <= "l",
+        "m_r": lambda record: "m" <= record["id"][0] <= "r",
+        "s_z": lambda record: "s" <= record["id"][0] <= "z",
+    }
     for locale, resource_dir in (("en", "values"), ("fr", "values-fr")):
-        root = ET.Element("resources")
-        for record in records:
-            prefix = "animal_encyclopedia_" + record["id"]
-            values = {"name": record["name"][locale], "latin": record["scientific"]}
-            values.update({s: record["sections"][s][locale] for s in SECTIONS})
-            values.update({f"source_{i}": source["title"][locale]
-                           for i, source in enumerate(record["sources"], 1)})
-            for suffix, value in values.items():
-                ET.SubElement(root, "string", name=f"{prefix}_{suffix}", formatted="false").text = android_text(value)
-        ET.indent(root, space="    ")
-        ET.ElementTree(root).write(ROOT / f"app/src/main/res/{resource_dir}/strings_bestiary_encyclopedia.xml",
-                                   encoding="utf-8", xml_declaration=True)
+        for group, include in resource_groups.items():
+            root = ET.Element("resources")
+            for record in records:
+                if not include(record):
+                    continue
+                prefix = "animal_encyclopedia_" + record["id"]
+                values = {"name": record["name"][locale], "latin": record["scientific"]}
+                values.update({s: record["sections"][s][locale] for s in SECTIONS})
+                values.update({f"source_{i}": source["title"][locale]
+                               for i, source in enumerate(record["sources"], 1)})
+                for suffix, value in values.items():
+                    ET.SubElement(root, "string", name=f"{prefix}_{suffix}", formatted="false").text = android_text(value)
+            ET.indent(root, space="    ")
+            ET.ElementTree(root).write(
+                ROOT / f"app/src/main/res/{resource_dir}/strings_bestiary_encyclopedia_{group}.xml",
+                encoding="utf-8", xml_declaration=True)
     # Small functions avoid the JVM method-size limit as the collection grows.
     lines = ["package com.Atom2Universe.app.science.bestiary", "",
              "import com.Atom2Universe.app.R", "",

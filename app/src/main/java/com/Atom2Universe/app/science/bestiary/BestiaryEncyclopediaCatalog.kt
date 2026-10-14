@@ -41,7 +41,7 @@ internal object BestiaryEncyclopediaCatalog {
             habitat = R.string.animal_encyclopedia_acheta_domesticus_habitat, diet = R.string.animal_encyclopedia_acheta_domesticus_diet, behavior = R.string.animal_encyclopedia_acheta_domesticus_behavior,
             reproduction = R.string.animal_encyclopedia_acheta_domesticus_reproduction, ecology = R.string.animal_encyclopedia_acheta_domesticus_ecology, conservation = R.string.animal_encyclopedia_acheta_domesticus_conservation,
             latin = R.string.animal_encyclopedia_acheta_domesticus_latin, sourceUrl = "https://ephytia.inrae.fr/fr/C/11790/Hypp-encyclopedie-en-protection-des-plantes-Acheta-domesticus", sourceTitle = R.string.animal_encyclopedia_acheta_domesticus_source_1,
-            references = listOf(AnimalReference("https://ephytia.inrae.fr/fr/C/11790/Hypp-encyclopedie-en-protection-des-plantes-Acheta-domesticus", R.string.animal_encyclopedia_acheta_domesticus_source_1), AnimalReference("https://orthoptera.org.uk/species/acheta-domesticus", R.string.animal_encyclopedia_acheta_domesticus_source_2), AnimalReference("https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000006827", R.string.animal_encyclopedia_acheta_domesticus_source_3), AnimalReference("https://www.mdpi.com/2076-3417/15/17/9494", R.string.animal_encyclopedia_acheta_domesticus_source_4))
+            references = listOf(AnimalReference("https://ephytia.inrae.fr/fr/C/11790/Hypp-encyclopedie-en-protection-des-plantes-Acheta-domesticus", R.string.animal_encyclopedia_acheta_domesticus_source_1), AnimalReference("https://orthoptera.org.uk/species/acheta-domesticus", R.string.animal_encyclopedia_acheta_domesticus_source_2), AnimalReference("https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000006827", R.string.animal_encyclopedia_acheta_domesticus_source_3), AnimalReference("https://www.mdpi.com/2076-3417/15/17/9494", R.string.animal_encyclopedia_acheta_domesticus_source_4), AnimalReference("https://www.orthoptera.ch/wiki/arten/ensifera/gryllinae/item/acheta-domesticus", R.string.animal_encyclopedia_acheta_domesticus_source_5))
         ),
         AnimalSpecies(
             id = "acicula_fusca", scientific = "Acicula fusca",
@@ -50,7 +50,7 @@ internal object BestiaryEncyclopediaCatalog {
             habitat = R.string.animal_encyclopedia_acicula_fusca_habitat, diet = R.string.animal_encyclopedia_acicula_fusca_diet, behavior = R.string.animal_encyclopedia_acicula_fusca_behavior,
             reproduction = R.string.animal_encyclopedia_acicula_fusca_reproduction, ecology = R.string.animal_encyclopedia_acicula_fusca_ecology, conservation = R.string.animal_encyclopedia_acicula_fusca_conservation,
             latin = R.string.animal_encyclopedia_acicula_fusca_latin, sourceUrl = "https://www.habitas.org.uk/priority/species.asp?item=6618", sourceTitle = R.string.animal_encyclopedia_acicula_fusca_source_1,
-            references = listOf(AnimalReference("https://www.habitas.org.uk/priority/species.asp?item=6618", R.string.animal_encyclopedia_acicula_fusca_source_1), AnimalReference("https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000006618", R.string.animal_encyclopedia_acicula_fusca_source_2), AnimalReference("https://www.habitas.org.uk/molluscireland/species.asp?ID=3", R.string.animal_encyclopedia_acicula_fusca_source_3), AnimalReference("https://www.npws.ie/sites/default/files/publications/pdf/RL2.pdf", R.string.animal_encyclopedia_acicula_fusca_source_4))
+            references = listOf(AnimalReference("https://www.habitas.org.uk/priority/species.asp?item=6618", R.string.animal_encyclopedia_acicula_fusca_source_1), AnimalReference("https://www.nhm.ac.uk/our-science/data/uk-species/taxon?tvk=NBNSYS0000006618", R.string.animal_encyclopedia_acicula_fusca_source_2), AnimalReference("https://www.habitas.org.uk/molluscireland/species.asp?ID=3", R.string.animal_encyclopedia_acicula_fusca_source_3), AnimalReference("https://www.npws.ie/sites/default/files/publications/pdf/RL2.pdf", R.string.animal_encyclopedia_acicula_fusca_source_4), AnimalReference("https://www.researchgate.net/publication/328096041_A_quantitative_study_on_the_implications_of_sieve_mesh_size_in_land_mollusc_sampling_-_are_snails_05-1_mmin_size_worth_including", R.string.animal_encyclopedia_acicula_fusca_source_5))
         ),
         AnimalSpecies(
             id = "actias_luna", scientific = "Actias luna",
@@ -59,7 +59,7 @@ internal object BestiaryEncyclopediaCatalog {
             habitat = R.string.animal_encyclopedia_actias_luna_habitat, diet = R.string.animal_encyclopedia_actias_luna_diet, behavior = R.string.animal_encyclopedia_actias_luna_behavior,
             reproduction = R.string.animal_encyclopedia_actias_luna_reproduction, ecology = R.string.animal_encyclopedia_actias_luna_ecology, conservation = R.string.animal_encyclopedia_actias_luna_conservation,
             latin = R.string.animal_encyclopedia_actias_luna_latin, sourceUrl = "https://ask.ifas.ufl.edu/publication/IN737", sourceTitle = R.string.animal_encyclopedia_actias_luna_source_1,
-            references = listOf(AnimalReference("https://ask.ifas.ufl.edu/publication/IN737", R.string.animal_encyclopedia_actias_luna_source_1), AnimalReference("https://mynpn.usanpn.org/npnapps/species/Actias/luna", R.string.animal_encyclopedia_actias_luna_source_2), AnimalReference("https://www.butterfliesandmoths.org/node/6140", R.string.animal_encyclopedia_actias_luna_source_3))
+            references = listOf(AnimalReference("https://ask.ifas.ufl.edu/publication/IN737", R.string.animal_encyclopedia_actias_luna_source_1), AnimalReference("https://mynpn.usanpn.org/npnapps/species/Actias/luna", R.string.animal_encyclopedia_actias_luna_source_2), AnimalReference("https://animaldiversity.org/accounts/Actias_luna/", R.string.animal_encyclopedia_actias_luna_source_3), AnimalReference("https://www.butterfliesandmoths.org/node/6140", R.string.animal_encyclopedia_actias_luna_source_4))
         ),
         AnimalSpecies(
             id = "adela_reaumurella", scientific = "Adela reaumurella",
@@ -77,7 +77,16 @@ internal object BestiaryEncyclopediaCatalog {
             habitat = R.string.animal_encyclopedia_adelphobates_quinquevittatus_habitat, diet = R.string.animal_encyclopedia_adelphobates_quinquevittatus_diet, behavior = R.string.animal_encyclopedia_adelphobates_quinquevittatus_behavior,
             reproduction = R.string.animal_encyclopedia_adelphobates_quinquevittatus_reproduction, ecology = R.string.animal_encyclopedia_adelphobates_quinquevittatus_ecology, conservation = R.string.animal_encyclopedia_adelphobates_quinquevittatus_conservation,
             latin = R.string.animal_encyclopedia_adelphobates_quinquevittatus_latin, sourceUrl = "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Dendrobatidae/Dendrobatinae/Adelphobates/Adelphobates-quinquevittatus", sourceTitle = R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_1,
-            references = listOf(AnimalReference("https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Dendrobatidae/Dendrobatinae/Adelphobates/Adelphobates-quinquevittatus", R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_1), AnimalReference("https://www.scielo.br/j/aabc/a/tZ5DwMcx9wQw5Xb7XybF9FD/?format=html", R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_2), AnimalReference("https://doi.org/10.5281/zenodo.6867791", R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_3))
+            references = listOf(AnimalReference("https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Dendrobatidae/Dendrobatinae/Adelphobates/Adelphobates-quinquevittatus", R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_1), AnimalReference("https://www.scielo.br/j/aabc/a/tZ5DwMcx9wQw5Xb7XybF9FD/?format=html", R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_2), AnimalReference("https://doi.org/10.5281/zenodo.6867791", R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_3), AnimalReference("https://bibliotecadigital.butantan.gov.br/arquivos/42/PDF/3.pdf", R.string.animal_encyclopedia_adelphobates_quinquevittatus_source_4))
+        ),
+        AnimalSpecies(
+            id = "aedes_vexans", scientific = "Aedes vexans",
+            name = R.string.animal_encyclopedia_aedes_vexans_name, group = "invertebrates",
+            description = R.string.animal_encyclopedia_aedes_vexans_overview, identification = R.string.animal_encyclopedia_aedes_vexans_identification,
+            habitat = R.string.animal_encyclopedia_aedes_vexans_habitat, diet = R.string.animal_encyclopedia_aedes_vexans_diet, behavior = R.string.animal_encyclopedia_aedes_vexans_behavior,
+            reproduction = R.string.animal_encyclopedia_aedes_vexans_reproduction, ecology = R.string.animal_encyclopedia_aedes_vexans_ecology, conservation = R.string.animal_encyclopedia_aedes_vexans_conservation,
+            latin = R.string.animal_encyclopedia_aedes_vexans_latin, sourceUrl = "https://www.ecdc.europa.eu/sites/default/files/documents/Reverse-identification-key-for-invasive-mosquito-species.pdf", sourceTitle = R.string.animal_encyclopedia_aedes_vexans_source_1,
+            references = listOf(AnimalReference("https://www.ecdc.europa.eu/sites/default/files/documents/Reverse-identification-key-for-invasive-mosquito-species.pdf", R.string.animal_encyclopedia_aedes_vexans_source_1), AnimalReference("https://www.scielo.br/j/zool/a/y4GTWSBf6L8PbYPr3b56Vxp/?format=html&lang=en", R.string.animal_encyclopedia_aedes_vexans_source_2), AnimalReference("https://ph.health.mil/resources/Aedes%28Aedimorphus%29vexans%28Meigen%29WRBUspecimenAEvex_TA-274-0116.pdf", R.string.animal_encyclopedia_aedes_vexans_source_3), AnimalReference("https://www.gov.uk/guidance/mosquitoes-species-profiles", R.string.animal_encyclopedia_aedes_vexans_source_4), AnimalReference("https://wwwnc.cdc.gov/eid/article/4/2/98-0218_article", R.string.animal_encyclopedia_aedes_vexans_source_5), AnimalReference("https://linnet.geog.ubc.ca/efauna/Atlas/Atlas.aspx?sciname=Aedes+vexans", R.string.animal_encyclopedia_aedes_vexans_source_6), AnimalReference("https://insektarium.net/diptera-2/culicidae-komarowate/aedes-vexans-doskwier-pastwiskowy/", R.string.animal_encyclopedia_aedes_vexans_source_7), AnimalReference("https://www.onehealthsecure.com/sites/default/files/2023-02/Mosquitoes%20Toolkit.pdf", R.string.animal_encyclopedia_aedes_vexans_source_8))
         ),
         AnimalSpecies(
             id = "african_elephant", scientific = "Loxodonta africana",
@@ -358,6 +367,9 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_blackbird_latin, sourceUrl = "https://www.allaboutbirds.org/guide/Eurasian_Blackbird/overview", sourceTitle = R.string.animal_encyclopedia_blackbird_source_1,
             references = listOf(AnimalReference("https://www.allaboutbirds.org/guide/Eurasian_Blackbird/overview", R.string.animal_encyclopedia_blackbird_source_1), AnimalReference("https://www.allaboutbirds.org/guide/Eurasian_Blackbird/lifehistory", R.string.animal_encyclopedia_blackbird_source_2), AnimalReference("https://www.bto.org/learn/about-birds/birdfacts/blackbird", R.string.animal_encyclopedia_blackbird_source_3), AnimalReference("https://doi.org/10.1007/BF00295101", R.string.animal_encyclopedia_blackbird_source_4), AnimalReference("https://academic.oup.com/auk/article/123/1/162/5562527", R.string.animal_encyclopedia_blackbird_source_5), AnimalReference("https://doi.org/10.1016/S0003-3472(05)80182-4", R.string.animal_encyclopedia_blackbird_source_6), AnimalReference("https://doi.org/10.1163/1568539X-00003232", R.string.animal_encyclopedia_blackbird_source_7), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC5697929/", R.string.animal_encyclopedia_blackbird_source_8), AnimalReference("https://doi.org/10.1111/j.1474-919X.1985.tb05036.x", R.string.animal_encyclopedia_blackbird_source_9), AnimalReference("https://doi.org/10.1046/j.0269-8463.2001.00561.x", R.string.animal_encyclopedia_blackbird_source_10), AnimalReference("https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T103888106A264548442.en", R.string.animal_encyclopedia_blackbird_source_11), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC9206397/", R.string.animal_encyclopedia_blackbird_source_12), AnimalReference("https://doi.org/10.1080/00063659309477129", R.string.animal_encyclopedia_blackbird_source_13), AnimalReference("https://www.viva.fct.unl.pt/aves/turdus-merula", R.string.animal_encyclopedia_blackbird_source_14), AnimalReference("https://www.environment.nsw.gov.au/sites/default/files/lord-howe-island-biodiversity-management-plan-fauna-appendix-070469.pdf", R.string.animal_encyclopedia_blackbird_source_15), AnimalReference("https://doi.org/10.1111/j.1474-919X.1958.tb00362.x", R.string.animal_encyclopedia_blackbird_source_16), AnimalReference("https://www.avilist.org/checklist/v2025b/", R.string.animal_encyclopedia_blackbird_source_17), AnimalReference("https://americanornithology.org/wp-content/uploads/2021/07/2021-C-final.pdf", R.string.animal_encyclopedia_blackbird_source_18))
         ),
+    )
+
+    private fun batch1(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "blue_tit", scientific = "Cyanistes caeruleus",
             name = R.string.animal_encyclopedia_blue_tit_name, group = "birds",
@@ -367,9 +379,6 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_blue_tit_latin, sourceUrl = "https://www.bto.org/learn/about-birds/birdfacts/blue-tit", sourceTitle = R.string.animal_encyclopedia_blue_tit_source_1,
             references = listOf(AnimalReference("https://www.bto.org/learn/about-birds/birdfacts/blue-tit", R.string.animal_encyclopedia_blue_tit_source_1), AnimalReference("https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/mesanges/mesange-bleue", R.string.animal_encyclopedia_blue_tit_source_2), AnimalReference("https://avibase.bsc-eoc.org/species.jsp?avibaseid=9BE53D340F9A4305&lang=EN", R.string.animal_encyclopedia_blue_tit_source_3), AnimalReference("https://www.allaboutbirds.org/guide/Eurasian_Blue_Tit/lifehistory", R.string.animal_encyclopedia_blue_tit_source_4), AnimalReference("https://www.rspb.org.uk/birds-and-wildlife/blue-tit", R.string.animal_encyclopedia_blue_tit_source_5), AnimalReference("https://www.allaboutbirds.org/guide/Eurasian_Blue_Tit/sounds", R.string.animal_encyclopedia_blue_tit_source_6), AnimalReference("https://www.bto.org/learn/skills/bird-identification/young-birds", R.string.animal_encyclopedia_blue_tit_source_7), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC1688906/", R.string.animal_encyclopedia_blue_tit_source_8), AnimalReference("https://www.tandfonline.com/doi/full/10.1080/00063657.2014.899307", R.string.animal_encyclopedia_blue_tit_source_9), AnimalReference("https://doi.org/10.2305/IUCN.UK.2021-3.RLTS.T103761667A200218007.en", R.string.animal_encyclopedia_blue_tit_source_10))
         ),
-    )
-
-    private fun batch1(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "blue_whale", scientific = "Balaenoptera musculus",
             name = R.string.animal_encyclopedia_blue_whale_name, group = "mammals",
@@ -721,6 +730,9 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_eidolon_helvum_latin, sourceUrl = "https://animaldiversity.org/accounts/Eidolon_helvum/", sourceTitle = R.string.animal_encyclopedia_eidolon_helvum_source_1,
             references = listOf(AnimalReference("https://animaldiversity.org/accounts/Eidolon_helvum/", R.string.animal_encyclopedia_eidolon_helvum_source_1), AnimalReference("https://www.worldlandtrust.org/species/straw-coloured-fruit-bat/", R.string.animal_encyclopedia_eidolon_helvum_source_2))
         ),
+    )
+
+    private fun batch2(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "emperor_penguin", scientific = "Aptenodytes forsteri",
             name = R.string.animal_encyclopedia_emperor_penguin_name, group = "birds",
@@ -730,9 +742,6 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_emperor_penguin_latin, sourceUrl = "https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/", sourceTitle = R.string.animal_encyclopedia_emperor_penguin_source_1,
             references = listOf(AnimalReference("https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/", R.string.animal_encyclopedia_emperor_penguin_source_1), AnimalReference("https://legacy.bas.ac.uk/about_antarctica/wildlife/birds/penguins/index.php", R.string.animal_encyclopedia_emperor_penguin_source_2), AnimalReference("https://www.nzbirdsonline.org.nz/species/emperor-penguin", R.string.animal_encyclopedia_emperor_penguin_source_3), AnimalReference("https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0033751", R.string.animal_encyclopedia_emperor_penguin_source_4), AnimalReference("https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/finding-emperor-penguin-colonies/", R.string.animal_encyclopedia_emperor_penguin_source_5), AnimalReference("https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/breeding-cycle/", R.string.animal_encyclopedia_emperor_penguin_source_6), AnimalReference("https://www.antarctica.gov.au/about-antarctica/animals/penguins/emperor-penguin/how-deep-can-they-dive/", R.string.animal_encyclopedia_emperor_penguin_source_7), AnimalReference("https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0020283", R.string.animal_encyclopedia_emperor_penguin_source_8), AnimalReference("https://doi.org/10.1017/S0954102090000037", R.string.animal_encyclopedia_emperor_penguin_source_9), AnimalReference("https://doi.org/10.1007/s002270050253", R.string.animal_encyclopedia_emperor_penguin_source_10), AnimalReference("https://doi.org/10.3390/birds5020016", R.string.animal_encyclopedia_emperor_penguin_source_11), AnimalReference("https://nc.iucnredlist.org/redlist/content/attachment_files/Aptenodytes_forsteri_Pre-Publication_Assessment_RLTS_T22697752A197622453_eng.pdf", R.string.animal_encyclopedia_emperor_penguin_source_12), AnimalReference("https://www.birdlife.org/news/2026/04/09/emperor-penguin-now-endangered-due-to-climate-change/", R.string.animal_encyclopedia_emperor_penguin_source_13), AnimalReference("https://doi.org/10.1038/s43247-023-00927-x", R.string.animal_encyclopedia_emperor_penguin_source_14), AnimalReference("https://animaldiversity.org/accounts/Aptenodytes_forsteri/", R.string.animal_encyclopedia_emperor_penguin_source_15), AnimalReference("https://www.bas.ac.uk/news/loss-of-sea-ice-causes-catastrophic-breeding-failure-for-emperor-penguins/", R.string.animal_encyclopedia_emperor_penguin_source_16))
         ),
-    )
-
-    private fun batch2(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "emu", scientific = "Dromaius novaehollandiae",
             name = R.string.animal_encyclopedia_emu_name, group = "birds",
@@ -1084,6 +1093,9 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_hippo_latin, sourceUrl = "https://animaldiversity.org/accounts/Hippopotamus_amphibius/", sourceTitle = R.string.animal_encyclopedia_hippo_source_1,
             references = listOf(AnimalReference("https://animaldiversity.org/accounts/Hippopotamus_amphibius/", R.string.animal_encyclopedia_hippo_source_1), AnimalReference("https://animals.sandiegozoo.org/animals/hippo", R.string.animal_encyclopedia_hippo_source_2), AnimalReference("https://doi.org/10.2305/IUCN.UK.2017-2.RLTS.T10103A18567364.en", R.string.animal_encyclopedia_hippo_source_3), AnimalReference("https://www.nature.com/articles/s41467-018-04391-6", R.string.animal_encyclopedia_hippo_source_4), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC5530709/", R.string.animal_encyclopedia_hippo_source_5))
         ),
+    )
+
+    private fun batch3(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "hippocampus_reidi", scientific = "Hippocampus reidi",
             name = R.string.animal_encyclopedia_hippocampus_reidi_name, group = "fish",
@@ -1093,9 +1105,6 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_hippocampus_reidi_latin, sourceUrl = "https://www.fishbase.se/summary/Hippocampus-reidi.html", sourceTitle = R.string.animal_encyclopedia_hippocampus_reidi_source_1,
             references = listOf(AnimalReference("https://www.fishbase.se/summary/Hippocampus-reidi.html", R.string.animal_encyclopedia_hippocampus_reidi_source_1), AnimalReference("https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/longsnout-seahorse/", R.string.animal_encyclopedia_hippocampus_reidi_source_2))
         ),
-    )
-
-    private fun batch3(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "homarus_americanus", scientific = "Homarus americanus",
             name = R.string.animal_encyclopedia_homarus_americanus_name, group = "invertebrates",
@@ -1447,6 +1456,9 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_murray_cod_latin, sourceUrl = "https://australian.museum/learn/animals/fishes/murray-cod-maccullochella-peelii/", sourceTitle = R.string.animal_encyclopedia_murray_cod_source_1,
             references = listOf(AnimalReference("https://australian.museum/learn/animals/fishes/murray-cod-maccullochella-peelii/", R.string.animal_encyclopedia_murray_cod_source_1), AnimalReference("https://fishesofaustralia.net.au/home/species/4655", R.string.animal_encyclopedia_murray_cod_source_2), AnimalReference("https://en.wikipedia.org/wiki/Murray_cod", R.string.animal_encyclopedia_murray_cod_source_3), AnimalReference("https://www.dcceew.gov.au/environment/biodiversity/threatened/conservation-advices/maccullochella-peelii-peelii", R.string.animal_encyclopedia_murray_cod_source_4))
         ),
+    )
+
+    private fun batch4(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "muscicapa_striata", scientific = "Muscicapa striata",
             name = R.string.animal_encyclopedia_muscicapa_striata_name, group = "birds",
@@ -1456,9 +1468,6 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_muscicapa_striata_latin, sourceUrl = "https://www.bto.org/understanding-birds/birdfacts/spotted-flycatcher", sourceTitle = R.string.animal_encyclopedia_muscicapa_striata_source_1,
             references = listOf(AnimalReference("https://www.bto.org/understanding-birds/birdfacts/spotted-flycatcher", R.string.animal_encyclopedia_muscicapa_striata_source_1), AnimalReference("https://www.rspb.org.uk/birds-and-wildlife/spotted-flycatcher", R.string.animal_encyclopedia_muscicapa_striata_source_2))
         ),
-    )
-
-    private fun batch4(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "muskrat", scientific = "Ondatra zibethicus",
             name = R.string.animal_encyclopedia_muskrat_name, group = "mammals",
@@ -1810,6 +1819,9 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_rabbit_latin, sourceUrl = "https://animaldiversity.org/accounts/Oryctolagus_cuniculus/", sourceTitle = R.string.animal_encyclopedia_rabbit_source_1,
             references = listOf(AnimalReference("https://animaldiversity.org/accounts/Oryctolagus_cuniculus/", R.string.animal_encyclopedia_rabbit_source_1), AnimalReference("https://www.msdvetmanual.com/en/exotic-and-laboratory-animals/rabbits/nutrition-of-rabbits", R.string.animal_encyclopedia_rabbit_source_2), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC5113872/", R.string.animal_encyclopedia_rabbit_source_3), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC8388719/", R.string.animal_encyclopedia_rabbit_source_4), AnimalReference("https://academic.oup.com/mspecies/article/52/997/125/6046128", R.string.animal_encyclopedia_rabbit_source_5), AnimalReference("https://doi.org/10.2305/IUCN.UK.2019-3.RLTS.T41291A170619657.en", R.string.animal_encyclopedia_rabbit_source_6), AnimalReference("https://doi.org/10.1007/s10344-024-01888-y", R.string.animal_encyclopedia_rabbit_source_7), AnimalReference("https://pubmed.ncbi.nlm.nih.gov/18680504/", R.string.animal_encyclopedia_rabbit_source_8), AnimalReference("https://www.environment.nsw.gov.au/topics/animals-and-plants/pest-animals-and-weeds/pest-animals/rabbits", R.string.animal_encyclopedia_rabbit_source_9))
         ),
+    )
+
+    private fun batch5(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "raccoon_dog", scientific = "Nyctereutes procyonoides",
             name = R.string.animal_encyclopedia_raccoon_dog_name, group = "mammals",
@@ -1819,9 +1831,6 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_raccoon_dog_latin, sourceUrl = "https://canids.org/canids/raccoon-dog/", sourceTitle = R.string.animal_encyclopedia_raccoon_dog_source_1,
             references = listOf(AnimalReference("https://canids.org/canids/raccoon-dog/", R.string.animal_encyclopedia_raccoon_dog_source_1), AnimalReference("https://www.canids.org/resources/Canid%20Action%20Plan%202004.pdf", R.string.animal_encyclopedia_raccoon_dog_source_2), AnimalReference("https://eea.government.bg/bg/bio/nsmbr/Field_Guide_Alien_species_in_European_Forests.pdf", R.string.animal_encyclopedia_raccoon_dog_source_3), AnimalReference("https://www.mammaldiversity.org/taxon/1005961/", R.string.animal_encyclopedia_raccoon_dog_source_4), AnimalReference("https://www.mammaldiversity.org/taxon/1005962/", R.string.animal_encyclopedia_raccoon_dog_source_5), AnimalReference("https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T14925A85658776.en", R.string.animal_encyclopedia_raccoon_dog_source_6), AnimalReference("https://laji.fi/en/taxon/MX.46564/biology", R.string.animal_encyclopedia_raccoon_dog_source_7), AnimalReference("https://eur-lex.europa.eu/eli/reg_impl/2016/1141/2025-08-07", R.string.animal_encyclopedia_raccoon_dog_source_8), AnimalReference("https://environment.ec.europa.eu/topics/nature-and-biodiversity/invasive-alien-species_en", R.string.animal_encyclopedia_raccoon_dog_source_9), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC4031070/", R.string.animal_encyclopedia_raccoon_dog_source_10), AnimalReference("https://fis.tu-dresden.de/portal/en/publications/ranging-and-parental-care-of-the-raccoon-dog-nyctereutes-procyonoides-during-pup-rearing(f4b34c65-761e-4b4a-b986-097aebdae3c9).html", R.string.animal_encyclopedia_raccoon_dog_source_11), AnimalReference("https://www.sciencedirect.com/science/article/pii/S1616504706001339", R.string.animal_encyclopedia_raccoon_dog_source_12), AnimalReference("https://pubmed.ncbi.nlm.nih.gov/18075801/", R.string.animal_encyclopedia_raccoon_dog_source_13), AnimalReference("https://academic.oup.com/jmammal/article-abstract/76/4/1036/895163", R.string.animal_encyclopedia_raccoon_dog_source_14), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC7108480/", R.string.animal_encyclopedia_raccoon_dog_source_15), AnimalReference("https://pmc.ncbi.nlm.nih.gov/articles/PMC7097217/", R.string.animal_encyclopedia_raccoon_dog_source_16))
         ),
-    )
-
-    private fun batch5(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "ramphastos_sulfuratus", scientific = "Ramphastos sulfuratus",
             name = R.string.animal_encyclopedia_ramphastos_sulfuratus_name, group = "birds",
@@ -2173,6 +2182,9 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_thymallus_arcticus_latin, sourceUrl = "https://www.fishbase.se/summary/Thymallus-arcticus.html", sourceTitle = R.string.animal_encyclopedia_thymallus_arcticus_source_1,
             references = listOf(AnimalReference("https://www.fishbase.se/summary/Thymallus-arcticus.html", R.string.animal_encyclopedia_thymallus_arcticus_source_1), AnimalReference("https://animaldiversity.org/accounts/Thymallus_arcticus/", R.string.animal_encyclopedia_thymallus_arcticus_source_2), AnimalReference("https://westernnativetrout.org/wp-content/uploads/2019/07/wnti-species_assessment_arctic-grayling_adfg_20130318.pdf", R.string.animal_encyclopedia_thymallus_arcticus_source_3))
         ),
+    )
+
+    private fun batch6(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "tiger", scientific = "Panthera tigris",
             name = R.string.animal_encyclopedia_tiger_name, group = "mammals",
@@ -2182,9 +2194,6 @@ internal object BestiaryEncyclopediaCatalog {
             latin = R.string.animal_encyclopedia_tiger_latin, sourceUrl = "https://nationalzoo.si.edu/animals/tiger", sourceTitle = R.string.animal_encyclopedia_tiger_source_1,
             references = listOf(AnimalReference("https://nationalzoo.si.edu/animals/tiger", R.string.animal_encyclopedia_tiger_source_1), AnimalReference("https://www.catsg.org/living-species-tiger", R.string.animal_encyclopedia_tiger_source_2), AnimalReference("https://animaldiversity.org/accounts/Panthera_tigris/", R.string.animal_encyclopedia_tiger_source_3), AnimalReference("https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T15955A214862019.en", R.string.animal_encyclopedia_tiger_source_4), AnimalReference("https://doi.org/10.1017/S0952836903003765", R.string.animal_encyclopedia_tiger_source_5), AnimalReference("https://www.cambridge.org/core/journals/oryx/article/female-tiger-panthera-tigris-home-range-size-and-prey-abundance-important-metrics-for-management/C427421DD59691CFF5C9D1D06CDEC07A", R.string.animal_encyclopedia_tiger_source_6), AnimalReference("https://doi.org/10.1111/joa.13636", R.string.animal_encyclopedia_tiger_source_7), AnimalReference("https://doi.org/10.1016/j.gecco.2024.e03161", R.string.animal_encyclopedia_tiger_source_8), AnimalReference("https://www.wti.org.in/wp-content/uploads/2023/02/Action-Tiger-2nd-Edition-2011-institutional.pdf", R.string.animal_encyclopedia_tiger_source_9), AnimalReference("https://animals.sandiegozoo.org/animals/tiger", R.string.animal_encyclopedia_tiger_source_10), AnimalReference("https://panthera.org/newsroom/global-tiger-population-stable-and-potentially-increasing-despite-extreme-threats", R.string.animal_encyclopedia_tiger_source_11), AnimalReference("https://www.worldwildlife.org/species/tiger/", R.string.animal_encyclopedia_tiger_source_12), AnimalReference("https://experts.umn.edu/en/publications/the-role-of-dispersal-in-structuring-the-chitwan-tiger-population/", R.string.animal_encyclopedia_tiger_source_13), AnimalReference("https://www.sciencedirect.com/science/article/abs/pii/S0140196320302196", R.string.animal_encyclopedia_tiger_source_14), AnimalReference("https://www.pretoriazoo.org/animals/tiger/", R.string.animal_encyclopedia_tiger_source_15))
         ),
-    )
-
-    private fun batch6(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "tinca_tinca", scientific = "Tinca tinca",
             name = R.string.animal_encyclopedia_tinca_tinca_name, group = "fish",

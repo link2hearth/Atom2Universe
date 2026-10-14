@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="bot_family_Fagaceae" translatable="false">Fagaceae</string>
+<string name="bot_family_Fagaceae_desc">Oaks, beeches and chestnuts: dry fruits associated with a cupule.</string>
+<string name="bot_family_Betulaceae" translatable="false">Betulaceae</string>
+<string name="bot_family_Betulaceae_desc">Birches, alders, hornbeams and hazels: unisexual flowers, often in catkins, and dry fruits.</string>
+<string name="bot_family_Sapindaceae" translatable="false">Sapindaceae</string>
+<string name="bot_family_Sapindaceae_desc">In this atlas: maples with opposite leaves and winged fruits, and horse chestnut with palmately compound leaves.</string>
+<string name="bot_family_Oleaceae" translatable="false">Oleaceae</string>
+<string name="bot_family_Oleaceae_desc">In this atlas: ash and privet, both with opposite leaves but very different fruits.</string>
+<string name="bot_family_Malvaceae" translatable="false">Malvaceae</string>
+<string name="bot_family_Malvaceae_desc">This family includes lindens: alternate leaves and a flower cluster associated with a long bract.</string>
+<string name="bot_family_Rosaceae" translatable="false">Rosaceae</string>
+<string name="bot_family_Rosaceae_desc">A diverse family: often five petals and many stamens; a wide range of fruit types.</string>
+<string name="bot_family_Salicaceae" translatable="false">Salicaceae</string>
+<string name="bot_family_Salicaceae_desc">In this atlas: aspen, with catkins and small hairy seeds.</string>
+<string name="bot_family_Pinaceae" translatable="false">Pinaceae</string>
+<string name="bot_family_Pinaceae_desc">Needle-bearing conifers with cones; ovules and seeds are not enclosed within an ovary.</string>
+<string name="bot_family_Viburnaceae" translatable="false">Viburnaceae</string>
+<string name="bot_family_Viburnaceae_desc">Elder and viburnum: opposite leaves and small flowers in broad clusters. Often called Adoxaceae in earlier works.</string>
+<string name="bot_family_Cornaceae" translatable="false">Cornaceae</string>
+<string name="bot_family_Cornaceae_desc">In this atlas: common dogwood, with curved leaf veins and four-petalled flowers.</string>
+<string name="bot_family_Celastraceae" translatable="false">Celastraceae</string>
+<string name="bot_family_Celastraceae_desc">In this atlas: spindle, with opposite leaves and pink capsules revealing orange seed coverings.</string>
+<string name="bot_family_Aquifoliaceae" translatable="false">Aquifoliaceae</string>
+<string name="bot_family_Aquifoliaceae_desc">In this atlas: holly, with leathery evergreen leaves and red fruits on female plants.</string>
+<string name="bot_family_Buxaceae" translatable="false">Buxaceae</string>
+<string name="bot_family_Buxaceae_desc">In this atlas: box, with small opposite leaves and inconspicuous flowers without petals.</string>
+<string name="bot_family_Fabaceae" translatable="false">Fabaceae</string>
+<string name="bot_family_Dioncophyllaceae" translatable="false">Dioncophyllaceae</string>
+<string name="bot_family_Dioncophyllaceae_desc">A monotypic tropical family of lianas, including the non-carnivorous Dioncophyllum thollonii.</string>
+<string name="bot_family_Dioncophyllaceae_aliases">Dioncophyll family</string>
+<string name="bot_family_Guamatelaceae" translatable="false">Guamatelaceae</string>
+<string name="bot_family_Guamatelaceae_desc">A monotypic Central American family of low shrubs, represented by Guamatela tuerckheimii.</string>
+<string name="bot_family_Guamatelaceae_aliases">Guamatela family</string>
+<string name="bot_family_Mniaceae" translatable="false">Mniaceae</string>
+<string name="bot_family_Mniaceae_desc">A family of mosses with leafy shoots and conspicuous sporophytes.</string>
+<string name="bot_family_Mniaceae_aliases">Mnium moss family</string>
+<string name="bot_family_Fabaceae_desc">The species shown have pea flowers and pods.</string>
+<string name="bot_family_Ericaceae" translatable="false">Ericaceae</string>
+<string name="bot_family_Ericaceae_desc">In this atlas: heather and bell heather, small woody plants of acid ground with reduced leaves.</string>
+<string name="bot_family_Asteraceae" translatable="false">Asteraceae</string>
+<string name="bot_family_Asteraceae_desc">What looks like a single flower is a head containing many small florets.</string>
+<string name="bot_family_Papaveraceae" translatable="false">Papaveraceae</string>
+<string name="bot_family_Papaveraceae_desc">In this atlas: common poppy, with four petals, many stamens and a capsule with pores.</string>
+<string name="bot_family_Ranunculaceae" translatable="false">Ranunculaceae</string>
+<string name="bot_family_Ranunculaceae_desc">In this atlas: meadow buttercup and lesser celandine, with yellow flowers, many stamens and many carpels.</string>
+<string name="bot_family_Primulaceae" translatable="false">Primulaceae</string>
+<string name="bot_family_Primulaceae_desc">In this atlas: cowslip, with a basal rosette and tubular flowers with five joined lobes.</string>
+<string name="bot_family_Plantaginaceae" translatable="false">Plantaginaceae</string>
+<string name="bot_family_Plantaginaceae_desc">A diverse family including foxgloves and plantains here; habit alone does not identify it.</string>
+<string name="bot_family_Campanulaceae" translatable="false">Campanulaceae</string>
+<string name="bot_family_Campanulaceae_desc">In this atlas: harebell, whose corolla has five fused petals.</string>
+<string name="bot_family_Violaceae" translatable="false">Violaceae</string>
+<string name="bot_family_Violaceae_desc">In this atlas: sweet violet, with five unequal petals and a spur on the lower petal.</string>
+<string name="bot_family_Apiaceae" translatable="false">Apiaceae</string>
+<string name="bot_family_Apiaceae_desc">Wild carrot and cow parsley: small flowers in compound umbels and fruits splitting into two mericarps.</string>
+<string name="bot_family_Urticaceae" translatable="false">Urticaceae</string>
+<string name="bot_family_Urticaceae_desc">In this atlas: stinging nettle, with stinging hairs and small greenish flowers without petals.</string>
+<string name="bot_family_Lamiaceae" translatable="false">Lamiaceae</string>
+<string name="bot_family_Lamiaceae_desc">In this atlas: dead-nettle and sage, with opposite leaves, usually square stems and two-lipped corollas.</string>
+<string name="bot_family_Poaceae" translatable="false">Poaceae</string>
+<string name="bot_family_Poaceae_desc">Grasses: narrow sheathing leaves, flowers grouped in spikelets and fruits called caryopses.</string>
+<string name="bot_family_Fagaceae_aliases">Beech family</string>
+<string name="bot_family_Betulaceae_aliases">Birch family</string>
+<string name="bot_family_Sapindaceae_aliases">Soapberry family; Aceraceae; Hippocastanaceae</string>
+<string name="bot_family_Oleaceae_aliases">Olive family</string>
+<string name="bot_family_Malvaceae_aliases">Mallow family; Tiliaceae</string>
+<string name="bot_family_Rosaceae_aliases">Rose family</string>
+<string name="bot_family_Salicaceae_aliases">Willow family</string>
+<string name="bot_family_Pinaceae_aliases">Pine family; conifers</string>
+<string name="bot_family_Viburnaceae_aliases">Viburnum family; Adoxaceae</string>
+<string name="bot_family_Cornaceae_aliases">Dogwood family</string>
+<string name="bot_family_Celastraceae_aliases">Spindle family</string>
+<string name="bot_family_Aquifoliaceae_aliases">Holly family</string>
+<string name="bot_family_Buxaceae_aliases">Box family</string>
+<string name="bot_family_Fabaceae_aliases">Pea family; legumes; Leguminosae</string>
+<string name="bot_family_Ericaceae_aliases">Heath family</string>
+<string name="bot_family_Asteraceae_aliases">Daisy family; Compositae</string>
+<string name="bot_family_Papaveraceae_aliases">Poppy family</string>
+<string name="bot_family_Ranunculaceae_aliases">Buttercup family</string>
+<string name="bot_family_Primulaceae_aliases">Primrose family</string>
+<string name="bot_family_Plantaginaceae_aliases">Plantain family</string>
+<string name="bot_family_Campanulaceae_aliases">Bellflower family</string>
+<string name="bot_family_Violaceae_aliases">Violet family</string>
+<string name="bot_family_Apiaceae_aliases">Carrot family; umbellifers; Umbelliferae</string>
+<string name="bot_family_Urticaceae_aliases">Nettle family</string>
+<string name="bot_family_Lamiaceae_aliases">Mint family; Labiatae</string>
+<string name="bot_family_Poaceae_aliases">Grass family; grasses; Gramineae</string>
+<string name="bot_family_Ulmaceae" translatable="false">Ulmaceae</string>
+<string name="bot_family_Ulmaceae_aliases">Ulmaceae — elm family</string>
+<string name="bot_family_Ulmaceae_desc">Woody plants with alternate, often unequal-based toothed leaves. Elms have small flowers without petals and flat winged fruits.</string>
+<string name="bot_family_Rhamnaceae" translatable="false">Rhamnaceae</string>
+<string name="bot_family_Rhamnaceae_aliases">Rhamnaceae — buckthorn family</string>
+<string name="bot_family_Rhamnaceae_desc">Mostly woody plants with small four- or five-parted flowers. Buckthorns have fleshy fruits with several stones; leaf arrangement and margins help separate genera.</string>
+<string name="bot_family_Brassicaceae" translatable="false">Brassicaceae</string>
+<string name="bot_family_Brassicaceae_aliases">Brassicaceae — mustard family; Cruciferae</string>
+<string name="bot_family_Brassicaceae_desc">Flowers usually have four cross-arranged petals and six stamens, four long and two short. Fruits are siliques or silicles, with seeds attached along a persistent partition.</string>
+<string name="bot_family_Caryophyllaceae" translatable="false">Caryophyllaceae</string>
+<string name="bot_family_Caryophyllaceae_aliases">Caryophyllaceae — pink family</string>
+<string name="bot_family_Caryophyllaceae_desc">Often opposite, entire leaves with swollen stem nodes. Flowers commonly have five petals, sometimes deeply split. Capsules usually open by teeth or valves.</string>
+<string name="bot_family_Geraniaceae" translatable="false">Geraniaceae</string>
+<string name="bot_family_Geraniaceae_aliases">Geraniaceae — cranesbill family</string>
+<string name="bot_family_Geraniaceae_desc">Flowers usually have five petals; leaves are often palmately divided. The fruit splits into five one-seeded units associated with a long central beak.</string>
+<string name="bot_family_Zygophyllaceae_aliases">Caltrop family</string>
+<string name="bot_family_Zygophyllaceae_desc">Includes dryland plants with varied habits. Balanites has paired leaflets, five-parted flowers and drupes.</string>
+<string name="bot_family_Apocynaceae_aliases">Dogbane milkweed family</string>
+<string name="bot_family_Apocynaceae_desc">Often latex-bearing plants with fused corollas. In Calotropis a five-parted corona surrounds the reproductive column.</string>
+<string name="bot_family_Combretaceae_aliases">Combretum family</string>
+<string name="bot_family_Combretaceae_desc">Mostly woody plants, often with opposite leaves, inferior ovaries and dry fruits, sometimes winged.</string>
+<string name="bot_family_Pedaliaceae_aliases">Sesame family</string>
+<string name="bot_family_Pedaliaceae_desc">Often herbs with tubular, bilaterally symmetrical flowers and dry capsules; seed and fruit structures vary between genera.</string>
+<string name="bot_family_Zygophyllaceae" translatable="false">Zygophyllaceae</string>
+<string name="bot_family_Apocynaceae" translatable="false">Apocynaceae</string>
+<string name="bot_family_Combretaceae" translatable="false">Combretaceae</string>
+<string name="bot_family_Pedaliaceae" translatable="false">Pedaliaceae</string>
+<string name="bot_family_Cupressaceae_desc">Conifers with scale-like, awl-shaped or flat needle-like leaves. Woody cones have scales often shaped like shields; this family includes the two Californian redwoods.</string>
+<string name="bot_family_Cupressaceae_aliases">Cypress family; redwoods; junipers; cedars</string>
+<string name="bot_family_Cupressaceae" translatable="false">Cupressaceae</string>
+<string name="bot_family_Solanaceae" translatable="false">Solanaceae</string>
+<string name="bot_family_Solanaceae_desc">Nightshade family. Leaves are usually alternate and flowers commonly have a fused, five-lobed corolla with five stamens. Fruits include berries and capsules. Solanum often has conspicuous yellow anthers grouped around the style. A potato tuber is a modified stem, not a fruit.</string>
+<string name="bot_family_Solanaceae_aliases">Nightshades · Tomato · Potato · Pepper · Eggplant</string>
+<string name="bot_family_Rubiaceae_aliases">coffee madder bedstraw family</string>
+<string name="bot_family_Rubiaceae_desc">Family including coffee and bedstraw; leaves often opposite with interpetiolar stipules, flowers with fused corollas.</string>
+<string name="bot_family_Rutaceae_aliases">rue citrus family</string>
+<string name="bot_family_Rutaceae_desc">Citrus and rue family; tissues often bear aromatic glands. Hesperidia characterize citrus, not the entire family.</string>
+<string name="bot_family_Rubiaceae" translatable="false">Rubiaceae</string>
+<string name="bot_family_Rutaceae" translatable="false">Rutaceae</string>
+<string name="bot_family_Amaryllidaceae_aliases">amaryllis onion daffodil family</string>
+<string name="bot_family_Amaryllidaceae_desc">Often bulbous monocots, usually with six tepals per flower. Onions and garlic belong to subfamily Allioideae.</string>
+<string name="bot_family_Cucurbitaceae_aliases">gourd melon cucumber family</string>
+<string name="bot_family_Cucurbitaceae_desc">Often tendril-climbing plants with usually unisexual flowers and inferior ovaries; fruits are frequently pepos.</string>
+<string name="bot_family_Amaryllidaceae" translatable="false">Amaryllidaceae</string>
+<string name="bot_family_Cucurbitaceae" translatable="false">Cucurbitaceae</string>
+<string name="bot_family_Theaceae_desc">Tea and camellia family; simple leaves and flowers often bearing numerous stamens.</string>
+<string name="bot_family_Theaceae_aliases">tea family camellia</string>
+<string name="bot_family_Lythraceae_desc">Pomegranate and loosestrife family; flowers have a floral tube, with varied fruits across genera.</string>
+<string name="bot_family_Lythraceae_aliases">loosestrife family pomegranate</string>
+<string name="bot_family_Lauraceae_desc">Laurel and avocado family, often aromatic, with small flowers and fleshy fruits.</string>
+<string name="bot_family_Lauraceae_aliases">laurel family avocado</string>
+<string name="bot_family_Theaceae" translatable="false">Theaceae</string>
+<string name="bot_family_Lythraceae" translatable="false">Lythraceae</string>
+<string name="bot_family_Lauraceae" translatable="false">Lauraceae</string>
+<string name="bot_family_Asphodelaceae_desc">Aloe relatives: some lineages form succulent rosettes; typically six tepals and six stamens.</string>
+<string name="bot_family_Asphodelaceae_aliases">Asphodelaceae</string>
+<string name="bot_family_Asphodelaceae">Asphodelaceae</string>
+<string name="bot_family_Bromeliaceae_desc">Bromeliads: rosette-forming monocots with three sepals, three petals and six stamens; fruits vary.</string>
+<string name="bot_family_Bromeliaceae_aliases">Bromeliaceae</string>
+<string name="bot_family_Bromeliaceae">Bromeliaceae</string>
+<string name="bot_family_Musaceae_desc">Banana relatives: large rhizomatous herbs with sheathing leaves, pseudostems and bracted inflorescences.</string>
+<string name="bot_family_Musaceae_aliases">Musaceae</string>
+<string name="bot_family_Musaceae">Musaceae</string>
+<string name="bot_family_Zingiberaceae_desc">Ginger relatives: aromatic rhizomatous herbs with asymmetric flowers, usually one fertile stamen.</string>
+<string name="bot_family_Zingiberaceae_aliases">Zingiberaceae</string>
+<string name="bot_family_Zingiberaceae">Zingiberaceae</string>
+<string name="bot_family_Arecaceae_desc">Palms: monocots with leaves clustered near the growing tip, often compound; flowers generally organized in threes.</string>
+<string name="bot_family_Arecaceae_aliases">Arecaceae</string>
+<string name="bot_family_Arecaceae">Arecaceae</string>
+<string name="bot_family_Asparagaceae_desc">Diverse monocots including rhizomatous and bulbous plants; six tepals are common but fruits and vegetative forms differ.</string>
+<string name="bot_family_Asparagaceae_aliases">Asparagaceae</string>
+<string name="bot_family_Asparagaceae">Asparagaceae</string>
+<string name="bot_family_Juglandaceae_desc">Walnut relatives: woody plants, usually pinnate leaves and separate male and female flowers, often wind-pollinated.</string>
+<string name="bot_family_Juglandaceae_aliases">Juglandaceae</string>
+<string name="bot_family_Juglandaceae">Juglandaceae</string>
+<string name="bot_family_Moraceae_desc">Fig and mulberry relatives: many have latex and reduced flowers aggregated in specialized inflorescences.</string>
+<string name="bot_family_Moraceae_aliases">Moraceae</string>
+<string name="bot_family_Moraceae">Moraceae</string>
+<string name="bot_family_Grossulariaceae_desc">Currants and gooseberries: shrubs with palmately lobed leaves; berries develop from an inferior ovary.</string>
+<string name="bot_family_Grossulariaceae_aliases">Grossulariaceae</string>
+<string name="bot_family_Grossulariaceae">Grossulariaceae</string>
+<string name="bot_family_Convolvulaceae" translatable="false">Convolvulaceae</string>
+<string name="bot_family_Convolvulaceae_desc">Morning-glories and sweet potatoes: usually alternate leaves and funnel-shaped flowers.</string>
+<string name="bot_family_Convolvulaceae_aliases">Morning-glory family; bindweeds</string>
+<string name="bot_family_Amaranthaceae" translatable="false">Amaranthaceae</string>
+<string name="bot_family_Amaranthaceae_desc">Amaranths, quinoa and beet relatives; many have small flowers in dense clusters.</string>
+<string name="bot_family_Amaranthaceae_aliases">Amaranth family; goosefoots (some former Chenopodiaceae)</string>
+<string name="bot_family_Schisandraceae" translatable="false">Schisandraceae</string>
+<string name="bot_family_Schisandraceae_desc">Mostly woody aromatic plants, including star-anise trees of the genus Illicium.</string>
+<string name="bot_family_Schisandraceae_aliases">Star-vine family</string>
+<string name="bot_family_Ginkgoaceae" translatable="false">Ginkgoaceae</string>
+<string name="bot_family_Ginkgoaceae_desc">An ancient gymnosperm family represented today by the maidenhair tree, Ginkgo biloba.</string>
+<string name="bot_family_Ginkgoaceae_aliases">Ginkgo family; maidenhair-tree family</string>
+<string name="bot_family_Dennstaedtiaceae" translatable="false">Dennstaedtiaceae</string>
+<string name="bot_family_Dennstaedtiaceae_desc">Fern family including bracken; fronds bear sori and reproduce by spores, not seeds.</string>
+<string name="bot_family_Dennstaedtiaceae_aliases">Bracken fern family</string>
+<string name="bot_family_Cannabaceae" translatable="false">Cannabaceae</string>
+<string name="bot_family_Cannabaceae_desc">Family including hemp and hops; flowers are small and leaves may be palmately divided.</string>
+<string name="bot_family_Cannabaceae_aliases">Hemp family</string>
+<string name="bot_family_Caricaceae" translatable="false">Caricaceae</string>
+<string name="bot_family_Caricaceae_desc">Tropical family of papaya trees with large lobed leaves and fleshy berries.</string>
+<string name="bot_family_Caricaceae_aliases">Papaya family</string>
+<string name="bot_family_Anacardiaceae" translatable="false">Anacardiaceae</string>
+<string name="bot_family_Anacardiaceae_desc">Cashew family; often trees or shrubs with small flowers and varied fleshy or dry fruits.</string>
+<string name="bot_family_Anacardiaceae_aliases">Cashew family; sumac family</string>
+<string name="bot_family_Araceae" translatable="false">Araceae</string>
+<string name="bot_family_Araceae_desc">Aroids: tiny flowers sit on a fleshy spadix, often partly enclosed by a showy spathe.</string>
+<string name="bot_family_Araceae_aliases">Arum family; aroid family</string>
+<string name="bot_family_Actinidiaceae" translatable="false">Actinidiaceae</string>
+<string name="bot_family_Actinidiaceae_desc">A family of woody climbers and small trees, best known for the kiwifruit genus Actinidia.</string>
+<string name="bot_family_Actinidiaceae_aliases">Actinidia family</string>
+<string name="bot_family_Alismataceae" translatable="false">Alismataceae</string>
+<string name="bot_family_Alismataceae_desc">A family of mostly aquatic plants with small flowers and whorls of separate achenes.</string>
+<string name="bot_family_Alismataceae_aliases">Water-plantain family</string>
+<string name="bot_family_Crassulaceae">Crassulaceae</string>
+<string name="bot_family_Crassulaceae_desc">Succulent family with water-storing leaves, often arranged in rosettes; flowers are commonly five-parted.</string>
+<string name="bot_family_Crassulaceae_aliases">Stonecrop family</string>
+<string name="bot_family_Plumbaginaceae">Plumbaginaceae</string>
+<string name="bot_family_Plumbaginaceae_desc">Coastal and dryland family that includes sea thrift, with small flowers often grouped in compact heads.</string>
+<string name="bot_family_Plumbaginaceae_aliases">Leadwort family; sea-lavender family</string>
+<string name="bot_family_Lecythidaceae">Lecythidaceae</string>
+<string name="bot_family_Lecythidaceae_desc">Mostly tropical trees and shrubs; many bear woody capsules, and the family includes the Brazil nut tree.</string>
+<string name="bot_family_Lecythidaceae_aliases">Brazil nut family</string>
+<string name="bot_family_Droseraceae">Droseraceae</string>
+<string name="bot_family_Droseraceae_desc">Carnivorous herbs with glandular leaves that trap small animals; sundews often form basal rosettes.</string>
+<string name="bot_family_Droseraceae_aliases">Sundew family</string>
+<string name="bot_family_Araucariaceae">Araucariaceae</string>
+<string name="bot_family_Araucariaceae_desc">Ancient conifer family with large trees, broad leathery leaves and cone-bearing reproductive shoots.</string>
+<string name="bot_family_Araucariaceae_aliases">Araucaria family</string>
+<string name="bot_family_Orchidaceae" translatable="false">Orchidaceae</string>
+<string name="bot_family_Orchidaceae_desc">Orchid family: flowers have a distinctive lip and column, and many species grow as epiphytes.</string>
+<string name="bot_family_Orchidaceae_aliases">Orchid family</string>
+<string name="bot_family_Araliaceae" translatable="false">Araliaceae</string>
+<string name="bot_family_Araliaceae_desc">Ivy family: often woody plants with alternate leaves and small flowers grouped in umbels or heads; fruits are commonly berries.</string>
+<string name="bot_family_Araliaceae_aliases">Ivy family; ginseng family</string>
+<string name="bot_family_Boraginaceae" translatable="false">Boraginaceae</string>
+<string name="bot_family_Boraginaceae_desc">Borage family: usually rough-haired plants with alternate leaves and often blue, tubular flowers whose lobes and throat scales help distinguish genera.</string>
+<string name="bot_family_Boraginaceae_aliases">Borage family; forget-me-not family</string>
+<string name="bot_family_Aristolochiaceae" translatable="false">Aristolochiaceae</string>
+<string name="bot_family_Aristolochiaceae_desc">Birthwort family: often rhizomatous herbs or climbers; many have distinctive tubular or three-lobed flowers. Some lineages contain toxic aristolochic acids.</string>
+<string name="bot_family_Aristolochiaceae_aliases">Birthwort family; pipevine family</string>
+<string name="bot_family_Cactaceae" translatable="false">Cactaceae</string>
+<string name="bot_family_Cactaceae_desc">Cactus family: succulent stems store water and carry areoles, the specialized structures from which spines, flowers and branches arise; true leaves are commonly reduced or absent.</string>
+<string name="bot_family_Cactaceae_aliases">Cactus family; cacti</string>
+<string name="bot_family_Saxifragaceae" translatable="false">Saxifragaceae</string>
+<string name="bot_family_Saxifragaceae_desc">A family largely of herbs from cool or mountainous habitats; flowers commonly have five parts and fruits are often capsules.</string>
+<string name="bot_family_Saxifragaceae_aliases">Saxifrage family</string>
+<string name="bot_family_Amblystegiaceae" translatable="false">Amblystegiaceae</string>
+<string name="bot_family_Amblystegiaceae_desc">A family of pleurocarpous mosses, often creeping on damp substrates; capsules are borne on setae.</string>
+<string name="bot_family_Amblystegiaceae_aliases">Amblystegium moss family</string>
+<string name="bot_family_Scrophulariaceae" translatable="false">Scrophulariaceae</string>
+<string name="bot_family_Scrophulariaceae_desc">A family of flowering plants including herbs and woody species; flowers are often bilabiate or nearly regular, and fruits commonly capsules.</string>
+<string name="bot_family_Scrophulariaceae_aliases">Figwort family</string>
+<string name="bot_family_Koeberliniaceae" translatable="false">Koeberliniaceae</string>
+<string name="bot_family_Koeberliniaceae_desc">A small monotypic family of desert woody plants, represented by Koeberlinia; green thorn-tipped shoots bear minute leaves and small dark fruits.</string>
+<string name="bot_family_Koeberliniaceae_aliases">Allthorn family</string>
+<string name="bot_family_Passifloraceae">Passionflower family</string>
+<string name="bot_family_Passifloraceae_desc">Mostly climbing plants with tendrils, alternate leaves, and distinctive flowers bearing a corona; fruits are usually berries with arillate seeds.</string>
+<string name="bot_family_Passifloraceae_aliases">Passionflower family</string>
+<string name="bot_family_Ochnaceae">Ochnaceae</string>
+<string name="bot_family_Ochnaceae_desc">Mostly tropical woody plants; many have simple leathery leaves and regular flowers with numerous stamens. In Lophira the fruit is a nut with enlarged wing-like sepals.</string>
+<string name="bot_family_Ochnaceae_aliases">Ochnaceae</string>
+<string name="bot_family_Clusiaceae">Clusiaceae</string>
+<string name="bot_family_Clusiaceae_desc">Tropical family of woody or herbaceous plants, often with latex or resins; flowers and berries vary among genera.</string>
+<string name="bot_family_Clusiaceae_aliases">Clusiaceae</string>
+<string name="bot_family_Burmanniaceae">Burmanniaceae</string>
+<string name="bot_family_Burmanniaceae_desc">Family of small forest monocots, often mycoheterotrophic and lacking chlorophyll.</string>
+<string name="bot_family_Burmanniaceae_aliases">Burmanniaceae</string>
+<string name="bot_family_Plocospermataceae">Plocospermataceae</string>
+<string name="bot_family_Plocospermataceae_desc">Small tropical woody family represented by Plocosperma, with tubular flowers and capsules.</string>
+<string name="bot_family_Plocospermataceae_aliases">Plocospermataceae</string>
+<string name="bot_family_Setchellanthaceae">Setchellanthaceae</string>
+<string name="bot_family_Setchellanthaceae_desc">Monotypic family of aromatic shrubs from dry regions of Mexico.</string>
+<string name="bot_family_Setchellanthaceae_aliases">Setchellanthaceae</string>
+<string name="bot_family_Retziaceae">Retziaceae</string>
+<string name="bot_family_Retziaceae_desc">Monotypic family of South African fynbos, known for its colorful tubular flowers.</string>
+<string name="bot_family_Retziaceae_aliases">Retziaceae</string>
+<string name="bot_family_Rhoipteleaceae">Rhoipteleaceae</string>
+<string name="bot_family_Rhoipteleaceae_desc">Monotypic family of large East Asian trees with pinnate leaves and winged fruits.</string>
+<string name="bot_family_Rhoipteleaceae_aliases">Rhoipteleaceae</string>
+</resources>

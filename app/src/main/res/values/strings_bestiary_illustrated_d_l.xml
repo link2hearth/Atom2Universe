@@ -1,0 +1,369 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+<string name="animal_illustrated_greater_scaup_name" formatted="false">Greater Scaup</string>
+<string name="animal_illustrated_greater_scaup_latin" formatted="false">Aythya marila</string>
+<string name="animal_illustrated_long_tailed_duck_name" formatted="false">Long-tailed Duck</string>
+<string name="animal_illustrated_long_tailed_duck_latin" formatted="false">Clangula hyemalis</string>
+<string name="animal_illustrated_gryllus_campestris_name" formatted="false">Field Cricket</string>
+<string name="animal_illustrated_gryllus_campestris_latin" formatted="false">Gryllus campestris</string>
+<string name="animal_illustrated_galerida_cristata_name" formatted="false">Crested Lark</string>
+<string name="animal_illustrated_galerida_cristata_latin" formatted="false">Galerida cristata</string>
+<string name="animal_illustrated_gavia_stellata_name" formatted="false">Red-throated Diver</string>
+<string name="animal_illustrated_gavia_stellata_latin" formatted="false">Gavia stellata</string>
+<string name="animal_illustrated_lullula_arborea_name" formatted="false">Woodlark</string>
+<string name="animal_illustrated_lullula_arborea_latin" formatted="false">Lullula arborea</string>
+<string name="animal_illustrated_lepisma_saccharina_name" formatted="false">Silverfish</string>
+<string name="animal_illustrated_lepisma_saccharina_latin" formatted="false">Lepisma saccharina</string>
+<string name="animal_illustrated_latrodectus_hasselti_name" formatted="false">Redback spider</string>
+<string name="animal_illustrated_latrodectus_hasselti_latin" formatted="false">Latrodectus hasselti</string>
+<string name="animal_illustrated_iphiclides_podalirius_name" formatted="false">Scarce Swallowtail</string>
+<string name="animal_illustrated_iphiclides_podalirius_latin" formatted="false">Iphiclides podalirius</string>
+<string name="animal_illustrated_elysia_chlorotica_name" formatted="false">Eastern emerald elysia</string>
+<string name="animal_illustrated_elysia_chlorotica_latin" formatted="false">Elysia chlorotica</string>
+<string name="animal_illustrated_dicrurus_macrocercus_name" formatted="false">Black Drongo</string>
+<string name="animal_illustrated_dicrurus_macrocercus_latin" formatted="false">Dicrurus macrocercus</string>
+<string name="animal_illustrated_hydrophasianus_chirurgus_name" formatted="false">Pheasant-tailed Jacana</string>
+<string name="animal_illustrated_hydrophasianus_chirurgus_latin" formatted="false">Hydrophasianus chirurgus</string>
+<string name="animal_illustrated_larus_hyperboreus_name" formatted="false">Glaucous Gull</string>
+<string name="animal_illustrated_larus_hyperboreus_latin" formatted="false">Larus hyperboreus</string>
+<string name="animal_illustrated_larus_canus_name" formatted="false">Common Gull</string>
+<string name="animal_illustrated_larus_canus_latin" formatted="false">Larus canus</string>
+<string name="animal_illustrated_hetaerina_americana_name" formatted="false">American Rubyspot</string>
+<string name="animal_illustrated_hetaerina_americana_latin" formatted="false">Hetaerina americana</string>
+<string name="animal_illustrated_hylotrupes_bajulus_name" formatted="false">Old-house borer</string>
+<string name="animal_illustrated_hylotrupes_bajulus_latin" formatted="false">Hylotrupes bajulus</string>
+<string name="animal_illustrated_henosepilachna_argus_name" formatted="false">Bryony Ladybird</string>
+<string name="animal_illustrated_henosepilachna_argus_latin" formatted="false">Henosepilachna argus</string>
+<string name="animal_illustrated_falco_biarmicus_name" formatted="false">Lanner Falcon</string>
+<string name="animal_illustrated_falco_biarmicus_latin" formatted="false">Falco biarmicus</string>
+<string name="animal_illustrated_hydroprogne_caspia_name" formatted="false">Caspian Tern</string>
+<string name="animal_illustrated_hydroprogne_caspia_latin" formatted="false">Hydroprogne caspia</string>
+<string name="animal_illustrated_limosa_lapponica_name" formatted="false">Bar-tailed Godwit</string>
+<string name="animal_illustrated_limosa_lapponica_latin" formatted="false">Limosa lapponica</string>
+<string name="animal_illustrated_libellula_forensis_name" formatted="false">Eight-spotted Skimmer</string>
+<string name="animal_illustrated_libellula_forensis_latin" formatted="false">Libellula forensis</string>
+<string name="animal_illustrated_euproctis_similis_name" formatted="false">yellow-tail</string>
+<string name="animal_illustrated_euproctis_similis_latin" formatted="false">Euproctis similis</string>
+<string name="animal_illustrated_larus_fuscus_name" formatted="false">Lesser Black-backed Gull</string>
+<string name="animal_illustrated_larus_fuscus_latin" formatted="false">Larus fuscus</string>
+<string name="animal_illustrated_ictiobus_cyprinellus_name" formatted="false">Bigmouth Buffalo</string>
+<string name="animal_illustrated_ictiobus_cyprinellus_latin" formatted="false">Ictiobus cyprinellus</string>
+<string name="animal_illustrated_erythemis_vesiculosa_name" formatted="false">Great Pondhawk</string>
+<string name="animal_illustrated_erythemis_vesiculosa_latin" formatted="false">Erythemis vesiculosa</string>
+<string name="animal_illustrated_dinopium_javanense_name" formatted="false">Common Flameback</string>
+<string name="animal_illustrated_dinopium_javanense_latin" formatted="false">Dinopium javanense</string>
+<string name="animal_illustrated_gelochelidon_nilotica_name" formatted="false">Gull-billed Tern</string>
+<string name="animal_illustrated_gelochelidon_nilotica_latin" formatted="false">Gelochelidon nilotica</string>
+<string name="animal_illustrated_dallia_pectoralis_name" formatted="false">Alaska blackfish</string>
+<string name="animal_illustrated_dallia_pectoralis_latin" formatted="false">Dallia pectoralis</string>
+<string name="animal_illustrated_deltote_uncula_name" formatted="false">Silver Hook Moth</string>
+<string name="animal_illustrated_deltote_uncula_latin" formatted="false">Deltote uncula</string>
+<string name="animal_illustrated_libellula_luctuosa_name" formatted="false">Widow Skimmer</string>
+<string name="animal_illustrated_libellula_luctuosa_latin" formatted="false">Libellula luctuosa</string>
+<string name="animal_illustrated_dasyurus_spartacus_name" formatted="false">Bronze quoll</string>
+<string name="animal_illustrated_dasyurus_spartacus_latin" formatted="false">Dasyurus spartacus</string>
+<string name="animal_illustrated_ia_io_name" formatted="false">Great evening bat</string>
+<string name="animal_illustrated_ia_io_latin" formatted="false">Ia io</string>
+<string name="animal_illustrated_liomys_adspersus_name" formatted="false">Panamanian spiny pocket mouse</string>
+<string name="animal_illustrated_liomys_adspersus_latin" formatted="false">Liomys adspersus</string>
+<string name="animal_illustrated_homo_sapiens_name" formatted="false">Human</string>
+<string name="animal_illustrated_homo_sapiens_latin" formatted="false">Homo sapiens</string>
+<string name="animal_illustrated_hyladelphys_kalinowskii_name" formatted="false">Kalinowski’s mouse opossum</string>
+<string name="animal_illustrated_hyladelphys_kalinowskii_latin" formatted="false">Hyladelphys kalinowskii</string>
+<string name="animal_illustrated_lepilemur_milanoii_name" formatted="false">Daraina sportive lemur</string>
+<string name="animal_illustrated_lepilemur_milanoii_latin" formatted="false">Lepilemur milanoii</string>
+<string name="animal_illustrated_eidolon_dupreanum_name" formatted="false">Roussette paillée malgache</string>
+<string name="animal_illustrated_eidolon_dupreanum_latin" formatted="false">Eidolon dupreanum</string>
+<string name="animal_illustrated_eurycea_nana_name" formatted="false">San Marcos Salamander</string>
+<string name="animal_illustrated_eurycea_nana_latin" formatted="false">Eurycea nana</string>
+<string name="animal_illustrated_halcyon_cyanoventris_name" formatted="false">Javan Kingfisher</string>
+<string name="animal_illustrated_halcyon_cyanoventris_latin" formatted="false">Halcyon cyanoventris</string>
+<string name="animal_illustrated_empusa_pennata_name" formatted="false">Conehead mantis</string>
+<string name="animal_illustrated_empusa_pennata_latin" formatted="false">Empusa pennata</string>
+<string name="animal_illustrated_gerris_lacustris_name" formatted="false">Common pond skater</string>
+<string name="animal_illustrated_gerris_lacustris_latin" formatted="false">Gerris lacustris</string>
+<string name="animal_illustrated_elops_lacerta_name" formatted="false">West African ladyfish</string>
+<string name="animal_illustrated_elops_lacerta_latin" formatted="false">Elops lacerta</string>
+<string name="animal_illustrated_elops_senegalensis_name" formatted="false">Senegalese ladyfish</string>
+<string name="animal_illustrated_elops_senegalensis_latin" formatted="false">Elops senegalensis</string>
+<string name="animal_illustrated_labeo_altivelis_name" formatted="false">Manyame labeo</string>
+<string name="animal_illustrated_labeo_altivelis_latin" formatted="false">Labeo altivelis</string>
+<string name="animal_illustrated_lethrinus_atlanticus_name" formatted="false">Atlantic emperor</string>
+<string name="animal_illustrated_lethrinus_atlanticus_latin" formatted="false">Lethrinus atlanticus</string>
+<string name="animal_illustrated_lethrinus_laticaudis_name" formatted="false">grass emperor</string>
+<string name="animal_illustrated_lethrinus_laticaudis_latin" formatted="false">Lethrinus laticaudis</string>
+<string name="animal_illustrated_hirundapus_caudacutus_name" formatted="false">White-throated Needletail</string>
+<string name="animal_illustrated_hirundapus_caudacutus_latin" formatted="false">Hirundapus caudacutus</string>
+<string name="animal_illustrated_lagopus_leucura_name" formatted="false">White-tailed Ptarmigan</string>
+<string name="animal_illustrated_lagopus_leucura_latin" formatted="false">Lagopus leucura</string>
+<string name="animal_illustrated_latrodectus_geometricus_name" formatted="false">Brown widow spider</string>
+<string name="animal_illustrated_latrodectus_geometricus_latin" formatted="false">Latrodectus geometricus</string>
+<string name="animal_illustrated_furcifer_lateralis_name" formatted="false">Carpet Chameleon</string>
+<string name="animal_illustrated_furcifer_lateralis_latin" formatted="false">Furcifer lateralis</string>
+<string name="animal_illustrated_ixoreus_naevius_name" formatted="false">Varied Thrush</string>
+<string name="animal_illustrated_ixoreus_naevius_latin" formatted="false">Ixoreus naevius</string>
+<string name="animal_illustrated_lonchura_punctulata_name" formatted="false">Scaly-breasted Munia</string>
+<string name="animal_illustrated_lonchura_punctulata_latin" formatted="false">Lonchura punctulata</string>
+<string name="animal_illustrated_ixobrychus_minutus_name" formatted="false">Little Bittern</string>
+<string name="animal_illustrated_ixobrychus_minutus_latin" formatted="false">Ixobrychus minutus</string>
+<string name="animal_illustrated_lymnocryptes_minimus_name" formatted="false">Jack Snipe</string>
+<string name="animal_illustrated_lymnocryptes_minimus_latin" formatted="false">Lymnocryptes minimus</string>
+<string name="animal_illustrated_falcipennis_canadensis_name" formatted="false">Spruce Grouse</string>
+<string name="animal_illustrated_falcipennis_canadensis_latin" formatted="false">Falcipennis canadensis</string>
+<string name="animal_illustrated_leiothrix_argentauris_name" formatted="false">Silver-eared Mesia</string>
+<string name="animal_illustrated_leiothrix_argentauris_latin" formatted="false">Leiothrix argentauris</string>
+<string name="animal_illustrated_hemiprocne_longipennis_name" formatted="false">Gray-rumped Treeswift</string>
+<string name="animal_illustrated_hemiprocne_longipennis_latin" formatted="false">Hemiprocne longipennis</string>
+<string name="animal_illustrated_eumorpha_labruscae_name" formatted="false">Gaudy sphinx</string>
+<string name="animal_illustrated_eumorpha_labruscae_latin" formatted="false">Eumorpha labruscae</string>
+<string name="animal_illustrated_eumorpha_fasciatus_name" formatted="false">Banded sphinx</string>
+<string name="animal_illustrated_eumorpha_fasciatus_latin" formatted="false">Eumorpha fasciatus</string>
+<string name="animal_illustrated_geotrupes_stercorarius_name" formatted="false">Common dor beetle</string>
+<string name="animal_illustrated_geotrupes_stercorarius_latin" formatted="false">Geotrupes stercorarius</string>
+<string name="animal_illustrated_hyla_molleri_name" formatted="false">Iberian tree frog</string>
+<string name="animal_illustrated_hyla_molleri_latin" formatted="false">Hyla molleri</string>
+<string name="animal_illustrated_haplopelma_lividum_name" formatted="false">Cobalt blue tarantula</string>
+<string name="animal_illustrated_haplopelma_lividum_latin" formatted="false">Haplopelma lividum</string>
+<string name="animal_illustrated_evarcha_falcata_name" formatted="false">Common jumping spider</string>
+<string name="animal_illustrated_evarcha_falcata_latin" formatted="false">Evarcha falcata</string>
+<string name="animal_illustrated_latrodectus_katipo_name" formatted="false">Katipo</string>
+<string name="animal_illustrated_latrodectus_katipo_latin" formatted="false">Latrodectus katipo</string>
+<string name="animal_illustrated_latrodectus_variolus_name" formatted="false">Northern black widow</string>
+<string name="animal_illustrated_latrodectus_variolus_latin" formatted="false">Latrodectus variolus</string>
+<string name="animal_illustrated_ero_aphana_name" formatted="false">Four-humped pirate spider</string>
+<string name="animal_illustrated_ero_aphana_latin" formatted="false">Ero aphana</string>
+<string name="animal_illustrated_laetacara_curviceps_name" formatted="false">Dwarf flag cichlid</string>
+<string name="animal_illustrated_laetacara_curviceps_latin" formatted="false">Laetacara curviceps</string>
+<string name="animal_illustrated_dicrossus_maculatus_name" formatted="false">Spadetail checkerboard cichlid</string>
+<string name="animal_illustrated_dicrossus_maculatus_latin" formatted="false">Dicrossus maculatus</string>
+<string name="animal_illustrated_esox_americanus_name" formatted="false">Redfin pickerel</string>
+<string name="animal_illustrated_esox_americanus_latin" formatted="false">Esox americanus</string>
+<string name="animal_illustrated_galeus_melastomus_name" formatted="false">Blackmouth catshark</string>
+<string name="animal_illustrated_galeus_melastomus_latin" formatted="false">Galeus melastomus</string>
+<string name="animal_illustrated_didunculus_strigirostris_name" formatted="false">Tooth-billed pigeon</string>
+<string name="animal_illustrated_didunculus_strigirostris_latin" formatted="false">Didunculus strigirostris</string>
+<string name="animal_illustrated_hampala_macrolepidota_name" formatted="false">Hampala barb</string>
+<string name="animal_illustrated_hampala_macrolepidota_latin" formatted="false">Hampala macrolepidota</string>
+<string name="animal_illustrated_hydra_vulgaris_name" formatted="false">Common hydra</string>
+<string name="animal_illustrated_hydra_vulgaris_latin" formatted="false">Hydra vulgaris</string>
+<string name="animal_illustrated_libellula_incesta_name" formatted="false">Slaty skimmer</string>
+<string name="animal_illustrated_libellula_incesta_latin" formatted="false">Libellula incesta</string>
+<string name="animal_illustrated_libellula_axilena_name" formatted="false">Bar-winged skimmer</string>
+<string name="animal_illustrated_libellula_axilena_latin" formatted="false">Libellula axilena</string>
+<string name="animal_illustrated_enallagma_signatum_name" formatted="false">Orange bluet</string>
+<string name="animal_illustrated_enallagma_signatum_latin" formatted="false">Enallagma signatum</string>
+<string name="animal_illustrated_euleia_heraclei_name" formatted="false">Celery fly</string>
+<string name="animal_illustrated_euleia_heraclei_latin" formatted="false">Euleia heraclei</string>
+<string name="animal_illustrated_limonia_nubeculosa_name" formatted="false">Clouded crane fly</string>
+<string name="animal_illustrated_limonia_nubeculosa_latin" formatted="false">Limonia nubeculosa</string>
+<string name="animal_illustrated_elops_machnata_name" formatted="false">Tenpounder</string>
+<string name="animal_illustrated_elops_machnata_latin" formatted="false">Elops machnata</string>
+<string name="animal_illustrated_lethrinus_erythracanthus_name" formatted="false">Orange-spotted emperor</string>
+<string name="animal_illustrated_lethrinus_erythracanthus_latin" formatted="false">Lethrinus erythracanthus</string>
+<string name="animal_illustrated_dasyatis_brevicaudata_name" formatted="false">Short-tail stingray</string>
+<string name="animal_illustrated_dasyatis_brevicaudata_latin" formatted="false">Dasyatis brevicaudata</string>
+<string name="animal_illustrated_lasioderma_serricorne_name" formatted="false">Cigarette beetle</string>
+<string name="animal_illustrated_lasioderma_serricorne_latin" formatted="false">Lasioderma serricorne</string>
+<string name="animal_illustrated_lobophora_halterata_name" formatted="false">Seraphim</string>
+<string name="animal_illustrated_lobophora_halterata_latin" formatted="false">Lobophora halterata</string>
+<string name="animal_illustrated_hypsopygia_glaucinalis_name" formatted="false">Double-striped Tabby</string>
+<string name="animal_illustrated_hypsopygia_glaucinalis_latin" formatted="false">Hypsopygia glaucinalis</string>
+<string name="animal_illustrated_evergestis_pallidata_name" formatted="false">Straw-barred Pearl</string>
+<string name="animal_illustrated_evergestis_pallidata_latin" formatted="false">Evergestis pallidata</string>
+<string name="animal_illustrated_luciobarbus_bocagei_name" formatted="false">Iberian barbel</string>
+<string name="animal_illustrated_luciobarbus_bocagei_latin" formatted="false">Luciobarbus bocagei</string>
+<string name="animal_illustrated_ecnomiohyla_rabborum_name" formatted="false">Rabbs\' fringe-limbed treefrog</string>
+<string name="animal_illustrated_ecnomiohyla_rabborum_latin" formatted="false">Ecnomiohyla rabborum</string>
+<string name="animal_illustrated_gymnogeophagus_labiatus_name" formatted="false">Thick-lipped eartheater</string>
+<string name="animal_illustrated_gymnogeophagus_labiatus_latin" formatted="false">Gymnogeophagus labiatus</string>
+<string name="animal_illustrated_geophagus_taeniopareius_name" formatted="false">Cheek-striped eartheater</string>
+<string name="animal_illustrated_geophagus_taeniopareius_latin" formatted="false">Geophagus taeniopareius</string>
+<string name="animal_illustrated_geophagus_pellegrini_name" formatted="false">Yellowhump eartheater</string>
+<string name="animal_illustrated_geophagus_pellegrini_latin" formatted="false">Geophagus pellegrini</string>
+<string name="animal_illustrated_dendrocopos_macei_name" formatted="false">Fulvous-breasted woodpecker</string>
+<string name="animal_illustrated_dendrocopos_macei_latin" formatted="false">Dendrocopos macei</string>
+<string name="animal_illustrated_dendrocopos_moluccensis_name" formatted="false">Sunda pygmy woodpecker</string>
+<string name="animal_illustrated_dendrocopos_moluccensis_latin" formatted="false">Dendrocopos moluccensis</string>
+<string name="animal_illustrated_garrulax_rufifrons_name" formatted="false">Rufous-fronted laughingthrush</string>
+<string name="animal_illustrated_garrulax_rufifrons_latin" formatted="false">Garrulax rufifrons</string>
+<string name="animal_illustrated_ingerophrynus_gollum_name" formatted="false">Gollum\'s toad</string>
+<string name="animal_illustrated_ingerophrynus_gollum_latin" formatted="false">Ingerophrynus gollum</string>
+<string name="animal_illustrated_hypomecis_roboraria_name" formatted="false">Hypomecis roboraria</string>
+<string name="animal_illustrated_hypomecis_roboraria_latin" formatted="false">Hypomecis roboraria</string>
+<string name="animal_illustrated_deileptenia_ribeata_name" formatted="false">Deileptenia ribeata</string>
+<string name="animal_illustrated_deileptenia_ribeata_latin" formatted="false">Deileptenia ribeata</string>
+<string name="animal_illustrated_isturgia_limbaria_name" formatted="false">Isturgia limbaria</string>
+<string name="animal_illustrated_isturgia_limbaria_latin" formatted="false">Isturgia limbaria</string>
+<string name="animal_illustrated_hedya_salicella_name" formatted="false">Hedya salicella</string>
+<string name="animal_illustrated_hedya_salicella_latin" formatted="false">Hedya salicella</string>
+<string name="animal_illustrated_gymnocranius_audleyi_name" formatted="false">Collared large-eye bream</string>
+<string name="animal_illustrated_gymnocranius_audleyi_latin" formatted="false">Gymnocranius audleyi</string>
+<string name="animal_illustrated_euclichthys_polynemus_name" formatted="false">Eucla cod</string>
+<string name="animal_illustrated_euclichthys_polynemus_latin" formatted="false">Euclichthys polynemus</string>
+<string name="animal_illustrated_etmopterus_baxteri_name" formatted="false">Baxter\'s lanternshark</string>
+<string name="animal_illustrated_etmopterus_baxteri_latin" formatted="false">Etmopterus baxteri</string>
+<string name="animal_illustrated_frankliniella_occidentalis_name" formatted="false">Western flower thrips</string>
+<string name="animal_illustrated_frankliniella_occidentalis_latin" formatted="false">Frankliniella occidentalis</string>
+<string name="animal_illustrated_limnognathia_maerski_name" formatted="false">Micro-jaw animal</string>
+<string name="animal_illustrated_limnognathia_maerski_latin" formatted="false">Limnognathia maerski</string>
+<string name="animal_illustrated_dicrocoelium_dendriticum_name" formatted="false">Lancet liver fluke</string>
+<string name="animal_illustrated_dicrocoelium_dendriticum_latin" formatted="false">Dicrocoelium dendriticum</string>
+<string name="animal_illustrated_giraffa_camelopardalis_name" formatted="false">Northern giraffe</string>
+<string name="animal_illustrated_giraffa_camelopardalis_latin" formatted="false">Giraffa camelopardalis</string>
+<string name="animal_illustrated_hydrochoerus_hydrochaeris_name" formatted="false">Capybara</string>
+<string name="animal_illustrated_hydrochoerus_hydrochaeris_latin" formatted="false">Hydrochoerus hydrochaeris</string>
+<string name="animal_illustrated_dasypus_novemcinctus_name" formatted="false">Nine-banded armadillo</string>
+<string name="animal_illustrated_dasypus_novemcinctus_latin" formatted="false">Dasypus novemcinctus</string>
+<string name="animal_illustrated_dipylidium_caninum_name" formatted="false">Flea tapeworm</string>
+<string name="animal_illustrated_dipylidium_caninum_latin" formatted="false">Dipylidium caninum</string>
+<string name="animal_illustrated_icosteus_aenigmaticus_name" formatted="false">Ragfish</string>
+<string name="animal_illustrated_icosteus_aenigmaticus_latin" formatted="false">Icosteus aenigmaticus</string>
+<string name="animal_illustrated_dermacentor_marginatus_name" formatted="false">Ornate sheep tick</string>
+<string name="animal_illustrated_dermacentor_marginatus_latin" formatted="false">Dermacentor marginatus</string>
+<string name="animal_illustrated_hyperprosopon_argenteum_name" formatted="false">Walleye surfperch</string>
+<string name="animal_illustrated_hyperprosopon_argenteum_latin" formatted="false">Hyperprosopon argenteum</string>
+<string name="animal_illustrated_lethrinus_obsoletus_name" formatted="false">Orange-striped emperor</string>
+<string name="animal_illustrated_lethrinus_obsoletus_latin" formatted="false">Lethrinus obsoletus</string>
+<string name="animal_illustrated_lethrinus_reticulatus_name" formatted="false">Red snout emperor</string>
+<string name="animal_illustrated_lethrinus_reticulatus_latin" formatted="false">Lethrinus reticulatus</string>
+<string name="animal_illustrated_idaea_emarginata_name" formatted="false">Small scallop</string>
+<string name="animal_illustrated_idaea_emarginata_latin" formatted="false">Idaea emarginata</string>
+<string name="animal_illustrated_lethrinus_microdon_name" formatted="false">Smalltooth emperor</string>
+<string name="animal_illustrated_lethrinus_microdon_latin" formatted="false">Lethrinus microdon</string>
+<string name="animal_illustrated_lethrinus_borbonicus_name" formatted="false">Snubnose emperor</string>
+<string name="animal_illustrated_lethrinus_borbonicus_latin" formatted="false">Lethrinus borbonicus</string>
+<string name="animal_illustrated_lethrinus_crocineus_name" formatted="false">Yellowtail emperor</string>
+<string name="animal_illustrated_lethrinus_crocineus_latin" formatted="false">Lethrinus crocineus</string>
+<string name="animal_illustrated_lethrinus_enigmaticus_name" formatted="false">Blackeye emperor</string>
+<string name="animal_illustrated_lethrinus_enigmaticus_latin" formatted="false">Lethrinus enigmaticus</string>
+<string name="animal_illustrated_gymnocranius_frenatus_name" formatted="false">Yellowsnout large-eye bream</string>
+<string name="animal_illustrated_gymnocranius_frenatus_latin" formatted="false">Gymnocranius frenatus</string>
+<string name="animal_illustrated_hypsurus_caryi_name" formatted="false">Rainbow seaperch</string>
+<string name="animal_illustrated_hypsurus_caryi_latin" formatted="false">Hypsurus caryi</string>
+<string name="animal_illustrated_hydrophis_viperinus_name" formatted="false">Hydrophis viperinus</string>
+<string name="animal_illustrated_hydrophis_viperinus_latin" formatted="false">Hydrophis viperinus</string>
+<string name="animal_illustrated_dolba_hyloeus_name" formatted="false">Pawpaw sphinx</string>
+<string name="animal_illustrated_dolba_hyloeus_latin" formatted="false">Dolba hyloeus</string>
+<string name="animal_illustrated_eupackardia_calleta_name" formatted="false">Calleta silkmoth</string>
+<string name="animal_illustrated_eupackardia_calleta_latin" formatted="false">Eupackardia calleta</string>
+<string name="animal_illustrated_lacantunia_enigmatica_name" formatted="false">Chiapas catfish</string>
+<string name="animal_illustrated_lacantunia_enigmatica_latin" formatted="false">Lacantunia enigmatica</string>
+<string name="animal_illustrated_lintneria_separatus_name" formatted="false">Separated sphinx</string>
+<string name="animal_illustrated_lintneria_separatus_latin" formatted="false">Lintneria separatus</string>
+<string name="animal_illustrated_eumorpha_anchemolus_name" formatted="false">Anchemola sphinx</string>
+<string name="animal_illustrated_eumorpha_anchemolus_latin" formatted="false">Eumorpha anchemolus</string>
+<string name="animal_illustrated_dorcadion_scopolii_name" formatted="false">Dorcadion scopolii</string>
+<string name="animal_illustrated_dorcadion_scopolii_latin" formatted="false">Dorcadion scopolii</string>
+<string name="animal_illustrated_enallagma_annexum_name" formatted="false">Enallagma annexum</string>
+<string name="animal_illustrated_enallagma_annexum_latin" formatted="false">Enallagma annexum</string>
+<string name="animal_illustrated_diachrysia_zosimi_name" formatted="false">Diachrysia zosimi</string>
+<string name="animal_illustrated_diachrysia_zosimi_latin" formatted="false">Diachrysia zosimi</string>
+<string name="animal_illustrated_eucrostes_indigenata_name" formatted="false">Eucrostes indigenata</string>
+<string name="animal_illustrated_eucrostes_indigenata_latin" formatted="false">Eucrostes indigenata</string>
+<string name="animal_illustrated_enallagma_carunculatum_name" formatted="false">Tule bluet</string>
+<string name="animal_illustrated_enallagma_carunculatum_latin" formatted="false">Enallagma carunculatum</string>
+<string name="animal_illustrated_dasyatis_izuensis_name" formatted="false">Izu stingray</string>
+<string name="animal_illustrated_dasyatis_izuensis_latin" formatted="false">Dasyatis izuensis</string>
+<string name="animal_illustrated_exiliboa_placata_name" formatted="false">Oaxacan Dwarf Boa</string>
+<string name="animal_illustrated_exiliboa_placata_latin" formatted="false">Exiliboa placata</string>
+<string name="animal_illustrated_erythrodiplax_ines_name" formatted="false">Ines dragonlet</string>
+<string name="animal_illustrated_erythrodiplax_ines_latin" formatted="false">Erythrodiplax ines</string>
+<string name="animal_illustrated_erythrodiplax_media_name" formatted="false">Media dragonlet</string>
+<string name="animal_illustrated_erythrodiplax_media_latin" formatted="false">Erythrodiplax media</string>
+<string name="animal_illustrated_erythrodiplax_gomesi_name" formatted="false">Gomes dragonlet</string>
+<string name="animal_illustrated_erythrodiplax_gomesi_latin" formatted="false">Erythrodiplax gomesi</string>
+<string name="animal_illustrated_heliothis_peltigera_name" formatted="false">Bordered straw</string>
+<string name="animal_illustrated_heliothis_peltigera_latin" formatted="false">Heliothis peltigera</string>
+<string name="animal_illustrated_dasyatis_marianae_name" formatted="false">Brazilian large-eyed stingray</string>
+<string name="animal_illustrated_dasyatis_marianae_latin" formatted="false">Dasyatis marianae</string>
+<string name="animal_illustrated_lethrinus_ravus_name" formatted="false">Drab emperor</string>
+<string name="animal_illustrated_lethrinus_ravus_latin" formatted="false">Lethrinus ravus</string>
+<string name="animal_illustrated_helicophagus_waandersii_name" formatted="false">Helicophagus waandersii</string>
+<string name="animal_illustrated_helicophagus_waandersii_latin" formatted="false">Helicophagus waandersii</string>
+<string name="animal_illustrated_discus_macclintocki_name" formatted="false">Iowa Pleistocene snail</string>
+<string name="animal_illustrated_discus_macclintocki_latin" formatted="false">Discus macclintocki</string>
+<string name="animal_illustrated_echinococcus_shiquicus_name" formatted="false">Shiqu hydatid tapeworm</string>
+<string name="animal_illustrated_echinococcus_shiquicus_latin" formatted="false">Echinococcus shiquicus</string>
+<string name="animal_illustrated_dichomeris_alacella_name" formatted="false">Black-spotted snout</string>
+<string name="animal_illustrated_dichomeris_alacella_latin" formatted="false">Dichomeris alacella</string>
+<string name="animal_illustrated_hyles_costata_name" formatted="false">Costate hawkmoth</string>
+<string name="animal_illustrated_hyles_costata_latin" formatted="false">Hyles costata</string>
+<string name="animal_illustrated_diplocephalus_lusiscus_name" formatted="false">Lusiscus dwarf spider</string>
+<string name="animal_illustrated_diplocephalus_lusiscus_latin" formatted="false">Diplocephalus lusiscus</string>
+<string name="animal_illustrated_edonis_helena_name" formatted="false">Mantled skimmer</string>
+<string name="animal_illustrated_edonis_helena_latin" formatted="false">Edonis helena</string>
+<string name="animal_illustrated_empis_opaca_name" formatted="false">Dark-kneed dance fly</string>
+<string name="animal_illustrated_empis_opaca_latin" formatted="false">Empis opaca</string>
+<string name="animal_illustrated_estrandia_grandaeva_name" formatted="false">Ancient sheetweaver</string>
+<string name="animal_illustrated_estrandia_grandaeva_latin" formatted="false">Estrandia grandaeva</string>
+<string name="animal_illustrated_eudendrium_dispar_name" formatted="false">Uneven hydroid</string>
+<string name="animal_illustrated_eudendrium_dispar_latin" formatted="false">Eudendrium dispar</string>
+<string name="animal_illustrated_evergestis_limbata_name" formatted="false">Dark-bordered Pearl</string>
+<string name="animal_illustrated_evergestis_limbata_latin" formatted="false">Evergestis limbata</string>
+<string name="animal_illustrated_fufius_striatipes_name" formatted="false">Striped-legged Fufius</string>
+<string name="animal_illustrated_fufius_striatipes_latin" formatted="false">Fufius striatipes</string>
+<string name="animal_illustrated_idaea_flaveolaria_name" formatted="false">Yellow Wave</string>
+<string name="animal_illustrated_idaea_flaveolaria_latin" formatted="false">Idaea flaveolaria</string>
+<string name="animal_illustrated_illawarra_wisharti_name" formatted="false">Illawarra funnel-web spider</string>
+<string name="animal_illustrated_illawarra_wisharti_latin" formatted="false">Illawarra wisharti</string>
+<string name="animal_illustrated_jordanita_budensis_name" formatted="false">Buda green forester</string>
+<string name="animal_illustrated_jordanita_budensis_latin" formatted="false">Jordanita budensis</string>
+<string name="animal_illustrated_lycia_lapponaria_name" formatted="false">Rannoch brindled beauty</string>
+<string name="animal_illustrated_lycia_lapponaria_latin" formatted="false">Lycia lapponaria</string>
+<string name="animal_illustrated_leptothele_bencha_name" formatted="false">Bencha funnel-web spider</string>
+<string name="animal_illustrated_leptothele_bencha_latin" formatted="false">Leptothele bencha</string>
+<string name="animal_illustrated_intoshia_linei_name" formatted="false">Lineus orthonectid</string>
+<string name="animal_illustrated_intoshia_linei_latin" formatted="false">Intoshia linei</string>
+<string name="animal_illustrated_intoshia_variabili_name" formatted="false">Variable orthonectid</string>
+<string name="animal_illustrated_intoshia_variabili_latin" formatted="false">Intoshia variabili</string>
+<string name="animal_illustrated_dapidodigma_hymen_name" formatted="false">Western virgin</string>
+<string name="animal_illustrated_dapidodigma_hymen_latin" formatted="false">Dapidodigma hymen</string>
+<string name="animal_illustrated_dapidodigma_demeter_name" formatted="false">Demeter virgin</string>
+<string name="animal_illustrated_dapidodigma_demeter_latin" formatted="false">Dapidodigma demeter</string>
+<string name="animal_illustrated_dolbogene_hartwegii_name" formatted="false">Hartweg\'s sphinx</string>
+<string name="animal_illustrated_dolbogene_hartwegii_latin" formatted="false">Dolbogene hartwegii</string>
+<string name="animal_illustrated_gyptis_mackiei_name" formatted="false">Mackie\'s hesionid worm</string>
+<string name="animal_illustrated_gyptis_mackiei_latin" formatted="false">Gyptis mackiei</string>
+<string name="animal_illustrated_geophagus_brokopondo_name" formatted="false">Geophagus brokopondo</string>
+<string name="animal_illustrated_geophagus_brokopondo_latin" formatted="false">Geophagus brokopondo</string>
+<string name="animal_illustrated_geophagus_surinamensis_name" formatted="false">Geophagus surinamensis</string>
+<string name="animal_illustrated_geophagus_surinamensis_latin" formatted="false">Geophagus surinamensis</string>
+<string name="animal_illustrated_garra_menoni_name" formatted="false">Garra menoni</string>
+<string name="animal_illustrated_garra_menoni_latin" formatted="false">Garra menoni</string>
+<string name="animal_illustrated_geophagus_argyrostictus_name" formatted="false">Silverspotted eartheater</string>
+<string name="animal_illustrated_geophagus_argyrostictus_latin" formatted="false">Geophagus argyrostictus</string>
+<string name="animal_illustrated_geophagus_crassilabris_name" formatted="false">Panamanian eartheater</string>
+<string name="animal_illustrated_geophagus_crassilabris_latin" formatted="false">Geophagus crassilabris</string>
+<string name="animal_illustrated_geophagus_dicrozoster_name" formatted="false">Geophagus dicrozoster</string>
+<string name="animal_illustrated_geophagus_dicrozoster_latin" formatted="false">Geophagus dicrozoster</string>
+<string name="animal_illustrated_geophagus_gottwaldi_name" formatted="false">Geophagus gottwaldi</string>
+<string name="animal_illustrated_geophagus_gottwaldi_latin" formatted="false">Geophagus gottwaldi</string>
+<string name="animal_illustrated_geophagus_grammepareius_name" formatted="false">Geophagus grammepareius</string>
+<string name="animal_illustrated_geophagus_grammepareius_latin" formatted="false">Geophagus grammepareius</string>
+<string name="animal_illustrated_geophagus_harreri_name" formatted="false">Maroni eartheater</string>
+<string name="animal_illustrated_geophagus_harreri_latin" formatted="false">Geophagus harreri</string>
+<string name="animal_illustrated_geophagus_winemilleri_name" formatted="false">Geophagus winemilleri</string>
+<string name="animal_illustrated_geophagus_winemilleri_latin" formatted="false">Geophagus winemilleri</string>
+<string name="animal_illustrated_guianacara_sphenozona_name" formatted="false">Guianacara sphenozona</string>
+<string name="animal_illustrated_guianacara_sphenozona_latin" formatted="false">Guianacara sphenozona</string>
+<string name="animal_illustrated_gymnogeophagus_caaguazuensis_name" formatted="false">Gymnogeophagus caaguazuensis</string>
+<string name="animal_illustrated_gymnogeophagus_caaguazuensis_latin" formatted="false">Gymnogeophagus caaguazuensis</string>
+<string name="animal_illustrated_hemigrammocharax_multifasciatus_name" formatted="false">Multibar citharine</string>
+<string name="animal_illustrated_hemigrammocharax_multifasciatus_latin" formatted="false">Hemigrammocharax multifasciatus</string>
+<string name="animal_illustrated_hispidoberyx_ambagiosus_name" formatted="false">Spiny-scale pricklefish</string>
+<string name="animal_illustrated_hispidoberyx_ambagiosus_latin" formatted="false">Hispidoberyx ambagiosus</string>
+<string name="animal_illustrated_labeo_rosae_name" formatted="false">Rednose labeo</string>
+<string name="animal_illustrated_labeo_rosae_latin" formatted="false">Labeo rosae</string>
+<string name="animal_illustrated_labeo_ruddi_name" formatted="false">Silver labeo</string>
+<string name="animal_illustrated_labeo_ruddi_latin" formatted="false">Labeo ruddi</string>
+<string name="animal_illustrated_lipogenys_gillii_name" formatted="false">Spiny sucker eel</string>
+<string name="animal_illustrated_lipogenys_gillii_latin" formatted="false">Lipogenys gillii</string>
+<string name="animal_illustrated_luciocyprinus_langsoni_name" formatted="false">Shuttle-like carp</string>
+<string name="animal_illustrated_luciocyprinus_langsoni_latin" formatted="false">Luciocyprinus langsoni</string>
+<string name="animal_illustrated_gollumjapyx_smeagol_name" formatted="false">Cave dipluran</string>
+<string name="animal_illustrated_gollumjapyx_smeagol_latin" formatted="false">Gollumjapyx smeagol</string>
+<string name="animal_illustrated_hippolais_icterina_name" formatted="false">Icterine Warbler</string>
+<string name="animal_illustrated_hippolais_icterina_latin" formatted="false">Hippolais icterina</string>
+<string name="animal_illustrated_leucocarbo_carunculatus_name" formatted="false">New Zealand king shag</string>
+<string name="animal_illustrated_leucocarbo_carunculatus_latin" formatted="false">Leucocarbo carunculatus</string>
+</resources>
