@@ -1,0 +1,15 @@
+{
+  "id": "nepenthes_rajah",
+  "sections": [
+    {"title": "Port et répartition", "text": "Nepenthes rajah est une plante carnivore de Bornéo, endémique des monts Kinabalu et Tambuyukon au Sabah. Elle croît sur sols humides et meubles entre environ 1 500 et 2 650 m; sa tige peut atteindre près de 3 m."},
+    {"title": "Feuilles et urnes", "text": "Les feuilles mesurent environ 20 à 50 × 9 à 13 cm. Les grandes urnes terrestres mesurent généralement 20 à 35 cm de haut et 11 à 18 cm de large, parfois jusqu’à 40 cm; leur large péristome strié borde l’ouverture du piège."},
+    {"title": "Fleurs et conservation", "text": "Les fleurs mâles et femelles sont portées par des plantes distinctes. Les urnes piègent surtout des invertébrés; de petits mammifères peuvent aussi y être observés. Kew classe l’espèce En danger et elle est inscrite à l’Annexe I de la CITES."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Nepenthes rajah", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A603791-1/general-information"},
+    {"title": "IUCN Red List — Nepenthes rajah", "url": "https://www.iucnredlist.org/species/39690/10251581"},
+    {"title": "CITES — Appendices", "url": "https://cites.org/eng/app/appendices.php"},
+    {"title": "Flora Malesiana — Nepenthes", "url": "https://repository.naturalis.nl/document/570519"}
+  ],
+  "related": ["nepenthes_inermis"]
+}

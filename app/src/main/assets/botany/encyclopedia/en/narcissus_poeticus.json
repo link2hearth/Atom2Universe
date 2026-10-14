@@ -1,0 +1,15 @@
+{
+  "id": "narcissus_poeticus",
+  "sections": [
+    {"title": "Form and habitat", "text": "Poet's narcissus is a bulbous perennial of central and southern Europe, often growing in wet meadows. It is usually 20–40 cm tall, sometimes taller, and flowers in spring."},
+    {"title": "Flower", "text": "The flower stalk usually bears a solitary white flower 4–6 cm across, with a small yellow corona edged in red. The bulb produces linear leaves."},
+    {"title": "Toxicity", "text": "Narcissi contain toxic alkaloids; the bulb is particularly dangerous if eaten. Do not consume any part of the plant."}
+  ],
+  "sources": [
+    {"title": "LPO — Poet's narcissus", "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/flore/narcisse-des-poetes"},
+    {"title": "CNPMAI — Narcissus poeticus", "url": "https://www.cnpmai.net/fr/2022/04/21/focus-sur-la-narcisse-des-poetes-narcissus-poeticus/"},
+    {"title": "Queensland Poisons Information Centre — Daffodils (Narcissus)", "url": "https://www.poisonsinfo.health.qld.gov.au/plants-and-mushrooms/daffodils-narcissus"},
+    {"title": "Végét’ox — Narcissus", "url": "https://vegetox.envt.fr/Monographies-html/Narcisse.html"}
+  ],
+  "related": ["narcissus_serotinus"]
+}

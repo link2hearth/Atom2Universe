@@ -1,0 +1,15 @@
+{
+  "id": "mitragyna_speciosa",
+  "sections": [
+    {"title": "Port et milieu", "text": "Le kratom est un arbre persistant des forêts humides d’Asie du Sud-Est jusqu’à la Nouvelle-Guinée. Il atteint souvent 4 à 9 m, parfois davantage, et pousse notamment dans les basses terres humides et les zones riveraines."},
+    {"title": "Feuilles et fleurs", "text": "Les feuilles opposées, larges et pétiolées mesurent souvent autour de 17 × 10 cm et montrent des nervures secondaires arquées. Les petites fleurs jaune pâle sont regroupées en têtes globuleuses près des extrémités des branches."},
+    {"title": "Usages et risques", "text": "Les feuilles ont des usages traditionnels, mais le kratom peut entraîner des effets graves, notamment des atteintes hépatiques, des convulsions et un trouble lié à l’usage. Ne pas le présenter comme un traitement sûr ni en recommander la consommation."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Mitragyna speciosa", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A756303-1/general-information"},
+    {"title": "Flora of Thailand — Mitragyna", "url": "https://botany.dnp.go.th/eflora/floragenus.html?factsheet=Mitragyna"},
+    {"title": "US FDA — FDA and kratom", "url": "https://www.fda.gov/news-events/public-health-focus/fda-and-kratom"},
+    {"title": "Botany and pharmacology review — Mitragyna speciosa", "url": "https://www.sciencedirect.com/science/article/abs/pii/B9780128194874000033"}
+  ],
+  "related": []
+}

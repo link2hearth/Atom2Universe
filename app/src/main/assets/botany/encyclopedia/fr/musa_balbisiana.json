@@ -1,0 +1,14 @@
+{
+  "id": "musa_balbisiana",
+  "sections": [
+    {"title": "Port et répartition", "text": "Musa balbisiana est une grande herbe tropicale asiatique, avec un pseudo-tronc d’environ 6 m formé par les gaines foliaires. Elle est l’un des ancêtres de bananiers cultivés. Contrairement à Musa acuminata, les fruits sauvages sont anguleux et pleins de grosses graines."},
+    {"title": "Feuilles, inflorescence et fruits", "text": "Les feuilles peuvent atteindre environ 2,9 × 0,9 m et l’inflorescence pendante environ 2,5 m. Les fruits gris-verts, anguleux, mesurent près de 13 × 4 cm et contiennent de nombreuses graines dures de 5 à 10 mm."},
+    {"title": "Usage et comestibilité", "text": "Les fruits sauvages sont très grenus. Kew rapporte que le bouton floral mâle est consommé en Asie du Sud-Est après trempage dans l’eau salée et cuisson; cela ne signifie pas que les fruits sauvages soient des bananes de table."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Musa balbisiana", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A797536-1/general-information"},
+    {"title": "Flora of China — Musa balbisiana", "url": "https://www.efloras.org/florataxon.aspx?flora_id=3&taxon_id=200028237"},
+    {"title": "Muséum national d’Histoire naturelle — Bananier fruitier", "url": "https://www.mnhn.fr/fr/bananier-fruitier"}
+  ],
+  "related": ["musa_acuminata"]
+}

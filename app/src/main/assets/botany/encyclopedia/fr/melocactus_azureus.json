@@ -1,0 +1,14 @@
+{
+  "id": "melocactus_azureus",
+  "sections": [
+    {"title": "Port et milieu", "text": "Ce cactus globuleux est endémique de Bahia, au nord-est du Brésil, où il pousse dans des milieux secs et rocheux de la Caatinga. La tige bleu-vert mesure environ 10 à 40 cm; un céphalium rougeâtre apparaît au sommet des sujets adultes."},
+    {"title": "Céphalium, fleurs et fruits", "text": "La tige côtelée porte des aréoles épineuses. Le céphalium est couvert de laine et de soies; de petites fleurs magenta et des fruits étroits rosés en émergent. La croissance ordinaire de la tige ne se prolonge pas au-dessus de ce céphalium."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’a été trouvé pour cette espèce; ne pas supposer que ses fruits sont comestibles."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Melocactus azureus", "url": "https://powo.science.kew.org/taxon/156751-2"},
+    {"title": "CNCFlora, Jardim Botânico do Rio de Janeiro — Melocactus azureus", "url": "https://proflora.jbrj.gov.br/html/Melocactus%20azureus_2012.html"},
+    {"title": "Société Nationale d’Horticulture de France — Melocactus", "url": "https://www.snhf.org/fiche-plante/melocactus/"}
+  ],
+  "related": ["melocactus_lemairei", "melocactus_pachyacanthus"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "melocactus_pachyacanthus",
+  "sections": [
+    {"title": "Form and habitat", "text": "Melocactus pachyacanthus is a succulent cactus from eastern Brazil, adapted to seasonally dry tropical habitats. Kew retains it as an accepted species but notes that a 2025 classification treats it as a synonym of M. azureus."},
+    {"title": "Stem, cephalium and flowers", "text": "The globose, ribbed stem bears strong spines and a reddish apical cephalium. Small flowers and fruits emerge from the cephalium. The plate shows these features; the sources consulted do not provide reliable dimensions."},
+    {"title": "Edibility", "text": "No solid food use was found for this species."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Melocactus pachyacanthus", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A135559-1"},
+    {"title": "Société Nationale d’Horticulture de France — Melocactus", "url": "https://www.snhf.org/fiche-plante/melocactus/"}
+  ],
+  "related": ["melocactus_azureus", "melocactus_lemairei"]
+}

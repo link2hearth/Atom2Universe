@@ -1,0 +1,15 @@
+{
+  "id": "nasturtium_officinale",
+  "sections": [
+    {"title": "Milieu et port", "text": "Le cresson de fontaine est une plante glabre des sources, ruisseaux et fossés d’eau douce. Ses tiges flottantes ou rampantes mesurent environ 10 à 110 cm, parfois jusqu’à 2 m."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles pennées portent généralement 3 à 9 folioles, parfois davantage, avec une foliole terminale plus large. Les petites fleurs blanches ont quatre pétales; les siliques mesurent environ 1 à 1,8 cm."},
+    {"title": "Comestibilité et hygiène", "text": "Les feuilles et pousses sont consommées crues ou cuites et ont un goût poivré. Le cresson sauvage cru peut transmettre la douve du foie s’il est contaminé; privilégier une filière contrôlée ou la cuisson et éviter la récolte dans une eau à risque."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Nasturtium officinale", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200009627"},
+    {"title": "USGS — Nasturtium officinale", "url": "https://nas.er.usgs.gov/queries/greatlakes/FactSheet.aspx?Potential=N&Species_ID=229&Type=0"},
+    {"title": "CDC — Fasciola (liver flukes)", "url": "https://www.cdc.gov/liver-flukes/fasciola/index.html"},
+    {"title": "PROTA / PlantUse — Nasturtium officinale", "url": "https://plantuse.plantnet.org/fr/Nasturtium_officinale_%28PROTA%29"}
+  ],
+  "related": []
+}

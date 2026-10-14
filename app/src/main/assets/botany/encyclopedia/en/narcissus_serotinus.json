@@ -1,0 +1,15 @@
+{
+  "id": "narcissus_serotinus",
+  "sections": [
+    {"title": "Form and range", "text": "Narcissus serotinus is a small autumn-flowering bulbous daffodil of the south-western Iberian Peninsula, the Balearic Islands and western Morocco. Its flower stalk is usually about 8–25 cm tall; leaves may appear after flowering."},
+    {"title": "Flower and comparison", "text": "The stalk usually bears one white flower with a tiny yellow-orange corona. Like N. poeticus, it has a white flower with a short corona, but it flowers in autumn and has a more southerly range."},
+    {"title": "Caution", "text": "No food use is known. Narcissi are poisonous; do not consume any part of the plant."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Narcissus serotinus", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A66213-1/general-information"},
+    {"title": "Flora Iberica — Narcissus serotinus", "url": "https://www.floraiberica.es/floraiberica/texto/imprenta/tomoXX/20_184_05_Narcissus.pdf"},
+    {"title": "Queensland Poisons Information Centre — Daffodils (Narcissus)", "url": "https://www.poisonsinfo.health.qld.gov.au/plants-and-mushrooms/daffodils-narcissus"},
+    {"title": "Flora of Israel — Narcissus deficiens", "url": "https://flora.org.il/en/plants/nardef/"}
+  ],
+  "related": ["narcissus_poeticus"]
+}

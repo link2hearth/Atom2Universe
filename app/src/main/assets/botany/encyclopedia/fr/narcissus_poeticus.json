@@ -1,0 +1,15 @@
+{
+  "id": "narcissus_poeticus",
+  "sections": [
+    {"title": "Port et habitat", "text": "Le narcisse des poètes est une vivace bulbeuse d’Europe centrale et méridionale, souvent dans les prairies humides. Il mesure généralement 20 à 40 cm, parfois davantage, et fleurit au printemps."},
+    {"title": "Fleur", "text": "La hampe porte habituellement une fleur blanche solitaire de 4 à 6 cm, avec une petite couronne jaune bordée de rouge. Le bulbe produit des feuilles linéaires."},
+    {"title": "Toxicité", "text": "Les narcisses contiennent des alcaloïdes toxiques; le bulbe est particulièrement dangereux en cas d’ingestion. Ne consommer aucune partie de la plante."}
+  ],
+  "sources": [
+    {"title": "LPO — Narcisse des poètes", "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/flore/narcisse-des-poetes"},
+    {"title": "CNPMAI — Narcissus poeticus", "url": "https://www.cnpmai.net/fr/2022/04/21/focus-sur-la-narcisse-des-poetes-narcissus-poeticus/"},
+    {"title": "Queensland Poisons Information Centre — Daffodils (Narcissus)", "url": "https://www.poisonsinfo.health.qld.gov.au/plants-and-mushrooms/daffodils-narcissus"},
+    {"title": "Végét’ox — Narcisse", "url": "https://vegetox.envt.fr/Monographies-html/Narcisse.html"}
+  ],
+  "related": ["narcissus_serotinus"]
+}

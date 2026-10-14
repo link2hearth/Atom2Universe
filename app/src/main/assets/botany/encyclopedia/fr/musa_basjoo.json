@@ -1,0 +1,15 @@
+{
+  "id": "musa_basjoo",
+  "sections": [
+    {"title": "Port et origine", "text": "Musa basjoo est une grande herbe rhizomateuse originaire du sud de la Chine, malgré son nom de bananier du Japon. Ses pseudo-troncs mesurent environ 2,5 à 4 m; la touffe cultivée peut s’étendre sur 1,8 à 4,3 m."},
+    {"title": "Feuilles et fruits", "text": "Les grandes feuilles se déchirent fréquemment et les bractées de l’inflorescence pendent. Les fruits jaunes-verts mesurent environ 5 à 10 cm; leur pulpe blanche est clairsemée et contient de nombreuses graines."},
+    {"title": "Usage", "text": "Cette espèce est surtout cultivée comme ornementale ou pour ses fibres. Les fruits ne sont pas considérés comme comestibles par NC State Extension."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Musa basjoo", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A323785-2/general-information"},
+    {"title": "Flora of China — Musaceae", "url": "https://www.iplant.cn/foc/pdf/Musaceae.pdf"},
+    {"title": "NC State Extension — Musa basjoo", "url": "https://plants.ces.ncsu.edu/plants/musa-basjoo/"},
+    {"title": "Cambridge University Botanic Garden — Musa basjoo", "url": "https://www.botanic.cam.ac.uk/the-garden/plant-list/musa-basjoo/"}
+  ],
+  "related": ["musa_acuminata", "musa_balbisiana"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "nepenthes_inermis",
+  "sections": [
+    {"title": "Port et habitat", "text": "Nepenthes inermis est une plante carnivore grimpante ou épiphyte endémique des hautes terres de l’ouest de Sumatra, vers 1 500 à 2 590 m. Elle pousse en forêt moussue ou dans la végétation des sommets."},
+    {"title": "Feuilles et urnes", "text": "Les feuilles portent une vrille terminée par une urne-piège. Les urnes supérieures mesurent environ 5,5 à 9 cm, étroites à la base et en entonnoir vers le haut; leur péristome est presque absent. L’urne est une feuille modifiée, pas une fleur ni un fruit."},
+    {"title": "Inflorescence", "text": "Les petites fleurs unisexuées sont portées séparément en grappes. Le fruit est une capsule sèche qui s’ouvre en valves et libère des graines."}
+  ],
+  "sources": [
+    {"title": "Flora Malesiana — Nepenthes inermis", "url": "https://repository.naturalis.nl/document/570519"},
+    {"title": "Ecology of Nepenthes inermis on Mount Talang", "url": "https://link.springer.com/article/10.1007/s42965-024-00333-0"},
+    {"title": "Nepenthes — Danser monograph", "url": "https://omnisterra.com/botany/cp/pictures/nepenthe/dansermg/dans29.htm"}
+  ],
+  "related": ["nepenthes_rajah"]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "melongena",
+  "sections": [
+    {"title": "Identification et port", "text": "La fiche du catalogue représente Solanum melongena, l’aubergine. Cette herbe ramifiée ou sous-arbrisseau peut atteindre environ 2 m. L’illustration montre une variété cultivée à fruits violets allongés; les formes et couleurs varient beaucoup selon les cultivars."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles alternes sont souvent velues et les fleurs sont violettes. Le fruit est une baie consommée comme légume, généralement cuite."},
+    {"title": "Comestibilité et précautions", "text": "Le fruit est consommé comme aliment. Les autres parties de la plante ne sont pas à considérer comme comestibles; des glycoalcaloïdes peuvent être présents dans le feuillage et les parties vertes."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Solanum melongena", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A820053-1/general-information"},
+    {"title": "PROSEA / PlantUse — Solanum melongena", "url": "https://plantuse.plantnet.org/en/Solanum_melongena_%28PROSEA%29"},
+    {"title": "NParks Flora & Fauna Web — Solanum melongena", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/2/4/2459"},
+    {"title": "NC State Extension — Solanum melongena", "url": "https://plants.ces.ncsu.edu/plants/solanum-melongena/"}
+  ],
+  "related": []
+}

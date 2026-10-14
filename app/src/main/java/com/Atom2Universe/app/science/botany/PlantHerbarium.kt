@@ -89,8 +89,9 @@ internal object PlantHerbarium {
         "ambuchanania_leucobryoides", "andreaeobryum_macrosporum", "catoscopium_nigritum", "hennediella_heimii", "bryum_turbinatum", "cirriphyllum_piliferum", "pohlia_melanodon", "dictyostega_orobanchoides", "heteranthia_decipiens", "escobaria_missouriensis", "lophopyxis_maingayi", "coronidium_boormanii", "cryptocarya_nova_anglica", "pradosia_decipiens", "pradosia_kuhlmannii", "pradosia_cuatrecasasii", "pradosia_grisebachii", "jupunba_obovalis", "espadaea_amoena", "aglaia_evansensis", "ipomoea_pulcherrima", "chamaecrista_aldabrensis", "aglaia_archboldiana", "syzygium_phaeophyllum", "erythrina_atitlanensis", "pierrebraunia_bahiensis", "rauhocereus_riosaniensis")
 
     // Exclude bundled plates with verified mismatches: D. braunii depicts D. sanderiana;
-    // Iriartea deltoidea depicts blue-black fruit, unlike its documented yellow-green fruit.
-    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea")
+    // Iriartea deltoidea depicts blue-black fruit, unlike its documented yellow-green fruit;
+    // N. inermis depicts a prominent pitcher rim, unlike its nearly absent peristome.
+    private val mismatchedPlates = setOf("dracaena_braunii", "iriartea_deltoidea", "nepenthes_inermis")
 
     fun hasPlate(id: String) = id in speciesIds && id !in mismatchedPlates
 

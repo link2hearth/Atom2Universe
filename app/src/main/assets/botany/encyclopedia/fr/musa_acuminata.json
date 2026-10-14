@@ -1,0 +1,14 @@
+{
+  "id": "musa_acuminata",
+  "sections": [
+    {"title": "Port et répartition", "text": "Musa acuminata est une grande herbe tropicale et l’un des ancêtres de nombreux bananiers cultivés; ce n’est pas un arbre au sens botanique. Le pseudo-tronc est formé par les gaines des feuilles. L’espèce est originaire d’Asie du Sud-Est et largement cultivée."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les très grandes feuilles peuvent atteindre environ 2,7 m de long sur 60 cm de large et se déchirent souvent avec le vent. Les bractées pourpres dévoilent des rangées de fleurs pâles. Les formes sauvages produisent des fruits avec des graines dures; de nombreuses variétés cultivées dérivées sont sans graines."},
+    {"title": "Comestibilité", "text": "Les bananes cultivées sont consommées comme fruits ou légumes selon la variété. L’illustration montre une forme cultivée sans graines et ne représente pas les fruits typiques des formes sauvages."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Musa acuminata", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A797527-1/general-information"},
+    {"title": "PROSEA / PlantUse — Musa acuminata", "url": "https://plantuse.plantnet.org/en/Musa_acuminata_%28PROSEA%29"},
+    {"title": "Royal Botanic Gardens, Kew — Origin of cultivated bananas", "url": "https://www.kew.org/plants/plantain"}
+  ],
+  "related": ["musa_balbisiana"]
+}

@@ -172,7 +172,7 @@
     <string name="bot_bivonaea_lutea_flower">Petites fleurs à quatre pétales jaunes sur une grappe terminale.</string>
     <string name="bot_bivonaea_lutea_fruit">Silicule oblongue comprimée, de quelques millimètres, avec nervures transversales réticulées.</string>
     <string name="bot_melocactus_lemairei_name">Mélocactus de Lemaire</string>
-    <string name="bot_melocactus_lemairei_latin" translatable="false">Melocactus lemarii</string>
+    <string name="bot_melocactus_lemairei_latin" translatable="false">Melocactus lemairei</string>
     <string name="bot_melocactus_lemairei_aliases">mélocactus de Lemaire</string>
     <string name="bot_melocactus_lemairei_description">Cactus globuleux des Caraïbes portant un céphalium laineux rougeâtre au sommet. Les petites fleurs émergent du céphalium; ce caractère distingue le genre des cactus sans céphalium.</string>
     <string name="bot_melocactus_lemairei_distribution">Caraïbes orientales, notamment Hispaniola; milieux secs et rocailleux.</string>

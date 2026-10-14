@@ -1,0 +1,14 @@
+{
+  "id": "musa_balbisiana",
+  "sections": [
+    {"title": "Form and range", "text": "Musa balbisiana is a large tropical Asian herb with a pseudostem about 6 m tall, formed by leaf sheaths. It is an ancestor of cultivated bananas. Unlike Musa acuminata, wild fruits are angular and contain large, hard seeds."},
+    {"title": "Leaves, inflorescence and fruit", "text": "The leaves can reach about 2.9 × 0.9 m and the pendulous inflorescence about 2.5 m. The angular, grey-green fruits are about 13 × 4 cm and contain many hard seeds 5–10 mm across."},
+    {"title": "Use and edibility", "text": "Wild fruits are very seedy. Kew reports that the male flower bud is eaten in Southeast Asia after soaking in salt water and cooking; this does not mean that wild fruits are table bananas."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Musa balbisiana", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A797536-1/general-information"},
+    {"title": "Flora of China — Musa balbisiana", "url": "https://www.efloras.org/florataxon.aspx?flora_id=3&taxon_id=200028237"},
+    {"title": "French National Museum of Natural History — Banana plant", "url": "https://www.mnhn.fr/fr/bananier-fruitier"}
+  ],
+  "related": ["musa_acuminata"]
+}
