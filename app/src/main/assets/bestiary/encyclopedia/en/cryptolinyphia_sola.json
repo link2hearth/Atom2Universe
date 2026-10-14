@@ -1,0 +1,26 @@
+{
+  "id": "cryptolinyphia_sola",
+  "name": "Cryptolinyphia Sola Sheet Weaver",
+  "scientific": "Cryptolinyphia sola",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This South American sheet-weaver is the sole accepted species in the genus Cryptolinyphia.",
+    "identification": "The original 1991 description is based on a female specimen and illustrates diagnostic anatomy.",
+    "habitat": "The World Spider Catalog records the species from Colombia, but does not summarize its finer habitat.",
+    "diet": "Species-specific prey observations were not found in the catalog entry or original description.",
+    "behavior": "Published material is taxonomic, and the sources reviewed do not establish its daily activity pattern.",
+    "reproduction": "Only a female is known from the original description; courtship, egg production and development are undocumented.",
+    "ecology": "Its only genus-level comparison is with other Linyphiidae; no living congener is currently accepted.",
+    "conservation": "The consulted sources provide no conservation assessment; missing assessment data do not establish safety."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/21560",
+      "title": "Cryptolinyphia sola — World Spider Catalog"
+    },
+    {
+      "url": "https://citeseerx.ist.psu.edu/document?doi=894efebe60dc310f0562c6b9c0f2277ea0dc793e&repid=rep1&type=pdf",
+      "title": "Further linyphiid spiders from South America — A. F. Millidge"
+    }
+  ]
+}

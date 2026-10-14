@@ -1,0 +1,30 @@
+{
+  "id": "dasyurus_spartacus",
+  "name": "Bronze Quoll",
+  "scientific": "Dasyurus spartacus",
+  "group": "mammals",
+  "sections": {
+    "overview": "The bronze quoll is a New Guinean dasyurid restricted to the Trans-Fly region; its closest living relatives include D. albopunctatus.",
+    "identification": "The original description distinguishes it by its unusually narrow snout and relatively short hallux and ears.",
+    "habitat": "It was described from low mixed savanna in southwestern Papua New Guinea, across the Trans-Fly plains.",
+    "diet": "Species-specific diet data are sparse in the references consulted.",
+    "behavior": "The consulted species accounts do not describe its daily activity or social behavior in detail.",
+    "reproduction": "The sources reviewed do not establish its breeding season or litter size.",
+    "ecology": "Its savanna distribution and affinities with D. albopunctatus distinguish it from the Australian quolls.",
+    "conservation": "The current Mammal Diversity Database page reports Near Threatened status, following the 2024 IUCN source."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1071/AM88018",
+      "title": "The Bronze Quoll, a new species from Papua New Guinea — Australian Mammalogy"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000151/",
+      "title": "Bronze Quoll — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/6301/21947093",
+      "title": "Bronze Quoll — IUCN Red List"
+    }
+  ]
+}

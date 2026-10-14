@@ -1,0 +1,149 @@
+{
+  "id": "dasyurus_spartacus",
+  "scientific": "Dasyurus spartacus",
+  "group": "mammals",
+  "name": {
+    "en": "Bronze Quoll",
+    "fr": "Quoll bronze"
+  },
+  "sections": {
+    "overview": {
+      "en": "The bronze quoll is a New Guinean dasyurid restricted to the Trans-Fly region; its closest living relatives include D. albopunctatus.",
+      "fr": "Le quoll bronze est un dasyuridé de Nouvelle-Guinée limité à la région de Trans-Fly; ses proches parents actuels comprennent D. albopunctatus."
+    },
+    "identification": {
+      "en": "The original description distinguishes it by its unusually narrow snout and relatively short hallux and ears.",
+      "fr": "La description originale le distingue par son museau exceptionnellement étroit et son hallux et ses oreilles relativement courts."
+    },
+    "habitat": {
+      "en": "It was described from low mixed savanna in southwestern Papua New Guinea, across the Trans-Fly plains.",
+      "fr": "Il a été décrit dans la savane basse mixte du sud-ouest de la Papouasie–Nouvelle-Guinée, dans les plaines de Trans-Fly."
+    },
+    "diet": {
+      "en": "Species-specific diet data are sparse in the references consulted.",
+      "fr": "Les références consultées fournissent peu de données sur le régime alimentaire propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The consulted species accounts do not describe its daily activity or social behavior in detail.",
+      "fr": "Les fiches consultées ne décrivent pas en détail son rythme d’activité ni son comportement social."
+    },
+    "reproduction": {
+      "en": "The sources reviewed do not establish its breeding season or litter size.",
+      "fr": "Les sources examinées ne permettent pas d’établir sa période de reproduction ni la taille des portées."
+    },
+    "ecology": {
+      "en": "Its savanna distribution and affinities with D. albopunctatus distinguish it from the Australian quolls.",
+      "fr": "Sa répartition en savane et ses affinités avec D. albopunctatus le distinguent des quolls d’Australie."
+    },
+    "conservation": {
+      "en": "The current Mammal Diversity Database page reports Near Threatened status, following the 2024 IUCN source.",
+      "fr": "La fiche actuelle du Mammal Diversity Database indique le statut quasi menacé, d’après la source UICN de 2024."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Bronze Quoll, a new species from Papua New Guinea — Australian Mammalogy",
+        "fr": "Le quoll bronze, nouvelle espèce de Papouasie–Nouvelle-Guinée — Australian Mammalogy"
+      },
+      "url": "https://doi.org/10.1071/AM88018",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Van Dyck’s original 1988 paper describes the taxon from Trans-Fly savanna, its diagnostic traits and affinities with D. albopunctatus."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 19,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bronze Quoll — Mammal Diversity Database",
+        "fr": "Quoll bronze — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000151/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "MDD recognizes Dasyurus spartacus as a species and reports the 2024 IUCN status as Near Threatened."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 16,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bronze Quoll — IUCN Red List",
+        "fr": "Quoll bronze — Liste rouge de l’UICN"
+      },
+      "url": "https://www.iucnredlist.org/species/6301/21947093",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The 2024 IUCN species assessment is cited for the current status record."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 12,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Detailed diet, behavior and breeding data were not established in the accessible species-level sources.",
+    "Some 2015 taxonomic treatments tentatively regarded it as D. geoffroii spartacus; the MDD currently lists species rank."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the original description against the Mammal Diversity Database and its linked IUCN assessment; preserves the MDD species treatment while noting historical uncertainty."
+}

@@ -1,0 +1,147 @@
+{
+  "id": "culex_pipiens",
+  "scientific": "Culex pipiens",
+  "group": "invertebrates",
+  "name": {
+    "en": "Common House Mosquito",
+    "fr": "Moustique commun"
+  },
+  "sections": {
+    "overview": {
+      "en": "This widespread mosquito is a species complex with distinct pipiens and molestus forms and intermediate populations.",
+      "fr": "Ce moustique largement répandu forme un complexe comprenant les formes pipiens et molestus ainsi que des populations intermédiaires."
+    },
+    "identification": {
+      "en": "It is brown and banded, but females can be difficult to separate from sibling Culex species without molecular tests.",
+      "fr": "Il est brun et présente des bandes abdominales, mais les femelles se distinguent difficilement de certaines espèces proches sans analyse moléculaire."
+    },
+    "habitat": {
+      "en": "Larvae use natural and artificial standing waters, including ponds, drains, containers and flooded cellars.",
+      "fr": "Les larves occupent des eaux stagnantes naturelles ou artificielles: mares, drains, récipients et caves inondées."
+    },
+    "diet": {
+      "en": "Females take blood from vertebrates, while larvae develop in water and feed on organic material.",
+      "fr": "Les femelles prennent du sang sur des vertébrés, tandis que les larves vivent dans l’eau et consomment des matières organiques."
+    },
+    "behavior": {
+      "en": "The pipiens form mainly bites birds outdoors; molestus more often feeds on people and other mammals near buildings.",
+      "fr": "La forme pipiens pique surtout les oiseaux à l’extérieur; molestus se nourrit plus souvent sur l’humain et d’autres mammifères près des bâtiments."
+    },
+    "reproduction": {
+      "en": "Females lay egg rafts on water; the molestus form can produce an initial batch without a blood meal.",
+      "fr": "Les femelles déposent des radeaux d’œufs à la surface de l’eau; la forme molestus peut pondre une première fois sans repas sanguin."
+    },
+    "ecology": {
+      "en": "Along with Culex torrentium, it is hard to identify reliably by appearance alone, especially in females.",
+      "fr": "Avec Culex torrentium, il est difficile à identifier de façon fiable sur le seul aspect, surtout chez les femelles."
+    },
+    "conservation": {
+      "en": "It is an important European vector of West Nile and Usutu viruses, although transmission depends on local hosts and conditions.",
+      "fr": "C’est un vecteur important des virus West Nile et Usutu en Europe, mais la transmission dépend des hôtes et conditions locales."
+    }
+  },
+  "uncertainties": [
+    "The forms’ host preferences and breeding traits vary geographically, and their identification and hybridization patterns complicate surveillance."
+  ],
+  "review_note": "Compared the ECDC expert account with its European identification guidance and a French ANSES risk review; distinguished the two biological forms rather than treating all populations as identical.",
+  "sources": [
+    {
+      "title": {
+        "en": "Culex pipiens — ECDC expert factsheet",
+        "fr": "Culex pipiens — fiche experte de l’ECDC"
+      },
+      "url": "https://www.ecdc.europa.eu/en/infectious-disease-topics/related-public-health-topics/disease-vectors/facts/mosquito-factsheets/culex-pipiens",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "ECDC covers forms, identification, hosts, habitat, eggs, overwintering and vector role."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 11,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reverse identification key for invasive mosquito species — ECDC",
+        "fr": "Clé inversée d’identification des moustiques invasifs — ECDC"
+      },
+      "url": "https://www.ecdc.europa.eu/sites/default/files/documents/Reverse-identification-key-for-invasive-mosquito-species.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "European identification guidance summarizes larval habitats, wintering females, egg rafts and host differences between the pipiens and molestus forms."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 19,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Avis relatif au risque de transmission du virus Zika en France — ANSES",
+        "fr": "Avis relatif au risque de transmission du virus Zika en France — ANSES"
+      },
+      "url": "https://www.anses.fr/fr/system/files?file=BIOC2015SA0169.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French food and health agency review describes Culex pipiens as night-biting and explains adult female diapause in sheltered sites."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 19,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

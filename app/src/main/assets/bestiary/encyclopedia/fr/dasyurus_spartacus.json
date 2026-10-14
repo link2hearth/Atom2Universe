@@ -1,0 +1,30 @@
+{
+  "id": "dasyurus_spartacus",
+  "name": "Quoll bronze",
+  "scientific": "Dasyurus spartacus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le quoll bronze est un dasyuridé de Nouvelle-Guinée limité à la région de Trans-Fly; ses proches parents actuels comprennent D. albopunctatus.",
+    "identification": "La description originale le distingue par son museau exceptionnellement étroit et son hallux et ses oreilles relativement courts.",
+    "habitat": "Il a été décrit dans la savane basse mixte du sud-ouest de la Papouasie–Nouvelle-Guinée, dans les plaines de Trans-Fly.",
+    "diet": "Les références consultées fournissent peu de données sur le régime alimentaire propre à l’espèce.",
+    "behavior": "Les fiches consultées ne décrivent pas en détail son rythme d’activité ni son comportement social.",
+    "reproduction": "Les sources examinées ne permettent pas d’établir sa période de reproduction ni la taille des portées.",
+    "ecology": "Sa répartition en savane et ses affinités avec D. albopunctatus le distinguent des quolls d’Australie.",
+    "conservation": "La fiche actuelle du Mammal Diversity Database indique le statut quasi menacé, d’après la source UICN de 2024."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1071/AM88018",
+      "title": "Le quoll bronze, nouvelle espèce de Papouasie–Nouvelle-Guinée — Australian Mammalogy"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000151/",
+      "title": "Quoll bronze — Mammal Diversity Database"
+    },
+    {
+      "url": "https://www.iucnredlist.org/species/6301/21947093",
+      "title": "Quoll bronze — Liste rouge de l’UICN"
+    }
+  ]
+}

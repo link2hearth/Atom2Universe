@@ -1,0 +1,30 @@
+{
+  "id": "dasypus_novemcinctus",
+  "name": "Tatou à neuf bandes",
+  "scientific": "Dasypus novemcinctus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le tatou à neuf bandes est un mammifère largement répandu dans les Amériques, dont l’aire s’est étendue vers le nord des États-Unis ces dernières décennies.",
+    "identification": "Son armure osseuse présente neuf bandes souples entre les plaques des épaules et de la croupe, ainsi qu’une longue queue annelée.",
+    "habitat": "Il préfère les sols faciles à creuser et utilise berges, prairies et lisières boisées pour ses terriers et sa recherche de nourriture.",
+    "diet": "Son régime varié se compose surtout d’insectes et d’autres invertébrés, avec parfois de petits vertébrés, des fruits et des champignons.",
+    "behavior": "Il est surtout actif le soir et la nuit par temps chaud et fouille le sol pour trouver ses proies.",
+    "reproduction": "Un seul ovule fécondé produit généralement quatre jeunes génétiquement identiques après une implantation différée.",
+    "ecology": "Son activité de fouille et son régime riche en insectes le lient à la texture du sol, aux invertébrés terrestres et aux corridors riverains.",
+    "conservation": "L’évaluation mondiale UICN de 2013 le classe en préoccupation mineure, en raison de sa vaste aire et de sa capacité d’adaptation."
+  },
+  "sources": [
+    {
+      "url": "https://www.depts.ttu.edu/nsrl/mammals-of-texas-online-edition/Accounts_Cingulata/Dasypus_novemcinctus.php",
+      "title": "Tatou à neuf bandes — Natural Science Research Laboratory de Texas Tech"
+    },
+    {
+      "url": "https://www.usgs.gov/publications/current-distribution-nine-banded-armadillo-dasypus-novemcinctus-united-states",
+      "title": "Répartition actuelle du tatou à neuf bandes aux États-Unis — USGS"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2014-1.RLTS.T6290A47440785.en",
+      "title": "Dasypus novemcinctus — Liste rouge de l’UICN"
+    }
+  ]
+}

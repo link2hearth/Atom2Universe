@@ -1,0 +1,142 @@
+{
+  "id": "deileptenia_ribeata",
+  "scientific": "Deileptenia ribeata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Satin Beauty",
+    "fr": "Boarmie du Sapin"
+  },
+  "sections": {
+    "overview": {
+      "en": "Satin Beauty is a geometrid moth of European woodland; French sources call it Boarmie du Sapin.",
+      "fr": "La Boarmie du Sapin est un papillon géomètre des boisements européens; son nom anglais est Satin Beauty."
+    },
+    "identification": {
+      "en": "Adults have a 30–40 mm wingspan and mottled brown forewings that can fade with wear.",
+      "fr": "L’adulte a une envergure de 30 à 40 mm et des ailes antérieures brun moucheté dont le motif peut s’effacer."
+    },
+    "habitat": {
+      "en": "It occurs in deciduous and coniferous woodland, with larvae using several conifer and broadleaf food plants.",
+      "fr": "Elle fréquente les boisements de feuillus et de conifères; les chenilles utilisent plusieurs plantes-hôtes ligneuses."
+    },
+    "diet": {
+      "en": "The caterpillars feed mainly on conifers such as spruce, fir and yew.",
+      "fr": "Les chenilles se nourrissent surtout de conifères comme l’épicéa, le sapin et l’if."
+    },
+    "behavior": {
+      "en": "Adults fly in one generation, chiefly from late June to early August, and come to light.",
+      "fr": "Les adultes volent en une génération, surtout de fin juin à début août, et sont attirés par la lumière."
+    },
+    "reproduction": {
+      "en": "The larva overwinters young on its food plant and later pupates in loose soil.",
+      "fr": "La jeune chenille hiverne sur sa plante-hôte puis se nymphose dans un sol meuble."
+    },
+    "ecology": {
+      "en": "It can be confused with Alcis repandata, but differences in wing pattern and genitalia aid identification.",
+      "fr": "Elle peut être confondue avec Alcis repandata, mais le motif des ailes et les genitalia aident à les distinguer."
+    },
+    "conservation": {
+      "en": "It is locally Near Threatened in Flanders and rare in parts of Belgium; this is a regional assessment, not a global status.",
+      "fr": "Elle est quasi menacée localement en Flandre et rare dans certaines régions de Belgique; il s’agit d’une évaluation régionale, pas mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Satin Beauty — UKMoths",
+        "fr": "Boarmie du Sapin — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/deileptenia-ribeata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "UKMoths gives adult size, woodland habitat, flight period, larval food plants and lookalikes."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 13,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Catalogue of the Lepidoptera of Belgium — Deileptenia ribeata",
+        "fr": "Catalogue des Lépidoptères de Belgique — Deileptenia ribeata"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/6005/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Belgian atlas records French name Boarmie du Sapin, larval overwintering and the local Flemish Near Threatened category."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 17,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Global Lepidoptera Names Index — Natural History Museum",
+        "fr": "Index mondial des noms de Lépidoptères — Natural History Museum"
+      },
+      "url": "https://www.nhm.ac.uk/our-science/data/lepindex/detail?taxonno=233710",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "NHM LepIndex records Deileptenia ribeata as the current valid species name."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Near Threatened category cited here applies to Flanders and should not be read as a global IUCN assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the UK moth field account with the Belgian multilingual Lepidoptera catalogue and NHM nomenclature index; explicitly limits the conservation category to Flanders."
+}

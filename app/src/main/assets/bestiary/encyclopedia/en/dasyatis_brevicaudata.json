@@ -1,0 +1,30 @@
+{
+  "id": "dasyatis_brevicaudata",
+  "name": "Smooth Stingray",
+  "scientific": "Dasyatis brevicaudata",
+  "group": "fish",
+  "sections": {
+    "overview": "The smooth stingray is a very large Indo-Pacific ray now classified as Bathytoshia brevicaudata; older sources use Dasyatis.",
+    "identification": "It has rows of small white spots beside the head and a relatively short tail; the similar black stingray B. lata lacks those spots.",
+    "habitat": "It lives on the bottom in coastal waters and estuaries, from shallow water to about 170 m.",
+    "diet": "It feeds on bottom-dwelling fishes, crustaceans and bivalves, often dug from sediment.",
+    "behavior": "It is often inquisitive around divers, but its venomous tail spine can cause severe injury.",
+    "reproduction": "It is aplacental viviparous and females produce litters of about six to ten pups.",
+    "ecology": "A bottom-feeding predator, it is also caught as bycatch in several coastal fisheries.",
+    "conservation": "The 2020 global IUCN assessment lists it as Least Concern, with a stable trend."
+  },
+  "sources": [
+    {
+      "url": "https://australian.museum/learn/animals/fishes/smooth-stingray-dasyatis-brevicaudata-hutton-1875/",
+      "title": "Smooth Stingray — Australian Museum"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/2020",
+      "title": "Smooth Stingray — Fishes of Australia"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T104039923A104039985.en",
+      "title": "Bathytoshia brevicaudata — IUCN Red List"
+    }
+  ]
+}

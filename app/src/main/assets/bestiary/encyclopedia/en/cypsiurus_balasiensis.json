@@ -1,0 +1,34 @@
+{
+  "id": "cypsiurus_balasiensis",
+  "name": "Asian palm swift",
+  "scientific": "Cypsiurus balasiensis",
+  "group": "birds",
+  "sections": {
+    "overview": "This small swift is widespread across tropical South and Southeast Asia and is strongly associated with palms.",
+    "identification": "It has long swept-back wings and a deeply forked tail, and spends most of its life flying rather than perching.",
+    "habitat": "It uses open country, clearings and cultivation, especially where palms or areca nut trees provide nesting sites.",
+    "diet": "It catches small flying insects in the air, often foraging around palms and over open ground.",
+    "behavior": "It is usually seen in small flocks and clings to vertical surfaces with its short feet instead of settling on the ground.",
+    "reproduction": "The tiny nest is glued to the underside of a palm leaf with saliva, and the eggs are secured to the nest.",
+    "ecology": "It was formerly combined with the African Palm Swift Cypsiurus parvus, but the two are now treated as separate species.",
+    "conservation": "The 2024 global assessment lists it as Least Concern, reflecting its very large range rather than the condition of every local population."
+  },
+  "sources": [
+    {
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "title": "Asian Palm-swift — Bangladesh Red List of Birds"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22686769A263634776.en",
+      "title": "Cypsiurus balasiensis — IUCN Red List assessment"
+    },
+    {
+      "url": "https://www.birdsofindia.org/Cypsiurus-balasiensis",
+      "title": "Asian Palm Swift — Birds of India"
+    },
+    {
+      "url": "https://ebird.org/species/aspswi1?siteLanguage=en_GB",
+      "title": "Asian Palm Swift — eBird species account"
+    }
+  ]
+}

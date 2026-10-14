@@ -1,0 +1,30 @@
+{
+  "id": "dasyatis_izuensis",
+  "name": "Pasténague d’Izu",
+  "scientific": "Dasyatis izuensis",
+  "group": "fish",
+  "sections": {
+    "overview": "La pasténague d’Izu est limitée à la péninsule japonaise d’Izu et appartient aujourd’hui au genre Hemitrygon. La fiche de H. marianae partage son ancien nom de genre Dasyatis, mais cette espèce est désormais classée dans un autre genre.",
+    "identification": "Son disque lisse, brun doré et losangique, ainsi que le repli blanc sous la queue, la distinguent des autres Dasyatidae décrites.",
+    "habitat": "Les spécimens originaux provenaient d’eaux côtières peu profondes, vers 10–20 m au large d’Izu.",
+    "diet": "Les sources consultées ne donnent pas de liste de proies propre à l’espèce.",
+    "behavior": "Les sources examinées documentent peu l’activité et le comportement social propres à l’espèce.",
+    "reproduction": "FishBase indique que la pasténague d’Izu est ovovivipare.",
+    "ecology": "Son aire se limite aux eaux côtières peu profondes autour d’Izu.",
+    "conservation": "FishBase rapporte une évaluation UICN de 2019 en catégorie vulnérable."
+  },
+  "sources": [
+    {
+      "url": "https://www.jstage.jst.go.jp/article/jji1950/35/3/35_3_227/_article/-char/ja",
+      "title": "Une nouvelle espèce de Dasyatis de la péninsule d’Izu — Japanese Journal of Ichthyology"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Hemitrygon-izuensis",
+      "title": "Hemitrygon izuensis — FishBase"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Dasyatis",
+      "title": "Noms Dasyatis et combinaisons acceptées — WoRMS"
+    }
+  ]
+}

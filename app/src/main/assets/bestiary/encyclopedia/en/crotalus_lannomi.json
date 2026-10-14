@@ -1,0 +1,30 @@
+{
+  "id": "crotalus_lannomi",
+  "name": "Autlán Long-tailed Rattlesnake",
+  "scientific": "Crotalus lannomi",
+  "group": "reptiles",
+  "sections": {
+    "overview": "This elusive rattlesnake is known from western Mexico, especially the Sierra de Manantlán region of Jalisco.",
+    "identification": "It has a slender, unusually long tail and a gray ground colour marked with dark dorsal blotches.",
+    "habitat": "Available records place it in rocky grassland near the transition between tropical deciduous and pine-oak forests.",
+    "diet": "The Mexican species account lists lizards, arthropods and other reptiles among its reported prey.",
+    "behavior": "It may be active at dusk or night and has been observed thermoregulating beside grasses or on low shrubs.",
+    "reproduction": "Reliable species-specific breeding information is scarce in the sources consulted.",
+    "ecology": "It belongs to the rare long-tailed rattlesnake group, alongside Crotalus stejnegeri and Crotalus ericsmithi.",
+    "conservation": "Mexico lists it as threatened; rediscovery reports and few locality records underline the need for further surveys."
+  },
+  "sources": [
+    {
+      "url": "https://enciclovida.mx/especies/27152.pdf",
+      "title": "Cascabel de Autlán — EncicloVida / CONABIO"
+    },
+    {
+      "url": "https://redtox.org/sites/default/files/toxiblog/descargables/2010-crotalus-lannomi-rediscovery-a_1.pdf",
+      "title": "Rediscovery of the rare Autlán long-tailed rattlesnake"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/Crotalus/lannomi?search_param=%28%28taxon%3D%27crotalinae%27%29%29",
+      "title": "Crotalus lannomi — The Reptile Database"
+    }
+  ]
+}

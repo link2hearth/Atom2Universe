@@ -1,0 +1,30 @@
+{
+  "id": "culex_pipiens",
+  "name": "Common House Mosquito",
+  "scientific": "Culex pipiens",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This widespread mosquito is a species complex with distinct pipiens and molestus forms and intermediate populations.",
+    "identification": "It is brown and banded, but females can be difficult to separate from sibling Culex species without molecular tests.",
+    "habitat": "Larvae use natural and artificial standing waters, including ponds, drains, containers and flooded cellars.",
+    "diet": "Females take blood from vertebrates, while larvae develop in water and feed on organic material.",
+    "behavior": "The pipiens form mainly bites birds outdoors; molestus more often feeds on people and other mammals near buildings.",
+    "reproduction": "Females lay egg rafts on water; the molestus form can produce an initial batch without a blood meal.",
+    "ecology": "Along with Culex torrentium, it is hard to identify reliably by appearance alone, especially in females.",
+    "conservation": "It is an important European vector of West Nile and Usutu viruses, although transmission depends on local hosts and conditions."
+  },
+  "sources": [
+    {
+      "url": "https://www.ecdc.europa.eu/en/infectious-disease-topics/related-public-health-topics/disease-vectors/facts/mosquito-factsheets/culex-pipiens",
+      "title": "Culex pipiens — ECDC expert factsheet"
+    },
+    {
+      "url": "https://www.ecdc.europa.eu/sites/default/files/documents/Reverse-identification-key-for-invasive-mosquito-species.pdf",
+      "title": "Reverse identification key for invasive mosquito species — ECDC"
+    },
+    {
+      "url": "https://www.anses.fr/fr/system/files?file=BIOC2015SA0169.pdf",
+      "title": "Avis relatif au risque de transmission du virus Zika en France — ANSES"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "id": "crotalus_intermedius",
+  "scientific": "Crotalus intermedius",
+  "group": "reptiles",
+  "name": {
+    "en": "Mexican Small-headed Rattlesnake",
+    "fr": "Crotale à petite tête du Mexique"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small-bodied rattlesnake is endemic to disjunct highland areas of central and southern Mexico.",
+      "fr": "Ce crotale de petite taille est endémique de secteurs montagnards disjoints du centre et du sud du Mexique."
+    },
+    "identification": {
+      "en": "Its distinctly small head and short, stout body distinguish it from many larger rattlesnakes.",
+      "fr": "Sa tête particulièrement petite et son corps court le distinguent de nombreux crotales de plus grande taille."
+    },
+    "habitat": {
+      "en": "It occurs mainly in pine-oak highlands, but records also include cloud forest and dry habitats.",
+      "fr": "Il fréquente surtout les montagnes de pins et de chênes, mais aussi des forêts nuageuses et des milieux secs."
+    },
+    "diet": {
+      "en": "Museum stomach contents and earlier records point to Sceloporus lizards as its principal prey.",
+      "fr": "Les contenus stomacaux de musée et les données antérieures désignent les lézards Sceloporus comme proies principales."
+    },
+    "behavior": {
+      "en": "This terrestrial snake shelters and forages among rocks; natural-history observations remain relatively sparse.",
+      "fr": "Ce serpent terrestre se réfugie et chasse parmi les rochers; les observations de son histoire naturelle restent limitées."
+    },
+    "reproduction": {
+      "en": "The species is live-bearing; published reports include a small litter, but reproductive data remain limited.",
+      "fr": "L’espèce est vivipare; quelques données signalent une petite portée, mais les informations reproductives restent limitées."
+    },
+    "ecology": {
+      "en": "It is a Mexican highland relative of Crotalus pusillus, though phylogenetic studies place them in different species groups.",
+      "fr": "C’est un crotale montagnard mexicain comme Crotalus pusillus, mais les études phylogénétiques les placent dans des groupes distincts."
+    },
+    "conservation": {
+      "en": "Its localized, fragmented range and narrow prey base make better field monitoring important for conservation.",
+      "fr": "Son aire localisée et fragmentée ainsi que son régime étroit rendent le suivi de terrain important pour sa conservation."
+    }
+  },
+  "uncertainties": [
+    "Its disjunct range and sparse field records leave population trends and several life-history details poorly known."
+  ],
+  "review_note": "Cross-checked the Mexican rattlesnake action plan with a peer-reviewed diet study and a published phylogeny; compared it cautiously with C. pusillus.",
+  "sources": [
+    {
+      "title": {
+        "en": "Programa de Acción para la Conservación: Serpientes de Cascabel",
+        "fr": "Programme d’action pour la conservation des crotales"
+      },
+      "url": "https://www.conanp.gob.mx/pace/PACE_Serpientes_de_Cascabel.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Mexican federal action plan describes C. intermedius as a small highland rattlesnake with disjunct distribution, rocky refuges and limited reproductive records."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 158,
+        "notes_words": 21,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Notes on the diet of Crotalus intermedius — Revista Latinoamericana de Herpetología",
+        "fr": "Notes sur le régime de Crotalus intermedius — Revista Latinoamericana de Herpetología"
+      },
+      "url": "https://herpetologia.fciencias.unam.mx/index.php/revista/article/download/114/70/1150",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed museum study found Sceloporus lizards in seven of 23 examined stomachs and discussed the species’ poorly known ecology."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 19,
+        "total": 83,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogeography of the Crotalus triseriatus group",
+        "fr": "Phylogéographie du groupe Crotalus triseriatus"
+      },
+      "url": "https://herp.mx/pubs/2011-Bryson-Crotalus-triseriatus-Group.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Published phylogeny distinguishes the C. triseriatus group, including C. pusillus, from the C. intermedius group."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 15,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

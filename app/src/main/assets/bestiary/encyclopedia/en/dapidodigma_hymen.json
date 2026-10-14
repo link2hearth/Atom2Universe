@@ -1,0 +1,30 @@
+{
+  "id": "dapidodigma_hymen",
+  "name": "Western virgin butterfly",
+  "scientific": "Dapidodigma hymen",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This West African hairstreak is one of two recognized species in the small genus Dapidodigma.",
+    "identification": "Males have a pale hindwing patch centered on the cell; in D. demeter it lies above.",
+    "habitat": "Recorded in forest, dry forest and scrub, often associated with Alchornea.",
+    "diet": "Its larval food plant is unknown.",
+    "behavior": "Females were found among plants attended by Oecophylla ants.",
+    "reproduction": "Larvae and pupae of Dapidodigma are attended by ants.",
+    "ecology": "Unlike forest-only D. demeter, it also occurs in dry forest and scrub; see its profile.",
+    "conservation": "No global conservation assessment was located in the sources reviewed."
+  },
+  "sources": [
+    {
+      "url": "https://www.metamorphosis.org.za/articlesPDF/1213/418%20Genus%20Dapidodigma%20Karsch.pdf",
+      "title": "418 Genus Dapidodigma Karsch — Metamorphosis, Lepidopterists’ Society of Africa"
+    },
+    {
+      "url": "https://tolweb.org/Dapidodigma/112399",
+      "title": "Dapidodigma — Tree of Life Web Project"
+    },
+    {
+      "url": "https://www.nic.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/papilionoidea/lycaenidae/theclinae/dapidodigma/",
+      "title": "Dapidodigma — Finnish University and Research Network Lepidoptera index"
+    }
+  ]
+}

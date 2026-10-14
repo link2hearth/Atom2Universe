@@ -1,0 +1,34 @@
+{
+  "id": "cypsiurus_balasiensis",
+  "name": "Martinet des palmes asiatique",
+  "scientific": "Cypsiurus balasiensis",
+  "group": "birds",
+  "sections": {
+    "overview": "Ce petit martinet est largement répandu dans l’Asie tropicale du Sud et du Sud-Est et étroitement associé aux palmiers.",
+    "identification": "Il possède de longues ailes recourbées vers l’arrière et une queue profondément fourchue ; il passe l’essentiel de sa vie en vol.",
+    "habitat": "Il fréquente les espaces ouverts, clairières et cultures, surtout là où des palmiers ou arecs offrent des sites de nidification.",
+    "diet": "Il capture de petits insectes en vol et chasse souvent près des palmiers et au-dessus des espaces ouverts.",
+    "behavior": "On l’observe généralement en petits groupes ; ses pattes courtes lui servent à s’agripper aux surfaces verticales plutôt qu’à se poser au sol.",
+    "reproduction": "Le minuscule nid est collé à la face inférieure d’une feuille de palmier avec de la salive, et les œufs y sont maintenus.",
+    "ecology": "Il a autrefois été regroupé avec le martinet des palmes africain Cypsiurus parvus, mais les deux sont aujourd’hui traités comme espèces distinctes.",
+    "conservation": "L’évaluation mondiale de 2024 le classe en préoccupation mineure, en raison de sa très vaste aire et non de l’état de chaque population locale."
+  },
+  "sources": [
+    {
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "title": "Martinet des palmes asiatique — Liste rouge des oiseaux du Bangladesh"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22686769A263634776.en",
+      "title": "Cypsiurus balasiensis — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.birdsofindia.org/Cypsiurus-balasiensis",
+      "title": "Martinet des palmes asiatique — Birds of India"
+    },
+    {
+      "url": "https://ebird.org/species/aspswi1?siteLanguage=en_GB",
+      "title": "Martinet des palmes asiatique — fiche d’espèce eBird"
+    }
+  ]
+}

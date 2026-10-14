@@ -1,0 +1,164 @@
+{
+  "id": "crotalus_pusillus",
+  "scientific": "Crotalus pusillus",
+  "group": "reptiles",
+  "name": {
+    "en": "Tancítaro Dusky Rattlesnake",
+    "fr": "Crotale sombre de Tancítaro"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small montane rattlesnake is native to west-central Mexico, chiefly the highlands of Michoacán and adjacent Jalisco.",
+      "fr": "Ce petit crotale montagnard est originaire du centre-ouest du Mexique, surtout des hautes terres du Michoacán et du Jalisco voisin."
+    },
+    "identification": {
+      "en": "Adults are usually about half a metre long, with a gray-brown ground colour and darker dorsal blotches.",
+      "fr": "Les adultes mesurent généralement environ un demi-mètre; leur fond gris-brun porte des taches dorsales plus sombres."
+    },
+    "habitat": {
+      "en": "It occupies high-elevation pine-oak forest and rocky volcanic or limestone slopes.",
+      "fr": "Il fréquente les forêts montagnardes de pins et de chênes ainsi que des pentes rocheuses volcaniques ou calcaires."
+    },
+    "diet": {
+      "en": "Lizards form its main known prey, including Sceloporus and Barisia; one report also records a bat.",
+      "fr": "Les lézards constituent l’essentiel de ses proies connues, notamment Sceloporus et Barisia; un signalement mentionne aussi une chauve-souris."
+    },
+    "behavior": {
+      "en": "It is a ground-dwelling ambush predator of rocky highlands; detailed activity patterns are not well documented.",
+      "fr": "C’est un prédateur terrestre à l’affût dans les montagnes rocheuses; ses rythmes d’activité sont peu documentés."
+    },
+    "reproduction": {
+      "en": "A published observation reports a small litter, but the species’ reproductive biology remains poorly known.",
+      "fr": "Une observation publiée signale une petite portée, mais la biologie reproductive de l’espèce reste mal connue."
+    },
+    "ecology": {
+      "en": "It shares Mexico’s volcanic highlands with Crotalus intermedius, but belongs to a different rattlesnake species group.",
+      "fr": "Il partage les hautes terres volcaniques du Mexique avec Crotalus intermedius, mais relève d’un autre groupe de crotales."
+    },
+    "conservation": {
+      "en": "The Mexican rattlesnake action plan describes a restricted montane distribution and identifies local records for conservation planning.",
+      "fr": "Le plan mexicain de conservation des crotales décrit une aire montagnarde restreinte et cartographie les données utiles à sa protection."
+    }
+  },
+  "uncertainties": [
+    "The sources provide few population-level data; the very restricted range makes local habitat changes especially relevant."
+  ],
+  "review_note": "Compared the Mexican federal rattlesnake plan and CONABIO species profile with a molecular phylogeny and the Reptile Database; treated prey and reproductive records as limited.",
+  "sources": [
+    {
+      "title": {
+        "en": "PACE: Serpientes de Cascabel — CONANP",
+        "fr": "PACE : crotales — CONANP"
+      },
+      "url": "https://www.conanp.gob.mx/pace/PACE_Serpientes_de_Cascabel.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Mexican federal plan gives species description, range, highland habitat, recorded prey, one litter observation and georeferenced records."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 97,
+        "notes_words": 17,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogeography of the Crotalus triseriatus group",
+        "fr": "Phylogéographie du groupe Crotalus triseriatus"
+      },
+      "url": "https://herp.mx/pubs/2011-Bryson-Crotalus-triseriatus-Group.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Molecular study places Crotalus pusillus within the C. triseriatus group, distinct from the C. intermedius group."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 16,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crotalus pusillus — The Reptile Database",
+        "fr": "Crotalus pusillus — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/species?genus=Crotalus&search_param=%28%28genus%3D%27Crotalus%27%29%29&species=pusillus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic account treats Crotalus pusillus as a valid species from west-central Mexico."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 12,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cascabel de Tancítaro — EncicloVida / CONABIO",
+        "fr": "Crotale de Tancítaro — EncicloVida / CONABIO"
+      },
+      "url": "https://enciclovida.mx/especies/27158.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "CONABIO species sheet gives adult size and colour, highland pine-oak habitat, western Mexican range and Mexican threatened category."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 18,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,26 @@
+{
+  "id": "cryptolinyphia_sola",
+  "name": "Araignée tisseuse Cryptolinyphia sola",
+  "scientific": "Cryptolinyphia sola",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette araignée tisseuse sud-américaine est la seule espèce actuellement reconnue dans le genre Cryptolinyphia.",
+    "identification": "La description originale de 1991 repose sur un spécimen femelle et illustre des caractères anatomiques distinctifs.",
+    "habitat": "Le World Spider Catalog signale l’espèce en Colombie, sans préciser ses habitats à une échelle plus fine.",
+    "diet": "Les sources consultées ne rapportent pas d’observations de proies propres à cette espèce.",
+    "behavior": "Les publications consultées sont taxonomiques et ne permettent pas d’établir son rythme d’activité quotidien.",
+    "reproduction": "La description originale ne connaît qu’une femelle; parade, ponte et développement ne sont pas documentés.",
+    "ecology": "Ses comparaisons au niveau du genre concernent d’autres Linyphiidae; aucune autre espèce du genre n’est actuellement reconnue.",
+    "conservation": "Les sources consultées ne donnent aucune évaluation de conservation; l’absence d’évaluation ne prouve pas une situation sûre."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/21560",
+      "title": "Cryptolinyphia sola — World Spider Catalog"
+    },
+    {
+      "url": "https://citeseerx.ist.psu.edu/document?doi=894efebe60dc310f0562c6b9c0f2277ea0dc793e&repid=rep1&type=pdf",
+      "title": "Nouvelles araignées Linyphiidae d’Amérique du Sud — A. F. Millidge"
+    }
+  ]
+}

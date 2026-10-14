@@ -1,0 +1,34 @@
+{
+  "id": "crotalus_pusillus",
+  "name": "Tancítaro Dusky Rattlesnake",
+  "scientific": "Crotalus pusillus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "This small montane rattlesnake is native to west-central Mexico, chiefly the highlands of Michoacán and adjacent Jalisco.",
+    "identification": "Adults are usually about half a metre long, with a gray-brown ground colour and darker dorsal blotches.",
+    "habitat": "It occupies high-elevation pine-oak forest and rocky volcanic or limestone slopes.",
+    "diet": "Lizards form its main known prey, including Sceloporus and Barisia; one report also records a bat.",
+    "behavior": "It is a ground-dwelling ambush predator of rocky highlands; detailed activity patterns are not well documented.",
+    "reproduction": "A published observation reports a small litter, but the species’ reproductive biology remains poorly known.",
+    "ecology": "It shares Mexico’s volcanic highlands with Crotalus intermedius, but belongs to a different rattlesnake species group.",
+    "conservation": "The Mexican rattlesnake action plan describes a restricted montane distribution and identifies local records for conservation planning."
+  },
+  "sources": [
+    {
+      "url": "https://www.conanp.gob.mx/pace/PACE_Serpientes_de_Cascabel.pdf",
+      "title": "PACE: Serpientes de Cascabel — CONANP"
+    },
+    {
+      "url": "https://herp.mx/pubs/2011-Bryson-Crotalus-triseriatus-Group.pdf",
+      "title": "Phylogeography of the Crotalus triseriatus group"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/species?genus=Crotalus&search_param=%28%28genus%3D%27Crotalus%27%29%29&species=pusillus",
+      "title": "Crotalus pusillus — The Reptile Database"
+    },
+    {
+      "url": "https://enciclovida.mx/especies/27158.pdf",
+      "title": "Cascabel de Tancítaro — EncicloVida / CONABIO"
+    }
+  ]
+}

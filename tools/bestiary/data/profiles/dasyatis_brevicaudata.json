@@ -1,0 +1,139 @@
+{
+  "id": "dasyatis_brevicaudata",
+  "scientific": "Dasyatis brevicaudata",
+  "group": "fish",
+  "name": {
+    "en": "Smooth Stingray",
+    "fr": "Pasténague à queue courte"
+  },
+  "sections": {
+    "overview": {
+      "en": "The smooth stingray is a very large Indo-Pacific ray now classified as Bathytoshia brevicaudata; older sources use Dasyatis.",
+      "fr": "La pasténague lisse est une grande raie de l’Indo-Pacifique aujourd’hui classée Bathytoshia brevicaudata; les sources anciennes utilisent Dasyatis."
+    },
+    "identification": {
+      "en": "It has rows of small white spots beside the head and a relatively short tail; the similar black stingray B. lata lacks those spots.",
+      "fr": "Elle porte des rangées de petites taches blanches près de la tête et une queue relativement courte; la pasténague noire B. lata, qui lui ressemble, n’a pas ces taches."
+    },
+    "habitat": {
+      "en": "It lives on the bottom in coastal waters and estuaries, from shallow water to about 170 m.",
+      "fr": "Elle vit sur le fond côtier et dans les estuaires, des eaux peu profondes jusqu’à environ 170 m."
+    },
+    "diet": {
+      "en": "It feeds on bottom-dwelling fishes, crustaceans and bivalves, often dug from sediment.",
+      "fr": "Elle mange des poissons de fond, des crustacés et des bivalves, souvent déterrés dans le sédiment."
+    },
+    "behavior": {
+      "en": "It is often inquisitive around divers, but its venomous tail spine can cause severe injury.",
+      "fr": "Elle se montre souvent curieuse près des plongeurs, mais son aiguillon venimeux peut causer de graves blessures."
+    },
+    "reproduction": {
+      "en": "It is aplacental viviparous and females produce litters of about six to ten pups.",
+      "fr": "Elle est vivipare sans placenta et les femelles donnent naissance à des portées d’environ six à dix petits."
+    },
+    "ecology": {
+      "en": "A bottom-feeding predator, it is also caught as bycatch in several coastal fisheries.",
+      "fr": "Prédateur benthique, elle est aussi capturée comme prise accessoire dans plusieurs pêcheries côtières."
+    },
+    "conservation": {
+      "en": "The 2020 global IUCN assessment lists it as Least Concern, with a stable trend.",
+      "fr": "L’évaluation mondiale UICN de 2020 la classe en préoccupation mineure et indique une tendance stable."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Smooth Stingray — Australian Museum",
+        "fr": "Pasténague lisse — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/fishes/smooth-stingray-dasyatis-brevicaudata-hutton-1875/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The museum calls the accepted species Bathytoshia brevicaudata, gives its diagnostic spots, coastal habitat and size."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 16,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Smooth Stingray — Fishes of Australia",
+        "fr": "Pasténague lisse — Fishes of Australia"
+      },
+      "url": "https://fishesofaustralia.net.au/home/species/2020",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The Australian fish account reports benthic prey, six to ten young and fisheries bycatch."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 14,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bathytoshia brevicaudata — IUCN Red List",
+        "fr": "Bathytoshia brevicaudata — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T104039923A104039985.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The global assessment was made in 2020 and lists Least Concern with a stable trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 15,
+        "total": 44,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the Australian Museum and national fish account with the IUCN assessment; notes the current Bathytoshia combination and the lookalike B. lata distinction."
+}

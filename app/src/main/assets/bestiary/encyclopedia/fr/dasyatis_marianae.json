@@ -1,0 +1,30 @@
+{
+  "id": "dasyatis_marianae",
+  "name": "Raie mariquita du Brésil",
+  "scientific": "Dasyatis marianae",
+  "group": "fish",
+  "sections": {
+    "overview": "Cette raie côtière brésilienne est aujourd’hui Hypanus marianae, anciennement Dasyatis. La fiche de la pasténague d’Izu concerne une autre espèce autrefois classée dans Dasyatis, désormais placée dans Hemitrygon.",
+    "identification": "C’est une petite raie, mesurée jusqu’à au moins 31 cm de largeur de disque, aux yeux particulièrement grands.",
+    "habitat": "Elle fréquente les récifs coralliens, herbiers marins, plages sableuses et estuaires, vers 1–30 m de profondeur.",
+    "diet": "Les analyses stomacales montrent un régime benthique dominé par les crevettes, d’autres crustacés et les vers polychètes.",
+    "behavior": "C’est un prédateur benthique côtier dont les proies varient avec l’âge.",
+    "reproduction": "La fécondité est faible, les femelles produisant généralement un seul petit, ce qui limite le rétablissement après la mortalité due à la pêche.",
+    "ecology": "Endémique du Brésil, elle est un mésoprédateur des réseaux trophiques benthiques côtiers peu profonds.",
+    "conservation": "L’UICN la classe en danger, car la pêche intensive et la dégradation des habitats côtiers menacent cette raie peu féconde."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T45925A104130004.en",
+      "title": "Hypanus marianae — Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://lajar.cl/index.php/rlajar/article/view/vol47-issue5-fulltext-10",
+      "title": "Régime et niveau trophique de Hypanus marianae — Latin American Journal of Aquatic Research"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Dasyatis",
+      "title": "Noms Dasyatis et combinaisons acceptées — WoRMS"
+    }
+  ]
+}

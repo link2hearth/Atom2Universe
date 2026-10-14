@@ -1,0 +1,38 @@
+{
+  "id": "dallia_pectoralis",
+  "name": "Poisson noir d’Alaska",
+  "scientific": "Dallia pectoralis",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce poisson d’eau douce de Béringie vit en Alaska, dans les îles voisines de la mer de Béring et le nord-est de la Sibérie.",
+    "identification": "Sa tête large et aplatie, ses grandes nageoires pectorales en forme de pagaie et ses petites nageoires pelviennes le distinguent des autres poissons nordiques.",
+    "habitat": "Il fréquente les mares, lacs, bras morts et ruisseaux lents des basses terres, où l’eau peut manquer d’oxygène sous la glace hivernale.",
+    "diet": "C’est un prédateur opportuniste de petits invertébrés aquatiques ; des poissons figurent aussi au régime de certaines populations et de certains habitats.",
+    "behavior": "Il peut respirer l’air et tolérer une très faible teneur en oxygène dissous, adaptations qui l’aident à survivre dans les eaux froides couvertes de glace.",
+    "reproduction": "En Alaska, le frai s’étend sur une longue période de saison chaude et les femelles peuvent pondre en plusieurs fois.",
+    "ecology": "Sa respiration aérienne est inhabituelle chez les poissons arctiques ; des études de populations déplacées montrent aussi que son régime varie selon le milieu.",
+    "conservation": "Le plan faunique de l’Alaska le désigne comme espèce nécessitant une attention de conservation ; l’USGS documente aussi des populations déplacées par l’humain hors de son aire native."
+  },
+  "sources": [
+    {
+      "url": "https://www.adfg.alaska.gov/static/education/wns/alaska_blackfish.pdf",
+      "title": "Poisson noir d’Alaska — carnet faunique du département des pêches et de la faune d’Alaska"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4375840/",
+      "title": "Respiration aérienne en Arctique : physiologie de Dallia pectoralis — Journal of Experimental Biology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5222565/",
+      "title": "Écologie trophique de populations introduites du poisson noir d’Alaska — Ecology of Freshwater Fish"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?SpeciesID=975",
+      "title": "Poisson noir d’Alaska — fiche USGS des espèces aquatiques non indigènes"
+    },
+    {
+      "url": "https://www.adfg.alaska.gov/static/species/wildlife_action_plan/2015_alaska_wildlife_action_plan.pdf",
+      "title": "Plan d’action faunique de l’Alaska 2015 — département des pêches et de la faune d’Alaska"
+    }
+  ]
+}

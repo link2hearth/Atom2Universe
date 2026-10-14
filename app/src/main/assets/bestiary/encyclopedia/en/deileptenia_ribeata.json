@@ -1,0 +1,30 @@
+{
+  "id": "deileptenia_ribeata",
+  "name": "Satin Beauty",
+  "scientific": "Deileptenia ribeata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Satin Beauty is a geometrid moth of European woodland; French sources call it Boarmie du Sapin.",
+    "identification": "Adults have a 30–40 mm wingspan and mottled brown forewings that can fade with wear.",
+    "habitat": "It occurs in deciduous and coniferous woodland, with larvae using several conifer and broadleaf food plants.",
+    "diet": "The caterpillars feed mainly on conifers such as spruce, fir and yew.",
+    "behavior": "Adults fly in one generation, chiefly from late June to early August, and come to light.",
+    "reproduction": "The larva overwinters young on its food plant and later pupates in loose soil.",
+    "ecology": "It can be confused with Alcis repandata, but differences in wing pattern and genitalia aid identification.",
+    "conservation": "It is locally Near Threatened in Flanders and rare in parts of Belgium; this is a regional assessment, not a global status."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/deileptenia-ribeata/",
+      "title": "Satin Beauty — UKMoths"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/6005/",
+      "title": "Catalogue of the Lepidoptera of Belgium — Deileptenia ribeata"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/our-science/data/lepindex/detail?taxonno=233710",
+      "title": "Global Lepidoptera Names Index — Natural History Museum"
+    }
+  ]
+}

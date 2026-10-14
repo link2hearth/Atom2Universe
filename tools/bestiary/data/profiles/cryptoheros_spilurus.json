@@ -1,0 +1,170 @@
+{
+  "id": "cryptoheros_spilurus",
+  "scientific": "Cryptoheros spilurus",
+  "group": "fish",
+  "name": {
+    "en": "Blue-eye Cichlid",
+    "fr": "Cichlidé aux yeux bleus"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small Central American cichlid inhabits Atlantic-slope rivers from Belize to Nicaragua.",
+      "fr": "Ce petit cichlidé d’Amérique centrale fréquente les rivières du versant atlantique, du Belize au Nicaragua."
+    },
+    "identification": {
+      "en": "It is known for bright blue eyes; males generally grow larger than females.",
+      "fr": "Il se reconnaît à ses yeux bleu vif; les mâles atteignent généralement une taille supérieure aux femelles."
+    },
+    "habitat": {
+      "en": "Adults occupy shallow lake margins and slower river reaches over sand, mud or rock.",
+      "fr": "Les adultes occupent les bordures peu profondes des lacs et les cours lents, sur fonds sableux, vaseux ou rocheux."
+    },
+    "diet": {
+      "en": "Field accounts describe benthic omnivory, including small invertebrates and algae gathered from the bottom.",
+      "fr": "Les descriptions de terrain évoquent un régime omnivore benthique, avec de petits invertébrés et des algues prélevés au fond."
+    },
+    "behavior": {
+      "en": "Pairs defend a territory during spawning and parental care, consistent with other cave-breeding Cryptoheros cichlids.",
+      "fr": "Les couples défendent un territoire pendant la ponte et les soins parentaux, comme d’autres cichlidés Cryptoheros nichant à couvert."
+    },
+    "reproduction": {
+      "en": "It lays eggs on a substrate and the two parents tend the brood; laboratory work documents rapid early development.",
+      "fr": "Il pond sur un support et les deux parents gardent la ponte; une étude en laboratoire décrit son développement précoce rapide."
+    },
+    "ecology": {
+      "en": "The accepted name is Cryptoheros spilurus, although older literature also uses Archocentrus and Cichlasoma.",
+      "fr": "Le nom retenu est Cryptoheros spilurus, même si des travaux plus anciens emploient aussi Archocentrus et Cichlasoma."
+    },
+    "conservation": {
+      "en": "A current global assessment is listed as Data Deficient, so this should not be read as evidence of low risk.",
+      "fr": "Une évaluation mondiale la classe en données insuffisantes; cela ne signifie pas que le risque soit faible."
+    }
+  },
+  "uncertainties": [
+    "Wild feeding and pair behaviour are not equally well studied across the range; aquarium observations are not treated as universal."
+  ],
+  "review_note": "Used the California Academy Catalog of Fishes and FishBase for accepted taxonomy and range, with a recent peer-reviewed developmental study and a field diet account.",
+  "sources": [
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Cryptoheros",
+        "fr": "Catalogue des poissons d’Eschmeyer — Cryptoheros"
+      },
+      "url": "https://research.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Cryptoheros&tbl=species",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "California Academy catalog accepts Cryptoheros spilurus and records its Atlantic Central American drainage distribution."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 14,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cryptoheros spilurus — FishBase",
+        "fr": "Cryptoheros spilurus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/7775",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Species account summarizes shallow river and lake habitat, size dimorphism, spawning, estimated clutch size and Data Deficient global assessment."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 19,
+        "total": 119,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Early development of the Blue-eye Cichlid — peer-reviewed study",
+        "fr": "Développement précoce du cichlidé aux yeux bleus — étude scientifique"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12495903/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed study documents rocky-substrate egg laying, habitat breadth, paired breeding groups and larval development through metamorphosis."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 16,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cryptoheros spilurus species register — Nordiska Ciklidsällskapet",
+        "fr": "Registre d’espèces Cryptoheros spilurus — Nordiska Ciklidsällskapet"
+      },
+      "url": "https://ciklid.org/artregister/art.php?ID=379",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Field-diet summary reports bottom searching for small insects and algae, including a stomach-content study from Laguna Caobas."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 17,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

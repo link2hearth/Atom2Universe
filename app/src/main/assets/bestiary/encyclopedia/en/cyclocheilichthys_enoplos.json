@@ -1,0 +1,30 @@
+{
+  "id": "cyclocheilichthys_enoplos",
+  "name": "Soldier river barb",
+  "scientific": "Cyclocheilichthys enoplos",
+  "group": "fish",
+  "sections": {
+    "overview": "This large Southeast Asian cyprinid is a strongly migratory river fish of the Mekong and other regional drainages.",
+    "identification": "It is a robust barb known locally by several names, including Trey chhkok in Khmer and ca coc in Vietnamese.",
+    "habitat": "It occupies the Mekong main channel and large tributaries, moving between river reaches and downstream nursery areas.",
+    "diet": "Adults are omnivorous, taking molluscs, algae, worms, insects, crustaceans and sometimes fish; young fish feed mainly on zooplankton.",
+    "behavior": "Its migrations follow changing river levels: fish move upstream in some seasons and return downstream toward the delta and floodplain.",
+    "reproduction": "Mature, egg-bearing fish have been recorded moving upstream during the rising-water period, consistent with a seasonal spawning migration.",
+    "ecology": "Pelagic eggs and drifting larvae depend on river flow to reach nursery habitat, linking reproduction to an uninterrupted flood pulse.",
+    "conservation": "FishBase relays a global Least Concern assessment from 2011, while also recording local declines around the Khone Falls."
+  },
+  "sources": [
+    {
+      "url": "https://www.mrcmekong.org/?document_id=01BMXYOABQQBR5FY7EAZFZRXEKJEP6NRZM&download_document=1&name=Distribution-and-Ecology-of-Some-Important-Riverine-Fish-Species-of-the-Mekong-River-Basin.pdf",
+      "title": "Distribution and Ecology of Some Important Riverine Fish Species of the Mekong River Basin — Mekong River Commission"
+    },
+    {
+      "url": "https://fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=418&genusname=Cyclocheilichthys&speciesname=enoplos",
+      "title": "Cyclocheilichthys enoplos — FishBase Field Guide"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7799820/",
+      "title": "Cyclocheilichthys enoplos — global mitochondrial genome study"
+    }
+  ]
+}

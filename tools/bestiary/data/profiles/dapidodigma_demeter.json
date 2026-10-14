@@ -1,0 +1,179 @@
+{
+  "id": "dapidodigma_demeter",
+  "scientific": "Dapidodigma demeter",
+  "group": "invertebrates",
+  "name": {
+    "en": "Eastern virgin butterfly",
+    "fr": "Papillon vierge oriental"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Afrotropical hairstreak butterfly is one of two recognized species in the small West African genus Dapidodigma.",
+      "fr": "Ce thécla afrotropical est l’une des deux espèces reconnues du petit genre ouest-africain Dapidodigma."
+    },
+    "identification": {
+      "en": "In males, its pale androconial patch lies above the hindwing cell, unlike the patch centered on the cell in D. hymen.",
+      "fr": "Chez le mâle, la tache androconiale pâle se trouve au-dessus de la cellule de l’aile postérieure, contrairement à celle centrée sur la cellule chez D. hymen."
+    },
+    "habitat": {
+      "en": "The specialist review records it from forest and contrasts this with D. hymen, also reported from dry woodland and scrub.",
+      "fr": "La synthèse spécialisée le signale en forêt et le distingue de D. hymen, également observé en boisement sec et dans les broussailles."
+    },
+    "diet": {
+      "en": "Larval food records include Homalium; an Albizia record was published under D. hymen, so the host evidence is limited.",
+      "fr": "Les plantes-hôtes documentées incluent Homalium ; une mention d’Albizia a été publiée sous D. hymen, donc les données restent limitées."
+    },
+    "behavior": {
+      "en": "The genus is reported to have ant-attended larvae and pupae.",
+      "fr": "Les larves et les pupes du genre sont signalées comme étant accompagnées par des fourmis."
+    },
+    "reproduction": {
+      "en": "The cited genus review gives no species-specific developmental calendar.",
+      "fr": "La synthèse du genre citée ne donne pas de calendrier de développement propre à l’espèce."
+    },
+    "ecology": {
+      "en": "D. hymen is its only listed congener in this two-species genus; see that profile for comparison.",
+      "fr": "D. hymen est son seul congénère répertorié dans ce genre de deux espèces ; consultez sa fiche pour comparer."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was located in the sources reviewed.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été localisée dans les sources examinées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "418 Genus Dapidodigma Karsch — Metamorphosis, Lepidopterists’ Society of Africa",
+        "fr": "Genre Dapidodigma Karsch — Metamorphosis, Société des lépidoptéristes d’Afrique"
+      },
+      "url": "https://www.metamorphosis.org.za/articlesPDF/1213/418%20Genus%20Dapidodigma%20Karsch.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The review compares markings, habitats and host records."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dapidodigma — Tree of Life Web Project",
+        "fr": "Dapidodigma — Tree of Life Web Project"
+      },
+      "url": "https://tolweb.org/Dapidodigma/112399",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The synopsis recognizes two West African species in Dapidodigma and notes ant attendance of larvae and pupae."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Dapidodigma — Finnish University and Research Network Lepidoptera index",
+        "fr": "Dapidodigma — index lépidoptérologique du réseau universitaire finlandais"
+      },
+      "url": "https://www.nic.funet.fi/pub/sci/bio/life/insecta/lepidoptera/ditrysia/papilionoidea/lycaenidae/theclinae/dapidodigma/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The taxonomic bibliography lists D. demeter and D. hymen and records nomenclatural and distribution literature."
+      ],
+      "prose_claims": []
+    }
+  ],
+  "uncertainties": [
+    "Species-specific early-stage biology and larval food are poorly known; the Albizia record was published under D. hymen.",
+    "The relative-rarity statements in the specialist review are regional comparisons, not a global population estimate."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the specialist genus review for its side-by-side diagnosis and ecology, with Tree of Life and the FUNET taxonomic bibliography as independent genus and name cross-checks; linked reciprocally to D. hymen."
+}

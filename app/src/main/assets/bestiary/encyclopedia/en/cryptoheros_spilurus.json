@@ -1,0 +1,34 @@
+{
+  "id": "cryptoheros_spilurus",
+  "name": "Blue-eye Cichlid",
+  "scientific": "Cryptoheros spilurus",
+  "group": "fish",
+  "sections": {
+    "overview": "This small Central American cichlid inhabits Atlantic-slope rivers from Belize to Nicaragua.",
+    "identification": "It is known for bright blue eyes; males generally grow larger than females.",
+    "habitat": "Adults occupy shallow lake margins and slower river reaches over sand, mud or rock.",
+    "diet": "Field accounts describe benthic omnivory, including small invertebrates and algae gathered from the bottom.",
+    "behavior": "Pairs defend a territory during spawning and parental care, consistent with other cave-breeding Cryptoheros cichlids.",
+    "reproduction": "It lays eggs on a substrate and the two parents tend the brood; laboratory work documents rapid early development.",
+    "ecology": "The accepted name is Cryptoheros spilurus, although older literature also uses Archocentrus and Cichlasoma.",
+    "conservation": "A current global assessment is listed as Data Deficient, so this should not be read as evidence of low risk."
+  },
+  "sources": [
+    {
+      "url": "https://research.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Cryptoheros&tbl=species",
+      "title": "Eschmeyer’s Catalog of Fishes — Cryptoheros"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/7775",
+      "title": "Cryptoheros spilurus — FishBase"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12495903/",
+      "title": "Early development of the Blue-eye Cichlid — peer-reviewed study"
+    },
+    {
+      "url": "https://ciklid.org/artregister/art.php?ID=379",
+      "title": "Cryptoheros spilurus species register — Nordiska Ciklidsällskapet"
+    }
+  ]
+}

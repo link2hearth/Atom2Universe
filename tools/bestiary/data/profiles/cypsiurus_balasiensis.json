@@ -1,0 +1,193 @@
+{
+  "id": "cypsiurus_balasiensis",
+  "scientific": "Cypsiurus balasiensis",
+  "group": "birds",
+  "name": {
+    "en": "Asian palm swift",
+    "fr": "Martinet des palmes asiatique"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small swift is widespread across tropical South and Southeast Asia and is strongly associated with palms.",
+      "fr": "Ce petit martinet est largement répandu dans l’Asie tropicale du Sud et du Sud-Est et étroitement associé aux palmiers."
+    },
+    "identification": {
+      "en": "It has long swept-back wings and a deeply forked tail, and spends most of its life flying rather than perching.",
+      "fr": "Il possède de longues ailes recourbées vers l’arrière et une queue profondément fourchue ; il passe l’essentiel de sa vie en vol."
+    },
+    "habitat": {
+      "en": "It uses open country, clearings and cultivation, especially where palms or areca nut trees provide nesting sites.",
+      "fr": "Il fréquente les espaces ouverts, clairières et cultures, surtout là où des palmiers ou arecs offrent des sites de nidification."
+    },
+    "diet": {
+      "en": "It catches small flying insects in the air, often foraging around palms and over open ground.",
+      "fr": "Il capture de petits insectes en vol et chasse souvent près des palmiers et au-dessus des espaces ouverts."
+    },
+    "behavior": {
+      "en": "It is usually seen in small flocks and clings to vertical surfaces with its short feet instead of settling on the ground.",
+      "fr": "On l’observe généralement en petits groupes ; ses pattes courtes lui servent à s’agripper aux surfaces verticales plutôt qu’à se poser au sol."
+    },
+    "reproduction": {
+      "en": "The tiny nest is glued to the underside of a palm leaf with saliva, and the eggs are secured to the nest.",
+      "fr": "Le minuscule nid est collé à la face inférieure d’une feuille de palmier avec de la salive, et les œufs y sont maintenus."
+    },
+    "ecology": {
+      "en": "It was formerly combined with the African Palm Swift Cypsiurus parvus, but the two are now treated as separate species.",
+      "fr": "Il a autrefois été regroupé avec le martinet des palmes africain Cypsiurus parvus, mais les deux sont aujourd’hui traités comme espèces distinctes."
+    },
+    "conservation": {
+      "en": "The 2024 global assessment lists it as Least Concern, reflecting its very large range rather than the condition of every local population.",
+      "fr": "L’évaluation mondiale de 2024 le classe en préoccupation mineure, en raison de sa très vaste aire et non de l’état de chaque population locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Asian Palm-swift — Bangladesh Red List of Birds",
+        "fr": "Martinet des palmes asiatique — Liste rouge des oiseaux du Bangladesh"
+      },
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "The Bangladesh government account describes its regional habitat and palm-associated nest, identifies the bird and records its local conservation assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cypsiurus balasiensis — IUCN Red List assessment",
+        "fr": "Cypsiurus balasiensis — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2024-2.RLTS.T22686769A263634776.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The 2024 assessment identifies the Asian Palm Swift and reports its very large global range and Least Concern status."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Asian Palm Swift — Birds of India",
+        "fr": "Martinet des palmes asiatique — Birds of India"
+      },
+      "url": "https://www.birdsofindia.org/Cypsiurus-balasiensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "The species account describes the swift’s flight and palm association; standard natural-history accounts report aerial insect feeding and clinging feet."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Asian Palm Swift — eBird species account",
+        "fr": "Martinet des palmes asiatique — fiche d’espèce eBird"
+      },
+      "url": "https://ebird.org/species/aspswi1?siteLanguage=en_GB",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The eBird account uses the distinct Asian Palm Swift taxon, separate from the African Palm Swift."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "The Bangladesh Red List describes status within Bangladesh and is not substituted for the global assessment.",
+    "The African Palm Swift Cypsiurus parvus is not a catalogue profile in this batch, so no bestiary cross-link is added."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the Bangladesh government bird account and current IUCN assessment with a regional field resource and eBird taxonomy; kept local and global conservation contexts distinct."
+}
