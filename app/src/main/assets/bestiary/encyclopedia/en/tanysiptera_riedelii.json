@@ -1,0 +1,30 @@
+{
+  "id": "tanysiptera_riedelii",
+  "name": "Biak paradise kingfisher",
+  "scientific": "Tanysiptera riedelii",
+  "group": "birds",
+  "sections": {
+    "overview": "The Biak paradise kingfisher is a forest kingfisher native to Biak and Supiori in Indonesia’s Cenderawasih Bay.",
+    "identification": "It has blue upperparts, pale underparts, a red bill and the long tail streamers typical of paradise kingfishers.",
+    "habitat": "It lives in forest, including secondary growth, and is associated with forest streams.",
+    "diet": "It takes invertebrates, including prey found on the forest floor.",
+    "behavior": "It searches for prey on the forest floor.",
+    "reproduction": "A tree-cavity study lists the species among cavity users and treats this use as likely opportunistic; detailed breeding data remain sparse.",
+    "ecology": "It was formerly treated as a subspecies of the Common Paradise Kingfisher, Tanysiptera galatea, but recent work supports species-level separation.",
+    "conservation": "A recent island avifauna study reports it as Near Threatened and notes that its known range includes both Biak and Supiori."
+  },
+  "sources": [
+    {
+      "url": "https://bioone.org/journals/bulletin-of-the-british-ornithologists-club/volume-143/issue-1/bboc.v143i1.2023.a2/The-avifauna-of-Biak-Island-Papua-Indonesia-with-comments-on/10.25226/bboc.v143i1.2023.a2.pdf",
+      "title": "The avifauna of Biak Island, Papua, Indonesia — Bulletin of the British Ornithologists’ Club"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/biak.paradise.kingfisher.html",
+      "title": "Biak Paradise Kingfisher — Oiseaux.net"
+    },
+    {
+      "url": "https://journals.sagepub.com/doi/full/10.1177/194008291300600602",
+      "title": "Tree Cavity-Using Wildlife and Their Conservation in Tropical Forests — Tropical Conservation Science"
+    }
+  ]
+}

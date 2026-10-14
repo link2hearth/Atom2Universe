@@ -1,0 +1,30 @@
+{
+  "id": "teleocichla_cinderella",
+  "name": "Cinderella cichlid",
+  "scientific": "Teleocichla cinderella",
+  "group": "fish",
+  "sections": {
+    "overview": "Teleocichla cinderella is a freshwater cichlid described from the lower Tocantins River in Brazil.",
+    "identification": "It is a small, elongated member of a genus adapted to life in fast-flowing water.",
+    "habitat": "The genus is associated with rapids and other strong-current habitats; the species’ type locality was at Tucuruí on the Tocantins.",
+    "diet": "Species-specific diet details are not given in the primary description or summary sources consulted.",
+    "behavior": "Its rheophilic body form is associated with life in flowing water, but detailed behavior is poorly documented.",
+    "reproduction": "The sources consulted do not provide reliable species-specific breeding information.",
+    "ecology": "Its known distribution is restricted to the lower Tocantins basin, where fast-water habitat has been heavily altered by dams.",
+    "conservation": "FishBase reports the 2018 global IUCN assessment as Endangered."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=56960",
+      "title": "Catalog of Fishes — California Academy of Sciences"
+    },
+    {
+      "url": "https://cichlidae.com/reference.php?id=961",
+      "title": "Kullander 1988, original genus/species description — Cichlidae.com reference record"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Teleocichla-cinderella",
+      "title": "Teleocichla cinderella — FishBase species summary"
+    }
+  ]
+}

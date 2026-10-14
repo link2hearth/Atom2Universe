@@ -1,0 +1,38 @@
+{
+  "id": "thaumoctopus_mimicus",
+  "name": "Mimic octopus",
+  "scientific": "Thaumoctopus mimicus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This long-armed octopus is known from the tropical Indo-West Pacific, including Indonesia.",
+    "identification": "It has long, narrow arms and distinctive white markings, including a teardrop-shaped ring and a U-shaped patch.",
+    "habitat": "The original description records it on soft bottoms in shallow water, at 0.5–7 m.",
+    "diet": "It probes burrows with its arm tips and traps fleeing prey with the web between its arms; the study did not identify prey taxa.",
+    "behavior": "The observed octopuses foraged by day in exposed sand, in view of potential fish predators.",
+    "reproduction": "The field paper observed adults and did not examine the species’ breeding cycle.",
+    "ecology": "Researchers documented postures resembling local flatfish, lionfish and sea snakes, but the defensive benefit was not experimentally tested.",
+    "conservation": "SeaLifeBase reports a global IUCN category of Least Concern for this species."
+  },
+  "sources": [
+    {
+      "url": "https://eprints.whiterose.ac.uk/id/eprint/91/1/tregenzat5.pdf",
+      "title": "Dynamic mimicry in an Indo-Malayan octopus — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://www.mapress.com/mr/content/v25/2005f/n2p070.htm",
+      "title": "Thaumoctopus mimicus — original species description, Memoirs of Museum Victoria"
+    },
+    {
+      "url": "https://www.fao.org/4/i3489e/i3489e.pdf",
+      "title": "Cephalopods of the World, Vol. 3 — FAO species catalogue"
+    },
+    {
+      "url": "https://sealifebase.org/summary/SpeciesSummary.php?id=100159&lang=English",
+      "title": "Thaumoctopus mimicus — SeaLifeBase summary"
+    },
+    {
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9044857",
+      "title": "BISMaL — Thaumoctopus mimicus"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "theretra_alecto",
+  "name": "Sphinx du Levant",
+  "scientific": "Theretra alecto",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Il est présent dans l’Asie tropicale, jusqu’au Japon, à Sulawesi et à Kei. En Inde, il est signalé dans plusieurs États.",
+    "identification": "Ses ailes postérieures rose foncé rappellent celles de T. suffusa, mais T. alecto a les ailes antérieures plus brunes et une plage pâle près de l’extrémité des postérieures.",
+    "habitat": "La fiche de Bornéo le décrit comme peu fréquent en plaine et parfois observé dans des lieux cultivés.",
+    "diet": "Les observations indiennes citent Dillenia, Pisum et Rubia parmi ses plantes-hôtes larvaires.",
+    "behavior": "Les fiches consultées ne décrivent pas de rythme d’activité particulier chez l’adulte.",
+    "reproduction": "La fiche de Bornéo décrit la chenille, mais ne détaille ni la ponte ni l’ensemble du cycle de développement.",
+    "ecology": "Il appartient au même genre que Theretra boisduvalii ; voir cette fiche pour une autre description régionale des plantes-hôtes larvaires.",
+    "conservation": "Les fiches consultées ne donnent ni catégorie mondiale de conservation ni tendance démographique."
+  },
+  "sources": [
+    {
+      "url": "https://www.mothsofborneo.com/species/theretra-alecto",
+      "title": "Theretra alecto — The Moths of Borneo"
+    },
+    {
+      "url": "https://www.mothsofindia.org/theretra-alecto",
+      "title": "Theretra alecto — Moths of India"
+    },
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/2795",
+      "title": "Theretra alecto — inventaire taxonomique des Sphingidae"
+    }
+  ]
+}

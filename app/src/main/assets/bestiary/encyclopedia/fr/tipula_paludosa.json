@@ -1,0 +1,38 @@
+{
+  "id": "tipula_paludosa",
+  "name": "Tipule des prairies",
+  "scientific": "Tipula paludosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tipula paludosa est une tipule dont les larves, appelées vers gris, vivent dans le sol et peuvent endommager pelouses et cultures.",
+    "identification": "L’adulte est une mouche aux longues pattes ; la larve apode, gris-brun, est surtout remarquée pour les dégâts qu’elle cause en se nourrissant.",
+    "habitat": "Elle est associée aux sols humides, notamment des prairies et pelouses ; son aire comprend le nord de l’Europe et des régions où elle a été introduite.",
+    "diet": "Les larves sont polyphages et consomment des végétaux, notamment des racines et la base des graminées.",
+    "behavior": "Elle a généralement une génération par an ; les adultes volent surtout de la fin de l’été à l’automne, tandis que les larves se nourrissent pendant les mois frais.",
+    "reproduction": "Les sources consultées décrivent un cycle annuel, mais donnent peu de détails propres à l’espèce sur l’accouplement et la ponte.",
+    "ecology": "Contrairement à l’espèce proche Tipula oleracea, qui peut avoir deux générations par an, T. paludosa est généralement univoltine ; leur activité saisonnière aide à les distinguer.",
+    "conservation": "Les sources agricoles et naturalistes consultées décrivent sa répartition et ses dégâts parfois importants, mais ne donnent pas d’évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/11692/Hypp-encyclopedie-en-protection-des-plantes-Tipula-spp",
+      "title": "INRAE ePhytia — Tipula spp."
+    },
+    {
+      "url": "https://cals.cornell.edu/integrated-pest-management/outreach-education/fact-sheets/european-crane-flies-tipula-paludosa-and-tipula-oleracea-ornamental-ipm-fact-sheet",
+      "title": "Cornell Cooperative Extension — Tipules européennes"
+    },
+    {
+      "url": "https://academic.oup.com/aesa/article/99/1/33/47468?searchresult=1",
+      "title": "Oxford Academic — Taxonomie et biologie de Tipula paludosa et T. oleracea"
+    },
+    {
+      "url": "https://www.agroscope.admin.ch/agroscope/fr/home/a-propos/collaborateurs/_jcr_content/par/externalcontent.bitexternalcontent.exturl.pdf/aHR0cHM6Ly9pcmEuYWdyb3Njb3BlLmNoL2ZyLUNIL1BhZ2UvRW/luemVscHVibGlrYXRpb24vRG93bmxvYWQ_ZWluemVscHVibGlr/YXRpb25JZD0zNzc1Mw%3D%3D.pdf",
+      "title": "Agroscope — Fiche d’information sur les tipules"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/discover/crane-fly-daddy-long-legs-facts.html",
+      "title": "Natural History Museum — Faits sur les tipules"
+    }
+  ]
+}

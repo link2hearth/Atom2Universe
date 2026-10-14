@@ -1,0 +1,30 @@
+{
+  "id": "tholera_cespitis",
+  "name": "Tholera cespitis",
+  "scientific": "Tholera cespitis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette noctuelle est présente en Europe et s’étend vers l’est jusqu’en Sibérie.",
+    "identification": "La fiche britannique indique une envergure de 34 à 40 mm ; cette taille recoupe celle de T. decimalis, son proche parent.",
+    "habitat": "Il fréquente les prairies étendues, des pelouses sèches pauvres en nutriments aux complexes humides et aux grandes clairières.",
+    "diet": "Les chenilles se nourrissent de graminées, notamment de nard raide et de deschampsie flexueuse dans les relevés britanniques.",
+    "behavior": "Les adultes volent en août et septembre ; les jeunes chenilles grimpent la nuit sur les tiges pour s’alimenter.",
+    "reproduction": "La chenille passe l’hiver et reste active jusqu’au début de l’été, tandis que le vol des adultes a lieu en fin d’été.",
+    "ecology": "Par rapport à T. decimalis, ses chenilles restent vertes plus longtemps et arrivent à maturité environ un mois plus tard ; voir cette fiche.",
+    "conservation": "La source régionale britannique consultée ne signale des observations régulières qu’à un seul site du Hampshire ; cela ne constitue pas une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://pyrgus.de/Tholera_cespitis_en.html",
+      "title": "Tholera cespitis — Lépidoptères européens et leur écologie"
+    },
+    {
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=73.252",
+      "title": "Hedge Rustic — Hantsmoths"
+    },
+    {
+      "url": "https://www.pyrgus.de/Tholera_cespitis.html",
+      "title": "Tholera cespitis — compte rendu germanophone de European Lepidoptera and their ecology"
+    }
+  ]
+}

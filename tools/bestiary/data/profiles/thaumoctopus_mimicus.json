@@ -1,0 +1,185 @@
+{
+  "id": "thaumoctopus_mimicus",
+  "scientific": "Thaumoctopus mimicus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Mimic octopus",
+    "fr": "Poulpe mimétique"
+  },
+  "sections": {
+    "overview": {
+      "en": "This long-armed octopus is known from the tropical Indo-West Pacific, including Indonesia.",
+      "fr": "Ce poulpe aux longs bras est connu de l’Indo-Pacifique tropical, notamment de l’Indonésie."
+    },
+    "identification": {
+      "en": "It has long, narrow arms and distinctive white markings, including a teardrop-shaped ring and a U-shaped patch.",
+      "fr": "Il possède de longs bras étroits et des marques blanches distinctives, dont un anneau en forme de larme et une tache en U."
+    },
+    "habitat": {
+      "en": "The original description records it on soft bottoms in shallow water, at 0.5–7 m.",
+      "fr": "La description originale le signale sur des fonds meubles peu profonds, entre 0,5 et 7 m."
+    },
+    "diet": {
+      "en": "It probes burrows with its arm tips and traps fleeing prey with the web between its arms; the study did not identify prey taxa.",
+      "fr": "Il sonde les terriers du bout des bras et piège les proies qui s’enfuient avec la membrane entre ses bras ; l’étude n’identifie pas les proies."
+    },
+    "behavior": {
+      "en": "The observed octopuses foraged by day in exposed sand, in view of potential fish predators.",
+      "fr": "Les poulpes observés cherchaient leur nourriture de jour sur le sable découvert, à la vue de poissons prédateurs potentiels."
+    },
+    "reproduction": {
+      "en": "The field paper observed adults and did not examine the species’ breeding cycle.",
+      "fr": "L’étude de terrain a observé des adultes sans examiner le cycle reproducteur de l’espèce."
+    },
+    "ecology": {
+      "en": "Researchers documented postures resembling local flatfish, lionfish and sea snakes, but the defensive benefit was not experimentally tested.",
+      "fr": "Les chercheurs ont décrit des postures évoquant des poissons plats, des rascasses-volantes et des serpents de mer locaux, sans tester expérimentalement leur effet défensif."
+    },
+    "conservation": {
+      "en": "SeaLifeBase reports a global IUCN category of Least Concern for this species.",
+      "fr": "SeaLifeBase indique pour cette espèce le statut mondial UICN de préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Dynamic mimicry in an Indo-Malayan octopus — Proceedings of the Royal Society B",
+        "fr": "Dynamic mimicry in an Indo-Malayan octopus — Proceedings of the Royal Society B"
+      },
+      "url": "https://eprints.whiterose.ac.uk/id/eprint/91/1/tregenzat5.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Field observations describe foraging and postures resembling other animals."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 153,
+        "notes_words": 9,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Thaumoctopus mimicus — original species description, Memoirs of Museum Victoria",
+        "fr": "Thaumoctopus mimicus — description originale, Memoirs of Museum Victoria"
+      },
+      "url": "https://www.mapress.com/mr/content/v25/2005f/n2p070.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The 2005 description records diagnostic white markings and shallow soft-bottom habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 11,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cephalopods of the World, Vol. 3 — FAO species catalogue",
+        "fr": "Cephalopods of the World, vol. 3 — catalogue d’espèces de la FAO"
+      },
+      "url": "https://www.fao.org/4/i3489e/i3489e.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The FAO catalogue maps the species in the Indo-West Pacific, from the Red Sea and Indonesia to Papua New Guinea, northern Australia and the Philippines."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 25,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Thaumoctopus mimicus — SeaLifeBase summary",
+        "fr": "Thaumoctopus mimicus — fiche SeaLifeBase"
+      },
+      "url": "https://sealifebase.org/summary/SpeciesSummary.php?id=100159&lang=English",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "SeaLifeBase reports the global IUCN Red List category for this species as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 14,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BISMaL — Thaumoctopus mimicus",
+        "fr": "BISMaL — Thaumoctopus mimicus"
+      },
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9044857",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The Japanese JAMSTEC database lists the accepted name Thaumoctopus mimicus and its cephalopod and octopod classification."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The field paper is an early, limited study of nine adults; it does not establish a complete prey list or reproductive account."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; mimicry observations are described without assuming a demonstrated survival benefit."
+}

@@ -1,0 +1,141 @@
+{
+  "id": "tholera_cespitis",
+  "scientific": "Tholera cespitis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Hedge rustic",
+    "fr": "Tholera cespitis"
+  },
+  "sections": {
+    "overview": {
+      "en": "This noctuid moth is distributed across Europe and eastward to Siberia.",
+      "fr": "Cette noctuelle est présente en Europe et s’étend vers l’est jusqu’en Sibérie."
+    },
+    "identification": {
+      "en": "The British account gives a wingspan of 34–40 mm; this size overlaps with the related T. decimalis.",
+      "fr": "La fiche britannique indique une envergure de 34 à 40 mm ; cette taille recoupe celle de T. decimalis, son proche parent."
+    },
+    "habitat": {
+      "en": "It occurs in extensive grasslands, from dry nutrient-poor turf to wetland complexes and large woodland clearings.",
+      "fr": "Il fréquente les prairies étendues, des pelouses sèches pauvres en nutriments aux complexes humides et aux grandes clairières."
+    },
+    "diet": {
+      "en": "The caterpillars feed on grasses, including mat-grass and wavy hair-grass in British records.",
+      "fr": "Les chenilles se nourrissent de graminées, notamment de nard raide et de deschampsie flexueuse dans les relevés britanniques."
+    },
+    "behavior": {
+      "en": "Adults fly in August and September; young caterpillars climb grass stems at night to feed.",
+      "fr": "Les adultes volent en août et septembre ; les jeunes chenilles grimpent la nuit sur les tiges pour s’alimenter."
+    },
+    "reproduction": {
+      "en": "The caterpillar overwinters and remains active into early summer, while the adult flight is late summer.",
+      "fr": "La chenille passe l’hiver et reste active jusqu’au début de l’été, tandis que le vol des adultes a lieu en fin d’été."
+    },
+    "ecology": {
+      "en": "Compared with T. decimalis, its caterpillars stay green longer and mature about a month later; see that profile.",
+      "fr": "Par rapport à T. decimalis, ses chenilles restent vertes plus longtemps et arrivent à maturité environ un mois plus tard ; voir cette fiche."
+    },
+    "conservation": {
+      "en": "The regional British source used here reports regular records at only one site in Hampshire; that local pattern is not a global assessment.",
+      "fr": "La source régionale britannique consultée ne signale des observations régulières qu’à un seul site du Hampshire ; cela ne constitue pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Tholera cespitis — European Lepidoptera and their ecology",
+        "fr": "Tholera cespitis — Lépidoptères européens et leur écologie"
+      },
+      "url": "https://pyrgus.de/Tholera_cespitis_en.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The account reports its Europe-to-Siberia range, grassland habitats, overwintering larvae, August–September adults and later larval development than T. decimalis."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 19,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Hedge Rustic — Hantsmoths",
+        "fr": "Hedge Rustic — Hantsmoths"
+      },
+      "url": "https://www.hantsmoths.org.uk/lep.php?code=73.252",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "The Hampshire account gives a 34–40 mm wingspan, grass hosts and local record pattern at Sandy Point."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 117,
+        "notes_words": 17,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Theretra cespitis — European Lepidoptera and their ecology, German-language account",
+        "fr": "Tholera cespitis — compte rendu germanophone de European Lepidoptera and their ecology"
+      },
+      "url": "https://www.pyrgus.de/Tholera_cespitis.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The German account independently notes the larval comparison with T. decimalis and gives the same approximate maturation delay."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The conservation note concerns Hampshire records only and should not be generalized beyond that region."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; the cross-reference to T. decimalis reflects the documented larval timing difference."
+}

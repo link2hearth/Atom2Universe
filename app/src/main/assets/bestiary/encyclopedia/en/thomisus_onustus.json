@@ -1,0 +1,30 @@
+{
+  "id": "thomisus_onustus",
+  "name": "Flower crab spider",
+  "scientific": "Thomisus onustus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Thomisus onustus is a flower-dwelling crab spider found across much of Europe, North Africa and Asia.",
+    "identification": "Females are much larger than males and may be white, yellow or pink; their colour can change over several days.",
+    "habitat": "It waits on flowers, especially in warm, sunny sites, where flower visitors come within reach.",
+    "diet": "It ambushes visiting insects, including bees, butterflies and hoverflies.",
+    "behavior": "Its flower-coloured appearance offers imperfect camouflage, and how conspicuous it is can affect its risk of attack.",
+    "reproduction": "The consulted identification and field sources do not provide a sufficiently detailed account of its reproduction.",
+    "ecology": "By ambushing pollinating insects, it is a predator within flower-visiting insect communities.",
+    "conservation": "The consulted sources provide a broad range but no global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/48574/Thomisus_onustus",
+      "title": "World Spider Catalog — Thomisus onustus"
+    },
+    {
+      "url": "https://araneae.nmbe.ch/data/940/Thomisus_onustus?lang=de",
+      "title": "Araneae — Thomisus onustus"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0003347220300944",
+      "title": "Animal Behaviour — Crypsis in a flower crab spider"
+    }
+  ]
+}

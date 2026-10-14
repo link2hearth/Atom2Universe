@@ -1,0 +1,34 @@
+{
+  "id": "thalassophis_anomalus",
+  "name": "Thalassophis anomalus",
+  "scientific": "Thalassophis anomalus",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Reptile Database emploie Hydrophis anomalus pour ce serpent marin. WoRMS accepte toujours le nom Thalassophis anomalus.",
+    "identification": "Les descriptions publiées signalent un dos gris, un ventre clair et des bandes sombres ; une source donne une longueur d’environ 81 cm.",
+    "habitat": "Il est marin. Les mentions incluent le golfe de Thaïlande, le Vietnam, Singapour et certaines régions d’Indonésie.",
+    "diet": "Les sources consultées détaillent peu le régime propre à l’espèce.",
+    "behavior": "Il est venimeux ; les sources détaillent peu son comportement.",
+    "reproduction": "Reptile Database le décrit comme ovovivipare.",
+    "ecology": "Reptile Database estime son classement générique incertain faute de données phylogénétiques.",
+    "conservation": "L’UICN l’a classé dans la catégorie Données insuffisantes lors de son évaluation de 2010."
+  },
+  "sources": [
+    {
+      "url": "https://reptile-database.reptarium.cz/Hydrophis/anomalus?search_param=%28%28taxon%3D%27Alethinophidia%27%2Cexact%29%29",
+      "title": "The Reptile Database — Hydrophis anomalus"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?id=344125&p=taxdetails",
+      "title": "WoRMS — Thalassophis anomalus"
+    },
+    {
+      "url": "https://www.mapress.com/zootaxa/2011/f/zt02894p020.pdf",
+      "title": "Rasmussen et al. — Serpents marins du Vietnam : liste et clé d’identification"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2010-4.RLTS.T176742A7295223.en",
+      "title": "Liste rouge de l’UICN — Thalassophis anomalus (évaluation de 2010)"
+    }
+  ]
+}

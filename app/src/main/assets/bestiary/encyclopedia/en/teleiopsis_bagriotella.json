@@ -1,0 +1,26 @@
+{
+  "id": "teleiopsis_bagriotella",
+  "name": "Alpine sorrel moth",
+  "scientific": "Teleiopsis bagriotella",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Teleiopsis bagriotella is a small gelechiid moth recorded in mountain regions of Europe and Turkey.",
+    "identification": "The available sources identify it mainly by its taxonomic placement; a concise species-specific field diagnosis was not found.",
+    "habitat": "It occurs in alpine settings, including rocky scree where its host plant grows.",
+    "diet": "Its larva feeds on Oxyria digyna, a plant of cold, rocky mountain habitats.",
+    "behavior": "The sources consulted provide little species-specific information on adult behavior.",
+    "reproduction": "The documented larval host is Oxyria digyna; other details of its life cycle were not established in the sources consulted.",
+    "ecology": "Its dependence on one documented host plant links the moth to alpine plant communities.",
+    "conservation": "The sources consulted describe distribution and host use but do not provide a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.nic.funet.fi/index/Tree_of_life/insecta/lepidoptera/ditrysia/gelechioidea/gelechiidae/gelechiinae/teleiopsis/",
+      "title": "Teleiopsis — Lepidoptera and some other life forms (Funet)"
+    },
+    {
+      "url": "https://www.zobodat.at/pdf/WissMittHoheTauern_5_0023-0060.pdf",
+      "title": "Die Schmetterlinge des Nationalparks Hohe Tauern — Wissenschaftliche Mitteilungen Hohe Tauern"
+    }
+  ]
+}

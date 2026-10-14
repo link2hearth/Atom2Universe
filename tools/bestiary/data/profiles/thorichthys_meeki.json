@@ -1,0 +1,169 @@
+{
+  "id": "thorichthys_meeki",
+  "scientific": "Thorichthys meeki",
+  "group": "fish",
+  "name": {
+    "en": "Firemouth cichlid",
+    "fr": "Cichlidé à gorge de feu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The firemouth cichlid is a freshwater fish native to the Yucatán region and nearby Central America.",
+      "fr": "Le cichlidé à gorge de feu est un poisson d’eau douce originaire du Yucatán et des régions voisines d’Amérique centrale."
+    },
+    "identification": {
+      "en": "It reaches about 17 cm in total length and is named for the bright reddish area beneath its head.",
+      "fr": "Il atteint environ 17 cm de longueur totale et doit son nom à la zone rouge vif sous la tête."
+    },
+    "habitat": {
+      "en": "It inhabits rivers, canals and ponds, including slow-flowing water with muddy or sandy bottoms and shoreline vegetation.",
+      "fr": "Il fréquente rivières, canaux et étangs, notamment les eaux lentes à fond vaseux ou sableux bordées de végétation."
+    },
+    "diet": {
+      "en": "Its diet varies; a study in a Yucatán lagoon found substantial zooplankton feeding, while broader accounts also report algae and other food.",
+      "fr": "Son régime varie ; une étude dans une lagune du Yucatán relève une consommation importante de zooplancton, tandis que des synthèses signalent aussi des algues et d’autres aliments."
+    },
+    "behavior": {
+      "en": "It is associated with shallow, vegetated freshwater habitats; feeding can vary with season, time and fish size.",
+      "fr": "Il est associé aux eaux douces peu profondes et végétalisées ; son alimentation peut varier selon la saison, l’heure et la taille du poisson."
+    },
+    "reproduction": {
+      "en": "Pairs lay eggs on open surfaces and both parents guard them; they later move the young into shallow pits and continue guarding them.",
+      "fr": "Les couples pondent sur une surface dégagée et les deux parents gardent les œufs ; ils déplacent ensuite les jeunes dans des cuvettes peu profondes et continuent de les protéger."
+    },
+    "ecology": {
+      "en": "It is a benthopelagic omnivore whose recorded food includes zooplankton and algae; diet studies show variation among habitats and seasons.",
+      "fr": "C’est un omnivore benthopélagique dont les aliments recensés comprennent le zooplancton et les algues ; les études montrent des variations selon les milieux et les saisons."
+    },
+    "conservation": {
+      "en": "A 2018 global assessment listed it as Least Concern.",
+      "fr": "Une évaluation mondiale de 2018 le classait en Préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "U.S. Geological Survey — Firemouth Cichlid",
+        "fr": "U.S. Geological Survey — Cichlidé à gorge de feu"
+      },
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=446",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "The fact sheet gives the native range in Mexico, Guatemala and Belize."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 12,
+        "total": 48,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Thorichthys meeki",
+        "fr": "FishBase — Thorichthys meeki"
+      },
+      "url": "https://www.fishbase.se/summary/4676",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports a maximum length of 17 cm, freshwater habitats, parental care after open-substrate egg laying, and a Least Concern assessment dated 2018."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 23,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revista de Biología Tropical — Feeding of cichlids in Laguna Caobas",
+        "fr": "Revista de Biología Tropical — Alimentation des cichlidés de la lagune Caobas"
+      },
+      "url": "https://www.scielo.sa.cr/scielo.php?pid=S0034-77442000000200022&script=sci_arttext",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "This Spanish-language study in a Yucatán lagoon finds zooplankton prominent in the diet and reports variation by time, size and season."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 21,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Enciclovida — Thorichthys meeki",
+        "fr": "Enciclovida — Thorichthys meeki"
+      },
+      "url": "https://enciclovida.mx/especies/30654-thorichthys-meeki",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Mexico’s biodiversity encyclopedia lists the species under the Spanish common name mojarra boca de fuego."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet varies by locality and conditions; the Yucatán study should not be read as a universal diet description."
+  ],
+  "review_note": "Cross-checked an English-language U.S. agency page and fish database with a Spanish-language Yucatán feeding study and Mexican taxonomic resource.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

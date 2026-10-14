@@ -1,0 +1,30 @@
+{
+  "id": "tetrapturus_georgii",
+  "name": "Roundscale spearfish",
+  "scientific": "Tetrapturus georgii",
+  "group": "fish",
+  "sections": {
+    "overview": "The roundscale spearfish is a poorly documented oceanic billfish of the Atlantic and Mediterranean.",
+    "identification": "It resembles other spearfishes, but its rounded, multi-pointed mid-body scales and anal-fin proportions aid identification.",
+    "habitat": "It is pelagic and oceanic; confirmed records include Madeira, Sicily, the Strait of Gibraltar and waters off southern Portugal.",
+    "diet": "Species-specific dietary information is scarce in the accounts consulted.",
+    "behavior": "It is highly migratory, but the scale of its movements remains uncertain because records are sparse.",
+    "reproduction": "A 2025 study genetically confirmed an egg and a juvenile, but much of its reproductive biology remains unknown.",
+    "ecology": "It is occasionally encountered in fisheries, and accurate identification matters because it can be confused with other billfishes.",
+    "conservation": "The IUCN assessment listed the species as Data Deficient in 2021."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Tetrapturus-georgii.html",
+      "title": "FishBase — Tetrapturus georgii"
+    },
+    {
+      "url": "https://repository.library.noaa.gov/view/noaa/8614",
+      "title": "NOAA — Roundscale Spearfish: Updated Morphology, Distribution and Relative Abundance"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12244303/",
+      "title": "Genetically confirmed first records of an egg and juvenile roundscale spearfish"
+    }
+  ]
+}

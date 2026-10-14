@@ -1,0 +1,34 @@
+{
+  "id": "tetrao_urogallus",
+  "name": "Western capercaillie",
+  "scientific": "Tetrao urogallus",
+  "group": "birds",
+  "sections": {
+    "overview": "The western capercaillie is a large forest grouse found across northern Eurasia and in mountain forests farther south.",
+    "identification": "Males are large and dark, with a pale bill and red eye-wattle; females are smaller and more cryptically mottled.",
+    "habitat": "It favours extensive, open-structured conifer or mixed forest with bilberry-rich undergrowth; in France it is chiefly associated with mountain forests.",
+    "diet": "Adults eat conifer needles in winter and shift toward buds, leaves and berries in warmer months; chicks initially take invertebrates.",
+    "behavior": "In spring, males gather at display grounds, where females choose among displaying males.",
+    "reproduction": "Mating is polygynous: dominant males may father many of the chicks at a lek.",
+    "ecology": "The bilberry layer supplies food and cover, while young chicks depend on insect prey during their first weeks.",
+    "conservation": "It is Red-listed in the United Kingdom. French authorities also report declines in parts of France."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/2964",
+      "title": "FAUNA — Tetrao urogallus"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Tetrao_urogallus/",
+      "title": "Animal Diversity Web — Western Capercaillie"
+    },
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/capercaillie",
+      "title": "RSPB — Capercaillie"
+    },
+    {
+      "url": "https://www.grand-est.developpement-durable.gouv.fr/le-grand-tetras-a13444.html",
+      "title": "DREAL Grand Est — Le Grand Tétras"
+    }
+  ]
+}

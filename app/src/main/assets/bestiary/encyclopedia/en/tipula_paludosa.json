@@ -1,0 +1,38 @@
+{
+  "id": "tipula_paludosa",
+  "name": "European crane fly",
+  "scientific": "Tipula paludosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Tipula paludosa is a crane fly whose larvae, known as leatherjackets, live in soil and can damage grass and crops.",
+    "identification": "The adult is a long-legged fly; the legless, grey-brown larva is the stage most often noticed for its feeding damage.",
+    "habitat": "It is associated with moist soils, including grassland and turf; its range includes northern Europe and introduced areas.",
+    "diet": "The larvae are polyphagous and feed on plant material, including roots and the bases of grasses.",
+    "behavior": "It usually has one generation per year; adults fly mainly in late summer and autumn, while larvae feed during the cooler months.",
+    "reproduction": "The sources consulted describe an annual life cycle but provide limited species-specific detail on mating and egg laying.",
+    "ecology": "Unlike the related Tipula oleracea, which can have two generations in a year, T. paludosa is generally univoltine; their seasonal activity can help distinguish them.",
+    "conservation": "The consulted agricultural and natural-history sources discuss its range and occasional pest damage but give no global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/11692/Hypp-encyclopedie-en-protection-des-plantes-Tipula-spp",
+      "title": "INRAE ePhytia — Tipula spp."
+    },
+    {
+      "url": "https://cals.cornell.edu/integrated-pest-management/outreach-education/fact-sheets/european-crane-flies-tipula-paludosa-and-tipula-oleracea-ornamental-ipm-fact-sheet",
+      "title": "Cornell Cooperative Extension — European crane flies"
+    },
+    {
+      "url": "https://academic.oup.com/aesa/article/99/1/33/47468?searchresult=1",
+      "title": "Oxford Academic — Taxonomy and biology of Tipula paludosa and T. oleracea"
+    },
+    {
+      "url": "https://www.agroscope.admin.ch/agroscope/fr/home/a-propos/collaborateurs/_jcr_content/par/externalcontent.bitexternalcontent.exturl.pdf/aHR0cHM6Ly9pcmEuYWdyb3Njb3BlLmNoL2ZyLUNIL1BhZ2UvRW/luemVscHVibGlrYXRpb24vRG93bmxvYWQ_ZWluemVscHVibGlr/YXRpb25JZD0zNzc1Mw%3D%3D.pdf",
+      "title": "Agroscope — Crane fly information sheet"
+    },
+    {
+      "url": "https://www.nhm.ac.uk/discover/crane-fly-daddy-long-legs-facts.html",
+      "title": "Natural History Museum — Crane fly facts"
+    }
+  ]
+}

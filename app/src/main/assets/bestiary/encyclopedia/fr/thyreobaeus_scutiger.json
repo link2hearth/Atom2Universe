@@ -1,0 +1,34 @@
+{
+  "id": "thyreobaeus_scutiger",
+  "name": "Thyreobaeus scutiger",
+  "scientific": "Thyreobaeus scutiger",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Thyreobaeus scutiger est une araignée peu connue de la famille des Linyphiidae, décrite de Madagascar.",
+    "identification": "La description originale reposait sur une seule femelle ; un article taxonomique ultérieur la caractérise comme une très petite araignée sombre portant un scutum dorsal.",
+    "habitat": "L’espèce est connue de Madagascar, mais les catalogues consultés n’indiquent pas de milieu ni de localité plus précis.",
+    "diet": "Son régime alimentaire n’est pas documenté dans les sources consultées.",
+    "behavior": "Les sources consultées ne décrivent pas de comportement propre à cette espèce.",
+    "reproduction": "La description originale reposait sur une femelle, mais les sources consultées ne précisent pas sa biologie reproductive.",
+    "ecology": "C’est l’espèce type de son genre ; les données disponibles sont trop rares pour caractériser son rôle écologique.",
+    "conservation": "Les sources consultées ne fournissent ni évaluation de conservation ni tendance de population."
+  },
+  "sources": [
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/24592",
+      "title": "World Spider Catalog — Thyreobaeus scutiger"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/7423",
+      "title": "Simon — Études arachnologiques, 21e mémoire (1889)"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/227606492_Asymmetric_female_genitalia_and_other_remarkable_morphology_in_a_new_genus_of_cobweb_spiders_Theridiidae_Araneae_from_Madagascar_ASYMMETRIC_SPIDER_EPYGNA",
+      "title": "Étude taxonomique — Asymmetric female genitalia and other remarkable morphology in a new genus of cobweb spiders"
+    },
+    {
+      "url": "https://research.calacademy.org/research/entomology/Entomology_Resources/Faunal_Projects/madagascar_spiders/text/Linyphiidae.htm",
+      "title": "California Academy of Sciences — Linyphiidae de Madagascar"
+    }
+  ]
+}

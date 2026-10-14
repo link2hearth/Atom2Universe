@@ -1,0 +1,164 @@
+{
+  "id": "theretra_boisduvalii",
+  "scientific": "Theretra boisduvalii",
+  "group": "invertebrates",
+  "name": {
+    "en": "Boisduval’s hawkmoth",
+    "fr": "Sphinx de Boisduval"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Asian hawkmoth ranges from western Asia through the Oriental tropics to Sundaland and the Lesser Sunda Islands.",
+      "fr": "Ce sphinx asiatique est présent de l’ouest de l’Asie jusqu’aux tropiques orientaux, à la région de la Sonde et aux petites îles de la Sonde."
+    },
+    "identification": {
+      "en": "Its forewing’s postmedial line is punctate on the veins, while the thorax and upper abdomen lack bands in the Borneo account’s description.",
+      "fr": "La ligne postmédiane de l’aile antérieure est ponctuée sur les nervures ; selon la fiche de Bornéo, le thorax et le dessus de l’abdomen ne sont pas rayés."
+    },
+    "habitat": {
+      "en": "The Borneo account calls it infrequent and notes records from lowlands as well as one high-elevation locality.",
+      "fr": "La fiche de Bornéo le dit peu fréquent et signale des observations en plaine ainsi qu’une localité d’altitude."
+    },
+    "diet": {
+      "en": "The Borneo species account records Cissus as a larval host plant.",
+      "fr": "La fiche de Bornéo signale Cissus comme plante-hôte larvaire."
+    },
+    "behavior": {
+      "en": "The species accounts used here do not describe a distinctive adult behavior pattern.",
+      "fr": "Les fiches consultées ne décrivent pas de comportement particulier chez l’adulte."
+    },
+    "reproduction": {
+      "en": "The Borneo account describes larval stages but does not detail the complete reproductive cycle.",
+      "fr": "La fiche de Bornéo décrit les stades larvaires, mais ne détaille pas le cycle reproducteur complet."
+    },
+    "ecology": {
+      "en": "It is a congener of Theretra alecto; see that profile for its broader recorded host-plant list.",
+      "fr": "C’est un congénère de Theretra alecto ; voir cette fiche pour sa liste plus étendue de plantes-hôtes signalées."
+    },
+    "conservation": {
+      "en": "The species accounts consulted do not provide a global conservation category or population trend.",
+      "fr": "Les fiches consultées ne donnent ni catégorie mondiale de conservation ni tendance démographique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Theretra boisduvalii — The Moths of Borneo",
+        "fr": "Theretra boisduvalii — The Moths of Borneo"
+      },
+      "url": "https://www.mothsofborneo.com/species/theretra-boisduvalii",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "The account describes range, wing markings, habitat, larval stages and Cissus as a host."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 14,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Theretra boisduvalii — Moths of India",
+        "fr": "Theretra boisduvalii — Moths of India"
+      },
+      "url": "https://www.mothsofindia.org/theretra-boisduvalii",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The Indian account records the species in several states but provides no distinctive adult behavior or global assessment."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 18,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Theretra boisduvalii — Sphingidae Taxonomic Inventory",
+        "fr": "Theretra boisduvalii — inventaire taxonomique des Sphingidae"
+      },
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/2797",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The inventory treats T. boisduvalii and T. alecto as species in Theretra."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 12,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Contribution à la connaissance des Theretra — The European Entomologist",
+        "fr": "Contribution à la connaissance des Theretra — The European Entomologist"
+      },
+      "url": "https://sphingidae.myspecies.info/node/20354",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "The French-language 2010 revision addresses the T. boisduvalii complex and associated Asian Theretra taxonomy."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The consulted sources supply range and larval host records but little information about adult behavior, full reproduction or global conservation status."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; T. alecto is referenced as a congener with a broader recorded host list."
+}

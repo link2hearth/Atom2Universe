@@ -1,0 +1,30 @@
+{
+  "id": "teleocichla_cinderella",
+  "name": "Teleocichla cinderella",
+  "scientific": "Teleocichla cinderella",
+  "group": "fish",
+  "sections": {
+    "overview": "Teleocichla cinderella est un cichlidé d’eau douce décrit du cours inférieur du rio Tocantins, au Brésil.",
+    "identification": "C’est un petit poisson allongé d’un genre adapté aux eaux à courant rapide.",
+    "habitat": "Le genre est associé aux rapides et aux autres milieux à fort courant ; la localité type de l’espèce se trouvait à Tucuruí, sur le Tocantins.",
+    "diet": "Les sources consultées, dont la description originale, ne précisent pas le régime alimentaire propre à l’espèce.",
+    "behavior": "Sa morphologie rhéophile est liée à la vie en eau courante, mais son comportement détaillé est peu documenté.",
+    "reproduction": "Les sources consultées ne fournissent pas d’informations fiables sur la reproduction propre à l’espèce.",
+    "ecology": "Sa répartition connue est limitée au bassin inférieur du Tocantins, où les habitats de courant rapide ont été fortement transformés par les barrages.",
+    "conservation": "FishBase rapporte que l’évaluation mondiale de l’UICN de 2018 classe l’espèce En danger."
+  },
+  "sources": [
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=56960",
+      "title": "Catalog of Fishes — California Academy of Sciences"
+    },
+    {
+      "url": "https://cichlidae.com/reference.php?id=961",
+      "title": "Kullander 1988, original genus/species description — Cichlidae.com reference record"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Teleocichla-cinderella",
+      "title": "Teleocichla cinderella — FishBase species summary"
+    }
+  ]
+}

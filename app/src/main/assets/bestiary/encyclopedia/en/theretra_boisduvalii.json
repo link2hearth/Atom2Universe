@@ -1,0 +1,34 @@
+{
+  "id": "theretra_boisduvalii",
+  "name": "Boisduval’s hawkmoth",
+  "scientific": "Theretra boisduvalii",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This Asian hawkmoth ranges from western Asia through the Oriental tropics to Sundaland and the Lesser Sunda Islands.",
+    "identification": "Its forewing’s postmedial line is punctate on the veins, while the thorax and upper abdomen lack bands in the Borneo account’s description.",
+    "habitat": "The Borneo account calls it infrequent and notes records from lowlands as well as one high-elevation locality.",
+    "diet": "The Borneo species account records Cissus as a larval host plant.",
+    "behavior": "The species accounts used here do not describe a distinctive adult behavior pattern.",
+    "reproduction": "The Borneo account describes larval stages but does not detail the complete reproductive cycle.",
+    "ecology": "It is a congener of Theretra alecto; see that profile for its broader recorded host-plant list.",
+    "conservation": "The species accounts consulted do not provide a global conservation category or population trend."
+  },
+  "sources": [
+    {
+      "url": "https://www.mothsofborneo.com/species/theretra-boisduvalii",
+      "title": "Theretra boisduvalii — The Moths of Borneo"
+    },
+    {
+      "url": "https://www.mothsofindia.org/theretra-boisduvalii",
+      "title": "Theretra boisduvalii — Moths of India"
+    },
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/2797",
+      "title": "Theretra boisduvalii — Sphingidae Taxonomic Inventory"
+    },
+    {
+      "url": "https://sphingidae.myspecies.info/node/20354",
+      "title": "Contribution à la connaissance des Theretra — The European Entomologist"
+    }
+  ]
+}

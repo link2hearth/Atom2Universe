@@ -1,0 +1,30 @@
+{
+  "id": "timalia_pileata",
+  "name": "Chestnut-capped babbler",
+  "scientific": "Timalia pileata",
+  "group": "birds",
+  "sections": {
+    "overview": "The chestnut-capped babbler is a resident Asian songbird of the Indian subcontinent and Southeast Asia.",
+    "identification": "Its common names refer to the chestnut-coloured crown that distinguishes this babbler.",
+    "habitat": "It uses dense scrub, tall grass and reedbeds, often in damp lowlands and secondary growth; it is also recorded in tea estates.",
+    "diet": "It feeds mainly on insects, gleaning among foliage and dense vegetation.",
+    "behavior": "It is described as diurnal and resident, foraging low in cover rather than making long seasonal movements.",
+    "reproduction": "Nesting information remains sparse in the consulted regional accounts.",
+    "ecology": "Its use of wet grass, reeds and scrub ties it to lowland cover, including some human-modified habitats.",
+    "conservation": "Bangladesh assessed it as Least Concern in 2014; that national assessment is not a substitute for a current global status."
+  },
+  "sources": [
+    {
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "title": "Bangladesh Red List of Birds — Timalia pileata"
+    },
+    {
+      "url": "https://indianbirds.in/wp-content/uploads/2025/06/IB_21_2_Final_Print.pdf",
+      "title": "Indian Birds — Notes on the natural history of Timalia pileata (2025)"
+    },
+    {
+      "url": "https://nfom.recherche.usherbrooke.ca/timalie.html",
+      "title": "Université de Sherbrooke — French bird names"
+    }
+  ]
+}

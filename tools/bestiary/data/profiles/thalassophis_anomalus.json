@@ -1,0 +1,168 @@
+{
+  "id": "thalassophis_anomalus",
+  "scientific": "Thalassophis anomalus",
+  "group": "reptiles",
+  "name": {
+    "en": "Anomalous sea snake",
+    "fr": "Thalassophis anomalus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Reptile Database uses Hydrophis anomalus for this marine snake. WoRMS still accepts the name Thalassophis anomalus.",
+      "fr": "Reptile Database emploie Hydrophis anomalus pour ce serpent marin. WoRMS accepte toujours le nom Thalassophis anomalus."
+    },
+    "identification": {
+      "en": "Published descriptions report a grey back, pale underside and dark bands; the species reaches about 81 cm in one account.",
+      "fr": "Les descriptions publiées signalent un dos gris, un ventre clair et des bandes sombres ; une source donne une longueur d’environ 81 cm."
+    },
+    "habitat": {
+      "en": "It is marine. Records include the Gulf of Thailand, Vietnam, Singapore and parts of Indonesia.",
+      "fr": "Il est marin. Les mentions incluent le golfe de Thaïlande, le Vietnam, Singapour et certaines régions d’Indonésie."
+    },
+    "diet": {
+      "en": "The consulted accounts give little species-specific detail on diet.",
+      "fr": "Les sources consultées détaillent peu le régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "It is venomous; the accounts give little further detail on behavior.",
+      "fr": "Il est venimeux ; les sources détaillent peu son comportement."
+    },
+    "reproduction": {
+      "en": "The Reptile Database describes it as ovoviviparous.",
+      "fr": "Reptile Database le décrit comme ovovivipare."
+    },
+    "ecology": {
+      "en": "The Reptile Database says its generic assignment is uncertain because phylogenetic data are lacking.",
+      "fr": "Reptile Database estime son classement générique incertain faute de données phylogénétiques."
+    },
+    "conservation": {
+      "en": "IUCN classified it as Data Deficient in its 2010 assessment.",
+      "fr": "L’UICN l’a classé dans la catégorie Données insuffisantes lors de son évaluation de 2010."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Reptile Database — Hydrophis anomalus",
+        "fr": "The Reptile Database — Hydrophis anomalus"
+      },
+      "url": "https://reptile-database.reptarium.cz/Hydrophis/anomalus?search_param=%28%28taxon%3D%27Alethinophidia%27%2Cexact%29%29",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Uses Hydrophis anomalus; notes marine habitat, venom, ovoviviparity and uncertain generic assignment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 12,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "WoRMS — Thalassophis anomalus",
+        "fr": "WoRMS — Thalassophis anomalus"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?id=344125&p=taxdetails",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "WoRMS currently lists Thalassophis anomalus as an accepted marine species name."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 14,
+        "notes_words": 11,
+        "total": 25,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "Rasmussen et al. — Sea snakes in Vietnam: checklist and identification key",
+        "fr": "Rasmussen et al. — Serpents marins du Vietnam : liste et clé d’identification"
+      },
+      "url": "https://www.mapress.com/zootaxa/2011/f/zt02894p020.pdf",
+      "supports": [
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The 2011 paper describes colour, size and Southeast Asian range."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 10,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    },
+    {
+      "title": {
+        "en": "IUCN Red List — Thalassophis anomalus (2010 assessment)",
+        "fr": "Liste rouge de l’UICN — Thalassophis anomalus (évaluation de 2010)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2010-4.RLTS.T176742A7295223.en",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The cited 2010 Red List assessment classifies the species as Data Deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 24,
+        "notes_words": 12,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      },
+      "consulted": "2026-10-14"
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic catalogues differ: WoRMS accepts the inventory's name, while the Reptile Database uses Hydrophis anomalus and notes uncertainty over generic assignment. Species-specific ecological information is sparse."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1
+}

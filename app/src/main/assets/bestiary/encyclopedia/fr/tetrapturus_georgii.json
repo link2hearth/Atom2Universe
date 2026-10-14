@@ -1,0 +1,30 @@
+{
+  "id": "tetrapturus_georgii",
+  "name": "Tetrapturus georgii",
+  "scientific": "Tetrapturus georgii",
+  "group": "fish",
+  "sections": {
+    "overview": "Tetrapturus georgii est un istiophoridé océanique peu documenté de l’Atlantique et de la Méditerranée.",
+    "identification": "Il ressemble aux autres poissons porte-épée, mais ses écailles médianes arrondies et pluridentées et les proportions de sa nageoire anale aident à l’identifier.",
+    "habitat": "Il est pélagique et océanique ; les mentions confirmées comprennent Madère, la Sicile, le détroit de Gibraltar et les eaux au large du sud du Portugal.",
+    "diet": "Les sources consultées donnent peu d’informations sur le régime propre à l’espèce.",
+    "behavior": "C’est un poisson très migrateur, mais l’ampleur de ses déplacements reste incertaine faute de données nombreuses.",
+    "reproduction": "Une étude de 2025 a confirmé génétiquement un œuf et un juvénile, mais une grande partie de sa biologie reproductive reste inconnue.",
+    "ecology": "Il est parfois rencontré dans les pêcheries ; une identification correcte importe car il peut être confondu avec d’autres istiophoridés.",
+    "conservation": "L’évaluation de l’UICN a classé l’espèce dans la catégorie Données insuffisantes en 2021."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Tetrapturus-georgii.html",
+      "title": "FishBase — Tetrapturus georgii"
+    },
+    {
+      "url": "https://repository.library.noaa.gov/view/noaa/8614",
+      "title": "NOAA — Morphologie, répartition et abondance actualisées du roundscale spearfish"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12244303/",
+      "title": "Premières mentions génétiquement confirmées d’un œuf et d’un juvénile"
+    }
+  ]
+}

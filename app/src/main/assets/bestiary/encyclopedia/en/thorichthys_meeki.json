@@ -1,0 +1,34 @@
+{
+  "id": "thorichthys_meeki",
+  "name": "Firemouth cichlid",
+  "scientific": "Thorichthys meeki",
+  "group": "fish",
+  "sections": {
+    "overview": "The firemouth cichlid is a freshwater fish native to the Yucatán region and nearby Central America.",
+    "identification": "It reaches about 17 cm in total length and is named for the bright reddish area beneath its head.",
+    "habitat": "It inhabits rivers, canals and ponds, including slow-flowing water with muddy or sandy bottoms and shoreline vegetation.",
+    "diet": "Its diet varies; a study in a Yucatán lagoon found substantial zooplankton feeding, while broader accounts also report algae and other food.",
+    "behavior": "It is associated with shallow, vegetated freshwater habitats; feeding can vary with season, time and fish size.",
+    "reproduction": "Pairs lay eggs on open surfaces and both parents guard them; they later move the young into shallow pits and continue guarding them.",
+    "ecology": "It is a benthopelagic omnivore whose recorded food includes zooplankton and algae; diet studies show variation among habitats and seasons.",
+    "conservation": "A 2018 global assessment listed it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=446",
+      "title": "U.S. Geological Survey — Firemouth Cichlid"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/4676",
+      "title": "FishBase — Thorichthys meeki"
+    },
+    {
+      "url": "https://www.scielo.sa.cr/scielo.php?pid=S0034-77442000000200022&script=sci_arttext",
+      "title": "Revista de Biología Tropical — Feeding of cichlids in Laguna Caobas"
+    },
+    {
+      "url": "https://enciclovida.mx/especies/30654-thorichthys-meeki",
+      "title": "Enciclovida — Thorichthys meeki"
+    }
+  ]
+}

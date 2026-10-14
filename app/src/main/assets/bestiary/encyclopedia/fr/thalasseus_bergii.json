@@ -1,0 +1,30 @@
+{
+  "id": "thalasseus_bergii",
+  "name": "Sterne huppée",
+  "scientific": "Thalasseus bergii",
+  "group": "birds",
+  "sections": {
+    "overview": "La Sterne huppée est une grande sterne côtière, présente de l’Afrique australe à l’ouest du Pacifique en passant par l’océan Indien.",
+    "identification": "Elle porte une huppe noire ébouriffée, un dessus gris, un dessous blanc et un long bec jaune. À comparer avec la Sterne caugek (T. sandvicensis), au bec noir à pointe jaune ; voir sa fiche.",
+    "habitat": "Elle niche sur des îlots au large, sableux, rocheux ou coralliens, et fréquente aussi les eaux côtières, estuaires et lagunes.",
+    "diet": "Elle se nourrit surtout de petits poissons capturés par des plongeons peu profonds ; elle prend aussi calmars et crabes.",
+    "behavior": "Elle peut être solitaire ou grégaire et forme des colonies bruyantes pour nicher ; beaucoup de populations restent près des sites de reproduction.",
+    "reproduction": "Les couples nichent au sol dans une simple cuvette et pondent généralement un œuf en Australie, un ou deux ailleurs.",
+    "ecology": "Son régime piscivore et ses colonies insulaires la lient aux eaux côtières peu profondes et à leurs proies marines.",
+    "conservation": "Elle n’est pas globalement menacée, mais ses colonies denses peuvent être localement vulnérables au dérangement et aux prédateurs."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/sterne.huppee.html",
+      "title": "Oiseaux.net — Sterne huppée"
+    },
+    {
+      "url": "https://cdn.environment.sa.gov.au/landscape/docs/hf/greater-crested-tern-bio-region-fact.pdf",
+      "title": "Australie-Méridionale — Fiche de la Sterne huppée"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/sterne.caugek.html",
+      "title": "Oiseaux.net — Sterne caugek"
+    }
+  ]
+}

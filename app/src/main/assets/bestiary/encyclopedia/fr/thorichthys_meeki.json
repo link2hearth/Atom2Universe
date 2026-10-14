@@ -1,0 +1,34 @@
+{
+  "id": "thorichthys_meeki",
+  "name": "Cichlidé à gorge de feu",
+  "scientific": "Thorichthys meeki",
+  "group": "fish",
+  "sections": {
+    "overview": "Le cichlidé à gorge de feu est un poisson d’eau douce originaire du Yucatán et des régions voisines d’Amérique centrale.",
+    "identification": "Il atteint environ 17 cm de longueur totale et doit son nom à la zone rouge vif sous la tête.",
+    "habitat": "Il fréquente rivières, canaux et étangs, notamment les eaux lentes à fond vaseux ou sableux bordées de végétation.",
+    "diet": "Son régime varie ; une étude dans une lagune du Yucatán relève une consommation importante de zooplancton, tandis que des synthèses signalent aussi des algues et d’autres aliments.",
+    "behavior": "Il est associé aux eaux douces peu profondes et végétalisées ; son alimentation peut varier selon la saison, l’heure et la taille du poisson.",
+    "reproduction": "Les couples pondent sur une surface dégagée et les deux parents gardent les œufs ; ils déplacent ensuite les jeunes dans des cuvettes peu profondes et continuent de les protéger.",
+    "ecology": "C’est un omnivore benthopélagique dont les aliments recensés comprennent le zooplancton et les algues ; les études montrent des variations selon les milieux et les saisons.",
+    "conservation": "Une évaluation mondiale de 2018 le classait en Préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://nas.er.usgs.gov/queries/FactSheet.aspx?speciesID=446",
+      "title": "U.S. Geological Survey — Cichlidé à gorge de feu"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/4676",
+      "title": "FishBase — Thorichthys meeki"
+    },
+    {
+      "url": "https://www.scielo.sa.cr/scielo.php?pid=S0034-77442000000200022&script=sci_arttext",
+      "title": "Revista de Biología Tropical — Alimentation des cichlidés de la lagune Caobas"
+    },
+    {
+      "url": "https://enciclovida.mx/especies/30654-thorichthys-meeki",
+      "title": "Enciclovida — Thorichthys meeki"
+    }
+  ]
+}

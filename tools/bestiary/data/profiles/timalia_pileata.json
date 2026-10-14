@@ -1,0 +1,142 @@
+{
+  "id": "timalia_pileata",
+  "scientific": "Timalia pileata",
+  "group": "birds",
+  "name": {
+    "en": "Chestnut-capped babbler",
+    "fr": "Timalie coiffée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The chestnut-capped babbler is a resident Asian songbird of the Indian subcontinent and Southeast Asia.",
+      "fr": "La timalie coiffée est un passereau sédentaire du sous-continent indien et de l’Asie du Sud-Est."
+    },
+    "identification": {
+      "en": "Its common names refer to the chestnut-coloured crown that distinguishes this babbler.",
+      "fr": "Son nom anglais fait référence à sa calotte brun châtain, caractéristique de cette timalie."
+    },
+    "habitat": {
+      "en": "It uses dense scrub, tall grass and reedbeds, often in damp lowlands and secondary growth; it is also recorded in tea estates.",
+      "fr": "Elle fréquente les fourrés denses, les hautes herbes et les roselières, souvent en plaine humide ou dans la végétation secondaire ; elle est aussi signalée dans les plantations de thé."
+    },
+    "diet": {
+      "en": "It feeds mainly on insects, gleaning among foliage and dense vegetation.",
+      "fr": "Elle se nourrit principalement d’insectes, qu’elle recherche dans le feuillage et la végétation dense."
+    },
+    "behavior": {
+      "en": "It is described as diurnal and resident, foraging low in cover rather than making long seasonal movements.",
+      "fr": "Elle est décrite comme diurne et sédentaire ; elle cherche sa nourriture dans les couverts bas plutôt que d’effectuer de longues migrations saisonnières."
+    },
+    "reproduction": {
+      "en": "Nesting information remains sparse in the consulted regional accounts.",
+      "fr": "Les informations sur la nidification restent limitées dans les sources régionales consultées."
+    },
+    "ecology": {
+      "en": "Its use of wet grass, reeds and scrub ties it to lowland cover, including some human-modified habitats.",
+      "fr": "Sa fréquentation des herbes humides, des roseaux et des fourrés la lie aux couverts de plaine, y compris à certains milieux modifiés par l’être humain."
+    },
+    "conservation": {
+      "en": "Bangladesh assessed it as Least Concern in 2014; that national assessment is not a substitute for a current global status.",
+      "fr": "Le Bangladesh l’a classée en Préoccupation mineure en 2014 ; cette évaluation nationale ne remplace pas un statut mondial actuel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bangladesh Red List of Birds — Timalia pileata",
+        "fr": "Liste rouge des oiseaux du Bangladesh — Timalia pileata"
+      },
+      "url": "https://sufal.bforest.gov.bd/redlist/wp-content/uploads/2023/03/Volume-3-Birds-Full-Book.pdf",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The national assessment calls it Chestnut-capped Babbler, resident and diurnal, notes insect feeding and records Bangladesh status as Least Concern in 2014."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 135,
+        "notes_words": 22,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Indian Birds — Notes on the natural history of Timalia pileata (2025)",
+        "fr": "Indian Birds — Notes sur l’histoire naturelle de Timalia pileata (2025)"
+      },
+      "url": "https://indianbirds.in/wp-content/uploads/2025/06/IB_21_2_Final_Print.pdf",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The 2025 field note describes tall grass, reeds and scrub in wet lowlands and discusses sparse nesting records."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 18,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Université de Sherbrooke — French bird names",
+        "fr": "Université de Sherbrooke — Noms français des oiseaux"
+      },
+      "url": "https://nfom.recherche.usherbrooke.ca/timalie.html",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The French nomenclature resource lists the name Timalie coiffée."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 9,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Bangladesh assessment is national and dated 2014; no current global conservation rank is asserted here."
+  ],
+  "review_note": "Cross-checked a national bird assessment and recent field note with an academic French naming resource; kept regional conservation status explicit.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,30 @@
+{
+  "id": "thalasseus_bergii",
+  "name": "Greater Crested Tern",
+  "scientific": "Thalasseus bergii",
+  "group": "birds",
+  "sections": {
+    "overview": "The Greater Crested Tern is a large coastal tern distributed from southern Africa across the Indian Ocean to the western Pacific.",
+    "identification": "It has a shaggy black crest, grey upperparts, white underparts and a long yellow bill. Compare it with the Sandwich Tern (T. sandvicensis), whose bill is black with a yellow tip; see that profile.",
+    "habitat": "It nests on offshore sandy, rocky or coral islands and also uses coastal waters, estuaries and lagoons.",
+    "diet": "It feeds mainly on small fish, caught by shallow plunge-dives; squid and crabs are also taken.",
+    "behavior": "It may occur alone or in flocks and forms noisy colonies to breed; many populations remain near nesting areas.",
+    "reproduction": "Pairs nest on the ground in a shallow scrape, usually laying one egg in Australia and one or two in other regions.",
+    "ecology": "Its fish-based diet and island colonies tie it to shallow coastal waters and nearby marine prey.",
+    "conservation": "It is not globally threatened overall, though dense colonies can be locally vulnerable to disturbance and predators."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/sterne.huppee.html",
+      "title": "Oiseaux.net — Greater Crested Tern"
+    },
+    {
+      "url": "https://cdn.environment.sa.gov.au/landscape/docs/hf/greater-crested-tern-bio-region-fact.pdf",
+      "title": "South Australia — Greater Crested Tern fact sheet"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/sterne.caugek.html",
+      "title": "Oiseaux.net — Sandwich Tern"
+    }
+  ]
+}

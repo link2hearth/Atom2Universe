@@ -1,0 +1,30 @@
+{
+  "id": "taenaris_urania",
+  "name": "Taenaris urania",
+  "scientific": "Taenaris urania",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Taenaris urania est un papillon nymphalidé signalé dans les îles Moluques, en Indonésie.",
+    "identification": "Comme les autres Taenaris, il appartient à un groupe de grands papillons aux ocelles bien visibles sur les ailes postérieures.",
+    "habitat": "Des spécimens de musée le documentent sur plusieurs îles des Moluques, mais les sources consultées ne précisent pas son habitat.",
+    "diet": "Une synthèse indique que les adultes du genre Taenaris consomment des fruits fermentés et de la sève ; les données propres à l’espèce restent limitées.",
+    "behavior": "Le comportement propre à cette espèce est peu documenté dans les sources consultées.",
+    "reproduction": "Les sources consultées ne donnent pas de description vérifiée du cycle reproducteur de cette espèce.",
+    "ecology": "Taenaris urania est l’espèce type de son genre, classé parmi les Nymphalidés.",
+    "conservation": "Les sources consultées ne signalent pas d’évaluation mondiale de conservation pour Taenaris urania."
+  },
+  "sources": [
+    {
+      "url": "https://www.nhm.ac.uk/our-science/data/lepindex/detail?taxonno=147087",
+      "title": "Global Lepidoptera Names Index — Natural History Museum"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/294779788_A_review_of_Taenaris_Hubner_lepidoptera_Nymphalidae_Amathusiinae_in_Queensland_together_with_first_Australian_records_for_T_Myops_Kirschistaudinger_and_Elymnias_agondas_melanippe_Grose-smith_satyrinae",
+      "title": "A review of Taenaris in Queensland — The Australian Entomologist"
+    },
+    {
+      "url": "https://ento.biomus.lu.se/search.php?country=Indonesia&family=Nymphalidae&taxa=Lepidoptera",
+      "title": "Lund University Biological Museum — Lepidoptera records"
+    }
+  ]
+}
