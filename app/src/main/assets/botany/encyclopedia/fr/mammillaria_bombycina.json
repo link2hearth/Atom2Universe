@@ -1,0 +1,14 @@
+{
+  "id": "mammillaria_bombycina",
+  "sections": [
+    {"title": "Port et origine", "text": "Mammillaria bombycina est un cactus cespiteux du Mexique, notamment d’Aguascalientes et de Jalisco, dans des milieux secs. Ses tiges cylindriques peuvent atteindre environ 20 cm."},
+    {"title": "Aiguillons et fleurs", "text": "Les tiges portent une laine blanche et des aiguillons centraux crochus brun rouge. Les fleurs rose soutenu mesurent environ 1,5 cm de diamètre. Elle ressemble à M. bocasana, mais forme des tiges plus hautes et cylindriques et porte des fleurs plus vives."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’a été vérifié pour cette espèce."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Mammillaria bombycina", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A150678-2"},
+    {"title": "Royal Horticultural Society — Mammillaria bombycina", "url": "https://www.rhs.org.uk/plants/106175/mammillaria-bombycina/details"},
+    {"title": "Adelaide Botanic Gardens — Mammillaria bombycina", "url": "https://plantselector.botanicgardens.sa.gov.au/Plants/Details/655"}
+  ],
+  "related": ["mammillaria_bocasana"]
+}

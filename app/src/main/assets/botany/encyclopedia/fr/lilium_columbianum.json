@@ -1,0 +1,14 @@
+{
+  "id": "lilium_columbianum",
+  "sections": [
+    {"title": "Port et habitat", "text": "Ce lis bulbeux de l’ouest de l’Amérique du Nord pousse dans les forêts claires, clairières, fourrés et prairies, du sud de la Colombie-Britannique à la Californie du Nord et l’Idaho. Sa tige mesure environ 40 à 120 cm; le bulbe écailleux blanc fait 3 à 5 cm."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles lancéolées, souvent en verticilles de 6 à 9, mesurent environ 4 à 10 cm. Les fleurs pendantes orange à rouge-orangé, ponctuées, ont des tépales de 4 à 6 cm fortement recourbés. La capsule dressée mesure 3 à 5 cm."},
+    {"title": "Usages et précautions", "text": "Des peuples autochtones du Nord-Ouest pacifique ont consommé les bulbes après diverses préparations. Cela ne constitue pas une recommandation de cueillette. Comme les autres vrais lis, la plante peut provoquer une intoxication rénale grave chez le chat."}
+  ],
+  "sources": [
+    {"title": "University of British Columbia — Lilium columbianum", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Lilium+columbianum"},
+    {"title": "Washington Native Plant Society — Lilium columbianum", "url": "https://www.wnps.org/native-plant-directory/145-lilium-columbianum"},
+    {"title": "US FDA — Lilies and cats", "url": "https://www.fda.gov/animal-veterinary/animal-health-literacy/lovely-lilies-and-curious-cats-dangerous-combination"}
+  ],
+  "related": ["lilium_cernuum"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "linaria_vulgaris",
+  "sections": [
+    {"title": "Port et habitat", "text": "La linaire commune est une vivace rhizomateuse de 20 à 80 cm, originaire d’Eurasie et introduite en Amérique du Nord. Elle pousse dans les lieux ouverts, secs à modérément frais, et peut former des colonies."},
+    {"title": "Fleurs et fruits", "text": "Ses feuilles sont étroites et linéaires. Les fleurs jaunes bilabiées portent un palais orange et un long éperon; la corolle mesure environ 1 à 1,5 cm hors éperon, lui-même long d’environ 1 à 1,5 cm. La capsule ovoïde libère des graines aplaties et ailées."},
+    {"title": "Toxicité", "text": "La plante contient un glucoside toxique et peut intoxiquer le bétail lorsqu’elle est ingérée en grande quantité, bien qu’elle soit peu appétente. Aucun usage alimentaire sûr n’est établi."}
+  ],
+  "sources": [
+    {"title": "World Flora Online — Linaria vulgaris", "url": "https://www.worldfloraonline.org/taxon/wfo-0000446438"},
+    {"title": "University of Wisconsin Extension — Yellow toadflax", "url": "https://hort.extension.wisc.edu/articles/yellow-toadflax-linaria-vulgaris/"}
+  ],
+  "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "lycium_europaeum",
+  "sections": [
+    {"title": "Port et répartition", "text": "Le lyciet d’Europe est un arbuste épineux du pourtour méditerranéen, atteignant environ 2 à 4 m. Il se distingue du lyciet de Chine par ses baies globuleuses plus petites et par l’absence de preuve solide d’un usage alimentaire dans les sources consultées."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Ses épines latérales robustes peuvent mesurer jusqu’à 2 cm. Les feuilles lancéolées à elliptiques atteignent environ 40 × 8 mm. Les fleurs rouge violacé ont une corolle tubulaire de 8 à 9 mm; les baies rouges globuleuses mesurent 5 à 6 mm."},
+    {"title": "Comestibilité", "text": "Des usages médicinaux sont rapportés, mais les sources consultées n’établissent pas que les fruits soient comestibles. Ne pas les consommer sur la base d’une ressemblance avec d’autres lyciets."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Lycium europaeum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A816435-1/general-information"},
+    {"title": "Flora of Israel — Lycium europaeum", "url": "https://flora.org.il/en/plants/LYCEUO/"},
+    {"title": "Ethnobotanical study — Lycium europaeum", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8322658/"}
+  ],
+  "related": ["lycium_chinense"]
+}

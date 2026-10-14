@@ -1,0 +1,14 @@
+{
+  "id": "lycopersicum",
+  "sections": [
+    {"title": "Identification et port", "text": "La fiche correspond à Solanum lycopersicum, la tomate; Lycopersicon esculentum est un ancien synonyme. Originaire des Andes, elle est aujourd’hui cultivée dans le monde entier. En culture, c’est une herbe annuelle; en climat tropical elle peut devenir vivace et atteindre environ 2 m."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles sont composées et les fleurs jaunes. Le fruit est une baie dont la taille, la forme et la couleur varient fortement selon le cultivar."},
+    {"title": "Comestibilité et toxicité", "text": "Les fruits mûrs sont consommés crus ou cuits. Les parties vertes de la plante et les fruits non mûrs contiennent des glycoalcaloïdes, dont la α-tomatine; ne pas les traiter comme équivalents au fruit mûr."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Solanum lycopersicum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A316947-2/general-information"},
+    {"title": "Flora of North America — Solanum lycopersicum", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=220012653"},
+    {"title": "Royal Horticultural Society — Lycopersicon esculentum", "url": "https://www.rhs.org.uk/plants/105481/lycopersicon-esculentum/details"}
+  ],
+  "related": []
+}

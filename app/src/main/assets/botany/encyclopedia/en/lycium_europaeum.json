@@ -1,0 +1,14 @@
+{
+  "id": "lycium_europaeum",
+  "sections": [
+    {"title": "Form and range", "text": "European boxthorn is a thorny shrub of the Mediterranean region, reaching about 2–4 m. It differs from Chinese boxthorn in its smaller, globose berries and the lack of solid evidence for food use in the sources consulted."},
+    {"title": "Leaves, flowers and fruit", "text": "Its stout lateral spines can reach 2 cm. The lanceolate to elliptic leaves are up to about 40 × 8 mm. The purplish-red flowers have a tubular corolla 8–9 mm long; the globose red berries are 5–6 mm across."},
+    {"title": "Edibility", "text": "Medicinal uses are reported, but the sources consulted do not establish that the fruits are edible. Do not eat them based on resemblance to other boxthorns."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Lycium europaeum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A816435-1/general-information"},
+    {"title": "Flora of Israel — Lycium europaeum", "url": "https://flora.org.il/en/plants/LYCEUO/"},
+    {"title": "Ethnobotanical study — Lycium europaeum", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8322658/"}
+  ],
+  "related": ["lycium_chinense"]
+}

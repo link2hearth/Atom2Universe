@@ -1,0 +1,14 @@
+{
+  "id": "lycium_chinense",
+  "sections": [
+    {"title": "Form and habitat", "text": "Chinese boxthorn is an erect or spreading shrub of East Asia, usually 0.5–1 m tall and reaching about 2 m in cultivation. It grows on slopes, disturbed ground and saline soils."},
+    {"title": "Leaves, flowers and fruit", "text": "The branches bear lateral spines 0.5–2 cm long. The leaves are about 1.5–5 cm long. The mauve flowers are about 1 cm across; red berries are usually 0.7–1.5 cm long."},
+    {"title": "Edibility", "text": "The ripe fruits are eaten; a Singapore botanical source also mentions the seeds. This entry does not specify a particular preparation or amount."}
+  ],
+  "sources": [
+    {"title": "Flora of China — Lycium chinense", "url": "https://efloras.org/florataxon.aspx?flora_id=3&taxon_id=200020538"},
+    {"title": "NParks Flora & Fauna Web — Lycium chinense", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/6/1/6194"},
+    {"title": "Plants of the World Online — Lycium chinense", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A816389-1"}
+  ],
+  "related": ["lycium_europaeum"]
+}

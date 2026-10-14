@@ -1,0 +1,14 @@
+{
+  "id": "lycopersicum",
+  "sections": [
+    {"title": "Identification and form", "text": "This entry represents Solanum lycopersicum, the tomato; Lycopersicon esculentum is an older synonym. Native to the Andes, it is now cultivated worldwide. In cultivation it is an annual herb; in tropical climates it can become perennial and reach about 2 m."},
+    {"title": "Leaves, flowers and fruit", "text": "The leaves are compound and the flowers are yellow. The fruit is a berry whose size, shape and colour vary widely among cultivars."},
+    {"title": "Edibility and toxicity", "text": "Ripe fruits are eaten raw or cooked. Green parts of the plant and unripe fruits contain glycoalkaloids, including α-tomatine; they should not be treated as equivalent to ripe fruit."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Solanum lycopersicum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A316947-2/general-information"},
+    {"title": "Flora of North America — Solanum lycopersicum", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=220012653"},
+    {"title": "Royal Horticultural Society — Lycopersicon esculentum", "url": "https://www.rhs.org.uk/plants/105481/lycopersicon-esculentum/details"}
+  ],
+  "related": []
+}

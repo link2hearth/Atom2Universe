@@ -10,5 +10,5 @@
     {"title": "USDA GRIN — Lilium cernuum", "url": "https://npgsweb.ars-grin.gov/gringlobal/taxon/taxonomydetail?id=22132"},
     {"title": "Veterinary toxicology review — lilies and cats", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11220931/"}
   ],
-  "related": []
+  "related": ["lilium_columbianum"]
 }

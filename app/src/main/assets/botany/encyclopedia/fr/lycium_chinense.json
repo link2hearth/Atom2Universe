@@ -1,0 +1,14 @@
+{
+  "id": "lycium_chinense",
+  "sections": [
+    {"title": "Port et habitat", "text": "Le lyciet de Chine est un arbuste dressé ou étalé d’Asie orientale, généralement haut de 0,5 à 1 m et pouvant atteindre environ 2 m en culture. Il pousse notamment sur les pentes, terrains perturbés et sols salés."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les rameaux portent des épines latérales de 0,5 à 2 cm. Les feuilles mesurent environ 1,5 à 5 cm de long. Les fleurs mauves font près de 1 cm; les baies rouges mesurent habituellement 0,7 à 1,5 cm de long."},
+    {"title": "Comestibilité", "text": "Les fruits mûrs sont consommés; une source botanique de Singapour mentionne aussi les graines. Cette fiche ne précise pas de préparation ni de quantité particulière."}
+  ],
+  "sources": [
+    {"title": "Flora of China — Lycium chinense", "url": "https://efloras.org/florataxon.aspx?flora_id=3&taxon_id=200020538"},
+    {"title": "NParks Flora & Fauna Web — Lycium chinense", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/6/1/6194"},
+    {"title": "Plants of the World Online — Lycium chinense", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A816389-1"}
+  ],
+  "related": ["lycium_europaeum"]
+}

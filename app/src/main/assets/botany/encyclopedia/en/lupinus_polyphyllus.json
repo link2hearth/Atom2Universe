@@ -1,0 +1,13 @@
+{
+  "id": "lupinus_polyphyllus",
+  "sections": [
+    {"title": "Form and habitat", "text": "Large-leaved lupine is a perennial native to western North America, usually 0.6–1.5 m tall. It grows in meadows, wetlands, streambanks and woodland edges; it is naturalised and sometimes invasive elsewhere."},
+    {"title": "Leaves, flowers and pods", "text": "The palmate leaves usually have 9–17 leaflets. Pea-shaped flowers grow in upright racemes. The hairy pods dry and split open to release the seeds."},
+    {"title": "Toxicity", "text": "The seeds contain quinolizidine alkaloids and can poison livestock or wildlife when eaten in large amounts. Do not eat them."}
+  ],
+  "sources": [
+    {"title": "USDA NRCS — Lupinus polyphyllus Plant Guide", "url": "https://www.nrcs.usda.gov/plantmaterials/orpmcpg11723.pdf"},
+    {"title": "USGS NAS — Lupinus polyphyllus", "url": "https://nas.er.usgs.gov/queries/greatlakes/FactSheet.aspx?Potenti=&Species_ID=2715"}
+  ],
+  "related": []
+}

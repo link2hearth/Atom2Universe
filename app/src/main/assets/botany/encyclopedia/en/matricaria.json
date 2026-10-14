@@ -1,0 +1,13 @@
+{
+  "id": "matricaria",
+  "sections": [
+    {"title": "Identification and form", "text": "This entry represents Matricaria chamomilla, also called M. recutita, German chamomile. This aromatic annual is usually 8–60 cm tall and grows in open places."},
+    {"title": "Leaves and flower heads", "text": "The foliage is finely divided. The flower heads have white rays around a yellow disc; the conical receptacle is hollow at maturity. The small dry fruits are about 0.75–0.9 mm long."},
+    {"title": "Use and cautions", "text": "The flower heads are used in infusions. Allergic reactions to chamomile products have been reported, sometimes severely; people allergic to Asteraceae should use caution."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Matricaria chamomilla", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Matricaria+chamomilla"},
+    {"title": "European Medicines Agency — Matricariae flos", "url": "https://www.ema.europa.eu/ga/medicines/herbal/matricariae-flos"}
+  ],
+  "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "medicago_minima",
+  "sections": [
+    {"title": "Port et habitat", "text": "La luzerne naine est une petite annuelle de 5 à 40 cm, aux tiges étalées ou dressées et velues. Elle pousse dans les lieux secs, friches et cultures du sud de l’Europe; sa floraison va surtout du printemps au début de l’été."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles sont trifoliolées et souvent velues. Les fleurs jaunes sont groupées par une à six. La gousse subglobuleuse, longue de 3 à 5 mm, forme une spirale de plusieurs tours et porte des épines crochues."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire humain n’a été suffisamment vérifié dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "INRAE ePhytia — Medicago minima", "url": "https://ephytia.inra.fr/fr/C/12347/Hypp-encyclopedie-en-protection-des-plantes-Medicago-minima"},
+    {"title": "University of Sydney — Medicago minima", "url": "https://eflora.sydney.edu.au/taxon/medicago-minima"},
+    {"title": "Kew Medicinal Plant Names Services — Medicago minima", "url": "https://mpns.science.kew.org/mpns-portal/plantDetail?dbs=wcs&filter=&fuzzy=true&nameType=all&plantId=2368363&query=Looe"}
+  ],
+  "related": []
+}
