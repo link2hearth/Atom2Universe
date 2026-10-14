@@ -1,0 +1,30 @@
+{
+  "id": "pygoderma_bilabiatum",
+  "name": "Ipanema broad-nosed bat",
+  "scientific": "Pygoderma bilabiatum",
+  "group": "mammals",
+  "sections": {
+    "overview": "This Neotropical fruit bat occurs in Bolivia, southeastern Brazil, Paraguay and northern Argentina.",
+    "identification": "The species is a member of the leaf-nosed bat family Phyllostomidae; detailed distinguishing features were not described in the sources used here.",
+    "habitat": "Records include the Atlantic Forest and coastal shrubland in Brazil.",
+    "diet": "It eats fruit, including soft, pulpy fruit; flower visits have also been recorded.",
+    "behavior": "Some Paraná records suggest seasonal presence, but migration patterns remain poorly known.",
+    "reproduction": "Species-specific reproductive information was not available in the consulted accounts.",
+    "ecology": "As a fruit eater, it may disperse seeds; pollen has also been found on bats visiting a recorded flower species.",
+    "conservation": "The Mammal Diversity Database lists it as Least Concern globally."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1005052/",
+      "title": "Mammal Diversity Database — taxon account"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Pygoderma_bilabiatum/",
+      "title": "Animal Diversity Web — species account"
+    },
+    {
+      "url": "https://www.biotaxa.org/cl/article/viewFile/3.3.175/12974",
+      "title": "Check List — coastal-shrubland occurrence note"
+    }
+  ]
+}

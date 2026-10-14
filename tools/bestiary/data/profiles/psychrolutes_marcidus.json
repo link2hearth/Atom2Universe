@@ -1,0 +1,142 @@
+{
+  "id": "psychrolutes_marcidus",
+  "scientific": "Psychrolutes marcidus",
+  "group": "fish",
+  "name": {
+    "en": "Smooth-head blobfish",
+    "fr": "Psychrolutes marcidus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Psychrolutes marcidus is a deep-water sculpin in the family Psychrolutidae, known from temperate waters off Australia.",
+      "fr": "Psychrolutes marcidus est un chabot d’eau profonde de la famille des Psychrolutidae, connu des eaux tempérées au large de l’Australie."
+    },
+    "identification": {
+      "en": "It has loose, thin skin and a uniformly pale brown to grey body, with small cirri on parts of the head.",
+      "fr": "Il a une peau lâche et fine et un corps uniformément brun pâle à gris, avec de petits cirres sur certaines parties de la tête."
+    },
+    "habitat": {
+      "en": "It lives on the continental slope, at roughly six hundred to one thousand two hundred metres depth, off Australia and Tasmania.",
+      "fr": "Il vit sur le talus continental, vers six cents à mille deux cents mètres de profondeur, au large de l’Australie et de la Tasmanie."
+    },
+    "diet": {
+      "en": "The sources consulted do not give a reliable species-specific account of its diet.",
+      "fr": "Les sources consultées ne donnent pas de description fiable du régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Field accounts describe it as a benthic fish; observations of its behavior in the deep sea remain limited.",
+      "fr": "Les fiches de terrain le décrivent comme un poisson benthique; les observations de son comportement en profondeur restent limitées."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive details were not available in the sources reviewed.",
+      "fr": "Les sources examinées ne fournissent pas de détails propres à l’espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Its congener P. phrictus is a North Pacific fish recorded at five hundred to two thousand eight hundred metres, unlike the shallower Australian range known for P. marcidus.",
+      "fr": "Son congénère P. phrictus est un poisson du Pacifique nord signalé entre cinq cents et deux mille huit cents mètres, contrairement à l’aire australienne moins profonde connue de P. marcidus."
+    },
+    "conservation": {
+      "en": "The current FishBase-linked global listing says the species has not been evaluated by the IUCN.",
+      "fr": "La fiche mondiale actuellement reliée par FishBase indique que l’espèce n’a pas été évaluée par l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Psychrolutes marcidus — FishBase species summary",
+        "fr": "Psychrolutes marcidus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/14347",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports an Australian range and continental-slope records at 600–1,200 m."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 11,
+        "total": 174,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Smooth-head blobfish — Fishes of Australia",
+        "fr": "Blobfish à tête lisse — Fishes of Australia"
+      },
+      "url": "https://fishesofaustralia.net.au/Home/species/4638",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The Australian fish account describes the loose skin, pale coloration, head cirri and slope habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 15,
+        "total": 98,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Psychrolutes phrictus — FishBase species summary",
+        "fr": "Psychrolutes phrictus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Psychrolutes-phrictus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The congener is reported from the North Pacific at 500–2,800 m."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 11,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet, reproduction and behavior are poorly documented in the sources consulted; surface photographs do not represent its appearance under deep-sea pressure."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Reciprocal comparison with P. phrictus distinguishes the two congeners by region and depth."
+}

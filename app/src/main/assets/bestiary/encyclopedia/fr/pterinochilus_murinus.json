@@ -1,0 +1,30 @@
+{
+  "id": "pterinochilus_murinus",
+  "name": "Mygale babouin orange",
+  "scientific": "Pterinochilus murinus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Pterinochilus murinus est une mygale africaine de la famille des Theraphosidae, connue dans le commerce des animaux comme la mygale babouin orange.",
+    "identification": "Le World Spider Catalog la reconnaît comme une espèce valide du genre africain Pterinochilus.",
+    "habitat": "Un atlas le signale dans le biome de savane d’Afrique du Sud. Sa vaste aire couvre plusieurs régions d’Afrique, si bien qu’il n’a pas un habitat typique unique.",
+    "diet": "Les références consultées ne détaillent pas les proies propres à l’espèce.",
+    "behavior": "Les sources consultées détaillent peu le comportement propre à l’espèce.",
+    "reproduction": "Les sources consultées ne fournissent pas de synthèse fiable de la reproduction propre à l’espèce.",
+    "ecology": "Sa répartition s’étend de l’Angola et de l’Afrique centrale à l’Afrique orientale et australe.",
+    "conservation": "Les sources taxonomiques et régionales consultées ne signalent pas d’évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/44486/Pterinochilus_murinus",
+      "title": "World Spider Catalog : Pterinochilus murinus"
+    },
+    {
+      "url": "https://www.arc.agric.za/arc-ppri/Documents/5.SPIDERATLASFAMILIESSPAZOR.pdf",
+      "title": "Premier atlas des araignées d’Afrique du Sud : Pterinochilus murinus"
+    },
+    {
+      "url": "https://www.aracnofilia.org/i-ragni-esotici/le-schede-sulle-migali/pterinochilus-murinus-theraphosidae/",
+      "title": "Pterinochilus murinus — Association italienne d’arachnologie"
+    }
+  ]
+}

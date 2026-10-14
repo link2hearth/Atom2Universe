@@ -1,0 +1,142 @@
+{
+  "id": "pyrausta_cingulata",
+  "scientific": "Pyrausta cingulata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Silver-barred sable moth",
+    "fr": "Pyrauste barrée"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small crambid moth is rare and very local in Belgium, where it has not been recorded since around 1920.",
+      "fr": "Cette petite pyrale est rare et très localisée en Belgique, où elle n’a pas été observée depuis 1920 environ."
+    },
+    "identification": {
+      "en": "It belongs to the moth genus Pyrausta.",
+      "fr": "Elle appartient au genre Pyrausta, chez les papillons de nuit."
+    },
+    "habitat": {
+      "en": "It is associated with chalk and limestone soils and coastal dunes in the Belgian account.",
+      "fr": "La fiche belge l’associe aux sols crayeux et calcaires ainsi qu’aux dunes côtières."
+    },
+    "diet": {
+      "en": "The larvae feed mainly on mint and oregano; thyme is also listed as a host plant.",
+      "fr": "Les chenilles se nourrissent surtout de menthe et d’origan ; le thym est aussi indiqué comme plante-hôte."
+    },
+    "behavior": {
+      "en": "Adults are recorded from late April into August, with two generations a year in the Belgian account.",
+      "fr": "La fiche belge signale des adultes de fin avril à août et deux générations par an."
+    },
+    "reproduction": {
+      "en": "No species-specific reproductive details were given in the consulted sources.",
+      "fr": "Les sources consultées ne donnent pas de détails reproductifs propres à l’espèce."
+    },
+    "ecology": {
+      "en": "The Belgian catalogue reports a decline across Western Europe, in addition to the species’ very local Belgian status.",
+      "fr": "Le catalogue belge signale un déclin en Europe occidentale, en plus de la rareté locale de l’espèce en Belgique."
+    },
+    "conservation": {
+      "en": "The cited rarity and decline are regional records, not a global conservation assessment.",
+      "fr": "La rareté et le déclin cités sont des constats régionaux, pas une évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Catalogue of the Lepidoptera of Belgium — species page",
+        "fr": "Catalogue des Lépidoptères de Belgique — fiche de l’espèce"
+      },
+      "url": "https://projects.biodiversity.be/lepidoptera/species/4655/",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Belgian records note rarity, host plants, flight period and habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 188,
+        "notes_words": 10,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "UKMoths — species page",
+        "fr": "UKMoths — fiche de l’espèce"
+      },
+      "url": "https://www.ukmoths.org.uk/species/pyrausta-cingulata/adult/",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "UKMoths documents the moth genus and British records."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 8,
+        "total": 25,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "UK Biological Records Centre — food-plant records",
+        "fr": "UK Biological Records Centre — relevés de plantes-hôtes"
+      },
+      "url": "https://dbif.brc.ac.uk/interactions.aspx?hostid=5174&insectid=7332",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The British database links P. cingulata with sage, a member of the mint family."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 33,
+        "notes_words": 14,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The dated absence refers specifically to Belgium, not the entire species range; global status is not inferred from it. The French common name is descriptive."
+  ],
+  "review_note": "Kept conservation wording at the regional scope of the sources; cross-checked a Belgian species catalogue with a British moth account.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

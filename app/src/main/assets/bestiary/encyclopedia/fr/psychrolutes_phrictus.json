@@ -1,0 +1,34 @@
+{
+  "id": "psychrolutes_phrictus",
+  "name": "Chabot blob",
+  "scientific": "Psychrolutes phrictus",
+  "group": "fish",
+  "sections": {
+    "overview": "Psychrolutes phrictus, le chabot blob, est un chabot d’eau profonde de la famille des Psychrolutidae.",
+    "identification": "Sa tête et son corps portent de nombreux petits cirres et sa peau est lâche; la base taïwanaise des poissons, en chinois, note aussi que les nageoires peuvent être en partie dissimulées dessous.",
+    "habitat": "C’est un poisson bathydémersal du Pacifique nord, signalé du Japon et de la mer de Béring jusqu’à la Californie, vers cinq cents à deux mille huit cents mètres.",
+    "diet": "FishBase mentionne parmi ses proies des pennatules, des crabes et des mollusques.",
+    "behavior": "Une étude dans le Pacifique oriental signale un spécimen capturé sur fond vaseux vers mille cent mètres; les observations comportementales restent rares.",
+    "reproduction": "Les sources consultées ne décrivent pas précisément sa reproduction.",
+    "ecology": "Son congénère P. marcidus est plutôt connu des eaux tempérées australiennes, dans une plage de profondeur signalée comme moins importante, de six cents à mille deux cents mètres.",
+    "conservation": "FishBase n’indique pas d’évaluation UICN pour cette espèce."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Psychrolutes-phrictus.html",
+      "title": "Psychrolutes phrictus — résumé d’espèce FishBase"
+    },
+    {
+      "url": "https://fishdb.sinica.edu.tw/taxon/383597-fishdb",
+      "title": "Psychrolutes phrictus — base taïwanaise des poissons"
+    },
+    {
+      "url": "https://revista.ib.unam.mx/index.php/bio/article/download/1448/1306/0",
+      "title": "Nouvelle mention de Psychrolutes phrictus dans le Pacifique oriental — Revista Mexicana de Biodiversidad"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/14347",
+      "title": "Psychrolutes marcidus — résumé d’espèce FishBase"
+    }
+  ]
+}

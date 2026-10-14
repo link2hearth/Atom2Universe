@@ -1,0 +1,30 @@
+{
+  "id": "psychrolutes_marcidus",
+  "name": "Smooth-head blobfish",
+  "scientific": "Psychrolutes marcidus",
+  "group": "fish",
+  "sections": {
+    "overview": "Psychrolutes marcidus is a deep-water sculpin in the family Psychrolutidae, known from temperate waters off Australia.",
+    "identification": "It has loose, thin skin and a uniformly pale brown to grey body, with small cirri on parts of the head.",
+    "habitat": "It lives on the continental slope, at roughly six hundred to one thousand two hundred metres depth, off Australia and Tasmania.",
+    "diet": "The sources consulted do not give a reliable species-specific account of its diet.",
+    "behavior": "Field accounts describe it as a benthic fish; observations of its behavior in the deep sea remain limited.",
+    "reproduction": "Species-specific reproductive details were not available in the sources reviewed.",
+    "ecology": "Its congener P. phrictus is a North Pacific fish recorded at five hundred to two thousand eight hundred metres, unlike the shallower Australian range known for P. marcidus.",
+    "conservation": "The current FishBase-linked global listing says the species has not been evaluated by the IUCN."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/14347",
+      "title": "Psychrolutes marcidus — FishBase species summary"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/Home/species/4638",
+      "title": "Smooth-head blobfish — Fishes of Australia"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Psychrolutes-phrictus.html",
+      "title": "Psychrolutes phrictus — FishBase species summary"
+    }
+  ]
+}

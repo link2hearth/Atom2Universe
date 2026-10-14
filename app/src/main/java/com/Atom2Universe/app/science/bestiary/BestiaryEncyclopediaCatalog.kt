@@ -6345,6 +6345,129 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "pseudoplatystoma_magdaleniatum"
         ),
         AnimalSpecies(
+            id = "pseudoplatystoma_metaense", scientific = "Pseudoplatystoma metaense",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pseudoplatystoma_metaense"
+        ),
+        AnimalSpecies(
+            id = "pseudosphinx_tetrio", scientific = "Pseudosphinx tetrio",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pseudosphinx_tetrio"
+        ),
+        AnimalSpecies(
+            id = "pseudotrichonotus_altivelis", scientific = "Pseudotrichonotus altivelis",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pseudotrichonotus_altivelis"
+        ),
+        AnimalSpecies(
+            id = "pseudotropheus_socolofi", scientific = "Pseudotropheus socolofi",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pseudotropheus_socolofi"
+        ),
+        AnimalSpecies(
+            id = "psittrichas_fulgidus", scientific = "Psittrichas fulgidus",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "psittrichas_fulgidus"
+        ),
+        AnimalSpecies(
+            id = "psychrolutes_marcidus", scientific = "Psychrolutes marcidus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "psychrolutes_marcidus"
+        ),
+        AnimalSpecies(
+            id = "psychrolutes_phrictus", scientific = "Psychrolutes phrictus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "psychrolutes_phrictus"
+        ),
+        AnimalSpecies(
+            id = "pterapherapteryx_sexalata", scientific = "Pterapherapteryx sexalata",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pterapherapteryx_sexalata"
+        ),
+        AnimalSpecies(
+            id = "pterinochilus_murinus", scientific = "Pterinochilus murinus",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pterinochilus_murinus"
+        ),
+        AnimalSpecies(
+            id = "pterocles_exustus", scientific = "Pterocles exustus",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pterocles_exustus"
+        ),
+        AnimalSpecies(
+            id = "pterocles_gutturalis", scientific = "Pterocles gutturalis",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pterocles_gutturalis"
+        ),
+        AnimalSpecies(
+            id = "pterocles_namaqua", scientific = "Pterocles namaqua",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pterocles_namaqua"
+        ),
+        AnimalSpecies(
+            id = "pterocles_senegallus", scientific = "Pterocles senegallus",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pterocles_senegallus"
+        ),
+        AnimalSpecies(
+            id = "pterophyllum_altum", scientific = "Pterophyllum altum",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pterophyllum_altum"
+        ),
+        AnimalSpecies(
+            id = "pteropus_aruensis", scientific = "Pteropus aruensis",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pteropus_aruensis"
+        ),
+    )
+
+    private fun batch20(): List<AnimalSpecies> = listOf(
+        AnimalSpecies(
             id = "pteropus_rufus", scientific = "Pteropus rufus",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
@@ -6361,12 +6484,44 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "pteropus_seychellensis"
         ),
         AnimalSpecies(
+            id = "ptychocheilus_oregonensis", scientific = "Ptychocheilus oregonensis",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "ptychocheilus_oregonensis"
+        ),
+        AnimalSpecies(
             id = "puma", scientific = "Puma concolor",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "puma"
+        ),
+        AnimalSpecies(
+            id = "pygoderma_bilabiatum", scientific = "Pygoderma bilabiatum",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pygoderma_bilabiatum"
+        ),
+        AnimalSpecies(
+            id = "pyrausta_cingulata", scientific = "Pyrausta cingulata",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pyrausta_cingulata"
+        ),
+        AnimalSpecies(
+            id = "pyrilia_aurantiocephala", scientific = "Pyrilia aurantiocephala",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "pyrilia_aurantiocephala"
         ),
         AnimalSpecies(
             id = "rabbit", scientific = "Oryctolagus cuniculus",
@@ -6383,6 +6538,14 @@ internal object BestiaryEncyclopediaCatalog {
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "raccoon_dog"
+        ),
+        AnimalSpecies(
+            id = "raja_binoculata", scientific = "Raja binoculata",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "raja_binoculata"
         ),
         AnimalSpecies(
             id = "ramphastos_sulfuratus", scientific = "Ramphastos sulfuratus",
@@ -6464,9 +6627,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "red_squirrel"
         ),
-    )
-
-    private fun batch20(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "red_tailed_green_ratsnake", scientific = "Gonyosoma oxycephalum",
             name = R.string.be_encyclopedia_placeholder, group = "reptiles",
@@ -6627,6 +6787,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "snowshoe_hare"
         ),
+    )
+
+    private fun batch21(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "solea_solea", scientific = "Solea solea",
             name = R.string.be_encyclopedia_placeholder, group = "fish",
@@ -6787,9 +6950,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "uria_aalge"
         ),
-    )
-
-    private fun batch21(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "water_vole", scientific = "Arvicola amphibius",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -7733,11 +7893,34 @@ internal object BestiaryEncyclopediaCatalog {
         "pseudomys_johnsoni" to "Central pebble-mound mouse",
         "pseudoplatystoma_corruscans" to "Spotted sorubim",
         "pseudoplatystoma_magdaleniatum" to "Magdalena shovelnose catfish",
+        "pseudoplatystoma_metaense" to "Meta shovelnose catfish",
+        "pseudosphinx_tetrio" to "Tetrio sphinx moth",
+        "pseudotrichonotus_altivelis" to "Sailfin sandfish",
+        "pseudotropheus_socolofi" to "Pindani",
+        "psittrichas_fulgidus" to "Pesquet’s parrot",
+        "psychrolutes_marcidus" to "Smooth-head blobfish",
+        "psychrolutes_phrictus" to "Blob sculpin",
+        "pterapherapteryx_sexalata" to "Small seraphim",
+        "pterinochilus_murinus" to "Orange baboon tarantula",
+        "pterocles_exustus" to "Chestnut-bellied sandgrouse",
+        "pterocles_gutturalis" to "Yellow-throated Sandgrouse",
+        "pterocles_namaqua" to "Namaqua Sandgrouse",
+        "pterocles_senegallus" to "Spotted Sandgrouse",
+        "pterophyllum_altum" to "Altum angelfish",
+        "pteropus_aruensis" to "Aru Flying Fox",
+    )
+
+    private fun namesEn10(): Map<String, String> = mapOf(
         "pteropus_rufus" to "Madagascar Flying Fox",
         "pteropus_seychellensis" to "Seychelles Fruit Bat",
+        "ptychocheilus_oregonensis" to "Northern pikeminnow",
         "puma" to "Puma",
+        "pygoderma_bilabiatum" to "Ipanema broad-nosed bat",
+        "pyrausta_cingulata" to "Silver-barred sable moth",
+        "pyrilia_aurantiocephala" to "Bald parrot",
         "rabbit" to "European rabbit",
         "raccoon_dog" to "Common raccoon dog",
+        "raja_binoculata" to "Big skate",
         "ramphastos_sulfuratus" to "Keel-billed toucan",
         "raven" to "Common raven",
         "red_backed_shrike" to "Red-backed Shrike",
@@ -7748,9 +7931,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_kangaroo" to "Red kangaroo",
         "red_knot" to "Red Knot",
         "red_squirrel" to "Red squirrel",
-    )
-
-    private fun namesEn10(): Map<String, String> = mapOf(
         "red_tailed_green_ratsnake" to "Red-tailed green ratsnake",
         "reed_bunting" to "Reed Bunting",
         "regulus_regulus" to "Goldcrest",
@@ -8624,11 +8804,34 @@ internal object BestiaryEncyclopediaCatalog {
         "pseudomys_johnsoni" to "Souris centrale à monticules de galets",
         "pseudoplatystoma_corruscans" to "Surubi tacheté",
         "pseudoplatystoma_magdaleniatum" to "Bagre rayado du Magdalena",
+        "pseudoplatystoma_metaense" to "Bagre du Meta",
+        "pseudosphinx_tetrio" to "Sphinx du frangipanier",
+        "pseudotrichonotus_altivelis" to "Poisson-sable à voile",
+        "pseudotropheus_socolofi" to "Pindani",
+        "psittrichas_fulgidus" to "Perroquet de Pesquet",
+        "psychrolutes_marcidus" to "Psychrolutes marcidus",
+        "psychrolutes_phrictus" to "Chabot blob",
+        "pterapherapteryx_sexalata" to "Phalène à six ailes",
+        "pterinochilus_murinus" to "Mygale babouin orange",
+        "pterocles_exustus" to "Ganga à ventre brun",
+        "pterocles_gutturalis" to "Ganga à gorge jaune",
+        "pterocles_namaqua" to "Ganga namaqua",
+        "pterocles_senegallus" to "Ganga tacheté",
+        "pterophyllum_altum" to "Scalaire altum",
+        "pteropus_aruensis" to "Pteropus aruensis",
+    )
+
+    private fun namesFr10(): Map<String, String> = mapOf(
         "pteropus_rufus" to "Renard volant de Madagascar",
         "pteropus_seychellensis" to "Roussette des Seychelles",
+        "ptychocheilus_oregonensis" to "Ménomini du Nord",
         "puma" to "Puma",
+        "pygoderma_bilabiatum" to "Chauve-souris d’Ipanema",
+        "pyrausta_cingulata" to "Pyrauste barrée",
+        "pyrilia_aurantiocephala" to "Caïque chauve",
         "rabbit" to "Lapin de garenne",
         "raccoon_dog" to "Chien viverrin continental",
+        "raja_binoculata" to "Grande raie",
         "ramphastos_sulfuratus" to "Toucan à carène",
         "raven" to "Grand Corbeau",
         "red_backed_shrike" to "Pie-grièche écorcheur",
@@ -8639,9 +8842,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_kangaroo" to "Kangourou roux",
         "red_knot" to "Bécasseau maubèche",
         "red_squirrel" to "Écureuil roux",
-    )
-
-    private fun namesFr10(): Map<String, String> = mapOf(
         "red_tailed_green_ratsnake" to "Serpent ratier vert à queue rouge",
         "reed_bunting" to "Bruant des roseaux",
         "regulus_regulus" to "Roitelet huppé",

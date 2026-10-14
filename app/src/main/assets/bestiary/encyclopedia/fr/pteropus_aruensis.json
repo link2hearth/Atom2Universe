@@ -1,0 +1,34 @@
+{
+  "id": "pteropus_aruensis",
+  "name": "Pteropus aruensis",
+  "scientific": "Pteropus aruensis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Pteropus aruensis est une roussette de la famille des Pteropodidae, actuellement considérée comme une espèce vivante d’Indonésie.",
+    "identification": "Elle appartient au genre Pteropus; un traitement taxonomique signale son dos blanchâtre comme un caractère distinctif.",
+    "habitat": "Sa localité-type connue est l’archipel des Aru, en Indonésie; les informations publiées sur son habitat propre sont limitées.",
+    "diet": "Les sources consultées pour cette espèce ne décrivent pas de régime alimentaire qui lui soit propre.",
+    "behavior": "Le comportement propre à l’espèce est peu documenté dans les sources consultées.",
+    "reproduction": "Les sources consultées ne décrivent pas sa biologie reproductive.",
+    "ecology": "La Mammal Diversity Database traite Pteropus aruensis comme une espèce valide; des ouvrages plus anciens la considéraient comme une forme de la Roussette à barbe noire, Pteropus melanopogon.",
+    "conservation": "La Mammal Diversity Database la classe en danger critique; le manque de données invite à la prudence sur les affirmations concernant sa population actuelle."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004453/",
+      "title": "Pteropus aruensis — Mammal Diversity Database de l’American Society of Mammalogists"
+    },
+    {
+      "url": "https://treatment.plazi.org/GgServer/html/03AD87FAFFA3F64D896D3071FABAF441/8",
+      "title": "Pteropus aruensis — traitement taxonomique, Plazi TreatmentBank"
+    },
+    {
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13800259&s=y",
+      "title": "Mammal Species of the World — Pteropus aruensis"
+    },
+    {
+      "url": "https://biodiversitywarriors.kehati.or.id/artikel/kalong-aru/",
+      "title": "Kalong Aru — Biodiversity Warriors, Kehati (indonésien)"
+    }
+  ]
+}

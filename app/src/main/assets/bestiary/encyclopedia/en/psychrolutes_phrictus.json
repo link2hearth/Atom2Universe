@@ -1,0 +1,34 @@
+{
+  "id": "psychrolutes_phrictus",
+  "name": "Blob sculpin",
+  "scientific": "Psychrolutes phrictus",
+  "group": "fish",
+  "sections": {
+    "overview": "Psychrolutes phrictus, the blob sculpin, is a deep-water sculpin in the family Psychrolutidae.",
+    "identification": "Its head and body carry many small cirri, and the skin is loose; the Chinese-language Taiwan Fish Database also notes that the fins can be partly hidden beneath it.",
+    "habitat": "It is a bathydemersal fish of the North Pacific, reported from Japan and the Bering Sea south to California, at about five hundred to two thousand eight hundred metres.",
+    "diet": "FishBase reports sea pens, crabs and molluscs among its prey.",
+    "behavior": "A research record from the eastern Pacific documents a specimen collected over muddy bottom at about one thousand one hundred metres; few behavioral observations are available.",
+    "reproduction": "The sources consulted do not provide a detailed account of its reproduction.",
+    "ecology": "Its congener P. marcidus is instead known from temperate Australian waters, at a shallower reported depth range of six hundred to one thousand two hundred metres.",
+    "conservation": "FishBase reports no IUCN assessment for this species."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Psychrolutes-phrictus.html",
+      "title": "Psychrolutes phrictus — FishBase species summary"
+    },
+    {
+      "url": "https://fishdb.sinica.edu.tw/taxon/383597-fishdb",
+      "title": "Psychrolutes phrictus — Taiwan Fish Database"
+    },
+    {
+      "url": "https://revista.ib.unam.mx/index.php/bio/article/download/1448/1306/0",
+      "title": "New eastern Pacific record of Psychrolutes phrictus — Revista Mexicana de Biodiversidad"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/14347",
+      "title": "Psychrolutes marcidus — FishBase species summary"
+    }
+  ]
+}

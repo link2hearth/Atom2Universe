@@ -1,0 +1,30 @@
+{
+  "id": "pyrausta_cingulata",
+  "name": "Pyrauste barrée",
+  "scientific": "Pyrausta cingulata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cette petite pyrale est rare et très localisée en Belgique, où elle n’a pas été observée depuis 1920 environ.",
+    "identification": "Elle appartient au genre Pyrausta, chez les papillons de nuit.",
+    "habitat": "La fiche belge l’associe aux sols crayeux et calcaires ainsi qu’aux dunes côtières.",
+    "diet": "Les chenilles se nourrissent surtout de menthe et d’origan ; le thym est aussi indiqué comme plante-hôte.",
+    "behavior": "La fiche belge signale des adultes de fin avril à août et deux générations par an.",
+    "reproduction": "Les sources consultées ne donnent pas de détails reproductifs propres à l’espèce.",
+    "ecology": "Le catalogue belge signale un déclin en Europe occidentale, en plus de la rareté locale de l’espèce en Belgique.",
+    "conservation": "La rareté et le déclin cités sont des constats régionaux, pas une évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/4655/",
+      "title": "Catalogue des Lépidoptères de Belgique — fiche de l’espèce"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/pyrausta-cingulata/adult/",
+      "title": "UKMoths — fiche de l’espèce"
+    },
+    {
+      "url": "https://dbif.brc.ac.uk/interactions.aspx?hostid=5174&insectid=7332",
+      "title": "UK Biological Records Centre — relevés de plantes-hôtes"
+    }
+  ]
+}

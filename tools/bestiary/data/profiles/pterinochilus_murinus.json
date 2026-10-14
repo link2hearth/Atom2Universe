@@ -1,0 +1,147 @@
+{
+  "id": "pterinochilus_murinus",
+  "scientific": "Pterinochilus murinus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Orange baboon tarantula",
+    "fr": "Mygale babouin orange"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pterinochilus murinus is an African tarantula in the family Theraphosidae, known in the pet trade as the orange baboon tarantula.",
+      "fr": "Pterinochilus murinus est une mygale africaine de la famille des Theraphosidae, connue dans le commerce des animaux comme la mygale babouin orange."
+    },
+    "identification": {
+      "en": "The World Spider Catalog recognizes it as a valid species in the African genus Pterinochilus.",
+      "fr": "Le World Spider Catalog la reconnaît comme une espèce valide du genre africain Pterinochilus."
+    },
+    "habitat": {
+      "en": "An atlas records it in South Africa’s savanna biome. Its broad range spans several regions of Africa, so it has no single typical habitat.",
+      "fr": "Un atlas le signale dans le biome de savane d’Afrique du Sud. Sa vaste aire couvre plusieurs régions d’Afrique, si bien qu’il n’a pas un habitat typique unique."
+    },
+    "diet": {
+      "en": "Species-specific prey information was not detailed in the references consulted.",
+      "fr": "Les références consultées ne détaillent pas les proies propres à l’espèce."
+    },
+    "behavior": {
+      "en": "The sources consulted give little detail on species-specific behavior.",
+      "fr": "Les sources consultées détaillent peu le comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide a reliable species-specific summary of reproduction.",
+      "fr": "Les sources consultées ne fournissent pas de synthèse fiable de la reproduction propre à l’espèce."
+    },
+    "ecology": {
+      "en": "Its distribution extends from Angola and central Africa through eastern Africa to southern Africa.",
+      "fr": "Sa répartition s’étend de l’Angola et de l’Afrique centrale à l’Afrique orientale et australe."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was identified in the taxonomic and regional sources consulted.",
+      "fr": "Les sources taxonomiques et régionales consultées ne signalent pas d’évaluation mondiale de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "World Spider Catalog: Pterinochilus murinus",
+        "fr": "World Spider Catalog : Pterinochilus murinus"
+      },
+      "url": "https://www.wsc.nmbe.ch/spec-data/44486/Pterinochilus_murinus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Taxonomy, family and African range."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 5,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "First Atlas of the Spiders of South Africa: Pterinochilus murinus",
+        "fr": "Premier atlas des araignées d’Afrique du Sud : Pterinochilus murinus"
+      },
+      "url": "https://www.arc.agric.za/arc-ppri/Documents/5.SPIDERATLASFAMILIESSPAZOR.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Atlas record: savanna at Lake Fundudzi."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 6,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pterinochilus murinus — Italian Arachnology Association",
+        "fr": "Pterinochilus murinus — Association italienne d’arachnologie"
+      },
+      "url": "https://www.aracnofilia.org/i-ragni-esotici/le-schede-sulle-migali/pterinochilus-murinus-theraphosidae/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The Italian account says its broad Central and East African distribution prevents defining one typical habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 16,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural-history data for diet and reproduction are scarce in the sources reviewed; colour forms should not be treated as separate species without taxonomic evidence."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Claims are limited to taxonomic and range information plus the regional atlas record; no captive-care claims are included."
+}

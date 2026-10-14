@@ -1,0 +1,42 @@
+{
+  "id": "pterocles_senegallus",
+  "name": "Ganga tacheté",
+  "scientific": "Pterocles senegallus",
+  "group": "birds",
+  "sections": {
+    "overview": "Ce ganga parcourt les terres arides du Sahel à l’Asie du Sud.",
+    "identification": "Ses longues plumes centrales et son ventre noir le distinguent en vol.",
+    "habitat": "Il fréquente déserts et terrains pierreux ouverts; en Israël, il niche au Néguev.",
+    "diet": "Les sources régionales signalent un régime de graines et de pousses.",
+    "behavior": "Il est grégaire et rejoint les points d’eau; les populations peuvent être résidentes ou nomades.",
+    "reproduction": "Il niche au sol; les deux sexes couvent à tour de rôle.",
+    "ecology": "Le comparer au Ganga namaqua d’Afrique australe et au Ganga à gorge jaune des prairies argileuses.",
+    "conservation": "BirdLife la classe en Préoccupation mineure à l’échelle mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.birds.org.il/he/species/274",
+      "title": "Ganga tacheté — portail ornithologique israélien (hébreu)"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/ganga.tachete.html",
+      "title": "Ganga tacheté — Oiseaux.net"
+    },
+    {
+      "url": "https://osme.org/wp-content/uploads/2023/06/The-Birds-of-Saudi-Arabia-Volume-2-2.pdf",
+      "title": "Ganga tacheté — Birds of Saudi Arabia, OSME"
+    },
+    {
+      "url": "https://www.biodiversityexplorer.info/birds/pteroclidae/pterocles_namaqua.htm",
+      "title": "Ganga namaqua — Biodiversity Explorer, université du Cap"
+    },
+    {
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/yellow-throated-sandgrouse/",
+      "title": "Ganga à gorge jaune — BirdLife South Africa"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/spotted-sandgrouse-pterocles-senegallus",
+      "title": "Ganga tacheté — BirdLife DataZone"
+    }
+  ]
+}

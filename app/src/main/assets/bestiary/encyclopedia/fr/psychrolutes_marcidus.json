@@ -1,0 +1,30 @@
+{
+  "id": "psychrolutes_marcidus",
+  "name": "Psychrolutes marcidus",
+  "scientific": "Psychrolutes marcidus",
+  "group": "fish",
+  "sections": {
+    "overview": "Psychrolutes marcidus est un chabot d’eau profonde de la famille des Psychrolutidae, connu des eaux tempérées au large de l’Australie.",
+    "identification": "Il a une peau lâche et fine et un corps uniformément brun pâle à gris, avec de petits cirres sur certaines parties de la tête.",
+    "habitat": "Il vit sur le talus continental, vers six cents à mille deux cents mètres de profondeur, au large de l’Australie et de la Tasmanie.",
+    "diet": "Les sources consultées ne donnent pas de description fiable du régime propre à l’espèce.",
+    "behavior": "Les fiches de terrain le décrivent comme un poisson benthique; les observations de son comportement en profondeur restent limitées.",
+    "reproduction": "Les sources examinées ne fournissent pas de détails propres à l’espèce sur sa reproduction.",
+    "ecology": "Son congénère P. phrictus est un poisson du Pacifique nord signalé entre cinq cents et deux mille huit cents mètres, contrairement à l’aire australienne moins profonde connue de P. marcidus.",
+    "conservation": "La fiche mondiale actuellement reliée par FishBase indique que l’espèce n’a pas été évaluée par l’UICN."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/14347",
+      "title": "Psychrolutes marcidus — résumé d’espèce FishBase"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/Home/species/4638",
+      "title": "Blobfish à tête lisse — Fishes of Australia"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Psychrolutes-phrictus.html",
+      "title": "Psychrolutes phrictus — résumé d’espèce FishBase"
+    }
+  ]
+}

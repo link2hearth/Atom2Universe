@@ -1,0 +1,26 @@
+{
+  "id": "ptychocheilus_oregonensis",
+  "name": "Northern pikeminnow",
+  "scientific": "Ptychocheilus oregonensis",
+  "group": "fish",
+  "sections": {
+    "overview": "This large minnow is native to western North America, including the Columbia River and its tributaries.",
+    "identification": "It has a long snout and large mouth, a greenish back and sides, a pale belly and opaque fins.",
+    "habitat": "It occurs in the Columbia and Snake rivers and in lakes and streams across the region.",
+    "diet": "Larger fish are opportunistic predators of aquatic invertebrates and fishes, including young salmon and steelhead.",
+    "behavior": "It is a well-studied native predator in the Columbia and Snake river systems.",
+    "reproduction": "The consulted species summaries did not provide reproductive details.",
+    "ecology": "Its predation on juvenile salmonids has prompted research and management programs, without implying that the native fish should be eradicated.",
+    "conservation": "No global conservation category was given in the consulted accounts."
+  },
+  "sources": [
+    {
+      "url": "https://www.usgs.gov/labs/columbia-river-research-laboratory/science/northern-pikeminnow-ptychocheilus-oregonensis-crrl",
+      "title": "USGS Columbia River Research Laboratory — species account"
+    },
+    {
+      "url": "https://wdfw.wa.gov/species-habitats/species/ptychocheilus-oregonensis",
+      "title": "Washington Department of Fish and Wildlife — species page"
+    }
+  ]
+}

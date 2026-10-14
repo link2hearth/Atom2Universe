@@ -1,0 +1,211 @@
+{
+  "id": "pterocles_senegallus",
+  "scientific": "Pterocles senegallus",
+  "group": "birds",
+  "name": {
+    "en": "Spotted Sandgrouse",
+    "fr": "Ganga tacheté"
+  },
+  "sections": {
+    "overview": {
+      "en": "This sandgrouse spans arid lands from the Sahel to South Asia.",
+      "fr": "Ce ganga parcourt les terres arides du Sahel à l’Asie du Sud."
+    },
+    "identification": {
+      "en": "Long central tail feathers and a black belly mark it in flight.",
+      "fr": "Ses longues plumes centrales et son ventre noir le distinguent en vol."
+    },
+    "habitat": {
+      "en": "It uses open desert and stony country; in Israel it nests in the Negev.",
+      "fr": "Il fréquente déserts et terrains pierreux ouverts; en Israël, il niche au Néguev."
+    },
+    "diet": {
+      "en": "Regional sources report a diet of seeds and sprouts.",
+      "fr": "Les sources régionales signalent un régime de graines et de pousses."
+    },
+    "behavior": {
+      "en": "It is sociable and visits water; populations may be resident or nomadic.",
+      "fr": "Il est grégaire et rejoint les points d’eau; les populations peuvent être résidentes ou nomades."
+    },
+    "reproduction": {
+      "en": "It nests on the ground; both sexes incubate in shifts.",
+      "fr": "Il niche au sol; les deux sexes couvent à tour de rôle."
+    },
+    "ecology": {
+      "en": "Compare it with the southern African Namaqua and clay-grassland Yellow-throated Sandgrouse.",
+      "fr": "Le comparer au Ganga namaqua d’Afrique australe et au Ganga à gorge jaune des prairies argileuses."
+    },
+    "conservation": {
+      "en": "BirdLife classifies it globally as Least Concern.",
+      "fr": "BirdLife la classe en Préoccupation mineure à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Spotted Sandgrouse — Israel Birding Portal (Hebrew)",
+        "fr": "Ganga tacheté — portail ornithologique israélien (hébreu)"
+      },
+      "url": "https://www.birds.org.il/he/species/274",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The Hebrew page describes range, Negev habitat, plumage, food, flocking and nesting."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 12,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spotted Sandgrouse — Oiseaux.net (French)",
+        "fr": "Ganga tacheté — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/ganga.tachete.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The French species account describes desert and open arid habitat, North African and Middle Eastern distribution, and flocking."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spotted Sandgrouse — Birds of Saudi Arabia, OSME",
+        "fr": "Ganga tacheté — Birds of Saudi Arabia, OSME"
+      },
+      "url": "https://osme.org/wp-content/uploads/2023/06/The-Birds-of-Saudi-Arabia-Volume-2-2.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The English OSME account describes arid sandy or gravel plains with scattered scrub and a seed-based diet."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 17,
+        "total": 17,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Namaqua Sandgrouse — Biodiversity Explorer, University of Cape Town",
+        "fr": "Ganga namaqua — Biodiversity Explorer, université du Cap"
+      },
+      "url": "https://www.biodiversityexplorer.info/birds/pteroclidae/pterocles_namaqua.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "This account places the Namaqua Sandgrouse in southern Africa and describes its gravelly and sandy habitats."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 16,
+        "total": 16,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Yellow-throated Sandgrouse — BirdLife South Africa",
+        "fr": "Ganga à gorge jaune — BirdLife South Africa"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/yellow-throated-sandgrouse/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "BirdLife describes the Yellow-throated Sandgrouse’s use of clay-soil grasslands in southern Africa."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spotted Sandgrouse — BirdLife DataZone",
+        "fr": "Ganga tacheté — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/spotted-sandgrouse-pterocles-senegallus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife’s global category is Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 16,
+        "notes_words": 6,
+        "total": 22,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Hebrew and French accounts emphasize regional observations; they should not be generalized to every part of the species’ range.",
+    "The evidence reviewed did not establish a single migration pattern for the whole species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Reciprocal comparisons with P. namaqua and P. gutturalis focus on range and habitat; no global abundance claim is made."
+}

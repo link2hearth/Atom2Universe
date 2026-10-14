@@ -1,0 +1,120 @@
+{
+  "id": "pseudosphinx_tetrio",
+  "scientific": "Pseudosphinx tetrio",
+  "group": "invertebrates",
+  "name": {
+    "en": "Tetrio sphinx moth",
+    "fr": "Sphinx du frangipanier"
+  },
+  "sections": {
+    "overview": {
+      "en": "This sphinx moth is common in tropical and subtropical America and occurs less often in southern Florida.",
+      "fr": "Ce sphinx est courant dans les régions tropicales et subtropicales d’Amérique, et plus rare dans le sud de la Floride."
+    },
+    "identification": {
+      "en": "Adults are mostly grey-brown; the large caterpillars are conspicuous, with black-and-yellow rings and a reddish head.",
+      "fr": "Les adultes sont surtout gris-brun ; les grandes chenilles sont voyantes, avec des anneaux noirs et jaunes et une tête rougeâtre."
+    },
+    "habitat": {
+      "en": "Caterpillars often occur in gardens on frangipani and related host plants.",
+      "fr": "Les chenilles se trouvent souvent dans les jardins, sur les frangipaniers et leurs plantes-hôtes apparentées."
+    },
+    "diet": {
+      "en": "Larvae feed on Apocynaceae leaves; adults visit flowers for nectar.",
+      "fr": "Les larves mangent des feuilles d’Apocynacées ; les adultes butinent les fleurs."
+    },
+    "behavior": {
+      "en": "Adults are active at night and attracted to lights.",
+      "fr": "Les adultes sont actifs la nuit et attirés par les lumières."
+    },
+    "reproduction": {
+      "en": "Females lay about 50–100 eggs in clusters on host-plant leaves.",
+      "fr": "Les femelles pondent environ 50 à 100 œufs en amas sur les feuilles des plantes-hôtes."
+    },
+    "ecology": {
+      "en": "Its bold larval colors are described as a warning signal, although some predators still eat the caterpillars.",
+      "fr": "Les couleurs vives de la chenille sont décrites comme un signal d’avertissement, bien que certains prédateurs la mangent malgré tout."
+    },
+    "conservation": {
+      "en": "Status is not stated.",
+      "fr": "Statut non précisé."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "UF/IFAS Featured Creatures — species account",
+        "fr": "UF/IFAS Featured Creatures — fiche de l’espèce"
+      },
+      "url": "https://ask.ifas.ufl.edu/publication/IN621",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "UF/IFAS describes range, appearance, biology and host plants."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 189,
+        "notes_words": 8,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biodar UNLP — species information",
+        "fr": "Biodar UNLP — informations sur l’espèce"
+      },
+      "url": "https://biodar.unlp.edu.ar/sphingidae/es/info/20335.html",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "This Spanish-language database lists the larval host-plant family Apocynaceae."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 9,
+        "total": 31,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The potential defensive toxicity of larvae is phrased cautiously because the UF/IFAS account says they may be toxic and notes that some predators still eat them."
+  ],
+  "review_note": "Kept the life-cycle claims to those in the UF/IFAS account and cross-checked host-plant information against a Spanish-language Argentine species database.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

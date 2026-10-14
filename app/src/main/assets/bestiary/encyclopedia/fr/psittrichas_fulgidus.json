@@ -1,0 +1,26 @@
+{
+  "id": "psittrichas_fulgidus",
+  "name": "Perroquet de Pesquet",
+  "scientific": "Psittrichas fulgidus",
+  "group": "birds",
+  "sections": {
+    "overview": "Ce perroquet est endémique de Nouvelle-Guinée.",
+    "identification": "Il est surtout noir et gris, avec le dessous rouge et la face nue.",
+    "habitat": "Il habite les forêts de collines et de basse montagne, ainsi que les forêts de plaine voisines.",
+    "diet": "Il se spécialise dans la pulpe de quelques espèces de figuiers.",
+    "behavior": "Il peut se déplacer au fil des saisons à la recherche de fruits.",
+    "reproduction": "Il niche dans de grands arbres creux et pond un ou deux œufs.",
+    "ecology": "Sa dépendance envers quelques figuiers lie étroitement son alimentation à la disponibilité des fruits.",
+    "conservation": "L’évaluation mondiale UICN de 2017 le classait « Vulnérable » ; la chasse pour ses plumes est une pression majeure."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T22685025A118772050.en",
+      "title": "Liste rouge UICN — évaluation de BirdLife"
+    },
+    {
+      "url": "https://parrots.org/encyclopedia/pesquets-parrot/",
+      "title": "World Parrot Trust — encyclopédie des perroquets"
+    }
+  ]
+}

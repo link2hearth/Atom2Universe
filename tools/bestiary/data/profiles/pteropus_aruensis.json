@@ -1,0 +1,166 @@
+{
+  "id": "pteropus_aruensis",
+  "scientific": "Pteropus aruensis",
+  "group": "mammals",
+  "name": {
+    "en": "Aru Flying Fox",
+    "fr": "Pteropus aruensis"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Aru Flying Fox is a bat in the family Pteropodidae, currently treated as a living species from Indonesia.",
+      "fr": "Pteropus aruensis est une roussette de la famille des Pteropodidae, actuellement considérée comme une espèce vivante d’Indonésie."
+    },
+    "identification": {
+      "en": "It belongs to the flying-fox genus Pteropus; a taxonomic treatment notes a whitish back as a distinctive feature.",
+      "fr": "Elle appartient au genre Pteropus; un traitement taxonomique signale son dos blanchâtre comme un caractère distinctif."
+    },
+    "habitat": {
+      "en": "Its known type locality is the Aru Islands in Indonesia; published species-specific habitat information is limited.",
+      "fr": "Sa localité-type connue est l’archipel des Aru, en Indonésie; les informations publiées sur son habitat propre sont limitées."
+    },
+    "diet": {
+      "en": "The sources reviewed for this species do not provide a documented species-specific diet.",
+      "fr": "Les sources consultées pour cette espèce ne décrivent pas de régime alimentaire qui lui soit propre."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is poorly documented in the sources reviewed.",
+      "fr": "Le comportement propre à l’espèce est peu documenté dans les sources consultées."
+    },
+    "reproduction": {
+      "en": "The reviewed sources do not describe its reproductive biology.",
+      "fr": "Les sources consultées ne décrivent pas sa biologie reproductive."
+    },
+    "ecology": {
+      "en": "The Mammal Diversity Database treats Pteropus aruensis as a valid species; older sources discussed it as a form of the Black-bearded Flying Fox, Pteropus melanopogon.",
+      "fr": "La Mammal Diversity Database traite Pteropus aruensis comme une espèce valide; des ouvrages plus anciens la considéraient comme une forme de la Roussette à barbe noire, Pteropus melanopogon."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database reports it as Critically Endangered; its limited documentation counsels caution about claims on its present population.",
+      "fr": "La Mammal Diversity Database la classe en danger critique; le manque de données invite à la prudence sur les affirmations concernant sa population actuelle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pteropus aruensis — American Society of Mammalogists Mammal Diversity Database",
+        "fr": "Pteropus aruensis — Mammal Diversity Database de l’American Society of Mammalogists"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1004453/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "MDD places the species in Pteropus and Pteropodidae, records Indonesia and the Aru Islands as distribution/type locality, and reports Critically Endangered status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 114,
+        "notes_words": 22,
+        "total": 136,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pteropus aruensis — taxonomic treatment, Plazi TreatmentBank",
+        "fr": "Pteropus aruensis — traitement taxonomique, Plazi TreatmentBank"
+      },
+      "url": "https://treatment.plazi.org/GgServer/html/03AD87FAFFA3F64D896D3071FABAF441/8",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The treatment reports whitish dorsal coloration as distinctive; it does not establish diet, behavior or reproduction."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 16,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Species of the World — Pteropus aruensis",
+        "fr": "Mammal Species of the World — Pteropus aruensis"
+      },
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13800259&s=y",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The 2005 catalogue records earlier treatment as a subspecies of Pteropus melanopogon and notes no collection since the nineteenth century."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 20,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Kalong Aru — Biodiversity Warriors, Kehati (Indonesian)",
+        "fr": "Kalong Aru — Biodiversity Warriors, Kehati (indonésien)"
+      },
+      "url": "https://biodiversitywarriors.kehati.or.id/artikel/kalong-aru/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The Indonesian-language account describes the Aru flying fox as endemic to the Aru Islands."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "This species is exceptionally poorly documented; an older catalogue reports no collection since the nineteenth century, while current taxonomic databases list it as living.",
+    "The draft does not infer current abundance from its conservation category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The account is intentionally short because species-specific natural history is poorly documented; present-day abundance is not inferred."
+}

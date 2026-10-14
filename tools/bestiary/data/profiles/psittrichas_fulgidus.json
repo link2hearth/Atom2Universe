@@ -1,0 +1,120 @@
+{
+  "id": "psittrichas_fulgidus",
+  "scientific": "Psittrichas fulgidus",
+  "group": "birds",
+  "name": {
+    "en": "Pesquet’s parrot",
+    "fr": "Perroquet de Pesquet"
+  },
+  "sections": {
+    "overview": {
+      "en": "This parrot is endemic to New Guinea.",
+      "fr": "Ce perroquet est endémique de Nouvelle-Guinée."
+    },
+    "identification": {
+      "en": "It is mostly black and grey with red underparts and a bare face.",
+      "fr": "Il est surtout noir et gris, avec le dessous rouge et la face nue."
+    },
+    "habitat": {
+      "en": "It inhabits hill and lower montane forest, and nearby lowland forest.",
+      "fr": "Il habite les forêts de collines et de basse montagne, ainsi que les forêts de plaine voisines."
+    },
+    "diet": {
+      "en": "It specializes in the pulp of a few fig species.",
+      "fr": "Il se spécialise dans la pulpe de quelques espèces de figuiers."
+    },
+    "behavior": {
+      "en": "It may move seasonally in search of fruit.",
+      "fr": "Il peut se déplacer au fil des saisons à la recherche de fruits."
+    },
+    "reproduction": {
+      "en": "It nests in large hollow trees and lays one or two eggs.",
+      "fr": "Il niche dans de grands arbres creux et pond un ou deux œufs."
+    },
+    "ecology": {
+      "en": "Its reliance on a few fig species links its feeding ecology closely to fruit availability.",
+      "fr": "Sa dépendance envers quelques figuiers lie étroitement son alimentation à la disponibilité des fruits."
+    },
+    "conservation": {
+      "en": "The 2017 global IUCN assessment classified it as Vulnerable; hunting for feathers is a major pressure.",
+      "fr": "L’évaluation mondiale UICN de 2017 le classait « Vulnérable » ; la chasse pour ses plumes est une pression majeure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "IUCN Red List — BirdLife assessment",
+        "fr": "Liste rouge UICN — évaluation de BirdLife"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-3.RLTS.T22685025A118772050.en",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife documents New Guinea forest habitat, fig-feeding, nomadism, nesting and threats."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 11,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "World Parrot Trust — species encyclopedia",
+        "fr": "World Parrot Trust — encyclopédie des perroquets"
+      },
+      "url": "https://parrots.org/encyclopedia/pesquets-parrot/",
+      "supports": [
+        "diet",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The World Parrot Trust describes its plumage, bare face and fig diet."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 77,
+        "notes_words": 12,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The assessed conservation status is tied to BirdLife’s 2017 global assessment. The French common name is a direct translation of the English name."
+  ],
+  "review_note": "Life history and status are based on the species assessment; plumage details were cross-checked with the World Parrot Trust account.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

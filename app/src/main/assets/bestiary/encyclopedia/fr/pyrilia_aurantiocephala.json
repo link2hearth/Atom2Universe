@@ -1,0 +1,34 @@
+{
+  "id": "pyrilia_aurantiocephala",
+  "name": "Caïque chauve",
+  "scientific": "Pyrilia aurantiocephala",
+  "group": "birds",
+  "sections": {
+    "overview": "Ce perroquet brésilien est connu du centre de l’Amazonie, entre les cours inférieurs du Madeira et du Xingu.",
+    "identification": "Il se distingue par sa tête nue d’un orange intense ; la description originale l’a établi comme espèce et non comme jeune perroquet vautourin.",
+    "habitat": "Il est associé aux forêts tropicales humides et aux forêts marécageuses tropicales du Brésil.",
+    "diet": "Les sources retenues ne donnent pas assez de détails propres à l’espèce pour résumer son régime.",
+    "behavior": "Sa silhouette en vol et son comportement sont décrits comme très proches de ceux de son espèce sœur, P. vulturina.",
+    "reproduction": "La fiche norvégienne signale une nidification dans des cavités.",
+    "ecology": "Elle est endémique du Brésil, avec des observations entre le Madeira–Tapajós et le Xingu.",
+    "conservation": "Le World Parrot Trust la classe « Quasi menacée »."
+  },
+  "sources": [
+    {
+      "url": "https://academic.oup.com/auk/article/119/3/815/5561817",
+      "title": "The Auk — description originale de l’espèce"
+    },
+    {
+      "url": "https://www.scielo.br/j/zool/a/RLVtzbxdkhDQcLN3rTbk9qr/?format=html",
+      "title": "SciELO — observations d’oiseaux en Amazonie centrale"
+    },
+    {
+      "url": "https://snl.no/kondorpapeg%C3%B8ye",
+      "title": "Store norske leksikon — notice sur l’espèce"
+    },
+    {
+      "url": "https://parrots.org/encyclopedia/orange-headed-parrot/",
+      "title": "World Parrot Trust — encyclopédie des perroquets"
+    }
+  ]
+}

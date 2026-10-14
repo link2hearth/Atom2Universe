@@ -1,0 +1,26 @@
+{
+  "id": "pseudosphinx_tetrio",
+  "name": "Sphinx du frangipanier",
+  "scientific": "Pseudosphinx tetrio",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce sphinx est courant dans les régions tropicales et subtropicales d’Amérique, et plus rare dans le sud de la Floride.",
+    "identification": "Les adultes sont surtout gris-brun ; les grandes chenilles sont voyantes, avec des anneaux noirs et jaunes et une tête rougeâtre.",
+    "habitat": "Les chenilles se trouvent souvent dans les jardins, sur les frangipaniers et leurs plantes-hôtes apparentées.",
+    "diet": "Les larves mangent des feuilles d’Apocynacées ; les adultes butinent les fleurs.",
+    "behavior": "Les adultes sont actifs la nuit et attirés par les lumières.",
+    "reproduction": "Les femelles pondent environ 50 à 100 œufs en amas sur les feuilles des plantes-hôtes.",
+    "ecology": "Les couleurs vives de la chenille sont décrites comme un signal d’avertissement, bien que certains prédateurs la mangent malgré tout.",
+    "conservation": "Statut non précisé."
+  },
+  "sources": [
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/IN621",
+      "title": "UF/IFAS Featured Creatures — fiche de l’espèce"
+    },
+    {
+      "url": "https://biodar.unlp.edu.ar/sphingidae/es/info/20335.html",
+      "title": "Biodar UNLP — informations sur l’espèce"
+    }
+  ]
+}

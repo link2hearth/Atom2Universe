@@ -1,0 +1,34 @@
+{
+  "id": "pterocles_namaqua",
+  "name": "Namaqua Sandgrouse",
+  "scientific": "Pterocles namaqua",
+  "group": "birds",
+  "sections": {
+    "overview": "This near-endemic sandgrouse inhabits dry, open country in southern Africa.",
+    "identification": "The sexes have different plumage; the bird forages on foot.",
+    "habitat": "From Angola to South Africa, it favors gravel desert, sandy semi-desert and shrubland.",
+    "diet": "Seeds dominate its diet, with flowers, small fruits and leaves also eaten.",
+    "behavior": "Males carry water to chicks in belly feathers, whose water-holding structure has been studied.",
+    "reproduction": "It nests on the ground; both sexes incubate in day and night shifts.",
+    "ecology": "Compare its arid open habitats with Yellow-throated and Spotted Sandgrouse in their linked profiles.",
+    "conservation": "The regional account calls it widespread but notes past decline in parts of the Nama Karoo."
+  },
+  "sources": [
+    {
+      "url": "https://www.biodiversityexplorer.info/birds/pteroclidae/pterocles_namaqua.htm",
+      "title": "Namaqua Sandgrouse — Biodiversity Explorer, University of Cape Town"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10091193/",
+      "title": "Namaqua Sandgrouse water-carrying feathers — Proceedings of the Royal Society B"
+    },
+    {
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/yellow-throated-sandgrouse/",
+      "title": "Yellow-throated Sandgrouse — BirdLife South Africa"
+    },
+    {
+      "url": "https://www.birds.org.il/he/species/274",
+      "title": "Spotted Sandgrouse — Israel Birding Portal (Hebrew)"
+    }
+  ]
+}

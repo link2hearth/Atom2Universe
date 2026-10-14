@@ -1,0 +1,145 @@
+{
+  "id": "raja_binoculata",
+  "scientific": "Raja binoculata",
+  "group": "fish",
+  "name": {
+    "en": "Big skate",
+    "fr": "Grande raie"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large skate inhabits the northeastern Pacific from the Bering Sea to Baja California. Some current taxonomic sources use the combination Beringraja binoculata.",
+      "fr": "Cette grande raie vit dans le nord-est du Pacifique, de la mer de Béring à la Basse-Californie. Certaines sources taxonomiques actuelles utilisent le nom Beringraja binoculata."
+    },
+    "identification": {
+      "en": "It has a diamond-shaped body, mottled brown upper surface and large eye-like spots on the pectoral fins.",
+      "fr": "Son corps est en forme de losange, son dessus marbré de brun et ses nageoires pectorales portent de grandes taches en forme d’yeux."
+    },
+    "habitat": {
+      "en": "It lives on sandy or muddy bottoms, including coastal bays and estuaries, and ranges across the continental shelf.",
+      "fr": "Elle vit sur des fonds sableux ou vaseux, notamment dans les baies côtières et les estuaires, et occupe le plateau continental."
+    },
+    "diet": {
+      "en": "It feeds on crustaceans and fishes, as well as other marine invertebrates.",
+      "fr": "Elle mange des crustacés et des poissons, ainsi que d’autres invertébrés marins."
+    },
+    "behavior": {
+      "en": "It is a bottom-dwelling species and may occur over sand, mud or rocky areas.",
+      "fr": "C’est une espèce vivant près du fond, qui peut fréquenter des zones sableuses, vaseuses ou rocheuses."
+    },
+    "reproduction": {
+      "en": "Females lay large leathery egg cases, which can contain several embryos; young hatch after about nine months.",
+      "fr": "Les femelles pondent de grandes capsules coriaces pouvant contenir plusieurs embryons ; les jeunes éclosent après environ neuf mois."
+    },
+    "ecology": {
+      "en": "It is one of the largest skates in North American waters and is caught in commercial fisheries.",
+      "fr": "C’est l’une des plus grandes raies des eaux nord-américaines et elle est capturée par les pêcheries commerciales."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern from 2024.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN « Préoccupation mineure » datant de 2024."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "NOAA — Big skate species account",
+        "fr": "NOAA — fiche de la grande raie"
+      },
+      "url": "https://repository.library.noaa.gov/view/noaa/5807/noaa_5807_DS1.pdf",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The NOAA report records the eastern North Pacific range, depth and continental-shelf distribution, and describes it as California’s largest skate."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 20,
+        "total": 124,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "University of Florida Museum — Discover Fishes",
+        "fr": "Florida Museum — Discover Fishes"
+      },
+      "url": "https://www.floridamuseum.ufl.edu/discover-fish/species-profiles/big-skate/",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The museum account describes its body and spots, benthic habitats, diet, egg capsules with multiple embryos and incubation of about nine months."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 22,
+        "total": 152,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Beringraja binoculata summary",
+        "fr": "FishBase — résumé de Beringraja binoculata"
+      },
+      "url": "https://www.fishbase.se/summary/Beringraja-binoculata",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase uses Beringraja binoculata and reports its 2024 global IUCN assessment as Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 14,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "This profile keeps the catalogue’s Raja binoculata label while noting the Beringraja combination used by FishBase. Egg capsule embryo counts vary among sources; no exact maximum is stated here."
+  ],
+  "review_note": "Cross-checked a NOAA range account and Florida Museum biology page; taxonomy and dated global status follow FishBase.",
+  "reviewed": true,
+  "source_audit_version": 1
+}
