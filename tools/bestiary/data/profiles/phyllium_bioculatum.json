@@ -1,0 +1,142 @@
+{
+  "id": "phyllium_bioculatum",
+  "scientific": "Phyllium bioculatum",
+  "group": "invertebrates",
+  "name": {
+    "en": "Gray leaf insect",
+    "fr": "Phyllie à deux taches"
+  },
+  "sections": {
+    "overview": {
+      "en": "Phyllium bioculatum is a leaf insect in family Phylliidae; recent taxonomy places it in Pulchriphyllium.",
+      "fr": "Phyllium bioculatum est un phasme-feuille de la famille des Phylliidae ; la taxonomie récente le place dans le genre Pulchriphyllium."
+    },
+    "identification": {
+      "en": "Its flattened, leaf-like form provides camouflage among foliage.",
+      "fr": "Sa silhouette aplatie, semblable à une feuille, le camoufle dans le feuillage."
+    },
+    "habitat": {
+      "en": "A Singapore record documents an individual at a secondary-forest edge; this does not establish its full habitat range.",
+      "fr": "Une observation à Singapour documente un individu en lisière de forêt secondaire ; elle ne définit pas tous ses habitats."
+    },
+    "diet": {
+      "en": "The sources consulted do not establish its wild diet or food plants.",
+      "fr": "Les sources consultées ne précisent ni son régime à l’état sauvage ni ses plantes alimentaires."
+    },
+    "behavior": {
+      "en": "Leaf insects resemble leaves, a form of camouflage documented in research on the group.",
+      "fr": "Les phasmes-feuilles ressemblent aux feuilles, un camouflage documenté dans les études sur le groupe."
+    },
+    "reproduction": {
+      "en": "Its eggs have a distinctive fused-fin form, and researchers have measured how their surface adhesive works.",
+      "fr": "Ses œufs ont une forme particulière à ailettes fusionnées, dont les chercheurs ont étudié l’adhérence."
+    },
+    "ecology": {
+      "en": "The name has been used for a broader group: taxonomic work separated the Sri Lankan form agathyrsus as its own species.",
+      "fr": "Le nom a désigné un groupe plus large : des travaux taxonomiques ont rétabli la forme sri-lankaise agathyrsus comme espèce distincte."
+    },
+    "conservation": {
+      "en": "Available sources focus on taxonomy and biology and do not describe conservation threats.",
+      "fr": "Les sources disponibles portent sur la taxonomie et la biologie, sans décrire de menaces de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A tree of leaves: phylogeny and historical biogeography of the leaf insects — Communications Biology",
+        "fr": "A tree of leaves : phylogénie et biogéographie historique des phasmes-feuilles — Communications Biology"
+      },
+      "url": "https://www.nature.com/articles/s42003-021-02436-z",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Phylogenetic study elevates Pulchriphyllium to genus rank and reinstates the Sri Lankan agathyrsus population as a separate species; describes leaf-like camouflage in leaf insects.",
+        "The study addresses taxonomy and biology, not threat status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 33,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Leaves that walk and eggs that stick — BMC Zoology",
+        "fr": "Leaves that walk and eggs that stick — BMC Zoology"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10170840/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "Comparative study includes P. bioculatum and reports its fused-fin egg morphotype."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 11,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biodiversity Record: Leaf insect, Phyllium bioculatum, along Old Upper Thomson Road — Nature in Singapore",
+        "fr": "Observation de biodiversité : Phyllium bioculatum en lisière forestière — Nature in Singapore"
+      },
+      "url": "https://lkcnhm.nus.edu.sg/wp-content/uploads/sites/10/2021/06/NIS-2021-0058.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "One observation from Singapore records the insect at a secondary-forest edge."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 11,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Older sources used a wider concept of Phyllium bioculatum; modern species limits and names should be followed when comparing range records."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the inventory ID and legacy scientific name, while explicitly noting current genus placement and a documented taxonomic split. Wild host plants and conservation status remain unresolved here."
+}

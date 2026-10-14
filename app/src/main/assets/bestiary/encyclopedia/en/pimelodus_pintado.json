@@ -1,0 +1,42 @@
+{
+  "id": "pimelodus_pintado",
+  "name": "Pimelodus pintado",
+  "scientific": "Pimelodus pintado",
+  "group": "fish",
+  "sections": {
+    "overview": "This South American long-whiskered catfish was described from tributaries flowing into Laguna Merín in Uruguay.",
+    "identification": "Its most striking reported feature is a dense pattern of small irregular dark spots over the head, body and fins; freshly caught fish were described with a metallic golden background.",
+    "habitat": "The confirmed records are from the Cebollatí, Tacuarí and Yaguarón rivers of the Laguna Merín basin; detailed habitat requirements remain poorly known.",
+    "diet": "Its diet has not been studied in detail; a Uruguayan guide reports mollusc remains in examined stomachs, while broader basin-level diet information cannot be assumed to apply fully to this species.",
+    "behavior": "Species-specific behavior is scarcely documented in the description and regional accounts consulted.",
+    "reproduction": "The Uruguayan regional account states that its reproductive biology is unknown.",
+    "ecology": "Its dense spotting and Laguna Merín range distinguish it among the four Pimelodus profiles here. P. pohli is instead known from the São Francisco drainage. P. stewarti comes from the Tocantins and is much smaller. P. tetramerus occurs in the Tapajós–Tocantins region and has four dark flank bands.",
+    "conservation": "Uruguay’s environment ministry lists it as a national conservation priority because its distribution is restricted; this national designation is not a global IUCN category."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "title": "Pimelodus pintado — original species description"
+    },
+    {
+      "url": "https://udelar.edu.uy/retema/wp-content/uploads/sites/30/2023/10/Peces-de-agua-dulce-de-Uruguay.-Segunda-Edicion.pdf",
+      "title": "Freshwater fishes of Uruguay — second edition (Spanish)"
+    },
+    {
+      "url": "https://www.ambiente.gub.uy/especies/especie/P_pintado/",
+      "title": "Pimelodus pintado — Uruguay Ministry of Environment species record (Spanish)"
+    },
+    {
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "title": "Pimelodus pohli — original description"
+    },
+    {
+      "url": "https://www.fishbase.org/summary/64684",
+      "title": "Pimelodus stewarti — FishBase species summary"
+    },
+    {
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "title": "Pimelodus tetramerus — original description"
+    }
+  ]
+}

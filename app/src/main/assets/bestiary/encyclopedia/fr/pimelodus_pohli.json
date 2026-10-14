@@ -1,0 +1,38 @@
+{
+  "id": "pimelodus_pohli",
+  "name": "Pimelodus pohli",
+  "scientific": "Pimelodus pohli",
+  "group": "fish",
+  "sections": {
+    "overview": "Pimelodus pohli est un poisson-chat sud-américain à longs barbillons, décrit dans le bassin du São Francisco au Brésil.",
+    "identification": "Son corps est relativement haut et sa nageoire adipeuse longue. Les adultes peuvent porter des taches sombres sur l’avant du dos, tandis que les jeunes ont des rangées de petites taches sur les flancs; une barre sombre peut marquer le lobe inférieur de la caudale.",
+    "habitat": "Son aire documentée se limite au bassin du São Francisco, au Brésil; les sources consultées ne précisent pas davantage ses préférences d’habitat.",
+    "diet": "Les sources taxonomiques consultées ne permettent pas d’établir un régime propre à l’espèce.",
+    "behavior": "La description originale est taxonomique et renseigne peu sur le comportement de l’espèce.",
+    "reproduction": "La description de l’espèce ne donne pas de détails sur sa reproduction; une étude ultérieure de population existe, mais ses résultats ne sont pas résumés ici sans examen vérifié du texte intégral.",
+    "ecology": "Sa présence dans le bassin du São Francisco le distingue des trois autres Pimelodus présentés ici. P. pintado est associé au bassin de la lagune Merín et est très tacheté. P. stewarti vit dans le Tocantins et est une espèce bien plus petite. P. tetramerus est connu de la région Tapajós–Tocantins et porte quatre bandes sombres sur les flancs.",
+    "conservation": "Les sources consultées ne donnent pas d’évaluation de conservation propre à l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "title": "Une nouvelle espèce de Pimelodus du bassin du São Francisco — description originale"
+    },
+    {
+      "url": "https://eol.org/pages/7197933/articles",
+      "title": "Pimelodus pohli — fiche espèce de l’Encyclopedia of Life, liée à FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "title": "Pimelodus pintado — description scientifique originale"
+    },
+    {
+      "url": "https://www.fishbase.org/summary/64684",
+      "title": "Pimelodus stewarti — fiche espèce FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "title": "Pimelodus tetramerus — description scientifique originale"
+    }
+  ]
+}

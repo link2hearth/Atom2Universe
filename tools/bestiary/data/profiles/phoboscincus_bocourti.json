@@ -1,0 +1,143 @@
+{
+  "id": "phoboscincus_bocourti",
+  "scientific": "Phoboscincus bocourti",
+  "group": "reptiles",
+  "name": {
+    "en": "Bocourt’s terrific skink",
+    "fr": "Scinque géant de Bocourt"
+  },
+  "sections": {
+    "overview": {
+      "en": "Bocourt’s terrific skink is a large New Caledonian skink, known today only from small islets near Île des Pins.",
+      "fr": "Le scinque géant de Bocourt est un grand scinque néo-calédonien, aujourd’hui connu seulement de petits îlots près de l’île des Pins."
+    },
+    "identification": {
+      "en": "It has an elongated body, short limbs, a robust tail and large, curved front teeth; it is the largest skink in New Caledonia.",
+      "fr": "Il a un corps allongé, des membres courts, une queue robuste et de grandes dents recourbées à l’avant ; c’est le plus grand scinque de Nouvelle-Calédonie."
+    },
+    "habitat": {
+      "en": "It is associated with low coastal forest on offshore islets.",
+      "fr": "Il est associé à la forêt littorale basse des îlots côtiers."
+    },
+    "diet": {
+      "en": "A 2022 study identified a land crab in its diet and found its bite force sufficient to crack hard crab shells.",
+      "fr": "Une étude de 2022 a identifié un crabe terrestre dans son régime et estimé que sa morsure peut briser des carapaces dures."
+    },
+    "behavior": {
+      "en": "Field observations are scarce; the species is thought to be mainly terrestrial, although individuals have also been seen climbing trunks.",
+      "fr": "Les observations de terrain sont rares ; l’espèce serait surtout terrestre, mais des individus ont aussi été vus en train de grimper aux troncs."
+    },
+    "reproduction": {
+      "en": "Its breeding biology and clutch size remain unknown.",
+      "fr": "Sa biologie de reproduction et la taille de ses pontes restent inconnues."
+    },
+    "ecology": {
+      "en": "It is one of two New Caledonian species in Phoboscincus; the other, P. garnieri, is much more widespread and has smoother scales.",
+      "fr": "C’est l’une des deux espèces néo-calédoniennes du genre Phoboscincus ; l’autre, P. garnieri, est bien plus répandue et possède des écailles plus lisses."
+    },
+    "conservation": {
+      "en": "A 2017 New Caledonian Red List assessment classed it as Critically Endangered, citing its tiny known range and threats such as habitat damage and introduced predators.",
+      "fr": "Une évaluation de la Liste rouge néo-calédonienne de 2017 l’a classée « en danger critique », en raison de son aire connue minuscule et de menaces comme la dégradation de l’habitat et les prédateurs introduits."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Terrific Skink bite force suggests insularity as a likely driver to exceptional resource use — peer-reviewed study",
+        "fr": "La force de morsure du scinque terrifiant suggère le rôle de l’insularité — étude évaluée par les pairs"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8930981/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "The 2022 study describes the skink as known from tiny New Caledonian islets and identifies land-crab prey; biomechanical estimates suggest a strong bite capable of cracking hard crab shells."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 29,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phoboscincus bocourti — Endemia, New Caledonian Red List",
+        "fr": "Phoboscincus bocourti — Endemia, Liste rouge néo-calédonienne"
+      },
+      "url": "https://endemia.nc/faune/fiche1084.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Endemia describes morphology, coastal forest, scarce terrestrial and climbing observations, unknown reproduction, and the 2017 CR assessment with threats."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 19,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phoboscincus — Endemia, New Caledonian genus account",
+        "fr": "Phoboscincus — Endemia, fiche du genre néo-calédonien"
+      },
+      "url": "https://endemia.nc/faune/fiche1083",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "The genus contains two New Caledonian species; P. garnieri is widespread while P. bocourti is restricted, and their scale textures differ.",
+        "The genus account says reproductive mode and clutch size are unknown."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 65,
+        "notes_words": 32,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The exact occupied range and population trend remain poorly known; Endemia’s cited assessment dates from 2017.",
+    "The 2022 study combines limited natural-history observations with biomechanical modelling, not a full dietary survey."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the 2022 peer-reviewed bite-force study with Endemia’s French species and genus accounts. P. garnieri is a close relative, but no reciprocal profile currently exists."
+}

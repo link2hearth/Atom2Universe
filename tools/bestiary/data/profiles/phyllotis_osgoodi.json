@@ -1,0 +1,144 @@
+{
+  "id": "phyllotis_osgoodi",
+  "scientific": "Phyllotis osgoodi",
+  "group": "mammals",
+  "name": {
+    "en": "Osgood's leaf-eared mouse",
+    "fr": "Phyllotis d’Osgood"
+  },
+  "sections": {
+    "overview": {
+      "en": "Phyllotis osgoodi is a poorly known Andean sigmodontine rodent recorded from northern Chile.",
+      "fr": "Phyllotis osgoodi est un rongeur sigmodontiné andin peu connu, signalé dans le nord du Chili."
+    },
+    "identification": {
+      "en": "Its species status has been questioned because researchers found no clear morphological distinction from sympatric Phyllotis xanthopygus.",
+      "fr": "Son statut d’espèce a été contesté, faute de différence morphologique claire avec Phyllotis xanthopygus, présent dans la même région."
+    },
+    "habitat": {
+      "en": "The modern mammal synthesis knows it only from its type locality in the Puna of northern Chile.",
+      "fr": "La synthèse moderne sur les mammifères ne le connaît que de sa localité type, dans la puna du nord du Chili."
+    },
+    "diet": {
+      "en": "No field data on its diet were available in the detailed mammal synthesis consulted.",
+      "fr": "La synthèse détaillée consultée ne disposait d’aucune donnée de terrain sur son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Its behaviour in the wild has not been studied in the sources consulted.",
+      "fr": "Son comportement à l’état sauvage n’a pas été étudié dans les sources consultées."
+    },
+    "reproduction": {
+      "en": "The field biology account does not report species-specific reproductive information.",
+      "fr": "La synthèse de biologie de terrain ne rapporte pas de donnée reproductive propre à l’espèce."
+    },
+    "ecology": {
+      "en": "An older Chilean museum account placed it in the puna at about four thousand four hundred metres; its limits and range remain uncertain.",
+      "fr": "Une ancienne synthèse du musée chilien le situait dans la puna vers quatre mille quatre cents mètres ; ses limites et son aire restent incertaines."
+    },
+    "conservation": {
+      "en": "Mammal Diversity Database lists it as Not Evaluated; this should not be read as evidence of low risk.",
+      "fr": "La Mammal Diversity Database indique « non évalué » ; cela ne signifie pas que le risque soit faible."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mammals of South America, Volume 2: Rodents — Phyllotis osgoodi",
+        "fr": "Mammals of South America, volume 2 : Rodents — Phyllotis osgoodi"
+      },
+      "url": "https://www.biodiversidad.gob.ec/wp-content/uploads/downloads/2019/08/Patton_2015.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Taxonomic account; field biology remains sparse.",
+        "The species account gives no reproductive details."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 181,
+        "notes_words": 13,
+        "total": 194,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mamíferos fósiles y vivientes de Chile — Museo Nacional de Historia Natural",
+        "fr": "Mammifères fossiles et actuels du Chili — Musée national d’histoire naturelle du Chili"
+      },
+      "url": "https://publicaciones.mnhn.gob.cl/668/articles-64209_archivo_01.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Spanish-language Chilean museum volume records puna habitat at about 4,400 m and notes past disagreements over species limits."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 18,
+        "total": 66,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phyllotis osgoodi — Mammal Diversity Database",
+        "fr": "Phyllotis osgoodi — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1002729/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "American Society of Mammalogists database currently lists the taxon and reports IUCN status as Not Evaluated."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 16,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species limits remain debated in literature; published distribution and ecological detail depend on which taxonomic treatment is followed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared an English mammal synthesis with a Spanish Chilean museum account and the current Mammal Diversity Database; retained the inventory taxon but foregrounded uncertainty."
+}

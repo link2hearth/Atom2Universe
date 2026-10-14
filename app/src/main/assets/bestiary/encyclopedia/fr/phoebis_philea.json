@@ -1,0 +1,30 @@
+{
+  "id": "phoebis_philea",
+  "name": "Piéride à bandes orangées",
+  "scientific": "Phoebis philea",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Phoebis philea est un grand papillon soufré des régions tropicales américaines, présent du Mexique à l’Argentine.",
+    "identification": "Les mâles sont jaunes avec une large bande orange sur les ailes antérieures ; les femelles, blanchâtres à jaunes, portent elles aussi des marques orangées.",
+    "habitat": "Elle fréquente les espaces ouverts et les lisières ; en Colombie, elle a été signalée du niveau de la mer à environ 2 000 m.",
+    "diet": "Les chenilles se nourrissent de légumineuses, notamment de senna et d’autres cassias. Les adultes butinent le nectar des fleurs.",
+    "behavior": "Son vol est puissant et rapide ; elle visite souvent les fleurs et fréquente aussi les jardins et les parcs en Floride.",
+    "reproduction": "Les femelles pondent leurs œufs isolément sur les plantes hôtes, dont se nourrissent ensuite les chenilles.",
+    "ecology": "Elle ressemble au Soufré craquelé (Phoebis sennae), mais celui-ci ne porte pas de marques orange sur le dessus des ailes.",
+    "conservation": "Les sources consultées décrivent une vaste répartition, mais ne fournissent pas d’évaluation mondiale actuelle de son état de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.floridamuseum.ufl.edu/wildflowers/butterfly/orange-barred-sulphur/",
+      "title": "Piéride à bandes orangées — Florida Museum of Natural History"
+    },
+    {
+      "url": "https://repositorio.uptc.edu.co/server/api/core/bitstreams/672392df-dd03-4db3-a9a1-859d502ad70c/content",
+      "title": "Catálogo ilustrado de mariposas — Universidad Pedagógica y Tecnológica de Colombia"
+    },
+    {
+      "url": "https://ffl-apps.ifas.ufl.edu/butterflies/Butterfly/Details/13",
+      "title": "Piéride à bandes orangées — UF/IFAS Florida-Friendly Landscaping"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "philodromus_margaritatus",
+  "name": "Lichen running spider",
+  "scientific": "Philodromus margaritatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Philodromus margaritatus is a Palearctic spider in the family Philodromidae.",
+    "identification": "Its flattened body is about 5–7 mm long, with variable contrasting markings and spiny, banded legs.",
+    "habitat": "It lives on tree bark and foliage, especially on lichen-covered trunks, and is recorded more rarely on rocks.",
+    "diet": "It ambushes mainly flies while concealed against lichen on tree trunks.",
+    "behavior": "Adults are observed from May to August in the French Alps; its camouflage makes it easy to overlook.",
+    "reproduction": "The female guards an egg sac woven against tree bark during incubation.",
+    "ecology": "It can be confused with Philodromus emarginatus; close examination, including genital structures, may be needed for identification.",
+    "conservation": "Regional assessments differ: British sources report Near Threatened, while the German Red List records Least Concern; these categories apply to their respective regions."
+  },
+  "sources": [
+    {
+      "url": "https://britishspiders.org.uk/species/philodromus-margaritatus",
+      "title": "Lichen Running-spider — British Arachnological Society"
+    },
+    {
+      "url": "https://biodiversite.ecrins-parcnational.fr/espece/1679",
+      "title": "Philodrome tigré — Biodiv’Écrins, Parc national des Écrins"
+    },
+    {
+      "url": "https://www.rote-liste-zentrum.de/en/detailseite/?species_uuid=e31a7617-22d7-4e1f-9644-66d0b8803140",
+      "title": "German Red List Centre: Philodromus margaritatus"
+    }
+  ]
+}

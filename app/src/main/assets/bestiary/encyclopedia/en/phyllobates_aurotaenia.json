@@ -1,0 +1,34 @@
+{
+  "id": "phyllobates_aurotaenia",
+  "name": "Kokoe Poison Frog",
+  "scientific": "Phyllobates aurotaenia",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Phyllobates aurotaenia, the Kokoe Poison Frog, is a poison frog endemic to western Colombia.",
+    "identification": "Its dorsal pattern varies; the species is a member of the genus Phyllobates, whose frogs include conspicuously striped forms.",
+    "habitat": "It inhabits wet forests in Colombia’s Chocó region, within the San Juan drainage.",
+    "diet": "A Colombian stomach-content study recorded varied prey, including aquatic and terrestrial organisms at different life stages.",
+    "behavior": "Field researchers have described its courtship, aggressive interactions and mating call.",
+    "reproduction": "A mating-call and courtship study documents reproductive behavior, but the sources used here do not summarize its full life cycle.",
+    "ecology": "A 2024 taxonomic revision separated southern populations formerly included in P. aurotaenia as Phyllobates samperi.",
+    "conservation": "A Colombian regional plan lists it as Least Concern; that category should be revisited alongside the recent taxonomic split."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Dendrobatidae/Dendrobatinae/Phyllobates/Phyllobates-aurotaenia",
+      "title": "Phyllobates aurotaenia — Amphibian Species of the World, American Museum of Natural History"
+    },
+    {
+      "url": "https://www.scielo.org.mx/scielo.php?pid=S0065-17372013000200001&script=sci_arttext",
+      "title": "Diet of Phyllobates aurotaenia and Oophaga histrionica in Alto Baudó, Chocó, Colombia — Acta Zoológica Mexicana"
+    },
+    {
+      "url": "https://www.biotaxa.org/hn/article/view/60982",
+      "title": "Aggressive behaviour, courtship and mating call description of Phyllobates aurotaenia — Herpetology Notes"
+    },
+    {
+      "url": "https://ecopedia.cvc.gov.co/sites/default/files/archivosAdjuntos/plan_de_accion_anfibios_valle.pdf",
+      "title": "Plan de acción para anfibios del Valle del Cauca — Corporación Autónoma Regional del Valle del Cauca"
+    }
+  ]
+}

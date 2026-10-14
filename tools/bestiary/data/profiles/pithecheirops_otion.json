@@ -1,0 +1,142 @@
+{
+  "id": "pithecheirops_otion",
+  "scientific": "Pithecheirops otion",
+  "group": "mammals",
+  "name": {
+    "en": "Bornean pithecheirops",
+    "fr": "Pithecheirops de Bornéo"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pithecheirops otion is a little-known murid rodent from Sabah, Malaysian Borneo, and the sole described species of its genus.",
+      "fr": "Pithecheirops otion est un rongeur muridé peu connu de Sabah, dans le Bornéo malaisien, et la seule espèce décrite de son genre."
+    },
+    "identification": {
+      "en": "It was originally described from a single specimen, and its distinguishing anatomy includes features of the middle-ear region and skull.",
+      "fr": "L’espèce a été décrite à l’origine à partir d’un seul spécimen ; des caractères distinctifs concernent l’oreille moyenne et le crâne."
+    },
+    "habitat": {
+      "en": "The sole museum specimen came from Danum Valley; later sightings there suggest the species persists.",
+      "fr": "Le seul spécimen de musée provenait de la vallée de Danum ; des observations ultérieures suggèrent que l’espèce s’y maintient."
+    },
+    "diet": {
+      "en": "Its natural diet remains unknown.",
+      "fr": "Son régime alimentaire naturel reste inconnu."
+    },
+    "behavior": {
+      "en": "The original account described it as arboreal, but its daily habits remain largely unknown.",
+      "fr": "La description initiale la présente comme arboricole, mais ses habitudes restent largement inconnues."
+    },
+    "reproduction": {
+      "en": "Reproduction is undocumented.",
+      "fr": "La reproduction n’est pas documentée."
+    },
+    "ecology": {
+      "en": "Genetic evidence places Pithecheirops as the sister genus of Pithecheir.",
+      "fr": "Les données génétiques placent Pithecheirops comme genre frère de Pithecheir."
+    },
+    "conservation": {
+      "en": "Few records leave its abundance and conservation needs uncertain.",
+      "fr": "Le faible nombre d’observations laisse son abondance et ses besoins de conservation incertains."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A new genus and species of rat from Borneo — Proceedings of the Biological Society of Washington",
+        "fr": "Nouveau genre et nouvelle espèce de rat de Bornéo — Proceedings of the Biological Society of Washington"
+      },
+      "url": "https://borneomammals.online/wp-content/uploads/2024/02/Emmons-1993-A-new-genus-and-species-of-rat-from-Borneo.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Emmons described Pithecheirops otion as a new genus and species of arboreal rat from Sabah and compared it with Pithecheir; diagnostic morphology centers on skull and auditory-region traits."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 109,
+        "notes_words": 28,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular phylogeny of rare arboreal rats from Southeast Asia, genera Pithecheir and Pithecheirops — Mammalian Biology",
+        "fr": "Phylogénie moléculaire de rats arboricoles rares d’Asie du Sud-Est, genres Pithecheir et Pithecheirops — Mammalian Biology"
+      },
+      "url": "https://link.springer.com/article/10.1007/s42991-026-00610-6",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "A recent genetic study links Pithecheirops closely with Pithecheir."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 96,
+        "notes_words": 9,
+        "total": 105,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pithecheirops otion Emmons, 1993 — Smithsonian National Museum of Natural History",
+        "fr": "Pithecheirops otion Emmons, 1993 — Musée national d’histoire naturelle Smithsonian"
+      },
+      "url": "https://www.si.edu/object/pithecheirops-otion-emmons-1993%3Anmnhvz_7194649",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The Smithsonian specimen database records the holotype from Danum Valley Field Centre in Sabah and dates its collection to 1991."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Most aspects of this rodent’s ecology remain poorly documented; an absence of observations does not establish absence of a behavior or threat.",
+    "The genomic relationship is at genus level and does not imply that Pithecheir and Pithecheirops are species-level cousins."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "The entry stays brief because the species is known from few records; newer genetic work clarifies its relationship to Pithecheir."
+}

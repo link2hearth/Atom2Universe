@@ -1,0 +1,30 @@
+{
+  "id": "platyla_polita",
+  "name": "Aiguillette lisse",
+  "scientific": "Platyla polita",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Platyla polita est un minuscule escargot terrestre à opercule, largement répandu en Europe mais de façon discontinue.",
+    "identification": "Sa coquille lisse, brillante et brun rougeâtre est allongée et en forme de tour ; elle mesure généralement moins de 4 mm.",
+    "habitat": "Elle vit dans la litière des bois humides, les mousses et le bois mort, souvent sur des sols frais riches en bases.",
+    "diet": "Les fiches consultées ne décrivent pas précisément son régime alimentaire.",
+    "behavior": "Elle se cache dans la litière et l’humus du bois ; en Lettonie, elle est active durant la végétation et hiverne sous la litière.",
+    "reproduction": "Les sexes sont séparés ; le reste de sa reproduction est peu connu.",
+    "ecology": "Dans l’est de la France, elle se rencontre aussi sous le bois mort et dans les éboulis de forêts fraîches de feuillus.",
+    "conservation": "En 2023, la Lettonie l’a classée vulnérable au niveau national, mais en préoccupation mineure dans le monde et en Europe."
+  },
+  "sources": [
+    {
+      "url": "https://dmg.mollusca.de/images/mitteilungen_dmg/mitteilungen106/mitt_dmg_106_001-020_menzel-harloff.pdf",
+      "title": "Platyla polita : répartition et écologie en Europe et en Allemagne — Société malacologique allemande"
+    },
+    {
+      "url": "https://sarkanagramata.lu.lv/suga/gludais-adatgliemezis/",
+      "title": "Aiguillette lisse — Livre rouge de Lettonie"
+    },
+    {
+      "url": "https://cbnfc-ori.org/ouvrages/Atlas-Meconnus-BFC/ATLAS-Mollusques_Meconnus-BFC_2025_WEB.pdf",
+      "title": "Smooth needle snail — atlas of little-known molluscs in Bourgogne–Franche-Comté"
+    }
+  ]
+}

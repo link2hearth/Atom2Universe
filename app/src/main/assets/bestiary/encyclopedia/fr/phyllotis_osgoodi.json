@@ -1,0 +1,30 @@
+{
+  "id": "phyllotis_osgoodi",
+  "name": "Phyllotis d’Osgood",
+  "scientific": "Phyllotis osgoodi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Phyllotis osgoodi est un rongeur sigmodontiné andin peu connu, signalé dans le nord du Chili.",
+    "identification": "Son statut d’espèce a été contesté, faute de différence morphologique claire avec Phyllotis xanthopygus, présent dans la même région.",
+    "habitat": "La synthèse moderne sur les mammifères ne le connaît que de sa localité type, dans la puna du nord du Chili.",
+    "diet": "La synthèse détaillée consultée ne disposait d’aucune donnée de terrain sur son régime alimentaire.",
+    "behavior": "Son comportement à l’état sauvage n’a pas été étudié dans les sources consultées.",
+    "reproduction": "La synthèse de biologie de terrain ne rapporte pas de donnée reproductive propre à l’espèce.",
+    "ecology": "Une ancienne synthèse du musée chilien le situait dans la puna vers quatre mille quatre cents mètres ; ses limites et son aire restent incertaines.",
+    "conservation": "La Mammal Diversity Database indique « non évalué » ; cela ne signifie pas que le risque soit faible."
+  },
+  "sources": [
+    {
+      "url": "https://www.biodiversidad.gob.ec/wp-content/uploads/downloads/2019/08/Patton_2015.pdf",
+      "title": "Mammals of South America, volume 2 : Rodents — Phyllotis osgoodi"
+    },
+    {
+      "url": "https://publicaciones.mnhn.gob.cl/668/articles-64209_archivo_01.pdf",
+      "title": "Mammifères fossiles et actuels du Chili — Musée national d’histoire naturelle du Chili"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1002729/",
+      "title": "Phyllotis osgoodi — Mammal Diversity Database"
+    }
+  ]
+}

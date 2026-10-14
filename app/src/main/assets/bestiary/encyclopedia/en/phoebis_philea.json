@@ -1,0 +1,30 @@
+{
+  "id": "phoebis_philea",
+  "name": "Orange-barred sulphur",
+  "scientific": "Phoebis philea",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Phoebis philea is a large sulphur butterfly of the American tropics, ranging from Mexico to Argentina.",
+    "identification": "Males are yellow with a broad orange forewing band; females vary from whitish to yellow and also show orange markings.",
+    "habitat": "It uses open areas and forest edges; in Colombia it has been recorded from sea level to about 2000 m.",
+    "diet": "Caterpillars feed on legumes, especially Senna and other cassias. Adults take flower nectar.",
+    "behavior": "It is a strong, fast flyer and often visits flowers; in Florida it also frequents gardens and parks.",
+    "reproduction": "Females lay eggs singly on host plants, and the caterpillars feed on those plants.",
+    "ecology": "It resembles the Cloudless Sulphur (Phoebis sennae), but the latter lacks the orange markings above.",
+    "conservation": "The sources consulted describe a broad range but do not provide a current global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.floridamuseum.ufl.edu/wildflowers/butterfly/orange-barred-sulphur/",
+      "title": "Orange-barred Sulphur — Florida Museum of Natural History"
+    },
+    {
+      "url": "https://repositorio.uptc.edu.co/server/api/core/bitstreams/672392df-dd03-4db3-a9a1-859d502ad70c/content",
+      "title": "Illustrated butterfly catalogue — Universidad Pedagógica y Tecnológica de Colombia"
+    },
+    {
+      "url": "https://ffl-apps.ifas.ufl.edu/butterflies/Butterfly/Details/13",
+      "title": "Orange-barred Sulphur — UF/IFAS Florida-Friendly Landscaping"
+    }
+  ]
+}

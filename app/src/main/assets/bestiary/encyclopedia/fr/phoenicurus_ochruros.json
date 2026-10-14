@@ -1,0 +1,30 @@
+{
+  "id": "phoenicurus_ochruros",
+  "name": "Rougequeue noir",
+  "scientific": "Phoenicurus ochruros",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Rougequeue noir est un passereau largement répandu en Eurasie, qui s’est adapté des paysages rocheux aux villes et aux bâtiments.",
+    "identification": "Au printemps, le mâle est sombre, avec une tache alaire claire et une queue rousse ; l’espèce mesure environ 14 cm.",
+    "habitat": "Elle occupait à l’origine les terrains rocheux et montagneux, mais fréquente aujourd’hui aussi les espaces bâtis.",
+    "diet": "Elle capture des insectes et des larves, souvent lors de sorties rapides, et peut manger des baies en automne.",
+    "behavior": "En Grande-Bretagne, l’espèce est présente toute l’année, mais les observations culminent pendant le passage automnal ; quelques oiseaux y hivernent.",
+    "reproduction": "Elle niche dans des cavités ou sur des éléments de bâtiments et peut élever deux ou trois couvées par an.",
+    "ecology": "Elle appartient au même genre que le Rougequeue à front blanc (Phoenicurus phoenicurus) ; le mâle du Rougequeue noir est sombre, tandis que l’autre espèce a la poitrine orangée.",
+    "conservation": "Les fiches consultées décrivent une vaste répartition, sans établir ici la tendance actuelle de la population mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougequeue-noir",
+      "title": "Black Redstart — Ligue pour la Protection des Oiseaux (LPO)"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-redstart",
+      "title": "Rougequeue noir — British Trust for Ornithology BirdFacts"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougequeue-a-front-blanc",
+      "title": "Rougequeue à front blanc — Ligue pour la Protection des Oiseaux"
+    }
+  ]
+}

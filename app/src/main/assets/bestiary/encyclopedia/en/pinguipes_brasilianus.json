@@ -1,0 +1,34 @@
+{
+  "id": "pinguipes_brasilianus",
+  "name": "Brazilian sandperch",
+  "scientific": "Pinguipes brasilianus",
+  "group": "fish",
+  "sections": {
+    "overview": "Pinguipes brasilianus is a marine sandperch in the family Pinguipedidae, native to the southwestern Atlantic.",
+    "identification": "It is a demersal fish associated with rocky reef communities in northern Patagonia.",
+    "habitat": "Its reported range extends along the southwestern Atlantic coast from Rio de Janeiro, Brazil, to Golfo Nuevo, Argentina.",
+    "diet": "A Patagonian reef study found a narrow, specialized diet consisting mainly of reef animals such as sea urchins, limpets, bivalves, crabs and polychaete worms.",
+    "behavior": "Field studies describe it among demersal fishes associated with shelter on rocky reefs; details of its daily activity remain poorly documented.",
+    "reproduction": "In northern Patagonian waters, spawning extends across spring and summer, with reproductive activity peaking around late spring and summer.",
+    "ecology": "Its specialized reef diet relies strongly on local prey, and the species is recorded as native in Argentina.",
+    "conservation": "The Argentine national inventory lists it as not evaluated; this is a local assessment record, not evidence of a global Red List category."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/pinguipes-brasilianus",
+      "title": "Pinguipes brasilianus — FishBase"
+    },
+    {
+      "url": "https://bibliotecadigital.exactas.uba.ar/collection/paper/document/paper_00221112_v75_n10_p2585_Galvan",
+      "title": "Food partitioning and spatial subsidy in shelter-limited fishes inhabiting patchy reefs of Patagonia — CONICET repository"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/dcqy7jvVzHmgh6vg5gSRYRx/?lang=en",
+      "title": "The reproductive biology of Pinguipes brasilianus in temperate rocky reefs of Argentina — Neotropical Ichthyology"
+    },
+    {
+      "url": "https://sib.gob.ar/especies/pinguipes-brasilianus",
+      "title": "Pinguipes brasilianus — Argentine National Parks Biodiversity Information System"
+    }
+  ]
+}

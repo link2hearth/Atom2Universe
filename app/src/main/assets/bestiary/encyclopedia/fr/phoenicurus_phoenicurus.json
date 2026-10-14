@@ -1,0 +1,30 @@
+{
+  "id": "phoenicurus_phoenicurus",
+  "name": "Rougequeue à front blanc",
+  "scientific": "Phoenicurus phoenicurus",
+  "group": "birds",
+  "sections": {
+    "overview": "Phoenicurus phoenicurus, le Rougequeue à front blanc, est un gobemouche migrateur de l’Ancien Monde.",
+    "identification": "Le mâle a la queue rousse, la poitrine orangée, le dos gris, la face noire et le front blanc ; la femelle est plus brune.",
+    "habitat": "Il niche surtout dans les boisements feuillus ouverts, notamment les vieux bois avec clairières et cavités.",
+    "diet": "Il mange surtout des insectes et autres invertébrés ; il consomme aussi des baies.",
+    "behavior": "Les populations européennes migrent en Afrique pour l’hiver ; l’oiseau hoche souvent sa queue rousse lorsqu’il est perché.",
+    "reproduction": "Il niche dans des trous d’arbres ou de murs, ou dans des nichoirs ; la femelle couve les œufs.",
+    "ecology": "Migrateur au long cours, il dépend de boisements favorables pour nicher et d’habitats africains pour hiverner. Le Rougequeue noir, Phoenicurus ochruros, est plus sombre et fréquente souvent les milieux rocheux ou urbains.",
+    "conservation": "La LPO rapporte une catégorie UICN mondiale de préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/redstart",
+      "title": "Faits sur le Rougequeue à front blanc — British Trust for Ornithology"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougequeue-a-front-blanc",
+      "title": "Rougequeue à front blanc — Ligue pour la Protection des Oiseaux"
+    },
+    {
+      "url": "https://www.lpo.fr/decouvrir-la-nature/fiches-especes/fiches-especes/oiseaux/rougequeue-noir",
+      "title": "Rougequeue noir — Ligue pour la Protection des Oiseaux"
+    }
+  ]
+}

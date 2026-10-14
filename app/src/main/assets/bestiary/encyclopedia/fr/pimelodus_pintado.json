@@ -1,0 +1,42 @@
+{
+  "id": "pimelodus_pintado",
+  "name": "Pimelodus pintado",
+  "scientific": "Pimelodus pintado",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce poisson-chat sud-américain à longs barbillons a été décrit dans des affluents de la lagune Merín, en Uruguay.",
+    "identification": "Son caractère le plus frappant est une profusion de petites taches sombres irrégulières sur la tête, le corps et les nageoires; les individus frais étaient décrits avec un fond métallique doré.",
+    "habitat": "Les données confirmées proviennent des rivières Cebollatí, Tacuarí et Yaguarón, dans le bassin de la lagune Merín; ses exigences précises en matière d’habitat restent peu connues.",
+    "diet": "Son régime n’a pas été étudié en détail; un guide uruguayen signale des restes de mollusques dans des estomacs examinés, mais les données alimentaires générales du bassin ne peuvent lui être attribuées sans réserve.",
+    "behavior": "Le comportement propre à l’espèce est peu documenté dans la description et les sources régionales consultées.",
+    "reproduction": "La source régionale uruguayenne indique que sa biologie reproductrice est inconnue.",
+    "ecology": "Sa robe très tachetée et sa présence dans le bassin de la lagune Merín le distinguent parmi les quatre Pimelodus présentés ici. P. pohli est plutôt connu du bassin du São Francisco. P. stewarti vient du Tocantins et est beaucoup plus petit. P. tetramerus vit dans la région Tapajós–Tocantins et porte quatre bandes sombres sur les flancs.",
+    "conservation": "Le ministère uruguayen de l’Environnement le classe parmi les priorités nationales de conservation en raison de son aire restreinte; cette désignation nationale n’est pas une catégorie mondiale de l’UICN."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "title": "Pimelodus pintado — description scientifique originale"
+    },
+    {
+      "url": "https://udelar.edu.uy/retema/wp-content/uploads/sites/30/2023/10/Peces-de-agua-dulce-de-Uruguay.-Segunda-Edicion.pdf",
+      "title": "Poissons d’eau douce d’Uruguay — deuxième édition (espagnol)"
+    },
+    {
+      "url": "https://www.ambiente.gub.uy/especies/especie/P_pintado/",
+      "title": "Pimelodus pintado — fiche espèce du ministère uruguayen de l’Environnement (espagnol)"
+    },
+    {
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "title": "Pimelodus pohli — description scientifique originale"
+    },
+    {
+      "url": "https://www.fishbase.org/summary/64684",
+      "title": "Pimelodus stewarti — fiche espèce FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "title": "Pimelodus tetramerus — description scientifique originale"
+    }
+  ]
+}

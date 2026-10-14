@@ -1,0 +1,42 @@
+{
+  "id": "pimelodus_tetramerus",
+  "name": "Pimelodus tetramerus",
+  "scientific": "Pimelodus tetramerus",
+  "group": "fish",
+  "sections": {
+    "overview": "Pimelodus tetramerus est un poisson-chat d’eau douce à longs barbillons, décrit dans le bassin du Tocantins au Brésil et également signalé dans la région du Tapajós.",
+    "identification": "Son motif caractéristique comprend quatre bandes sombres sur les flancs; un guide régional signale aussi une marque sombre à la base de l’épine dorsale.",
+    "habitat": "C’est un poisson d’eau douce signalé dans les réseaux du Tapajós et du Tocantins; les sources consultées n’établissent pas ses préférences précises d’habitat.",
+    "diet": "Le régime propre à l’espèce n’est pas documenté dans les sources taxonomiques et régionales consultées.",
+    "behavior": "Les sources examinées ne décrivent pas de comportement propre à l’espèce.",
+    "reproduction": "Les sources consultées ne fournissent pas de détails sur la reproduction de cette espèce.",
+    "ecology": "Ses quatre bandes sombres le distinguent des autres Pimelodus présentés ici. P. pintado est très tacheté et limité au bassin de la lagune Merín. P. pohli vient du São Francisco et possède un corps relativement haut. P. stewarti est un poisson-chat beaucoup plus petit du Tocantins, aux flancs gris et aux marques sombres près de la dorsale.",
+    "conservation": "FishBase rapporte une évaluation mondiale UICN de « préoccupation mineure » datant de 2018; les sources consultées donnent peu d’informations sur l’évolution des effectifs."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "title": "Pimelodus tetramerus — description scientifique originale"
+    },
+    {
+      "url": "https://www.uhetelespires.com.br/site/uploads/arquivos/2020/08/513-1-peixes-do-rio-teles-pires-diversidade-e-guia-de-identificacao-chtp.pdf",
+      "title": "Pimelodus cf. tetramerus — guide des poissons du Teles Pires (portugais)"
+    },
+    {
+      "url": "https://www.fishbase.net.br/summary/63452",
+      "title": "Pimelodus tetramerus — fiche espèce FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "title": "Pimelodus pintado — description scientifique originale"
+    },
+    {
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "title": "Pimelodus pohli — description scientifique originale"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/Lt8rhkXsT9dg8VbLYpN7MRH/abstract/?lang=en",
+      "title": "Pimelodus stewarti — description scientifique originale"
+    }
+  ]
+}

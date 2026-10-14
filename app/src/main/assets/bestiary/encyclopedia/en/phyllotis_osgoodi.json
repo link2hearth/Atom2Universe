@@ -1,0 +1,30 @@
+{
+  "id": "phyllotis_osgoodi",
+  "name": "Osgood's leaf-eared mouse",
+  "scientific": "Phyllotis osgoodi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Phyllotis osgoodi is a poorly known Andean sigmodontine rodent recorded from northern Chile.",
+    "identification": "Its species status has been questioned because researchers found no clear morphological distinction from sympatric Phyllotis xanthopygus.",
+    "habitat": "The modern mammal synthesis knows it only from its type locality in the Puna of northern Chile.",
+    "diet": "No field data on its diet were available in the detailed mammal synthesis consulted.",
+    "behavior": "Its behaviour in the wild has not been studied in the sources consulted.",
+    "reproduction": "The field biology account does not report species-specific reproductive information.",
+    "ecology": "An older Chilean museum account placed it in the puna at about four thousand four hundred metres; its limits and range remain uncertain.",
+    "conservation": "Mammal Diversity Database lists it as Not Evaluated; this should not be read as evidence of low risk."
+  },
+  "sources": [
+    {
+      "url": "https://www.biodiversidad.gob.ec/wp-content/uploads/downloads/2019/08/Patton_2015.pdf",
+      "title": "Mammals of South America, Volume 2: Rodents — Phyllotis osgoodi"
+    },
+    {
+      "url": "https://publicaciones.mnhn.gob.cl/668/articles-64209_archivo_01.pdf",
+      "title": "Mamíferos fósiles y vivientes de Chile — Museo Nacional de Historia Natural"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1002729/",
+      "title": "Phyllotis osgoodi — Mammal Diversity Database"
+    }
+  ]
+}

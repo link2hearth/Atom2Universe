@@ -1,0 +1,147 @@
+{
+  "id": "pieris_rapae",
+  "scientific": "Pieris rapae",
+  "group": "invertebrates",
+  "name": {
+    "en": "Small White",
+    "fr": "Piéride de la rave"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Small White is a widespread day-flying butterfly whose caterpillars use many wild and cultivated plants, especially cabbages and their relatives.",
+      "fr": "La Piéride de la rave est un papillon diurne largement répandu, dont les chenilles utilisent de nombreuses plantes sauvages ou cultivées, surtout les choux et leurs parentes."
+    },
+    "identification": {
+      "en": "The adult is white with dark tips on the forewings; males usually have one dark forewing spot and females two. The green caterpillar has a yellow dorsal line.",
+      "fr": "L’adulte est blanc, avec le bout des ailes antérieures sombre; le mâle porte généralement une tache sur chaque aile antérieure et la femelle deux. La chenille verte a une ligne dorsale jaune."
+    },
+    "habitat": {
+      "en": "It occurs in open and disturbed places, including gardens, meadows, crop fields, woodland edges and fallow ground.",
+      "fr": "Elle fréquente les milieux ouverts ou remaniés, notamment les jardins, prairies, champs cultivés, lisières et friches."
+    },
+    "diet": {
+      "en": "Adults take flower nectar, while caterpillars feed mainly on Brassicaceae such as cabbage, turnip, rape and wild mustards; capers are also reported as a host plant.",
+      "fr": "Les adultes prennent le nectar des fleurs, tandis que les chenilles mangent surtout des Brassicacées comme les choux, navets, colzas et moutardes sauvages; le câprier est aussi signalé comme plante hôte."
+    },
+    "behavior": {
+      "en": "In suitable climates it may produce several generations in a year; a French field guide records up to four. It overwinters as a chrysalis in some regions.",
+      "fr": "Sous un climat favorable, elle peut produire plusieurs générations par an; un guide français en indique jusqu’à quatre. Dans certaines régions, elle passe l’hiver sous forme de chrysalide."
+    },
+    "reproduction": {
+      "en": "Females lay eggs on host plants, where the caterpillars develop before pupating; the number of generations varies with region and season.",
+      "fr": "Les femelles pondent sur les plantes hôtes, où les chenilles se développent avant la nymphose."
+    },
+    "ecology": {
+      "en": "It is a close relative of the Large White, P. brassicae, but is generally smaller; it also resembles P. napi and other white pierids, so wing markings help separate them.",
+      "fr": "C’est une proche parente de la Piéride du chou, P. brassicae, mais elle est généralement plus petite; elle ressemble aussi à P. napi et à d’autres piérides blanches, d’où l’intérêt des marques alaires pour les distinguer."
+    },
+    "conservation": {
+      "en": "It is common across much of its range, although local abundance and the number of generations depend on conditions.",
+      "fr": "Elle est commune dans une grande partie de son aire, même si son abondance locale et le nombre de générations dépendent des conditions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Small White — French butterfly identification guide, Vigie-Nature",
+        "fr": "Piéride de la rave — Guide d’identification des papillons, Vigie-Nature"
+      },
+      "url": "https://www.vigienature.fr/sites/vigienature/files/documents/guide_identification_papillons.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The French guide gives the adult and larval field marks, host plants, habitats and up to four annual generations."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 166,
+        "notes_words": 19,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pieris rapae — INRAE Ephytia plant protection encyclopedia",
+        "fr": "Pieris rapae — Encyclopédie de protection des plantes INRAE Ephytia"
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/11760/Hypp-encyclopedie-en-protection-des-plantes-Pieris-rapae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "INRAE describes adult nectar feeding, larval host plants and the smaller size relative to P. brassicae."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 16,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pieris rapae — Animal Diversity Web",
+        "fr": "Pieris rapae — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Pieris_rapae/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The species account describes pupal overwintering and a broad distribution."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 10,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The precise number of generations varies by climate and locality; four is the value reported by the cited French field guide.",
+    "The host-plant list is broad and should not be read as exhaustive."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Cross-reference to the catalogue’s P. brassicae entry; P. napi is mentioned as a similar white pierid, but is not in this illustrated catalogue segment."
+}

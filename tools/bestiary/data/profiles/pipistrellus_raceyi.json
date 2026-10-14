@@ -1,0 +1,119 @@
+{
+  "id": "pipistrellus_raceyi",
+  "scientific": "Pipistrellus raceyi",
+  "group": "mammals",
+  "name": {
+    "en": "Pipistrellus raceyi",
+    "fr": "Pipistrellus raceyi"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pipistrellus raceyi is a small vesper bat known from Madagascar.",
+      "fr": "Pipistrellus raceyi est une petite chauve-souris connue de Madagascar."
+    },
+    "identification": {
+      "en": "Its description separates it from related pipistrelles by skull, teeth, wings and male anatomy.",
+      "fr": "Sa description la distingue des pipistrelles proches par le crâne, les dents, les ailes et l’anatomie mâle."
+    },
+    "habitat": {
+      "en": "Records come from lowland eastern and western sites, including farmland and dry forest.",
+      "fr": "Les observations viennent de sites de basse altitude à l’est et à l’ouest, dont des terres agricoles et des forêts sèches."
+    },
+    "diet": {
+      "en": "The original account gives no direct prey observations.",
+      "fr": "La description initiale ne rapporte pas d’observation directe de proies."
+    },
+    "behavior": {
+      "en": "At one eastern site, bats used a hollow in an occupied building wall as a day roost.",
+      "fr": "Sur un site oriental, des individus gîtaient le jour dans une cavité du mur d’un bâtiment occupé."
+    },
+    "reproduction": {
+      "en": "Reproductive observations were limited in the original study.",
+      "fr": "Les observations reproductives étaient limitées dans l’étude initiale."
+    },
+    "ecology": {
+      "en": "Known records span human-modified eastern sites and dry western habitats.",
+      "fr": "Les observations connues couvrent des sites orientaux modifiés par l’humain et des milieux secs à l’ouest."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database currently lists it as Not Evaluated; older papers used Data Deficient.",
+      "fr": "La Mammal Diversity Database l’indique actuellement comme non évaluée ; des publications anciennes utilisaient la catégorie « données insuffisantes »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A description of a new species of Pipistrellus from Madagascar — Acta Chiropterologica",
+        "fr": "Description d’une nouvelle espèce de Pipistrellus de Madagascar — Acta Chiropterologica"
+      },
+      "url": "https://www.researchgate.net/publication/232678520_A_description_of_a_new_species_of_Pipistrellus_Chiroptera_Vespertilionidae_from_Madagascar_with_a_review_of_related_Vespertilioninae_from_the_island",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Bates et al. describe the species, its Malagasy lowland records and limited breeding observations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 178,
+        "notes_words": 14,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pipistrellus raceyi — Mammal Diversity Database",
+        "fr": "Pipistrellus raceyi — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1005634/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The database presently displays Not Evaluated; older literature used Data Deficient."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 11,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is known from few records; its full range and diet remain uncertain."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the description brief because the species account reports few field observations; checked current assessment wording in the Mammal Diversity Database."
+}

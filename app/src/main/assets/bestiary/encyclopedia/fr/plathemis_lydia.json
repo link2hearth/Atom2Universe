@@ -1,0 +1,26 @@
+{
+  "id": "plathemis_lydia",
+  "name": "Plathemis lydia",
+  "scientific": "Plathemis lydia",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Plathemis lydia est une libellule largement répandue en Amérique du Nord, de la famille des Libellulidae.",
+    "identification": "Les mâles adultes ont l’abdomen blanc poudreux et de larges bandes sombres sur les ailes ; les femelles sont brunes, avec des marques claires sur les flancs et trois taches sombres par aile.",
+    "habitat": "Elle se reproduit près des lacs, des étangs et des cours d’eau lents, souvent là où le fond est vaseux.",
+    "diet": "Les adultes capturent de petits insectes en vol.",
+    "behavior": "Elle se pose bas dans les espaces ouverts ; les mâles défendent un territoire au bord de l’eau.",
+    "reproduction": "Les femelles déposent leurs œufs dans l’eau ou la vase près des plantes ; les mâles peuvent les garder.",
+    "ecology": "Les larves aquatiques se développent en eau douce et tolèrent des conditions variées.",
+    "conservation": "L’agence de l’Illinois la décrit comme commune et indigène dans cet État."
+  },
+  "sources": [
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfcommonwhitetail.html",
+      "title": "Common Whitetail — Illinois Department of Natural Resources"
+    },
+    {
+      "url": "https://gfp.sd.gov/userdocs/docs/odonata_field_guide_sdgfp_2025.pdf",
+      "title": "Common Whitetail — guide des libellules de South Dakota Game, Fish and Parks"
+    }
+  ]
+}

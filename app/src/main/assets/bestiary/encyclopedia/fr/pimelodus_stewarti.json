@@ -1,0 +1,38 @@
+{
+  "id": "pimelodus_stewarti",
+  "name": "Pimelodus stewarti",
+  "scientific": "Pimelodus stewarti",
+  "group": "fish",
+  "sections": {
+    "overview": "Pimelodus stewarti est un petit poisson-chat à longs barbillons, décrit dans le bassin du Tocantins au Brésil.",
+    "identification": "Ses flancs sont gris; une bande transversale sombre précède la nageoire dorsale et une tache marque l’extrémité de certains de ses rayons. La longueur standard maximale rapportée est de 6,6 cm.",
+    "habitat": "Elle est connue des eaux douces du bassin du Tocantins; les sources consultées ne précisent pas ses préférences d’habitat.",
+    "diet": "La description taxonomique et la fiche consultées ne donnent pas de données alimentaires propres à l’espèce.",
+    "behavior": "La source disponible est surtout taxonomique, et le comportement propre à l’espèce reste peu documenté.",
+    "reproduction": "Les sources consultées ne décrivent pas sa biologie reproductrice.",
+    "ecology": "Sa petite taille et sa présence dans le Tocantins le distinguent des autres Pimelodus présentés ici. P. pintado est un poisson plus grand, très tacheté, du bassin de la lagune Merín. P. pohli vient du São Francisco et a le corps plus haut, avec des rangées de taches chez les jeunes. P. tetramerus vit dans la région Tapajós–Tocantins et porte quatre bandes sombres sur les flancs.",
+    "conservation": "La fiche FishBase consultée rapporte la catégorie mondiale UICN « données insuffisantes », évaluée en 2022; les informations disponibles ne permettent donc pas de déterminer le risque."
+  },
+  "sources": [
+    {
+      "url": "https://www.scielo.br/j/ni/a/Lt8rhkXsT9dg8VbLYpN7MRH/abstract/?lang=en",
+      "title": "Trois nouvelles espèces de Pimelodus du bassin du Tocantins — description originale"
+    },
+    {
+      "url": "https://www.fishbase.org/summary/64684",
+      "title": "Pimelodus stewarti — fiche espèce FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "title": "Pimelodus pintado — description scientifique originale"
+    },
+    {
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "title": "Pimelodus pohli — description scientifique originale"
+    },
+    {
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "title": "Pimelodus tetramerus — description scientifique originale"
+    }
+  ]
+}

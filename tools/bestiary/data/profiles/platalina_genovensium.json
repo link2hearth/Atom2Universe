@@ -1,0 +1,142 @@
+{
+  "id": "platalina_genovensium",
+  "scientific": "Platalina genovensium",
+  "group": "mammals",
+  "name": {
+    "en": "Peruvian long-tongued bat",
+    "fr": "Chauve-souris à long museau du Pérou"
+  },
+  "sections": {
+    "overview": {
+      "en": "Platalina genovensium is a nectar-feeding bat found on the arid western slopes of the Andes, from Peru to northern Chile.",
+      "fr": "Platalina genovensium est une chauve-souris nectarivore des versants arides occidentaux des Andes, du Pérou au nord du Chili."
+    },
+    "identification": {
+      "en": "Its elongated muzzle is distinctive; its body is about 8 cm long and the forearm measures roughly 5 cm.",
+      "fr": "Son museau allongé la distingue ; son corps mesure environ 8 cm et son avant-bras autour de 5 cm."
+    },
+    "habitat": {
+      "en": "It forages in dry areas with columnar cacti and uses cracks, abandoned mine shafts and tunnels as roosts.",
+      "fr": "Elle s’alimente dans les milieux secs où poussent des cactus colonnaires et se réfugie dans des fissures, des mines abandonnées et des tunnels."
+    },
+    "diet": {
+      "en": "It feeds mainly on cactus nectar and pollen, while also eating fruit and insects; Haageocereus pollen was especially frequent in a study at Lachay.",
+      "fr": "Elle se nourrit surtout du nectar et du pollen des cactus, mais aussi de fruits et d’insectes ; le pollen de Haageocereus dominait dans une étude menée à Lachay."
+    },
+    "behavior": {
+      "en": "Field captures in southwestern Peru show that it is active after dusk.",
+      "fr": "Les captures de terrain dans le sud-ouest du Pérou montrent qu’elle est active après la tombée du jour."
+    },
+    "reproduction": {
+      "en": "Pregnant and lactating females have been recorded in March in Peru, but reproduction remains poorly documented.",
+      "fr": "Des femelles gestantes et allaitantes ont été observées en mars au Pérou, mais sa reproduction reste peu documentée."
+    },
+    "ecology": {
+      "en": "Pollen carried on its fur suggests that it pollinates some cacti and bromeliads in the lomas ecosystem.",
+      "fr": "Le pollen transporté sur son pelage indique qu’elle pollinise certains cactus et broméliacées de l’écosystème des lomas."
+    },
+    "conservation": {
+      "en": "A 2020 species review reported a global IUCN category of Near Threatened; it identifies habitat loss and dependence on columnar cacti as concerns.",
+      "fr": "Une synthèse de 2020 rapportait la catégorie mondiale UICN « quasi menacée » ; elle souligne la perte d’habitat et la dépendance aux cactus colonnaires."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Peruvian long-tongued bat — Mammalian Species, American Society of Mammalogists",
+        "fr": "Chauve-souris à long museau du Pérou — Mammalian Species, American Society of Mammalogists"
+      },
+      "url": "https://academic.oup.com/mspecies/article/52/995/105/6035134",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "The 2020 review reports range, morphology, activity and global status at that time."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 13,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Platalina genovensium — Chilean Ministry of the Environment biodiversity platform",
+        "fr": "Platalina genovensium — plateforme biodiversité du ministère chilien de l’Environnement"
+      },
+      "url": "https://simbio.mma.gob.cl/Especies/Details/4505",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "The Chilean government account gives body and forearm measurements, xeric habitat, mine and tunnel roosts, and pregnant or lactating females recorded in Peru in March."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 25,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet and Pollinator Role of the Long-Snouted Bat — Tropical Conservation Science",
+        "fr": "Régime et rôle pollinisateur de la chauve-souris à long museau — Tropical Conservation Science"
+      },
+      "url": "https://journals.sagepub.com/doi/10.1177/1940082916674288",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "A 15-month study at Lachay analyzed feces and pollen from 16 bats and found cactus resources prominent."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 17,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited IUCN category is the one reported by the 2020 Mammalian Species review; local legal categories differ and may have changed.",
+    "The pollination evidence is based on pollen samples and is described by the study as suggestive for particular plant species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a 2020 peer-reviewed species review with the Spanish-language Chilean government species account; status is explicitly dated and pollination is phrased cautiously."
+}

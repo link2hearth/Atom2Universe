@@ -1,0 +1,30 @@
+{
+  "id": "platyla_polita",
+  "name": "Smooth needle snail",
+  "scientific": "Platyla polita",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Platyla polita is a tiny, operculate land snail with a broad but patchy European range.",
+    "identification": "Its smooth, glossy reddish-brown shell is elongated and tower-shaped, usually under 4 mm high.",
+    "habitat": "It lives in damp woodland litter, moss and decaying wood, often on moist, base-rich ground.",
+    "diet": "The species accounts consulted do not describe its diet in detail.",
+    "behavior": "It hides in litter and wood mould; in Latvia it is active in the growing season and overwinters below litter.",
+    "reproduction": "It has separate sexes; little else is known about its reproduction.",
+    "ecology": "In eastern France it also occurs under dead wood and among scree in cool deciduous forests.",
+    "conservation": "In 2023 Latvia assessed it as Vulnerable nationally, but Least Concern globally and in Europe."
+  },
+  "sources": [
+    {
+      "url": "https://dmg.mollusca.de/images/mitteilungen_dmg/mitteilungen106/mitt_dmg_106_001-020_menzel-harloff.pdf",
+      "title": "Platyla polita: distribution and ecology in Europe and Germany — German Malacological Society"
+    },
+    {
+      "url": "https://sarkanagramata.lu.lv/suga/gludais-adatgliemezis/",
+      "title": "Smooth needle snail — Latvian Red Data Book"
+    },
+    {
+      "url": "https://cbnfc-ori.org/ouvrages/Atlas-Meconnus-BFC/ATLAS-Mollusques_Meconnus-BFC_2025_WEB.pdf",
+      "title": "Aiguillette luisante — Atlas des mollusques méconnus de Bourgogne–Franche-Comté"
+    }
+  ]
+}

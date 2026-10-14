@@ -1,0 +1,30 @@
+{
+  "id": "pithecheirops_otion",
+  "name": "Pithecheirops de Bornéo",
+  "scientific": "Pithecheirops otion",
+  "group": "mammals",
+  "sections": {
+    "overview": "Pithecheirops otion est un rongeur muridé peu connu de Sabah, dans le Bornéo malaisien, et la seule espèce décrite de son genre.",
+    "identification": "L’espèce a été décrite à l’origine à partir d’un seul spécimen ; des caractères distinctifs concernent l’oreille moyenne et le crâne.",
+    "habitat": "Le seul spécimen de musée provenait de la vallée de Danum ; des observations ultérieures suggèrent que l’espèce s’y maintient.",
+    "diet": "Son régime alimentaire naturel reste inconnu.",
+    "behavior": "La description initiale la présente comme arboricole, mais ses habitudes restent largement inconnues.",
+    "reproduction": "La reproduction n’est pas documentée.",
+    "ecology": "Les données génétiques placent Pithecheirops comme genre frère de Pithecheir.",
+    "conservation": "Le faible nombre d’observations laisse son abondance et ses besoins de conservation incertains."
+  },
+  "sources": [
+    {
+      "url": "https://borneomammals.online/wp-content/uploads/2024/02/Emmons-1993-A-new-genus-and-species-of-rat-from-Borneo.pdf",
+      "title": "Nouveau genre et nouvelle espèce de rat de Bornéo — Proceedings of the Biological Society of Washington"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s42991-026-00610-6",
+      "title": "Phylogénie moléculaire de rats arboricoles rares d’Asie du Sud-Est, genres Pithecheir et Pithecheirops — Mammalian Biology"
+    },
+    {
+      "url": "https://www.si.edu/object/pithecheirops-otion-emmons-1993%3Anmnhvz_7194649",
+      "title": "Pithecheirops otion Emmons, 1993 — Musée national d’histoire naturelle Smithsonian"
+    }
+  ]
+}

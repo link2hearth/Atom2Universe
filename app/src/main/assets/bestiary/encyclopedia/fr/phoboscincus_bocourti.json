@@ -1,0 +1,30 @@
+{
+  "id": "phoboscincus_bocourti",
+  "name": "Scinque géant de Bocourt",
+  "scientific": "Phoboscincus bocourti",
+  "group": "reptiles",
+  "sections": {
+    "overview": "Le scinque géant de Bocourt est un grand scinque néo-calédonien, aujourd’hui connu seulement de petits îlots près de l’île des Pins.",
+    "identification": "Il a un corps allongé, des membres courts, une queue robuste et de grandes dents recourbées à l’avant ; c’est le plus grand scinque de Nouvelle-Calédonie.",
+    "habitat": "Il est associé à la forêt littorale basse des îlots côtiers.",
+    "diet": "Une étude de 2022 a identifié un crabe terrestre dans son régime et estimé que sa morsure peut briser des carapaces dures.",
+    "behavior": "Les observations de terrain sont rares ; l’espèce serait surtout terrestre, mais des individus ont aussi été vus en train de grimper aux troncs.",
+    "reproduction": "Sa biologie de reproduction et la taille de ses pontes restent inconnues.",
+    "ecology": "C’est l’une des deux espèces néo-calédoniennes du genre Phoboscincus ; l’autre, P. garnieri, est bien plus répandue et possède des écailles plus lisses.",
+    "conservation": "Une évaluation de la Liste rouge néo-calédonienne de 2017 l’a classée « en danger critique », en raison de son aire connue minuscule et de menaces comme la dégradation de l’habitat et les prédateurs introduits."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8930981/",
+      "title": "La force de morsure du scinque terrifiant suggère le rôle de l’insularité — étude évaluée par les pairs"
+    },
+    {
+      "url": "https://endemia.nc/faune/fiche1084.html",
+      "title": "Phoboscincus bocourti — Endemia, Liste rouge néo-calédonienne"
+    },
+    {
+      "url": "https://endemia.nc/faune/fiche1083",
+      "title": "Phoboscincus — Endemia, fiche du genre néo-calédonien"
+    }
+  ]
+}

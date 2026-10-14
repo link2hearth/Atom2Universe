@@ -1,0 +1,42 @@
+{
+  "id": "pimelodus_tetramerus",
+  "name": "Pimelodus tetramerus",
+  "scientific": "Pimelodus tetramerus",
+  "group": "fish",
+  "sections": {
+    "overview": "Pimelodus tetramerus is a freshwater long-whiskered catfish described from Brazil’s Tocantins drainage and also recorded in the Tapajós region.",
+    "identification": "Its characteristic pattern is four dark bands along the sides, with an additional dark mark at the base of the dorsal-fin spine reported in a regional identification guide.",
+    "habitat": "It is a freshwater fish recorded from the Tapajós and Tocantins river systems; specific habitat preferences are not established by the sources consulted.",
+    "diet": "The species-specific diet is not documented in the taxonomic and regional accounts consulted.",
+    "behavior": "Species-specific behavior is not described in the sources reviewed.",
+    "reproduction": "The sources consulted do not provide reproductive details for this species.",
+    "ecology": "Its four dark bands distinguish it from the other Pimelodus profiles here. P. pintado is densely spotted and restricted to the Laguna Merín basin. P. pohli is from the São Francisco drainage and has a relatively deep body. P. stewarti is a much smaller catfish of the Tocantins drainage, with a gray flank and dark marks near the dorsal fin.",
+    "conservation": "FishBase reports a global IUCN assessment of Least Concern from 2018; the consulted sources provide little species-specific trend information."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1590/S0073-47212006000300008",
+      "title": "Pimelodus tetramerus — original description"
+    },
+    {
+      "url": "https://www.uhetelespires.com.br/site/uploads/arquivos/2020/08/513-1-peixes-do-rio-teles-pires-diversidade-e-guia-de-identificacao-chtp.pdf",
+      "title": "Pimelodus cf. tetramerus — Teles Pires River fish guide (Portuguese)"
+    },
+    {
+      "url": "https://www.fishbase.net.br/summary/63452",
+      "title": "Pimelodus tetramerus — FishBase species summary"
+    },
+    {
+      "url": "https://doi.org/10.1635/0097-3157(2008)157[149:PPSPAN]2.0.CO;2",
+      "title": "Pimelodus pintado — original species description"
+    },
+    {
+      "url": "https://doi.org/10.1590/S1679-62252006000400004",
+      "title": "Pimelodus pohli — original description"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/Lt8rhkXsT9dg8VbLYpN7MRH/abstract/?lang=en",
+      "title": "Pimelodus stewarti — original description"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "id": "phyllobates_aurotaenia",
+  "scientific": "Phyllobates aurotaenia",
+  "group": "amphibians",
+  "name": {
+    "en": "Kokoe Poison Frog",
+    "fr": "Phyllobate à bande dorée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Phyllobates aurotaenia, the Kokoe Poison Frog, is a poison frog endemic to western Colombia.",
+      "fr": "Phyllobates aurotaenia, le Phyllobate à bande dorée, est une grenouille venimeuse endémique de l’ouest de la Colombie."
+    },
+    "identification": {
+      "en": "Its dorsal pattern varies; the species is a member of the genus Phyllobates, whose frogs include conspicuously striped forms.",
+      "fr": "Son motif dorsal varie ; l’espèce appartient au genre Phyllobates, qui comprend des formes vivement rayées."
+    },
+    "habitat": {
+      "en": "It inhabits wet forests in Colombia’s Chocó region, within the San Juan drainage.",
+      "fr": "Elle vit dans les forêts humides du Chocó colombien, dans le bassin du San Juan."
+    },
+    "diet": {
+      "en": "A Colombian stomach-content study recorded varied prey, including aquatic and terrestrial organisms at different life stages.",
+      "fr": "Une étude colombienne des contenus stomacaux a relevé des proies variées, aquatiques et terrestres, à différents stades de vie."
+    },
+    "behavior": {
+      "en": "Field researchers have described its courtship, aggressive interactions and mating call.",
+      "fr": "Des chercheurs ont décrit sa parade, ses interactions agressives et son chant nuptial."
+    },
+    "reproduction": {
+      "en": "A mating-call and courtship study documents reproductive behavior, but the sources used here do not summarize its full life cycle.",
+      "fr": "Une étude du chant nuptial et de la parade documente son comportement reproducteur, mais les sources retenues ne résument pas tout son cycle de vie."
+    },
+    "ecology": {
+      "en": "A 2024 taxonomic revision separated southern populations formerly included in P. aurotaenia as Phyllobates samperi.",
+      "fr": "Une révision taxonomique de 2024 a séparé les populations méridionales autrefois incluses dans P. aurotaenia sous le nom Phyllobates samperi."
+    },
+    "conservation": {
+      "en": "A Colombian regional plan lists it as Least Concern; that category should be revisited alongside the recent taxonomic split.",
+      "fr": "Un plan régional colombien la classe en préoccupation mineure ; cette catégorie est à réexaminer à la lumière de la récente séparation taxonomique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Phyllobates aurotaenia — Amphibian Species of the World, American Museum of Natural History",
+        "fr": "Phyllobates aurotaenia — Amphibian Species of the World, American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Dendrobatoidea/Dendrobatidae/Dendrobatinae/Phyllobates/Phyllobates-aurotaenia",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "AMNH taxonomic account gives Chocó wet-forest range and records the 2024 removal of southern populations as Phyllobates samperi."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 18,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Diet of Phyllobates aurotaenia and Oophaga histrionica in Alto Baudó, Chocó, Colombia — Acta Zoológica Mexicana",
+        "fr": "Régime de Phyllobates aurotaenia et Oophaga histrionica dans l’Alto Baudó, Chocó, Colombie — Acta Zoológica Mexicana"
+      },
+      "url": "https://www.scielo.org.mx/scielo.php?pid=S0065-17372013000200001&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Spanish-language study recorded ten prey items for P. aurotaenia, including aquatic and terrestrial adult and larval organisms."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 17,
+        "total": 52,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Aggressive behaviour, courtship and mating call description of Phyllobates aurotaenia — Herpetology Notes",
+        "fr": "Comportement agressif, parade et description du chant nuptial de Phyllobates aurotaenia — Herpetology Notes"
+      },
+      "url": "https://www.biotaxa.org/hn/article/view/60982",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed field note documents courtship, aggressive behaviour and mating call."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 10,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Plan de acción para anfibios del Valle del Cauca — Corporación Autónoma Regional del Valle del Cauca",
+        "fr": "Plan d’action pour les amphibiens du Valle del Cauca — Corporación Autónoma Regional del Valle del Cauca"
+      },
+      "url": "https://ecopedia.cvc.gov.co/sites/default/files/archivosAdjuntos/plan_de_accion_anfibios_valle.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Colombian regional amphibian plan lists P. aurotaenia as LC."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 9,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The regional conservation category predates the 2024 species split; it is not presented as a refreshed global assessment."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an AMNH taxonomy account, Colombian diet study and a field behaviour paper; flagged the 2024 taxonomic change before repeating a regional LC category."
+}

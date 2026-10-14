@@ -1,0 +1,30 @@
+{
+  "id": "pinirampus_pirinampu",
+  "name": "Silure à barbillons plats",
+  "scientific": "Pinirampus pirinampu",
+  "group": "fish",
+  "sections": {
+    "overview": "Pinirampus pirinampu est un poisson-chat d’eau douce sud-américain de la famille des Pimelodidae.",
+    "identification": "C’est un grand poisson-chat des rivières, appelé localement barba-chata dans certaines régions du Brésil.",
+    "habitat": "Il vit dans de grands réseaux fluviaux d’Amérique du Sud, notamment les bassins de l’Amazone, de l’Orénoque, de l’Essequibo et du Paraná.",
+    "diet": "Souvent décrit comme un prédateur piscivore, il avait surtout consommé des insectes aquatiques dans une étude récente du Xingu ; les isotopes indiquaient toutefois l’assimilation de ressources provenant de poissons, de crustacés et de mollusques.",
+    "behavior": "Il est décrit comme nocturne et se déplace dans les réseaux fluviaux ; dans le Xingu, il a aussi été observé en quête de nourriture dans la colonne d’eau et près du fond.",
+    "reproduction": "Les sources consultées n’établissent pas de détails propres à la reproduction de cette espèce.",
+    "ecology": "Les données alimentaires montrent que les proies observées varient selon la méthode et le milieu étudié ; les résultats du Xingu ne doivent donc pas être généralisés à toute l’espèce.",
+    "conservation": "FishBase rapporte une évaluation mondiale de l’UICN en catégorie « Préoccupation mineure », datée de 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/8688",
+      "title": "Fiche Pinirampus pirinampu — FishBase"
+    },
+    {
+      "url": "https://www.scielo.br/j/ni/a/FY5qmpJCD7kz4BxsrrR8hPC/",
+      "title": "Dynamique trophique d’un poisson-chat carnivore sous régime de crues régulé en Amazonie — Neotropical Ichthyology"
+    },
+    {
+      "url": "https://www.editorarealize.com.br/artigo/visualizar/119589",
+      "title": "Écologie alimentaire du barba-chata Pinirampus pirinampu dans la Volta Grande du Xingu — Realize Editora"
+    }
+  ]
+}

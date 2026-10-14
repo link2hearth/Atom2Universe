@@ -1,0 +1,30 @@
+{
+  "id": "platalina_genovensium",
+  "name": "Peruvian long-tongued bat",
+  "scientific": "Platalina genovensium",
+  "group": "mammals",
+  "sections": {
+    "overview": "Platalina genovensium is a nectar-feeding bat found on the arid western slopes of the Andes, from Peru to northern Chile.",
+    "identification": "Its elongated muzzle is distinctive; its body is about 8 cm long and the forearm measures roughly 5 cm.",
+    "habitat": "It forages in dry areas with columnar cacti and uses cracks, abandoned mine shafts and tunnels as roosts.",
+    "diet": "It feeds mainly on cactus nectar and pollen, while also eating fruit and insects; Haageocereus pollen was especially frequent in a study at Lachay.",
+    "behavior": "Field captures in southwestern Peru show that it is active after dusk.",
+    "reproduction": "Pregnant and lactating females have been recorded in March in Peru, but reproduction remains poorly documented.",
+    "ecology": "Pollen carried on its fur suggests that it pollinates some cacti and bromeliads in the lomas ecosystem.",
+    "conservation": "A 2020 species review reported a global IUCN category of Near Threatened; it identifies habitat loss and dependence on columnar cacti as concerns."
+  },
+  "sources": [
+    {
+      "url": "https://academic.oup.com/mspecies/article/52/995/105/6035134",
+      "title": "Peruvian long-tongued bat — Mammalian Species, American Society of Mammalogists"
+    },
+    {
+      "url": "https://simbio.mma.gob.cl/Especies/Details/4505",
+      "title": "Platalina genovensium — Chilean Ministry of the Environment biodiversity platform"
+    },
+    {
+      "url": "https://journals.sagepub.com/doi/10.1177/1940082916674288",
+      "title": "Diet and Pollinator Role of the Long-Snouted Bat — Tropical Conservation Science"
+    }
+  ]
+}
