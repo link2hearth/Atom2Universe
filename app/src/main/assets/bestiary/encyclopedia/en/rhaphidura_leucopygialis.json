@@ -1,0 +1,30 @@
+{
+  "id": "rhaphidura_leucopygialis",
+  "name": "Silver-rumped Spinetail",
+  "scientific": "Rhaphidura leucopygialis",
+  "group": "birds",
+  "sections": {
+    "overview": "The Silver-rumped Spinetail is a small swift of the family Apodidae, resident in parts of South-East Asia.",
+    "identification": "It is dark-plumaged with a conspicuous pale, silvery-white rump and upper tail-coverts.",
+    "habitat": "It is often seen flying above lowland forest and its edges, including clearings and riverside openings.",
+    "diet": "It catches flying insects in the air.",
+    "behavior": "A study describes it roosting in large tree hollows high in the canopy and documents flexible energy-saving temperature regulation.",
+    "reproduction": "The field guide gives general needletail breeding figures, not confirmed species-specific measurements.",
+    "ecology": "The two common English names, Silver-rumped Spinetail and Silver-rumped Needletail, refer to the same swift.",
+    "conservation": "The IUCN assessment lists it as Least Concern; the population trend is reported as stable."
+  },
+  "sources": [
+    {
+      "url": "https://www.wildlifeofborneo.com/species/silver-rumped-spinetail",
+      "title": "Silver-rumped Spinetail — Wildlife of Borneo Field Guide"
+    },
+    {
+      "url": "https://academic.oup.com/auk/article/132/3/697/5149049",
+      "title": "Thermoregulatory strategies in the Apodidae — Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22686661A93120578.en",
+      "title": "Rhaphidura leucopygialis — IUCN Red List"
+    }
+  ]
+}

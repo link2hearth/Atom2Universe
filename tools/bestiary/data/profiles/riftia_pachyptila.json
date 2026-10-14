@@ -1,0 +1,142 @@
+{
+  "id": "riftia_pachyptila",
+  "scientific": "Riftia pachyptila",
+  "group": "invertebrates",
+  "name": {
+    "en": "Giant tubeworm",
+    "fr": "Ver géant des sources hydrothermales"
+  },
+  "sections": {
+    "overview": {
+      "en": "Riftia pachyptila is a large deep-sea annelid living around hydrothermal vents in the eastern Pacific.",
+      "fr": "Riftia pachyptila est un grand annélide des profondeurs qui vit près des sources hydrothermales du Pacifique oriental."
+    },
+    "identification": {
+      "en": "It lives inside a pale tube and displays a bright red plume; adults can reach about two metres.",
+      "fr": "Il vit dans un tube clair et porte un panache rouge vif; l’adulte peut atteindre environ deux mètres."
+    },
+    "habitat": {
+      "en": "It forms dense clusters beside vent openings on the Galápagos Rift and East Pacific Rise.",
+      "fr": "Il forme des bouquets près des cheminées hydrothermales de la dorsale des Galápagos et de la ride Est-Pacifique."
+    },
+    "diet": {
+      "en": "Adults lack a digestive tract and receive nutrition from sulfur-oxidizing bacteria housed in a trophosome.",
+      "fr": "L’adulte n’a pas de tube digestif et reçoit ses nutriments de bactéries oxydant le soufre dans un trophosome."
+    },
+    "behavior": {
+      "en": "Vent colonies can die when fluid flow stops, while larvae may colonize newly active vents.",
+      "fr": "Les colonies peuvent mourir lorsque le flux hydrothermal cesse, tandis que les larves colonisent parfois de nouvelles sources actives."
+    },
+    "reproduction": {
+      "en": "Larvae hatch without symbiotic bacteria and acquire them from the surrounding water after settlement.",
+      "fr": "Les larves éclosent sans bactéries symbiotiques et les acquièrent dans l’eau environnante après leur installation."
+    },
+    "ecology": {
+      "en": "Its bacterial partners use chemical energy rather than sunlight, supporting life in vent ecosystems.",
+      "fr": "Ses bactéries partenaires utilisent l’énergie chimique plutôt que la lumière, soutenant la vie des écosystèmes hydrothermaux."
+    },
+    "conservation": {
+      "en": "The sources consulted describe its ecology but do not provide a conservation assessment for this species.",
+      "fr": "Les sources consultées décrivent son écologie, mais ne fournissent pas d’évaluation de conservation pour cette espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Chemosynthetic symbioses in the deep ocean — French National Museum of Natural History",
+        "fr": "Les symbioses chimiosynthétiques de l’océan profond — Muséum national d’Histoire naturelle"
+      },
+      "url": "https://edu.mnhn.fr/mod/page/view.php?id=8035",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "MNHN gives no conservation assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 5,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tubeworms on a Hydrothermal Vent — Smithsonian Ocean",
+        "fr": "Vers tubicoles sur une source hydrothermale — Smithsonian Ocean"
+      },
+      "url": "https://ocean.si.edu/ocean-life/invertebrates/tubeworms-hydrothermal-vent",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Smithsonian describes Riftia colonies at vents and their decline when the vent flow ceases."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 14,
+        "total": 81,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Riftia pachyptila — Smithsonian National Museum of Natural History specimen record",
+        "fr": "Riftia pachyptila — fiche de spécimen du Smithsonian National Museum of Natural History"
+      },
+      "url": "https://www.si.edu/object/riftia-pachyptila%3Anmnhinvertebratezoology_739723",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The museum specimen record documents the species at the Galápagos Rift at 2,451 metres."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The NHM page gives a general upper size, while individual length can vary.",
+    "No conservation category is provided in the references reviewed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. French MNHN material is cross-checked against Smithsonian and museum specimen records; unknown conservation status is not inferred."
+}

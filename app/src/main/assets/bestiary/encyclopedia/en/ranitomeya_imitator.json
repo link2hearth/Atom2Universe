@@ -1,0 +1,26 @@
+{
+  "id": "ranitomeya_imitator",
+  "name": "Mimic poison frog",
+  "scientific": "Ranitomeya imitator",
+  "group": "amphibians",
+  "sections": {
+    "overview": "This small poison frog is native to northern Peru, where its warning colours vary geographically.",
+    "identification": "Several local colour forms resemble those of other poisonous Ranitomeya frogs, a pattern associated with Müllerian mimicry.",
+    "habitat": "It occurs in the Peruvian departments of San Martín and Loreto, in forest where it uses small water-filled plant cavities for its larvae.",
+    "diet": "The consulted field study focuses on reproduction and does not establish a species-specific wild diet.",
+    "behavior": "The species shares locally similar warning patterns with other defended frogs, though its pattern forms also differ across its range.",
+    "reproduction": "Eggs are laid in water held by Heliconia or Xanthosoma; both parents care for the young, and females feed tadpoles with unfertilized eggs.",
+    "ecology": "Its mimicry system has made this species a subject of research on warning signals and reproductive isolation.",
+    "conservation": "The sources used here document its biology but do not provide a current global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.nature.com/articles/ncomms5749",
+      "title": "Nature Communications — reproductive isolation in mimetic Ranitomeya"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11349946/",
+      "title": "Peer-reviewed study on Peruvian Ranitomeya (PMC)"
+    }
+  ]
+}

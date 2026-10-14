@@ -1,0 +1,30 @@
+{
+  "id": "rattus_tiomanicus",
+  "name": "Rat des champs malais",
+  "scientific": "Rattus tiomanicus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Ce rongeur muridé est originaire de certaines régions d’Asie du Sud-Est, notamment de la péninsule Malaise et des îles de la plate-forme de la Sonde.",
+    "identification": "Il appartient au vaste genre Rattus, dont la taxonomie est complexe ; les sources consultées ne fournissent pas de description de terrain assez fiable.",
+    "habitat": "L’espèce fréquente des habitats de basse altitude et a également été étudiée dans des plantations de palmiers à huile en Malaisie.",
+    "diet": "L’étude en plantation relève une utilisation de la végétation au sol et des couronnes de palmiers pour se nourrir, sans établir un régime complet pour toute l’espèce.",
+    "behavior": "Les rats suivis par radiotélémétrie utilisaient aussi des tas de frondes, probablement comme sites de nidification et passages protégés dans la plantation.",
+    "reproduction": "Les sources utilisées ici ne donnent pas assez d’informations reproductives propres à l’espèce pour en proposer un résumé fiable.",
+    "ecology": "Son aire comprend plusieurs îles et archipels ; d’anciennes révisions taxonomiques signalent que ce complexe pourrait réunir plus d’une espèce.",
+    "conservation": "La Mammal Diversity Database de l’American Society of Mammalogists la classe en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003672/",
+      "title": "Mammal Diversity Database — rat des champs malais"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0261219497000100",
+      "title": "ScienceDirect — déplacements et habitat dans une plantation malaisienne de palmiers à huile"
+    },
+    {
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13001788",
+      "title": "Mammal Species of the World — compte rendu taxonomique"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "satanoperca_pappaterra",
+  "name": "Pantanal eartheater",
+  "scientific": "Satanoperca pappaterra",
+  "group": "fish",
+  "sections": {
+    "overview": "This South American cichlid occurs in the Guaporé and Paraguay river systems.",
+    "identification": "FishBase reports a maximum published length of about 27.5 cm total length.",
+    "habitat": "It inhabits streams and lagoons with sandy or muddy bottoms.",
+    "diet": "It sifts sediment through its mouth to extract insect larvae, crustaceans and other food items.",
+    "behavior": "When feeding in small groups, individuals may watch for approaching piranhas, according to the cited field observation.",
+    "reproduction": "FishBase classifies the species as an ovophile mouthbrooder.",
+    "ecology": "Like S. mapiritensis, it is an eartheater cichlid in the genus Satanoperca, but its documented range is the Guaporé and Paraguay systems rather than the lower Orinoco; see the related profile.",
+    "conservation": "FishBase lists a global IUCN assessment of Least Concern, dated 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/57778",
+      "title": "FishBase — Pantanal eartheater summary"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S1055790312000711",
+      "title": "Species-level phylogeny of Satanoperca — Molecular Phylogenetics and Evolution"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37704",
+      "title": "Eschmeyer’s Catalog of Fishes — Satanoperca pappaterra"
+    }
+  ]
+}

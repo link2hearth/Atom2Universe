@@ -1,0 +1,30 @@
+{
+  "id": "rangifer_tarandus",
+  "name": "Renne",
+  "scientific": "Rangifer tarandus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Le renne, appelé caribou pour les populations sauvages d’Amérique du Nord, est un cervidé circumpolaire des régions arctiques et subarctiques.",
+    "identification": "Contrairement à la plupart des cervidés, les deux sexes peuvent porter des bois, qui tombent puis repoussent au fil des saisons.",
+    "habitat": "Selon les populations et la saison, les rennes fréquentent les bois, les lisières forestières et la toundra arctique ouverte.",
+    "diet": "Ils broutent et pâturent des végétaux ; les lichens et les champignons comptent parmi leurs aliments importants en hiver.",
+    "behavior": "Certaines populations effectuent de longs déplacements saisonniers entre les bois d’hiver et la toundra d’été.",
+    "reproduction": "Les références consultées ne donnent pas de calendrier reproductif unique applicable à cette espèce répartie sur de vastes régions.",
+    "ecology": "Le nom « renne » est courant en Europe, tandis qu’en Amérique du Nord l’usage distingue le caribou sauvage du renne domestiqué.",
+    "conservation": "Le statut de conservation varie selon les populations et sous-espèces ; cette fiche ne leur attribue donc pas une catégorie mondiale unique."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/sites/default/files/shared_documents/publications/research-reports/2005/rr414.pdf",
+      "title": "British Trust for Ornithology — synthèse sur le caribou et le renne"
+    },
+    {
+      "url": "https://www.fda.gov/animal-veterinary/animal-health-literacy/fun-facts-about-reindeer-and-caribou",
+      "title": "FDA des États-Unis — faits sur le renne et le caribou"
+    },
+    {
+      "url": "https://lister.artsdatabanken.no/rodlisteforarter/2021/19057",
+      "title": "Artsdatabanken — évaluation de la liste rouge norvégienne"
+    }
+  ]
+}

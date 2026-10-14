@@ -1,0 +1,30 @@
+{
+  "id": "riftia_pachyptila",
+  "name": "Ver géant des sources hydrothermales",
+  "scientific": "Riftia pachyptila",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Riftia pachyptila est un grand annélide des profondeurs qui vit près des sources hydrothermales du Pacifique oriental.",
+    "identification": "Il vit dans un tube clair et porte un panache rouge vif; l’adulte peut atteindre environ deux mètres.",
+    "habitat": "Il forme des bouquets près des cheminées hydrothermales de la dorsale des Galápagos et de la ride Est-Pacifique.",
+    "diet": "L’adulte n’a pas de tube digestif et reçoit ses nutriments de bactéries oxydant le soufre dans un trophosome.",
+    "behavior": "Les colonies peuvent mourir lorsque le flux hydrothermal cesse, tandis que les larves colonisent parfois de nouvelles sources actives.",
+    "reproduction": "Les larves éclosent sans bactéries symbiotiques et les acquièrent dans l’eau environnante après leur installation.",
+    "ecology": "Ses bactéries partenaires utilisent l’énergie chimique plutôt que la lumière, soutenant la vie des écosystèmes hydrothermaux.",
+    "conservation": "Les sources consultées décrivent son écologie, mais ne fournissent pas d’évaluation de conservation pour cette espèce."
+  },
+  "sources": [
+    {
+      "url": "https://edu.mnhn.fr/mod/page/view.php?id=8035",
+      "title": "Les symbioses chimiosynthétiques de l’océan profond — Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://ocean.si.edu/ocean-life/invertebrates/tubeworms-hydrothermal-vent",
+      "title": "Vers tubicoles sur une source hydrothermale — Smithsonian Ocean"
+    },
+    {
+      "url": "https://www.si.edu/object/riftia-pachyptila%3Anmnhinvertebratezoology_739723",
+      "title": "Riftia pachyptila — fiche de spécimen du Smithsonian National Museum of Natural History"
+    }
+  ]
+}

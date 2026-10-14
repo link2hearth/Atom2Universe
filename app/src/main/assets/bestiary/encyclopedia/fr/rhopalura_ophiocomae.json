@@ -1,0 +1,38 @@
+{
+  "id": "rhopalura_ophiocomae",
+  "name": "Orthonectide des ophiures",
+  "scientific": "Rhopalura ophiocomae",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Rhopalura ophiocomae est un orthonectide parasite associé aux ophiures.",
+    "identification": "C’est un représentant microscopique du genre Rhopalura; les orthonectides se reconnaissent par leur anatomie cellulaire et reproductive particulière.",
+    "habitat": "Les observations proviennent d’ophiures marines, notamment de l’espèce Amphipholis squamata.",
+    "diet": "Il parasite son hôte au lieu de se nourrir comme un animal libre; des plasmodes se développent dans sa cavité corporelle et ses tissus reproducteurs.",
+    "behavior": "Les stades adultes quittent l’hôte et gagnent l’eau de mer, où a lieu la reproduction.",
+    "reproduction": "Les sexes sont séparés; les œufs fécondés donnent des larves ciliées qui recherchent un nouvel hôte.",
+    "ecology": "Son hôte documenté diffère de celui de R. granosa, décrit chez le bivalve Heteranomia squamula.",
+    "conservation": "Les études citées portent sur la biologie de l’hôte, pas sur le statut de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/00364827.1972.10411204",
+      "title": "The orthonectid Rhopalura ophiocomae in brittle stars from Norway — Sarsia"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6395.1994.tb01206.x",
+      "title": "The Structure and Origin of the Plasmodium of Rhopalura ophiocomae — Acta Zoologica"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/journal-of-the-marine-biological-association-of-the-united-kingdom/article/abs/rhopalura-granosa-sp-nov-an-orthonectid-parasite-of-a-lamellibranch-heteranomia-squamula-l-with-a-note-on-its-swimming-behaviour/49F72F4D67763B362427CEA8F7BB638F",
+      "title": "Rhopalura granosa — original species description"
+    },
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "title": "Les genres du phylum Orthonectida — Cahiers de Biologie Marine"
+    },
+    {
+      "url": "https://www.treccani.it/enciclopedia/mesozoi_%28Enciclopedia-Italiana%29/",
+      "title": "Mesozoi — Encyclopédie italienne"
+    }
+  ]
+}

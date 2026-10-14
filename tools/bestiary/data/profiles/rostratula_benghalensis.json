@@ -1,0 +1,165 @@
+{
+  "id": "rostratula_benghalensis",
+  "scientific": "Rostratula benghalensis",
+  "group": "birds",
+  "name": {
+    "en": "Greater Painted-snipe",
+    "fr": "Rhynchée peinte"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Greater Painted-snipe is a secretive wetland bird with a broad range across Africa and Asia.",
+      "fr": "La Rhynchée peinte est un oiseau discret des zones humides, largement réparti en Afrique et en Asie."
+    },
+    "identification": {
+      "en": "The female is larger and more brightly coloured than the male, an unusual reversal of the usual pattern.",
+      "fr": "La femelle est plus grande et plus vivement colorée que le mâle, inversion inhabituelle du dimorphisme courant."
+    },
+    "habitat": {
+      "en": "It favors shallow wetlands with dense vegetation, including marshes and flooded grassland.",
+      "fr": "Elle préfère les zones humides peu profondes et végétalisées, notamment les marais et prairies inondées."
+    },
+    "diet": {
+      "en": "It is omnivorous, taking insects and other small invertebrates as well as seeds.",
+      "fr": "Elle est omnivore et consomme des insectes, d’autres petits invertébrés ainsi que des graines."
+    },
+    "behavior": {
+      "en": "The female courts several males; males undertake incubation and care for the chicks.",
+      "fr": "La femelle courtise plusieurs mâles; ceux-ci assurent la couvaison et les soins aux poussins."
+    },
+    "reproduction": {
+      "en": "The nest is a shallow cup on the ground among vegetation near water.",
+      "fr": "Le nid est une coupe peu profonde au sol, dans la végétation près de l’eau."
+    },
+    "ecology": {
+      "en": "It is generally resident, though some populations make short movements as wetland conditions change.",
+      "fr": "Elle est généralement sédentaire, bien que certaines populations effectuent de courts déplacements selon l’état des zones humides."
+    },
+    "conservation": {
+      "en": "BirdLife’s global assessment lists it as Least Concern, while noting a decreasing population trend.",
+      "fr": "L’évaluation mondiale de BirdLife la classe en Préoccupation mineure, tout en indiquant une tendance démographique à la baisse."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Greater Painted-snipe — Singapore NParks Flora and Fauna Web",
+        "fr": "Rhynchée peinte — Flora and Fauna Web de NParks, Singapour"
+      },
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/2/7/271",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "NParks describes the female-biased plumage, polyandrous courtship and male incubation and care."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 90,
+        "notes_words": 12,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greater Painted-snipe — IUCN Red List assessment",
+        "fr": "Rhynchée peinte — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22735810A95118332.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "BirdLife’s assessment describes broad Afro-Asian range, shallow wetland habitat, omnivorous diet and short or irregular movements."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 16,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greater Painted-snipe — 2025 Red Data Book, BirdLife South Africa",
+        "fr": "Rhynchée peinte — Livre rouge 2025, BirdLife South Africa"
+      },
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/greater-painted-snipe/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife South Africa reports the current global category as Least Concern and a decreasing trend."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 15,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Rhynchée peinte — Oiseaux.net (French)",
+        "fr": "Rhynchée peinte — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/rhynchee.peinte.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The French bird account records wetlands, marshes and aquatic invertebrates as habitat and feeding context."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The broad range includes populations with different local movements and breeding seasons.",
+    "The IUCN assessment used here is an older detailed account; the 2024 global category is confirmed by BirdLife South Africa."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. Sources in English and French are cross-checked; broad species patterns are distinguished from population-specific movements."
+}

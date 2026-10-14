@@ -1,0 +1,34 @@
+{
+  "id": "rostratula_benghalensis",
+  "name": "Rhynchée peinte",
+  "scientific": "Rostratula benghalensis",
+  "group": "birds",
+  "sections": {
+    "overview": "La Rhynchée peinte est un oiseau discret des zones humides, largement réparti en Afrique et en Asie.",
+    "identification": "La femelle est plus grande et plus vivement colorée que le mâle, inversion inhabituelle du dimorphisme courant.",
+    "habitat": "Elle préfère les zones humides peu profondes et végétalisées, notamment les marais et prairies inondées.",
+    "diet": "Elle est omnivore et consomme des insectes, d’autres petits invertébrés ainsi que des graines.",
+    "behavior": "La femelle courtise plusieurs mâles; ceux-ci assurent la couvaison et les soins aux poussins.",
+    "reproduction": "Le nid est une coupe peu profonde au sol, dans la végétation près de l’eau.",
+    "ecology": "Elle est généralement sédentaire, bien que certaines populations effectuent de courts déplacements selon l’état des zones humides.",
+    "conservation": "L’évaluation mondiale de BirdLife la classe en Préoccupation mineure, tout en indiquant une tendance démographique à la baisse."
+  },
+  "sources": [
+    {
+      "url": "https://www.nparks.gov.sg/florafaunaweb/fauna/2/7/271",
+      "title": "Rhynchée peinte — Flora and Fauna Web de NParks, Singapour"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22735810A95118332.en",
+      "title": "Rhynchée peinte — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/greater-painted-snipe/",
+      "title": "Rhynchée peinte — Livre rouge 2025, BirdLife South Africa"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/rhynchee.peinte.html",
+      "title": "Rhynchée peinte — Oiseaux.net"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "rattus_tiomanicus",
+  "name": "Malaysian field rat",
+  "scientific": "Rattus tiomanicus",
+  "group": "mammals",
+  "sections": {
+    "overview": "This murid rodent is native to parts of Southeast Asia, including the Malay Peninsula and islands of the Sunda Shelf.",
+    "identification": "It is a member of the large and taxonomically complex genus Rattus; the sources consulted here do not offer a reliable field description.",
+    "habitat": "The species occurs in lowland habitats and has also been studied in oil-palm plantations in Malaysia.",
+    "diet": "The plantation study records feeding use of ground vegetation and palm crowns but does not establish a complete species-wide diet.",
+    "behavior": "Radio-tracked rats also used piles of palm fronds, likely as nesting sites and protected routes through the plantation.",
+    "reproduction": "The sources used for this profile do not provide enough species-specific reproductive information for a concise account.",
+    "ecology": "Its range includes several islands and island groups; older taxonomic reviews caution that this complex may include more than one species.",
+    "conservation": "The American Society of Mammalogists’ Mammal Diversity Database lists it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003672/",
+      "title": "Mammal Diversity Database — Malaysian field rat"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0261219497000100",
+      "title": "ScienceDirect — Ranging and habitat use in a Malaysian oil-palm estate"
+    },
+    {
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13001788",
+      "title": "Mammal Species of the World — taxonomic account"
+    }
+  ]
+}

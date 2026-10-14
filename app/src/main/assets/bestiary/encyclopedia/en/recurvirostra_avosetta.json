@@ -1,0 +1,26 @@
+{
+  "id": "recurvirostra_avosetta",
+  "name": "Pied avocet",
+  "scientific": "Recurvirostra avosetta",
+  "group": "birds",
+  "sections": {
+    "overview": "The pied avocet is a black-and-white wader found across parts of Europe, Africa and Asia.",
+    "identification": "Its long, slender bill curves upward, and its long legs are bluish grey.",
+    "habitat": "It frequents shallow, open wetlands such as estuaries, mudflats, lagoons and salt pans.",
+    "diet": "Walking through shallow water, it sweeps its bill from side to side to catch small invertebrates in mud or water.",
+    "behavior": "Some populations migrate, while others remain in their region year-round.",
+    "reproduction": "It nests in colonies near water, often on bare ground or in sparse vegetation.",
+    "ecology": "Its upturned bill is adapted to its distinctive lateral-sweeping feeding method.",
+    "conservation": "The consulted species accounts classify it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/avocet",
+      "title": "British Trust for Ornithology — Avocet"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Recurvirostra-avosetta-Avocette-elegante-4180",
+      "title": "DORIS — Avocette élégante"
+    }
+  ]
+}

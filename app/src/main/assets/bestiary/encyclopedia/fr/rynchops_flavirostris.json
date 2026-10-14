@@ -1,0 +1,30 @@
+{
+  "id": "rynchops_flavirostris",
+  "name": "Bec-en-ciseaux d’Afrique",
+  "scientific": "Rynchops flavirostris",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Bec-en-ciseaux d’Afrique fréquente les grands cours d’eau, lacs et lagunes d’Afrique subsaharienne.",
+    "identification": "Son bec orangé possède une mandibule inférieure plus longue que la supérieure, adaptation caractéristique à la pêche en surface.",
+    "habitat": "Il pêche au-dessus d’eaux calmes et peu profondes et utilise les bancs de sable émergés des rivières et des lacs, notamment pour nicher.",
+    "diet": "Il capture de petits poissons en volant près de l’eau, mandibule inférieure immergée, et referme le bec au contact d’une proie.",
+    "behavior": "Hors période de reproduction, les Bec-en-ciseaux d’Afrique peuvent se rassembler en grandes bandes; leurs déplacements saisonniers suivent les réseaux de rivières et de lacs.",
+    "reproduction": "Il pond dans de simples dépressions creusées dans le sable nu, souvent en petites colonies; les deux parents couvent et s’occupent des jeunes.",
+    "ecology": "La reproduction coïncide avec les basses eaux, qui découvrent des bancs de sable près des zones d’alimentation.",
+    "conservation": "BirdLife classe la population mondiale en Préoccupation mineure, mais l’évaluation sud-africaine est « non applicable », l’espèce y restant très rare."
+  },
+  "sources": [
+    {
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/african-skimmer/",
+      "title": "Bec-en-ciseaux d’Afrique — Livre rouge de BirdLife South Africa"
+    },
+    {
+      "url": "https://doi.org/10.1080/00306525.1988.9633707",
+      "title": "Distribution et biologie de reproduction du Bec-en-ciseaux d’Afrique sur le haut et moyen Zambèze"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/bec-en-ciseaux.d.afrique.html",
+      "title": "Bec-en-ciseaux d’Afrique — Oiseaux.net"
+    }
+  ]
+}

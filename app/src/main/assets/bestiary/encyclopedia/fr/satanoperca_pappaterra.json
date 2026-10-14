@@ -1,0 +1,30 @@
+{
+  "id": "satanoperca_pappaterra",
+  "name": "Satanoperca pappaterra",
+  "scientific": "Satanoperca pappaterra",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce cichlidé sud-américain vit dans les bassins des fleuves Guaporé et Paraguay.",
+    "identification": "FishBase rapporte une longueur maximale publiée d’environ 27,5 cm de longueur totale.",
+    "habitat": "Il fréquente les cours d’eau et lagunes aux fonds sableux ou vaseux.",
+    "diet": "Il filtre les sédiments avec sa bouche pour en extraire des larves d’insectes, des crustacés et d’autres aliments.",
+    "behavior": "Lorsqu’ils s’alimentent en petits groupes, les individus peuvent surveiller l’approche des piranhas, selon l’observation de terrain citée.",
+    "reproduction": "FishBase classe l’espèce parmi les incubateurs buccaux ovophiles.",
+    "ecology": "Comme S. mapiritensis, c’est un cichlidé fouisseur du genre Satanoperca, mais son aire documentée concerne les bassins du Guaporé et du Paraguay plutôt que l’Orénoque inférieur ; voir la fiche correspondante.",
+    "conservation": "FishBase indique une évaluation mondiale UICN « Préoccupation mineure », datée de 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/57778",
+      "title": "FishBase — résumé du géophage du Pantanal"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S1055790312000711",
+      "title": "Phylogénie des espèces de Satanoperca — Molecular Phylogenetics and Evolution"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=37704",
+      "title": "Catalogue des poissons d’Eschmeyer — Satanoperca pappaterra"
+    }
+  ]
+}

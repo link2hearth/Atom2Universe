@@ -1,0 +1,26 @@
+{
+  "id": "recurvirostra_avosetta",
+  "name": "Avocette élégante",
+  "scientific": "Recurvirostra avosetta",
+  "group": "birds",
+  "sections": {
+    "overview": "L’avocette élégante est un limicole noir et blanc présent dans certaines régions d’Europe, d’Afrique et d’Asie.",
+    "identification": "Son long bec fin est retroussé vers le haut et ses longues pattes sont gris bleuté.",
+    "habitat": "Elle fréquente les zones humides peu profondes et dégagées, comme les estuaires, vasières, lagunes et marais salants.",
+    "diet": "En avançant dans l’eau peu profonde, elle balaie la vase ou l’eau de son bec latéralement pour capturer de petits invertébrés.",
+    "behavior": "Certaines populations migrent, tandis que d’autres restent dans leur région toute l’année.",
+    "reproduction": "Elle niche en colonies près de l’eau, souvent sur un sol nu ou dans une végétation clairsemée.",
+    "ecology": "Son bec retroussé est adapté à sa méthode particulière de recherche de nourriture par balayage latéral.",
+    "conservation": "Les fiches d’espèce consultées la classent en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/avocet",
+      "title": "British Trust for Ornithology — Avocette"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Recurvirostra-avosetta-Avocette-elegante-4180",
+      "title": "DORIS — Avocette élégante"
+    }
+  ]
+}

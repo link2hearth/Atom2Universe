@@ -1,0 +1,141 @@
+{
+  "id": "rattus_tiomanicus",
+  "scientific": "Rattus tiomanicus",
+  "group": "mammals",
+  "name": {
+    "en": "Malaysian field rat",
+    "fr": "Rat des champs malais"
+  },
+  "sections": {
+    "overview": {
+      "en": "This murid rodent is native to parts of Southeast Asia, including the Malay Peninsula and islands of the Sunda Shelf.",
+      "fr": "Ce rongeur muridé est originaire de certaines régions d’Asie du Sud-Est, notamment de la péninsule Malaise et des îles de la plate-forme de la Sonde."
+    },
+    "identification": {
+      "en": "It is a member of the large and taxonomically complex genus Rattus; the sources consulted here do not offer a reliable field description.",
+      "fr": "Il appartient au vaste genre Rattus, dont la taxonomie est complexe ; les sources consultées ne fournissent pas de description de terrain assez fiable."
+    },
+    "habitat": {
+      "en": "The species occurs in lowland habitats and has also been studied in oil-palm plantations in Malaysia.",
+      "fr": "L’espèce fréquente des habitats de basse altitude et a également été étudiée dans des plantations de palmiers à huile en Malaisie."
+    },
+    "diet": {
+      "en": "The plantation study records feeding use of ground vegetation and palm crowns but does not establish a complete species-wide diet.",
+      "fr": "L’étude en plantation relève une utilisation de la végétation au sol et des couronnes de palmiers pour se nourrir, sans établir un régime complet pour toute l’espèce."
+    },
+    "behavior": {
+      "en": "Radio-tracked rats also used piles of palm fronds, likely as nesting sites and protected routes through the plantation.",
+      "fr": "Les rats suivis par radiotélémétrie utilisaient aussi des tas de frondes, probablement comme sites de nidification et passages protégés dans la plantation."
+    },
+    "reproduction": {
+      "en": "The sources used for this profile do not provide enough species-specific reproductive information for a concise account.",
+      "fr": "Les sources utilisées ici ne donnent pas assez d’informations reproductives propres à l’espèce pour en proposer un résumé fiable."
+    },
+    "ecology": {
+      "en": "Its range includes several islands and island groups; older taxonomic reviews caution that this complex may include more than one species.",
+      "fr": "Son aire comprend plusieurs îles et archipels ; d’anciennes révisions taxonomiques signalent que ce complexe pourrait réunir plus d’une espèce."
+    },
+    "conservation": {
+      "en": "The American Society of Mammalogists’ Mammal Diversity Database lists it as Least Concern.",
+      "fr": "La Mammal Diversity Database de l’American Society of Mammalogists la classe en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mammal Diversity Database — Malaysian field rat",
+        "fr": "Mammal Diversity Database — rat des champs malais"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1003672/",
+      "supports": [
+        "overview",
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "MDD lists the accepted name, family/genus, Southeast Asian country distribution, and global IUCN category Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 16,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ScienceDirect — Ranging and habitat use in a Malaysian oil-palm estate",
+        "fr": "ScienceDirect — déplacements et habitat dans une plantation malaisienne de palmiers à huile"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S0261219497000100",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "A radio-telemetry study in Johore records R. tiomanicus use of palm crowns, ground vegetation, burrows and frond piles, with frond piles used for nesting and protected movement; it does not detail reproduction."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 32,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mammal Species of the World — taxonomic account",
+        "fr": "Mammal Species of the World — compte rendu taxonomique"
+      },
+      "url": "https://www.departments.bucknell.edu/biology/resources/msw3/browse.asp?id=13001788",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The account notes island-range uncertainty in the R. tiomanicus complex."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 10,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Available ecological detail is based on one oil-palm study in Johore; it should not be generalized to all habitats or populations."
+  ],
+  "review_note": "Cross-checked the mammal taxonomy database, a taxonomic account, and a radio-telemetry study; diet and breeding are kept deliberately narrow.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

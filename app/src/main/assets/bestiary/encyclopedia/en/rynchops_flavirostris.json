@@ -1,0 +1,30 @@
+{
+  "id": "rynchops_flavirostris",
+  "name": "African Skimmer",
+  "scientific": "Rynchops flavirostris",
+  "group": "birds",
+  "sections": {
+    "overview": "The African Skimmer is a waterbird of broad rivers, lakes and lagoons across sub-Saharan Africa.",
+    "identification": "Its orange bill has a lower mandible longer than the upper one, a distinctive adaptation for skimming the water surface.",
+    "habitat": "It forages over calm, shallow water and uses exposed sandbars along rivers and lakes, especially for nesting.",
+    "diet": "It catches small fish by flying low and dragging its lower mandible through the water; it can close its bill when it contacts prey.",
+    "behavior": "Outside the breeding season, African Skimmers may gather in large flocks; seasonal movements follow river and lake systems.",
+    "reproduction": "It lays its eggs in shallow scrapes on bare sand, often in small colonies; both parents incubate and care for the young.",
+    "ecology": "Breeding is timed to low water, when exposed sandbars provide nesting ground beside feeding areas.",
+    "conservation": "BirdLife lists the global population as Least Concern, but the species is assessed as Not Applicable in South Africa, where it remains very scarce."
+  },
+  "sources": [
+    {
+      "url": "https://www.birdlife.org.za/red-data-book/red-list/african-skimmer/",
+      "title": "African Skimmer — BirdLife South Africa Red Data Book"
+    },
+    {
+      "url": "https://doi.org/10.1080/00306525.1988.9633707",
+      "title": "Distribution and breeding biology of the African Skimmer on the upper and middle Zambezi River"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/bec-en-ciseaux.d.afrique.html",
+      "title": "Bec-en-ciseaux d’Afrique — Oiseaux.net (French)"
+    }
+  ]
+}

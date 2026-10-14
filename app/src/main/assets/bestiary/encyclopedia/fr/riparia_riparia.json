@@ -1,0 +1,34 @@
+{
+  "id": "riparia_riparia",
+  "name": "Hirondelle de rivage",
+  "scientific": "Riparia riparia",
+  "group": "birds",
+  "sections": {
+    "overview": "L’Hirondelle de rivage est une petite hirondelle migratrice qui niche dans une grande partie de l’hémisphère Nord.",
+    "identification": "Elle est brune dessus, claire dessous, avec une nette bande pectorale brune.",
+    "habitat": "Elle niche dans les berges sableuses, les falaises côtières et certaines gravières ou carrières.",
+    "diet": "Elle capture de petits insectes en vol, souvent en chassant près de la surface de l’eau.",
+    "behavior": "Elle est grégaire et migre vers l’Afrique subsaharienne pour hiverner.",
+    "reproduction": "Les couples creusent une galerie de nidification dans une berge meuble et garnissent la chambre terminale.",
+    "ecology": "Les colonies dépendent de berges érodées et dégagées; les sablières et gravières peuvent aussi offrir des sites de nidification.",
+    "conservation": "L’évaluation mondiale de 2025 la classe en Préoccupation mineure, bien que sa population soit en baisse."
+  },
+  "sources": [
+    {
+      "url": "https://biodiversite.ecrins-parcnational.fr/espece/3688",
+      "title": "Hirondelle de rivage — Biodiv’Écrins, parc national des Écrins"
+    },
+    {
+      "url": "https://www.bto.org/learn-about-birds/birdfacts/sand-martin",
+      "title": "Hirondelle de rivage — BirdFacts du British Trust for Ornithology"
+    },
+    {
+      "url": "https://piaf.stac.aviation-civile.gouv.fr/index.php/birds/33",
+      "title": "Migration et dortoirs de l’Hirondelle de rivage — PIAF, Direction générale de l’aviation civile"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T103815961A281862538.en",
+      "title": "Hirondelle de rivage — Liste rouge de l’UICN 2025"
+    }
+  ]
+}

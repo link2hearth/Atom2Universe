@@ -1,0 +1,119 @@
+{
+  "id": "recurvirostra_avosetta",
+  "scientific": "Recurvirostra avosetta",
+  "group": "birds",
+  "name": {
+    "en": "Pied avocet",
+    "fr": "Avocette élégante"
+  },
+  "sections": {
+    "overview": {
+      "en": "The pied avocet is a black-and-white wader found across parts of Europe, Africa and Asia.",
+      "fr": "L’avocette élégante est un limicole noir et blanc présent dans certaines régions d’Europe, d’Afrique et d’Asie."
+    },
+    "identification": {
+      "en": "Its long, slender bill curves upward, and its long legs are bluish grey.",
+      "fr": "Son long bec fin est retroussé vers le haut et ses longues pattes sont gris bleuté."
+    },
+    "habitat": {
+      "en": "It frequents shallow, open wetlands such as estuaries, mudflats, lagoons and salt pans.",
+      "fr": "Elle fréquente les zones humides peu profondes et dégagées, comme les estuaires, vasières, lagunes et marais salants."
+    },
+    "diet": {
+      "en": "Walking through shallow water, it sweeps its bill from side to side to catch small invertebrates in mud or water.",
+      "fr": "En avançant dans l’eau peu profonde, elle balaie la vase ou l’eau de son bec latéralement pour capturer de petits invertébrés."
+    },
+    "behavior": {
+      "en": "Some populations migrate, while others remain in their region year-round.",
+      "fr": "Certaines populations migrent, tandis que d’autres restent dans leur région toute l’année."
+    },
+    "reproduction": {
+      "en": "It nests in colonies near water, often on bare ground or in sparse vegetation.",
+      "fr": "Elle niche en colonies près de l’eau, souvent sur un sol nu ou dans une végétation clairsemée."
+    },
+    "ecology": {
+      "en": "Its upturned bill is adapted to its distinctive lateral-sweeping feeding method.",
+      "fr": "Son bec retroussé est adapté à sa méthode particulière de recherche de nourriture par balayage latéral."
+    },
+    "conservation": {
+      "en": "The consulted species accounts classify it as Least Concern.",
+      "fr": "Les fiches d’espèce consultées la classent en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "British Trust for Ornithology — Avocet",
+        "fr": "British Trust for Ornithology — Avocette"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/avocet",
+      "supports": [
+        "overview",
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "BTO describes a pied wader with a long upturned bill and side-to-side feeding in shallow water."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 101,
+        "notes_words": 16,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "DORIS — Avocette élégante",
+        "fr": "DORIS — Avocette élégante"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Recurvirostra-avosetta-Avocette-elegante-4180",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "DORIS gives a broad range, coastal wetland habitats, partial migration, feeding, colonial nesting and IUCN Least Concern."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 128,
+        "notes_words": 17,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The account keeps range and migration broad because movements differ among populations."
+  ],
+  "review_note": "Cross-checked an English bird conservation organization and the French DORIS species reference; no local population estimates are included.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

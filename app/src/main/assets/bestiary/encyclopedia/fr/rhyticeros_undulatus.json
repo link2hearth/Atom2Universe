@@ -1,0 +1,30 @@
+{
+  "id": "rhyticeros_undulatus",
+  "name": "Calao festonné",
+  "scientific": "Rhyticeros undulatus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Calao festonné est un grand calao forestier d’Asie du Sud et du Sud-Est.",
+    "identification": "Le mâle possède une poche gulaire jaune pâle barrée d’une bande sombre; la tête et la gorge de la femelle sont plus foncées.",
+    "habitat": "Il dépend surtout des vastes forêts sempervirentes, des plaines aux contreforts, et fréquente aussi les mangroves.",
+    "diet": "Les fruits, notamment les figues, constituent une grande part de son régime, complété par des proies animales comme des insectes et de petits vertébrés.",
+    "behavior": "Il se nourrit dans la canopée et peut se déplacer en groupes bruyants entre les sites d’alimentation.",
+    "reproduction": "Pendant la nidification, la femelle se mure dans une cavité d’arbre et dépend du mâle pour son ravitaillement.",
+    "ecology": "Une étude thaïlandaise sur les fruits dispersés par les calaos incluait cette espèce parmi les consommateurs de fruits.",
+    "conservation": "BirdLife le classe vulnérable, en raison de la perte des forêts et de la pression de chasse."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/wreathed-hornbill-rhyticeros-undulatus",
+      "title": "Wreathed Hornbill — BirdLife DataZone"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/calao.festonne.html",
+      "title": "Calao festonné — Oiseaux.net"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/characteristics-of-hornbilldispersed-fruits-in-a-tropical-seasonal-forest-in-thailand/568A3545A54A0E14631EC3F497C057D6",
+      "title": "Characteristics of hornbill-dispersed fruits in Thailand — Bird Conservation International"
+    }
+  ]
+}

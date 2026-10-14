@@ -1,0 +1,30 @@
+{
+  "id": "rhopalura_granosa",
+  "name": "Granular orthonectid",
+  "scientific": "Rhopalura granosa",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Rhopalura granosa is a little-known orthonectid, a microscopic marine parasite.",
+    "identification": "Orthonectids have a highly simplified body plan; the genus is distinguished from related genera by microscopic anatomical characters.",
+    "habitat": "Published records place this species in a marine bivalve host in the eastern North Atlantic.",
+    "diet": "It is parasitic in the bivalve Heteranomia squamula, identified as its host in the original description.",
+    "behavior": "The original species paper includes observations of swimming, but the available account is brief.",
+    "reproduction": "The references consulted do not provide a concise species-specific account of reproduction.",
+    "ecology": "Unlike R. ophiocomae, which is reported from brittle stars, R. granosa is known from a bivalve host.",
+    "conservation": "No conservation assessment for this microscopic parasite was found in the sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://www.cambridge.org/core/journals/journal-of-the-marine-biological-association-of-the-united-kingdom/article/abs/rhopalura-granosa-sp-nov-an-orthonectid-parasite-of-a-lamellibranch-heteranomia-squamula-l-with-a-note-on-its-swimming-behaviour/49F72F4D67763B362427CEA8F7BB638F",
+      "title": "Rhopalura granosa sp. nov. — Journal of the Marine Biological Association of the United Kingdom"
+    },
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "title": "The genera of the phylum Orthonectida — Cahiers de Biologie Marine"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1463-6395.1994.tb01206.x",
+      "title": "Rhopalura ophiocomae — structure and host biology"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "rhaphidura_leucopygialis",
+  "name": "Martinet leucopyge",
+  "scientific": "Rhaphidura leucopygialis",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Martinet leucopyge est un petit martinet de la famille des Apodidae, présent toute l’année dans certaines régions d’Asie du Sud-Est.",
+    "identification": "Son plumage est sombre, avec un croupion et des sus-caudales nettement blancs argentés.",
+    "habitat": "On l’observe souvent en vol au-dessus des forêts de plaine et de leurs lisières, notamment près des clairières et des rivières.",
+    "diet": "Il capture des insectes en vol.",
+    "behavior": "Une étude décrit son repos dans de grandes cavités d’arbres situées dans la haute canopée et documente une thermorégulation flexible qui économise de l’énergie.",
+    "reproduction": "Le guide donne des valeurs générales pour les martinets-épines, sans mesures confirmées propres à cette espèce.",
+    "ecology": "Les deux noms anglais courants, Silver-rumped Spinetail et Silver-rumped Needletail, désignent le même martinet.",
+    "conservation": "L’évaluation UICN le classe en préoccupation mineure et indique une tendance de population stable."
+  },
+  "sources": [
+    {
+      "url": "https://www.wildlifeofborneo.com/species/silver-rumped-spinetail",
+      "title": "Silver-rumped Spinetail — Wildlife of Borneo Field Guide"
+    },
+    {
+      "url": "https://academic.oup.com/auk/article/132/3/697/5149049",
+      "title": "Thermoregulatory strategies in the Apodidae — Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22686661A93120578.en",
+      "title": "Rhaphidura leucopygialis — IUCN Red List"
+    }
+  ]
+}

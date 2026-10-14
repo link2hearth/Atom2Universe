@@ -1,0 +1,119 @@
+{
+  "id": "ranitomeya_imitator",
+  "scientific": "Ranitomeya imitator",
+  "group": "amphibians",
+  "name": {
+    "en": "Mimic poison frog",
+    "fr": "Dendrobate imitateur"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small poison frog is native to northern Peru, where its warning colours vary geographically.",
+      "fr": "Cette petite grenouille dendrobate est originaire du nord du Pérou, où ses couleurs d’avertissement varient selon les régions."
+    },
+    "identification": {
+      "en": "Several local colour forms resemble those of other poisonous Ranitomeya frogs, a pattern associated with Müllerian mimicry.",
+      "fr": "Plusieurs formes locales ressemblent à celles d’autres Ranitomeya toxiques, un phénomène associé au mimétisme müllérien."
+    },
+    "habitat": {
+      "en": "It occurs in the Peruvian departments of San Martín and Loreto, in forest where it uses small water-filled plant cavities for its larvae.",
+      "fr": "Elle vit dans les départements péruviens de San Martín et de Loreto, en forêt, et utilise de petites cavités végétales remplies d’eau pour ses larves."
+    },
+    "diet": {
+      "en": "The consulted field study focuses on reproduction and does not establish a species-specific wild diet.",
+      "fr": "L’étude consultée porte sur la reproduction et ne précise pas le régime alimentaire de l’espèce dans la nature."
+    },
+    "behavior": {
+      "en": "The species shares locally similar warning patterns with other defended frogs, though its pattern forms also differ across its range.",
+      "fr": "L’espèce partage localement des motifs d’avertissement similaires avec d’autres grenouilles défendues, mais ses formes varient aussi selon son aire."
+    },
+    "reproduction": {
+      "en": "Eggs are laid in water held by Heliconia or Xanthosoma; both parents care for the young, and females feed tadpoles with unfertilized eggs.",
+      "fr": "Les œufs sont déposés dans l’eau retenue par des Heliconia ou des Xanthosoma ; les deux parents s’occupent des jeunes et la femelle nourrit les têtards avec des œufs non fécondés."
+    },
+    "ecology": {
+      "en": "Its mimicry system has made this species a subject of research on warning signals and reproductive isolation.",
+      "fr": "Son système de mimétisme en fait un sujet de recherche sur les signaux d’avertissement et l’isolement reproductif."
+    },
+    "conservation": {
+      "en": "The sources used here document its biology but do not provide a current global conservation assessment.",
+      "fr": "Les sources utilisées décrivent sa biologie, mais ne fournissent pas d’évaluation mondiale actuelle de sa conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nature Communications — reproductive isolation in mimetic Ranitomeya",
+        "fr": "Nature Communications — isolement reproductif chez des Ranitomeya mimétiques"
+      },
+      "url": "https://www.nature.com/articles/ncomms5749",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The research paper documents geographic colour-pattern variation and mimetic relationships in R. imitator from northern Peru, including sampled populations in Loreto."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 21,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peer-reviewed study on Peruvian Ranitomeya (PMC)",
+        "fr": "Étude évaluée par les pairs sur les Ranitomeya péruviennes (PMC)"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11349946/",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Paper records it in San Martín/Loreto and details plant-cavity egg laying and biparental care; not a diet or conservation study."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 20,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The taxon is treated as a species in the catalog; the profile does not generalize findings from particular localities to every population."
+  ],
+  "review_note": "Two primary research papers support the distribution, mimicry and parental-care statements; no current global status or diet claim is added.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

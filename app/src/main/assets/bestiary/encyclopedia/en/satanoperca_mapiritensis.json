@@ -1,0 +1,26 @@
+{
+  "id": "satanoperca_mapiritensis",
+  "name": "Satanoperca mapiritensis",
+  "scientific": "Satanoperca mapiritensis",
+  "group": "fish",
+  "sections": {
+    "overview": "This South American cichlid is known from the lower Orinoco basin and neighboring rivers.",
+    "identification": "The documented species reaches about 14 cm standard length; detailed field marks are not summarized here.",
+    "habitat": "FishBase classifies it as a tropical freshwater, benthopelagic fish.",
+    "diet": "The accessible species summaries do not provide a verified species-specific diet description.",
+    "behavior": "The sources consulted do not provide species-specific behavioral details.",
+    "reproduction": "The sources consulted do not provide species-specific reproductive details.",
+    "ecology": "It shares the genus Satanoperca with S. pappaterra, but the published ranges place this species in the Orinoco and pappaterra mainly in the Guaporé and Paraguay systems; see the related profile.",
+    "conservation": "FishBase lists a global IUCN assessment of Least Concern, dated 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/57779",
+      "title": "FishBase — species summary"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S1055790312000711",
+      "title": "Species-level phylogeny of Satanoperca — Molecular Phylogenetics and Evolution"
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "id": "regulus_ignicapilla",
+  "scientific": "Regulus ignicapilla",
+  "group": "birds",
+  "name": {
+    "en": "Common Firecrest",
+    "fr": "Roitelet à triple bandeau"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Common Firecrest is a tiny Eurasian songbird in the kinglet family, found chiefly in Europe and north-western Africa.",
+      "fr": "Le Roitelet à triple bandeau est un minuscule passereau de la famille des roitelets, présent surtout en Europe et dans le nord-ouest de l’Afrique."
+    },
+    "identification": {
+      "en": "Its bold black-and-white facial stripes and crest distinguish it from the Goldcrest; the male crest is orange, while the female’s is yellow.",
+      "fr": "Ses bandes faciales noires et blanches bien marquées et sa huppe le distinguent du Roitelet huppé; la huppe du mâle est orangée, celle de la femelle jaune."
+    },
+    "habitat": {
+      "en": "It uses coniferous woodland and also some mixed or evergreen broadleaf woods.",
+      "fr": "Il fréquente les forêts de conifères, mais aussi certains bois mixtes ou feuillus persistants."
+    },
+    "diet": {
+      "en": "It feeds on small insects and other invertebrates, gleaned among foliage and sometimes caught while hovering.",
+      "fr": "Il consomme de petits insectes et d’autres invertébrés, qu’il glane dans le feuillage et capture parfois en vol stationnaire."
+    },
+    "behavior": {
+      "en": "In autumn and winter it may join mixed foraging flocks with tits and other small woodland birds.",
+      "fr": "En automne et en hiver, il peut se joindre à des rondes mixtes de mésanges et d’autres petits oiseaux des bois."
+    },
+    "reproduction": {
+      "en": "The female builds the nest and incubates; both parents feed the young.",
+      "fr": "La femelle construit le nid et couve; les deux parents nourrissent les jeunes."
+    },
+    "ecology": {
+      "en": "Where it overlaps the Goldcrest, the Firecrest tends to take larger prey and forage on different leaf and branch surfaces, which can reduce direct competition.",
+      "fr": "Là où il cohabite avec le Roitelet huppé, le triple-bandeau tend à prendre des proies plus grandes et à chercher sa nourriture sur d’autres faces des feuilles et des branches, ce qui peut réduire la concurrence directe."
+    },
+    "conservation": {
+      "en": "It is assessed as Least Concern globally.",
+      "fr": "Il est classé en préoccupation mineure à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Roitelet triple-bandeau — Oiseaux.net",
+        "fr": "Roitelet triple-bandeau — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/roitelet.triple-bandeau.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French species account."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 195,
+        "notes_words": 3,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Firecrest — British Trust for Ornithology",
+        "fr": "Firecrest — British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/firecrest",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "BTO: invertebrate prey, flocking and parental care."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 7,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Migration and habitat use vary across its broad range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only; claims are general and the Goldcrest comparison is supported by the French species account."
+}

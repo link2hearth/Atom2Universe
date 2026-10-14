@@ -1,0 +1,26 @@
+{
+  "id": "ranitomeya_imitator",
+  "name": "Dendrobate imitateur",
+  "scientific": "Ranitomeya imitator",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Cette petite grenouille dendrobate est originaire du nord du Pérou, où ses couleurs d’avertissement varient selon les régions.",
+    "identification": "Plusieurs formes locales ressemblent à celles d’autres Ranitomeya toxiques, un phénomène associé au mimétisme müllérien.",
+    "habitat": "Elle vit dans les départements péruviens de San Martín et de Loreto, en forêt, et utilise de petites cavités végétales remplies d’eau pour ses larves.",
+    "diet": "L’étude consultée porte sur la reproduction et ne précise pas le régime alimentaire de l’espèce dans la nature.",
+    "behavior": "L’espèce partage localement des motifs d’avertissement similaires avec d’autres grenouilles défendues, mais ses formes varient aussi selon son aire.",
+    "reproduction": "Les œufs sont déposés dans l’eau retenue par des Heliconia ou des Xanthosoma ; les deux parents s’occupent des jeunes et la femelle nourrit les têtards avec des œufs non fécondés.",
+    "ecology": "Son système de mimétisme en fait un sujet de recherche sur les signaux d’avertissement et l’isolement reproductif.",
+    "conservation": "Les sources utilisées décrivent sa biologie, mais ne fournissent pas d’évaluation mondiale actuelle de sa conservation."
+  },
+  "sources": [
+    {
+      "url": "https://www.nature.com/articles/ncomms5749",
+      "title": "Nature Communications — isolement reproductif chez des Ranitomeya mimétiques"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11349946/",
+      "title": "Étude évaluée par les pairs sur les Ranitomeya péruviennes (PMC)"
+    }
+  ]
+}

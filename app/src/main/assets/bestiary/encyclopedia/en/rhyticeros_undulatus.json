@@ -1,0 +1,30 @@
+{
+  "id": "rhyticeros_undulatus",
+  "name": "Wreathed Hornbill",
+  "scientific": "Rhyticeros undulatus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Wreathed Hornbill is a large forest hornbill of South and South-East Asia.",
+    "identification": "The male has a pale yellow gular pouch crossed by a dark band; the female’s head and throat are darker.",
+    "habitat": "It depends mainly on extensive evergreen forest, from lowlands into foothills, and may also use mangroves.",
+    "diet": "Fruit, especially figs, forms much of its diet, supplemented by animal prey such as insects and small vertebrates.",
+    "behavior": "It forages in the canopy and can travel in noisy groups between feeding sites.",
+    "reproduction": "The female seals herself inside a tree cavity during nesting and depends on the male to bring food.",
+    "ecology": "A Thai study of hornbill-dispersed fruits included this species among the fruit consumers.",
+    "conservation": "BirdLife assesses it as Vulnerable, citing forest loss and hunting pressure."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/wreathed-hornbill-rhyticeros-undulatus",
+      "title": "Wreathed Hornbill — BirdLife DataZone"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/calao.festonne.html",
+      "title": "Calao festonné — Oiseaux.net"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/characteristics-of-hornbilldispersed-fruits-in-a-tropical-seasonal-forest-in-thailand/568A3545A54A0E14631EC3F497C057D6",
+      "title": "Characteristics of hornbill-dispersed fruits in Thailand — Bird Conservation International"
+    }
+  ]
+}

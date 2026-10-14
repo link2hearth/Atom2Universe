@@ -1,0 +1,119 @@
+{
+  "id": "salmo_nigripinnis",
+  "scientific": "Salmo nigripinnis",
+  "group": "fish",
+  "name": {
+    "en": "Sonaghen",
+    "fr": "Sonaghen"
+  },
+  "sections": {
+    "overview": {
+      "en": "The sonaghen is a distinctive trout of Lough Melvin in north-west Ireland.",
+      "fr": "Le sonaghen est une truite distinctive du Lough Melvin, dans le nord-ouest de l’Irlande."
+    },
+    "identification": {
+      "en": "Its historical name, black-finned trout, refers to a notable dark-fin character; it is one of the lake’s three recognized trout forms.",
+      "fr": "Son ancien nom de « truite à nageoires noires » évoque ses nageoires sombres ; c’est l’une des trois formes de truites reconnues dans le lac."
+    },
+    "habitat": {
+      "en": "It is associated with Lough Melvin and its tributary catchment.",
+      "fr": "Il est associé au Lough Melvin et à son bassin alimenté par des affluents."
+    },
+    "diet": {
+      "en": "The sources consulted here focus on identification and population structure rather than a detailed species-specific diet.",
+      "fr": "Les sources consultées portent sur l’identification et la structure des populations plutôt que sur un régime alimentaire détaillé propre à l’espèce."
+    },
+    "behavior": {
+      "en": "A recent genetic assessment found the sonaghen population structured across multiple inflowing tributaries.",
+      "fr": "Une récente étude génétique a mis en évidence une structuration de la population de sonaghen entre plusieurs affluents entrants."
+    },
+    "reproduction": {
+      "en": "The 2025 assessment reports that sonaghens spawn in multiple tributaries of the lake.",
+      "fr": "L’évaluation de 2025 indique que les sonaghens se reproduisent dans plusieurs affluents du lac."
+    },
+    "ecology": {
+      "en": "It coexists in Lough Melvin with gillaroo and ferox trout, treated in a recent study as reproductively isolated forms/species.",
+      "fr": "Il coexiste dans le Lough Melvin avec le gillaroo et le ferox, considérés dans une étude récente comme des formes ou espèces isolées reproductivement."
+    },
+    "conservation": {
+      "en": "Its lake populations are the subject of genetic monitoring and conservation planning.",
+      "fr": "Ses populations lacustres font l’objet d’un suivi génétique et de mesures de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Inland Fisheries Ireland — Lough Melvin trout genetic assessment (2025)",
+        "fr": "Inland Fisheries Ireland — étude génétique des truites du Lough Melvin (2025)"
+      },
+      "url": "https://www.fisheriesireland.ie/sites/default/files/2025-05/population-structure-and-genetic-stock-identification-of-the-lough-melvin-trout-2025.pdf",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The report treats sonaghen as a distinct Lough Melvin trout and reports spawning in tributaries."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 15,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecology of Freshwater Fish — Lough Melvin trout review",
+        "fr": "Ecology of Freshwater Fish — étude des truites du Lough Melvin"
+      },
+      "url": "https://doi.org/10.1111/eff.12651",
+      "supports": [
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "The review confirms the names sonaghen and black-finned trout; consulted extract lacks a detailed diet account."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 16,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic treatment of the Lough Melvin trout forms has historically varied; this draft follows the current Fisheries Ireland report’s treatment of the sonaghen as Salmo nigripinnis."
+  ],
+  "review_note": "Used the 2025 government-commissioned genetic assessment and peer-reviewed review; avoided unsupported diet details.",
+  "reviewed": true,
+  "source_audit_version": 1
+}
