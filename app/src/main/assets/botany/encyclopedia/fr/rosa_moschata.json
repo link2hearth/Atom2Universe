@@ -1,0 +1,13 @@
+{
+  "id": "rosa_moschata",
+  "sections": [
+    {"title": "Rosier musqué", "text": "Rosier vigoureux et arqué, originaire du sud de l’Iran à l’Afghanistan ; Kew le décrit comme un arbuste sarmenteux ou une liane. En culture, il atteint couramment environ 2,5 à 4 m de haut et d’envergure. Ses fleurs blanches, musquées et tardives sont réunies en grandes grappes et mesurent environ 5 cm de diamètre ; elles sont suivies de cynorrhodons arrondis orange rougeâtre."},
+    {"title": "Usages et comparaison", "text": "Les fleurs blanches en bouquets et les cynorrhodons arrondis de la planche correspondent à cette espèce. Les cynorrhodons sont utilisés comme aliment dans le genre Rosa, mais les sources consultées ne confirment pas d’évaluation alimentaire ou toxicologique propre à R. moschata."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online, Kew — Rosa moschata", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:733393-1/general-information"},
+    {"title": "Royal Horticultural Society — Rosa moschata", "url": "https://www.rhs.org.uk/plants/16051/rosa-moschata-ra/details"},
+    {"title": "AP News — cynorrhodons et préparation alimentaire (contexte au niveau du genre)", "url": "https://apnews.com/article/636619421ed5df07e1372720b7f36e6a"}
+  ],
+  "related": ["rosa"]
+}

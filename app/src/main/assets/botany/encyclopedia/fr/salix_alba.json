@@ -1,0 +1,38 @@
+{
+  "id": "salix_alba",
+  "sections": [
+    {
+      "title": "Arbre et habitat",
+      "text": "Le saule blanc est un arbre caduc à croissance rapide des milieux humides et des berges. Il atteint couramment 20–30 m de haut, avec un tronc pouvant approcher 1 m de diamètre. Son écorce devient profondément fissurée avec l’âge."
+    },
+    {
+      "title": "Feuilles et chatons",
+      "text": "Ses feuilles lancéolées, longues d’environ 5–10 cm, ont un revers soyeux blanchâtre qui donne à l’arbre son aspect argenté. Les fleurs sont réunies en chatons; les capsules libèrent de petites graines plumeuses. La planche montre ce feuillage pâle et les chatons."
+    },
+    {
+      "title": "Usages et précautions",
+      "text": "L’écorce contient de la salicine et a été utilisée comme source de composés salicylés; le bois et les rameaux souples ont d’autres usages. Les préparations d’écorce de saule peuvent provoquer des troubles digestifs ou des réactions allergiques; un risque accru de saignement est signalé pour certaines personnes, et la prudence s’impose avec les médicaments salicylés."
+    }
+  ],
+  "sources": [
+    {
+      "title": "EUFORGEN — Salix alba",
+      "url": "https://www.euforgen.org/species/salix-alba/"
+    },
+    {
+      "title": "Atlas européen des espèces d’arbres forestiers — Salix alba",
+      "url": "https://forest.jrc.ec.europa.eu/media/atlas/Salix_alba.pdf"
+    },
+    {
+      "title": "PubMed — Risk assessment of white willow (Salix alba) in food",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32704312/"
+    },
+    {
+      "title": "US Pharmacopeia — Safety Review of Willow Bark",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31604354/"
+    }
+  ],
+  "related": [
+    "salix_caprea"
+  ]
+}

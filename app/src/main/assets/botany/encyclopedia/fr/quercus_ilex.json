@@ -10,5 +10,5 @@
     {"title": "Royal Horticultural Society — Quercus ilex", "url": "https://www.rhs.org.uk/plants/14264/quercus-ilex/details"},
     {"title": "Plants of the World Online, Kew — Quercus ilex", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:296290-1/general-information"}
   ],
-  "related": ["quercus_pubescens", "quercus_rubra"]
+  "related": ["quercus_pubescens", "quercus_rubra", "robur"]
 }

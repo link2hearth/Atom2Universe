@@ -1,0 +1,32 @@
+{
+  "id": "roystonea_altissima",
+  "sections": [
+    {
+      "title": "Silhouette et habitat",
+      "text": "This solitary palm is endemic to the limestone hills and mountains of Jamaica, up to about 760 m elevation. Its smooth, grey-brown stem can reach 20 m tall and 25–35 cm in diameter; the leaf sheaths form a green crownshaft below the crown."
+    },
+    {
+      "title": "Leaves, flowers and fruit",
+      "text": "The long pinnate leaves carry many narrow leaflets. Branched inflorescences emerge below the crownshaft; the flowers produce small ovoid fruits that turn purple-black. The plate matches the solitary trunk, green crownshaft, pinnate leaves and fruit clusters."
+    },
+    {
+      "title": "Uses and caution",
+      "text": "The species is sometimes called Jamaican cabbage palm; a palm heart is the terminal bud, and harvesting it kills the stem. The sources consulted do not establish safe food use of the fruits or other parts, so do not eat them based on this account alone."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Kew — Plants of the World Online, Roystonea altissima",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:222795-2/general-information"
+    },
+    {
+      "title": "PalmPedia — Roystonea altissima",
+      "url": "https://palmpedia.net/wiki/Roystonea_altissima"
+    }
+  ],
+  "related": [
+    "roystonea_borinquena",
+    "roystonea_oleracea"
+  ]
+}
+

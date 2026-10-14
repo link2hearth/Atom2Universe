@@ -10,5 +10,5 @@
     {"title": "USDA Plants Database — Quercus rubra characteristics", "url": "https://plants.sc.egov.usda.gov/plant-profile/QURU/characteristics"},
     {"title": "US Forest Service FEIS — Quercus rubra", "url": "https://research.fs.usda.gov/feis/species-reviews/querub"}
   ],
-  "related": ["quercus_ilex", "quercus_pubescens"]
+  "related": ["quercus_ilex", "quercus_pubescens", "robur"]
 }

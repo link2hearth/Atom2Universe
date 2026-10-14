@@ -1,0 +1,16 @@
+{
+  "id": "rosa",
+  "sections": [
+    {"title": "Genre des rosiers", "text": "Rosa est un vaste genre d’arbustes, parfois persistants, et de plantes grimpantes, à tiges épineuses, feuilles composées pennées et fleurs généralement à cinq pétales. La taille des plantes, des fleurs et des cynorrhodons varie fortement selon les espèces ; cette planche générique ne permet pas d’indiquer une hauteur ou une largeur fiables."},
+    {"title": "Fleurs et cynorrhodons", "text": "Après pollinisation, la base de la fleur se transforme en cynorrhodon charnu contenant les véritables fruits (akènes). Les pétales et les cynorrhodons mûrs de nombreuses espèces de rosiers se consomment ou servent à préparer boissons et conserves ; cela ne peut être généralisé à tous les cultivars ornementaux ni aux plantes traitées par des pesticides. Les poils raides entourant les akènes peuvent irriter la bouche et le tube digestif et doivent être retirés lors de la préparation."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online, Kew — genre Rosa", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30002432-2/general-information"},
+    {"title": "Kew — Roses", "url": "https://www.kew.org/plants/roses"},
+    {"title": "Flora of Somalia via JSTOR Global Plants — morphologie du genre", "url": "https://plants.jstor.org/collection/FLOS"},
+    {"title": "University of Alaska Fairbanks Cooperative Extension — Wild Roses", "url": "https://www.uaf.edu/ces/publications/database/food/wild-roses.php"},
+    {"title": "North Carolina Extension Gardener Plant Toolbox — Rosa villosa (irritation par les poils des graines)", "url": "https://plants.ces.ncsu.edu/plants/rosa-villosa/common-name/apple-rose/"},
+    {"title": "AP News — usages alimentaires et préparation des cynorrhodons", "url": "https://apnews.com/article/636619421ed5df07e1372720b7f36e6a"}
+  ],
+  "related": ["rosa_cymosa", "rosa_moschata", "rosa_multiflora", "rosa_pendulina", "rosa_virginiana"]
+}

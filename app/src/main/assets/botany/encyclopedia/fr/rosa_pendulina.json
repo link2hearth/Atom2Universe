@@ -1,0 +1,12 @@
+{
+  "id": "rosa_pendulina",
+  "sections": [
+    {"title": "Rosier des Alpes", "text": "Arbuste caduc indigène d’Europe jusqu’au Kazakhstan. Ses tiges dressées ou légèrement arquées mesurent environ 1 à 2 m ; il est généralement moins épineux que bien des rosiers. Ses fleurs roses à rouge rosé, solitaires ou peu nombreuses, mesurent environ 4 à 6 cm de diamètre. Les cynorrhodons rouges et allongés pendent vers le bas et perdent souvent leurs sépales à maturité."},
+    {"title": "Comparaison et usages", "text": "La fleur rose vif solitaire et le cynorrhodon étroit et pendant de la planche sont caractéristiques de ce rosier. Une flore bulgare décrit ses fruits comme utiles à l’industrie alimentaire, mais les sources ne précisent ni préparation domestique ni évaluation de leur toxicité."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online, Kew — Rosa pendulina", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:733641-1/general-information"},
+    {"title": "BG Flora — Rosa pendulina (description d’après Flora of Bulgaria)", "url": "https://www.bgflora.eu/Rosa%20pendulina%20L.%20EN.html"}
+  ],
+  "related": ["rosa"]
+}

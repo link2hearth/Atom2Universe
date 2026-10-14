@@ -1,0 +1,13 @@
+{
+  "id": "rosa_moschata",
+  "sections": [
+    {"title": "Musk rose", "text": "A vigorous, arching rose from southern Iran to Afghanistan, treated by Kew as a scrambling shrub or liana. In cultivation it commonly reaches about 2.5–4 m in both height and spread. Its late-season, musk-scented white flowers are borne in large clusters and reach about 5 cm across; rounded orange-red hips follow."},
+    {"title": "Use and comparison", "text": "The white clustered flowers and rounded hips in the plate fit this species. Rose hips are used as food in the genus, but a species-specific food or toxicity assessment for R. moschata was not confirmed in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online, Kew — Rosa moschata", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:733393-1/general-information"},
+    {"title": "Royal Horticultural Society — Rosa moschata", "url": "https://www.rhs.org.uk/plants/16051/rosa-moschata-ra/details"},
+    {"title": "AP News — rose hips and food preparation (genus-level context)", "url": "https://apnews.com/article/636619421ed5df07e1372720b7f36e6a"}
+  ],
+  "related": ["rosa"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "rosa_cymosa",
+  "sections": [
+    {"title": "Rosier grimpant", "text": "Rosier sarmenteux épineux, originaire de Chine et également signalé au Laos et au Vietnam. La description de Flora of China donne des tiges de 2 à 5 m, des folioles le plus souvent longues de 2,5 à 6 cm et de nombreuses fleurs blanches d’environ 2 à 2,5 cm, en grappes ramifiées. Ses petits cynorrhodons ronds, rouges à brun foncé, mesurent 4 à 7 mm de diamètre."},
+    {"title": "Nom et comparaison", "text": "Les traitements taxonomiques divergent : Flora of China maintient Rosa cymosa comme espèce, tandis que le référentiel actuel de Kew place ce nom en synonymie de R. indica. Les fleurs blanches en grappes et les petits cynorrhodons de la planche correspondent à la description historique de R. cymosa. Aucune information vérifiée sur la consommation humaine ou la toxicité propre à cette espèce n’a été trouvée."}
+  ],
+  "sources": [
+    {"title": "Flora of China — Rosa cymosa", "url": "https://efloras.org/florataxon.aspx?flora_id=2&taxon_id=200011237"},
+    {"title": "Digital Flora of Shanghai — Rosa cymosa (chinois ; dimensions, fleurs et fruits)", "url": "https://shflora.ibiodiversity.net/Pages/Rosa_cymosa.html"},
+    {"title": "Plants of the World Online, Kew — synonymie de Rosa cymosa", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:732228-1"}
+  ],
+  "related": ["rosa"]
+}

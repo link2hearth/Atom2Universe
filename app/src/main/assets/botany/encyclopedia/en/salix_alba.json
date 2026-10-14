@@ -1,0 +1,38 @@
+{
+  "id": "salix_alba",
+  "sections": [
+    {
+      "title": "Tree and habitat",
+      "text": "White willow is a fast-growing deciduous tree of wet ground and riverbanks. It commonly reaches 20–30 m tall, with a trunk that may approach 1 m in diameter. Its bark becomes deeply fissured with age."
+    },
+    {
+      "title": "Leaves and catkins",
+      "text": "Its lance-shaped leaves, about 5–10 cm long, have silky white undersides that give the tree a silvery appearance. The flowers are grouped in catkins; the capsules release tiny, downy seeds. The plate shows the pale foliage and catkins."
+    },
+    {
+      "title": "Uses and caution",
+      "text": "The bark contains salicin and has been used as a source of salicylate compounds; the wood and flexible twigs have other uses. Willow bark preparations can cause digestive symptoms or allergic reactions; increased bleeding risk is noted for some people, and caution is warranted with salicylate medicines."
+    }
+  ],
+  "sources": [
+    {
+      "title": "EUFORGEN — Salix alba",
+      "url": "https://www.euforgen.org/species/salix-alba/"
+    },
+    {
+      "title": "European Atlas of Forest Tree Species — Salix alba",
+      "url": "https://forest.jrc.ec.europa.eu/media/atlas/Salix_alba.pdf"
+    },
+    {
+      "title": "PubMed — Risk assessment of white willow (Salix alba) in food",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32704312/"
+    },
+    {
+      "title": "US Pharmacopeia — Safety Review of Willow Bark",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31604354/"
+    }
+  ],
+  "related": [
+    "salix_caprea"
+  ]
+}

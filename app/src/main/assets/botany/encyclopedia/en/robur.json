@@ -1,0 +1,14 @@
+{
+  "id": "robur",
+  "sections": [
+    {"title": "Pedunculate oak", "text": "Quercus robur is a large deciduous oak native across much of Europe and parts of western Asia. It commonly reaches 20–40 m and develops a broad crown. Its leaves have deep rounded lobes and a short stalk; the acorns sit in cups on conspicuously long stalks."},
+    {"title": "Acorns and comparison", "text": "Acorns are about 2–3 cm long and have been eaten after processing, including grinding into flour. They are rich in bitter tannins, so they require leaching or other preparation; raw or inadequately prepared acorns are not a ready-to-eat food. Unlike evergreen holm oak (Q. ilex), this species sheds its leaves; it also differs from the downy oak and northern red oak in its long-stalked acorns."}
+  ],
+  "sources": [
+    {"title": "Woodland Trust — English oak (Quercus robur)", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/english-oak/"},
+    {"title": "Kew — Oak tree (Quercus robur)", "url": "https://www.kew.org/plants/oak-tree"},
+    {"title": "Plants of the World Online, Kew — Quercus robur", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:304293-2/general-information"},
+    {"title": "University of Pretoria Repository — Quercus robur and acorn tannins", "url": "https://repository.up.ac.za/items/36454e89-0cf6-427a-ac7c-6efe981166b5"}
+  ],
+  "related": ["quercus_ilex", "quercus_pubescens", "quercus_rubra"]
+}

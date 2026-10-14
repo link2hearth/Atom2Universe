@@ -1,0 +1,14 @@
+{
+  "id": "rohdea_japonica",
+  "sections": [
+    {"title": "Vivace persistante", "text": "Vivace rhizomateuse à feuillage persistant, indigène en Chine et dans le sud du Japon. Ses feuilles luisantes, longues et rubanées forment une touffe basale ; un court épi dressé de fleurs blanc verdâtre est suivi de baies rouges visibles près de la base. Une fiche horticole indique une hauteur et une largeur maximales habituelles d’environ 60 cm."},
+    {"title": "Toxicité", "text": "Toute la plante contient des glycosides cardiotoniques, dont la rhodexine A, et elle est toxique en cas d’ingestion. Les baies sont ornementales, pas alimentaires ; l’usage médicinal traditionnel ne rend pas son emploi domestique sûr."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online, Kew — Rohdea japonica", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:540426-1/general-information"},
+    {"title": "North Carolina Extension Gardener Plant Toolbox — Rohdea japonica", "url": "https://plants.ces.ncsu.edu/plants/rohdea-japonica/"},
+    {"title": "Jardin des plantes médicinales de l’université Toho — Rohdea japonica (japonais ; toxicité et glycosides cardiotoniques)", "url": "https://www.lab.toho-u.ac.jp/phar/yakusou/omoto.html"},
+    {"title": "Masuda et al. 2003 — rhodexine A, constituant toxique, PubMed", "url": "https://pubmed.ncbi.nlm.nih.gov/12843672/"}
+  ],
+  "related": []
+}

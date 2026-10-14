@@ -10,5 +10,5 @@
     {"title": "Oaks of the World — Quercus pubescens", "url": "https://oakcompendium.org/species/pubescens"},
     {"title": "Plants of the World Online, Kew — Quercus pubescens", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:326376-2/general-information"}
   ],
-  "related": ["quercus_ilex", "quercus_rubra"]
+  "related": ["quercus_ilex", "quercus_rubra", "robur"]
 }

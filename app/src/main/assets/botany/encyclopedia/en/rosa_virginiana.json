@@ -1,0 +1,14 @@
+{
+  "id": "rosa_virginiana",
+  "sections": [
+    {"title": "Virginia rose", "text": "An upright, suckering shrub native to eastern North America. It typically grows about 1.2–1.8 m tall, with compound leaves and prickly canes. Its five-petalled pink flowers are followed by round, bright-red hips, about 1 cm wide."},
+    {"title": "Fruit and comparison", "text": "North Carolina Extension lists the ripe hips as edible. Remove the seed hairs when preparing them; those hairs can irritate the mouth and gut. The species is a compact North American shrub, unlike the longer, scrambling stems and dense white flower clusters of Rosa multiflora."}
+  ],
+  "sources": [
+    {"title": "USDA NRCS Plant Guide — Virginia rose (Rosa virginiana)", "url": "https://plants.usda.gov/DocumentLibrary/plantguide/pdf/cs_roviv2.pdf"},
+    {"title": "North Carolina Extension Gardener Plant Toolbox — Rosa virginiana", "url": "https://plants.ces.ncsu.edu/plants/rosa-virginiana/"},
+    {"title": "Flora of North America — Rosa virginiana", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=242417152"},
+    {"title": "University of Alaska Fairbanks Cooperative Extension — Wild Roses (seed-hair preparation)", "url": "https://www.uaf.edu/ces/publications/database/food/wild-roses.php"}
+  ],
+  "related": ["rosa", "rosa_multiflora"]
+}
