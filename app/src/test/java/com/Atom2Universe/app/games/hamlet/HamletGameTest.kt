@@ -324,4 +324,23 @@ class HamletGameTest {
         assertTrue("manque en français : $missingFr", missingFr.isEmpty())
         assertEquals("mêmes clés dans les deux langues", en, fr)
     }
+
+    @Test fun `une sauvegarde d'avant la refonte se charge sans rien planter`() {
+        val g = game()
+        val old = org.json.JSONObject(HamletSave.toJson(g))
+        old.put("version", 5); old.remove("legends"); old.remove("pantry")
+        old.getJSONObject("journey").put("companions", org.json.JSONArray(listOf(1, 2, 3, 4, 5, 5))).put("party", org.json.JSONArray(listOf(0, 1, 2)))
+        val adventure = old.getJSONObject("adventure")
+        // six places d'équipe, quatre héros possédés, et des champs devenus inutiles
+        adventure.put("teams", org.json.JSONArray(listOf(org.json.JSONArray(listOf(1, 7, 3, 0, 2, 4)), org.json.JSONArray(listOf(-1, -1, -1, -1, -1, -1)), org.json.JSONArray(listOf(-1, -1, -1, -1, -1, -1)))))
+        adventure.put("rescued", org.json.JSONArray(listOf(1, 2))).put("gear", org.json.JSONArray(listOf(3, 3, 3)))
+        val heroes = adventure.getJSONArray("heroes")
+        for (id in intArrayOf(0, 1, 3, 7, 8, 30)) heroes.getJSONObject(id).put("owned", true).put("level", 60).put("stars", 9)
+        val loaded = game()
+        assertTrue(HamletSave.fromJson(loaded, old.toString()))
+        assertTrue(loaded.adventure.heroes[8].owned); assertEquals(0, loaded.pantry.size)
+        assertEquals(0, loaded.legends.nights.sum())
+        assertTrue(loaded.adventure.teams[0].count { it >= 0 } <= loaded.adventure.slotCount())
+        assertTrue(loaded.adventure.heroes[1].level <= HamletHeroes.levelCap(loaded.adventure.heroes[1].stars))
+    }
 }
