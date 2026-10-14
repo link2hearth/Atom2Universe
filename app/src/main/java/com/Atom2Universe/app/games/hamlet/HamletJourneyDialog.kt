@@ -15,7 +15,7 @@ import android.widget.*
 import com.Atom2Universe.app.R
 
 /** Carnet du village : une seule fenêtre, onglets horizontaux et objectifs lisibles avant déblocage. */
-internal class HamletJourneyDialog(context: Context, game: HamletGame, haptics: Boolean = false, onQuest: () -> Unit = {}) {
+internal class HamletJourneyDialog(context: Context, game: HamletGame, haptics: Boolean = false, onQuest: (() -> Unit)? = null) {
     constructor(activity: HamletActivity) : this(activity, activity.game, activity.village.haptics, activity::showQuest)
     private val a = JournalContext(context, game, haptics, onQuest)
     private val g get() = a.game
@@ -110,6 +110,7 @@ internal class HamletJourneyDialog(context: Context, game: HamletGame, haptics: 
             val unlocks = HamletJourney.buildings.filterValues { it == i + 1 }.keys.map { a.itemName(it) }.toMutableList()
             HamletJourney.regions.forEachIndexed { r, def -> if (def.chapter == i + 1) unlocks.add(name("region", r)) }
             if (i % 2 == 0) unlocks.add(name("companion", i / 2))
+            if (i + 1 == HamletGame.COLLECT_ALL_CHAPTER) unlocks.add(a.getString(R.string.hamlet_ui_collect))
             text(box, a.getString(R.string.hamlet_chapter_unlocks, unlocks.joinToString(a.getString(R.string.hamlet_list_separator))))
             if (done) text(box, a.getString(R.string.hamlet_daily_claimed))
             else {
@@ -122,6 +123,8 @@ internal class HamletJourneyDialog(context: Context, game: HamletGame, haptics: 
     }
     private fun expeditions() {
         text(rows, a.getString(R.string.hamlet_expedition_help, j.power()))
+        text(rows, a.getString(R.string.hamlet_s_expedition_link, j.scoutingPower(), j.scoutingSpeed()))
+        text(rows, a.getString(R.string.hamlet_expedition_invitation_help))
         if (j.expedition >= 0) {
             val box = card(name("region", j.expedition))
             countdown = text(box, a.getString(R.string.hamlet_expedition_running, name("region", j.expedition), a.duration(j.expeditionLeft())))
@@ -136,6 +139,7 @@ internal class HamletJourneyDialog(context: Context, game: HamletGame, haptics: 
             val box = card(name("region", i), j.explored[i] > 0)
             text(box, a.stringByName("hamlet_region_story_$i"))
             text(box, a.getString(R.string.hamlet_region_detail, r.chapter, r.power, a.duration(j.expeditionSeconds(i) * 1000L), r.coins, r.supplies, j.explored[i]))
+            text(box, a.getString(R.string.hamlet_s_expedition_loot, j.expeditionFood(i), j.expeditionOre(i), j.expeditionBooks(i), j.expeditionTickets(i)))
             action(box, a.getString(R.string.hamlet_expedition_start), j.canExplore(i)) { j.startExpedition(i) }
         }
     }
@@ -255,7 +259,18 @@ internal class HamletJourneyDialog(context: Context, game: HamletGame, haptics: 
     }
 
     /** Le carnet n'a pas besoin du cycle de vie de l'activité pour se dessiner. */
-    private class JournalContext(context: Context, val game: HamletGame, val haptics: Boolean, val showQuest: () -> Unit) : ContextWrapper(context) {
+    private class JournalContext(context: Context, val game: HamletGame, val haptics: Boolean, private val onQuest: (() -> Unit)?) : ContextWrapper(context) {
+        fun showQuest() {
+            if (onQuest != null) { onQuest.invoke(); return }
+            val q = game.currentQuest() ?: run { toast(getString(R.string.hamlet_quests_done)); return }
+            val title = stringByName("hamlet_q${game.quest}_t")
+            val builder = AlertDialog.Builder(this).setTitle(title)
+                .setMessage(getString(R.string.hamlet_quest_detail, title, stringByName("hamlet_q${game.quest}_d"), game.questProgress(q), q.n, q.coins, q.gems))
+                .setNegativeButton(android.R.string.cancel, null)
+            if (game.questDone(q)) builder.setPositiveButton(R.string.hamlet_claim) { _, _ -> game.claimQuest() }
+            else builder.setPositiveButton(android.R.string.ok, null)
+            builder.show()
+        }
         fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
         fun rounded(color: Int, radius: Int) = GradientDrawable().apply { setColor(color); cornerRadius = dp(radius).toFloat() }
         fun stringByName(name: String): String {

@@ -79,6 +79,19 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
     private val mat = Matrix()
     private val path = Path()
     private val rect = RectF()
+    private val objectBounds = RectF()
+    private val lightMatrix = Matrix()
+    private val warmLight = RadialGradient(0f, 0f, 1f, 0xBEFFC86E.toInt(), 0x00FFB450, Shader.TileMode.CLAMP)
+    private val orderedVillagers = ArrayList<Villager>()
+    private val villagerDepth = compareBy<Villager> { it.x + it.y }
+    private val walkDirections = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+    private val walkOptions = IntArray(4)
+    private var roadCache: List<IntArray> = emptyList()
+    private var roadRev = -1
+    private var roadOrigin = -1
+    private var roadSize = -1
+    private var daylightCheckedAt = Long.MIN_VALUE
+    private var ambientDaylight = 1f
     private var buildingIso: Iso? = null
 
     private var sorted: List<Obj> = emptyList()
@@ -86,6 +99,7 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
     private var waterTiles = IntArray(0)
     private var waterRev = -1
     private var lights: List<FloatArray> = emptyList()
+    private val stewardHomes = arrayOfNulls<Obj>(3)
 
     // ------------------------------------------------------------------ passage écran / monde
 
@@ -111,11 +125,8 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
         val o = game.realmOrigin().toFloat()
         val r = game.realmSize().toFloat()
         val m = 3f
-        val corners = listOf(o - m to o - m, o + r + m to o - m, o - m to o + r + m, o + r + m to o + r + m)
-        val xs = corners.map { (it.first - it.second) * 32f }
-        val ys = corners.map { (it.first + it.second) * 16f }
-        camX = camX.coerceIn(xs.min(), xs.max())
-        camY = camY.coerceIn(ys.min(), ys.max())
+        camX = camX.coerceIn(-(r + m * 2f) * 32f, (r + m * 2f) * 32f)
+        camY = camY.coerceIn((o - m) * 32f, (o + r + m) * 32f)
     }
 
     // ------------------------------------------------------------------ habitants
@@ -141,9 +152,11 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
     }
 
     private fun roadTiles(): List<IntArray> {
-        val out = ArrayList<IntArray>()
         val o = game.realmOrigin(); val r = game.realmSize()
+        if (roadRev == game.groundRev && roadOrigin == o && roadSize == r) return roadCache
+        val out = ArrayList<IntArray>()
         for (y in o until o + r) for (x in o until o + r) if (Hamlet.walkable(game.pathAt(x, y)) || game.pathAt(x, y) == Hamlet.PATH_BRIDGE) out.add(intArrayOf(x, y))
+        roadRev = game.groundRev; roadOrigin = o; roadSize = r; roadCache = out
         return out
     }
 
@@ -161,13 +174,16 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
             if (dist < 0.05f) {
                 // choisir une tuile voisine marchable, de préférence en continuant tout droit
                 val cx = floor(v.x).toInt(); val cy = floor(v.y).toInt()
-                val dirs = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
-                val options = dirs.filter { walkableAt(cx + it[0], cy + it[1]) }
-                if (options.isEmpty()) {
+                var optionCount = 0
+                for (i in walkDirections.indices) {
+                    val dir = walkDirections[i]
+                    if (walkableAt(cx + dir[0], cy + dir[1])) walkOptions[optionCount++] = i
+                }
+                if (optionCount == 0) {
                     if (!walkableAt(cx, cy)) { respawn(v, rng) }
                     v.pause = 1.5f
                 } else {
-                    val pick = options[rng.nextInt(options.size)]
+                    val pick = walkDirections[walkOptions[rng.nextInt(optionCount)]]
                     v.tx = cx + pick[0] + 0.3f + rng.nextFloat() * 0.4f
                     v.ty = cy + pick[1] + 0.3f + rng.nextFloat() * 0.4f
                     if (rng.nextFloat() < 0.12f) v.pause = 0.5f + rng.nextFloat() * 2f
@@ -183,7 +199,10 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
         if (villagers.isNotEmpty() && villagers.none { it.gift } && rng.nextFloat() < dt / 70f) villagers[rng.nextInt(villagers.size)].gift = true
         val now = game.now()
         floaters.removeAll { now - it.t0 > 1500 }
-        daylight = daylightOverride ?: if (nightEnabled) daylightNow() else 1f
+        if (daylightCheckedAt == Long.MIN_VALUE || now - daylightCheckedAt >= 10_000L || now < daylightCheckedAt) {
+            ambientDaylight = daylightNow(); daylightCheckedAt = now
+        }
+        daylight = daylightOverride ?: if (nightEnabled) ambientDaylight else 1f
     }
 
     private fun respawn(v: Villager, rng: Random) {
@@ -213,6 +232,12 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
         if (sortedRev == game.rev) return
         sortedRev = game.rev
         sorted = game.objs.values.sortedWith(compareBy<Obj>({ it.x + it.w + it.y + it.d }, { it.x }))
+        stewardHomes.fill(null)
+        for (o in sorted) {
+            if (game.buildLeft(o) > 0L) continue
+            val post = when (o.def.cat) { Cat.FIELD, Cat.RANCH -> 0; Cat.SHOP -> 1; Cat.HOME -> 2; else -> -1 }
+            if (post >= 0 && stewardHomes[post] == null) stewardHomes[post] = o
+        }
         lights = ArrayList<FloatArray>().also { list ->
             for (o in sorted) {
                 val k = o.def.look.kind
@@ -299,17 +324,19 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
         }
     }
 
-    private fun spriteBox(o: Obj, s: Sprite): FloatArray {
+    private fun spriteBox(o: Obj, s: Sprite): RectF {
         val k = zoom / HamletArt.S
         val wx = (o.x - o.y) * 32f
         val wy = (o.x + o.y) * 16f
         val dx = sx(wx) - s.ox * k
         val dy = sy(wy) - s.oy * k
-        return floatArrayOf(dx, dy, dx + s.bmp.width * k, dy + s.bmp.height * k)
+        objectBounds.set(dx, dy, dx + s.bmp.width * k, dy + s.bmp.height * k)
+        return objectBounds
     }
 
     private fun drawObjects(c: Canvas) {
-        val vs = villagers.sortedBy { it.x + it.y }
+        orderedVillagers.clear(); orderedVillagers.addAll(villagers); orderedVillagers.sortWith(villagerDepth)
+        val vs = orderedVillagers
         var vi = 0
         val k = zoom / HamletArt.S
         for (o in sorted) {
@@ -318,13 +345,14 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
             while (vi < vs.size && vs[vi].x + vs[vi].y < key - 0.5f) { drawVillager(c, vs[vi]); vi++ }
             val s = art.forObj(o, game)
             val b = spriteBox(o, s)
-            if (b[2] < 0 || b[3] < 0 || b[0] > width || b[1] > height) continue
+            if (b.right < 0 || b.bottom < 0 || b.left > width || b.top > height) continue
             mat.reset()
             mat.postScale(k, k)
-            mat.postTranslate(b[0], b[1])
+            mat.postTranslate(b.left, b.top)
             c.drawBitmap(s.bmp, mat, bmpPaint)
             if (o.def.cat == Cat.RANCH && game.buildLeft(o) == 0L) drawAnimals(c, o)
             drawObjectEffects(c, o)
+            drawSteward(c, o)
             if (!photoMode) drawBubble(c, o, b, s)
         }
         while (vi < vs.size) { drawVillager(c, vs[vi]); vi++ }
@@ -366,6 +394,7 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
             c.scale(if (o.flip) -zoom else zoom, zoom)
             val iso = buildingIso?.takeIf { it.c === c } ?: Iso(c, 0f, 0f).also { buildingIso = it }
             HamletArtAdventure.animate(iso, o.def.look.n, time + o.id * .37f, daylight, effectsEnabled)
+            drawGarrison(iso, o)
             c.restoreToCount(save)
         }
         if (effectsEnabled && (kind == "h_cot" || kind == "h_farm" || kind == "s_shop")) {
@@ -402,6 +431,38 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
             fillP.color = Iso.opaque(0xF5D379)
             for (i in 1 until o.tier) c.drawCircle(px - 6 * zoom + i * 5 * zoom, py - 5 * zoom, 2 * zoom, fillP)
         }
+    }
+
+    /** The selected party lives in the village; these are presentation-only courtyard poses. */
+    private fun drawGarrison(iso: Iso, o: Obj) {
+        val slot = when (o.def.look.n) { 0 -> 2; 4 -> 1; 5 -> 0; else -> return }
+        val adventure = game.adventure
+        val heroId = adventure.teams[adventure.selectedTeam].getOrNull(slot) ?: return
+        if (heroId in game.stewardship.posts) return
+        val hero = adventure.heroes.getOrNull(heroId)?.takeIf { it.owned } ?: return
+        val x = when (o.def.look.n) { 0 -> .88f; 4 -> 2.56f; else -> 1.5f }
+        val y = if (o.def.look.n == 0) 2.86f else 2.57f
+        iso.oval(x, y, .14f, 7f, 2.5f, Iso.withAlpha(0x293D36, .25f))
+        HamletCharacterArt.draw(iso.c, true, hero.id, iso.px(x, y), iso.py(x, y, .14f), 32f,
+            if (effectsEnabled) time + hero.id * .37f else 0f,
+            if (o.def.look.n == 4 && effectsEnabled) HamletCharacterArt.Pose.ATTACK else HamletCharacterArt.Pose.IDLE)
+    }
+
+    private fun drawSteward(c: Canvas, o: Obj) {
+        val post = stewardHomes.indexOfFirst { it === o }
+        if (post < 0) return
+        val heroId = game.stewardship.posts[post]
+        val hero = game.adventure.heroes.getOrNull(heroId)?.takeIf { it.owned } ?: return
+        val save = c.save()
+        c.translate(sx((o.x - o.y) * 32f), sy((o.x + o.y) * 16f))
+        c.scale(if (o.flip) -zoom else zoom, zoom)
+        val iso = buildingIso?.takeIf { it.c === c } ?: Iso(c, 0f, 0f).also { buildingIso = it }
+        val x = o.def.w * .72f; val y = o.def.d + .08f
+        iso.oval(x, y, 0f, 7f, 2.5f, Iso.withAlpha(0x293D36, .25f))
+        HamletCharacterArt.draw(c, true, hero.id, iso.px(x, y), iso.py(x, y, 0f), 32f,
+            if (effectsEnabled) time + hero.id * .37f else 0f,
+            if (effectsEnabled && post == 0) HamletCharacterArt.Pose.CAST else HamletCharacterArt.Pose.IDLE)
+        c.restoreToCount(save)
     }
 
     private fun drawAtmosphere(c: Canvas) {
@@ -452,16 +513,26 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
 
     // ------------------------------------------------------------------ bulles
 
-    private fun drawBubble(c: Canvas, o: Obj, box: FloatArray, s: Sprite) {
+    private fun bubbleVisible(o: Obj, status: Status): Boolean = when (status) {
+        Status.NONE -> o.def.look.kind == "asset" && game.buildLeft(o) == 0L
+        Status.ORDER_BUSY, Status.GROWING, Status.PRODUCING -> false
+        else -> true
+    }
+
+    private fun bubbleY(o: Obj, top: Float): Float =
+        top - 16f * zoom + if (effectsEnabled) sin(time * 3.2f + o.id) * 3f * zoom else 0f
+
+    private fun bubbleRadius() = 17f * zoom.coerceIn(0.6f, 1.6f)
+
+    private fun drawBubble(c: Canvas, o: Obj, box: RectF, s: Sprite) {
         val st = game.status(o)
-        if (st == Status.NONE || st == Status.ORDER_BUSY || st == Status.GROWING || st == Status.PRODUCING) return
+        if (!bubbleVisible(o, st)) return
         val def = o.def
         val cxw = (o.x + o.w / 2f - (o.y + o.d / 2f)) * 32f
         val bx = sx(cxw)
-        val top = box[1] + s.topRow * (zoom / HamletArt.S)
-        val bob = if (effectsEnabled) sin(time * 3.2f + o.id) * 3f * zoom else 0f
-        val by = top - 16f * zoom + bob
-        val r = 17f * zoom.coerceIn(0.6f, 1.6f)
+        val top = box.top + s.topRow * (zoom / HamletArt.S)
+        val by = bubbleY(o, top)
+        val r = bubbleRadius()
         val gold = st == Status.TAX || st == Status.ORDER_DONE || st == Status.RIPE || st == Status.GIFT || st == Status.PRODUCT
         val back = when {
             st == Status.WITHERED -> 0xFFA8A090.toInt()
@@ -497,6 +568,8 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
             Status.ORDER_DONE -> HamletGlyphs.draw(c, def.glyph, bx, by, r * 1.3f, 0xC8392E)
             Status.FEED -> HamletGlyphs.draw(c, "leaf", bx, by, r * 1.3f, 0x609445)
             Status.PRODUCT -> HamletGlyphs.draw(c, HamletLife.produce.getValue(o.t).glyph, bx, by, r * 1.3f)
+            Status.NONE -> HamletGlyphs.draw(c, def.glyph, bx, by, r * 1.3f, 0x397F83)
+            Status.BUILDING -> HamletGlyphs.draw(c, "hourglass", bx, by, r * 1.3f, 0x866A47)
             else -> {}
         }
     }
@@ -518,7 +591,7 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
         if (game.objs[o.id] !== o) return
         diamondPath(o.x.toFloat(), o.y.toFloat(), o.w.toFloat(), o.d.toFloat())
         fillP.shader = null
-        fillP.color = Color.argb((40 + 25 * sin(time * 5f)).toInt(), 255, 240, 120)
+        fillP.color = Color.argb((40 + if (effectsEnabled) 25 * sin(time * 5f) else 0f).toInt(), 255, 240, 120)
         c.drawPath(path, fillP)
         strokeP.color = Color.argb(230, 255, 240, 120)
         strokeP.strokeWidth = 2.6f * density / 2.5f
@@ -570,10 +643,13 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
             val px = sx((l[0] - l[1]) * 32f); val py = sy((l[0] + l[1]) * 16f - l[2] * Iso.ZH)
             val r = 70f * zoom * l[3]
             if (px < -r || px > width + r || py < -r || py > height + r) continue
-            glowP.shader = RadialGradient(px, py, r, Color.argb((dark * 190).toInt(), 255, 200, 110), Color.argb(0, 255, 180, 80), Shader.TileMode.CLAMP)
+            lightMatrix.setScale(r, r); lightMatrix.postTranslate(px, py)
+            warmLight.setLocalMatrix(lightMatrix)
+            glowP.shader = warmLight; glowP.alpha = (dark * 255).toInt()
             c.drawCircle(px, py, r, glowP)
         }
         glowP.shader = null
+        glowP.alpha = 255
     }
 
     // ------------------------------------------------------------------ texte flottant
@@ -614,9 +690,30 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
 
     // ------------------------------------------------------------------ toucher
 
+    /** Action markers take priority over silhouettes and passing villagers. */
+    fun actionAt(px: Float, py: Float): Obj? {
+        ensureSorted()
+        val k = zoom / HamletArt.S
+        var nearest: Obj? = null
+        var nearestDistance = Float.POSITIVE_INFINITY
+        // The action marker is part of the building's touch target, even above its roof.
+        if (!photoMode) for (i in sorted.indices.reversed()) {
+            val o = sorted[i]
+            if (o === hidden || !bubbleVisible(o, game.status(o))) continue
+            val s = art.forObj(o, game)
+            val b = spriteBox(o, s)
+            val bx = sx((o.x + o.w / 2f - o.y - o.d / 2f) * 32f)
+            val by = bubbleY(o, b.top + s.topRow * k)
+            val r = max(bubbleRadius(), 20f * density)
+            val distance = (px - bx) * (px - bx) + (py - by) * (py - by)
+            if (distance <= r * r && distance < nearestDistance) { nearest = o; nearestDistance = distance }
+        }
+        return nearest
+    }
+
     /** L'objet visible sous un doigt : on teste les pixels du dessin, pas seulement l'empreinte au sol. */
     fun objectAt(px: Float, py: Float): Obj? {
-        ensureSorted()
+        actionAt(px, py)?.let { return it }
         val k = zoom / HamletArt.S
         for (i in sorted.indices.reversed()) {
             val o = sorted[i]
@@ -624,9 +721,9 @@ class HamletRenderer(val game: HamletGame, val art: HamletArt) {
             // Wildlife is animated directly in the scene; use its resting silhouette for touch picking.
             val s = if (HamletArtWildlife.handles(o.def) && game.buildLeft(o) == 0L) art.forDef(o.def, o.flip) else art.forObj(o, game)
             val b = spriteBox(o, s)
-            if (px < b[0] || py < b[1] || px >= b[2] || py >= b[3]) continue
-            val ix = ((px - b[0]) / k).toInt().coerceIn(0, s.bmp.width - 1)
-            val iy = ((py - b[1]) / k).toInt().coerceIn(0, s.bmp.height - 1)
+            if (!b.contains(px, py)) continue
+            val ix = ((px - b.left) / k).toInt().coerceIn(0, s.bmp.width - 1)
+            val iy = ((py - b.top) / k).toInt().coerceIn(0, s.bmp.height - 1)
             if (Color.alpha(s.bmp.getPixel(ix, iy)) > 40) return o
         }
         val t = tileAt(px, py)

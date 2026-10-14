@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_frontier_go">Return to the frontier</string>
+    <string name="hamlet_a_owned_filter">Recruited heroes only · %1$d / %2$d</string>
+    <string name="hamlet_a_recruit_duplicate_cost">Recruit again · 3 invitations → 1 fragment</string>
+    <string name="hamlet_a_next_stage">Play the next stage</string>
+    <string name="hamlet_a_battle_loot">Loot: %1$d food · %2$d timber · %3$d stone · %4$d ore\n%5$d books · %6$d crystals · %7$d runes · %8$d invitations\nVillage: +%9$d coins · +%10$d s construction work</string>
+    <string name="hamlet_collect_direct_hint">Tap a golden reward in the village to collect it directly. Collect all unlocks after chapter %1$d.</string>
+    <string name="hamlet_expedition_invitation_help">Expeditions award one invitation on the first visit and every fifth trip, up to two per day. Other supplies always remain available.</string>
+    <string name="hamlet_hero_target_requirement">Targeted recruitment: route %1$d · village chapter %2$d. A lucky invitation can recruit this hero earlier.</string>
+    <string name="hamlet_hero_target_cost">Recruit this hero · %1$d invitations</string>
+    <string name="hamlet_hero_duplicate_cost">Recruit again · %1$d invitations → %2$d fragment of %3$s</string>
+    <string name="hamlet_hero_personal_fragments">%1$s fragments: %2$d. These fragments only improve or unlock this hero.</string>
+    <string name="hamlet_hero_focus">Prioritize %1$s fragments in adventure</string>
+    <string name="hamlet_hero_focus_clear">Stop prioritizing %1$s</string>
+    <string name="hamlet_hero_focus_help">Focus directs future adventure fragment rewards to this owned hero. Recruitment duplicates always belong to the hero drawn.</string>
+    <string name="hamlet_hero_star_preview">Next star %1$d: +%2$.1f%% health and attack, including equipment.</string>
+    <string name="hamlet_hero_stars_max">%1$d stars reached. Further personal fragments can improve this hero’s traits.</string>
+    <string name="hamlet_hero_recruitment_brief">36 heroes to discover. The first copy recruits the hero; every duplicate gives one fragment of that exact character.</string>
+    <string name="hamlet_hero_recruitment_rules">Rarities, odds and guarantees</string>
+</resources>

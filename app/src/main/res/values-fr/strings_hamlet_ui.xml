@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_title">Mon hameau</string>
-    <string name="hamlet_description">Construis un village, cultive ses champs et accueille ses habitants</string>
+    <string name="hamlet_description">Bâtis ton village, recrute tes héros et explore de nouvelles terres</string>
     <string name="hamlet_home">Centrer</string>
     <string name="hamlet_stats">Niveau %1$d · %2$d pièces · %3$d gemmes · %4$d habitants</string>
     <string name="hamlet_build">Construire</string>
@@ -9,7 +9,7 @@
     <string name="hamlet_quest">Quête</string>
     <string name="hamlet_land">Agrandir le terrain</string>
     <string name="hamlet_hall">Améliorer la halle</string>
-    <string name="hamlet_hint">Touche un bâtiment pour ses actions · Construis pour agrandir le village</string>
+    <string name="hamlet_hint">Touche une récompense dorée pour la ramasser · Construis pour agrandir le village</string>
     <string name="hamlet_selected">%1$s · %2$s</string>
     <string name="hamlet_placing">Déplace le bâtiment fantôme, puis valide son emplacement</string>
     <string name="hamlet_brushing">Glisse sur le village pour peindre le sol</string>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_recruitment_title">The travellers’ guild</string>
+    <string name="hamlet_a_recruitment_help" formatted="false">36 heroes: 12 common, 12 rare, 8 epic, 3 legendary and 1 mythic. Each invitation draws one hero: Common 70%, Rare 25%, Epic 4.75%, Legendary 0.2%, Mythic 0.05%. The first copy welcomes the hero; every further copy gives one fragment of that exact character. Guarantees: Epic or better within 40 draws, Legendary or better within 600, Mythic within 2,000. Targeted recruitment costs 3 / 3 / 12 / 240 / 600 invitations and requires the route and village chapter shown. Enough personal fragments offer another path. Stars cost 10, then 25, then 50 fragments and more; they strengthen your original heroes throughout the game.</string>
+    <string name="hamlet_a_recruitment_progress">Draws: %1$d · Next guarantees in %2$d / %3$d / %4$d draws (Epic / Legendary / Mythic)</string>
+    <string name="hamlet_a_summon_one">Welcome a traveller · 1 invitation</string>
+    <string name="hamlet_a_summon_ten">Welcome ten travellers · 10 invitations</string>
+    <string name="hamlet_a_summon_results">Travellers welcomed</string>
+    <string name="hamlet_a_recruit_new">%1$s · %2$s · New hero!</string>
+    <string name="hamlet_a_recruit_duplicate">%1$s · %2$s · +%3$d fragment</string>
+    <string name="hamlet_a_recruit_pity">Guaranteed rarity</string>
+    <string name="hamlet_a_recruit_shards_cost">Recruit with %1$d fragments</string>
+    <string name="hamlet_a_shards_progress">Fragments collected: %1$d / %2$d</string>
+    <string name="hamlet_a_new_recruit_at">May arrive with an invitation now. Guaranteed targeted recruitment from route %1$d.</string>
+    <string name="hamlet_a_sweep_cost">Quick expedition · %1$d food</string>
+    <string name="hamlet_a_sweep_help">A route completed with three stars can be gathered instantly. Spend food to prepare the expedition, receive normal repeat loot and help village construction. New routes still require exploration.</string>
+    <string name="hamlet_a_auto_formation">Prepare a balanced formation</string>
+    <string name="hamlet_a_inn_recruitment">Your highest completed inn rank produces one invitation every 12 hours (rank 1), 9 hours 36 minutes (rank 2), or 8 hours (rank 3). Village work adds invitations: progress %1$d / 120. Invitations remain stored until used.</string>
+    <string name="hamlet_a_hero_12">Rowan</string>
+    <string name="hamlet_a_hero_13">Aster</string>
+    <string name="hamlet_a_hero_14">Mira</string>
+    <string name="hamlet_a_hero_15">Sylva</string>
+    <string name="hamlet_a_hero_16">Lucian</string>
+    <string name="hamlet_a_hero_17">Flint</string>
+    <string name="hamlet_a_hero_18">Willow</string>
+    <string name="hamlet_a_hero_19">Vesper</string>
+    <string name="hamlet_a_hero_20">Bram</string>
+    <string name="hamlet_a_hero_21">Reed</string>
+    <string name="hamlet_a_hero_22">Celeste</string>
+    <string name="hamlet_a_hero_23">Ember</string>
+    <string name="hamlet_a_hero_24">Hazel</string>
+    <string name="hamlet_a_hero_25">Aurel</string>
+    <string name="hamlet_a_hero_26">Pyra</string>
+    <string name="hamlet_a_hero_27">Iris</string>
+    <string name="hamlet_a_hero_28">Lyra</string>
+    <string name="hamlet_a_hero_29">Ferris</string>
+    <string name="hamlet_a_hero_30">Thorne</string>
+    <string name="hamlet_a_hero_31">Aurora</string>
+    <string name="hamlet_a_hero_32">Atlas</string>
+    <string name="hamlet_a_hero_33">Elder</string>
+    <string name="hamlet_a_hero_34">Nova</string>
+    <string name="hamlet_a_hero_35">Vulcan</string>
+    <string name="hamlet_a_hero_story_12">An orchard keeper who raises a living shield. His skills also restore the most wounded ally, making him a forgiving first-line guardian.</string>
+    <string name="hamlet_a_hero_story_13">A watchtower scout who marks dangerous foes. Her skills weaken one enemy, or three with her ultimate, reducing their attack.</string>
+    <string name="hamlet_a_hero_story_14">The village infirmary’s travelling apothecary. She heals and removes poison, weakness and stuns from the most wounded ally; her ultimate cleanses the whole team.</string>
+    <string name="hamlet_a_hero_story_15">A woodland singer who knows every planting song. Her inspiration also gives an extra heal to the most wounded ally.</string>
+    <string name="hamlet_a_hero_story_16">A lantern-bearing gatekeeper. His skills add shields to both front-line allies, protecting a fragile partner as well as himself.</string>
+    <string name="hamlet_a_hero_story_17" formatted="false">A crossbow maker who tests every bolt. His skills strike again at the weakest enemy below 35% health.</string>
+    <string name="hamlet_a_hero_story_18">A keeper of winter seeds. Her magic briefly freezes one enemy, or three with her ultimate, interrupting their attacks.</string>
+    <string name="hamlet_a_hero_story_19">A dusk courier who slips past the front line. Her skills also weaken enemy attacks, buying time for village healers.</string>
+    <string name="hamlet_a_hero_story_20">A smith whose hammer keeps marching time. His inspiring songs also shield both front-line allies.</string>
+    <string name="hamlet_a_hero_story_21">A fencing teacher from the reed beds. Each skill restores a little health to the most wounded ally, keeping long encounters manageable.</string>
+    <string name="hamlet_a_hero_story_22">A star gardener who calls little celestial companions. Her summons are backed by shields for the front line.</string>
+    <string name="hamlet_a_hero_story_23" formatted="false">A discreet locksmith who protects caravan routes. Her skills strike again at a foe below 35% health, finishing wounded enemies behind the line.</string>
+    <string name="hamlet_a_hero_story_24">A millwright who builds ingenious traps. Alongside her machinery, her skills weaken enemy attacks.</string>
+    <string name="hamlet_a_hero_story_25">A sworn defender of the market road. His skills cleanse the most wounded ally; his ultimate removes poison, weakness and stuns from the entire team.</string>
+    <string name="hamlet_a_hero_story_26">A kiln keeper who turns sparks into spells. Her fire also weakens the enemy, reducing pressure on the village guard.</string>
+    <string name="hamlet_a_hero_story_27">A botanist whose herbarium never closes. Her healing skills remove poison, weakness and stuns; her ultimate cleanses all allies.</string>
+    <string name="hamlet_a_hero_story_28">An observatory inventor with a clockwork frost lens. Her skills briefly freeze foes in addition to stunning them with machinery.</string>
+    <string name="hamlet_a_hero_story_29">A forge keeper who awakens little metal guardians. Every summon also brings shields to both front-line allies.</string>
+    <string name="hamlet_a_hero_story_30" formatted="false">The guardian of the oldest forest path. His arrows strike again at a foe below 35% health; combine him with area damage to finish weakened groups.</string>
+    <string name="hamlet_a_hero_story_31">A singer whose dawn chorus clears the air. Her skills cleanse the most wounded ally; her ultimate frees the whole team from poison, weakness and stuns.</string>
+    <string name="hamlet_a_hero_story_32">The living cornerstone of the village walls. His shields are accompanied by a small heal for the most wounded ally.</string>
+    <string name="hamlet_a_hero_story_33">An ancient shepherd of woodland spirits. His summons also restore the most wounded ally, supporting the team in long fights.</string>
+    <string name="hamlet_a_hero_story_34">An astronomer who catches falling stars in winter glass. Her skills freeze one enemy; her ultimate freezes three.</string>
+    <string name="hamlet_a_hero_story_35" formatted="false">A master smith who forged his own duelling blade. His skills strike again at the weakest foe below 35% health.</string>
+</resources>

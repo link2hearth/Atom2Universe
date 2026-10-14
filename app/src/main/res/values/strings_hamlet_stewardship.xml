@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_s_title">Village journal</string>
+    <string name="hamlet_s_today">Today</string>
+    <string name="hamlet_s_posts">Village duties</string>
+    <string name="hamlet_s_return">A moment in the village</string>
+    <string name="hamlet_s_ready">%1$d collections ready · %2$d / %3$d heroes recruited</string>
+    <string name="hamlet_s_plan_trip">Prepare an expedition</string>
+    <string name="hamlet_s_trip_wait">Expedition returns in %1$s</string>
+    <string name="hamlet_s_cycle">Harvests feed your heroes; adventures fund your village and speed up construction. Send an expedition before leaving, or keep exploring.</string>
+    <string name="hamlet_s_daily_help">Optional tasks · reset in %1$s. No streak to maintain: play at your own pace. Each reward also includes 12 books and village coins.</string>
+    <string name="hamlet_s_task_village">A thriving village</string>
+    <string name="hamlet_s_task_adventure">Beyond the gate</string>
+    <string name="hamlet_s_task_growth">Grow together</string>
+    <string name="hamlet_s_task_village_help">Harvest crops, collect produce or taxes, or deliver workshop orders.</string>
+    <string name="hamlet_s_task_adventure_help">Win battles, gather on the campaign map, complete quick raids, or bring expeditions home.</string>
+    <string name="hamlet_s_task_growth_help">Recruit or improve heroes, upgrade village buildings, or study village research.</string>
+    <string name="hamlet_s_task_progress">%1$d / %2$d · Reward: %3$d recruitment invitations</string>
+    <string name="hamlet_s_go">Go there</string>
+    <string name="hamlet_s_chest">Village celebration</string>
+    <string name="hamlet_s_chest_help">Claim all three tasks: 2 invitations, 8 crystals, 3 minutes of construction work and 200 coins.</string>
+    <string name="hamlet_s_chapters">Chapters, expeditions and village research</string>
+    <string name="hamlet_s_posts_help" formatted="false">Give your heroes a village duty. They remain available for combat. One hero per duty; change duties freely. Matching roles grant an extra 5%. Levels and stars improve the bonus up to 25%.</string>
+    <string name="hamlet_s_post_0">Gardens and farms</string>
+    <string name="hamlet_s_post_1">Crafts and supplies</string>
+    <string name="hamlet_s_post_2">Village stewardship</string>
+    <string name="hamlet_s_post_help_0">Boost crop, orchard and ranch income, and passive food production. Rangers, healers and summoners excel here.</string>
+    <string name="hamlet_s_post_help_1">Boost workshop income, and passive timber, stone and ore production. Guardians, engineers and duelists excel here.</string>
+    <string name="hamlet_s_post_help_2">Boost home income and passive book production. Bards, mages and rogues excel here.</string>
+    <string name="hamlet_s_unassigned">No hero assigned</string>
+    <string name="hamlet_s_assignment">%1$s · Yield +%2$d%%</string>
+    <string name="hamlet_s_assign">Choose a hero</string>
+    <string name="hamlet_s_choice">%1$s · +%2$d%% yield</string>
+    <string name="hamlet_s_unassign">Clear this duty</string>
+    <string name="hamlet_s_expedition_link">Your active combat team also helps expeditions: +%1$d scouting power, −%2$d%% travel time. Travel time is fixed at departure; heroes remain available.</string>
+    <string name="hamlet_s_expedition_loot">Also returns %1$d food, %2$d ore, %3$d books and %4$d invitation(s) for your heroes.</string>
+    <string name="hamlet_s_facility_open">Manage this building</string>
+    <string name="hamlet_s_village_bonus">\nHero duty bonus: +%1$d%% income.</string>
+</resources>

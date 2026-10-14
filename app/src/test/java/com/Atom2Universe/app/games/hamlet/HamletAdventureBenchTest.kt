@@ -81,7 +81,8 @@ class HamletAdventureBenchTest {
             listOf(r.seed, r.policy, r.hours, r.stages, r.battles, r.losses, r.gathers, r.averageLevel, r.owned, r.firstBossMinutes, r.allHeroesMinutes, r.food).joinToString(",")
         })
         for ((policy, rows) in results.groupBy { it.policy }) println("$policy: stages ${rows.minOf { it.stages }}..${rows.maxOf { it.stages }}, heroes ${rows.minOf { it.owned }}..${rows.maxOf { it.owned }}, boss ${rows.minOf { it.firstBossMinutes }}..${rows.maxOf { it.firstBossMinutes }} min")
-        assertTrue(results.filter { it.policy == "active" }.all { it.stages >= 90 && it.owned == 12 })
+        // This legacy policy never summons: only four starters and three campaign rescues join it.
+        assertTrue(results.filter { it.policy == "active" }.all { it.stages >= 90 && it.owned == 7 && it.allHeroesMinutes < 0 })
         assertTrue(results.filter { it.policy == "four_visits" }.all { it.stages > 120 })
         assertTrue(results.filter { it.policy == "basic" }.all { it.stages < 40 })
     }

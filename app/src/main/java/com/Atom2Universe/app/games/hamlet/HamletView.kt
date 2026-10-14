@@ -89,7 +89,7 @@ class HamletView(context: Context, val game: HamletGame, val art: HamletArt) : V
             if (lastVillagerSync != game.rev) { lastVillagerSync = game.rev; renderer.syncVillagers(rng) }
             renderer.update(dt, rng)
             invalidate()
-            postOnAnimation(this)
+            if (renderer.effectsEnabled) postOnAnimation(this) else postDelayed(this, 33L)
         }
     }
 
@@ -375,6 +375,7 @@ class HamletView(context: Context, val game: HamletGame, val art: HamletArt) : V
         if (photoMode) return
         when (val m = mode) {
             is HamletMode.Browse -> {
+                renderer.actionAt(px, py)?.let { host?.onTapObject(it); return }
                 tipVillager?.let { v ->
                     if (renderer.villagerAt(px, py) === v) {
                         rewardAnchor = v

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_armory_title">Armory and equipment sets</string>
+    <string name="hamlet_armory_help">Forge actual pieces for four slots, choose a tactical set and lend equipment freely between heroes. Two matching pieces activate a first bonus; four add another. Mixing two pairs also works, even across rarities. Permanent training and old gear upgrades remain on each hero. Pieces improve instantly up to level 10. Unequip a piece before dismantling it; this returns half its crafting and enhancement materials.</string>
+    <string name="hamlet_armory_inventory">%1$d pieces · %2$d equipped</string>
+    <string name="hamlet_armory_empty">The armory is empty. Complete a village forge, choose a recipe and craft your first piece.</string>
+    <string name="hamlet_armory_forge_rank">Completed forge rank: %1$d / 3</string>
+    <string name="hamlet_armory_requirement">%1$s requires forge rank %2$d and campaign route %3$d.</string>
+    <string name="hamlet_armory_craft">Craft this piece</string>
+    <string name="hamlet_armory_cost">%1$d ore · %2$d runes · %3$d crystals · %4$d timber · %5$d stone</string>
+    <string name="hamlet_armory_piece">%1$s · %2$s · %3$s · Level %4$d</string>
+    <string name="hamlet_armory_piece_id">Piece #%1$d</string>
+    <string name="hamlet_armory_reserve">Available in the armory</string>
+    <string name="hamlet_armory_owner">Equipped by %1$s</string>
+    <string name="hamlet_armory_transfer">Give to %1$s</string>
+    <string name="hamlet_armory_transfer_help">This moves the piece from its current owner. Replaced equipment returns to the armory.</string>
+    <string name="hamlet_armory_equip">Choose a hero</string>
+    <string name="hamlet_armory_unequip">Return to the armory</string>
+    <string name="hamlet_armory_enhance">Enhance this piece</string>
+    <string name="hamlet_armory_quality">Reforge as %1$s</string>
+    <string name="hamlet_armory_quality_help">Reforging keeps this piece’s level, set, identity and owner. It pays the difference in recipe and enhancement materials, plus a reforging surcharge. Your early investment stays useful; high-quality gear still needs the matching forge rank and campaign progress.</string>
+    <string name="hamlet_armory_quality_max">Mythic quality reached</string>
+    <string name="hamlet_armory_max_level">Maximum piece level reached</string>
+    <string name="hamlet_armory_salvage">Dismantle this piece</string>
+    <string name="hamlet_armory_salvage_return">Materials recovered: %1$s</string>
+    <string name="hamlet_armory_salvage_help">Only unequipped pieces can be dismantled. The piece is consumed; recovered materials are always less than the amount spent.</string>
+    <string name="hamlet_armory_set_count">%1$s · %2$d / 4 pieces</string>
+    <string name="hamlet_armory_active_bonus">Equipment and set bonuses</string>
+    <string name="hamlet_armory_recommendation">Suggested starting set for this hero: %1$s. Mixing sets can suit another tactic.</string>
+    <string name="hamlet_armory_stats">HP +%1$d%% · Attack +%2$d%% · Armor +%3$d\nCritical +%4$d%% · Haste +%5$d%% · Skills +%6$d%%\nHealing +%7$d%% · Lifesteal %8$d%% · Armor penetration %9$d%% · Opening shield %10$d%%</string>
+    <string name="hamlet_armory_set_hearthward">Hearthguard</string>
+    <string name="hamlet_armory_set_hunt">Hunter</string>
+    <string name="hamlet_armory_set_gale">Gale</string>
+    <string name="hamlet_armory_set_grove">Springkeeper</string>
+    <string name="hamlet_armory_set_blood">Redthorn</string>
+    <string name="hamlet_armory_set_storm">Stormsmith</string>
+    <string name="hamlet_armory_set_help_hearthward" formatted="false">For the front line: pieces add health, armor and an opening shield. Two pieces: +8% HP. Four: an additional +8 armor and a shield worth 12% of maximum HP.</string>
+    <string name="hamlet_armory_set_help_hunt" formatted="false">For focused damage: pieces add attack and critical chance. Two pieces: +4% critical chance. Four: an additional +10% attack and +2% critical chance.</string>
+    <string name="hamlet_armory_set_help_gale" formatted="false">For frequent attacks and skills: pieces add haste. Two pieces: +4% haste. Four: an additional +4% haste and +8% skill strength.</string>
+    <string name="hamlet_armory_set_help_grove" formatted="false">For healers and support: pieces improve healing and health. Two pieces: +12% healing. Four: an additional +18% healing and an opening shield worth 6% of maximum HP.</string>
+    <string name="hamlet_armory_set_help_blood" formatted="false">For sustained duelling: pieces convert some damage dealt into personal healing. Two pieces: +5% lifesteal. Four: an additional +8% lifesteal and +6% HP.</string>
+    <string name="hamlet_armory_set_help_storm" formatted="false">For armored opponents: pieces penetrate armor and improve skills. Two pieces: ignore 8% of armor. Four: an additional +15% skill strength and 6% armor penetration.</string>
+    <string name="hamlet_armory_rarity_0">Rare</string>
+    <string name="hamlet_armory_rarity_1">Epic</string>
+    <string name="hamlet_armory_rarity_2">Legendary</string>
+    <string name="hamlet_armory_rarity_3">Mythic</string>
+</resources>

@@ -13,6 +13,9 @@ object HamletSave {
         val root = JSONObject()
         root.put("version", 5)
         root.put("adventure", HamletAdventureSave.encode(g.adventure))
+        root.put("stewardship", g.stewardship.encode())
+        root.put("armory", g.armory.encode())
+        root.put("shardShop", g.shardShop.encode())
         root.put("neighbors", g.neighbors.encode())
         root.put("recentBuilds", JSONArray(g.buildHistory.recent))
         root.put("chronicle", JSONArray().also { a -> g.chronicle.rows.forEach { e -> a.put(JSONObject()
@@ -25,7 +28,8 @@ object HamletSave {
         root.put("journey", JSONObject().put("chapter", j.chapter).put("supplies", j.supplies)
             .put("research", JSONArray(j.research.toList())).put("companions", JSONArray(j.companions.toList()))
             .put("party", JSONArray(j.party.toList())).put("explored", JSONArray(j.explored.toList()))
-            .put("expedition", j.expedition).put("departure", j.departure).put("arrival", j.arrival))
+            .put("expedition", j.expedition).put("departure", j.departure).put("arrival", j.arrival)
+            .put("invitationDay", j.invitationDay).put("invitationsToday", j.invitationsToday))
         root.put("workSeconds", g.workSeconds).put("workStep", g.workStep).put("workTool", g.workTool)
         root.put("coins", g.coins).put("gems", g.gems).put("xp", g.xp)
         root.put("hall", g.hall).put("expand", g.expand).put("sandbox", g.sandbox)
@@ -77,6 +81,9 @@ object HamletSave {
         candidate.dailyBase.copyInto(g.dailyBase)
         g.journey.copyFrom(candidate.journey)
         g.adventure.copyFrom(candidate.adventure)
+        g.stewardship.copyFrom(candidate.stewardship)
+        g.armory.copyFrom(candidate.armory)
+        g.shardShop.copyFrom(candidate.shardShop)
         g.neighbors.copyFrom(candidate.neighbors)
         g.realms.copyFrom(candidate.realms)
         g.buildHistory.clear()
@@ -107,6 +114,8 @@ object HamletSave {
         root.optJSONObject("journey")?.let { j ->
             journey.chapter = j.optInt("chapter").coerceIn(0, HamletJourney.chapters.size)
             journey.supplies = j.optInt("supplies").coerceIn(0, 1_000_000)
+            journey.invitationDay = j.optLong("invitationDay", -1).coerceAtLeast(-1)
+            journey.invitationsToday = j.optInt("invitationsToday").coerceIn(0, 2)
             fun array(key: String, dest: IntArray, lo: Int, hi: Int) {
                 j.optJSONArray(key)?.let { a -> for (i in dest.indices) dest[i] = a.optInt(i, dest[i]).coerceIn(lo, hi) }
             }
@@ -199,6 +208,9 @@ object HamletSave {
                 g.adventure.pets[i] = maxOf(1, g.adventure.pets[i]); g.adventure.relics[i] = maxOf(1, g.adventure.relics[i])
             }
         }
+        g.stewardship.decode(root.optJSONObject("stewardship"))
+        g.armory.decode(root.optJSONObject("armory"))
+        g.shardShop.decode(root.optJSONObject("shardShop"))
         g.bump()
         return true
     }

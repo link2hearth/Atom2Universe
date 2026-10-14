@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_recruitment_title">La guilde des voyageurs</string>
+    <string name="hamlet_a_recruitment_help" formatted="false">36 héros : 12 communs, 12 rares, 8 épiques, 3 légendaires et 1 mythique. Une invitation tire un héros : commun 70 %, rare 25 %, épique 4,75 %, légendaire 0,2 %, mythique 0,05 %. La première copie accueille le héros ; chaque copie suivante donne un fragment de ce personnage précis. Garanties : épique ou mieux en 40 tirages, légendaire ou mieux en 600, mythique en 2 000. Le recrutement ciblé coûte 3 / 3 / 12 / 240 / 600 invitations et demande la route et le chapitre du village affichés. Assez de fragments personnels offrent une autre voie. Les étoiles coûtent 10, puis 25, puis 50 fragments et davantage ; elles renforcent tes héros d’origine durant toute la partie.</string>
+    <string name="hamlet_a_recruitment_progress">Tirages : %1$d · Prochaines garanties dans %2$d / %3$d / %4$d tirages (épique / légendaire / mythique)</string>
+    <string name="hamlet_a_summon_one">Accueillir un voyageur · 1 invitation</string>
+    <string name="hamlet_a_summon_ten">Accueillir dix voyageurs · 10 invitations</string>
+    <string name="hamlet_a_summon_results">Voyageurs accueillis</string>
+    <string name="hamlet_a_recruit_new">%1$s · %2$s · Nouveau héros !</string>
+    <string name="hamlet_a_recruit_duplicate">%1$s · %2$s · +%3$d fragment</string>
+    <string name="hamlet_a_recruit_pity">Rareté garantie</string>
+    <string name="hamlet_a_recruit_shards_cost">Recruter avec %1$d fragments</string>
+    <string name="hamlet_a_shards_progress">Fragments réunis : %1$d / %2$d</string>
+    <string name="hamlet_a_new_recruit_at">Peut arriver avec une invitation dès maintenant. Recrutement ciblé garanti à partir de la route %1$d.</string>
+    <string name="hamlet_a_sweep_cost">Expédition rapide · %1$d vivres</string>
+    <string name="hamlet_a_sweep_help">Une route réussie avec trois étoiles peut être récoltée instantanément. Les vivres préparent l’expédition ; tu reçois le butin normal et aides les chantiers du village. Les nouvelles routes restent à explorer.</string>
+    <string name="hamlet_a_auto_formation">Préparer une formation équilibrée</string>
+    <string name="hamlet_a_inn_recruitment">Le meilleur rang d’auberge terminé produit une invitation toutes les 12 h (rang 1), 9 h 36 (rang 2) ou 8 h (rang 3). Le travail au village en ajoute aussi : progression %1$d / 120. Les invitations restent stockées jusqu’à leur utilisation.</string>
+    <string name="hamlet_a_hero_12">Robin</string>
+    <string name="hamlet_a_hero_13">Aster</string>
+    <string name="hamlet_a_hero_14">Mira</string>
+    <string name="hamlet_a_hero_15">Sylva</string>
+    <string name="hamlet_a_hero_16">Lucien</string>
+    <string name="hamlet_a_hero_17">Silex</string>
+    <string name="hamlet_a_hero_18">Saule</string>
+    <string name="hamlet_a_hero_19">Vesper</string>
+    <string name="hamlet_a_hero_20">Bram</string>
+    <string name="hamlet_a_hero_21">Jonas</string>
+    <string name="hamlet_a_hero_22">Céleste</string>
+    <string name="hamlet_a_hero_23">Braise</string>
+    <string name="hamlet_a_hero_24">Noisette</string>
+    <string name="hamlet_a_hero_25">Aurel</string>
+    <string name="hamlet_a_hero_26">Pyra</string>
+    <string name="hamlet_a_hero_27">Iris</string>
+    <string name="hamlet_a_hero_28">Lyra</string>
+    <string name="hamlet_a_hero_29">Ferris</string>
+    <string name="hamlet_a_hero_30">Ronce</string>
+    <string name="hamlet_a_hero_31">Aurore</string>
+    <string name="hamlet_a_hero_32">Atlas</string>
+    <string name="hamlet_a_hero_33">Ancien</string>
+    <string name="hamlet_a_hero_34">Nova</string>
+    <string name="hamlet_a_hero_35">Vulcain</string>
+    <string name="hamlet_a_hero_story_12">Un gardien de verger qui dresse un bouclier vivant. Ses compétences soignent aussi l’allié le plus blessé, ce qui en fait un gardien rassurant en première ligne.</string>
+    <string name="hamlet_a_hero_story_13">Une éclaireuse des tours de guet qui marque les adversaires dangereux. Ses compétences affaiblissent l’attaque d’un ennemi, ou de trois avec son ultime.</string>
+    <string name="hamlet_a_hero_story_14">L’apothicaire itinérante de l’infirmerie. Elle soigne et retire poison, faiblesse et étourdissement de l’allié le plus blessé ; son ultime purifie toute l’équipe.</string>
+    <string name="hamlet_a_hero_story_15">Une chanteuse des bois qui connaît tous les chants des semailles. Son inspiration apporte aussi un soin supplémentaire à l’allié le plus blessé.</string>
+    <string name="hamlet_a_hero_story_16">Un gardien de porte qui porte la lanterne du village. Ses compétences ajoutent des boucliers aux deux alliés de première ligne.</string>
+    <string name="hamlet_a_hero_story_17" formatted="false">Un fabricant d’arbalètes qui teste chaque carreau. Ses compétences frappent une seconde fois l’ennemi le plus faible sous 35 % de vie.</string>
+    <string name="hamlet_a_hero_story_18">Une gardienne des graines d’hiver. Sa magie gèle brièvement un ennemi, ou trois avec son ultime, interrompant leurs attaques.</string>
+    <string name="hamlet_a_hero_story_19">Une messagère du crépuscule qui contourne la première ligne. Ses compétences réduisent aussi l’attaque ennemie pour laisser du temps aux soigneurs.</string>
+    <string name="hamlet_a_hero_story_20">Un forgeron dont le marteau donne la cadence. Ses chants inspirants protègent aussi les deux alliés de première ligne avec des boucliers.</string>
+    <string name="hamlet_a_hero_story_21">Un maître d’armes venu des roselières. Chaque compétence rend un peu de vie à l’allié le plus blessé pour tenir les longues rencontres.</string>
+    <string name="hamlet_a_hero_story_22">Une jardinière des étoiles qui appelle de petits compagnons célestes. Ses invocations apportent aussi des boucliers à la première ligne.</string>
+    <string name="hamlet_a_hero_story_23" formatted="false">Une serrurière discrète qui protège les caravanes. Ses compétences frappent encore un ennemi sous 35 % de vie et achèvent les blessés à l’arrière.</string>
+    <string name="hamlet_a_hero_story_24">Une bâtisseuse de moulins aux pièges ingénieux. Ses machines s’accompagnent de compétences qui réduisent l’attaque ennemie.</string>
+    <string name="hamlet_a_hero_story_25">Un défenseur de la route du marché. Ses compétences purifient l’allié le plus blessé ; son ultime retire poison, faiblesse et étourdissement de toute l’équipe.</string>
+    <string name="hamlet_a_hero_story_26">Une gardienne des fours qui transforme les étincelles en sorts. Son feu affaiblit aussi les ennemis pour soulager les défenseurs du village.</string>
+    <string name="hamlet_a_hero_story_27">Une botaniste dont l’herbier reste toujours ouvert. Ses soins retirent poison, faiblesse et étourdissement ; son ultime purifie tous les alliés.</string>
+    <string name="hamlet_a_hero_story_28">Une inventrice de l’observatoire à la lentille de givre mécanique. Ses compétences gèlent brièvement les ennemis en plus de les étourdir.</string>
+    <string name="hamlet_a_hero_story_29">Un gardien de forge qui éveille de petits protecteurs de métal. Chaque invocation apporte aussi des boucliers aux deux alliés de première ligne.</string>
+    <string name="hamlet_a_hero_story_30" formatted="false">Le gardien du plus ancien sentier forestier. Ses flèches frappent encore un ennemi sous 35 % de vie ; associe-le aux dégâts de zone pour achever les groupes blessés.</string>
+    <string name="hamlet_a_hero_story_31">Une chanteuse dont le chœur d’aube purifie l’air. Ses compétences libèrent l’allié le plus blessé ; son ultime retire poison, faiblesse et étourdissement de toute l’équipe.</string>
+    <string name="hamlet_a_hero_story_32">La pierre vivante des remparts du village. Ses boucliers s’accompagnent d’un petit soin pour l’allié le plus blessé.</string>
+    <string name="hamlet_a_hero_story_33">Un ancien berger des esprits forestiers. Ses invocations soignent aussi l’allié le plus blessé pour soutenir les combats prolongés.</string>
+    <string name="hamlet_a_hero_story_34">Une astronome qui capture les étoiles filantes dans du verre d’hiver. Ses compétences gèlent un ennemi ; son ultime en gèle trois.</string>
+    <string name="hamlet_a_hero_story_35" formatted="false">Un maître forgeron qui a façonné sa propre lame de duel. Ses compétences frappent encore l’ennemi le plus faible sous 35 % de vie.</string>
+</resources>

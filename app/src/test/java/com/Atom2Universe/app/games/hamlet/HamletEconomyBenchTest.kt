@@ -65,7 +65,7 @@ class HamletEconomyBenchTest {
                 assertTrue(HamletSave.fromJson(g, HamletSave.toJson(g)))
                 continue
             }
-            g.tick(); g.collectAll()
+            g.tick(); if (g.canCollectAll()) g.collectAll() else g.objs.values.toList().forEach { g.collectReady(it) }
             for (o in g.objs.values.toList()) {
                 if (g.status(o) == Status.ORDER_NEW) g.acceptOrder(o)
                 if (g.status(o) == Status.FEED && g.coins > 40) g.feed(o)

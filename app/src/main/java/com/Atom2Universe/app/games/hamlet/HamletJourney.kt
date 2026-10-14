@@ -18,10 +18,13 @@ class HamletJourney(private val g: HamletGame) {
     var expedition = -1
     var departure = 0L
     var arrival = 0L
+    var invitationDay = -1L
+    var invitationsToday = 0
 
     fun reset() {
         chapter = 0; supplies = 0; research.fill(0); companions.fill(0); party.fill(-1)
         explored.fill(0); expedition = -1; departure = 0; arrival = 0
+        invitationDay = -1; invitationsToday = 0
     }
 
     fun copyFrom(other: HamletJourney) {
@@ -29,6 +32,7 @@ class HamletJourney(private val g: HamletGame) {
         other.research.copyInto(research); other.companions.copyInto(companions)
         other.party.copyInto(party); other.explored.copyInto(explored)
         expedition = other.expedition; departure = other.departure; arrival = other.arrival
+        invitationDay = other.invitationDay; invitationsToday = other.invitationsToday
     }
 
     fun progress(goal: Goal): Long = when {
@@ -103,14 +107,19 @@ class HamletJourney(private val g: HamletGame) {
         notifyChange(); return true
     }
 
-    fun power() = party.filter { it >= 0 }.sumOf { companions[it] * 3 } + research[2] * 4 + chapter
+    private fun adventurers() = g.adventure.teams[g.adventure.selectedTeam].take(g.adventure.slotCount())
+        .distinct().mapNotNull { g.adventure.heroes.getOrNull(it)?.takeIf { h -> h.owned } }
+    fun scoutingPower() = adventurers().sumOf { (it.level - 1) / 5 + it.stars + it.def.rarity.ordinal }.coerceAtMost(20)
+    fun scoutingSpeed() = adventurers().filter { it.def.role in setOf(HeroRole.RANGER, HeroRole.ROGUE, HeroRole.SUMMONER) }
+        .sumOf { 3 + it.stars }.coerceAtMost(15)
+    fun power() = party.filter { it >= 0 }.sumOf { companions[it] * 3 } + research[2] * 4 + chapter + scoutingPower()
     fun bonus(cat: Cat): Int {
         val branch = if (cat == Cat.FIELD || cat == Cat.RANCH || cat == Cat.NATURE) 0 else 1
         return research[branch] * 3 + party.filter { it >= 0 && it % 3 == branch }.sumOf { companions[it] * 3 }
     }
     fun expeditionSeconds(region: Int): Int {
         val scouts = party.filter { it >= 0 && it % 3 == 2 }.sumOf { companions[it] * 3 }
-        val reduction = (scouts + research[2] * 3).coerceAtMost(30)
+        val reduction = (scouts + research[2] * 3 + scoutingSpeed() + g.adventure.facilityRank("adventureGate") * 3).coerceAtMost(30)
         return regions[region].seconds * (100 - reduction) / 100
     }
     fun canExplore(region: Int) = region in regions.indices && expedition == -1 &&
@@ -125,12 +134,32 @@ class HamletJourney(private val g: HamletGame) {
         val region = expedition
         if (region !in regions.indices || expeditionLeft() > 0) return false
         val r = regions[region]
+        val tickets = expeditionTickets(region)
         // Consommer la mission avant toute notification/récompense : jamais deux gains au même retour.
         expedition = -1; departure = 0; arrival = 0
         explored[region]++
         supplies += r.supplies
+        g.adventure.add(AdventureResource.FOOD, expeditionFood(region))
+        g.adventure.add(AdventureResource.ORE, expeditionOre(region))
+        g.adventure.add(AdventureResource.BOOKS, expeditionBooks(region))
+        if (tickets > 0) {
+            val day = g.now() / Hamlet.DAY_MS
+            if (day > invitationDay) { invitationDay = day; invitationsToday = 0 }
+            invitationsToday += tickets.toInt()
+            g.adventure.add(AdventureResource.TICKETS, tickets)
+        }
         g.stat("expeditions"); g.reward(null, r.coins, r.coins / 5)
         notifyChange(); return true
+    }
+    fun expeditionFood(region: Int) = regions[region].supplies * 5L
+    fun expeditionOre(region: Int) = regions[region].supplies * 2L
+    fun expeditionBooks(region: Int) = regions[region].supplies.toLong()
+    /** Invitations are discoveries, not an unlimited short-route farming currency. */
+    fun expeditionTickets(region: Int): Long {
+        if (region !in regions.indices) return 0
+        val used = if (g.now() / Hamlet.DAY_MS > invitationDay) 0 else invitationsToday
+        if (used >= 2) return 0
+        return if (explored[region] == 0 || (explored[region] + 1) % 5 == 0) 1 else 0
     }
     private fun notifyChange() { g.listener?.onChanged() }
 

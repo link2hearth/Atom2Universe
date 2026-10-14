@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_a_frontier_go">Revenir à la frontière</string>
+    <string name="hamlet_a_owned_filter">Héros recrutés seulement · %1$d / %2$d</string>
+    <string name="hamlet_a_recruit_duplicate_cost">Recruter à nouveau · 3 invitations → 1 fragment</string>
+    <string name="hamlet_a_next_stage">Jouer l’étape suivante</string>
+    <string name="hamlet_a_battle_loot">Butin : %1$d vivres · %2$d bois · %3$d pierre · %4$d minerai\n%5$d livres · %6$d cristaux · %7$d runes · %8$d invitations\nVillage : +%9$d pièces · +%10$d s de travail de chantier</string>
+    <string name="hamlet_collect_direct_hint">Touche une récompense dorée dans le village pour la ramasser directement. Tout récolter se débloque après le chapitre %1$d.</string>
+    <string name="hamlet_expedition_invitation_help">Les expéditions donnent une invitation à la première visite et tous les cinq voyages, jusqu’à deux par jour. Les autres provisions restent toujours disponibles.</string>
+    <string name="hamlet_hero_target_requirement">Recrutement ciblé : route %1$d · chapitre %2$d du village. Une invitation chanceuse peut recruter ce héros plus tôt.</string>
+    <string name="hamlet_hero_target_cost">Recruter ce héros · %1$d invitations</string>
+    <string name="hamlet_hero_duplicate_cost">Recruter à nouveau · %1$d invitations → %2$d fragment de %3$s</string>
+    <string name="hamlet_hero_personal_fragments">Fragments de %1$s : %2$d. Ces fragments améliorent ou débloquent uniquement ce héros.</string>
+    <string name="hamlet_hero_focus">Privilégier les fragments de %1$s en aventure</string>
+    <string name="hamlet_hero_focus_clear">Ne plus privilégier %1$s</string>
+    <string name="hamlet_hero_focus_help">La priorité dirige les prochains fragments d’aventure vers ce héros déjà recruté. Les doublons de recrutement donnent toujours les fragments du héros tiré.</string>
+    <string name="hamlet_hero_star_preview">Prochaine étoile %1$d : +%2$.1f%% de vie et d’attaque, équipement compris.</string>
+    <string name="hamlet_hero_stars_max">%1$d étoiles atteintes. Les prochains fragments personnels peuvent améliorer les talents de ce héros.</string>
+    <string name="hamlet_hero_recruitment_brief">36 héros à découvrir. La première copie recrute le héros ; chaque doublon donne un fragment de ce personnage précis.</string>
+    <string name="hamlet_hero_recruitment_rules">Raretés, probabilités et garanties</string>
+</resources>

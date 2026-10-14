@@ -23,6 +23,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
     private lateinit var actionScroll: View
     private lateinit var progress: ProgressBar
     private lateinit var questButton: Button
+    private lateinit var collectButton: Button
     private var selected: Obj? = null
     private var actionSignature = ""
     private var resumed = false
@@ -108,14 +109,9 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
             action()
         }
         tool(nav(R.string.hamlet_ui_build, "crate") { HamletCatalogDialog(this).show() })
-        tool(nav(R.string.hamlet_ui_collect, "sack") { toast(getString(R.string.hamlet_round_result, game.collectAll())) })
-        tool(nav(R.string.hamlet_ui_adventure, "sword") {
-            adventureOpen = true; village.stop()
-            HamletAdventureDialog(this, game, village.haptics, onBuild = { d -> selected = null; village.startPlacing(d) },
-                onClose = { adventureOpen = false; if (resumed && !isFinishing) village.start(); refresh() },
-                onExit = { exitGame() }, effectsEnabled = village.renderer.effectsEnabled).show()
-        })
-        questButton = nav(R.string.hamlet_ui_journal, "book") { HamletJourneyDialog(this).show() }; tool(questButton)
+        collectButton = nav(R.string.hamlet_ui_collect, "sack") { toast(getString(R.string.hamlet_round_result, game.collectAll())) }; tool(collectButton)
+        tool(nav(R.string.hamlet_ui_adventure, "sword") { showAdventure() })
+        questButton = nav(R.string.hamlet_ui_journal, "book") { showStewardship() }; tool(questButton)
         tool(nav(R.string.hamlet_ui_manage, "gear") { showVillage() })
         root.addView(tools); chrome.add(tools)
         photoTools = LinearLayout(this).apply {
@@ -165,7 +161,11 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null); worldFiles.close(); village.stop(); village.art.clear(); game.listener = null; super.onDestroy()
     }
-    override fun onTapObject(o: Obj) { selected = o; refresh() }
+    override fun onTapObject(o: Obj) {
+        selected = o
+        if (village.mode is HamletMode.Browse) game.collectReady(o)
+        refresh()
+    }
     override fun onTapVillager(v: Villager) {
         val roles = intArrayOf(R.string.hamlet_role_resident, R.string.hamlet_role_farmer, R.string.hamlet_role_artisan, R.string.hamlet_role_guard, R.string.hamlet_role_shepherd)
         AlertDialog.Builder(this).setTitle(getString(R.string.hamlet_resident_name, Hamlet.visitors[v.nameIndex], getString(roles[v.role])))
@@ -193,6 +193,8 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
     }
     private fun refresh() {
         if (!::stats.isInitialized) return
+        collectButton.visibility = if (game.canCollectAll()) View.VISIBLE else View.GONE
+        collectButton.isEnabled = game.collectableCount() > 0
         val realmName = game.realms.name(game.realms.current).ifBlank { getString(R.string.hamlet_realms_default_name, game.realms.current) }
         stats.text = getString(R.string.hamlet_ui_realm_level, realmName, if (creative) getString(R.string.hamlet_ui_creative) else getString(R.string.hamlet_ui_level, game.level()))
         val values = longArrayOf(game.coins.toLong(), game.gems.toLong(), game.population().toLong(), game.happiness().toLong())
@@ -202,7 +204,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
             chip.contentDescription = getString(descriptions[i], values[i])
             chip.tooltipText = chip.contentDescription
         }
-        val rewardReady = game.currentQuest()?.let { game.questDone(it) } == true || game.journey.canClaim() || (game.journey.expedition >= 0 && game.journey.expeditionLeft() == 0L)
+        val rewardReady = game.currentQuest()?.let { game.questDone(it) } == true || game.journey.canClaim() || game.stewardship.hasRewards() || (game.journey.expedition >= 0 && game.journey.expeditionLeft() == 0L)
         if (journeyReady != rewardReady) {
             journeyReady = rewardReady
             questButton.text = getString(if (rewardReady) R.string.hamlet_ui_ready else R.string.hamlet_ui_journal)
@@ -269,6 +271,14 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
         objectActions.addView(it, LinearLayout.LayoutParams(-2, dp(46)).apply { marginEnd = dp(6); topMargin = dp(2) })
     }
     private fun objectActionButtons(o: Obj) {
+        if (o.t in HamletAdventure.FACILITIES && game.buildLeft(o) == 0L) {
+            addAction(R.string.hamlet_s_facility_open) { showAdventure(when (o.t) {
+                "adventureInn" -> 1
+                "adventureForge" -> 3
+                "adventureGate" -> 0
+                else -> 4
+            }) }
+        }
         when (game.status(o)) {
             Status.RIPE, Status.WITHERED -> addAction(R.string.hamlet_harvest) { game.harvest(o) }
             Status.TAX -> addAction(R.string.hamlet_collect) { game.collectTax(o) }
@@ -319,10 +329,12 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
             else -> getString(R.string.hamlet_charm_info, d.charm)
         }
         if (d.shore) message += getString(R.string.hamlet_shore_help)
+        if (game.stewardship.villageBonus(d.cat) > 0) message += getString(R.string.hamlet_s_village_bonus, game.stewardship.villageBonus(d.cat))
         AlertDialog.Builder(this).setTitle(itemName(o.t)).setMessage(message).setPositiveButton(android.R.string.ok, null).show()
     }
     private fun showVillage() {
         val actions = listOf<Pair<Int, () -> Unit>>(
+            R.string.hamlet_s_today to { showStewardship() },
             R.string.hamlet_overview to ::showOverview,
             R.string.hamlet_realms_title to { HamletWorldsDialog(this, game, onChanged = ::refreshWorld, onSave = { save() }).show() },
             R.string.hamlet_ui_neighbors to ::showNeighbors,
@@ -407,6 +419,16 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener {
         adventureOpen = true; village.stop()
         HamletNeighborsDialog(this, game, haptics = village.haptics, effectsEnabled = village.renderer.effectsEnabled,
             onClose = { adventureOpen = false; if (resumed && !isFinishing) village.start(); refresh(); save() }).show()
+    }
+    private fun showStewardship() {
+        HamletStewardshipDialog(this, game, onAdventure = ::showAdventure,
+            onJournal = { tab -> HamletJourneyDialog(this).show(tab) }).show()
+    }
+    private fun showAdventure(initialTab: Int = 0) {
+        adventureOpen = true; village.stop()
+        HamletAdventureDialog(this, game, village.haptics, onBuild = { d -> selected = null; village.startPlacing(d) },
+            onClose = { adventureOpen = false; if (resumed && !isFinishing) village.start(); refresh(); save() },
+            onExit = { exitGame() }, effectsEnabled = village.renderer.effectsEnabled).show(initialTab)
     }
     private fun guideToQuest(q: Quest) {
         val target = when (q.key) {

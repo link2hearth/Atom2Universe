@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_shard_shop_title">Guild fragment workshop</string>
+    <string name="hamlet_shard_shop_help">Choose a hero you already welcomed and buy that character’s personal fragments with earned runes and crystals. Fragments stay with their exact hero and improve stars or awakening talents. The workshop opens progressively with your village, campaign and completed facilities. It complements recruitment; it never recruits a new hero.</string>
+    <string name="hamlet_shard_shop_stock_help">Stock is shared by rarity across all heroes: 6 common, 4 rare, 2 epic and 1 legendary fragment each day. Mythic stock is 1 fragment each week. Spending the common stock on one hero leaves fewer fragments for the others. Daily stock renews at midnight UTC; mythic stock renews on Monday at midnight UTC.</string>
+    <string name="hamlet_shard_shop_price_help">Prices follow campaign progress and remain proportional to adventure loot: roughly two encounters per common fragment, three per rare, four per epic, six per legendary and eight per mythic. Epic and higher fragments also cost crystals. These materials are also used by equipment, so buying fragments is a choice alongside improving your forge.</string>
+    <string name="hamlet_shard_shop_unlock_help">Common: chapter 2 and an inn. Rare: chapter 3, route 40 and forge rank 1. Epic: chapter 5, route 120 and forge rank 2. Legendary: chapter 8, route 500 and forge rank 3. Mythic: chapter 12, route 2,000, forge rank 3 and academy rank 3. Every tier needs a completed inn.</string>
+    <string name="hamlet_shard_shop_personal">%1$s · Personal fragments: %2$d</string>
+    <string name="hamlet_shard_shop_stock">%1$s · Shared stock: %2$d</string>
+    <string name="hamlet_shard_shop_cost">%1$d runes · %2$d crystals</string>
+    <string name="hamlet_shard_shop_buy">Buy %1$d fragments for %2$s</string>
+    <string name="hamlet_shard_shop_requirements">%1$s · Chapter %2$d · Route %3$d\nInn %4$d · Forge %5$d · Academy %6$d</string>
+    <string name="hamlet_shard_shop_not_owned">Welcome this hero first to buy their personal fragments.</string>
+    <string name="hamlet_shard_shop_empty_stock">This rarity’s shared stock is sold out. The next renewal replenishes it.</string>
+    <string name="hamlet_shard_shop_changed_price">Campaign progress changed this price. Review the updated offer before buying.</string>
+    <string name="hamlet_shard_shop_next_stock">Stock renews: %1$s</string>
+    <string name="hamlet_shard_shop_free_mode">Free village mode: workshop tiers are open and fragments cost no materials.</string>
+</resources>

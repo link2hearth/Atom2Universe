@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hamlet_title">Hamlet</string>
-    <string name="hamlet_description">Build a village, grow crops and welcome its residents</string>
+    <string name="hamlet_description">Build your village, recruit heroes and explore new lands</string>
     <string name="hamlet_home">Center</string>
     <string name="hamlet_stats">Level %1$d · %2$d coins · %3$d gems · %4$d residents</string>
     <string name="hamlet_build">Build</string>
@@ -9,7 +9,7 @@
     <string name="hamlet_quest">Quest</string>
     <string name="hamlet_land">Expand land</string>
     <string name="hamlet_hall">Upgrade hall</string>
-    <string name="hamlet_hint">Tap a building to see its actions · Build to grow your village</string>
+    <string name="hamlet_hint">Tap a golden reward to collect it · Build to grow your village</string>
     <string name="hamlet_selected">%1$s · %2$s</string>
     <string name="hamlet_placing">Move the ghost, then confirm its location</string>
     <string name="hamlet_brushing">Drag across the village to paint the ground</string>

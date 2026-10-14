@@ -69,6 +69,9 @@ class HamletGame(
     val objs = LinkedHashMap<Int, Obj>()
     val journey = HamletJourney(this)
     val adventure = HamletAdventure(this)
+    val stewardship = HamletStewardship(this)
+    val armory = HamletArmory(this)
+    val shardShop = HamletShardShop(this)
     val buildHistory = HamletBuildHistory(this)
     val chronicle = HamletChronicle(this)
     /** Travail gratuit mis de côté, plafonné à deux heures ; les gestes du village le remplissent. */
@@ -124,6 +127,7 @@ class HamletGame(
 
     fun stat(key: String, n: Long = 1) {
         ensureDaily()
+        stewardship.ensureDay()
         stats[key] = (stats[key] ?: 0L) + n
         adventure.villageAction(key, n)
         val work = when (key) { "harvested" -> 10; "products" -> 15; "delivered" -> 30; else -> 0 }
@@ -324,13 +328,14 @@ class HamletGame(
     fun upgrade(o: Obj): Boolean {
         val cost = upgradeCost(o)
         if (!canUpgrade(o) || !spendCoins(cost)) return false
+        adventure.advanceProduction()
         o.tier++
         o.economicRevision++
         stat("upgrades"); addXp(cost / 15)
         touch(); changed()
         return true
     }
-    fun yieldCoins(o: Obj, base: Int) = base * (100 + (o.tier - 1) * 25 + journey.bonus(o.def.cat)) / 100
+    fun yieldCoins(o: Obj, base: Int) = base * (100 + (o.tier - 1) * 25 + journey.bonus(o.def.cat) + stewardship.villageBonus(o.def.cat)) / 100
 
     /** Douze consignes de chantier, sans chronomètre ni dépense. Une erreur conserve l'avancement. */
     fun beginWork() { if (workTool < 0) workTool = workRng.nextInt(3) }
@@ -356,6 +361,7 @@ class HamletGame(
     fun applyWork(o: Obj): Boolean {
         val left = workLeft(o)
         if (left <= 0 || workSeconds <= 0) return false
+        adventure.advanceProduction()
         val used = minOf(workSeconds, ((left + 999) / 1000).toInt(), 300)
         val ms = used * 1000L
         when {
@@ -420,18 +426,25 @@ class HamletGame(
         return true
     }
 
-    /** Une tournée manuelle : laisse les champs vides et les élevages au repos. */
+    fun canCollectAll() = sandbox || journey.chapter >= COLLECT_ALL_CHAPTER
+    /** Récompense gratuite d'un seul bâtiment, accessible dès le premier geste. */
+    fun collectReady(o: Obj): Boolean {
+        if (!owns(o)) return false
+        return when (status(o)) {
+            Status.RIPE, Status.WITHERED -> harvest(o)
+            Status.TAX -> collectTax(o)
+            Status.ORDER_DONE -> deliver(o)
+            Status.PRODUCT -> collectProduct(o)
+            Status.GIFT -> openGift()
+            else -> false
+        }
+    }
+    /** Confort débloqué tard : laisse les champs vides et les élevages au repos. */
     fun collectAll(): Int {
+        if (!canCollectAll()) return 0
         var count = 0
         for (o in objs.values.toList()) {
-            val ok = when (status(o)) {
-                Status.RIPE, Status.WITHERED -> harvest(o)
-                Status.TAX -> collectTax(o)
-                Status.ORDER_DONE -> deliver(o)
-                Status.PRODUCT -> collectProduct(o)
-                else -> false
-            }
-            if (ok) count++
+            if (collectReady(o)) count++
         }
         return count
     }
@@ -494,6 +507,12 @@ class HamletGame(
     fun readyCount(): Int = objs.values.count {
         val s = status(it)
         s == Status.RIPE || s == Status.TAX || s == Status.ORDER_DONE || s == Status.ORDER_NEW || s == Status.PRODUCT
+    }
+    fun collectableCount(): Int = objs.values.count {
+        when (status(it)) {
+            Status.RIPE, Status.WITHERED, Status.TAX, Status.ORDER_DONE, Status.PRODUCT, Status.GIFT -> true
+            else -> false
+        }
     }
 
     // ------------------------------------------------------------------ maisons
@@ -568,6 +587,7 @@ class HamletGame(
         val cost = hurryCost(o)
         if (cost <= 0) return false
         if (!spendGems(cost)) { listener?.onMessage("poor_gems"); return false }
+        adventure.advanceProduction()
         val d = o.def
         when {
             buildLeft(o) > 0 -> { o.b0 = 0; if (o.t in HamletLife.produce && o.def.cat != Cat.RANCH) o.t0 = now() }
@@ -621,6 +641,7 @@ class HamletGame(
 
     fun sell(o: Obj): Boolean {
         if (o.def.cat == Cat.HALL || objs[o.id] !== o) return false
+        adventure.advanceProduction()
         setOcc(o, 0)
         objs.remove(o.id)
         val v = sellValue(o)
@@ -858,6 +879,9 @@ class HamletGame(
         objs.clear(); stats.clear(); paths.fill(0); occ.fill(0)
         journey.reset(); workSeconds = 0; workStep = 0; workTool = -1
         adventure.reset()
+        stewardship.reset()
+        armory.reset()
+        shardShop.reset()
         buildHistory.clear(); buildHistory.restoreRecent(emptyList()); realms.reset(); neighbors.reset(); chronicle.reset()
         nextId = 1; quest = 0; questBase = 0; questNoted = -1; expand = 0; hall = 1; xp = 0
         dailyDay = -1; dailyClaimed = 0; dailyBase.fill(0); tickAt = 0; giftT = 0; visitT = 0
@@ -879,6 +903,7 @@ class HamletGame(
         scatter(Random(7), o, 0.06)
         ensureDaily()
         chronicle.record(HamletChronicle.Kind.WELCOME)
+        stewardship.ensureDay()
         groundRev++
         touch(); changed()
     }
@@ -920,6 +945,7 @@ class HamletGame(
     }
 
     companion object {
+        const val COLLECT_ALL_CHAPTER = 10
         const val CHARM_RANGE = 4
         const val CHARM_PERCENT = 0.8
         const val CHARM_CAP = 40

@@ -9,9 +9,15 @@ object HamletAdventureSave {
         val j = JSONObject().put("bag", JSONArray(a.bag.toList())).put("frontier", a.frontier)
             .put("trial", a.trial).put("bounty", a.bounty).put("raid", a.raid).put("arena", a.arena)
             .put("team", a.selectedTeam).put("productionAt", a.productionAt).put("auto", a.auto)
+            .put("recruitmentPulls", a.recruitmentPulls).put("pityEpic", a.pityEpic)
+            .put("pityLegendary", a.pityLegendary).put("pityMythic", a.pityMythic)
+            .put("recruitmentWork", a.recruitmentWork).put("innTicketProgress", a.innTicketProgress)
+            .put("recruitmentVersion", 2).put("shardFocusHero", a.shardFocusHero)
+            .put("productionRemainder", JSONArray(a.productionRemainder.toList()))
         for ((key, values) in listOf("tech" to a.tech, "workers" to a.workers, "troops" to a.troops,
             "troopTier" to a.troopTier, "relics" to a.relics, "pets" to a.pets, "teamPets" to a.teamPets, "teamRelics" to a.teamRelics)) j.put(key, JSONArray(values.toList()))
         j.put("teams", JSONArray(a.teams.map { JSONArray(it.toList()) }))
+        j.put("tactics", JSONArray(a.tactics.map { it.name }))
         val heroes = JSONArray()
         for (h in a.heroes) heroes.put(JSONObject().put("id", h.id).put("owned", h.owned).put("level", h.level)
             .put("stars", h.stars).put("shards", h.shards).put("skills", JSONArray(h.skills.toList()))
@@ -30,11 +36,27 @@ object HamletAdventureSave {
         a.trial = j.optInt("trial").coerceIn(0, 1_000_000); a.bounty = j.optInt("bounty").coerceIn(0, 1_000_000)
         a.raid = j.optInt("raid").coerceIn(0, 1_000_000); a.arena = j.optInt("arena").coerceIn(0, 1_000_000)
         a.selectedTeam = j.optInt("team").coerceIn(0, 2)
+        j.optJSONArray("tactics")?.let { arr -> for (i in a.tactics.indices) {
+            a.tactics[i] = BattleTactic.entries.firstOrNull { it.name == arr.optString(i) } ?: BattleTactic.BALANCED
+        } }
         a.productionAt = j.optLong("productionAt", a.productionAt); a.auto = j.optBoolean("auto", true)
+        a.recruitmentPulls = j.optInt("recruitmentPulls").coerceAtLeast(0)
+        a.pityEpic = j.optInt("pityEpic").coerceIn(0, HamletAdventure.PITY_EPIC - 1)
+        a.pityLegendary = j.optInt("pityLegendary").coerceIn(0, HamletAdventure.PITY_LEGENDARY - 1)
+        a.pityMythic = j.optInt("pityMythic").coerceIn(0, HamletAdventure.PITY_MYTHIC - 1)
+        a.recruitmentWork = j.optLong("recruitmentWork").coerceIn(0, HamletAdventure.WORK_INVITATION_POINTS - 1)
+        a.innTicketProgress = if (j.optInt("recruitmentVersion") >= 2) j.optLong("innTicketProgress").coerceIn(0, HamletAdventure.INN_INVITATION_UNITS - 1) else 0
+        a.productionRemainder.fill(0.0)
+        j.optJSONArray("productionRemainder")?.let { values ->
+            for (i in a.productionRemainder.indices) {
+                val fraction = values.optDouble(i, 0.0)
+                a.productionRemainder[i] = if (fraction.isFinite()) fraction.coerceIn(0.0, 0.999999999999) else 0.0
+            }
+        }
         fill("tech", a.tech); fill("workers", a.workers, hi = 24); fill("troops", a.troops)
         var remaining = a.workerCapacity()
         for (i in a.workers.indices) { a.workers[i] = minOf(a.workers[i], remaining); remaining -= a.workers[i] }
-        fill("troopTier", a.troopTier, 1); fill("relics", a.relics); fill("pets", a.pets)
+        fill("troopTier", a.troopTier, 1, 10); fill("relics", a.relics); fill("pets", a.pets)
         fill("teamPets", a.teamPets, -1, 2); fill("teamRelics", a.teamRelics, -1, 2)
         j.optJSONArray("heroes")?.let { arr ->
             val seen = HashSet<Int>()
@@ -44,13 +66,14 @@ object HamletAdventureSave {
                 if (id !in a.heroes.indices || !seen.add(id)) continue
                 val dest = a.heroes[id]
                 dest.owned = h.optBoolean("owned"); dest.level = h.optInt("level", 1).coerceIn(1, 1_000_000)
-                dest.stars = h.optInt("stars").coerceIn(0, 1_000_000); dest.shards = h.optLong("shards").coerceAtLeast(0)
+                dest.stars = h.optInt("stars").coerceIn(0, HamletHeroes.STAR_CAP); dest.shards = h.optLong("shards").coerceAtLeast(0)
                 for ((key, values) in listOf("skills" to dest.skills, "gear" to dest.gear, "gearTier" to dest.gearTier, "traits" to dest.traits))
                     h.optJSONArray(key)?.let { v -> for (n in values.indices) values[n] = v.optInt(n, values[n]).coerceIn(if (key == "skills") 1 else 0, if (key == "gearTier") 3 else 1_000_000) }
             }
         }
         // Ces héros ne peuvent jamais être perdus en jeu ; une sauvegarde partielle reste jouable.
         HamletAdventure.STARTERS.forEach { a.heroes[it].owned = true }
+        a.shardFocusHero = j.optInt("shardFocusHero", -1).takeIf { a.heroes.getOrNull(it)?.owned == true } ?: -1
         j.optJSONArray("teams")?.let { teams -> for (i in a.teams.indices) teams.optJSONArray(i)?.let { t ->
             val seen = HashSet<Int>()
             for (n in 0..5) {

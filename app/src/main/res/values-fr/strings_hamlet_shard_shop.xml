@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_shard_shop_title">Atelier de fragments de la guilde</string>
+    <string name="hamlet_shard_shop_help">Choisis un héros déjà accueilli et achète ses fragments personnels avec les runes et cristaux gagnés en jeu. Les fragments restent liés à ce personnage précis et améliorent ses étoiles ou ses talents d’éveil. L’atelier s’ouvre avec ton village, la campagne et les bâtiments terminés. Il complète le recrutement ; il ne recrute jamais un nouveau héros.</string>
+    <string name="hamlet_shard_shop_stock_help">Le stock est partagé entre tous les héros de chaque rareté : 6 fragments communs, 4 rares, 2 épiques et 1 légendaire par jour. Le stock mythique est de 1 fragment par semaine. Dépenser les fragments communs sur un héros en laisse moins pour les autres. Le stock quotidien revient à minuit UTC ; le mythique revient le lundi à minuit UTC.</string>
+    <string name="hamlet_shard_shop_price_help">Les prix suivent la campagne et restent proportionnés au butin : environ deux rencontres par fragment commun, trois pour un rare, quatre pour un épique, six pour un légendaire et huit pour un mythique. Les fragments épiques et supérieurs demandent aussi des cristaux. Ces matériaux servent à l’équipement : acheter des fragments est donc un choix à côté des améliorations de forge.</string>
+    <string name="hamlet_shard_shop_unlock_help">Commun : chapitre 2 et une auberge. Rare : chapitre 3, route 40 et forge de rang 1. Épique : chapitre 5, route 120 et forge de rang 2. Légendaire : chapitre 8, route 500 et forge de rang 3. Mythique : chapitre 12, route 2 000, forge de rang 3 et académie de rang 3. Chaque palier demande une auberge terminée.</string>
+    <string name="hamlet_shard_shop_personal">%1$s · Fragments personnels : %2$d</string>
+    <string name="hamlet_shard_shop_stock">%1$s · Stock partagé : %2$d</string>
+    <string name="hamlet_shard_shop_cost">%1$d runes · %2$d cristaux</string>
+    <string name="hamlet_shard_shop_buy">Acheter %1$d fragments pour %2$s</string>
+    <string name="hamlet_shard_shop_requirements">%1$s · Chapitre %2$d · Route %3$d\nAuberge %4$d · Forge %5$d · Académie %6$d</string>
+    <string name="hamlet_shard_shop_not_owned">Accueille d’abord ce héros pour acheter ses fragments personnels.</string>
+    <string name="hamlet_shard_shop_empty_stock">Le stock partagé de cette rareté est épuisé. Le prochain renouvellement le remplira.</string>
+    <string name="hamlet_shard_shop_changed_price">La progression en campagne a changé ce prix. Consulte la nouvelle offre avant d’acheter.</string>
+    <string name="hamlet_shard_shop_next_stock">Renouvellement du stock : %1$s</string>
+    <string name="hamlet_shard_shop_free_mode">Village libre : les paliers de l’atelier sont ouverts et les fragments ne coûtent aucun matériau.</string>
+</resources>

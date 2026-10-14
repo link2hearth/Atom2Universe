@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_s_title">Carnet du village</string>
+    <string name="hamlet_s_today">Aujourd’hui</string>
+    <string name="hamlet_s_posts">Métiers des héros</string>
+    <string name="hamlet_s_return">Un moment au village</string>
+    <string name="hamlet_s_ready">%1$d collectes prêtes · %2$d / %3$d héros recrutés</string>
+    <string name="hamlet_s_plan_trip">Préparer une expédition</string>
+    <string name="hamlet_s_trip_wait">Retour de l’expédition dans %1$s</string>
+    <string name="hamlet_s_cycle">Les récoltes nourrissent tes héros ; les aventures financent le village et accélèrent les chantiers. Lance une expédition avant de partir, ou continue à explorer.</string>
+    <string name="hamlet_s_daily_help">Tâches facultatives · renouvellement dans %1$s. Aucune série à maintenir : joue à ton rythme. Chaque récompense comprend aussi 12 livres et des pièces pour le village.</string>
+    <string name="hamlet_s_task_village">Un village vivant</string>
+    <string name="hamlet_s_task_adventure">Au-delà du portail</string>
+    <string name="hamlet_s_task_growth">Grandir ensemble</string>
+    <string name="hamlet_s_task_village_help">Récolte les cultures, collecte les produits ou les impôts, ou livre les commandes des ateliers.</string>
+    <string name="hamlet_s_task_adventure_help">Gagne des combats, cueille sur la carte de campagne, termine des raids rapides ou récupère les expéditions.</string>
+    <string name="hamlet_s_task_growth_help">Recrute ou améliore des héros, améliore les bâtiments du village ou étudie ses recherches.</string>
+    <string name="hamlet_s_task_progress">%1$d / %2$d · Récompense : %3$d invitations de recrutement</string>
+    <string name="hamlet_s_go">Y aller</string>
+    <string name="hamlet_s_chest">Fête du village</string>
+    <string name="hamlet_s_chest_help">Réclame les trois tâches : 2 invitations, 8 cristaux, 3 minutes de travail de chantier et 200 pièces.</string>
+    <string name="hamlet_s_chapters">Chapitres, expéditions et recherches du village</string>
+    <string name="hamlet_s_posts_help" formatted="false">Confie un métier du village à tes héros. Ils restent disponibles au combat. Un héros par métier ; les changements sont libres. Un rôle adapté donne 5% supplémentaires. Les niveaux et étoiles renforcent le bonus jusqu’à 25%.</string>
+    <string name="hamlet_s_post_0">Jardins et élevages</string>
+    <string name="hamlet_s_post_1">Artisanat et matériel</string>
+    <string name="hamlet_s_post_2">Intendance du village</string>
+    <string name="hamlet_s_post_help_0">Améliore les revenus des champs, vergers et élevages, et la production passive de vivres. Archers, soigneurs et invocateurs sont adaptés.</string>
+    <string name="hamlet_s_post_help_1">Améliore les revenus des ateliers, et la production passive de bois, pierre et minerai. Gardiens, ingénieurs et duellistes sont adaptés.</string>
+    <string name="hamlet_s_post_help_2">Améliore les revenus des maisons et la production passive de livres. Bardes, mages et assassins sont adaptés.</string>
+    <string name="hamlet_s_unassigned">Aucun héros affecté</string>
+    <string name="hamlet_s_assignment">%1$s · Rendement +%2$d%%</string>
+    <string name="hamlet_s_assign">Choisir un héros</string>
+    <string name="hamlet_s_choice">%1$s · Rendement +%2$d%%</string>
+    <string name="hamlet_s_unassign">Libérer ce métier</string>
+    <string name="hamlet_s_expedition_link">Ton équipe de combat aide aussi les expéditions : +%1$d en exploration, −%2$d%% de trajet. La durée est figée au départ ; les héros restent disponibles.</string>
+    <string name="hamlet_s_expedition_loot">Rapporte aussi %1$d vivres, %2$d minerai, %3$d livres et %4$d invitation(s) pour tes héros.</string>
+    <string name="hamlet_s_facility_open">Gérer ce bâtiment</string>
+    <string name="hamlet_s_village_bonus">\nBonus du métier d’un héros : +%1$d%% de revenus.</string>
+</resources>

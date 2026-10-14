@@ -51,6 +51,8 @@ object HubTileArtworks {
         com.Atom2Universe.app.stats.StatsHubActivity::class.java.name to StatsOverviewHubTileDrawable::class,
         MainClickerActivity::class.java.name to ClickerHubTileDrawable::class,
         FarmActivity::class.java.name to FarmHubTileDrawable::class,
+        com.Atom2Universe.app.games.hamlet.HamletActivity::class.java.name to
+            com.Atom2Universe.app.games.hamlet.HamletHubTileDrawable::class,
         com.Atom2Universe.app.games.match3.Match3Activity::class.java.name to
             com.Atom2Universe.app.games.match3.Match3HubTileDrawable::class,
         com.Atom2Universe.app.games.starswar.StarsWarActivity::class.java.name to

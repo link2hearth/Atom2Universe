@@ -82,7 +82,7 @@ object HamletCharacterArt {
     }
 
     private fun sprite(hero: Boolean, rawId: Int, pose: Pose, frame: Int, resident: Boolean = false): Bitmap {
-        val id = Math.floorMod(rawId, if (hero) 12 else 8)
+        val id = Math.floorMod(rawId, if (resident) 12 else if (hero) HamletHeroes.defs.size else 8)
         val key = (if (resident) 20000 else if (hero) 10000 else 0) + id * 256 + pose.ordinal * 16 + frame
         cache.get(key)?.let { return it }
         val bmp = Bitmap.createBitmap(W, H, Bitmap.Config.ARGB_8888)
@@ -90,9 +90,34 @@ object HamletCharacterArt {
         if (pose == Pose.DOWN) {
             p.c.translate(5f, 43f); p.c.scale(0.8f, 0.8f); p.c.rotate(76f); p.c.translate(-24f, -50f)
         }
-        if (hero) p.hero(id, pose, frame, resident) else p.enemy(id, pose, frame)
+        if (hero) {
+            val def = if (resident) null else HamletHeroes.defs[id]
+            p.hero(def?.portraitBase ?: id, pose, frame, resident, heroPalette(id, resident),
+                if (!resident && id >= 12) def else null)
+        } else p.enemy(id, pose, frame)
         cache.put(key, bmp)
         return bmp
+    }
+
+    private fun heroPalette(id: Int, resident: Boolean): Colors {
+        val base = palettes[id % palettes.size]
+        if (resident || id < 12) return base
+        val def = HamletHeroes.defs[id]
+        val faction = when (def.faction) {
+            HeroFaction.GROVE -> intArrayOf(0x438A78, 0xB6D995, 0x28564C)
+            HeroFaction.DAWN -> intArrayOf(0x596FAD, 0xC6CBF1, 0x384773)
+            HeroFaction.FORGE -> intArrayOf(0xA55D4F, 0xE7AC7A, 0x653D42)
+        }
+        val shift = if (id >= 24) .18f else -.08f
+        val trim = when (def.rarity) {
+            HeroRarity.COMMON -> 0xB5BEA8
+            HeroRarity.RARE -> 0xA4D7D2
+            HeroRarity.EPIC -> 0xD0A0E4
+            HeroRarity.LEGENDARY -> 0xF0CB6B
+            HeroRarity.MYTHIC -> 0xF19DA5
+        }
+        return base.copy(cloth = Iso.shade(faction[0], shift), light = color(faction[1]),
+            dark = color(faction[2]), trim = color(trim))
     }
 
     /** Only used while constructing cached frames, never during the game's drawing loop. */
@@ -118,8 +143,7 @@ object HamletCharacterArt {
             line(x - 1, y - 2, x - 2, y, light, 2)
         }
 
-        fun hero(id: Int, pose: Pose, f: Int, resident: Boolean) {
-            val q = palettes[id]
+        fun hero(id: Int, pose: Pose, f: Int, resident: Boolean, q: Colors, variant: HeroDef?) {
             val walk = if (pose == Pose.WALK) intArrayOf(0, 2, 3, 0, -2, -3)[f] else 0
             val bob = if (pose == Pose.WALK) if (f % 3 == 1) -1 else 0 else if (pose == Pose.IDLE && f == 2) -1 else 0
             val attack = pose == Pose.ATTACK
@@ -198,6 +222,20 @@ object HamletCharacterArt {
                     if (cast) { rect(handX + 11, handY + 4, 1, 2, color(0xB7E2E0)); rect(handX + 13, handY + 7 + f % 2, 1, 2, color(0xB7E2E0)) }
                 }
             } else weapon(id, q, handX, handY, attack, cast, f)
+            if (variant != null) {
+                // Distinct faction insignia and rank ornaments keep a large roster readable.
+                box(21, 29, 7, 6, q.dark)
+                when (variant.faction) {
+                    HeroFaction.GROVE -> poly(q.trim, 23, 30, 26, 30, 25, 34, 22, 33)
+                    HeroFaction.DAWN -> glint(24, 32, q.trim, 2)
+                    HeroFaction.FORGE -> { rect(22, 31, 5, 2, q.trim); rect(24, 31, 1, 4, q.trim) }
+                }
+                if (variant.id >= 24) { box(16, 14, 4, 4, q.trim); rect(17, 15, 2, 2, cream) }
+                if (variant.rarity == HeroRarity.MYTHIC) {
+                    poly(q.trim, 16, 28, 12, 26, 13, 32, 17, 33)
+                    glint(34, 13, q.trim, 1)
+                }
+            }
             box(handX - 2, handY - 2, 5, 5, q.skin)
             if (cast && !resident) { gem(38, 13 + f % 2, q.trim, cream, 3); glint(13 + f * 3, 12 + (f % 2) * 4, q.light, 1) }
             if (hurt) { rect(20, 22, 4, 1, color(0xDB7767)); line(36, 20, 39, 16, cream, 2) }

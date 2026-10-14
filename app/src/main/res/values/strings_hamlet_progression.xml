@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_armory_tab_0">Craft</string>
+    <string name="hamlet_armory_tab_1">Equip</string>
+    <string name="hamlet_armory_tab_2">Inventory</string>
+    <string name="hamlet_armory_slot_empty">No crafted piece equipped</string>
+    <string name="hamlet_armory_no_matching_piece">Craft a piece for this slot first.</string>
+    <string name="hamlet_progression_training">Academy training level: %1$d. Once an academy is built, newly recruited heroes match the lowest level of your strongest trained heroes (as many as your available team slots). Their own training and equipment remain yours.</string>
+    <string name="hamlet_progression_training_hero">Personal level %1$d · Academy level %2$d. The next level upgrade starts from the academy level and uses its normal food cost.</string>
+    <string name="hamlet_progression_worn">%1$s: %2$s</string>
+    <string name="hamlet_progression_legacy_gear">Permanent training and equipment mastery</string>
+    <string name="hamlet_progression_upgrade_building">Upgrade to rank %1$d · %2$d coins</string>
+    <string name="hamlet_progression_rate">%1$s: %2$.1f per hour</string>
+    <string name="hamlet_progression_supply_workshop">Supply workshops</string>
+    <string name="hamlet_progression_supply_help">Turn surplus supplies into useful materials. A completed store enables ore preparation; a completed academy enables book production. These exchanges have no timers.</string>
+    <string name="hamlet_progression_supply_ore">12 timber + 12 stone → 8 ore</string>
+    <string name="hamlet_progression_supply_books">16 food + 16 timber → 8 books</string>
+    <string name="hamlet_progression_militia_cap">Training rank available: %1$d / 10. New ranks open every 20 routes and with yard upgrades. The escort reaches at most 120 soldiers per faction; heroes and equipment carry the later progression.</string>
+    <string name="hamlet_progression_defeat_timeout">Your team survived, but the enemies outlasted the time limit. Try Assault, focus a dangerous caster with Control, or add Hunter or Storm equipment. Improve weapons and active skills before increasing every stat.</string>
+    <string name="hamlet_progression_defeat_survival">Your team fell before the enemies did. Try Defensive, protect a healer in the back line, or add Hearthward and Grove equipment. Control can delay the announced boss attacks.</string>
+</resources>

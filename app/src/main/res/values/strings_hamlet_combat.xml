@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_combat_tactic_balanced">Balanced</string>
+    <string name="hamlet_combat_tactic_assault">Assault</string>
+    <string name="hamlet_combat_tactic_defensive">Defensive</string>
+    <string name="hamlet_combat_tactic_control">Control</string>
+    <string name="hamlet_combat_tactic_balanced_desc">Standard damage, protection and targeting.</string>
+    <string name="hamlet_combat_tactic_assault_desc" formatted="false">+15% damage, +8% attack speed; focus wounded frontline enemies. Take +10% damage.</string>
+    <string name="hamlet_combat_tactic_defensive_desc" formatted="false">Take 15% less damage; +15% healing and a starting shield for the front row. Deal 10% less damage. Automatic support ultimates wait for injuries or a boss warning.</string>
+    <string name="hamlet_combat_tactic_control_desc" formatted="false">Skills recharge 20% faster; stuns last 35% longer. Ranged attackers prioritize enemy casters. Deal 5% less damage.</string>
+    <string name="hamlet_combat_report_row">Damage %1$s · Healing %2$s · Absorbed %3$s · KOs %4$d</string>
+    <string name="hamlet_combat_report_title">Hero contributions</string>
+    <string name="hamlet_combat_boss_cleave">Frontline cleave</string>
+    <string name="hamlet_combat_boss_devastation">Shockwave</string>
+    <string name="hamlet_combat_boss_dread">Backline ambush</string>
+    <string name="hamlet_combat_boss_warning">%1$s · %2$.1f s</string>
+    <string name="hamlet_combat_status_stun">STN</string>
+    <string name="hamlet_combat_status_poison">PSN</string>
+    <string name="hamlet_combat_status_buff">ATK+</string>
+    <string name="hamlet_combat_status_weak">ATK−</string>
+    <string name="hamlet_combat_status_help" formatted="false">STN: cannot act. PSN: damage over time. ATK+: +20% attack. ATK−: −20% attack. Boss attacks show their targets for 1.5 seconds; shields absorb the impact and stuns delay it.</string>
+    <string name="hamlet_combat_field_meadow">Meadow • Clear ground</string>
+    <string name="hamlet_combat_field_mist">Mist • Support shields</string>
+    <string name="hamlet_combat_field_quarry">Quarry • Armoured enemies</string>
+    <string name="hamlet_combat_field_ember">Embers • Growing pressure</string>
+    <string name="hamlet_combat_field_marsh">Marsh • Venom waves</string>
+    <string name="hamlet_combat_field_frost">Frost • Slower attacks</string>
+    <string name="hamlet_combat_field_meadow_desc">No terrain modifier. Learn formations, factions and boss warnings here.</string>
+    <string name="hamlet_combat_field_mist_desc">Every 8 seconds, unstunned guardians, healers, bards and engineers shield their most injured ally for 1.5 × their attack. Both sides follow this rule.</string>
+    <string name="hamlet_combat_field_quarry_desc">Enemies gain 25 armour. Mages and engineers ignore this extra plating; armour penetration also helps.</string>
+    <string name="hamlet_combat_field_ember_desc" formatted="false">After 20 seconds, attacks on both sides gain 1% damage per second, up to +15%. Burst damage and timely shields shorten dangerous fights.</string>
+    <string name="hamlet_combat_field_marsh_desc" formatted="false">Every 10 seconds, all combatants take venom for 4 seconds: 0.6% of their maximum health per second, bypassing shields. Purify clears this venom. Healing and defensive tactics help.</string>
+    <string name="hamlet_combat_field_frost_desc" formatted="false">Ordinary attacks recharge 12% slower for both sides. Skills and ultimates recharge normally. Casters and the Control tactic keep their rhythm.</string>
+</resources>

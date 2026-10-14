@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_armory_title">Armurerie et ensembles</string>
+    <string name="hamlet_armory_help">Forge de vraies pièces pour quatre emplacements, choisis un ensemble tactique et prête librement ton équipement entre héros. Deux pièces identiques activent un premier bonus ; quatre en ajoutent un autre. Deux paires fonctionnent aussi, même de raretés différentes. L’entraînement permanent et les anciennes améliorations restent sur chaque héros. Les pièces progressent instantanément jusqu’au niveau 10. Retire une pièce avant de la démonter ; tu récupères la moitié des matériaux de fabrication et d’amélioration.</string>
+    <string name="hamlet_armory_inventory">%1$d pièces · %2$d équipées</string>
+    <string name="hamlet_armory_empty">L’armurerie est vide. Termine une forge au village, choisis une recette et fabrique ta première pièce.</string>
+    <string name="hamlet_armory_forge_rank">Rang de forge terminé : %1$d / 3</string>
+    <string name="hamlet_armory_requirement">%1$s demande une forge de rang %2$d et la route %3$d en campagne.</string>
+    <string name="hamlet_armory_craft">Fabriquer cette pièce</string>
+    <string name="hamlet_armory_cost">%1$d minerai · %2$d runes · %3$d cristaux · %4$d bois · %5$d pierre</string>
+    <string name="hamlet_armory_piece">%1$s · %2$s · %3$s · Niveau %4$d</string>
+    <string name="hamlet_armory_piece_id">Pièce n° %1$d</string>
+    <string name="hamlet_armory_reserve">Disponible à l’armurerie</string>
+    <string name="hamlet_armory_owner">Équipée par %1$s</string>
+    <string name="hamlet_armory_transfer">Confier à %1$s</string>
+    <string name="hamlet_armory_transfer_help">La pièce quitte son propriétaire actuel. L’équipement remplacé retourne à l’armurerie.</string>
+    <string name="hamlet_armory_equip">Choisir un héros</string>
+    <string name="hamlet_armory_unequip">Rendre à l’armurerie</string>
+    <string name="hamlet_armory_enhance">Améliorer cette pièce</string>
+    <string name="hamlet_armory_quality">Reforger en %1$s</string>
+    <string name="hamlet_armory_quality_help">La reforge conserve le niveau, l’ensemble, l’identité et le propriétaire de cette pièce. Elle paie la différence des recettes et des améliorations, avec un supplément de reforge. Ton investissement initial reste utile ; la qualité supérieure demande toujours le rang de forge et la progression en campagne correspondants.</string>
+    <string name="hamlet_armory_quality_max">Qualité mythique atteinte</string>
+    <string name="hamlet_armory_max_level">Niveau maximal de la pièce atteint</string>
+    <string name="hamlet_armory_salvage">Démonter cette pièce</string>
+    <string name="hamlet_armory_salvage_return">Matériaux récupérés : %1$s</string>
+    <string name="hamlet_armory_salvage_help">Seules les pièces retirées peuvent être démontées. La pièce est consommée ; les matériaux récupérés restent toujours inférieurs aux dépenses.</string>
+    <string name="hamlet_armory_set_count">%1$s · %2$d / 4 pièces</string>
+    <string name="hamlet_armory_active_bonus">Bonus des pièces et ensembles</string>
+    <string name="hamlet_armory_recommendation">Ensemble conseillé pour débuter avec ce héros : %1$s. Un mélange peut servir une autre tactique.</string>
+    <string name="hamlet_armory_stats">PV +%1$d%% · Attaque +%2$d%% · Armure +%3$d\nCritique +%4$d%% · Vivacité +%5$d%% · Compétences +%6$d%%\nSoins +%7$d%% · Vol de vie %8$d%% · Pénétration %9$d%% · Bouclier initial %10$d%%</string>
+    <string name="hamlet_armory_set_hearthward">Garde du foyer</string>
+    <string name="hamlet_armory_set_hunt">Chasseur</string>
+    <string name="hamlet_armory_set_gale">Bourrasque</string>
+    <string name="hamlet_armory_set_grove">Gardien des sources</string>
+    <string name="hamlet_armory_set_blood">Épine rouge</string>
+    <string name="hamlet_armory_set_storm">Forgeron d’orage</string>
+    <string name="hamlet_armory_set_help_hearthward" formatted="false">Pour la première ligne : les pièces ajoutent vie, armure et bouclier initial. Deux pièces : +8 % de PV. Quatre : +8 armure et un bouclier de 12 % des PV maximum supplémentaires.</string>
+    <string name="hamlet_armory_set_help_hunt" formatted="false">Pour concentrer les dégâts : les pièces ajoutent attaque et chances de critique. Deux pièces : +4 % de critique. Quatre : +10 % d’attaque et +2 % de critique supplémentaires.</string>
+    <string name="hamlet_armory_set_help_gale" formatted="false">Pour attaquer et lancer les sorts souvent : les pièces ajoutent de la vivacité. Deux pièces : +4 % de vivacité. Quatre : +4 % de vivacité et +8 % de force des compétences supplémentaires.</string>
+    <string name="hamlet_armory_set_help_grove" formatted="false">Pour les soigneurs et soutiens : les pièces renforcent soins et vie. Deux pièces : +12 % de soins. Quatre : +18 % de soins et un bouclier initial de 6 % des PV maximum supplémentaires.</string>
+    <string name="hamlet_armory_set_help_blood" formatted="false">Pour tenir en duel : les pièces transforment une partie des dégâts infligés en soin personnel. Deux pièces : +5 % de vol de vie. Quatre : +8 % de vol de vie et +6 % de PV supplémentaires.</string>
+    <string name="hamlet_armory_set_help_storm" formatted="false">Contre les adversaires blindés : les pièces percent l’armure et renforcent les compétences. Deux pièces : ignore 8 % de l’armure. Quatre : +15 % de force des compétences et 6 % de pénétration supplémentaires.</string>
+    <string name="hamlet_armory_rarity_0">Rare</string>
+    <string name="hamlet_armory_rarity_1">Épique</string>
+    <string name="hamlet_armory_rarity_2">Légendaire</string>
+    <string name="hamlet_armory_rarity_3">Mythique</string>
+</resources>

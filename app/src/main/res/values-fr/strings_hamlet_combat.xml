@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hamlet_combat_tactic_balanced">Équilibrée</string>
+    <string name="hamlet_combat_tactic_assault">Assaut</string>
+    <string name="hamlet_combat_tactic_defensive">Défensive</string>
+    <string name="hamlet_combat_tactic_control">Contrôle</string>
+    <string name="hamlet_combat_tactic_balanced_desc">Dégâts, protection et ciblage habituels.</string>
+    <string name="hamlet_combat_tactic_assault_desc" formatted="false">+15% de dégâts, +8% de vitesse d’attaque ; cible les ennemis blessés du premier rang. Subit +10% de dégâts.</string>
+    <string name="hamlet_combat_tactic_defensive_desc" formatted="false">Subit 15% de dégâts en moins ; +15% de soins et bouclier initial au premier rang. Inflige 10% de dégâts en moins. Les ultimes de soutien automatiques attendent des blessures ou une alerte de boss.</string>
+    <string name="hamlet_combat_tactic_control_desc" formatted="false">Compétences rechargées 20% plus vite ; étourdissements 35% plus longs. Les attaquants à distance ciblent les lanceurs de sorts. Inflige 5% de dégâts en moins.</string>
+    <string name="hamlet_combat_report_row">Dégâts %1$s · Soins %2$s · Absorbés %3$s · K.-O. %4$d</string>
+    <string name="hamlet_combat_report_title">Contribution des héros</string>
+    <string name="hamlet_combat_boss_cleave">Fauchage du premier rang</string>
+    <string name="hamlet_combat_boss_devastation">Onde de choc</string>
+    <string name="hamlet_combat_boss_dread">Embuscade du dernier rang</string>
+    <string name="hamlet_combat_boss_warning">%1$s · %2$.1f s</string>
+    <string name="hamlet_combat_status_stun">ÉTD</string>
+    <string name="hamlet_combat_status_poison">PSN</string>
+    <string name="hamlet_combat_status_buff">ATQ+</string>
+    <string name="hamlet_combat_status_weak">ATQ−</string>
+    <string name="hamlet_combat_status_help" formatted="false">ÉTD : ne peut pas agir. PSN : dégâts progressifs. ATQ+ : +20% d’attaque. ATQ− : −20% d’attaque. Les boss annoncent leurs cibles pendant 1,5 seconde ; les boucliers absorbent l’impact et les étourdissements le retardent.</string>
+    <string name="hamlet_combat_field_meadow">Prairie • Terrain dégagé</string>
+    <string name="hamlet_combat_field_mist">Brume • Boucliers de soutien</string>
+    <string name="hamlet_combat_field_quarry">Carrière • Ennemis cuirassés</string>
+    <string name="hamlet_combat_field_ember">Braises • Pression croissante</string>
+    <string name="hamlet_combat_field_marsh">Marais • Vagues de venin</string>
+    <string name="hamlet_combat_field_frost">Gel • Attaques ralenties</string>
+    <string name="hamlet_combat_field_meadow_desc">Aucun effet de terrain. Découvre ici les formations, les factions et les alertes de boss.</string>
+    <string name="hamlet_combat_field_mist_desc">Toutes les 8 secondes, les gardiens, soigneurs, bardes et ingénieurs non étourdis offrent à leur allié le plus blessé un bouclier de 1,5 × leur attaque. La règle vaut pour les deux camps.</string>
+    <string name="hamlet_combat_field_quarry_desc">Les ennemis gagnent 25 points d’armure. Les mages et ingénieurs ignorent ce blindage supplémentaire ; la perforation d’armure aide également.</string>
+    <string name="hamlet_combat_field_ember_desc" formatted="false">Après 20 secondes, les attaques des deux camps gagnent 1% de dégâts par seconde, jusqu’à +15%. Les dégâts rapides et les boucliers bien placés écourtent les combats dangereux.</string>
+    <string name="hamlet_combat_field_marsh_desc" formatted="false">Toutes les 10 secondes, tous les combattants subissent du venin pendant 4 secondes : 0,6% de leurs PV maximaux par seconde, en ignorant les boucliers. Purification retire ce venin. Les soins et la tactique défensive aident.</string>
+    <string name="hamlet_combat_field_frost_desc" formatted="false">Les attaques ordinaires se rechargent 12% moins vite dans les deux camps. Les compétences et ultimes gardent leur cadence. Les lanceurs de sorts et la tactique Contrôle restent efficaces.</string>
+</resources>

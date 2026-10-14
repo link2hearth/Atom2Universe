@@ -54,8 +54,9 @@ class HamletAdventureTest {
         val g = game(); val a = g.adventure
         assertFalse(a.forge(0, 0)); assertFalse(a.research(0)); assertFalse(a.focusRecruit(2))
         a.frontier = 6; assertTrue(a.focusRecruit(2)); assertTrue(a.heroes[2].owned)
-        assertFalse(a.focusRecruit(2)); a.add(AdventureResource.TICKETS, 3); assertTrue(a.focusRecruit(2)); assertEquals(8, a.heroes[2].shards)
-        assertTrue(a.promote(2)); assertEquals(3, a.heroes[2].shards); assertFalse(a.promoteTrait(2, 0))
+        assertFalse(a.focusRecruit(2)); a.add(AdventureResource.TICKETS, 3); assertTrue(a.focusRecruit(2)); assertEquals(1, a.heroes[2].shards)
+        assertFalse(a.promote(2)); a.heroes[2].shards = 10
+        assertTrue(a.promote(2)); assertEquals(0, a.heroes[2].shards); assertFalse(a.promoteTrait(2, 0))
         a.heroes[2].stars = 5; a.heroes[2].shards = 12; assertTrue(a.promoteTrait(2, 0)); assertEquals(0, a.heroes[2].shards)
         facility(g, "adventureForge"); assertTrue(a.forge(0, 0)); assertEquals(1, a.heroes[0].gear[0]); assertFalse(a.refine(0, 0))
         a.heroes[0].gear[0] = 5; a.add(AdventureResource.CRYSTAL, 10); assertTrue(a.refine(0, 0))

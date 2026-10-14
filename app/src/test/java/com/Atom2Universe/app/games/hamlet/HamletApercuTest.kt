@@ -33,6 +33,20 @@ class HamletApercuTest {
         FileOutputStream(File(dossier, "$nom.png")).use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
 
+    @Test fun tuileDuHub() {
+        val context = org.robolectric.RuntimeEnvironment.getApplication()
+        assertTrue(com.Atom2Universe.app.hub.HubTileArtworks.forActivity(HamletActivity::class.java.name) == HamletHubTileDrawable::class)
+        val drawable = HamletHubTileDrawable(context)
+        val render = HamletHubTileDrawable::class.java.getDeclaredMethod("render", Canvas::class.java,
+            Float::class.javaPrimitiveType, Float::class.javaPrimitiveType).apply { isAccessible = true }
+        for ((width, height) in listOf(768 to 768, 384 to 192, 192 to 384)) {
+            val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            render.invoke(drawable, Canvas(bmp), width.toFloat(), height.toFloat())
+            ecrire("hub_${width}x$height", bmp)
+            assertTrue(Color.alpha(bmp.getPixel(width / 2, height / 2)) == 255)
+        }
+    }
+
     private fun planche(nom: String, defs: List<Def>, cols: Int, cell: Int, cropOf: (Def) -> String? = { null }, stage: Int = -1) {
         val rows = (defs.size + cols - 1) / cols
         val bmp = Bitmap.createBitmap(cols * cell, rows * (cell + 24), Bitmap.Config.ARGB_8888)
