@@ -20,8 +20,8 @@
       "fr": "Elle fréquente les eaux calmes, notamment les étangs ; les données de Virginie concernent des étangs de castors d’altitude."
     },
     "diet": {
-      "en": "The species accounts consulted give no prey list for the Northern Bluet.",
-      "fr": "Les fiches consultées ne donnent pas de liste de proies pour l’Agrion d’Amérique."
+      "en": "The Virginia species account does not provide prey information specific to the Northern Bluet.",
+      "fr": "La fiche de Virginie ne fournit pas d’information sur les proies propres à l’Agrion d’Amérique."
     },
     "behavior": {
       "en": "Similar bluets can require close examination to identify reliably.",
@@ -49,11 +49,11 @@
       "url": "https://www.vararespecies.org/specie/Enallagma%20annexum",
       "consulted": "2026-10-14",
       "supports": [
-        "identification",
-        "habitat",
         "behavior",
-        "reproduction",
-        "diet"
+        "diet",
+        "habitat",
+        "identification",
+        "reproduction"
       ],
       "facts": [
         "Virginia atlas account describes adult size, blue-and-black appearance, similar species and local habitat.",

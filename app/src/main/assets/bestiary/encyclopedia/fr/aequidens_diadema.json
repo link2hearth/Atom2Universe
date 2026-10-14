@@ -10,7 +10,7 @@
     "diet": "Les sources examinées ne fournissent pas d’étude propre à l’espèce sur ses proies sauvages ou le contenu de son estomac. FishBase ne donne pas de liste directe de proies ; l’estimation de niveau trophique affichée est modélisée à partir de poissons apparentés et ne constitue pas une mesure du régime alimentaire. Les données disponibles ne permettent donc pas de décrire précisément son menu naturel.",
     "behavior": "Le comportement parental le mieux documenté intervient après la ponte : les deux parents prennent les larves nouvellement écloses dans leur bouche. Cette forme particulière de soin distingue sa reproduction d’une simple garde des œufs. En dehors de ces soins parentaux, les fiches consultées donnent peu d’observations directes de terrain sur son activité quotidienne, sa vie sociale ou sa territorialité.",
     "reproduction": "L’espèce pond ses œufs sur un support au lieu de les incuber dans sa bouche. Après l’éclosion, les deux parents transportent les larves dans leur bouche : la littérature sur les cichlidés décrit ainsi une incubation larvaire différée et assurée par les deux parents. Les sources consultées ne donnent pas de données fiables propres à l’espèce sur la taille des pontes, la durée d’incubation ou l’âge de maturité.",
-    "ecology": "L’espèce vit dans les réseaux fluviaux d’eau douce de la région Amazone–Orénoque et est classée comme benthopélagique. Les sources trouvées ne quantifient ni son rôle écologique précis ni son régime naturel. FishBase signale que d’anciennes mentions péruviennes pourraient concerner un autre taxon ; elles ne doivent donc pas servir sans réserve à étendre son aire ou son profil écologique.",
+    "ecology": "L’espèce vit dans les réseaux fluviaux d’eau douce de la région Amazone–Orénoque et est classée comme benthopélagique. Les sources trouvées ne quantifient ni son rôle écologique précis ni son régime naturel. FishBase signale que d’anciennes mentions péruviennes pourraient concerner un autre taxon ; elles ne doivent donc pas servir sans réserve à étendre son aire ou son profil écologique. Un autre Cichlasomatini présent dans ce Bestiaire est l’acara bleu, Andinoacara pulcher. Il était autrefois appelé Aequidens pulcher, mais ce synonyme ne désigne pas Aequidens diadema.",
     "conservation": "L’évaluation de l’UICN datée de 2020 classe Aequidens diadema en préoccupation mineure. Le résumé de l’évaluation indique une vaste répartition, mais peu d’informations sur l’effectif et son évolution ; cette catégorie ne prouve pas que toutes les populations locales soient abondantes ou suivies. Les sources examinées ne donnent pas de tendance fiable à l’échelle de l’espèce."
   },
   "sources": [
@@ -37,6 +37,14 @@
     {
       "url": "https://www.cichlidatlas.com/species/aequidens-diadema/",
       "title": "Aequidens diadema — Cichlid Atlas"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=318560",
+      "title": "Taxonomie NCBI — Aequidens diadema"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=172522",
+      "title": "Taxonomie NCBI — Andinoacara pulcher"
     }
   ]
 }

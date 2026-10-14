@@ -10,7 +10,7 @@
     "diet": "A species-specific study of wild prey or stomach contents was not found in the sources reviewed. FishBase provides no direct prey list for this species; its displayed trophic-level estimate is modelled from related fishes and should not be treated as a measured diet. A detailed menu therefore cannot be stated reliably from the available evidence.",
     "behavior": "The clearest documented parental behavior occurs after spawning: both parents take the newly hatched larvae into their mouths. This is a specialized form of brood care and distinguishes its reproductive behavior from simple egg guarding. Beyond parental care, the reviewed species accounts provide little direct field information on daily activity, social grouping or territorial behavior.",
     "reproduction": "The species lays eggs on a substrate rather than brooding the eggs in the mouth. After hatching, both parents carry the larvae in their mouths, a delayed, biparental form of larval mouthbrooding reported in the cichlid literature. The sources reviewed do not provide dependable species-specific clutch size, incubation time or age at maturity.",
-    "ecology": "The species occupies freshwater river systems in the Amazon–Orinoco region and is classified as benthopelagic. Its exact ecological role and natural diet are not quantified in the sources found. FishBase flags older Peruvian records as potentially belonging to a different taxon, so those records should not be used uncritically to extend its range or ecological profile.",
+    "ecology": "The species occupies freshwater river systems in the Amazon–Orinoco region and is classified as benthopelagic. Its exact ecological role and natural diet are not quantified in the sources found. FishBase flags older Peruvian records as potentially belonging to a different taxon, so those records should not be used uncritically to extend its range or ecological profile. Another Cichlasomatini in this Bestiary is the blue acara, Andinoacara pulcher. It was formerly called Aequidens pulcher, but that synonym does not mean it is Aequidens diadema.",
     "conservation": "The IUCN assessment dated 2020 classifies Aequidens diadema as Least Concern. The assessment summary reports a broad range but limited information on population size and trend; the category should not be read as proof that every local population is abundant or monitored. No reliable species-wide trend was found in the sources reviewed."
   },
   "sources": [
@@ -37,6 +37,14 @@
     {
       "url": "https://www.cichlidatlas.com/species/aequidens-diadema/",
       "title": "Diadem Cichlid — Cichlid Atlas"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=318560",
+      "title": "NCBI Taxonomy — Aequidens diadema"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=172522",
+      "title": "NCBI Taxonomy — Andinoacara pulcher"
     }
   ]
 }
