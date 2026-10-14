@@ -1,0 +1,38 @@
+{
+  "id": "macaria_signaria",
+  "name": "Dusky Peacock",
+  "scientific": "Macaria signaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Dusky Peacock is a geometrid moth recorded in Europe and North America.",
+    "identification": "It can resemble worn Macaria notata (Peacock Moth) or Macaria alternata (Sharp-angled Peacock), but lacks their dark-edged forewing notch.",
+    "habitat": "Its larvae use conifers; North American forest accounts list fir, spruce, hemlock, larch and related hosts.",
+    "diet": "In Canada, the form dispuncta feeds on many conifers, including Douglas-fir, western hemlock and Engelmann spruce.",
+    "behavior": "In Britain, adults fly after dark from May to July and are attracted to light.",
+    "reproduction": "The British account reports one generation per year and an established breeding population in Kent.",
+    "ecology": "Like Macaria liturata, it is a conifer-feeding moth; the documented host list for its North American form is broader than the Scots-pine emphasis for liturata.",
+    "conservation": "A French regional atlas labels it Near Threatened in Nouvelle-Aquitaine; that local status is not a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-signaria/",
+      "title": "Dusky Peacock — UKMoths"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=6344&state=IA",
+      "title": "Macaria signaria — Moth Photographers Group"
+    },
+    {
+      "url": "https://tidcf.nrcan.gc.ca/en/insects/factsheet/8890",
+      "title": "Spruce-fir looper — Canadian Forest Service"
+    },
+    {
+      "url": "https://nouvelle-aquitaine.kollect.fr/observatoire/index.php?action=fiche&d=heteros&id=248999&module=fiche",
+      "title": "Macaria signaria — FAUNA Nouvelle-Aquitaine"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-liturata/",
+      "title": "Tawny-barred Angle — UKMoths"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "manduca_florestan",
+  "name": "Florestan sphinx",
+  "scientific": "Manduca florestan",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Manduca florestan is a New World hawkmoth ranging from the southwestern United States southward.",
+    "identification": "Adults have grey-brown forewings with pale patches and dark marks.",
+    "habitat": "It reaches Mexico, Central America and South America; habitat detail is sparse.",
+    "diet": "Caterpillars use several woody plant families, including Bignoniaceae, Boraginaceae and Verbenaceae; adults feed on flower nectar.",
+    "behavior": "The caterpillar bears the tail horn typical of many sphinxes.",
+    "reproduction": "A pupa precedes adult emergence; timing across its range is unclear.",
+    "ecology": "Argentine records list hosts from three plant families. By comparison, the Costa Rican inventory of Manduca albiplaga larvae found them on Annonaceae; see that profile for details.",
+    "conservation": "Sources reviewed give no global population trend for this moth."
+  },
+  "sources": [
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Manduca-florestan",
+      "title": "Manduca florestan — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://biodar.unlp.edu.ar/sphingidae/en/info/20431.html",
+      "title": "Manduca florestan — Argentine Sphingidae database, Biodar-UNLP"
+    },
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1734",
+      "title": "Manduca florestan — Sphingidae Taxonomic Inventory"
+    },
+    {
+      "url": "https://www.acguanacaste.ac.cr/paginas-de-especies/insectos/101-sphingidae/4743-i-manduca-albiplaga-i-sphingidae",
+      "title": "Manduca albiplaga — Área de Conservación Guanacaste species account"
+    }
+  ]
+}

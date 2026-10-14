@@ -1,0 +1,30 @@
+{
+  "id": "megalaima_australis",
+  "name": "Barbu à calotte bleue",
+  "scientific": "Megalaima australis",
+  "group": "birds",
+  "sections": {
+    "overview": "Le nom du catalogue, Megalaima australis, est une ancienne combinaison ; les listes actuelles classent l’espèce de Java et Bali sous Psilopogon australis.",
+    "identification": "Ce barbu vert présente une calotte et une gorge bleues, une bande sombre sur la poitrine, ainsi que des joues et des couvertures auriculaires jaunes.",
+    "habitat": "Cette espèce monotypique est limitée à Java et Bali ; son habitat principal est la forêt.",
+    "diet": "Elle est classée comme principalement frugivore ; son proche parent insulaire, le Barbu souci-col, mange aussi des insectes et des araignées.",
+    "behavior": "C’est un barbu forestier sédentaire ; le comportement est peu documenté pour la définition actuelle, plus restreinte, de l’espèce.",
+    "reproduction": "Les détails de nidification des anciennes fiches sont difficiles à dissocier du taxon autrefois plus large.",
+    "ecology": "Comme le Barbu souci-col, c’est un barbu forestier insulaire, mais ses couvertures auriculaires jaunes le distinguent du front jaune orangé de ce cousin.",
+    "conservation": "Birds of the World la classe en préoccupation mineure ; cette catégorie ne démontre pas que chaque population locale soit stable."
+  },
+  "sources": [
+    {
+      "url": "https://birdsoftheworld.org/bow/species/litbar1/cur/introduction",
+      "title": "Barbu à calotte bleue — Birds of the World, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/barbu.a.calotte.bleue.html",
+      "title": "Barbu à calotte bleue — Oiseaux.net"
+    },
+    {
+      "url": "https://nhmo-birds.collectionexplorer.org/taxon-9110.aspx",
+      "title": "Barbu à calotte bleue — Musée d’histoire naturelle de l’Université d’Oslo"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "macroglossum_trochilus",
+  "name": "African hummingbird hawkmoth",
+  "scientific": "Macroglossum trochilus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Macroglossum trochilus is a day-flying African hawkmoth.",
+    "identification": "Adults visit flowers in bright daylight.",
+    "habitat": "Records extend from southern to tropical Africa.",
+    "diet": "Larvae feed on Galium and Rubia; adults sip nectar.",
+    "behavior": "It is regularly active by day.",
+    "reproduction": "Species-specific breeding details remain poorly documented.",
+    "ecology": "Recorded larval hosts are both in Rubiaceae.",
+    "conservation": "No species-level conservation assessment was located."
+  },
+  "sources": [
+    {
+      "url": "https://www.biodiversityexplorer.info/lepidoptera/sphingidae/macroglossum_trochilus.htm",
+      "title": "Macroglossum trochilus — Lepidoptera of Southern Africa, Biodiversity Explorer"
+    },
+    {
+      "url": "https://doi.org/10.37828/em.2020.35.5",
+      "title": "A contribution to the knowledge of the Sphingidae fauna of Mozambique — Ecologica Montenegrina"
+    },
+    {
+      "url": "https://www.afromoths.net/moth/6088",
+      "title": "Macroglossum trochilus — Afromoths taxonomic catalogue"
+    }
+  ]
+}

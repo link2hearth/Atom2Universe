@@ -1,0 +1,30 @@
+{
+  "id": "megachasma_pelagios",
+  "name": "Requin grande-gueule",
+  "scientific": "Megachasma pelagios",
+  "group": "fish",
+  "sections": {
+    "overview": "Le requin grande-gueule est un grand requin océanique filtreur, rarement observé, et le seul représentant vivant de son genre.",
+    "identification": "Sa tête particulièrement large et sa grande bouche terminale le distinguent de la plupart des requins, et les plus grands individus rapportés approchent huit à neuf mètres.",
+    "habitat": "Il est largement réparti dans les océans tropicaux et tempérés chauds, près de la surface jusqu’à environ mille cinq cents mètres, avec de nombreuses observations au Japon, à Taïwan et aux Philippines.",
+    "diet": "Il filtre des animaux planctoniques, notamment du krill, en retenant de petites proies dérivantes dans l’eau.",
+    "behavior": "Les marquages et les captures suggèrent des déplacements verticaux qui pourraient suivre des proies migrant entre les profondeurs au cours du cycle jour-nuit.",
+    "reproduction": "La reproduction est mal documentée ; on pense que l’espèce met au monde des petits vivants nourris par leur vitellus, tandis que le cannibalisme intra-utérin reste incertain.",
+    "ecology": "Au large de Taïwan, il a été capturé accessoirement dans une pêcherie ciblant le poisson-lune lancéolé (Masturus lanceolatus) ; voir cette fiche pour le renvoi réciproque.",
+    "conservation": "L’évaluation mondiale de l’UICN publiée en 2019 le classait en préoccupation mineure, mais recommandait de surveiller les captures, car il est rare et potentiellement sensible à la surexploitation."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-1.RLTS.T39338A124402302.en",
+      "title": "Requin grande-gueule — Liste rouge de l’UICN, 2019"
+    },
+    {
+      "url": "https://doi.org/10.1111/jfb.14007",
+      "title": "Répartition, taille et biologie de Megachasma pelagios — Journal of Fish Biology (2019)"
+    },
+    {
+      "url": "https://cites.org/sites/default/files/document/FAO%20Pelagic%20Guide%20IO-FR-COMPLETE.pdf",
+      "title": "Megamouth shark — FAO field guide, French edition"
+    }
+  ]
+}

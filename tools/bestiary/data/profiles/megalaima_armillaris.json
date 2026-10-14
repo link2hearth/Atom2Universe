@@ -1,0 +1,186 @@
+{
+  "id": "megalaima_armillaris",
+  "scientific": "Megalaima armillaris",
+  "group": "birds",
+  "name": {
+    "en": "Flame-fronted barbet",
+    "fr": "Barbu souci-col"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small Asian barbet is currently classified as Psilopogon armillaris; the catalogue name Megalaima armillaris is an older combination.",
+      "fr": "Ce petit barbu asiatique est aujourd’hui classé sous le nom Psilopogon armillaris ; le nom du catalogue, Megalaima armillaris, est une ancienne combinaison."
+    },
+    "identification": {
+      "en": "Its green plumage contrasts with a yellow-orange forehead, blue crown and nape, and a warm orange band across the upper chest.",
+      "fr": "Son plumage vert contraste avec son front jaune orangé, sa calotte et sa nuque bleues, ainsi qu’une bande orangée sur le haut de la poitrine."
+    },
+    "habitat": {
+      "en": "On Java and Bali it uses forest and edges, often with fruit trees nearby; it is most frequent above 600 m.",
+      "fr": "À Java et Bali, elle fréquente les forêts et leurs lisières, souvent près d’arbres fruitiers ; elle est surtout commune au-dessus de 600 m."
+    },
+    "diet": {
+      "en": "Its food includes fruit, including coffee fruit, as well as insects and spiders.",
+      "fr": "Elle mange des fruits, notamment ceux du caféier, ainsi que des insectes et des araignées."
+    },
+    "behavior": {
+      "en": "It is resident; repeated short trills form a characteristic part of its call.",
+      "fr": "Elle est sédentaire ; son chant caractéristique comporte des trilles brefs répétés."
+    },
+    "reproduction": {
+      "en": "It excavates a nest tunnel in a tree; breeding periods differ between Java and Bali.",
+      "fr": "Elle creuse une galerie de nidification dans un arbre ; les périodes de reproduction diffèrent entre Java et Bali."
+    },
+    "ecology": {
+      "en": "Like the Yellow-eared Barbet, it is a forest bird of Java and Bali; its orange-yellow forehead contrasts with that cousin’s yellow ear-coverts.",
+      "fr": "Comme le Barbu à calotte bleue, elle vit dans les forêts de Java et Bali ; son front jaune orangé contraste avec les couvertures auriculaires jaunes de ce cousin."
+    },
+    "conservation": {
+      "en": "Birds of the World lists it as Least Concern, while its range remains confined to two islands.",
+      "fr": "Birds of the World la classe en préoccupation mineure, même si son aire reste limitée à deux îles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Flame-fronted Barbet — Birds of the World, Cornell Lab of Ornithology",
+        "fr": "Barbu souci-col — Birds of the World, Cornell Lab of Ornithology"
+      },
+      "url": "https://birdsoftheworld.org/bow/species/flfbar1/cur/introduction",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell identifies Psilopogon armillaris, provides a Java type locality and range map, and lists Least Concern."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 16,
+        "total": 138,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barbu souci-col — Oiseaux.net",
+        "fr": "Barbu souci-col — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/barbu.souci-col.html",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French account describes plumage, food, resident behavior, and tree-cavity nesting."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 10,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Barbu à calotte bleue — Oiseaux.net",
+        "fr": "Barbu à calotte bleue — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/barbu.a.calotte.bleue.html",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The related barbet has yellow ear-coverts and a blue crown; both accounts describe Java and Bali forms."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 17,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS Report: Psilopogon armillaris — Integrated Taxonomic Information System",
+        "fr": "Fiche ITIS : Psilopogon armillaris — Integrated Taxonomic Information System"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1145246",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS accepts Psilopogon armillaris and records Megalaima armillaris as a synonym."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 11,
+        "total": 11,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Flame-fronted Barbet — Avibase",
+        "fr": "Barbu souci-col — Avibase"
+      },
+      "url": "https://avibase.bsc-eoc.org/species.jsp?avibaseid=1DDCF3CBC3485EBB&lang=EN",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Avibase aligns the current Psilopogon name and English name with current checklists while preserving older combinations in historical checklists."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The inventory preserves the older Megalaima combination, while current taxonomic references use Psilopogon armillaris.",
+    "The Oiseaux.net account itself notes that field ecology remains incompletely known; nest duration and parental care are not expanded here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a French natural-history account with Cornell, ITIS and Avibase for current taxonomy and status; retained the inventory name and added the reciprocal comparison with the Yellow-eared Barbet."
+}

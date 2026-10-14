@@ -1,0 +1,38 @@
+{
+  "id": "macaria_signaria",
+  "name": "Philobie des pins",
+  "scientific": "Macaria signaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La Philobie des pins est un papillon géomètre signalé en Europe et en Amérique du Nord.",
+    "identification": "Elle peut ressembler à Macaria notata (Philobie tachetée) ou à Macaria alternata (Philobie alternée) aux ailes usées, mais n’a pas leur échancrure bordée de sombre.",
+    "habitat": "Ses chenilles utilisent des conifères ; les sources forestières nord-américaines citent sapins, épicéas, pruches, mélèzes et autres hôtes proches.",
+    "diet": "Au Canada, la forme dispuncta consomme de nombreux conifères, notamment le douglas, la pruche de l’Ouest et l’épinette d’Engelmann.",
+    "behavior": "En Grande-Bretagne, les adultes volent après la tombée de la nuit de mai à juillet et sont attirés par la lumière.",
+    "reproduction": "La fiche britannique signale une génération annuelle et une population reproductrice établie dans le Kent.",
+    "ecology": "Comme Macaria liturata, c’est un papillon dont les chenilles mangent des conifères ; la liste d’hôtes de sa forme nord-américaine est plus vaste que l’accent mis sur le pin sylvestre chez liturata.",
+    "conservation": "Un atlas régional français la classe quasi menacée en Nouvelle-Aquitaine ; ce statut local ne constitue pas une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-signaria/",
+      "title": "Dusky Peacock — UKMoths"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=6344&state=IA",
+      "title": "Macaria signaria — Moth Photographers Group"
+    },
+    {
+      "url": "https://tidcf.nrcan.gc.ca/en/insects/factsheet/8890",
+      "title": "Arpenteuse des épinettes et sapins — Service canadien des forêts"
+    },
+    {
+      "url": "https://nouvelle-aquitaine.kollect.fr/observatoire/index.php?action=fiche&d=heteros&id=248999&module=fiche",
+      "title": "Macaria signaria — FAUNA Nouvelle-Aquitaine"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-liturata/",
+      "title": "Philobie effacée — UKMoths"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "manduca_albiplaga",
+  "name": "Sphinx à plaques blanches",
+  "scientific": "Manduca albiplaga",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Manduca albiplaga est un sphinx du genre Manduca.",
+    "identification": "Ses ailes antérieures portent de grandes plages claires et des marques sombres ; sa chenille présente la corne caudale typique de nombreuses chenilles de sphinx.",
+    "habitat": "Elle est signalée du Mexique et de l’Amérique centrale jusqu’en Amérique du Sud, avec de rares individus erratiques bien plus au nord.",
+    "diet": "Les chenilles consomment des plantes ligneuses ; des hôtes documentés comprennent Annona et Rollinia, dans la famille des Annonacées, ainsi que Cordia, dans les Boraginacées.",
+    "behavior": "Ses chenilles consomment les feuilles des plantes hôtes recensées.",
+    "reproduction": "Comme chez les autres sphinx, la chenille se transforme en chrysalide avant l’émergence de l’adulte ; la période de reproduction propre à l’espèce n’est pas précisée ici.",
+    "ecology": "Dans l’Área de Conservación Guanacaste au Costa Rica, des centaines d’observations de chenilles concernaient surtout les Annonacées. Voir la fiche de Manduca florestan, dont les plantes hôtes recensées en Argentine couvrent d’autres familles.",
+    "conservation": "Les sources consultées décrivent sa répartition et ses plantes hôtes, mais n’établissent ni tendance démographique mondiale actuelle ni catégorie de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1666",
+      "title": "Manduca albiplaga — inventaire taxonomique des Sphingidae"
+    },
+    {
+      "url": "https://www.acguanacaste.ac.cr/paginas-de-especies/insectos/101-sphingidae/4743-i-manduca-albiplaga-i-sphingidae",
+      "title": "Manduca albiplaga — fiche de l’Área de Conservación Guanacaste"
+    },
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Manduca-albiplaga",
+      "title": "Sphinx à plaques blanches — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://www.mothphotographersgroup.msstate.edu/species.php?hodges=7779",
+      "title": "Manduca albiplaga — Moth Photographers Group"
+    },
+    {
+      "url": "https://biodar.unlp.edu.ar/sphingidae/en/info/20431.html",
+      "title": "Manduca florestan — base argentine des Sphingidae, Biodar-UNLP"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "id": "macroglossum_trochilus",
+  "scientific": "Macroglossum trochilus",
+  "group": "invertebrates",
+  "name": {
+    "en": "African hummingbird hawkmoth",
+    "fr": "Moro-sphinx africain"
+  },
+  "sections": {
+    "overview": {
+      "en": "Macroglossum trochilus is a day-flying African hawkmoth.",
+      "fr": "Macroglossum trochilus est un sphinx africain diurne."
+    },
+    "identification": {
+      "en": "Adults visit flowers in bright daylight.",
+      "fr": "Les adultes butinent en plein jour."
+    },
+    "habitat": {
+      "en": "Records extend from southern to tropical Africa.",
+      "fr": "Il est signalé d’Afrique australe à l’Afrique tropicale."
+    },
+    "diet": {
+      "en": "Larvae feed on Galium and Rubia; adults sip nectar.",
+      "fr": "Les chenilles consomment Galium et Rubia ; les adultes boivent le nectar."
+    },
+    "behavior": {
+      "en": "It is regularly active by day.",
+      "fr": "Il est régulièrement actif de jour."
+    },
+    "reproduction": {
+      "en": "Species-specific breeding details remain poorly documented.",
+      "fr": "La reproduction propre à l’espèce reste mal documentée."
+    },
+    "ecology": {
+      "en": "Recorded larval hosts are both in Rubiaceae.",
+      "fr": "Les hôtes larvaires recensés sont des Rubiacées."
+    },
+    "conservation": {
+      "en": "No species-level conservation assessment was located.",
+      "fr": "Aucune évaluation de conservation propre à l’espèce n’a été trouvée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Macroglossum trochilus — Lepidoptera of Southern Africa, Biodiversity Explorer",
+        "fr": "Macroglossum trochilus — Lépidoptères d’Afrique australe, Biodiversity Explorer"
+      },
+      "url": "https://www.biodiversityexplorer.info/lepidoptera/sphingidae/macroglossum_trochilus.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Lists its broad African distribution, daytime flower visits and recorded larval hosts Galium and Rubia.",
+        "Does not provide a detailed species-specific conservation assessment or life-history account."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 26,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A contribution to the knowledge of the Sphingidae fauna of Mozambique — Ecologica Montenegrina",
+        "fr": "Contribution à la connaissance des Sphingidae du Mozambique — Ecologica Montenegrina"
+      },
+      "url": "https://doi.org/10.37828/em.2020.35.5",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "A 2020 faunal paper reports Macroglossum trochilus specimens from Mozambique."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macroglossum trochilus — Afromoths taxonomic catalogue",
+        "fr": "Macroglossum trochilus — catalogue taxonomique Afromoths"
+      },
+      "url": "https://www.afromoths.net/moth/6088",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The inventory's Hübner taxon is distinct from Cephonodes trochilus (Guérin-Méneville), whose former combination also used the name Macroglossum trochilus."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 19,
+        "total": 19,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The old combination Macroglossum trochilus has also been used for the separate Cephonodes trochilus (Guérin-Méneville, 1843); this record refers to the African species Macroglossum trochilus (Hübner, 1823). The available host-plant and natural-history records are incomplete."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked an African species account and a peer-reviewed Mozambique faunal paper; kept the Hübner taxon distinct from the similarly named Cephonodes species."
+}

@@ -1,0 +1,120 @@
+{
+  "id": "megahexura_fulva",
+  "scientific": "Megahexura fulva",
+  "group": "invertebrates",
+  "name": {
+    "en": "Tawny dwarf tarantula",
+    "fr": "Mygale naine fauve"
+  },
+  "sections": {
+    "overview": {
+      "en": "Megahexura fulva is a mygalomorph spider known from upland habitats of central and southern California.",
+      "fr": "Megahexura fulva est une araignée mygalomorphe connue des milieux d’altitude du centre et du sud de la Californie."
+    },
+    "identification": {
+      "en": "It is notable among the small funnel-web relatives for building a relatively large, exposed sheet web with a funnel-shaped retreat.",
+      "fr": "Elle se distingue parmi ses petites parentes à toile en entonnoir par une nappe de soie relativement grande et exposée, prolongée par un refuge en forme d’entonnoir."
+    },
+    "habitat": {
+      "en": "The described species is recorded from upland parts of central and southern California.",
+      "fr": "L’espèce décrite est signalée dans les zones d’altitude du centre et du sud de la Californie."
+    },
+    "diet": {
+      "en": "The taxonomic and web references consulted do not provide a species-specific prey list.",
+      "fr": "Les références taxonomiques et consacrées à sa toile consultées ne donnent pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "It waits at the funnel-like retreat beneath its exposed sheet web, which distinguishes its web from the covered sheets of smaller relatives.",
+      "fr": "Elle attend dans son refuge en entonnoir, sous sa nappe de soie exposée, différente des nappes couvertes de parentes plus petites."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not describe its breeding season or clutch size.",
+      "fr": "Les sources consultées ne décrivent ni sa période de reproduction ni la taille de ses pontes."
+    },
+    "ecology": {
+      "en": "A recent family-level study notes that populations currently identified as M. fulva may include cryptic species, so its diversity may be underestimated.",
+      "fr": "Une étude récente à l’échelle de la famille indique que les populations actuellement identifiées comme M. fulva pourraient inclure des espèces cryptiques, et que leur diversité est peut-être sous-estimée."
+    },
+    "conservation": {
+      "en": "The sources used here establish a California range but do not provide a species-specific conservation assessment.",
+      "fr": "Les sources utilisées ici établissent une aire californienne, mais ne fournissent pas d’évaluation de conservation propre à l’espèce."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "A new family-level classification and phylogeny of atypoid mygalomorph spiders — PeerJ",
+        "fr": "Nouvelle classification et phylogénie des mygalomorphes atypoïdes à l’échelle familiale — PeerJ"
+      },
+      "url": "https://peerj.com/articles/6864/",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The described species is known from upland habitats of central and southern California; the study suggests the currently recognized species may contain cryptic diversity."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 24,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common Spiders of North America: Midget Funnelweb Tarantulas — University of California Press",
+        "fr": "Common Spiders of North America : mygales naines à toile en entonnoir — University of California Press"
+      },
+      "url": "https://academic.oup.com/california-scholarship-online/book/28633/chapter-abstract/232585399",
+      "supports": [
+        "identification",
+        "behavior",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Megahexura fulva builds the largest and more exposed sheet web with a funnel-shaped retreat among the small funnel-web spiders discussed; the work does not give species-specific prey or reproduction data."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 30,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The available natural-history details are sparse; family-level observations should not be mistaken for measured species-specific ecology.",
+    "A recent phylogenetic study flags possible cryptic diversity, but does not formally split the species."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft based on a peer-reviewed family phylogeny and a California spider reference; sparse species-specific biology is explicitly left unstated."
+}

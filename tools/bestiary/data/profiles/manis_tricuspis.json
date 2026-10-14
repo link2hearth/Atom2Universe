@@ -1,0 +1,120 @@
+{
+  "id": "manis_tricuspis",
+  "scientific": "Manis tricuspis",
+  "group": "mammals",
+  "name": {
+    "en": "White-bellied pangolin",
+    "fr": "Pangolin à ventre blanc"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small African forest pangolin climbs trees but also descends to forage; current specialist sources use Phataginus tricuspis, though older references used Manis.",
+      "fr": "Ce petit pangolin forestier africain grimpe aux arbres mais descend aussi au sol pour chercher sa nourriture ; les sources spécialistes actuelles retiennent Phataginus tricuspis, contrairement à certaines références anciennes qui employaient Manis."
+    },
+    "identification": {
+      "en": "Its body is protected by overlapping scales and its belly has pale, sparsely haired skin; compared with the black-bellied pangolin (Phataginus tetradactyla), its tail is shorter.",
+      "fr": "Son corps est protégé par des écailles imbriquées et son ventre porte une peau claire et peu poilue ; par rapport au pangolin à ventre noir (Phataginus tetradactyla), sa queue est plus courte."
+    },
+    "habitat": {
+      "en": "It occurs in equatorial African forests and uses trees as well as the ground.",
+      "fr": "Il fréquente les forêts équatoriales d’Afrique et utilise aussi bien les arbres que le sol."
+    },
+    "diet": {
+      "en": "It feeds mainly on ants and termites, which it collects with its long sticky tongue.",
+      "fr": "Il se nourrit surtout de fourmis et de termites, qu’il capture avec sa longue langue collante."
+    },
+    "behavior": {
+      "en": "It climbs and can use its prehensile tail for support; when threatened, it curls into a ball and shields its soft underside with scales.",
+      "fr": "Il grimpe et peut s’appuyer sur sa queue préhensile ; menacé, il se roule en boule et protège son ventre vulnérable sous ses écailles."
+    },
+    "reproduction": {
+      "en": "A single young is usually born after a gestation of about 150 days and rides on its mother’s tail.",
+      "fr": "Un petit naît généralement après une gestation d’environ 150 jours et s’accroche à la queue de sa mère."
+    },
+    "ecology": {
+      "en": "By eating ants and termites, it participates in forest food webs, but population monitoring remains difficult.",
+      "fr": "En consommant fourmis et termites, il participe aux réseaux alimentaires forestiers, mais le suivi des populations reste difficile."
+    },
+    "conservation": {
+      "en": "The IUCN SSC lists it as Endangered; hunting and trade threaten it, though local trends remain unclear.",
+      "fr": "Le groupe UICN le classe En danger ; la chasse et le commerce le menacent, mais les tendances locales restent inconnues."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "White-bellied pangolin — IUCN SSC Pangolin Specialist Group",
+        "fr": "Pangolin à ventre blanc — Groupe de spécialistes des pangolins de la CSE de l’UICN"
+      },
+      "url": "https://pangolinsg.org/portfolio/white-bellied-pangolin/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Current name, range, reproduction and status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 160,
+        "notes_words": 6,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "White-bellied pangolin — African Pangolin Working Group",
+        "fr": "Pangolin à ventre blanc — African Pangolin Working Group"
+      },
+      "url": "https://africanpangolin.org/about-us/the-four-african-pangolin-species/white-bellied-pangolin/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Body form, diet and habits."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 5,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The available specialist-group summary gives broad range and life-history information but few population-level measurements.",
+    "Le résumé du groupe spécialiste donne des informations générales sur l’aire et le cycle de vie, mais peu de mesures démographiques."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the current combination and status with the IUCN SSC Pangolin Specialist Group in English and French; retained the inventory ID while using the accepted species name. The black-bellied pangolin is a close relative and the direct comparison is reciprocal only if that profile is present."
+}

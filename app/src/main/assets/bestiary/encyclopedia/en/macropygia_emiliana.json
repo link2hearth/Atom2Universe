@@ -1,0 +1,30 @@
+{
+  "id": "macropygia_emiliana",
+  "name": "ruddy cuckoo-dove",
+  "scientific": "Macropygia emiliana",
+  "group": "birds",
+  "sections": {
+    "overview": "The ruddy cuckoo-dove is a reddish-brown pigeon native to Brunei, Indonesia and Malaysia.",
+    "identification": "Its overall rufous-brown plumage and paler yellowish head help distinguish it from other cuckoo-doves.",
+    "habitat": "It inhabits forest, wooded country and tree-rich plantations in lowlands and foothills.",
+    "diet": "Species accounts describe quiet foraging in the middle and lower forest layers, but the sources consulted do not establish a detailed diet.",
+    "behavior": "It is shy and unobtrusive, usually feeding within forest cover and giving a repeated, low, cooing call.",
+    "reproduction": "The concise species accounts consulted provide no reliable detail on nesting or breeding timing.",
+    "ecology": "The Enggano Cuckoo-Dove (Macropygia cinnamomea), once grouped with it, is now treated as a separate species partly on the basis of plumage and voice.",
+    "conservation": "Oiseaux.net reports a global IUCN category of Least Concern; that category does not mean every local population is secure."
+  },
+  "sources": [
+    {
+      "url": "https://ebird.org/species/rucdov1?siteLanguage=in",
+      "title": "Uncal buau (Macropygia emiliana) — eBird, Cornell Lab of Ornithology, Indonesian-language account"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/ruddy.cuckoo-dove.html",
+      "title": "Ruddy Cuckoo-Dove — Oiseaux.net"
+    },
+    {
+      "url": "https://doi.org/10.1111/bij.12768",
+      "title": "Using bioacoustic data to test species limits in an Indo-Pacific island radiation of Macropygia cuckoo-doves — Biological Journal of the Linnean Society"
+    }
+  ]
+}

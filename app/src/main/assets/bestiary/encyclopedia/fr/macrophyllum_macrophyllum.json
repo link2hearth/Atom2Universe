@@ -1,0 +1,30 @@
+{
+  "id": "macrophyllum_macrophyllum",
+  "name": "Grand phyllostome",
+  "scientific": "Macrophyllum macrophyllum",
+  "group": "mammals",
+  "sections": {
+    "overview": "Macrophyllum macrophyllum est une petite chauve-souris à feuille nasale des Amériques.",
+    "identification": "Ses longues pattes arrière et sa queue le distinguent de petites chauves-souris proches.",
+    "habitat": "Il se repose près de l’eau, en forêt, dans des grottes, buses et tunnels.",
+    "diet": "Il mange surtout des insectes volants et aquatiques ; la pêche n’est pas confirmée.",
+    "behavior": "L’écholocation guide son vol papillonnant au-dessus de l’eau.",
+    "reproduction": "Les femelles donnent naissance à un seul petit ; la saison de reproduction est mal documentée.",
+    "ecology": "Il peut influer sur les populations locales d’insectes aquatiques.",
+    "conservation": "Animal Diversity Web rapporte la catégorie mondiale de l’UICN « préoccupation mineure ». L’évaluation argentine de 2019 l’a classée « données insuffisantes » dans ce pays."
+  },
+  "sources": [
+    {
+      "url": "https://animaldiversity.org/accounts/Macrophyllum_macrophyllum/",
+      "title": "Macrophyllum macrophyllum — Animal Diversity Web, Université du Michigan"
+    },
+    {
+      "url": "https://mamiferosmexico.org/books/Compendio%20de%20llamados%20de%20murci%C3%A9lagos.pdf",
+      "title": "Chauve-souris à longues pattes — Compendium des cris de chauves-souris du Mexique (espagnol/anglais)"
+    },
+    {
+      "url": "https://doi.org/10.31687/SaremLR.19.055",
+      "title": "Macrophyllum macrophyllum — évaluation de la conservation des mammifères d’Argentine (SAREM, 2019)"
+    }
+  ]
+}

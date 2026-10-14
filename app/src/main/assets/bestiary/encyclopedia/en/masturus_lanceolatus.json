@@ -1,0 +1,34 @@
+{
+  "id": "masturus_lanceolatus",
+  "name": "Sharptail mola",
+  "scientific": "Masturus lanceolatus",
+  "group": "fish",
+  "sections": {
+    "overview": "The sharptail mola is a large oceanic sunfish in the family Molidae and the sole living member of Masturus; it is related to but distinct from the ocean sunfish Mola mola.",
+    "identification": "Its tall, flattened body ends in a truncated tail-like clavus with a central pointed projection, unlike the unpointed clavus of Mola mola; it can approach three metres long.",
+    "habitat": "It occurs in tropical and warm-temperate waters of the major oceans, although its scattered records leave its full distribution imperfectly known.",
+    "diet": "A recent diet study found varied prey, with tunicates prominent in sampled fish and prey drawn from several ocean depths and habitats.",
+    "behavior": "It is rarely observed directly, though tagging has documented deep dives whose purpose remains uncertain.",
+    "reproduction": "Its breeding season and reproductive biology remain poorly known.",
+    "ecology": "It occupies open-water food webs and is targeted in a Taiwanese fishery where megamouth sharks are also caught incidentally; see that shark’s profile for the reciprocal link.",
+    "conservation": "The IUCN assessment published in 2015 classified it as Least Concern but noted uncertainty and the need for better catch and biological data."
+  },
+  "sources": [
+    {
+      "url": "https://oki-churaumi.jp/en/fishbook/1521347397/",
+      "title": "Sharptail mola — Okinawa Churaumi Aquarium"
+    },
+    {
+      "url": "https://www.soest.hawaii.edu/oceanography/oceanwp/wp-content/uploads/2024/09/2024-Chang.pdf",
+      "title": "Ontogenetic and seasonal shifts in diets of sharptail sunfish — University of Hawaiʻi thesis, 2024"
+    },
+    {
+      "url": "https://dx.doi.org/10.2305/IUCN.UK.2015-4.RLTS.T193634A2250642.en",
+      "title": "Masturus lanceolatus — IUCN Red List assessment, 2015"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Mola-mola-Poisson-lune-344/",
+      "title": "Poisson-lune commun — DORIS, Fédération française d’études et de sports sous-marins"
+    }
+  ]
+}

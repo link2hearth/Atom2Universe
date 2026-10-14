@@ -1,0 +1,34 @@
+{
+  "id": "macaria_liturata",
+  "name": "Tawny-barred Angle",
+  "scientific": "Macaria liturata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Tawny-barred Angle is a geometrid moth associated with coniferous woodland in Britain.",
+    "identification": "Its wingspan is 22–27 mm; the dark form nigrofulvata is reported especially often in northern Britain.",
+    "habitat": "The British account describes it as fairly common through much of the islands, in landscapes with conifer woodland.",
+    "diet": "Its caterpillars feed on conifers, especially Scots pine.",
+    "behavior": "A Finnish species account says it flies at dusk and at night and is attracted to light.",
+    "reproduction": "In Finland, the pupa overwinters; local flight timing differs from the British pattern.",
+    "ecology": "Like Macaria signaria, it is a congener whose larvae use conifers, although Scots pine is especially noted for this species.",
+    "conservation": "UKMoths describes it as fairly common in much of Britain; that regional account does not establish a global population trend."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-liturata/",
+      "title": "Tawny-barred Angle — UKMoths"
+    },
+    {
+      "url": "https://laji.fi/taxon/MX.61556/biology",
+      "title": "Macaria liturata — Finnish Biodiversity Information Facility"
+    },
+    {
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=6344&state=IA",
+      "title": "Macaria signaria — Moth Photographers Group"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/417",
+      "title": "Macaria liturata — Lepidoptera Mundi"
+    }
+  ]
+}

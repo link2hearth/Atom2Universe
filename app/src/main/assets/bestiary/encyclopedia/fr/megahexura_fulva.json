@@ -1,0 +1,26 @@
+{
+  "id": "megahexura_fulva",
+  "name": "Mygale naine fauve",
+  "scientific": "Megahexura fulva",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Megahexura fulva est une araignée mygalomorphe connue des milieux d’altitude du centre et du sud de la Californie.",
+    "identification": "Elle se distingue parmi ses petites parentes à toile en entonnoir par une nappe de soie relativement grande et exposée, prolongée par un refuge en forme d’entonnoir.",
+    "habitat": "L’espèce décrite est signalée dans les zones d’altitude du centre et du sud de la Californie.",
+    "diet": "Les références taxonomiques et consacrées à sa toile consultées ne donnent pas de liste de proies propre à l’espèce.",
+    "behavior": "Elle attend dans son refuge en entonnoir, sous sa nappe de soie exposée, différente des nappes couvertes de parentes plus petites.",
+    "reproduction": "Les sources consultées ne décrivent ni sa période de reproduction ni la taille de ses pontes.",
+    "ecology": "Une étude récente à l’échelle de la famille indique que les populations actuellement identifiées comme M. fulva pourraient inclure des espèces cryptiques, et que leur diversité est peut-être sous-estimée.",
+    "conservation": "Les sources utilisées ici établissent une aire californienne, mais ne fournissent pas d’évaluation de conservation propre à l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://peerj.com/articles/6864/",
+      "title": "Nouvelle classification et phylogénie des mygalomorphes atypoïdes à l’échelle familiale — PeerJ"
+    },
+    {
+      "url": "https://academic.oup.com/california-scholarship-online/book/28633/chapter-abstract/232585399",
+      "title": "Common Spiders of North America : mygales naines à toile en entonnoir — University of California Press"
+    }
+  ]
+}

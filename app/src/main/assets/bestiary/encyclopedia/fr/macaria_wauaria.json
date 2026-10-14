@@ -1,0 +1,34 @@
+{
+  "id": "macaria_wauaria",
+  "name": "Damas cendré",
+  "scientific": "Macaria wauaria",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le Damas cendré est un papillon géomètre dont les populations britanniques fréquentent souvent les cultures de petits fruits.",
+    "identification": "UKMoths indique une envergure adulte de 25 à 30 mm.",
+    "habitat": "Il fréquente les jardins, jardins familiaux et autres lieux cultivés où poussent groseilliers ou cassissiers.",
+    "diet": "Les chenilles se nourrissent de plusieurs groseilliers et cassissiers du genre Ribes.",
+    "behavior": "En Europe centrale, les adultes volent surtout en juin et juillet, rarement à la fin mai ou au début août.",
+    "reproduction": "L’œuf hiverne et les chenilles sont généralement observées de la mi-avril au début juin.",
+    "ecology": "Contrairement aux chenilles de Macaria liturata et Macaria signaria, qui consomment des conifères, les siennes utilisent des arbustes Ribes souvent cultivés dans les jardins.",
+    "conservation": "UKMoths indique que l’espèce semble décliner en Grande-Bretagne, tout en restant largement répartie dans le pays."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-wauaria/",
+      "title": "Damas cendré — UKMoths"
+    },
+    {
+      "url": "https://www.pyrgus.de/Macaria_wauaria_en.html",
+      "title": "Damas cendré — European Lepidoptera and their ecology"
+    },
+    {
+      "url": "https://www.papillon-poitou-charentes.org/Macaria-wauaria-Linnaeus-1758.html?tri=num",
+      "title": "Macaria wauaria — Lépidoptères du Poitou-Charentes"
+    },
+    {
+      "url": "https://portal.research.lu.se/en/publications/molecular-phylogeny-of-north-european-geometridae-lepidoptera-geo/",
+      "title": "Phylogénie moléculaire des Geometridae d’Europe du Nord — université de Lund"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "id": "mastotermes_darwiniensis",
+  "scientific": "Mastotermes darwiniensis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Darwin termite",
+    "fr": "Termite de Darwin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Darwin termite is a distinctive large-bodied member of the family Mastotermitidae, native to tropical northern Australia.",
+      "fr": "La termite de Darwin est une grande espèce distinctive de la famille des Mastotermitidae, indigène du nord tropical de l’Australie."
+    },
+    "identification": {
+      "en": "It is a large termite; unlike many termites, it has no true worker caste.",
+      "fr": "C’est une grande termite ; contrairement à de nombreuses termites, elle ne possède pas de véritable caste d’ouvriers."
+    },
+    "habitat": {
+      "en": "It occurs in tropical northern Australia, where colonies live in galleries and nests associated with trees, logs and other wood.",
+      "fr": "Elle vit dans le nord tropical de l’Australie, où les colonies occupent des galeries et des nids associés aux arbres, aux troncs et à d’autres bois."
+    },
+    "diet": {
+      "en": "It consumes wood and other plant material and can damage living trees, timber and crops near settlements and plantations.",
+      "fr": "Elle consomme du bois et d’autres matières végétales et peut endommager arbres vivants, bois d’œuvre et cultures près des zones habitées et des plantations."
+    },
+    "behavior": {
+      "en": "It lives in social colonies; colony size is generally small in natural settings but can grow in built-up areas.",
+      "fr": "Elle vit en colonies sociales ; celles-ci sont généralement petites dans les milieux naturels, mais peuvent grossir dans les zones bâties."
+    },
+    "reproduction": {
+      "en": "Termite colonies generally produce winged reproductive forms that disperse and found new colonies; species-specific breeding data are scarce.",
+      "fr": "Les colonies de termites produisent généralement des reproducteurs ailés qui se dispersent et fondent de nouvelles colonies ; les données propres à l’espèce sont rares."
+    },
+    "ecology": {
+      "en": "It helps decompose wood and plant matter, but is also an economically important timber pest in northern Australia.",
+      "fr": "Elle contribue à décomposer le bois et les matières végétales, mais constitue aussi un ravageur important du bois dans le nord australien."
+    },
+    "conservation": {
+      "en": "It is documented as a damaging timber and crop pest in tropical northern Australia; the references give no population-trend estimate.",
+      "fr": "Elle est documentée comme ravageur du bois et des cultures dans le nord tropical de l’Australie ; les références ne donnent pas d’estimation de tendance démographique."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Termites — CSIRO Entomology",
+        "fr": "Termites — CSIRO Entomology"
+      },
+      "url": "https://www.ento.csiro.au/education/insects/isoptera.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "CSIRO reports northern Australian range, wood nests and damage to timber, trees and crops."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 14,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Termites as pests — Australian Museum",
+        "fr": "Les termites nuisibles — Australian Museum"
+      },
+      "url": "https://australian.museum/termites-as-pests",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Australian Museum describes the family member as large-bodied, with no true worker caste."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 13,
+        "total": 168,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific breeding and population data are limited in the sources consulted; general termite social biology should not be mistaken for measurements specific to this species.",
+    "Les sources consultées apportent peu de données propres à l’espèce sur la reproduction et les populations ; la biologie sociale générale des termites ne doit pas être confondue avec des mesures spécifiques."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked northern Australian range and pest ecology against CSIRO and Australian Museum accounts; avoided applying general termite caste biology to a species reported to lack a true worker caste."
+}

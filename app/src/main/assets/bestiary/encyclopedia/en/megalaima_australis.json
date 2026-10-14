@@ -1,0 +1,30 @@
+{
+  "id": "megalaima_australis",
+  "name": "Yellow-eared Barbet",
+  "scientific": "Megalaima australis",
+  "group": "birds",
+  "sections": {
+    "overview": "The catalogue name Megalaima australis is an older combination; current checklists treat the Java-and-Bali species as Psilopogon australis.",
+    "identification": "The green barbet has a blue crown and throat, a dark chest band, and conspicuous yellow ear-coverts and cheeks.",
+    "habitat": "This monotypic species is restricted to Java and Bali; forest is its principal habitat.",
+    "diet": "It is classed as mainly fruit-eating; its close island relative, the Flame-fronted Barbet, also takes insects and spiders.",
+    "behavior": "It is a resident forest barbet; detailed behavior is poorly documented for the modern, narrow species concept.",
+    "reproduction": "Nesting details in older accounts are difficult to separate from the formerly broader taxon.",
+    "ecology": "Like the Flame-fronted Barbet, it is an island forest barbet, but yellow ear-coverts distinguish it from that cousin’s orange-yellow forehead.",
+    "conservation": "Birds of the World lists it as Least Concern; this category does not establish that every local population is stable."
+  },
+  "sources": [
+    {
+      "url": "https://birdsoftheworld.org/bow/species/litbar1/cur/introduction",
+      "title": "Yellow-eared Barbet — Birds of the World, Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/barbu.a.calotte.bleue.html",
+      "title": "Barbu à calotte bleue — Oiseaux.net"
+    },
+    {
+      "url": "https://nhmo-birds.collectionexplorer.org/taxon-9110.aspx",
+      "title": "Yellow-eared Barbet — Natural History Museum, University of Oslo"
+    }
+  ]
+}

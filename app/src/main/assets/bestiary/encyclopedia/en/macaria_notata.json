@@ -1,0 +1,34 @@
+{
+  "id": "macaria_notata",
+  "name": "Peacock Moth",
+  "scientific": "Macaria notata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Peacock Moth is a geometrid recorded in the British Isles and widely across much of France.",
+    "identification": "It may be confused with the Sharp-angled Peacock or Dusky Peacock, especially when worn.",
+    "habitat": "French regional accounts associate it with humid broad-leaved woods.",
+    "diet": "Its caterpillars feed on birches and other deciduous trees, including willow, alder and oak.",
+    "behavior": "In Poitou-Charentes, adults are recorded in two periods: May–June and August–September.",
+    "reproduction": "The French regional account reports an overwintering chrysalis.",
+    "ecology": "The Dusky Peacock, Macaria signaria, is a close lookalike; its British account says it lacks the dark-edged forewing notch seen in the Peacock and Sharp-angled Peacock.",
+    "conservation": "A regional French species record says it has not been assessed on any Red List; this is not a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-notata/",
+      "title": "Peacock Moth — UKMoths"
+    },
+    {
+      "url": "https://www.papillon-poitou-charentes.org/Macaria-notata-Linnaeus-1758%2C17950.html?tri=verna",
+      "title": "Macaria notata — Lépidoptères du Poitou-Charentes"
+    },
+    {
+      "url": "https://www.ukmoths.org.uk/species/macaria-signaria/",
+      "title": "Macaria signaria — UKMoths"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248997",
+      "title": "Philobie tachetée — Observatoire FAUNA"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "megaphobema_mesomelas",
+  "name": "Mygale à pattes rouges du Costa Rica",
+  "scientific": "Megaphobema mesomelas",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le nom d’inventaire Megaphobema mesomelas est une ancienne combinaison ; le World Spider Catalog accepte Abdomegaphobema mesomelas, une mygale du Costa Rica.",
+    "identification": "Le World Spider Catalog confirme le nom accepté et la répartition costaricienne ; son nom commun évoque le contraste des pattes rougeâtres.",
+    "habitat": "Une source costaricienne la signale en milieu forestier, dans des cavités creusées par d’autres animaux ou dans des terriers qu’elle aménage sur des talus verticaux.",
+    "diet": "C’est un prédateur de petits animaux ; une étude menée à Monteverde a montré que le type et l’abondance des proies ne suffisaient pas à expliquer ses préférences.",
+    "behavior": "C’est une mygale terricole qui creuse un terrier ; des observations hors du terrier sont signalées pendant la période de reproduction.",
+    "reproduction": "Les sources consultées documentent peu les détails de sa reproduction.",
+    "ecology": "Comme prédateur du sol, elle consomme d’autres animaux et participe au réseau trophique du sous-bois.",
+    "conservation": "Le World Spider Catalog signale l’espèce au Costa Rica, mais ne lui attribue aucune catégorie de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/44302/species",
+      "title": "Abdomegaphobema mesomelas — World Spider Catalog"
+    },
+    {
+      "url": "https://eol.org/pages/1182131/articles",
+      "title": "Habitat — articles sur la mygale à pattes rouges du Costa Rica, Encyclopedia of Life (INBio)"
+    },
+    {
+      "url": "https://digitalcommons.usf.edu/tropical_ecology/571/",
+      "title": "Préférences alimentaires de Megaphobema mesomelas — dépôt numérique de l’Université de Floride du Sud"
+    }
+  ]
+}

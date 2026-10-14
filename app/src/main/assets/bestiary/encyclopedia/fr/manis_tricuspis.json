@@ -1,0 +1,26 @@
+{
+  "id": "manis_tricuspis",
+  "name": "Pangolin à ventre blanc",
+  "scientific": "Manis tricuspis",
+  "group": "mammals",
+  "sections": {
+    "overview": "Ce petit pangolin forestier africain grimpe aux arbres mais descend aussi au sol pour chercher sa nourriture ; les sources spécialistes actuelles retiennent Phataginus tricuspis, contrairement à certaines références anciennes qui employaient Manis.",
+    "identification": "Son corps est protégé par des écailles imbriquées et son ventre porte une peau claire et peu poilue ; par rapport au pangolin à ventre noir (Phataginus tetradactyla), sa queue est plus courte.",
+    "habitat": "Il fréquente les forêts équatoriales d’Afrique et utilise aussi bien les arbres que le sol.",
+    "diet": "Il se nourrit surtout de fourmis et de termites, qu’il capture avec sa longue langue collante.",
+    "behavior": "Il grimpe et peut s’appuyer sur sa queue préhensile ; menacé, il se roule en boule et protège son ventre vulnérable sous ses écailles.",
+    "reproduction": "Un petit naît généralement après une gestation d’environ 150 jours et s’accroche à la queue de sa mère.",
+    "ecology": "En consommant fourmis et termites, il participe aux réseaux alimentaires forestiers, mais le suivi des populations reste difficile.",
+    "conservation": "Le groupe UICN le classe En danger ; la chasse et le commerce le menacent, mais les tendances locales restent inconnues."
+  },
+  "sources": [
+    {
+      "url": "https://pangolinsg.org/portfolio/white-bellied-pangolin/",
+      "title": "Pangolin à ventre blanc — Groupe de spécialistes des pangolins de la CSE de l’UICN"
+    },
+    {
+      "url": "https://africanpangolin.org/about-us/the-four-african-pangolin-species/white-bellied-pangolin/",
+      "title": "Pangolin à ventre blanc — African Pangolin Working Group"
+    }
+  ]
+}

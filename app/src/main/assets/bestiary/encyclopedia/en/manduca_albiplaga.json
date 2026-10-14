@@ -1,0 +1,38 @@
+{
+  "id": "manduca_albiplaga",
+  "name": "White-plaqued sphinx",
+  "scientific": "Manduca albiplaga",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Manduca albiplaga is a hawkmoth in the genus Manduca.",
+    "identification": "Its forewings carry conspicuous pale patches and dark markings, and its caterpillar bears the characteristic tail horn of many sphinx larvae.",
+    "habitat": "It is recorded from Mexico and Central America south into South America, with occasional vagrants much farther north.",
+    "diet": "Caterpillars feed on woody plants; documented hosts include Annona and Rollinia in the custard-apple family and Cordia in Boraginaceae.",
+    "behavior": "Its caterpillars feed on the leaves of recorded host plants.",
+    "reproduction": "As in other sphinx moths, the caterpillar develops into a pupa before the adult emerges; detailed species-specific breeding timing is not established here.",
+    "ecology": "At Costa Rica's Área de Conservación Guanacaste, hundreds of larval records were concentrated on Annonaceae. Compare Manduca florestan, whose Argentine host records span other plant families, in that profile.",
+    "conservation": "The sources consulted document its range and host use but do not establish a current global population trend or conservation category."
+  },
+  "sources": [
+    {
+      "url": "https://sphingidae.myspecies.info/taxonomy/term/1666",
+      "title": "Manduca albiplaga — Sphingidae Taxonomic Inventory"
+    },
+    {
+      "url": "https://www.acguanacaste.ac.cr/paginas-de-especies/insectos/101-sphingidae/4743-i-manduca-albiplaga-i-sphingidae",
+      "title": "Manduca albiplaga — Área de Conservación Guanacaste species account"
+    },
+    {
+      "url": "https://www.butterfliesandmoths.org/species/Manduca-albiplaga",
+      "title": "White-plaqued sphinx — Butterflies and Moths of North America"
+    },
+    {
+      "url": "https://www.mothphotographersgroup.msstate.edu/species.php?hodges=7779",
+      "title": "Manduca albiplaga — Moth Photographers Group"
+    },
+    {
+      "url": "https://biodar.unlp.edu.ar/sphingidae/en/info/20431.html",
+      "title": "Manduca florestan — Argentine Sphingidae database, Biodar-UNLP"
+    }
+  ]
+}

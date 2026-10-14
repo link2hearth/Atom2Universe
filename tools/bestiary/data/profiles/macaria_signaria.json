@@ -1,0 +1,186 @@
+{
+  "id": "macaria_signaria",
+  "scientific": "Macaria signaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Dusky Peacock",
+    "fr": "Philobie des pins"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Dusky Peacock is a geometrid moth recorded in Europe and North America.",
+      "fr": "La Philobie des pins est un papillon géomètre signalé en Europe et en Amérique du Nord."
+    },
+    "identification": {
+      "en": "It can resemble worn Macaria notata (Peacock Moth) or Macaria alternata (Sharp-angled Peacock), but lacks their dark-edged forewing notch.",
+      "fr": "Elle peut ressembler à Macaria notata (Philobie tachetée) ou à Macaria alternata (Philobie alternée) aux ailes usées, mais n’a pas leur échancrure bordée de sombre."
+    },
+    "habitat": {
+      "en": "Its larvae use conifers; North American forest accounts list fir, spruce, hemlock, larch and related hosts.",
+      "fr": "Ses chenilles utilisent des conifères ; les sources forestières nord-américaines citent sapins, épicéas, pruches, mélèzes et autres hôtes proches."
+    },
+    "diet": {
+      "en": "In Canada, the form dispuncta feeds on many conifers, including Douglas-fir, western hemlock and Engelmann spruce.",
+      "fr": "Au Canada, la forme dispuncta consomme de nombreux conifères, notamment le douglas, la pruche de l’Ouest et l’épinette d’Engelmann."
+    },
+    "behavior": {
+      "en": "In Britain, adults fly after dark from May to July and are attracted to light.",
+      "fr": "En Grande-Bretagne, les adultes volent après la tombée de la nuit de mai à juillet et sont attirés par la lumière."
+    },
+    "reproduction": {
+      "en": "The British account reports one generation per year and an established breeding population in Kent.",
+      "fr": "La fiche britannique signale une génération annuelle et une population reproductrice établie dans le Kent."
+    },
+    "ecology": {
+      "en": "Like Macaria liturata, it is a conifer-feeding moth; the documented host list for its North American form is broader than the Scots-pine emphasis for liturata.",
+      "fr": "Comme Macaria liturata, c’est un papillon dont les chenilles mangent des conifères ; la liste d’hôtes de sa forme nord-américaine est plus vaste que l’accent mis sur le pin sylvestre chez liturata."
+    },
+    "conservation": {
+      "en": "A French regional atlas labels it Near Threatened in Nouvelle-Aquitaine; that local status is not a global assessment.",
+      "fr": "Un atlas régional français la classe quasi menacée en Nouvelle-Aquitaine ; ce statut local ne constitue pas une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Dusky Peacock — UKMoths",
+        "fr": "Dusky Peacock — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-signaria/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "UKMoths records a breeding population in Kent, one generation, May–July flight after dark and attraction to light; it describes resemblance to notata and alternata and the forewing notch distinction."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 29,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria signaria — Moth Photographers Group",
+        "fr": "Macaria signaria — Moth Photographers Group"
+      },
+      "url": "https://mothphotographersgroup.msstate.edu/species.php?hodges=6344&state=IA",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The North American account classifies larvae as Pinaceae feeders and lists host genera Abies, Larix, Picea, Pinus, Pseudotsuga and Tsuga."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 64,
+        "notes_words": 20,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spruce-fir looper — Canadian Forest Service",
+        "fr": "Arpenteuse des épinettes et sapins — Service canadien des forêts"
+      },
+      "url": "https://tidcf.nrcan.gc.ca/en/insects/factsheet/8890",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "The Canadian Forest Service lists many conifer hosts of Macaria signaria dispuncta, including Douglas-fir, western hemlock and Engelmann spruce."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 19,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria signaria — FAUNA Nouvelle-Aquitaine",
+        "fr": "Macaria signaria — FAUNA Nouvelle-Aquitaine"
+      },
+      "url": "https://nouvelle-aquitaine.kollect.fr/observatoire/index.php?action=fiche&d=heteros&id=248999&module=fiche",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The regional French atlas displays a Near Threatened assessment, which is local rather than global."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 38,
+        "notes_words": 15,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Tawny-barred Angle — UKMoths",
+        "fr": "Philobie effacée — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-liturata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "UKMoths notes that Macaria liturata larvae feed on conifers, especially Scots pine, supporting the explicit congener comparison."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 17,
+        "total": 74,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Canadian forestry information focuses on M. signaria dispuncta and should not be assumed to describe every population.",
+    "Near Threatened is the regional Nouvelle-Aquitaine status, not a global category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared UKMoths, North American host records, Canadian Forest Service and a French regional assessment; reciprocally cross-references M. liturata for shared conifer-feeding ecology."
+}

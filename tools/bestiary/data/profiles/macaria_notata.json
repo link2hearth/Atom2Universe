@@ -1,0 +1,163 @@
+{
+  "id": "macaria_notata",
+  "scientific": "Macaria notata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Peacock Moth",
+    "fr": "Philobie tachetée"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Peacock Moth is a geometrid recorded in the British Isles and widely across much of France.",
+      "fr": "La Philobie tachetée est un papillon géomètre observé dans les îles Britanniques et largement répandu dans une grande partie de la France."
+    },
+    "identification": {
+      "en": "It may be confused with the Sharp-angled Peacock or Dusky Peacock, especially when worn.",
+      "fr": "Elle peut être confondue avec le Phibaloptère à angles aigus ou la Philobie des pins, surtout lorsque ses ailes sont usées."
+    },
+    "habitat": {
+      "en": "French regional accounts associate it with humid broad-leaved woods.",
+      "fr": "Les sources régionales françaises l’associent aux boisements humides de feuillus."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on birches and other deciduous trees, including willow, alder and oak.",
+      "fr": "Ses chenilles se nourrissent de bouleaux et d’autres feuillus, notamment des saules, aulnes et chênes."
+    },
+    "behavior": {
+      "en": "In Poitou-Charentes, adults are recorded in two periods: May–June and August–September.",
+      "fr": "En Poitou-Charentes, les adultes sont observés en deux périodes : de mai à juin puis d’août à septembre."
+    },
+    "reproduction": {
+      "en": "The French regional account reports an overwintering chrysalis.",
+      "fr": "La source régionale française indique que la chrysalide hiverne."
+    },
+    "ecology": {
+      "en": "The Dusky Peacock, Macaria signaria, is a close lookalike; its British account says it lacks the dark-edged forewing notch seen in the Peacock and Sharp-angled Peacock.",
+      "fr": "La Philobie des pins, Macaria signaria, est un proche sosie ; sa fiche britannique indique qu’elle n’a pas l’échancrure bordée de sombre visible chez la Philobie tachetée et le Phibaloptère à angles aigus."
+    },
+    "conservation": {
+      "en": "A regional French species record says it has not been assessed on any Red List; this is not a global conservation assessment.",
+      "fr": "Une fiche régionale française précise qu’elle n’a été évaluée dans aucune liste rouge ; il ne s’agit pas d’une évaluation mondiale de son état de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Peacock Moth — UKMoths",
+        "fr": "Peacock Moth — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-notata/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "UKMoths describes British occurrence, similarity to the Sharp-angled Peacock and birch-feeding caterpillars."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 35,
+        "notes_words": 12,
+        "total": 47,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria notata — Lépidoptères du Poitou-Charentes",
+        "fr": "Macaria notata — Lépidoptères du Poitou-Charentes"
+      },
+      "url": "https://www.papillon-poitou-charentes.org/Macaria-notata-Linnaeus-1758%2C17950.html?tri=verna",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French regional account says it is widespread in Europe and much of France except the Mediterranean fringe, in humid broad-leaved woods; gives May–June and August–September flight periods, host genera Betula, Salix, Alnus and Quercus, and an overwintering chrysalis."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 38,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Macaria signaria — UKMoths",
+        "fr": "Macaria signaria — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/macaria-signaria/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The Dusky Peacock page documents the lookalike resemblance and says signaria lacks the dark-edged notch typical of notata and alternata."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 59,
+        "notes_words": 20,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Philobie tachetée — Observatoire FAUNA",
+        "fr": "Philobie tachetée — Observatoire FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/248997",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "This regional automatic record says Macaria notata has not been evaluated in any Red List and has no consolidated expert regional status."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 22,
+        "total": 70,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight times and distribution describe British/French regional sources, not a universal timetable."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared UKMoths, the French Poitou-Charentes account and the regional FAUNA record; cross-reference to signaria is based on the UKMoths comparison of these lookalikes."
+}

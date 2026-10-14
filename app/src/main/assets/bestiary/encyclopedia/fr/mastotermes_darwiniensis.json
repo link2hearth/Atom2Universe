@@ -1,0 +1,26 @@
+{
+  "id": "mastotermes_darwiniensis",
+  "name": "Termite de Darwin",
+  "scientific": "Mastotermes darwiniensis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "La termite de Darwin est une grande espèce distinctive de la famille des Mastotermitidae, indigène du nord tropical de l’Australie.",
+    "identification": "C’est une grande termite ; contrairement à de nombreuses termites, elle ne possède pas de véritable caste d’ouvriers.",
+    "habitat": "Elle vit dans le nord tropical de l’Australie, où les colonies occupent des galeries et des nids associés aux arbres, aux troncs et à d’autres bois.",
+    "diet": "Elle consomme du bois et d’autres matières végétales et peut endommager arbres vivants, bois d’œuvre et cultures près des zones habitées et des plantations.",
+    "behavior": "Elle vit en colonies sociales ; celles-ci sont généralement petites dans les milieux naturels, mais peuvent grossir dans les zones bâties.",
+    "reproduction": "Les colonies de termites produisent généralement des reproducteurs ailés qui se dispersent et fondent de nouvelles colonies ; les données propres à l’espèce sont rares.",
+    "ecology": "Elle contribue à décomposer le bois et les matières végétales, mais constitue aussi un ravageur important du bois dans le nord australien.",
+    "conservation": "Elle est documentée comme ravageur du bois et des cultures dans le nord tropical de l’Australie ; les références ne donnent pas d’estimation de tendance démographique."
+  },
+  "sources": [
+    {
+      "url": "https://www.ento.csiro.au/education/insects/isoptera.html",
+      "title": "Termites — CSIRO Entomology"
+    },
+    {
+      "url": "https://australian.museum/termites-as-pests",
+      "title": "Les termites nuisibles — Australian Museum"
+    }
+  ]
+}
