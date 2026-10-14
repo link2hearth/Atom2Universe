@@ -1,0 +1,168 @@
+{
+  "id": "numenius_madagascariensis",
+  "scientific": "Numenius madagascariensis",
+  "group": "birds",
+  "name": {
+    "en": "Far Eastern Curlew",
+    "fr": "Courlis de Sibérie"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Far Eastern Curlew is a very large migratory shorebird of the East Asian–Australasian flyway.",
+      "fr": "Le Courlis de Sibérie est un très grand limicole migrateur du couloir Asie de l’Est–Australasie."
+    },
+    "identification": {
+      "en": "Its exceptionally long, down-curved bill and dark rump distinguish it; it is bulkier and longer-billed than the Whimbrel (Numenius phaeopus), while the Little Curlew (N. minutus) is much smaller.",
+      "fr": "Son bec exceptionnellement long et arqué et son croupion sombre le distinguent ; il est plus massif et son bec est plus long que chez le Courlis corlieu (Numenius phaeopus), tandis que le Courlis nain (N. minutus) est bien plus petit."
+    },
+    "habitat": {
+      "en": "It breeds in north-eastern Asia and winters on coastal mudflats and estuaries from South-East Asia to Australia.",
+      "fr": "Il niche dans le nord-est de l’Asie et hiverne sur les vasières et les estuaires côtiers, de l’Asie du Sud-Est à l’Australie."
+    },
+    "diet": {
+      "en": "On Australian non-breeding grounds it probes mud for invertebrates, with crabs an important prey.",
+      "fr": "Sur ses sites d’hivernage australiens, il sonde la vase à la recherche d’invertébrés, notamment de crabes."
+    },
+    "behavior": {
+      "en": "It makes long seasonal migrations and depends on a chain of coastal feeding and stopover sites along the flyway.",
+      "fr": "Il effectue de longues migrations saisonnières et dépend d’un réseau de sites côtiers d’alimentation et de halte le long de son couloir migratoire."
+    },
+    "reproduction": {
+      "en": "It nests in northern Asia, where accounts describe a ground nest and a typical clutch of four eggs.",
+      "fr": "Il niche dans le nord de l’Asie ; les descriptions disponibles mentionnent un nid au sol et une ponte généralement de quatre œufs."
+    },
+    "ecology": {
+      "en": "Large intertidal flats, especially stopover areas around the Yellow Sea, are vital to its migration; the related Eurasian Curlew (N. arquata) is smaller and has a white rump, as described in its profile.",
+      "fr": "Les vastes estrans, notamment les haltes migratoires de la mer Jaune, sont essentiels à ses déplacements ; le Courlis cendré (N. arquata), apparenté, est plus petit et a le croupion blanc, comme l’explique sa fiche."
+    },
+    "conservation": {
+      "en": "BirdLife and Australian authorities classify it as Critically Endangered, citing decline and loss or degradation of coastal mudflats.",
+      "fr": "BirdLife et les autorités australiennes le classent En danger critique, en raison de son déclin et de la perte ou dégradation des vasières côtières."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Far Eastern Curlew — BirdLife Australia",
+        "fr": "Courlis de Sibérie — BirdLife Australia"
+      },
+      "url": "https://birdlife.org.au/bird-profiles/far-eastern-curlew/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife describes this as the largest shorebird visiting Australia, with a very long bill, coastal habitat and crab prey; its IUCN category is Critically Endangered."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 25,
+        "total": 166,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eastern Curlew — Australian government action plan",
+        "fr": "Eastern Curlew — plan d’action du gouvernement australien"
+      },
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/action-plan/eastern-curlew",
+      "supports": [
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Government account describes its long-distance migration and the critical Yellow Sea stopover mudflats threatened by reclamation."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 16,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eastern Curlew — Asian migratory-bird species account",
+        "fr": "Courlis de Sibérie — notice asiatique sur les oiseaux migrateurs"
+      },
+      "url": "https://www.esabii.biodic.go.jp/database/migrantbirds/60.html",
+      "supports": [
+        "reproduction",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Asian database describes the breeding range, nesting and clutch; it compares size and bill shape with Whimbrel."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 17,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eastern Curlew — HANZAB species account, Birds New Zealand",
+        "fr": "Eastern Curlew — notice Birds New Zealand"
+      },
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691911477-204_eastern-20curlew.pdf",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Bird account compares the Eastern Curlew with Whimbrel and documents rump differences from Eurasian Curlew."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 15,
+        "total": 85,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The English name Far Eastern Curlew and French name Courlis de Sibérie refer to the same species; madagascariensis does not indicate an African range. Flyway population estimates vary among assessments."
+  ],
+  "review_note": "Species-specific data cross-checked with BirdLife Australia, Australian government and an Asian flyway account; references to related curlews are included.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

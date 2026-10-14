@@ -1,0 +1,30 @@
+{
+  "id": "nomada_trapeziformis",
+  "name": "Trapezoid nomad bee",
+  "scientific": "Nomada trapeziformis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada trapeziformis is a European cuckoo bee with sparse ecological data; its suspected hosts are mining bees, but proposed associations remain unsettled.",
+    "identification": "The Swiss key warns that colour varies and emphasizes structural characters for identification.",
+    "habitat": "The available Swiss account does not establish a characteristic habitat.",
+    "diet": "As a Nomada, it is expected to develop as a nest cleptoparasite rather than provision its own brood with pollen; species-specific feeding observations were not located.",
+    "behavior": "That key lists Andrena barbareae and A. limata only as possible hosts.",
+    "reproduction": "The Swiss account reports two generations per year, but this should be treated as a regional statement rather than a range-wide schedule.",
+    "ecology": "The European Red List classifies N. trapeziformis as Endangered; sparse ecological documentation makes careful verification of host and occurrence records especially useful.",
+    "conservation": "The Endangered category applies at European and EU scales in the Red List; it is a dated assessment, not a substitute for current national status."
+  },
+  "sources": [
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "title": "European Red List of Bees — European Commission / IUCN"
+    },
+    {
+      "url": "https://geonature.arb-idf.fr/sites/default/files/articles/documents/ClefIdent/Hymenopteres/e-fh20_apidae_5.pdf",
+      "title": "CSCF Apidae 5, Swiss identification key / Fauna Helvetica 20"
+    },
+    {
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "title": "British Bees: The Genera — BWARS"
+    }
+  ]
+}

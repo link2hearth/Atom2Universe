@@ -1,0 +1,30 @@
+{
+  "id": "nomada_leucophthalma",
+  "name": "Nomade précoce",
+  "scientific": "Nomada leucophthalma",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada leucophthalma est une abeille coucou du début du printemps, associée aux andrènes Andrena clarkella et A. apicata.",
+    "identification": "Les sexes se ressemblent ; une fiche britannique décrit une abeille noire, brune et jaune, mais la distinguer des autres Nomada exige des caractères diagnostiques.",
+    "habitat": "Elle vit avec ses hôtes dans les bois ouverts, les landes et les tourbières ; ces milieux abritent aussi les andrènes qui butinent les saules au début du printemps.",
+    "diet": "Les adultes visitent les fleurs pour le nectar, mais les femelles n’ont pas d’équipement de collecte du pollen ; la larve consomme les réserves de son hôte.",
+    "behavior": "La fiche britannique indique un vol de mars à la mi-mai et des observations près des terriers hôtes ; N. succincta utilise d’autres Andrena et vole plus tard en été.",
+    "reproduction": "La femelle entre dans les nids d’A. clarkella ou A. apicata ; l’activité précoce de ces hôtes et leur spécialisation sur les saules expliquent le calendrier printanier du parasite.",
+    "ecology": "Une étude classique d’écologie chimique a trouvé le même composé odorant dominant chez A. clarkella et les mâles N. leucophthalma, compatible avec une ressemblance chimique dans ce couple hôte-parasite.",
+    "conservation": "BWARS ne considère pas l’espèce comme rare ou menacée en Grande-Bretagne ; il s’agit d’une appréciation régionale, et non d’une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://bwars.com/bee/apidae/nomada-leucophthalma",
+      "title": "Nomada leucophthalma — fiche espèce BWARS"
+    },
+    {
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "title": "Abeilles britanniques : les genres — BWARS"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17778551/",
+      "title": "Cleptoparasitisme et mimétisme olfactif chez les abeilles — Science / PubMed"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "numenius_phaeopus",
+  "name": "Courlis corlieu",
+  "scientific": "Numenius phaeopus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Courlis corlieu est un courlis migrateur qui niche dans les régions nordiques et hiverne surtout sur des côtes plus chaudes.",
+    "identification": "Il est plus petit que le Courlis cendré (Numenius arquata), avec un bec plus court et une raie claire au centre de la calotte, bordée de raies sombres ; il est bien plus petit que le Courlis de Sibérie (N. madagascariensis).",
+    "habitat": "Il niche dans les landes nordiques, la toundra et les tourbières ouvertes ; en migration et en hiver, il fréquente les côtes, les estuaires et parfois les zones humides intérieures.",
+    "diet": "Son alimentation varie selon la saison : il capture des insectes et des mollusques sur ses sites de nidification, ainsi que des crabes, crevettes, vers et mollusques pendant les migrations.",
+    "behavior": "De nombreux oiseaux traversent l’Europe au printemps et en automne entre leurs sites de nidification nordiques et leurs quartiers d’hiver africains ou asiatiques.",
+    "reproduction": "Il niche au sol dans les milieux ouverts du Nord, souvent dans une simple dépression parmi la végétation.",
+    "ecology": "Le Courlis corlieu partage son genre avec les courlis cendré et de Sibérie, plus grands, et le minuscule Courlis nain ; leurs fiches comparent tailles, becs et aires de répartition. Son plus proche parent est le Courlis d’Alaska (Numenius tahitiensis), dont les déplacements vers les îles du Pacifique contrastent avec les routes afro-eurasiennes du Courlis corlieu ; voir cette fiche pour la comparaison réciproque.",
+    "conservation": "BirdLife classe l’espèce en Préoccupation mineure à l’échelle mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/whimbrel/",
+      "title": "Courlis corlieu — RSPB"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/whimbrel",
+      "title": "Courlis corlieu — BirdFacts du BTO"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/courlis.corlieu.html",
+      "title": "Courlis corlieu — Oiseaux.net"
+    },
+    {
+      "url": "https://datazone.birdlife.org/country/factsheet/India",
+      "title": "Courlis corlieu — fiche nationale de BirdLife International"
+    },
+    {
+      "url": "https://www.reservebaiedesaintbrieuc.com/decouvrir/la-faune/oiseaux/le-courlis-corlieu",
+      "title": "Le Courlis corlieu — Réserve naturelle de la baie de Saint-Brieuc"
+    },
+    {
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.104761/Numenius_tahitiensis",
+      "title": "Courlis d’Alaska — NatureServe Explorer"
+    }
+  ]
+}

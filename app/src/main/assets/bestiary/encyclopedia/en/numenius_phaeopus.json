@@ -1,0 +1,42 @@
+{
+  "id": "numenius_phaeopus",
+  "name": "Eurasian Whimbrel",
+  "scientific": "Numenius phaeopus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Eurasian Whimbrel is a migratory curlew that breeds across northern regions and winters mainly in warmer coastal areas.",
+    "identification": "It is smaller than the Eurasian Curlew (Numenius arquata), with a shorter bill and a pale central crown stripe bordered by dark stripes; it is much smaller than the Far Eastern Curlew (N. madagascariensis).",
+    "habitat": "It breeds on northern moorland, tundra and open boggy ground, and uses coasts, estuaries and sometimes inland wetlands during migration and winter.",
+    "diet": "Its food varies by season: it takes insects and molluscs on breeding grounds, and also feeds on crabs, shrimps, worms and molluscs during passage.",
+    "behavior": "Many birds pass through Europe in spring and autumn between northern breeding areas and African or southern Asian wintering grounds.",
+    "reproduction": "It nests on the ground in open northern habitats, often in a shallow scrape among vegetation.",
+    "ecology": "The Eurasian Whimbrel shares its genus with the larger Eurasian and Far Eastern curlews and the tiny Little Curlew; their profiles compare their sizes, bills and ranges. Its closest relative is the Bristle-thighed Curlew (Numenius tahitiensis), whose Pacific island migration contrasts with the Whimbrel’s broad Afro-Eurasian routes; see that profile for the reciprocal comparison.",
+    "conservation": "BirdLife lists the species as Least Concern globally."
+  },
+  "sources": [
+    {
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/whimbrel/",
+      "title": "Whimbrel — RSPB"
+    },
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/whimbrel",
+      "title": "Whimbrel — BTO BirdFacts"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/courlis.corlieu.html",
+      "title": "Courlis corlieu — Oiseaux.net"
+    },
+    {
+      "url": "https://datazone.birdlife.org/country/factsheet/India",
+      "title": "Whimbrel — BirdLife International country factsheet"
+    },
+    {
+      "url": "https://www.reservebaiedesaintbrieuc.com/decouvrir/la-faune/oiseaux/le-courlis-corlieu",
+      "title": "Whimbrel — Saint-Brieuc Bay Nature Reserve"
+    },
+    {
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.104761/Numenius_tahitiensis",
+      "title": "Bristle-thighed Curlew — NatureServe Explorer"
+    }
+  ]
+}

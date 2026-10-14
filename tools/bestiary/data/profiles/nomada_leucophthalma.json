@@ -1,0 +1,142 @@
+{
+  "id": "nomada_leucophthalma",
+  "scientific": "Nomada leucophthalma",
+  "group": "invertebrates",
+  "name": {
+    "en": "Early nomad bee",
+    "fr": "Nomade précoce"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomada leucophthalma is an early-spring cuckoo bee associated with the mining bees Andrena clarkella and A. apicata.",
+      "fr": "Nomada leucophthalma est une abeille coucou du début du printemps, associée aux andrènes Andrena clarkella et A. apicata."
+    },
+    "identification": {
+      "en": "The sexes are similar; a British account describes a black, brown and yellow bee, while reliable separation from other Nomada requires diagnostic characters.",
+      "fr": "Les sexes se ressemblent ; une fiche britannique décrit une abeille noire, brune et jaune, mais la distinguer des autres Nomada exige des caractères diagnostiques."
+    },
+    "habitat": {
+      "en": "It is found with its hosts in open woodland, heath and moor; these are also landscapes where the host bees forage on willows in early spring.",
+      "fr": "Elle vit avec ses hôtes dans les bois ouverts, les landes et les tourbières ; ces milieux abritent aussi les andrènes qui butinent les saules au début du printemps."
+    },
+    "diet": {
+      "en": "Adults visit flowers for nectar, but females lack pollen-collecting equipment; the larva takes food stored by its host.",
+      "fr": "Les adultes visitent les fleurs pour le nectar, mais les femelles n’ont pas d’équipement de collecte du pollen ; la larve consomme les réserves de son hôte."
+    },
+    "behavior": {
+      "en": "The British account gives a flight period from March to mid-May and reports adults near host burrows; N. succincta uses other Andrena hosts and flies later into summer.",
+      "fr": "La fiche britannique indique un vol de mars à la mi-mai et des observations près des terriers hôtes ; N. succincta utilise d’autres Andrena et vole plus tard en été."
+    },
+    "reproduction": {
+      "en": "The female enters nests of A. clarkella or A. apicata; their early activity and willow-pollen specialization help explain the parasite’s spring schedule.",
+      "fr": "La femelle entre dans les nids d’A. clarkella ou A. apicata ; l’activité précoce de ces hôtes et leur spécialisation sur les saules expliquent le calendrier printanier du parasite."
+    },
+    "ecology": {
+      "en": "A classic chemical-ecology study found the same major scent compound in A. clarkella and male N. leucophthalma, consistent with chemical resemblance in this host-parasite pair.",
+      "fr": "Une étude classique d’écologie chimique a trouvé le même composé odorant dominant chez A. clarkella et les mâles N. leucophthalma, compatible avec une ressemblance chimique dans ce couple hôte-parasite."
+    },
+    "conservation": {
+      "en": "BWARS does not consider the species scarce or threatened in Britain; this is a regional statement, not a global assessment.",
+      "fr": "BWARS ne considère pas l’espèce comme rare ou menacée en Grande-Bretagne ; il s’agit d’une appréciation régionale, et non d’une évaluation mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Nomada leucophthalma — BWARS species profile",
+        "fr": "Nomada leucophthalma — fiche espèce BWARS"
+      },
+      "url": "https://bwars.com/bee/apidae/nomada-leucophthalma",
+      "supports": [
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "BWARS profile reports habitat with hosts, March–mid-May flight, nearby host burrows, and no British scarce/threatened status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 155,
+        "notes_words": 16,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Bees: The Genera — BWARS",
+        "fr": "Abeilles britanniques : les genres — BWARS"
+      },
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction",
+        "diet"
+      ],
+      "facts": [
+        "BWARS bee guide describes similar sexes, coloration, hosts A. clarkella and A. apicata, early-spring activity, and no pollen-collecting apparatus in Nomada."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 179,
+        "notes_words": 21,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cleptoparasitism and odor mimetism in bees — Science / PubMed",
+        "fr": "Cleptoparasitisme et mimétisme olfactif chez les abeilles — Science / PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17778551/",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Reports geranyl octanoate as a major compound in both A. clarkella gland secretion and male N. leucophthalma scent."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 18,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Flight timing and status refer to Britain as described by BWARS.",
+    "The scent result concerns one host-parasite pair and should not be generalized to every Nomada."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR claims réparties par phrases et recoupées avec des sources institutionnelles ou scientifiques.",
+  "source_audit_version": 1
+}

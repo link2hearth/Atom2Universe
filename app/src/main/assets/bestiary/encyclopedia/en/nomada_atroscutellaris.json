@@ -1,0 +1,38 @@
+{
+  "id": "nomada_atroscutellaris",
+  "name": "Dark-scutellum nomad bee",
+  "scientific": "Nomada atroscutellaris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada atroscutellaris is a European cuckoo bee recorded as a cleptoparasite of the mining bee Andrena viridescens.",
+    "identification": "Species-level identification in the diverse genus Nomada depends on diagnostic structures; colour or a common name alone is not a safe guide.",
+    "habitat": "The host A. viridescens nests in sparsely vegetated banks and grasslands where speedwells grow; parasite records near host nesting sites suggest it shares these habitats.",
+    "diet": "As a Nomada cleptoparasite, its larva uses a host nest and provisions rather than a pollen store gathered by the female.",
+    "behavior": "Its known host association is narrower than host use across Nomada as a whole; compare N. argentata, tied to another Andrena species.",
+    "reproduction": "The host record points to A. viridescens nests, but the sources do not detail the parasite’s oviposition sequence or development period.",
+    "ecology": "Because A. viridescens relies on speedwell pollen and open nesting ground, protecting only flowers or only bare soil may not preserve the host-parasite relationship.",
+    "conservation": "The European Red List classifies N. atroscutellaris as Least Concern at European and EU scales; local scarcity can still occur where its host is rare."
+  },
+  "sources": [
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "title": "European Red List of Bees — European Commission / IUCN"
+    },
+    {
+      "url": "https://wildbienen.de/eb-aviri.htm",
+      "title": "Andrena viridescens — Wildbienen.de"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/356557343_Bemerkenswerte_Wildbienen-Nachweise_aus_Sudniedersachsen_Hymenoptera_Apiformes",
+      "title": "Notable wild-bee records from southern Lower Saxony — regional survey"
+    },
+    {
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "title": "British Bees: The Genera — BWARS"
+    },
+    {
+      "url": "https://academic.oup.com/isd/article/8/1/1/7510720",
+      "title": "Phylogenomic monograph of West-Palearctic Nomada — Insect Systematics and Diversity"
+    }
+  ]
+}

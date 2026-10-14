@@ -1,0 +1,213 @@
+{
+  "id": "numenius_phaeopus",
+  "scientific": "Numenius phaeopus",
+  "group": "birds",
+  "name": {
+    "en": "Eurasian Whimbrel",
+    "fr": "Courlis corlieu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Eurasian Whimbrel is a migratory curlew that breeds across northern regions and winters mainly in warmer coastal areas.",
+      "fr": "Le Courlis corlieu est un courlis migrateur qui niche dans les régions nordiques et hiverne surtout sur des côtes plus chaudes."
+    },
+    "identification": {
+      "en": "It is smaller than the Eurasian Curlew (Numenius arquata), with a shorter bill and a pale central crown stripe bordered by dark stripes; it is much smaller than the Far Eastern Curlew (N. madagascariensis).",
+      "fr": "Il est plus petit que le Courlis cendré (Numenius arquata), avec un bec plus court et une raie claire au centre de la calotte, bordée de raies sombres ; il est bien plus petit que le Courlis de Sibérie (N. madagascariensis)."
+    },
+    "habitat": {
+      "en": "It breeds on northern moorland, tundra and open boggy ground, and uses coasts, estuaries and sometimes inland wetlands during migration and winter.",
+      "fr": "Il niche dans les landes nordiques, la toundra et les tourbières ouvertes ; en migration et en hiver, il fréquente les côtes, les estuaires et parfois les zones humides intérieures."
+    },
+    "diet": {
+      "en": "Its food varies by season: it takes insects and molluscs on breeding grounds, and also feeds on crabs, shrimps, worms and molluscs during passage.",
+      "fr": "Son alimentation varie selon la saison : il capture des insectes et des mollusques sur ses sites de nidification, ainsi que des crabes, crevettes, vers et mollusques pendant les migrations."
+    },
+    "behavior": {
+      "en": "Many birds pass through Europe in spring and autumn between northern breeding areas and African or southern Asian wintering grounds.",
+      "fr": "De nombreux oiseaux traversent l’Europe au printemps et en automne entre leurs sites de nidification nordiques et leurs quartiers d’hiver africains ou asiatiques."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in open northern habitats, often in a shallow scrape among vegetation.",
+      "fr": "Il niche au sol dans les milieux ouverts du Nord, souvent dans une simple dépression parmi la végétation."
+    },
+    "ecology": {
+      "en": "The Eurasian Whimbrel shares its genus with the larger Eurasian and Far Eastern curlews and the tiny Little Curlew; their profiles compare their sizes, bills and ranges. Its closest relative is the Bristle-thighed Curlew (Numenius tahitiensis), whose Pacific island migration contrasts with the Whimbrel’s broad Afro-Eurasian routes; see that profile for the reciprocal comparison.",
+      "fr": "Le Courlis corlieu partage son genre avec les courlis cendré et de Sibérie, plus grands, et le minuscule Courlis nain ; leurs fiches comparent tailles, becs et aires de répartition. Son plus proche parent est le Courlis d’Alaska (Numenius tahitiensis), dont les déplacements vers les îles du Pacifique contrastent avec les routes afro-eurasiennes du Courlis corlieu ; voir cette fiche pour la comparaison réciproque."
+    },
+    "conservation": {
+      "en": "BirdLife lists the species as Least Concern globally.",
+      "fr": "BirdLife classe l’espèce en Préoccupation mineure à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Whimbrel — RSPB",
+        "fr": "Courlis corlieu — RSPB"
+      },
+      "url": "https://www.rspb.org.uk/birds-and-wildlife/whimbrel/",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "RSPB account describes migration, Scottish breeding habitat, seasonal diet and ground-nesting wader characteristics."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 146,
+        "notes_words": 13,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whimbrel — BTO BirdFacts",
+        "fr": "Courlis corlieu — BirdFacts du BTO"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/whimbrel",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "BTO compares Whimbrel with Eurasian Curlew, noting smaller size, shorter bill and pale crown stripe; describes migration and distribution."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 19,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Courlis corlieu — Oiseaux.net",
+        "fr": "Courlis corlieu — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/courlis.corlieu.html",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "French species account compares this curlew with other Numenius, including Eurasian and Far Eastern Curlews."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 15,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whimbrel — BirdLife International country factsheet",
+        "fr": "Courlis corlieu — fiche nationale de BirdLife International"
+      },
+      "url": "https://datazone.birdlife.org/country/factsheet/India",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife’s country factsheet lists the Whimbrel as Least Concern."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 9,
+        "total": 26,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whimbrel — Saint-Brieuc Bay Nature Reserve",
+        "fr": "Le Courlis corlieu — Réserve naturelle de la baie de Saint-Brieuc"
+      },
+      "url": "https://www.reservebaiedesaintbrieuc.com/decouvrir/la-faune/oiseaux/le-courlis-corlieu",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "French species account describes the nest as a shallow ground depression in an open site."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 15,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bristle-thighed Curlew — NatureServe Explorer",
+        "fr": "Courlis d’Alaska — NatureServe Explorer"
+      },
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.104761/Numenius_tahitiensis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "NatureServe identifies the Eurasian Whimbrel as the closest relative of the Bristle-thighed Curlew and reports the latter’s Alaska breeding and Pacific-island nonbreeding range."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 23,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some checklists split the North American Hudsonian Whimbrel as Numenius hudsonicus; this entry follows the inventory's Eurasian Whimbrel concept and does not combine population estimates."
+  ],
+  "review_note": "Compared identification with BTO and French Oiseaux.net; migration, diet and breeding habitat checked against RSPB, with a conservative conservation summary.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

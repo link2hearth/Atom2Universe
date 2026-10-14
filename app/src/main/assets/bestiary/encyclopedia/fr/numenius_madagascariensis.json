@@ -1,0 +1,34 @@
+{
+  "id": "numenius_madagascariensis",
+  "name": "Courlis de Sibérie",
+  "scientific": "Numenius madagascariensis",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Courlis de Sibérie est un très grand limicole migrateur du couloir Asie de l’Est–Australasie.",
+    "identification": "Son bec exceptionnellement long et arqué et son croupion sombre le distinguent ; il est plus massif et son bec est plus long que chez le Courlis corlieu (Numenius phaeopus), tandis que le Courlis nain (N. minutus) est bien plus petit.",
+    "habitat": "Il niche dans le nord-est de l’Asie et hiverne sur les vasières et les estuaires côtiers, de l’Asie du Sud-Est à l’Australie.",
+    "diet": "Sur ses sites d’hivernage australiens, il sonde la vase à la recherche d’invertébrés, notamment de crabes.",
+    "behavior": "Il effectue de longues migrations saisonnières et dépend d’un réseau de sites côtiers d’alimentation et de halte le long de son couloir migratoire.",
+    "reproduction": "Il niche dans le nord de l’Asie ; les descriptions disponibles mentionnent un nid au sol et une ponte généralement de quatre œufs.",
+    "ecology": "Les vastes estrans, notamment les haltes migratoires de la mer Jaune, sont essentiels à ses déplacements ; le Courlis cendré (N. arquata), apparenté, est plus petit et a le croupion blanc, comme l’explique sa fiche.",
+    "conservation": "BirdLife et les autorités australiennes le classent En danger critique, en raison de son déclin et de la perte ou dégradation des vasières côtières."
+  },
+  "sources": [
+    {
+      "url": "https://birdlife.org.au/bird-profiles/far-eastern-curlew/",
+      "title": "Courlis de Sibérie — BirdLife Australia"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/environment/biodiversity/threatened/action-plan/eastern-curlew",
+      "title": "Eastern Curlew — plan d’action du gouvernement australien"
+    },
+    {
+      "url": "https://www.esabii.biodic.go.jp/database/migrantbirds/60.html",
+      "title": "Courlis de Sibérie — notice asiatique sur les oiseaux migrateurs"
+    },
+    {
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691911477-204_eastern-20curlew.pdf",
+      "title": "Eastern Curlew — notice Birds New Zealand"
+    }
+  ]
+}

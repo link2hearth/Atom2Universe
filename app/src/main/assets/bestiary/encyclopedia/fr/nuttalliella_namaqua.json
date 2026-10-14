@@ -1,0 +1,30 @@
+{
+  "id": "nuttalliella_namaqua",
+  "name": "Tique namaqua",
+  "scientific": "Nuttalliella namaqua",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nuttalliella namaqua est la seule espèce actuelle de sa famille de tiques, les Nuttalliellidae. Elle est rarement collectée, et plusieurs aspects élémentaires de sa biologie restent mal connus.",
+    "identification": "Sa cuticule coriace et plissée et son bouclier dorsal partiellement durci réunissent des caractères associés aux tiques molles et dures. « Fossile vivant » est une formule imagée : ce n’est ni un fossile au sens propre ni l’ancêtre direct des autres tiques.",
+    "habitat": "Les observations proviennent d’Afrique australe et orientale, notamment d’Afrique du Sud, de Namibie, de Tanzanie, du Botswana et du Mozambique. Des spécimens ont été trouvés sous des pierres, dans des fissures rocheuses, à découvert et dans des nids d’oiseaux.",
+    "diet": "Comme les autres tiques, elle se nourrit du sang de vertébrés. Des observations sur des rongeurs, des reptiles et d’autres animaux suggèrent plusieurs hôtes possibles, mais ses préférences ne sont pas établies.",
+    "behavior": "Cette tique est discrète et semble se nourrir rapidement, ce qui contribue à la rareté des spécimens collectés sur un hôte. Son cycle de vie dans la nature n’est toujours pas élucidé.",
+    "reproduction": "Les mâles et les stades immatures ont été décrits, et des femelles maintenues en laboratoire ont pondu des œufs qui ont éclos. Ces observations confirment la reproduction, sans révéler tout le cycle naturel.",
+    "ecology": "Les études anatomiques et moléculaires placent cette lignée singulière près de la base de l’arbre des tiques, à part des familles des tiques dures et des tiques molles.",
+    "conservation": "L’espèce ne possède pas de catégorie évaluée dans les listes rouges de conservation. Sa rareté dans les collections ne prouve pas que sa population décline."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3406016/",
+      "title": "Nuttalliella namaqua — PLOS ONE, mâle et stades immatures"
+    },
+    {
+      "url": "https://www.sanbi.org/animal-of-the-week/nuttaliella-tick/",
+      "title": "Tique Nuttalliella — South African National Biodiversity Institute"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11731621/",
+      "title": "Nuttalliella namaqua : seule espèce actuelle — synthèse de Frontiers in Parasitology"
+    }
+  ]
+}

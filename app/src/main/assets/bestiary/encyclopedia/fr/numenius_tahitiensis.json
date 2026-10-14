@@ -1,0 +1,34 @@
+{
+  "id": "numenius_tahitiensis",
+  "name": "Courlis d’Alaska",
+  "scientific": "Numenius tahitiensis",
+  "group": "birds",
+  "sections": {
+    "overview": "Ce limicole migrateur niche en Alaska et hiverne sur des îles du Pacifique, franchissant une vaste étendue d’océan entre les deux.",
+    "identification": "Il ressemble au courlis corlieu, mais son plumage est plus chaud, son croupion et sa queue sont couleur cannelle, et ses cuisses portent des plumes raides visibles de près.",
+    "habitat": "Il niche dans la toundra arctique d’altitude et s’alimente sur les plages, récifs, vasières, lagunes et terrains herbeux ouverts des îles.",
+    "diet": "En Alaska, il mange des baies, insectes, araignées et fleurs ; sur les îles, il consomme aussi des invertébrés marins, des œufs, de petits vertébrés et des charognes.",
+    "behavior": "Durant sa longue migration, il peut voler sans escale, mais sur ses quartiers d’hiver du Pacifique, il devient temporairement incapable de voler en renouvelant de nombreuses plumes de vol simultanément.",
+    "reproduction": "Il pond trois ou quatre œufs dans un nid simple au sol de la toundra, et les deux parents couvent.",
+    "ecology": "Le courlis corlieu (*Numenius phaeopus*) est considéré comme son plus proche parent ; voir cette fiche pour l’aire et la migration de l’espèce apparentée.",
+    "conservation": "Des dénombrements en Polynésie française en 2021–2022 ont indiqué un déclin d’environ 50 % en deux décennies, bien que sa catégorie mondiale UICN ait alors été « quasi menacée »."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Bristle-thighed_Curlew/lifehistory",
+      "title": "Courlis d’Alaska — Cornell Lab of Ornithology, All About Birds"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/population-trends-size-and-potential-threats-to-bristlethighed-curlew-numenius-tahitiensis-new-data-from-french-polynesia/4C687B6AB040F1E3724B7859B0116D63",
+      "title": "Tendances, effectifs et menaces du courlis d’Alaska — Bird Conservation International"
+    },
+    {
+      "url": "https://www.tetiaroasociety.org/fr/ile/oiseaux/courlis-d-alaska",
+      "title": "Courlis d’Alaska — Tetiaroa Society"
+    },
+    {
+      "url": "https://explorer.natureserve.org/Taxon/ELEMENT_GLOBAL.2.104761/Numenius_tahitiensis",
+      "title": "Courlis d’Alaska — NatureServe Explorer"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "nomada_atroscutellaris",
+  "name": "Nomade du véronique",
+  "scientific": "Nomada atroscutellaris",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada atroscutellaris est une abeille coucou européenne connue comme cleptoparasite de l’andrène Andrena viridescens.",
+    "identification": "La détermination à l’espèce dans le genre Nomada repose sur des caractères diagnostiques ; la couleur ou le nom vernaculaire ne suffit pas.",
+    "habitat": "L’hôte A. viridescens niche dans des talus et prairies clairsemés où poussent des véroniques ; des observations du parasite près de ces nids suggèrent qu’il fréquente les mêmes milieux.",
+    "diet": "Comme cleptoparasite du genre Nomada, sa larve utilise le nid et les provisions de son hôte, plutôt qu’un stock de pollen récolté par la femelle.",
+    "behavior": "Son association connue est plus ciblée que l’ensemble des hôtes du genre Nomada ; comparer avec N. argentata, liée à une autre espèce d’Andrena.",
+    "reproduction": "Les données désignent les nids d’A. viridescens, mais les sources ne détaillent ni la ponte ni la durée du développement du parasite.",
+    "ecology": "Comme A. viridescens dépend du pollen des véroniques et de sols ouverts pour nicher, protéger seulement les fleurs ou le sol nu peut ne pas préserver la relation hôte-parasite.",
+    "conservation": "La Liste rouge européenne classe N. atroscutellaris en préoccupation mineure aux échelles européenne et de l’UE à vingt-sept ; elle peut rester localement rare si son hôte manque."
+  },
+  "sources": [
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "title": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+    },
+    {
+      "url": "https://wildbienen.de/eb-aviri.htm",
+      "title": "Andrena viridescens — Wildbienen.de"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/356557343_Bemerkenswerte_Wildbienen-Nachweise_aus_Sudniedersachsen_Hymenoptera_Apiformes",
+      "title": "Observations remarquables d’abeilles sauvages en Basse-Saxe méridionale — relevé régional"
+    },
+    {
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "title": "Abeilles britanniques : les genres — BWARS"
+    },
+    {
+      "url": "https://academic.oup.com/isd/article/8/1/1/7510720",
+      "title": "Monographie phylogénomique des Nomada du Paléarctique occidental — Insect Systematics and Diversity"
+    }
+  ]
+}

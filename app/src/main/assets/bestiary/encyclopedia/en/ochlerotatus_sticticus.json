@@ -1,0 +1,30 @@
+{
+  "id": "ochlerotatus_sticticus",
+  "name": "Floodwater mosquito",
+  "scientific": "Ochlerotatus sticticus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ochlerotatus sticticus, also widely called *Aedes sticticus*, is a floodwater mosquito whose larvae can become abundant after river or seasonal flooding. Both genus combinations occur in the literature.",
+    "identification": "It is described as a relatively large and aggressive floodplain mosquito; close examination with an identification key is needed to distinguish similar species.",
+    "habitat": "Its eggs are laid on damp ground in flood-prone meadows and woodland, then hatch when rising water inundates them. Larvae develop in temporary pools left by rain or river floods.",
+    "diet": "Adult females take blood meals from mammals, including people and livestock. Larvae feed in water, but their exact food has not been characterised for this species.",
+    "behavior": "Its dormant eggs can persist through dry periods, and flooding triggers synchronized larval emergence; adult numbers may therefore rise sharply after suitable floods.",
+    "reproduction": "The species overwinters as eggs in damp habitat. In northern Italy, the main adult emergence was observed in April or May, with timing varying according to egg submersion and temperature.",
+    "ecology": "In parts of Sweden it is an important nuisance species during flood outbreaks. That local impact does not mean every population is abundant or medically important.",
+    "conservation": "The sources consulted document its ecology and local nuisance impacts, but do not provide a global population estimate or conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.naturvardsverket.se/amnesomraden/miljofororeningar/metoder-for-bekampning-av-oversvamningsmyggor/",
+      "title": "Aedes sticticus in Sweden — Swedish Environmental Protection Agency"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9333754/",
+      "title": "First record of Aedes (Ochlerotatus) sticticus in northern Italy — Parassitologia / PubMed"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/s00027-023-00944-0",
+      "title": "Ecological effects of mosquito control with Bti — Aquatic Sciences"
+    }
+  ]
+}

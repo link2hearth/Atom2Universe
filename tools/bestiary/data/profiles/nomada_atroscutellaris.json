@@ -1,0 +1,186 @@
+{
+  "id": "nomada_atroscutellaris",
+  "scientific": "Nomada atroscutellaris",
+  "group": "invertebrates",
+  "name": {
+    "en": "Dark-scutellum nomad bee",
+    "fr": "Nomade du véronique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomada atroscutellaris is a European cuckoo bee recorded as a cleptoparasite of the mining bee Andrena viridescens.",
+      "fr": "Nomada atroscutellaris est une abeille coucou européenne connue comme cleptoparasite de l’andrène Andrena viridescens."
+    },
+    "identification": {
+      "en": "Species-level identification in the diverse genus Nomada depends on diagnostic structures; colour or a common name alone is not a safe guide.",
+      "fr": "La détermination à l’espèce dans le genre Nomada repose sur des caractères diagnostiques ; la couleur ou le nom vernaculaire ne suffit pas."
+    },
+    "habitat": {
+      "en": "The host A. viridescens nests in sparsely vegetated banks and grasslands where speedwells grow; parasite records near host nesting sites suggest it shares these habitats.",
+      "fr": "L’hôte A. viridescens niche dans des talus et prairies clairsemés où poussent des véroniques ; des observations du parasite près de ces nids suggèrent qu’il fréquente les mêmes milieux."
+    },
+    "diet": {
+      "en": "As a Nomada cleptoparasite, its larva uses a host nest and provisions rather than a pollen store gathered by the female.",
+      "fr": "Comme cleptoparasite du genre Nomada, sa larve utilise le nid et les provisions de son hôte, plutôt qu’un stock de pollen récolté par la femelle."
+    },
+    "behavior": {
+      "en": "Its known host association is narrower than host use across Nomada as a whole; compare N. argentata, tied to another Andrena species.",
+      "fr": "Son association connue est plus ciblée que l’ensemble des hôtes du genre Nomada ; comparer avec N. argentata, liée à une autre espèce d’Andrena."
+    },
+    "reproduction": {
+      "en": "The host record points to A. viridescens nests, but the sources do not detail the parasite’s oviposition sequence or development period.",
+      "fr": "Les données désignent les nids d’A. viridescens, mais les sources ne détaillent ni la ponte ni la durée du développement du parasite."
+    },
+    "ecology": {
+      "en": "Because A. viridescens relies on speedwell pollen and open nesting ground, protecting only flowers or only bare soil may not preserve the host-parasite relationship.",
+      "fr": "Comme A. viridescens dépend du pollen des véroniques et de sols ouverts pour nicher, protéger seulement les fleurs ou le sol nu peut ne pas préserver la relation hôte-parasite."
+    },
+    "conservation": {
+      "en": "The European Red List classifies N. atroscutellaris as Least Concern at European and EU scales; local scarcity can still occur where its host is rare.",
+      "fr": "La Liste rouge européenne classe N. atroscutellaris en préoccupation mineure aux échelles européenne et de l’UE à vingt-sept ; elle peut rester localement rare si son hôte manque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "European Red List of Bees — European Commission / IUCN",
+        "fr": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "European and EU categories are Least Concern."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 84,
+        "notes_words": 7,
+        "total": 91,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Andrena viridescens — Wildbienen.de",
+        "fr": "Andrena viridescens — Wildbienen.de"
+      },
+      "url": "https://wildbienen.de/eb-aviri.htm",
+      "supports": [
+        "habitat",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Identifies N. atroscutellaris as the cuckoo bee of A. viridescens; the host nests on sparsely vegetated banks and specializes on Veronica."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 21,
+        "total": 171,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Notable wild-bee records from southern Lower Saxony — regional survey",
+        "fr": "Observations remarquables d’abeilles sauvages en Basse-Saxe méridionale — relevé régional"
+      },
+      "url": "https://www.researchgate.net/publication/356557343_Bemerkenswerte_Wildbienen-Nachweise_aus_Sudniedersachsen_Hymenoptera_Apiformes",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Survey records N. atroscutellaris females at a potential host nesting bank and associates it with A. viridescens."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 17,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Bees: The Genera — BWARS",
+        "fr": "Abeilles britanniques : les genres — BWARS"
+      },
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Nomada larvae exploit host brood cells and consume provisions gathered by the host."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 13,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogenomic monograph of West-Palearctic Nomada — Insect Systematics and Diversity",
+        "fr": "Monographie phylogénomique des Nomada du Paléarctique occidental — Insect Systematics and Diversity"
+      },
+      "url": "https://academic.oup.com/isd/article/8/1/1/7510720",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The monograph provides a morphological key for West-Palearctic Nomada and cautions that identification depends on combinations of characters."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 18,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific life-history information is sparse; host and habitat details come mainly from European field records.",
+    "The French common name is from the project inventory and may not be standardized."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR claims réparties par phrases et recoupées avec des sources institutionnelles ou scientifiques.",
+  "source_audit_version": 1
+}

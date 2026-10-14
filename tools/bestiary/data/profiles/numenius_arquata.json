@@ -12,8 +12,8 @@
       "fr": "Le courlis cendré est le plus grand des limicoles d’Europe, reconnaissable à son long bec courbé vers le bas et à son cri bouillonnant qui porte loin sur les landes et les estuaires. C’est aujourd’hui une espèce très préoccupante, en fort déclin sur une grande partie de son aire."
     },
     "identification": {
-      "en": "A curlew measures 50–60 cm, with a wingspan around 90 cm, and weighs roughly 770 g to 1 kg; females are larger than males and have longer bills. The plumage is mottled brown and grey, the legs long and bluish, and in flight a white wedge shows on the rump.",
-      "fr": "Le courlis mesure 50 à 60 cm, avec une envergure d’environ 90 cm, et pèse de 770 g à 1 kg environ ; les femelles sont plus grandes que les mâles et ont un bec plus long. Le plumage est tacheté de brun et de gris, les pattes sont longues et bleutées, et un coin blanc apparaît sur le croupion en vol."
+      "en": "A curlew measures 50–60 cm, with a wingspan around 90 cm, and weighs roughly 770 g to 1 kg; females are larger than males and have longer bills. The plumage is mottled brown and grey, the legs long and bluish, and in flight a white wedge shows on the rump. The smaller Whimbrel (Numenius phaeopus) has a shorter bill and a pale crown stripe; the larger Far Eastern Curlew (N. madagascariensis) has a dark rump. See their profiles for the reciprocal comparisons.",
+      "fr": "Le courlis mesure 50 à 60 cm, avec une envergure d’environ 90 cm, et pèse de 770 g à 1 kg environ ; les femelles sont plus grandes que les mâles et ont un bec plus long. Le plumage est tacheté de brun et de gris, les pattes sont longues et bleutées, et un coin blanc apparaît sur le croupion en vol. Le Courlis corlieu (Numenius phaeopus), plus petit, a le bec plus court et une raie claire sur la calotte ; le Courlis de Sibérie (N. madagascariensis), plus grand, a le croupion sombre. Voir leurs fiches pour les comparaisons réciproques."
     },
     "habitat": {
       "en": "In the breeding season in Britain it is most frequent on moorland and also common in marshes, using upland rough pasture, heather moor, bogs and wet grassland. In winter it moves to the coast and nearby farmland, with the highest densities on major estuaries.",
@@ -48,7 +48,14 @@
       },
       "url": "https://www.bto.org/understanding-birds/birdfacts/curlew",
       "consulted": "2026-10-12",
-      "supports": ["identification", "habitat", "behavior", "reproduction", "ecology", "conservation"],
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Wing 306 mm, weight 823 g; females have longer bills; first clutch average 2 May, 4 eggs, incubation 27–29 days, fledging 32–38 days; breeding at 2 years; max age 32 y 7 m.",
         "UK 59,000 pairs (2016), −51% 1995–2024; IUCN Near Threatened; nest predation up to 97% in Northern Ireland (1993–95), foxes in Breckland."
@@ -61,7 +68,14 @@
       },
       "url": "https://www.wwt.org.uk/wildlife/curlews/",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "diet", "behavior", "ecology", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
       "facts": [
         "Length 50–60 cm, wingspan 90 cm, 770 g–1 kg; prey pincered and tossed before swallowing; threats: predation, changing farm practices, habitat loss.",
         "UK holds over 30% of west European breeding population; Red-listed in UK; IUCN Near Threatened."
@@ -74,10 +88,44 @@
       },
       "url": "https://www.rspb.org.uk/birds-and-wildlife/curlew",
       "consulted": "2026-10-12",
-      "supports": ["overview", "identification", "habitat", "reproduction", "conservation"],
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
       "facts": [
         "Largest European wader; down-curved bill, bubbling call; breeds on rough pasture, moorland and bog; winters on estuaries, mudflats and farmland.",
         "Red-listed in the UK since 2015; big declines in breeding numbers and range."
+      ]
+    },
+    {
+      "title": {
+        "en": "Whimbrel — BTO BirdFacts",
+        "fr": "Courlis corlieu — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/whimbrel",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "BTO describes the Whimbrel as a smaller version of the Curlew with a shorter bill and a pale crown stripe."
+      ]
+    },
+    {
+      "title": {
+        "en": "Eastern Curlew — New Zealand Birds Online field guide",
+        "fr": "Courlis de Sibérie — guide de terrain New Zealand Birds Online"
+      },
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691911477-204_eastern-20curlew.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Far Eastern Curlew is much larger and bulkier than the Whimbrel; flight identification separates it from Eurasian Curlew by rump pattern."
       ]
     }
   ],

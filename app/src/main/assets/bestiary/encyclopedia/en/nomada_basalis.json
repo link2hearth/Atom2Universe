@@ -1,0 +1,30 @@
+{
+  "id": "nomada_basalis",
+  "name": "Basal nomad bee",
+  "scientific": "Nomada basalis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada basalis is a cuckoo bee recorded across Europe and nearby regions; its known hosts are Andrena mining bees.",
+    "identification": "A French account gives females as 10–12 mm and males as 8–11 mm; use a key for identification.",
+    "habitat": "It is recorded across the Palearctic, but no characteristic habitat is established.",
+    "diet": "Like other Nomada, the female does not provision her own brood with pollen; the larva develops in a host nest and consumes its food stores.",
+    "behavior": "Reported hosts are Andrena truncatilabris and A. optata; further hosts are possible.",
+    "reproduction": "It is cleptoparasitic; species-specific flight and brood details remain uncertain.",
+    "ecology": "The European Red List classifies N. basalis as Least Concern; this continental assessment does not establish abundance at any particular locality.",
+    "conservation": "No species-specific conservation measure was established here; protecting host nesting habitat is a cautious general implication, not a documented targeted programme."
+  },
+  "sources": [
+    {
+      "url": "https://jessica-joachim.com/insectes/hymenopteres/apidae/nomada-basalis/",
+      "title": "Nomada basalis — Les carnets nature de Jessica Joachim"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "title": "European Red List of Bees — European Commission / IUCN"
+    },
+    {
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "title": "British Bees: The Genera — BWARS"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "nomada_kohli",
+  "name": "Kohl's nomad bee",
+  "scientific": "Nomada kohli",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada kohli is a West Palearctic cuckoo bee whose documented host is the sweat bee Lasioglossum puncticolle.",
+    "identification": "A published male diagnosis describes a small dark bee with sparse yellow abdominal markings; structural details help separate it from similar Nomada.",
+    "habitat": "A Luxembourg record came from a landscape dominated by pasture with some nearby woodland; this single observation does not define its full habitat preferences.",
+    "diet": "Unlike many Nomada associated with Andrena, N. kohli is reported as a cleptoparasite of Lasioglossum; the host brood cell provides food for the larva.",
+    "behavior": "The host association with L. puncticolle also appears in regional ecological databases; compare N. basalis, for which Andrena hosts are reported.",
+    "reproduction": "The published host relationship indicates nest parasitism, but detailed observations of egg laying and larval development were not available.",
+    "ecology": "Because reproduction depends on a particular Lasioglossum host, N. kohli may be overlooked where that small bee is not identified to species.",
+    "conservation": "A French regional database marks N. kohli as very rare in its territory; this local status should not be generalized to its full range."
+  },
+  "sources": [
+    {
+      "url": "https://www.researchgate.net/publication/356002827_An_addition_to_the_list_of_wild_bee_fauna_of_Luxembourg_Nomada_kohli_Schmiedeknecht_1882_Hymenoptera_Apidae_with_a_list_of_the_species_of_the_genus_Nomada_Scopoli_1770_recorded_in_the_country",
+      "title": "An addition to the wild-bee fauna of Luxembourg: Nomada kohli — Bulletin de la Société des naturalistes luxembourgeois"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/240001",
+      "title": "Nomada kohli — Observatoire régional de la biodiversité FAUNA"
+    },
+    {
+      "url": "https://academic.oup.com/isd/article/8/1/1/7510720",
+      "title": "Phylogenomic monograph of West-Palearctic Nomada — Insect Systematics and Diversity"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "nomada_succincta",
+  "name": "Nomade jaune et noire",
+  "scientific": "Nomada succincta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada succincta est une abeille coucou européenne ; ses hôtes les mieux documentés sont Andrena nitida et A. nigroaenea.",
+    "identification": "Son nom anglais courant évoque ses pattes jaunes, mais des Nomada proches peuvent lui ressembler ; une fiche française la distingue de N. goodeniana par ses tibias et tarses plus entièrement jaunes.",
+    "habitat": "Des sources régionales la signalent dans des milieux variés, comme les emprises ferroviaires, digues, lisières et landes ; aucun habitat unique n’est établi pour toute son aire.",
+    "diet": "Comme cleptoparasite, ses larves utilisent les réserves du nid hôte plutôt que du pollen récolté par la femelle ; les adultes peuvent visiter des fleurs pour le nectar.",
+    "behavior": "Les sources européennes citent surtout A. nitida et A. nigroaenea comme hôtes ; certaines proposent d’autres Andrena, mais ces données restent provisoires.",
+    "reproduction": "Une source slovène décrit une génération annuelle, avec des adultes d’avril à juin ; les dates locales peuvent varier selon le climat et l’activité des hôtes.",
+    "ecology": "Sa période chevauche celle d’autres Nomada printaniers, mais ses hôtes documentés diffèrent de ceux de N. leucophthalma : A. clarkella et A. apicata.",
+    "conservation": "La Liste rouge européenne classe N. succincta en préoccupation mineure aux échelles européenne et de l’UE à vingt-sept ; cela ne signifie pas qu’elle soit commune partout."
+  },
+  "sources": [
+    {
+      "url": "https://www.pms-lj.si/app/uploads/2022/11/Scopolia-42.pdf",
+      "title": "Fiches de Nomada — revue Scopolia 42, Musée slovène d’histoire naturelle"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/254911760_De_wespbijen_Nomada_van_Nederland_Hymenoptera_Apidae",
+      "title": "Les abeilles coucous Nomada des Pays-Bas — article de la Société entomologique néerlandaise"
+    },
+    {
+      "url": "https://www.quelestcetanimal.com/hymenopteres/la-nomada-a-pattes-jaunes/",
+      "title": "La nomada à pattes jaunes — Quel est cet animal?"
+    },
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "title": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+    },
+    {
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "title": "Abeilles britanniques : les genres — BWARS"
+    }
+  ]
+}

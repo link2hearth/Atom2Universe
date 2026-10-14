@@ -1,0 +1,164 @@
+{
+  "id": "nomada_argentata",
+  "scientific": "Nomada argentata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Silver-sided nomad bee",
+    "fr": "Nomade argentée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomada argentata is a European cuckoo bee whose known host is the mining bee Andrena marginata; its life depends on that bee’s nesting sites.",
+      "fr": "Nomada argentata est une abeille coucou européenne dont l’hôte connu est l’andrène Andrena marginata ; son cycle dépend des sites de nidification de cette abeille."
+    },
+    "identification": {
+      "en": "An Irish account describes a small to medium bee with a red-and-black abdomen and grey hairs at the thorax base; field identification should be checked against a specialist key.",
+      "fr": "Une fiche irlandaise décrit une abeille de petite à moyenne taille, à abdomen rouge et noir et aux poils gris à la base du thorax ; l’identification doit être confirmée à l’aide d’une clé spécialisée."
+    },
+    "habitat": {
+      "en": "It occurs in open grasslands where A. marginata and its food plants, especially scabiouses and Succisa, are present; the Italian assessment includes both dry and damp meadows.",
+      "fr": "Elle fréquente les prairies où vivent A. marginata et ses plantes alimentaires, notamment les scabieuses et Succisa ; l’évaluation italienne mentionne des prairies sèches comme humides."
+    },
+    "diet": {
+      "en": "Like other Nomada, the female does not provision a nest with pollen: the larva exploits the host bee’s brood cell and stored food.",
+      "fr": "Comme les autres Nomada, la femelle ne ravitaille pas son nid en pollen : la larve exploite une cellule de couvain et les réserves de l’abeille hôte."
+    },
+    "behavior": {
+      "en": "Adults may visit scabious flowers, but these visits do not make the bee a pollen-provisioning species; compare N. atroscutellaris, another specialist tied to a single Andrena host.",
+      "fr": "Les adultes peuvent visiter les scabieuses, mais ne récoltent pas de pollen pour leur nid ; comparer avec N. atroscutellaris, autre spécialiste lié à une seule espèce d’Andrena."
+    },
+    "reproduction": {
+      "en": "The female lays in nests of A. marginata; accounts identify this host relationship, but details of egg laying and larval timing are not established here.",
+      "fr": "La femelle pond dans les nids d’A. marginata ; les sources confirment cette relation d’hôte, mais ne précisent pas les détails de la ponte et du développement."
+    },
+    "ecology": {
+      "en": "Its dependence on A. marginata links it to grasslands with scabiouses and Succisa, so loss of these host-rich meadows can affect both bees.",
+      "fr": "Sa dépendance envers A. marginata la lie aux prairies riches en scabieuses et Succisa ; la disparition de ces milieux peut donc toucher les deux abeilles."
+    },
+    "conservation": {
+      "en": "The European Red List assesses N. argentata as Vulnerable, while an Italian assessment gives Near Threatened; these are separate geographic assessments, not a global category.",
+      "fr": "La Liste rouge européenne classe N. argentata comme vulnérable, tandis qu’une évaluation italienne la classe quasi menacée ; ces catégories concernent des échelles distinctes, et non une catégorie mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "European Red List of Bees — European Commission / IUCN",
+        "fr": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "The appendix lists N. argentata as Vulnerable at European and EU scales."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 12,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nomada argentata — Italian IUCN assessment",
+        "fr": "Nomada argentata — évaluation italienne UICN"
+      },
+      "url": "https://iucn.it/scheda-2018.php?id=-840729808",
+      "supports": [
+        "habitat",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Identifies Andrena marginata as host and connects the bees to meadows with Scabiosa and Succisa; assesses N. argentata Near Threatened in Italy."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 22,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Nomada argentata — National Biodiversity Data Centre, Ireland",
+        "fr": "Nomada argentata — Centre national irlandais des données sur la biodiversité"
+      },
+      "url": "https://species.biodiversityireland.ie/profile.php?taxonId=56899",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Reports red-and-black abdomen, grey thoracic hairs, visits to scabious and host A. marginata."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 119,
+        "notes_words": 13,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Bees: The Genera — BWARS",
+        "fr": "Abeilles britanniques : les genres — BWARS"
+      },
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Nomada females lack pollen-collecting equipment; larvae consume host-cell provisions."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 50,
+        "notes_words": 9,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "European and Italian conservation categories concern different scales.",
+    "The host relationship is known; detailed reproductive timing is not."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR claims réparties par phrases et recoupées avec des sources institutionnelles ou scientifiques.",
+  "source_audit_version": 1
+}

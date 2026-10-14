@@ -1,0 +1,30 @@
+{
+  "id": "numenius_minutus",
+  "name": "Little Curlew",
+  "scientific": "Numenius minutus",
+  "group": "birds",
+  "sections": {
+    "overview": "The Little Curlew is the smallest curlew, breeding in northern Siberia and migrating to Australasia.",
+    "identification": "It has a short, gently curved bill and is far smaller than the Far Eastern Curlew (Numenius madagascariensis); the Whimbrel (N. phaeopus) is larger and bulkier.",
+    "habitat": "It nests in open clearings and river valleys in northern Siberia, then winters mainly in northern Australia on inland grasslands and wetlands.",
+    "diet": "It feeds by picking prey from the surface and probing only shallowly, often on short grass or wet ground.",
+    "behavior": "Away from the breeding grounds it often gathers in large flocks and makes long seasonal journeys between Siberia and Australasia.",
+    "reproduction": "It nests on the ground in the northern breeding range, sometimes in loose colonies, and generally lays four eggs.",
+    "ecology": "Unlike the coastal Far Eastern Curlew, the Little Curlew often uses inland grasslands and floodplains during the Australian wet season.",
+    "conservation": "BirdLife's 2024 global assessment lists it as Least Concern, although the population trend is reported as decreasing."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/little-curlew-numenius-minutus",
+      "title": "Little Curlew — BirdLife DataZone"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/courlis.nain.html",
+      "title": "Courlis nain — Oiseaux.net"
+    },
+    {
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691911546-205_whimbrel.pdf",
+      "title": "Whimbrel — New Zealand Birds Online"
+    }
+  ]
+}

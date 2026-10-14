@@ -1,0 +1,30 @@
+{
+  "id": "nothodiplax_dendrophila",
+  "name": "Canopy skimmer",
+  "scientific": "Nothodiplax dendrophila",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This little-known libellulid dragonfly is the only described species in its genus.",
+    "identification": "The original description gives a body length of about 31 mm and hindwings around 25 mm; identification relies on details of wing venation and colour.",
+    "habitat": "It was first found beside a small sandy-bottomed stream in Suriname gallery forest; recent French Guianan records include savannas, open wetlands and drainage ditches.",
+    "diet": "The publications consulted provide no species-specific prey study, so its diet is not described more precisely here.",
+    "behavior": "In Suriname it was observed mainly high in trees, but adults sometimes descended to streamside vegetation and retreated upward when disturbed.",
+    "reproduction": "A recent French Guianan paper documents local observations and an emergence, but the species’ broader breeding biology remains poorly known.",
+    "ecology": "Known records come from few localities, and French Guianan observations broaden the habitats documented since the original forest records.",
+    "conservation": "Scattered records are insufficient to infer a population trend; recent observations show it also occurs beyond the originally reported canopy setting."
+  },
+  "sources": [
+    {
+      "url": "https://martinia.insectes.org/de-nouveaux-elements-sur-lecologie-de-em-nothodiplax-dendrophila-em-belle-1984-en-guyane-odonata-libellulidae/",
+      "title": "New ecological data on Nothodiplax dendrophila in French Guiana — Martinia"
+    },
+    {
+      "url": "https://natuurtijdschriften.nl/pub/1012755/EB1984044001004.pdf",
+      "title": "Nothodiplax dendrophila, a new genus and species from Suriname — Entomologische Berichten"
+    },
+    {
+      "url": "https://www.odonates.net/wow/index.php?title=Nothodiplax_dendrophila",
+      "title": "Nothodiplax dendrophila — Odonates du Monde"
+    }
+  ]
+}

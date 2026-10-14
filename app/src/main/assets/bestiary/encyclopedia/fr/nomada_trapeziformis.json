@@ -1,0 +1,30 @@
+{
+  "id": "nomada_trapeziformis",
+  "name": "Nomade trapéziforme",
+  "scientific": "Nomada trapeziformis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Nomada trapeziformis est une abeille coucou européenne peu documentée ; ses hôtes supposés sont des andrènes, mais ces associations restent incertaines.",
+    "identification": "La clé suisse signale des couleurs variables et privilégie les caractères structurels pour l’identification.",
+    "habitat": "La fiche suisse disponible ne définit pas d’habitat caractéristique.",
+    "diet": "Comme les autres Nomada, elle devrait se développer comme cleptoparasite de nid plutôt que récolter du pollen pour son couvain ; aucune observation alimentaire propre à l’espèce n’a été retrouvée.",
+    "behavior": "Cette clé cite Andrena barbareae et A. limata comme hôtes possibles seulement.",
+    "reproduction": "La fiche suisse indique deux générations annuelles, mais cette donnée doit être comprise comme régionale et non comme un calendrier valable sur toute l’aire.",
+    "ecology": "La Liste rouge européenne classe N. trapeziformis en danger ; le peu de données écologiques rend particulièrement utiles les vérifications des hôtes et des observations.",
+    "conservation": "La catégorie en danger s’applique aux échelles européenne et de l’UE à vingt-sept dans la Liste rouge ; cette évaluation datée ne remplace pas un statut national actuel."
+  },
+  "sources": [
+    {
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "title": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+    },
+    {
+      "url": "https://geonature.arb-idf.fr/sites/default/files/articles/documents/ClefIdent/Hymenopteres/e-fh20_apidae_5.pdf",
+      "title": "CSCF Apidae 5, clé suisse / Fauna Helvetica 20"
+    },
+    {
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "title": "Abeilles britanniques : les genres — BWARS"
+    }
+  ]
+}

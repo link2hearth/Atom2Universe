@@ -1,0 +1,154 @@
+{
+  "id": "ochlerotatus_sticticus",
+  "scientific": "Ochlerotatus sticticus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Floodwater mosquito",
+    "fr": "Moustique des zones inondables"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ochlerotatus sticticus, also widely called *Aedes sticticus*, is a floodwater mosquito whose larvae can become abundant after river or seasonal flooding. Both genus combinations occur in the literature.",
+      "fr": "Ochlerotatus sticticus, également appelé *Aedes sticticus* dans de nombreuses sources, est un moustique des zones inondables dont les larves peuvent être abondantes après une crue ou une inondation saisonnière. Les deux combinaisons de genre sont employées dans la littérature."
+    },
+    "identification": {
+      "en": "It is described as a relatively large and aggressive floodplain mosquito; close examination with an identification key is needed to distinguish similar species.",
+      "fr": "Il est décrit comme un moustique de plaine inondable relativement grand et agressif ; un examen attentif à l’aide d’une clé est nécessaire pour le distinguer des espèces proches."
+    },
+    "habitat": {
+      "en": "Its eggs are laid on damp ground in flood-prone meadows and woodland, then hatch when rising water inundates them. Larvae develop in temporary pools left by rain or river floods.",
+      "fr": "Ses œufs sont pondus sur les sols humides des prairies inondables et des bois, puis éclosent lorsque la montée des eaux les submerge. Les larves se développent dans des mares temporaires laissées par la pluie ou les crues."
+    },
+    "diet": {
+      "en": "Adult females take blood meals from mammals, including people and livestock. Larvae feed in water, but their exact food has not been characterised for this species.",
+      "fr": "Les femelles adultes prennent du sang sur des mammifères, dont les humains et le bétail. Les larves se nourrissent dans l’eau, mais leur régime précis n’a pas été caractérisé pour cette espèce."
+    },
+    "behavior": {
+      "en": "Its dormant eggs can persist through dry periods, and flooding triggers synchronized larval emergence; adult numbers may therefore rise sharply after suitable floods.",
+      "fr": "Ses œufs dormants peuvent persister pendant les périodes sèches, et les inondations déclenchent l’émergence des larves ; les adultes peuvent donc devenir brusquement nombreux après une crue favorable."
+    },
+    "reproduction": {
+      "en": "The species overwinters as eggs in damp habitat. In northern Italy, the main adult emergence was observed in April or May, with timing varying according to egg submersion and temperature.",
+      "fr": "L’espèce passe l’hiver sous forme d’œufs dans des milieux humides. Dans le nord de l’Italie, la principale émergence des adultes a été observée en avril ou mai, selon l’immersion des œufs et la température."
+    },
+    "ecology": {
+      "en": "In parts of Sweden it is an important nuisance species during flood outbreaks. That local impact does not mean every population is abundant or medically important.",
+      "fr": "Dans certaines régions de Suède, il constitue une nuisance importante lors des pullulations liées aux crues. Cet impact local ne signifie pas que toutes les populations soient abondantes ou présentent un enjeu médical."
+    },
+    "conservation": {
+      "en": "The sources consulted document its ecology and local nuisance impacts, but do not provide a global population estimate or conservation assessment.",
+      "fr": "Les sources consultées décrivent son écologie et ses nuisances locales, mais ne fournissent ni estimation mondiale de population ni évaluation de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Aedes sticticus in Sweden — Swedish Environmental Protection Agency",
+        "fr": "Aedes sticticus en Suède — Agence suédoise pour la protection de l’environnement"
+      },
+      "url": "https://www.naturvardsverket.se/amnesomraden/miljofororeningar/metoder-for-bekampning-av-oversvamningsmyggor/",
+      "supports": [
+        "overview",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Swedish agency identifies Aedes sticticus as the dominant floodwater mosquito in lower Dalälven and discusses local control; it is a regional management page, not a global population or conservation assessment."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "overview.en.1",
+        "overview.en.2",
+        "overview.fr.1",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 169,
+        "notes_words": 30,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "First record of Aedes (Ochlerotatus) sticticus in northern Italy — Parassitologia / PubMed",
+        "fr": "Premier signalement d’Aedes (Ochlerotatus) sticticus en Italie du Nord — Parassitologia / PubMed"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9333754/",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Italian field study found larval development in rain- or river-flood residual pools; main adult emergence in April or May, with smaller emergence varying by egg submersion and temperature."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "reproduction.en.1",
+        "reproduction.en.2",
+        "reproduction.fr.1",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 141,
+        "notes_words": 28,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ecological effects of mosquito control with Bti — Aquatic Sciences",
+        "fr": "Effets écologiques du contrôle des moustiques par Bti — Aquatic Sciences"
+      },
+      "url": "https://link.springer.com/article/10.1007/s00027-023-00944-0",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Describes Aedes sticticus as relatively large and aggressive; eggs in wet meadows and alder swamps can remain dormant and hatch after flooding; species-specific larval diet has not been characterised."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 29,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The inventory retains Ochlerotatus sticticus; many current sources use Aedes sticticus or Aedes (Ochlerotatus) sticticus.",
+    "Biting impact is local; no global medical or conservation conclusion is drawn."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Swedish, Italian and English sources; keeps life-history details specific to floodplain evidence."
+}

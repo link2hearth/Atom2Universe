@@ -1,0 +1,34 @@
+{
+  "id": "octopus_minor",
+  "name": "Poulpe à longs bras",
+  "scientific": "Octopus minor",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le poulpe à longs bras est une espèce côtière et benthique d’Asie du Nord-Est, importante pour les pêcheries locales. Son placement dans le vaste genre *Octopus* reste provisoire dans la littérature récente sur les céphalopodes.",
+    "identification": "Il possède un corps relativement petit et de longs bras, comme l’indique son nom vernaculaire. Son apparence peut varier selon les localités et sa position phylogénétique n’est pas résolue.",
+    "habitat": "Il vit sur les fonds des eaux côtières de Chine, de Corée et du Japon, notamment sur les estrans vaseux et les vasières.",
+    "diet": "L’écologie alimentaire de l’espèce a été étudiée, mais les sources consultées ici ne permettent pas d’établir une liste détaillée de proies ni des proportions alimentaires fiables.",
+    "behavior": "Il est benthique et soutient les pêcheries côtières. Les recherches sur sa croissance, son alimentation et son comportement contribuent à la gestion de la pêche, notamment parce que la surexploitation est signalée comme une préoccupation.",
+    "reproduction": "Une étude coréenne situe la principale période de ponte en avril–mai. Le calendrier et la fécondité peuvent varier selon les conditions locales ; ces résultats ne décrivent donc pas nécessairement toute l’aire de l’espèce.",
+    "ecology": "L’espèce reste provisoirement placée dans *Octopus* : des travaux phylogénétiques récents suggèrent une plus grande proximité avec *Callistoctopus*, mais de nouvelles données sont nécessaires pour trancher.",
+    "conservation": "Cette espèce a une importance commerciale, et une synthèse récente rapporte des préoccupations liées à la baisse des captures et à la surexploitation. Les sources consultées ne fournissent pas d’évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6279123/",
+      "title": "Génome du poulpe commun à longs bras *Octopus minor* — GigaScience"
+    },
+    {
+      "url": "https://kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002209766",
+      "title": "Maturité, fécondité et cycle reproducteur d’*Octopus minor* — Korean Journal of Malacology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11602926/",
+      "title": "Taxonomie et positions systématiques de trois espèces de *Callistoctopus* — Zoological Studies"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/B9780128206393000054",
+      "title": "« Octopus » minor, poulpe à longs bras — Octopus Biology and Ecology (2024)"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "id": "nomada_trapeziformis",
+  "scientific": "Nomada trapeziformis",
+  "group": "invertebrates",
+  "name": {
+    "en": "Trapezoid nomad bee",
+    "fr": "Nomade trapéziforme"
+  },
+  "sections": {
+    "overview": {
+      "en": "Nomada trapeziformis is a European cuckoo bee with sparse ecological data; its suspected hosts are mining bees, but proposed associations remain unsettled.",
+      "fr": "Nomada trapeziformis est une abeille coucou européenne peu documentée ; ses hôtes supposés sont des andrènes, mais ces associations restent incertaines."
+    },
+    "identification": {
+      "en": "The Swiss key warns that colour varies and emphasizes structural characters for identification.",
+      "fr": "La clé suisse signale des couleurs variables et privilégie les caractères structurels pour l’identification."
+    },
+    "habitat": {
+      "en": "The available Swiss account does not establish a characteristic habitat.",
+      "fr": "La fiche suisse disponible ne définit pas d’habitat caractéristique."
+    },
+    "diet": {
+      "en": "As a Nomada, it is expected to develop as a nest cleptoparasite rather than provision its own brood with pollen; species-specific feeding observations were not located.",
+      "fr": "Comme les autres Nomada, elle devrait se développer comme cleptoparasite de nid plutôt que récolter du pollen pour son couvain ; aucune observation alimentaire propre à l’espèce n’a été retrouvée."
+    },
+    "behavior": {
+      "en": "That key lists Andrena barbareae and A. limata only as possible hosts.",
+      "fr": "Cette clé cite Andrena barbareae et A. limata comme hôtes possibles seulement."
+    },
+    "reproduction": {
+      "en": "The Swiss account reports two generations per year, but this should be treated as a regional statement rather than a range-wide schedule.",
+      "fr": "La fiche suisse indique deux générations annuelles, mais cette donnée doit être comprise comme régionale et non comme un calendrier valable sur toute l’aire."
+    },
+    "ecology": {
+      "en": "The European Red List classifies N. trapeziformis as Endangered; sparse ecological documentation makes careful verification of host and occurrence records especially useful.",
+      "fr": "La Liste rouge européenne classe N. trapeziformis en danger ; le peu de données écologiques rend particulièrement utiles les vérifications des hôtes et des observations."
+    },
+    "conservation": {
+      "en": "The Endangered category applies at European and EU scales in the Red List; it is a dated assessment, not a substitute for current national status.",
+      "fr": "La catégorie en danger s’applique aux échelles européenne et de l’UE à vingt-sept dans la Liste rouge ; cette évaluation datée ne remplace pas un statut national actuel."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "European Red List of Bees — European Commission / IUCN",
+        "fr": "Liste rouge européenne des abeilles — Commission européenne / UICN"
+      },
+      "url": "https://portals.iucn.org/library/sites/library/files/documents/RL-4-019.pdf",
+      "supports": [
+        "overview",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Nomada trapeziformis is Endangered at European and EU regional scales."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 143,
+        "notes_words": 10,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "CSCF Apidae 5, Swiss identification key / Fauna Helvetica 20",
+        "fr": "CSCF Apidae 5, clé suisse / Fauna Helvetica 20"
+      },
+      "url": "https://geonature.arb-idf.fr/sites/default/files/articles/documents/ClefIdent/Hymenopteres/e-fh20_apidae_5.pdf",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The key lists A. barbareae and A. limata as possible hosts, says old colour-based identification can be unreliable, reports two generations and questions the Swiss species record."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 116,
+        "notes_words": 27,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "British Bees: The Genera — BWARS",
+        "fr": "Abeilles britanniques : les genres — BWARS"
+      },
+      "url": "https://bwars.com/sites/default/files/diary_downloads/Britain%27s_Bees_Chapter_5_the_Genera.pdf",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Nomada larvae exploit host brood cells and provisions; females lack pollen-collecting apparatus."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 12,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Andrena host records are provisional, not confirmed.",
+    "The cited Swiss key itself questions the validity of a Swiss occurrence record.",
+    "The threatened category is the European assessment located for this profile; national categories may differ."
+  ],
+  "reviewed": true,
+  "review_note": "EN/FR claims réparties par phrases et recoupées avec des sources institutionnelles ou scientifiques.",
+  "source_audit_version": 1
+}

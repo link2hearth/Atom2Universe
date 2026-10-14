@@ -1,0 +1,181 @@
+{
+  "id": "odontoscion_eurymesops",
+  "scientific": "Odontoscion eurymesops",
+  "group": "fish",
+  "name": {
+    "en": "Galapagos croaker",
+    "fr": "Corvina de Galápagos"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Galapagos croaker is a small marine drum in the croaker family, Sciaenidae. It is known from the Galapagos Islands and nearby Cocos Island in the eastern Pacific.",
+      "fr": "La corvina de Galápagos est un petit poisson marin de la famille des Sciaenidés. Elle est connue des îles Galápagos et de l’île Cocos voisine, dans le Pacifique oriental."
+    },
+    "identification": {
+      "en": "It has a short, deep, laterally compressed body and a conspicuously large eye. Its jaws bear rows of teeth but lack enlarged front canines; the lateral line continues to the tail.",
+      "fr": "Son corps est court, haut et comprimé latéralement, avec un œil particulièrement grand. Ses mâchoires portent des rangées de dents sans grandes canines antérieures ; la ligne latérale se prolonge jusqu’à la queue."
+    },
+    "habitat": {
+      "en": "It is a tropical, reef-associated fish reported from shallow water, at about 3–30 m depth. It occurs around rocky slopes and reefs in the eastern Pacific islands.",
+      "fr": "C’est un poisson tropical associé aux récifs, signalé dans des eaux peu profondes, vers 3 à 30 m. Il fréquente les pentes rocheuses et les récifs des îles du Pacifique oriental."
+    },
+    "diet": {
+      "en": "FishBase reports that it feeds mainly on zooplankton.",
+      "fr": "FishBase indique qu’elle se nourrit principalement de zooplancton."
+    },
+    "behavior": {
+      "en": "It is often observed in schools or loose aggregations above rocky, algae-covered bottoms.",
+      "fr": "On l’observe souvent en bancs ou en groupes lâches au-dessus de fonds rocheux couverts d’algues."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive details were not available in the sources reviewed for this profile.",
+      "fr": "Les sources examinées pour cette fiche ne fournissent pas de détails propres à l’espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Its zooplankton diet and schooling habit place it in shallow reef food webs. Records are concentrated around oceanic islands rather than continental shores.",
+      "fr": "Son régime à base de zooplancton et son comportement grégaire l’inscrivent dans les réseaux alimentaires des récifs peu profonds. Les observations se concentrent autour des îles océaniques plutôt que des côtes continentales."
+    },
+    "conservation": {
+      "en": "FishBase and the Galapagos database report Least Concern in 2022, but the Smithsonian species page gives Vulnerable, so the conflict should be checked against the Red List assessment itself.",
+      "fr": "FishBase et la base des Galápagos rapportent la catégorie « préoccupation mineure » en 2022, mais la fiche du Smithsonian indique « vulnérable » ; cette divergence doit être vérifiée dans l’évaluation de la Liste rouge elle-même."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Galapagos Croaker — Shorefishes of the Eastern Pacific, Smithsonian Tropical Research Institute",
+        "fr": "Corvina de Galápagos — Peces costeros del Pacífico oriental, Smithsonian Tropical Research Institute"
+      },
+      "url": "https://biogeodb.stri.si.edu/sftep/en/thefishes/species/1421",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Description gives diagnostic body, eye, teeth and lateral-line characters; classifies it as a tropical reef-associated eastern Pacific island fish."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 19,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Odontoscion eurymesops — FishBase species summary",
+        "fr": "Odontoscion eurymesops — résumé de l’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/13994",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Reef-associated at 3–30 m; mainly feeds on zooplankton; may aggregate above rocky algae-covered slopes; reports IUCN Least Concern, assessed 2022."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "conservation.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 72,
+        "notes_words": 20,
+        "total": 92,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Odontoscion eurymesops — Galapagos Species Database, Charles Darwin Foundation",
+        "fr": "Odontoscion eurymesops — base des espèces des Galápagos, Fondation Charles Darwin"
+      },
+      "url": "https://datazone.darwinfoundation.org/es/checklist/?species=7782",
+      "supports": [
+        "overview",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language Galapagos database treats the taxon as valid, reports it from the archipelago and lists IUCN Least Concern; provides no reproduction details."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.en.2",
+        "ecology.fr.1",
+        "ecology.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 122,
+        "notes_words": 22,
+        "total": 144,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eschmeyer’s Catalog of Fishes — Odontoscion eurymesops",
+        "fr": "Catalogue des poissons d’Eschmeyer — Odontoscion eurymesops"
+      },
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=33285",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "Valid species; distribution listed as Cocos Island, Costa Rica, and Galapagos Islands, Ecuador."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.en.2",
+        "habitat.fr.1",
+        "habitat.fr.2",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 88,
+        "notes_words": 13,
+        "total": 101,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Some regional summaries label it Galapagos-endemic, while the Catalog of Fishes also lists Cocos Island; the profile uses the broader documented island range.",
+    "The 2022 Red List assessment is the most recent status cited here; no population trend was found.",
+    "The conservation sources conflict: FishBase and the Galapagos database report Least Concern (2022), while the Smithsonian profile displays Vulnerable; neither category is treated as settled here."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Smithsonian field identification with FishBase, the Spanish-language Charles Darwin Foundation database and Eschmeyer’s Catalog of Fishes."
+}

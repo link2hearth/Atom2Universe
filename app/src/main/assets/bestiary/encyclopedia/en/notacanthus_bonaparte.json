@@ -1,0 +1,34 @@
+{
+  "id": "notacanthus_bonaparte",
+  "name": "Shortfin spiny eel",
+  "scientific": "Notacanthus bonaparte",
+  "group": "fish",
+  "sections": {
+    "overview": "The shortfin spiny eel is a deep-water member of the notacanth family, despite its eel-like outline.",
+    "identification": "It has an elongated body and separate dorsal spines; the accepted name is Notacanthus bonaparte, though many older papers use N. bonapartei.",
+    "habitat": "Records place it on deep continental slopes in the eastern North Atlantic and Mediterranean, often from several hundred to about two thousand metres.",
+    "diet": "Mediterranean stomach analyses found a benthic diet including echinoderms and sessile animals such as anemones and bamboo-coral polyps.",
+    "behavior": "In the Balearic Sea it was most abundant over the middle slope, and larger fish occurred deeper than smaller ones.",
+    "reproduction": "A Mediterranean study found reproduction from late summer into autumn and suggested adults move deeper when breeding.",
+    "ecology": "Its specialized benthic feeding links the fish to deep-sea communities, including habitat formed by the bamboo coral Isidella elongata.",
+    "conservation": "Deep-water trawl surveys have caught the species at depths used by commercial fisheries, but the studies cited here do not establish a global population trend."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Notacanthus-bonaparte",
+      "title": "Notacanthus bonaparte — FishBase"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&pid=10294&rComp=%3E%3D&tRank=220",
+      "title": "Notacanthus bonaparte — WoRMS"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0967063716300644",
+      "title": "Trophic ecology of deep-sea spiny eels in the Mediterranean — Deep Sea Research I"
+    },
+    {
+      "url": "https://pure.uhi.ac.uk/en/publications/abundance-distribution-reproduction-and-diet-of-notacanthid-fishe/",
+      "title": "North-east Atlantic notacanthid abundance, distribution, reproduction and diet — Journal of Fish Biology"
+    }
+  ]
+}

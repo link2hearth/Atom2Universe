@@ -1,0 +1,143 @@
+{
+  "id": "numenius_minutus",
+  "scientific": "Numenius minutus",
+  "group": "birds",
+  "name": {
+    "en": "Little Curlew",
+    "fr": "Courlis nain"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Little Curlew is the smallest curlew, breeding in northern Siberia and migrating to Australasia.",
+      "fr": "Le Courlis nain est le plus petit des courlis ; il niche dans le nord de la Sibérie et migre vers l’Australasie."
+    },
+    "identification": {
+      "en": "It has a short, gently curved bill and is far smaller than the Far Eastern Curlew (Numenius madagascariensis); the Whimbrel (N. phaeopus) is larger and bulkier.",
+      "fr": "Il possède un bec court et légèrement arqué et est bien plus petit que le Courlis de Sibérie (Numenius madagascariensis) ; le Courlis corlieu (N. phaeopus) est plus grand et plus massif."
+    },
+    "habitat": {
+      "en": "It nests in open clearings and river valleys in northern Siberia, then winters mainly in northern Australia on inland grasslands and wetlands.",
+      "fr": "Il niche dans les clairières et vallées fluviales du nord de la Sibérie, puis hiverne surtout dans le nord de l’Australie, dans les prairies intérieures et les zones humides."
+    },
+    "diet": {
+      "en": "It feeds by picking prey from the surface and probing only shallowly, often on short grass or wet ground.",
+      "fr": "Il se nourrit en picorant à la surface et en sondant peu profondément, souvent dans les herbes courtes ou sur les sols humides."
+    },
+    "behavior": {
+      "en": "Away from the breeding grounds it often gathers in large flocks and makes long seasonal journeys between Siberia and Australasia.",
+      "fr": "Hors des sites de nidification, il se rassemble souvent en grandes bandes et effectue de longs déplacements saisonniers entre la Sibérie et l’Australasie."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in the northern breeding range, sometimes in loose colonies, and generally lays four eggs.",
+      "fr": "Il niche au sol dans son aire nordique, parfois en colonies lâches, et pond généralement quatre œufs."
+    },
+    "ecology": {
+      "en": "Unlike the coastal Far Eastern Curlew, the Little Curlew often uses inland grasslands and floodplains during the Australian wet season.",
+      "fr": "Contrairement au Courlis de Sibérie, surtout côtier, le Courlis nain fréquente souvent les prairies intérieures et les plaines inondables durant la saison humide australienne."
+    },
+    "conservation": {
+      "en": "BirdLife's 2024 global assessment lists it as Least Concern, although the population trend is reported as decreasing.",
+      "fr": "L’évaluation mondiale 2024 de BirdLife le classe en Préoccupation mineure, bien que la tendance de la population soit indiquée comme décroissante."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Little Curlew — BirdLife DataZone",
+        "fr": "Courlis nain — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/little-curlew-numenius-minutus",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife account gives breeding and non-breeding distribution, flocking, nesting information, and 2024 Least Concern assessment with decreasing trend."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 154,
+        "notes_words": 18,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Courlis nain — Oiseaux.net",
+        "fr": "Courlis nain — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/courlis.nain.html",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "French species account describes smallest-curlew identification, shallow probing, inland wet-season habitat and winter movements."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 14,
+        "total": 151,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Whimbrel — New Zealand Birds Online",
+        "fr": "Courlis corlieu — New Zealand Birds Online"
+      },
+      "url": "https://www.nzbirdsonline.org.nz/assets/95597/1691911546-205_whimbrel.pdf",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Species account directly compares Whimbrel size and build with Little Curlew and Far Eastern Curlew."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 58,
+        "notes_words": 15,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Non-breeding habitats are better documented than exact prey composition, so diet is described only by foraging method and habitat."
+  ],
+  "review_note": "Compared the three related profiles and used BirdLife's current global assessment alongside a French-language species account.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

@@ -1,0 +1,164 @@
+{
+  "id": "notacanthus_bonaparte",
+  "scientific": "Notacanthus bonaparte",
+  "group": "fish",
+  "name": {
+    "en": "Shortfin spiny eel",
+    "fr": "Notacanthe de Bonaparte"
+  },
+  "sections": {
+    "overview": {
+      "en": "The shortfin spiny eel is a deep-water member of the notacanth family, despite its eel-like outline.",
+      "fr": "Le notacanthe de Bonaparte est un poisson profond de la famille des Notacanthidae, malgré sa silhouette d’anguille."
+    },
+    "identification": {
+      "en": "It has an elongated body and separate dorsal spines; the accepted name is Notacanthus bonaparte, though many older papers use N. bonapartei.",
+      "fr": "Son corps est allongé et sa nageoire dorsale porte des épines séparées ; le nom accepté est Notacanthus bonaparte, mais de nombreux travaux anciens emploient N. bonapartei."
+    },
+    "habitat": {
+      "en": "Records place it on deep continental slopes in the eastern North Atlantic and Mediterranean, often from several hundred to about two thousand metres.",
+      "fr": "Les observations le situent sur les talus continentaux profonds de l’Atlantique Nord-Est et de la Méditerranée, souvent entre quelques centaines et environ deux mille mètres."
+    },
+    "diet": {
+      "en": "Mediterranean stomach analyses found a benthic diet including echinoderms and sessile animals such as anemones and bamboo-coral polyps.",
+      "fr": "L’analyse de contenus stomacaux en Méditerranée révèle un régime benthique comprenant des échinodermes et des animaux fixés, comme des anémones et des polypes de corail-bambou."
+    },
+    "behavior": {
+      "en": "In the Balearic Sea it was most abundant over the middle slope, and larger fish occurred deeper than smaller ones.",
+      "fr": "Dans la mer des Baléares, il était surtout abondant sur le talus moyen, et les individus les plus grands ont été trouvés plus profondément que les petits."
+    },
+    "reproduction": {
+      "en": "A Mediterranean study found reproduction from late summer into autumn and suggested adults move deeper when breeding.",
+      "fr": "Une étude méditerranéenne situe sa reproduction de la fin de l’été à l’automne et suggère que les adultes gagnent des profondeurs plus grandes à cette période."
+    },
+    "ecology": {
+      "en": "Its specialized benthic feeding links the fish to deep-sea communities, including habitat formed by the bamboo coral Isidella elongata.",
+      "fr": "Son alimentation benthique spécialisée le relie aux communautés profondes, notamment à l’habitat formé par le corail-bambou Isidella elongata."
+    },
+    "conservation": {
+      "en": "Deep-water trawl surveys have caught the species at depths used by commercial fisheries, but the studies cited here do not establish a global population trend.",
+      "fr": "Des campagnes de chalutage profond l’ont capturé dans des tranches bathymétriques exploitées par la pêche, mais les études citées ici n’établissent pas de tendance mondiale de population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Notacanthus bonaparte — FishBase",
+        "fr": "Notacanthus bonaparte — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Notacanthus-bonaparte",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "FishBase gives the accepted name, family, deep-water range, distribution and elongated body form."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 81,
+        "notes_words": 13,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Notacanthus bonaparte — WoRMS",
+        "fr": "Notacanthus bonaparte — WoRMS"
+      },
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&pid=10294&rComp=%3E%3D&tRank=220",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "WoRMS treats Notacanthus bonaparte as accepted and N. bonapartei as a synonym."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 12,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Trophic ecology of deep-sea spiny eels in the Mediterranean — Deep Sea Research I",
+        "fr": "Écologie trophique des notacanthes profonds en Méditerranée — Deep Sea Research I"
+      },
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0967063716300644",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Balearic Basin research reports benthic prey, depth patterns, seasonal reproduction and bamboo-coral polyps in the diet."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 16,
+        "total": 186,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "North-east Atlantic notacanthid abundance, distribution, reproduction and diet — Journal of Fish Biology",
+        "fr": "Abondance, répartition, reproduction et régime des Notacanthidae de l’Atlantique Nord-Est — Journal of Fish Biology"
+      },
+      "url": "https://pure.uhi.ac.uk/en/publications/abundance-distribution-reproduction-and-diet-of-notacanthid-fishe/",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Survey paper documents the species in the Rockall Trough and overlap with depths commercially trawled."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 15,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and reproduction results cited for Mediterranean samples should not be assumed to describe every population."
+  ],
+  "review_note": "Name cross-checked with WoRMS and FishBase; ecological summary kept within peer-reviewed study results.",
+  "reviewed": true,
+  "source_audit_version": 1
+}
