@@ -1,0 +1,14 @@
+{
+  "id": "geranium",
+  "sections": [
+    {"title": "Cycle et habitat", "text": "Dans ce catalogue, Geranium désigne Geranium robertianum, une herbe annuelle ou bisannuelle odorante pouvant atteindre environ 60 cm. Elle pousse dans les sous-bois, lisières, rochers et lieux perturbés."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les tiges souvent rouges et collantes portent des feuilles profondément découpées. Les petites fleurs roses ont cinq pétales, souvent par paires; le fruit allongé en bec se sépare en cinq parties à maturité."},
+    {"title": "Toxicité", "text": "La source botanique consultée ne signale pas de toxicité. Cela ne constitue pas une preuve d’usage alimentaire."}
+  ],
+  "sources": [
+    {"title": "USDA Forest Service — Plant guide", "url": "https://www.fs.usda.gov/pnw/pubs/pnw_gtr817.pdf"},
+    {"title": "Kew Grow Wild — Herb-Robert", "url": "https://growwild.kew.org/plants/herb-robert"},
+    {"title": "Washington State Noxious Weed Control Board", "url": "https://www.nwcb.wa.gov/images/weeds/Geranium-robertianum-1997.pdf"}
+  ],
+  "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "fagus_grandifolia",
+  "sections": [
+    {"title": "Form and range", "text": "American beech is a deciduous tree of eastern Canada and the United States, usually 15–24 m tall. Its crown can be as wide as the tree is tall."},
+    {"title": "Flowers and fruit", "text": "Separate male and female flowers appear on the same tree in spring. Two triangular beechnuts about 2 cm long ripen inside a spiny cupule. They are smaller than those of European beech (Fagus sylvatica), whose leaves are also smaller."},
+    {"title": "Edibility", "text": "The nuts are eaten raw or cooked in small quantities; the horticultural sources consulted do not recommend eating large amounts."}
+  ],
+  "sources": [
+    {"title": "Oregon State University — Landscape Plants", "url": "https://landscapeplants.oregonstate.edu/plants/fagus-grandifolia"},
+    {"title": "NC State Extension — Fagus grandifolia", "url": "https://plants.ces.ncsu.edu/plants/fagus-grandifolia/"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A295597-1/general-information"}
+  ],
+  "related": ["fagus"]
+}

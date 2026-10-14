@@ -1,0 +1,14 @@
+{
+  "id": "gossypium_hirsutum",
+  "sections": [
+    {"title": "Form and range", "text": "Upland cotton is a robust herb or shrub native to tropical America and widely cultivated. Plants are often 1–2 m tall and may reach about 4 m."},
+    {"title": "Flowers and bolls", "text": "The leaves are heart-shaped and often divided into three to five lobes. Cream to pale yellow flowers have five petals and sometimes a dark centre. The 2–5 cm boll opens when ripe, releasing seeds surrounded by cotton fibres."},
+    {"title": "Caution", "text": "The seeds contain gossypol and require appropriate processing; do not eat raw seeds."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A30042843-2/general-information"},
+    {"title": "PROTA / PlantUse — Gossypium hirsutum", "url": "https://plantuse.plantnet.org/en/Gossypium_hirsutum_%28PROTA%29"},
+    {"title": "NC State Extension — Upland cotton", "url": "https://plants.ces.ncsu.edu/plants/gossypium-hirsutum/common-name/upland-cotton/"}
+  ],
+  "related": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "genista",
+  "sections": [
+    {"title": "Port et habitat", "text": "Le genêt des teinturiers (Genista tinctoria) est un sous-arbrisseau dressé d’Europe jusqu’au sud-ouest de la Sibérie et à l’Afghanistan. Il mesure généralement 60 à 100 cm."},
+    {"title": "Fleurs et fruits", "text": "Ses fleurs jaunes papilionacées sont réunies en grappes; les gousses aplaties mesurent environ 1,5 à 3 cm. La plante a été cultivée comme source de teinture jaune."},
+    {"title": "Précautions", "text": "Des sources botaniques la signalent comme toxique. Malgré des mentions historiques d’usages alimentaires de boutons floraux, la consommation n’est pas recommandée."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A496408-1/general-information"},
+    {"title": "Kew Grow Wild — Dyer’s greenweed", "url": "https://growwild.kew.org/plants/dyers-greenweed"},
+    {"title": "University of Illinois Extension — Shrub Selector", "url": "https://web.extension.illinois.edu/shrubselector/detail_plant.cfm?PlantID=339"}
+  ],
+  "related": []
+}

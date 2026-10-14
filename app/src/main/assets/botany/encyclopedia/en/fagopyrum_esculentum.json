@@ -1,0 +1,13 @@
+{
+  "id": "fagopyrum_esculentum",
+  "sections": [
+    {"title": "Life cycle and form", "text": "Common buckwheat is a fast-growing annual, often about 75 cm tall. Its leaves are arrow-shaped and its small white to pinkish flowers grow in clusters."},
+    {"title": "Seeds and food", "text": "The triangular achenes are hulled and cooked as a pseudocereal, whole or milled into flour. The above-ground parts can contain fagopyrin, associated with photosensitivity; hulled seed is the usual food portion."},
+    {"title": "Difference from Tartary buckwheat", "text": "Fagopyrum tataricum has more strongly ridged seeds and is often more bitter; both species are cultivated for their seeds."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Fagopyrum esculentum", "url": "https://plants.ces.ncsu.edu/plants/fagopyrum-esculentum/"},
+    {"title": "USDA Plant Guide — Common buckwheat", "url": "https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_faes2.pdf"}
+  ],
+  "related": ["fagopyrum_tataricum"]
+}

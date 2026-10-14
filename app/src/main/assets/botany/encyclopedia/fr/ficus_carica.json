@@ -1,0 +1,14 @@
+{
+  "id": "ficus_carica",
+  "sections": [
+    {"title": "Port et répartition", "text": "Le figuier commun est un grand arbuste ou petit arbre caduc, souvent haut de 5 à 9 m et étalé. Originaire du bassin méditerranéen et de l’Asie occidentale, il est largement cultivé."},
+    {"title": "Feuilles et figues", "text": "Ses grandes feuilles sont lobées. Les nombreuses petites fleurs sont cachées à l’intérieur d’un réceptacle creux, le sycone, qui devient la figue charnue de 1,5 à 5 cm."},
+    {"title": "Comestibilité et précautions", "text": "Les figues mûres sont comestibles. Le latex des tiges et des fruits immatures peut irriter la peau et les yeux."}
+  ],
+  "sources": [
+    {"title": "World Flora Online — Ficus carica", "url": "https://www.worldfloraonline.org/taxon/wfo-0000687690"},
+    {"title": "Royal Botanic Gardens, Kew — Fig", "url": "https://www.kew.org/plants/fig"},
+    {"title": "World Agroforestry — Ficus carica", "url": "https://apps.worldagroforestry.org/treedb2/AFTPDFS/Ficus_carica.PDF"}
+  ],
+  "related": []
+}

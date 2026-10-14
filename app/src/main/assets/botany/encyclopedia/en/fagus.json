@@ -1,0 +1,14 @@
+{
+  "id": "fagus",
+  "sections": [
+    {"title": "Form and range", "text": "European beech (Fagus sylvatica) is a large deciduous tree native to Europe, often 30–40 m tall, with a broad crown."},
+    {"title": "Flowers and fruit", "text": "In spring, hanging male catkins and inconspicuous female flowers appear on the same tree. The triangular beechnuts occur in pairs inside a spiny cupule."},
+    {"title": "Food use and caution", "text": "Beechnuts are eaten after preparation or cooking. Raw or immature seeds can cause illness if eaten in quantity."}
+  ],
+  "sources": [
+    {"title": "Kew Grow Wild — Common beech", "url": "https://growwild.kew.org/plants/common-beech"},
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A305836-2"},
+    {"title": "NC State Extension — Fagus sylvatica", "url": "https://plants.ces.ncsu.edu/plants/fagus-sylvatica/common-name/common-beech/"}
+  ],
+  "related": ["fagus_grandifolia"]
+}

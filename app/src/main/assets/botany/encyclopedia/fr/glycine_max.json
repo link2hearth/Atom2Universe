@@ -1,0 +1,14 @@
+{
+  "id": "glycine_max",
+  "sections": [
+    {"title": "Cycle et port", "text": "Le soja est une annuelle dressée, généralement haute de 60 cm à 1,8 m, largement cultivée. Ses feuilles sont trifoliolées et ses petites fleurs blanches à violettes sont discrètes."},
+    {"title": "Gousses et graines", "text": "Les gousses velues mesurent environ 2 à 7 cm et contiennent généralement deux ou trois graines, parfois jusqu’à cinq."},
+    {"title": "Comestibilité", "text": "Les graines mûres sont consommées après cuisson et transformées en de nombreux aliments; les graines immatures sont aussi consommées comme edamame après cuisson."}
+  ],
+  "sources": [
+    {"title": "Government of Canada — Biology of Glycine max", "url": "https://inspection.canada.ca/en/plant-varieties/plants-novel-traits/applicants/directive-94-08/biology-documents/glycine-max-merr"},
+    {"title": "Royal Horticultural Society — Glycine max", "url": "https://www.rhs.org.uk/plants/158994/glycine-max/details"},
+    {"title": "University of Wisconsin–Stevens Point — Plant ID", "url": "https://www4.uwsp.edu/biology/courses/plantid/061-Glycine_max.htm"}
+  ],
+  "related": []
+}

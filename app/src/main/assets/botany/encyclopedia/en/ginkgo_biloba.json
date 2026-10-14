@@ -1,0 +1,14 @@
+{
+  "id": "ginkgo_biloba",
+  "sections": [
+    {"title": "Form and range", "text": "A deciduous, dioecious tree native to China, usually 5–20 m tall and sometimes about 35 m. It is widely planted beyond its natural range."},
+    {"title": "Leaves and reproduction", "text": "The fan-shaped leaves have veins that fork repeatedly. Male trees produce pollen in catkins; female trees bear naked seeds about 1–2 cm long, surrounded by a fleshy, odorous outer covering. That covering is not a botanical fruit."},
+    {"title": "Toxicity", "text": "The seeds contain toxic compounds. Serious poisonings have been reported from raw seeds and even after roasting; consumption is not recommended."}
+  ],
+  "sources": [
+    {"title": "University of Vienna Botanical Garden — Ginkgo biloba", "url": "https://botanischergarten.univie.ac.at/en/the-garden/plants-from-a-to-z/plant-portraits/ginkgo-biloba/"},
+    {"title": "NIH NCCIH — Ginkgo", "url": "https://www.nccih.nih.gov/health/ginkgo"},
+    {"title": "Poison Control — Ginkgo biloba", "url": "https://www.poison.org/articles/ginkgo-biloba-risks-benefits-181"}
+  ],
+  "related": []
+}

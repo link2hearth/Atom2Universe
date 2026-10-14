@@ -1,0 +1,14 @@
+{
+  "id": "frangula",
+  "sections": [
+    {"title": "Port et habitat", "text": "La bourdaine (Frangula alnus) est un arbuste ou petit arbre caduc des bois humides, tourbières et berges. Elle mesure généralement 2 à 5 m et peut atteindre environ 7 m."},
+    {"title": "Fleurs et fruits", "text": "Les petites fleurs verdâtres apparaissent à l’aisselle des feuilles de mai à septembre. Les drupes de 6 à 8 mm mûrissent successivement du vert au rouge puis au noir."},
+    {"title": "Toxicité", "text": "Les baies peuvent provoquer nausées, vomissements et troubles digestifs. Ne pas les consommer."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Frangula alnus", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=242322785"},
+    {"title": "NC State Extension — Frangula alnus", "url": "https://plants.ces.ncsu.edu/plants/frangula-alnus/"},
+    {"title": "U.S. Forest Service — FEIS species review", "url": "https://research.fs.usda.gov/feis/species-reviews/fraaln"}
+  ],
+  "related": []
+}

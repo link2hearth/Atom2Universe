@@ -1,0 +1,14 @@
+{
+  "id": "geranium",
+  "sections": [
+    {"title": "Life cycle and habitat", "text": "In this catalogue, Geranium refers to Geranium robertianum, an aromatic annual or biennial herb reaching about 60 cm. It grows in woodland, margins, rocky places and disturbed sites."},
+    {"title": "Leaves, flowers and fruit", "text": "Often red, sticky stems carry deeply divided leaves. The small pink flowers have five petals and often occur in pairs; the elongated beaked fruit splits into five parts when ripe."},
+    {"title": "Toxicity", "text": "The botanical source consulted does not report toxicity. This is not evidence of food use."}
+  ],
+  "sources": [
+    {"title": "USDA Forest Service — Plant guide", "url": "https://www.fs.usda.gov/pnw/pubs/pnw_gtr817.pdf"},
+    {"title": "Kew Grow Wild — Herb-Robert", "url": "https://growwild.kew.org/plants/herb-robert"},
+    {"title": "Washington State Noxious Weed Control Board", "url": "https://www.nwcb.wa.gov/images/weeds/Geranium-robertianum-1997.pdf"}
+  ],
+  "related": []
+}

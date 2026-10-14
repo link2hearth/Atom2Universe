@@ -1,0 +1,13 @@
+{
+  "id": "fagopyrum_esculentum",
+  "sections": [
+    {"title": "Cycle et port", "text": "Le sarrasin commun est une annuelle à croissance rapide, souvent haute d’environ 75 cm. Ses feuilles sont sagittées et ses petites fleurs blanches à rosées apparaissent en grappes."},
+    {"title": "Graines et alimentation", "text": "Les akènes triangulaires sont décortiqués puis cuits comme pseudo-céréale, en grains ou en farine. Les parties aériennes peuvent contenir de la fagopyrine, associée à une photosensibilisation; la graine décortiquée est la partie alimentaire usuelle."},
+    {"title": "Différence avec le sarrasin de Tartarie", "text": "Fagopyrum tataricum porte des graines plus ridées et a souvent un goût plus amer; les deux espèces sont cultivées pour leurs graines."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Fagopyrum esculentum", "url": "https://plants.ces.ncsu.edu/plants/fagopyrum-esculentum/"},
+    {"title": "USDA Plant Guide — Common buckwheat", "url": "https://plants.usda.gov/DocumentLibrary/plantguide/pdf/pg_faes2.pdf"}
+  ],
+  "related": ["fagopyrum_tataricum"]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "gossypium_hirsutum",
+  "sections": [
+    {"title": "Port et répartition", "text": "Le cotonnier upland est une herbe robuste ou un arbuste des régions tropicales américaines, cultivé à grande échelle. Les plants mesurent souvent 1 à 2 m et peuvent atteindre environ 4 m."},
+    {"title": "Fleurs et capsules", "text": "Les feuilles sont cordées et souvent divisées en trois à cinq lobes. Les fleurs crème à jaune pâle ont cinq pétales, parfois un centre sombre. La capsule de 2 à 5 cm s’ouvre à maturité et libère les graines entourées de fibres de coton."},
+    {"title": "Précautions", "text": "Les graines contiennent du gossypol et exigent une transformation appropriée; ne pas consommer les graines brutes."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A30042843-2/general-information"},
+    {"title": "PROTA / PlantUse — Gossypium hirsutum", "url": "https://plantuse.plantnet.org/en/Gossypium_hirsutum_%28PROTA%29"},
+    {"title": "NC State Extension — Upland cotton", "url": "https://plants.ces.ncsu.edu/plants/gossypium-hirsutum/common-name/upland-cotton/"}
+  ],
+  "related": []
+}

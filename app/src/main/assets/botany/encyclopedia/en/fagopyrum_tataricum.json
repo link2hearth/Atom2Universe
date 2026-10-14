@@ -1,0 +1,14 @@
+{
+  "id": "fagopyrum_tataricum",
+  "sections": [
+    {"title": "Life cycle and origin", "text": "Tartary buckwheat is a cultivated annual native to mountainous parts of central and eastern Asia. It is usually 30–70 cm tall, sometimes reaching 1 m."},
+    {"title": "Flowers and seeds", "text": "Its greenish-white flowers are often less showy than those of F. esculentum. The angular seeds are more strongly ridged and generally more bitter; they are used for flour, noodles, porridge and infusions."},
+    {"title": "Difference from common buckwheat", "text": "Fagopyrum esculentum has less strongly ridged seeds and is generally milder in taste. Both are food crops, but the seeds are the main parts eaten."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A694553-1/general-information"},
+    {"title": "Flora of China", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200006710"},
+    {"title": "Food Science and Technology Research — Tartary buckwheat foods", "url": "https://www.jstage.jst.go.jp/article/fstr/23/1/23_1/_html/-char/en"}
+  ],
+  "related": ["fagopyrum_esculentum"]
+}

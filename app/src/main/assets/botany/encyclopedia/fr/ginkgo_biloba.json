@@ -1,0 +1,14 @@
+{
+  "id": "ginkgo_biloba",
+  "sections": [
+    {"title": "Port et répartition", "text": "Arbre caduc dioïque originaire de Chine, généralement haut de 5 à 20 m, parfois jusqu’à environ 35 m. Il est largement planté hors de son aire naturelle."},
+    {"title": "Feuilles et reproduction", "text": "Les feuilles en éventail portent des nervures qui se divisent en deux. Les arbres mâles produisent du pollen en chatons; les femelles portent des graines nues d’environ 1 à 2 cm entourées d’une enveloppe charnue odorante. Cette enveloppe n’est pas un fruit botanique."},
+    {"title": "Toxicité", "text": "Les graines contiennent des substances toxiques. Des intoxications graves ont été rapportées avec les graines crues et même après torréfaction; aucune consommation n’est recommandée."}
+  ],
+  "sources": [
+    {"title": "University of Vienna Botanical Garden — Ginkgo biloba", "url": "https://botanischergarten.univie.ac.at/en/the-garden/plants-from-a-to-z/plant-portraits/ginkgo-biloba/"},
+    {"title": "NIH NCCIH — Ginkgo", "url": "https://www.nccih.nih.gov/health/ginkgo"},
+    {"title": "Poison Control — Ginkgo biloba", "url": "https://www.poison.org/articles/ginkgo-biloba-risks-benefits-181"}
+  ],
+  "related": []
+}

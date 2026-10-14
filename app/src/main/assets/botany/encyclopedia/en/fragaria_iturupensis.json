@@ -1,0 +1,14 @@
+{
+  "id": "fragaria_iturupensis",
+  "sections": [
+    {"title": "Form and range", "text": "A small stoloniferous perennial strawberry endemic to Iturup Island in the Kurils. It is reported from volcanic mountain habitats."},
+    {"title": "Leaves, flowers and fruit", "text": "The leaves are trifoliate. Inflorescences bear two to four bisexual flowers about 16–20 mm across. The nearly spherical red fruits have surface achenes and are larger than those of F. vesca."},
+    {"title": "Edibility", "text": "The sources consulted do not document food use for this particular species; it cannot be inferred from cultivated strawberries."}
+  ],
+  "sources": [
+    {"title": "Taxonomic review of Fragaria — chapter on F. iturupensis", "url": "https://s3.amazonaws.com/bi-dam-prod/5e81fef8d5ef2b474a24e8ca/a44ace7d6973ff75ccac221787cffb09428dda4f/9781789242270_23_aa05afde1abd55161ec9a83e2739d36d.pdf"},
+    {"title": "Hummer et al. — chromosome count", "url": "https://doi.org/10.1093/ajb/96.3.713"},
+    {"title": "HortScience — origin and habitat", "url": "https://journals.ashs.org/downloadpdf/view/journals/hortsci/43/5/article-p1623.pdf"}
+  ],
+  "related": []
+}

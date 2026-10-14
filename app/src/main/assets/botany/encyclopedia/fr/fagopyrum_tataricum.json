@@ -1,0 +1,14 @@
+{
+  "id": "fagopyrum_tataricum",
+  "sections": [
+    {"title": "Cycle et origine", "text": "Le sarrasin de Tartarie est une annuelle cultivée, originaire de régions montagneuses d’Asie centrale et orientale. Il mesure généralement 30 à 70 cm, parfois jusqu’à 1 m."},
+    {"title": "Fleurs et graines", "text": "Ses fleurs verdâtres à blanches sont souvent moins voyantes que celles de F. esculentum. Les graines anguleuses sont plus fortement ridées et généralement plus amères; elles servent notamment à faire farine, nouilles, bouillies et infusions."},
+    {"title": "Différence avec le sarrasin commun", "text": "Fagopyrum esculentum a des graines moins ridées et un goût généralement plus doux. Les deux sont des cultures alimentaires, mais les parties consommées sont surtout les graines."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A694553-1/general-information"},
+    {"title": "Flora of China", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=200006710"},
+    {"title": "Food Science and Technology Research — Tartary buckwheat foods", "url": "https://www.jstage.jst.go.jp/article/fstr/23/1/23_1/_html/-char/en"}
+  ],
+  "related": ["fagopyrum_esculentum"]
+}
