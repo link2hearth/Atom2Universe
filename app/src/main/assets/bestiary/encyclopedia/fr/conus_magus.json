@@ -1,0 +1,38 @@
+{
+  "id": "conus_magus",
+  "name": "Cône magicien",
+  "scientific": "Conus magus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce cône indo-pacifique est un gastéropode marin prédateur de la famille des Conidae, dont les membres chassent avec des dents radulaires venimeuses.",
+    "identification": "Sa coquille conique et décorée peut ressembler à celle de Conus consors, et l’apparence seule ne permet pas toujours de les distinguer.",
+    "habitat": "Il vit dans les eaux peu profondes de l’Indo-Pacifique; des spécimens de musée ont été récoltés sur substrat sableux récifal en Indonésie.",
+    "diet": "Les juvéniles chassent des vers polychètes, puis passent aux poissons adultes grâce à une dent radulaire crochue et des peptides paralysants.",
+    "behavior": "Il injecte son venin avec une dent radulaire creuse; les recherches décrivent des chasses et mélanges de venins différents chez les jeunes et les adultes.",
+    "reproduction": "Les femelles déposent des capsules d’œufs sur des surfaces dures; les larves élevées en laboratoire nagent et s’alimentent avant de se fixer et de se métamorphoser.",
+    "ecology": "C’est l’espèce type du sous-genre Pionoconus; les adultes chassent les poissons, tandis que les juvéniles passent d’abord par une phase vermivore.",
+    "conservation": "La fiche française de SeaLifeBase ne fournit pas de catégorie mondiale de menace vérifiée; cette fiche n’en attribue donc aucune."
+  },
+  "sources": [
+    {
+      "url": "https://www.nature.com/articles/s41467-023-38924-5",
+      "title": "Adaptations coordonnées du passage de la chasse aux vers à la chasse aux poissons chez un cône venimeux — Nature Communications"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Conus+magus",
+      "title": "Conus magus — Registre mondial des espèces marines"
+    },
+    {
+      "url": "https://www.si.edu/object/conus-magus%3Anmnhinvertebratezoology_463362",
+      "title": "Spécimen de Conus magus — Muséum national d’histoire naturelle du Smithsonian"
+    },
+    {
+      "url": "https://www.sealifebase.ca/summary/SpeciesSummary.php?id=106230&lang=french",
+      "title": "Conus magus — SeaLifeBase, interface française"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12266717/",
+      "title": "Pionoconus : un sous-genre piscivore des gastéropodes Conus"
+    }
+  ]
+}

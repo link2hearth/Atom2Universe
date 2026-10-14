@@ -1,0 +1,193 @@
+{
+  "id": "crenicara_punctulatum",
+  "scientific": "Crenicara punctulatum",
+  "group": "fish",
+  "name": {
+    "en": "Checkerboard cichlid",
+    "fr": "Cichlidé damier"
+  },
+  "sections": {
+    "overview": {
+      "en": "Crenicara punctulatum is a small South American cichlid widespread in the upper Amazon and also recorded in the Essequibo basin.",
+      "fr": "Crenicara punctulatum est un petit cichlidé sud-américain répandu dans le haut Amazone et également signalé dans le bassin de l’Essequibo."
+    },
+    "identification": {
+      "en": "Its dark checkerboard flank pattern gives the species its common name; it is similar to C. latruncularium, which differs in several meristic and colour characters.",
+      "fr": "Son motif sombre en damier sur les flancs lui donne son nom commun ; il ressemble à C. latruncularium, qui diffère par plusieurs caractères méristiques et chromatiques."
+    },
+    "habitat": {
+      "en": "It is recorded from forest creeks and sandy river shores, often near fallen leaves or among aquatic plants.",
+      "fr": "Il est signalé dans des ruisseaux forestiers et sur des rives sableuses, souvent près des feuilles tombées ou parmi les plantes aquatiques."
+    },
+    "diet": {
+      "en": "Kullander’s redescription does not provide a detailed natural prey inventory, so no specialized diet is assigned here.",
+      "fr": "La redescription de Kullander ne donne pas d’inventaire détaillé des proies naturelles ; aucun régime spécialisé ne lui est donc attribué ici."
+    },
+    "behavior": {
+      "en": "Claims that this species changes sex have appeared in older sources, but the status of C. punctulatum as a true sex-changing fish remains disputed.",
+      "fr": "Des sources anciennes lui ont attribué un changement de sexe, mais le statut de C. punctulatum comme poisson réellement hermaphrodite séquentiel reste contesté."
+    },
+    "reproduction": {
+      "en": "It lays eggs attached to plants or stones, and the female tends the clutch; reported egg numbers vary among compiled summaries.",
+      "fr": "Il pond des œufs fixés aux plantes ou aux pierres, et la femelle garde la ponte ; les nombres d’œufs rapportés varient selon les synthèses compilées."
+    },
+    "ecology": {
+      "en": "It is a benthopelagic freshwater fish of tropical lowland streams and shores, sharing its genus with the more localized C. latruncularium.",
+      "fr": "C’est un poisson dulçaquicole tropical benthopélagique des cours d’eau et de leurs rives, qui partage son genre avec C. latruncularium, à l’aire plus localisée."
+    },
+    "conservation": {
+      "en": "FishBase relays a global IUCN assessment of Least Concern; this status is distinct from the contested details of its reproductive biology.",
+      "fr": "FishBase relaie une évaluation mondiale UICN en préoccupation mineure ; ce statut est distinct des incertitudes concernant sa biologie reproductive."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cichlid fishes of the Amazon River drainage of Peru — Sven O. Kullander",
+        "fr": "Les poissons cichlidés du bassin péruvien de l’Amazone — Sven O. Kullander"
+      },
+      "url": "https://svenkullander.se/publications/Kullander_Peru_1986.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology",
+        "diet"
+      ],
+      "facts": [
+        "The monograph redescribes C. punctulatum, illustrates its checkerboard pattern and gives its broad geographic range; it does not detail a prey inventory."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Crenicara punctulata — FishBase",
+        "fr": "Crenicara punctulata — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Crenicara-punctulatum.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase compiles forest-creek and sandy-shore habitat, egg attachment and female care, broad range, and the global IUCN Least Concern assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Fish and sex change in Crenicara punctulata — Carruth, 2000, Copeia",
+        "fr": "Changement sexuel chez Crenicara punctulata — Carruth, 2000, Copeia"
+      },
+      "url": "https://doi.org/10.1643/0045-8511(2000)2000%5B0071:FCCPIA%5D2.0.CO;2",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Carruth’s study used gonadal histology to test published reports of protogyny; later cichlid reviews caution that the species is not generally accepted as a confirmed sex changer."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Epigenetic regulation and environmental sex determination in cichlid fishes — review",
+        "fr": "Régulation épigénétique et détermination environnementale du sexe chez les cichlidés — revue"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8440468/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The review notes evidence debated for Crenicara punctulatum and cautions that experts generally do not regard it as a confirmed sex-changing cichlid."
+      ],
+      "prose_claims": []
+    }
+  ],
+  "uncertainties": [
+    "The name appears as Crenicara punctulata in some modern catalogues and databases, while the inventory uses punctulatum; the taxonomic catalog regards punctulata as valid and punctulatum as a frequent alternative spelling.",
+    "Sex-change reports are contested; the entry does not present protogyny as settled biology.",
+    "No direct reciprocal profile edit was requested for the already-existing C. latruncularium entry; this draft contains the reverse reference."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Kullander’s taxonomic redescription with FishBase and the modern catalog spelling; treated the disputed sex-change claim cautiously using a primary histology study and a later specialist review, and linked to C. latruncularium."
+}

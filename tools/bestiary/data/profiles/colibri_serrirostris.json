@@ -1,0 +1,166 @@
+{
+  "id": "colibri_serrirostris",
+  "scientific": "Colibri serrirostris",
+  "group": "birds",
+  "name": {
+    "en": "White-vented Violetear",
+    "fr": "Colibri à ventre blanc"
+  },
+  "sections": {
+    "overview": {
+      "en": "The common name White-vented Violetear refers to this hummingbird’s violet ear patch and pale lower belly.",
+      "fr": "Le nom de Colibri à ventre blanc et à oreilles mauves évoque ses touffes violettes derrière les yeux et son bas-ventre clair."
+    },
+    "identification": {
+      "en": "Males are green with violet ear patches and bluish-violet chest tones; females are duller and lack the violet patch.",
+      "fr": "Le mâle est vert, avec des touffes violettes derrière les yeux et des reflets bleu-violet au poitrail; la femelle, plus terne, n’a pas ces touffes."
+    },
+    "habitat": {
+      "en": "It uses semi-open scrub, savanna, grassland, bushy ravines and forest edges across central South America.",
+      "fr": "Il fréquente les broussailles semi-ouvertes, savanes, prairies, ravins arbustifs et lisières forestières du centre de l’Amérique du Sud."
+    },
+    "diet": {
+      "en": "It takes nectar from flowers and supplements it with small arthropods, which provide animal protein.",
+      "fr": "Il prélève le nectar des fleurs et complète son alimentation avec de petits arthropodes, qui lui apportent des protéines animales."
+    },
+    "behavior": {
+      "en": "It is territorial around flower patches and may move locally between highlands and valleys with seasonal conditions.",
+      "fr": "Il défend les massifs fleuris et peut se déplacer localement entre hauts plateaux et vallées selon la saison."
+    },
+    "reproduction": {
+      "en": "The female builds a small cup nest and usually lays one or two eggs; she incubates while the male brings food.",
+      "fr": "La femelle construit un petit nid en coupe et pond généralement un ou deux œufs; elle couve tandis que le mâle lui apporte de la nourriture."
+    },
+    "ecology": {
+      "en": "The genus also includes other violetears, such as Colibri coruscans. The pale vent is a useful field mark for this species.",
+      "fr": "Le genre comprend aussi d’autres colibris à oreilles violettes, comme Colibri coruscans. Le ventre clair aide à reconnaître cette espèce sur le terrain."
+    },
+    "conservation": {
+      "en": "The cited species account lists it as Least Concern, though local habitat conditions vary across its wide range.",
+      "fr": "La fiche consultée le classe en préoccupation mineure, même si les conditions locales d’habitat varient dans son vaste territoire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Colibri serrirostris — Birds of Bolivia",
+        "fr": "Colibri serrirostris — Birds of Bolivia"
+      },
+      "url": "https://birdsofbolivia.org/species-fact-sheets-2/hummingbirds-picaflores/colibri-serrirostris/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Bilingual field account gives South American identity, range and semi-open habitats."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 11,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Beija-flor-de-orelha-violeta — WikiAves",
+        "fr": "Beija-flor-de-orelha-violeta — WikiAves"
+      },
+      "url": "https://wikiaves.com/wiki/beija-flor-de-orelha-violeta",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Brazilian ornithology entry gives plumage, flower and arthropod foods, territoriality, local movements and nesting."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 161,
+        "notes_words": 14,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colibri serrirostris — Argentine Biodiversity Information System",
+        "fr": "Colibri serrirostris — Système argentin d’information sur la biodiversité"
+      },
+      "url": "https://sib.gob.ar/ficha.php?especie=ANIMALIA%2AColibri%2Aserrirostris",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Argentina’s biodiversity system reproduces the IUCN Least Concern category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 9,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genus Colibri — Argentine Biodiversity Information System",
+        "fr": "Genre Colibri — Système argentin d’information sur la biodiversité"
+      },
+      "url": "https://sib.gob.ar/taxonomia/genero/colibri",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Argentina’s system lists Colibri coruscans, Colibri cyanotus and Colibri serrirostris in the genus."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 22,
+        "notes_words": 13,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Published range accounts differ on southernmost records; the profile gives the broad central South American range without a precise boundary."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared a Bolivian bilingual bird guide and Brazilian WikiAves with Argentina’s biodiversity taxonomy; contrasted the pale belly with the larger Colibri coruscans."
+}

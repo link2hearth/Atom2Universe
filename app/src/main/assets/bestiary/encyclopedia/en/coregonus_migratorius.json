@@ -1,0 +1,30 @@
+{
+  "id": "coregonus_migratorius",
+  "name": "Baikal omul",
+  "scientific": "Coregonus migratorius",
+  "group": "fish",
+  "sections": {
+    "overview": "The Baikal omul is a whitefish endemic to Lake Baikal and its tributaries, historically also called Coregonus autumnalis migratorius.",
+    "identification": "It is a pelagic, schooling member of the salmon family; the sources consulted do not establish a single field mark that reliably separates all populations.",
+    "habitat": "It feeds and grows in the lake, using different depths with season and food availability, then enters tributary rivers to reproduce.",
+    "diet": "Its principal food is the endemic zooplankton Epischura baikalensis, supplemented by small fish and other invertebrates.",
+    "behavior": "Spawning migrants enter rivers in autumn, and the fish is also an important prey of the Baikal seal.",
+    "reproduction": "It spawns over gravelly river riffles; eggs develop through winter and newly hatched fish drift back toward the lake in spring.",
+    "ecology": "This lake-and-river life cycle links pelagic feeding grounds with tributary spawning habitat and the lake’s native predator, the Baikal seal.",
+    "conservation": "The cited global assessment classifies it as Least Concern, while fisheries management still monitors the lake’s spawning runs and catches."
+  },
+  "sources": [
+    {
+      "url": "https://baikal.vniro.ru/images/%D0%B1%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB_%D0%BE%D0%B4%D1%83_2024_%D0%B4%D0%BB%D1%8F_%D0%BE%D1%81.pdf",
+      "title": "Baikal omul (Coregonus migratorius) — Baikal Fisheries Basin Research Institute (VNIRO)"
+    },
+    {
+      "url": "https://barguzinsky.ru/species/omul",
+      "title": "Baikal omul — Barguzinsky Nature Reserve"
+    },
+    {
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=643&genusname=Coregonus&speciesname=migratorius",
+      "title": "Coregonus migratorius — FishBase Field Guide"
+    }
+  ]
+}

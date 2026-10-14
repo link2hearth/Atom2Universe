@@ -1,0 +1,30 @@
+{
+  "id": "stock_dove",
+  "name": "Pigeon colombin",
+  "scientific": "Columba oenas",
+  "group": "birds",
+  "sections": {
+    "overview": "Le Pigeon colombin est un pigeon largement répandu en Europe et en Asie occidentale, qui niche dans des cavités plutôt que dans des nids ouverts.",
+    "identification": "Plus petit et plus uniforme que le Pigeon ramier, Columba palumbus, il a le croupion gris et ne présente pas de larges barres blanches sur l’aile.",
+    "habitat": "Il fréquente les bois clairs, vieux arbres, terres agricoles et parcs où les zones d’alimentation sont proches de cavités favorables.",
+    "diet": "Son alimentation se compose surtout de graines, céréales, pousses, feuilles et autres végétaux, avec quelques invertébrés consommés à l’occasion.",
+    "behavior": "Certaines populations du nord et du centre de l’Europe migrent ou se dispersent vers le sud et l’ouest en hiver, tandis que d’autres restent sédentaires.",
+    "reproduction": "Les couples nichent dans des trous d’arbres, des falaises ou des bâtiments et pondent généralement un ou deux œufs, couvés par les deux parents.",
+    "ecology": "Contrairement au Pigeon biset, Columba livia, il dépend fortement des cavités naturelles et se distingue du Pigeon ramier, plus grand, par sa taille et son plumage.",
+    "conservation": "L’évaluation mondiale de l’UICN de 2016 le classe en préoccupation mineure. Des sources régionales signalent la perte de vieux arbres et l’agriculture intensive comme pressions."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/stock-dove",
+      "title": "Pigeon colombin — BTO BirdFacts"
+    },
+    {
+      "url": "https://seo.org/ave/paloma-zurita/",
+      "title": "Pigeon colombin — SEO/BirdLife Espagne"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22690088A86074207.en",
+      "title": "Columba oenas — évaluation de la Liste rouge de l’UICN"
+    }
+  ]
+}

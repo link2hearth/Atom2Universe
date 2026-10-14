@@ -1,0 +1,38 @@
+{
+  "id": "crenicichla_johanna",
+  "name": "Cichlidé-brochet de Johanna",
+  "scientific": "Crenicichla johanna",
+  "group": "fish",
+  "sections": {
+    "overview": "Le nom de l’inventaire, Crenicichla johanna, est l’ancienne combinaison familière ; une révision phylogénétique place maintenant l’espèce dans Lugubria sous le nom Lugubria johanna.",
+    "identification": "C’est un cichlidé-brochet de grande taille ; dans le genre révisé Lugubria, L. johanna fait partie des exceptions dépourvues de la tache sombre caudale habituelle.",
+    "habitat": "Son aire rapportée couvre plusieurs bassins sud-américains à l’est des Andes, notamment l’Amazone, l’Orénoque et les Guyanes, bien que le nom puisse recouvrir plusieurs lignées.",
+    "diet": "Comme les autres cichlidés-brochets, c’est un prédateur, mais les observations de terrain propres à l’espèce ne justifient pas une liste précise de proies pour toute son vaste aire.",
+    "behavior": "Il appartient à la lignée robuste des Lugubria, un groupe de cichlidés-brochets séparé de plusieurs autres lignées autrefois classées dans Crenicichla par des données phylogénétiques.",
+    "reproduction": "Les sources consultées ne fournissent pas de description fiable et propre à l’espèce de son cycle reproducteur ou des soins parentaux.",
+    "ecology": "L’ancien nom Crenicichla johanna reste utile pour retrouver la littérature antérieure ; comparez le profil Crenicichla strigata du catalogue, une autre espèce désormais placée dans Lugubria.",
+    "conservation": "Une enquête régionale citée et l’évaluation mondiale le donnent en préoccupation mineure, mais les indices de complexe d’espèces invitent à ne pas traiter toutes les observations comme une population uniforme."
+  },
+  "sources": [
+    {
+      "url": "https://academic.oup.com/zoolinnean/article/198/4/982/7204395",
+      "title": "Révision de la classification générique des cichlidés-brochets — Varella et al., 2023"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=56696",
+      "title": "Catalogue des poissons d’Eschmeyer — Lugubria johanna"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8588857/",
+      "title": "Phylogénie mitochondriale et diversité sous-estimée de Crenicichla — PeerJ"
+    },
+    {
+      "url": "https://www.scielo.org.pe/scielo.php?pid=S2410-11842023000200004&script=sci_arttext",
+      "title": "Poissons menacés : diversité cachée d’un lac amazonien péruvien — Revista Peruana de Biología"
+    },
+    {
+      "url": "https://www.fishbase.net.br/identification/SpeciesList.php?genus=Lugubria",
+      "title": "Crenicichla strigata — liste FishBase des Lugubria"
+    }
+  ]
+}

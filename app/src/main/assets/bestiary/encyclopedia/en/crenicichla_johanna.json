@@ -1,0 +1,38 @@
+{
+  "id": "crenicichla_johanna",
+  "name": "Johanna pike cichlid",
+  "scientific": "Crenicichla johanna",
+  "group": "fish",
+  "sections": {
+    "overview": "The inventory name Crenicichla johanna is the familiar historical combination; a phylogenetic revision now places the species in Lugubria as Lugubria johanna.",
+    "identification": "It is a large-bodied pike cichlid; in the revised genus Lugubria, L. johanna is one of the exceptions lacking the usual dark caudal-fin blotch.",
+    "habitat": "Its reported range spans several cis-Andean South American drainages, including the Amazon, Orinoco and Guiana systems, though the name may cover multiple lineages.",
+    "diet": "Like other pike cichlids it is predatory, but species-level field records do not justify a precise prey list across its entire broad range.",
+    "behavior": "It belongs to the robust-bodied Lugubria lineage of pike cichlids, a group separated from several other former Crenicichla lineages by phylogenetic evidence.",
+    "reproduction": "The sources consulted do not provide a dependable species-specific account of its breeding cycle or parental care.",
+    "ecology": "The old name Crenicichla johanna is still useful for finding earlier literature; compare the catalogue’s Crenicichla strigata profile, another species now assigned to Lugubria.",
+    "conservation": "A cited regional survey and the global assessment report it as Least Concern, but the species-complex evidence cautions against treating all records as one uniform population."
+  },
+  "sources": [
+    {
+      "url": "https://academic.oup.com/zoolinnean/article/198/4/982/7204395",
+      "title": "Revision of the generic classification of pike cichlids — Varella et al., 2023"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=56696",
+      "title": "Eschmeyer’s Catalog of Fishes — Lugubria johanna"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8588857/",
+      "title": "MtDNA species-level phylogeny and underestimated diversity in Crenicichla — PeerJ"
+    },
+    {
+      "url": "https://www.scielo.org.pe/scielo.php?pid=S2410-11842023000200004&script=sci_arttext",
+      "title": "Fishes at Risk: Hidden diversity in a Peruvian Amazon lake — Revista Peruana de Biología"
+    },
+    {
+      "url": "https://www.fishbase.net.br/identification/SpeciesList.php?genus=Lugubria",
+      "title": "Crenicichla strigata — FishBase species list for Lugubria"
+    }
+  ]
+}

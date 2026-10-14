@@ -1,0 +1,144 @@
+{
+  "id": "stock_dove",
+  "scientific": "Columba oenas",
+  "group": "birds",
+  "name": {
+    "en": "Stock Dove",
+    "fr": "Pigeon colombin"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Stock Dove is a widespread European and western Asian pigeon that nests in cavities rather than open twig nests.",
+      "fr": "Le Pigeon colombin est un pigeon largement répandu en Europe et en Asie occidentale, qui niche dans des cavités plutôt que dans des nids ouverts."
+    },
+    "identification": {
+      "en": "It is smaller and plainer than the Woodpigeon, Columba palumbus, with a grey rump and no broad white wing bars.",
+      "fr": "Plus petit et plus uniforme que le Pigeon ramier, Columba palumbus, il a le croupion gris et ne présente pas de larges barres blanches sur l’aile."
+    },
+    "habitat": {
+      "en": "It uses open woodland, old trees, farmland and parks where feeding grounds lie near suitable nesting cavities.",
+      "fr": "Il fréquente les bois clairs, vieux arbres, terres agricoles et parcs où les zones d’alimentation sont proches de cavités favorables."
+    },
+    "diet": {
+      "en": "Its food is mainly seeds, grains, shoots, leaves and other plant matter, with invertebrates taken occasionally.",
+      "fr": "Son alimentation se compose surtout de graines, céréales, pousses, feuilles et autres végétaux, avec quelques invertébrés consommés à l’occasion."
+    },
+    "behavior": {
+      "en": "Some northern and central European populations migrate or disperse south and west for winter, while others remain resident.",
+      "fr": "Certaines populations du nord et du centre de l’Europe migrent ou se dispersent vers le sud et l’ouest en hiver, tandis que d’autres restent sédentaires."
+    },
+    "reproduction": {
+      "en": "Pairs nest in tree holes, cliffs or buildings and usually lay one or two eggs, incubated by both parents.",
+      "fr": "Les couples nichent dans des trous d’arbres, des falaises ou des bâtiments et pondent généralement un ou deux œufs, couvés par les deux parents."
+    },
+    "ecology": {
+      "en": "Unlike the Rock Pigeon, Columba livia, it relies strongly on natural cavities, and differs from the larger Woodpigeon in plumage and size.",
+      "fr": "Contrairement au Pigeon biset, Columba livia, il dépend fortement des cavités naturelles et se distingue du Pigeon ramier, plus grand, par sa taille et son plumage."
+    },
+    "conservation": {
+      "en": "The 2016 global IUCN assessment lists it as Least Concern. Regional sources identify loss of old trees and intensive farming as pressures.",
+      "fr": "L’évaluation mondiale de l’UICN de 2016 le classe en préoccupation mineure. Des sources régionales signalent la perte de vieux arbres et l’agriculture intensive comme pressions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Stock Dove — BTO BirdFacts",
+        "fr": "Pigeon colombin — BTO BirdFacts"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/stock-dove",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "British Trust for Ornithology contrasts it with Woodpigeon and documents cavities, farmland use and breeding biology."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 174,
+        "notes_words": 16,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Paloma zurita — SEO/BirdLife",
+        "fr": "Pigeon colombin — SEO/BirdLife Espagne"
+      },
+      "url": "https://seo.org/ave/paloma-zurita/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish bird society gives range, diet, seasonal movements and regional pressures."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 11,
+        "total": 160,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Columba oenas — IUCN Red List assessment",
+        "fr": "Columba oenas — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22690088A86074207.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2016 global assessment lists Least Concern and describes the species’ very large range."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 21,
+        "notes_words": 14,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Population patterns and conservation pressures differ across Europe; local threats are not generalized worldwide."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared BTO information with SEO/BirdLife Spanish natural history and the IUCN assessment; distinguished this species from Columba palumbus and Columba livia."
+}

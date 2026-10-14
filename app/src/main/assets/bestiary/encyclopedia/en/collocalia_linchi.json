@@ -1,0 +1,38 @@
+{
+  "id": "collocalia_linchi",
+  "name": "Cave Swiftlet",
+  "scientific": "Collocalia linchi",
+  "group": "birds",
+  "sections": {
+    "overview": "This small swiftlet is native to Java, Bali, Lombok and nearby islands, with populations also in Sumatra.",
+    "identification": "It has dark, green-glossed upperparts, a pale belly and square-cut tail, and is easily confused with other swiftlets.",
+    "habitat": "It forages over varied lowland and upland habitats and nests in caves.",
+    "diet": "It catches small flying insects in the air while in continuous, fast flight.",
+    "behavior": "It is active in groups. Indonesian observers describe rapid, erratic flight and chattering calls near nesting sites.",
+    "reproduction": "Swiftlets build small bracket nests on sheltered vertical surfaces, using saliva with plant material.",
+    "ecology": "It is distinct from the Glossy Swiftlet, Collocalia esculenta; the Kinabalu swiftlet is now treated separately as Collocalia dodgei.",
+    "conservation": "BirdLife lists the species as Least Concern; local abundance and trends are not uniform across the islands."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/cave-swiftlet-collocalia-linchi",
+      "title": "Cave Swiftlet — BirdLife DataZone"
+    },
+    {
+      "url": "https://ebird.org/species/cavswi2?siteLanguage=in",
+      "title": "Walet linci — eBird Indonesia"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/151187",
+      "title": "Taxonomic status of the Kinabalu “linchi” swiftlet"
+    },
+    {
+      "url": "https://tahuradjuanda.jabarprov.go.id/fauna/qdcn8edz2j1op51wzgu0vzn0",
+      "title": "Walet Linch — Tahura Ir. H. Djuanda fauna account"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Collocaliini/",
+      "title": "Collocaliini — Animal Diversity Web, University of Michigan"
+    }
+  ]
+}

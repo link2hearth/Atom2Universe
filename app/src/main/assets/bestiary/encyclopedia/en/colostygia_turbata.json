@@ -1,0 +1,34 @@
+{
+  "id": "colostygia_turbata",
+  "name": "Dark-barred Twin-spot",
+  "scientific": "Colostygia turbata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This geometrid moth is a cool-region species recorded from European mountain systems and farther across northern Eurasia.",
+    "identification": "Its dark forewings contrast with nearly white hindwings, giving the flying moth a striking black-and-white appearance.",
+    "habitat": "It is associated with mountain forests, alpine meadows and cool streamside vegetation.",
+    "diet": "The caterpillars feed on bedstraws, especially Galium palustre, a host plant listed by several European references.",
+    "behavior": "Adults fly mainly in early summer and may be flushed by day or attracted to light at night.",
+    "reproduction": "Larvae are reported to overwinter, but references do not establish a consistent number of generations across the range.",
+    "ecology": "Several geographic forms are recognized, including Pyrenean and northern forms; local identification should account for this variation.",
+    "conservation": "French records are concentrated in the Alps and Pyrenees, but no verified global threat category was found."
+  },
+  "sources": [
+    {
+      "url": "https://lepiforum.org/wiki/page/Colostygia_Turbata",
+      "title": "Colostygia turbata — LepiWiki"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=34240",
+      "title": "Colostygia turbata — Lepinet"
+    },
+    {
+      "url": "https://lepidoptera.eu/species/695",
+      "title": "Colostygia turbata — Lepidoptera Mundi"
+    },
+    {
+      "url": "https://www.perhoset.fi/historia/larentiinae/col-turbata.htm",
+      "title": "Colostygia turbata in Finland — Finnish Lepidoptera"
+    }
+  ]
+}

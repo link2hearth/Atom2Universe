@@ -1,0 +1,30 @@
+{
+  "id": "stock_dove",
+  "name": "Stock Dove",
+  "scientific": "Columba oenas",
+  "group": "birds",
+  "sections": {
+    "overview": "The Stock Dove is a widespread European and western Asian pigeon that nests in cavities rather than open twig nests.",
+    "identification": "It is smaller and plainer than the Woodpigeon, Columba palumbus, with a grey rump and no broad white wing bars.",
+    "habitat": "It uses open woodland, old trees, farmland and parks where feeding grounds lie near suitable nesting cavities.",
+    "diet": "Its food is mainly seeds, grains, shoots, leaves and other plant matter, with invertebrates taken occasionally.",
+    "behavior": "Some northern and central European populations migrate or disperse south and west for winter, while others remain resident.",
+    "reproduction": "Pairs nest in tree holes, cliffs or buildings and usually lay one or two eggs, incubated by both parents.",
+    "ecology": "Unlike the Rock Pigeon, Columba livia, it relies strongly on natural cavities, and differs from the larger Woodpigeon in plumage and size.",
+    "conservation": "The 2016 global IUCN assessment lists it as Least Concern. Regional sources identify loss of old trees and intensive farming as pressures."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/stock-dove",
+      "title": "Stock Dove — BTO BirdFacts"
+    },
+    {
+      "url": "https://seo.org/ave/paloma-zurita/",
+      "title": "Paloma zurita — SEO/BirdLife"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22690088A86074207.en",
+      "title": "Columba oenas — IUCN Red List assessment"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "conus_magus",
+  "name": "Magician’s Cone",
+  "scientific": "Conus magus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This Indo-Pacific cone snail is a predatory marine gastropod in family Conidae, whose members hunt with venomous radular teeth.",
+    "identification": "Its conical, patterned shell can resemble that of Conus consors, and shell appearance alone may not reliably separate them.",
+    "habitat": "It lives in shallow Indo-Pacific waters; museum specimens have been collected on sandy reef substrate in Indonesia.",
+    "diet": "Juveniles hunt polychaete worms, then shift to fish as adults, using a hooked radular tooth and paralytic venom peptides.",
+    "behavior": "It injects venom through a hollow radular tooth; research documents different hunting behavior and venom mixtures in juveniles and adults.",
+    "reproduction": "Females deposit egg capsules on hard surfaces, and laboratory-reared larvae swim and feed before settling and metamorphosing.",
+    "ecology": "It is the type species of subgenus Pionoconus; adults hunt fish, while juveniles retain a worm-eating phase.",
+    "conservation": "The French SeaLifeBase record provides no verified global threat category, so this profile assigns none."
+  },
+  "sources": [
+    {
+      "url": "https://www.nature.com/articles/s41467-023-38924-5",
+      "title": "Coordinated adaptations define the ontogenetic shift from worm- to fish-hunting in a venomous cone snail — Nature Communications"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Conus+magus",
+      "title": "Conus magus — World Register of Marine Species"
+    },
+    {
+      "url": "https://www.si.edu/object/conus-magus%3Anmnhinvertebratezoology_463362",
+      "title": "Conus magus specimen — Smithsonian National Museum of Natural History"
+    },
+    {
+      "url": "https://www.sealifebase.ca/summary/SpeciesSummary.php?id=106230&lang=french",
+      "title": "Conus magus — SeaLifeBase, French interface"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12266717/",
+      "title": "Pionoconus: a piscivorous subgenus of Conus gastropods"
+    }
+  ]
+}

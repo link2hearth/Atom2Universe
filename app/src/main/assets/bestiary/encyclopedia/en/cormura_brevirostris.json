@@ -1,0 +1,30 @@
+{
+  "id": "cormura_brevirostris",
+  "name": "Chestnut sac-winged bat",
+  "scientific": "Cormura brevirostris",
+  "group": "mammals",
+  "sections": {
+    "overview": "This small Neotropical emballonurid bat is the only living species in the genus Cormura and is also called Wagner’s sac-winged bat.",
+    "identification": "Adults are about 5 cm long and 9 g, with a light-brown to black back, paler underside and elongated scent sacs on the forearms.",
+    "habitat": "It is associated with humid, continuous forests and waterways, and has been recorded across Central America and northern and western South America.",
+    "diet": "It is an aerial insectivore, hunting flying insects in forest gaps, along edges and above the canopy.",
+    "behavior": "The species is generally solitary and forages through several forest height layers, from canopy to near ground level.",
+    "reproduction": "The available species accounts describe its roosting and echolocation but provide little direct information on breeding or litter size.",
+    "ecology": "Its activity within forest interiors and edges makes it one of the aerial insectivorous bats monitored in studies of Amazonian forest fragmentation.",
+    "conservation": "The Mammal Diversity Database reports a global IUCN status of Least Concern; this broad category does not remove the importance of retaining humid forest habitat."
+  },
+  "sources": [
+    {
+      "url": "https://ppbio.inpa.gov.br/en/Bat_Library/Species/Cormura_brevirostris",
+      "title": "Cormura brevirostris — INPA Bat Library"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004781/",
+      "title": "Cormura brevirostris — Mammal Diversity Database"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9506665/",
+      "title": "Edge effects and vertical stratification of aerial insectivorous bats across Amazonian rainforest — PeerJ"
+    }
+  ]
+}

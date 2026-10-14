@@ -1,0 +1,34 @@
+{
+  "id": "crenicara_punctulatum",
+  "name": "Checkerboard cichlid",
+  "scientific": "Crenicara punctulatum",
+  "group": "fish",
+  "sections": {
+    "overview": "Crenicara punctulatum is a small South American cichlid widespread in the upper Amazon and also recorded in the Essequibo basin.",
+    "identification": "Its dark checkerboard flank pattern gives the species its common name; it is similar to C. latruncularium, which differs in several meristic and colour characters.",
+    "habitat": "It is recorded from forest creeks and sandy river shores, often near fallen leaves or among aquatic plants.",
+    "diet": "Kullander’s redescription does not provide a detailed natural prey inventory, so no specialized diet is assigned here.",
+    "behavior": "Claims that this species changes sex have appeared in older sources, but the status of C. punctulatum as a true sex-changing fish remains disputed.",
+    "reproduction": "It lays eggs attached to plants or stones, and the female tends the clutch; reported egg numbers vary among compiled summaries.",
+    "ecology": "It is a benthopelagic freshwater fish of tropical lowland streams and shores, sharing its genus with the more localized C. latruncularium.",
+    "conservation": "FishBase relays a global IUCN assessment of Least Concern; this status is distinct from the contested details of its reproductive biology."
+  },
+  "sources": [
+    {
+      "url": "https://svenkullander.se/publications/Kullander_Peru_1986.pdf",
+      "title": "Cichlid fishes of the Amazon River drainage of Peru — Sven O. Kullander"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Crenicara-punctulatum.html",
+      "title": "Crenicara punctulata — FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1643/0045-8511(2000)2000%5B0071:FCCPIA%5D2.0.CO;2",
+      "title": "Fish and sex change in Crenicara punctulata — Carruth, 2000, Copeia"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8440468/",
+      "title": "Epigenetic regulation and environmental sex determination in cichlid fishes — review"
+    }
+  ]
+}

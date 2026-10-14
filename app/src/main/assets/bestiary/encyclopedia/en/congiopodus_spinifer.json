@@ -1,0 +1,34 @@
+{
+  "id": "congiopodus_spinifer",
+  "name": "Spinenose Horsefish",
+  "scientific": "Congiopodus spinifer",
+  "group": "fish",
+  "sections": {
+    "overview": "This southern African bottom-dwelling fish belongs to Congiopodidae, a family often called horsefishes or pigfishes.",
+    "identification": "Its compressed, rough-skinned body has a protruding snout with strong spines and a brown, dark-spotted pattern.",
+    "habitat": "It lives off southern Africa from Walvis Bay to KwaZulu-Natal, over rocky reefs and sandy bottoms.",
+    "diet": "It feeds on bottom-dwelling invertebrates, including crustaceans, molluscs, sea urchins, brittle stars and worms.",
+    "behavior": "It is demersal and often caught incidentally by bottom trawlers; aquarium observations suggest greater activity at night.",
+    "reproduction": "Species-specific reproductive details were not available in the regional identification and aquarium sources consulted.",
+    "ecology": "It is readily distinguished from the smooth horsefish, Congiopodus torvus, by the spined snout and rough skin.",
+    "conservation": "The aquarium account does not consider it threatened, but notes pollution and trawl bycatch among potential pressures."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/ad468e/ad468eDC.pdf",
+      "title": "FAO species identification sheet: Congiopodus spinifer"
+    },
+    {
+      "url": "https://www.aquarium.co.za/animals/spinynose-horsefish",
+      "title": "Spinenose Horsefish — Two Oceans Aquarium"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Congiopodus-spinifer",
+      "title": "Congiopodus spinifer — FishBase"
+    },
+    {
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_2_text.pdf",
+      "title": "Congiopodidae key and species account — Fishes of the World, SAIAB"
+    }
+  ]
+}

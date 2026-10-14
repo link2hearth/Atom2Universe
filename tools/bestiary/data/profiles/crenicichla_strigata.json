@@ -1,0 +1,124 @@
+{
+  "id": "crenicichla_strigata",
+  "scientific": "Crenicichla strigata",
+  "group": "fish",
+  "name": {
+    "en": "Striped Pike Cichlid",
+    "fr": "Cichlidé brochet rayé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Current authorities place the Amazonian pike cichlid formerly called Crenicichla strigata in Lugubria. The revised genus also includes L. tigrina, described from the Rio Trombetas. Its northern range contrasts with the southern C. punctata profile.",
+      "fr": "Les autorités actuelles placent le cichlidé brochet amazonien autrefois appelé Crenicichla strigata dans le genre Lugubria. Le genre révisé comprend aussi L. tigrina, décrit du Rio Trombetas. Son aire septentrionale contraste avec celle de C. punctata, au sud."
+    },
+    "identification": {
+      "en": "The sources consulted identify the species taxonomically but offer limited field marks for separating it from other Lugubria.",
+      "fr": "Les sources consultées identifient l’espèce sur le plan taxonomique, mais donnent peu de critères de terrain pour la distinguer des autres Lugubria."
+    },
+    "habitat": {
+      "en": "FishBase records it from freshwater in the Amazon basin and adjoining northern South American drainages.",
+      "fr": "FishBase la signale en eau douce dans le bassin amazonien et les bassins voisins du nord de l’Amérique du Sud."
+    },
+    "diet": {
+      "en": "A species-specific prey list was not available in the references consulted for this profile.",
+      "fr": "Les références consultées pour cette fiche ne fournissent pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "The cited summaries do not characterize its activity pattern or social behavior.",
+      "fr": "Les synthèses citées ne décrivent pas son rythme d’activité ni son comportement social."
+    },
+    "reproduction": {
+      "en": "FishBase reports cave-laid eggs, female clutch tending, male territorial defense and later parental care by both adults.",
+      "fr": "FishBase rapporte une ponte dans des cavités, la surveillance de la ponte par la femelle, la défense du territoire par le mâle, puis des soins parentaux par les deux adultes."
+    },
+    "ecology": {
+      "en": "The 2023 integrative revision transferred this species from Crenicichla to Lugubria, reflecting a revised generic classification of pike cichlids.",
+      "fr": "La révision intégrative de 2023 a transféré l’espèce de Crenicichla à Lugubria, dans le cadre d’une nouvelle classification générique des cichlidés brochets."
+    },
+    "conservation": {
+      "en": "FishBase displays a global IUCN status of Least Concern, assessed in 2018.",
+      "fr": "FishBase affiche un statut mondial UICN de préoccupation mineure, évalué en 2018."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lugubria strigata — FishBase",
+        "fr": "Lugubria strigata — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Crenicichla-strigata.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation",
+        "overview"
+      ],
+      "facts": [
+        "FishBase reports range, cave nesting, parental care and IUCN category."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "overview.en.3",
+        "overview.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 10,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of the generic classification of pike cichlids — Zoological Journal of the Linnean Society",
+        "fr": "Revision of the generic classification of pike cichlids — Zoological Journal of the Linnean Society"
+      },
+      "url": "https://academic.oup.com/zoolinnean/article/198/4/982/7204395",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The 2023 revision and catalog establish the current generic placement."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 133,
+        "notes_words": 10,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and detailed behavioral descriptions were not found in the sources reviewed. The bestiary ID/scientific label remains Crenicichla strigata while several current authorities use Lugubria strigata."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the current California Academy catalog, the 2023 peer-reviewed generic revision and FishBase; explicitly preserves the runtime scientific label while documenting the accepted new combination."
+}

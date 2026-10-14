@@ -1,0 +1,30 @@
+{
+  "id": "coregonus_migratorius",
+  "name": "Omoul du Baïkal",
+  "scientific": "Coregonus migratorius",
+  "group": "fish",
+  "sections": {
+    "overview": "L’omoul du Baïkal est un corégone endémique du lac Baïkal et de ses affluents, autrefois aussi nommé Coregonus autumnalis migratorius.",
+    "identification": "C’est un poisson pélagique vivant en bancs, de la famille des Salmonidés ; les sources consultées ne donnent pas de critère unique permettant d’identifier sûrement toutes les populations.",
+    "habitat": "Il se nourrit et grandit dans le lac, à des profondeurs variables selon la saison et les ressources, puis gagne les affluents pour se reproduire.",
+    "diet": "Sa principale nourriture est le zooplancton endémique Epischura baikalensis, complété par de petits poissons et d’autres invertébrés.",
+    "behavior": "Les reproducteurs remontent les rivières en automne, et ce poisson constitue aussi une proie importante du phoque du Baïkal.",
+    "reproduction": "Il pond sur des radiers graveleux des rivières ; les œufs se développent pendant l’hiver et les jeunes dérivent vers le lac au printemps.",
+    "ecology": "Son cycle entre lac et rivières relie les zones d’alimentation pélagiques, les frayères des affluents et un prédateur indigène du lac, le phoque du Baïkal.",
+    "conservation": "L’évaluation mondiale citée le classe en préoccupation mineure, tandis que la gestion des pêcheries suit les remontées de frai et les captures du lac."
+  },
+  "sources": [
+    {
+      "url": "https://baikal.vniro.ru/images/%D0%B1%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB_%D0%BE%D0%B4%D1%83_2024_%D0%B4%D0%BB%D1%8F_%D0%BE%D1%81.pdf",
+      "title": "Omoul du Baïkal (Coregonus migratorius) — Institut de recherche halieutique du bassin du Baïkal (VNIRO)"
+    },
+    {
+      "url": "https://barguzinsky.ru/species/omul",
+      "title": "Omoul du Baïkal — réserve naturelle de Bargouzine"
+    },
+    {
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=643&genusname=Coregonus&speciesname=migratorius",
+      "title": "Coregonus migratorius — guide de terrain FishBase"
+    }
+  ]
+}

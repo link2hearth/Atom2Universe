@@ -1,0 +1,26 @@
+{
+  "id": "crenicichla_punctata",
+  "name": "Spotted Pike Cichlid",
+  "scientific": "Crenicichla punctata",
+  "group": "fish",
+  "sections": {
+    "overview": "This southern South American pike cichlid inhabits the Laguna dos Patos and Lagoa Mirim basins; unlike the Amazonian C. tigrina and C. strigata accounts below, its range lies in Brazil and Uruguay.",
+    "identification": "FishBase describes an elongated freshwater fish and records a maximum standard length of 23.1 cm.",
+    "habitat": "It is a benthopelagic fish of the subtropical southern-basin waters, not a riverine Amazon species.",
+    "diet": "The species-specific sources consulted here do not provide a documented prey list, so its diet is left unspecified.",
+    "behavior": "Published species summaries used here provide little species-level behavioral detail.",
+    "reproduction": "The consulted accounts do not establish this species’ spawning period or clutch size.",
+    "ecology": "The Uruguay freshwater-fish guide places the species in the Laguna Merín basin and includes it among taxa prioritized by the national protected-area system.",
+    "conservation": "FishBase reports a global IUCN assessment of Least Concern, dated 2020."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Crenicichla-punctata.html",
+      "title": "Crenicichla punctata — FishBase"
+    },
+    {
+      "url": "https://udelar.edu.uy/retema/wp-content/uploads/sites/30/2023/10/Peces-de-agua-dulce-de-Uruguay.-Segunda-Edicion.pdf",
+      "title": "Peces de agua dulce de Uruguay, 2.ª edición — Universidad de la República"
+    }
+  ]
+}

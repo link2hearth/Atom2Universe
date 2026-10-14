@@ -1,0 +1,188 @@
+{
+  "id": "collocalia_linchi",
+  "scientific": "Collocalia linchi",
+  "group": "birds",
+  "name": {
+    "en": "Cave Swiftlet",
+    "fr": "Salangane linchi"
+  },
+  "sections": {
+    "overview": {
+      "en": "This small swiftlet is native to Java, Bali, Lombok and nearby islands, with populations also in Sumatra.",
+      "fr": "Cette petite salangane est indigène de Java, Bali, Lombok et des îles voisines, ainsi que de certaines régions de Sumatra."
+    },
+    "identification": {
+      "en": "It has dark, green-glossed upperparts, a pale belly and square-cut tail, and is easily confused with other swiftlets.",
+      "fr": "Son dessus sombre présente un reflet vert, son ventre est clair et sa queue carrée; elle se confond facilement avec d’autres salanganes."
+    },
+    "habitat": {
+      "en": "It forages over varied lowland and upland habitats and nests in caves.",
+      "fr": "Elle chasse dans des milieux variés de plaine et d’altitude, et niche dans des grottes."
+    },
+    "diet": {
+      "en": "It catches small flying insects in the air while in continuous, fast flight.",
+      "fr": "Elle capture de petits insectes volants en plein vol, au cours de déplacements rapides et continus."
+    },
+    "behavior": {
+      "en": "It is active in groups. Indonesian observers describe rapid, erratic flight and chattering calls near nesting sites.",
+      "fr": "Elle est active en groupes. Des observateurs indonésiens décrivent un vol rapide et irrégulier ainsi que des cris bavards près des nids."
+    },
+    "reproduction": {
+      "en": "Swiftlets build small bracket nests on sheltered vertical surfaces, using saliva with plant material.",
+      "fr": "Les salanganes construisent de petits nids en console sur des parois abritées, avec de la salive et des matières végétales."
+    },
+    "ecology": {
+      "en": "It is distinct from the Glossy Swiftlet, Collocalia esculenta; the Kinabalu swiftlet is now treated separately as Collocalia dodgei.",
+      "fr": "Elle est distincte de la Salangane soyeuse, Collocalia esculenta; la Salangane du Kinabalu est désormais séparée sous le nom Collocalia dodgei."
+    },
+    "conservation": {
+      "en": "BirdLife lists the species as Least Concern; local abundance and trends are not uniform across the islands.",
+      "fr": "BirdLife classe l’espèce en préoccupation mineure; son abondance et ses tendances locales ne sont pas uniformes d’une île à l’autre."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cave Swiftlet — BirdLife DataZone",
+        "fr": "Salangane linchi — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/cave-swiftlet-collocalia-linchi",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife provides the global species account and IUCN assessment for Collocalia linchi."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 37,
+        "notes_words": 12,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Walet linci — eBird Indonesia",
+        "fr": "Walet linci — eBird Indonésie"
+      },
+      "url": "https://ebird.org/species/cavswi2?siteLanguage=in",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Indonesian account describes the island range, green gloss, pale belly, square-cut tail and group flight."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 106,
+        "notes_words": 15,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomic status of the Kinabalu “linchi” swiftlet",
+        "fr": "Statut taxonomique de la salangane « linchi » du Kinabalu"
+      },
+      "url": "https://www.biodiversitylibrary.org/part/151187",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Molecular and morphological study discusses separation from Collocalia esculenta and the Kinabalu population."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 13,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Walet Linch — Tahura Ir. H. Djuanda fauna account",
+        "fr": "Walet Linch — fiche faune Tahura Ir. H. Djuanda"
+      },
+      "url": "https://tahuradjuanda.jabarprov.go.id/fauna/qdcn8edz2j1op51wzgu0vzn0",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Indonesian provincial park account describes capture of small flying insects."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 10,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Collocaliini — Animal Diversity Web, University of Michigan",
+        "fr": "Collocaliini — Animal Diversity Web, Université du Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Collocaliini/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "University of Michigan account describes swiftlet cave nesting habitat and bracket nests built on sheltered surfaces with saliva and plant material."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 17,
+        "total": 78,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic treatments of Indo-Pacific swiftlets have changed; island subspecies limits remain source-dependent."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared BirdLife and eBird accounts with Indonesian field information and a molecular taxonomic study; noted historical separation from Collocalia esculenta."
+}

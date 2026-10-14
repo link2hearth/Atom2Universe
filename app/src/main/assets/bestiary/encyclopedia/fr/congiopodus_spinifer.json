@@ -1,0 +1,34 @@
+{
+  "id": "congiopodus_spinifer",
+  "name": "Cacique hérisson",
+  "scientific": "Congiopodus spinifer",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce poisson benthique d’Afrique australe appartient aux Congiopodidae, famille souvent appelée horsefishes ou pigfishes.",
+    "identification": "Son corps comprimé à peau rugueuse porte un museau proéminent armé d’épines et une livrée brune tachetée de sombre.",
+    "habitat": "Il vit au large de l’Afrique australe, de Walvis Bay au KwaZulu-Natal, sur des récifs rocheux et des fonds sableux.",
+    "diet": "Il mange des invertébrés benthiques, dont des crustacés, mollusques, oursins, ophiures et vers.",
+    "behavior": "Il vit près du fond et est souvent capturé accidentellement par les chalutiers de fond; des observations en aquarium suggèrent une activité nocturne accrue.",
+    "reproduction": "Les sources régionales d’identification et d’aquarium consultées ne fournissent pas de détails propres à la reproduction de l’espèce.",
+    "ecology": "Il se distingue du Cacique lisse, Congiopodus torvus, par son museau épineux et sa peau rugueuse.",
+    "conservation": "La fiche d’aquarium ne le considère pas menacé, mais cite la pollution et les prises accessoires au chalut parmi les pressions possibles."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/ad468e/ad468eDC.pdf",
+      "title": "Fiche FAO d’identification : Congiopodus spinifer"
+    },
+    {
+      "url": "https://www.aquarium.co.za/animals/spinynose-horsefish",
+      "title": "Cacique hérisson — Two Oceans Aquarium"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Congiopodus-spinifer",
+      "title": "Congiopodus spinifer — FishBase"
+    },
+    {
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_2_text.pdf",
+      "title": "Clé des Congiopodidae et fiche espèce — Fishes of the World, SAIAB"
+    }
+  ]
+}

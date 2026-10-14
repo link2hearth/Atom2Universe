@@ -1,0 +1,30 @@
+{
+  "id": "cormura_brevirostris",
+  "name": "Cormure à ailes en sac",
+  "scientific": "Cormura brevirostris",
+  "group": "mammals",
+  "sections": {
+    "overview": "Cette petite chauve-souris néotropicale de la famille des Emballonuridés est l’unique espèce actuelle du genre Cormura et porte aussi le nom de chauve-souris à ailes en sac de Wagner.",
+    "identification": "Les adultes mesurent environ 5 cm et pèsent 9 g ; leur dos va du brun clair au noir, le ventre est plus pâle et leurs avant-bras portent de longs sacs odorifères.",
+    "habitat": "Elle fréquente les forêts humides relativement continues et leurs cours d’eau ; sa répartition couvre l’Amérique centrale et le nord et l’ouest de l’Amérique du Sud.",
+    "diet": "C’est un insectivore aérien qui chasse des insectes en vol dans les trouées forestières, le long des lisières et au-dessus de la canopée.",
+    "behavior": "L’espèce est généralement solitaire et chasse à plusieurs étages de la forêt, de la canopée jusqu’à proximité du sol.",
+    "reproduction": "Les fiches d’espèce disponibles décrivent ses gîtes et son écholocation, mais donnent peu d’informations directes sur la reproduction ou la taille des portées.",
+    "ecology": "Son activité à l’intérieur des forêts et près de leurs lisières en fait l’une des chauves-souris insectivores suivies dans les études sur la fragmentation des forêts amazoniennes.",
+    "conservation": "La Mammal Diversity Database indique un statut mondial UICN de préoccupation mineure ; cette catégorie générale ne diminue pas l’importance de préserver les forêts humides."
+  },
+  "sources": [
+    {
+      "url": "https://ppbio.inpa.gov.br/en/Bat_Library/Species/Cormura_brevirostris",
+      "title": "Cormura brevirostris — bibliothèque des chauves-souris de l’INPA"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1004781/",
+      "title": "Cormura brevirostris — Mammal Diversity Database"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9506665/",
+      "title": "Effets de lisière et stratification verticale des chauves-souris insectivores aériennes en forêt amazonienne — PeerJ"
+    }
+  ]
+}

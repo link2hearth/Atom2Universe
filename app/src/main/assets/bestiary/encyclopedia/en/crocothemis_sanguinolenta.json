@@ -1,0 +1,26 @@
+{
+  "id": "crocothemis_sanguinolenta",
+  "name": "Little Scarlet",
+  "scientific": "Crocothemis sanguinolenta",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Little Scarlet is an African libellulid dragonfly, smaller and narrower than the related Broad Scarlet C. erythraea.",
+    "identification": "Mature males are bright red; the species is smaller than C. erythraea and has shorter pterostigmas.",
+    "habitat": "It favors open rocky streams and ponds.",
+    "diet": "It catches flying insects.",
+    "behavior": "It often perches on rocks or bare ground.",
+    "reproduction": "The field guides give no egg or larval details.",
+    "ecology": "Adults may stray from water outside the breeding period.",
+    "conservation": "The atlas calls it widespread but tied to flowing waters."
+  },
+  "sources": [
+    {
+      "url": "https://thebdi.org/2020/06/17/little-scarlet-crocothemis-sanguinolenta/",
+      "title": "Little Scarlet — Online Atlas of South African Odonata, BDI"
+    },
+    {
+      "url": "https://www.sanbi.org/wp-content/uploads/2018/04/sanbibiodiveristyseries21.pdf",
+      "title": "Field Guide to the Damselflies and Dragonflies of South Africa — SANBI"
+    }
+  ]
+}

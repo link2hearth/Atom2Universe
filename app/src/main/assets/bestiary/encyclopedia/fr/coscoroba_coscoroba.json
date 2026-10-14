@@ -1,0 +1,34 @@
+{
+  "id": "coscoroba_coscoroba",
+  "name": "Cygne coscoroba",
+  "scientific": "Coscoroba coscoroba",
+  "group": "birds",
+  "sections": {
+    "overview": "Le coscoroba est un oiseau d’eau sud-américain de petite taille, à l’allure de cygne, classé dans son propre genre, Coscoroba.",
+    "identification": "L’adulte est blanc, avec le bout des rémiges noires et le bec rouge ; il est plus petit et son cou est plus court que celui des grands cygnes.",
+    "habitat": "Il fréquente les lagunes peu profondes, marais et lacs d’eau douce riches en végétation, ainsi que certains milieux humides côtiers.",
+    "diet": "Il mange surtout des plantes aquatiques et de petits invertébrés en barbotant ou en marchant dans l’eau, et broute aussi les pâtures voisines.",
+    "behavior": "Il se nourrit souvent en eau peu profonde sans basculer aussi souvent que les autres cygnes, et peut se rassembler en couples ou petits groupes hors reproduction.",
+    "reproduction": "La reproduction se concentre dans le sud de son aire sud-américaine, tandis que les déplacements saisonniers plus au nord restent mal connus.",
+    "ecology": "Son large bec finement dentelé aide à filtrer les particules alimentaires ; son aire recoupe celle du cygne à cou noir, sans qu’il appartienne au genre Cygnus.",
+    "conservation": "Le statut mondial cité est « préoccupation mineure », mais sa répartition discontinue rend importantes les pertes locales de zones humides et les disparitions locales."
+  },
+  "sources": [
+    {
+      "url": "https://swansg.org/the-swans/coscoroba/",
+      "title": "Cygne coscoroba — groupe de spécialistes des cygnes"
+    },
+    {
+      "url": "https://simbio.mma.gob.cl/Especies/VistaImpresion/5084",
+      "title": "Coscoroba coscoroba — fiche du ministère chilien de l’Environnement"
+    },
+    {
+      "url": "https://www.waterfowltag.com/coscoroba-swan",
+      "title": "Cygne coscoroba — groupe consultatif taxonomique des Ansériformes de l’AZA"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T22679866A92832574.en",
+      "title": "Coscoroba coscoroba — Liste rouge de l’UICN"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "colibri_serrirostris",
+  "name": "White-vented Violetear",
+  "scientific": "Colibri serrirostris",
+  "group": "birds",
+  "sections": {
+    "overview": "The common name White-vented Violetear refers to this hummingbird’s violet ear patch and pale lower belly.",
+    "identification": "Males are green with violet ear patches and bluish-violet chest tones; females are duller and lack the violet patch.",
+    "habitat": "It uses semi-open scrub, savanna, grassland, bushy ravines and forest edges across central South America.",
+    "diet": "It takes nectar from flowers and supplements it with small arthropods, which provide animal protein.",
+    "behavior": "It is territorial around flower patches and may move locally between highlands and valleys with seasonal conditions.",
+    "reproduction": "The female builds a small cup nest and usually lays one or two eggs; she incubates while the male brings food.",
+    "ecology": "The genus also includes other violetears, such as Colibri coruscans. The pale vent is a useful field mark for this species.",
+    "conservation": "The cited species account lists it as Least Concern, though local habitat conditions vary across its wide range."
+  },
+  "sources": [
+    {
+      "url": "https://birdsofbolivia.org/species-fact-sheets-2/hummingbirds-picaflores/colibri-serrirostris/",
+      "title": "Colibri serrirostris — Birds of Bolivia"
+    },
+    {
+      "url": "https://wikiaves.com/wiki/beija-flor-de-orelha-violeta",
+      "title": "Beija-flor-de-orelha-violeta — WikiAves"
+    },
+    {
+      "url": "https://sib.gob.ar/ficha.php?especie=ANIMALIA%2AColibri%2Aserrirostris",
+      "title": "Colibri serrirostris — Argentine Biodiversity Information System"
+    },
+    {
+      "url": "https://sib.gob.ar/taxonomia/genero/colibri",
+      "title": "Genus Colibri — Argentine Biodiversity Information System"
+    }
+  ]
+}

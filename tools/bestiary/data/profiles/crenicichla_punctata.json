@@ -1,0 +1,120 @@
+{
+  "id": "crenicichla_punctata",
+  "scientific": "Crenicichla punctata",
+  "group": "fish",
+  "name": {
+    "en": "Spotted Pike Cichlid",
+    "fr": "Cichlidé brochet ponctué"
+  },
+  "sections": {
+    "overview": {
+      "en": "This southern South American pike cichlid inhabits the Laguna dos Patos and Lagoa Mirim basins; unlike the Amazonian C. tigrina and C. strigata accounts below, its range lies in Brazil and Uruguay.",
+      "fr": "Ce cichlidé brochet du sud de l’Amérique du Sud vit dans les bassins de la Laguna dos Patos et de la Lagoa Mirim; contrairement aux fiches amazoniennes de C. tigrina et C. strigata ci-dessous, son aire couvre le Brésil et l’Uruguay."
+    },
+    "identification": {
+      "en": "FishBase describes an elongated freshwater fish and records a maximum standard length of 23.1 cm.",
+      "fr": "FishBase décrit un poisson d’eau douce au corps allongé et indique une longueur standard maximale de 23,1 cm."
+    },
+    "habitat": {
+      "en": "It is a benthopelagic fish of the subtropical southern-basin waters, not a riverine Amazon species.",
+      "fr": "C’est un poisson benthopélagique des eaux subtropicales des bassins méridionaux, et non une espèce amazonienne."
+    },
+    "diet": {
+      "en": "The species-specific sources consulted here do not provide a documented prey list, so its diet is left unspecified.",
+      "fr": "Les sources spécifiques consultées ici ne donnent pas de liste de proies documentée; son régime reste donc non précisé."
+    },
+    "behavior": {
+      "en": "Published species summaries used here provide little species-level behavioral detail.",
+      "fr": "Les synthèses spécifiques consultées ici donnent peu de détails sur son comportement."
+    },
+    "reproduction": {
+      "en": "The consulted accounts do not establish this species’ spawning period or clutch size.",
+      "fr": "Les références consultées ne permettent pas d’établir sa période de ponte ni la taille de sa ponte."
+    },
+    "ecology": {
+      "en": "The Uruguay freshwater-fish guide places the species in the Laguna Merín basin and includes it among taxa prioritized by the national protected-area system.",
+      "fr": "Le guide des poissons d’eau douce d’Uruguay situe l’espèce dans le bassin de la Laguna Merín et la compte parmi les taxons prioritaires du système national d’aires protégées."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Least Concern, dated 2020.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN en préoccupation mineure, datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Crenicichla punctata — FishBase",
+        "fr": "Crenicichla punctata — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Crenicichla-punctata.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records southern-basin distribution, elongated form, maximum size and 2020 Least Concern assessment."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 13,
+        "total": 188,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Peces de agua dulce de Uruguay, 2.ª edición — Universidad de la República",
+        "fr": "Peces de agua dulce de Uruguay, 2.ª edición — Universidad de la República"
+      },
+      "url": "https://udelar.edu.uy/retema/wp-content/uploads/sites/30/2023/10/Peces-de-agua-dulce-de-Uruguay.-Segunda-Edicion.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Uruguay guide notes Laguna Merín range and SNAP priority listing."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 10,
+        "total": 134,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level diet, behavior and breeding details were not available in the consulted authoritative summaries."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase with the Spanish-language Uruguayan freshwater-fish guide; links its southern range to the Amazonian C. tigrina and C. strigata profiles without implying close geographic overlap."
+}

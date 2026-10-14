@@ -1,0 +1,30 @@
+{
+  "id": "costaconvexa_polygrammata",
+  "name": "Many-lined moth",
+  "scientific": "Costaconvexa polygrammata",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "This geometrid moth occurs across much of Europe and adjoining parts of Asia and North Africa, with local records varying greatly by region.",
+    "identification": "The adult has several fine transverse wing lines, the pattern reflected in its scientific epithet and English name Many-lined moth.",
+    "habitat": "Its documented European habitats include open grassy and disturbed places where bedstraws of the genus Galium grow.",
+    "diet": "The caterpillar feeds on Galium species, including heath bedstraw, Galium saxatile.",
+    "behavior": "Adults fly from late afternoon into dusk and are also attracted to artificial lights.",
+    "reproduction": "The species has several adult generations in a year, and the pupa overwinters in a cocoon among plant debris.",
+    "ecology": "Its larval association with bedstraws ties its local occurrence to host-plant patches in suitable open vegetation.",
+    "conservation": "It is described as very rare and highly localized in Belgium, a regional observation that does not by itself establish global threat status."
+  },
+  "sources": [
+    {
+      "url": "https://lepiforum.org/wiki/page/Costaconvexa_polygrammata",
+      "title": "Lepiforum — Costaconvexa polygrammata"
+    },
+    {
+      "url": "https://projects.biodiversity.be/lepidoptera/species/5105/",
+      "title": "Catalogue of the Lepidoptera of Belgium — Costaconvexa polygrammata"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?e=l&id=33740",
+      "title": "La Phalène convexe — Lepinet"
+    }
+  ]
+}

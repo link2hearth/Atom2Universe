@@ -1,0 +1,38 @@
+{
+  "id": "collocalia_linchi",
+  "name": "Salangane linchi",
+  "scientific": "Collocalia linchi",
+  "group": "birds",
+  "sections": {
+    "overview": "Cette petite salangane est indigène de Java, Bali, Lombok et des îles voisines, ainsi que de certaines régions de Sumatra.",
+    "identification": "Son dessus sombre présente un reflet vert, son ventre est clair et sa queue carrée; elle se confond facilement avec d’autres salanganes.",
+    "habitat": "Elle chasse dans des milieux variés de plaine et d’altitude, et niche dans des grottes.",
+    "diet": "Elle capture de petits insectes volants en plein vol, au cours de déplacements rapides et continus.",
+    "behavior": "Elle est active en groupes. Des observateurs indonésiens décrivent un vol rapide et irrégulier ainsi que des cris bavards près des nids.",
+    "reproduction": "Les salanganes construisent de petits nids en console sur des parois abritées, avec de la salive et des matières végétales.",
+    "ecology": "Elle est distincte de la Salangane soyeuse, Collocalia esculenta; la Salangane du Kinabalu est désormais séparée sous le nom Collocalia dodgei.",
+    "conservation": "BirdLife classe l’espèce en préoccupation mineure; son abondance et ses tendances locales ne sont pas uniformes d’une île à l’autre."
+  },
+  "sources": [
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/cave-swiftlet-collocalia-linchi",
+      "title": "Salangane linchi — BirdLife DataZone"
+    },
+    {
+      "url": "https://ebird.org/species/cavswi2?siteLanguage=in",
+      "title": "Walet linci — eBird Indonésie"
+    },
+    {
+      "url": "https://www.biodiversitylibrary.org/part/151187",
+      "title": "Statut taxonomique de la salangane « linchi » du Kinabalu"
+    },
+    {
+      "url": "https://tahuradjuanda.jabarprov.go.id/fauna/qdcn8edz2j1op51wzgu0vzn0",
+      "title": "Walet Linch — fiche faune Tahura Ir. H. Djuanda"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Collocaliini/",
+      "title": "Collocaliini — Animal Diversity Web, Université du Michigan"
+    }
+  ]
+}

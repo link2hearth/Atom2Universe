@@ -1,0 +1,26 @@
+{
+  "id": "crenicichla_strigata",
+  "name": "Striped Pike Cichlid",
+  "scientific": "Crenicichla strigata",
+  "group": "fish",
+  "sections": {
+    "overview": "Current authorities place the Amazonian pike cichlid formerly called Crenicichla strigata in Lugubria. The revised genus also includes L. tigrina, described from the Rio Trombetas. Its northern range contrasts with the southern C. punctata profile.",
+    "identification": "The sources consulted identify the species taxonomically but offer limited field marks for separating it from other Lugubria.",
+    "habitat": "FishBase records it from freshwater in the Amazon basin and adjoining northern South American drainages.",
+    "diet": "A species-specific prey list was not available in the references consulted for this profile.",
+    "behavior": "The cited summaries do not characterize its activity pattern or social behavior.",
+    "reproduction": "FishBase reports cave-laid eggs, female clutch tending, male territorial defense and later parental care by both adults.",
+    "ecology": "The 2023 integrative revision transferred this species from Crenicichla to Lugubria, reflecting a revised generic classification of pike cichlids.",
+    "conservation": "FishBase displays a global IUCN status of Least Concern, assessed in 2018."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Crenicichla-strigata.html",
+      "title": "Lugubria strigata — FishBase"
+    },
+    {
+      "url": "https://academic.oup.com/zoolinnean/article/198/4/982/7204395",
+      "title": "Revision of the generic classification of pike cichlids — Zoological Journal of the Linnean Society"
+    }
+  ]
+}

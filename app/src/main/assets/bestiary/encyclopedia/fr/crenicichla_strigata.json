@@ -1,0 +1,26 @@
+{
+  "id": "crenicichla_strigata",
+  "name": "Cichlidé brochet rayé",
+  "scientific": "Crenicichla strigata",
+  "group": "fish",
+  "sections": {
+    "overview": "Les autorités actuelles placent le cichlidé brochet amazonien autrefois appelé Crenicichla strigata dans le genre Lugubria. Le genre révisé comprend aussi L. tigrina, décrit du Rio Trombetas. Son aire septentrionale contraste avec celle de C. punctata, au sud.",
+    "identification": "Les sources consultées identifient l’espèce sur le plan taxonomique, mais donnent peu de critères de terrain pour la distinguer des autres Lugubria.",
+    "habitat": "FishBase la signale en eau douce dans le bassin amazonien et les bassins voisins du nord de l’Amérique du Sud.",
+    "diet": "Les références consultées pour cette fiche ne fournissent pas de liste de proies propre à l’espèce.",
+    "behavior": "Les synthèses citées ne décrivent pas son rythme d’activité ni son comportement social.",
+    "reproduction": "FishBase rapporte une ponte dans des cavités, la surveillance de la ponte par la femelle, la défense du territoire par le mâle, puis des soins parentaux par les deux adultes.",
+    "ecology": "La révision intégrative de 2023 a transféré l’espèce de Crenicichla à Lugubria, dans le cadre d’une nouvelle classification générique des cichlidés brochets.",
+    "conservation": "FishBase affiche un statut mondial UICN de préoccupation mineure, évalué en 2018."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Crenicichla-strigata.html",
+      "title": "Lugubria strigata — FishBase"
+    },
+    {
+      "url": "https://academic.oup.com/zoolinnean/article/198/4/982/7204395",
+      "title": "Revision of the generic classification of pike cichlids — Zoological Journal of the Linnean Society"
+    }
+  ]
+}

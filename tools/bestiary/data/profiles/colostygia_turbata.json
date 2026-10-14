@@ -1,0 +1,163 @@
+{
+  "id": "colostygia_turbata",
+  "scientific": "Colostygia turbata",
+  "group": "invertebrates",
+  "name": {
+    "en": "Dark-barred Twin-spot",
+    "fr": "Cidarie dérangée"
+  },
+  "sections": {
+    "overview": {
+      "en": "This geometrid moth is a cool-region species recorded from European mountain systems and farther across northern Eurasia.",
+      "fr": "Cette géomètre des régions fraîches est signalée dans les massifs européens et plus largement dans le nord de l’Eurasie."
+    },
+    "identification": {
+      "en": "Its dark forewings contrast with nearly white hindwings, giving the flying moth a striking black-and-white appearance.",
+      "fr": "Ses ailes antérieures sombres contrastent avec des ailes postérieures presque blanches, donnant au papillon en vol un aspect noir et blanc marqué."
+    },
+    "habitat": {
+      "en": "It is associated with mountain forests, alpine meadows and cool streamside vegetation.",
+      "fr": "Elle est associée aux forêts montagnardes, prairies alpines et végétations fraîches des bords de cours d’eau."
+    },
+    "diet": {
+      "en": "The caterpillars feed on bedstraws, especially Galium palustre, a host plant listed by several European references.",
+      "fr": "Les chenilles se nourrissent de gaillets, notamment Galium palustre, plante hôte citée dans plusieurs références européennes."
+    },
+    "behavior": {
+      "en": "Adults fly mainly in early summer and may be flushed by day or attracted to light at night.",
+      "fr": "Les adultes volent surtout au début de l’été et peuvent s’envoler lorsqu’ils sont dérangés le jour ou être attirés par la lumière la nuit."
+    },
+    "reproduction": {
+      "en": "Larvae are reported to overwinter, but references do not establish a consistent number of generations across the range.",
+      "fr": "Les chenilles hivernent d’après les références, qui ne permettent toutefois pas d’établir un nombre de générations uniforme sur toute l’aire."
+    },
+    "ecology": {
+      "en": "Several geographic forms are recognized, including Pyrenean and northern forms; local identification should account for this variation.",
+      "fr": "Plusieurs formes géographiques sont reconnues, notamment pyrénéenne et nordique; l’identification locale doit tenir compte de cette variation."
+    },
+    "conservation": {
+      "en": "French records are concentrated in the Alps and Pyrenees, but no verified global threat category was found.",
+      "fr": "En France, les mentions se concentrent dans les Alpes et les Pyrénées, mais aucune catégorie mondiale de menace vérifiée n’a été trouvée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Colostygia turbata — LepiWiki",
+        "fr": "Colostygia turbata — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Colostygia_Turbata",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "German specialist account documents distribution, wing contrast and named subspecies."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 10,
+        "total": 118,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colostygia turbata — Lepinet",
+        "fr": "Colostygia turbata — Lepinet"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=34240",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "French account lists Galium as larval food and records it in the Alps and Pyrenees."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 15,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colostygia turbata — Lepidoptera Mundi",
+        "fr": "Colostygia turbata — Lepidoptera Mundi"
+      },
+      "url": "https://lepidoptera.eu/species/695",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "European species page gives mountain-forest habitat and Galium host plants."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 10,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Colostygia turbata in Finland — Finnish Lepidoptera",
+        "fr": "Colostygia turbata en Finlande — référence finlandaise sur les lépidoptères"
+      },
+      "url": "https://www.perhoset.fi/historia/larentiinae/col-turbata.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Finnish account reports flight in late June and early July and larval overwintering."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 80,
+        "notes_words": 13,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Regional flight timing and habitat descriptions vary; no global conservation assessment was confirmed."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked German and Finnish specialist accounts with French Lepinet records and a multilingual European database; kept regional distribution distinct from global range."
+}

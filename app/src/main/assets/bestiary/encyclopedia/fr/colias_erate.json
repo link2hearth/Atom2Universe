@@ -1,0 +1,34 @@
+{
+  "id": "colias_erate",
+  "name": "Citrin",
+  "scientific": "Colias erate",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ce piéride largement répandu vit du sud-est de l’Europe à travers l’Asie tempérée jusqu’au Japon et à Taïwan.",
+    "identification": "Il est jaune, avec des marques sombres près de l’apex des ailes antérieures.",
+    "habitat": "Il fréquente les prairies sèches, les steppes et les champs de luzerne, y compris les piémonts et versants montagnards.",
+    "diet": "Ses chenilles mangent des légumineuses telles que la luzerne et la coronille bigarrée.",
+    "behavior": "C’est un migrateur continental qui tend à étendre son aire; plusieurs générations peuvent se succéder dans l’année.",
+    "reproduction": "Au Japon, la chenille hiverne sur ses plantes hôtes et peut continuer à s’alimenter lorsque l’hiver est doux.",
+    "ecology": "Son usage de la luzerne recoupe celui de Colias croceus, mais les deux espèces restent distinctes et présentent des différences alaires utiles.",
+    "conservation": "Une évaluation régionale méditerranéenne le classe en préoccupation mineure; cette catégorie n’est pas une évaluation mondiale."
+  },
+  "sources": [
+    {
+      "url": "https://lepiforum.org/wiki/page/Colias_Erate",
+      "title": "Colias erate — LepiWiki"
+    },
+    {
+      "url": "https://www.nara-edu.ac.jp/cnee/NUE-KINDER-INSECT-GUIDE/web-content/musipage/monnkichou.html",
+      "title": "モンキチョウ — guide entomologique de l’Université d’éducation de Nara"
+    },
+    {
+      "url": "https://kotobank.jp/word/%E3%82%82%E3%82%93%E3%81%8D%E3%81%A1%E3%82%88%E3%81%86-3173453",
+      "title": "モンキチョウ — Kotobank, entrée de l’encyclopédie mondiale"
+    },
+    {
+      "url": "https://www.lepidoptera.life/wp-content/uploads/2020/04/The_status_and_distribution_of_mediterranean_butterflies.pdf",
+      "title": "Statut et répartition des papillons méditerranéens"
+    }
+  ]
+}
