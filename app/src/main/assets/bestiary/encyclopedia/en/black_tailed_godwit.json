@@ -1,0 +1,34 @@
+{
+  "id": "black_tailed_godwit",
+  "name": "Black-tailed Godwit",
+  "scientific": "Limosa limosa",
+  "group": "birds",
+  "sections": {
+    "overview": "The Black-tailed Godwit is a long-legged migratory shorebird breeding across Eurasia. Its subspecies include limosa and islandica; its close relative the Bar-tailed Godwit is Limosa lapponica.",
+    "identification": "Breeding birds develop orange-brown head, neck and breast, with a black-and-white wing bar and black tail. The Bar-tailed Godwit is a close comparison, but has a barred tail.",
+    "habitat": "It breeds in wet grasslands and other open wetlands, and uses inland wetlands, estuaries and tidal flats during migration and winter. Icelandic-breeding islandica birds winter widely in western Europe and Africa.",
+    "diet": "It feeds mainly on insects, worms, molluscs and crustaceans, probing soft sediment or wet ground with its long bill. It also takes plant material, especially outside the breeding season.",
+    "behavior": "It makes long seasonal movements between northern breeding grounds and southern non-breeding areas. Many birds return to the same wintering site, although members of a pair may winter in different countries.",
+    "reproduction": "It nests on the ground in wet open country and usually lays four eggs. In Britain and the Netherlands, low breeding productivity has prompted measures such as raising chicks in captivity before release.",
+    "ecology": "Use of inland wetlands and coastal mudflats links freshwater and estuarine food webs. The Bar-tailed Godwit is more strongly associated with coastal feeding areas.",
+    "conservation": "The IUCN assessed the species as Near Threatened in 2017, citing pressures that include habitat change and poor breeding success. Status and trends differ among subspecies and regions."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-tailed-godwit",
+      "title": "Black-tailed Godwit — British Trust for Ornithology BirdFacts"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22693150A111611637.en",
+      "title": "Limosa limosa — IUCN Red List assessment"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Bar-tailed_Godwit/lifehistory",
+      "title": "Bar-tailed Godwit — Cornell Lab All About Birds"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/barge.a.queue.noire.html",
+      "title": "Black-tailed Godwit — Oiseaux.net French species account"
+    }
+  ]
+}

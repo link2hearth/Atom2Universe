@@ -1,0 +1,34 @@
+{
+  "id": "astyanax_jordani",
+  "name": "Tétra cavernicole aveugle du Mexique",
+  "scientific": "Astyanax jordani",
+  "group": "fish",
+  "sections": {
+    "overview": "Astyanax jordani désigne couramment un tétra mexicain cavernicole aveugle, mais certaines classifications rattachent les poissons de grotte aux populations d’Astyanax mexicanus.",
+    "identification": "Les adultes sont petits, pâles et dépourvus d’yeux fonctionnels ; cette forme cavernicole contraste avec les tétras de surface pigmentés et voyants, proches d’A. mexicanus.",
+    "habitat": "La forme cavernicole reconnue provient des réseaux d’eau douce souterrains du nord-est du Mexique, où les populations occupent des grottes calcaires distinctes plutôt que des rivières ouvertes.",
+    "diet": "Les données alimentaires de terrain propres à l’espèce sont limitées ; les populations cavernicoles de la lignée du tétra mexicain exploitent les ressources apportées sous terre, sans proportions de proies vérifiées pour A. jordani.",
+    "behavior": "Privés de vision, ces poissons se déplacent dans l’obscurité permanente grâce à d’autres sens ; des expériences comparatives montrent que formes cavernicole et de surface entendent une large gamme de sons.",
+    "reproduction": "FishBase rapporte des œufs adhésifs dispersés dans des fissures, où ils échappent aux parents et aux autres habitants des grottes ; les observations reproductives détaillées restent rares.",
+    "ecology": "Sa forme cavernicole illustre les transformations sensorielles et développementales du complexe du tétra mexicain, tandis que les populations de surface voisines conservent yeux et pigmentation.",
+    "conservation": "FishBase rapporte un statut mondial En danger pour A. jordani, et des chercheurs mexicains alertent sur l’extraction d’eau et le manque de protection des grottes occupées par les poissons aveugles."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Anoptichthys-jordani.html",
+      "title": "Astyanax jordani — FishBase"
+    },
+    {
+      "url": "https://www.ib.unam.mx/ibunam/gyotaku/14-Sardinita.pdf",
+      "title": "Sardinita ciega mexicana — Institut de biologie de l’UNAM"
+    },
+    {
+      "url": "https://doi.org/10.1016/0003-3472(70)90052-7",
+      "title": "Capacités auditives du poisson cavernicole aveugle et de son ancêtre voyant — Animal Behaviour"
+    },
+    {
+      "url": "https://www.dgcs.unam.mx/boletin/bdboletin/2009_359.html",
+      "title": "Habitats des poissons cavernicoles aveugles au Mexique — bulletin de l’UNAM"
+    }
+  ]
+}

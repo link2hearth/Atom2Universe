@@ -1,0 +1,42 @@
+{
+  "id": "asthenosoma_ijimai",
+  "name": "Iijima's fire urchin",
+  "scientific": "Asthenosoma ijimai",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Asthenosoma ijimai is a tropical echinothuriid sea urchin, notable for its soft, flexible test and conspicuous venomous spines.",
+    "identification": "The flattened animal may reach about 13 centimetres across; a dark reddish upper surface, pale spine bands and white spine tips distinguish it.",
+    "habitat": "It lives on the seabed in the western Pacific, from Japanese waters south toward the Philippines and South China Sea, across reported depth ranges of roughly 7–300 metres.",
+    "diet": "Species-specific feeding observations are sparse in the references consulted, so a more precise account of its natural food remains uncertain.",
+    "behavior": "An older Japanese encyclopedia account says it hides in hollows or beneath stones, then returns to shelter after emerging to feed.",
+    "reproduction": "Laboratory work found unusually large, floating eggs and a lecithotrophic larval development; larvae remain near the surface before settling after several weeks.",
+    "ecology": "It is a benthic urchin documented across a broad tropical western Pacific depth range, while variation among Japanese populations has prompted taxonomic study.",
+    "conservation": "No global Red List assessment was located in the databases consulted, and available sources do not establish population trends or a species-specific conservation status."
+  },
+  "sources": [
+    {
+      "url": "https://www.sealifebase.se/summary/139087",
+      "title": "Asthenosoma ijimai — SeaLifeBase"
+    },
+    {
+      "url": "https://kotobank.jp/word/%E3%81%84%E3%81%84%E3%81%98%E3%81%BE%E3%81%B5%E3%81%8F%E3%82%8D%E3%81%86%E3%81%AB-3190887",
+      "title": "Iijima's fire urchin — Kotobank, Britannica International Encyclopedia"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29304716/",
+      "title": "The Development and Larval Form of Asthenosoma ijimai, Revisited — PubMed"
+    },
+    {
+      "url": "https://doi.org/10.1007/BF00386862",
+      "title": "Development of the echinothurid sea urchin Asthenosoma ijimai — Marine Biology"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15514475/",
+      "title": "Molecular evidence for sibling species within Asthenosoma ijimai — PubMed"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Asthenosoma_ijimai",
+      "title": "Asthenosoma ijimai — French Wikipedia"
+    }
+  ]
+}

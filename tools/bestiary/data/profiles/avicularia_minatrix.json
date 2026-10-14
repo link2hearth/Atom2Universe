@@ -1,0 +1,164 @@
+{
+  "id": "avicularia_minatrix",
+  "scientific": "Avicularia minatrix",
+  "group": "invertebrates",
+  "name": {
+    "en": "Venezuelan redstripe pinktoe tarantula",
+    "fr": "Mygale à bandes rouges du Venezuela"
+  },
+  "sections": {
+    "overview": {
+      "en": "Avicularia minatrix is a South American arboreal tarantula described from Venezuela and currently accepted as a distinct species in the genus Avicularia.",
+      "fr": "Avicularia minatrix est une mygale arboricole d’Amérique du Sud, décrite du Venezuela et actuellement reconnue comme espèce distincte du genre Avicularia."
+    },
+    "identification": {
+      "en": "Adults are distinguished by vivid orange lateral spots across a black abdomen; taxonomic descriptions separate it from similar Avicularia using additional anatomical characters.",
+      "fr": "L’adulte se reconnaît à ses taches latérales orange vif sur l’abdomen noir ; les descriptions taxonomiques la distinguent des Avicularia proches par d’autres caractères anatomiques."
+    },
+    "habitat": {
+      "en": "Verified records place the species in Venezuela and Brazil, but published locality and ecological data are too sparse to define its full habitat preferences.",
+      "fr": "Les données vérifiées situent l’espèce au Venezuela et au Brésil, mais les localités et observations écologiques publiées sont trop rares pour préciser ses préférences d’habitat."
+    },
+    "diet": {
+      "en": "No species-specific field diet study was located; as a tarantula, it is predatory, but prey breadth and hunting details should not be inferred from captive-care accounts.",
+      "fr": "Aucune étude alimentaire de terrain propre à l’espèce n’a été trouvée ; cette mygale est prédatrice, mais le régime et la chasse ne doivent pas être déduits de soins en captivité."
+    },
+    "behavior": {
+      "en": "The species belongs to Avicularia, a genus of New World tarantulas; direct observations of its activity, defensive behavior and web use remain poorly documented.",
+      "fr": "Cette espèce appartient à Avicularia, un genre de mygales du Nouveau Monde ; ses rythmes d’activité, défenses et comportements de toile restent peu documentés directement."
+    },
+    "reproduction": {
+      "en": "The taxonomic literature recognizes both sexes and illustrates diagnostic adult structures, but the sources reviewed provide no reliable species-specific account of courtship or egg-sac care.",
+      "fr": "La littérature taxonomique reconnaît les deux sexes et illustre les structures diagnostiques des adultes, mais les sources examinées ne décrivent pas fiablement la parade ni les soins au cocon."
+    },
+    "ecology": {
+      "en": "It is closely related to other pinktoe tarantulas such as A. avicularia, but its orange abdominal spotting provides a useful distinction from that familiar relative.",
+      "fr": "Elle est apparentée aux autres mygales à doigts roses, dont A. avicularia, mais ses taches abdominales orange permettent de la distinguer de cette espèce mieux connue."
+    },
+    "conservation": {
+      "en": "The World Spider Catalog confirms its accepted taxonomic status and range, but no species-level global conservation assessment or population trend was located.",
+      "fr": "Le World Spider Catalog confirme son statut taxonomique accepté et son aire, mais aucune évaluation mondiale de conservation ni tendance démographique propre à l’espèce n’a été trouvée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Avicularia minatrix — World Spider Catalog",
+        "fr": "Avicularia minatrix — World Spider Catalog"
+      },
+      "url": "https://wsc.nmbe.ch/spec-data/43836",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The Natural History Museum Bern catalog accepts A. minatrix and records distribution in Venezuela and Brazil, with taxonomic literature citations."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 20,
+        "total": 162,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Taxonomic revision and cladistic analysis of Avicularia — ZooKeys",
+        "fr": "Révision taxonomique et analyse cladistique d’Avicularia — ZooKeys"
+      },
+      "url": "https://doi.org/10.3897/zookeys.659.10717",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Revision diagnoses A. minatrix by vivid orange abdominal lateral spots on black and places the examined holotype from Lara, Venezuela; genus distribution covers tropical American countries."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 147,
+        "notes_words": 26,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Avicularia minatrix — Spanish Wikipedia",
+        "fr": "Avicularia minatrix — Wikipédia en espagnol"
+      },
+      "url": "https://es.wikipedia.org/wiki/Avicularia_minatrix",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Spanish-language account provides a second-language taxonomic synopsis, but contains little independently verifiable natural-history detail."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 14,
+        "total": 125,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Avicularia minatrix — World Spider Catalog species account",
+        "fr": "Avicularia minatrix — fiche d’espèce du World Spider Catalog"
+      },
+      "url": "https://wsc.nmbe.ch/catalog/100",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Catalog bibliography links the species to the original description and later male and female taxonomic redescriptions; A. avicularia is a congeneric comparator."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 22,
+        "total": 22,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-specific feeding, habitat structure, behavior, reproductive biology and conservation remain poorly documented in the accessible authoritative literature; avoid treating husbandry recommendations as field observations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the Bern World Spider Catalog and a peer-reviewed taxonomic revision; Spanish-language coverage is secondary and was not used to support detailed biological claims. No Avicularia relatives are represented in the current profile catalog; A. avicularia is included as an external textual comparison."
+}

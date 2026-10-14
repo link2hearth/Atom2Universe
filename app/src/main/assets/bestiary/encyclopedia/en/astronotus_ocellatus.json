@@ -1,0 +1,38 @@
+{
+  "id": "astronotus_ocellatus",
+  "name": "Oscar",
+  "scientific": "Astronotus ocellatus",
+  "group": "fish",
+  "sections": {
+    "overview": "The oscar is a large South American freshwater cichlid native to the Amazon and Orinoco drainages, widely kept in aquariums and also eaten locally.",
+    "identification": "Its deep oval body, large mouth and dark ground colour with orange-red markings are distinctive; adults commonly reach about 24 centimetres and can exceed 40.",
+    "habitat": "Oscars inhabit warm, quiet, shallow freshwater habitats such as sluggish channels, ponds and floodplain waters with muddy or sandy bottoms.",
+    "diet": "It feeds mainly near the bottom, taking snails, shrimp, insects and other small animals, while field accounts also report small fish and crayfish.",
+    "behavior": "Pairs clean and defend spawning surfaces, and both parents guard eggs and young; the species is a popular aquarium fish but grows relatively slowly.",
+    "reproduction": "This open-substrate spawner lays adhesive eggs on a cleaned flat surface; both parents tend the clutch, and eggs typically hatch within three or four days.",
+    "ecology": "As a generalist predator and benthic feeder, it links small invertebrates and fish to larger predators; introduced populations can persist outside its native range.",
+    "conservation": "The global IUCN assessment classifies the oscar as Least Concern, although local assessments can differ and non-native populations are documented in several regions."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.org/summary/Astronotus-ocellatus",
+      "title": "Astronotus ocellatus — FishBase"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Astronotus_ocellatus/",
+      "title": "Astronotus ocellatus — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/astronotus-ocellatus",
+      "title": "Oscar — Fishipedia"
+    },
+    {
+      "url": "https://nas.er.usgs.gov/queries/factsheet.aspx?SpeciesID=436",
+      "title": "Oscar (Astronotus ocellatus) — U.S. Geological Survey Nonindigenous Aquatic Species"
+    },
+    {
+      "url": "https://inpn.mnhn.fr/docs/LR_FCE/Rapport_Liste_rouge_especes_Faune_vertebree_Guyane_Poissons_eau_douce_2017_2020.pdf",
+      "title": "Oscar — French Guiana freshwater fish Red List"
+    }
+  ]
+}

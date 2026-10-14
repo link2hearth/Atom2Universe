@@ -1,0 +1,42 @@
+{
+  "id": "biastes_truncatus",
+  "name": "Biaste tronquée",
+  "scientific": "Biastes truncatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Biastes truncatus est une petite abeille solitaire européenne de la famille des Apidés et une abeille cleptoparasite : les femelles pondent dans les nids approvisionnés par d’autres abeilles. Dans le genre Biastes, elle fait partie des parentes coucous plutôt que des bâtisseuses qui stockent le pollen.",
+    "identification": "Les adultes mesurent environ 6 à 7 mm. Le corps est principalement sombre, avec des marques rougeâtres sur les mandibules et les premiers segments abdominaux, ainsi que des plages de poils pâles sur plusieurs segments arrière ; un examen rapproché est nécessaire pour distinguer sûrement les petites espèces de Biastes.",
+    "habitat": "Son aire européenne traverse l’Europe centrale, remonte vers le nord jusqu’à environ 63° N et s’étend vers l’est en Roumanie et en Bulgarie. Sa présence suit celle de populations de ses abeilles hôtes ; elle est donc liée à leurs habitats plutôt qu’à un seul type de milieu.",
+    "diet": "Les femelles adultes ne récoltent pas de pollen pour approvisionner leur propre couvain. Les larves se développent aux dépens des réserves d’un nid d’abeille hôte, comme chez les abeilles coucous cleptoparasites.",
+    "behavior": "Elle vole principalement en juillet et août. Son cycle dépend de la découverte des nids de Dufourea compatibles, dont elle exploite les provisions et les cellules de couvain au lieu de construire ses propres cellules.",
+    "reproduction": "Les hôtes documentés comprennent Dufourea dentiventris et D. inermis ; des références allemandes sur les abeilles signalent aussi le parasitisme d’autres espèces de Dufourea. La gamme d’hôtes peut varier selon les observations régionales : ces deux hôtes constituent les exemples les mieux établis à retenir ici.",
+    "ecology": "En tant que parasite du couvain, elle dépend écologiquement des abeilles hôtes ainsi que de leurs ressources florales et de nidification. Cette relation la relie notamment aux Dufourea, un autre genre d’abeilles de la famille des Halictidés.",
+    "conservation": "La Liste rouge suisse des abeilles de 2024 la classe Vulnérable (VU), critère D2. Cette catégorie nationale concerne la Suisse et ne constitue pas une évaluation mondiale de l’UICN."
+  },
+  "sources": [
+    {
+      "url": "https://de.wikipedia.org/wiki/Biastes_truncatus",
+      "title": "Biastes truncatus — fiche allemande"
+    },
+    {
+      "url": "https://wildbienen.info/system/gattung_biastes.php",
+      "title": "Genre Biastes — Wildbienen.info (allemand)"
+    },
+    {
+      "url": "https://www.wildbienen.info/steckbriefe/dufourea_dentiventris.php",
+      "title": "Dufourea dentiventris — Wildbienen.info (allemand)"
+    },
+    {
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=765341",
+      "title": "Taxon Biastes truncatus — ITIS"
+    },
+    {
+      "url": "https://www.bafu.admin.ch/dam/fr/sd-web/C5CEOTtzGOzX/rote-liste-bienen.pdf",
+      "title": "Liste rouge des abeilles de Suisse — OFEV"
+    },
+    {
+      "url": "https://doi.org/10.1093/isd/ixaa013",
+      "title": "Réévaluation phylogénomique et morphologique des Biastini — Insect Systematics and Diversity"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "bidessus_unistriatus",
+  "name": "Bidesse unistriée",
+  "scientific": "Bidessus unistriatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Bidessus unistriatus est un minuscule coléoptère aquatique de la famille des Dytiscidés. Il appartient au genre Bidessus, composé de très petits dytiques ; contrairement au grand dytique bordé bien connu (Dytiscus marginalis), cette espèce ne mesure que quelques millimètres.",
+    "identification": "Il mesure environ 2 mm et est brun foncé. Pour le distinguer d’autres minuscules dytiques, il faut un grossissement et l’examen de caractères diagnostiques ; l’aspect « unistrié » évoqué par son nom français ne constitue pas à lui seul une clé de terrain complète.",
+    "habitat": "En Grande-Bretagne, il est signalé dans des mares stagnantes de plaine, des fosses marneuses et des fossés lents, souvent en bordure peu végétalisée. La source régionale citée ne le signale pas en eau saumâtre, malgré quelques présences près des côtes.",
+    "diet": "Comme les autres dytiques prédateurs, il appartient à une famille dont les adultes et les larves chassent généralement de petits animaux aquatiques. La source régionale consultée ne détaille pas les proies propres à cette espèce ; aucun régime plus précis n’est donc proposé ici.",
+    "behavior": "L’espèce est aquatique et associée aux eaux stagnantes ou très lentes. Des observations britanniques indiquent qu’elle peut voler, ce qui peut faciliter ses déplacements entre mares favorables, sans que la fréquence des vols soit quantifiée dans les sources utilisées.",
+    "reproduction": "Les sources consultées ne donnent pas de détails propres à l’espèce sur la parade, la ponte ou le développement. Comme les autres coléoptères, elle subit une métamorphose complète, mais son calendrier et les étapes précises ne sont pas indiqués ici.",
+    "ecology": "Il dépend de petits milieux d’eau douce de plaine et est connu en Angleterre par des localités dispersées et de plus en plus isolées. Le drainage, les changements de qualité de l’eau et l’intrusion saline côtière sont signalés comme des pressions sur les populations britanniques.",
+    "conservation": "La synthèse britannique décrit une forte contraction par rapport à l’ancienne répartition anglaise et souligne le risque d’intrusion saline près de Hickling Broad. Ces données régionales n’établissent pas de catégorie mondiale UICN ; le statut national ne doit pas être confondu avec le statut mondial de l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://data.jncc.gov.uk/data/e80beaf2-456c-4178-8f16-0c2ef01368d/SpeciesStatus-1-Coleoptera-WEB-2010.pdf",
+      "title": "Revue des dytiques rares et menacés de Grande-Bretagne — JNCC"
+    },
+    {
+      "url": "https://dnu7gk7p9afoo.cloudfront.net/Files/coleoptera-of-rye-bay.pdf",
+      "title": "Coléoptères de Rye Bay — fiche du dytique"
+    },
+    {
+      "url": "https://science.mnhn.fr/taxon/species/bidessus/unistriatus",
+      "title": "Bidessus unistriatus — fiche taxonomique du Muséum national d’Histoire naturelle"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Dytiscidae",
+      "title": "Famille des Dytiscidés — Wikipédia en français"
+    },
+    {
+      "url": "https://content.freshwaterhabitats.org.uk/2015/03/18-ONE-GROOVED-DIVING-BEETLE-RARE-SPECIES-RECORDING-SHEET-FINAL.pdf",
+      "title": "Fiche d’observation du bidesse unistrié — Freshwater Habitats Trust"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/296126606_The_three_smallest_British_diving_beetles",
+      "title": "Les trois plus petits dytiques britanniques — British Wildlife"
+    }
+  ]
+}

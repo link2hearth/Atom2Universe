@@ -1,0 +1,34 @@
+{
+  "id": "australoheros_facetus",
+  "name": "Chameleon cichlid",
+  "scientific": "Australoheros facetus",
+  "group": "fish",
+  "sections": {
+    "overview": "Australoheros facetus is a southern South American cichlid native to Uruguay, northeastern Argentina and adjoining river systems, and the type species of its genus.",
+    "identification": "It has a deep body, usually dark vertical bars and a projecting lower jaw with an upturned mouth; these characters help separate it from close congeners.",
+    "habitat": "The species occupies freshwater streams, rivers, swamps and lakes across tributaries of the lower Paraná and Uruguay drainages and Uruguayan coastal rivers.",
+    "diet": "It is a diurnal opportunist that eats detritus and plant matter as well as small aquatic animals, including small fish when available.",
+    "behavior": "Pairs become territorial while breeding, select exposed stones or wood for egg laying, and both adults guard eggs, larvae and young fish.",
+    "reproduction": "This substrate-spawning cichlid attaches its eggs to a hard surface; parental defence continues after hatching, with reported guarding of juveniles for one to three weeks.",
+    "ecology": "Its genus contains many regional look-alikes, including A. scitulus and A. tembe; modern morphological and genetic work emphasizes careful separation of these southern cichlids.",
+    "conservation": "The global IUCN assessment classifies A. facetus as Least Concern, while the species is non-native and regulated as invasive in parts of Europe."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Australoheros_facetus.html",
+      "title": "Australoheros facetus — FishBase"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0261027",
+      "title": "Conjectures and refutations: species diversity and phylogeny of Australoheros — PLOS ONE"
+    },
+    {
+      "url": "https://www.miteco.gob.es/content/dam/miteco/es/agua/temas/estado-y-calidad-de-las-aguas/Especies-invasoras-en-medios-acuaticos-continentales/fichas-especies-ex%C3%B3ticas-invasoras/Australoheros%20facetus.pdf",
+      "title": "Australoheros facetus — Spanish Ministry for Ecological Transition invasive species sheet"
+    },
+    {
+      "url": "https://journal.szu.org.uy/index.php/Bol_SZU/es/article/view/7",
+      "title": "Post-hatching larval development of Australoheros facetus — Zoological Society of Uruguay"
+    }
+  ]
+}

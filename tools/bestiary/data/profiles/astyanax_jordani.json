@@ -1,0 +1,164 @@
+{
+  "id": "astyanax_jordani",
+  "scientific": "Astyanax jordani",
+  "group": "fish",
+  "name": {
+    "en": "Mexican blind cave tetra",
+    "fr": "Tétra cavernicole aveugle du Mexique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Astyanax jordani is the name commonly applied to a blind cave-dwelling Mexican tetra, though some taxonomies treat cave fish as Astyanax mexicanus populations.",
+      "fr": "Astyanax jordani désigne couramment un tétra mexicain cavernicole aveugle, mais certaines classifications rattachent les poissons de grotte aux populations d’Astyanax mexicanus."
+    },
+    "identification": {
+      "en": "Adults are small, pale and lack functional eyes; the cave form contrasts with eyed, pigmented surface tetras assigned to the closely related A. mexicanus.",
+      "fr": "Les adultes sont petits, pâles et dépourvus d’yeux fonctionnels ; cette forme cavernicole contraste avec les tétras de surface pigmentés et voyants, proches d’A. mexicanus."
+    },
+    "habitat": {
+      "en": "The recognized cave form comes from subterranean freshwater systems in northeastern Mexico, where populations occupy separate limestone caves rather than open rivers.",
+      "fr": "La forme cavernicole reconnue provient des réseaux d’eau douce souterrains du nord-est du Mexique, où les populations occupent des grottes calcaires distinctes plutôt que des rivières ouvertes."
+    },
+    "diet": {
+      "en": "Species-level field diet data are limited; cave populations of the Mexican tetra lineage exploit food reaching underground waters, but exact prey proportions for A. jordani remain unverified.",
+      "fr": "Les données alimentaires de terrain propres à l’espèce sont limitées ; les populations cavernicoles de la lignée du tétra mexicain exploitent les ressources apportées sous terre, sans proportions de proies vérifiées pour A. jordani."
+    },
+    "behavior": {
+      "en": "Without vision, these fish navigate in perpetual darkness using nonvisual senses; comparative experiments found that cave and surface forms retain broad hearing ability.",
+      "fr": "Privés de vision, ces poissons se déplacent dans l’obscurité permanente grâce à d’autres sens ; des expériences comparatives montrent que formes cavernicole et de surface entendent une large gamme de sons."
+    },
+    "reproduction": {
+      "en": "FishBase reports adhesive eggs scattered among crevices, which can hide them from parents and other cave inhabitants; detailed reproductive observations remain scarce.",
+      "fr": "FishBase rapporte des œufs adhésifs dispersés dans des fissures, où ils échappent aux parents et aux autres habitants des grottes ; les observations reproductives détaillées restent rares."
+    },
+    "ecology": {
+      "en": "Its cave form is a striking example of sensory and developmental change within the Mexican tetra complex, while nearby surface populations retain eyes and pigmentation.",
+      "fr": "Sa forme cavernicole illustre les transformations sensorielles et développementales du complexe du tétra mexicain, tandis que les populations de surface voisines conservent yeux et pigmentation."
+    },
+    "conservation": {
+      "en": "FishBase reports an Endangered global assessment for A. jordani, and Mexican researchers have warned that groundwater extraction and unprotected cave habitats threaten blind cavefish.",
+      "fr": "FishBase rapporte un statut mondial En danger pour A. jordani, et des chercheurs mexicains alertent sur l’extraction d’eau et le manque de protection des grottes occupées par les poissons aveugles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Astyanax jordani — FishBase",
+        "fr": "Astyanax jordani — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Anoptichthys-jordani.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase calls it a blind cave fish recently evolved from surface Astyanax mexicanus, gives Mexico distribution and describes egg scattering into crevices.",
+        "FishBase lists the species as Endangered (assessment 2018-02-26)."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 30,
+        "total": 123,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sardinita ciega mexicana — Instituto de Biología, UNAM",
+        "fr": "Sardinita ciega mexicana — Institut de biologie de l’UNAM"
+      },
+      "url": "https://www.ib.unam.mx/ibunam/gyotaku/14-Sardinita.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Spanish-language UNAM natural-history sheet maps Mexican blind tetra cave distributions and uses the combination Astyanax mexicanus jordani."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 17,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Auditory capacities of the Mexican blind cave fish and its eyed ancestor — Animal Behaviour",
+        "fr": "Capacités auditives du poisson cavernicole aveugle et de son ancêtre voyant — Animal Behaviour"
+      },
+      "url": "https://doi.org/10.1016/0003-3472(70)90052-7",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Comparative study measured auditory capacities in A. jordani and A. mexicanus and found broad hearing ranges in both."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 110,
+        "notes_words": 18,
+        "total": 128,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blind cave fish habitats in Mexico — UNAM press bulletin",
+        "fr": "Habitats des poissons cavernicoles aveugles au Mexique — bulletin de l’UNAM"
+      },
+      "url": "https://www.dgcs.unam.mx/boletin/bdboletin/2009_359.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Spanish-language UNAM account warns about water extraction and lack of legal/ecological protection at cave habitats; it discusses Astyanax mexicanus populations broadly."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 108,
+        "notes_words": 21,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The accepted species boundary is disputed: A. jordani has also been treated as the cave morph of A. mexicanus, and broad cavefish findings should not automatically be read as species-specific."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked FishBase species information against UNAM Spanish-language cavefish material and a comparative primary auditory study. The profile catalog has no A. mexicanus or other Astyanax species, so the closest-relative reference remains a textual cross-reference."
+}

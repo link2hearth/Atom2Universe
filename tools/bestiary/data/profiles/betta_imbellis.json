@@ -1,0 +1,232 @@
+{
+  "id": "betta_imbellis",
+  "scientific": "Betta imbellis",
+  "group": "fish",
+  "name": {
+    "en": "Crescent Betta",
+    "fr": "Combattant paisible"
+  },
+  "sections": {
+    "overview": {
+      "en": "The crescent betta is a small wild species native to parts of Thailand, Peninsular Malaysia, Singapore and Sumatra. It belongs to the splendens group, close to B. splendens and B. mahachaiensis, and is a bubble-nesting fish rather than one of the mouthbrooding Bornean bettas.",
+      "fr": "Le combattant paisible est une petite espèce sauvage indigène de régions de Thaïlande, de la péninsule Malaise, de Singapour et de Sumatra. Il appartient au groupe splendens, proche de B. splendens et B. mahachaiensis, et construit un nid de bulles, contrairement aux combattants de Bornéo à incubation buccale."
+    },
+    "identification": {
+      "en": "It reaches about 6 cm standard length. The dark brown to black body, iridescent blue opercular scales and bright red crescent at the rear edge of the tail fin distinguish it from B. splendens; the latter commonly has different fin and body markings, especially in domestic forms.",
+      "fr": "Il atteint environ 6 cm de longueur standard. Son corps brun sombre à noir, ses écailles operculaires bleu irisé et le croissant rouge vif au bord arrière de la nageoire caudale le distinguent du B. splendens, dont les marques du corps et des nageoires diffèrent souvent, surtout chez les formes domestiques."
+    },
+    "habitat": {
+      "en": "It inhabits shallow lowland wetlands, including stagnant pools, ditches, swamps and rice fields, in clear to brown fresh water. Its documented tolerance of modified habitats is broader than that of peat-swamp specialists such as B. brownorum.",
+      "fr": "Il fréquente des zones humides peu profondes de basse altitude, notamment mares stagnantes, fossés, marais et rizières, dans des eaux douces claires à brunes. Sa présence documentée dans des milieux modifiés est plus large que celle de spécialistes des tourbières comme B. brownorum."
+    },
+    "diet": {
+      "en": "It is a small carnivorous fish that takes aquatic insects and other tiny invertebrates. Its feeding ecology resembles that of other wild bettas, including B. splendens, even though the two species occupy different geographic and habitat settings.",
+      "fr": "C’est un petit poisson carnivore qui capture des insectes aquatiques et d’autres minuscules invertébrés. Son alimentation ressemble à celle d’autres combattants sauvages, dont B. splendens, malgré des répartitions et des milieux différents."
+    },
+    "behavior": {
+      "en": "Males defend territories and can fight, although B. imbellis is generally less aggressive than selectively bred fighting strains of B. splendens. The name imbellis means unwarlike, but it does not mean the fish is invariably peaceful toward its own species.",
+      "fr": "Les mâles défendent un territoire et peuvent se battre, même si B. imbellis est généralement moins agressif que les lignées de combat sélectionnées de B. splendens. Le nom imbellis signifie « non belliqueux », mais cela ne veut pas dire que le poisson soit toujours paisible envers ses congénères."
+    },
+    "reproduction": {
+      "en": "The species builds a bubble nest. During spawning, eggs may sink briefly before being collected by one or both parents and placed in the foam nest, where the male guards them; this differs from the paternal mouthbrooding of B. channoides and B. edithae.",
+      "fr": "L’espèce construit un nid de bulles. Pendant la ponte, les œufs peuvent couler brièvement avant d’être récupérés par un parent ou les deux et placés dans le nid de mousse, que le mâle garde ; ce mode diffère de l’incubation buccale paternelle de B. channoides et B. edithae."
+    },
+    "ecology": {
+      "en": "Its broad distribution and ability to use ditches and rice fields help explain why its global risk is assessed differently from narrowly distributed peat-swamp relatives. Local wetland loss and pollution can still affect populations, so general resilience does not imply that every site is intact.",
+      "fr": "Sa vaste répartition et sa capacité à utiliser fossés et rizières contribuent à expliquer pourquoi son risque mondial diffère de celui de parents limités aux tourbières. La disparition locale des zones humides et la pollution peuvent néanmoins affecter les populations : une certaine résilience ne signifie pas que tous les sites soient préservés."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2019 lists Betta imbellis as Least Concern. This is a global assessment and should not be read as a guarantee for every local population or wetland.",
+      "fr": "L’évaluation de l’UICN publiée en 2019 classe Betta imbellis en Préoccupation mineure. Il s’agit d’une évaluation mondiale, qui ne garantit pas la sécurité de chaque population ou zone humide locale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Betta imbellis — FishBase field guide",
+        "fr": "Betta imbellis — guide de terrain FishBase"
+      },
+      "url": "https://fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=458&genusname=Betta&speciesname=imbellis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase species summary."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 3,
+        "total": 30,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta imbellis — FishBase summary",
+        "fr": "Betta imbellis — fiche FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Betta-imbellis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase diagnosis and habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 4,
+        "total": 175,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta imbellis — Seriously Fish",
+        "fr": "Betta imbellis — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/betta-imbellis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Species account: behaviour and ecology."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 5,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Combattant paisible — Wikipédia en français",
+        "fr": "Combattant paisible — Wikipédia en français"
+      },
+      "url": "https://fr.wikipedia.org/wiki/Combattant_paisible",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "French-language cross-check."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 162,
+        "notes_words": 2,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Crescent Betta — Aquarist Atlas",
+        "fr": "Combattant paisible — Aquarist Atlas"
+      },
+      "url": "https://www.aquaristatlas.com/bettas/betta-imbellis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "Specialist profile."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 69,
+        "notes_words": 2,
+        "total": 71,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta imbellis — IUCN Red List",
+        "fr": "Betta imbellis — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-2.RLTS.T180889A7653828.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN Red List assessment."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 4,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Least Concern category is global; local population trends are not inferred from it."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase morphology and habitat with specialist behaviour accounts and French nomenclature; distinguished species-level behaviour from selectively bred B. splendens strains."
+}

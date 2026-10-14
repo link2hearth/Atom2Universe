@@ -1,0 +1,30 @@
+{
+  "id": "blatta_orientalis",
+  "name": "Oriental Cockroach",
+  "scientific": "Blatta orientalis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Blatta orientalis is a widespread cockroach associated with cool, damp, sheltered places. It differs from the smaller German cockroach Blattella germanica in body form and typical breeding sites.",
+    "identification": "Adults are dark brown to nearly black and roughly 2 to 3 cm long. Both sexes are flightless; males have longer wings than the short vestigial wings of females.",
+    "habitat": "It shelters outdoors under debris and in damp shade, and can enter buildings through drains, foundations and crawl spaces. Indoors it is common in basements, near plumbing and other cool humid refuges.",
+    "diet": "It is an opportunistic scavenger that consumes varied organic matter. Its use of decomposing material helps explain its association with refuse and damp service areas.",
+    "behavior": "It is mainly active at night and tends to remain near humid refuges. Compared with German cockroaches, oriental cockroaches are more closely associated with drains and cooler, wetter sites.",
+    "reproduction": "A female produces oothecae with about 16 eggs and deposits them in a sheltered site after carrying each capsule briefly. Development to adulthood may take about a year; the female does not care for the young.",
+    "ecology": "As a scavenger it recycles organic waste, but it can also move through unsanitary areas and contaminate indoor surfaces. Its association with moisture distinguishes it from more indoor-adapted relatives such as B. germanica.",
+    "conservation": "It is a common synanthropic insect rather than wildlife listed as threatened in the sources consulted. Its significance to people is mainly as a household pest and potential mechanical carrier of contaminants."
+  },
+  "sources": [
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/IN316",
+      "title": "Oriental Cockroach — University of Florida IFAS Extension"
+    },
+    {
+      "url": "https://ipm.ucanr.edu/home-and-landscape/cockroaches/",
+      "title": "Cockroaches — University of California Statewide Integrated Pest Management Program"
+    },
+    {
+      "url": "https://www.colibri.udelar.edu.uy/jspui/bitstream/20.500.12008/44110/1/1999%20N18.pdf",
+      "title": "Plagas: fundamentos biológicos — Universidad de la República"
+    }
+  ]
+}

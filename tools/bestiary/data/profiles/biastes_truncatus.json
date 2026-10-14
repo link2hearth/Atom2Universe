@@ -1,0 +1,228 @@
+{
+  "id": "biastes_truncatus",
+  "scientific": "Biastes truncatus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Truncated Cuckoo Bee",
+    "fr": "Biaste tronquée"
+  },
+  "sections": {
+    "overview": {
+      "en": "Biastes truncatus is a small European solitary bee in the family Apidae and a cleptoparasite: females lay eggs in nests provisioned by other bees. Within its genus Biastes, it is one of several cuckoo-bee relatives rather than a pollen-provisioning nest-builder.",
+      "fr": "Biastes truncatus est une petite abeille solitaire européenne de la famille des Apidés et une abeille cleptoparasite : les femelles pondent dans les nids approvisionnés par d’autres abeilles. Dans le genre Biastes, elle fait partie des parentes coucous plutôt que des bâtisseuses qui stockent le pollen."
+    },
+    "identification": {
+      "en": "Adults are about 6–7 mm long. The body is mostly dark, with reddish markings on the mandibles and front abdominal segments and pale hair patches along several rear segments; close examination is needed to separate small Biastes species reliably.",
+      "fr": "Les adultes mesurent environ 6 à 7 mm. Le corps est principalement sombre, avec des marques rougeâtres sur les mandibules et les premiers segments abdominaux, ainsi que des plages de poils pâles sur plusieurs segments arrière ; un examen rapproché est nécessaire pour distinguer sûrement les petites espèces de Biastes."
+    },
+    "habitat": {
+      "en": "Its European range extends through central Europe north to roughly 63° N and east into Romania and Bulgaria. Its occurrence follows suitable nesting populations of its host bees, so it is associated with their habitats rather than one single habitat type.",
+      "fr": "Son aire européenne traverse l’Europe centrale, remonte vers le nord jusqu’à environ 63° N et s’étend vers l’est en Roumanie et en Bulgarie. Sa présence suit celle de populations de ses abeilles hôtes ; elle est donc liée à leurs habitats plutôt qu’à un seul type de milieu."
+    },
+    "diet": {
+      "en": "Adult females do not collect pollen to provision their own brood. The larvae develop at the expense of stored provisions in a host bee’s nest, as is characteristic of cleptoparasitic cuckoo bees.",
+      "fr": "Les femelles adultes ne récoltent pas de pollen pour approvisionner leur propre couvain. Les larves se développent aux dépens des réserves d’un nid d’abeille hôte, comme chez les abeilles coucous cleptoparasites."
+    },
+    "behavior": {
+      "en": "It flies mainly in July and August. Its life cycle depends on locating nests of suitable Dufourea bees, whose provisions and brood cells it exploits rather than constructing its own nest cells.",
+      "fr": "Elle vole principalement en juillet et août. Son cycle dépend de la découverte des nids de Dufourea compatibles, dont elle exploite les provisions et les cellules de couvain au lieu de construire ses propres cellules."
+    },
+    "reproduction": {
+      "en": "Documented hosts include Dufourea dentiventris and D. inermis; German bee references also report parasitism of other Dufourea species. The exact host range can vary among regional records, so the two confirmed hosts are the clearest concise examples.",
+      "fr": "Les hôtes documentés comprennent Dufourea dentiventris et D. inermis ; des références allemandes sur les abeilles signalent aussi le parasitisme d’autres espèces de Dufourea. La gamme d’hôtes peut varier selon les observations régionales : ces deux hôtes constituent les exemples les mieux établis à retenir ici."
+    },
+    "ecology": {
+      "en": "As a brood parasite, it is ecologically linked to host bees and their flowering and nesting resources. The host relationship connects this species particularly with Dufourea, a separate bee genus in the family Halictidae.",
+      "fr": "En tant que parasite du couvain, elle dépend écologiquement des abeilles hôtes ainsi que de leurs ressources florales et de nidification. Cette relation la relie notamment aux Dufourea, un autre genre d’abeilles de la famille des Halictidés."
+    },
+    "conservation": {
+      "en": "The 2024 Swiss bee Red List classifies it as Vulnerable (VU), criterion D2. This national category describes Switzerland and is not a global IUCN assessment.",
+      "fr": "La Liste rouge suisse des abeilles de 2024 la classe Vulnérable (VU), critère D2. Cette catégorie nationale concerne la Suisse et ne constitue pas une évaluation mondiale de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Biastes truncatus — German species account",
+        "fr": "Biastes truncatus — fiche allemande"
+      },
+      "url": "https://de.wikipedia.org/wiki/Biastes_truncatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species details: size and range."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 5,
+        "total": 197,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biastes genus account — Wildbienen.info",
+        "fr": "Genre Biastes — Wildbienen.info (allemand)"
+      },
+      "url": "https://wildbienen.info/system/gattung_biastes.php",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Genus and host references."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 4,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Dufourea dentiventris species account — Wildbienen.info",
+        "fr": "Dufourea dentiventris — Wildbienen.info (allemand)"
+      },
+      "url": "https://www.wildbienen.info/steckbriefe/dufourea_dentiventris.php",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Host species account."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 3,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biastes truncatus taxonomic report — ITIS",
+        "fr": "Taxon Biastes truncatus — ITIS"
+      },
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=765341",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Taxonomic record."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 2,
+        "total": 2,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Red List of Bees in Switzerland — Federal Office for the Environment",
+        "fr": "Liste rouge des abeilles de Suisse — OFEV"
+      },
+      "url": "https://www.bafu.admin.ch/dam/fr/sd-web/C5CEOTtzGOzX/rote-liste-bienen.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Swiss national category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 54,
+        "notes_words": 3,
+        "total": 57,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Phylogenomic and morphological reevaluation of Biastini — Insect Systematics and Diversity",
+        "fr": "Réévaluation phylogénomique et morphologique des Biastini — Insect Systematics and Diversity"
+      },
+      "url": "https://doi.org/10.1093/isd/ixaa013",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed phylogeny."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 2,
+        "total": 126,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Source material for this species is substantially stronger in German than French or English; the profile avoids assigning a global risk category from regional evidence."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-referenced a German specialist bee resource with a host-species account and ITIS taxonomy; described the obligate host relationship without inferring a global conservation category."
+}

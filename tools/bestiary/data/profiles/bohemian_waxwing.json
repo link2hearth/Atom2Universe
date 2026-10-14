@@ -1,0 +1,164 @@
+{
+  "id": "bohemian_waxwing",
+  "scientific": "Bombycilla garrulus",
+  "group": "birds",
+  "name": {
+    "en": "Bohemian Waxwing",
+    "fr": "Jaseur boréal"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Bohemian Waxwing is a crested, starling-sized passerine of northern Eurasia and North America. It is one of three waxwing species, alongside the Cedar Waxwing and the more easterly Japanese Waxwing.",
+      "fr": "Le Jaseur boréal est un passereau huppé de la taille d’un étourneau, présent dans le nord de l’Eurasie et de l’Amérique du Nord. C’est l’une des trois espèces de jaseurs, avec le Jaseur d’Amérique et le Jaseur du Japon, plus oriental."
+    },
+    "identification": {
+      "en": "Its gray-brown plumage, chestnut face, pointed crest, yellow tail tip and red wax-like feather tips distinguish it from the browner, yellow-bellied Cedar Waxwing. The two species share a sleek crest and flocking habits.",
+      "fr": "Son plumage gris-brun, son masque roux, sa huppe pointue, le bout jaune de la queue et les extrémités rouges cireuses des rémiges le distinguent du Jaseur d’Amérique, plus brun et au ventre jaune. Les deux espèces partagent une huppe lisse et des habitudes grégaires."
+    },
+    "habitat": {
+      "en": "It breeds in northern coniferous and mixed forests, then wanders widely wherever fruit crops are available. In towns and suburbs, fruiting trees can attract winter flocks.",
+      "fr": "Il niche dans les forêts de conifères et mixtes du nord, puis se déplace largement vers les endroits où les fruits abondent. En ville et en banlieue, les arbres fruitiers peuvent attirer les groupes hivernaux."
+    },
+    "diet": {
+      "en": "Berries and other fruits dominate its nonbreeding diet, while flying insects become important during the breeding season. Rowan, juniper and other persistent fruits can draw large flocks when northern food supplies fail.",
+      "fr": "Les baies et autres fruits dominent son régime hors saison de reproduction, tandis que les insectes volants deviennent importants pendant la nidification. Les sorbiers, genévriers et autres fruits persistants attirent de grands groupes lorsque la nourriture manque au nord."
+    },
+    "behavior": {
+      "en": "Flocks move nomadically in search of fruit, and winter numbers south of the breeding range vary greatly between years. These irregular irruptions track changes in food availability.",
+      "fr": "Les groupes se déplacent de manière nomade à la recherche de fruits, et leur abondance hivernale au sud de l’aire de nidification varie fortement selon les années. Ces mouvements irruptifs suivent la disponibilité de la nourriture."
+    },
+    "reproduction": {
+      "en": "It nests in northern woodland and breeds later than many passerines, when summer food is abundant. A clutch usually numbers four to six eggs, and both parents feed the nestlings.",
+      "fr": "Il niche dans les boisements nordiques et se reproduit plus tard que beaucoup de passereaux, lorsque la nourriture estivale abonde. La ponte compte généralement quatre à six œufs, et les deux parents nourrissent les oisillons."
+    },
+    "ecology": {
+      "en": "By eating fruit and spreading seeds, it helps disperse plants across its wide seasonal range. Its dependence on fruit crops links movements to annual variation in woodland food.",
+      "fr": "En consommant des fruits et en dispersant les graines, il contribue à propager les plantes sur sa vaste aire saisonnière. Sa dépendance aux récoltes de fruits relie ses déplacements aux variations annuelles des ressources forestières."
+    },
+    "conservation": {
+      "en": "It remains widespread, but Cornell Lab reports a steep long-term decline in North America. Conservation outlook should be interpreted regionally because trends vary across its range.",
+      "fr": "L’espèce reste largement répartie, mais le Cornell Lab signale un fort déclin à long terme en Amérique du Nord. Son état de conservation doit être interprété à l’échelle régionale, car les tendances varient dans son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bohemian Waxwing — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Jaseur boréal — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Bohemian_Waxwing/",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell describes range, plumage differences from Cedar Waxwing, fruit-seeking movements and North American decline."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 14,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Waxwing — British Trust for Ornithology BirdFacts",
+        "fr": "Jaseur boréal — fiche BirdFacts du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/waxwing",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "overview"
+      ],
+      "facts": [
+        "Irruptions."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 199,
+        "notes_words": 1,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Jaseur boréal — Oiseaux.net French species account",
+        "fr": "Jaseur boréal — fiche française Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/jaseur.boreal.html",
+      "supports": [
+        "diet",
+        "ecology",
+        "overview"
+      ],
+      "facts": [
+        "Fruit-driven movements."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 196,
+        "notes_words": 2,
+        "total": 198,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The steep decline reported by Cornell concerns North America and should not be generalized to all populations.",
+    "Fruit and insect proportions vary by season and location."
+  ],
+  "review_note": "Cross-checked Cornell and BTO with a French-language ornithological account; compared other Bombycilla waxwings.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

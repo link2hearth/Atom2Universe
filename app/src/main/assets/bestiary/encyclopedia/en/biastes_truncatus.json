@@ -1,0 +1,42 @@
+{
+  "id": "biastes_truncatus",
+  "name": "Truncated Cuckoo Bee",
+  "scientific": "Biastes truncatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Biastes truncatus is a small European solitary bee in the family Apidae and a cleptoparasite: females lay eggs in nests provisioned by other bees. Within its genus Biastes, it is one of several cuckoo-bee relatives rather than a pollen-provisioning nest-builder.",
+    "identification": "Adults are about 6–7 mm long. The body is mostly dark, with reddish markings on the mandibles and front abdominal segments and pale hair patches along several rear segments; close examination is needed to separate small Biastes species reliably.",
+    "habitat": "Its European range extends through central Europe north to roughly 63° N and east into Romania and Bulgaria. Its occurrence follows suitable nesting populations of its host bees, so it is associated with their habitats rather than one single habitat type.",
+    "diet": "Adult females do not collect pollen to provision their own brood. The larvae develop at the expense of stored provisions in a host bee’s nest, as is characteristic of cleptoparasitic cuckoo bees.",
+    "behavior": "It flies mainly in July and August. Its life cycle depends on locating nests of suitable Dufourea bees, whose provisions and brood cells it exploits rather than constructing its own nest cells.",
+    "reproduction": "Documented hosts include Dufourea dentiventris and D. inermis; German bee references also report parasitism of other Dufourea species. The exact host range can vary among regional records, so the two confirmed hosts are the clearest concise examples.",
+    "ecology": "As a brood parasite, it is ecologically linked to host bees and their flowering and nesting resources. The host relationship connects this species particularly with Dufourea, a separate bee genus in the family Halictidae.",
+    "conservation": "The 2024 Swiss bee Red List classifies it as Vulnerable (VU), criterion D2. This national category describes Switzerland and is not a global IUCN assessment."
+  },
+  "sources": [
+    {
+      "url": "https://de.wikipedia.org/wiki/Biastes_truncatus",
+      "title": "Biastes truncatus — German species account"
+    },
+    {
+      "url": "https://wildbienen.info/system/gattung_biastes.php",
+      "title": "Biastes genus account — Wildbienen.info"
+    },
+    {
+      "url": "https://www.wildbienen.info/steckbriefe/dufourea_dentiventris.php",
+      "title": "Dufourea dentiventris species account — Wildbienen.info"
+    },
+    {
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=765341",
+      "title": "Biastes truncatus taxonomic report — ITIS"
+    },
+    {
+      "url": "https://www.bafu.admin.ch/dam/fr/sd-web/C5CEOTtzGOzX/rote-liste-bienen.pdf",
+      "title": "Red List of Bees in Switzerland — Federal Office for the Environment"
+    },
+    {
+      "url": "https://doi.org/10.1093/isd/ixaa013",
+      "title": "Phylogenomic and morphological reevaluation of Biastini — Insect Systematics and Diversity"
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "id": "black_tailed_godwit",
+  "scientific": "Limosa limosa",
+  "group": "birds",
+  "name": {
+    "en": "Black-tailed Godwit",
+    "fr": "Barge à queue noire"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Black-tailed Godwit is a long-legged migratory shorebird breeding across Eurasia. Its subspecies include limosa and islandica; its close relative the Bar-tailed Godwit is Limosa lapponica.",
+      "fr": "La Barge à queue noire est un limicole migrateur aux longues pattes qui niche à travers l’Eurasie. Elle comprend les sous-espèces limosa et islandica; sa proche parente, la Barge rousse, est Limosa lapponica."
+    },
+    "identification": {
+      "en": "Breeding birds develop orange-brown head, neck and breast, with a black-and-white wing bar and black tail. The Bar-tailed Godwit is a close comparison, but has a barred tail.",
+      "fr": "En plumage nuptial, sa tête, son cou et sa poitrine deviennent roux orangé; elle garde une barre alaire noire et blanche et une queue noire. La Barge rousse est proche, mais sa queue est barrée."
+    },
+    "habitat": {
+      "en": "It breeds in wet grasslands and other open wetlands, and uses inland wetlands, estuaries and tidal flats during migration and winter. Icelandic-breeding islandica birds winter widely in western Europe and Africa.",
+      "fr": "Elle niche dans les prairies humides et autres zones ouvertes inondées, et fréquente lacs, estuaires et vasières en migration et en hiver. Les oiseaux islandica nichant en Islande hivernent largement en Europe occidentale et en Afrique."
+    },
+    "diet": {
+      "en": "It feeds mainly on insects, worms, molluscs and crustaceans, probing soft sediment or wet ground with its long bill. It also takes plant material, especially outside the breeding season.",
+      "fr": "Elle consomme surtout des insectes, vers, mollusques et crustacés, qu’elle recherche dans la vase et les sols humides avec son long bec. Elle mange aussi des végétaux, surtout hors saison de reproduction."
+    },
+    "behavior": {
+      "en": "It makes long seasonal movements between northern breeding grounds and southern non-breeding areas. Many birds return to the same wintering site, although members of a pair may winter in different countries.",
+      "fr": "Elle effectue de longs déplacements saisonniers entre ses lieux de reproduction septentrionaux et ses quartiers méridionaux. De nombreux oiseaux reviennent au même site d’hivernage, même si les membres d’un couple peuvent hiverner dans des pays différents."
+    },
+    "reproduction": {
+      "en": "It nests on the ground in wet open country and usually lays four eggs. In Britain and the Netherlands, low breeding productivity has prompted measures such as raising chicks in captivity before release.",
+      "fr": "Elle niche au sol en milieu ouvert humide et pond généralement quatre œufs. En Grande-Bretagne et aux Pays-Bas, la faible productivité a conduit à des mesures comme l’élevage de poussins avant leur relâcher."
+    },
+    "ecology": {
+      "en": "Use of inland wetlands and coastal mudflats links freshwater and estuarine food webs. The Bar-tailed Godwit is more strongly associated with coastal feeding areas.",
+      "fr": "L’utilisation des zones humides intérieures et des vasières côtières la relie aux réseaux alimentaires d’eau douce et d’estuaire. La Barge rousse est davantage associée aux zones d’alimentation côtières."
+    },
+    "conservation": {
+      "en": "The IUCN assessed the species as Near Threatened in 2017, citing pressures that include habitat change and poor breeding success. Status and trends differ among subspecies and regions.",
+      "fr": "En 2017, l’UICN a classé l’espèce comme quasi menacée, évoquant notamment la transformation des habitats et le faible succès reproducteur. Le statut et les tendances varient selon les sous-espèces et les régions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Black-tailed Godwit — British Trust for Ornithology BirdFacts",
+        "fr": "Barge à queue noire — fiche BirdFacts du British Trust for Ornithology"
+      },
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-tailed-godwit",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "BTO outlines migration, site fidelity and conservation."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 7,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Limosa limosa — IUCN Red List assessment",
+        "fr": "Limosa limosa — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22693150A111611637.en",
+      "supports": [
+        "habitat",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment covers habitat, invertebrate diet, migratory distribution and Near Threatened status."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 12,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Bar-tailed Godwit — Cornell Lab All About Birds",
+        "fr": "Barge rousse — Cornell Lab All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Bar-tailed_Godwit/lifehistory",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell describes the close relative L. lapponica using coastal mudflats outside breeding."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 12,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-tailed Godwit — Oiseaux.net French species account",
+        "fr": "Barge à queue noire — fiche française Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/barge.a.queue.noire.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French account describes morphology, migration and conservation category."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 127,
+        "notes_words": 8,
+        "total": 135,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The IUCN citation reflects its 2017 assessment and does not imply recent reassessment.",
+    "Habitat pressures and demographic trends vary among subspecies and regions."
+  ],
+  "review_note": "Cross-checked BTO and IUCN material and Cornell's related-species account; retained the subspecies distinction.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

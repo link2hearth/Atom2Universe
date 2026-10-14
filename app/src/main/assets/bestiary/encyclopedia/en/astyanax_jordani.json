@@ -1,0 +1,34 @@
+{
+  "id": "astyanax_jordani",
+  "name": "Mexican blind cave tetra",
+  "scientific": "Astyanax jordani",
+  "group": "fish",
+  "sections": {
+    "overview": "Astyanax jordani is the name commonly applied to a blind cave-dwelling Mexican tetra, though some taxonomies treat cave fish as Astyanax mexicanus populations.",
+    "identification": "Adults are small, pale and lack functional eyes; the cave form contrasts with eyed, pigmented surface tetras assigned to the closely related A. mexicanus.",
+    "habitat": "The recognized cave form comes from subterranean freshwater systems in northeastern Mexico, where populations occupy separate limestone caves rather than open rivers.",
+    "diet": "Species-level field diet data are limited; cave populations of the Mexican tetra lineage exploit food reaching underground waters, but exact prey proportions for A. jordani remain unverified.",
+    "behavior": "Without vision, these fish navigate in perpetual darkness using nonvisual senses; comparative experiments found that cave and surface forms retain broad hearing ability.",
+    "reproduction": "FishBase reports adhesive eggs scattered among crevices, which can hide them from parents and other cave inhabitants; detailed reproductive observations remain scarce.",
+    "ecology": "Its cave form is a striking example of sensory and developmental change within the Mexican tetra complex, while nearby surface populations retain eyes and pigmentation.",
+    "conservation": "FishBase reports an Endangered global assessment for A. jordani, and Mexican researchers have warned that groundwater extraction and unprotected cave habitats threaten blind cavefish."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Anoptichthys-jordani.html",
+      "title": "Astyanax jordani — FishBase"
+    },
+    {
+      "url": "https://www.ib.unam.mx/ibunam/gyotaku/14-Sardinita.pdf",
+      "title": "Sardinita ciega mexicana — Instituto de Biología, UNAM"
+    },
+    {
+      "url": "https://doi.org/10.1016/0003-3472(70)90052-7",
+      "title": "Auditory capacities of the Mexican blind cave fish and its eyed ancestor — Animal Behaviour"
+    },
+    {
+      "url": "https://www.dgcs.unam.mx/boletin/bdboletin/2009_359.html",
+      "title": "Blind cave fish habitats in Mexico — UNAM press bulletin"
+    }
+  ]
+}

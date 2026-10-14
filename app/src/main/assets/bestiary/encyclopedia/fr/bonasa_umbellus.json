@@ -1,0 +1,30 @@
+{
+  "id": "bonasa_umbellus",
+  "name": "Gélinotte huppée",
+  "scientific": "Bonasa umbellus",
+  "group": "birds",
+  "sections": {
+    "overview": "La Gélinotte huppée est un tétraonidé forestier originaire d’Amérique du Nord. C’est l’unique espèce vivante du genre Bonasa, au sein de la famille des faisans, les Phasianidae.",
+    "identification": "Elle porte une courte huppe, une large queue en éventail et une collerette sombre que le mâle déploie. Son plumage existe sous des formes grises, brunes et rousses.",
+    "habitat": "Elle fréquente les forêts mixtes et feuillues à sous-bois dense, dans une mosaïque de peuplements jeunes et âgés. Le tremble est particulièrement important dans le nord de son aire; plus au sud, d’autres forêts feuillues conviennent.",
+    "diet": "Les adultes consomment bourgeons, chatons, rameaux, fruits, graines et herbes selon la saison et la région. Durant leurs premières semaines, les poussins dépendent beaucoup des insectes.",
+    "behavior": "Les mâles signalent leur territoire par un roulement d’ailes rapide qui produit un grondement sourd. Cette parade culmine au printemps et donne à l’espèce son tambourinage caractéristique.",
+    "reproduction": "La femelle niche au sol; sa ponte compte généralement environ sept à douze œufs qu’elle couve durant quelque 23 à 24 jours. Les poussins quittent le nid peu après l’éclosion et sont élevés par la femelle.",
+    "ecology": "Son besoin de couvert dense, de secteurs forestiers jeunes et de nourriture saisonnière rend la structure forestière importante toute l’année. Le tremble fournit des bourgeons essentiels en hiver dans le nord, tandis que les clairières riches en insectes profitent aux couvées.",
+    "conservation": "L’espèce est sûre dans une grande partie de son aire, mais dépend de mosaïques forestières entretenues par les perturbations ou la gestion. Des déclins locaux peuvent suivre la disparition des jeunes forêts et du sous-bois dense."
+  },
+  "sources": [
+    {
+      "url": "https://research.fs.usda.gov/feis/species-reviews/boum",
+      "title": "Bonasa umbellus — système d’information du Service des forêts des États-Unis"
+    },
+    {
+      "url": "https://www.in.gov/dnr/fish-and-wildlife/wildlife-resources/animals/ruffed-grouse/",
+      "title": "Gélinotte huppée — Département des ressources naturelles de l’Indiana"
+    },
+    {
+      "url": "https://www.oiseaux.net/es/oiseaux/gelinotte.huppee.html",
+      "title": "Gélinotte huppée — fiche espagnole Oiseaux.net"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "id": "betta_channoides",
+  "scientific": "Betta channoides",
+  "group": "fish",
+  "name": {
+    "en": "Snakehead Betta",
+    "fr": "Combattant à tête de serpent"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Bornean wild betta is restricted to the middle Mahakam drainage in East Kalimantan. It is a member of the albimarginata group and, unlike the bubble-nesting B. brownorum, the male carries the eggs in his mouth.",
+      "fr": "Ce combattant sauvage de Bornéo est limité au cours moyen du bassin du Mahakam, dans le Kalimantan oriental. Il appartient au groupe albimarginata et, contrairement au B. brownorum qui bâtit un nid de bulles, le mâle incube les œufs dans sa bouche."
+    },
+    "identification": {
+      "en": "It is a very small species, with a recorded maximum near 4 cm standard length. Its broad, flattened head recalls a snakehead fish and inspired the name channoides; males develop stronger red and dark coloration than females.",
+      "fr": "C’est une très petite espèce, dont la longueur standard maximale rapportée approche 4 cm. Sa tête large et aplatie évoque celle des poissons-serpents et explique le nom channoides ; les mâles prennent une coloration rouge et sombre plus marquée que les femelles."
+    },
+    "habitat": {
+      "en": "It lives in shallow, forested acidic streams with blackwater, submerged leaf litter and riparian roots. The known range is exceptionally small, so local habitat changes can affect much of the species at once.",
+      "fr": "Il vit dans des ruisseaux forestiers peu profonds, acides et à eaux noires, parmi la litière de feuilles submergée et les racines riveraines. Son aire connue est exceptionnellement réduite, si bien qu’une modification locale de l’habitat peut toucher une grande part de l’espèce."
+    },
+    "diet": {
+      "en": "The available accounts describe a small carnivorous fish; small aquatic invertebrates and zooplankton are consistent with its shallow-stream setting. Precise field diet measurements are limited.",
+      "fr": "Les sources disponibles décrivent un petit poisson carnivore ; les petits invertébrés aquatiques et le zooplancton correspondent à son milieu de ruisseau peu profond. Les mesures précises du régime en nature restent limitées."
+    },
+    "behavior": {
+      "en": "The species breathes with gills and can also use the labyrinth organ to take atmospheric air. Its secretive stream life and mouthbrooding differ from the more conspicuous bubble-nesting behaviour of B. splendens and B. imbellis.",
+      "fr": "Il respire par les branchies et peut également prendre de l’air atmosphérique grâce à son organe labyrinthique. Sa vie discrète en ruisseau et son incubation buccale diffèrent du comportement plus visible de constructeurs de nids de bulles comme B. splendens et B. imbellis."
+    },
+    "reproduction": {
+      "en": "Betta channoides is a paternal mouthbrooder: after spawning, the male holds fertilised eggs in his buccal cavity until the young are ready to be released. This reproductive strategy is shared with close B. albimarginata, and contrasts with bubble-nesting species such as B. brownorum.",
+      "fr": "Betta channoides pratique l’incubation buccale paternelle : après la ponte, le mâle garde les œufs fécondés dans sa cavité buccale jusqu’à la libération des jeunes. Cette stratégie est partagée avec son proche parent B. albimarginata et s’oppose à celle des espèces à nid de bulles comme B. brownorum."
+    },
+    "ecology": {
+      "en": "Its dependence on forested blackwater habitat makes it sensitive to changes in stream quality and surrounding land use. Compared with the widespread, adaptable B. splendens, its narrow distribution leaves less room for populations to persist elsewhere.",
+      "fr": "Sa dépendance aux eaux noires forestières le rend sensible aux changements de qualité des ruisseaux et d’usage des terres voisines. Comparée au B. splendens largement réparti et adaptable, son aire étroite laisse peu de possibilités de maintien des populations ailleurs."
+    },
+    "conservation": {
+      "en": "The 2019 IUCN assessment lists it as Endangered because its extent and area of occupancy are very small, it occurs at few threat-defined locations, and collection for the ornamental trade may contribute to declines. The assessment also identifies habitat pressure in its range.",
+      "fr": "L’évaluation UICN de 2019 le classe En danger, car son étendue et sa zone d’occupation sont très faibles, il n’est présent que dans quelques localités exposées aux menaces, et les prélèvements pour le commerce aquariophile peuvent contribuer au déclin. L’évaluation relève aussi les pressions sur l’habitat de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Betta channoides — IUCN Red List",
+        "fr": "Betta channoides — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-2.RLTS.T91309244A91309260.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "IUCN Red List assessment: Endangered."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 5,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta channoides — Seriously Fish",
+        "fr": "Betta channoides — Seriously Fish"
+      },
+      "url": "https://www.seriouslyfish.com/species/betta-channoides",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Species account: size, diet, breeding."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 5,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Betta channoides — FishBase field guide",
+        "fr": "Betta channoides — guide de terrain FishBase"
+      },
+      "url": "https://fishbase.se/FieldGuide/FieldGuideSummary.php?GenusName=Betta&SpeciesName=channoides&pda=1&sps=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase species summary."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 3,
+        "total": 90,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Snakehead Betta — Aquarist Atlas",
+        "fr": "Combattant à tête de serpent — Aquarist Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/bettas/betta-channoides/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "Specialist account: range and ecology."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 5,
+        "total": 191,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Field diet details and fine-scale population estimates remain sparse; the profile avoids unsupported numerical claims beyond published assessment data."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked IUCN and fish reference sources; used mouthbrooding as a clear contrast with bubble-nesting Betta relatives."
+}

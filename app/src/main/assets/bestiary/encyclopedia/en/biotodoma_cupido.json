@@ -1,0 +1,42 @@
+{
+  "id": "biotodoma_cupido",
+  "name": "Cupid Cichlid",
+  "scientific": "Biotodoma cupido",
+  "group": "fish",
+  "sections": {
+    "overview": "Biotodoma cupido is a South American freshwater cichlid of the geophagine lineage, native to the Amazon and Essequibo systems. Its only congener is B. wavrini; older names such as Geophagus cupido reflect past genus placements, not a separate species.",
+    "identification": "Adults reach about 12–13 cm. The oval, laterally compressed body usually has a dark stripe through the eye and a dark mid-flank spot, with fine greenish-blue streaks; regional colour forms vary and should not automatically be named as separate taxa.",
+    "habitat": "Its wide range includes clear, tannin-stained and seasonally changing rivers, floodplain waters and tributaries. It tolerates varied flow, from still backwaters to flowing channels, but accounts suggest it avoids the most torrential conditions.",
+    "diet": "It picks small bottom-dwelling prey such as insect larvae, tiny crustaceans and other invertebrates from the substrate. This benthic feeding is characteristic of the eartheater-like geophagine lineage, though it is not a specialised sand-sifter to the same degree as many Geophagus species.",
+    "behavior": "Outside breeding, it is generally a relatively peaceful cichlid and browses close to the bottom. Its behaviour and appearance may be compared with other geophagines, but the two Biotodoma species are the closest genus-level comparison: B. wavrini is a separate species, not a colour morph of B. cupido.",
+    "reproduction": "It is a biparental substrate spawner: the pair cleans a firm surface, lays and guards eggs, then protects the free-swimming fry. This differs from mouthbrooding in some cichlid lineages and resembles the parental care seen in several other geophagines.",
+    "ecology": "Seasonal flooding alters water depth, turbidity and current across much of its range, so populations encounter changing river and floodplain habitats. As a benthic predator it consumes small invertebrates and forms part of the food web for larger fishes.",
+    "conservation": "FishBase lists the IUCN Red List category as Least Concern, assessed on 30 November 2020. This global assessment does not establish that every local population is stable; population trends and species-specific threats remain poorly documented."
+  },
+  "sources": [
+    {
+      "url": "https://www.seriouslyfish.com/species/biotodoma-cupido",
+      "title": "Biotodoma cupido — Seriously Fish"
+    },
+    {
+      "url": "https://dcg-online.de/biotodoma-cupido-heckel-1840/",
+      "title": "Biotodoma cupido — Deutsche Cichliden-Gesellschaft"
+    },
+    {
+      "url": "https://ciklid.org/artregister/art.php?ID=311",
+      "title": "Biotodoma cupido — Nordiska Ciklidsällskapet"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Biotodoma_cupido",
+      "title": "Biotodoma cupido — French Wikipedia"
+    },
+    {
+      "url": "https://www.cichlidatlas.com/species/biotodoma-cupido/",
+      "title": "Cupid Cichlid — Aquarist Atlas"
+    },
+    {
+      "url": "https://fishbase.se/summary/12291",
+      "title": "Biotodoma cupido — FishBase"
+    }
+  ]
+}

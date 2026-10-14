@@ -1,0 +1,38 @@
+{
+  "id": "biotoecus_dicentrarchus",
+  "name": "Biotoecus à deux épines",
+  "scientific": "Biotoecus dicentrarchus",
+  "group": "fish",
+  "sections": {
+    "overview": "Biotoecus dicentrarchus est un minuscule cichlidé géophaginé du bassin de l’Orénoque. C’est l’une des deux espèces décrites du genre Biotoecus, avec B. opercularis de l’Amazone.",
+    "identification": "Son nom fait référence à ses deux épines anales, qui le distinguent de la plupart des cichlidés et de son parent B. opercularis, qui en porte trois. Sa longueur standard signalée atteint environ 3,8 cm.",
+    "habitat": "Il vit dans le bassin de l’Orénoque, du río Inírida en Colombie à Maripa au Venezuela. Il est signalé en milieu fluvial, mais les données détaillées sur son microhabitat sont rares.",
+    "diet": "Les sources consultées ne donnent pas d’information précise sur le régime de cette espèce. Ses proches géophaginés s’alimentent près du fond, mais toute précision demanderait une étude directe.",
+    "behavior": "Les synthèses taxonomiques disponibles apportent peu d’informations comportementales. Le poisson est classé benthopélagique, ce qui indique qu’il vit dans la colonne d’eau près du fond.",
+    "reproduction": "Les références consultées ne décrivent pas de façon vérifiée la parade, la ponte ou les soins parentaux. Ces détails ne peuvent être déduits sans risque de son congénère.",
+    "ecology": "C’est l’espèce de l’Orénoque d’un genre représenté aussi par B. opercularis, qui vit en Amazonie. Les deux espèces diffèrent par leur bassin et le nombre d’épines anales.",
+    "conservation": "Les sources consultées décrivent sa taxonomie et sa répartition, mais ne fournissent pas d’évaluation mondiale actuelle de conservation. L’effectif et la tendance restent indéterminés ici."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/Biotoecus_dicentrarchus.html",
+      "title": "Biotoecus dicentrarchus — fiche FishBase"
+    },
+    {
+      "url": "https://www.cichlidatlas.com/genus/biotoecus/",
+      "title": "Biotoecus — présentation du genre Aquarist Atlas"
+    },
+    {
+      "url": "https://www.cichlidatlas.com/species/biotoecus-dicentrarchus/",
+      "title": "Biotoecus dicentrarchus — fiche Aquarist Atlas"
+    },
+    {
+      "url": "https://doi.org/10.1080/00222938900770131",
+      "title": "Biotoecus : description d’une nouvelle espèce de l’Orénoque — Journal of Natural History"
+    },
+    {
+      "url": "https://cichlidae.com/species.php?id=1591&lang=es",
+      "title": "Biotoecus dicentrarchus — fiche espagnole Cichlid Room Companion"
+    }
+  ]
+}

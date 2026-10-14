@@ -1,0 +1,34 @@
+{
+  "id": "black_tailed_godwit",
+  "name": "Barge à queue noire",
+  "scientific": "Limosa limosa",
+  "group": "birds",
+  "sections": {
+    "overview": "La Barge à queue noire est un limicole migrateur aux longues pattes qui niche à travers l’Eurasie. Elle comprend les sous-espèces limosa et islandica; sa proche parente, la Barge rousse, est Limosa lapponica.",
+    "identification": "En plumage nuptial, sa tête, son cou et sa poitrine deviennent roux orangé; elle garde une barre alaire noire et blanche et une queue noire. La Barge rousse est proche, mais sa queue est barrée.",
+    "habitat": "Elle niche dans les prairies humides et autres zones ouvertes inondées, et fréquente lacs, estuaires et vasières en migration et en hiver. Les oiseaux islandica nichant en Islande hivernent largement en Europe occidentale et en Afrique.",
+    "diet": "Elle consomme surtout des insectes, vers, mollusques et crustacés, qu’elle recherche dans la vase et les sols humides avec son long bec. Elle mange aussi des végétaux, surtout hors saison de reproduction.",
+    "behavior": "Elle effectue de longs déplacements saisonniers entre ses lieux de reproduction septentrionaux et ses quartiers méridionaux. De nombreux oiseaux reviennent au même site d’hivernage, même si les membres d’un couple peuvent hiverner dans des pays différents.",
+    "reproduction": "Elle niche au sol en milieu ouvert humide et pond généralement quatre œufs. En Grande-Bretagne et aux Pays-Bas, la faible productivité a conduit à des mesures comme l’élevage de poussins avant leur relâcher.",
+    "ecology": "L’utilisation des zones humides intérieures et des vasières côtières la relie aux réseaux alimentaires d’eau douce et d’estuaire. La Barge rousse est davantage associée aux zones d’alimentation côtières.",
+    "conservation": "En 2017, l’UICN a classé l’espèce comme quasi menacée, évoquant notamment la transformation des habitats et le faible succès reproducteur. Le statut et les tendances varient selon les sous-espèces et les régions."
+  },
+  "sources": [
+    {
+      "url": "https://www.bto.org/learn/about-birds/birdfacts/black-tailed-godwit",
+      "title": "Barge à queue noire — fiche BirdFacts du British Trust for Ornithology"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22693150A111611637.en",
+      "title": "Limosa limosa — évaluation de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Bar-tailed_Godwit/lifehistory",
+      "title": "Barge rousse — Cornell Lab All About Birds"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/barge.a.queue.noire.html",
+      "title": "Barge à queue noire — fiche française Oiseaux.net"
+    }
+  ]
+}

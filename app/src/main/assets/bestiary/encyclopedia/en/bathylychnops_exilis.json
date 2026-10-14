@@ -1,0 +1,38 @@
+{
+  "id": "bathylychnops_exilis",
+  "name": "Javelin spookfish",
+  "scientific": "Bathylychnops exilis",
+  "group": "fish",
+  "sections": {
+    "overview": "Bathylychnops exilis is a large deep-water barreleye, or spookfish, in the family Opisthoproctidae, recorded in the North Pacific and near the Azores.",
+    "identification": "It can reach about 58 centimetres standard length and is unusual among vertebrates for having a second, ventrally directed optical globe associated with each eye.",
+    "habitat": "This oceanic species occupies mesopelagic to bathypelagic waters, with records generally between about 400 and 800 metres in the North Pacific and eastern Atlantic.",
+    "diet": "Its feeding ecology is poorly known; examined stomachs contained krill-like euphausiids, while other possible organic remains have been difficult to identify.",
+    "behavior": "The striking paired-eye arrangement includes forward or upward primary eyes and auxiliary globes directed downward, giving the fish an expanded field of view.",
+    "reproduction": "It is egg-laying, and its eggs and larvae are pelagic; available developmental records describe larval pigmentation and body form but little adult spawning behavior.",
+    "ecology": "Bathylychnops is related to other opisthoproctid barreleyes, including Dolichopteryx; its unusual optics are interpreted as adaptations to dim open-ocean depths.",
+    "conservation": "No global IUCN assessment was listed by FishBase, and the species is rarely sampled; population size and trend therefore remain unknown."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/9119",
+      "title": "Bathylychnops exilis — FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1095-8649.1985.tb04022.x",
+      "title": "Observations on the morphology, ecology, and behaviour of Bathylychnops exilis — Journal of Fish Biology"
+    },
+    {
+      "url": "https://apps-afsc.fisheries.noaa.gov/ichthyo/LHDataELH.php?GSID=Bathylychnops%21exilis",
+      "title": "Early Life History Description: Bathylychnops exilis — NOAA Alaska Fisheries Science Center"
+    },
+    {
+      "url": "https://doi.org/10.1134/S0032945220050138",
+      "title": "Revision of the generic classification of long-bodied Opisthoproctidae — Journal of Ichthyology"
+    },
+    {
+      "url": "https://zh.wikipedia.org/wiki/%E6%93%AC%E6%B7%B5%E7%87%88%E9%AE%AD",
+      "title": "擬淵燈鮭 (Bathylychnops exilis) — Chinese Wikipedia"
+    }
+  ]
+}

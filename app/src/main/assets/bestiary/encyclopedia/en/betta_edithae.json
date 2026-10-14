@@ -1,0 +1,38 @@
+{
+  "id": "betta_edithae",
+  "name": "Edith's Betta",
+  "scientific": "Betta edithae",
+  "group": "fish",
+  "sections": {
+    "overview": "Edith’s betta is a wild labyrinth fish recorded from Borneo, Sumatra and nearby islands. It belongs to the edithae group, distinct from the albimarginata group that includes B. channoides, although both lineages include paternal mouthbrooders.",
+    "identification": "It reaches roughly 8 cm total length. Males show stronger iridescence and more extended unpaired fins, while the overall form is sturdier and less ornate than domesticated B. splendens; wild coloration is comparatively restrained.",
+    "habitat": "The species occurs in lowland fresh waters across parts of Kalimantan, Sumatra and islands including Bangka, Belitung and Bintan. It is associated with slow or still, vegetated water, often acidic and stained by peat and leaf tannins.",
+    "diet": "It feeds on small animal prey, including aquatic invertebrates and insects. This is typical of the genus, whose species forage in shallow vegetated waters rather than grazing on plants.",
+    "behavior": "Like other osphronemids it supplements gill respiration by taking air at the surface with its labyrinth organ. Compared with territorial bubble-nesting B. splendens, its mouthbrooding reproductive ecology and reported temperament are different, though individual behaviour varies.",
+    "reproduction": "The male is a paternal mouthbrooder and carries eggs in his mouth for about two to three weeks before releasing free-swimming fry. This contrasts with the bubble nests of B. splendens and B. imbellis, while resembling the strategy of B. channoides.",
+    "ecology": "Its broad island distribution spans varied lowland waters, but peat-swamp populations depend on intact vegetation and water chemistry. Its air-breathing organ, shared across labyrinth fishes, helps tolerate oxygen-poor water but does not remove its dependence on suitable habitat.",
+    "conservation": "The IUCN assessment published in 2019 classifies B. edithae as Least Concern. The broad recorded range supports that assessment, but local habitat alteration and the uneven quality of distribution records should not be mistaken for proof that every population is secure."
+  },
+  "sources": [
+    {
+      "url": "https://www.seriouslyfish.com/species/betta-edithae",
+      "title": "Betta edithae — Seriously Fish"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2019-2.RLTS.T91309748A91309753.en",
+      "title": "Betta edithae — IUCN Red List"
+    },
+    {
+      "url": "https://smp.ibcbettas.org/species/edithae.html",
+      "title": "Edith's betta — International Betta Congress"
+    },
+    {
+      "url": "https://de.wikipedia.org/wiki/Ediths_Kampffisch",
+      "title": "Edith's Kampffisch — German Wikipedia"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Betta-edithae",
+      "title": "Betta edithae — FishBase"
+    }
+  ]
+}

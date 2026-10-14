@@ -1,0 +1,42 @@
+{
+  "id": "asthenosoma_ijimai",
+  "name": "Oursin de feu d’Iijima",
+  "scientific": "Asthenosoma ijimai",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Asthenosoma ijimai est un oursin tropical de la famille des Echinothuriidae, remarquable par son test souple et ses épines venimeuses.",
+    "identification": "Cet animal aplati peut atteindre environ 13 centimètres de diamètre ; sa face supérieure rouge sombre, ses bandes claires et ses pointes blanches le caractérisent.",
+    "habitat": "Il vit sur les fonds du Pacifique occidental, des eaux japonaises vers les Philippines et la mer de Chine méridionale, dans des profondeurs rapportées d’environ 7 à 300 mètres.",
+    "diet": "Les références consultées fournissent peu d’observations alimentaires propres à l’espèce ; la composition précise de son régime naturel reste donc incertaine.",
+    "behavior": "Une ancienne encyclopédie japonaise indique qu’il se cache dans les creux ou sous les pierres, puis regagne son abri après être sorti se nourrir.",
+    "reproduction": "En laboratoire, les œufs se sont révélés exceptionnellement grands et flottants, avec un développement larvaire lécithotrophe ; les larves restent près de la surface avant de se fixer après plusieurs semaines.",
+    "ecology": "C’est un oursin benthique documenté sur une vaste plage de profondeurs du Pacifique tropical occidental ; la variation entre populations japonaises a motivé des études taxonomiques.",
+    "conservation": "Aucune évaluation mondiale de la Liste rouge n’a été trouvée dans les bases consultées, et les sources disponibles n’établissent ni tendance démographique ni statut de conservation propre à l’espèce."
+  },
+  "sources": [
+    {
+      "url": "https://www.sealifebase.se/summary/139087",
+      "title": "Asthenosoma ijimai — SeaLifeBase"
+    },
+    {
+      "url": "https://kotobank.jp/word/%E3%81%84%E3%81%84%E3%81%98%E3%81%BE%E3%81%B5%E3%81%8F%E3%82%8D%E3%81%86%E3%81%AB-3190887",
+      "title": "Oursin de feu d’Iijima — Kotobank, Encyclopædia Britannica internationale"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29304716/",
+      "title": "Développement et forme larvaire d’Asthenosoma ijimai — PubMed"
+    },
+    {
+      "url": "https://doi.org/10.1007/BF00386862",
+      "title": "Développement de l’oursin échinothuride Asthenosoma ijimai — Marine Biology"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15514475/",
+      "title": "Données moléculaires en faveur d’espèces jumelles au sein d’Asthenosoma ijimai — PubMed"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Asthenosoma_ijimai",
+      "title": "Asthenosoma ijimai — Wikipédia en français"
+    }
+  ]
+}

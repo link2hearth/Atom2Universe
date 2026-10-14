@@ -1,0 +1,38 @@
+{
+  "id": "bathylychnops_exilis",
+  "name": "Poisson-fantôme javelot",
+  "scientific": "Bathylychnops exilis",
+  "group": "fish",
+  "sections": {
+    "overview": "Bathylychnops exilis est un grand poisson-fantôme des profondeurs, de la famille des Opisthoproctidae, signalé dans le Pacifique Nord et près des Açores.",
+    "identification": "Il peut atteindre environ 58 centimètres de longueur standard et se distingue par un globe optique secondaire dirigé vers le bas associé à chaque œil.",
+    "habitat": "Cette espèce océanique fréquente les eaux mésopélagiques à bathypélagiques, avec des observations généralement entre 400 et 800 mètres dans le Pacifique Nord et l’Atlantique oriental.",
+    "diet": "Son écologie alimentaire est mal connue ; des estomacs examinés contenaient des euphausiacés proches du krill, tandis que d’autres restes organiques possibles étaient difficiles à identifier.",
+    "behavior": "Son étonnante organisation oculaire associe des yeux principaux orientés vers l’avant ou le haut et des globes auxiliaires dirigés vers le bas, élargissant son champ visuel.",
+    "reproduction": "Il pond des œufs et ses œufs comme ses larves sont pélagiques ; les données de développement décrivent pigmentation et forme larvaires, mais peu le frai des adultes.",
+    "ecology": "Bathylychnops est apparenté aux autres poissons-fantômes opisthoproctidés, dont Dolichopteryx ; son optique inhabituelle est interprétée comme une adaptation aux profondeurs sombres du large.",
+    "conservation": "FishBase ne mentionne aucune évaluation mondiale de l’UICN, et l’espèce est rarement échantillonnée ; l’effectif et l’évolution de sa population restent inconnus."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/9119",
+      "title": "Bathylychnops exilis — FishBase"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1095-8649.1985.tb04022.x",
+      "title": "Observations sur la morphologie, l’écologie et le comportement de Bathylychnops exilis — Journal of Fish Biology"
+    },
+    {
+      "url": "https://apps-afsc.fisheries.noaa.gov/ichthyo/LHDataELH.php?GSID=Bathylychnops%21exilis",
+      "title": "Description des premiers stades de vie de Bathylychnops exilis — NOAA Alaska Fisheries Science Center"
+    },
+    {
+      "url": "https://doi.org/10.1134/S0032945220050138",
+      "title": "Révision de la classification générique des Opisthoproctidae à corps allongé — Journal of Ichthyology"
+    },
+    {
+      "url": "https://zh.wikipedia.org/wiki/%E6%93%AC%E6%B7%B5%E7%87%88%E9%AE%AD",
+      "title": "擬淵燈鮭 (Bathylychnops exilis) — Wikipédia en chinois"
+    }
+  ]
+}

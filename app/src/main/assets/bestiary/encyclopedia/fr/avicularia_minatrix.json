@@ -1,0 +1,34 @@
+{
+  "id": "avicularia_minatrix",
+  "name": "Mygale à bandes rouges du Venezuela",
+  "scientific": "Avicularia minatrix",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Avicularia minatrix est une mygale arboricole d’Amérique du Sud, décrite du Venezuela et actuellement reconnue comme espèce distincte du genre Avicularia.",
+    "identification": "L’adulte se reconnaît à ses taches latérales orange vif sur l’abdomen noir ; les descriptions taxonomiques la distinguent des Avicularia proches par d’autres caractères anatomiques.",
+    "habitat": "Les données vérifiées situent l’espèce au Venezuela et au Brésil, mais les localités et observations écologiques publiées sont trop rares pour préciser ses préférences d’habitat.",
+    "diet": "Aucune étude alimentaire de terrain propre à l’espèce n’a été trouvée ; cette mygale est prédatrice, mais le régime et la chasse ne doivent pas être déduits de soins en captivité.",
+    "behavior": "Cette espèce appartient à Avicularia, un genre de mygales du Nouveau Monde ; ses rythmes d’activité, défenses et comportements de toile restent peu documentés directement.",
+    "reproduction": "La littérature taxonomique reconnaît les deux sexes et illustre les structures diagnostiques des adultes, mais les sources examinées ne décrivent pas fiablement la parade ni les soins au cocon.",
+    "ecology": "Elle est apparentée aux autres mygales à doigts roses, dont A. avicularia, mais ses taches abdominales orange permettent de la distinguer de cette espèce mieux connue.",
+    "conservation": "Le World Spider Catalog confirme son statut taxonomique accepté et son aire, mais aucune évaluation mondiale de conservation ni tendance démographique propre à l’espèce n’a été trouvée."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/43836",
+      "title": "Avicularia minatrix — World Spider Catalog"
+    },
+    {
+      "url": "https://doi.org/10.3897/zookeys.659.10717",
+      "title": "Révision taxonomique et analyse cladistique d’Avicularia — ZooKeys"
+    },
+    {
+      "url": "https://es.wikipedia.org/wiki/Avicularia_minatrix",
+      "title": "Avicularia minatrix — Wikipédia en espagnol"
+    },
+    {
+      "url": "https://wsc.nmbe.ch/catalog/100",
+      "title": "Avicularia minatrix — fiche d’espèce du World Spider Catalog"
+    }
+  ]
+}

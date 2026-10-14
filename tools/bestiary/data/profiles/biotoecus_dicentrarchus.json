@@ -1,0 +1,210 @@
+{
+  "id": "biotoecus_dicentrarchus",
+  "scientific": "Biotoecus dicentrarchus",
+  "group": "fish",
+  "name": {
+    "en": "Two-spined Biotoecus",
+    "fr": "Biotoecus à deux épines"
+  },
+  "sections": {
+    "overview": {
+      "en": "Biotoecus dicentrarchus is a minute geophagine cichlid of the Orinoco basin. It is one of two described Biotoecus species, alongside Amazonian B. opercularis.",
+      "fr": "Biotoecus dicentrarchus est un minuscule cichlidé géophaginé du bassin de l’Orénoque. C’est l’une des deux espèces décrites du genre Biotoecus, avec B. opercularis de l’Amazone."
+    },
+    "identification": {
+      "en": "Its name refers to its two anal-fin spines, distinguishing it from most cichlids and from its three-spined relative B. opercularis. It is reported to reach about 3.8 cm standard length.",
+      "fr": "Son nom fait référence à ses deux épines anales, qui le distinguent de la plupart des cichlidés et de son parent B. opercularis, qui en porte trois. Sa longueur standard signalée atteint environ 3,8 cm."
+    },
+    "habitat": {
+      "en": "It occurs in the Orinoco drainage from the Inírida River in Colombia to Maripa in Venezuela. It is recorded from river habitats, although detailed microhabitat data are sparse.",
+      "fr": "Il vit dans le bassin de l’Orénoque, du río Inírida en Colombie à Maripa au Venezuela. Il est signalé en milieu fluvial, mais les données détaillées sur son microhabitat sont rares."
+    },
+    "diet": {
+      "en": "Species-specific diet information was not located in the sources used. Its geophagine relatives forage near the bottom, but finer dietary claims need direct study.",
+      "fr": "Les sources consultées ne donnent pas d’information précise sur le régime de cette espèce. Ses proches géophaginés s’alimentent près du fond, mais toute précision demanderait une étude directe."
+    },
+    "behavior": {
+      "en": "Available taxonomic summaries offer little behavioral information. The fish is classified as benthopelagic, indicating use of the water column close to the bottom.",
+      "fr": "Les synthèses taxonomiques disponibles apportent peu d’informations comportementales. Le poisson est classé benthopélagique, ce qui indique qu’il vit dans la colonne d’eau près du fond."
+    },
+    "reproduction": {
+      "en": "The consulted references do not provide a verified account of courtship, spawning or parental care. These details cannot safely be inferred from its congener.",
+      "fr": "Les références consultées ne décrivent pas de façon vérifiée la parade, la ponte ou les soins parentaux. Ces détails ne peuvent être déduits sans risque de son congénère."
+    },
+    "ecology": {
+      "en": "It is the Orinoco member of a genus otherwise represented by Amazonian B. opercularis. The two species differ in drainage and anal-fin spine count.",
+      "fr": "C’est l’espèce de l’Orénoque d’un genre représenté aussi par B. opercularis, qui vit en Amazonie. Les deux espèces diffèrent par leur bassin et le nombre d’épines anales."
+    },
+    "conservation": {
+      "en": "The consulted sources describe taxonomy and range but do not establish a current global conservation assessment. Population size and trend remain unclear here.",
+      "fr": "Les sources consultées décrivent sa taxonomie et sa répartition, mais ne fournissent pas d’évaluation mondiale actuelle de conservation. L’effectif et la tendance restent indéterminés ici."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Biotoecus dicentrarchus — FishBase species summary",
+        "fr": "Biotoecus dicentrarchus — fiche FishBase"
+      },
+      "url": "https://fishbase.se/summary/Biotoecus_dicentrarchus.html",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase gives the Orinoco range, maximum reported standard length, benthopelagic environment and diagnostic two-spine count."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 15,
+        "total": 159,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotoecus — Aquarist Atlas genus account",
+        "fr": "Biotoecus — présentation du genre Aquarist Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/genus/biotoecus/",
+      "supports": [
+        "overview",
+        "ecology",
+        "reproduction"
+      ],
+      "facts": [
+        "Genus account recognizes the two species and contrasts their Orinoco and Amazon distributions."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 103,
+        "notes_words": 13,
+        "total": 116,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotoecus dicentrarchus — Aquarist Atlas species account",
+        "fr": "Biotoecus dicentrarchus — fiche Aquarist Atlas"
+      },
+      "url": "https://www.cichlidatlas.com/species/biotoecus-dicentrarchus/",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "No sufficiently documented species-specific diet was found in the consulted reference set."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 52,
+        "notes_words": 12,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotoecus: description of a new Orinoco species — Journal of Natural History",
+        "fr": "Biotoecus : description d’une nouvelle espèce de l’Orénoque — Journal of Natural History"
+      },
+      "url": "https://doi.org/10.1080/00222938900770131",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Original 1989 taxonomic description distinguishes both congeners."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 7,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Biotoecus dicentrarchus — Cichlid Room Companion, Spanish account",
+        "fr": "Biotoecus dicentrarchus — fiche espagnole Cichlid Room Companion"
+      },
+      "url": "https://cichlidae.com/species.php?id=1591&lang=es",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "Spanish specialist catalogue cross-checks taxonomy and Orinoco locality.",
+        "It cites Kullander’s original description."
+      ],
+      "consulted": "2026-10-14",
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Detailed diet and reproductive behavior were not verified from primary species-specific sources.",
+    "No current conservation assessment was verified."
+  ],
+  "review_note": "Used FishBase taxonomy and distribution with the genus account for comparison to B. opercularis; marked life-history gaps explicitly.",
+  "reviewed": true,
+  "source_audit_version": 1
+}
