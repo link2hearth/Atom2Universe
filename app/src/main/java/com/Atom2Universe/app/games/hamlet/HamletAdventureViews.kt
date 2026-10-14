@@ -50,11 +50,14 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
         BattleField.MARSH -> R.string.hamlet_combat_field_marsh
         BattleField.FROST -> R.string.hamlet_combat_field_frost
     })
+    /** Enemies wear their region's creatures; heroes and summons keep their own art. */
+    private fun art(u: BattleUnit) = if (u.heroVisual) u.sprite else if (u.summoned) HamletEnemies.SUMMON
+        else HamletEnemies.visual(u.sprite, battle.region)
     init {
         assets.get("region", battle.region)
-        battle.units.forEach { HamletCharacterArt.prewarm(it.heroVisual, it.sprite) }
-        HamletCharacterArt.prewarm(false, 0) // Summons can enter after the battle starts.
-        if (battle.pet >= 0) HamletCharacterArt.prewarm(false, intArrayOf(0, 5, 7)[battle.pet])
+        battle.units.forEach { HamletCharacterArt.prewarm(it.heroVisual, art(it)) }
+        HamletCharacterArt.prewarm(false, HamletEnemies.SUMMON) // Summons can enter after the battle starts.
+        if (battle.pet >= 0) HamletCharacterArt.prewarm(false, HamletEnemies.pet(battle.pet))
     }
     private val loop = object : Runnable {
         override fun run() {
@@ -88,10 +91,10 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
             var x = width * (if (u.enemy) 0.68f + column * -0.08f else 0.18f + column * 0.14f)
             val y = height * (if (u.front) 0.43f + row * 0.20f else 0.32f + row * 0.135f) + if (u.summoned) 18f * dp else 0f
             if (effectsEnabled) x += (if (u.enemy) -1 else 1) * sin((u.lunge / 0.22f) * PI).toFloat() * 22f * dp
-            val size = minOf(width * 0.21f, height * 0.27f) * (if (u.maxHp > 1500 && u.enemy && u.slot == 0) 1.25f else if (u.summonLeft > 0) 0.7f else 1f)
+            val size = minOf(width * 0.21f, height * 0.27f) * (if (u.boss) 1.25f else if (u.summonLeft > 0) 0.7f else 1f)
             spots.getOrPut(u.index) { PointF() }.set(x, y - size * 0.4f)
             if (!u.alive) {
-                HamletCharacterArt.draw(c, u.heroVisual, u.sprite, x, y, size, pose = HamletCharacterArt.Pose.DOWN, mirrored = u.enemy, alpha = 95)
+                HamletCharacterArt.draw(c, u.heroVisual, art(u), x, y, size, pose = HamletCharacterArt.Pose.DOWN, mirrored = u.enemy, alpha = 95)
                 continue
             }
             paint.color = 0x44312D24; c.drawOval(x - size * 0.28f, y - 6f * dp, x + size * 0.28f, y + 3f * dp, paint)
@@ -109,7 +112,7 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
                 HamletCharacterArt.Pose.ATTACK -> 0.22f - u.lunge
                 else -> battle.time + u.index * 0.31f
             }
-            HamletCharacterArt.draw(c, u.heroVisual, u.sprite, x, y, size, if (effectsEnabled) poseTime else 0f, pose, u.enemy,
+            HamletCharacterArt.draw(c, u.heroVisual, art(u), x, y, size, if (effectsEnabled) poseTime else 0f, pose, u.enemy,
                 fx = if (effectsEnabled) battle.time + u.index * 0.31f else 0f)
             if (u.shield > 0) {
                 paint.color = 0x775CDBF3; paint.style = Paint.Style.STROKE; paint.strokeWidth = 2f * dp
@@ -170,7 +173,7 @@ class HamletBattleView(context: Context, val battle: HamletBattle, private val a
         }
         text(c, label("combat_clock", arrayOf(battle.time.toInt())), width / 2f, 24f * dp, 14f, 0xFFF9E7B2.toInt())
         text(c, fieldLabel, width / 2f, 40f * dp, 10f, 0xFFCBDDD0.toInt())
-        if (battle.pet >= 0) HamletCharacterArt.draw(c, false, intArrayOf(0, 5, 7)[battle.pet], width * 0.1f, height * 0.86f, 40f * dp, if (effectsEnabled) battle.time else 0f)
+        if (battle.pet >= 0) HamletCharacterArt.draw(c, false, HamletEnemies.pet(battle.pet), width * 0.1f, height * 0.86f, 40f * dp, if (effectsEnabled) battle.time else 0f)
         val heroes = party
         val spacing = width.toFloat() / maxOf(1, heroes.size)
         for ((i, u) in heroes.withIndex()) {

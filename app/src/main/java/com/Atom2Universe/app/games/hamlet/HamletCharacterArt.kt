@@ -7,8 +7,8 @@ import android.graphics.RectF
 import android.util.LruCache
 
 /** Original, articulated pixel art. Frames are rendered once on a 48 × 56 grid, with a margin for
- * heroes' halos and companions; scaling keeps their crisp pixels. A shared bounded cache serves
- * portraits, residents and battle units. */
+ * halos, companions and the largest bosses; scaling keeps their crisp pixels. A shared bounded cache
+ * serves portraits, residents and battle units. Enemy ids come from [HamletEnemies]. */
 object HamletCharacterArt {
     enum class Pose(val frames: Int, val fps: Float) {
         IDLE(4, 3f), WALK(6, 9f), ATTACK(4, 16f), CAST(4, 7f), HURT(2, 12f), DOWN(1, 1f)
@@ -18,6 +18,11 @@ object HamletCharacterArt {
     private const val PAD_X = 11
     private const val PAD_TOP = 12
     private const val PAD_BOTTOM = 4
+    /** Cache key ranges; enemies start at zero. */
+    private const val HEROES = 100_000
+    private const val RESIDENTS = 200_000
+    private const val HERO_HALOS = 300_000
+    private const val BOSS_HALOS = 400_000
     private val cache = object : LruCache<Int, Bitmap>(12 * 1024 * 1024) {
         override fun sizeOf(key: Int, value: Bitmap) = value.allocationByteCount
     }
@@ -44,9 +49,10 @@ object HamletCharacterArt {
     )
 
     fun prewarm(hero: Boolean, id: Int) {
+        val glows = haloRadius(hero, id) > 0
         for (pose in Pose.entries) for (frame in 0 until pose.frames) {
             sprite(hero, id, pose, frame)
-            if (hero && pose != Pose.DOWN && HamletHeroes.defs[Math.floorMod(id, HamletHeroes.defs.size)].rarity != HeroRarity.COMMON) halo(id, pose, frame)
+            if (glows && pose != Pose.DOWN) halo(hero, id, pose, frame)
         }
     }
 
@@ -69,20 +75,31 @@ object HamletCharacterArt {
         out.set(x - (W / 2f + PAD_X) * k, foot - (H + PAD_TOP) * k, x + (W / 2f + PAD_X) * k, foot + PAD_BOTTOM * k)
     }
 
-    /** Size is the character's box; foot is the ground anchor, independent of pose. Heroes also get
-     * their rarity effects, animated by [fx] (pass 0 to keep them still). */
+    /** Size is the character's box; foot is the ground anchor, independent of pose. Heroes get their
+     * rarity effects and bosses their menace, animated by [fx] (pass 0 to keep them still). */
     fun draw(c: Canvas, hero: Boolean, id: Int, x: Float, foot: Float, size: Float,
              time: Float = 0f, pose: Pose = Pose.IDLE, mirrored: Boolean = false, alpha: Int = 255, fx: Float = time) {
         val frame = frame(pose, time)
         val sprite = sprite(hero, id, pose, frame)
-        val rarity = if (hero && pose != Pose.DOWN) HamletHeroes.defs[Math.floorMod(id, HamletHeroes.defs.size)].rarity else null
-        if (rarity == null || rarity == HeroRarity.COMMON) { drawBitmap(c, sprite, x, foot, size, mirrored, paint, alpha); return }
-        HamletHeroFx.under(c, rarity, x, foot, size, fx, mirrored, alpha)
-        haloPaint.color = HamletHeroFx.aura(rarity, fx)
-        drawBitmap(c, halo(id, pose, frame), x, foot, size, mirrored, haloPaint, (HamletHeroFx.haloAlpha(rarity, fx) * alpha).toInt())
-        drawBitmap(c, sprite, x, foot, size, mirrored, paint, alpha)
-        HamletHeroFx.over(c, rarity, x, foot, size, fx, mirrored, alpha)
+        if (pose == Pose.DOWN || haloRadius(hero, id) == 0) { drawBitmap(c, sprite, x, foot, size, mirrored, paint, alpha); return }
+        if (hero) {
+            val rarity = HamletHeroes.defs[Math.floorMod(id, HamletHeroes.defs.size)].rarity
+            HamletHeroFx.under(c, rarity, x, foot, size, fx, mirrored, alpha)
+            haloPaint.color = HamletHeroFx.aura(rarity, fx)
+            drawBitmap(c, halo(true, id, pose, frame), x, foot, size, mirrored, haloPaint, (HamletHeroFx.haloAlpha(rarity, fx) * alpha).toInt())
+            drawBitmap(c, sprite, x, foot, size, mirrored, paint, alpha)
+            HamletHeroFx.over(c, rarity, x, foot, size, fx, mirrored, alpha)
+        } else {
+            HamletHeroFx.menaceUnder(c, x, foot, size, fx, mirrored, alpha)
+            haloPaint.color = HamletHeroFx.MENACE
+            drawBitmap(c, halo(false, id, pose, frame), x, foot, size, mirrored, haloPaint, (HamletHeroFx.menaceAlpha(fx) * alpha).toInt())
+            drawBitmap(c, sprite, x, foot, size, mirrored, paint, alpha)
+            HamletHeroFx.menaceOver(c, x, foot, size, fx, mirrored, alpha)
+        }
     }
+
+    private fun haloRadius(hero: Boolean, rawId: Int) = if (hero) HamletHeroFx.haloRadius(HamletHeroes.defs[Math.floorMod(rawId, HamletHeroes.defs.size)].rarity)
+        else if (HamletEnemies.isBoss(Math.floorMod(rawId, HamletEnemies.COUNT))) 2 else 0
 
     private fun frame(pose: Pose, time: Float) = if (time.isFinite()) (time.coerceAtLeast(0f) * pose.fps).toInt() % pose.frames else 0
 
@@ -97,8 +114,8 @@ object HamletCharacterArt {
     }
 
     private fun sprite(hero: Boolean, rawId: Int, pose: Pose, frame: Int, resident: Boolean = false): Bitmap {
-        val id = Math.floorMod(rawId, if (resident) 12 else if (hero) HamletHeroes.defs.size else 8)
-        val key = (if (resident) 20000 else if (hero) 10000 else 0) + id * 256 + pose.ordinal * 16 + frame
+        val id = Math.floorMod(rawId, if (resident) 12 else if (hero) HamletHeroes.defs.size else HamletEnemies.COUNT)
+        val key = (if (resident) RESIDENTS else if (hero) HEROES else 0) + id * 256 + pose.ordinal * 16 + frame
         cache.get(key)?.let { return it }
         val bmp = Bitmap.createBitmap(W + PAD_X * 2, H + PAD_TOP + PAD_BOTTOM, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bmp)
@@ -109,20 +126,20 @@ object HamletCharacterArt {
         when {
             resident -> Pixels(canvas).resident(id, pose, frame, residentPalettes[id])
             hero -> HeroPainter(canvas).paint(HamletHeroLooks[id], HamletHeroes.defs[id], pose, frame)
-            else -> Pixels(canvas).enemy(id, pose, frame)
+            else -> EnemyPainter(canvas).paint(id, pose, frame)
         }
         cache.put(key, bmp)
         return bmp
     }
 
-    /** Glow around the hero's silhouette, as an alpha mask tinted when drawn. */
-    private fun halo(rawId: Int, pose: Pose, frame: Int): Bitmap {
-        val id = Math.floorMod(rawId, HamletHeroes.defs.size)
-        val key = 30000 + id * 256 + pose.ordinal * 16 + frame
+    /** Glow around a silhouette, as an alpha mask tinted when drawn. */
+    private fun halo(hero: Boolean, rawId: Int, pose: Pose, frame: Int): Bitmap {
+        val id = Math.floorMod(rawId, if (hero) HamletHeroes.defs.size else HamletEnemies.COUNT)
+        val key = (if (hero) HERO_HALOS else BOSS_HALOS) + id * 256 + pose.ordinal * 16 + frame
         cache.get(key)?.let { return it }
-        val source = sprite(true, id, pose, frame)
+        val source = sprite(hero, id, pose, frame)
         val w = source.width; val h = source.height
-        val radius = HamletHeroFx.haloRadius(HamletHeroes.defs[id].rarity)
+        val radius = haloRadius(hero, id)
         val pixels = IntArray(w * h)
         source.getPixels(pixels, 0, w, 0, 0, w, h)
         val glow = IntArray(w * h)
@@ -202,96 +219,6 @@ object HamletCharacterArt {
             }
             box(handX - 2, handY - 2, 5, 5, q.skin)
             c.restore()
-        }
-
-        fun enemy(id: Int, pose: Pose, f: Int) {
-            val motion = when (pose) { Pose.WALK -> intArrayOf(0, 2, 3, 0, -2, -3)[f]; Pose.ATTACK -> intArrayOf(-2, 0, 4, 1)[f]; else -> 0 }
-            val bob = when (pose) {
-                Pose.IDLE, Pose.CAST -> f % 2
-                Pose.WALK -> kotlin.math.abs(motion) / 2
-                else -> 0
-            }
-            val blink = pose == Pose.HURT || pose == Pose.DOWN || (pose == Pose.IDLE && f == 3)
-            val leaf = color(0x71AF75); val leafLight = color(0xBBDD85)
-            c.save(); c.translate((if (pose == Pose.ATTACK) motion else 0).toFloat(), -bob.toFloat())
-            when (id) {
-                0 -> { // Moss sprite: squash/stretch, feet and springing sapling.
-                    val squish = if (pose == Pose.ATTACK || pose == Pose.WALK) f % 2 * 3 else bob
-                    box(11 - motion / 2, 46, 9, 6, color(0x3F7263)); box(28 + motion / 2, 46, 10, 6, color(0x3F7263))
-                    box(10 - squish, 30 + squish, 27 + squish * 2, 20 - squish, color(0x448875))
-                    box(13, 27 + squish, 23, 19 - squish, leaf); rect(16, 30 + squish, 8, 3, leafLight)
-                    eyes(23, 38 + squish, blink, 8); rect(28, 45, 3, 1, ink)
-                    line(23, 29 + squish, 24 + bob, 20, color(0x79593A), 2)
-                    poly(leaf, 24, 23, 15, 17 - bob, 16, 13 - bob, 23, 15, 25, 21, 29, 14, 35, 13, 33, 20)
-                    rect(12, 42, 3, 3, leafLight)
-                }
-                1 -> { // Bat wings genuinely open and fold.
-                    val flap = intArrayOf(-6, 0, 6, 0)[f % 4]
-                    poly(ink, 20, 29, 11, 20 + flap, 3, 22 + flap, 4, 38 + flap / 2, 11, 34, 16, 39, 22, 35)
-                    poly(color(0x796697), 19, 30, 10, 23 + flap, 5, 24 + flap, 6, 34 + flap / 2, 12, 31, 18, 36)
-                    poly(ink, 28, 29, 37, 20 + flap, 45, 22 + flap, 44, 38 + flap / 2, 37, 34, 32, 39, 26, 35)
-                    poly(color(0xAA7DA8), 29, 30, 38, 23 + flap, 43, 24 + flap, 42, 34 + flap / 2, 36, 31, 30, 36)
-                    box(18, 24, 15, 19, color(0x59476D)); poly(color(0xB190BC), 19, 27, 17, 15, 23, 21, 29, 21, 34, 16, 32, 27)
-                    eyes(23, 29, blink, 6); rect(25, 35, 2, 3, cream); rect(30, 35, 1, 2, cream)
-                }
-                2 -> { // Small masked brigand, ragged cape and twin knives.
-                    box(16 - motion / 2, 39, 6, 13, color(0x62494A)); box(27 + motion / 2, 39, 6, 13, color(0x62494A))
-                    poly(ink, 16, 24, 30, 26, 36, 45, 24, 42, 13, 46); poly(color(0xAA604B), 17, 26, 29, 28, 33, 42, 23, 39, 16, 42)
-                    box(17, 16, 17, 16, color(0x955F44)); poly(color(0xD89759), 16, 19, 18, 12, 27, 10, 34, 17)
-                    rect(19, 21, 16, 6, ink); eyes(24, 22, blink, 7)
-                    line(16, 30, 12, 40 - motion, ink, 5); line(30, 31, 37, 34 + motion, ink, 5)
-                    line(37, 34 + motion, 42, 24 + motion, color(0xC6D2C4), 3); line(11, 39 - motion, 7, 47 - motion, color(0xC6D2C4), 3)
-                    rect(19, 36, 13, 3, color(0xE0B875))
-                }
-                3, 4 -> { // Heavy rock sentinel / frost ogre.
-                    val stone = if (id == 3) color(0xA58C6B) else color(0x6797AE)
-                    val light = if (id == 3) color(0xD4BB8A) else color(0xB1D6DE)
-                    val dark = if (id == 3) color(0x736953) else color(0x3D6B89)
-                    box(11 - motion / 2, 41, 11, 12, dark); box(27 + motion / 2, 41, 11, 12, stone)
-                    box(10, 26, 29, 21, stone); rect(15, 28, 20, 4, light); rect(28, 35, 9, 10, dark)
-                    box(6, 28 - motion, 10, 17, dark); box(34, 27 + motion, 10, 17, stone); rect(35, 29 + motion, 7, 5, light)
-                    box(15, 12, 23, 20, stone); rect(17, 14, 17, 5, light); rect(18, 22, 19, 4, dark); eyes(24, 22, blink, 9)
-                    if (id == 3) { gem(25, 36, leaf, leafLight, 4); line(20, 15, 21, 20, dark); line(20, 34, 17, 39, dark, 2); rect(10, 27, 8, 3, leaf) }
-                    else { poly(light, 16, 16, 10, 7, 13, 5, 21, 13); poly(light, 32, 13, 39, 6, 42, 8, 36, 18); rect(25, 29, 2, 4, cream); rect(33, 29, 2, 4, cream); box(7, 43, 8, 8, dark) }
-                }
-                5 -> { // Bramble boar, separate trot legs and twitching ears.
-                    for (j in 0..3) box(11 + j * 7, 43, 5, 9 - (j % 2 * 2 - 1) * motion / 2, color(0x5F4E3E))
-                    box(7, 29, 31, 19, color(0x96734F)); rect(10, 31, 22, 4, color(0xC59A65))
-                    poly(leaf, 7, 30, 13, 18, 18, 25, 23, 18, 27, 25, 33, 20, 35, 33)
-                    box(29, 31, 13, 15, color(0xBB9569)); box(37, 37, 9, 8, color(0xD4AF88)); rect(41, 39, 2, 3, ink)
-                    eyes(33, 34, blink, 6); poly(color(0xD1A975), 30, 32, 30 - bob, 22, 36, 27); poly(cream, 38, 45, 35, 46, 34, 41, 36, 42)
-                    line(8, 37, 3, 33 - bob, color(0x6E583F), 2)
-                }
-                6 -> { // Crystal snail: walking belly wave and revolving jewel pulse.
-                    box(6, 43 + bob, 37, 9 - bob, color(0x789DA2)); rect(11, 45 + bob, 31, 3, color(0xB9D0BE))
-                    box(10, 20, 25, 27, color(0x6B789E)); box(14, 22, 21, 21, color(0xA0ADD1)); box(17, 26, 15, 14, color(0x6975A0)); box(20, 29, 9, 8, color(0xBBBDDF))
-                    gem(22, 20, color(0xA0D8DF), cream, 8); gem(11, 26, color(0x90B9CD), cream, 4)
-                    line(36, 44, 37, 32 - bob, color(0xB9D0BE), 3); line(42, 44, 44, 30 + bob, color(0xB9D0BE), 3)
-                    box(35, 30 - bob, 5, 5, cream); box(41, 28 + bob, 5, 5, cream); rect(38, 31 - bob, 1, 2, ink); rect(44, 29 + bob, 1, 2, ink)
-                    if (pose == Pose.CAST) { glint(9 + f * 5, 15 - f, cream, 2); glint(30, 13 + f * 2, color(0xA0D8DF), 2) }
-                }
-                7 -> { // Fern drake: articulated wing, jaw, tail and two feet.
-                    val green = color(0x509887); val light = color(0xA5CDA1); val dark = color(0x35656A)
-                    poly(ink, 18, 41, 6, 43, 2, 35, 3, 30, 7, 37, 17, 34)
-                    poly(green, 17, 40, 7, 41, 4, 35, 8, 38, 17, 36)
-                    box(15 - motion / 2, 42, 8, 11, dark); box(28 + motion / 2, 42, 9, 11, dark)
-                    box(14, 25, 24, 22, green); rect(25, 32, 9, 13, light)
-                    val flap = intArrayOf(-3, 1, 5, 1)[f % 4]
-                    poly(ink, 18, 32, 7, 18 + flap, 5, 8 + flap, 17, 13 + flap, 25, 26)
-                    poly(light, 18, 30, 9, 18 + flap, 8, 11 + flap, 16, 16 + flap, 22, 26)
-                    line(9, 13 + flap, 16, 27, dark, 2)
-                    box(24, 16, 17, 17, green); box(34, 25, 12, if (pose == Pose.ATTACK || pose == Pose.CAST) 9 else 6, green)
-                    rect(35, 28, 9, 2, dark); eyes(29, 21, blink, 7); rect(29, 23, 3, 1, color(0xE8CB7B))
-                    poly(light, 24, 20, 22, 9, 28, 14); poly(light, 35, 18, 38, 9, 39, 21)
-                    if (pose == Pose.CAST) { gem(42, 35, leafLight, cream, 3); glint(39, 42, cream, 2) }
-                }
-            }
-            if (pose == Pose.HURT) { line(38, 12, 42, 8, cream, 2); line(39, 17, 45, 16, cream, 2) }
-            c.restore()
-        }
-        private fun eyes(x: Int, y: Int, closed: Boolean, distance: Int) {
-            rect(x, y, 3, if (closed) 1 else 4, ink); rect(x + distance, y, 2, if (closed) 1 else 3, ink)
-            if (!closed) { rect(x + 1, y, 1, 1, cream); rect(x + distance, y, 1, 1, cream) }
         }
     }
 }

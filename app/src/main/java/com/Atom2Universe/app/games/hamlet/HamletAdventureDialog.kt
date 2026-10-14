@@ -216,7 +216,8 @@ internal class HamletAdventureDialog(private val context: Context, private val g
             text(box, raw("hamlet_combat_field_${field.name.lowercase()}_desc"))
             text(box, s("enemy_hint", foes.map { it.faction }.distinct().joinToString(" · ") { s("faction_${it.ordinal}") }))
             val line = LinearLayout(context)
-            for (foe in foes) line.addView(portrait(if (foe.heroVisual) "hero" else "enemy", foe.sprite, 70), LinearLayout.LayoutParams(0, dp(70), 1f))
+            for (foe in foes) line.addView(portrait(if (foe.heroVisual) "hero" else "enemy",
+                if (foe.heroVisual) foe.sprite else HamletEnemies.visual(foe.sprite, a.region(selected)), 70), LinearLayout.LayoutParams(0, dp(70), 1f))
             box.addView(line)
         } else text(box, s("gather_help"))
         if (selected > a.frontier) text(box, s("route_locked", a.frontier + 1))
@@ -388,7 +389,7 @@ internal class HamletAdventureDialog(private val context: Context, private val g
         for (pet in listOf(true, false)) {
             val values = if (pet) a.pets else a.relics
             for (i in values.indices) {
-                if (pet) support.addView(portrait("enemy", intArrayOf(0, 5, 7)[i], 70))
+                if (pet) support.addView(portrait("enemy", HamletEnemies.pet(i), 70))
                 val name = s(if (pet) "pet_$i" else "relic_$i")
                 val equipped = (if (pet) a.teamPets else a.teamRelics)[a.selectedTeam] == i
                 text(support, s("support_row", name, values[i]) + if (equipped) " · " + s("active") else "")

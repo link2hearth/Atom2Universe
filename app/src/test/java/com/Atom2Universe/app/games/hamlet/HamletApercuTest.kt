@@ -1,10 +1,13 @@
 package com.Atom2Universe.app.games.hamlet
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -527,5 +530,63 @@ class HamletApercuTest {
             sc.restore()
         }
         ecrire("heros_cartes", strip)
+    }
+
+    private fun decor(i: Int): Bitmap? = File("src/main/assets/hamlet/adventure/region_$i.webp").takeIf { it.exists() }
+        ?.let { BitmapFactory.decodeFile(it.path) }
+
+    /** Le bestiaire régional : une rangée par région sur son décor (ennemis en miroir, boss agrandi),
+     * quelques poses et deux scènes de combat. */
+    @Test fun ennemis() {
+        val cell = 240; val label = 24
+        val sheet = Bitmap.createBitmap(7 * cell, HamletEnemies.REGIONS * (cell + label), Bitmap.Config.ARGB_8888)
+        val c = Canvas(sheet)
+        c.drawColor(0xFF2B3A36.toInt())
+        val text = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = Color.WHITE; textSize = 17f }
+        val filter = Paint(Paint.FILTER_BITMAP_FLAG)
+        for (r in 0 until HamletEnemies.REGIONS) {
+            val bg = decor(r)
+            for (k in 0..6) {
+                val x = k * cell.toFloat(); val y = r * (cell + label).toFloat()
+                if (bg != null) c.drawBitmap(bg, Rect(bg.width * 3 / 10, bg.height * 4 / 10, bg.width * 7 / 10, bg.height * 9 / 10),
+                    RectF(x + 2, y + 2, x + cell - 2, y + cell - 2), filter)
+                c.save(); c.clipRect(x + 2, y + 2, x + cell - 2, y + cell - 2)
+                HamletCharacterArt.draw(c, false, HamletEnemies.visual(k, r), x + cell / 2f, y + cell - 22f,
+                    cell * (if (k == 6) .62f else .5f), .4f, mirrored = true, fx = 1.1f)
+                c.restore()
+                c.drawText(if (k == 6) "region $r boss" else "region $r type $k", x + 6, y + cell + 18f, text)
+            }
+        }
+        ecrire("ennemis", sheet)
+        val ids = listOf(1, 8, 23, 28, 36, 39, 40)
+        val poses = HamletCharacterArt.Pose.entries
+        val pc = 170
+        val poseSheet = Bitmap.createBitmap(poses.sumOf { it.frames } * pc, ids.size * pc, Bitmap.Config.ARGB_8888)
+        val pcv = Canvas(poseSheet)
+        pcv.drawColor(0xFF6E8C6A.toInt())
+        for ((row, id) in ids.withIndex()) {
+            var col = 0
+            for (pose in poses) for (frame in 0 until pose.frames) {
+                val t = (frame + .5f) / pose.fps
+                HamletCharacterArt.draw(pcv, false, id, col * pc + pc / 2f, row * pc + pc * .9f, pc * .6f, t, pose, mirrored = true, fx = t)
+                col++
+            }
+        }
+        ecrire("ennemis_poses", poseSheet)
+        for ((nom, r) in listOf("combat_tours" to 3, "combat_marais" to 4)) {
+            val w = 1080; val h = 520
+            val scene = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+            val sc = Canvas(scene)
+            decor(r)?.let { val k = maxOf(w.toFloat() / it.width, h.toFloat() / it.height); sc.drawBitmap(it, null, RectF(0f, 0f, it.width * k, it.height * k), filter) }
+            val size = minOf(w * .21f, h * .27f)
+            val heroes = listOf(32, 8, 30, 13)
+            val slots = listOf(.32f to .43f, .32f to .63f, .18f to .32f, .18f to .455f)
+            for ((i, id) in heroes.withIndex()) HamletCharacterArt.draw(sc, true, id, w * slots[i].first, h * slots[i].second, size, .4f, fx = 1.2f + i)
+            val foes = listOf(6, 0, 2, 4)
+            val foeSlots = listOf(.60f to .43f, .60f to .63f, .68f to .32f, .68f to .455f)
+            for ((i, k) in foes.withIndex()) HamletCharacterArt.draw(sc, false, HamletEnemies.visual(k, r), w * foeSlots[i].first, h * foeSlots[i].second,
+                size * (if (k == 6) 1.25f else 1f), .4f, mirrored = true, fx = 1.4f + i)
+            ecrire(nom, scene)
+        }
     }
 }

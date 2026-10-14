@@ -111,6 +111,30 @@ internal object HamletHeroFx {
         if (r == HeroRarity.MYTHIC) orbit(c, r, t, back = false)
     }
 
+    /** Bosses: a crimson halo, a jagged ring on the ground and rising embers. */
+    const val MENACE = 0xFFE0402E.toInt()
+    private const val EMBER = 0xFF8A4A
+    fun menaceAlpha(t: Float) = .55f + .35f * (.5f + .5f * sin(t * 2.6f))
+
+    fun menaceUnder(c: Canvas, x: Float, foot: Float, size: Float, t: Float, mirrored: Boolean, alpha: Int) {
+        place(x, foot, size, mirrored, alpha)
+        for (k in 0 until 20) {
+            val a = k * 2 * PI.toFloat() / 20 - t * .4f
+            val front = sin(a)
+            tone(MENACE, .4f + .35f * front)
+            dot(c, 24f + cos(a) * 21f, 54f + front * 3.5f, if (k % 2 == 0) 2 else 1, if (k % 5 == 0) 2 else 1)
+        }
+    }
+
+    fun menaceOver(c: Canvas, x: Float, foot: Float, size: Float, t: Float, mirrored: Boolean, alpha: Int) {
+        place(x, foot, size, mirrored, alpha)
+        for (k in 0 until 6) {
+            val phase = frac(t / (2.2f + (k % 3) * .5f) + k * .41f)
+            tone(if (k % 2 == 0) EMBER else MENACE, sin(phase * PI.toFloat()))
+            dot(c, MOTE_X[k] + sin(t * 2.1f + k) * 1.5f, 50f - phase * 50f)
+        }
+    }
+
     private fun orbit(c: Canvas, r: HeroRarity, t: Float, back: Boolean) {
         for (k in 0 until 4) {
             val a = t * 1.4f + k * PI.toFloat() / 2
