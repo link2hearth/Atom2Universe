@@ -2,7 +2,7 @@
 <resources>
     <string name="hamlet_a_call_title">Appel aux voyageurs</string>
     <string name="hamlet_a_tickets_line">Invitations : %1$d</string>
-    <string name="hamlet_a_collection_title">Tes héros (%1$d)</string>
+    <string name="hamlet_a_collection_title">Tes héros (%1$d / %2$d)</string>
     <string name="hamlet_a_collection_help">Les héros que tu n’as pas encore rencontrés restent derrière un point d’interrogation. Touche un héros pour le faire monter de niveau, lui ajouter des étoiles et lui apprendre des compétences. Une carte dorée annonce une légende : suis-la dans le carnet.</string>
     <string name="hamlet_a_rumor_card">Une légende s’éveille</string>
     <string name="hamlet_a_unknown">\?</string>
@@ -48,4 +48,6 @@
     <string name="hamlet_welcome_ready">Prêt au village : %1$d</string>
     <string name="hamlet_welcome_vigil">Une veillée est terminée.</string>
     <string name="hamlet_welcome_trip">Une expédition est de retour.</string>
+    <string name="hamlet_restart">Recommencer</string>
+    <string name="hamlet_restart_confirm">Effacer ce monde et recommencer au premier jour ? Les bâtiments, les héros et la progression de ce monde sont perdus.</string>
 </resources>

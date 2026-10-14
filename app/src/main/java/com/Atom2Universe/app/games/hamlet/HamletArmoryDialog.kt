@@ -44,6 +44,7 @@ internal class HamletArmoryDialog(private val context: Context, private val g: H
         fun add(amount: Long, resource: AdventureResource) { if (amount > 0) parts.add(raw("hamlet_a_amount", amount, raw("hamlet_a_resource_${resource.name.lowercase()}"))) }
         add(value.ore, AdventureResource.ORE); add(value.runes, AdventureResource.RUNES); add(value.crystal, AdventureResource.CRYSTAL)
         add(value.timber, AdventureResource.TIMBER); add(value.stone, AdventureResource.STONE)
+        if (value.coins > 0) parts.add(raw("hamlet_a_amount", value.coins, raw("hamlet_a_coins")))
         return parts.joinToString(context.getString(R.string.hamlet_ui_dot))
     }
     private fun column() = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }

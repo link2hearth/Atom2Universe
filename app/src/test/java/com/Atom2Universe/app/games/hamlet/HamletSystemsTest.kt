@@ -26,7 +26,7 @@ class HamletSystemsTest {
     }
     @Test fun `equipement et tactique traversent la sauvegarde et arrivent au vrai combat`() {
         val g = game(); val a = g.adventure; building(g, "adventureForge")
-        a.add(AdventureResource.ORE, 200); a.add(AdventureResource.STONE, 100)
+        a.add(AdventureResource.ORE, 200); a.add(AdventureResource.STONE, 100); g.coins += 100_000
         val before = a.numbers(1)
         val piece = g.armory.craft(1, GearSet.HEARTHWARD, EquipmentRarity.RARE)!!
         assertTrue(g.armory.equip(1, piece.id)); assertTrue(a.numbers(1).hp > before.hp)

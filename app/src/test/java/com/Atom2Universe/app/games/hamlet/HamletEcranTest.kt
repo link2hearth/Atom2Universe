@@ -55,7 +55,7 @@ class HamletEcranTest {
         // la fenêtre de révélation est ouverte : son bouton ferme et rend la main à la page
         val continuer = vues(org.robolectric.shadows.ShadowDialog.getLatestDialog().window!!.decorView).filterIsInstance<Button>().first()
         assertTrue(continuer.performClick()); idle()
-        assertTrue(textes(decor).any { it.startsWith("Tes héros (1)") })
+        assertTrue(textes(decor).any { it.startsWith("Tes héros (1 / 36)") })
         // des cartes fermées restent pour les héros qu'on ne connaît pas
         assertTrue(textes(decor).any { it == "?" })
         controller.pause().stop().destroy()
@@ -128,6 +128,20 @@ class HamletEcranTest {
         activity.open(HamletModule.ADVENTURE, HamletAdventurePage.EXPLORE); idle()
         assertTrue(bouton(decor, "Combattre")!!.performClick()); idle()
         assertNotNull(a.activeBattle)
+        controller.pause().stop().destroy()
+    }
+
+    @Test fun recommencerRepartDeZeroSansHerosNiAventure() {
+        val controller = ecran(); val activity = controller.get(); val decor = activity.window.decorView
+        val game = activity.game
+        for (id in intArrayOf(7, 3, 0)) game.adventure.welcome(game.adventure.heroes[id])
+        game.adventure.frontier = 30; game.journey.chapter = 5
+        activity.onChanged(); idle()
+        assertEquals(View.VISIBLE, module(decor, "Héros")!!.visibility)
+        HamletActivity::class.java.getDeclaredMethod("restartGame").apply { isAccessible = true }.invoke(activity); idle()
+        assertEquals(0, game.adventure.ownedCount()); assertEquals(0, game.adventure.frontier); assertEquals(0, game.journey.chapter)
+        assertEquals(View.GONE, module(decor, "Héros")!!.visibility)
+        assertEquals(0, game.quest)
         controller.pause().stop().destroy()
     }
 }

@@ -317,7 +317,7 @@ internal class HamletAdventurePage(private val context: Context, private val gam
         val owned = a.heroes.filter { it.owned }
         if (owned.isEmpty()) return
         side(rows, button(raw("hamlet_shop_ui_entry"), weight = Weight.QUIET, glyph = "gem", onDark = true) { HamletShardShopDialog(context, game, ::render).show() } to 1f)
-        section(s("collection_title", owned.size), s("collection_help"))
+        section(s("collection_title", owned.size, a.heroes.size), s("collection_help"))
         if (owned.size >= 4) {
             val filters = (-1..2).map { faction ->
                 HamletUi.choice(button(if (faction < 0) s("all") else factionName(HeroFaction.entries[faction])) { heroFilter = faction; render() }, faction == heroFilter) to 1f

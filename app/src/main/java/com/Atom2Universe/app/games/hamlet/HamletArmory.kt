@@ -11,14 +11,15 @@ data class GearPiece(val id: Int, val slot: Int, val set: GearSet, val rarity: E
     val craftRarity: EquipmentRarity = rarity)
 
 data class GearCost(val ore: Long = 0, val runes: Long = 0, val crystal: Long = 0,
-    val timber: Long = 0, val stone: Long = 0) {
+    val timber: Long = 0, val stone: Long = 0, val coins: Long = 0) {
     fun resources() = linkedMapOf(AdventureResource.ORE to ore, AdventureResource.RUNES to runes,
         AdventureResource.CRYSTAL to crystal, AdventureResource.TIMBER to timber, AdventureResource.STONE to stone)
     operator fun plus(other: GearCost) = GearCost(ore + other.ore, runes + other.runes,
-        crystal + other.crystal, timber + other.timber, stone + other.stone)
+        crystal + other.crystal, timber + other.timber, stone + other.stone, coins + other.coins)
     fun difference(other: GearCost) = GearCost((ore - other.ore).coerceAtLeast(0),
         (runes - other.runes).coerceAtLeast(0), (crystal - other.crystal).coerceAtLeast(0),
-        (timber - other.timber).coerceAtLeast(0), (stone - other.stone).coerceAtLeast(0))
+        (timber - other.timber).coerceAtLeast(0), (stone - other.stone).coerceAtLeast(0), (coins - other.coins).coerceAtLeast(0))
+    /** Le recyclage rend la moitié des matériaux, jamais les pièces. */
     fun half() = GearCost(ore / 2, runes / 2, crystal / 2, timber / 2, stone / 2)
 }
 
@@ -70,9 +71,9 @@ class HamletArmory(private val g: HamletGame) {
             if (set in setOf(GearSet.HUNT, GearSet.GALE, GearSet.GROVE)) material else 0,
             if (set in setOf(GearSet.HEARTHWARD, GearSet.BLOOD, GearSet.STORM)) material else 0)
     }
-    fun canPay(cost: GearCost) = g.sandbox || cost.resources().all { (resource, value) -> value >= 0 && g.adventure[resource] >= value }
+    fun canPay(cost: GearCost) = g.sandbox || g.coins >= cost.coins && cost.resources().all { (resource, value) -> value >= 0 && g.adventure[resource] >= value }
     private fun pay(cost: GearCost): Boolean {
-        if (!canPay(cost)) return false
+        if (!canPay(cost) || !g.spendCoins(cost.coins.coerceAtMost(Int.MAX_VALUE.toLong()).toInt())) return false
         if (!g.sandbox) cost.resources().forEach { (resource, value) -> g.adventure.bag[resource.ordinal] -= value }
         return true
     }
@@ -107,7 +108,9 @@ class HamletArmory(private val g: HamletGame) {
     private fun enhancementCost(rarity: EquipmentRarity, level: Int) = GearCost(
         ore = (10L + (rarity.ordinal + 1) * 6L * level) * COST_MULT,
         runes = (rarity.ordinal + 1L) * level * COST_MULT,
-        crystal = if (rarity.ordinal >= 2 && level % 3 == 0) rarity.ordinal.toLong() else 0)
+        crystal = if (rarity.ordinal >= 2 && level % 3 == 0) rarity.ordinal.toLong() else 0,
+        // Les pièces ne servent qu'aux niveaux profonds : avant, elles manqueraient au village (halle, bâtiments).
+        coins = if (level >= COIN_FROM_LEVEL) 40L * level * level * (rarity.ordinal + 1) else 0)
     fun canEnhance(pieceId: Int): Boolean {
         val piece = pieces[pieceId] ?: return false
         return g.adventure.activeBattle == null && piece.level < levelCap() && unlocked(piece.rarity) && canPay(enhancementCost(piece.rarity, piece.level))
@@ -258,6 +261,8 @@ class HamletArmory(private val g: HamletGame) {
         /** Niveau de départ du plafond ; il monte avec la profondeur de la campagne jusqu'à [HARD_LEVEL]. */
         const val MAX_LEVEL = 10
         const val HARD_LEVEL = 40
+        /** À partir de ce niveau, une amélioration demande aussi des pièces : le puits où se vide l'argent de la fin de partie. */
+        const val COIN_FROM_LEVEL = 15
         const val DEEP_FROM = 100
         const val DEEP_STEP = 8
         /** Le minerai et les runes de l'équipement coûtent ce multiple : un ensemble complet se forge en semaines, pas en jours. */

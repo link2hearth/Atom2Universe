@@ -153,7 +153,7 @@ class HamletGame(
     /** Pour la sauvegarde : le décor vient de changer en bloc. */
     fun bump() { rev++; groundRev++ }
 
-    private fun spendCoins(n: Int): Boolean {
+    internal fun spendCoins(n: Int): Boolean {
         if (sandbox) return true
         if (coins < n) return false
         coins -= n

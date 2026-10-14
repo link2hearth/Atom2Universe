@@ -2,7 +2,7 @@
 <resources>
     <string name="hamlet_a_call_title">Call for travellers</string>
     <string name="hamlet_a_tickets_line">Invitations: %1$d</string>
-    <string name="hamlet_a_collection_title">Your heroes (%1$d)</string>
+    <string name="hamlet_a_collection_title">Your heroes (%1$d / %2$d)</string>
     <string name="hamlet_a_collection_help">Heroes you have not met stay hidden behind a question mark. Tap a hero to level up, add stars and learn skills. A golden card means a legend is stirring: follow it in the journal.</string>
     <string name="hamlet_a_rumor_card">A legend stirs</string>
     <string name="hamlet_a_unknown">\?</string>
@@ -48,4 +48,6 @@
     <string name="hamlet_welcome_ready">Ready in the village: %1$d</string>
     <string name="hamlet_welcome_vigil">A vigil has ended.</string>
     <string name="hamlet_welcome_trip">An expedition is back.</string>
+    <string name="hamlet_restart">Start over</string>
+    <string name="hamlet_restart_confirm">Erase this world and begin again from the first day? Buildings, heroes and progress of this world are lost.</string>
 </resources>

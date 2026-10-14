@@ -506,7 +506,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
         for (crop in crops) {
             val name = itemName("c_${crop.id}")
             val stock = game.stock(crop.id)
-            val label = HamletUi.tint(getString(R.string.hamlet_crop_choice, name, crop.cost, crop.earn, duration(crop.time * 1000L)) +
+            val label = HamletUi.tint(getString(R.string.hamlet_crop_choice, name, crop.cost, game.yieldCoins(field, crop.earn), duration(crop.time * 1000L)) +
                 if (stock > 0) getString(R.string.hamlet_ui_dot) + getString(R.string.hamlet_crop_stock, stock) else "", name to HamletUi.INK)
             sheet.body.addView(HamletUi.row(this, label, glyph = "leaf") {
                 sheet.dismiss()
@@ -585,6 +585,7 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
             Entry(R.string.hamlet_realms_export, "crate") { worldFiles.exportWorld() },
             Entry(R.string.hamlet_realms_import, "sack") { worldFiles.importWorld() },
             Entry(R.string.hamlet_worlds, "star") { showWorlds() },
+            Entry(R.string.hamlet_restart, "undo") { confirm(getString(R.string.hamlet_restart), getString(R.string.hamlet_restart_confirm), "undo") { restartGame(); true } },
             Entry(R.string.hamlet_settings, "gear") { showSettings() },
             Entry(R.string.hamlet_help, "lantern") { showHelp() },
         )
@@ -758,6 +759,16 @@ class HamletActivity : ThemedActivity(), HamletViewHost, HamletListener, HamletN
             toast(getString(R.string.hamlet_realms_file_error)); return
         }
         unreadableSave = false; game.listener = this; refreshWorld(); toast(getString(R.string.hamlet_realms_import_ok))
+    }
+    /** Efface ce monde et repart du début : sans héros, avec la première quête. */
+    private fun restartGame() {
+        handler.removeCallbacks(delayedSave)
+        game.listener = null
+        game.startNew(creative)
+        unreadableSave = false
+        game.listener = this
+        prefs.edit().remove("leftAt").apply()
+        open(HamletModule.VILLAGE); refreshWorld(); save()
     }
     private fun switchWorld() {
         handler.removeCallbacks(delayedSave)
