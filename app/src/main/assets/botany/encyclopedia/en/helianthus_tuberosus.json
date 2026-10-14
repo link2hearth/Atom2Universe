@@ -1,0 +1,14 @@
+{
+  "id": "helianthus_tuberosus",
+  "sections": [
+    {"title": "Form and habitat", "text": "A rhizomatous perennial native to North America, with upright stems 1–3 m tall. Lower leaves are often opposite and upper leaves alternate."},
+    {"title": "Flowers and tubers", "text": "The yellow flower heads resemble small sunflowers. The edible tubers are swollen ends of rhizomes, so they are underground stems rather than roots; they contain abundant inulin."},
+    {"title": "Edibility", "text": "The tubers are eaten raw or cooked. Unlike common sunflower (H. annuus), grown chiefly for its seeds, this species is mainly harvested for its tubers."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A329252-2/general-information"},
+    {"title": "NC State Extension — Helianthus tuberosus", "url": "https://plants.ces.ncsu.edu/plants/helianthus-tuberosus/"},
+    {"title": "Flora of North America — Helianthus tuberosus", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=200024006"}
+  ],
+  "related": ["helianthus"]
+}

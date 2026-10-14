@@ -1,0 +1,13 @@
+{
+  "id": "halothamnus_lancifolius",
+  "sections": [
+    {"title": "Form and habitat", "text": "A glabrous, glaucous subshrub of desert or sandy ground, often saline, from the Levant and Arabian Peninsula to southern Iran. It reaches about 45–60 cm."},
+    {"title": "Leaves and fruit", "text": "The fleshy, linear to lance-shaped leaves are up to 40–43 × 2–5 mm. The dry, winged fruit is about 9–15 mm long."},
+    {"title": "Edibility", "text": "No reliable food use is established in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew / Flora of Iraq", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A976101-1/general-information"},
+    {"title": "Flora of Israel Online", "url": "https://flora.org.il/en/plants/HALLAN/"}
+  ],
+  "related": ["halothamnus_glaucus"]
+}

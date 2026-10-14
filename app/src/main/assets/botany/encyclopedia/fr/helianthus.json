@@ -1,0 +1,13 @@
+{
+  "id": "helianthus",
+  "sections": [
+    {"title": "Cycle et port", "text": "Dans ce catalogue, Helianthus désigne le tournesol commun, H. annuus, une annuelle originaire d’Amérique du Nord. Selon les variétés, il mesure environ 0,6 à 3 m."},
+    {"title": "Capitules et graines", "text": "Les grands capitules, d’environ 7,5 à 15 cm, réunissent des fleurs centrales et des fleurons jaunes périphériques. Les graines mûres sont consommées et pressées pour produire de l’huile."},
+    {"title": "Comestibilité", "text": "Les graines sont consommées comme aliment; les sources horticoles signalent également des usages culinaires des pétales et jeunes boutons."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Helianthus annuus", "url": "https://plants.ces.ncsu.edu/plants/helianthus-annuus/"},
+    {"title": "Flora of North America — Helianthus annuus", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200024005"}
+  ],
+  "related": ["helianthus_tuberosus"]
+}

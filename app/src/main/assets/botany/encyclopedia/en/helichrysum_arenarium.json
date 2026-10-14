@@ -1,0 +1,14 @@
+{
+  "id": "helichrysum_arenarium",
+  "sections": [
+    {"title": "Form and habitat", "text": "A woolly perennial of dry, sandy soils in Europe. It is usually 8–30 cm tall and sometimes reaches about 50 cm."},
+    {"title": "Flowers and fruit", "text": "Golden-yellow to orange flower heads grow in tight clusters. After flowering, each achene bears a pappus that aids dispersal."},
+    {"title": "Traditional use", "text": "The European Medicines Agency recognizes traditional use of the flowers in preparations for relief of some mild digestive complaints. This is not general proof of clinical efficacy or a recommendation for self-medication."}
+  ],
+  "sources": [
+    {"title": "European Medicines Agency — Helichrysi flos", "url": "https://www.ema.europa.eu/en/medicines/herbal/helichrysi-flos"},
+    {"title": "EMA — Assessment report on Helichrysum arenarium", "url": "https://www.ema.europa.eu/en/documents/herbal-report/draft-assessment-report-helichrysum-arenarium-l-moench-flos_en.pdf"},
+    {"title": "World Flora Online", "url": "https://www.worldfloraonline.org/taxon/wfo-0000090226"}
+  ],
+  "related": []
+}

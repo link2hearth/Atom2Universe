@@ -1,0 +1,14 @@
+{
+  "id": "heliamphora_glabra",
+  "sections": [
+    {"title": "Port et habitat", "text": "Plante vivace carnivore du plateau guyanais, dans le nord du Venezuela et au Guyana. Elle pousse sur des tepuis et rochers humides, vers 1 200 à 2 100 m."},
+    {"title": "Urnes et fleurs", "text": "Les urnes tubulaires dressées, généralement de 25 à 45 cm, sont glabres dans leur tiers supérieur. Les fleurs portent des tépales d’environ 3 à 5 cm. Certaines bases traitent l’espèce sous le nom H. heterodoxa var. glabra."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire n’est documenté; cette plante carnivore n’est pas une plante de consommation."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A77073626-1"},
+    {"title": "Flora do Brasil — Sarraceniaceae", "url": "https://monografiasfloradobrasil.jbrj.gov.br/sarraceniaceae.pdf"},
+    {"title": "Sarraceniaceae in Flora do Brasil 2020", "url": "https://www.researchgate.net/publication/357256102_Sarraceniaceae_in_Flora_do_Brasil_2020"}
+  ],
+  "related": ["heliamphora_chimantensis", "heliamphora_heterodoxa", "heliamphora_nutans"]
+}

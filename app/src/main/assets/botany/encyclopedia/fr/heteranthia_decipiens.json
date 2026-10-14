@@ -1,0 +1,13 @@
+{
+  "id": "heteranthia_decipiens",
+  "sections": [
+    {"title": "Port et répartition", "text": "Herbe ou petit sous-arbrisseau endémique du Brésil, dans les fragments de forêts humides du Minas Gerais et de Bahia. Elle atteint environ 40 cm."},
+    {"title": "Feuilles et fleurs", "text": "Les feuilles opposées, ovales et dentées mesurent environ 3,4 à 7,2 × 2,1 à 4 cm. Les petites fleurs bilabiées, blanches à lilas, ont une corolle de 5 à 6 mm; la capsule mesure environ 3,3 mm."},
+    {"title": "Famille et comestibilité", "text": "L’espèce appartient aux Solanaceae, et non aux Lamiaceae comme l’indiquait une ancienne description du catalogue. Aucun usage alimentaire ni toxicité spécifique n’est documenté."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A803903-1"},
+    {"title": "Flora do Brasil 2020 — Heteranthia", "url": "https://monografiasfloradobrasil.jbrj.gov.br/heteranthia.pdf"}
+  ],
+  "related": []
+}

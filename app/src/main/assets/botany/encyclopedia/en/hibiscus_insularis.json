@@ -1,0 +1,14 @@
+{
+  "id": "hibiscus_insularis",
+  "sections": [
+    {"title": "Form and range", "text": "A shrub endemic to Phillip Island in the Norfolk Island group; plants are also cultivated for conservation on Norfolk Island. It reaches about 2.5–4 m."},
+    {"title": "Flowers", "text": "The pale cream to light green flowers have a magenta centre and become redder as they age. They differ from the large bright pink flowers of Mauritius hibiscus H. fragilis."},
+    {"title": "Edibility", "text": "No reliable food use is documented in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Parks Australia — Phillip Island hibiscus", "url": "https://norfolkislandnationalpark.gov.au/discover/nature/plants/phillip-island-hibiscus/"},
+    {"title": "Australian National Botanic Gardens — Hibiscus insularis", "url": "https://www.anbg.gov.au/stamps/stamp-hibiscus-insularis-2023.html"},
+    {"title": "Australian Government — plant recovery report", "url": "https://www.agriculture.gov.au/sites/default/files/documents/constraints-threatened-plant-recovery-final-report.pdf"}
+  ],
+  "related": ["hibiscus_fragilis"]
+}

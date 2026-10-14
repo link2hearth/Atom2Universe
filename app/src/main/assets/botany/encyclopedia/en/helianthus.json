@@ -1,0 +1,13 @@
+{
+  "id": "helianthus",
+  "sections": [
+    {"title": "Life cycle and form", "text": "In this catalogue, Helianthus refers to common sunflower, H. annuus, an annual native to North America. Depending on cultivar, it grows about 0.6–3 m tall."},
+    {"title": "Flower heads and seeds", "text": "The large flower heads, about 7.5–15 cm across, combine central flowers with yellow outer florets. Mature seeds are eaten and pressed for oil."},
+    {"title": "Edibility", "text": "The seeds are eaten as food; horticultural sources also describe culinary uses of petals and young buds."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Helianthus annuus", "url": "https://plants.ces.ncsu.edu/plants/helianthus-annuus/"},
+    {"title": "Flora of North America — Helianthus annuus", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200024005"}
+  ],
+  "related": ["helianthus_tuberosus"]
+}

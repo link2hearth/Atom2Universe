@@ -1,0 +1,14 @@
+{
+  "id": "hibiscus_insularis",
+  "sections": [
+    {"title": "Port et répartition", "text": "Arbuste endémique de Phillip Island, dans l’archipel Norfolk; des plants sont également cultivés pour sa conservation sur l’île Norfolk. Il atteint environ 2,5 à 4 m."},
+    {"title": "Fleurs", "text": "Les fleurs pâles, crème à vert clair, ont un centre magenta; elles deviennent plus rouges en vieillissant. Elles se distinguent des grandes fleurs rose vif de l’hibiscus mauricien H. fragilis."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est documenté dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Parks Australia — Phillip Island hibiscus", "url": "https://norfolkislandnationalpark.gov.au/discover/nature/plants/phillip-island-hibiscus/"},
+    {"title": "Australian National Botanic Gardens — Hibiscus insularis", "url": "https://www.anbg.gov.au/stamps/stamp-hibiscus-insularis-2023.html"},
+    {"title": "Australian Government — plant recovery report", "url": "https://www.agriculture.gov.au/sites/default/files/documents/constraints-threatened-plant-recovery-final-report.pdf"}
+  ],
+  "related": ["hibiscus_fragilis"]
+}

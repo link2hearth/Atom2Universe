@@ -1,0 +1,13 @@
+{
+  "id": "heliamphora_heterodoxa",
+  "sections": [
+    {"title": "Form and habitat", "text": "A perennial pitcher plant of wet savannas and highland heath in southeastern Venezuela. Its identity has been revised because the historical type material may mix several taxa; the circumscription varies among authors."},
+    {"title": "Pitchers and flowers", "text": "Its leaves form open pitchers that trap small animals; a separate flower stalk bears pale flowers. The sources consulted do not support one reliable size for the plant under the taxonomic concept used."},
+    {"title": "Edibility", "text": "No food use is documented; this carnivorous plant is not a food plant."}
+  ],
+  "sources": [
+    {"title": "Royal Horticultural Society — Heliamphora heterodoxa", "url": "https://www.rhs.org.uk/plants/81394/heliamphora-heterodoxa/details"},
+    {"title": "Wrazidlo & Fleischmann — taxonomic reassessment", "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/tax.12110"}
+  ],
+  "related": ["heliamphora_nutans", "heliamphora_chimantensis", "heliamphora_glabra"]
+}

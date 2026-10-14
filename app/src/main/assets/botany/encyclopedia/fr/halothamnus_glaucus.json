@@ -1,0 +1,12 @@
+{
+  "id": "halothamnus_glaucus",
+  "sections": [
+    {"title": "Port et habitat", "text": "Sous-arbrisseau bleu-vert des déserts, semi-déserts et pentes arides d’Asie centrale et occidentale. Il mesure généralement 30 à 70 cm."},
+    {"title": "Feuilles et fruits", "text": "Les feuilles charnues mesurent environ 1,5 à 3 cm. Les fleurs sont petites; le fruit sec porte des ailes membraneuses d’environ 1,5 à 2,5 cm, qui facilitent sa dispersion."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire fiable n’est documenté dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Flora of China — Halothamnus glaucus", "url": "https://www.efloras.org/florataxon.aspx?flora_id=3&taxon_id=242414775"}
+  ],
+  "related": ["halothamnus_lancifolius"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "halothamnus_glaucus",
+  "sections": [
+    {"title": "Form and habitat", "text": "A blue-green subshrub of deserts, semi-deserts and arid slopes in central and western Asia. It is usually 30–70 cm tall."},
+    {"title": "Leaves and fruit", "text": "The fleshy leaves are about 1.5–3 cm long. The flowers are small; the dry fruit bears membranous wings about 1.5–2.5 cm long that aid dispersal."},
+    {"title": "Edibility", "text": "No reliable food use is documented in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Flora of China — Halothamnus glaucus", "url": "https://www.efloras.org/florataxon.aspx?flora_id=3&taxon_id=242414775"}
+  ],
+  "related": ["halothamnus_lancifolius"]
+}

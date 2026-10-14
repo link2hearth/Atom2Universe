@@ -1,0 +1,13 @@
+{
+  "id": "heliamphora_heterodoxa",
+  "sections": [
+    {"title": "Port et habitat", "text": "Plante vivace à urnes pièges des savanes humides et landes d’altitude du sud-est du Venezuela. Son identité a fait l’objet d’une révision, car le matériel type ancien pourrait mêler plusieurs taxons; la circonscription retenue varie selon les auteurs."},
+    {"title": "Urnes et fleurs", "text": "Les feuilles forment des urnes ouvertes qui capturent des petits animaux; une hampe florale distincte porte des fleurs pâles. Les sources consultées ne justifient pas une dimension unique pour la plante sous le concept taxonomique retenu."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire n’est documenté; cette plante carnivore n’est pas une plante de consommation."}
+  ],
+  "sources": [
+    {"title": "Royal Horticultural Society — Heliamphora heterodoxa", "url": "https://www.rhs.org.uk/plants/81394/heliamphora-heterodoxa/details"},
+    {"title": "Wrazidlo & Fleischmann — taxonomic reassessment", "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/tax.12110"}
+  ],
+  "related": ["heliamphora_nutans", "heliamphora_chimantensis", "heliamphora_glabra"]
+}

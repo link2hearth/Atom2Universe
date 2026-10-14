@@ -1,0 +1,14 @@
+{
+  "id": "haraella_retrocalla",
+  "sections": [
+    {"title": "Form and range", "text": "A small epiphytic orchid from Taiwan. The name Haraella retrocalla is still used, but Kew treats it as a synonym of Gastrochilus retrocallus; a recent phylogenomic study supports that placement."},
+    {"title": "Leaves and flowers", "text": "The stems are very short, about 1.5–2 cm; the fleshy leaves are about 3–8 × 0.8–1.5 cm. Yellow flowers have a red lip; the sepals and petals are about 8–10 mm long."},
+    {"title": "Edibility", "text": "No food use or species-specific toxicity is documented in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "National Taiwan University — Flora of Taiwan", "url": "https://tai2.ntu.edu.tw/species/642%20063%2001%200"},
+    {"title": "Phylogenomic study of Gastrochilus", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11312641/"},
+    {"title": "Plants of the World Online — Haraella retrocalla", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A638433-1"}
+  ],
+  "related": []
+}

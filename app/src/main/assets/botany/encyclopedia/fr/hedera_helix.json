@@ -1,0 +1,13 @@
+{
+  "id": "hedera_helix",
+  "sections": [
+    {"title": "Port et répartition", "text": "Lierre ligneux persistant d’Europe et du bassin méditerranéen jusqu’à l’Iran. Les jeunes tiges grimpent grâce à des racines crampons et portent des feuilles lobées; les rameaux adultes florifères ont des feuilles entières."},
+    {"title": "Fleurs et fruits", "text": "Les petites fleurs sont réunies en ombelles sphériques à l’automne. Les baies mûres atteignent environ 9 mm."},
+    {"title": "Toxicité", "text": "Les feuilles et les baies peuvent provoquer des troubles digestifs; la plante peut aussi irriter la peau chez certaines personnes."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A90723-1/general-information"},
+    {"title": "NC State Extension — English ivy", "url": "https://plants.ces.ncsu.edu/plants/hedera-helix/common-name/english-ivy/"}
+  ],
+  "related": []
+}

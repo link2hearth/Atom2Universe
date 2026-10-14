@@ -1,0 +1,13 @@
+{
+  "id": "hibiscus_fragilis",
+  "sections": [
+    {"title": "Form and range", "text": "A small evergreen shrub endemic to Mauritius, reaching about 1.5 m. Its wild populations are highly localized."},
+    {"title": "Flowers and fruit", "text": "The large bright pink to carmine flowers are about 7–10 cm across and have a distinctive staminal column. The fruit is a capsule."},
+    {"title": "Edibility", "text": "No reliable food use is documented in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Mauritian Wildlife Foundation — Hibiscus fragilis", "url": "https://www.mauritian-wildlife.org/mwf-files/files/files/Osmose%20template-August%281%29.pdf"},
+    {"title": "Royal Botanic Gardens, Kew — Islands Flora Collection", "url": "https://www.kew.org/kew-gardens/plants/islands-flora-collection"}
+  ],
+  "related": ["hibiscus_insularis"]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "heliamphora_nutans",
+  "sections": [
+    {"title": "Port et habitat", "text": "Plante vivace carnivore des tepuis humides du Venezuela, du Guyana et du nord du Brésil, vers 1 200 à 2 800 m. Ses urnes mesurent environ 20 à 30 cm et s’ouvrent sur 8 à 10 cm."},
+    {"title": "Fleurs et pièges", "text": "Une hampe de 40 à 45 cm porte des fleurs blanches pendantes, aux pétales de 3 à 5 cm. Les urnes capturent des insectes; la production d’enzymes digestives n’est pas confirmée dans la référence horticole consultée."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire n’est documenté; cette plante carnivore n’est pas destinée à être consommée."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A790110-1/general-information"},
+    {"title": "Oxford University — Plants 400: Heliamphora", "url": "https://herbaria.plants.ox.ac.uk/bol/plants400/profiles/GH/Heliamphora"}
+  ],
+  "related": ["heliamphora_heterodoxa", "heliamphora_chimantensis", "heliamphora_glabra"]
+}

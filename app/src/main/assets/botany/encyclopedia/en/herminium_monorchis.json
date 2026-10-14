@@ -1,0 +1,14 @@
+{
+  "id": "herminium_monorchis",
+  "sections": [
+    {"title": "Form and habitat", "text": "A small tuberous terrestrial orchid widespread across temperate Eurasia to the Himalaya. It is about 5.5–35 cm tall and grows in open grassland, often on calcareous soils."},
+    {"title": "Leaves and flowers", "text": "Two main leaves sit near the base of the stem. The small spike bears greenish-yellow flowers with a three-lobed lip."},
+    {"title": "Edibility", "text": "No safe food use is documented; collecting this wild orchid is not recommended."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A638624-1"},
+    {"title": "Flora of China", "url": "https://efloras.org/florataxon.aspx?flora_id=2&taxon_id=200028715"},
+    {"title": "University of Udine — Flora", "url": "https://flora.uniud.it/scheda.php?id=1565"}
+  ],
+  "related": []
+}
