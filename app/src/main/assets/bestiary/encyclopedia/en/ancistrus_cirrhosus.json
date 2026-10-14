@@ -1,0 +1,42 @@
+{
+  "id": "ancistrus_cirrhosus",
+  "name": "Bristlenose catfish",
+  "scientific": "Ancistrus cirrhosus",
+  "group": "fish",
+  "sections": {
+    "overview": "Ancistrus cirrhosus is a small armored catfish in the family Loricariidae, recorded from the Paraná basin of South America. It is a freshwater bottom-dweller that feeds mainly on algae.",
+    "identification": "Its broad, flattened body is covered with rows of bony plates and is usually dark olive, brown, or grey, sometimes with pale spots. Mature males grow branched fleshy tentacles on the snout; females lack them or have only small ones near the snout margin. FishBase records a maximum of 9.1 cm standard length for male or unsexed fish; the consulted sources give no reliable adult mass, body height, or width. A recent English-language ornamental-fish synthesis lists 10–15 cm without stating whether it means standard or total length, so the figures are not directly comparable.",
+    "habitat": "It inhabits freshwater streams in the Paraná drainage, from turbid, slow water over clay to clearer, flowing reaches over gravel or rocky bottoms. It shelters among submerged wood and other cavities.",
+    "diet": "FishBase describes it as an algae-eater; regional accounts also report algae and plant matter. It scrapes food from submerged surfaces with its ventral sucker mouth, but should not be treated as a substitute for a varied diet in captivity.",
+    "behavior": "It spends much of its time close to the bottom or attached to firm surfaces. Males defend a nest cavity during breeding and remain with the eggs and newly hatched larvae.",
+    "reproduction": "Spawning takes place in a cavity nest. The female deposits adhesive eggs there, and the male guards the clutch and larvae; a study reports care continuing for up to ten days after hatching.",
+    "ecology": "Its algae-based feeding connects it to submerged surfaces where attached growth accumulates. Like other members of the armored-catfish family Loricariidae, it has a plated body and ventral sucker mouth.",
+    "conservation": "Brazil’s 2021 national assessment lists the species as Data Deficient, citing uncertain records and limited population information; this is a national assessment, not a global IUCN category. A historical account reports a severe local reduction after the Itaipu reservoir was built, while other Paraná tributaries still hold populations."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Ancistrus-cirrhosus",
+      "title": "Ancistrus cirrhosus — FishBase species summary"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7818365/",
+      "title": "Ultrastructure of the fertilized egg envelopes in Ancistrus cirrhosus — peer-reviewed study, PMC"
+    },
+    {
+      "url": "https://salve.icmbio.gov.br/salve-api/api/fichaEspecie?cache=true&download=true&language=pt-br&sqFichaVersao=23288",
+      "title": "Evaluation of Ancistrus cirrhosus — Brazilian ICMBio SALVE assessment (Portuguese)"
+    },
+    {
+      "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1177428/1/AmazonianOrnamentalFish.pdf",
+      "title": "Amazonian Ornamental Fish — Embrapa technical synthesis"
+    },
+    {
+      "url": "https://www.santafe.gob.ar/acuario/download/fichas-100-especies-formato-3-647890d040a8c.pdf",
+      "title": "100 freshwater species of Santa Fe — Ancistrus cirrhosus account (Spanish)"
+    },
+    {
+      "url": "https://www.aqua-pedia.com/fr/species/ancistrus-cirrhosus-bristlenose-pleco",
+      "title": "Ancistrus (bristlenose pleco) — Aqua-Pedia French profile"
+    }
+  ]
+}

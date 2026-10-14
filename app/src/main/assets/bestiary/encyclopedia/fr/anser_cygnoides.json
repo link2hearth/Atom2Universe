@@ -1,0 +1,54 @@
+{
+  "id": "anser_cygnoides",
+  "name": "Oie cygnoïde",
+  "scientific": "Anser cygnoides",
+  "group": "birds",
+  "sections": {
+    "overview": "L’Oie cygnoïde est une oie migratrice au long cou, propre à l’Asie orientale, qui niche surtout en Mongolie, dans le nord-est de la Chine et en Extrême-Orient russe. La plupart hivernent dans l’est et le sud de la Chine, notamment autour du moyen et du bas Yangtsé.",
+    "identification": "L’oiseau sauvage a la tête et le cou bicolores : la calotte et l’arrière du cou brun roux foncé contrastent avec la face, la gorge et l’avant du cou très pâles. Son long bec noir porte un fin liseré clair à la base et ses pattes sont orange; le corps est gris-brun, aux plumes bordées plus clair, avec le ventre pâle. L’adulte mesure environ 81–94 cm, pour une envergure de 160–185 cm et une masse d’environ 2,8–3,5 kg; la hauteur et la largeur du corps sont rarement rapportées. Le mâle est en moyenne plus grand, avec le cou plus long et le bec plus fort, mais le plumage ne permet pas de sexer sûrement l’oiseau.",
+    "habitat": "En période de reproduction, elle fréquente les zones humides des steppes et steppes boisées : vallées et deltas fluviaux, prairies humides et rives de lacs d’eau douce ou saumâtre. En hiver, elle gagne les marais de plaine, les lacs, les rizières, les estuaires et les vasières littorales.",
+    "diet": "Elle est herbivore et broute les plantes des zones humides et les herbes; elle consomme notamment des laîches, des roseaux, des graines et des baies selon la saison. Au lac Shengjin, en Chine, des oiseaux hivernants ont été observés mangeant des tubercules souterrains de Vallisneria, ainsi que des laîches et de l’alpiste roseau.",
+    "behavior": "L’espèce migre entre des quartiers de reproduction et d’hivernage éloignés, en suivant deux grands couloirs d’Asie orientale. Le suivi satellitaire montre que les trajets individuels comportent plusieurs haltes dans des zones humides plutôt qu’un vol continu.",
+    "reproduction": "Les couples arrivent sur les sites de nidification au printemps et installent leur nid d’herbes ou de roseaux sur une butte sèche près de l’eau, où ils défendent un petit territoire. La plupart des sources décrivent une ponte d’environ cinq ou six œufs, couvés près de quatre semaines; la famille reste groupée pendant la croissance des oisons.",
+    "ecology": "Sa proche parente la plus connue est l’Oie cendrée, Anser anser, décrite dans la fiche de l’Oie cendrée. L’Oie cygnoïde sauvage a un bec plus long et plus sombre, ainsi qu’un contraste plus net entre les zones pâles et brun roux de la tête; l’Oie cendrée a un bec plus court, rose ou orange, et la tête gris-brun plus mouchetée. Les oies domestiques chinoises descendent de l’Oie cygnoïde, tandis que la plupart des oies domestiques européennes descendent de l’Oie cendrée; les oiseaux férals et les hybrides peuvent brouiller ces critères.",
+    "conservation": "L’évaluation mondiale de 2023 de BirdLife International classe l’Oie cygnoïde « En danger » et estime sa population adulte à 36 000–43 500 individus, en déclin. Plus de 99 % empruntent la voie intérieure, ce qui concentre les risques de perte des zones humides, sécheresse, chasse, prélèvement des œufs et dérangement."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T22679869A228564177.en",
+      "title": "Oie cygnoïde — évaluation 2023 de la Liste rouge de l’UICN"
+    },
+    {
+      "url": "https://wiki.biodiversity.cern.ac.cn/index.php/%E9%B8%BF%E9%9B%81",
+      "title": "鸿雁 — plateforme chinoise de connaissances sur la biodiversité"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/oie.cygnoide.html",
+      "title": "Oie cygnoïde — Oiseaux.net"
+    },
+    {
+      "url": "https://www.birdfact.com/birds/swan-goose",
+      "title": "Oie cygnoïde — guide d’identification Birdfact"
+    },
+    {
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/156287",
+      "title": "Structure des couloirs, reproduction, migration et hivernage de l’Oie cygnoïde menacée — Wildfowl"
+    },
+    {
+      "url": "https://www.mdpi.com/2072-4292/14/8/1899",
+      "title": "Habitats potentiels et état de leur conservation pour l’Oie cygnoïde le long de la voie d’Asie orientale — Remote Sensing"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/swan-goose-anser-cygnoid",
+      "title": "Observations préliminaires du régime diurne de l’Oie cygnoïde au lac Shengjin — référence de BirdLife DataZone"
+    },
+    {
+      "url": "https://jasbsci.biomedcentral.com/articles/10.1186/s40104-022-00826-9",
+      "title": "Origines, chronologie et introgression des oies domestiques révélées par les génomes — Journal of Animal Science and Biotechnology"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/oie.cendree.html",
+      "title": "Oie cendrée Anser anser — fiche du Bestiaire et résumé de la Liste rouge BirdLife"
+    }
+  ]
+}

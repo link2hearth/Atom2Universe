@@ -1,0 +1,42 @@
+{
+  "id": "ancistrus_cirrhosus",
+  "name": "Poisson-chat poilu",
+  "scientific": "Ancistrus cirrhosus",
+  "group": "fish",
+  "sections": {
+    "overview": "Ancistrus cirrhosus est un petit poisson-chat cuirassé de la famille des Loricariidés, signalé dans le bassin du Paraná en Amérique du Sud. Il vit en eau douce près du fond et se nourrit surtout d’algues.",
+    "identification": "Son corps large et aplati est couvert de rangées de plaques osseuses; sa couleur est généralement olive sombre, brune ou grise, parfois ponctuée de taches claires. Les mâles adultes portent des tentacules charnus ramifiés sur le museau; les femelles en sont dépourvues ou n’en ont que de petits au bord du museau. FishBase donne une longueur standard maximale de 9,1 cm pour un mâle ou un individu non sexé; les sources consultées ne fournissent pas de données fiables sur la masse, la hauteur ou la largeur adultes. Une synthèse anglophone sur les poissons d’ornement indique 10–15 cm sans préciser s’il s’agit d’une longueur standard ou totale; ces chiffres ne sont donc pas directement comparables.",
+    "habitat": "Il fréquente les cours d’eau douce du bassin du Paraná, des secteurs turbides et lents sur fond argileux aux zones plus claires et courantes sur gravier ou rochers. Il se réfugie sous le bois immergé et dans d’autres cavités.",
+    "diet": "FishBase le décrit comme consommateur d’algues; les fiches régionales mentionnent aussi les algues et les végétaux. Il racle les surfaces immergées avec sa bouche ventrale en ventouse, mais ne doit pas être considéré en captivité comme un simple nettoyeur dispensé d’une alimentation variée.",
+    "behavior": "Il passe une grande partie de son temps près du fond ou fixé aux surfaces dures. En période de reproduction, le mâle défend une cavité et reste auprès des œufs puis des larves nouvellement écloses.",
+    "reproduction": "La ponte a lieu dans une cavité. La femelle y dépose des œufs adhésifs, puis le mâle garde la ponte et les larves; une étude signale que cette surveillance se poursuit jusqu’à dix jours après l’éclosion.",
+    "ecology": "Son alimentation à base d’algues le relie aux surfaces immergées où s’accumule la végétation fixée. Comme les autres membres de la famille des Loricariidés, il possède un corps cuirassé et une bouche ventrale en ventouse.",
+    "conservation": "L’évaluation nationale brésilienne de 2021 classe l’espèce en données insuffisantes, en raison de signalements incertains et d’informations limitées sur les populations; ce statut national n’est pas une catégorie UICN mondiale. Une source historique rapporte une forte baisse locale après la création du réservoir d’Itaipu, tandis que d’autres affluents du Paraná hébergent encore des populations."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Ancistrus-cirrhosus",
+      "title": "Ancistrus cirrhosus — fiche d’espèce FishBase"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7818365/",
+      "title": "Ultrastructure des enveloppes ovulaires fécondées d’Ancistrus cirrhosus — étude évaluée par les pairs, PMC"
+    },
+    {
+      "url": "https://salve.icmbio.gov.br/salve-api/api/fichaEspecie?cache=true&download=true&language=pt-br&sqFichaVersao=23288",
+      "title": "Évaluation d’Ancistrus cirrhosus — évaluation brésilienne ICMBio SALVE, en portugais"
+    },
+    {
+      "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1177428/1/AmazonianOrnamentalFish.pdf",
+      "title": "Poissons d’ornement amazoniens — synthèse technique d’Embrapa"
+    },
+    {
+      "url": "https://www.santafe.gob.ar/acuario/download/fichas-100-especies-formato-3-647890d040a8c.pdf",
+      "title": "100 espèces d’eau douce de Santa Fe — fiche Ancistrus cirrhosus, en espagnol"
+    },
+    {
+      "url": "https://www.aqua-pedia.com/fr/species/ancistrus-cirrhosus-bristlenose-pleco",
+      "title": "Ancistrus à nez touffu — fiche française Aqua-Pedia"
+    }
+  ]
+}

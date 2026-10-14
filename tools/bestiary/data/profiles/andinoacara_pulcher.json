@@ -1,0 +1,224 @@
+{
+  "id": "andinoacara_pulcher",
+  "scientific": "Andinoacara pulcher",
+  "group": "fish",
+  "name": {
+    "en": "Blue acara",
+    "fr": "Acara bleu"
+  },
+  "sections": {
+    "overview": {
+      "en": "The blue acara is a freshwater cichlid native to northern South America and Trinidad, with populations in the Orinoco, Maracaibo, and upper Magdalena drainages.",
+      "fr": "L’Acara bleu est un cichlidé d’eau douce originaire du nord de l’Amérique du Sud et de Trinité, présent dans les bassins de l’Orénoque, du Maracaibo et du haut Magdalena."
+    },
+    "identification": {
+      "en": "It has an oval, moderately compressed body, usually olive to grey-blue, with faint dark bars and fine iridescent blue-green lines on the cheek. Males tend to be larger and more colourful than females, with brighter blue tones during breeding. FishBase records a maximum total length of 16 cm for male or unsexed fish; no reliable adult mass, body width, or body height was found in the consulted species references.",
+      "fr": "Son corps ovale est modérément comprimé; il est généralement olive à gris-bleu, avec de faibles barres sombres et de fines lignes bleu-vert irisées sur la joue. Les mâles sont généralement plus grands et plus colorés que les femelles, et leur bleu s’intensifie pendant la reproduction. FishBase rapporte une longueur totale maximale de 16 cm pour un mâle ou un individu non sexé; les sources consultées ne donnent pas de mesure fiable de masse, de largeur ou de hauteur du corps."
+    },
+    "habitat": {
+      "en": "It occurs in clear or turbid rivers, from still pools to flowing reaches, and also uses shallow streams, swamps, and floodplains.",
+      "fr": "Il fréquente des rivières claires ou turbides, des bassins stagnants aux secteurs courants, ainsi que des ruisseaux peu profonds, des marais et des plaines inondables."
+    },
+    "diet": {
+      "en": "It is an opportunistic omnivore. A Colombian stomach-content study found plant remains, fish, detritus, and insects; fish were consumed most during low or rising water, while plant material dominated at high or falling water.",
+      "fr": "C’est un omnivore opportuniste. Une étude colombienne des contenus stomacaux a relevé des végétaux, poissons, détritus et insectes; les poissons dominaient en basses eaux et en montée des eaux, tandis que les végétaux dominaient en hautes eaux et en décrue."
+    },
+    "behavior": {
+      "en": "Breeding pairs become territorial around their nest and both parents guard the eggs and young.",
+      "fr": "Pendant la reproduction, le couple devient territorial autour du nid et les deux parents protègent les œufs et les jeunes."
+    },
+    "reproduction": {
+      "en": "The pair excavates a nest in sand or mud and guards its brood. Maturity is reported at about 9.5 cm total length, and multiple partial spawns may occur over a prolonged breeding season.",
+      "fr": "Le couple creuse un nid dans le sable ou la vase et protège sa progéniture. La maturité est rapportée vers 9,5 cm de longueur totale, et plusieurs pontes partielles peuvent survenir au cours d’une longue saison de reproduction."
+    },
+    "ecology": {
+      "en": "The accepted name is Andinoacara pulcher; Aequidens pulcher is an older synonym. The related tree entry Aequidens diadema belongs to the same cichlid tribe, Cichlasomatini, but is a distinct species in a different genus.",
+      "fr": "Le nom accepté est Andinoacara pulcher; Aequidens pulcher est un ancien synonyme. La fiche apparentée Aequidens diadema appartient à la même tribu de cichlidés, les Cichlasomatini, mais désigne une espèce distincte d’un autre genre."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Least Concern and suspects a stable population trend because the species persists in modified waters. The total population size is unknown, and habitat quality continues to decline in parts of its range.",
+      "fr": "L’évaluation UICN classe l’espèce en préoccupation mineure et estime sa tendance probablement stable, car elle persiste dans des eaux modifiées. L’effectif total demeure inconnu et la qualité des habitats se dégrade dans une partie de son aire."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Andinoacara pulcher — IUCN Red List assessment",
+        "fr": "Andinoacara pulcher — évaluation de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T64791019A214850080.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Range, freshwater habitat, global status, and population trend."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "conservation.en.1",
+        "conservation.en.2",
+        "conservation.fr.1",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 8,
+        "total": 157,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Andinoacara pulcher — FishBase species summary",
+        "fr": "Andinoacara pulcher — fiche d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/4727",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Maximum total length 16 cm; male or unsexed; males larger and more colourful."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 13,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Acara bleu — Fishipedia species profile (French)",
+        "fr": "Acara bleu — fiche d’espèce Fishipedia en français"
+      },
+      "url": "https://www.fishipedia.fr/fr/poissons/andinoacara-pulcher",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "French account describes body shape, bars, cheek lines, and natural colour."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 11,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Feeding habits of Cocobolo Andinoacara pulcher in Ciénaga Grande de Lorica — Revista MVZ Córdoba",
+        "fr": "Habitudes alimentaires du cocobolo Andinoacara pulcher dans la Ciénaga Grande de Lorica — Revista MVZ Córdoba"
+      },
+      "url": "https://www.redalyc.org/pdf/693/69343172010.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Bilingual 2016 stomach-content study documents seasonal diet shifts in Colombia."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.en.2",
+        "diet.fr.1",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 10,
+        "total": 84,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Acara azul — Aqua-Pedia species profile (Spanish)",
+        "fr": "Acara bleu — fiche Aqua-Pedia en espagnol"
+      },
+      "url": "https://www.aqua-pedia.com/es/species/andinoacara-pulcher-blue-acara",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish account summarizes slow-water habitat, breeding territoriality, and paired parental care."
+      ],
+      "prose_claims": [
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 11,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "NCBI Taxonomy — Andinoacara pulcher and Aequidens diadema",
+        "fr": "Taxonomie NCBI — Andinoacara pulcher et Aequidens diadema"
+      },
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=172522",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomy confirms Cichlasomatini lineage and older Aequidens pulcher name."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 68,
+        "notes_words": 9,
+        "total": 77,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the oval blue-grey or olive body, fine blue-green cheek lines, faint dark bars, and full fins. Do not depict the larger green terror Andinoacara rivulatus as this species.",
+  "uncertainties": [
+    "The IUCN distribution concept includes Orinoco, Maracaibo, and upper Magdalena populations, but it also notes possible cryptic diversity among subpopulations.",
+    "The 16 cm figure is a recorded maximum total length, not a separate male/female range; no reliable body mass, height, or width measurement was found.",
+    "Fine-scale habitat use and social behavior outside breeding are incompletely documented."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked the dated IUCN assessment and FishBase with French and Spanish species accounts, a bilingual Spanish-English stomach-content study, and NCBI taxonomy; preserved the reported size limits and linked the distinct Aequidens diadema profile."
+}

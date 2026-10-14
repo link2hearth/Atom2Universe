@@ -1,0 +1,50 @@
+{
+  "id": "anoura_geoffroyi",
+  "name": "Geoffroy’s tailless bat",
+  "scientific": "Anoura geoffroyi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Anoura geoffroyi is a medium-sized leaf-nosed bat widespread from Mexico through Central America and northern South America to the Amazon and southeastern Brazil. Its elongated muzzle and tongue suit it to flowers, but it also catches insects and eats fruit.",
+    "identification": "Adults have dark to grey-brown fur, a long muzzle, short rounded ears that meet across the forehead, and no tail. The small triangular membrane between the hind legs is densely furred. In one combined-sex sample of 46 bats, mean total length was 69.2 mm, forearm 43.3 mm, and mass 12.8 g; body height and width were not reported. Male and female measurements were similar in central Brazil, while one Trinidad sample found longer female forearms, so dimorphism is not consistent across localities.",
+    "habitat": "It uses caves and tunnels, often near streams, as well as evergreen, cloud, pine, and oak forests, orchards, and cultivated areas. The species account records roosts from about 400 to 2,500 m elevation; bats may roost alone or in colonies, usually numbering 20–75 and occasionally reaching 300.",
+    "diet": "This bat eats insects, nectar, pollen, and fruit, with proportions varying by region. In one northern sample of 30 stomachs, moths dominated by volume; central Brazilian droppings contained mainly fruit pulp and arthropods.",
+    "behavior": "Groups usually leave the roost about an hour after sunset. The bat can hover in flight.",
+    "reproduction": "Females usually give birth to one young, but birth timing changes across the range. A Trinidad study recorded births in late November or early December. In central Brazil, births occurred near the start of the dry season, and young began flying at about half adult mass and 90% of adult forearm length.",
+    "ecology": "Anoura caudifer is a close look-alike and may share roosts with this species. A. geoffroyi lacks a tail and has a narrow, densely furred hind-leg membrane; A. caudifer usually has a tiny tail and a wider, sparsely furred membrane, as well as a shorter forearm in published comparisons.",
+    "conservation": "A 2016 IUCN assessment classified Anoura geoffroyi as Least Concern, citing its broad range and abundance. That assessment is dated, and does not mean that every local population or roost is secure."
+  },
+  "sources": [
+    {
+      "url": "https://academic.oup.com/mspecies/article/doi/10.1644/818.1/2600862",
+      "title": "Anoura geoffroyi (Chiroptera: Phyllostomidae) — Mammalian Species"
+    },
+    {
+      "url": "https://www.minambiente.gov.co/wp-content/uploads/2021/10/Gu%C3%ADa-especies-migratorias-de-la-biodiversidad-en-Colombia-Volumen-3-insectos.pdf",
+      "title": "Guía de las especies migratorias de la biodiversidad en Colombia — Ministry of Environment of Colombia"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T88109511A88109515.en",
+      "title": "Anoura geoffroyi — IUCN Red List assessment (2016)"
+    },
+    {
+      "url": "https://www.scielo.org.mx/scielo.php?pid=S0065-17372009000100014&script=sci_arttext",
+      "title": "Anoura geoffroyi diet in a tropical dry forest — SciELO México"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Anoura_geoffroyi/",
+      "title": "Anoura geoffroyi — Animal Diversity Web"
+    },
+    {
+      "url": "https://doi.org/10.1530/jrf.0.0960765",
+      "title": "Seasonal reproduction of a tropical bat, Anoura geoffroyi — Journal of Reproduction and Fertility"
+    },
+    {
+      "url": "https://doi.org/10.1515/mamm.1994.58.3.415",
+      "title": "Reproductive seasonality and development of Anoura geoffroyi in central Brazil — Mammalia"
+    },
+    {
+      "url": "https://doi.org/10.1644/844.1",
+      "title": "Anoura caudifer (Chiroptera: Phyllostomidae) — Mammalian Species"
+    }
+  ]
+}

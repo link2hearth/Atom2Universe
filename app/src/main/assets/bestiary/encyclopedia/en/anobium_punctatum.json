@@ -1,0 +1,38 @@
+{
+  "id": "anobium_punctatum",
+  "name": "Common furniture beetle",
+  "scientific": "Anobium punctatum",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The common furniture beetle is a small wood-boring beetle native to Europe and now established in several other regions. Its larvae develop inside seasoned timber, so adults may appear in buildings long after infested wood was installed.",
+    "identification": "The adult is reddish to dark brown, cylindrical, and 2.5–5 mm long; its head is largely hidden beneath a hood-like pronotum. The wing cases bear rows of fine punctures, and the antennae end in a distinct club. The consulted identification sources give no sex-specific body size, height, width, or mass.",
+    "habitat": "Larvae live within dry, seasoned wood from both deciduous and coniferous trees, including structural timber, floorboards, furniture, and joinery. The species is common in buildings and stores; ivy stems can also provide suitable woody material.",
+    "diet": "The feeding stage is the larva, which excavates galleries through wood and leaves fine frass behind. Adults do not feed, relying on reserves accumulated during larval development before reproduction.",
+    "behavior": "Larvae remain concealed in timber for years, then tunnel toward the surface and pupate in a chamber just beneath it. Adults emerge mainly in early summer through small, round exit holes, are short-lived, and are often noticed around infested wood.",
+    "reproduction": "After mating, females place eggs in cracks, pores, or old galleries rather than on smooth exposed surfaces. Larval development commonly takes three to five years.",
+    "ecology": "Its round emergence holes are usually about 1–2 mm across, with galleries and powdery frass inside the wood. It can be confused with Lyctus beetles, but Lyctus has a more exposed head, whereas Anobium’s head is hidden from above by the pronotum.",
+    "conservation": "Its larval galleries can damage furniture and structural timber when they extend through worked wood over several years."
+  },
+  "sources": [
+    {
+      "url": "https://www.nhm.ac.uk/take-part/identify-nature/common-insect-pest-species-in-homes/furniture-beetle-anobium-punctatum-identification-guide.html",
+      "title": "Furniture beetle identification guide — Natural History Museum"
+    },
+    {
+      "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/dgaln_guide_termites_protection_batiments_neufs_2016_0.pdf",
+      "title": "Protection of new buildings against termites and other wood-boring insects — French Ministry of Ecological Transition"
+    },
+    {
+      "url": "https://www.diba.cat/es/web/salutpublica/-/corc-comu-dels-mobles",
+      "title": "Common furniture beetle — Catalan Public Health Agency, Barcelona Provincial Council"
+    },
+    {
+      "url": "https://www.sag.gob.cl/sites/default/files/MANUAL_INSECTOS_MADERA.pdf",
+      "title": "Manual for wood insects — Chilean Agricultural and Livestock Service (SAG)"
+    },
+    {
+      "url": "https://c.pool.nzffa.org.nz/farm-forestry-model/the-essentials/forest-health-pests-and-diseases/Pests/Anobium-punctatum/household-borer-anobium-punctatum/",
+      "title": "Common furniture beetle (Anobium punctatum) — New Zealand Farm Forestry Association"
+    }
+  ]
+}

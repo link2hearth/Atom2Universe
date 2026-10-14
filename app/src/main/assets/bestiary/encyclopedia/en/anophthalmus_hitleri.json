@@ -1,0 +1,42 @@
+{
+  "id": "anophthalmus_hitleri",
+  "name": "Slovenian blind cave beetle",
+  "scientific": "Anophthalmus hitleri",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Anophthalmus hitleri is a flightless ground beetle known from caves in Slovenia’s Savinja region. Its name, published in 1937, honours Adolf Hitler and has since drawn attention from collectors of Nazi memorabilia.",
+    "identification": "This eyeless, reddish-brown beetle is 5–5.5 mm long, with long legs; width, height and mass are unreported. Male genitalia aid identification, but no reliable external sex difference or size dimorphism was found.",
+    "habitat": "Records are concentrated in a few dark, humid caves near Celje, in Slovenia’s Savinja region. A 2012 cave survey recorded eight individuals in one cave, 11–66 m from its entrance and 8–25 m below the surface.",
+    "diet": "This predatory carabid feeds on tiny cave insects, though detailed prey records remain scarce for this species.",
+    "behavior": "Like other cave-specialized Anophthalmus, it has lost functional eyesight and flight; the genus runs rapidly over cave floors. In a small cold-tolerance experiment, lower lethal temperature averaged −3 °C in summer and −4.5 °C in winter, with two individuals sampled per season.",
+    "reproduction": "The 1937 description focuses on adults and male genitalia; species-specific egg or development data were not found.",
+    "ecology": "It resembles the cave congener Anophthalmus schaumi knirschi, which can be difficult for non-specialists to distinguish; male genital structures help experts tell them apart.",
+    "conservation": "Slovenia’s 2002 beetle Red List places it in category V, Vulnerable; that dated assessment does not by itself describe current population trends. Its name has drawn attention from Nazi-memorabilia collectors, but the scale and effect of illegal collecting in caves remain uncertain."
+  },
+  "sources": [
+    {
+      "url": "https://www.sueddeutsche.de/muenchen/serie-ein-brauner-kaefer-namens-hitler-1.2803036",
+      "title": "A brown beetle named Hitler — Süddeutsche Zeitung"
+    },
+    {
+      "url": "https://www.matjazperc.com/publications/InternationalJournalSpeleology_41_181.pdf",
+      "title": "Duality of terrestrial subterranean fauna — Digital Library of the University of Maribor"
+    },
+    {
+      "url": "https://razstava.podzemlje.si/razstava?id=2&morecontent=True",
+      "title": "Hidden life underground — Slovenian subterranean fauna exhibition"
+    },
+    {
+      "url": "https://digitalcommons.usf.edu/ijs/vol43/iss3/3/",
+      "title": "Cold tolerance in terrestrial invertebrates inhabiting subterranean habitats — International Journal of Speleology"
+    },
+    {
+      "url": "https://www.uradni-list.si/glasilo-uradni-list-rs/vsebina/2002-01-4055?sop=2002-01-4055",
+      "title": "Red List of beetles — Official Gazette of the Republic of Slovenia, 2002"
+    },
+    {
+      "url": "https://www.nature.com/articles/d41586-024-04200-9",
+      "title": "Should offensive species names be changed? — Nature"
+    }
+  ]
+}

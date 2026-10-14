@@ -1,0 +1,50 @@
+{
+  "id": "androdon_aequatorialis",
+  "name": "Tooth-billed hummingbird",
+  "scientific": "Androdon aequatorialis",
+  "group": "birds",
+  "sections": {
+    "overview": "The tooth-billed hummingbird inhabits eastern Panama, western Colombia, and north-western Ecuador. It is considered near-endemic to Colombia’s Pacific biogeographic region.",
+    "identification": "The upperparts are glossy green with a coppery crown; the underparts are pale and dark-streaked, and the grey rounded tail has dark and white markings. The long, almost straight bill has tooth-like serrations; males have a hooked tip and stronger serrations, while the female’s tip is straighter and lacks the hook. In a Colombian field sample, males averaged 14.2 cm and 9.03 g (n=4); females averaged 13.2 cm and 6.72 g (length n=4; mass n=6). A French account gives a broader 13–15 cm body-length range and about 7.3 g; neither height nor body width is reported.",
+    "habitat": "It inhabits humid primary forests and nearby advanced secondary growth, from sea level to about 1,560 m. In western Colombia it was observed in forested foothill valleys at 200–600 m, usually foraging just 1–3 m above ground.",
+    "diet": "It takes nectar from flowers, including Ericaceae and Gesneriaceae, and supplements it with spiders and other small arthropods. A field study found spiders in about 85% of the stomach contents of three examined birds; males searched cavities and rolled dead leaves, while females gleaned prey beneath large leaves.",
+    "behavior": "It is an inconspicuous, fast-flying bird that works the lower and middle forest layers for food.",
+    "reproduction": "Its nesting biology remains poorly documented, and the nest itself is not reliably known. Gonadal observations suggest breeding in south-western Colombia around January–March, but clutch size, incubation, and care of young remain unreported.",
+    "ecology": "The serrated bill helps it extract spiders and insects from narrow cavities, rolled leaves, and other concealed sites. The genus is monotypic, so Androdon aequatorialis has no second living congener for direct comparison.",
+    "conservation": "BirdLife lists the species as Least Concern because its range is still relatively large, although it is scarce and localized in places. It depends on humid Chocó forest, where deforestation has reduced suitable habitat; a Colombian habitat model estimated substantial loss but did not measure the global population trend."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1002/mmnz.4830710306",
+      "title": "Taxonomy and Biology of the Tooth-billed Hummingbird — Karl-L. Schuchmann, 1995"
+    },
+    {
+      "url": "https://birdscolombia.com/2020/01/14/colibri-piquidentado-tooth-billed-hummingbird-androdon-aequatorialis/",
+      "title": "Colibrí Piquidentado / Tooth-billed Hummingbird — Birds Colombia"
+    },
+    {
+      "url": "https://www.oiseaux.net/birds/tooth-billed.hummingbird.html",
+      "title": "Tooth-billed Hummingbird — Oiseaux.net English species account"
+    },
+    {
+      "url": "https://www.oiseaux.net/oiseaux/colibri.d.equateur.html",
+      "title": "Colibri d’Équateur — Oiseaux.net French species account"
+    },
+    {
+      "url": "https://weirdwildly.com/animals/aves/apodiformes/trochilidae/androdon-aequatorialis/",
+      "title": "Taxonomy and Biology of the Tooth-billed Hummingbird — species-specific body-size summary"
+    },
+    {
+      "url": "https://doi.org/10.18359/rfcb.6307",
+      "title": "Aportes al conocimiento de los colibríes del Chocó — Revista Facultad de Ciencias Básicas, 2023"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/tooth-billed-hummingbird-androdon-aequatorialis",
+      "title": "BirdLife International species factsheet — Tooth-billed Hummingbird"
+    },
+    {
+      "url": "https://www.atlas-of-the-birds-of-colombia.org/atlas-of-the-birds-of-colombia/maps/apodiformes/androdon-aequatorialis",
+      "title": "Atlas of the Birds of Colombia — Androdon aequatorialis habitat model"
+    }
+  ]
+}

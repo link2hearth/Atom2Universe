@@ -1,0 +1,38 @@
+{
+  "id": "anopheles_maculipennis",
+  "name": "Anophèle à ailes tachetées",
+  "scientific": "Anopheles maculipennis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Anopheles maculipennis est un moustique européen et l’espèce nominale du complexe qui porte son nom. Ses proches parentes diffèrent par leurs hôtes et leur rôle dans le paludisme; cette espèce a une importance vectorielle plutôt secondaire.",
+    "identification": "L’adulte gris-brun porte des écailles sombres groupées en taches sur les ailes et une zone pâle au bord terminal. Une description taxonomique donne une aile femelle d’environ 5,1 mm, et non une longueur corporelle. Les antennes du mâle sont plus plumeuses, mais l’adulte ne se distingue pas sûrement de ses proches parentes à l’œil. Ses œufs ont des barres transversales plus sombres que ceux d’Anopheles messeae; leur examen ou l’ADN est plus fiable que l’apparence adulte. Aucune longueur du corps, hauteur, largeur, masse ou mesure comparable entre les sexes n’a été trouvée.",
+    "habitat": "Les larves vivent en eau douce, souvent avec algues ou végétation, y compris dans les ruisseaux et canaux où elles tolèrent plus de courant que certaines parentes.",
+    "diet": "Les femelles préfèrent nettement le sang animal, surtout près du bétail. Elles peuvent piquer l’humain si les moustiques abondent ou si les hôtes animaux manquent; certaines espèces jumelles sont plus anthropophiles.",
+    "behavior": "Les adultes se reposent souvent dans les étables; leur dormance hivernale varie, des repas et pontes étant observés par temps doux mais absents par temps froid.",
+    "reproduction": "Les femelles pondent des œufs flottants, séparés, à la surface de l’eau; leurs bandes aident à distinguer les espèces jumelles. Larve et nymphe aquatiques précèdent l’adulte ailé.",
+    "ecology": "Ses proches parentes comprennent Anopheles atroparvus, Anopheles labranchiae et Anopheles messeae. Les anciens textes appliquaient souvent le nom Anopheles maculipennis au groupe entier, ce qui complique les comparaisons de rôle vectoriel et d’hôtes.",
+    "conservation": "Cette espèce peut contribuer à transmettre le paludisme, mais son alimentation animale réduit généralement son rôle par rapport à certaines parentes."
+  },
+  "sources": [
+    {
+      "url": "https://resjournals.onlinelibrary.wiley.com/doi/10.1046/j.1365-3113.2003.00198.x",
+      "title": "Caractérisation morphologique et moléculaire d’Anopheles maculipennis — Systematic Entomology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8922938/",
+      "title": "Présence et biologie des vecteurs potentiels du paludisme en Europe — revue systématique"
+    },
+    {
+      "url": "https://bioinfo-web.mpl.ird.fr/identiciels/culeurope/html/taxa/An_maculipennis_s_s_L_.html",
+      "title": "Anopheles maculipennis s.s. — Les moustiques d’Europe, identiciel de l’IRD"
+    },
+    {
+      "url": "https://scielo.isciii.es/scielo.php?pid=s1135-57272008000500003&script=sci_arttext",
+      "title": "Paludisme en Espagne : aspects entomologiques et perspectives — Revista Española de Salud Pública"
+    },
+    {
+      "url": "https://www.cdc.gov/mosquitoes/es/about-mosquito-bites/ciclo-de-vida-de-los-mosquitos-anopheles.html",
+      "title": "Cycle de vie des moustiques Anopheles — Centers for Disease Control and Prevention (édition espagnole)"
+    }
+  ]
+}

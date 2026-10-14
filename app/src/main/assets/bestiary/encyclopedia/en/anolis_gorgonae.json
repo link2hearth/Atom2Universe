@@ -1,0 +1,46 @@
+{
+  "id": "anolis_gorgonae",
+  "name": "Blue anole",
+  "scientific": "Anolis gorgonae",
+  "group": "reptiles",
+  "sections": {
+    "overview": "The blue anole is a tree-dwelling lizard endemic to Gorgona Island in Colombia’s Pacific. Its range is restricted to this island, where it shares the forest with four other native anole species.",
+    "identification": "A reported maximum snout-to-vent length is about 67 mm. A Spanish species account gives roughly 13–15 cm total length, including the tail. Adults are vivid blue and relatively slender, and males have a white throat fan. A field study measured only one female, so sex-specific size differences are not established.",
+    "habitat": "It inhabits humid tropical forest on Gorgona, where researchers observed it high on branches and among dense foliage. The island rises only modestly above sea level, and the species is strongly associated with wooded habitat rather than open ground.",
+    "diet": "Its exact prey and dietary proportions have not been well studied, although a Spanish natural-history account describes it as mainly insectivorous.",
+    "behavior": "It is an arboreal anole that uses elevated perches and can be difficult to detect in the dense canopy.",
+    "reproduction": "The species is oviparous, but reliable descriptions of clutch size, nesting sites, incubation, and breeding season are scarce.",
+    "ecology": "On Gorgona it occurs alongside Dactyloa princeps, D. chocorum, Norops medemi, and N. parvauritus. Its closest mainland relative is Dactyloa chloris, similar in form but not solid blue.",
+    "conservation": "The IUCN assessment lists the blue anole as Near Threatened. Its island-only range and elusive, canopy-dwelling habits make population estimates difficult; older accounts also identify predation by introduced western basilisks as a concern."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.3390/d11090141",
+      "title": "Biogeography, Systematics, and Ecomorphology of Pacific Island Anoles — Phillips et al., 2019"
+    },
+    {
+      "url": "https://www.parquesnacionales.gov.co/nuestros-parques/pnn-gorgona/",
+      "title": "Gorgona National Natural Park — National Parks of Colombia"
+    },
+    {
+      "url": "https://biology.ed.ac.uk/sites/default/files/2025-10/Slaying%20dragons%3A%20limited%20evidence%20for%20unusual%20body%20size%20evolution%20on%20islands..pdf",
+      "title": "Anolis body-size dataset — Meiri, Raia & Phillimore, 2010"
+    },
+    {
+      "url": "https://www.wildlifephotographer.app/es/especie-salvaje/anolis-azul/?id=1006775",
+      "title": "Blue anole: observation and natural-history account — WildlifePhotographer"
+    },
+    {
+      "url": "https://reptile-database.reptarium.cz/Anolis/gorgonae",
+      "title": "Anolis gorgonae — The Reptile Database"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T44577361A44577366.en",
+      "title": "Anolis gorgonae — IUCN Red List assessment, 2021"
+    },
+    {
+      "url": "https://news.mongabay.com/2007/03/worlds-only-pure-blue-lizard-at-risk-of-extinction/",
+      "title": "World’s only pure blue lizard at risk of extinction — Mongabay, 2007"
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "id": "anoura_geoffroyi",
+  "scientific": "Anoura geoffroyi",
+  "group": "mammals",
+  "name": {
+    "en": "Geoffroy’s tailless bat",
+    "fr": "Anoura de Geoffroy"
+  },
+  "sections": {
+    "overview": {
+      "en": "Anoura geoffroyi is a medium-sized leaf-nosed bat widespread from Mexico through Central America and northern South America to the Amazon and southeastern Brazil. Its elongated muzzle and tongue suit it to flowers, but it also catches insects and eats fruit.",
+      "fr": "Anoura geoffroyi est une chauve-souris à nez feuillu de taille moyenne, répandue du Mexique à l’Amazonie et au sud-est du Brésil, en passant par l’Amérique centrale et le nord de l’Amérique du Sud. Son museau et sa langue allongés facilitent la visite des fleurs, mais elle capture aussi des insectes et mange des fruits."
+    },
+    "identification": {
+      "en": "Adults have dark to grey-brown fur, a long muzzle, short rounded ears that meet across the forehead, and no tail. The small triangular membrane between the hind legs is densely furred. In one combined-sex sample of 46 bats, mean total length was 69.2 mm, forearm 43.3 mm, and mass 12.8 g; body height and width were not reported. Male and female measurements were similar in central Brazil, while one Trinidad sample found longer female forearms, so dimorphism is not consistent across localities.",
+      "fr": "L’adulte a un pelage brun foncé à gris-brun, un long museau, de petites oreilles arrondies qui se rejoignent sur le front et pas de queue. La petite membrane entre les pattes arrière est densément velue. Dans un échantillon de 46 chauves-souris des deux sexes, la longueur totale moyenne était de 69,2 mm, l’avant-bras de 43,3 mm et la masse de 12,8 g; hauteur et largeur du corps ne sont pas rapportées. Les mensurations mâles et femelles étaient proches au centre du Brésil, mais une étude à Trinidad trouvait un avant-bras femelle plus long; le dimorphisme n’est donc pas constant selon les régions."
+    },
+    "habitat": {
+      "en": "It uses caves and tunnels, often near streams, as well as evergreen, cloud, pine, and oak forests, orchards, and cultivated areas. The species account records roosts from about 400 to 2,500 m elevation; bats may roost alone or in colonies, usually numbering 20–75 and occasionally reaching 300.",
+      "fr": "Elle fréquente les grottes et les tunnels, souvent près des cours d’eau, ainsi que les forêts sempervirentes, nuageuses, de pins ou de chênes, les vergers et les terres cultivées. La synthèse scientifique mentionne des observations d’environ 400 à 2 500 m d’altitude; les individus se reposent seuls ou en colonies de 20 à 75, parfois jusqu’à 300."
+    },
+    "diet": {
+      "en": "This bat eats insects, nectar, pollen, and fruit, with proportions varying by region. In one northern sample of 30 stomachs, moths dominated by volume; central Brazilian droppings contained mainly fruit pulp and arthropods.",
+      "fr": "Cette chauve-souris consomme des insectes, du nectar, du pollen et des fruits, en proportions variables selon les régions. Dans un échantillon de 30 estomacs du nord de son aire, les papillons de nuit dominaient en volume; au centre du Brésil, les excréments contenaient surtout de la pulpe de fruits et des arthropodes."
+    },
+    "behavior": {
+      "en": "Groups usually leave the roost about an hour after sunset. The bat can hover in flight.",
+      "fr": "Les groupes quittent généralement le gîte environ une heure après le coucher du soleil. Elle peut faire du surplace en vol."
+    },
+    "reproduction": {
+      "en": "Females usually give birth to one young, but birth timing changes across the range. A Trinidad study recorded births in late November or early December. In central Brazil, births occurred near the start of the dry season, and young began flying at about half adult mass and 90% of adult forearm length.",
+      "fr": "Les femelles donnent généralement naissance à un petit, mais le calendrier varie selon les régions. Une étude à Trinidad a observé les naissances à la fin novembre ou au début décembre. Au centre du Brésil, les naissances avaient lieu au début de la saison sèche et les jeunes commençaient à voler vers la moitié de la masse adulte et 90 % de la longueur adulte de l’avant-bras."
+    },
+    "ecology": {
+      "en": "Anoura caudifer is a close look-alike and may share roosts with this species. A. geoffroyi lacks a tail and has a narrow, densely furred hind-leg membrane; A. caudifer usually has a tiny tail and a wider, sparsely furred membrane, as well as a shorter forearm in published comparisons.",
+      "fr": "Anoura caudifer est une espèce proche qui peut partager ses gîtes. A. geoffroyi n’a pas de queue et possède une membrane étroite, densément velue, entre les pattes; A. caudifer a généralement une très petite queue et une membrane plus large, peu velue, ainsi qu’un avant-bras plus court dans les comparaisons publiées."
+    },
+    "conservation": {
+      "en": "A 2016 IUCN assessment classified Anoura geoffroyi as Least Concern, citing its broad range and abundance. That assessment is dated, and does not mean that every local population or roost is secure.",
+      "fr": "Une évaluation de l’UICN publiée en 2016 classait Anoura geoffroyi en préoccupation mineure, en raison de sa vaste aire et de son abondance. Cette évaluation est ancienne et ne signifie pas que chaque population locale ou chaque gîte soit à l’abri."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Anoura geoffroyi (Chiroptera: Phyllostomidae) — Mammalian Species",
+        "fr": "Anoura geoffroyi (Chiroptera: Phyllostomidae) — Mammalian Species"
+      },
+      "url": "https://academic.oup.com/mspecies/article/doi/10.1644/818.1/2600862",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "diet"
+      ],
+      "facts": [
+        "Peer-reviewed species account documents measurements, distribution, roosts, and regionally variable reproduction."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 11,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Guía de las especies migratorias de la biodiversidad en Colombia — Ministry of Environment of Colombia",
+        "fr": "Guide des espèces migratrices de la biodiversité en Colombie — ministère colombien de l’Environnement"
+      },
+      "url": "https://www.minambiente.gov.co/wp-content/uploads/2021/10/Gu%C3%ADa-especies-migratorias-de-la-biodiversidad-en-Colombia-Volumen-3-insectos.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification"
+      ],
+      "facts": [
+        "Spanish-language government field guide gives the bat’s range, common names, and external identification characters."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 14,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anoura geoffroyi — IUCN Red List assessment (2016)",
+        "fr": "Anoura geoffroyi — évaluation de la Liste rouge de l’UICN (2016)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T88109511A88109515.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment records the species as Least Concern and notes its association with streams in tropical evergreen forest."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 177,
+        "notes_words": 18,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anoura geoffroyi diet in a tropical dry forest — SciELO México",
+        "fr": "Régime alimentaire d’Anoura geoffroyi en forêt tropicale sèche — SciELO México"
+      },
+      "url": "https://www.scielo.org.mx/scielo.php?pid=S0065-17372009000100014&script=sci_arttext",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "Spanish-language study examines the varied feeding and pollination ecology of A. geoffroyi."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 31,
+        "notes_words": 12,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anoura geoffroyi — Animal Diversity Web",
+        "fr": "Anoura geoffroyi — Animal Diversity Web"
+      },
+      "url": "https://animaldiversity.org/accounts/Anoura_geoffroyi/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "English-language species synthesis describes measurements, sex comparisons, and nightly flight behaviour."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "identification.en.4",
+        "identification.fr.4",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 184,
+        "notes_words": 11,
+        "total": 195,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Seasonal reproduction of a tropical bat, Anoura geoffroyi — Journal of Reproduction and Fertility",
+        "fr": "Reproduction saisonnière d’une chauve-souris tropicale, Anoura geoffroyi — Journal of Reproduction and Fertility"
+      },
+      "url": "https://doi.org/10.1530/jrf.0.0960765",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Peer-reviewed Trinidad study found seasonal breeding and births in late November or early December."
+      ],
+      "prose_claims": [
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 14,
+        "total": 41,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Reproductive seasonality and development of Anoura geoffroyi in central Brazil — Mammalia",
+        "fr": "Saisonnalité reproductive et développement d’Anoura geoffroyi au centre du Brésil — Mammalia"
+      },
+      "url": "https://doi.org/10.1515/mamm.1994.58.3.415",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Brazilian colony study documents dry-season births and the body development threshold for young bats to fly."
+      ],
+      "prose_claims": [
+        "reproduction.en.3",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 63,
+        "notes_words": 16,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anoura caudifer (Chiroptera: Phyllostomidae) — Mammalian Species",
+        "fr": "Anoura caudifer (Chiroptera: Phyllostomidae) — Mammalian Species"
+      },
+      "url": "https://doi.org/10.1644/844.1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Congener account describes the contrasting tail and hind-leg membrane and notes shared roosts with A. geoffroyi."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 99,
+        "notes_words": 16,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a medium-sized brown-grey bat with an elongated muzzle, short rounded ears, no visible tail, and a narrow furry membrane between the hind legs. A small inset can show the forearm and membrane characters used to separate it from Anoura caudifer.",
+  "uncertainties": [
+    "Published measurements combine sexes and populations; sex differences vary among reported samples. No general body height or width measurement was located.",
+    "Diet proportions and reproductive timing differ geographically; the cited samples represent specific regions rather than the entire species range.",
+    "The conservation category cited is the 2016 IUCN assessment, not a newly published reassessment."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked the peer-reviewed Mammalian Species account with a Colombian government field guide and the IUCN assessment. Kept population-specific measurements, diet, reproduction, and conservation dates explicit; compared external characters against the A. caudifer species account."
+}

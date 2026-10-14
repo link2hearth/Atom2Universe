@@ -1,0 +1,42 @@
+{
+  "id": "anophthalmus_hitleri",
+  "name": "Carabe aveugle des grottes slovènes",
+  "scientific": "Anophthalmus hitleri",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Anophthalmus hitleri est un carabe incapable de voler, connu dans des grottes de la région slovène de la Savinja. Son nom, publié en 1937, rend hommage à Adolf Hitler et attire depuis l’attention de collectionneurs de souvenirs nazis.",
+    "identification": "Ce carabe brun rougeâtre et aveugle mesure 5–5,5 mm; largeur, hauteur et masse ne sont pas rapportées. Les genitalia mâles aident à l’identifier, mais aucune différence externe ou de taille entre sexes n’est établie.",
+    "habitat": "Les observations se concentrent dans quelques grottes sombres et humides près de Celje, dans la région slovène de la Savinja. Un inventaire de 2012 a relevé huit individus dans une grotte, à 11–66 m de l’entrée et 8–25 m sous la surface.",
+    "diet": "Ce carabe prédateur consomme de petits insectes cavernicoles, mais les données précises sur ses proies restent rares.",
+    "behavior": "Comme d’autres Anophthalmus cavernicoles, il a perdu la vue fonctionnelle et le vol; le genre court rapidement au sol. Dans une petite étude de tolérance au froid, la température létale basse moyenne était de −3 °C en été et −4,5 °C en hiver, avec deux individus par saison.",
+    "reproduction": "La description de 1937 porte sur les adultes et les genitalia mâles; aucune donnée propre à l’espèce sur les œufs ou le développement n’a été trouvée.",
+    "ecology": "Il ressemble au congénère cavernicole Anophthalmus schaumi knirschi, parfois difficile à distinguer pour un non-spécialiste; les genitalia mâles aident les experts à les différencier.",
+    "conservation": "La liste rouge slovène des coléoptères de 2002 le classe V, vulnérable; cette évaluation ancienne ne décrit pas à elle seule l’évolution actuelle des populations. Son nom attire des collectionneurs de souvenirs nazis, mais l’ampleur et l’effet des prélèvements illégaux dans les grottes restent incertains."
+  },
+  "sources": [
+    {
+      "url": "https://www.sueddeutsche.de/muenchen/serie-ein-brauner-kaefer-namens-hitler-1.2803036",
+      "title": "Un coléoptère brun nommé Hitler — Süddeutsche Zeitung"
+    },
+    {
+      "url": "https://www.matjazperc.com/publications/InternationalJournalSpeleology_41_181.pdf",
+      "title": "Dualité de la faune terrestre souterraine — Bibliothèque numérique de l’Université de Maribor"
+    },
+    {
+      "url": "https://razstava.podzemlje.si/razstava?id=2&morecontent=True",
+      "title": "La vie cachée sous terre — exposition slovène sur la faune souterraine"
+    },
+    {
+      "url": "https://digitalcommons.usf.edu/ijs/vol43/iss3/3/",
+      "title": "Tolérance au froid des invertébrés terrestres des habitats souterrains — International Journal of Speleology"
+    },
+    {
+      "url": "https://www.uradni-list.si/glasilo-uradni-list-rs/vsebina/2002-01-4055?sop=2002-01-4055",
+      "title": "Liste rouge des coléoptères — Journal officiel de la République de Slovénie, 2002"
+    },
+    {
+      "url": "https://www.nature.com/articles/d41586-024-04200-9",
+      "title": "Faut-il changer les noms scientifiques offensants? — Nature"
+    }
+  ]
+}

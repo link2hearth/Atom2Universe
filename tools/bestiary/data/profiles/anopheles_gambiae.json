@@ -1,0 +1,270 @@
+{
+  "id": "anopheles_gambiae",
+  "scientific": "Anopheles gambiae",
+  "group": "invertebrates",
+  "name": {
+    "en": "African malaria mosquito",
+    "fr": "Anophèle africain"
+  },
+  "sections": {
+    "overview": {
+      "en": "Anopheles gambiae sensu stricto is a mosquito native to sub-Saharan Africa, including Madagascar. It is one of the region’s most efficient malaria vectors, although Plasmodium parasites cause the disease.",
+      "fr": "Anopheles gambiae sensu stricto est un moustique d’Afrique subsaharienne, présent aussi à Madagascar. C’est l’un des principaux vecteurs du paludisme dans la région, mais la maladie est causée par le parasite Plasmodium."
+    },
+    "identification": {
+      "en": "The adult is a small, slender mosquito, usually light brown to grey with pale and dark scales on the wings. Species accounts give adult wing lengths of about 2.8–4.4 mm; this is a wing measurement, not body length. Males have bushy, feathery antennae, whereas females’ antennae are less plume-like. A laboratory study found mean wing lengths of 2.84–2.91 mm in females and 2.73–2.92 mm in males across two years. These overlapping sample means do not establish a reliable sex difference in overall size; body height, width, and mass were not reported.",
+      "fr": "L’adulte est un petit moustique élancé, généralement brun clair à gris, avec des écailles claires et sombres sur les ailes. Les fiches donnent une longueur d’aile d’environ 2,8–4,4 mm; il s’agit de l’aile, pas de la longueur du corps. Les antennes du mâle sont très plumeuses, celles de la femelle moins fournies. Une étude en laboratoire a mesuré des moyennes d’aile de 2,84–2,91 mm chez les femelles et 2,73–2,92 mm chez les mâles selon l’année. Ces moyennes qui se chevauchent ne démontrent pas de différence fiable de taille générale entre sexes; la hauteur, la largeur et la masse ne sont pas rapportées."
+    },
+    "habitat": {
+      "en": "The immature stages develop in shallow standing water, especially sunlit pools, puddles, hoof prints, marshes, and water-filled structures; larvae lie parallel to the surface to breathe.",
+      "fr": "Les stades immatures se développent dans l’eau stagnante peu profonde, notamment les mares ensoleillées, flaques, empreintes de sabots, marais et ouvrages remplis d’eau; les larves restent parallèles à la surface pour respirer."
+    },
+    "diet": {
+      "en": "Both adult sexes take nectar and other plant sugars, but only females blood-feed on vertebrates to obtain protein for egg production. Anopheles gambiae sensu stricto strongly favours human hosts. Its larvae filter algae and organic particles from water.",
+      "fr": "Les deux sexes adultes prennent du nectar et d’autres sucres végétaux, mais seules les femelles prennent du sang de vertébrés pour obtenir les protéines nécessaires aux œufs. Anopheles gambiae sensu stricto privilégie fortement l’être humain. Ses larves filtrent algues et particules organiques dans l’eau."
+    },
+    "behavior": {
+      "en": "Adults are active at night, with high biting activity often recorded after midnight and before dawn. Females may enter houses to feed and rest, though outdoor feeding and resting also occur.",
+      "fr": "Les adultes sont actifs la nuit, avec une activité de piqûre souvent forte après minuit et avant l’aube. Les femelles peuvent entrer dans les maisons pour se nourrir et se reposer, mais elles piquent et se reposent aussi dehors."
+    },
+    "reproduction": {
+      "en": "Females lay eggs one by one directly on water; each egg has lateral floats and does not tolerate drying. A laying may contain 50–300 eggs, and eggs usually hatch within two or three days. Development from egg to adult can take about 10–11 days in warm conditions, but up to three weeks when cooler.",
+      "fr": "Les femelles déposent les œufs un à un directement sur l’eau; chacun porte des flotteurs latéraux et résiste mal au dessèchement. Une ponte peut compter 50–300 œufs, qui éclosent généralement en deux ou trois jours. Le développement de l’œuf à l’adulte prend environ 10–11 jours quand il fait chaud, mais jusqu’à trois semaines par temps plus frais."
+    },
+    "ecology": {
+      "en": "The name Anopheles gambiae is also used loosely for a complex containing several closely related sibling species. Anopheles coluzzii and Anopheles arabiensis look almost identical externally but can differ in host choice, resting behaviour, and vector importance.",
+      "fr": "Le nom Anopheles gambiae est parfois employé au sens large pour un complexe qui rassemble plusieurs espèces jumelles proches. Anopheles coluzzii et Anopheles arabiensis sont presque identiques extérieurement, mais diffèrent par les hôtes recherchés, le repos et leur rôle vectoriel."
+    },
+    "conservation": {
+      "en": "Its ecological importance is its role in transmitting human malaria, though Plasmodium parasites rather than the mosquito cause the disease. An infected female can pass the parasites during a later blood meal.",
+      "fr": "Son importance écologique tient à son rôle dans la transmission du paludisme humain, mais ce sont les parasites Plasmodium qui causent la maladie. Une femelle infectée peut transmettre les parasites lors d’un repas sanguin ultérieur."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "African Malaria Mosquito Anopheles gambiae — University of Florida IFAS Extension",
+        "fr": "Moustique africain du paludisme Anopheles gambiae — University of Florida IFAS Extension"
+      },
+      "url": "https://ask.ifas.ufl.edu/publication/IN1048",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Species morphology, range, feeding, and development."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.fr.1",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.en.2",
+        "behavior.en.1",
+        "reproduction.en.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 6,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anopheles gambiae s.l.: morphology, life cycle, and ecology — Target Malaria (French field sheet)",
+        "fr": "Anopheles gambiae s.l. : morphologie, cycle biologique et écologie — fiche de Target Malaria"
+      },
+      "url": "https://targetmalaria.org/wp-content/uploads/2021/05/Ecologie_FS_FR_Anopheles-gambiae-s.l.-morphologie_Aout20.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "French field sheet describes larval and adult ecology."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "diet.en.3",
+        "diet.fr.1",
+        "diet.fr.2",
+        "diet.fr.3",
+        "behavior.en.2",
+        "behavior.fr.1",
+        "behavior.fr.2",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "reproduction.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 8,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anopheles mosquito life cycle — US Centers for Disease Control and Prevention (Spanish edition)",
+        "fr": "Cycle de vie des moustiques Anopheles — Centers for Disease Control and Prevention (édition espagnole)"
+      },
+      "url": "https://www.cdc.gov/mosquitoes/es/about-mosquito-bites/ciclo-de-vida-de-los-mosquitos-anopheles.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish CDC page describes aquatic stages and breeding sites."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 9,
+        "total": 107,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Genetic and environmental factors associated with laboratory rearing affect body size in Anopheles gambiae s.s.",
+        "fr": "Effets des facteurs génétiques et environnementaux de l’élevage sur la taille d’Anopheles gambiae s.s."
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3877013/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Laboratory Mopti-form means: female wing length 2.91 mm in 2010 and 2.84 mm in 2011; male means 2.92 and 2.73 mm."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "identification.en.5",
+        "identification.fr.5"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 21,
+        "total": 113,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Malaria entomology and vector control: guide for participants — WHO Regional Office for Africa",
+        "fr": "Entomologie du paludisme et lutte antivectorielle : guide des participants — Bureau régional de l’OMS pour l’Afrique"
+      },
+      "url": "https://www.afro.who.int/sites/default/files/2017-06/9789241505819_eng.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "WHO guide covers morphology and sibling taxa."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 7,
+        "total": 67,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Malaria — World Health Organization (Spanish edition)",
+        "fr": "Paludisme — Organisation mondiale de la Santé (édition espagnole)"
+      },
+      "url": "https://www.who.int/es/news-room/fact-sheets/detail/malaria",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "WHO defines malaria transmission via infected female Anopheles."
+      ],
+      "prose_claims": [
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 86,
+        "notes_words": 8,
+        "total": 94,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Geographical distributions of African malaria vector sibling species — Sinka et al., 2017",
+        "fr": "Répartition géographique des espèces jumelles vectrices africaines du paludisme — Sinka et al., 2017"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5319841/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed review distinguishes Anopheles gambiae complex sibling species and discusses their different vector roles."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 14,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a slender grey-brown mosquito with pale and dark wing scales and the characteristic angled resting posture, abdomen raised. Add a small inset comparing the male’s bushy antennae with the female’s less feathery antennae; indicate a water surface with a parallel-floating larva.",
+  "uncertainties": [
+    "Wing length is the best species-specific size measure found; it should not be presented as total body length. A general wing-length range and laboratory means vary with environment.",
+    "No reliable species-wide body length, height, width, or mass values were found. The reported wing measures do not establish meaningful male–female size dimorphism.",
+    "Anopheles gambiae sensu stricto is distinct from the broader An. gambiae sensu lato sibling complex; external identification alone may not resolve sibling species."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked University of Florida species guidance, French Target Malaria biology and morphology material, the Spanish CDC mosquito-life-cycle page, WHO information in Spanish and English, and a peer-reviewed wing-size study. Sex-specific means are explicitly limited to one laboratory form and two years."
+}

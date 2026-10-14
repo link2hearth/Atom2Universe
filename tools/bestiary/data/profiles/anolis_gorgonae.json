@@ -1,0 +1,256 @@
+{
+  "id": "anolis_gorgonae",
+  "scientific": "Anolis gorgonae",
+  "group": "reptiles",
+  "name": {
+    "en": "Blue anole",
+    "fr": "Anole bleu de Gorgone"
+  },
+  "sections": {
+    "overview": {
+      "en": "The blue anole is a tree-dwelling lizard endemic to Gorgona Island in Colombia’s Pacific. Its range is restricted to this island, where it shares the forest with four other native anole species.",
+      "fr": "L’Anole bleu est un lézard arboricole endémique de l’île Gorgona, dans le Pacifique colombien. Son aire se limite à cette île, où il partage la forêt avec quatre autres espèces d’anoles indigènes."
+    },
+    "identification": {
+      "en": "A reported maximum snout-to-vent length is about 67 mm. A Spanish species account gives roughly 13–15 cm total length, including the tail. Adults are vivid blue and relatively slender, and males have a white throat fan. A field study measured only one female, so sex-specific size differences are not established.",
+      "fr": "La longueur museau-cloaque maximale rapportée est d’environ 67 mm. Une fiche espagnole indique 13–15 cm au total, queue comprise. L’adulte est bleu vif et assez élancé, et le mâle porte un fanon blanc. Une étude de terrain n’a mesuré qu’une femelle, ce qui ne permet pas d’établir de différence de taille selon le sexe."
+    },
+    "habitat": {
+      "en": "It inhabits humid tropical forest on Gorgona, where researchers observed it high on branches and among dense foliage. The island rises only modestly above sea level, and the species is strongly associated with wooded habitat rather than open ground.",
+      "fr": "Il fréquente la forêt tropicale humide de Gorgona, où les chercheurs l’ont observé sur des branches hautes et dans le feuillage dense. L’île s’élève peu au-dessus du niveau marin et l’espèce est liée aux milieux boisés plutôt qu’aux terrains ouverts."
+    },
+    "diet": {
+      "en": "Its exact prey and dietary proportions have not been well studied, although a Spanish natural-history account describes it as mainly insectivorous.",
+      "fr": "Ses proies précises et la composition de son régime restent peu étudiées, bien qu’une fiche naturaliste espagnole le décrive comme principalement insectivore."
+    },
+    "behavior": {
+      "en": "It is an arboreal anole that uses elevated perches and can be difficult to detect in the dense canopy.",
+      "fr": "C’est un anole arboricole qui utilise des perchoirs élevés et se repère difficilement dans la canopée dense."
+    },
+    "reproduction": {
+      "en": "The species is oviparous, but reliable descriptions of clutch size, nesting sites, incubation, and breeding season are scarce.",
+      "fr": "L’espèce est ovipare, mais les sources fiables décrivent peu la taille des pontes, les sites de ponte, l’incubation et la saison de reproduction."
+    },
+    "ecology": {
+      "en": "On Gorgona it occurs alongside Dactyloa princeps, D. chocorum, Norops medemi, and N. parvauritus. Its closest mainland relative is Dactyloa chloris, similar in form but not solid blue.",
+      "fr": "À Gorgona, il cohabite avec Dactyloa princeps, D. chocorum, Norops medemi et N. parvauritus. Sa proche parente continentale est Dactyloa chloris, de forme similaire mais non uniformément bleue."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists the blue anole as Near Threatened. Its island-only range and elusive, canopy-dwelling habits make population estimates difficult; older accounts also identify predation by introduced western basilisks as a concern.",
+      "fr": "L’évaluation de l’UICN classe l’Anole bleu comme quasi menacé. Son aire insulaire et ses habitudes discrètes dans la canopée compliquent l’estimation des effectifs; des sources anciennes signalent aussi la prédation par le Basilic occidental introduit."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Biogeography, Systematics, and Ecomorphology of Pacific Island Anoles — Phillips et al., 2019",
+        "fr": "Biogéographie, systématique et écomorphologie des anoles des îles du Pacifique — Phillips et al., 2019"
+      },
+      "url": "https://doi.org/10.3390/d11090141",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed study: one female measured; close mainland relative Dactyloa chloris."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 10,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Gorgona National Natural Park — National Parks of Colombia",
+        "fr": "Parc national naturel Gorgona — Parcs nationaux de Colombie"
+      },
+      "url": "https://www.parquesnacionales.gov.co/nuestros-parques/pnn-gorgona/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Colombian park authority calls the species endemic to Gorgona and lists it as Near Threatened."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 15,
+        "total": 82,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anolis body-size dataset — Meiri, Raia & Phillimore, 2010",
+        "fr": "Base de données de taille corporelle des Anolis — Meiri, Raia et Phillimore, 2010"
+      },
+      "url": "https://biology.ed.ac.uk/sites/default/files/2025-10/Slaying%20dragons%3A%20limited%20evidence%20for%20unusual%20body%20size%20evolution%20on%20islands..pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Published comparative dataset gives a maximum snout-to-vent value of 67 mm for Anolis gorgonae."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 18,
+        "notes_words": 14,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Blue anole: observation and natural-history account — WildlifePhotographer",
+        "fr": "Anole bleu : observation et fiche naturaliste — WildlifePhotographer"
+      },
+      "url": "https://www.wildlifephotographer.app/es/especie-salvaje/anolis-azul/?id=1006775",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish-language account reports 13–15 cm total length and a white male throat fan."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 130,
+        "notes_words": 13,
+        "total": 143,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anolis gorgonae — The Reptile Database",
+        "fr": "Anolis gorgonae — The Reptile Database"
+      },
+      "url": "https://reptile-database.reptarium.cz/Anolis/gorgonae",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Taxonomic account lists Gorgona Island, oviparity, and the historical combination Dactyloa gorgonae."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 12,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Anolis gorgonae — IUCN Red List assessment, 2021",
+        "fr": "Anolis gorgonae — évaluation de la Liste rouge de l’UICN, 2021"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-2.RLTS.T44577361A44577366.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "IUCN assessment category is Near Threatened; the assessment is the source for the current global category."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 19,
+        "notes_words": 16,
+        "total": 35,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "World’s only pure blue lizard at risk of extinction — Mongabay, 2007",
+        "fr": "Le seul lézard entièrement bleu au monde menacé — Mongabay, 2007"
+      },
+      "url": "https://news.mongabay.com/2007/03/worlds-only-pure-blue-lizard-at-risk-of-extinction/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Older field reporting describes predation by the introduced western basilisk and uncertainty about population size."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 49,
+        "notes_words": 15,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a small, slim, vivid blue arboreal anole on a leafy branch. Include the male’s conspicuous white throat fan; do not depict an iguana-like crest or terrestrial body form.",
+  "uncertainties": [
+    "A comparative source lists a maximum snout-to-vent length of 67 mm; a separate Spanish species account reports 13–15 cm total length including the tail. These are different measurements and should not be conflated.",
+    "A 2019 study reports only one measured female for this species, so sex-specific body size cannot be reliably compared. No body height, width, or mass value was found.",
+    "Specific diet, clutch size, and detailed nesting biology remain poorly documented; retain only oviparity as established."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked a peer-reviewed Pacific-island anole study, a comparative body-size dataset, Spanish and English taxonomic and conservation references, and Colombia’s national park information. Measurement units, weak sex sample, endemic range, and the close mainland relative are stated with their limitations."
+}

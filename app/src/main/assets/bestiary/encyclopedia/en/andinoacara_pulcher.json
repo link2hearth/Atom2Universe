@@ -1,0 +1,42 @@
+{
+  "id": "andinoacara_pulcher",
+  "name": "Blue acara",
+  "scientific": "Andinoacara pulcher",
+  "group": "fish",
+  "sections": {
+    "overview": "The blue acara is a freshwater cichlid native to northern South America and Trinidad, with populations in the Orinoco, Maracaibo, and upper Magdalena drainages.",
+    "identification": "It has an oval, moderately compressed body, usually olive to grey-blue, with faint dark bars and fine iridescent blue-green lines on the cheek. Males tend to be larger and more colourful than females, with brighter blue tones during breeding. FishBase records a maximum total length of 16 cm for male or unsexed fish; no reliable adult mass, body width, or body height was found in the consulted species references.",
+    "habitat": "It occurs in clear or turbid rivers, from still pools to flowing reaches, and also uses shallow streams, swamps, and floodplains.",
+    "diet": "It is an opportunistic omnivore. A Colombian stomach-content study found plant remains, fish, detritus, and insects; fish were consumed most during low or rising water, while plant material dominated at high or falling water.",
+    "behavior": "Breeding pairs become territorial around their nest and both parents guard the eggs and young.",
+    "reproduction": "The pair excavates a nest in sand or mud and guards its brood. Maturity is reported at about 9.5 cm total length, and multiple partial spawns may occur over a prolonged breeding season.",
+    "ecology": "The accepted name is Andinoacara pulcher; Aequidens pulcher is an older synonym. The related tree entry Aequidens diadema belongs to the same cichlid tribe, Cichlasomatini, but is a distinct species in a different genus.",
+    "conservation": "The IUCN assessment lists it as Least Concern and suspects a stable population trend because the species persists in modified waters. The total population size is unknown, and habitat quality continues to decline in parts of its range."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T64791019A214850080.en",
+      "title": "Andinoacara pulcher — IUCN Red List assessment"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/4727",
+      "title": "Andinoacara pulcher — FishBase species summary"
+    },
+    {
+      "url": "https://www.fishipedia.fr/fr/poissons/andinoacara-pulcher",
+      "title": "Acara bleu — Fishipedia species profile (French)"
+    },
+    {
+      "url": "https://www.redalyc.org/pdf/693/69343172010.pdf",
+      "title": "Feeding habits of Cocobolo Andinoacara pulcher in Ciénaga Grande de Lorica — Revista MVZ Córdoba"
+    },
+    {
+      "url": "https://www.aqua-pedia.com/es/species/andinoacara-pulcher-blue-acara",
+      "title": "Acara azul — Aqua-Pedia species profile (Spanish)"
+    },
+    {
+      "url": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=172522",
+      "title": "NCBI Taxonomy — Andinoacara pulcher and Aequidens diadema"
+    }
+  ]
+}

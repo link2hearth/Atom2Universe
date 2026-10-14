@@ -1,0 +1,244 @@
+{
+  "id": "ancistrus_cirrhosus",
+  "scientific": "Ancistrus cirrhosus",
+  "group": "fish",
+  "name": {
+    "en": "Bristlenose catfish",
+    "fr": "Poisson-chat poilu"
+  },
+  "sections": {
+    "overview": {
+      "en": "Ancistrus cirrhosus is a small armored catfish in the family Loricariidae, recorded from the Paraná basin of South America. It is a freshwater bottom-dweller that feeds mainly on algae.",
+      "fr": "Ancistrus cirrhosus est un petit poisson-chat cuirassé de la famille des Loricariidés, signalé dans le bassin du Paraná en Amérique du Sud. Il vit en eau douce près du fond et se nourrit surtout d’algues."
+    },
+    "identification": {
+      "en": "Its broad, flattened body is covered with rows of bony plates and is usually dark olive, brown, or grey, sometimes with pale spots. Mature males grow branched fleshy tentacles on the snout; females lack them or have only small ones near the snout margin. FishBase records a maximum of 9.1 cm standard length for male or unsexed fish; the consulted sources give no reliable adult mass, body height, or width. A recent English-language ornamental-fish synthesis lists 10–15 cm without stating whether it means standard or total length, so the figures are not directly comparable.",
+      "fr": "Son corps large et aplati est couvert de rangées de plaques osseuses; sa couleur est généralement olive sombre, brune ou grise, parfois ponctuée de taches claires. Les mâles adultes portent des tentacules charnus ramifiés sur le museau; les femelles en sont dépourvues ou n’en ont que de petits au bord du museau. FishBase donne une longueur standard maximale de 9,1 cm pour un mâle ou un individu non sexé; les sources consultées ne fournissent pas de données fiables sur la masse, la hauteur ou la largeur adultes. Une synthèse anglophone sur les poissons d’ornement indique 10–15 cm sans préciser s’il s’agit d’une longueur standard ou totale; ces chiffres ne sont donc pas directement comparables."
+    },
+    "habitat": {
+      "en": "It inhabits freshwater streams in the Paraná drainage, from turbid, slow water over clay to clearer, flowing reaches over gravel or rocky bottoms. It shelters among submerged wood and other cavities.",
+      "fr": "Il fréquente les cours d’eau douce du bassin du Paraná, des secteurs turbides et lents sur fond argileux aux zones plus claires et courantes sur gravier ou rochers. Il se réfugie sous le bois immergé et dans d’autres cavités."
+    },
+    "diet": {
+      "en": "FishBase describes it as an algae-eater; regional accounts also report algae and plant matter. It scrapes food from submerged surfaces with its ventral sucker mouth, but should not be treated as a substitute for a varied diet in captivity.",
+      "fr": "FishBase le décrit comme consommateur d’algues; les fiches régionales mentionnent aussi les algues et les végétaux. Il racle les surfaces immergées avec sa bouche ventrale en ventouse, mais ne doit pas être considéré en captivité comme un simple nettoyeur dispensé d’une alimentation variée."
+    },
+    "behavior": {
+      "en": "It spends much of its time close to the bottom or attached to firm surfaces. Males defend a nest cavity during breeding and remain with the eggs and newly hatched larvae.",
+      "fr": "Il passe une grande partie de son temps près du fond ou fixé aux surfaces dures. En période de reproduction, le mâle défend une cavité et reste auprès des œufs puis des larves nouvellement écloses."
+    },
+    "reproduction": {
+      "en": "Spawning takes place in a cavity nest. The female deposits adhesive eggs there, and the male guards the clutch and larvae; a study reports care continuing for up to ten days after hatching.",
+      "fr": "La ponte a lieu dans une cavité. La femelle y dépose des œufs adhésifs, puis le mâle garde la ponte et les larves; une étude signale que cette surveillance se poursuit jusqu’à dix jours après l’éclosion."
+    },
+    "ecology": {
+      "en": "Its algae-based feeding connects it to submerged surfaces where attached growth accumulates. Like other members of the armored-catfish family Loricariidae, it has a plated body and ventral sucker mouth.",
+      "fr": "Son alimentation à base d’algues le relie aux surfaces immergées où s’accumule la végétation fixée. Comme les autres membres de la famille des Loricariidés, il possède un corps cuirassé et une bouche ventrale en ventouse."
+    },
+    "conservation": {
+      "en": "Brazil’s 2021 national assessment lists the species as Data Deficient, citing uncertain records and limited population information; this is a national assessment, not a global IUCN category. A historical account reports a severe local reduction after the Itaipu reservoir was built, while other Paraná tributaries still hold populations.",
+      "fr": "L’évaluation nationale brésilienne de 2021 classe l’espèce en données insuffisantes, en raison de signalements incertains et d’informations limitées sur les populations; ce statut national n’est pas une catégorie UICN mondiale. Une source historique rapporte une forte baisse locale après la création du réservoir d’Itaipu, tandis que d’autres affluents du Paraná hébergent encore des populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ancistrus cirrhosus — FishBase species summary",
+        "fr": "Ancistrus cirrhosus — fiche d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Ancistrus-cirrhosus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "Paraná basin, freshwater demersal ecology, algae-eating biology, maximum 9.1 cm standard length (male/unsexed), and stream conditions."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.en.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 171,
+        "notes_words": 16,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ultrastructure of the fertilized egg envelopes in Ancistrus cirrhosus — peer-reviewed study, PMC",
+        "fr": "Ultrastructure des enveloppes ovulaires fécondées d’Ancistrus cirrhosus — étude évaluée par les pairs, PMC"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7818365/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed study: cavity nesting and male care of eggs and larvae."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 104,
+        "notes_words": 11,
+        "total": 115,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Evaluation of Ancistrus cirrhosus — Brazilian ICMBio SALVE assessment (Portuguese)",
+        "fr": "Évaluation d’Ancistrus cirrhosus — évaluation brésilienne ICMBio SALVE, en portugais"
+      },
+      "url": "https://salve.icmbio.gov.br/salve-api/api/fichaEspecie?cache=true&download=true&language=pt-br&sqFichaVersao=23288",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "conservation"
+      ],
+      "facts": [
+        "Brazil assessment: Data Deficient; uncertain records; local decline after Itaipu."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 137,
+        "notes_words": 10,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Amazonian Ornamental Fish — Embrapa technical synthesis",
+        "fr": "Poissons d’ornement amazoniens — synthèse technique d’Embrapa"
+      },
+      "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/1177428/1/AmazonianOrnamentalFish.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Synthesis reports 10–15 cm without defining length convention; rocky-stream habitat."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 70,
+        "notes_words": 10,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "100 freshwater species of Santa Fe — Ancistrus cirrhosus account (Spanish)",
+        "fr": "100 espèces d’eau douce de Santa Fe — fiche Ancistrus cirrhosus, en espagnol"
+      },
+      "url": "https://www.santafe.gob.ar/acuario/download/fichas-100-especies-formato-3-647890d040a8c.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "habitat",
+        "reproduction"
+      ],
+      "facts": [
+        "Spanish account: plated, spotted body; male snout filaments; plant diet and Paraná basin."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 148,
+        "notes_words": 13,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ancistrus (bristlenose pleco) — Aqua-Pedia French profile",
+        "fr": "Ancistrus à nez touffu — fiche française Aqua-Pedia"
+      },
+      "url": "https://www.aqua-pedia.com/fr/species/ancistrus-cirrhosus-bristlenose-pleco",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "French profile describes the sucker mouth, plated body and snout tentacles."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 95,
+        "notes_words": 11,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show the flattened, plated body and ventral sucker mouth. A mature male should have branched fleshy snout tentacles; avoid giving females a large male-like beard or depicting a large common pleco.",
+  "uncertainties": [
+    "FishBase reports 9.1 cm standard length, while the Embrapa synthesis gives 10–15 cm without defining the length measurement; the figures are not directly comparable.",
+    "No reliable adult body mass, height, or width measurement was found in the consulted species sources.",
+    "Many aquarium fish sold as bristlenose Ancistrus are not verified wild Ancistrus cirrhosus; details from aquarium stock may not describe the species precisely."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked the species database against Brazilian national assessment data, Spanish regional ichthyology, a peer-reviewed reproductive study, and French and English aquarium references; kept aquarium-trade size ambiguity explicit."
+}

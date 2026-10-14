@@ -1,0 +1,50 @@
+{
+  "id": "antechinus_swainsonii",
+  "name": "Tasmanian Dusky Antechinus",
+  "scientific": "Antechinus swainsonii",
+  "group": "mammals",
+  "sections": {
+    "overview": "The Tasmanian Dusky Antechinus is a small, ground-dwelling carnivorous marsupial. Current taxonomy restricts Antechinus swainsonii to Tasmania; mainland animals once included under this name are now A. mimetes.",
+    "identification": "Its fur is grey-brown to dark brown above and pale grey underneath; the ears are small and the muzzle pointed. The long, tapering tail approaches body length. In the 2015 Tasmanian sample, males averaged 63.2 g and 13.4 cm head-body length, while females averaged 41.6 g and 11.7 cm. Body height and width were not reported.",
+    "habitat": "It is found across most of Tasmania, except the far south-east of the Tasman Peninsula. It uses forest with dense ground cover, including wet or dry sclerophyll forest and rainforest, where fallen leaves, logs, and shallow shelter sites provide cover.",
+    "diet": "It searches the forest floor for invertebrates, especially insects and worms, and also takes small lizards. Small vertebrates or fruit may supplement this mainly animal-based diet, but they are not its principal food.",
+    "behavior": "Unlike many small mammals, it can be active both by day and at night. It forages on the ground through leaf litter and shelters in nests made from leaves, shallow burrows, or other protected ground-level sites.",
+    "reproduction": "Breeding is tightly seasonal in winter, with mating recorded from July to September in natural populations. Males sharply increase activity during this short period and usually die synchronously soon afterward; some females survive to breed again in a later year.",
+    "ecology": "The 2015 revision separated this species from the Mainland Dusky Antechinus, A. mimetes, and the Tasman Peninsula Dusky Antechinus, A. vandycki. A. swainsonii occurs across most of Tasmania, while A. vandycki is restricted to the Tasman Peninsula. The related Swamp Antechinus, A. minimus, is generally more squat and shorter-tailed.",
+    "conservation": "The Mammal Diversity Database lists Antechinus swainsonii as Least Concern. Its range is much narrower than older references suggested because the mainland populations were reassigned to A. mimetes in 2015."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.17082/j.2204-1478.59.2015.2014-10",
+      "title": "A taxonomic assessment of the Australian Dusky Antechinus Complex — Memoirs of the Queensland Museum"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000180/",
+      "title": "Antechinus swainsonii — Mammal Diversity Database"
+    },
+    {
+      "url": "https://collections.museumsvictoria.com.au/species/8428",
+      "title": "Antechinus swainsonii — Museums Victoria Field Guide"
+    },
+    {
+      "url": "https://doi.org/10.1111/j.1469-7998.1985.tb03555.x",
+      "title": "Effects of photoperiod and endogenous control on timing of reproduction in Antechinus — Journal of Zoology"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9366648/",
+      "title": "Sleep architecture and regulation of male Dusky Antechinus — Current Biology"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Antechinus_swainsonii",
+      "title": "Antechinus swainsonii — Antechine sombre, French-language summary"
+    },
+    {
+      "url": "https://lib.ysu.am/disciplines_bk/036df0ca668104750d45dee045799730.pdf",
+      "title": "Antequino sombrío — Spanish-language marsupial reference"
+    },
+    {
+      "url": "https://doi.org/10.17082/j.2204-1478.59.2015.2014-11",
+      "title": "Taxonomy and redescription of the Swamp Antechinus — Memoirs of the Queensland Museum"
+    }
+  ]
+}

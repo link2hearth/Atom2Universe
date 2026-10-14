@@ -1,0 +1,188 @@
+{
+  "id": "antennarius_multiocellatus",
+  "scientific": "Antennarius multiocellatus",
+  "group": "fish",
+  "name": {
+    "en": "Longlure Frogfish",
+    "fr": "Antennaire longue ligne"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Longlure Frogfish is a bottom-living ambush predator of the tropical western Atlantic, especially Caribbean reefs. It often perches among sponges, where its shape, color and skin texture help it disappear against the background.",
+      "fr": "L’Antennaire longue ligne est un prédateur d’affût du fond marin, présent dans l’Atlantique tropical occidental et particulièrement sur les récifs des Caraïbes. Il se perche souvent parmi les éponges, dont le fond, les couleurs et parfois la texture l’aident à imiter l’environnement."
+    },
+    "identification": {
+      "en": "Its short, globular body has a huge upward-facing mouth, rough scaleless skin, and pectoral fins with elbow-like joints that resemble little legs. Dark, pale-ringed ocelli occur on the body and fins; the pattern is more useful for identification than its highly variable background color, which may be red, yellow, brown, green, or nearly white. FishBase reports a maximum total length of 20 cm. DORIS gives a 7–20 cm range without specifying the measurement convention; reliable weight, body-height, body-width, or sex-specific size measurements were not found. Its first dorsal spine forms a fishing rod about 21–32% of standard length, roughly twice the second spine, and ends in a flattened, flag-like lure.",
+      "fr": "Son corps court et globuleux porte une très grande bouche tournée vers le haut, une peau rugueuse dépourvue d’écailles et des nageoires pectorales articulées en « coudes », semblables à de petites pattes. Des ocelles sombres cerclés de pâle marquent le corps et les nageoires; ils aident davantage à l’identifier que sa couleur de fond très variable, qui peut être rouge, jaune, brune, verte ou presque blanche. FishBase indique une longueur totale maximale de 20 cm. DORIS donne une fourchette de 7 à 20 cm sans préciser la convention de mesure; je n’ai pas trouvé de données fiables sur le poids, la hauteur, la largeur ou les mensurations selon le sexe. La première épine dorsale forme une « canne » longue de 21 à 32 % de la longueur standard, environ deux fois la deuxième épine, et se termine par un leurre aplati en forme de drapeau."
+    },
+    "habitat": {
+      "en": "It lives on tropical reefs and is commonly found around sponges. Its range includes Bermuda, Florida, the Gulf of Mexico, the Bahamas and Caribbean islands, then south along the western Atlantic coast toward northern South America. FishBase records it to 66 m, though it is usually encountered in shallow water.",
+      "fr": "Il vit sur les récifs tropicaux et fréquente souvent les secteurs riches en éponges. Son aire comprend les Bermudes, la Floride, le golfe du Mexique, les Bahamas et les îles des Caraïbes, puis s’étend vers le sud le long de l’Atlantique occidental jusqu’au nord de l’Amérique du Sud. FishBase rapporte des observations jusqu’à 66 m, mais l’espèce est surtout rencontrée près de la surface."
+    },
+    "diet": {
+      "en": "It feeds mainly on fishes and also takes mobile crustaceans such as shrimps and crabs.",
+      "fr": "Il se nourrit surtout de poissons et capture aussi des crustacés mobiles, comme des crevettes ou des crabes."
+    },
+    "behavior": {
+      "en": "It relies on camouflage and ambush rather than chasing prey across the reef, remaining nearly motionless until a small animal approaches.",
+      "fr": "Il compte sur le camouflage et la chasse à l’affût plutôt que de poursuivre ses proies sur le récif, restant presque immobile jusqu’à ce qu’un animal s’approche."
+    },
+    "reproduction": {
+      "en": "It is oviparous and its eggs are released in a floating gelatinous ribbon or mass known as an egg raft; the larvae are pelagic.",
+      "fr": "Il est ovipare et ses œufs sont libérés dans un ruban ou une masse gélatineuse flottante appelée radeau d’œufs; les larves sont pélagiques."
+    },
+    "ecology": {
+      "en": "The Dwarf Frogfish (A. pauciradiatus) is a close regional comparison: it rarely exceeds 5 cm and is usually pale yellow with few markings.",
+      "fr": "L’Antennaire nain (A. pauciradiatus) est une proche parente régionale : elle dépasse rarement 5 cm et est généralement jaune pâle avec peu de marques."
+    },
+    "conservation": {
+      "en": "FishBase reports the species as Least Concern on the IUCN Red List, based on an assessment dated 2013.",
+      "fr": "FishBase rapporte que l’espèce est classée en préoccupation mineure sur la Liste rouge de l’UICN, selon une évaluation datée de 2013."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Longlure Frogfish — Shorefishes of the Greater Caribbean",
+        "fr": "Antennaire longue ligne — Shorefishes of the Greater Caribbean"
+      },
+      "url": "https://biogeodb.stri.si.edu/caribbean/en/thefishes/species/3178",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology",
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "Smithsonian Tropical Research Institute species account; detailed morphology, lure proportions, ocelli, and color pattern.",
+        "The species account lists IUCN Least Concern, reef habitat, and a maximum length of 14.3 cm; this length is not combined with FishBase's 20 cm total-length record."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "identification.en.1",
+        "identification.en.2",
+        "identification.en.5",
+        "habitat.en.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 41,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Ranisapo seboso — Peces Costeros del Gran Caribe",
+        "fr": "Ranisapo seboso — poissons côtiers du Grand Caraïbe"
+      },
+      "url": "https://biogeodb.stri.si.edu/caribbean/es/thefishes/species/3178",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Versión en español del recurso del Smithsonian; descripción morfológica y proporciones del illicium."
+      ],
+      "prose_claims": [
+        "overview.fr.1",
+        "identification.fr.1",
+        "identification.fr.2",
+        "identification.fr.5",
+        "conservation.fr.1",
+        "diet.fr.1",
+        "habitat.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 13,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Antennaire longue ligne — DORIS, French Underwater Observations",
+        "fr": "Antennaire longue ligne — DORIS, Données d’Observations subaquatiques"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Antennarius-multiocellatus-Antennaire-longue-ligne-276",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "behavior",
+        "diet",
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "French field guide."
+      ],
+      "prose_claims": [
+        "overview.fr.2",
+        "habitat.fr.1",
+        "behavior.fr.1",
+        "identification.en.4",
+        "identification.fr.4",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "behavior.en.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 186,
+        "notes_words": 3,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Antennarius multiocellatus — FishBase species summary",
+        "fr": "Antennarius multiocellatus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/ANTENNARIUS-MULTIOCELLATUS.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Species summary gives maximum length, reef range, diet, reproduction and conservation status."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "identification.en.3",
+        "identification.fr.3",
+        "habitat.en.1",
+        "diet.en.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "habitat.en.3",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 12,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Show a squat, globular frogfish perched among Caribbean sponges, with elbow-like pectoral fins, conspicuous pale-ringed dark ocelli, and a long dorsal fishing rod ending in a flattened flag-like lure. Do not depict a single fixed color phase; the species is highly variable.",
+  "uncertainties": [
+    "Published lengths use different or unspecified conventions: FishBase gives a maximum total length of 20 cm, while DORIS gives a 7–20 cm range without defining the measurement. No dependable weight, body height, body width, or sex-specific size data were located.",
+    "Some range and depth accounts differ: the Smithsonian Greater Caribbean page includes records to 91 m and New York to Brazil, while FishBase gives 0–66 m and the Greater Caribbean to northern South America, with Ascension Island also listed. The habitat text uses the FishBase depth and the broader basin-level distribution."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked French, Spanish and English sources, prioritizing DORIS, the Smithsonian Tropical Research Institute's Shorefishes of the Greater Caribbean, and FishBase. Kept size units/conventions explicit, described the Dwarf Frogfish comparison from DORIS, and qualified the dated Least Concern assessment."
+}

@@ -1,0 +1,307 @@
+{
+  "id": "anser_cygnoides",
+  "scientific": "Anser cygnoides",
+  "group": "birds",
+  "name": {
+    "en": "Swan Goose",
+    "fr": "Oie cygnoïde"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Swan Goose is a long-necked migratory goose of eastern Asia, breeding mainly in Mongolia, northeastern China, and the Russian Far East. Most winter in eastern and southern China, especially around the middle and lower Yangtze River.",
+      "fr": "L’Oie cygnoïde est une oie migratrice au long cou, propre à l’Asie orientale, qui niche surtout en Mongolie, dans le nord-est de la Chine et en Extrême-Orient russe. La plupart hivernent dans l’est et le sud de la Chine, notamment autour du moyen et du bas Yangtsé."
+    },
+    "identification": {
+      "en": "The wild bird has a striking two-tone head and neck: a dark chestnut crown and hindneck contrast with a pale face, throat, and front of the neck. Its long black bill has a narrow pale band at the base, and the legs are orange; the body is grey-brown with lighter feather edges and a pale belly. Adults are about 81–94 cm long, with a 160–185 cm wingspan and a mass of roughly 2.8–3.5 kg; body height and width are not routinely reported. Males average larger, with longer necks and heavier bills, but plumage alone does not reliably distinguish the sexes.",
+      "fr": "L’oiseau sauvage a la tête et le cou bicolores : la calotte et l’arrière du cou brun roux foncé contrastent avec la face, la gorge et l’avant du cou très pâles. Son long bec noir porte un fin liseré clair à la base et ses pattes sont orange; le corps est gris-brun, aux plumes bordées plus clair, avec le ventre pâle. L’adulte mesure environ 81–94 cm, pour une envergure de 160–185 cm et une masse d’environ 2,8–3,5 kg; la hauteur et la largeur du corps sont rarement rapportées. Le mâle est en moyenne plus grand, avec le cou plus long et le bec plus fort, mais le plumage ne permet pas de sexer sûrement l’oiseau."
+    },
+    "habitat": {
+      "en": "During breeding, it uses steppe and forest-steppe wetlands: river valleys and deltas, wet meadows, and the margins of freshwater or brackish lakes. In winter, it shifts to lowland marshes, lakes, rice fields, estuaries, and tidal flats.",
+      "fr": "En période de reproduction, elle fréquente les zones humides des steppes et steppes boisées : vallées et deltas fluviaux, prairies humides et rives de lacs d’eau douce ou saumâtre. En hiver, elle gagne les marais de plaine, les lacs, les rizières, les estuaires et les vasières littorales."
+    },
+    "diet": {
+      "en": "It is herbivorous, grazing on wetland plants and grasses and taking sedges, reeds, seeds, and berries as food availability changes through the year. At Shengjin Lake in China, wintering birds have been recorded eating underground Vallisneria tubers as well as sedges and canary grass.",
+      "fr": "Elle est herbivore et broute les plantes des zones humides et les herbes; elle consomme notamment des laîches, des roseaux, des graines et des baies selon la saison. Au lac Shengjin, en Chine, des oiseaux hivernants ont été observés mangeant des tubercules souterrains de Vallisneria, ainsi que des laîches et de l’alpiste roseau."
+    },
+    "behavior": {
+      "en": "The species migrates between distant breeding and wintering areas using two broad East Asian flyways. Satellite tracking shows that individual journeys include several stopover wetlands rather than one uninterrupted flight.",
+      "fr": "L’espèce migre entre des quartiers de reproduction et d’hivernage éloignés, en suivant deux grands couloirs d’Asie orientale. Le suivi satellitaire montre que les trajets individuels comportent plusieurs haltes dans des zones humides plutôt qu’un vol continu."
+    },
+    "reproduction": {
+      "en": "Pairs arrive on breeding grounds in spring and nest in grass or reeds on a dry mound close to water, defending a small territory. Most accounts describe one clutch of about five or six eggs, incubated for roughly four weeks; family groups remain together as the goslings grow.",
+      "fr": "Les couples arrivent sur les sites de nidification au printemps et installent leur nid d’herbes ou de roseaux sur une butte sèche près de l’eau, où ils défendent un petit territoire. La plupart des sources décrivent une ponte d’environ cinq ou six œufs, couvés près de quatre semaines; la famille reste groupée pendant la croissance des oisons."
+    },
+    "ecology": {
+      "en": "Its closest familiar relative is the Greylag Goose, Anser anser, described in the Greylag profile. The wild Swan Goose has a longer, darker bill and a sharper pale-and-chestnut head pattern; the Greylag has a shorter pink or orange bill and a more mottled grey-brown head. Chinese domestic geese descend from the Swan Goose, whereas most European domestic geese descend from the Greylag; feral birds and hybrids can blur these field marks.",
+      "fr": "Sa proche parente la plus connue est l’Oie cendrée, Anser anser, décrite dans la fiche de l’Oie cendrée. L’Oie cygnoïde sauvage a un bec plus long et plus sombre, ainsi qu’un contraste plus net entre les zones pâles et brun roux de la tête; l’Oie cendrée a un bec plus court, rose ou orange, et la tête gris-brun plus mouchetée. Les oies domestiques chinoises descendent de l’Oie cygnoïde, tandis que la plupart des oies domestiques européennes descendent de l’Oie cendrée; les oiseaux férals et les hybrides peuvent brouiller ces critères."
+    },
+    "conservation": {
+      "en": "BirdLife International’s 2023 global assessment lists the Swan Goose as Endangered and estimates 36,000–43,500 mature individuals, with a decreasing trend. More than 99% follow the inland flyway, concentrating risks from wetland loss, drought, hunting, egg collection, and disturbance.",
+      "fr": "L’évaluation mondiale de 2023 de BirdLife International classe l’Oie cygnoïde « En danger » et estime sa population adulte à 36 000–43 500 individus, en déclin. Plus de 99 % empruntent la voie intérieure, ce qui concentre les risques de perte des zones humides, sécheresse, chasse, prélèvement des œufs et dérangement."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Swan Goose — IUCN Red List assessment 2023",
+        "fr": "Oie cygnoïde — évaluation 2023 de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2023-1.RLTS.T22679869A228564177.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife International 2023 assessment reports Endangered status, declining population, flyways, and the mature-population estimate."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 173,
+        "notes_words": 14,
+        "total": 187,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "鸿雁 — Biodiversity Knowledge Platform of China",
+        "fr": "鸿雁 — plateforme chinoise de connaissances sur la biodiversité"
+      },
+      "url": "https://wiki.biodiversity.cern.ac.cn/index.php/%E9%B8%BF%E9%9B%81",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "overview"
+      ],
+      "facts": [
+        "Chinese-language species page describes field marks, 80–94 cm body length, range, and migration to lower Yangtze wetlands."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 168,
+        "notes_words": 17,
+        "total": 185,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oie cygnoïde — Oiseaux.net",
+        "fr": "Oie cygnoïde — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/oie.cygnoide.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "French-language species account gives wild body dimensions, sex differences, identification, habitats, diet, migration, and nesting."
+      ],
+      "prose_claims": [
+        "identification.en.4",
+        "identification.fr.4",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 150,
+        "notes_words": 15,
+        "total": 165,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Swan Goose — Birdfact field guide",
+        "fr": "Oie cygnoïde — guide d’identification Birdfact"
+      },
+      "url": "https://www.birdfact.com/birds/swan-goose",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "English-language bird guide reports wild length, wingspan, and body-mass ranges."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 53,
+        "notes_words": 10,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Flyway structure, breeding, migration and wintering distributions of the globally threatened Swan Goose — Wildfowl",
+        "fr": "Structure des couloirs, reproduction, migration et hivernage de l’Oie cygnoïde menacée — Wildfowl"
+      },
+      "url": "https://tidsskrift.dk/Wildfowl/article/view/156287",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior"
+      ],
+      "facts": [
+        "Peer-reviewed East Asian flyway study integrates tracking, winter counts, and expert knowledge to distinguish inland and coastal routes."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 32,
+        "notes_words": 18,
+        "total": 50,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Potential Habitats and Their Conservation Status for Swan Geese along the East Asian Flyway — Remote Sensing",
+        "fr": "Habitats potentiels et état de leur conservation pour l’Oie cygnoïde le long de la voie d’Asie orientale — Remote Sensing"
+      },
+      "url": "https://www.mdpi.com/2072-4292/14/8/1899",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "Satellite-tracking study maps breeding, stopover, and wintering grounds, including the Yangtze basin and Northeast China."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 15,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Preliminary observations of diurnal feeding patterns of Swan Geese at Shengjin Lake — BirdLife DataZone reference",
+        "fr": "Observations préliminaires du régime diurne de l’Oie cygnoïde au lac Shengjin — référence de BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/swan-goose-anser-cygnoid",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "BirdLife species account describes winter feeding on Vallisneria tubers, sedges, and canary grass at Shengjin Lake."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 129,
+        "notes_words": 16,
+        "total": 145,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Origins, timing and introgression of domestic geese revealed by whole genome data — Journal of Animal Science and Biotechnology",
+        "fr": "Origines, chronologie et introgression des oies domestiques révélées par les génomes — Journal of Animal Science and Biotechnology"
+      },
+      "url": "https://jasbsci.biomedcentral.com/articles/10.1186/s40104-022-00826-9",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Genomic comparison supports distinct wild ancestors for Chinese domestic geese and European Greylag-derived geese, with introgression possible."
+      ],
+      "prose_claims": [
+        "ecology.en.3",
+        "ecology.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 56,
+        "notes_words": 17,
+        "total": 73,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Greylag Goose Anser anser — Bestiary profile and BirdLife Red List summary",
+        "fr": "Oie cendrée Anser anser — fiche du Bestiaire et résumé de la Liste rouge BirdLife"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/oie.cendree.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Greylag profile provides the contrasting bill and head pattern for field identification."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 105,
+        "notes_words": 12,
+        "total": 117,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "illustration_notes": "Depict the wild form, not the heavier Chinese domestic goose: long neck, chestnut crown and hindneck, pale face and front neck, black bill with a thin pale base ring, grey-brown body, and orange legs. Add a small comparison inset with a Greylag Goose showing its shorter pink or orange bill and mottled head.",
+  "uncertainties": [
+    "Wild mass is reported as a species-wide range; exact sex-specific mass ranges and dependable body-height or body-width measurements were not located. Domestic geese are much heavier and should not be used as wild-size references.",
+    "Sources vary slightly in clutch-size ranges and geographic detail; the profile gives the commonly reported clutch size and broad, well-established flyways.",
+    "The 2023 IUCN assessment uses the spelling Anser cygnoid, while the project taxon and most field sources retain Anser cygnoides."
+  ],
+  "reviewed": true,
+  "review_note": "Cross-checked BirdLife/IUCN, a Chinese biodiversity species page, a French field account, and peer-reviewed flyway and genomic studies. Kept wild measurements separate from domestic goose weights and linked identification and ancestry to the existing Greylag Goose profile."
+}

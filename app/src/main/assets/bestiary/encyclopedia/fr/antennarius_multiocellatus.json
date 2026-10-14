@@ -1,0 +1,34 @@
+{
+  "id": "antennarius_multiocellatus",
+  "name": "Antennaire longue ligne",
+  "scientific": "Antennarius multiocellatus",
+  "group": "fish",
+  "sections": {
+    "overview": "L’Antennaire longue ligne est un prédateur d’affût du fond marin, présent dans l’Atlantique tropical occidental et particulièrement sur les récifs des Caraïbes. Il se perche souvent parmi les éponges, dont le fond, les couleurs et parfois la texture l’aident à imiter l’environnement.",
+    "identification": "Son corps court et globuleux porte une très grande bouche tournée vers le haut, une peau rugueuse dépourvue d’écailles et des nageoires pectorales articulées en « coudes », semblables à de petites pattes. Des ocelles sombres cerclés de pâle marquent le corps et les nageoires; ils aident davantage à l’identifier que sa couleur de fond très variable, qui peut être rouge, jaune, brune, verte ou presque blanche. FishBase indique une longueur totale maximale de 20 cm. DORIS donne une fourchette de 7 à 20 cm sans préciser la convention de mesure; je n’ai pas trouvé de données fiables sur le poids, la hauteur, la largeur ou les mensurations selon le sexe. La première épine dorsale forme une « canne » longue de 21 à 32 % de la longueur standard, environ deux fois la deuxième épine, et se termine par un leurre aplati en forme de drapeau.",
+    "habitat": "Il vit sur les récifs tropicaux et fréquente souvent les secteurs riches en éponges. Son aire comprend les Bermudes, la Floride, le golfe du Mexique, les Bahamas et les îles des Caraïbes, puis s’étend vers le sud le long de l’Atlantique occidental jusqu’au nord de l’Amérique du Sud. FishBase rapporte des observations jusqu’à 66 m, mais l’espèce est surtout rencontrée près de la surface.",
+    "diet": "Il se nourrit surtout de poissons et capture aussi des crustacés mobiles, comme des crevettes ou des crabes.",
+    "behavior": "Il compte sur le camouflage et la chasse à l’affût plutôt que de poursuivre ses proies sur le récif, restant presque immobile jusqu’à ce qu’un animal s’approche.",
+    "reproduction": "Il est ovipare et ses œufs sont libérés dans un ruban ou une masse gélatineuse flottante appelée radeau d’œufs; les larves sont pélagiques.",
+    "ecology": "L’Antennaire nain (A. pauciradiatus) est une proche parente régionale : elle dépasse rarement 5 cm et est généralement jaune pâle avec peu de marques.",
+    "conservation": "FishBase rapporte que l’espèce est classée en préoccupation mineure sur la Liste rouge de l’UICN, selon une évaluation datée de 2013."
+  },
+  "sources": [
+    {
+      "url": "https://biogeodb.stri.si.edu/caribbean/en/thefishes/species/3178",
+      "title": "Antennaire longue ligne — Shorefishes of the Greater Caribbean"
+    },
+    {
+      "url": "https://biogeodb.stri.si.edu/caribbean/es/thefishes/species/3178",
+      "title": "Ranisapo seboso — poissons côtiers du Grand Caraïbe"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Antennarius-multiocellatus-Antennaire-longue-ligne-276",
+      "title": "Antennaire longue ligne — DORIS, Données d’Observations subaquatiques"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/ANTENNARIUS-MULTIOCELLATUS.html",
+      "title": "Antennarius multiocellatus — résumé d’espèce FishBase"
+    }
+  ]
+}
