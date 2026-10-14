@@ -1,0 +1,216 @@
+{
+  "id": "pluvialis_fulva",
+  "scientific": "Pluvialis fulva",
+  "group": "birds",
+  "name": {
+    "en": "Pacific Golden Plover",
+    "fr": "Pluvier fauve"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Pacific Golden Plover is a migratory shorebird that breeds in Arctic Siberia and Alaska.",
+      "fr": "Le Pluvier fauve est un limicole migrateur qui niche dans l’Arctique sibérien et en Alaska."
+    },
+    "identification": {
+      "en": "Its upperparts are golden-spangled, with black underparts in breeding plumage. Compared with the European Golden Plover (P. apricaria), it has grey-brown rather than white axillaries, a useful distinction in flight. The Grey Plover (P. squatarola) has black axillaries.",
+      "fr": "Son dessus est tacheté d’or et son dessous devient noir en plumage nuptial. Par rapport au Pluvier doré (P. apricaria), ses axillaires sont gris-brun plutôt que blancs, une différence utile en vol. Le Pluvier argenté (P. squatarola) a les axillaires noirs."
+    },
+    "habitat": {
+      "en": "It nests on Arctic tundra and uses coasts, beaches, mudflats and other open ground across its broad non-breeding range.",
+      "fr": "Il niche dans la toundra arctique et fréquente les côtes, les plages, les vasières et d’autres milieux ouverts sur sa vaste aire d’hivernage."
+    },
+    "diet": {
+      "en": "It feeds mainly on insects, molluscs, worms, crustaceans and spiders; berries also form part of its tundra-season diet.",
+      "fr": "Il se nourrit surtout d’insectes, de mollusques, de vers, de crustacés et d’araignées ; les baies complètent aussi son régime dans la toundra."
+    },
+    "behavior": {
+      "en": "It undertakes long-distance migration, wintering from Pacific islands and Australasia to parts of Asia and the Indian Ocean region.",
+      "fr": "Il effectue de longues migrations et hiverne des îles du Pacifique et de l’Australasie jusqu’à certaines régions d’Asie et de l’océan Indien."
+    },
+    "reproduction": {
+      "en": "On the Arctic breeding grounds, adults nest on the ground and both sexes defend nesting territories.",
+      "fr": "Sur les sites de reproduction arctiques, les adultes nichent au sol et les deux sexes défendent leur territoire de nidification."
+    },
+    "ecology": {
+      "en": "It is a close relative of the European Golden Plover (Pluvialis apricaria), whose breeding range and main wintering region are much farther west; P. fulva instead breeds in Siberia and Alaska and winters broadly across the Pacific and Indian Oceans.",
+      "fr": "C’est un proche parent du Pluvier doré (Pluvialis apricaria), dont l’aire de nidification et la principale zone d’hivernage sont bien plus occidentales ; Pluvialis fulva niche plutôt en Sibérie et en Alaska et hiverne largement autour des océans Pacifique et Indien."
+    },
+    "conservation": {
+      "en": "BirdLife lists it as Least Concern globally, while noting evidence of decline in the Australian population over several decades.",
+      "fr": "BirdLife la classe en préoccupation mineure à l’échelle mondiale, tout en signalant des indices de déclin de la population australienne sur plusieurs décennies."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pacific Golden Plover — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Pluvier fauve — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Pacific_Golden-Plover/overview",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell account covers breeding range and long migrations.",
+        "The Pacific winter range differs markedly from the European species’ west-European wintering region."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 21,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Golden Plover Life History — Cornell Lab of Ornithology",
+        "fr": "Biologie du Pluvier fauve — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Pacific_Golden-Plover/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "Cornell reports that both sexes are territorial during nesting."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 36,
+        "notes_words": 9,
+        "total": 45,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Golden Plover — Australian Government migratory shorebird plan background paper",
+        "fr": "Pluvier fauve — document de référence du gouvernement australien sur les limicoles migrateurs"
+      },
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/shorebird-plan-background.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The Australian government document lists northern Siberia and Alaska as breeding areas and coastal habitat, beaches and mudflats as Australian non-breeding habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 22,
+        "total": 64,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Golden Plover — BirdLife DataZone species factsheet",
+        "fr": "Pluvier fauve — fiche d’espèce BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/pacific-golden-plover-pluvialis-fulva",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife gives Least Concern globally, a diet including invertebrates and berries, and cites a significant decline in Australian counts between 1973 and 2014."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 83,
+        "notes_words": 23,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pacific Golden Plover — Qatar e-Nature",
+        "fr": "Pluvier fauve — Qatar e-Nature"
+      },
+      "url": "https://www.enature.qa/specie/plover-pacific-golden/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The field account notes grey-brown axillaries in Pacific Golden Plover, contrasting with white axillaries in European Golden Plover."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 62,
+        "notes_words": 18,
+        "total": 80,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Grey Plover — Cornell Lab of Ornithology, All About Birds",
+        "fr": "Pluvier argenté — Cornell Lab of Ornithology, All About Birds"
+      },
+      "url": "https://www.allaboutbirds.org/guide/black-bellied_plover",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Cornell notes that Grey Plovers have black axillaries in all plumages."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 11,
+        "total": 28,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited decline is for Australia and does not establish a global population decline.",
+    "Golden-plover identification depends on plumage, age and viewing conditions; axillary colour is a useful but not exhaustive distinction."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Cornell, BirdLife, an Australian government shorebird document and a regional field guide; included reciprocal comparisons with P. apricaria for migration geography and flight identification."
+}

@@ -1,0 +1,42 @@
+{
+  "id": "pluvialis_fulva",
+  "name": "Pacific Golden Plover",
+  "scientific": "Pluvialis fulva",
+  "group": "birds",
+  "sections": {
+    "overview": "The Pacific Golden Plover is a migratory shorebird that breeds in Arctic Siberia and Alaska.",
+    "identification": "Its upperparts are golden-spangled, with black underparts in breeding plumage. Compared with the European Golden Plover (P. apricaria), it has grey-brown rather than white axillaries, a useful distinction in flight. The Grey Plover (P. squatarola) has black axillaries.",
+    "habitat": "It nests on Arctic tundra and uses coasts, beaches, mudflats and other open ground across its broad non-breeding range.",
+    "diet": "It feeds mainly on insects, molluscs, worms, crustaceans and spiders; berries also form part of its tundra-season diet.",
+    "behavior": "It undertakes long-distance migration, wintering from Pacific islands and Australasia to parts of Asia and the Indian Ocean region.",
+    "reproduction": "On the Arctic breeding grounds, adults nest on the ground and both sexes defend nesting territories.",
+    "ecology": "It is a close relative of the European Golden Plover (Pluvialis apricaria), whose breeding range and main wintering region are much farther west; P. fulva instead breeds in Siberia and Alaska and winters broadly across the Pacific and Indian Oceans.",
+    "conservation": "BirdLife lists it as Least Concern globally, while noting evidence of decline in the Australian population over several decades."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Pacific_Golden-Plover/overview",
+      "title": "Pacific Golden Plover — Cornell Lab of Ornithology, All About Birds"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Pacific_Golden-Plover/lifehistory",
+      "title": "Pacific Golden Plover Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.dcceew.gov.au/sites/default/files/documents/shorebird-plan-background.pdf",
+      "title": "Pacific Golden Plover — Australian Government migratory shorebird plan background paper"
+    },
+    {
+      "url": "https://datazone.birdlife.org/species/factsheet/pacific-golden-plover-pluvialis-fulva",
+      "title": "Pacific Golden Plover — BirdLife DataZone species factsheet"
+    },
+    {
+      "url": "https://www.enature.qa/specie/plover-pacific-golden/",
+      "title": "Pacific Golden Plover — Qatar e-Nature"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/black-bellied_plover",
+      "title": "Grey Plover — Cornell Lab of Ornithology, All About Birds"
+    }
+  ]
+}

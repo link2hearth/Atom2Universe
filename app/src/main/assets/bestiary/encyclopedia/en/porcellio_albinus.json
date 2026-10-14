@@ -1,0 +1,38 @@
+{
+  "id": "porcellio_albinus",
+  "name": "White Porcellio Woodlouse",
+  "scientific": "Porcellio albinus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Porcellio albinus is a desert-adapted terrestrial isopod studied in southern Tunisia.",
+    "identification": "It is a woodlouse in the family Porcellionidae; the sources consulted focus on ecology rather than a field identification key.",
+    "habitat": "It occupies arid and Saharan regions of North Africa, including sandy habitats in southern Tunisia; records also extend to the Canary Islands and Niger Sahara.",
+    "diet": "The species-specific diet is not detailed in the studies consulted.",
+    "behavior": "It is a burrowing, mainly nocturnal species; surface activity varies with time of day and season in the Tunisian desert population studied.",
+    "reproduction": "A field study in Zarat found seasonal breeding, with two breeding periods during the year; this result is specific to that population.",
+    "ecology": "It is adapted to sandy desert soils. Unlike P. albinus, P. dilatatus is often found around human settlements.",
+    "conservation": "The ecological studies consulted do not give a global conservation assessment for this species."
+  },
+  "sources": [
+    {
+      "url": "https://www.sciencedirect.com/org/science/article/pii/S131329892200338X",
+      "title": "Daily and seasonal time partitioning in surface activity of Porcellio albinus — Journal of Arid Environments"
+    },
+    {
+      "url": "https://doi.org/10.1080/07924259.2016.1263242",
+      "title": "Population dynamics and reproductive aspects of Porcellio albinus — Invertebrate Reproduction & Development"
+    },
+    {
+      "url": "https://www.porcellio.nl/_downloads/79c8368a5f9101fb1cdf7090b7aa939d",
+      "title": "Behavioral and Reproductive Strategies of Porcellio Species in Tunisian Pre-Desert Ecosystems"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/237085",
+      "title": "Porcellio dilatatus — French regional species record"
+    },
+    {
+      "url": "https://itis.gov/servlet/SingleRpt/SingleRpt;jsessionid=4215DD5E330AEBC3C53F6A58257FC69B?search_topic=TSN&search_value=596265",
+      "title": "Porcellio albinus — ITIS taxonomic record"
+    }
+  ]
+}

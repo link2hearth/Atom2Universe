@@ -1,0 +1,30 @@
+{
+  "id": "porcellio_obsoletus",
+  "name": "Obsolete woodlouse",
+  "scientific": "Porcellio obsoletus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Porcellio obsoletus is a terrestrial isopod historically known mainly from the eastern Mediterranean.",
+    "identification": "A 2026 taxonomic paper provides an updated description, but accessible accounts do not summarize simple field marks.",
+    "habitat": "The reviewed sources do not establish a well-supported habitat profile for this species.",
+    "diet": "Species-specific diet information was not found in the sources consulted.",
+    "behavior": "Its behavior is poorly documented in the sources reviewed.",
+    "reproduction": "The sources reviewed provide no species-specific reproductive details.",
+    "ecology": "A 2026 study reported it for the first time from mainland Portugal and Spain; the fragmented range may reflect natural history or human transport.",
+    "conservation": "No species-level conservation assessment was identified in the sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.3157/021.133.0206",
+      "title": "Porcellio obsoletus in the Iberian Peninsula — Entomological News (2026)"
+    },
+    {
+      "url": "https://www.vliz.be/en/imis?module=ref&refid=441061&show=html",
+      "title": "Porcellio obsoletus — VLIZ reference record for the 2026 paper"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=554381",
+      "title": "Porcellio obsoletus — ITIS"
+    }
+  ]
+}

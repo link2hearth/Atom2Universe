@@ -1,0 +1,30 @@
+{
+  "id": "plesiothele_fentoni",
+  "name": "Lake Fenton trapdoor spider",
+  "scientific": "Plesiothele fentoni",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Plesiothele fentoni is a little-known trapdoor spider endemic to Tasmania, Australia.",
+    "identification": "It grows to about 1.5 cm and has a yellow-brown abdomen with a distinctive chevron pattern.",
+    "habitat": "It is recorded from subalpine woodland at Lake Fenton and, tentatively, tall wet forest near Tarraleah.",
+    "diet": "Its diet is not described in the available species account.",
+    "behavior": "It lives in a silk-lined, lidless burrow about 5 cm deep, usually among soft moss.",
+    "reproduction": "The reviewed account provides no detailed information on its breeding cycle.",
+    "ecology": "The known sites are few, and damage to mossy burrow habitat from trampling is a documented concern.",
+    "conservation": "Tasmania lists the species as Endangered; the state account also identifies possible development and infrastructure works as threats."
+  },
+  "sources": [
+    {
+      "url": "https://nre.tas.gov.au/Documents/Plesiothele%20fentoni%20listing%20statement.pdf",
+      "title": "Listing Statement for Plesiothele fentoni — Tasmanian Department of Natural Resources and Environment"
+    },
+    {
+      "url": "https://www.wsc.nmbe.ch/spec-data/19856",
+      "title": "Plesiothele fentoni — World Spider Catalog"
+    },
+    {
+      "url": "https://www.threatenedspecieslink.tas.gov.au/Pages/Lake-Fenton-Trapdoor-Spider.aspx",
+      "title": "Lake Fenton Trapdoor Spider — Tasmanian Threatened Species Link"
+    }
+  ]
+}

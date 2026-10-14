@@ -1,0 +1,30 @@
+{
+  "id": "porcellio_spinipennis",
+  "name": "Cloporte à ptérotergites épineux",
+  "scientific": "Porcellio spinipennis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Son aire est limitée aux Alpes-Maritimes, au Var et au nord-ouest de l’Italie.",
+    "identification": "ITIS reconnaît P. spinipennis Budde-Lund, 1885 comme une espèce valide.",
+    "habitat": "Elle a des affinités montagnardes, mais se rencontre aussi près du niveau de la mer.",
+    "diet": "Les sources taxonomiques et faunistiques examinées ne décrivent pas son régime alimentaire.",
+    "behavior": "Son écologie est décrite comme liée au sol et aux milieux rocheux ; les sources ne détaillent pas davantage son comportement.",
+    "reproduction": "Aucune information propre à l’espèce sur sa reproduction n’a été trouvée dans les sources examinées.",
+    "ecology": "Une révision de 2026 en Ligurie avertit que certaines anciennes mentions identifiées comme P. spinipennis concernent en fait P. orarum ; elle réévalue aussi d’anciennes mentions de P. monticola.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée dans les sources consultées."
+  },
+  "sources": [
+    {
+      "url": "https://escholarship.org/content/qt7xv2g7n0/qt7xv2g7n0_noSplash_de0e157dd6f6e0226f187a40a8a4e001.pdf",
+      "title": "Oniscidea de Ligurie — Biogeographia (2026)"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/315337752_Note_pour_la_revision_du_referentiel_taxonomique_des_Crustaces_Isopodes_continentaux_des_ZNIEFF_de_la_region_Provence-Alpes-Cote_d%27Azur",
+      "title": "Référentiel des isopodes de Provence-Alpes-Côte d’Azur (2011)"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=596513",
+      "title": "Porcellio spinipennis — ITIS"
+    }
+  ]
+}

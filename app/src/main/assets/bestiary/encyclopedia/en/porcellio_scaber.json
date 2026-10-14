@@ -1,0 +1,34 @@
+{
+  "id": "porcellio_scaber",
+  "name": "Common rough woodlouse",
+  "scientific": "Porcellio scaber",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Porcellio scaber is a familiar European woodlouse that has spread widely beyond its native range.",
+    "identification": "Its body is rough and strongly tuberculate, with variable colouration. Unlike P. spinicornis, its mottling is irregular rather than forming a yellow-flanked stripe. Its telson is less rounded than that of P. dilatatus.",
+    "habitat": "It uses many habitats, especially under stones, dead wood and leaf litter, and tolerates drier sites than Oniscus asellus.",
+    "diet": "It feeds on decaying organic matter, including leaf litter, fungi and animal remains.",
+    "behavior": "It often shelters in damp refuges but can also climb walls and enter buildings.",
+    "reproduction": "Females carry eggs and hatchlings in a fluid-filled brood pouch.",
+    "ecology": "Experiments have documented viable seed dispersal after it eats fruits.",
+    "conservation": "The British group lists it as Least Concern in Great Britain; this regional status is not a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://bmig.org.uk/species/Porcellio-scaber",
+      "title": "Porcellio scaber — British Myriapod and Isopod Group"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Porcellio_scaber/",
+      "title": "Porcellio scaber — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://nph.onlinelibrary.wiley.com/doi/10.1002/ppp3.10519",
+      "title": "Seed dispersal by terrestrial isopods — Plants, People, Planet (2024)"
+    },
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/18820",
+      "title": "Porcellio scaber — FAUNA regional account"
+    }
+  ]
+}

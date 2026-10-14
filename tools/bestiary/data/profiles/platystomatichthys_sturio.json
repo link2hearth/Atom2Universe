@@ -1,0 +1,143 @@
+{
+  "id": "platystomatichthys_sturio",
+  "scientific": "Platystomatichthys sturio",
+  "group": "fish",
+  "name": {
+    "en": "Sturgeon catfish",
+    "fr": "Silure esturgeon"
+  },
+  "sections": {
+    "overview": {
+      "en": "Platystomatichthys sturio is a freshwater pimelodid catfish native to the Amazon basin.",
+      "fr": "Platystomatichthys sturio est un poisson-chat pimelodidé d’eau douce originaire du bassin de l’Amazone."
+    },
+    "identification": {
+      "en": "Its common name refers to its sturgeon-like head and body profile; despite the resemblance, it is a catfish, not a sturgeon.",
+      "fr": "Son nom courant évoque la silhouette de sa tête et de son corps, semblable à celle d’un esturgeon ; malgré cette ressemblance, c’est un poisson-chat et non un esturgeon."
+    },
+    "habitat": {
+      "en": "It is a demersal species reported from tropical freshwater in the Amazon basin.",
+      "fr": "C’est une espèce démersale signalée dans les eaux douces tropicales du bassin de l’Amazone."
+    },
+    "diet": {
+      "en": "The references consulted do not provide a reliable, detailed description of its wild diet.",
+      "fr": "Les références consultées ne donnent pas de description détaillée et fiable de son régime à l’état sauvage."
+    },
+    "behavior": {
+      "en": "Species-specific activity and social behavior are not well documented in the sources consulted.",
+      "fr": "L’activité et le comportement social propres à l’espèce sont peu documentés dans les sources consultées."
+    },
+    "reproduction": {
+      "en": "Breeding biology is not detailed in the references consulted.",
+      "fr": "Les références consultées ne détaillent pas la biologie reproductive de cette espèce."
+    },
+    "ecology": {
+      "en": "Much of its natural history remains unresolved in the available species accounts.",
+      "fr": "Une grande partie de son histoire naturelle reste inconnue dans les fiches disponibles."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2023 lists it as Least Concern, while noting that information about the species is limited.",
+      "fr": "L’évaluation de l’UICN publiée en 2023 la classe en « Préoccupation mineure », tout en soulignant que les informations sur l’espèce sont limitées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Platystomatichthys sturio — FishBase",
+        "fr": "Platystomatichthys sturio — FishBase"
+      },
+      "url": "https://www.fishbase.net.br/summary/13267",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "ecology"
+      ],
+      "facts": [
+        "FishBase reports an Amazonian demersal freshwater pimelodid; detailed life-history data are absent."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 12,
+        "total": 169,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Platystomatichthys sturio — ScotCat",
+        "fr": "Platystomatichthys sturio — ScotCat"
+      },
+      "url": "https://www.scotcat.com/pimelodidae/platystomatichthys_sturio.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "conservation"
+      ],
+      "facts": [
+        "The account explains the sturgeon-based species name and reports a 2023 IUCN Least Concern assessment despite limited information."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 18,
+        "total": 111,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Family Pimelodidae — The ETYFish Project",
+        "fr": "Famille des Pimelodidae — The ETYFish Project"
+      },
+      "url": "https://etyfish.org/pimelodidae/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The family account gives the etymology of Platystomatichthys and lists P. sturio as its species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species has comparatively sparse natural-history information in accessible summaries.",
+    "Conservation status is relayed from the IUCN 2023 assessment through a specialist catfish reference."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Range and habitat checked against FishBase; the sturgeon comparison and IUCN assessment date cross-checked in specialist catfish references."
+}

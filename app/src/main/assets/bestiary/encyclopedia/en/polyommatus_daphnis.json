@@ -1,0 +1,34 @@
+{
+  "id": "polyommatus_daphnis",
+  "name": "Meleager’s Blue",
+  "scientific": "Polyommatus daphnis",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Meleager’s Blue is a locally distributed blue butterfly of southeastern Europe and western Asia.",
+    "identification": "Both sexes have scalloped hindwing edges, especially pronounced in females. Males are blue above; females are usually brown, sometimes with blue at the wing bases.",
+    "habitat": "It inhabits warm, dry, often flowery grasslands, scrub edges and woodland clearings, from low hills to about eighteen hundred metres in some regional accounts.",
+    "diet": "Adults take nectar from flowers. Caterpillars feed on legumes, including crown vetch and milk-vetches such as Astragalus.",
+    "behavior": "It usually has one generation per year, with adults flying in summer; populations can be local and small.",
+    "reproduction": "It overwinters as an egg or young larva, depending on the region. Caterpillars may be attended by ants.",
+    "ecology": "Its scalloped hindwing margin is a useful distinction from many other blue butterflies. A Central European population study found high densities near patches of the larval host plant Securigera varia.",
+    "conservation": "The sources consulted describe it as local in parts of its range but do not provide a current global IUCN category."
+  },
+  "sources": [
+    {
+      "url": "https://pensoft.net/J_FILES/2/articles/568/3-3-Chapter-C-Lycaenidae-Riodinidae-Libytheidae.pdf",
+      "title": "Meleager’s Blue — Climatic Risk Atlas of European Butterflies"
+    },
+    {
+      "url": "https://ns340113.ip-5-196-79.eu/index.php?cd_nom=219766&pag=3_12_5especes&rub=3",
+      "title": "Azuré de l’orobe — Conservatoire d’espaces naturels de Provence-Alpes-Côte d’Azur"
+    },
+    {
+      "url": "https://www.lepinet.fr/especes/nation/lep/index.php?id=31390",
+      "title": "Polyommatus daphnis — Lepinet, French butterfly species account"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7316833/",
+      "title": "Polyommatus daphnis — population study, Ecology and Evolution (PMC)"
+    }
+  ]
+}

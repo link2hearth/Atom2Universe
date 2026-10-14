@@ -1,0 +1,30 @@
+{
+  "id": "platyrrhinus_helleri",
+  "name": "Heller’s broad-nosed bat",
+  "scientific": "Platyrrhinus helleri",
+  "group": "mammals",
+  "sections": {
+    "overview": "Platyrrhinus helleri is a fruit-eating leaf-nosed bat of Central America and northern South America.",
+    "identification": "Older specimens identified as P. helleri included close species now recognized separately, notably P. incarum, P. angustirostris and P. fusciventris, so identification within this group may require specialist characters.",
+    "habitat": "It uses a range of moist and seasonally dry habitats, including evergreen, semi-deciduous and dry forests, forest edges and fruit groves.",
+    "diet": "Its diet is mainly fruit, especially figs and fruits of Cecropia and Acnistus; insects are eaten occasionally.",
+    "behavior": "It roosts in pairs or small groups in tree crowns, caves, buildings, hollow trees or foliage; whether it builds leaf tents is not consistently documented.",
+    "reproduction": "Breeding is generally associated with the start of the rainy season, though timing varies among local populations.",
+    "ecology": "As a fruit-eater, it likely transports seeds between feeding and roosting places; the IUCN account documents its use of both natural and human-modified habitats.",
+    "conservation": "The IUCN assessment lists it as Least Concern, citing its broad range, presumed large population and tolerance of varied habitats."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T88159886A88159952.en",
+      "title": "Platyrrhinus helleri — IUCN Red List assessment"
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/j.1096-3642.2009.00610.x",
+      "title": "Systematics of the Platyrrhinus helleri species complex — Zoological Journal of the Linnean Society"
+    },
+    {
+      "url": "https://relcomlatinoamerica.net/aicoms/riomanso/",
+      "title": "Murciélago de nariz ancha de Heller — Red Latinoamericana para la Conservación de los Murciélagos"
+    }
+  ]
+}

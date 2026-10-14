@@ -1,0 +1,30 @@
+{
+  "id": "porcellio_monticola",
+  "name": "Cloporte montagnard",
+  "scientific": "Porcellio monticola",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Porcellio monticola est signalé en Europe occidentale. Des inventaires espagnols le mentionnent dans plusieurs provinces ibériques.",
+    "identification": "Il est relativement grand, aplati et assez lisse ; il peut être confondu avec P. montanus.",
+    "habitat": "On le trouve souvent sous les écorces en forêt, mais aussi dans les vallées fluviales, les falaises calcaires et les entrées de grottes.",
+    "diet": "Les fiches consultées ne décrivent pas précisément son régime alimentaire.",
+    "behavior": "La fiche française le signale toute l’année et précise qu’il s’abrite dans les fissures pendant la journée.",
+    "reproduction": "Les fiches examinées ne fournissent pas d’informations propres à l’espèce sur sa reproduction.",
+    "ecology": "Une révision de 2026 en Ligurie avertit que d’anciennes mentions sous le nom P. monticola pourraient concerner d’autres espèces ; elle examine séparément P. spinipennis.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée dans les sources consultées."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/237094",
+      "title": "Porcellio monticola — Observatoire FAUNA"
+    },
+    {
+      "url": "https://escholarship.org/content/qt7xv2g7n0/qt7xv2g7n0_noSplash_de0e157dd6f6e0226f187a40a8a4e001.pdf",
+      "title": "Oniscidea de Ligurie — Biogeographia (2026)"
+    },
+    {
+      "url": "https://graellsia.revistas.csic.es/index.php/graellsia/article/download/666/962",
+      "title": "Cloportes du Levant ibérique — Graellsia"
+    }
+  ]
+}

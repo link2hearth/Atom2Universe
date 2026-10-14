@@ -1,0 +1,30 @@
+{
+  "id": "porcellio_obsoletus",
+  "name": "Porcellio obsoletus",
+  "scientific": "Porcellio obsoletus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Porcellio obsoletus est un isopode terrestre historiquement connu surtout dans l’est de la Méditerranée.",
+    "identification": "Un article taxonomique de 2026 en propose une description actualisée, mais les sources accessibles ne résument pas de critères simples d’identification.",
+    "habitat": "Les sources examinées ne permettent pas d’établir un profil d’habitat bien étayé pour cette espèce.",
+    "diet": "Aucune information propre à l’espèce sur son régime alimentaire n’a été trouvée dans les sources consultées.",
+    "behavior": "Son comportement est peu documenté dans les sources examinées.",
+    "reproduction": "Les sources consultées ne fournissent pas de détails propres à l’espèce sur sa reproduction.",
+    "ecology": "Une étude de 2026 l’a signalé pour la première fois au Portugal continental et en Espagne ; sa répartition fragmentée peut résulter de l’histoire naturelle ou de transports humains.",
+    "conservation": "Aucune évaluation de conservation au niveau de l’espèce n’a été repérée dans les sources consultées."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.3157/021.133.0206",
+      "title": "Porcellio obsoletus dans la péninsule Ibérique — Entomological News (2026)"
+    },
+    {
+      "url": "https://www.vliz.be/en/imis?module=ref&refid=441061&show=html",
+      "title": "Porcellio obsoletus — notice VLIZ de l’article de 2026"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=554381",
+      "title": "Porcellio obsoletus — ITIS"
+    }
+  ]
+}

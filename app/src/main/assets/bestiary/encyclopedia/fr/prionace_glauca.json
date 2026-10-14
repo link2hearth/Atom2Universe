@@ -1,0 +1,26 @@
+{
+  "id": "prionace_glauca",
+  "name": "Requin bleu",
+  "scientific": "Prionace glauca",
+  "group": "fish",
+  "sections": {
+    "overview": "Le requin bleu est un requin océanique à vaste répartition, de la famille des Carcharhinidés.",
+    "identification": "Son corps fuselé présente un dos bleu cobalt, des flancs clairs et un ventre blanc ; son museau est long et étroit, et ses nageoires pectorales sont particulièrement longues.",
+    "habitat": "Il fréquente les eaux tropicales, subtropicales et tempérées chaudes des océans du monde entier.",
+    "diet": "Son régime, principalement pélagique, comprend des poissons et des calmars, ainsi que d’autres proies selon les occasions.",
+    "behavior": "Il entreprend de longues migrations saisonnières et peut se déplacer seul ou en groupes souvent séparés selon le sexe et la taille.",
+    "reproduction": "Il est vivipare, et ses caractéristiques reproductives varient selon les bassins océaniques.",
+    "ecology": "Prédateur pélagique situé haut dans le réseau alimentaire marin, il relie des régions océaniques éloignées par ses migrations.",
+    "conservation": "La fiche de la CMS rapporte un statut UICN mondial de « Quasi menacé » et un statut « En danger critique » en Méditerranée ; la pêche, y compris les captures accessoires, exerce une forte pression."
+  },
+  "sources": [
+    {
+      "url": "https://www.cms.int/species/prionace-glauca",
+      "title": "Requin bleu — Convention sur la conservation des espèces migratrices"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Prionace-glauca-Requin-peau-bleue-1660",
+      "title": "Requin peau bleue — DORIS, Fédération française d’études et de sports sous-marins"
+    }
+  ]
+}

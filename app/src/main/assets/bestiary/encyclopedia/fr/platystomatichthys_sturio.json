@@ -1,0 +1,30 @@
+{
+  "id": "platystomatichthys_sturio",
+  "name": "Silure esturgeon",
+  "scientific": "Platystomatichthys sturio",
+  "group": "fish",
+  "sections": {
+    "overview": "Platystomatichthys sturio est un poisson-chat pimelodidé d’eau douce originaire du bassin de l’Amazone.",
+    "identification": "Son nom courant évoque la silhouette de sa tête et de son corps, semblable à celle d’un esturgeon ; malgré cette ressemblance, c’est un poisson-chat et non un esturgeon.",
+    "habitat": "C’est une espèce démersale signalée dans les eaux douces tropicales du bassin de l’Amazone.",
+    "diet": "Les références consultées ne donnent pas de description détaillée et fiable de son régime à l’état sauvage.",
+    "behavior": "L’activité et le comportement social propres à l’espèce sont peu documentés dans les sources consultées.",
+    "reproduction": "Les références consultées ne détaillent pas la biologie reproductive de cette espèce.",
+    "ecology": "Une grande partie de son histoire naturelle reste inconnue dans les fiches disponibles.",
+    "conservation": "L’évaluation de l’UICN publiée en 2023 la classe en « Préoccupation mineure », tout en soulignant que les informations sur l’espèce sont limitées."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/13267",
+      "title": "Platystomatichthys sturio — FishBase"
+    },
+    {
+      "url": "https://www.scotcat.com/pimelodidae/platystomatichthys_sturio.htm",
+      "title": "Platystomatichthys sturio — ScotCat"
+    },
+    {
+      "url": "https://etyfish.org/pimelodidae/",
+      "title": "Famille des Pimelodidae — The ETYFish Project"
+    }
+  ]
+}

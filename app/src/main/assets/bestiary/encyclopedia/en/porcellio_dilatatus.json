@@ -1,0 +1,42 @@
+{
+  "id": "porcellio_dilatatus",
+  "name": "Broad Woodlouse",
+  "scientific": "Porcellio dilatatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Porcellio dilatatus is a terrestrial woodlouse native to southwestern Europe and introduced in many other regions.",
+    "identification": "It is broad-bodied, flattened and rough, and females can reach about 20 mm. Its rounded telson helps distinguish it from the pointed telson of P. scaber.",
+    "habitat": "It often lives close to people, including compost or manure heaps and stables, but records also come from some natural habitats.",
+    "diet": "Like other woodlice, it feeds on decaying plant material; species-specific diet details are limited in the sources consulted.",
+    "behavior": "Its frequent presence in buildings and manure or compost piles reflects a tolerance for human-modified habitats.",
+    "reproduction": "In females, fertilization is associated with ovarian maturation and the brood-related molt, as shown in physiological work on this species.",
+    "ecology": "P. albinus is a burrowing isopod of sandy desert habitats. P. dilatatus is instead frequently recorded around human settlements.",
+    "conservation": "No global conservation assessment is reported in the regional and taxonomic sources consulted."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/237085",
+      "title": "Porcellio dilatatus — French FAUNA species record based on INPN data"
+    },
+    {
+      "url": "https://bmig.org.uk/species/porcellio-dilatatus",
+      "title": "Porcellio dilatatus — British Myriapod and Isopod Group"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/13585666/",
+      "title": "Induction of ovarian maturity and parturial moulting in Porcellio dilatatus — PubMed"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0147651300919821",
+      "title": "Optimization of culture conditions for Porcellio dilatatus — ScienceDirect"
+    },
+    {
+      "url": "https://doi.org/10.1080/07924259.2016.1263242",
+      "title": "Porcellio albinus — reproductive and ecological study"
+    },
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/25151/jardibiodiv-Cloportes",
+      "title": "Woodlice — INRAE Jardibiodiv"
+    }
+  ]
+}

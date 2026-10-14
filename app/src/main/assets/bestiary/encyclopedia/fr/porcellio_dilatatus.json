@@ -1,0 +1,42 @@
+{
+  "id": "porcellio_dilatatus",
+  "name": "Cloporte dilaté",
+  "scientific": "Porcellio dilatatus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Porcellio dilatatus est un cloporte terrestre originaire du sud-ouest de l’Europe et introduit dans de nombreuses autres régions.",
+    "identification": "Son corps est large, aplati et rugueux; les femelles peuvent atteindre environ 20 mm. Son telson arrondi aide à le distinguer du telson pointu de P. scaber.",
+    "habitat": "Il vit souvent près des humains, notamment dans les tas de compost ou de fumier et les étables, mais il est aussi signalé dans certains milieux naturels.",
+    "diet": "Comme les autres cloportes, il consomme des végétaux en décomposition; les sources consultées donnent peu de détails sur son régime propre.",
+    "behavior": "Sa présence fréquente dans les bâtiments et les tas de fumier ou de compost témoigne de sa tolérance aux milieux modifiés par l’humain.",
+    "reproduction": "Chez les femelles, la fécondation est associée à la maturation ovarienne et à la mue liée à la gestation, comme l’a montré une étude physiologique de cette espèce.",
+    "ecology": "P. albinus est un cloporte fouisseur des habitats sableux désertiques. P. dilatatus est plutôt souvent signalé près des habitations.",
+    "conservation": "Les sources régionales et taxonomiques consultées ne rapportent pas d’évaluation mondiale de conservation."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/237085",
+      "title": "Porcellio dilatatus — fiche espèce FAUNA fondée sur les données de l’INPN"
+    },
+    {
+      "url": "https://bmig.org.uk/species/porcellio-dilatatus",
+      "title": "Porcellio dilatatus — British Myriapod and Isopod Group"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/13585666/",
+      "title": "Induction de la maturité ovarienne et de la mue parturiale chez Porcellio dilatatus — PubMed"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0147651300919821",
+      "title": "Optimisation des conditions d’élevage de Porcellio dilatatus — ScienceDirect"
+    },
+    {
+      "url": "https://doi.org/10.1080/07924259.2016.1263242",
+      "title": "Porcellio albinus — étude de la reproduction et de l’écologie"
+    },
+    {
+      "url": "https://ephytia.inrae.fr/fr/C/25151/jardibiodiv-Cloportes",
+      "title": "Cloportes — INRAE Jardibiodiv"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "platystomatichthys_sturio",
+  "name": "Sturgeon catfish",
+  "scientific": "Platystomatichthys sturio",
+  "group": "fish",
+  "sections": {
+    "overview": "Platystomatichthys sturio is a freshwater pimelodid catfish native to the Amazon basin.",
+    "identification": "Its common name refers to its sturgeon-like head and body profile; despite the resemblance, it is a catfish, not a sturgeon.",
+    "habitat": "It is a demersal species reported from tropical freshwater in the Amazon basin.",
+    "diet": "The references consulted do not provide a reliable, detailed description of its wild diet.",
+    "behavior": "Species-specific activity and social behavior are not well documented in the sources consulted.",
+    "reproduction": "Breeding biology is not detailed in the references consulted.",
+    "ecology": "Much of its natural history remains unresolved in the available species accounts.",
+    "conservation": "The IUCN assessment published in 2023 lists it as Least Concern, while noting that information about the species is limited."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.net.br/summary/13267",
+      "title": "Platystomatichthys sturio — FishBase"
+    },
+    {
+      "url": "https://www.scotcat.com/pimelodidae/platystomatichthys_sturio.htm",
+      "title": "Platystomatichthys sturio — ScotCat"
+    },
+    {
+      "url": "https://etyfish.org/pimelodidae/",
+      "title": "Family Pimelodidae — The ETYFish Project"
+    }
+  ]
+}

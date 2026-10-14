@@ -1,0 +1,145 @@
+{
+  "id": "porcellio_monticola",
+  "scientific": "Porcellio monticola",
+  "group": "invertebrates",
+  "name": {
+    "en": "Mountain woodlouse",
+    "fr": "Cloporte montagnard"
+  },
+  "sections": {
+    "overview": {
+      "en": "Porcellio monticola is recorded in western Europe. Spanish surveys report it from multiple Iberian provinces.",
+      "fr": "Porcellio monticola est signalé en Europe occidentale. Des inventaires espagnols le mentionnent dans plusieurs provinces ibériques."
+    },
+    "identification": {
+      "en": "It is relatively large, flattened and rather smooth; it can be confused with P. montanus.",
+      "fr": "Il est relativement grand, aplati et assez lisse ; il peut être confondu avec P. montanus."
+    },
+    "habitat": {
+      "en": "It is often found beneath bark in woodland, and also in river valleys, limestone cliffs and cave entrances.",
+      "fr": "On le trouve souvent sous les écorces en forêt, mais aussi dans les vallées fluviales, les falaises calcaires et les entrées de grottes."
+    },
+    "diet": {
+      "en": "The accounts reviewed do not describe its diet in detail.",
+      "fr": "Les fiches consultées ne décrivent pas précisément son régime alimentaire."
+    },
+    "behavior": {
+      "en": "The French account reports it throughout the year and notes that it shelters in crevices by day.",
+      "fr": "La fiche française le signale toute l’année et précise qu’il s’abrite dans les fissures pendant la journée."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive information was not available in the accounts reviewed.",
+      "fr": "Les fiches examinées ne fournissent pas d’informations propres à l’espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "A 2026 Ligurian review cautions that older records labelled P. monticola may be other species; it discusses P. spinipennis separately.",
+      "fr": "Une révision de 2026 en Ligurie avertit que d’anciennes mentions sous le nom P. monticola pourraient concerner d’autres espèces ; elle examine séparément P. spinipennis."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was found in the sources consulted.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Porcellio monticola — Observatoire FAUNA",
+        "fr": "Porcellio monticola — Observatoire FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/237094",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "French account gives range, identification and habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 185,
+        "notes_words": 7,
+        "total": 192,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Oniscidea of Liguria — Biogeographia (2026)",
+        "fr": "Oniscidea de Ligurie — Biogeographia (2026)"
+      },
+      "url": "https://escholarship.org/content/qt7xv2g7n0/qt7xv2g7n0_noSplash_de0e157dd6f6e0226f187a40a8a4e001.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed revision reassesses old Ligurian P. monticola records and separately discusses P. spinipennis amid confusion involving P. orarum."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 18,
+        "total": 63,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Woodlice of the Iberian Levant — Graellsia",
+        "fr": "Cloportes du Levant ibérique — Graellsia"
+      },
+      "url": "https://graellsia.revistas.csic.es/index.php/graellsia/article/download/666/962",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "Spanish faunistic paper records the species from many Iberian provinces."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 17,
+        "notes_words": 10,
+        "total": 27,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Ligurian authors caution that old Italian records assigned to P. monticola likely include other species.",
+    "Diet, reproduction and conservation were not detailed in the reviewed accounts."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French and Spanish species records with a 2026 peer-reviewed Ligurian revision; retained caveats on older identifications."
+}

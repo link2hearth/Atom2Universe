@@ -1,0 +1,168 @@
+{
+  "id": "pristimantis_xylochobates",
+  "scientific": "Pristimantis xylochobates",
+  "group": "amphibians",
+  "name": {
+    "en": "Pristimantis xylochobates",
+    "fr": "Pristimantis xylochobates"
+  },
+  "sections": {
+    "overview": {
+      "en": "This Colombian frog was originally described as Eleutherodactylus xylochobates and is now placed in Pristimantis. The original description identifies P. cacao and P. chrysops as its closest relatives.",
+      "fr": "Cette grenouille colombienne a d’abord été décrite sous le nom d’Eleutherodactylus xylochobates et est aujourd’hui classée dans le genre Pristimantis. La description originale indique que P. cacao et P. chrysops sont ses plus proches parentes."
+    },
+    "identification": {
+      "en": "The regional species account describes adults as reddish brown, with a smooth back; compared with P. chrysops, they are smaller and lack heel tubercles and labial stripes.",
+      "fr": "La fiche régionale décrit les adultes comme brun rougeâtre, avec le dos lisse ; par rapport à P. chrysops, ils sont plus petits et dépourvus de tubercules au talon et de rayures labiales."
+    },
+    "habitat": {
+      "en": "It is known from the high crest of the Serranía de los Paraguas, in cloud-forest country of western Colombia.",
+      "fr": "Elle est connue des hauteurs de la Serranía de los Paraguas, dans les forêts de nuages de l’ouest de la Colombie."
+    },
+    "diet": {
+      "en": "Species-specific diet details were not found in the consulted accounts.",
+      "fr": "Les sources consultées ne précisent pas le régime alimentaire propre à cette espèce."
+    },
+    "behavior": {
+      "en": "The consulted species accounts provide no specific behavioral observations.",
+      "fr": "Les fiches consultées ne fournissent pas d’observations comportementales propres à cette espèce."
+    },
+    "reproduction": {
+      "en": "The consulted species accounts provide no species-specific reproductive details.",
+      "fr": "Les fiches consultées ne fournissent pas de détails sur la reproduction propre à cette espèce."
+    },
+    "ecology": {
+      "en": "Its known range is exceptionally restricted: the global threatened-amphibian account reported only two localities along this mountain crest.",
+      "fr": "Son aire connue est extrêmement restreinte : la fiche mondiale des amphibiens menacés ne signalait que deux localités sur cette crête montagneuse."
+    },
+    "conservation": {
+      "en": "A global threatened-amphibian account classified it as Vulnerable. Colombia’s 2024 national threatened-species list places it in Critically Endangered.",
+      "fr": "Une évaluation mondiale des amphibiens menacés la classait comme Vulnérable. La liste nationale colombienne des espèces menacées de 2024 la classe « En danger critique »."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pristimantis xylochobates — Amphibian Species of the World, American Museum of Natural History",
+        "fr": "Pristimantis xylochobates — Amphibian Species of the World, American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Brachycephaloidea/Craugastoridae/Pristimantinae/Pristimantis/Pristimantis-xylochobates",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "AMNH lists the accepted combination Pristimantis xylochobates, its former Eleutherodactylus combination, and the original account’s stated close relationships to E. cacao and E. chrysops; the account has no diet, behavior or reproductive section."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 131,
+        "notes_words": 33,
+        "total": 164,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Libro Rojo de los Anfibios del Valle del Cauca — CVC",
+        "fr": "Livre rouge des amphibiens du Valle del Cauca — CVC"
+      },
+      "url": "https://ecopedia.cvc.gov.co/sites/default/files/archivosAdjuntos/libro_rojo_de_anfibios_valle_del_cauca.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Spanish regional account describes the adult colour and smooth dorsal skin and contrasts its smaller size, lack of heel tubercles and lack of labial stripes with P. chrysops."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 29,
+        "total": 89,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Eleutherodactylus xylochobates — Threatened Amphibians of the World, species profile",
+        "fr": "Eleutherodactylus xylochobates — Threatened Amphibians of the World, fiche d’espèce"
+      },
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2018/11/TAW-Threatened-Species-Profiles_Part3.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The global species profile places its known localities on the Serranía de los Paraguas crest in Colombia, records Vulnerable D2, and describes its distribution as limited to two sites."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 29,
+        "total": 127,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Annex to Resolution 0126 of 2024 — Official Colombian list of threatened species",
+        "fr": "Annexe à la Résolution 0126 de 2024 — Liste officielle colombienne des espèces menacées"
+      },
+      "url": "https://www.suin-juriscol.gov.co/imagenes/07/03/2024/1709837014993_ANEXO%20RESOLUCION%20126.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "The 2024 Colombian legal annex lists Pristimantis xylochobates under Critically Endangered (CR)."
+      ],
+      "prose_claims": [
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 26,
+        "notes_words": 12,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The older global profile reports Vulnerable D2, whereas the 2024 Colombian legal list reports Critically Endangered; these are separate assessments and jurisdictions. The taxonomic sources disagree on elevation data, so no altitude is stated. No species-specific diet, behavior or reproductive detail was found in the consulted sources."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used an English taxonomic account and global assessment alongside Spanish-language regional documentation and Colombia’s 2024 legal list. No profile for P. cacao or P. chrysops was found in the bestiary inventory, so the relative comparison remains descriptive rather than an internal fiche link."
+}

@@ -1,0 +1,141 @@
+{
+  "id": "platynematichthys_notatus",
+  "scientific": "Platynematichthys notatus",
+  "group": "fish",
+  "name": {
+    "en": "Lince catfish",
+    "fr": "Platynematichthys notatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Platynematichthys notatus is a freshwater catfish in the South American family Pimelodidae.",
+      "fr": "Platynematichthys notatus est un poisson-chat d’eau douce de la famille sud-américaine des Pimelodidae."
+    },
+    "identification": {
+      "en": "It is a demersal member of the long-whiskered catfish family; its genus name refers to flattened barbels.",
+      "fr": "C’est un poisson démersal de la famille des poissons-chats à longs barbillons ; le nom de son genre évoque des barbillons aplatis."
+    },
+    "habitat": {
+      "en": "It is recorded from the Amazon and Orinoco river basins.",
+      "fr": "L’espèce est signalée dans les bassins de l’Amazone et de l’Orénoque."
+    },
+    "diet": {
+      "en": "The species pages consulted provide no detailed account of its natural diet.",
+      "fr": "Les fiches consultées ne décrivent pas en détail son régime alimentaire naturel."
+    },
+    "behavior": {
+      "en": "The consulted sources do not describe its activity patterns.",
+      "fr": "Les sources consultées ne décrivent pas son rythme d’activité."
+    },
+    "reproduction": {
+      "en": "Species-specific reproductive information was not available in the references consulted.",
+      "fr": "Les références consultées ne fournissent pas d’informations propres à la reproduction de cette espèce."
+    },
+    "ecology": {
+      "en": "The genus Platynematichthys contains this single currently recognized species, rather than a set of described close congeners.",
+      "fr": "Le genre Platynematichthys ne comprend actuellement que cette espèce reconnue, et non plusieurs espèces proches décrites."
+    },
+    "conservation": {
+      "en": "FishBase relays a global IUCN assessment of Least Concern, dated 2020.",
+      "fr": "FishBase relaie une évaluation mondiale de l’UICN en catégorie « Préoccupation mineure », datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Platynematichthys notatus — FishBase",
+        "fr": "Platynematichthys notatus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Platynematichthys_notatus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase summarizes distribution, ecology, feeding and conservation data."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 172,
+        "notes_words": 8,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Fish identification field guide: Platynematichthys notatus — FishBase",
+        "fr": "Guide d’identification des poissons : Platynematichthys notatus — FishBase"
+      },
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Platynematichthys&speciesname=notatus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The field guide records Brazilian and Portuguese common names, including coroatá and piranambu."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pimelodidae — The ETYFish Project",
+        "fr": "Pimelodidae — The ETYFish Project"
+      },
+      "url": "https://etyfish.org/pimelodidae/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The genus name Platynematichthys derives from Greek terms meaning flat thread or filament and fish, referring to tape-like flat barbels."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 20,
+        "total": 59,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Natural diet, detailed behavior and reproduction are not sufficiently covered by the strongest accessible species summaries."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept ecological claims brief where the consulted summaries lacked species-specific observations."
+}

@@ -1,0 +1,34 @@
+{
+  "id": "pristimantis_xylochobates",
+  "name": "Pristimantis xylochobates",
+  "scientific": "Pristimantis xylochobates",
+  "group": "amphibians",
+  "sections": {
+    "overview": "This Colombian frog was originally described as Eleutherodactylus xylochobates and is now placed in Pristimantis. The original description identifies P. cacao and P. chrysops as its closest relatives.",
+    "identification": "The regional species account describes adults as reddish brown, with a smooth back; compared with P. chrysops, they are smaller and lack heel tubercles and labial stripes.",
+    "habitat": "It is known from the high crest of the Serranía de los Paraguas, in cloud-forest country of western Colombia.",
+    "diet": "Species-specific diet details were not found in the consulted accounts.",
+    "behavior": "The consulted species accounts provide no specific behavioral observations.",
+    "reproduction": "The consulted species accounts provide no species-specific reproductive details.",
+    "ecology": "Its known range is exceptionally restricted: the global threatened-amphibian account reported only two localities along this mountain crest.",
+    "conservation": "A global threatened-amphibian account classified it as Vulnerable. Colombia’s 2024 national threatened-species list places it in Critically Endangered."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Anura/Brachycephaloidea/Craugastoridae/Pristimantinae/Pristimantis/Pristimantis-xylochobates",
+      "title": "Pristimantis xylochobates — Amphibian Species of the World, American Museum of Natural History"
+    },
+    {
+      "url": "https://ecopedia.cvc.gov.co/sites/default/files/archivosAdjuntos/libro_rojo_de_anfibios_valle_del_cauca.pdf",
+      "title": "Libro Rojo de los Anfibios del Valle del Cauca — CVC"
+    },
+    {
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2018/11/TAW-Threatened-Species-Profiles_Part3.pdf",
+      "title": "Eleutherodactylus xylochobates — Threatened Amphibians of the World, species profile"
+    },
+    {
+      "url": "https://www.suin-juriscol.gov.co/imagenes/07/03/2024/1709837014993_ANEXO%20RESOLUCION%20126.pdf",
+      "title": "Annex to Resolution 0126 of 2024 — Official Colombian list of threatened species"
+    }
+  ]
+}
