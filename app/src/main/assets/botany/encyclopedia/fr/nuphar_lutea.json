@@ -1,0 +1,15 @@
+{
+  "id": "nuphar_lutea",
+  "sections": [
+    {"title": "Milieu et port", "text": "Le nénuphar jaune est une vivace aquatique des étangs, lacs et eaux lentes. Son rhizome rampant mesure environ 3 à 8 cm de diamètre. Les feuilles flottantes font environ 15 à 30 × 10 à 22 cm."},
+    {"title": "Fleurs et fruits", "text": "Les fleurs jaunes mesurent environ 4 à 5 cm. Les pièces florales visibles principales sont des sépales; de nombreux petits pétales se trouvent à l’intérieur. Le fruit mesure environ 2,5 cm et contient des graines d’environ 5 mm."},
+    {"title": "Usages et précautions", "text": "Un usage alimentaire traditionnel du rhizome après cuisson est rapporté, mais la plante contient des alcaloïdes et ne doit pas être consommée crue. Éviter les préparations concentrées et ne pas confondre cet usage ancien avec une recommandation de consommation."}
+  ],
+  "sources": [
+    {"title": "InfoFlora — Nuphar lutea", "url": "https://www.infoflora.ch/fr/flore/nuphar-lutea.html"},
+    {"title": "Flora of China — Nuphar lutea", "url": "https://www.efloras.org/florataxon.aspx?flora_id=2&taxon_id=220009308"},
+    {"title": "Verspreidingsatlas — Nuphar lutea", "url": "https://www.verspreidingsatlas.nl/0865"},
+    {"title": "UK government literature review — Nuphar lutea", "url": "https://assets.publishing.service.gov.uk/media/6034e1cdd3bf7f2654b735ef/SC120008-R4_Literature_review.pdf"}
+  ],
+  "related": []
+}

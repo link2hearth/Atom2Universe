@@ -1,0 +1,15 @@
+{
+  "id": "nigrum",
+  "sections": [
+    {"title": "Identification et habitat", "text": "La fiche du catalogue correspond à Solanum nigrum, la morelle noire, et non à la belladone. Cette herbe annuelle ou vivace de courte durée pousse souvent dans les terrains perturbés; sa taille varie fortement, d’environ 5 cm à 1,5 m."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles mesurent environ 2,5 à 9,5 × 1,8 à 6 cm. Les fleurs blanches étoilées portent des anthères jaunes. Les baies mûres sont généralement noir-violet, mates et mesurent 5 à 10 mm."},
+    {"title": "Toxicité et usages", "text": "La toxicité varie selon les populations et le stade de maturité; les fruits verts et les parties vertes peuvent contenir des glycoalcaloïdes toxiques. Des sources signalent la consommation de fruits mûrs noirs, mais le complexe d’espèces et les risques d’identification rendent toute cueillette hasardeuse. Ne consommer que des produits alimentaires identifiés et préparés de façon fiable."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Solanum nigrum", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A30048260-2/general-information"},
+    {"title": "Colorado State University Veterinary Diagnostic Laboratories — Solanum nigrum", "url": "https://poisonousplants.cvmbs.colostate.edu/plant/90"},
+    {"title": "Queensland Poisons Information Centre — Blackberry nightshade", "url": "https://www.poisonsinfo.health.qld.gov.au/plants-and-mushrooms/blackberry-nightshade-solanum-nigrum-solanum-americanum"},
+    {"title": "Review of Solanum nigrum nutrition and toxicity", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9424827/"}
+  ],
+  "related": []
+}

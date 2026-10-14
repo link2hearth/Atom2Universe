@@ -1,0 +1,15 @@
+{
+  "id": "nesocodon_mauritianus",
+  "sections": [
+    {"title": "Port et habitat", "text": "Nesocodon mauritianus est un petit sous-arbrisseau endémique de l’île Maurice. La planche montre des feuilles épaisses et des fleurs bleu-vert pendantes; la taille précise n’est pas nécessaire à l’identification."},
+    {"title": "Fleurs et pollinisation", "text": "Les fleurs produisent un nectar rouge contenant le pigment nesocodin. Des geckos diurnes Phelsuma en sont attirés et constituent probablement les pollinisateurs; cette fonction reste présentée comme une hypothèse étayée, non comme une certitude absolue."},
+    {"title": "Comestibilité", "text": "Aucun usage alimentaire n’a été documenté dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Royal Botanic Gardens, Kew — Red nectar and Mauritian geckos", "url": "https://www.kew.org/read-and-watch/secrets-kew-temperate-house"},
+    {"title": "Hansen et al. — Geckos and red nectar in Nesocodon", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1618895/"},
+    {"title": "Nesocodin pigment study", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8812537/"},
+    {"title": "Royal Botanic Gardens Edinburgh — Nesocodon mauritianus", "url": "https://stories.rbge.org.uk/archives/25796"}
+  ],
+  "related": []
+}

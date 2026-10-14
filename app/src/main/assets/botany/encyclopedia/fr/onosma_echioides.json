@@ -1,0 +1,14 @@
+{
+  "id": "onosma_echioides",
+  "sections": [
+    {"title": "Port et habitat", "text": "Onosma echioides est une vivace à base ligneuse pouvant atteindre environ 50 cm. Elle pousse dans les pelouses sèches et rocailles calcaires du sud de l’Europe, jusqu’à environ 1 400 m."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Les feuilles lancéolées et les tiges sont couvertes de poils raides. Les fleurs jaune pâle, pendantes et tubulaires, mesurent environ 2,5 cm. Chaque fruit se divise en quatre nucules de 2 à 3,8 mm."},
+    {"title": "Identification et comestibilité", "text": "Le taxon comprend des sous-espèces et des variations régionales; l’illustration ne permet pas de déterminer une forme infraspécifique. Aucun usage alimentaire ou toxicité fiable n’a été établi dans les sources consultées."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Onosma echioides", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A119634-1"},
+    {"title": "Royal Botanic Garden Edinburgh — Flora Europaea record", "url": "https://websites.rbge.org.uk/cgi-bin/nph-readbtree.pl/feout?GENUS_XREF=Onosma&SPECIES_XREF=echioides"},
+    {"title": "Antropocene — Onosma echioides", "url": "https://antropocene.it/en/2023/02/25/onosma-echioides-2/"}
+  ],
+  "related": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "nesocodon_mauritianus",
+  "sections": [
+    {"title": "Form and habitat", "text": "Nesocodon mauritianus is a small subshrub endemic to Mauritius. The plate shows thick leaves and hanging blue-green flowers; an exact size is not needed for identification."},
+    {"title": "Flowers and pollination", "text": "The flowers produce red nectar containing the pigment nesocodin. Day geckos of the genus Phelsuma are attracted to it and are considered probable pollinators; this is a well-supported hypothesis, not absolute certainty."},
+    {"title": "Edibility", "text": "No food use was documented in the sources consulted."}
+  ],
+  "sources": [
+    {"title": "Royal Botanic Gardens, Kew — Red nectar and Mauritian geckos", "url": "https://www.kew.org/read-and-watch/secrets-kew-temperate-house"},
+    {"title": "Hansen et al. — Geckos and red nectar in Nesocodon", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1618895/"},
+    {"title": "Nesocodin pigment study", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8812537/"},
+    {"title": "Royal Botanic Gardens Edinburgh — Nesocodon mauritianus", "url": "https://stories.rbge.org.uk/archives/25796"}
+  ],
+  "related": []
+}

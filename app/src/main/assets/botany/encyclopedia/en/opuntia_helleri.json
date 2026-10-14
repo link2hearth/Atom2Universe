@@ -1,0 +1,15 @@
+{
+  "id": "opuntia_helleri",
+  "sections": [
+    {"title": "Identification and range", "text": "Heller's prickly pear is a branching cactus endemic to several northern Galápagos Islands. POWO treats Opuntia helleri as a synonym of O. galapageia var. helleri, while the Charles Darwin Foundation retains O. helleri at species rank."},
+    {"title": "Pads, flowers and fruit", "text": "The cactus bears flattened cladodes, spiny areoles and yellow flowers. The plate shows a yellow-green fruit; its ripe colour could not be verified specifically for this taxon."},
+    {"title": "Edibility and conservation", "text": "Wildlife consumption of the fruit is reported, but no human food use specific to this species was verified. The Charles Darwin Foundation classifies the species as Vulnerable."}
+  ],
+  "sources": [
+    {"title": "Charles Darwin Foundation — Galápagos checklist: Opuntia helleri", "url": "https://datazone.darwinfoundation.org/en/checklist/?species=247"},
+    {"title": "Plants of the World Online — Opuntia galapageia var. helleri", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A175098-2"},
+    {"title": "Evolutionary radiation and distribution of Galápagos Opuntia", "url": "https://academic.oup.com/evolinnean/article/3/1/kzae021/7747600"},
+    {"title": "Galapagos Conservation Trust — Prickly-pear cactus", "url": "https://galapagosconservation.org.uk/species/prickly-pear-cactus/"}
+  ],
+  "related": ["opuntia_stricta"]
+}
