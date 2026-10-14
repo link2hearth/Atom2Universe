@@ -1,0 +1,14 @@
+{
+  "id": "quercus_rubra",
+  "sections": [
+    {"title": "Red oak", "text": "Northern red oak is a large deciduous tree native to eastern North America. It typically grows about 15–23 m tall with a similarly broad crown. Its leaves have 7–11 sharply pointed lobes and turn reddish-brown in autumn."},
+    {"title": "Acorns and food", "text": "The rounded acorns are about 2–4 cm long and take two growing seasons to mature. They are edible after tannins are removed by leaching or boiling; raw acorns are astringent. The plate correctly shows pointed leaves, hanging catkins and a large acorn."},
+    {"title": "Comparison", "text": "Unlike evergreen Q. ilex and downy-leaved Q. pubescens, this North American oak has sharply bristle-tipped lobes. Its acorns mature over two seasons, unlike those of Q. ilex and Q. pubescens."}
+  ],
+  "sources": [
+    {"title": "North Carolina Extension Gardener Plant Toolbox — Quercus rubra", "url": "https://plants.ces.ncsu.edu/plants/quercus-rubra/common-name/red-oak/"},
+    {"title": "USDA Plants Database — Quercus rubra characteristics", "url": "https://plants.sc.egov.usda.gov/plant-profile/QURU/characteristics"},
+    {"title": "US Forest Service FEIS — Quercus rubra", "url": "https://research.fs.usda.gov/feis/species-reviews/querub"}
+  ],
+  "related": ["quercus_ilex", "quercus_pubescens"]
+}

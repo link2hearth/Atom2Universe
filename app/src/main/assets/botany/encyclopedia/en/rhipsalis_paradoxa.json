@@ -1,0 +1,13 @@
+{
+  "id": "rhipsalis_paradoxa",
+  "sections": [
+    {"title": "Growth and stems", "text": "Rhipsalis paradoxa is an epiphytic cactus native to southeastern and southern Brazil. Its long, hanging shoots can reach about 5 m; their stiff, three-angled segments join in a distinctive zigzag chain."},
+    {"title": "Flowers and fruit", "text": "Small white, radially symmetrical flowers, about 1–2 cm across, grow singly from the areoles. The globose fruits are pale or translucent when ripe."},
+    {"title": "Image comparison", "text": "The plate accurately shows the pendant chains of three-winged segments and white flowers. It does not establish an edible use for the fruit."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Rhipsalis paradoxa", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:138343-1"},
+    {"title": "Rhipsalis.com — Rhipsalis paradoxa", "url": "https://rhipsalis.com/species/paradoxa.htm"}
+  ],
+  "related": ["rhipsalis_pilocarpa"]
+}

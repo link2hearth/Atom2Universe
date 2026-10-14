@@ -1,0 +1,14 @@
+{
+  "id": "quercus_pubescens",
+  "sections": [
+    {"title": "Port et feuilles", "text": "Le chêne pubescent est un arbre caduc de taille moyenne, originaire du sud et du centre de l’Europe ainsi que de l’ouest de l’Asie. Il atteint couramment environ 15 à 20 m et porte une couronne large et irrégulière. Ses feuilles lobées sont couvertes de poils gris dessous, comme ses jeunes rameaux."},
+    {"title": "Glands", "text": "Les glands mûrissent en un an, souvent par groupes de trois ou quatre ; ils mesurent environ 1 à 3,5 cm et sont partiellement enfermés dans une cupule à écailles velues. Les sources consultées les décrivent comme nourriture pour la faune, sans établir de préparation humaine sûre ni de toxicité propre à l’espèce."},
+    {"title": "Comparaison", "text": "Il se distingue du chêne vert persistant Quercus ilex et du Q. rubra nord-américain par ses feuilles caduques et leur revers duveteux. Q. rubra porte plutôt des lobes terminés par des pointes aiguës."}
+  ],
+  "sources": [
+    {"title": "European Atlas of Forest Tree Species, JRC — Quercus pubescens", "url": "https://forest.jrc.ec.europa.eu/media/atlas/Quercus_pubescens.pdf"},
+    {"title": "Oaks of the World — Quercus pubescens", "url": "https://oakcompendium.org/species/pubescens"},
+    {"title": "Plants of the World Online, Kew — Quercus pubescens", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:326376-2/general-information"}
+  ],
+  "related": ["quercus_ilex", "quercus_rubra"]
+}

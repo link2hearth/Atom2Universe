@@ -1,0 +1,14 @@
+{
+  "id": "raphanus_raphanistrum",
+  "sections": [
+    {"title": "Radis sauvage", "text": "Le radis sauvage est une herbe annuelle ou bisannuelle originaire d’Europe, du bassin méditerranéen et d’Asie centrale. Il peut atteindre environ 1 m. Les feuilles inférieures très découpées, les fleurs jaune pâle à quatre pétales et les siliques segmentées de la planche correspondent à l’espèce."},
+    {"title": "Siliques et alimentation", "text": "Kew indique que l’espèce est utilisée comme aliment sans préciser les parties concernées. Il ne faut pas supposer que toutes les plantes sauvages possèdent la racine de réserve comestible du radis cultivé ; les sources alimentaires distinguent la sous-espèce cultivée. L’ASPCA classe le radis sauvage comme toxique pour les chevaux. Les parties sûres pour l’humain et leur préparation n’ont pas été vérifiées ici."},
+    {"title": "Graines", "text": "Le fruit est une silique segmentée qui reste fermée à maturité, avec une graine dans chaque segment fertile ; la silique étroite en chapelet de la planche est caractéristique."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online, Kew — Raphanus raphanistrum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:217826-2/general-information"},
+    {"title": "Oxford University — Field weeds guide: Wild Radish", "url": "https://www.arch.ox.ac.uk/files/fieldweedsinthesaultregionpdf"},
+    {"title": "ASPCA — Wild Radish", "url": "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/wild-radish"}
+  ],
+  "related": []
+}

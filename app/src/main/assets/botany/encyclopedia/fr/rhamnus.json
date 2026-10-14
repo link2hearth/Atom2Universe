@@ -1,0 +1,14 @@
+{
+  "id": "rhamnus",
+  "sections": [
+    {"title": "Port et feuilles", "text": "Rhamnus cathartica, le nerprun purgatif, est un arbuste ou petit arbre caduc et épineux, généralement haut d’environ 5,5 à 9 m et large de 4,5 à 6 m. Ses feuilles ovales ont un bord finement denté et des nervures souvent arquées."},
+    {"title": "Fleurs et fruits", "text": "De petites fleurs verdâtres apparaissent à l’aisselle des feuilles. Les pieds femelles portent des grappes de baies noires rondes d’environ 6 à 10 mm, contenant plusieurs graines."},
+    {"title": "Toxicité", "text": "Les baies et d’autres parties ont un effet purgatif et peuvent provoquer des troubles en cas d’ingestion ; elles ne sont pas comestibles. La planche, avec ses fruits noirs mûrs et ses rameaux épineux, correspond à l’espèce."}
+  ],
+  "sources": [
+    {"title": "NC State Extension — Rhamnus cathartica", "url": "https://plants.ces.ncsu.edu/plants/rhamnus-cathartica/"},
+    {"title": "Woodland Trust — Purging Buckthorn", "url": "https://www.woodlandtrust.org.uk/trees-woods-and-wildlife/british-trees/a-z-of-british-trees/purging-buckthorn/"},
+    {"title": "USDA Forest Service — Common buckthorn review", "url": "https://research.fs.usda.gov/feis/species-reviews/rhaspp"}
+  ],
+  "related": []
+}

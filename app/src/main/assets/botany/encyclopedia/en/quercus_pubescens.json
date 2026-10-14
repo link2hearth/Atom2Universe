@@ -1,0 +1,14 @@
+{
+  "id": "quercus_pubescens",
+  "sections": [
+    {"title": "Habit and leaves", "text": "Downy oak is a medium-sized deciduous tree of southern and central Europe and western Asia. It commonly reaches about 15–20 m, with a broad, irregular crown. Its lobed leaves are grey-hairy beneath, and young shoots are softly hairy."},
+    {"title": "Acorns", "text": "The acorns mature in one year, often in clusters of three or four; they are roughly 1–3.5 cm long and partly enclosed by a hairy-scaled cup. The sources consulted describe acorns as wildlife food but do not establish safe human preparation or species-specific toxicity."},
+    {"title": "Comparison", "text": "It differs from evergreen Quercus ilex and from North American Q. rubra by its deciduous leaves and downy leaf undersides. Q. rubra instead has sharply pointed lobes."}
+  ],
+  "sources": [
+    {"title": "European Atlas of Forest Tree Species, JRC — Quercus pubescens", "url": "https://forest.jrc.ec.europa.eu/media/atlas/Quercus_pubescens.pdf"},
+    {"title": "Oaks of the World — Quercus pubescens", "url": "https://oakcompendium.org/species/pubescens"},
+    {"title": "Plants of the World Online, Kew — Quercus pubescens", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:326376-2/general-information"}
+  ],
+  "related": ["quercus_ilex", "quercus_rubra"]
+}

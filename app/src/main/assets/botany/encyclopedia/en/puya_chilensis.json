@@ -1,0 +1,13 @@
+{
+  "id": "puya_chilensis",
+  "sections": [
+    {"title": "Rosette and flowering stem", "text": "This Chilean bromeliad forms a basal rosette of stiff, spiny leaves up to about 1 m long. The flowering panicle can reach about 5 m; its trumpet-shaped flowers are lime-green to turquoise. The flowering rosette dies after blooming, while offsets may persist."},
+    {"title": "Pollination and safety", "text": "Birds feed on nectar at the base of the flowers in its native range. The leaf margins bear sharp spines; human edibility or toxicity was not established in the sources consulted."},
+    {"title": "Comparison", "text": "Like Puya alpestris, it is a spiny Chilean rosette bromeliad; its green to turquoise flowers differ from the blue-green flowers of P. alpestris."}
+  ],
+  "sources": [
+    {"title": "Cambridge University Botanic Garden — Puya chilensis", "url": "https://www.botanic.cam.ac.uk/the-garden/plant-list/puya-chilensis/"},
+    {"title": "Plants of the World Online, Kew — Puya chilensis", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:124406-1"}
+  ],
+  "related": ["puya_alpestris"]
+}

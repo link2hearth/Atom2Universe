@@ -1,0 +1,13 @@
+{
+  "id": "rhinanthus_minor",
+  "sections": [
+    {"title": "Port et fleurs", "text": "Rhinanthus minor, le rhinanthe crête-de-coq, est une annuelle de 15 à 50 cm. Des feuilles opposées et dentées bordent la tige dressée ; des fleurs jaunes bilabiées sont disposées dans un épi terminal, parmi des bractées renflées."},
+    {"title": "Graines et écologie", "text": "Le calice brunit et devient papyracé autour d’une capsule dont les graines libres tintent à maturité. Cette hémiparasite puise dans les racines des plantes voisines, notamment des graminées ; elle peut freiner leur croissance et contribuer à diversifier les prairies."},
+    {"title": "Éléments illustrés", "text": "La planche montre la fleur jaune, le calice renflé et la capsule sèche caractéristiques de l’espèce."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Rhinanthus minor", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30116962-2/general-information"},
+    {"title": "E-Flora BC — Rhinanthus minor", "url": "https://linnet.geog.ubc.ca/Atlas/Atlas.aspx?sciname=Rhinanthus+minor"}
+  ],
+  "related": []
+}

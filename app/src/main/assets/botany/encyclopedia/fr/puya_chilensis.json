@@ -1,0 +1,13 @@
+{
+  "id": "puya_chilensis",
+  "sections": [
+    {"title": "Rosette et floraison", "text": "Cette broméliacée chilienne forme une rosette basale de feuilles raides et épineuses pouvant atteindre environ 1 m. La panicule florale peut mesurer près de 5 m ; ses fleurs en trompette sont vert citron à turquoise. La rosette qui fleurit meurt après la floraison, tandis que les rejets peuvent persister."},
+    {"title": "Pollinisation et sécurité", "text": "Dans son aire d’origine, des oiseaux viennent boire le nectar à la base des fleurs. Les feuilles portent des épines acérées ; les sources consultées ne permettent pas d’établir la comestibilité ni la toxicité pour l’humain."},
+    {"title": "Comparaison", "text": "Comme Puya alpestris, c’est une broméliacée chilienne en rosette épineuse ; ses fleurs vertes à turquoise diffèrent des fleurs bleu-vert de P. alpestris."}
+  ],
+  "sources": [
+    {"title": "Cambridge University Botanic Garden — Puya chilensis", "url": "https://www.botanic.cam.ac.uk/the-garden/plant-list/puya-chilensis/"},
+    {"title": "Plants of the World Online, Kew — Puya chilensis", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:124406-1"}
+  ],
+  "related": ["puya_alpestris"]
+}

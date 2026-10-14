@@ -1,0 +1,14 @@
+{
+  "id": "retzia_capensis",
+  "sections": [
+    {"title": "Plante du Cap", "text": "Retzia capensis est une petite vivace en rosette, velue, endémique du sud-ouest de la province du Cap en Afrique du Sud. Elle atteint environ 10 cm de haut. Ses feuilles serrées mesurent environ 3 à 7 cm."},
+    {"title": "Fleurs tubulaires", "text": "Les corolles axillaires, orange-rouge à extrémité sombre, mesurent environ 45 à 55 mm de long. Les fleurs étroites à pointe sombre, les feuilles velues et la capsule de la planche correspondent à la description publiée. Les sources consultées ne confirment ni usage alimentaire ni toxicité."},
+    {"title": "Habitat", "text": "Elle pousse dans les lieux rocheux humides et moussus du sud-ouest du Cap. Cette plante compacte des rochers se distingue des arbres de grande taille des fiches de chênes voisines."}
+  ],
+  "sources": [
+    {"title": "SANBI — Plants of the Greater Cape Floristic Region, Strelitzia 29", "url": "https://www.sanbi.org/wp-content/uploads/2024/05/2012_Strelitzia29.pdf"},
+    {"title": "Plants of the World Online, Kew — Retzia capensis", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:817716-1/general-information"},
+    {"title": "SANBI Red List — Retzia capensis", "url": "https://redlist.sanbi.org/species.php?species=3674-1"}
+  ],
+  "related": []
+}
