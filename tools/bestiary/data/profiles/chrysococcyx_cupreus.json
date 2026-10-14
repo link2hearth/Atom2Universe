@@ -1,0 +1,205 @@
+{
+  "id": "chrysococcyx_cupreus",
+  "scientific": "Chrysococcyx cupreus",
+  "group": "birds",
+  "name": {
+    "en": "African Emerald Cuckoo",
+    "fr": "Coucou foliotocol"
+  },
+  "sections": {
+    "overview": {
+      "en": "The African emerald cuckoo is a small, canopy-dwelling cuckoo widespread through sub-Saharan Africa.",
+      "fr": "Le coucou foliotocol est un petit coucou des canopées, largement répandu en Afrique subsaharienne."
+    },
+    "identification": {
+      "en": "The adult male is glossy green above with a bright yellow breast, while the female is more cryptic, with barred green, brown and pale plumage. This strong sexual difference is shared with several Chrysococcyx species, so range and call help confirm identification.",
+      "fr": "Le mâle adulte est vert brillant sur le dessus et porte une poitrine jaune vif, tandis que la femelle est plus discrète, avec des motifs barrés verts, bruns et clairs. Ce dimorphisme marqué existe chez plusieurs Chrysococcyx ; l’aire et le chant aident donc à confirmer l’identification."
+    },
+    "habitat": {
+      "en": "It favours woodland and forest, including forest edges and well-wooded gardens, and occurs from lowlands into highland forests. The species is widely distributed south of the Sahara, with seasonal movements in some parts of its range.",
+      "fr": "Il fréquente les forêts et boisements, leurs lisières ainsi que les jardins arborés, des basses terres aux forêts de montagne. L’espèce est largement distribuée au sud du Sahara et effectue des déplacements saisonniers dans certaines régions."
+    },
+    "diet": {
+      "en": "It feeds chiefly on caterpillars and other insects, often gleaning prey among foliage in the middle and upper canopy. Small fruits can supplement the diet, but insects remain its principal food in species accounts.",
+      "fr": "Il mange surtout des chenilles et d’autres insectes, qu’il prélève souvent dans le feuillage des étages moyens et supérieurs. De petits fruits peuvent compléter son régime, mais les fiches de l’espèce indiquent que les insectes restent la nourriture principale."
+    },
+    "behavior": {
+      "en": "Its clear, repeated whistled call is a conspicuous way to detect a bird that can otherwise remain high and partly hidden in foliage. Like other cuckoos, it is more often heard than seen in dense woodland.",
+      "fr": "Son sifflement clair et répété permet de repérer un oiseau qui peut rester haut dans les arbres, en partie caché par le feuillage. Comme d’autres coucous, il est souvent entendu avant d’être aperçu dans les bois denses."
+    },
+    "reproduction": {
+      "en": "It is a brood parasite: females lay eggs in the nests of other bird species and leave incubation and chick-rearing to the hosts. Host choice varies across Africa; details should not be generalized from the better-studied common cuckoo or from another Chrysococcyx species.",
+      "fr": "C’est un parasite de couvée : les femelles pondent dans les nids d’autres oiseaux et laissent aux hôtes l’incubation et l’élevage du jeune. Les hôtes varient selon les régions d’Afrique ; il ne faut pas transposer automatiquement les données du coucou gris, mieux étudié, ou d’un autre Chrysococcyx."
+    },
+    "ecology": {
+      "en": "By consuming foliage-feeding insects and parasitising other birds’ nests, it links forest food webs in two distinct ways. Its close relative the diederik cuckoo C. caprius shares parts of southern Africa but differs in plumage and host relationships.",
+      "fr": "En mangeant des insectes du feuillage et en parasitant les nids d’autres oiseaux, il intervient de deux façons dans les réseaux forestiers. Son proche parent, le coucou didéric C. caprius, partage une partie de l’Afrique australe, mais diffère par le plumage et les relations avec les hôtes."
+    },
+    "conservation": {
+      "en": "BirdLife’s assessment lists it as Least Concern, reflecting a broad range and no evidence of a rapid global decline. Local forest loss may still affect populations, and conservation categories should not be read as meaning that every habitat is secure.",
+      "fr": "L’évaluation de BirdLife le classe en préoccupation mineure, compte tenu de sa vaste aire et de l’absence d’indice d’un déclin mondial rapide. La disparition locale des forêts peut néanmoins affecter certaines populations ; cette catégorie ne signifie pas que chaque habitat est préservé."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "African Emerald Cuckoo — IUCN Red List / BirdLife International",
+        "fr": "Coucou foliotocol — Liste rouge de l’UICN / BirdLife International"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22684021A111721716.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife assessment records broad sub-Saharan range and Least Concern global status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 182,
+        "notes_words": 11,
+        "total": 193,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "African emerald cuckoo — Oiseaux.net",
+        "fr": "Coucou foliotocol — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/en/oiseaux/african.emerald.cuckoo.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "Oiseaux.net account covers plumage and call."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 175,
+        "notes_words": 6,
+        "total": 181,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "African emerald cuckoo — Biodiversity Explorer",
+        "fr": "Coucou foliotocol — Biodiversity Explorer"
+      },
+      "url": "https://www.biodiversityexplorer.info/birds/cuculidae/chrysococcyx_cupreus.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "South African biodiversity account describes insect diet, brood parasitism and host-nest use."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 12,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Declining ranges of southern African breeding cuckoos do not reflect host species’ range changes",
+        "fr": "Le recul des aires de coucous nicheurs d’Afrique australe ne reflète pas les changements d’aire de leurs hôtes"
+      },
+      "url": "https://www.tandfonline.com/doi/full/10.1080/01584197.2017.1292403",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "Peer-reviewed atlas analysis compares African Emerald and Diederik cuckoo distributions and host ranges."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 13,
+        "total": 58,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "African emerald cuckoo — eBird / Cornell Lab",
+        "fr": "Coucou foliotocol — eBird / Cornell Lab"
+      },
+      "url": "https://ebird.org/species/afecuc1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Cornell field guide supports call identification."
+      ],
+      "prose_claims": [
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 6,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host species differ regionally and published life-history detail is uneven; the profile states brood parasitism but does not name a universal host."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked BirdLife’s global assessment, a South African biodiversity species account and bird field references; distinguished the African species from Asian emerald cuckoo and Diederik cuckoo."
+}

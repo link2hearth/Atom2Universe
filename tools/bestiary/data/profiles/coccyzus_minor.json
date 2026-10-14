@@ -1,0 +1,170 @@
+{
+  "id": "coccyzus_minor",
+  "scientific": "Coccyzus minor",
+  "group": "birds",
+  "name": {
+    "en": "Mangrove Cuckoo",
+    "fr": "Coulicou des mangroves"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Mangrove Cuckoo is a secretive tropical American cuckoo; unlike forest-edge C. erythropthalmus, it often uses coastal scrub.",
+      "fr": "Le Coulicou des mangroves est un coulicou tropical discret ; contrairement à C. erythropthalmus des lisières boisées, il fréquente souvent les fourrés côtiers."
+    },
+    "identification": {
+      "en": "Its long tail, brown upperparts, barred underside and partly yellow lower bill distinguish it.",
+      "fr": "Sa longue queue, son dessus brun, son dessous barré et la base jaune du bec le distinguent."
+    },
+    "habitat": {
+      "en": "It uses mangroves, beach scrub and tropical woodland, with habitat varying across its broad Caribbean and mainland range.",
+      "fr": "Il fréquente les mangroves, les fourrés littoraux et les bois tropicaux, selon les régions de son vaste territoire caribéen et continental."
+    },
+    "diet": {
+      "en": "It takes insects, spiders, frogs, lizards, eggs, nestlings and fruit, often foraging in the canopy.",
+      "fr": "Il consomme insectes, araignées, grenouilles, lézards, œufs, oisillons et fruits, et recherche souvent sa nourriture dans la canopée."
+    },
+    "behavior": {
+      "en": "Both parents build the nest, incubate and feed the young.",
+      "fr": "Les deux parents construisent le nid, couvent et nourrissent les jeunes."
+    },
+    "reproduction": {
+      "en": "The nest is a loose twig platform placed in a tree, often close to or over water.",
+      "fr": "Le nid est une plateforme lâche de brindilles installée dans un arbre, souvent près de l’eau ou au-dessus."
+    },
+    "ecology": {
+      "en": "In Florida, its habitat includes mangrove forest and tropical hardwood hammock.",
+      "fr": "En Floride, son habitat comprend les mangroves et les bois tropicaux feuillus."
+    },
+    "conservation": {
+      "en": "Cornell reports declines in Florida that are probably linked to habitat loss and fragmentation.",
+      "fr": "Cornell rapporte des déclins en Floride probablement liés à la perte et à la fragmentation de l’habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Mangrove Cuckoo Life History — Cornell Lab of Ornithology",
+        "fr": "Histoire naturelle du Coulicou des mangroves — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Mangrove_Cuckoo/lifehistory",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Cornell documents varied habitats, broad diet, parental care and Florida habitat-linked declines."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 167,
+        "notes_words": 12,
+        "total": 179,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cuclillo manglero — Enciclovida, CONABIO",
+        "fr": "Cuclillo manglero — Enciclovida, CONABIO"
+      },
+      "url": "https://enciclovida.mx/especies/35858-coccyzus-minor",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "Mexico biodiversity portal lists the Spanish common name and maps potential distribution."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Black-billed Cuckoo Overview — Cornell Lab of Ornithology",
+        "fr": "Présentation du Coulicou à bec noir — Cornell Lab of Ornithology"
+      },
+      "url": "https://www.allaboutbirds.org/guide/Black-billed_Cuckoo/overview",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "Cornell presents C. erythropthalmus as a related species associated with eastern wooded habitats."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Mangrove Cuckoo — Florida Natural Areas Inventory",
+        "fr": "Coulicou des mangroves — Florida Natural Areas Inventory"
+      },
+      "url": "https://www.fnai.org/PDFs/FieldGuides/Coccyzus_minor.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "diet",
+        "habitat",
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "FNAI field guide describes the long tail, black mask and yellow lower bill, plus Florida mangrove habitat."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 17,
+        "total": 104,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Florida conservation trends should not be generalized to the entire species range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared Cornell life histories with the Spanish CONABIO species portal; reciprocal comparison with the forest-associated C. erythropthalmus."
+}

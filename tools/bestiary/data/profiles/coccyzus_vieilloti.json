@@ -1,0 +1,164 @@
+{
+  "id": "coccyzus_vieilloti",
+  "scientific": "Coccyzus vieilloti",
+  "group": "birds",
+  "name": {
+    "en": "Puerto Rican Lizard-Cuckoo",
+    "fr": "Tacco de Porto Rico"
+  },
+  "sections": {
+    "overview": {
+      "en": "This lizard-cuckoo is endemic to Puerto Rico and closely related to Cuba’s C. merlini.",
+      "fr": "Ce coulicou-lézard est endémique de Porto Rico et proche du C. merlini de Cuba."
+    },
+    "identification": {
+      "en": "Its long tail has white-tipped outer feathers, and the bill is dark above with a yellow lower edge.",
+      "fr": "Les plumes externes de sa longue queue ont des pointes blanches ; le bec est sombre dessus et jaune à la mandibule inférieure."
+    },
+    "habitat": {
+      "en": "It uses forests, dense suburban vegetation, shade-coffee plantations and even dry woodland.",
+      "fr": "Il fréquente les forêts, la végétation dense des banlieues, les plantations de café ombragées et même les bois secs."
+    },
+    "diet": {
+      "en": "Lizards are its main prey, supplemented by large spiders, insects and small frogs.",
+      "fr": "Les lézards sont ses proies principales, complétées par de grandes araignées, des insectes et de petites grenouilles."
+    },
+    "behavior": {
+      "en": "It forages slowly and quietly through the understory and canopy, using stealth to approach prey.",
+      "fr": "Il chasse lentement et discrètement dans le sous-bois et la canopée, s’approchant furtivement de ses proies."
+    },
+    "reproduction": {
+      "en": "Breeding occurs year-round, with most activity from March to June; the nest is a loose structure of leaves and sticks.",
+      "fr": "La reproduction a lieu toute l’année, avec un pic de mars à juin ; le nid est une structure lâche de feuilles et de brindilles."
+    },
+    "ecology": {
+      "en": "It shares the Caribbean lizard-cuckoo group with C. merlini, but the two are island endemics on different islands.",
+      "fr": "Il appartient au groupe caribéen des coulicous-lézards avec C. merlini, mais les deux sont endémiques d’îles différentes."
+    },
+    "conservation": {
+      "en": "The Puerto Rico atlas reports Least Concern globally and no local threatened-category listing in its cited assessment.",
+      "fr": "L’atlas de Porto Rico rapporte un statut mondial de préoccupation mineure et aucune catégorie locale d’espèce menacée dans l’évaluation citée."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Puerto Rico Breeding Bird Atlas — Puerto Rican Lizard-Cuckoo",
+        "fr": "Atlas des oiseaux nicheurs de Porto Rico — Tacco de Porto Rico"
+      },
+      "url": "https://www.srs.fs.usda.gov/pubs/gtr/gtr_iitf_053.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "USDA atlas documents island endemism, habitat, year-round breeding, nest form and reported IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 176,
+        "notes_words": 14,
+        "total": 190,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Puerto Rican Lizard-Cuckoo — Birds of Puerto Rico",
+        "fr": "Tacco de Porto Rico — Birds of Puerto Rico"
+      },
+      "url": "https://birdsofpuertorico.com/bird/82/Puerto%20Rican%20Lizard-Cuckoo",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Puerto Rico bird account describes tail and bill markings, diet and slow foraging through forest."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 15,
+        "total": 56,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "2024 AOS taxonomy proposal on Caribbean lizard-cuckoos",
+        "fr": "Proposition taxonomique 2024 de l’AOS sur les coulicous-lézards caribéens"
+      },
+      "url": "https://americanornithology.org/wp-content/uploads/2024/01/2024-A.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "AOS document treats C. vieilloti and the Cuban C. merlini within a Caribbean lizard-cuckoo group."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 15,
+        "total": 15,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Endemic Bird of the Day: Puerto Rican Lizard-Cuckoo — BirdsCaribbean",
+        "fr": "Oiseau endémique du jour : Tacco de Porto Rico — BirdsCaribbean"
+      },
+      "url": "https://www.birdscaribbean.org/2021/05/from-the-nest-day-61/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "BirdsCaribbean reports a diet dominated by anoles and slow, stealthy foraging in understory and canopy."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 15,
+        "total": 76,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The older breeding atlas uses a mix of published records and atlas observations; detailed diet proportions were not repeated."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the USDA Puerto Rico atlas with a Puerto Rico bird account and AOS review; reciprocal comparison with C. merlini."
+}

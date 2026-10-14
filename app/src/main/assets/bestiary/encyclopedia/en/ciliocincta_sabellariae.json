@@ -1,0 +1,34 @@
+{
+  "id": "ciliocincta_sabellariae",
+  "name": "Ciliocincta sabellariae",
+  "scientific": "Ciliocincta sabellariae",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ciliocincta sabellariae is a microscopic marine orthonectid first described from the tube-building polychaete Sabellaria cementarium in Washington State.",
+    "identification": "Its ciliated adults are organized in repeated body rings and include separate male and female forms; these details require microscopic examination.",
+    "habitat": "The original specimens came from the San Juan Islands, where the parasite was found in its marine polychaete host.",
+    "diet": "It lives parasitically in the host rather than capturing free-living prey; no species-specific feeding study was located.",
+    "behavior": "The host can contain numerous microscopic reproductive worms, but the natural timing and transmission behavior of this parasite remain poorly documented.",
+    "reproduction": "The original description documented males and females in infected worms; broader orthonectid research describes a parasitic plasmodium producing ciliated reproductive stages.",
+    "ecology": "Its known association with Sabellaria cementarium distinguishes it from C. julini, reported from Scolelepis fuliginosa; both belong to the same small genus.",
+    "conservation": "Records remain too sparse to establish a population trend or conservation status for this microscopic parasite."
+  },
+  "sources": [
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/14259478/",
+      "title": "Ciliocincta sabellariae — original description, Journal of Parasitology (1965)"
+    },
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "title": "The genera of the phylum Orthonectida (Mesozoa) — peer-reviewed study"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00443/full",
+      "title": "Orthonectida life cycles and body-plan simplification — Frontiers in Genetics"
+    },
+    {
+      "url": "https://obis.org/taxon/265734",
+      "title": "Ciliocincta sabellariae — Ocean Biodiversity Information System"
+    }
+  ]
+}

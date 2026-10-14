@@ -1,0 +1,34 @@
+{
+  "id": "coccyzus_minor",
+  "name": "Mangrove Cuckoo",
+  "scientific": "Coccyzus minor",
+  "group": "birds",
+  "sections": {
+    "overview": "The Mangrove Cuckoo is a secretive tropical American cuckoo; unlike forest-edge C. erythropthalmus, it often uses coastal scrub.",
+    "identification": "Its long tail, brown upperparts, barred underside and partly yellow lower bill distinguish it.",
+    "habitat": "It uses mangroves, beach scrub and tropical woodland, with habitat varying across its broad Caribbean and mainland range.",
+    "diet": "It takes insects, spiders, frogs, lizards, eggs, nestlings and fruit, often foraging in the canopy.",
+    "behavior": "Both parents build the nest, incubate and feed the young.",
+    "reproduction": "The nest is a loose twig platform placed in a tree, often close to or over water.",
+    "ecology": "In Florida, its habitat includes mangrove forest and tropical hardwood hammock.",
+    "conservation": "Cornell reports declines in Florida that are probably linked to habitat loss and fragmentation."
+  },
+  "sources": [
+    {
+      "url": "https://www.allaboutbirds.org/guide/Mangrove_Cuckoo/lifehistory",
+      "title": "Mangrove Cuckoo Life History — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://enciclovida.mx/especies/35858-coccyzus-minor",
+      "title": "Cuclillo manglero — Enciclovida, CONABIO"
+    },
+    {
+      "url": "https://www.allaboutbirds.org/guide/Black-billed_Cuckoo/overview",
+      "title": "Black-billed Cuckoo Overview — Cornell Lab of Ornithology"
+    },
+    {
+      "url": "https://www.fnai.org/PDFs/FieldGuides/Coccyzus_minor.pdf",
+      "title": "Mangrove Cuckoo — Florida Natural Areas Inventory"
+    }
+  ]
+}

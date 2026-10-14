@@ -1,0 +1,34 @@
+{
+  "id": "chiropterotriton_mosaueri",
+  "name": "Salamandre pied plat des cavernes",
+  "scientific": "Chiropterotriton mosaueri",
+  "group": "amphibians",
+  "sections": {
+    "overview": "Cette salamandre cavernicole très localisée d’Hidalgo est un amphibien sans poumons de la famille des Plethodontidae.",
+    "identification": "Ses orteils palmés en spatule et sa longue queue aident à la distinguer des autres salamandres Chiropterotriton.",
+    "habitat": "Elle est connue de grottes humides près de Durango, dans l’État d’Hidalgo, vers 2160 m, en milieu de pins et de chênes.",
+    "diet": "Les sources consultées ne rapportent pas les proies de l’espèce; son régime reste inconnu dans les fiches disponibles.",
+    "behavior": "Après 73 ans sans observation, des chercheurs l’ont redécouverte dans une grotte en septembre 2010.",
+    "reproduction": "Les références ne donnent aucun détail fiable sur la parade, la ponte ou le développement propres à l’espèce.",
+    "ecology": "Elle partage une grotte avec C. magnipes; C. multidentatus fut jadis considéré comme synonyme possible, mais la taxonomie les distingue aujourd’hui.",
+    "conservation": "Une fiche du groupe de spécialistes de l’UICN la classe en danger critique, vu son aire minuscule et les menaces sur les grottes."
+  },
+  "sources": [
+    {
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Caudata/Plethodontidae/Hemidactyliinae/Chiropterotriton/Chiropterotriton-mosaueri",
+      "title": "Chiropterotriton mosaueri — Amphibian Species of the World, American Museum of Natural History"
+    },
+    {
+      "url": "https://eol.org/pages/1048382/articles",
+      "title": "Salamandre pied plat des cavernes — fiche AmphibiaWeb reprise par Encyclopedia of Life"
+    },
+    {
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2018/11/TAW-Threatened-Species-Profiles_Part5.pdf",
+      "title": "Amphibiens menacés du monde — fiche espèce"
+    },
+    {
+      "url": "https://enciclovida.mx/especies/35178",
+      "title": "Salamandre pied plat des cavernes — Enciclovida / CONABIO"
+    }
+  ]
+}

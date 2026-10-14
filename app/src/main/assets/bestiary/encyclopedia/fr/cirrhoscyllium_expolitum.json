@@ -1,0 +1,30 @@
+{
+  "id": "cirrhoscyllium_expolitum",
+  "name": "Requin-carpette à moustache",
+  "scientific": "Cirrhoscyllium expolitum",
+  "group": "fish",
+  "sections": {
+    "overview": "Cirrhoscyllium expolitum est un petit requin-tapis du Pacifique nord-ouest, de la famille des Parascylliidae, connu de la mer de Chine méridionale.",
+    "identification": "L’espèce n’est connue que par peu de spécimens, dont une femelle type de 34 cm ; les barbillons de la gorge distinguent le genre de nombreux autres requins-tapis.",
+    "habitat": "Les données publiées le situent sur le plateau continental de la mer de Chine méridionale, vers 180–190 m de profondeur, entre le sud de la Chine et les Philippines.",
+    "diet": "Son régime alimentaire est mal documenté ; les sources disponibles n’établissent pas de liste de proies propre à l’espèce.",
+    "behavior": "C’est un requin benthique, mais les observations sont trop limitées pour décrire précisément son activité quotidienne ou ses déplacements.",
+    "reproduction": "Les synthèses disponibles indiquent une ponte d’œufs, bien que les observations directes de reproduction soient rares.",
+    "ecology": "C’est l’une des trois espèces reconnues de Cirrhoscyllium ; comparez ses données de mer de Chine méridionale avec C. formosanum, localisée à Taïwan, et C. japonicum, associé au Japon.",
+    "conservation": "L’évaluation de l’UICN le classe en données insuffisantes, ce qui reflète le manque d’informations sur sa répartition, sa biologie et sa population."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/5911",
+      "title": "Requin-carpette à moustache — fiche FishBase et statut UICN"
+    },
+    {
+      "url": "https://www.fao.org/4/x9293e/x9293e13.pdf",
+      "title": "Catalogue FAO des espèces de requins du monde"
+    },
+    {
+      "url": "https://sharks.linnaeus.naturalis.nl/linnaeus_ng/app/views/highertaxa/taxon.php?cat=TAB_DESCRIPTION&id=62305",
+      "title": "Sharks of the World — présentation des Parascylliidae par Naturalis"
+    }
+  ]
+}

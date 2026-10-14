@@ -1,0 +1,184 @@
+{
+  "id": "chorthippus_parallelus",
+  "scientific": "Chorthippus parallelus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Meadow Grasshopper",
+    "fr": "Criquet des pâtures"
+  },
+  "sections": {
+    "overview": {
+      "en": "The meadow grasshopper is a widespread European grass-feeding acridid found in meadows and other open grassy habitats. Many modern European lists use Pseudochorthippus parallelus, while Chorthippus parallelus remains common in regional literature and data systems.",
+      "fr": "Le criquet des pâtures est un acrididé largement répandu en Europe dans les prairies et autres milieux herbacés ouverts. De nombreuses listes européennes récentes emploient Pseudochorthippus parallelus, tandis que Chorthippus parallelus reste courant dans la littérature et les bases régionales."
+    },
+    "identification": {
+      "en": "Adults are usually green or brown, and colour varies within the species. The side keels on the pronotum are approximately parallel, a useful clue against similar grasshoppers such as the common green grasshopper C. viridulus, though careful identification may require song or close examination.",
+      "fr": "Les adultes sont généralement verts ou bruns, avec une coloration variable. Les carènes latérales du pronotum sont à peu près parallèles, ce qui aide à le distinguer d’espèces proches comme le criquet palustre C. montanus ; l’identification peut toutefois demander l’écoute du chant ou un examen attentif."
+    },
+    "habitat": {
+      "en": "It occurs across a wide range of grasslands, field margins and woodland edges, with particularly frequent records in moist or moderately productive swards. It is common in much of Germany and France, but local abundance depends on vegetation structure and management.",
+      "fr": "Il occupe divers types de prairies, de bordures de champs et de lisières, et se rencontre souvent dans les pelouses humides ou assez productives. Il est commun dans une grande partie de l’Allemagne et de la France, mais son abondance locale dépend de la structure de la végétation et de sa gestion."
+    },
+    "diet": {
+      "en": "It feeds mainly on grasses, cropping blades with its chewing mouthparts.",
+      "fr": "Il se nourrit surtout de graminées, qu’il coupe avec ses pièces buccales broyeuses."
+    },
+    "behavior": {
+      "en": "Males produce a soft stridulating song to attract females, and adults are most often seen in the warmer months. It is a short-winged, mainly ground-dwelling grasshopper, though some individuals have longer wings and can disperse farther.",
+      "fr": "Les mâles produisent une stridulation discrète pour attirer les femelles, et les adultes s’observent surtout pendant les mois chauds. Ce criquet a généralement des ailes courtes et vit près du sol, même si certains individus aux ailes plus longues se dispersent davantage."
+    },
+    "reproduction": {
+      "en": "After mating, females deposit egg pods in soil; the eggs overwinter and nymphs hatch in spring. The species has one main generation each year in much of its temperate range, with development timing shifting with local climate.",
+      "fr": "Après l’accouplement, les femelles déposent des amas d’œufs dans le sol ; les œufs passent l’hiver et les larves éclosent au printemps. Dans une grande partie de son aire tempérée, l’espèce produit une génération principale par an, avec un calendrier qui varie selon le climat local."
+    },
+    "ecology": {
+      "en": "It is food for birds and other insect-eaters and can be a dominant herbivore in grassland. Its close relative C. montanus is associated more strongly with wet, marshy grassland, so habitat overlap does not make the two interchangeable.",
+      "fr": "Il nourrit les oiseaux et d’autres insectivores et peut être un herbivore dominant des prairies. Son proche parent C. montanus est davantage associé aux prairies humides et marécageuses : un chevauchement d’habitat ne rend pas les deux espèces interchangeables."
+    },
+    "conservation": {
+      "en": "A German species summary considers it widespread and not threatened in Germany; that local assessment should not be extrapolated to every region.",
+      "fr": "Une synthèse allemande la considère répandue et non menacée en Allemagne ; cette appréciation locale ne doit pas être extrapolée à toutes les régions."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Common grasshopper — Deutschlands Natur",
+        "fr": "Criquet commun — Deutschlands Natur"
+      },
+      "url": "https://www.deutschlands-natur.de/tierarten/heuschrecken/gemeiner-grashuepfer/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "German species summary covers commonness and life history."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 191,
+        "notes_words": 8,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudochorthippus parallelus — Orthoptera.ch",
+        "fr": "Pseudochorthippus parallelus — Orthoptera.ch"
+      },
+      "url": "https://www.orthoptera.ch/wiki/arten/caelifera/gomphocerinae/item/pseudochorthippus-parallelus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "Swiss source shows the alternate generic combination and European occurrence."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "overview.en.2",
+        "overview.fr.2",
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.2",
+        "behavior.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 138,
+        "notes_words": 10,
+        "total": 148,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Meadow grasshopper — British grasshoppers and crickets",
+        "fr": "Criquet des pâtures — atlas britannique des orthoptères"
+      },
+      "url": "https://nora.nerc.ac.uk/id/eprint/7358/1/Grasshoppers.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "British orthopteran field guide covers identification and ecology."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 192,
+        "notes_words": 8,
+        "total": 200,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Criquet des pâtures — Biodiv’ Normandie-Maine",
+        "fr": "Criquet des pâtures — Biodiv’ Normandie-Maine"
+      },
+      "url": "https://biodiversite.parc-naturel-normandie-maine.fr/espece/837869",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "French regional park atlas confirms the French vernacular name and occurrence in varied grassy habitats."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 46,
+        "notes_words": 15,
+        "total": 61,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Taxonomic treatment varies by checklist between Chorthippus and Pseudochorthippus; the profile retains the requested dataset name and notes the alternate combination."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-referenced German, French, Swiss and British orthopteran accounts; retained the supplied binomial while flagging the modern generic combination and the ecological contrast with C. montanus."
+}

@@ -1,0 +1,34 @@
+{
+  "id": "ciliocincta_julini",
+  "name": "Ciliocincta julini",
+  "scientific": "Ciliocincta julini",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ciliocincta julini est un orthonectide marin microscopique signalé chez le polychète spionidé Scolelepis fuliginosa, sur la côte atlantique française.",
+    "identification": "Les stades reproducteurs libres ont un corps cilié et annelé, mais leur identification sur le terrain est difficile car ces animaux minuscules vivent à l’intérieur d’un hôte.",
+    "habitat": "Son hôte connu est un polychète marin observé à l’Anse Saint-Martin, au cap de la Hague ; cette donnée ne permet pas d’établir une aire étendue.",
+    "diet": "Parasite interne, il utilise les tissus de son hôte plutôt que de chasser des proies autonomes ; son alimentation précise n’est pas décrite pour l’espèce.",
+    "behavior": "Les stades sexués ciliés quittent l’hôte, un cycle décrit chez les orthonectides en général ; le calendrier et le comportement de C. julini restent peu connus.",
+    "reproduction": "La redescription de 1992 place cette espèce dans le genre Ciliocincta et identifie son hôte polychète ; son cycle reproducteur est surtout compris à partir d’études générales sur les orthonectides.",
+    "ecology": "Son existence écologique dépend d’un hôte marin précis ; on peut la comparer directement à C. sabellariae, décrite chez un autre polychète.",
+    "conservation": "Aucune tendance démographique ni évaluation de conservation propre à l’espèce n’a été trouvée ; l’unique localité et l’hôte historiques laissent son statut incertain."
+  },
+  "sources": [
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "title": "Les genres du phylum Orthonectida (Mesozoa) — étude évaluée par les pairs"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00443/full",
+      "title": "Cycles de vie et simplification du plan corporel des orthonectides — Frontiers in Genetics"
+    },
+    {
+      "url": "https://www.marinespecies.org/aphia.php?id=119166&p=taxdetails",
+      "title": "Ciliocincta julini — Registre mondial des espèces marines"
+    },
+    {
+      "url": "https://obis.org/taxon/119166",
+      "title": "Ciliocincta julini — Système d’information sur la biodiversité océanique"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "chlamys_islandica",
+  "name": "Pétoncle d’Islande",
+  "scientific": "Chlamys islandica",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le pétoncle d’Islande est un coquillage en éventail des eaux froides de l’Atlantique Nord et des marges arctiques. Il appartient aux pectinidés, comme la coquille Saint-Jacques de l’Atlantique, mais constitue une espèce subarctique distincte.",
+    "identification": "Sa coquille arrondie en éventail porte des côtes rayonnantes et deux petites « oreilles » de part et d’autre de la charnière ; sa couleur varie du clair au rougeâtre ou brun. Les adultes peuvent dépasser 10 cm de hauteur, mais la taille et la croissance varient selon les bancs.",
+    "habitat": "Elle vit sur le fond marin des eaux subarctiques fraîches et peu profondes, souvent sur du sable, des débris coquilliers ou des fonds grossiers mixtes. En Islande, les principaux bancs sont dans les fjords, fréquemment entre environ 15 et 75 m de profondeur.",
+    "diet": "Comme les autres pétoncles, elle filtre l’eau : ses branchies retiennent les particules alimentaires en suspension, notamment le phytoplancton et la matière organique. La variation saisonnière de cette nourriture contribue aux différences de croissance au fil de l’année.",
+    "behavior": "Elle peut claquer ses valves et expulser de l’eau pour s’éloigner brièvement d’un danger, même si les adultes restent généralement sur le fond.",
+    "reproduction": "Les sexes libèrent leurs ovules et spermatozoïdes dans l’eau, où a lieu la fécondation ; les larves dérivent ensuite avant de se fixer. Sa croissance lente limite le renouvellement rapide des adultes prélevés.",
+    "ecology": "Les bancs de pétoncles hébergent des organismes fixés et nourrissent des prédateurs benthiques tels que les étoiles de mer. Son aire d’eaux froides recoupe celle d’autres pectinidés, mais son cycle et l’évolution de ses stocks ne se confondent pas avec ceux de la coquille Saint-Jacques de l’Atlantique.",
+    "conservation": "Les stocks islandais se sont effondrés vers 1999–2000 et un quota nul a été recommandé en 2004 ; la surexploitation, une maladie à protozoaire et le réchauffement du fond ont été mis en cause. Il s’agit d’un historique de pêcherie propre à ces stocks, pas d’une catégorie mondiale actuelle de menace."
+  },
+  "sources": [
+    {
+      "url": "https://www.st.nmfs.noaa.gov/spo/SPO/tr129opt.pdf",
+      "title": "Les pêcheries de mollusques d’Islande"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16905425/",
+      "title": "La pêcherie du pétoncle d’Islande dans l’Atlantique Nord-Est"
+    },
+    {
+      "url": "https://www.hi.no/resources/publikasjoner/imrpinro/2008/pinro_nr_.1_2008.pdf",
+      "title": "Pétoncle d’Islande — Institut norvégien de recherche marine"
+    },
+    {
+      "url": "https://naturalhistory.museumwales.ac.uk/britishbivalves/browserecord.php?-recid=220",
+      "title": "Chlamys islandica — Coquillages bivalves marins des îles Britanniques"
+    },
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S002209810000215X",
+      "title": "Réactions de fuite chez Chlamys islandica"
+    }
+  ]
+}

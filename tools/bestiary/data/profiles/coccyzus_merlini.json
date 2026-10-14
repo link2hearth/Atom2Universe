@@ -1,0 +1,167 @@
+{
+  "id": "coccyzus_merlini",
+  "scientific": "Coccyzus merlini",
+  "group": "birds",
+  "name": {
+    "en": "Great Lizard-Cuckoo (Cuban)",
+    "fr": "Tacco de Cuba"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Cuban Lizard-Cuckoo is a large island cuckoo; its close Caribbean lizard-cuckoo relative C. vieilloti is endemic to Puerto Rico.",
+      "fr": "Le Tacco de Cuba est un grand coulicou insulaire ; son proche parent caribéen C. vieilloti est endémique de Porto Rico."
+    },
+    "identification": {
+      "en": "It is a large, long-tailed bird with olive-brown upperparts and a conspicuous red eye-skin.",
+      "fr": "C’est un grand oiseau à longue queue, au dessus brun olive et à la peau rouge visible autour de l’œil."
+    },
+    "habitat": {
+      "en": "On Cuba it occurs widely in wooded and forested habitats.",
+      "fr": "À Cuba, il est largement présent dans les milieux arborés et forestiers."
+    },
+    "diet": {
+      "en": "Its prey includes lizards and other small vertebrates, as well as insects.",
+      "fr": "Ses proies comprennent des lézards et d’autres petits vertébrés, ainsi que des insectes."
+    },
+    "behavior": {
+      "en": "The Cuban account records it throughout the year, rather than as a seasonal migrant.",
+      "fr": "La source cubaine le signale toute l’année plutôt que comme migrateur saisonnier."
+    },
+    "reproduction": {
+      "en": "The references used here do not establish nest timing or clutch details for this species.",
+      "fr": "Les références utilisées ici ne précisent ni la période de nidification ni la taille de ponte de cette espèce."
+    },
+    "ecology": {
+      "en": "Like C. vieilloti, it belongs to the Caribbean lizard-cuckoo group formerly placed in Saurothera.",
+      "fr": "Comme C. vieilloti, il appartient au groupe caribéen des coulicous-lézards autrefois placés dans le genre Saurothera."
+    },
+    "conservation": {
+      "en": "BirdLife treats the Cuban taxon as Least Concern; Bahamian birds have been split as C. bahamensis in some taxonomies.",
+      "fr": "BirdLife classe le taxon cubain en préoccupation mineure ; certaines taxonomies séparent les oiseaux des Bahamas sous le nom C. bahamensis."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Great Lizard-Cuckoo — Birds of Cuba",
+        "fr": "Tacco de Cuba — Birds of Cuba"
+      },
+      "url": "https://www.birds-of-cuba.com/Great_Lizard-Cuckoo.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "The Cuba guide gives the Cuban common name, year-round occurrence, wooded habitat and approximately 55 cm length."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 17,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "2024 Proposal 2024-A-8: Bahama Lizard-Cuckoo taxonomy — American Ornithological Society",
+        "fr": "Proposition taxonomique 2024-A-8 sur le Tacco des Bahamas — American Ornithological Society"
+      },
+      "url": "https://americanornithology.org/wp-content/uploads/2024/01/2024-A.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "diet",
+        "ecology",
+        "identification",
+        "reproduction"
+      ],
+      "facts": [
+        "AOS review summarizes relationships, Cuban and Bahamian forms, diagnostic plumage, and reported lizard, frog, snake, bird and insect prey."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 123,
+        "notes_words": 19,
+        "total": 142,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cuban Lizard-cuckoo — BirdLife DataZone",
+        "fr": "Tacco cubain — BirdLife DataZone"
+      },
+      "url": "https://datazone.birdlife.org/species/factsheet/cuban-lizard-cuckoo-coccyzus-merlini",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "BirdLife assessment for Cuban Coccyzus merlini is Least Concern; the Bahamas form is treated separately."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 15,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Great Lizard-Cuckoo (Cuban) — eBird",
+        "fr": "Grand Coulicou-lézard (Cuba) — eBird"
+      },
+      "url": "https://ebird.org/species/grelic3",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The current eBird page uses the name Great Lizard-Cuckoo (Cuban) for C. merlini."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 13,
+        "total": 13,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "BirdLife and several modern lists recognize C. bahamensis separately, while historical and some continuing taxonomies lumped it with C. merlini."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Kept the Cuban taxon distinct in the account and noted that Bahamian lizard-cuckoo rank differs among taxonomic authorities; reciprocal reference to C. vieilloti."
+}

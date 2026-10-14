@@ -1,0 +1,34 @@
+{
+  "id": "ciliocincta_sabellariae",
+  "name": "Ciliocincta sabellariae",
+  "scientific": "Ciliocincta sabellariae",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Ciliocincta sabellariae est un orthonectide marin microscopique décrit pour la première fois chez le polychète tubicole Sabellaria cementarium, dans l’État de Washington.",
+    "identification": "Ses adultes ciliés sont organisés en anneaux corporels répétés et comprennent des formes mâles et femelles distinctes ; ces détails nécessitent un examen microscopique.",
+    "habitat": "Les spécimens originaux provenaient des îles San Juan, où le parasite a été trouvé chez son hôte polychète marin.",
+    "diet": "Il vit en parasite chez son hôte au lieu de capturer des proies libres ; aucune étude alimentaire propre à l’espèce n’a été trouvée.",
+    "behavior": "L’hôte peut contenir de nombreux vers reproducteurs microscopiques, mais le calendrier naturel et le mode de transmission de ce parasite restent peu documentés.",
+    "reproduction": "La description originale a documenté des mâles et des femelles chez des vers infestés ; les études générales sur les orthonectides décrivent un plasmodium parasite produisant des stades reproducteurs ciliés.",
+    "ecology": "Son association connue avec Sabellaria cementarium la distingue de C. julini, signalée chez Scolelepis fuliginosa ; toutes deux appartiennent au même petit genre.",
+    "conservation": "Les données restent trop rares pour établir une tendance démographique ou un statut de conservation pour ce parasite microscopique."
+  },
+  "sources": [
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/14259478/",
+      "title": "Ciliocincta sabellariae — description originale, Journal of Parasitology (1965)"
+    },
+    {
+      "url": "https://www.vliz.be/imisdocs/publications/ocrd/286929.pdf",
+      "title": "Les genres du phylum Orthonectida (Mesozoa) — étude évaluée par les pairs"
+    },
+    {
+      "url": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2019.00443/full",
+      "title": "Cycles de vie et simplification du plan corporel des orthonectides — Frontiers in Genetics"
+    },
+    {
+      "url": "https://obis.org/taxon/265734",
+      "title": "Ciliocincta sabellariae — Système d’information sur la biodiversité océanique"
+    }
+  ]
+}

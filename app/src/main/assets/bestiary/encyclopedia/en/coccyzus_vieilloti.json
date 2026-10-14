@@ -1,0 +1,34 @@
+{
+  "id": "coccyzus_vieilloti",
+  "name": "Puerto Rican Lizard-Cuckoo",
+  "scientific": "Coccyzus vieilloti",
+  "group": "birds",
+  "sections": {
+    "overview": "This lizard-cuckoo is endemic to Puerto Rico and closely related to Cuba’s C. merlini.",
+    "identification": "Its long tail has white-tipped outer feathers, and the bill is dark above with a yellow lower edge.",
+    "habitat": "It uses forests, dense suburban vegetation, shade-coffee plantations and even dry woodland.",
+    "diet": "Lizards are its main prey, supplemented by large spiders, insects and small frogs.",
+    "behavior": "It forages slowly and quietly through the understory and canopy, using stealth to approach prey.",
+    "reproduction": "Breeding occurs year-round, with most activity from March to June; the nest is a loose structure of leaves and sticks.",
+    "ecology": "It shares the Caribbean lizard-cuckoo group with C. merlini, but the two are island endemics on different islands.",
+    "conservation": "The Puerto Rico atlas reports Least Concern globally and no local threatened-category listing in its cited assessment."
+  },
+  "sources": [
+    {
+      "url": "https://www.srs.fs.usda.gov/pubs/gtr/gtr_iitf_053.pdf",
+      "title": "Puerto Rico Breeding Bird Atlas — Puerto Rican Lizard-Cuckoo"
+    },
+    {
+      "url": "https://birdsofpuertorico.com/bird/82/Puerto%20Rican%20Lizard-Cuckoo",
+      "title": "Puerto Rican Lizard-Cuckoo — Birds of Puerto Rico"
+    },
+    {
+      "url": "https://americanornithology.org/wp-content/uploads/2024/01/2024-A.pdf",
+      "title": "2024 AOS taxonomy proposal on Caribbean lizard-cuckoos"
+    },
+    {
+      "url": "https://www.birdscaribbean.org/2021/05/from-the-nest-day-61/",
+      "title": "Endemic Bird of the Day: Puerto Rican Lizard-Cuckoo — BirdsCaribbean"
+    }
+  ]
+}

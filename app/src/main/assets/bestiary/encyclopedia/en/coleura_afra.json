@@ -1,0 +1,30 @@
+{
+  "id": "coleura_afra",
+  "name": "African Sheath-tailed Bat",
+  "scientific": "Coleura afra",
+  "group": "mammals",
+  "sections": {
+    "overview": "This emballonurid bat occurs across parts of sub-Saharan Africa, Arabia and Madagascar.",
+    "identification": "It is a small, dark-brown bat with paler underparts; published descriptions give a mass around 10–12 g.",
+    "habitat": "It roosts in illuminated caves, rocky crevices and sometimes house cellars, often near coasts or lakes.",
+    "diet": "It is insectivorous; reported prey includes beetles and moths, with feeding activity higher in the rainy season.",
+    "behavior": "On mainland Africa it may form large roosting colonies numbering in the thousands.",
+    "reproduction": "Species-specific breeding details were not available in the Red List account consulted.",
+    "ecology": "The genus Coleura also includes the Seychelles Sheath-tailed Bat, C. seychellensis, a much more restricted island relative.",
+    "conservation": "The IUCN assessment published in 2017 lists C. afra as Least Concern, while noting that population trend is unknown."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-2.RLTS.T5113A22089365.en",
+      "title": "African Sheath-tailed Bat — IUCN Red List"
+    },
+    {
+      "url": "https://fr.wikipedia.org/wiki/Coleura_afra",
+      "title": "Coleura afra — French Wikipedia (references include IUCN, GBIF and bat studies)"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4513465/",
+      "title": "Bats of the Western Indian Ocean Islands — peer-reviewed review"
+    }
+  ]
+}

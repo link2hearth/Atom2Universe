@@ -1,0 +1,168 @@
+{
+  "id": "chiropterotriton_mosaueri",
+  "scientific": "Chiropterotriton mosaueri",
+  "group": "amphibians",
+  "name": {
+    "en": "Cave Splayfoot Salamander",
+    "fr": "Salamandre pied plat des cavernes"
+  },
+  "sections": {
+    "overview": {
+      "en": "This highly localized Mexican cave salamander from Hidalgo is a lungless amphibian in family Plethodontidae.",
+      "fr": "Cette salamandre cavernicole très localisée d’Hidalgo est un amphibien sans poumons de la famille des Plethodontidae."
+    },
+    "identification": {
+      "en": "Its webbed, spatulate toes and long tail help distinguish it from related Chiropterotriton salamanders.",
+      "fr": "Ses orteils palmés en spatule et sa longue queue aident à la distinguer des autres salamandres Chiropterotriton."
+    },
+    "habitat": {
+      "en": "It is known from damp caves near Durango in Hidalgo, at about 2160 m in pine-oak country.",
+      "fr": "Elle est connue de grottes humides près de Durango, dans l’État d’Hidalgo, vers 2160 m, en milieu de pins et de chênes."
+    },
+    "diet": {
+      "en": "The sources reviewed do not report this species’ prey, so its diet remains unknown in species accounts.",
+      "fr": "Les sources consultées ne rapportent pas les proies de l’espèce; son régime reste inconnu dans les fiches disponibles."
+    },
+    "behavior": {
+      "en": "After 73 years without records, researchers rediscovered it inside a cave in September 2010.",
+      "fr": "Après 73 ans sans observation, des chercheurs l’ont redécouverte dans une grotte en septembre 2010."
+    },
+    "reproduction": {
+      "en": "The references provide no reliable species-specific details on courtship, egg laying or development.",
+      "fr": "Les références ne donnent aucun détail fiable sur la parade, la ponte ou le développement propres à l’espèce."
+    },
+    "ecology": {
+      "en": "It shares a cave with C. magnipes; C. multidentatus was once considered a possible synonym, but taxonomy now separates them.",
+      "fr": "Elle partage une grotte avec C. magnipes; C. multidentatus fut jadis considéré comme synonyme possible, mais la taxonomie les distingue aujourd’hui."
+    },
+    "conservation": {
+      "en": "An IUCN specialist-group profile lists it as Critically Endangered, citing its tiny range and cave-habitat concerns.",
+      "fr": "Une fiche du groupe de spécialistes de l’UICN la classe en danger critique, vu son aire minuscule et les menaces sur les grottes."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Chiropterotriton mosaueri — Amphibian Species of the World, American Museum of Natural History",
+        "fr": "Chiropterotriton mosaueri — Amphibian Species of the World, American Museum of Natural History"
+      },
+      "url": "https://amphibiansoftheworld.amnh.org/Amphibia/Caudata/Plethodontidae/Hemidactyliinae/Chiropterotriton/Chiropterotriton-mosaueri",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "AMNH accepts the species in Plethodontidae, places it in caves at 2,160 m, and notes the earlier comparison with C. multidentatus."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 111,
+        "notes_words": 21,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cave Splayfoot Salamander — AmphibiaWeb account via Encyclopedia of Life",
+        "fr": "Salamandre pied plat des cavernes — fiche AmphibiaWeb reprise par Encyclopedia of Life"
+      },
+      "url": "https://eol.org/pages/1048382/articles",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "AmphibiaWeb records spatulate webbed toes, damp caves, the 2010 rediscovery and syntopy with C. magnipes; prey and reproduction remain undocumented there."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 21,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Threatened Amphibians of the World — species profile",
+        "fr": "Amphibiens menacés du monde — fiche espèce"
+      },
+      "url": "https://www.iucn-amphibians.org/wp-content/uploads/sites/4/2018/11/TAW-Threatened-Species-Profiles_Part5.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "habitat"
+      ],
+      "facts": [
+        "The IUCN Amphibian Specialist Group profile lists Critically Endangered status and cave plus surrounding-forest conservation concerns."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 39,
+        "notes_words": 16,
+        "total": 55,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Salamandra pie plano de caverna — Enciclovida / CONABIO",
+        "fr": "Salamandre pied plat des cavernes — Enciclovida / CONABIO"
+      },
+      "url": "https://enciclovida.mx/especies/35178",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "CONABIO gives the Spanish name salamandra pie plano de caverna and synonym Oedipus mosaueri."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 14,
+        "total": 14,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The 2008 threatened-species profile predates the 2010 rediscovery and contains obsolete detection data; current population size, prey and reproduction remain poorly documented in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the current AMNH taxonomy with the Spanish CONABIO name, AmphibiaWeb natural-history details and the older IUCN specialist-group status account; explicitly noted the 2010 rediscovery when discussing outdated assessment observations."
+}

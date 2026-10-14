@@ -1,0 +1,34 @@
+{
+  "id": "cirrhoscyllium_formosanum",
+  "name": "Taiwan Saddled Carpetshark",
+  "scientific": "Cirrhoscyllium formosanum",
+  "group": "fish",
+  "sections": {
+    "overview": "Cirrhoscyllium formosanum is a small carpet shark recorded around Taiwan and regarded by Taiwanese sources as endemic to the island.",
+    "identification": "It has a slender body, throat barbels and dark crossbands; older Taiwanese records show that it has sometimes been confused with C. expolitum or C. japonicum.",
+    "habitat": "The Taiwan Fish Database records coastal and deeper benthic habitat, including a type locality off Kaohsiung at about 110 m; surveys also suggest occurrence near 200 m in the Kaoping Trench.",
+    "diet": "Species-specific prey have not been documented well enough in the sources consulted to describe its diet.",
+    "behavior": "It is a rarely recorded bottom-associated shark, and its habits remain little known.",
+    "reproduction": "The literature reports egg-laying for this species, but detailed timing and breeding sites are not established.",
+    "ecology": "It is the Taiwan-restricted member of a three-species genus; unlike C. expolitum from the South China Sea and C. japonicum recorded around Japan, its known records cluster around Taiwan.",
+    "conservation": "The IUCN global assessment categorizes it as Vulnerable; a Taiwanese database still shows Data Deficient, reflecting differences in assessment source or update."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T161679A124527280.en",
+      "title": "Cirrhoscyllium formosanum — IUCN Red List (2020)"
+    },
+    {
+      "url": "https://fishdb.sinica.edu.tw/eng/species.php?id=383136",
+      "title": "Taiwan Fish Database — English species account"
+    },
+    {
+      "url": "https://www.fa.gov.tw/view.php?font-size=s&id=20&subtheme=&theme=research_report",
+      "title": "Taiwan Fisheries Agency — distribution and status survey"
+    },
+    {
+      "url": "https://kmweb.moa.gov.tw/theme_data.php?id=250&theme=production_map",
+      "title": "Taiwan Fish Database — Chinese species account"
+    }
+  ]
+}

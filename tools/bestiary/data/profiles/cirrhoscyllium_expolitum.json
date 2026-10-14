@@ -1,0 +1,177 @@
+{
+  "id": "cirrhoscyllium_expolitum",
+  "scientific": "Cirrhoscyllium expolitum",
+  "group": "fish",
+  "name": {
+    "en": "Barbelthroat Carpetshark",
+    "fr": "Requin-carpette à moustache"
+  },
+  "sections": {
+    "overview": {
+      "en": "Cirrhoscyllium expolitum is a small Northwest Pacific carpet shark in the family Parascylliidae, known from the South China Sea.",
+      "fr": "Cirrhoscyllium expolitum est un petit requin-tapis du Pacifique nord-ouest, de la famille des Parascylliidae, connu de la mer de Chine méridionale."
+    },
+    "identification": {
+      "en": "The species is known from very few specimens, including a 34 cm female type; throat barbels distinguish the genus from many other carpet sharks.",
+      "fr": "L’espèce n’est connue que par peu de spécimens, dont une femelle type de 34 cm ; les barbillons de la gorge distinguent le genre de nombreux autres requins-tapis."
+    },
+    "habitat": {
+      "en": "Published records place it on the continental shelf of the South China Sea, roughly 180–190 m deep, between southern China and the Philippines.",
+      "fr": "Les données publiées le situent sur le plateau continental de la mer de Chine méridionale, vers 180–190 m de profondeur, entre le sud de la Chine et les Philippines."
+    },
+    "diet": {
+      "en": "Its diet is poorly documented; the available sources do not establish a species-specific prey list.",
+      "fr": "Son régime alimentaire est mal documenté ; les sources disponibles n’établissent pas de liste de proies propre à l’espèce."
+    },
+    "behavior": {
+      "en": "It is a bottom-dwelling shark, but observations are too limited to describe its daily activity or movement in detail.",
+      "fr": "C’est un requin benthique, mais les observations sont trop limitées pour décrire précisément son activité quotidienne ou ses déplacements."
+    },
+    "reproduction": {
+      "en": "Available species summaries report egg-laying, although direct reproductive observations are scarce.",
+      "fr": "Les synthèses disponibles indiquent une ponte d’œufs, bien que les observations directes de reproduction soient rares."
+    },
+    "ecology": {
+      "en": "It is one of three recognized Cirrhoscyllium species; compare its South China Sea records with the more localized Taiwanese C. formosanum and Japanese C. japonicum.",
+      "fr": "C’est l’une des trois espèces reconnues de Cirrhoscyllium ; comparez ses données de mer de Chine méridionale avec C. formosanum, localisée à Taïwan, et C. japonicum, associé au Japon."
+    },
+    "conservation": {
+      "en": "The IUCN assessment lists it as Data Deficient, reflecting the limited distribution, biological and population information available.",
+      "fr": "L’évaluation de l’UICN le classe en données insuffisantes, ce qui reflète le manque d’informations sur sa répartition, sa biologie et sa population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Barbelthroat Carpetshark — FishBase species summary and IUCN status",
+        "fr": "Requin-carpette à moustache — fiche FishBase et statut UICN"
+      },
+      "url": "https://www.fishbase.se/summary/5911",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "FishBase reports global IUCN Data Deficient assessment dated 6 May 2020 and records bycatch use.",
+        "FishBase and compiled species references give maximum known length near 34 cm and egg-laying; trophic information is modeled or sparse, so no specific prey claim is made."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "FAO Sharks of the World species catalogue",
+        "fr": "Catalogue FAO des espèces de requins du monde"
+      },
+      "url": "https://www.fao.org/4/x9293e/x9293e13.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "identification"
+      ],
+      "facts": [
+        "FAO catalogue is a primary taxonomic fisheries reference for species diagnosis, South China Sea distribution and depth."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Sharks of the World — Naturalis Parascylliidae overview",
+        "fr": "Sharks of the World — présentation des Parascylliidae par Naturalis"
+      },
+      "url": "https://sharks.linnaeus.naturalis.nl/linnaeus_ng/app/views/highertaxa/taxon.php?cat=TAB_DESCRIPTION&id=62305",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Naturalis shark reference describes throat barbels and compares Cirrhoscyllium with its close genus-level relative Parascyllium."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Biology and population data are sparse for these poorly observed sharks. For C. formosanum, sources differ on the status label: the cited global IUCN 2020 assessment gives Vulnerable, whereas Taiwan Fish Database displays Data Deficient. C. japonicum has a local Okinawa record around 400 m although the IUCN habitat detail gives a range to 200 m."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared IUCN assessments, national fish databases and specialist/official species accounts; cross-referenced the three catalogue species of Cirrhoscyllium and kept local observations distinct from global range assessments."
+}

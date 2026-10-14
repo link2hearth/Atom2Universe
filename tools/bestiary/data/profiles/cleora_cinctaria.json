@@ -1,0 +1,143 @@
+{
+  "id": "cleora_cinctaria",
+  "scientific": "Cleora cinctaria",
+  "group": "invertebrates",
+  "name": {
+    "en": "Ringed Carpet",
+    "fr": "Boarmie ceinte"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Ringed Carpet is a geometrid moth of open, scrubby landscapes.",
+      "fr": "La Boarmie ceinte est un papillon géomètre des paysages ouverts et buissonnants."
+    },
+    "identification": {
+      "en": "British adults have a wingspan of about 28–35 mm.",
+      "fr": "Les adultes britanniques ont une envergure d’environ 28 à 35 mm."
+    },
+    "habitat": {
+      "en": "In Britain it favours heathland dotted with trees and bushes.",
+      "fr": "En Grande-Bretagne, elle préfère les landes parsemées d’arbres et de buissons."
+    },
+    "diet": {
+      "en": "Its caterpillars feed on several plants, including birch and bog myrtle.",
+      "fr": "Ses chenilles consomment plusieurs plantes, dont le bouleau et la myrique baumier."
+    },
+    "behavior": {
+      "en": "Finnish records describe adults flying at dusk and at night, and coming to light.",
+      "fr": "Des observations finlandaises décrivent des adultes actifs au crépuscule et la nuit, attirés par la lumière."
+    },
+    "reproduction": {
+      "en": "The Finnish species account reports overwintering inside the pupa; further breeding details vary by source.",
+      "fr": "La fiche finlandaise indique un hivernage dans la chrysalide ; les autres détails du cycle varient selon les sources."
+    },
+    "ecology": {
+      "en": "Its larvae use both woody hosts and low plants, linking it to mixed heath vegetation.",
+      "fr": "Ses chenilles utilisent des ligneux et des plantes basses, ce qui les associe à une végétation de lande variée."
+    },
+    "conservation": {
+      "en": "The references consulted describe its natural history but give no population trend or formal risk category.",
+      "fr": "Les références consultées décrivent son histoire naturelle, sans fournir de tendance démographique ni de catégorie de risque officielle."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Ringed Carpet — UKMoths",
+        "fr": "Boarmie ceinte — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/cleora-cinctaria/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "UKMoths reports 28–35 mm wingspan, heathland habitat and birch and bog-myrtle larval hosts."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 13,
+        "total": 100,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cleora cinctaria in Finland — Finnish Lepidoptera Society archive",
+        "fr": "Cleora cinctaria en Finlande — archives de la Société finlandaise de lépidoptérologie"
+      },
+      "url": "https://www.perhoset.fi/historia/ennominae/cle-cinctaria.htm",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction",
+        "ecology"
+      ],
+      "facts": [
+        "The Finnish account describes nocturnal flight, light attraction, pupal overwintering and a polyphagous larva."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 14,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Cleora cinctaria — Lepinet",
+        "fr": "Cleora cinctaria — Lepinet"
+      },
+      "url": "https://www.lepinet.fr/especes/nation/lep/?e=l&id=37110",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet",
+        "conservation"
+      ],
+      "facts": [
+        "French moth reference gives French vernacular name and notes birch and heather as larval foods."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 15,
+        "total": 49,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Host-plant lists and flight seasons are regional; the Finnish account is based on records and older cited references."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared UK, Finnish and French moth references; kept geographic qualifications on size, habitat and phenology."
+}

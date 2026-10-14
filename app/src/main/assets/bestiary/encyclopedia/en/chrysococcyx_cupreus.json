@@ -1,0 +1,38 @@
+{
+  "id": "chrysococcyx_cupreus",
+  "name": "African Emerald Cuckoo",
+  "scientific": "Chrysococcyx cupreus",
+  "group": "birds",
+  "sections": {
+    "overview": "The African emerald cuckoo is a small, canopy-dwelling cuckoo widespread through sub-Saharan Africa.",
+    "identification": "The adult male is glossy green above with a bright yellow breast, while the female is more cryptic, with barred green, brown and pale plumage. This strong sexual difference is shared with several Chrysococcyx species, so range and call help confirm identification.",
+    "habitat": "It favours woodland and forest, including forest edges and well-wooded gardens, and occurs from lowlands into highland forests. The species is widely distributed south of the Sahara, with seasonal movements in some parts of its range.",
+    "diet": "It feeds chiefly on caterpillars and other insects, often gleaning prey among foliage in the middle and upper canopy. Small fruits can supplement the diet, but insects remain its principal food in species accounts.",
+    "behavior": "Its clear, repeated whistled call is a conspicuous way to detect a bird that can otherwise remain high and partly hidden in foliage. Like other cuckoos, it is more often heard than seen in dense woodland.",
+    "reproduction": "It is a brood parasite: females lay eggs in the nests of other bird species and leave incubation and chick-rearing to the hosts. Host choice varies across Africa; details should not be generalized from the better-studied common cuckoo or from another Chrysococcyx species.",
+    "ecology": "By consuming foliage-feeding insects and parasitising other birds’ nests, it links forest food webs in two distinct ways. Its close relative the diederik cuckoo C. caprius shares parts of southern Africa but differs in plumage and host relationships.",
+    "conservation": "BirdLife’s assessment lists it as Least Concern, reflecting a broad range and no evidence of a rapid global decline. Local forest loss may still affect populations, and conservation categories should not be read as meaning that every habitat is secure."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22684021A111721716.en",
+      "title": "African Emerald Cuckoo — IUCN Red List / BirdLife International"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/african.emerald.cuckoo.html",
+      "title": "African emerald cuckoo — Oiseaux.net"
+    },
+    {
+      "url": "https://www.biodiversityexplorer.info/birds/cuculidae/chrysococcyx_cupreus.htm",
+      "title": "African emerald cuckoo — Biodiversity Explorer"
+    },
+    {
+      "url": "https://www.tandfonline.com/doi/full/10.1080/01584197.2017.1292403",
+      "title": "Declining ranges of southern African breeding cuckoos do not reflect host species’ range changes"
+    },
+    {
+      "url": "https://ebird.org/species/afecuc1",
+      "title": "African emerald cuckoo — eBird / Cornell Lab"
+    }
+  ]
+}

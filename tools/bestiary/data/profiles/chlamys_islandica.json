@@ -1,0 +1,205 @@
+{
+  "id": "chlamys_islandica",
+  "scientific": "Chlamys islandica",
+  "group": "invertebrates",
+  "name": {
+    "en": "Iceland Scallop",
+    "fr": "Pétoncle d’Islande"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Iceland scallop is a cold-water fan shell of the North Atlantic and Arctic margins. It belongs to the pectinid scallops, alongside the better-known Atlantic sea scallop, but is a distinct subarctic species.",
+      "fr": "Le pétoncle d’Islande est un coquillage en éventail des eaux froides de l’Atlantique Nord et des marges arctiques. Il appartient aux pectinidés, comme la coquille Saint-Jacques de l’Atlantique, mais constitue une espèce subarctique distincte."
+    },
+    "identification": {
+      "en": "Its rounded fan-shaped shell has radiating ribs and two small ear-like projections beside the hinge; shell colours vary from pale to reddish or brown. Adults can exceed 10 cm in shell height, though size and growth differ among beds.",
+      "fr": "Sa coquille arrondie en éventail porte des côtes rayonnantes et deux petites « oreilles » de part et d’autre de la charnière ; sa couleur varie du clair au rougeâtre ou brun. Les adultes peuvent dépasser 10 cm de hauteur, mais la taille et la croissance varient selon les bancs."
+    },
+    "habitat": {
+      "en": "It lives on the seabed in cool, shallow subarctic waters, commonly on sand, shell gravel and mixed coarse bottoms. Around Iceland, major beds are concentrated in fjords, often between about 15 and 75 m deep.",
+      "fr": "Elle vit sur le fond marin des eaux subarctiques fraîches et peu profondes, souvent sur du sable, des débris coquilliers ou des fonds grossiers mixtes. En Islande, les principaux bancs sont dans les fjords, fréquemment entre environ 15 et 75 m de profondeur."
+    },
+    "diet": {
+      "en": "Like other scallops, it filter-feeds: gills retain suspended microscopic food, especially phytoplankton and organic particles. Seasonal food supply helps explain why growth changes through the year.",
+      "fr": "Comme les autres pétoncles, elle filtre l’eau : ses branchies retiennent les particules alimentaires en suspension, notamment le phytoplancton et la matière organique. La variation saisonnière de cette nourriture contribue aux différences de croissance au fil de l’année."
+    },
+    "behavior": {
+      "en": "It can clap its valves and jet water to swim briefly away from disturbance, although adults usually remain on the bottom.",
+      "fr": "Elle peut claquer ses valves et expulser de l’eau pour s’éloigner brièvement d’un danger, même si les adultes restent généralement sur le fond."
+    },
+    "reproduction": {
+      "en": "The sexes release eggs and sperm into the water, where fertilisation occurs; larvae then drift before settling. Its slow growth means that a fishery cannot quickly replace lost adults.",
+      "fr": "Les sexes libèrent leurs ovules et spermatozoïdes dans l’eau, où a lieu la fécondation ; les larves dérivent ensuite avant de se fixer. Sa croissance lente limite le renouvellement rapide des adultes prélevés."
+    },
+    "ecology": {
+      "en": "Scallop beds support attached organisms and provide prey for bottom-feeding predators such as starfish. The species’ cold-water range overlaps with other pectinids, but its life history and stock trends should not be assumed to match those of the Atlantic sea scallop.",
+      "fr": "Les bancs de pétoncles hébergent des organismes fixés et nourrissent des prédateurs benthiques tels que les étoiles de mer. Son aire d’eaux froides recoupe celle d’autres pectinidés, mais son cycle et l’évolution de ses stocks ne se confondent pas avec ceux de la coquille Saint-Jacques de l’Atlantique."
+    },
+    "conservation": {
+      "en": "Icelandic stocks collapsed around 1999–2000, and a zero quota was advised in 2004; overfishing, a protozoan disease and warmer bottom water were implicated. This is a historical, stock-specific fishery record, not a current global threatened-species category.",
+      "fr": "Les stocks islandais se sont effondrés vers 1999–2000 et un quota nul a été recommandé en 2004 ; la surexploitation, une maladie à protozoaire et le réchauffement du fond ont été mis en cause. Il s’agit d’un historique de pêcherie propre à ces stocks, pas d’une catégorie mondiale actuelle de menace."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "The Molluscan Fisheries of Iceland",
+        "fr": "Les pêcheries de mollusques d’Islande"
+      },
+      "url": "https://www.st.nmfs.noaa.gov/spo/SPO/tr129opt.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "NOAA technical report summarizes Icelandic scallop beds, bottom habitat, associated fauna, fishery collapse and management."
+      ],
+      "prose_claims": [
+        "habitat.en.2",
+        "habitat.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 124,
+        "notes_words": 15,
+        "total": 139,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The fishery for Iceland scallop in the Northeast Atlantic",
+        "fr": "La pêcherie du pétoncle d’Islande dans l’Atlantique Nord-Est"
+      },
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16905425/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "Peer-reviewed review compares regional stock history and scallop biology."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2",
+        "ecology.en.2",
+        "ecology.fr.2",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 180,
+        "notes_words": 9,
+        "total": 189,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Iceland scallop — Norwegian Institute of Marine Research",
+        "fr": "Pétoncle d’Islande — Institut norvégien de recherche marine"
+      },
+      "url": "https://www.hi.no/resources/publikasjoner/imrpinro/2008/pinro_nr_.1_2008.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet"
+      ],
+      "facts": [
+        "The research report gives subarctic range, shallow-water occurrence, slow growth and filter-feeding ecology."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "diet.en.2",
+        "diet.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 142,
+        "notes_words": 13,
+        "total": 155,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Chlamys islandica — Marine Bivalve Shells of the British Isles",
+        "fr": "Chlamys islandica — Coquillages bivalves marins des îles Britanniques"
+      },
+      "url": "https://naturalhistory.museumwales.ac.uk/britishbivalves/browserecord.php?-recid=220",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "National Museum Wales account gives size, ribbing, colour, range, attachment and substrate details."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 89,
+        "notes_words": 13,
+        "total": 102,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Escape responses in Chlamys islandica",
+        "fr": "Réactions de fuite chez Chlamys islandica"
+      },
+      "url": "https://www.sciencedirect.com/science/article/pii/S002209810000215X",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "Species-specific study measures valve-clapping escape responses in adult Iceland scallops."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 44,
+        "notes_words": 10,
+        "total": 54,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level maximum size is reported inconsistently; the stated 10 cm is an approximate upper adult size, not a typical size.",
+    "No global Red List category was verified for this profile; fishery status is described regionally."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared NOAA, Norwegian marine research and peer-reviewed fishery sources; distinguished this subarctic scallop from Atlantic sea scallop and kept Icelandic fishery history geographically bounded."
+}

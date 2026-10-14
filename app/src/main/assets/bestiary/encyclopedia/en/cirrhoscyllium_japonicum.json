@@ -1,0 +1,34 @@
+{
+  "id": "cirrhoscyllium_japonicum",
+  "name": "Saddled Carpetshark",
+  "scientific": "Cirrhoscyllium japonicum",
+  "group": "fish",
+  "sections": {
+    "overview": "Cirrhoscyllium japonicum is a small carpet shark of the Northwest Pacific, endemic to southern Japan.",
+    "identification": "It has dark saddle-like markings and a pair of throat barbels; adults remain much smaller than large reef-associated carpet sharks.",
+    "habitat": "The IUCN account describes a demersal shelf shark from shallow water to about 200 m, while Okinawa aquarium observations document individuals near 400 m locally.",
+    "diet": "Its diet has not been characterized in the sources consulted.",
+    "behavior": "An Okinawa aquarium account describes it as mostly sedentary and not an active swimmer, while wild behavioral observations remain limited.",
+    "reproduction": "It is oviparous; the aquarium reported two eggs from a captive female and successful hatching, but this is an observation rather than a population-wide breeding estimate.",
+    "ecology": "It is one of three Cirrhoscyllium species; its saddle pattern and Japanese records distinguish it from the Taiwan-restricted C. formosanum and South China Sea C. expolitum.",
+    "conservation": "The global IUCN assessment lists it as Least Concern with a stable trend, but species-level biological information remains limited."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T161606A124513884.en",
+      "title": "Cirrhoscyllium japonicum — IUCN Red List global assessment"
+    },
+    {
+      "url": "https://oki-churaumi.jp/en/topics/1779074251/",
+      "title": "Saddle carpetshark — Okinawa Churaumi Aquarium (English)"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/5913",
+      "title": "Cirrhoscyllium japonicum — FishBase species summary"
+    },
+    {
+      "url": "https://sharks.linnaeus.naturalis.nl/linnaeus_ng/app/views/highertaxa/taxon.php?cat=TAB_DESCRIPTION&id=62305",
+      "title": "Cirrhoscyllium — Naturalis Sharks of the World, Parascylliidae overview"
+    }
+  ]
+}

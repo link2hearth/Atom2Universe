@@ -1,0 +1,30 @@
+{
+  "id": "cimberis_attelaboides",
+  "name": "Pine-flower snout beetle",
+  "scientific": "Cimberis attelaboides",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Cimberis attelaboides is a small, relatively primitive weevil associated with pines across Europe.",
+    "identification": "The adult has a narrow elongated snout, straight antennae and orange appendages; it is only a few millimetres long and can be confused with other snouted beetles.",
+    "habitat": "It occurs in lowland and mountain pine woods, where adults are found on pines during the warmer season.",
+    "diet": "Larvae feed in pollen-bearing male pine flowers, and adults are also associated with pine pollen.",
+    "behavior": "Adults are flower-visiting beetles seen on pines, especially during spring and early summer.",
+    "reproduction": "The documented life cycle links larval development to male pine flowers; detailed courtship or egg-laying behavior is not well covered in the sources consulted.",
+    "ecology": "This specialized pollen association connects the beetle closely to Pinus, especially Scots pine in British records; no other Cimberis profile in this catalogue is available for a species-by-species comparison.",
+    "conservation": "The sources consulted provide no formal species-level threat category, so local occurrence should not be mistaken for a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/242807",
+      "title": "Cimberis attelaboides — Observatoire FAUNA species account"
+    },
+    {
+      "url": "https://dbif.brc.ac.uk/familiesresults.aspx?id=98",
+      "title": "Database of Insects and their Food Plants — British Research Centre for Ecology and Hydrology"
+    },
+    {
+      "url": "https://www.eje.cz/pdfs/eje/2024/01/47.pdf",
+      "title": "Phylogeny and classification of Cimberididae — European Journal of Entomology (2024)"
+    }
+  ]
+}

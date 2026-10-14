@@ -1,0 +1,38 @@
+{
+  "id": "chrysococcyx_cupreus",
+  "name": "Coucou foliotocol",
+  "scientific": "Chrysococcyx cupreus",
+  "group": "birds",
+  "sections": {
+    "overview": "Le coucou foliotocol est un petit coucou des canopées, largement répandu en Afrique subsaharienne.",
+    "identification": "Le mâle adulte est vert brillant sur le dessus et porte une poitrine jaune vif, tandis que la femelle est plus discrète, avec des motifs barrés verts, bruns et clairs. Ce dimorphisme marqué existe chez plusieurs Chrysococcyx ; l’aire et le chant aident donc à confirmer l’identification.",
+    "habitat": "Il fréquente les forêts et boisements, leurs lisières ainsi que les jardins arborés, des basses terres aux forêts de montagne. L’espèce est largement distribuée au sud du Sahara et effectue des déplacements saisonniers dans certaines régions.",
+    "diet": "Il mange surtout des chenilles et d’autres insectes, qu’il prélève souvent dans le feuillage des étages moyens et supérieurs. De petits fruits peuvent compléter son régime, mais les fiches de l’espèce indiquent que les insectes restent la nourriture principale.",
+    "behavior": "Son sifflement clair et répété permet de repérer un oiseau qui peut rester haut dans les arbres, en partie caché par le feuillage. Comme d’autres coucous, il est souvent entendu avant d’être aperçu dans les bois denses.",
+    "reproduction": "C’est un parasite de couvée : les femelles pondent dans les nids d’autres oiseaux et laissent aux hôtes l’incubation et l’élevage du jeune. Les hôtes varient selon les régions d’Afrique ; il ne faut pas transposer automatiquement les données du coucou gris, mieux étudié, ou d’un autre Chrysococcyx.",
+    "ecology": "En mangeant des insectes du feuillage et en parasitant les nids d’autres oiseaux, il intervient de deux façons dans les réseaux forestiers. Son proche parent, le coucou didéric C. caprius, partage une partie de l’Afrique australe, mais diffère par le plumage et les relations avec les hôtes.",
+    "conservation": "L’évaluation de BirdLife le classe en préoccupation mineure, compte tenu de sa vaste aire et de l’absence d’indice d’un déclin mondial rapide. La disparition locale des forêts peut néanmoins affecter certaines populations ; cette catégorie ne signifie pas que chaque habitat est préservé."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2017-1.RLTS.T22684021A111721716.en",
+      "title": "Coucou foliotocol — Liste rouge de l’UICN / BirdLife International"
+    },
+    {
+      "url": "https://www.oiseaux.net/en/oiseaux/african.emerald.cuckoo.html",
+      "title": "Coucou foliotocol — Oiseaux.net"
+    },
+    {
+      "url": "https://www.biodiversityexplorer.info/birds/cuculidae/chrysococcyx_cupreus.htm",
+      "title": "Coucou foliotocol — Biodiversity Explorer"
+    },
+    {
+      "url": "https://www.tandfonline.com/doi/full/10.1080/01584197.2017.1292403",
+      "title": "Le recul des aires de coucous nicheurs d’Afrique australe ne reflète pas les changements d’aire de leurs hôtes"
+    },
+    {
+      "url": "https://ebird.org/species/afecuc1",
+      "title": "Coucou foliotocol — eBird / Cornell Lab"
+    }
+  ]
+}

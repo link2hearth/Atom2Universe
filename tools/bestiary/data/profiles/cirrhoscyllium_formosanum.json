@@ -1,0 +1,191 @@
+{
+  "id": "cirrhoscyllium_formosanum",
+  "scientific": "Cirrhoscyllium formosanum",
+  "group": "fish",
+  "name": {
+    "en": "Taiwan Saddled Carpetshark",
+    "fr": "Requin-carpette de Taïwan"
+  },
+  "sections": {
+    "overview": {
+      "en": "Cirrhoscyllium formosanum is a small carpet shark recorded around Taiwan and regarded by Taiwanese sources as endemic to the island.",
+      "fr": "Cirrhoscyllium formosanum est un petit requin-tapis observé autour de Taïwan et considéré comme endémique de l’île par les sources taïwanaises."
+    },
+    "identification": {
+      "en": "It has a slender body, throat barbels and dark crossbands; older Taiwanese records show that it has sometimes been confused with C. expolitum or C. japonicum.",
+      "fr": "Il possède un corps élancé, des barbillons à la gorge et des bandes transversales sombres ; d’anciens relevés taïwanais montrent qu’il a parfois été confondu avec C. expolitum ou C. japonicum."
+    },
+    "habitat": {
+      "en": "The Taiwan Fish Database records coastal and deeper benthic habitat, including a type locality off Kaohsiung at about 110 m; surveys also suggest occurrence near 200 m in the Kaoping Trench.",
+      "fr": "La base taïwanaise des poissons indique des habitats benthiques côtiers et profonds, dont la localité type au large de Kaohsiung vers 110 m ; des relevés suggèrent aussi sa présence près de 200 m dans la fosse de Kaoping."
+    },
+    "diet": {
+      "en": "Species-specific prey have not been documented well enough in the sources consulted to describe its diet.",
+      "fr": "Les sources consultées ne documentent pas suffisamment ses proies pour décrire son régime alimentaire."
+    },
+    "behavior": {
+      "en": "It is a rarely recorded bottom-associated shark, and its habits remain little known.",
+      "fr": "C’est un requin benthique rarement observé dont les habitudes restent peu connues."
+    },
+    "reproduction": {
+      "en": "The literature reports egg-laying for this species, but detailed timing and breeding sites are not established.",
+      "fr": "La littérature indique que cette espèce pond des œufs, mais ne précise ni le calendrier ni les lieux de reproduction."
+    },
+    "ecology": {
+      "en": "It is the Taiwan-restricted member of a three-species genus; unlike C. expolitum from the South China Sea and C. japonicum recorded around Japan, its known records cluster around Taiwan.",
+      "fr": "C’est le membre du genre limité à Taïwan ; contrairement à C. expolitum, connue de la mer de Chine méridionale, et C. japonicum, signalée autour du Japon, ses observations connues se concentrent autour de Taïwan."
+    },
+    "conservation": {
+      "en": "The IUCN global assessment categorizes it as Vulnerable; a Taiwanese database still shows Data Deficient, reflecting differences in assessment source or update.",
+      "fr": "L’évaluation mondiale de l’UICN la classe vulnérable ; une base taïwanaise affiche encore « données insuffisantes », ce qui reflète une différence de source ou de mise à jour."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cirrhoscyllium formosanum — IUCN Red List (2020)",
+        "fr": "Cirrhoscyllium formosanum — Liste rouge de l’UICN (2020)"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-3.RLTS.T161679A124527280.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment lists Vulnerable; assessment is global and dated 2020."
+      ],
+      "prose_claims": [
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Taiwan Fish Database — English species account",
+        "fr": "Base de données taïwanaise des poissons — fiche en anglais"
+      },
+      "url": "https://fishdb.sinica.edu.tw/eng/species.php?id=383136",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "Database documents Taiwanese endemism, type locality off Kaohsiung around 110 m, habitat and identifying morphology."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Taiwan Fisheries Agency — distribution and status survey",
+        "fr": "Agence taïwanaise des pêches — enquête de répartition et d’état"
+      },
+      "url": "https://www.fa.gov.tw/view.php?font-size=s&id=20&subtheme=&theme=research_report",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Government survey reports one capture in two years of bottom trawling and proposes Kaoping Trench around 200 m as likely main habitat."
+      ],
+      "prose_claims": [
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Taiwan Fish Database — Chinese species account",
+        "fr": "Base de données taïwanaise des poissons — fiche en chinois"
+      },
+      "url": "https://kmweb.moa.gov.tw/theme_data.php?id=250&theme=production_map",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "diet"
+      ],
+      "facts": [
+        "Chinese account describes body pattern, throat barbels, habitat, low utilization and historical confusion with C. expolitum and C. japonicum."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Biology and population data are sparse for these poorly observed sharks. For C. formosanum, sources differ on the status label: the cited global IUCN 2020 assessment gives Vulnerable, whereas Taiwan Fish Database displays Data Deficient. C. japonicum has a local Okinawa record around 400 m although the IUCN habitat detail gives a range to 200 m."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared IUCN assessments, national fish databases and specialist/official species accounts; cross-referenced the three catalogue species of Cirrhoscyllium and kept local observations distinct from global range assessments."
+}

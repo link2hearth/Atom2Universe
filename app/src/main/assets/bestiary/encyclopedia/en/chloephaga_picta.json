@@ -1,0 +1,42 @@
+{
+  "id": "chloephaga_picta",
+  "name": "Upland Goose",
+  "scientific": "Chloephaga picta",
+  "group": "birds",
+  "sections": {
+    "overview": "The upland goose is a South American sheldgoose of open Patagonian country and the Falkland Islands. It is one of several related Chloephaga geese, including the ruddy-headed goose C. rubidiceps and the ash-headed goose C. poliocephala.",
+    "identification": "The sexes look strikingly different: males are largely white with bold black barring on some plumage, while females are brown and barred, with yellow legs. Its black bill and generally large, goose-like build help separate it from smaller, more uniformly coloured waterfowl.",
+    "habitat": "It uses open grasslands, steppe and damp meadows, often near lakes, rivers or marshy ground. On the continent it breeds in southern Chile and Argentina, with seasonal movements northward; island populations occur in the Falklands.",
+    "diet": "It is primarily a grazer, feeding on grasses and other soft vegetation, including seeds.",
+    "behavior": "It forms large flocks, but breeding pairs defend a territory. It is rarely seen in water except when tending young.",
+    "reproduction": "It nests on the ground in grassland, often near wetlands, lining the nest with down. The female incubates a clutch while the male guards the pair’s territory; goslings leave the nest soon after hatching and are led by their parents.",
+    "ecology": "By grazing native grassland and crop pasture, it affects forage plants and can come into conflict with ranching. The ruddy-headed goose occurs in the same broad region but is a distinct close relative, so records should not be conflated.",
+    "conservation": "Chile classified the species as Vulnerable in its 2022 national assessment; this country-level category does not represent a global assessment."
+  },
+  "sources": [
+    {
+      "url": "https://sib.gob.ar/especies/chloephaga-picta",
+      "title": "Cauquén común — Argentine National Parks Biodiversity Information System"
+    },
+    {
+      "url": "https://www.avesdechile.cl/166.htm",
+      "title": "Caiquén — Birds of Chile"
+    },
+    {
+      "url": "https://simbio.mma.gob.cl/Especies/VistaImpresion/12400",
+      "title": "Chloephaga picta — Chilean biodiversity platform"
+    },
+    {
+      "url": "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/000D3885CC8CE57B8CCB485603E4B814/S0959270913000178a.pdf",
+      "title": "Molecular phylogeny of the South American sheldgeese"
+    },
+    {
+      "url": "https://www.cambridge.org/core/journals/bird-conservation-international/article/abs/diet-of-the-upland-goose-chloephaga-picta-in-the-sarmiento-valley-a-breeding-and-wintering-site-in-argentine-patagonia/4B9907D813694E1FA6F4A549314B8CE9",
+      "title": "Diet of the Upland Goose Chloephaga picta in Patagonia — Bird Conservation International"
+    },
+    {
+      "url": "https://clasificacionespecies.mma.gob.cl/wp-content/uploads/2024/04/Chloephaga_picta_19RCE_FINAL.pdf",
+      "title": "Chloephaga picta — Chilean Species Classification 2022"
+    }
+  ]
+}

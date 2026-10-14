@@ -1,0 +1,191 @@
+{
+  "id": "cirrhoscyllium_japonicum",
+  "scientific": "Cirrhoscyllium japonicum",
+  "group": "fish",
+  "name": {
+    "en": "Saddled Carpetshark",
+    "fr": "Requin-carpette à selle"
+  },
+  "sections": {
+    "overview": {
+      "en": "Cirrhoscyllium japonicum is a small carpet shark of the Northwest Pacific, endemic to southern Japan.",
+      "fr": "Cirrhoscyllium japonicum est un petit requin-tapis du Pacifique nord-ouest, endémique du sud du Japon."
+    },
+    "identification": {
+      "en": "It has dark saddle-like markings and a pair of throat barbels; adults remain much smaller than large reef-associated carpet sharks.",
+      "fr": "Il porte des marques sombres en forme de selle et une paire de barbillons sous la gorge ; les adultes restent bien plus petits que les grands requins-tapis des récifs."
+    },
+    "habitat": {
+      "en": "The IUCN account describes a demersal shelf shark from shallow water to about 200 m, while Okinawa aquarium observations document individuals near 400 m locally.",
+      "fr": "La fiche UICN le décrit comme un requin du fond du plateau continental jusqu’à environ 200 m, tandis que l’aquarium d’Okinawa documente localement des individus vers 400 m."
+    },
+    "diet": {
+      "en": "Its diet has not been characterized in the sources consulted.",
+      "fr": "Son régime alimentaire n’est pas caractérisé dans les sources consultées."
+    },
+    "behavior": {
+      "en": "An Okinawa aquarium account describes it as mostly sedentary and not an active swimmer, while wild behavioral observations remain limited.",
+      "fr": "Une fiche de l’aquarium d’Okinawa le décrit comme surtout sédentaire et peu nageur, tandis que les observations comportementales en milieu naturel restent limitées."
+    },
+    "reproduction": {
+      "en": "It is oviparous; the aquarium reported two eggs from a captive female and successful hatching, but this is an observation rather than a population-wide breeding estimate.",
+      "fr": "Il est ovipare ; l’aquarium a rapporté deux œufs pondus par une femelle en captivité et leur éclosion, une observation qui ne constitue pas une estimation de reproduction à l’échelle de la population."
+    },
+    "ecology": {
+      "en": "It is one of three Cirrhoscyllium species; its saddle pattern and Japanese records distinguish it from the Taiwan-restricted C. formosanum and South China Sea C. expolitum.",
+      "fr": "C’est l’une des trois espèces de Cirrhoscyllium ; son motif en selle et ses données japonaises le distinguent de C. formosanum, restreint à Taïwan, et de C. expolitum, connue de la mer de Chine méridionale."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment lists it as Least Concern with a stable trend, but species-level biological information remains limited.",
+      "fr": "L’évaluation mondiale de l’UICN le classe en préoccupation mineure avec une tendance stable, mais les informations biologiques propres à l’espèce restent limitées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Cirrhoscyllium japonicum — IUCN Red List global assessment",
+        "fr": "Cirrhoscyllium japonicum — évaluation mondiale de la Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2021-1.RLTS.T161606A124513884.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "Global assessment lists Least Concern and stable; gives southern Japan range, demersal shelf habitat to 200 m, and reproductive summary."
+      ],
+      "prose_claims": [
+        {
+          "section": "overview",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "habitat",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "conservation",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Saddle carpetshark — Okinawa Churaumi Aquarium (English)",
+        "fr": "Requin-carpette à selle — aquarium Okinawa Churaumi (anglais)"
+      },
+      "url": "https://oki-churaumi.jp/en/topics/1779074251/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "Aquarium reports throat barbels, sedentary behavior, 400 m Okinawa ROV habitat record and captive laying/hatching of two eggs."
+      ],
+      "prose_claims": [
+        {
+          "section": "identification",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "behavior",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        },
+        {
+          "section": "reproduction",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cirrhoscyllium japonicum — FishBase species summary",
+        "fr": "Cirrhoscyllium japonicum — fiche espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/5913",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet"
+      ],
+      "facts": [
+        "FishBase provides taxonomic summary and cross-references the IUCN assessment."
+      ],
+      "prose_claims": [
+        {
+          "section": "diet",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "title": {
+        "en": "Cirrhoscyllium — Naturalis Sharks of the World, Parascylliidae overview",
+        "fr": "Cirrhoscyllium — Sharks of the World de Naturalis, présentation des Parascylliidae"
+      },
+      "url": "https://sharks.linnaeus.naturalis.nl/linnaeus_ng/app/views/highertaxa/taxon.php?cat=TAB_DESCRIPTION&id=62305",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "Naturalis reference supports family-level relationship, throat barbels and distinction from Parascyllium; species comparison uses IUCN range accounts."
+      ],
+      "prose_claims": [
+        {
+          "section": "ecology",
+          "en_sentence_ids": [
+            1
+          ],
+          "fr_sentence_ids": [
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Biology and population data are sparse for these poorly observed sharks. For C. formosanum, sources differ on the status label: the cited global IUCN 2020 assessment gives Vulnerable, whereas Taiwan Fish Database displays Data Deficient. C. japonicum has a local Okinawa record around 400 m although the IUCN habitat detail gives a range to 200 m."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared IUCN assessments, national fish databases and specialist/official species accounts; cross-referenced the three catalogue species of Cirrhoscyllium and kept local observations distinct from global range assessments."
+}

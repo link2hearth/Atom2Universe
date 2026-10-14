@@ -1,0 +1,180 @@
+{
+  "id": "chondrocladia_lyra",
+  "scientific": "Chondrocladia lyra",
+  "group": "invertebrates",
+  "name": {
+    "en": "Harp Sponge",
+    "fr": "Éponge lyre"
+  },
+  "sections": {
+    "overview": {
+      "en": "Chondrocladia lyra is a deep-sea carnivorous sponge in the cladorhizid family. Its striking lyre-like form gave rise to the common names harp sponge and lyre sponge.",
+      "fr": "Chondrocladia lyra est une éponge carnivore des grands fonds appartenant aux cladorhizidés. Sa forme de lyre caractéristique lui a valu les noms communs d’éponge lyre et d’éponge harpe."
+    },
+    "identification": {
+      "en": "One or more upright, comb-like vanes rise from a central base, with evenly spaced branches bearing rows of tiny hooked filaments. The number and arrangement of vanes vary among observed individuals, so the tidy, symmetrical harp shape is not identical in every specimen.",
+      "fr": "Une ou plusieurs structures dressées en peigne partent d’une base centrale ; leurs branches espacées portent des rangées de minuscules filaments crochus. Le nombre et la disposition des structures varient entre individus observés : la forme de harpe symétrique n’est donc pas identique chez tous les spécimens."
+    },
+    "habitat": {
+      "en": "The species is known from the northeast Pacific, including Monterey Canyon and Escanaba Ridge off California. The specimens described in the original study came from about 3 316–3 399 m, on deep seafloor far below the sunlit zone.",
+      "fr": "L’espèce est connue du Pacifique Nord-Est, notamment du canyon de Monterey et de la dorsale d’Escanaba au large de la Californie. Les spécimens décrits dans l’étude originale provenaient d’environ 3 316 à 3 399 m de profondeur, bien au-dessous de la zone éclairée."
+    },
+    "diet": {
+      "en": "Unlike most sponges that filter microscopic food, it snares small crustaceans with surface hooks and digests them externally.",
+      "fr": "Contrairement à la plupart des éponges qui filtrent des particules microscopiques, elle capture de petits crustacés à l’aide de crochets de surface et les digère à l’extérieur."
+    },
+    "behavior": {
+      "en": "A stalk and root-like extensions anchor it to the deep seafloor.",
+      "fr": "Une tige et des prolongements en forme de racines l’ancrent au fond des grands fonds."
+    },
+    "reproduction": {
+      "en": "Sponges generally reproduce sexually through gametes, with free-swimming larvae that settle; species-specific observations of this sponge’s reproductive cycle remain sparse. The general sponge pattern should not be mistaken for a detailed account of C. lyra.",
+      "fr": "Les éponges se reproduisent généralement par gamètes et par des larves nageuses qui se fixent ensuite ; les observations propres au cycle de cette espèce restent rares. Ce schéma général ne constitue pas une description détaillée de C. lyra."
+    },
+    "ecology": {
+      "en": "It is part of a broader cladorhizid lineage of carnivorous sponges, including other Chondrocladia that catch small animals with modified surface structures. Its unusual feeding mode shows that sponges can occupy predator roles in deep-sea food webs.",
+      "fr": "Elle appartient à la lignée des cladorhizidés carnivores, qui comprend d’autres Chondrocladia capturant de petits animaux grâce à des structures de surface spécialisées. Son mode d’alimentation montre que les éponges peuvent être des prédatrices dans les réseaux trophiques profonds."
+    },
+    "conservation": {
+      "en": "There is not enough species-level population or trend information here to assign a conservation category. Deep-sea sampling has revealed only a limited number of specimens, which is a knowledge gap rather than proof that the species is rare or threatened.",
+      "fr": "Les informations disponibles ici sur ses populations et leur évolution ne suffisent pas à lui attribuer une catégorie de conservation. Les campagnes en profondeur n’ont révélé qu’un nombre limité de spécimens : c’est une lacune de connaissance, pas une preuve de rareté ou de menace."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "An extraordinary new carnivorous sponge, Chondrocladia lyra",
+        "fr": "Une nouvelle éponge carnivore remarquable, Chondrocladia lyra"
+      },
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/ivb.12001",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "Original description gives diagnosis, locality and relationships."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 170,
+        "notes_words": 7,
+        "total": 177,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Carnivorous sponges on the deep seafloor — MBARI",
+        "fr": "Les éponges carnivores des grands fonds — MBARI"
+      },
+      "url": "https://www.mbari.org/news/scientists-discover-extraordinary-new-carnivorous-sponge/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "MBARI documents the harp form and carnivorous feeding."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 121,
+        "notes_words": 8,
+        "total": 129,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The State of Deep-Sea Coral and Sponge Ecosystems of the United States",
+        "fr": "État des écosystèmes coralliens et spongiaires profonds des États-Unis"
+      },
+      "url": "https://swfsc-publications.fisheries.noaa.gov/publications/CR/2017/2017Clarke.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "NOAA synthesis documents discovery context; no trend is stated."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "habitat.en.2",
+        "habitat.fr.2",
+        "conservation.en.1",
+        "conservation.fr.1",
+        "conservation.en.2",
+        "conservation.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 164,
+        "notes_words": 9,
+        "total": 173,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "About Sponges: Reproduction — Smithsonian Q?rius",
+        "fr": "Les éponges : reproduction — Smithsonian Q?rius"
+      },
+      "url": "https://qrius.si.edu/taxonomy/term/11915",
+      "consulted": "2026-10-14",
+      "supports": [
+        "reproduction"
+      ],
+      "facts": [
+        "General sponge source for broadcast reproduction and larval stages, not species-specific reproductive details."
+      ],
+      "prose_claims": [
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "reproduction.en.2",
+        "reproduction.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 74,
+        "notes_words": 13,
+        "total": 87,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The exact species-specific reproductive mode and population trend have not been verified; reproduction wording is marked as a general sponge pattern."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used the peer-reviewed description as the species-level authority, cross-checked its carnivory with MBARI and NOAA, and labeled reproductive knowledge as general rather than species-specific."
+}
