@@ -1,0 +1,13 @@
+{
+  "id": "briza_maxima",
+  "sections": [
+    {"title": "Port et milieu", "text": "Briza maxima, la grande brize, est une graminée annuelle du bassin méditerranéen et de Macaronésie, aujourd’hui aussi cultivée ailleurs. Elle mesure environ 20 à 70 cm. Ses épillets très visibles, pendants et en forme de cœur, oscillent au bout de pédicelles fins."},
+    {"title": "Épillets et usages", "text": "Elle pousse dans les lieux herbeux ouverts et est surtout cultivée comme graminée ornementale ou utilisée sèche en bouquets. La planche montre ses grands épillets caractéristiques. Elle se distingue de Briza media, vivace plus basse aux épillets plus petits."}
+  ],
+  "sources": [
+    {"title": "Briza maxima — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A393293-1/general-information"},
+    {"title": "Briza maxima — World Flora Online", "url": "https://www.worldfloraonline.org/taxon/wfo-0000854743"},
+    {"title": "Briza maxima — PlantNET, Royal Botanic Garden Sydney", "url": "https://plantnet.rbgsyd.nsw.gov.au/cgi-bin/NSWfl.pl?lvl=sp&name=Briza~maxima&page=nswfl"}
+  ],
+  "related": ["briza"]
+}

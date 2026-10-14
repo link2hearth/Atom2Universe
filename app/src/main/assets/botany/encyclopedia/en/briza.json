@@ -1,0 +1,13 @@
+{
+  "id": "briza",
+  "sections": [
+    {"title": "Identification and habitat", "text": "The catalogue entry Briza refers to Briza media, quaking grass, rather than the whole genus. This perennial grass is usually 20–50 cm tall, sometimes taller. Its loose inflorescences bear small, flattened, heart-shaped spikelets that tremble in the wind; it occurs in open grassland."},
+    {"title": "Uses and comparison", "text": "It is grown as an ornamental, and its inflorescences can be dried. The plate fits this species with small spikelets; Briza maxima is an annual, taller, and has distinctly larger spikelets. No food use was verified."}
+  ],
+  "sources": [
+    {"title": "Briza media — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A393294-1/general-information"},
+    {"title": "Briza media — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/2406/briza-media/details"},
+    {"title": "Briza media — Grassland species profile, FAO", "url": "https://www.fao.org/4/y5576e/y5576e0a.htm"}
+  ],
+  "related": ["briza_maxima"]
+}

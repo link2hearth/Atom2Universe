@@ -1,0 +1,12 @@
+{
+  "id": "calotropis",
+  "sections": [
+    {"title": "Identification et port", "text": "Cette entrée du catalogue représente Calotropis procera, grand arbuste sempervirent généralement haut d’environ 2,5 à 4 m, parfois près de 6 m. Il porte de grosses feuilles opposées, des fleurs cireuses à centre pourpre et un follicule renflé qui libère des graines munies d’aigrettes soyeuses. L’espèce est répandue dans les régions tropicales sèches d’Afrique et d’Asie."},
+    {"title": "Toxicité et image", "text": "Son latex blanc est irritant et toxique, notamment pour les yeux ; aucun usage alimentaire n’est décrit. Les usages médicinaux traditionnels ne prouvent ni l’innocuité ni l’efficacité. Les feuilles charnues opposées, fleurs à centre violet et follicule à graines plumeuses de la planche correspondent à l’espèce."}
+  ],
+  "sources": [
+    {"title": "Calotropis procera — PROSEA Plant Resources of South-East Asia", "url": "https://prosea.prota4u.org/view.aspx?id=981"},
+    {"title": "Calotropis procera — base arborée de World Agroforestry", "url": "https://apps.worldagroforestry.org/treedb/AFTPDFS/Calotropis_procera.pdf"},
+    {"title": "Calotropis procera — Missouri Botanical Garden Plant Finder", "url": "https://plantfinder.mobot.org/PlantFinderDetails.aspx?taxonid=276915"}
+  ], "related": []
+}

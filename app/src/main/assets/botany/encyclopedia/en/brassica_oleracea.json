@@ -1,0 +1,13 @@
+{
+  "id": "brassica_oleracea",
+  "sections": [
+    {"title": "One species, many vegetables", "text": "Brassica oleracea is the species behind several familiar crops, including headed cabbages, kale, Brussels sprouts, broccoli, cauliflower and kohlrabi. The plate depicts a headed cultivar; these crop forms mainly differ in the organ selected and enlarged. Flowering plants can exceed 1 m."},
+    {"title": "Edible parts and plate", "text": "Depending on the cultivar, people eat the leaves, buds, inflorescences or swollen stem, raw or cooked. The plate's four-petalled yellow flowers and siliques fit the species, but do not represent every garden form."}
+  ],
+  "sources": [
+    {"title": "Brassica oleracea — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A279435-1/general-information"},
+    {"title": "Cole crops: botany and cultivar groups — Purdue University", "url": "https://web.ics.purdue.edu/~drhodes/hort410/cole/co00001.htm"},
+    {"title": "Growing broccoli and other cole crops — University of Florida IFAS", "url": "https://ask.ifas.ufl.edu/publication/FY1548"}
+  ],
+  "related": ["brassica_rapa"]
+}

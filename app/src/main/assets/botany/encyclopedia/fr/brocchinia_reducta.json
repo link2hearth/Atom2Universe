@@ -1,0 +1,12 @@
+{
+  "id": "brocchinia_reducta",
+  "sections": [
+    {"title": "Port et habitat", "text": "Brocchinia reducta est une broméliacée terrestre carnivore des savanes humides, tourbières et tepuis pauvres en nutriments du bouclier guyanais. Sa rosette dressée forme un réservoir d’eau ; les feuilles mesurent environ 25 à 50 cm et la hampe florale peut atteindre environ 60 cm."},
+    {"title": "Proies et image", "text": "Une cire glissante et des structures absorbantes sur les feuilles contribuent à piéger puis digérer des insectes, surtout des fourmis. Le réservoir central, le détail de la fourmi et la hampe florale de la planche concordent avec l’espèce. Aucun usage alimentaire humain n’a été trouvé."}
+  ],
+  "sources": [
+    {"title": "Brocchinia reducta — HortFlora des Jardins botaniques royaux de Victoria", "url": "https://hortflora.rbg.vic.gov.au/taxon/adadfd70-5340-11e7-b82b-005056b0018f"},
+    {"title": "Carnivorie de Brocchinia reducta — Givnish et al., 1984", "url": "https://doi.org/10.1086/284289"},
+    {"title": "Brocchinia reducta — Bromeliad Society of Australia", "url": "https://www.bromeliad.org.au/pictures/Brocchinia/reducta.htm"}
+  ], "related": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "capsella",
+  "sections": [
+    {"title": "Identification et port", "text": "L’entrée Capsella correspond à Capsella bursa-pastoris, la bourse-à-pasteur, et non à tout le genre. Cette annuelle variable mesure généralement environ 10 à 60 cm ; elle porte une rosette basale, de minuscules fleurs blanches à quatre pétales et des silicules caractéristiques en cœur renversé, longues d’environ 4 à 9 mm."},
+    {"title": "Alimentation et image", "text": "Les jeunes feuilles, pousses et graines sont signalées comme aliments dans des références botaniques ; cela ne constitue pas un conseil général de sécurité alimentaire. La rosette, les petites fleurs blanches et les fruits en cœur inversé de la planche correspondent à l’espèce."}
+  ],
+  "sources": [
+    {"title": "Capsella bursa-pastoris — Flora of North America, eFloras", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200009292"},
+    {"title": "Bourse-à-pasteur — NC State Extension Plant Toolbox", "url": "https://plants.ces.ncsu.edu/plants/capsella-bursa-pastoris/"}
+  ], "related": []
+}

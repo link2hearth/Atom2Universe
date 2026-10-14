@@ -1,0 +1,12 @@
+{
+  "id": "capsicum",
+  "sections": [
+    {"title": "Identification et port", "text": "L’entrée Capsicum du catalogue représente Capsicum annuum, notamment une forme poivron, et non tout le genre. C’est une herbe ou un sous-arbrisseau cultivé, à fleurs blanches et baies charnues. Taille, forme, couleur et piquant des fruits varient fortement selon les cultivars."},
+    {"title": "Alimentation et image", "text": "Les baies sont consommées crues ou cuites. Les formes piquantes contiennent de la capsaïcine, irritante pour la bouche et les yeux ; le fruit rouge et carré de la planche représente une forme de poivron doux et non tous les C. annuum."},
+    {"title": "Piment apparenté", "text": "Capsicum pubescens est un piment andin aux feuilles velues, aux fleurs violettes et aux graines sombres, contrairement à la forme à fleurs blanches représentée ici."}
+  ],
+  "sources": [
+    {"title": "Poivron (Capsicum annuum) — Royal Botanic Gardens, Kew", "url": "https://www.kew.org/plants/pepper"},
+    {"title": "Capsicum annuum (Longum Group) — NC State Extension", "url": "https://plants.ces.ncsu.edu/plants/capsicum-annuum-longum-group/"}
+  ], "related": ["capsicum_pubescens"]
+}

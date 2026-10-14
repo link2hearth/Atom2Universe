@@ -1,0 +1,12 @@
+{
+  "id": "cannabis_sativa",
+  "sections": [
+    {"title": "Port et usages", "text": "Cannabis sativa est une annuelle herbacée très variable, d’environ 0,2 à 5 m selon le cultivar et les conditions de culture. Ses feuilles palmées portent des folioles fortement dentées. Les plantes sont généralement mâles ou femelles, mais il existe des formes monoïques. Le petit fruit sec mesure environ 2,5 à 5 mm ; les graines cultivées sont consommées ou pressées pour l’huile, et les tiges servent à produire des fibres."},
+    {"title": "Floraison et image", "text": "La planche montre les folioles dentées, les fleurs et le fruit, mais ne distingue pas clairement les plantes mâles et femelles ; le dessin est schématique. Les usages du chanvre pour les graines et les fibres ne doivent pas être confondus avec la teneur en cannabinoïdes, variable selon les cultivars et les catégories légales."}
+  ],
+  "sources": [
+    {"title": "Cannabis sativa — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A306087-2/general-information"},
+    {"title": "Cannabis sativa — Flora of North America, eFloras", "url": "https://efloras.org/florataxon.aspx?flora_id=1&taxon_id=200006342"},
+    {"title": "Biologie de Cannabis sativa — Agence canadienne d’inspection des aliments", "url": "https://inspection.canada.ca/en/plant-varieties/plants-novel-traits/applicants/directive-94-08/biology-documents/cannabis-sativa"}
+  ], "related": []
+}

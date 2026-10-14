@@ -1,0 +1,11 @@
+{
+  "id": "campestre",
+  "sections": [
+    {"title": "Identification et port", "text": "L’entrée campestre du catalogue correspond à Acer campestre, l’érable champêtre. Il est indigène d’Europe jusqu’à l’Iran et descend au sud jusqu’au nord de l’Algérie. Cet arbre caduc atteint généralement 10 à 15 m. Ses feuilles arrondies ont des lobes peu profonds et ses fruits sont des samares jumelées."},
+    {"title": "Image et usages", "text": "Les feuilles peu lobées, grappes florales et samares largement écartées de la planche correspondent à l’érable champêtre. Aucun usage alimentaire n’a été vérifié pour cette fiche."}
+  ],
+  "sources": [
+    {"title": "Acer campestre — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A781250-1/general-information"},
+    {"title": "Native trees and shrubs — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/types/trees/native-tree-shrubs"}
+  ], "related": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "brassica_oleracea",
+  "sections": [
+    {"title": "Une espèce, plusieurs légumes", "text": "Brassica oleracea est l’espèce dont dérivent notamment les choux pommés, le chou frisé, les choux de Bruxelles, le brocoli, le chou-fleur et le chou-rave. La planche représente une forme à pomme ; ces cultivars diffèrent surtout par l’organe développé et sélectionné. La plante fleurie peut dépasser 1 m."},
+    {"title": "Parties consommées et image", "text": "Selon le cultivar, on consomme les feuilles, les bourgeons, les inflorescences ou la tige renflée, crus ou cuits. Les fleurs jaunes à quatre pétales et les siliques de la planche correspondent à l’espèce, mais ne représentent pas chaque forme potagère."}
+  ],
+  "sources": [
+    {"title": "Brassica oleracea — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A279435-1/general-information"},
+    {"title": "Cole crops: botany and cultivar groups — Purdue University", "url": "https://web.ics.purdue.edu/~drhodes/hort410/cole/co00001.htm"},
+    {"title": "Growing broccoli and other cole crops — University of Florida IFAS", "url": "https://ask.ifas.ufl.edu/publication/FY1548"}
+  ],
+  "related": ["brassica_rapa"]
+}

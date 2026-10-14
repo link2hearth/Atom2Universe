@@ -1,0 +1,13 @@
+{
+  "id": "brassica_rapa",
+  "sections": [
+    {"title": "Species and crop forms", "text": "Brassica rapa includes crop forms such as turnip, Chinese cabbage, pak choi, mizuna and some oilseed crops. The plate shows a flowering plant: depending on the form, plants reach roughly 1–1.5 m, while leaves and, in turnip forms, the swollen root are harvested."},
+    {"title": "Food and comparison", "text": "Turnip leaves and roots are eaten raw or cooked according to preparation; pak choi leaves are also eaten. B. rapa differs from B. oleracea in its crop groups and harvested organs, although their four-petalled yellow flowers look similar."}
+  ],
+  "sources": [
+    {"title": "Brassica rapa — Plants of the World Online, Kew", "url": "https://powo.science.kew.org/taxon/urn%3Alsid%3Aipni.org%3Anames%3A279485-1/general-information"},
+    {"title": "Brassica rapa — Royal Horticultural Society", "url": "https://www.rhs.org.uk/plants/106082/brassica-rapa/details"},
+    {"title": "Brassica rapa — Flora & Fauna Web, NParks Singapore", "url": "https://www.nparks.gov.sg/florafaunaweb/flora/6/5/6525"}
+  ],
+  "related": ["brassica_oleracea"]
+}
