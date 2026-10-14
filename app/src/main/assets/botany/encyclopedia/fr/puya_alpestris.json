@@ -1,0 +1,32 @@
+{
+  "id": "puya_alpestris",
+  "sections": [
+    {
+      "title": "Rosette et fleurs",
+      "text": "Puya alpestris est une broméliacée chilienne qui forme une rosette dense de feuilles raides et épineuses. La plante en fleur atteint environ 1,2 à 2,5 m. Son inflorescence ramifiée porte des fleurs bleu métallique à bleu-vert au pollen orange."
+    },
+    {
+      "title": "Feuilles et graines",
+      "text": "Une révision taxonomique décrit des feuilles pouvant atteindre environ 98 cm de long, munies d’épines de 2 à 8 mm. Sa capsule mesure environ 1,5 à 2,2 cm et contient des graines ailées."
+    },
+    {
+      "title": "Comparaison",
+      "text": "Ses fleurs bleu-vert la distinguent de Puya chilensis, à fleurs jaunes."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Zizka et al. 2013 — révision taxonomique des Puya chiliennes",
+      "url": "https://plants.sdsu.edu/chile/pdfs/Zizka_etal2013-Puya-Bromeliac.pdf"
+    },
+    {
+      "title": "Universidad de Concepción — Puya",
+      "url": "https://www.naturalesudec.cl/puya/"
+    },
+    {
+      "title": "Plants of the World Online — Puya alpestris",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:124378-1/general-information"
+    }
+  ],
+  "related": []
+}

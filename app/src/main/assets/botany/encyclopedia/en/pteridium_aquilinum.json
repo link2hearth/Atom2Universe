@@ -1,0 +1,12 @@
+{
+  "id": "pteridium_aquilinum",
+  "sections": [
+    {"title": "Fronds and growth", "text": "Pteridium aquilinum, bracken, is a rhizomatous fern that forms large triangular fronds, often about 1 m tall or more. New fronds emerge as coiled fiddleheads; sori run along the underside of the leaf margins."},
+    {"title": "Toxicity and food", "text": "Young fronds and rhizomes have been eaten traditionally, but bracken contains toxic and carcinogenic compounds and is associated with serious health risks. It should not be treated as a safe food; the available sources do not guarantee safety after processing."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Pteridium aquilinum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:17210060-1/general-information"},
+    {"title": "US Forest Service — Pteridium aquilinum (FEIS review)", "url": "https://research.fs.usda.gov/feis/species-reviews/pteaqu"}
+  ],
+  "related": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "puya_alpestris",
+  "sections": [
+    {
+      "title": "Rosette and flowers",
+      "text": "Puya alpestris is a Chilean bromeliad that forms a dense rosette of stiff, spiny leaves. The flowering plant reaches about 1.2–2.5 m. Its branched inflorescence bears metallic blue to blue-green flowers with orange pollen."
+    },
+    {
+      "title": "Leaves and seeds",
+      "text": "A taxonomic revision records leaves up to about 98 cm long, with spines 2–8 mm long. Its capsule is about 1.5–2.2 cm long and contains winged seeds."
+    },
+    {
+      "title": "Comparison",
+      "text": "Its blue-green flowers distinguish it from the yellow-flowered Puya chilensis."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Zizka et al. 2013 — Taxonomic revision of the Chilean Puya species",
+      "url": "https://plants.sdsu.edu/chile/pdfs/Zizka_etal2013-Puya-Bromeliac.pdf"
+    },
+    {
+      "title": "Universidad de Concepción — Puya",
+      "url": "https://www.naturalesudec.cl/puya/"
+    },
+    {
+      "title": "Plants of the World Online — Puya alpestris",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:124378-1/general-information"
+    }
+  ],
+  "related": []
+}

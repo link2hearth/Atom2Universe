@@ -1,0 +1,12 @@
+{
+  "id": "pseudotsuga",
+  "sections": [
+    {"title": "Le genre", "text": "Pseudotsuga est un genre de conifères sempervirents de la famille des pins, indigène d’Amérique du Nord et d’Asie orientale. L’espèce la plus répandue est le Douglas taxifolié, P. menziesii ; les autres ont des aires plus restreintes."},
+    {"title": "Reconnaissance", "text": "Les Douglas portent des cônes pendants dont les bractées à trois pointes dépassent les écailles. Cette planche générale convient au genre, mais ne permet pas à elle seule d’identifier une espèce."}
+  ],
+  "sources": [
+    {"title": "USDA Forest Service — Pseudotsuga (Silvics of North America)", "url": "https://www.fs.usda.gov/nsl/Wpsm/Pseudotsuga.pdf"},
+    {"title": "Plants of the World Online — Pseudotsuga", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30005513-2"}
+  ],
+  "related": ["pseudotsuga_menziesii"]
+}

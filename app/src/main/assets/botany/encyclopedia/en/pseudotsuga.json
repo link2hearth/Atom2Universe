@@ -1,0 +1,12 @@
+{
+  "id": "pseudotsuga",
+  "sections": [
+    {"title": "The genus", "text": "Pseudotsuga is a genus of evergreen conifers in the pine family, native to North America and East Asia. The most widely distributed species is Douglas-fir, P. menziesii; other species have much narrower ranges."},
+    {"title": "Recognition", "text": "Douglas-firs bear hanging seed cones with three-pointed bracts that project beyond the scales. This general plate is compatible with the genus but cannot identify a species by itself."}
+  ],
+  "sources": [
+    {"title": "USDA Forest Service — Pseudotsuga (Silvics of North America)", "url": "https://www.fs.usda.gov/nsl/Wpsm/Pseudotsuga.pdf"},
+    {"title": "Plants of the World Online — Pseudotsuga", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30005513-2"}
+  ],
+  "related": ["pseudotsuga_menziesii"]
+}

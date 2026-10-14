@@ -1,0 +1,14 @@
+{
+  "id": "pseudotsuga_menziesii",
+  "sections": [
+    {"title": "Port et habitat", "text": "Pseudotsuga menziesii, le Douglas taxifolié, est un très grand conifère sempervirent de l’ouest de l’Amérique du Nord. La taille des arbres adultes varie selon la variété et le site : les arbres des Rocheuses atteignent couramment 30 à 37 m, tandis que le Douglas côtier peut atteindre environ 76 m sur les sites favorables."},
+    {"title": "Aiguilles et cônes", "text": "Ses aiguilles plates mesurent environ 2 à 3,5 cm. Ses cônes pendants mesurent environ 4 à 9 cm et portent des bractées caractéristiques à trois pointes qui dépassent des écailles."},
+    {"title": "Usages", "text": "Son bois est largement employé en construction. Les sources consultées n’établissent pas d’usage alimentaire humain pour les feuilles ou cônes illustrés."}
+  ],
+  "sources": [
+    {"title": "Atlas européen des essences forestières — Pseudotsuga menziesii", "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Pseudotsuga_menziesii.pdf"},
+    {"title": "USDA Forest Service — Silvics of North America: Douglas-fir", "url": "https://research.fs.usda.gov/silvics/douglas-fir"},
+    {"title": "Plants of the World Online — Pseudotsuga menziesii", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:677141-1"}
+  ],
+  "related": ["pseudotsuga"]
+}

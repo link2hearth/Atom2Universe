@@ -1,0 +1,30 @@
+{
+  "id": "primula_stricta",
+  "sections": [
+    {
+      "title": "Form and habitat",
+      "text": "Primula stricta is a small arctic perennial, about 5–30 cm tall. It grows on shores, gravelly riverbanks and wet seepage areas."
+    },
+    {
+      "title": "Leaves and flowers",
+      "text": "Its narrow basal leaves are about 0.8–1.5 cm wide. A leafless stalk carries an umbel of two to eight lilac flowers with yellow throats. The dry capsule is about 3–4 × 2–3 mm."
+    },
+    {
+      "title": "Comparison",
+      "text": "It belongs to a complex of closely related arctic primroses that can be difficult to distinguish. Unlike P. veris, it is a small arctic plant with narrow leaves and lilac flowers."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Flora of the Canadian Arctic Archipelago — Primula stricta",
+      "url": "https://nature.ca/aaflora/data/www/prprst.htm"
+    },
+    {
+      "title": "Plants of the World Online — Primula stricta",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30480203-2"
+    }
+  ],
+  "related": [
+    "primula"
+  ]
+}

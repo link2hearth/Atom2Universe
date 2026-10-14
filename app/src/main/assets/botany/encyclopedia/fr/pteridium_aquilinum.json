@@ -1,0 +1,12 @@
+{
+  "id": "pteridium_aquilinum",
+  "sections": [
+    {"title": "Frondes et croissance", "text": "Pteridium aquilinum, la fougère-aigle, est une fougère rhizomateuse qui forme de grandes frondes triangulaires, souvent hautes d’environ 1 m ou davantage. Les jeunes frondes apparaissent en crosses ; les sores longent le revers des marges de la feuille."},
+    {"title": "Toxicité et alimentation", "text": "Les jeunes crosses et les rhizomes ont été consommés traditionnellement, mais la fougère contient des composés toxiques et cancérogènes et est associée à de graves risques pour la santé. Elle ne doit pas être considérée comme un aliment sûr ; les sources disponibles ne garantissent pas son innocuité après transformation."}
+  ],
+  "sources": [
+    {"title": "Plants of the World Online — Pteridium aquilinum", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:17210060-1/general-information"},
+    {"title": "US Forest Service — Pteridium aquilinum (revue FEIS)", "url": "https://research.fs.usda.gov/feis/species-reviews/pteaqu"}
+  ],
+  "related": []
+}

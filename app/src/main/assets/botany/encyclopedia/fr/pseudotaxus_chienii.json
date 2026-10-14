@@ -1,0 +1,13 @@
+{
+  "id": "pseudotaxus_chienii",
+  "sections": [
+    {"title": "Port et habitat", "text": "Pseudotaxus chienii est un arbuste conifère sempervirent et dioïque qui peut atteindre environ 4 m. Il est indigène de Chine et pousse dans les forêts de montagne."},
+    {"title": "Feuilles et graine", "text": "Ses feuilles linéaires mesurent environ 1 à 2,6 cm de long et 2 à 4,5 mm de large. La graine est partiellement entourée d’un arille blanc en coupe, long d’environ 5 à 7 mm."},
+    {"title": "Alimentation et prudence", "text": "Les sources consultées n’établissent pas d’usage alimentaire sûr pour cette espèce. Il ne faut pas présumer que son arille est comestible par analogie avec d’autres ifs."}
+  ],
+  "sources": [
+    {"title": "Flora of China — Pseudotaxus chienii", "url": "https://efloras.org/florataxon.aspx?flora_id=2&taxon_id=200005493"},
+    {"title": "Étude de l’arille de Pseudotaxus", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6344100/"}
+  ],
+  "related": []
+}

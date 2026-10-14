@@ -1,0 +1,36 @@
+{
+  "id": "prunus_mahaleb",
+  "sections": [
+    {
+      "title": "Port et feuilles",
+      "text": "Prunus mahaleb, le mahaleb ou bois de Sainte-Lucie, est un grand arbuste ou petit arbre qui peut atteindre environ 6 à 10 m. Ses petites feuilles mesurent environ 1,6 à 3,5 cm de long."
+    },
+    {
+      "title": "Fleurs et fruits",
+      "text": "De courtes grappes portent des fleurs blanches parfumées. Ses fruits noirs brillants sont petits, environ 6 à 8 × 5 à 7 mm, et très amers."
+    },
+    {
+      "title": "Alimentation et usages",
+      "text": "Certaines sources rapportent les fruits comme comestibles et les amandes extraites des noyaux comme épice aromatique. Cet usage concerne l’amande extraite, pas la consommation des noyaux entiers. L’espèce sert aussi de porte-greffe pour le cerisier doux."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Flora of New Zealand — Prunus mahaleb",
+      "url": "https://www.nzflora.info/factsheet/taxon/Prunus-mahaleb.html"
+    },
+    {
+      "title": "Atlas européen des essences forestières — Prunus mahaleb",
+      "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Prunus_mahaleb.pdf"
+    },
+    {
+      "title": "Plants of the World Online — Prunus mahaleb",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:729931-1/general-information"
+    }
+  ],
+  "related": [
+    "prunus_avium",
+    "prunus_maximowiczii",
+    "prunus_padus"
+  ]
+}

@@ -1,12 +1,26 @@
 {
   "id": "platanoides",
   "sections": [
-    {"title": "Tree and leaves", "text": "This catalogue entry is Acer platanoides, the Norway maple. It is a deciduous tree that can reach 20–30 m. Opposite leaves have five sharply pointed lobes and are commonly 8–18 cm long."},
-    {"title": "Flowers and fruit", "text": "Yellow-green flowers appear in upright clusters before the leaves. The paired-winged samaras spread almost straight out and measure about 3–5.5 cm."}
+    {
+      "title": "Tree and leaves",
+      "text": "This catalogue entry is Acer platanoides, the Norway maple. It is a deciduous tree that can reach 20–30 m. Opposite leaves have five sharply pointed lobes and are commonly 8–18 cm long."
+    },
+    {
+      "title": "Flowers and fruit",
+      "text": "Yellow-green flowers appear in upright clusters before the leaves. The paired-winged samaras spread almost straight out and measure about 3–5.5 cm."
+    }
   ],
   "sources": [
-    {"title": "Burke Herbarium — Acer platanoides (Flora of North America description)", "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Acer+platanoides"},
-    {"title": "USDA Forest Service — Norway maple", "url": "https://www.fs.usda.gov/Internet/FSE_DOCUMENTS/fsm91_054482.pdf"}
+    {
+      "title": "Burke Herbarium — Acer platanoides (Flora of North America description)",
+      "url": "https://burkeherbarium.org/imagecollection/taxon.php?Taxon=Acer+platanoides"
+    },
+    {
+      "title": "USDA Forest Service — Norway maple",
+      "url": "https://www.fs.usda.gov/Internet/FSE_DOCUMENTS/fsm91_054482.pdf"
+    }
   ],
-  "related": []
+  "related": [
+    "pseudoplatanus"
+  ]
 }

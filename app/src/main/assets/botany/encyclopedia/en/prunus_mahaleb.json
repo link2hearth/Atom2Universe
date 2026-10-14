@@ -1,0 +1,36 @@
+{
+  "id": "prunus_mahaleb",
+  "sections": [
+    {
+      "title": "Form and leaves",
+      "text": "Prunus mahaleb, mahaleb cherry or St Lucie cherry, is a large shrub or small tree that can reach about 6–10 m. Its small leaves are about 1.6–3.5 cm long."
+    },
+    {
+      "title": "Flowers and fruit",
+      "text": "Short clusters carry fragrant white flowers. The glossy black fruits are small, about 6–8 × 5–7 mm, and very bitter."
+    },
+    {
+      "title": "Food and use",
+      "text": "Some sources report the fruits as edible and the kernels inside the stones as an aromatic spice. This use concerns the extracted kernel, not eating whole stones. The species is also used as a rootstock for sweet cherry."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Flora of New Zealand — Prunus mahaleb",
+      "url": "https://www.nzflora.info/factsheet/taxon/Prunus-mahaleb.html"
+    },
+    {
+      "title": "European Atlas of Forest Tree Species — Prunus mahaleb",
+      "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Prunus_mahaleb.pdf"
+    },
+    {
+      "title": "Plants of the World Online — Prunus mahaleb",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:729931-1/general-information"
+    }
+  ],
+  "related": [
+    "prunus_avium",
+    "prunus_maximowiczii",
+    "prunus_padus"
+  ]
+}

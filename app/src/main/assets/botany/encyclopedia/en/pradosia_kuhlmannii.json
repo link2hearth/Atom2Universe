@@ -1,0 +1,14 @@
+{
+  "id": "pradosia_kuhlmannii",
+  "sections": [
+    {"title": "Tree and range", "text": "Pradosia kuhlmannii is a tree endemic to Brazil’s Atlantic coastal region, in humid lowland forest. The taxonomic revision describes it to about 15 m; a Brazilian conservation record reports trees up to 35 m, so height varies among sources."},
+    {"title": "Leaves, flowers and fruit", "text": "Its alternate leaves are about 4–11 × 1.4–4 cm. Small greenish flowers grow along the branches; the smooth green ellipsoid drupes are about 2.5–3.5 cm long."},
+    {"title": "Taxonomy and food", "text": "Chrysophyllum kuhlmannii is a synonym. The sources consulted do not confirm that the fruit is eaten."}
+  ],
+  "sources": [
+    {"title": "Terra-Araujo et al. 2016 — A Taxonomic Update of Neotropical Pradosia, Systematic Botany", "url": "https://doi.org/10.1600/036364416X692389"},
+    {"title": "CNCFlora — Pradosia kuhlmannii", "url": "https://proflora.jbrj.gov.br/html/Pradosia%20kuhlmannii_2019.html"},
+    {"title": "Plants of the World Online — Pradosia kuhlmannii", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:209945-2"}
+  ],
+  "related": ["pradosia_cuatrecasasii", "pradosia_decipiens", "pradosia_grisebachii"]
+}

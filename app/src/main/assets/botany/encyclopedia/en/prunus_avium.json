@@ -1,0 +1,13 @@
+{
+  "id": "prunus_avium",
+  "sections": [
+    {"title": "Tree and flowers", "text": "Prunus avium, sweet cherry or wild cherry, is a deciduous tree usually 15–20 m tall and sometimes reaching 30 m. Its leaves are about 8–15 × 4–7 cm. White flowers, about 2–3 cm across, grow in small umbels."},
+    {"title": "Fruit and toxicity", "text": "The ripe fleshy fruit is eaten as a cherry. Leaves, flowers, unripe fruits, stalks and especially the stones contain cyanogenic glycosides; the kernels inside the stones should not be eaten."}
+  ],
+  "sources": [
+    {"title": "Sistema de Información de Biodiversidad, Argentina — Prunus avium", "url": "https://sib.gob.ar/especies/prunus-avium"},
+    {"title": "NC State Extension — Prunus avium", "url": "https://plants.ces.ncsu.edu/plants/prunus-avium/"},
+    {"title": "Plants of the World Online — Prunus avium", "url": "https://powo.science.kew.org/taxon/30093848-2"}
+  ],
+  "related": ["prunus_mahaleb", "prunus_maximowiczii", "prunus_padus"]
+}

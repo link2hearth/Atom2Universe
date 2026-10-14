@@ -1,0 +1,14 @@
+{
+  "id": "pseudoplatanus",
+  "sections": [
+    {"title": "Arbre et feuilles", "text": "Cette fiche du catalogue représente Acer pseudoplatanus, l’érable sycomore. C’est un grand arbre caduc d’environ 20 à 35 m. Ses feuilles opposées et palmées ont cinq lobes et peuvent atteindre environ 18 × 26 cm."},
+    {"title": "Fleurs et fruits", "text": "Ses petites fleurs sont groupées en grappes pendantes. Ses fruits à deux ailes sont des samares longues d’environ 2 à 6 cm."},
+    {"title": "Toxicité", "text": "Les graines et les plantules peuvent exposer les chevaux à l’hypoglycine A, associée à la myopathie atypique. La planche montre les feuilles et les samares jumelles caractéristiques de l’espèce."}
+  ],
+  "sources": [
+    {"title": "Atlas européen des essences forestières — Acer pseudoplatanus", "url": "https://forest.jrc.ec.europa.eu/media/atlas/Acer_pseudoplatanus.pdf"},
+    {"title": "Étude de l’hypoglycine A dans les samares et plantules d’Acer pseudoplatanus", "url": "https://pubmed.ncbi.nlm.nih.gov/26278545/"},
+    {"title": "Arboretum de Gembloux — Acer pseudoplatanus", "url": "https://www.gembloux.ulg.ac.be/arboretumgembloux/erable-sycomore/"}
+  ],
+  "related": ["platanoides"]
+}

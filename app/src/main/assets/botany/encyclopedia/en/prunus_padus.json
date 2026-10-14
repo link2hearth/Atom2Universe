@@ -1,0 +1,13 @@
+{
+  "id": "prunus_padus",
+  "sections": [
+    {"title": "Tree and flowers", "text": "Prunus padus, bird cherry, is a tree or large shrub often reaching 14–15 m. Its leaves are about 5–10 cm long. Fragrant white flowers grow in long hanging racemes."},
+    {"title": "Fruit and toxicity", "text": "The black drupes are about 6–8 mm across and very bitter; the pulp is used in some preserves and drinks. Seeds and bark contain cyanogenic glycosides, and the plant can poison grazing animals."}
+  ],
+  "sources": [
+    {"title": "Flora of North America — Prunus padus", "url": "https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=242341600"},
+    {"title": "European Atlas of Forest Tree Species — Prunus padus", "url": "https://ies-ows.jrc.ec.europa.eu/efdac/download/Atlas/pdf/Prunus_padus.pdf"},
+    {"title": "University of Alaska — Cyanogenic glycosides in Prunus padus", "url": "https://accs.uaa.alaska.edu/wp-content/uploads/Prunus_padus_BIO_PRPA5.pdf"}
+  ],
+  "related": ["prunus_avium", "prunus_mahaleb", "prunus_maximowiczii"]
+}

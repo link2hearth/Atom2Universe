@@ -1,0 +1,30 @@
+{
+  "id": "primula_stricta",
+  "sections": [
+    {
+      "title": "Port et habitat",
+      "text": "Primula stricta est une petite vivace arctique d’environ 5 à 30 cm. Elle pousse sur les rivages, les berges de graviers et les zones de suintement humide."
+    },
+    {
+      "title": "Feuilles et fleurs",
+      "text": "Ses feuilles basales étroites mesurent environ 0,8 à 1,5 cm de large. Une hampe sans feuilles porte une ombelle de deux à huit fleurs lilas à gorge jaune. La capsule sèche mesure environ 3 à 4 × 2 à 3 mm."
+    },
+    {
+      "title": "Comparaison",
+      "text": "Elle appartient à un groupe de primevères arctiques proches, difficiles à distinguer. Contrairement à P. veris, c’est une petite plante arctique à feuilles étroites et fleurs lilas."
+    }
+  ],
+  "sources": [
+    {
+      "title": "Flora of the Canadian Arctic Archipelago — Primula stricta",
+      "url": "https://nature.ca/aaflora/data/www/prprst.htm"
+    },
+    {
+      "title": "Plants of the World Online — Primula stricta",
+      "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:30480203-2"
+    }
+  ],
+  "related": [
+    "primula"
+  ]
+}

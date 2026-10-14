@@ -1,0 +1,13 @@
+{
+  "id": "pradosia_grisebachii",
+  "sections": [
+    {"title": "Arbre et habitat", "text": "Pradosia grisebachii est un arbre tropical de basse altitude décrit jusqu’à environ 15 m. Il pousse en forêt non inondée sur sols argileux, vers 100 à 700 m d’altitude."},
+    {"title": "Feuilles, fleurs et fruits", "text": "Ses feuilles alternes ou presque verticillées mesurent environ 8 à 22 × 4 à 8 cm. Ses fleurs rougeâtres poussent sur les rameaux ; ses drupes ellipsoïdes, lisses et jaune pâle mesurent environ 3,5 à 5 cm de long."},
+    {"title": "Taxonomie et alimentation", "text": "La révision taxonomique traite P. atroviolacea comme synonyme de P. grisebachii. Les sources consultées n’établissent pas d’usage alimentaire de son fruit."}
+  ],
+  "sources": [
+    {"title": "Terra-Araujo et al. 2016 — A Taxonomic Update of Neotropical Pradosia, Systematic Botany", "url": "https://doi.org/10.1600/036364416X692389"},
+    {"title": "Plants of the World Online — Pradosia grisebachii", "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:948095-1"}
+  ],
+  "related": ["pradosia_cuatrecasasii", "pradosia_decipiens", "pradosia_kuhlmannii"]
+}
