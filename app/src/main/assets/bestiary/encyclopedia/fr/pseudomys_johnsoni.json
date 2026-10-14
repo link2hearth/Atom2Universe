@@ -1,0 +1,30 @@
+{
+  "id": "pseudomys_johnsoni",
+  "name": "Souris centrale à monticules de galets",
+  "scientific": "Pseudomys johnsoni",
+  "group": "mammals",
+  "sections": {
+    "overview": "Ce rongeur australien de la famille des Muridés est appelé souris centrale à monticules de galets.",
+    "identification": "Son dos va du brun jaunâtre au roux, avec des poils de jarre foncés, et son ventre est clair.",
+    "habitat": "Elle fréquente les terrains rocheux, les boisements ouverts, les vallées et les prairies, notamment les crêtes et plaines pierreuses.",
+    "diet": "Les sources consultées ne donnent pas de données alimentaires propres à cette espèce.",
+    "behavior": "Elle creuse des terriers et bâtit des monticules de galets près de leurs entrées ; plusieurs souris peuvent partager un même réseau.",
+    "reproduction": "Les sources consultées ne fournissent pas de détails sur sa reproduction.",
+    "ecology": "Ses monticules de galets sont un indice visible de sa présence, mais ses empreintes et autres traces peuvent ressembler à celles d’autres petits mammifères.",
+    "conservation": "La Mammal Diversity Database indique pour l’espèce la catégorie mondiale UICN « Préoccupation mineure »."
+  },
+  "sources": [
+    {
+      "url": "https://www.nespthreatenedspecies.edu.au/media/jsypmqty/azm-species-profiles-complete-digital_v2_lowres.pdf",
+      "title": "Arid Zone Monitoring — species profile"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003292/",
+      "title": "Mammal Diversity Database — taxon account"
+    },
+    {
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/f44806fd-7802-45d7-bb10-774ecc577c7d",
+      "title": "Atlas of Living Australia — species taxonomy"
+    }
+  ]
+}

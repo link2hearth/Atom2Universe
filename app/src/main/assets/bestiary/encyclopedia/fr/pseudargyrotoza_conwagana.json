@@ -1,0 +1,34 @@
+{
+  "id": "pseudargyrotoza_conwagana",
+  "name": "Tordeuse du frêne",
+  "scientific": "Pseudargyrotoza conwagana",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Pseudargyrotoza conwagana est une petite tordeuse présente dans une grande partie de l’Europe et dans certaines régions d’Asie.",
+    "identification": "Une tache jaune bien visible sur les ailes antérieures de l’adulte au repos aide à la reconnaître; son envergure est d’environ onze à quinze millimètres.",
+    "habitat": "En Grande-Bretagne, elle est signalée dans les lieux où poussent frênes et troènes.",
+    "diet": "Les chenilles se nourrissent surtout de frêne et peuvent aussi utiliser le troène; des observations européennes signalent des larves dans les fruits ou graines du frêne, du troène et de l’épine-vinette.",
+    "behavior": "Les adultes sont souvent observés de jour près des frênes; en Grande-Bretagne, la principale période de vol va de la fin du printemps à l’été.",
+    "reproduction": "Les sources examinées décrivent les plantes hôtes, mais pas le cycle de vie complet.",
+    "ecology": "Les larves utilisent plusieurs plantes hôtes, surtout le frêne.",
+    "conservation": "Aucune évaluation mondiale de conservation n’a été trouvée dans les sources consultées."
+  },
+  "sources": [
+    {
+      "url": "https://www.ukmoths.org.uk/species/pseudargyrotoza-conwagana/",
+      "title": "Pseudargyrotoza conwagana — UKMoths"
+    },
+    {
+      "url": "https://lepiforum.org/wiki/page/Pseudargyrotoza_conwagana",
+      "title": "Pseudargyrotoza conwagana — LepiWiki"
+    },
+    {
+      "url": "https://link.springer.com/article/10.1007/BF02856750",
+      "title": "Révision des Archipini du nord-est de la Chine — Journal of Forestry Research"
+    },
+    {
+      "url": "https://www.derbyshiremoths.org/49-091-bf1011-tortricidae-tortricinae-pseudargyrotoza-conwagana/",
+      "title": "Pseudargyrotoza conwagana — Derbyshire Moths"
+    }
+  ]
+}

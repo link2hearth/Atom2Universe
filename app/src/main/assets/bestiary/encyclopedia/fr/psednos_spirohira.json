@@ -1,0 +1,34 @@
+{
+  "id": "psednos_spirohira",
+  "name": "Limace de mer à intestin spiralé",
+  "scientific": "Psednos spirohira",
+  "group": "fish",
+  "sections": {
+    "overview": "Limace de mer marine de la famille des Liparidés, signalée dans l’Atlantique Nord-Est, à l’ouest du nord de l’Espagne.",
+    "identification": "La partie postérieure de son intestin forme deux boucles rapprochées et parallèles, caractère évoqué par son nom scientifique.",
+    "habitat": "Elle est signalée en eaux profondes, mais sa profondeur de vie précise n’est pas établie.",
+    "diet": "Les fiches consultées ne décrivent pas son régime alimentaire.",
+    "behavior": "Les sources consultées ne donnent pas de comportement propre à l’espèce.",
+    "reproduction": "Les sources consultées ne contiennent pas d’observations sur sa reproduction.",
+    "ecology": "Les données connues sont limitées et les informations écologiques sont rares. P. islandicus est un autre congénère de l’Atlantique Nord-Est, signalé au sud de l’Islande ; sa description souligne sa peau pâle et sa bouche très inclinée.",
+    "conservation": "FishBase indique la catégorie UICN « Données insuffisantes », attribuée lors d’une évaluation en 2014."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/59796",
+      "title": "FishBase — species summary"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/242550096_Family_Liparidae_Scopoli_1777_-_Snailfishes",
+      "title": "Family Liparidae — snailfishes, taxonomic account"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=644416",
+      "title": "ITIS — taxonomic report"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59797",
+      "title": "FishBase — résumé de Psednos islandicus"
+    }
+  ]
+}

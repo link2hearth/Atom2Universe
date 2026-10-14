@@ -1,0 +1,141 @@
+{
+  "id": "pseudolais_pleurotaenia",
+  "scientific": "Pseudolais pleurotaenia",
+  "group": "fish",
+  "name": {
+    "en": "Pseudolais pleurotaenia",
+    "fr": "Pseudolais pleurotaenia"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudolais pleurotaenia is a freshwater pangasiid catfish native to mainland Southeast Asia.",
+      "fr": "Pseudolais pleurotaenia est un poisson-chat pangasiidé d’eau douce originaire d’Asie du Sud-Est continentale."
+    },
+    "identification": {
+      "en": "It has a slender body, a sharp abdominal keel and two pairs of short barbels; the tail is deeply forked.",
+      "fr": "Il a un corps élancé, une arête ventrale marquée et deux paires de barbillons courts; sa nageoire caudale est profondément fourchue."
+    },
+    "habitat": {
+      "en": "It occurs in major mainland river basins, including the Mekong, Chao Phraya, Meklong and Tapi, and uses both rapids and slower deep reaches.",
+      "fr": "Il vit dans plusieurs grands bassins fluviaux continentaux, dont le Mékong, le Chao Phraya, le Meklong et le Tapi, et fréquente rapides et secteurs profonds plus lents."
+    },
+    "diet": {
+      "en": "Adults feed on terrestrial and aquatic insects, with smaller amounts of plant material reported.",
+      "fr": "Les adultes consomment des insectes terrestres et aquatiques, ainsi que de faibles quantités de matière végétale."
+    },
+    "behavior": {
+      "en": "In parts of the Mekong in southern Laos, upstream movements have been recorded during the wet season; migration timing may vary among reaches.",
+      "fr": "Dans certains secteurs du Mékong, au sud du Laos, des déplacements vers l’amont ont été observés pendant la saison humide; le calendrier migratoire peut varier selon les tronçons."
+    },
+    "reproduction": {
+      "en": "Species-specific spawning information was not available in the sources reviewed.",
+      "fr": "Les sources examinées ne fournissent pas d’information propre à l’espèce sur la ponte."
+    },
+    "ecology": {
+      "en": "Its seasonal movements connect river reaches and tributaries; the cited migration observations refer to particular Mekong sites rather than the entire range.",
+      "fr": "Ses déplacements saisonniers relient différents secteurs du fleuve et des affluents; les observations citées concernent certains sites du Mékong, pas toute son aire."
+    },
+    "conservation": {
+      "en": "FishBase reports a Least Concern assessment from twenty eleven; that dated assessment should not be read as a current population survey.",
+      "fr": "FishBase rapporte une évaluation en Préoccupation mineure datant de deux mille onze; cette évaluation ancienne ne remplace pas un suivi actuel des populations."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pseudolais pleurotaenia — FishBase field guide",
+        "fr": "Pseudolais pleurotaenia — guide de terrain FishBase"
+      },
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=418&genusname=Pseudolais&speciesname=pleurotaenia",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase: basin, habitat, diet, migration, IUCN."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 193,
+        "notes_words": 6,
+        "total": 199,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Thai Department of Fisheries: Pseudolais pleurotaenia",
+        "fr": "Département thaïlandais des pêches : Pseudolais pleurotaenia"
+      },
+      "url": "https://www4.fisheries.go.th/local/file_document/20210220111426_1_file.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "The Thai government document gives diagnostic body, barbel, keel and tail features."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 41,
+        "notes_words": 12,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Common fishes of the Lower Mekong — Mekong River Commission",
+        "fr": "Poissons communs du bas Mékong — Commission du Mékong"
+      },
+      "url": "https://www.mrcmekong.org/?document_id=01BMXYOAHMTXNAAS4OYJBZW6IV5354FMZQ&download_document=1&name=Photos-of-Common-Fishes-of-the-Lower-Mekong-River-Basin.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat"
+      ],
+      "facts": [
+        "The regional fish guide includes Pseudolais pleurotaenia among Lower Mekong fishes."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 11,
+        "total": 86,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The range-wide summary combines basin records; migration details refer to specific southern Lao Mekong locations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The conservation category is dated, and local migration data are not generalized to all populations."
+}

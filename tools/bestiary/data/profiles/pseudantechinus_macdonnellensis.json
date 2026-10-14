@@ -1,0 +1,173 @@
+{
+  "id": "pseudantechinus_macdonnellensis",
+  "scientific": "Pseudantechinus macdonnellensis",
+  "group": "mammals",
+  "name": {
+    "en": "Fat-tailed pseudantechinus",
+    "fr": "Pseudantechinus à queue grasse"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudantechinus macdonnellensis is a small marsupial of arid central Australia.",
+      "fr": "Pseudantechinus macdonnellensis est un petit marsupial des régions arides du centre de l’Australie."
+    },
+    "identification": {
+      "en": "Its short, thick-based tail stores fat. Unlike P. bilarni, it is not described as having a proportionally long, slender tail. It is also distinct in current taxonomies from P. woolleyae, recognized separately in 1988.",
+      "fr": "Sa queue courte, épaisse à la base, stocke des réserves de graisse. Contrairement à P. bilarni, sa queue n’est pas décrite comme proportionnellement longue et fine. Elle est aussi distincte dans les taxonomies actuelles de P. woolleyae, reconnue séparément en 1988."
+    },
+    "habitat": {
+      "en": "It shelters among rocks and termite mounds in arid landscapes.",
+      "fr": "Il s’abrite parmi les rochers et les termitières des milieux arides."
+    },
+    "diet": {
+      "en": "It eats termites, beetles, grasshoppers and other invertebrates.",
+      "fr": "Il mange des termites, des coléoptères, des sauterelles et d’autres invertébrés."
+    },
+    "behavior": {
+      "en": "It is mainly nocturnal; winter basking and daily torpor are also reported.",
+      "fr": "Il est surtout nocturne ; le bain de soleil hivernal et la torpeur quotidienne sont aussi rapportés."
+    },
+    "reproduction": {
+      "en": "Females usually breed annually and carry five or six young in the pouch.",
+      "fr": "Les femelles se reproduisent généralement chaque année et portent cinq ou six petits dans leur poche."
+    },
+    "ecology": {
+      "en": "A 2017 genetic study proposed synonymizing P. roryi with P. macdonnellensis after finding the sampled specimens indistinguishable. The Mammal Diversity Database now includes roryi here; see P. roryi.",
+      "fr": "Une étude génétique de 2017 a proposé de réunir P. roryi à P. macdonnellensis après avoir jugé les spécimens échantillonnés indiscernables. La Mammal Diversity Database inclut maintenant roryi ici ; voir P. roryi."
+    },
+    "conservation": {
+      "en": "The Mammal Diversity Database lists it as Least Concern globally.",
+      "fr": "La Mammal Diversity Database le classe en préoccupation mineure à l’échelle mondiale."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Fat-tailed pseudantechinus — Animal Diversity Web, University of Michigan",
+        "fr": "Fat-tailed pseudantechinus — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pseudantechinus_macdonnellensis/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "University natural-history account compiles diet and life history."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 139,
+        "notes_words": 8,
+        "total": 147,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudantechinus macdonnellensis — Mammal Diversity Database",
+        "fr": "Pseudantechinus macdonnellensis — Mammal Diversity Database"
+      },
+      "url": "https://www.mammaldiversity.org/taxon/1000162/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "conservation",
+        "ecology"
+      ],
+      "facts": [
+        "MDD global category and taxonomic inclusion."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1",
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 45,
+        "notes_words": 6,
+        "total": 51,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Umbrello et al. (2017), taxonomic status of Pseudantechinus roryi — Australian Journal of Zoology",
+        "fr": "Umbrello et al. (2017), taxonomic status of Pseudantechinus roryi — Australian Journal of Zoology"
+      },
+      "url": "https://doi.org/10.1071/ZO17086",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Woolleyae recognized separately in 1988."
+      ],
+      "prose_claims": [
+        "identification.en.3",
+        "identification.fr.3",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 67,
+        "notes_words": 5,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Sandstone pseudantechinus — Animal Diversity Web, University of Michigan",
+        "fr": "Sandstone pseudantechinus — Animal Diversity Web, University of Michigan"
+      },
+      "url": "https://animaldiversity.org/accounts/Pseudantechinus_bilarni/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Bilarni tail proportion contrasts."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 4,
+        "total": 32,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "MDD treats roryi as included within macdonnellensis; older references and some databases may still present roryi as a separate species.",
+    "Natural-history details are compiled from an educational account that cites primary studies."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Used a university natural-history synthesis, MDD and the peer-reviewed DNA study; linked P. roryi reciprocally while preserving the taxonomic caveat."
+}

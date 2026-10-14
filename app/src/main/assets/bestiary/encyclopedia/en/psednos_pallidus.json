@@ -1,0 +1,34 @@
+{
+  "id": "psednos_pallidus",
+  "name": "Pallid snailfish",
+  "scientific": "Psednos pallidus",
+  "group": "fish",
+  "sections": {
+    "overview": "This marine snailfish of Liparidae is recorded off central Baja California, Mexico.",
+    "identification": "Its description emphasizes pale coloration across the body and internal organs.",
+    "habitat": "It was collected in midwater above deep seafloor; this does not define a complete depth range.",
+    "diet": "The consulted species accounts do not report what it eats.",
+    "behavior": "No behavior specific to the species is documented in the consulted accounts.",
+    "reproduction": "The consulted sources provide no reproductive observations.",
+    "ecology": "The checklist reports only one known specimen, so its ecology remains poorly known. Its eastern-Pacific congener P. mexicanus is also known from Isla Guadalupe, but is described with a pale body and dark tongue and palate.",
+    "conservation": "The consulted sources do not report an IUCN evaluation."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/59830",
+      "title": "FishBase — species summary"
+    },
+    {
+      "url": "https://espis.boem.gov/Final%20Reports/4996.pdf",
+      "title": "BOEM — deep-sea fish checklist"
+    },
+    {
+      "url": "https://scripps.ucsd.edu/marine-vertebrate-collection/special-collections/type-catalog",
+      "title": "Scripps Institution — type catalog"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59795",
+      "title": "FishBase — Psednos mexicanus species summary"
+    }
+  ]
+}

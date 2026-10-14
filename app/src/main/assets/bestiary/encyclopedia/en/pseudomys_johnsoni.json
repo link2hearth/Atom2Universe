@@ -1,0 +1,30 @@
+{
+  "id": "pseudomys_johnsoni",
+  "name": "Central pebble-mound mouse",
+  "scientific": "Pseudomys johnsoni",
+  "group": "mammals",
+  "sections": {
+    "overview": "This Australian murid rodent is known as the central pebble-mound mouse.",
+    "identification": "It has a yellow-brown to rufous back with dark guard hairs and a pale underside.",
+    "habitat": "It inhabits rocky country, open woodland, valleys and grassland, especially stony ridges and plains.",
+    "diet": "Species-specific diet data were not found in the consulted accounts.",
+    "behavior": "It constructs burrows and pebble mounds near their entrances; several mice may share a mound system.",
+    "reproduction": "The consulted species accounts provide no reproductive details.",
+    "ecology": "Pebble mounds are a conspicuous sign of this species, but tracks and other signs can resemble those of other small mammals.",
+    "conservation": "The Mammal Diversity Database lists its global IUCN category as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.nespthreatenedspecies.edu.au/media/jsypmqty/azm-species-profiles-complete-digital_v2_lowres.pdf",
+      "title": "Arid Zone Monitoring — species profile"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1003292/",
+      "title": "Mammal Diversity Database — taxon account"
+    },
+    {
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/f44806fd-7802-45d7-bb10-774ecc577c7d",
+      "title": "Atlas of Living Australia — species taxonomy"
+    }
+  ]
+}

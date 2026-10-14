@@ -1,0 +1,169 @@
+{
+  "id": "pseudeuophrys_erratica",
+  "scientific": "Pseudeuophrys erratica",
+  "group": "invertebrates",
+  "name": {
+    "en": "Black-palped jumper",
+    "fr": "Saltique erratique"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudeuophrys erratica is a small jumping spider in the family Salticidae, recorded across Europe and much of Asia.",
+      "fr": "Pseudeuophrys erratica est une petite araignée sauteuse de la famille des Salticidae, signalée en Europe et dans une grande partie de l’Asie."
+    },
+    "identification": {
+      "en": "Adults are only a few millimetres long. Males have contrasting black-and-white palps; females can be difficult to distinguish from related Pseudeuophrys without close examination.",
+      "fr": "L’adulte ne mesure que quelques millimètres. Le mâle a des pédipalpes contrastés noirs et blancs; les femelles peuvent être difficiles à distinguer d’autres Pseudeuophrys sans examen attentif."
+    },
+    "habitat": {
+      "en": "It has been recorded on the ground and on tree trunks, including dead wood; British accounts also report it under bark and stones.",
+      "fr": "Elle a été observée au sol et sur les troncs, y compris le bois mort; des sources britanniques la signalent aussi sous les écorces et les pierres."
+    },
+    "diet": {
+      "en": "The references consulted do not provide a species-specific account of its prey.",
+      "fr": "Les références consultées ne décrivent pas les proies propres à cette espèce."
+    },
+    "behavior": {
+      "en": "Field accounts report that males and juveniles are more readily encountered than females; this may affect the chance of identifying the species in surveys.",
+      "fr": "Les observations de terrain indiquent que les mâles et les juvéniles sont plus faciles à rencontrer que les femelles; cela peut influencer sa détection lors des inventaires."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide species-specific reproductive details.",
+      "fr": "Les sources consultées ne donnent pas de détails propres à l’espèce sur sa reproduction."
+    },
+    "ecology": {
+      "en": "It is widespread in Europe and Asia, with an introduced population reported in the United States; local French assessments list it as Least Concern.",
+      "fr": "Elle est largement répartie en Europe et en Asie, avec une population introduite signalée aux États-Unis; les évaluations françaises régionales la classent en Préoccupation mineure."
+    },
+    "conservation": {
+      "en": "French Red List assessments classify it as Least Concern; this is a national assessment, not a global IUCN category.",
+      "fr": "Les listes rouges françaises la classent en Préoccupation mineure; il s’agit d’une évaluation nationale et non d’une catégorie mondiale de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "World Spider Catalog: Pseudeuophrys erratica",
+        "fr": "World Spider Catalog : Pseudeuophrys erratica"
+      },
+      "url": "https://www.wsc.nmbe.ch/spec-data/38817",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "The catalog confirms the accepted species and its broad Eurasian distribution, with introduction in the United States."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 136,
+        "notes_words": 17,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudeuophrys erratica — Araignée-sauteuse.fr",
+        "fr": "Pseudeuophrys erratica — Araignée-sauteuse.fr"
+      },
+      "url": "https://www.araignee-sauteuse.fr/index/france/pseudeuophrys/erratica",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior"
+      ],
+      "facts": [
+        "French specialist account gives adult size, appearance, sites and relative detectability of sexes and juveniles."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 152,
+        "notes_words": 15,
+        "total": 167,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudeuophrys erratica — FAUNA species record",
+        "fr": "Pseudeuophrys erratica — fiche espèce FAUNA"
+      },
+      "url": "https://observatoire-fauna.fr/programmes/referentiel-especes/fiche-espece/234026",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French regional and national spider Red Lists classify the species as Least Concern."
+      ],
+      "prose_claims": [
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 40,
+        "notes_words": 13,
+        "total": 53,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spiders of Britain and Ireland: Pseudeuophrys erratica",
+        "fr": "Araignées de Grande-Bretagne et d’Irlande : Pseudeuophrys erratica"
+      },
+      "url": "https://nora.nerc.ac.uk/id/eprint/8096/1/Spidersv2.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "British spider account reports use of bark and stones."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 9,
+        "total": 9,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Species-level prey and reproduction information was not found in the references consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. French conservation categories are clearly distinguished from a global IUCN assessment."
+}

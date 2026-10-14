@@ -1,0 +1,30 @@
+{
+  "id": "pseudantechinus_roryi",
+  "name": "Pseudantechinus de Rory Cooper",
+  "scientific": "Pseudantechinus roryi",
+  "group": "mammals",
+  "sections": {
+    "overview": "Pseudantechinus roryi est un nom historiquement appliqué à des pseudantechinus de l’ouest de l’Australie.",
+    "identification": "Les analyses ADN n’ont pas distingué les spécimens identifiés comme P. roryi, y compris le matériel type, de P. macdonnellensis.",
+    "habitat": "Les populations occidentales portant ce nom ont été observées dans des zones sèches et rocheuses d’Australie-Occidentale, notamment dans le Pilbara.",
+    "diet": "Un régime distinct propre à P. roryi n’est pas établi au vu de la synonymie proposée par l’étude de 2017.",
+    "behavior": "L’étude génétique n’a pas trouvé de séparation biogéographique nette entre les populations échantillonnées sous les noms roryi et macdonnellensis.",
+    "reproduction": "L’étude taxonomique consultée ne décrit pas de biologie de reproduction distincte pour P. roryi.",
+    "ecology": "Les auteurs de 2017 ont proposé de traiter P. roryi comme synonyme de P. macdonnellensis. La Mammal Diversity Database l’y inclut actuellement ; voir P. macdonnellensis.",
+    "conservation": "Les informations de conservation sont à consulter sous P. macdonnellensis, où ce taxon est inclus."
+  },
+  "sources": [
+    {
+      "url": "https://research-repository.uwa.edu.au/en/publications/species-relationships-in-the-dasyurid-marsupial-genus-pseudantech",
+      "title": "Umbrello et al. (2017), taxonomic status of P. roryi — UWA Research Repository"
+    },
+    {
+      "url": "https://animaldiversity.org/accounts/Pseudantechinus_macdonnellensis/",
+      "title": "Fat-tailed pseudantechinus — Animal Diversity Web, University of Michigan"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000162/",
+      "title": "Pseudantechinus macdonnellensis — Mammal Diversity Database"
+    }
+  ]
+}

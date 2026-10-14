@@ -1,0 +1,166 @@
+{
+  "id": "pseudoplatystoma_corruscans",
+  "scientific": "Pseudoplatystoma corruscans",
+  "group": "fish",
+  "name": {
+    "en": "Spotted sorubim",
+    "fr": "Surubi tacheté"
+  },
+  "sections": {
+    "overview": {
+      "en": "This large South American freshwater catfish inhabits the São Francisco and Paraná river basins. It is a close genus-mate of Pseudoplatystoma magdaleniatum, which is restricted to the Magdalena–Cauca drainage.",
+      "fr": "Ce grand poisson-chat d’eau douce sud-américain vit dans les bassins du São Francisco et du Paraná. Il est proche de Pseudoplatystoma magdaleniatum, cantonné au bassin Magdalena–Cauca."
+    },
+    "identification": {
+      "en": "Its spotted pattern contrasts with the broad, straight dark side-bars described for P. magdaleniatum.",
+      "fr": "Son motif tacheté contraste avec les larges bandes sombres rectilignes décrites chez P. magdaleniatum."
+    },
+    "habitat": {
+      "en": "It is a freshwater, bottom-associated fish that moves within river systems.",
+      "fr": "C’est un poisson d’eau douce vivant près du fond et se déplaçant au sein des réseaux fluviaux."
+    },
+    "diet": {
+      "en": "It feeds mainly on other fishes; field accounts note that natural-diet observations remain limited.",
+      "fr": "Elle se nourrit surtout d’autres poissons ; les études de terrain signalent que les observations de son régime naturel restent limitées."
+    },
+    "behavior": {
+      "en": "The species is migratory within river basins, with movements associated with its life cycle.",
+      "fr": "L’espèce effectue des déplacements migratoires dans les bassins fluviaux, liés à son cycle de vie."
+    },
+    "reproduction": {
+      "en": "The consulted sources do not provide enough detail here to summarize its reproductive cycle.",
+      "fr": "Les sources consultées ne donnent pas ici assez de détails pour résumer son cycle reproductif."
+    },
+    "ecology": {
+      "en": "The contrast with P. magdaleniatum is supported both by published color-pattern analyses and by their separate river-basin distributions.",
+      "fr": "Le contraste avec P. magdaleniatum est étayé à la fois par des analyses publiées des motifs de coloration et par leurs bassins de répartition distincts."
+    },
+    "conservation": {
+      "en": "FishBase reports a global IUCN assessment of Near Threatened, dated 2020.",
+      "fr": "FishBase rapporte une évaluation mondiale UICN « Quasi menacée », datée de 2020."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://www.fishbase.se/summary/pseudoplatystoma-corruscans.html",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records the São Francisco and Paraná basins, freshwater demersal habitat, fish-based diet, potamodromous movement and Near Threatened assessment dated 2020."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 82,
+        "notes_words": 21,
+        "total": 103,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Scientific Reports — color-pattern study",
+        "fr": "Scientific Reports — color-pattern study"
+      },
+      "url": "https://www.nature.com/articles/s41598-020-68700-0",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "The study distinguishes the spotted pattern of P. corruscans from the banded pattern of P. magdaleniatum and discusses their contrasting pigment patterning."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 71,
+        "notes_words": 22,
+        "total": 93,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Universidade Federal do Paraná — Pintado account",
+        "fr": "Universidade Federal do Paraná — Pintado account"
+      },
+      "url": "https://paginasdabio.ufpr.br/pintado/",
+      "supports": [
+        "diet",
+        "behavior",
+        "reproduction"
+      ],
+      "facts": [
+        "The Portuguese-language university account describes piscivory and seasonal spawning migrations in P. corruscans; the FishBase summary provides the basin-wide life-history context."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 93,
+        "notes_words": 21,
+        "total": 114,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — P. magdaleniatum summary",
+        "fr": "FishBase — P. magdaleniatum summary"
+      },
+      "url": "https://fishbase.se/summary/Pseudoplatystoma-magdaleniatum",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "FishBase records P. magdaleniatum as endemic to the Magdalena River drainage, including the Cauca."
+      ],
+      "prose_claims": [
+        "overview.en.2",
+        "overview.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 14,
+        "total": 39,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Common names vary across South America; the French name is descriptive. The reciprocal comparison is restricted to coloration and drainage distribution documented in taxonomic and species sources."
+  ],
+  "review_note": "Kept the profile concise and cross-checked species-level facts against taxonomic, institutional or assessment sources. Related Pseudoplatystoma profiles use reciprocal comparisons limited to sourced distribution and coloration.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

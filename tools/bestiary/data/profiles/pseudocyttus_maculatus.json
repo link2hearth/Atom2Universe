@@ -1,0 +1,165 @@
+{
+  "id": "pseudocyttus_maculatus",
+  "scientific": "Pseudocyttus maculatus",
+  "group": "fish",
+  "name": {
+    "en": "Smooth oreo",
+    "fr": "Pseudocyttus maculatus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudocyttus maculatus, the smooth oreo, is a deepwater fish in the family Oreosomatidae.",
+      "fr": "Pseudocyttus maculatus, ou smooth oreo, est un poisson profond de la famille des Oreosomatidae."
+    },
+    "identification": {
+      "en": "Adults are bluish grey to grey-brown; juveniles have dark blue blotches. The black oreo Allocyttus niger is a related fishery species.",
+      "fr": "L’adulte est gris bleuté à brun-gris; le jeune porte des taches bleu foncé. L’oreo noir Allocyttus niger est une espèce apparentée exploitée dans les mêmes pêcheries."
+    },
+    "habitat": {
+      "en": "It lives close to the seabed along deep continental slopes, commonly at depths of roughly six hundred to fifteen hundred metres in New Zealand waters.",
+      "fr": "Il vit près du fond, le long des pentes continentales profondes, généralement vers six cents à mille cinq cents mètres dans les eaux néo-zélandaises."
+    },
+    "diet": {
+      "en": "A study of the Chatham Rise found that smooth oreos fed mainly on salps and amphipods; diet composition varied with fish size.",
+      "fr": "Une étude du Chatham Rise a montré que le smooth oreo se nourrissait surtout de salpes et d’amphipodes; le régime variait selon la taille du poisson."
+    },
+    "behavior": {
+      "en": "The species is commercially fished in New Zealand and may be taken in targeted oreo fisheries or as bycatch in orange roughy fisheries.",
+      "fr": "L’espèce est pêchée commercialement en Nouvelle-Zélande et peut être capturée dans les pêcheries ciblant les oreos ou comme prise accessoire de celles de l’hoplostèthe orange."
+    },
+    "reproduction": {
+      "en": "New Zealand fisheries summaries estimate that females mature at about thirty-one years and spawn from October to December; these figures concern the monitored fishery stock.",
+      "fr": "Les synthèses halieutiques néo-zélandaises estiment que les femelles mûrissent vers trente et un ans et pondent d’octobre à décembre; ces valeurs concernent le stock suivi."
+    },
+    "ecology": {
+      "en": "Unlike black oreo, which ate amphipods, salps and small decapods in the same study, smooth oreo fed mostly on salps and amphipods.",
+      "fr": "Contrairement à l’oreo noir, qui consommait amphipodes, salpes et petits décapodes dans la même étude, le smooth oreo se nourrissait surtout de salpes et d’amphipodes."
+    },
+    "conservation": {
+      "en": "Oreo catches in New Zealand are managed under a quota system; this management covers several related species together.",
+      "fr": "Les captures d’oreos en Nouvelle-Zélande sont gérées par quotas; cette gestion regroupe plusieurs espèces apparentées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "New Zealand Ministry for Primary Industries: Smooth oreo stock overview",
+        "fr": "Ministère néo-zélandais des Industries primaires : état du stock de smooth oreo"
+      },
+      "url": "https://fs.fish.govt.nz/Page.aspx?ey=2024&pk=8&stock=SSO4",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The government stock account gives fish appearance, deep habitat, maturity and spawning estimates, and quota management."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 16,
+        "total": 172,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Feeding relationships of black and smooth oreos — Journal of Fish Biology",
+        "fr": "Relations alimentaires entre oreos noir et smooth — Journal of Fish Biology"
+      },
+      "url": "https://doi.org/10.1111/j.1095-8649.1989.tb02999.x",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "The Chatham Rise study found different prey mixes in smooth and black oreos and diet changes with fish size."
+      ],
+      "prose_claims": [
+        "identification.en.2",
+        "identification.fr.2",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 19,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "CSIRO Australian National Fish Collection: Smooth oreodory",
+        "fr": "Collection nationale de poissons d’Australie du CSIRO : smooth oreodory"
+      },
+      "url": "https://www.cmar.csiro.au/data/caab/taxon_report.cfm?caab_code=37266003",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "CSIRO lists the accepted taxon, oreodory family and slope-demersal habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 10,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Smooth and black oreo fisheries in New Zealand — Ministry for Primary Industries",
+        "fr": "Pêcheries de smooth oreo et d’oreo noir en Nouvelle-Zélande — Ministry for Primary Industries"
+      },
+      "url": "https://www.mpi.govt.nz/dmsdocument/53854/direct",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior"
+      ],
+      "facts": [
+        "The fisheries report documents commercial smooth-oreo catch, including target fisheries and bycatch."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 48,
+        "notes_words": 12,
+        "total": 60,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Life-history estimates apply to fish sampled or modeled for New Zealand fisheries, not necessarily all populations."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The close comparison with black oreo is limited to the prey results from the same study."
+}

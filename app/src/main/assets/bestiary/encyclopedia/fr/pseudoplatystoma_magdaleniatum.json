@@ -1,0 +1,42 @@
+{
+  "id": "pseudoplatystoma_magdaleniatum",
+  "name": "Bagre rayado du Magdalena",
+  "scientific": "Pseudoplatystoma magdaleniatum",
+  "group": "fish",
+  "sections": {
+    "overview": "Ce poisson-chat d’eau douce colombien est endémique du bassin Magdalena–Cauca. Il est proche de Pseudoplatystoma corruscans, présent plutôt dans les bassins du São Francisco et du Paraná.",
+    "identification": "Elle porte de larges bandes sombres rectilignes sur les flancs ; P. corruscans se distingue par un motif tacheté.",
+    "habitat": "Elle fréquente les chenaux des grands cours d’eau et les lacs de plaine inondable du bassin Magdalena.",
+    "diet": "Les juvéniles se nourrissent d’autres poissons, selon l’évaluation citée pour le bassin.",
+    "behavior": "Elle effectue des migrations longitudinales de moyenne distance dans le bassin fluvial.",
+    "reproduction": "Elle se reproduit toute l’année, avec des pics saisonniers pendant les hautes eaux.",
+    "ecology": "Les analyses publiées des motifs de coloration distinguent ses bandes sombres des taches caractéristiques de P. corruscans. La révision taxonomique reconnaît également P. metaense, un congénère de l’Orénoque.",
+    "conservation": "L’évaluation mondiale UICN de 2014 la classait « En danger ». La résolution colombienne de 2024 sur les espèces menacées la classe « En danger critique »."
+  },
+  "sources": [
+    {
+      "url": "https://fishbase.se/summary/Pseudoplatystoma-magdaleniatum",
+      "title": "FishBase — species summary"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-1.RLTS.T58439165A61474168.en",
+      "title": "IUCN Red List — species assessment"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41598-020-68700-0",
+      "title": "Scientific Reports — color-pattern study"
+    },
+    {
+      "url": "https://www.minambiente.gov.co/wp-content/uploads/2024/02/Resolucion-0126-de-2024.pdf",
+      "title": "MinAmbiente Colombia — Resolución 0126 de 2024"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/pseudoplatystoma-corruscans.html",
+      "title": "FishBase — P. corruscans summary"
+    },
+    {
+      "url": "https://www.mapress.com/zootaxa/2007f/zt01512p038.pdf",
+      "title": "Zootaxa — révision taxonomique de Pseudoplatystoma"
+    }
+  ]
+}

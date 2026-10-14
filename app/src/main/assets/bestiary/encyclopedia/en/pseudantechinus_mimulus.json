@@ -1,0 +1,30 @@
+{
+  "id": "pseudantechinus_mimulus",
+  "name": "Carpentarian pseudantechinus",
+  "scientific": "Pseudantechinus mimulus",
+  "group": "mammals",
+  "sections": {
+    "overview": "Pseudantechinus mimulus is a recognized dasyurid species from northern Australia.",
+    "identification": "It resembles P. bilarni and P. macdonnellensis; the 2024 study cautions that camera-trap images may not reliably separate them.",
+    "habitat": "Confirmed records are from rocky outcrops in Queensland and the Northern Territory.",
+    "diet": "The reviewed distribution study does not establish a species-specific prey list.",
+    "behavior": "Movements are poorly known; one male moved about 2 km in 24 h.",
+    "reproduction": "Reproductive biology is not detailed in the study reviewed here.",
+    "ecology": "In the Mount Isa Inlier it uses varied rocky outcrops; habitat links elsewhere remain uncertain.",
+    "conservation": "The 2024 authors report an IUCN Near Threatened category; they recommend Data Deficient for Australian assessment pending more data."
+  },
+  "sources": [
+    {
+      "url": "https://doi.org/10.1111/aec.13557",
+      "title": "Barnes et al. (2024), distribution, habitat and status of P. mimulus — Austral Ecology"
+    },
+    {
+      "url": "https://bie.ala.org.au/species/https%3A/biodiversity.org.au/afd/taxa/c2a7a31d-a80f-4ea4-8ccc-d3e966a24356",
+      "title": "Pseudantechinus mimulus — Australian Faunal Directory via Atlas of Living Australia"
+    },
+    {
+      "url": "https://www.mammaldiversity.org/taxon/1000163/",
+      "title": "Pseudantechinus mimulus — Mammal Diversity Database"
+    }
+  ]
+}

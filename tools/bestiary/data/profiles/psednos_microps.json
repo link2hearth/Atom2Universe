@@ -1,0 +1,166 @@
+{
+  "id": "psednos_microps",
+  "scientific": "Psednos microps",
+  "group": "fish",
+  "name": {
+    "en": "Smalleye dwarf snailfish",
+    "fr": "Limace naine à petits yeux"
+  },
+  "sections": {
+    "overview": {
+      "en": "A tiny marine snailfish recorded from the Crozet Basin in the western Indian Ocean.",
+      "fr": "Petite limace de mer marine signalée dans le bassin de Crozet, dans l’ouest de l’océan Indien."
+    },
+    "identification": {
+      "en": "Its very small eyes are a diagnostic feature and are reflected in the name microps.",
+      "fr": "Ses yeux très petits sont un caractère distinctif, repris dans le nom microps."
+    },
+    "habitat": {
+      "en": "The species is known from a midwater trawl in deep oceanic waters.",
+      "fr": "L’espèce est connue par une capture au chalut pélagique dans des eaux océaniques profondes."
+    },
+    "diet": {
+      "en": "The consulted accounts do not describe its prey.",
+      "fr": "Les sources consultées ne décrivent pas ses proies."
+    },
+    "behavior": {
+      "en": "No species-specific behavior is reported in the consulted accounts.",
+      "fr": "Les sources consultées ne rapportent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The consulted accounts contain no reproductive observations.",
+      "fr": "Les sources consultées ne contiennent pas d’observations sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The known material is limited, so little can be said about its ecology. P. steini is another Crozet Basin congener; the published descriptions note its tan coloration, whereas the very small eyes distinguish this species.",
+      "fr": "Le matériel connu est limité ; on dispose donc de peu d’informations sur son écologie. P. steini est un autre congénère du bassin de Crozet ; les descriptions publiées signalent sa couleur beige, tandis que cette espèce se distingue par ses très petits yeux."
+    },
+    "conservation": {
+      "en": "FishBase lists the species as not evaluated by the IUCN.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée par l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59952",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records a Crozet Basin distribution, very small eyes, midwater-trawl collection, and no diet, behavior, reproduction or IUCN assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 157,
+        "notes_words": 19,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS — valid-species search",
+        "fr": "ITIS — valid-species search"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/RefRpt?search_topic=Scientific_Author&search_value=Chernova%2C+2001",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "ITIS lists Psednos microps Chernova, 2001 as valid; the taxonomic record gives no ecological details."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 28,
+        "notes_words": 15,
+        "total": 43,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — reference summary for Chernova 2001",
+        "fr": "FishBase — reference summary for Chernova 2001"
+      },
+      "url": "https://fishbase.se/references/FBRefSummary.php?ID=42989",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The cited 2001 review describes ten new Psednos species from the North Atlantic and southwestern Indian Ocean."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 17,
+        "total": 17,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos steini species summary",
+        "fr": "FishBase — résumé de Psednos steini"
+      },
+      "url": "https://www.fishbase.se/summary/59964",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos steini as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 14,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The small maximum length reported by FishBase is based on a juvenile specimen and is omitted here; it should not be read as an adult-size estimate. French name is descriptive, not standardized."
+  ],
+  "review_note": "Kept this profile short because species-specific observations are limited. Claims about capture depth, ecology and life history are restricted to what the cited records support.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

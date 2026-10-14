@@ -1,0 +1,34 @@
+{
+  "id": "psednos_microps",
+  "name": "Smalleye dwarf snailfish",
+  "scientific": "Psednos microps",
+  "group": "fish",
+  "sections": {
+    "overview": "A tiny marine snailfish recorded from the Crozet Basin in the western Indian Ocean.",
+    "identification": "Its very small eyes are a diagnostic feature and are reflected in the name microps.",
+    "habitat": "The species is known from a midwater trawl in deep oceanic waters.",
+    "diet": "The consulted accounts do not describe its prey.",
+    "behavior": "No species-specific behavior is reported in the consulted accounts.",
+    "reproduction": "The consulted accounts contain no reproductive observations.",
+    "ecology": "The known material is limited, so little can be said about its ecology. P. steini is another Crozet Basin congener; the published descriptions note its tan coloration, whereas the very small eyes distinguish this species.",
+    "conservation": "FishBase lists the species as not evaluated by the IUCN."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/59952",
+      "title": "FishBase — species summary"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/RefRpt?search_topic=Scientific_Author&search_value=Chernova%2C+2001",
+      "title": "ITIS — valid-species search"
+    },
+    {
+      "url": "https://fishbase.se/references/FBRefSummary.php?ID=42989",
+      "title": "FishBase — reference summary for Chernova 2001"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59964",
+      "title": "FishBase — Psednos steini species summary"
+    }
+  ]
+}

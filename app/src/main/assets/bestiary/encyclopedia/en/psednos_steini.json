@@ -1,0 +1,34 @@
+{
+  "id": "psednos_steini",
+  "name": "Stein’s dwarf snailfish",
+  "scientific": "Psednos steini",
+  "group": "fish",
+  "sections": {
+    "overview": "A marine snailfish known from the Crozet Basin near the southwest Indian Ridge.",
+    "identification": "The description notes tan coloration and a vertical gill slit about as long as the eye.",
+    "habitat": "It has been collected in deep oceanic waters, but the available record does not establish a full depth range.",
+    "diet": "The consulted species accounts do not describe its diet.",
+    "behavior": "Species-specific behavior is not documented in the consulted accounts.",
+    "reproduction": "The consulted accounts report no reproductive observations.",
+    "ecology": "The species is named for ichthyologist David L. Stein; its known ecological record is limited. Its Crozet Basin congener P. microps is named for its very small eyes, in contrast to the tan coloration noted for this species.",
+    "conservation": "FishBase lists the species as not evaluated by the IUCN."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/59964",
+      "title": "FishBase — species summary"
+    },
+    {
+      "url": "https://citeseerx.ist.psu.edu/document?doi=f1f17be1ca362b413454e3e00e8953317a4b1254&repid=rep1&type=pdf",
+      "title": "Redescription and review of Psednos — Zootaxa"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/RefRpt?search_topic=Scientific_Author&search_value=Chernova%2C+2001",
+      "title": "ITIS — valid-species search"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59952",
+      "title": "FishBase — Psednos microps species summary"
+    }
+  ]
+}

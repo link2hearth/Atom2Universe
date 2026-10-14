@@ -1,0 +1,146 @@
+{
+  "id": "pseudogobiopsis_tigrellus",
+  "scientific": "Pseudogobiopsis tigrellus",
+  "group": "fish",
+  "name": {
+    "en": "Tiger goby",
+    "fr": "Pseudogobiopsis tigrellus"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudogobiopsis tigrellus is a tiny freshwater goby known from the Mamberamo River system of western New Guinea.",
+      "fr": "Pseudogobiopsis tigrellus est un minuscule gobie d’eau douce connu du bassin du Mamberamo, en Nouvelle-Guinée occidentale."
+    },
+    "identification": {
+      "en": "It is a small, slender goby reaching about two point three centimetres standard length. The original description placed it in Gobius as Gobius tigrellus.",
+      "fr": "C’est un gobie petit et élancé, atteignant environ deux virgule trois centimètres de longueur standard. La description originale le plaçait dans Gobius sous le nom Gobius tigrellus."
+    },
+    "habitat": {
+      "en": "Records describe it in shallow marginal pools away from the main current, over sand or rock, in freshwater.",
+      "fr": "Les observations le décrivent dans des mares peu profondes en bordure, à l’écart du courant principal, sur fond sableux ou rocheux, en eau douce."
+    },
+    "diet": {
+      "en": "The sources consulted do not report prey or a species-specific diet.",
+      "fr": "Les sources consultées ne décrivent ni ses proies ni un régime propre à l’espèce."
+    },
+    "behavior": {
+      "en": "Field records found individuals alone or in loose groups of a few fish, usually resting on the bottom.",
+      "fr": "Les observations de terrain signalent des individus isolés ou en petits groupes lâches, généralement posés sur le fond."
+    },
+    "reproduction": {
+      "en": "The references reviewed provide no specific information on its reproduction.",
+      "fr": "Les références examinées ne donnent pas d’informations précises sur sa reproduction."
+    },
+    "ecology": {
+      "en": "Only a small number of old specimens and localities are reported, so its wider distribution and ecology remain poorly known.",
+      "fr": "Seuls quelques spécimens anciens et localités sont signalés; sa répartition plus large et son écologie restent donc mal connues."
+    },
+    "conservation": {
+      "en": "The latest FishBase-linked IUCN assessment classifies it as Data Deficient, reflecting the limited available information.",
+      "fr": "La dernière évaluation UICN relayée par FishBase le classe en Données insuffisantes, ce qui reflète le peu d’informations disponibles."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pseudogobiopsis tigrellus — FishBase species summary",
+        "fr": "Pseudogobiopsis tigrellus — résumé d’espèce FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Pseudogobiopsis-tigrellus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports range, habitat, size, grouping and DD status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 187,
+        "notes_words": 9,
+        "total": 196,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Four new gobies from New Guinea — Biodiversity Heritage Library",
+        "fr": "Quatre nouveaux gobies de Nouvelle-Guinée — Biodiversity Heritage Library"
+      },
+      "url": "https://field.biodiversitylibrary.org/bibliography/209847",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Nichols’s 1951 work records the original description of Gobius tigrellus from the 1939 New Guinea expedition."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.2",
+        "identification.fr.2",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 94,
+        "notes_words": 16,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudogobiopsis genus identification list — FishBase",
+        "fr": "Liste d’identification du genre Pseudogobiopsis — FishBase"
+      },
+      "url": "https://fishbase.se/identification/SpeciesList.php?genus=Pseudogobiopsis",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "The FishBase genus list distinguishes P. tigrellus from other recognized Pseudogobiopsis species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 12,
+        "total": 12,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The species is known from very limited historical material; ecological and life-history information is sparse."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. The original combination is distinguished from the accepted genus name."
+}

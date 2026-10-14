@@ -1,0 +1,163 @@
+{
+  "id": "pseudargyrotoza_conwagana",
+  "scientific": "Pseudargyrotoza conwagana",
+  "group": "invertebrates",
+  "name": {
+    "en": "Yellow-spot tortrix",
+    "fr": "Tordeuse du frêne"
+  },
+  "sections": {
+    "overview": {
+      "en": "Pseudargyrotoza conwagana is a small tortrix moth found across much of Europe and parts of Asia.",
+      "fr": "Pseudargyrotoza conwagana est une petite tordeuse présente dans une grande partie de l’Europe et dans certaines régions d’Asie."
+    },
+    "identification": {
+      "en": "A conspicuous yellow patch on the resting adult’s forewings helps identify it; its wingspan is about eleven to fifteen millimetres.",
+      "fr": "Une tache jaune bien visible sur les ailes antérieures de l’adulte au repos aide à la reconnaître; son envergure est d’environ onze à quinze millimètres."
+    },
+    "habitat": {
+      "en": "In Britain it is recorded in places where ash and privet grow.",
+      "fr": "En Grande-Bretagne, elle est signalée dans les lieux où poussent frênes et troènes."
+    },
+    "diet": {
+      "en": "The caterpillars feed chiefly on ash and can also use privet; European records include larvae in the fruits or seeds of ash, privet and barberry.",
+      "fr": "Les chenilles se nourrissent surtout de frêne et peuvent aussi utiliser le troène; des observations européennes signalent des larves dans les fruits ou graines du frêne, du troène et de l’épine-vinette."
+    },
+    "behavior": {
+      "en": "Adults are often seen flying by day near ash, and in Britain the main flight period runs from late spring into summer.",
+      "fr": "Les adultes sont souvent observés de jour près des frênes; en Grande-Bretagne, la principale période de vol va de la fin du printemps à l’été."
+    },
+    "reproduction": {
+      "en": "The sources reviewed describe host plants but not a complete life cycle.",
+      "fr": "Les sources examinées décrivent les plantes hôtes, mais pas le cycle de vie complet."
+    },
+    "ecology": {
+      "en": "Larvae use several host plants, especially ash.",
+      "fr": "Les larves utilisent plusieurs plantes hôtes, surtout le frêne."
+    },
+    "conservation": {
+      "en": "No global conservation assessment was found in the sources consulted.",
+      "fr": "Aucune évaluation mondiale de conservation n’a été trouvée dans les sources consultées."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Pseudargyrotoza conwagana — UKMoths",
+        "fr": "Pseudargyrotoza conwagana — UKMoths"
+      },
+      "url": "https://www.ukmoths.org.uk/species/pseudargyrotoza-conwagana/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior"
+      ],
+      "facts": [
+        "UK account: yellow wing patch, ash and privet hosts, and daytime flight in Britain."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 92,
+        "notes_words": 14,
+        "total": 106,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudargyrotoza conwagana — LepiWiki",
+        "fr": "Pseudargyrotoza conwagana — LepiWiki"
+      },
+      "url": "https://lepiforum.org/wiki/page/Pseudargyrotoza_conwagana",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "German-language records include larvae in fruits and seeds of ash, privet and barberry."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 13,
+        "total": 133,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Revision of Archipini in Northeast China — Journal of Forestry Research",
+        "fr": "Révision des Archipini du nord-est de la Chine — Journal of Forestry Research"
+      },
+      "url": "https://link.springer.com/article/10.1007/BF02856750",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The taxonomic revision records this species in Asia as well as Europe."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 34,
+        "notes_words": 12,
+        "total": 46,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Pseudargyrotoza conwagana — Derbyshire Moths",
+        "fr": "Pseudargyrotoza conwagana — Derbyshire Moths"
+      },
+      "url": "https://www.derbyshiremoths.org/49-091-bf1011-tortricidae-tortricinae-pseudargyrotoza-conwagana/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "The county account records it in places with ash and privet."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 25,
+        "notes_words": 11,
+        "total": 36,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Seasonal details here refer mainly to British records; they should not be generalized to the whole range."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Draft only. British phenology is identified as regional, and the host-plant records are cross-checked against a German reference."
+}

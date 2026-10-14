@@ -1,0 +1,166 @@
+{
+  "id": "psednos_mexicanus",
+  "scientific": "Psednos mexicanus",
+  "group": "fish",
+  "name": {
+    "en": "Mexican snailfish",
+    "fr": "Limace de mer mexicaine"
+  },
+  "sections": {
+    "overview": {
+      "en": "This marine Liparidae snailfish is known from Isla Guadalupe, Mexico.",
+      "fr": "Cette limace de mer marine de la famille des Liparidés est connue de l’île Guadalupe, au Mexique."
+    },
+    "identification": {
+      "en": "The description notes a pale body, with a dark tongue and palate.",
+      "fr": "La description signale un corps pâle, avec la langue et le palais sombres."
+    },
+    "habitat": {
+      "en": "It has been collected in midwater over deep seafloor near the island.",
+      "fr": "Elle a été recueillie en pleine eau au-dessus de fonds profonds près de l’île."
+    },
+    "diet": {
+      "en": "The consulted accounts do not report its diet.",
+      "fr": "Les sources consultées ne rapportent pas son régime alimentaire."
+    },
+    "behavior": {
+      "en": "Species-specific behavior is not documented in the consulted accounts.",
+      "fr": "Les sources consultées ne documentent pas de comportement propre à l’espèce."
+    },
+    "reproduction": {
+      "en": "The consulted sources give no reproductive observations.",
+      "fr": "Les sources consultées ne donnent pas d’observations sur sa reproduction."
+    },
+    "ecology": {
+      "en": "The original material was very limited, so its ecology remains poorly known. P. pallidus is another eastern-Pacific congener recorded off Baja California; its description emphasizes pale coloration, unlike the dark mouth parts noted here.",
+      "fr": "Le matériel d’origine était très limité ; son écologie reste donc mal connue. P. pallidus est un autre congénère du Pacifique oriental, signalé au large de la Basse-Californie ; sa description souligne sa coloration pâle, contrairement aux parties buccales sombres décrites ici."
+    },
+    "conservation": {
+      "en": "FishBase lists the species as not evaluated by the IUCN.",
+      "fr": "FishBase indique que l’espèce n’a pas été évaluée par l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "FishBase — species summary",
+        "fr": "FishBase — species summary"
+      },
+      "url": "https://www.fishbase.se/summary/59795",
+      "supports": [
+        "overview",
+        "identification",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase records Isla Guadalupe, the pale body and dark mouth parts, and states no diet, behavior or reproduction account; it lists no IUCN assessment."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 126,
+        "notes_words": 24,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "BOEM — deep-sea fish checklist",
+        "fr": "BOEM — deep-sea fish checklist"
+      },
+      "url": "https://espis.boem.gov/Final%20Reports/4996.pdf",
+      "supports": [
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The checklist says only two specimens were known and describes midwater collection near Isla Guadalupe above deep bottom."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 18,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "ITIS — valid-species search",
+        "fr": "ITIS — valid-species search"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/RefRpt?search_topic=Scientific_Author&search_value=Chernova+and+Stein%2C+2002",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS lists Psednos mexicanus Chernova and Stein, 2002 as valid."
+      ],
+      "prose_claims": [],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FishBase — Psednos pallidus species summary",
+        "fr": "FishBase — résumé de Psednos pallidus"
+      },
+      "url": "https://www.fishbase.se/summary/59830",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "FishBase records Psednos pallidus as a congener with the stated range or diagnostic feature."
+      ],
+      "prose_claims": [
+        "ecology.en.2",
+        "ecology.fr.2"
+      ],
+      "consulted": "2026-10-14",
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 51,
+        "notes_words": 14,
+        "total": 65,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Because records are sparse and catches were made in midwater, the collection stratum should not be taken as the species’ exact preferred depth. The French common name is descriptive."
+  ],
+  "review_note": "Kept this profile short because species-specific observations are limited. Claims about capture depth, ecology and life history are restricted to what the cited records support.",
+  "reviewed": true,
+  "source_audit_version": 1
+}

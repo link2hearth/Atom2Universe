@@ -1,0 +1,34 @@
+{
+  "id": "psednos_spirohira",
+  "name": "Coiled-gut snailfish",
+  "scientific": "Psednos spirohira",
+  "group": "fish",
+  "sections": {
+    "overview": "A marine Liparidae snailfish recorded in the northeast Atlantic west of northern Spain.",
+    "identification": "Its posterior intestine forms two close parallel coils, the feature reflected in its scientific name.",
+    "habitat": "It is reported from deep water, but the precise living depth is not established.",
+    "diet": "The consulted species accounts do not describe its diet.",
+    "behavior": "No species-specific behavior is given in the consulted accounts.",
+    "reproduction": "The consulted sources contain no reproductive observations.",
+    "ecology": "The known record is limited, and ecological information is scarce. P. islandicus is another northeast-Atlantic congener, recorded south of Iceland; its description emphasizes pale skin and a steeply angled mouth.",
+    "conservation": "FishBase reports the IUCN category Data Deficient, assessed in 2014."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/59796",
+      "title": "FishBase — species summary"
+    },
+    {
+      "url": "https://www.researchgate.net/publication/242550096_Family_Liparidae_Scopoli_1777_-_Snailfishes",
+      "title": "Family Liparidae — snailfishes, taxonomic account"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=644416",
+      "title": "ITIS — taxonomic report"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/59797",
+      "title": "FishBase — Psednos islandicus species summary"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "pseudolais_pleurotaenia",
+  "name": "Pseudolais pleurotaenia",
+  "scientific": "Pseudolais pleurotaenia",
+  "group": "fish",
+  "sections": {
+    "overview": "Pseudolais pleurotaenia est un poisson-chat pangasiidé d’eau douce originaire d’Asie du Sud-Est continentale.",
+    "identification": "Il a un corps élancé, une arête ventrale marquée et deux paires de barbillons courts; sa nageoire caudale est profondément fourchue.",
+    "habitat": "Il vit dans plusieurs grands bassins fluviaux continentaux, dont le Mékong, le Chao Phraya, le Meklong et le Tapi, et fréquente rapides et secteurs profonds plus lents.",
+    "diet": "Les adultes consomment des insectes terrestres et aquatiques, ainsi que de faibles quantités de matière végétale.",
+    "behavior": "Dans certains secteurs du Mékong, au sud du Laos, des déplacements vers l’amont ont été observés pendant la saison humide; le calendrier migratoire peut varier selon les tronçons.",
+    "reproduction": "Les sources examinées ne fournissent pas d’information propre à l’espèce sur la ponte.",
+    "ecology": "Ses déplacements saisonniers relient différents secteurs du fleuve et des affluents; les observations citées concernent certains sites du Mékong, pas toute son aire.",
+    "conservation": "FishBase rapporte une évaluation en Préoccupation mineure datant de deux mille onze; cette évaluation ancienne ne remplace pas un suivi actuel des populations."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=418&genusname=Pseudolais&speciesname=pleurotaenia",
+      "title": "Pseudolais pleurotaenia — guide de terrain FishBase"
+    },
+    {
+      "url": "https://www4.fisheries.go.th/local/file_document/20210220111426_1_file.pdf",
+      "title": "Département thaïlandais des pêches : Pseudolais pleurotaenia"
+    },
+    {
+      "url": "https://www.mrcmekong.org/?document_id=01BMXYOAHMTXNAAS4OYJBZW6IV5354FMZQ&download_document=1&name=Photos-of-Common-Fishes-of-the-Lower-Mekong-River-Basin.pdf",
+      "title": "Poissons communs du bas Mékong — Commission du Mékong"
+    }
+  ]
+}
