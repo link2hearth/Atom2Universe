@@ -1,0 +1,34 @@
+{
+  "id": "lethrinus_atlanticus",
+  "name": "Atlantic emperor",
+  "scientific": "Lethrinus atlanticus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus atlanticus, the Atlantic emperor, is a marine fish in the emperor family Lethrinidae.",
+    "identification": "It has an olive-brown or pinkish body, fine cheek reticulations and a pointed snout; maximum length is about 50 centimetres.",
+    "habitat": "It inhabits shallow coastal waters of the eastern central Atlantic, from Senegal to Gabon and nearby islands, generally to about 50 metres.",
+    "diet": "It feeds mainly on invertebrates living on the seabed.",
+    "behavior": "FishBase describes it as non-migratory; species-specific behavioural observations are limited.",
+    "reproduction": "FishBase reports maturity near 23 centimetres, but the sources consulted give little detail on spawning.",
+    "ecology": "It shares its genus with the Indian Ocean snubnose emperor, Lethrinus borbonicus, but occupies the eastern Atlantic; it has a pointed snout and conical teeth, unlike that species.",
+    "conservation": "The global IUCN assessment dated 2013 classified it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus-atlanticus.html",
+      "title": "Lethrinus atlanticus — FishBase"
+    },
+    {
+      "url": "https://www.fao.org/4/t0242e/T0242E07.pdf",
+      "title": "FAO Species Catalogue: L. atlanticus and L. borbonicus"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0169149",
+      "title": "Lethrinus atlanticus — ITIS Taxonomic Report"
+    },
+    {
+      "url": "https://www.fao.org/4/t0438f/t0438f17.pdf",
+      "title": "Guide to the Identification of Bony Fishes: Atlantic emperor — FAO"
+    }
+  ]
+}

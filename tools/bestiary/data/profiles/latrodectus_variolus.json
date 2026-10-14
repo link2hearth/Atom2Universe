@@ -1,0 +1,143 @@
+{
+  "id": "latrodectus_variolus",
+  "scientific": "Latrodectus variolus",
+  "group": "invertebrates",
+  "name": {
+    "en": "Northern Black Widow",
+    "fr": "Veuve noire du Nord"
+  },
+  "sections": {
+    "overview": {
+      "en": "Its range lies farther north than that of the Common Black Widow, Latrodectus mactans.",
+      "fr": "Son aire remonte plus au nord que celle de la veuve noire commune, Latrodectus mactans."
+    },
+    "identification": {
+      "en": "Females are glossy dark, with variable red spots on the upper abdomen.",
+      "fr": "Les femelles sont sombres et luisantes, avec des taches rouges dorsales variables."
+    },
+    "habitat": {
+      "en": "In Quebec, records are from a few southern localities.",
+      "fr": "Au Québec, elle n’est signalée que dans quelques localités du sud."
+    },
+    "diet": {
+      "en": "It is a web-building predator; species-specific prey details are limited.",
+      "fr": "C’est une prédatrice qui tisse une toile; les détails sur ses proies restent limités."
+    },
+    "behavior": {
+      "en": "A Quebec paper describes it as discreet and not inclined to bite.",
+      "fr": "Un article québécois la décrit comme discrète et peu encline à mordre."
+    },
+    "reproduction": {
+      "en": "A Quebec female with three egg sacs confirmed local reproduction.",
+      "fr": "Une femelle québécoise accompagnée de trois cocons a confirmé la reproduction locale."
+    },
+    "ecology": {
+      "en": "It is distinct from L. mactans and shares its genus with L. geometricus, L. hasselti and L. katipo.",
+      "fr": "Elle se distingue de L. mactans et partage son genre avec L. geometricus, L. hasselti et L. katipo."
+    },
+    "conservation": {
+      "en": "In 2021, four Quebec localities were known; this is not a global threat assessment.",
+      "fr": "En 2021, quatre localités québécoises étaient connues; ce chiffre n’est pas une évaluation mondiale du risque."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Confirmation de la présence de la Veuve noire du Nord, Latrodectus variolus, et répartition de l'espèce au Québec — NatureWeb",
+        "fr": "Confirmation de la présence de la Veuve noire du Nord, Latrodectus variolus, et répartition de l'espèce au Québec — NatureWeb"
+      },
+      "url": "https://www.natureweb.com/articles-de-recherche/confirmation-de-la-presence-de-la-veuve-noire-du-nord-latrodectus-variolus-walckenaer-1837-theridiidae-araneae-et-repartition-de-lespece-au-quebec",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "2021 Quebec paper describes local records, variable markings, reproduction and behavior."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 120,
+        "notes_words": 11,
+        "total": 131,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Northern black widow — Grand dictionnaire terminologique, Office québécois de la langue française",
+        "fr": "Veuve noire du Nord — Grand dictionnaire terminologique, Office québécois de la langue française"
+      },
+      "url": "https://vitrinelinguistique.oqlf.gouv.qc.ca/fiche-gdt/fiche/26580826/veuve-noire-du-nord",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "OQLF states that its distribution is farther north than L. mactans."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 29,
+        "notes_words": 11,
+        "total": 40,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spiders — Health Canada",
+        "fr": "Araignées — Santé Canada"
+      },
+      "url": "https://www.canada.ca/fr/sante-canada/services/conseils-pour-controle-parasites/araignees.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Health Canada describes widow spiders as web predators and provides genus-level context."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 60,
+        "notes_words": 12,
+        "total": 72,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Quebec occurrence count is specifically the count reported in 2021 and may have changed since publication.",
+    "The article notes that genital features alone may not distinguish this species from related North American Latrodectus; pattern and range are important context.",
+    "No global conservation assessment was identified in the sources consulted."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a bilingual Quebec arachnology paper, a 2025 OQLF terminology record and Health Canada. Kept the locality count date-bound and distinguished local records from global conservation status."
+}

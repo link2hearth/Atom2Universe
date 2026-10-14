@@ -1,0 +1,169 @@
+{
+  "id": "lethrinus_borbonicus",
+  "scientific": "Lethrinus borbonicus",
+  "group": "fish",
+  "name": {
+    "en": "Snubnose emperor",
+    "fr": "Empereur à nez retroussé"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lethrinus borbonicus, the snubnose emperor, is a reef-associated marine fish in the family Lethrinidae.",
+      "fr": "Lethrinus borbonicus, l’empereur à nez retroussé, est un poisson marin associé aux récifs et appartenant à la famille des Lethrinidae."
+    },
+    "identification": {
+      "en": "It has a blunt snout, molar-like side teeth and a dark grey or yellow-brown body; it reaches about 40 centimetres total length.",
+      "fr": "Il possède un museau obtus, des dents latérales molariformes et un corps gris foncé ou brun-jaune ; il atteint environ 40 centimètres de longueur totale."
+    },
+    "habitat": {
+      "en": "It ranges through the western Indian Ocean, from the Red Sea and Persian Gulf to Réunion, and shelters over sand near reefs by day.",
+      "fr": "Elle vit dans l’océan Indien occidental, de la mer Rouge et du golfe Persique jusqu’à La Réunion, et se tient le jour sur le sable près des récifs."
+    },
+    "diet": {
+      "en": "At night it forages over reef flats and slopes, eating echinoderms, molluscs and crustaceans.",
+      "fr": "La nuit, elle chasse sur les platiers et les pentes récifales, où elle mange des échinodermes, des mollusques et des crustacés."
+    },
+    "behavior": {
+      "en": "It may gather in small groups by day but is solitary at night.",
+      "fr": "Elle peut former de petits groupes le jour, mais reste solitaire la nuit."
+    },
+    "reproduction": {
+      "en": "FishBase lists maturity at about 21 centimetres, while detailed spawning information is limited.",
+      "fr": "FishBase indique une maturité vers 21 centimètres, tandis que les données détaillées sur la ponte sont limitées."
+    },
+    "ecology": {
+      "en": "It is a congener of the Atlantic emperor, Lethrinus atlanticus, but lives in the western Indian Ocean; its blunt snout and molar teeth contrast with that species’ pointed snout and conical teeth.",
+      "fr": "C’est une congénère de l’empereur atlantique, Lethrinus atlanticus, mais elle vit dans l’océan Indien occidental ; son museau obtus et ses dents molariformes contrastent avec le museau pointu et les dents coniques de cette espèce."
+    },
+    "conservation": {
+      "en": "The global IUCN assessment dated 2018 classified it as Least Concern.",
+      "fr": "L’évaluation mondiale de l’UICN datée de 2018 la classe en préoccupation mineure."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lethrinus borbonicus — FishBase",
+        "fr": "Lethrinus borbonicus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Lethrinus-borbonicus",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports range to Reunion, reef association, size, maturity, diel group behaviour and IUCN status."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 165,
+        "notes_words": 15,
+        "total": 180,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "FAO Species Catalogue: L. atlanticus and L. borbonicus",
+        "fr": "Catalogue FAO des espèces : Lethrinus atlanticus et L. borbonicus"
+      },
+      "url": "https://www.fao.org/4/t0242e/T0242E07.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "FAO describes L. borbonicus morphology and its nocturnal feeding on benthic invertebrates."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 12,
+        "total": 161,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus borbonicus — ITIS Taxonomic Report",
+        "fr": "Lethrinus borbonicus — fiche taxonomique ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0550900",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "ITIS lists Lethrinus borbonicus Valenciennes, 1830 as a valid species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 10,
+        "total": 10,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Guide to the Identification of Reef Fishes of Mayotte: Lethrinus borbonicus — OFB",
+        "fr": "Guide d’identification des poissons récifaux de Mayotte : Lethrinus borbonicus — OFB"
+      },
+      "url": "https://parc-marin-mayotte.fr/media/1069/download?attachment=",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "The OFB Mayotte fish guide gives Empereur à nez retroussé as the French common name for Lethrinus borbonicus."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 18,
+        "total": 18,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Conservation status is dated 2018. Older literature discusses confusion with L. bungus; current sources accept L. borbonicus.",
+    "Lethrinus atlanticus is a congeneric profile in this batch and should receive the reciprocal range and morphology comparison."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared FishBase with the FAO species catalogue and its cited IUCN assessment. The cross-reference with L. atlanticus distinguishes range and diagnostic traits without claiming a sister-species relationship."
+}

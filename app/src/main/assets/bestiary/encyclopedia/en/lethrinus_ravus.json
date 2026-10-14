@@ -1,0 +1,34 @@
+{
+  "id": "lethrinus_ravus",
+  "name": "Drab emperor",
+  "scientific": "Lethrinus ravus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus ravus Carpenter & Randall, 2003 is a marine emperor fish in the family Lethrinidae.",
+    "identification": "A relatively small emperor, it reaches about 25 centimetres standard length and has a pale grey or tan body with scattered dark blotches.",
+    "habitat": "It occurs from the western Pacific to the eastern Indian Ocean, on or near reefs at roughly 5–35 metres depth.",
+    "diet": "The consulted species accounts do not provide a well-supported, detailed diet description.",
+    "behavior": "It is observed alone or in small groups near reefs.",
+    "reproduction": "The sources consulted provide little species-specific information on reproduction.",
+    "ecology": "The original description identifies L. semicinctus as its closest look-alike and probable sister species; the companion profiles of L. obsoletus and L. reticulatus add two other Lethrinus for comparison.",
+    "conservation": "The global IUCN assessment dated 2015 classified it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?c_code=036&genusname=Lethrinus&speciesname=ravus",
+      "title": "Lethrinus ravus — FishBase field guide"
+    },
+    {
+      "url": "https://www.mapress.com/zootaxa/2003f/z00240f.pdf",
+      "title": "Lethrinus ravus, a new species of emperor fish — Zootaxa"
+    },
+    {
+      "url": "https://www.cmar.csiro.au/caab/taxon_report.cfm?caab_code=37351031",
+      "title": "Drab emperor — Codes for Australian Aquatic Biota"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers14-04/010061070.pdf",
+      "title": "Checklist of the fishes of New Caledonia — IRD"
+    }
+  ]
+}

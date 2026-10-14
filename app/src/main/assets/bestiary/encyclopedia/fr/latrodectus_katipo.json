@@ -1,0 +1,30 @@
+{
+  "id": "latrodectus_katipo",
+  "name": "Katipō",
+  "scientific": "Latrodectus katipo",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Le katipō est une petite araignée du genre des veuves, indigène de Nouvelle-Zélande et présente sur les deux îles principales.",
+    "identification": "C’est une araignée compacte d’environ huit millimètres; les femelles sont généralement noires avec une marque rouge sur l’abdomen.",
+    "habitat": "Elle vit près du rivage, souvent sous le bois flotté ou parmi les herbes et autres végétaux des plages.",
+    "diet": "Sa petite toile collante capture des coléoptères et d’autres insectes rampants.",
+    "behavior": "La femelle demeure dans un refuge à la base de la végétation côtière et y garde ses cocons d’œufs.",
+    "reproduction": "Les femelles produisent leurs cocons d’œufs vers la fin de l’année.",
+    "ecology": "Elle est étroitement apparentée à la veuve à dos rouge d’Australie, Latrodectus hasselti.",
+    "conservation": "Te Papa signale un déclin régulier de la population et indique que l’espèce est protégée par la loi néo-zélandaise sur la faune."
+  },
+  "sources": [
+    {
+      "url": "https://www.landcareresearch.co.nz/tools-and-resources/identification/what-is-this-bug/katipo-spider",
+      "title": "Katipō spider — Manaaki Whenua, Landcare Research"
+    },
+    {
+      "url": "https://collections.tepapa.govt.nz/topic/9431",
+      "title": "Katipō — musée de Nouvelle-Zélande Te Papa Tongarewa"
+    },
+    {
+      "url": "https://mro.massey.ac.nz/server/api/core/bitstreams/316aa1fe-3eb6-4bc7-945e-3602f50b806a/content",
+      "title": "The ecology and conservation of Latrodectus katipo, New Zealand's endangered widow spider — université Massey"
+    }
+  ]
+}

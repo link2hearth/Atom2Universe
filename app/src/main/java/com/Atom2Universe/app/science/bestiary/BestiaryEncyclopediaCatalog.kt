@@ -3948,12 +3948,52 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "latimeria_chalumnae"
         ),
         AnimalSpecies(
+            id = "latrodectus_geometricus", scientific = "Latrodectus geometricus",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "latrodectus_geometricus"
+        ),
+        AnimalSpecies(
+            id = "latrodectus_hasselti", scientific = "Latrodectus hasselti",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "latrodectus_hasselti"
+        ),
+        AnimalSpecies(
+            id = "latrodectus_katipo", scientific = "Latrodectus katipo",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "latrodectus_katipo"
+        ),
+        AnimalSpecies(
+            id = "latrodectus_variolus", scientific = "Latrodectus variolus",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "latrodectus_variolus"
+        ),
+        AnimalSpecies(
             id = "least_weasel", scientific = "Mustela nivalis",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "least_weasel"
+        ),
+        AnimalSpecies(
+            id = "leiothrix_argentauris", scientific = "Leiothrix argentauris",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "leiothrix_argentauris"
         ),
         AnimalSpecies(
             id = "leopard", scientific = "Panthera pardus",
@@ -3972,12 +4012,132 @@ internal object BestiaryEncyclopediaCatalog {
             encyclopediaId = "leopardus_braccatus"
         ),
         AnimalSpecies(
+            id = "lepilemur_milanoii", scientific = "Lepilemur milanoii",
+            name = R.string.be_encyclopedia_placeholder, group = "mammals",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lepilemur_milanoii"
+        ),
+        AnimalSpecies(
+            id = "lepisma_saccharina", scientific = "Lepisma saccharina",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lepisma_saccharina"
+        ),
+        AnimalSpecies(
             id = "leptinotarsa_decemlineata", scientific = "Leptinotarsa decemlineata",
             name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
             description = null, habitat = null, diet = null, behavior = null, identification = null,
             sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "leptinotarsa_decemlineata"
+        ),
+        AnimalSpecies(
+            id = "leptothele_bencha", scientific = "Leptothele bencha",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "leptothele_bencha"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_atlanticus", scientific = "Lethrinus atlanticus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_atlanticus"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_borbonicus", scientific = "Lethrinus borbonicus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_borbonicus"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_crocineus", scientific = "Lethrinus crocineus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_crocineus"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_enigmaticus", scientific = "Lethrinus enigmaticus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_enigmaticus"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_erythracanthus", scientific = "Lethrinus erythracanthus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_erythracanthus"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_laticaudis", scientific = "Lethrinus laticaudis",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_laticaudis"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_microdon", scientific = "Lethrinus microdon",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_microdon"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_obsoletus", scientific = "Lethrinus obsoletus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_obsoletus"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_ravus", scientific = "Lethrinus ravus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_ravus"
+        ),
+        AnimalSpecies(
+            id = "lethrinus_reticulatus", scientific = "Lethrinus reticulatus",
+            name = R.string.be_encyclopedia_placeholder, group = "fish",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "lethrinus_reticulatus"
+        ),
+        AnimalSpecies(
+            id = "leucocarbo_carunculatus", scientific = "Leucocarbo carunculatus",
+            name = R.string.be_encyclopedia_placeholder, group = "birds",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "leucocarbo_carunculatus"
+        ),
+        AnimalSpecies(
+            id = "libellula_axilena", scientific = "Libellula axilena",
+            name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
+            description = null, habitat = null, diet = null, behavior = null, identification = null,
+            sourceUrl = null, sourceTitle = null, latin = R.string.be_encyclopedia_placeholder,
+            reproduction = null, ecology = null, conservation = null, references = emptyList(),
+            encyclopediaId = "libellula_axilena"
         ),
         AnimalSpecies(
             id = "limulus_polyphemus", scientific = "Limulus polyphemus",
@@ -4043,6 +4203,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "lumbricus_terrestris"
         ),
+    )
+
+    private fun batch13(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "magpie", scientific = "Pica pica",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -4203,9 +4366,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "northern_gannet"
         ),
-    )
-
-    private fun batch13(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "northern_lapwing", scientific = "Vanellus vanellus",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -4366,6 +4526,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "pied_flycatcher"
         ),
+    )
+
+    private fun batch14(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "pieris_brassicae", scientific = "Pieris brassicae",
             name = R.string.be_encyclopedia_placeholder, group = "invertebrates",
@@ -4526,9 +4689,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "red_knot"
         ),
-    )
-
-    private fun batch14(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "red_squirrel", scientific = "Sciurus vulgaris",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -4689,6 +4849,9 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "siamese_fighting_fish"
         ),
+    )
+
+    private fun batch15(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "snowshoe_hare", scientific = "Lepus americanus",
             name = R.string.be_encyclopedia_placeholder, group = "mammals",
@@ -4849,9 +5012,6 @@ internal object BestiaryEncyclopediaCatalog {
             reproduction = null, ecology = null, conservation = null, references = emptyList(),
             encyclopediaId = "turdus_philomelos"
         ),
-    )
-
-    private fun batch15(): List<AnimalSpecies> = listOf(
         AnimalSpecies(
             id = "uria_aalge", scientific = "Uria aalge",
             name = R.string.be_encyclopedia_placeholder, group = "birds",
@@ -5497,10 +5657,30 @@ internal object BestiaryEncyclopediaCatalog {
         "lasioderma_serricorne" to "Cigarette Beetle",
         "lasius_niger" to "Black Garden Ant",
         "latimeria_chalumnae" to "West Indian Ocean Coelacanth",
+        "latrodectus_geometricus" to "Brown Widow",
+        "latrodectus_hasselti" to "Redback Spider",
+        "latrodectus_katipo" to "Katipō",
+        "latrodectus_variolus" to "Northern Black Widow",
         "least_weasel" to "Least weasel",
+        "leiothrix_argentauris" to "Silver-eared Mesia",
         "leopard" to "Leopard",
         "leopardus_braccatus" to "Pantanal Cat",
+        "lepilemur_milanoii" to "Daraina sportive lemur",
+        "lepisma_saccharina" to "Silverfish",
         "leptinotarsa_decemlineata" to "Colorado Potato Beetle",
+        "leptothele_bencha" to "Bencha funnel-web spider",
+        "lethrinus_atlanticus" to "Atlantic emperor",
+        "lethrinus_borbonicus" to "Snubnose emperor",
+        "lethrinus_crocineus" to "Yellowtail emperor",
+        "lethrinus_enigmaticus" to "Blackeye emperor",
+        "lethrinus_erythracanthus" to "Orange-spotted emperor",
+        "lethrinus_laticaudis" to "Grass emperor",
+        "lethrinus_microdon" to "Smalltooth emperor",
+        "lethrinus_obsoletus" to "Orange-striped emperor",
+        "lethrinus_ravus" to "Drab emperor",
+        "lethrinus_reticulatus" to "Red snout emperor",
+        "leucocarbo_carunculatus" to "New Zealand king shag",
+        "libellula_axilena" to "Bar-winged skimmer",
         "limulus_polyphemus" to "Atlantic Horseshoe Crab",
         "lingcod" to "Lingcod",
         "lion" to "Lion",
@@ -5549,6 +5729,9 @@ internal object BestiaryEncyclopediaCatalog {
         "petromyzon_marinus" to "Sea Lamprey",
         "phalanger_mimicus" to "Southern Common Cuscus",
         "pied_flycatcher" to "Pied Flycatcher",
+    )
+
+    private fun namesEn7(): Map<String, String> = mapOf(
         "pieris_brassicae" to "Large White",
         "pine_marten" to "European pine marten",
         "platypus" to "Platypus",
@@ -5569,9 +5752,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_junglefowl" to "Red junglefowl",
         "red_kangaroo" to "Red kangaroo",
         "red_knot" to "Red Knot",
-    )
-
-    private fun namesEn7(): Map<String, String> = mapOf(
         "red_squirrel" to "Red squirrel",
         "red_tailed_green_ratsnake" to "Red-tailed green ratsnake",
         "reed_bunting" to "Reed Bunting",
@@ -6140,10 +6320,30 @@ internal object BestiaryEncyclopediaCatalog {
         "lasioderma_serricorne" to "Vrillette du tabac",
         "lasius_niger" to "Fourmi noire des jardins",
         "latimeria_chalumnae" to "Cœlacanthe africain",
+        "latrodectus_geometricus" to "Veuve brune",
+        "latrodectus_hasselti" to "Veuve à dos rouge",
+        "latrodectus_katipo" to "Katipō",
+        "latrodectus_variolus" to "Veuve noire du Nord",
         "least_weasel" to "Belette",
+        "leiothrix_argentauris" to "Léiothrix à joues argent",
         "leopard" to "Léopard",
         "leopardus_braccatus" to "Leopardus braccatus",
+        "lepilemur_milanoii" to "Lépilémur de Daraina",
+        "lepisma_saccharina" to "Poisson d’argent",
         "leptinotarsa_decemlineata" to "Doryphore de la pomme de terre",
+        "leptothele_bencha" to "Mygale à toile-entonnoir de Bencha",
+        "lethrinus_atlanticus" to "Empereur atlantique",
+        "lethrinus_borbonicus" to "Empereur à nez retroussé",
+        "lethrinus_crocineus" to "Empereur à queue jaune",
+        "lethrinus_enigmaticus" to "Empereur aux yeux noirs",
+        "lethrinus_erythracanthus" to "Empereur capitaine",
+        "lethrinus_laticaudis" to "Empereur des herbiers",
+        "lethrinus_microdon" to "Empereur tidents",
+        "lethrinus_obsoletus" to "Empereur à bandes orange",
+        "lethrinus_ravus" to "Empereur terne",
+        "lethrinus_reticulatus" to "Empereur à museau rouge",
+        "leucocarbo_carunculatus" to "Cormoran royal de Nouvelle-Zélande",
+        "libellula_axilena" to "Libellule aux ailes barrées",
         "limulus_polyphemus" to "Limule atlantique",
         "lingcod" to "Morue-lingue",
         "lion" to "Lion",
@@ -6192,6 +6392,9 @@ internal object BestiaryEncyclopediaCatalog {
         "petromyzon_marinus" to "Lamproie marine",
         "phalanger_mimicus" to "Couscous commun du Sud",
         "pied_flycatcher" to "Gobemouche noir",
+    )
+
+    private fun namesFr7(): Map<String, String> = mapOf(
         "pieris_brassicae" to "Piéride du chou",
         "pine_marten" to "Martre des pins",
         "platypus" to "Ornithorynque",
@@ -6212,9 +6415,6 @@ internal object BestiaryEncyclopediaCatalog {
         "red_junglefowl" to "Coq bankiva",
         "red_kangaroo" to "Kangourou roux",
         "red_knot" to "Bécasseau maubèche",
-    )
-
-    private fun namesFr7(): Map<String, String> = mapOf(
         "red_squirrel" to "Écureuil roux",
         "red_tailed_green_ratsnake" to "Serpent ratier vert à queue rouge",
         "reed_bunting" to "Bruant des roseaux",

@@ -1,0 +1,30 @@
+{
+  "id": "leiothrix_argentauris",
+  "name": "Léiothrix à joues argent",
+  "scientific": "Leiothrix argentauris",
+  "group": "birds",
+  "sections": {
+    "overview": "Le léiothrix à joues argent est un petit passereau des contreforts de l’Himalaya et des montagnes d’Asie du Sud-Est.",
+    "identification": "Son capuchon noir et ses joues argentées le distinguent du léiothrix jaune, Leiothrix lutea, son proche parent.",
+    "habitat": "Il fréquente les forêts sempervirentes, les broussailles et les boisements secondaires des collines et montagnes.",
+    "diet": "Il mange des insectes, des baies et des graines, qu’il cherche dans le feuillage.",
+    "behavior": "Il cherche souvent sa nourriture en groupes bruyants et actifs dans le sous-bois.",
+    "reproduction": "Il construit un nid en coupe dans un arbuste bas et pond généralement environ quatre œufs.",
+    "ecology": "Le léiothrix jaune est son proche parent le plus connu; les marques de la tête distinguent les deux.",
+    "conservation": "Oiseaux.net indique que l’espèce est en préoccupation mineure sur la Liste rouge de l’UICN."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/leiothrix.a.joues.argent.html",
+      "title": "Léiothrix à joues argent — Oiseaux.net"
+    },
+    {
+      "url": "https://avifauna.hkbws.org.hk/species/0370/044100",
+      "title": "Silver-eared Mesia — avifaune de la Hong Kong Bird Watching Society"
+    },
+    {
+      "url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/956",
+      "title": "Silver-eared Mesia, Leiothrix argentauris — centre de données de l’Institut de zoologie de Kunming"
+    }
+  ]
+}

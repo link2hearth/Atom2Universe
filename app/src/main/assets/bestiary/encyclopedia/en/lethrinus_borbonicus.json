@@ -1,0 +1,34 @@
+{
+  "id": "lethrinus_borbonicus",
+  "name": "Snubnose emperor",
+  "scientific": "Lethrinus borbonicus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus borbonicus, the snubnose emperor, is a reef-associated marine fish in the family Lethrinidae.",
+    "identification": "It has a blunt snout, molar-like side teeth and a dark grey or yellow-brown body; it reaches about 40 centimetres total length.",
+    "habitat": "It ranges through the western Indian Ocean, from the Red Sea and Persian Gulf to Réunion, and shelters over sand near reefs by day.",
+    "diet": "At night it forages over reef flats and slopes, eating echinoderms, molluscs and crustaceans.",
+    "behavior": "It may gather in small groups by day but is solitary at night.",
+    "reproduction": "FishBase lists maturity at about 21 centimetres, while detailed spawning information is limited.",
+    "ecology": "It is a congener of the Atlantic emperor, Lethrinus atlanticus, but lives in the western Indian Ocean; its blunt snout and molar teeth contrast with that species’ pointed snout and conical teeth.",
+    "conservation": "The global IUCN assessment dated 2018 classified it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus-borbonicus",
+      "title": "Lethrinus borbonicus — FishBase"
+    },
+    {
+      "url": "https://www.fao.org/4/t0242e/T0242E07.pdf",
+      "title": "FAO Species Catalogue: L. atlanticus and L. borbonicus"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0550900",
+      "title": "Lethrinus borbonicus — ITIS Taxonomic Report"
+    },
+    {
+      "url": "https://parc-marin-mayotte.fr/media/1069/download?attachment=",
+      "title": "Guide to the Identification of Reef Fishes of Mayotte: Lethrinus borbonicus — OFB"
+    }
+  ]
+}

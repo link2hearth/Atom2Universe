@@ -1,0 +1,30 @@
+{
+  "id": "lethrinus_laticaudis",
+  "name": "Empereur des herbiers",
+  "scientific": "Lethrinus laticaudis",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus laticaudis Alleyne et Macleay, 1877 est un empereur du Pacifique occidental, signalé du sud de l’Indonésie et du nord de l’Australie jusqu’à la Papouasie-Nouvelle-Guinée et aux îles Salomon.",
+    "identification": "Son corps beige, brun ou jaune porte des taches sombres irrégulières ; des points et de courtes lignes bleus marquent souvent les joues et la tête. Il atteint environ 56 cm de longueur totale.",
+    "habitat": "Les jeunes fréquentent les herbiers marins et les mangroves, tandis que les adultes se rencontrent surtout au-dessus des récifs coralliens.",
+    "diet": "Son alimentation se compose surtout de crustacés et de poissons.",
+    "behavior": "Il est souvent observé en bancs, selon le compte rendu de la FAO.",
+    "reproduction": "Les comptes rendus consultés ne donnent pas de calendrier de ponte propre à L. laticaudis.",
+    "ecology": "Comme Lethrinus microdon, il s’agit d’un empereur de l’Indo-Pacifique, mais leurs habitats signalés diffèrent : les jeunes empereurs des herbiers fréquentent les herbiers et les mangroves, tandis que l’empereur tidents est signalé sur le sable près des récifs.",
+    "conservation": "FishBase indique une évaluation UICN de 2015 en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/y0770e/y0770e26.pdf",
+      "title": "Lethrinus laticaudis — catalogue FAO des empereurs"
+    },
+    {
+      "url": "https://www.fishbase.se/Summary/SpeciesSummary.php?id=1857&lang=french",
+      "title": "Lethrinus laticaudis — FishBase (interface française)"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/2461",
+      "title": "Lethrinus laticaudis — Fishes of Australia"
+    }
+  ]
+}

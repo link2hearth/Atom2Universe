@@ -1,0 +1,30 @@
+{
+  "id": "latrodectus_geometricus",
+  "name": "Brown Widow",
+  "scientific": "Latrodectus geometricus",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "The Brown Widow is a warm-region member of the widow genus Latrodectus.",
+    "identification": "Its colour varies from tan to dark brown; the underside has an orange hourglass.",
+    "habitat": "It often webs in sheltered spots around buildings and garden furniture.",
+    "diet": "Its irregular web catches small arthropods.",
+    "behavior": "When disturbed, it may retreat or drop from its web.",
+    "reproduction": "The egg sac is covered in distinctive pointed silk projections.",
+    "ecology": "It shares its genus with the Redback (L. hasselti), Katipō (L. katipo) and Northern Black Widow (L. variolus).",
+    "conservation": "The sources describe its biology, not a global conservation assessment."
+  },
+  "sources": [
+    {
+      "url": "https://ipm.ucanr.edu/home-and-landscape/widow-spiders-and-their-relatives/",
+      "title": "Widow Spiders and Their Relatives — UC Statewide IPM Program"
+    },
+    {
+      "url": "https://sfyl.ifas.ufl.edu/sarasota/natural-resources/chemicals-in-the-environment/integrated-pest-management/brown-widow-spider/",
+      "title": "Brown Widow Spider — UF/IFAS Extension, Sarasota County"
+    },
+    {
+      "url": "https://cisr.ucr.edu/invasive-species/how-identify-brown-widow-spiders",
+      "title": "How to identify Brown Widow Spiders — Center for Invasive Species Research, UC Riverside"
+    }
+  ]
+}

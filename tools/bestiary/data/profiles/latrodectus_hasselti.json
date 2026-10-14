@@ -1,0 +1,142 @@
+{
+  "id": "latrodectus_hasselti",
+  "scientific": "Latrodectus hasselti",
+  "group": "invertebrates",
+  "name": {
+    "en": "Redback Spider",
+    "fr": "Veuve à dos rouge"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Redback is a widow spider common in Australian towns and disturbed places.",
+      "fr": "La veuve à dos rouge est une veuve commune dans les villes et milieux perturbés d’Australie."
+    },
+    "identification": {
+      "en": "Females have a red dorsal stripe; males are smaller and paler.",
+      "fr": "Les femelles portent une bande rouge dorsale; les mâles sont plus petits et plus pâles."
+    },
+    "habitat": {
+      "en": "It webs in dry shelters such as sheds, shrubs and rock crevices.",
+      "fr": "Elle tisse dans des abris secs comme les cabanons, les arbustes et les fissures rocheuses."
+    },
+    "diet": {
+      "en": "Its usual prey are insects.",
+      "fr": "Ses proies habituelles sont des insectes."
+    },
+    "behavior": {
+      "en": "It stays in its web; bites usually follow accidental pressure against skin.",
+      "fr": "Elle reste dans sa toile; les morsures surviennent généralement après une pression accidentelle contre la peau."
+    },
+    "reproduction": {
+      "en": "Females can store sperm and use it for several egg batches.",
+      "fr": "Les femelles peuvent conserver le sperme pour plusieurs pontes."
+    },
+    "ecology": {
+      "en": "It is closely related to the New Zealand Katipō, Latrodectus katipo; they remain distinct species.",
+      "fr": "Elle est étroitement apparentée au katipō de Nouvelle-Zélande, Latrodectus katipo; les deux restent des espèces distinctes."
+    },
+    "conservation": {
+      "en": "The sources describe its range and biology, not a global conservation assessment.",
+      "fr": "Les sources décrivent sa répartition et sa biologie, sans évaluation mondiale de son état de conservation."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Redback Spider — Australian Museum",
+        "fr": "Redback Spider — Australian Museum"
+      },
+      "url": "https://australian.museum/learn/animals/spiders/redback-spider/",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "Australian Museum summarizes urban distribution, habitat, prey and close relationship to katipō."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 12,
+        "total": 110,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Spiders in New Zealand — HealthEd, New Zealand Ministry of Health",
+        "fr": "Spiders in New Zealand — HealthEd, ministère néo-zélandais de la Santé"
+      },
+      "url": "https://healthed.govt.nz/products/spiders-in-new-zealand",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "Australian museum account documents sex differences, bites and sperm storage."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 102,
+        "notes_words": 10,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Redback Spider — Museums Victoria Collections",
+        "fr": "Redback Spider — collections des Museums Victoria"
+      },
+      "url": "https://collections.museumsvictoria.com.au/species/8810",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification"
+      ],
+      "facts": [
+        "Museum Victoria provides an independent collection record."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 7,
+        "total": 7,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The Australian Museum account describes closest relationship to katipō based on then-recent molecular work; this is a relative statement, not a claim that the species are interchangeable.",
+    "The natural-history sources consulted do not establish a global conservation category."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked Australian museum natural history with New Zealand public-health information and a second Australian museum collection. The relationship to katipō is reciprocal in the katipō draft; no bite-risk comparison is inferred."
+}

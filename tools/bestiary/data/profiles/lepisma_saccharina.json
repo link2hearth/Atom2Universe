@@ -1,0 +1,193 @@
+{
+  "id": "lepisma_saccharina",
+  "scientific": "Lepisma saccharina",
+  "group": "invertebrates",
+  "name": {
+    "en": "Silverfish",
+    "fr": "Poisson d’argent"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lepisma saccharina is a wingless insect in the zygentome family Lepismatidae, familiar from human buildings as the silverfish.",
+      "fr": "Lepisma saccharina est un insecte aptère de la famille des Lepismatidae (ordre des Zygentoma), connu dans les bâtiments sous le nom de poisson d’argent."
+    },
+    "identification": {
+      "en": "Its flattened, tapering body bears silvery scales, long antennae and three slender tail filaments; adults reach about 15 millimetres.",
+      "fr": "Son corps aplati et effilé porte des écailles argentées, de longues antennes et trois filaments caudaux ; l’adulte atteint environ 15 millimètres."
+    },
+    "habitat": {
+      "en": "It shelters in dark, cool, humid places indoors and also occurs in natural leaf litter.",
+      "fr": "Elle se réfugie dans des endroits sombres, frais et humides des bâtiments, mais vit aussi dans la litière naturelle."
+    },
+    "diet": {
+      "en": "It consumes starch-rich material, mould and other detritus, and may damage paper, book bindings and some fabrics.",
+      "fr": "Elle consomme des matières riches en amidon, des moisissures et d’autres détritus ; elle peut abîmer le papier, les reliures et certains tissus."
+    },
+    "behavior": {
+      "en": "It is mostly active at night and runs rapidly when exposed.",
+      "fr": "Elle est surtout active la nuit et s’enfuit rapidement lorsqu’elle est dérangée."
+    },
+    "reproduction": {
+      "en": "It develops without larval metamorphosis: juveniles resemble adults and continue moulting as they grow.",
+      "fr": "Son développement ne comporte pas de métamorphose larvaire : les jeunes ressemblent aux adultes et muent encore en grandissant."
+    },
+    "ecology": {
+      "en": "The firebrat Thermobia domestica is a close household relative, but favours warmer sites than the cool, damp microhabitats typical of silverfish; it has no profile here.",
+      "fr": "La thermobie Thermobia domestica est une proche parente domestique, mais préfère des sites plus chauds que les microhabitats frais et humides typiques du poisson d’argent ; elle n’a pas de fiche ici."
+    },
+    "conservation": {
+      "en": "A French regional atlas reports the species throughout France; those local occurrence records are not a global population assessment.",
+      "fr": "Un atlas régional français signale l’espèce dans toute la France ; ces données de présence locale ne constituent pas une évaluation mondiale de sa population."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lepisma saccharina — ITIS Report",
+        "fr": "Lepisma saccharina — fiche ITIS"
+      },
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=99222",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "ecology"
+      ],
+      "facts": [
+        "ITIS accepts Lepisma saccharina and lists silverfish and lépisme argenté as names; ICZN Opinion 2427 later ruled the genus neuter, so some current sources use L. saccharinum."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 42,
+        "notes_words": 27,
+        "total": 69,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Info-Insectes: Zygentoma — INRAE Ephytia",
+        "fr": "Info-Insectes : Zygentoma — INRAE Ephytia"
+      },
+      "url": "https://ephytia.inrae.fr/fr/C/7514/Info-Insectes-ZYGENTOMA",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior"
+      ],
+      "facts": [
+        "INRAE describes Zygentoma as wingless, nocturnal flattened insects with long antennae and three terminal filaments."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 23,
+        "notes_words": 15,
+        "total": 38,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Silverfish and Firebrats — University of Maryland Extension",
+        "fr": "Poissons d’argent et thermobies — University of Maryland Extension"
+      },
+      "url": "https://extension.umd.edu/resource/silverfish-and-firebrats",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "diet",
+        "behavior",
+        "ecology"
+      ],
+      "facts": [
+        "The extension contrasts cool damp silverfish sites with warmer sites preferred by firebrats and describes feeding on starch, paper and fabrics."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 21,
+        "total": 153,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Poisson d’argent — Atlas de la faune de Bourgogne, SHNA",
+        "fr": "Poisson d’argent — Atlas de la faune de Bourgogne, SHNA"
+      },
+      "url": "https://atlas.shna.fr/espece/79227",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "The French atlas reports size up to 15 mm, repeated moults, eggs laid in crevices and occurrence across France."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 118,
+        "notes_words": 19,
+        "total": 137,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Opinion 2427: Lepisma gender ruling — ICZN",
+        "fr": "Avis 2427 : genre grammatical de Lepisma — ICZN"
+      },
+      "url": "https://www.iczn.org/cases/resolved-opinion-issued/case/3704",
+      "consulted": "2026-10-14",
+      "supports": [
+        "ecology"
+      ],
+      "facts": [
+        "The ICZN reversed Direction 71 in 2018 and ruled Lepisma neuter, implying the corrected epithet saccharinum; many catalogues retain saccharina."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The illustrated-species manifest uses Lepisma saccharina. ICZN Opinion 2427 changed the grammatical gender in 2018, so some sources use L. saccharinum.",
+    "The related firebrat Thermobia domestica is not profiled in the current catalogue, so no reciprocal edit is available."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked French INRAE and SHNA accounts with University of Maryland Extension and nomenclatural records. Kept the manifest spelling and recorded the ICZN change."
+}

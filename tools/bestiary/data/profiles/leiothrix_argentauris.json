@@ -1,0 +1,142 @@
+{
+  "id": "leiothrix_argentauris",
+  "scientific": "Leiothrix argentauris",
+  "group": "birds",
+  "name": {
+    "en": "Silver-eared Mesia",
+    "fr": "Léiothrix à joues argent"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Silver-eared Mesia is a small babbler of the Himalayan foothills and Southeast Asian hills.",
+      "fr": "Le léiothrix à joues argent est un petit passereau des contreforts de l’Himalaya et des montagnes d’Asie du Sud-Est."
+    },
+    "identification": {
+      "en": "Its black cap and silver ear patches distinguish it from the related Red-billed Leiothrix, Leiothrix lutea.",
+      "fr": "Son capuchon noir et ses joues argentées le distinguent du léiothrix jaune, Leiothrix lutea, son proche parent."
+    },
+    "habitat": {
+      "en": "It uses evergreen forest, scrub and secondary growth in hills and mountains.",
+      "fr": "Il fréquente les forêts sempervirentes, les broussailles et les boisements secondaires des collines et montagnes."
+    },
+    "diet": {
+      "en": "It eats insects, berries and seeds, foraging among foliage.",
+      "fr": "Il mange des insectes, des baies et des graines, qu’il cherche dans le feuillage."
+    },
+    "behavior": {
+      "en": "It often forages actively in noisy groups in the forest understorey.",
+      "fr": "Il cherche souvent sa nourriture en groupes bruyants et actifs dans le sous-bois."
+    },
+    "reproduction": {
+      "en": "It builds a cup-shaped nest in a low shrub, usually laying about four eggs.",
+      "fr": "Il construit un nid en coupe dans un arbuste bas et pond généralement environ quatre œufs."
+    },
+    "ecology": {
+      "en": "The Red-billed Leiothrix is its closest familiar relative; their head markings distinguish the two.",
+      "fr": "Le léiothrix jaune est son proche parent le plus connu; les marques de la tête distinguent les deux."
+    },
+    "conservation": {
+      "en": "Oiseaux.net reports it as Least Concern on the IUCN Red List.",
+      "fr": "Oiseaux.net indique que l’espèce est en préoccupation mineure sur la Liste rouge de l’UICN."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Léiothrix à joues argent — Oiseaux.net",
+        "fr": "Léiothrix à joues argent — Oiseaux.net"
+      },
+      "url": "https://www.oiseaux.net/oiseaux/leiothrix.a.joues.argent.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "French ornithology account covers plumage, flocking, nesting, close Leiothrix kinship and Red List status."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 144,
+        "notes_words": 14,
+        "total": 158,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Silver-eared Mesia — Hong Kong Bird Watching Society Avifauna",
+        "fr": "Silver-eared Mesia — avifaune de la Hong Kong Bird Watching Society"
+      },
+      "url": "https://avifauna.hkbws.org.hk/species/0370/044100",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "diet"
+      ],
+      "facts": [
+        "Chinese Academy database gives regional species description, range and mixed diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "diet.en.1",
+        "diet.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 57,
+        "notes_words": 11,
+        "total": 68,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Silver-eared Mesia, Leiothrix argentauris — Kunming Institute of Zoology Data Center",
+        "fr": "Silver-eared Mesia, Leiothrix argentauris — centre de données de l’Institut de zoologie de Kunming"
+      },
+      "url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/956",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat"
+      ],
+      "facts": [
+        "Hong Kong Bird Watching Society independently describes its forest-understorey habitat."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 27,
+        "notes_words": 10,
+        "total": 37,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The cited Chinese Academy account discusses the subspecies rubrogularis and local observations; its regional specifics were not generalized to the whole species.",
+    "The shared-genus comparison is reciprocal with the Red-billed Leiothrix profile, which follows this species alphabetically and is not yet drafted in this batch."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a detailed French bird account with a Chinese Academy of Sciences species database and the Hong Kong Bird Watching Society. Kept the profile compact and avoided extrapolating local subspecies details to the species as a whole; the Red-billed Leiothrix should reciprocate the comparison when its alphabetically later draft is prepared."
+}

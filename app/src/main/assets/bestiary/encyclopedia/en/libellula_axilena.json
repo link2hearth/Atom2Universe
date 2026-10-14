@@ -1,0 +1,34 @@
+{
+  "id": "libellula_axilena",
+  "name": "Bar-winged skimmer",
+  "scientific": "Libellula axilena",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Libellula axilena Westwood, 1837 is a North American dragonfly in the skimmer family Libellulidae.",
+    "identification": "A dark bar between the nodus and stigma on each wing gives it its common name; males and females differ in appearance.",
+    "habitat": "It frequents ponds, swamp pools and other still waters near forests, including temporary pools in cleared utility corridors.",
+    "diet": "Adults forage near forest edges, but the consulted species account does not identify particular prey.",
+    "behavior": "Males perch on exposed twigs beside water and patrol back and forth over pools; adults often forage along forest edges.",
+    "reproduction": "Species-specific details of courtship, egg laying and larval development are sparse in the sources consulted.",
+    "ecology": "The slaty skimmer (L. incesta) is a similar relative, but dark wing bars help separate L. axilena; the Great Blue Skimmer (L. vibrans) is another close look-alike noted in regional identification guides.",
+    "conservation": "The North Carolina species account lists a global conservation rank of G5, while noting that abundance varies across the state."
+  },
+  "sources": [
+    {
+      "url": "https://auth1.dpr.ncparks.gov/odes/a/accounts.php?Submit=Find&id=100&no=1",
+      "title": "Bar-winged Skimmer — NC Odonate Website"
+    },
+    {
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "title": "A Checklist of North American Odonata, 2024 — OdonataCentral"
+    },
+    {
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfslatyskimmer.html",
+      "title": "Slaty Skimmer — Illinois Department of Natural Resources"
+    },
+    {
+      "url": "https://file.iflora.cn/fastdfs/group1/M00/64/AA/wKhnoF2XSsaAAkCXAP70rrWNimw203.pdf",
+      "title": "A Field Guide to the Dragonflies and Damselflies of Massachusetts"
+    }
+  ]
+}

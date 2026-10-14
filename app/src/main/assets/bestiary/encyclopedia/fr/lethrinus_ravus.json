@@ -1,0 +1,34 @@
+{
+  "id": "lethrinus_ravus",
+  "name": "Empereur terne",
+  "scientific": "Lethrinus ravus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus ravus Carpenter et Randall, 2003 est un poisson marin de la famille des Lethrinidae.",
+    "identification": "Empereur de taille relativement modeste, il atteint environ 25 centimètres de longueur standard et présente un corps gris pâle ou beige parsemé de taches sombres.",
+    "habitat": "Il vit du Pacifique occidental à l’est de l’océan Indien, sur les récifs ou à proximité, vers 5–35 mètres de profondeur.",
+    "diet": "Les fiches consultées ne fournissent pas de description détaillée et bien étayée de son régime alimentaire.",
+    "behavior": "On l’observe seul ou en petits groupes près des récifs.",
+    "reproduction": "Les sources consultées donnent peu d’informations propres à l’espèce sur sa reproduction.",
+    "ecology": "La description originale présente L. semicinctus comme son sosie le plus proche et probablement son espèce sœur ; les fiches associées de L. obsoletus et L. reticulatus offrent deux autres Lethrinus à comparer.",
+    "conservation": "L’évaluation mondiale de l’UICN datée de 2015 le classe en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/FieldGuide/FieldGuideSummary.php?c_code=036&genusname=Lethrinus&speciesname=ravus",
+      "title": "Lethrinus ravus — guide de terrain FishBase"
+    },
+    {
+      "url": "https://www.mapress.com/zootaxa/2003f/z00240f.pdf",
+      "title": "Lethrinus ravus, nouvelle espèce d’empereur — Zootaxa"
+    },
+    {
+      "url": "https://www.cmar.csiro.au/caab/taxon_report.cfm?caab_code=37351031",
+      "title": "Empereur terne — Codes for Australian Aquatic Biota"
+    },
+    {
+      "url": "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers14-04/010061070.pdf",
+      "title": "Liste des poissons de Nouvelle-Calédonie — IRD"
+    }
+  ]
+}

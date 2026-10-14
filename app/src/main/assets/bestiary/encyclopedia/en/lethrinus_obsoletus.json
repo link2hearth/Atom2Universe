@@ -1,0 +1,38 @@
+{
+  "id": "lethrinus_obsoletus",
+  "name": "Orange-striped emperor",
+  "scientific": "Lethrinus obsoletus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus obsoletus (Forsskål, 1775) is a marine emperor in the family Lethrinidae.",
+    "identification": "It is olive to brown with an orange-yellow stripe along the lower flank and can reach about 60 centimetres total length.",
+    "habitat": "It ranges from the Red Sea and East Africa across the Indo-Pacific to the Ryukyu Islands and French Polynesia, using shallow reefs, lagoons, seagrass beds and nearby sand or rubble, usually to about 30 metres.",
+    "diet": "It feeds on bottom-dwelling molluscs, crustaceans and echinoderms.",
+    "behavior": "Adults may be solitary or occur in groups; juveniles are also recorded on weedy reefs.",
+    "reproduction": "Species-specific spawning details are limited in the sources consulted.",
+    "ecology": "It shares the genus Lethrinus with the drab emperor (L. ravus) and red snout emperor (L. reticulatus); their companion profiles make their different identifying patterns easy to compare.",
+    "conservation": "The global IUCN assessment dated 2015 classified it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus_obsoletus.html",
+      "title": "Lethrinus obsoletus — FishBase"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Lethrinus-obsoletus-Empereur-a-bandes-orange-3797",
+      "title": "Empereur à bandes orange — DORIS"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/fishes/yellow-striped-emperor-lethrinus-obsoletus-forsskal-1775/",
+      "title": "Lethrinus obsoletus — Australian Museum"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=49938",
+      "title": "Eschmeyer's Catalog of Fishes: Lethrinus obsoletus"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T16720267A16722420.en",
+      "title": "Orange-striped Emperor — IUCN Red List"
+    }
+  ]
+}

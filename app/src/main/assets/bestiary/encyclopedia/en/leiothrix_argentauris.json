@@ -1,0 +1,30 @@
+{
+  "id": "leiothrix_argentauris",
+  "name": "Silver-eared Mesia",
+  "scientific": "Leiothrix argentauris",
+  "group": "birds",
+  "sections": {
+    "overview": "The Silver-eared Mesia is a small babbler of the Himalayan foothills and Southeast Asian hills.",
+    "identification": "Its black cap and silver ear patches distinguish it from the related Red-billed Leiothrix, Leiothrix lutea.",
+    "habitat": "It uses evergreen forest, scrub and secondary growth in hills and mountains.",
+    "diet": "It eats insects, berries and seeds, foraging among foliage.",
+    "behavior": "It often forages actively in noisy groups in the forest understorey.",
+    "reproduction": "It builds a cup-shaped nest in a low shrub, usually laying about four eggs.",
+    "ecology": "The Red-billed Leiothrix is its closest familiar relative; their head markings distinguish the two.",
+    "conservation": "Oiseaux.net reports it as Least Concern on the IUCN Red List."
+  },
+  "sources": [
+    {
+      "url": "https://www.oiseaux.net/oiseaux/leiothrix.a.joues.argent.html",
+      "title": "Léiothrix à joues argent — Oiseaux.net"
+    },
+    {
+      "url": "https://avifauna.hkbws.org.hk/species/0370/044100",
+      "title": "Silver-eared Mesia — Hong Kong Bird Watching Society Avifauna"
+    },
+    {
+      "url": "https://datacenter.kiz.ac.cn/DataBase/BirdDetail/956",
+      "title": "Silver-eared Mesia, Leiothrix argentauris — Kunming Institute of Zoology Data Center"
+    }
+  ]
+}

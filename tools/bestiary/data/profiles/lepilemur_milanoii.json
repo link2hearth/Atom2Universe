@@ -1,0 +1,142 @@
+{
+  "id": "lepilemur_milanoii",
+  "scientific": "Lepilemur milanoii",
+  "group": "mammals",
+  "name": {
+    "en": "Daraina sportive lemur",
+    "fr": "Lépilémur de Daraina"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lepilemur milanoii, the Daraina sportive lemur, is a primate endemic to northern Madagascar.",
+      "fr": "Lepilemur milanoii, le lépilémur de Daraina, est un primate endémique du nord de Madagascar."
+    },
+    "identification": {
+      "en": "It was described as a distinct species in 2006 using molecular and morphological evidence.",
+      "fr": "L’espèce a été décrite comme distincte en 2006 à partir d’éléments moléculaires et morphologiques."
+    },
+    "habitat": {
+      "en": "It occurs in dry deciduous, gallery and semi-evergreen forests of the Loky–Manambato region and nearby northern forest blocks.",
+      "fr": "Elle vit dans des forêts décidues sèches, des forêts-galeries et des forêts semi-sempervirentes de la région Loky–Manambato et de blocs forestiers voisins du nord."
+    },
+    "diet": {
+      "en": "The species-specific diet was not detailed in the field and assessment sources consulted.",
+      "fr": "Les sources de terrain et d’évaluation consultées ne détaillent pas le régime alimentaire propre à cette espèce."
+    },
+    "behavior": {
+      "en": "A northern Madagascar field study treats it among endangered nocturnal lemurs surveyed in forest fragments.",
+      "fr": "Une étude de terrain dans le nord de Madagascar la compte parmi les lémuriens nocturnes menacés recensés dans des fragments forestiers."
+    },
+    "reproduction": {
+      "en": "The sources consulted do not provide species-specific breeding details.",
+      "fr": "Les sources consultées ne donnent pas de détails propres à sa reproduction."
+    },
+    "ecology": {
+      "en": "It has been reported alongside another sportive lemur Lepilemur ankaranensis in the Andrafiamena area; that species has no profile in this batch.",
+      "fr": "Elle a été signalée aux côtés d’un autre lépilémur, Lepilemur ankaranensis, dans la région d’Andrafiamena ; cette espèce n’a pas de fiche dans ce lot."
+    },
+    "conservation": {
+      "en": "The IUCN assessment published in 2020 classified it as Endangered, citing a restricted, fragmented forest range and continuing habitat decline.",
+      "fr": "L’évaluation de l’UICN publiée en 2020 la classe En danger, en raison de son aire forestière restreinte et fragmentée et du déclin continu de son habitat."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lepilemur milanoii — IUCN Red List",
+        "fr": "Lepilemur milanoii — Liste rouge de l’UICN"
+      },
+      "url": "https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T136609A115583605.en",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "The 2020 assessment recognizes the species as Endangered and details its northern Madagascar range and forest habitat."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 115,
+        "notes_words": 17,
+        "total": 132,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Molecular and morphological analyses of sportive lemurs — BHL",
+        "fr": "Analyses moléculaires et morphologiques des lépilémurs — Biodiversity Heritage Library"
+      },
+      "url": "https://www.biodiversitylibrary.org/bibliography/142646",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Louis et al. described L. milanoii in 2006 using molecular and morphological evidence; the paper reports overlap with L. ankaranensis in Andrafiamena."
+      ],
+      "prose_claims": [
+        "identification.en.1",
+        "identification.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 75,
+        "notes_words": 22,
+        "total": 97,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Density estimates of two endangered nocturnal lemurs — American Journal of Primatology",
+        "fr": "Estimations de densité de deux espèces de lémuriens nocturnes menacées du nord de Madagascar — American Journal of Primatology"
+      },
+      "url": "https://doi.org/10.1002/ajp.21997",
+      "consulted": "2026-10-14",
+      "supports": [
+        "behavior",
+        "habitat",
+        "diet",
+        "reproduction"
+      ],
+      "facts": [
+        "A northern Madagascar field study estimated densities for endangered nocturnal lemurs in forest fragments; it focuses on methods and density, not species-specific diet or breeding."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 87,
+        "notes_words": 25,
+        "total": 112,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "Diet and reproduction are not detailed in the species-specific accounts reviewed; these sections deliberately state that limit rather than extrapolate from the genus."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Compared the 2020 IUCN assessment with the 2006 description and a northern Madagascar field study. L. ankaranensis is a useful future reciprocal cross-reference if that species receives a profile."
+}

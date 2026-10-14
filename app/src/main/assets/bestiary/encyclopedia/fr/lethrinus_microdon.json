@@ -1,0 +1,38 @@
+{
+  "id": "lethrinus_microdon",
+  "name": "Empereur tidents",
+  "scientific": "Lethrinus microdon",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus microdon Valenciennes, 1830 est un empereur largement répandu dans l’Indo-Pacifique occidental, signalé de la mer Rouge et de l’Afrique orientale jusqu’au Japon et à la Papouasie-Nouvelle-Guinée.",
+    "identification": "Son corps est relativement allongé, gris bleuté ou brun, souvent marqué de taches sombres irrégulières et parfois de trois stries sombres partant de l’œil vers l’avant ; il peut atteindre environ 80 cm.",
+    "habitat": "Il fréquente les fonds sableux près des récifs coralliens et a été signalé jusqu’à environ 80 m de profondeur.",
+    "diet": "Il mange des poissons, des crustacés, des céphalopodes et des vers polychètes.",
+    "behavior": "Il nage en petits bancs, parfois avec Lethrinus olivaceus, une autre espèce du même genre.",
+    "reproduction": "À Palau, la ponte a été signalée pendant une grande partie de l’année, au cours des cinq premiers jours du mois lunaire, près des bordures récifales.",
+    "ecology": "Par rapport à Lethrinus laticaudis, qui fréquente les herbiers et les mangroves au stade juvénile, L. microdon est signalé sur le sable près des récifs ; les deux espèces sont pêchées pour l’alimentation.",
+    "conservation": "FishBase indique une évaluation UICN de 2015 en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/y0770e/y0770e26.pdf",
+      "title": "Lethrinus microdon — catalogue FAO des empereurs"
+    },
+    {
+      "url": "https://fishbase.se/summary/1845",
+      "title": "Lethrinus microdon — FishBase"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/2462",
+      "title": "Empereur à petites dents — Fishes of Australia"
+    },
+    {
+      "url": "https://www.fishbase.se/Summary/SpeciesSummary.php?id=1857&lang=french",
+      "title": "Lethrinus laticaudis — FishBase (interface française)"
+    },
+    {
+      "url": "https://www.fao.org/4/ad468e/AD468eFW.pdf",
+      "title": "Fiches d’identification FAO, océan Indien occidental — Lethrinus microdon"
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "id": "libellula_axilena",
+  "scientific": "Libellula axilena",
+  "group": "invertebrates",
+  "name": {
+    "en": "Bar-winged skimmer",
+    "fr": "Libellule aux ailes barrées"
+  },
+  "sections": {
+    "overview": {
+      "en": "Libellula axilena Westwood, 1837 is a North American dragonfly in the skimmer family Libellulidae.",
+      "fr": "Libellula axilena Westwood, 1837 est une libellule nord-américaine de la famille des Libellulidae."
+    },
+    "identification": {
+      "en": "A dark bar between the nodus and stigma on each wing gives it its common name; males and females differ in appearance.",
+      "fr": "Une barre sombre entre le nodus et le ptérostigma de chaque aile explique son nom anglais ; le mâle et la femelle diffèrent d’aspect."
+    },
+    "habitat": {
+      "en": "It frequents ponds, swamp pools and other still waters near forests, including temporary pools in cleared utility corridors.",
+      "fr": "Elle fréquente les étangs, mares marécageuses et autres eaux stagnantes proches des forêts, notamment les mares temporaires des corridors déboisés pour les lignes électriques."
+    },
+    "diet": {
+      "en": "Adults forage near forest edges, but the consulted species account does not identify particular prey.",
+      "fr": "Les adultes chassent près des lisières forestières, mais la fiche consultée ne précise pas leurs proies."
+    },
+    "behavior": {
+      "en": "Males perch on exposed twigs beside water and patrol back and forth over pools; adults often forage along forest edges.",
+      "fr": "Les mâles se posent sur des brindilles dégagées près de l’eau et patrouillent au-dessus des mares ; les adultes chassent souvent le long des lisières forestières."
+    },
+    "reproduction": {
+      "en": "Species-specific details of courtship, egg laying and larval development are sparse in the sources consulted.",
+      "fr": "Les sources consultées donnent peu de détails propres à l’espèce sur la parade, la ponte et le développement larvaire."
+    },
+    "ecology": {
+      "en": "The slaty skimmer (L. incesta) is a similar relative, but dark wing bars help separate L. axilena; the Great Blue Skimmer (L. vibrans) is another close look-alike noted in regional identification guides.",
+      "fr": "La libellule ardoisée (L. incesta) est une proche ressemblante, mais les barres sombres des ailes aident à distinguer L. axilena ; les guides régionaux signalent aussi la libellule bleue géante (L. vibrans) comme sosie."
+    },
+    "conservation": {
+      "en": "The North Carolina species account lists a global conservation rank of G5, while noting that abundance varies across the state.",
+      "fr": "La fiche de Caroline du Nord indique un rang mondial de conservation G5, tout en précisant que l’abondance varie selon les secteurs de l’État."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Bar-winged Skimmer — NC Odonate Website",
+        "fr": "Libellula axilena — site des odonates de Caroline du Nord"
+      },
+      "url": "https://auth1.dpr.ncparks.gov/odes/a/accounts.php?Submit=Find&id=100&no=1",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "NC records its habitat, patrols and foraging, regional abundance and global rank G5."
+      ],
+      "prose_claims": [
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 163,
+        "notes_words": 13,
+        "total": 176,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Checklist of North American Odonata, 2024 — OdonataCentral",
+        "fr": "Liste des odonates d’Amérique du Nord, 2024 — OdonataCentral"
+      },
+      "url": "https://www.odonatacentral.org/public/media/uploads/files/NA_Odonata_Checklist_2024.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat"
+      ],
+      "facts": [
+        "The checklist recognizes the species and common name and describes the diagnostic dark wing bar."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 73,
+        "notes_words": 15,
+        "total": 88,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Slaty Skimmer — Illinois Department of Natural Resources",
+        "fr": "Libellula incesta — ministère des Ressources naturelles de l’Illinois"
+      },
+      "url": "https://dnr.illinois.gov/education/wildaboutpages/wildaboutinvertebrates/wildaboutdragonflies/family-libellulidae/wadfslatyskimmer.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "ecology"
+      ],
+      "facts": [
+        "Illinois DNR says the related Slaty Skimmer (Libellula incesta) resembles L. axilena but the latter is distinguished by dark wing lines."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 21,
+        "total": 21,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "A Field Guide to the Dragonflies and Damselflies of Massachusetts",
+        "fr": "Guide de terrain des libellules et demoiselles du Massachusetts"
+      },
+      "url": "https://file.iflora.cn/fastdfs/group1/M00/64/AA/wKhnoF2XSsaAAkCXAP70rrWNimw203.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "identification",
+        "habitat",
+        "ecology"
+      ],
+      "facts": [
+        "The regional guide compares L. axilena with Slaty and Great Blue skimmers and gives pond habitat; its account has little breeding detail."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 100,
+        "notes_words": 22,
+        "total": 122,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The consulted regional references provide little detail on this species’ prey and reproductive biology; the global rank quoted is the rank shown by the North Carolina account."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Checked the North American Odonata checklist and regional state accounts. All located species-level natural-history sources are in English; kept diet and reproduction deliberately sparse where they did not provide details."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "lethrinus_laticaudis",
+  "name": "Grass emperor",
+  "scientific": "Lethrinus laticaudis",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus laticaudis Alleyne & Macleay, 1877 is a western Pacific emperor, recorded from southern Indonesia and northern Australia to Papua New Guinea and the Solomon Islands.",
+    "identification": "It has a tan, brown or yellow body with irregular dark blotches; blue dots and short blue lines often mark the cheeks and head. It reaches about 56 cm total length.",
+    "habitat": "Juveniles use seagrass beds and mangrove swamps, while adults are found mainly over coral reefs.",
+    "diet": "Its diet consists mainly of crustaceans and fishes.",
+    "behavior": "It is often observed in schools, according to the FAO account.",
+    "reproduction": "The species accounts consulted do not provide a spawning calendar specific to L. laticaudis.",
+    "ecology": "Like Lethrinus microdon, it is an Indo-Pacific emperor, but their reported habitats differ: juvenile grass emperors use seagrass and mangroves, whereas smalltooth emperors are reported over sand near reefs.",
+    "conservation": "FishBase lists a 2015 IUCN assessment of Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/y0770e/y0770e26.pdf",
+      "title": "Lethrinus laticaudis — FAO emperor-fish catalogue"
+    },
+    {
+      "url": "https://www.fishbase.se/Summary/SpeciesSummary.php?id=1857&lang=french",
+      "title": "Lethrinus laticaudis — FishBase (French interface)"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/2461",
+      "title": "Lethrinus laticaudis — Fishes of Australia"
+    }
+  ]
+}

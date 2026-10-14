@@ -1,0 +1,42 @@
+{
+  "id": "lethrinus_reticulatus",
+  "name": "Red snout emperor",
+  "scientific": "Lethrinus reticulatus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus reticulatus Valenciennes, 1830 is a marine emperor fish in the family Lethrinidae.",
+    "identification": "It has an olive-grey to tan body with irregular dark blotches and reddish markings on the snout and around the pectoral-fin base; it reaches about 40 centimetres total length.",
+    "habitat": "This tropical Indo-West Pacific fish is associated with reefs and nearby soft bottoms, generally at about 5–30 metres depth.",
+    "diet": "Its diet is poorly documented; accounts suggest it takes benthic invertebrates and small fish.",
+    "behavior": "It is reported alone or in groups, but detailed species-specific behavioural observations are scarce.",
+    "reproduction": "The consulted sources provide little information on its reproductive biology.",
+    "ecology": "It shares the genus Lethrinus with the orange-striped emperor (L. obsoletus) and drab emperor (L. ravus), described in the companion profiles for comparison.",
+    "conservation": "The global IUCN assessment dated 2015 classified it as Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus_reticulatus.html",
+      "title": "Lethrinus reticulatus — FishBase"
+    },
+    {
+      "url": "https://fishdb.sinica.edu.tw/taxon/382077-fishdb",
+      "title": "Lethrinus reticulatus — Taiwan Fish Database"
+    },
+    {
+      "url": "https://spccfpstore1.blob.core.windows.net/digitallibrary-docs/files/be/be52b796fc1713716190259812cdc133.pdf",
+      "title": "Lethrinus reticulatus — SPC Deep-bottom Identification Manual"
+    },
+    {
+      "url": "https://www.fao.org/4/y0770e/y0770e27.pdf",
+      "title": "Lethrinus reticulatus — FAO Western Central Pacific identification guide"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=169135",
+      "title": "Lethrinus reticulatus — ITIS"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Lethrinus&tbl=species",
+      "title": "Eschmeyer’s Catalog of Fishes: Lethrinus species"
+    }
+  ]
+}

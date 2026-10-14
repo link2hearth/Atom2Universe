@@ -1,0 +1,38 @@
+{
+  "id": "lethrinus_obsoletus",
+  "name": "Empereur à bandes orange",
+  "scientific": "Lethrinus obsoletus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus obsoletus (Forsskål, 1775) est un empereur marin de la famille des Lethrinidae.",
+    "identification": "Il est olive à brun, avec une bande jaune orangé sur le bas du flanc, et peut atteindre environ 60 centimètres de longueur totale.",
+    "habitat": "Il vit de la mer Rouge et de l’Afrique de l’Est à travers l’Indo-Pacifique jusqu’aux îles Ryūkyū et à la Polynésie française, dans les récifs peu profonds, lagons, herbiers et fonds sableux ou graveleux voisins, généralement jusqu’à environ 30 mètres.",
+    "diet": "Il mange des mollusques, des crustacés et des échinodermes vivant sur le fond.",
+    "behavior": "Les adultes peuvent vivre seuls ou en groupes ; des juvéniles sont aussi signalés sur des récifs couverts d’algues.",
+    "reproduction": "Les sources consultées donnent peu de détails propres à l’espèce sur sa ponte.",
+    "ecology": "Il partage le genre Lethrinus avec l’empereur terne (L. ravus) et l’empereur à museau rouge (L. reticulatus) ; leurs fiches associées permettent de comparer leurs marques distinctives.",
+    "conservation": "L’évaluation mondiale de l’UICN datée de 2015 le classe en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus_obsoletus.html",
+      "title": "Lethrinus obsoletus — FishBase"
+    },
+    {
+      "url": "https://doris.ffessm.fr/Especes/Lethrinus-obsoletus-Empereur-a-bandes-orange-3797",
+      "title": "Empereur à bandes orange — DORIS"
+    },
+    {
+      "url": "https://australian.museum/learn/animals/fishes/yellow-striped-emperor-lethrinus-obsoletus-forsskal-1775/",
+      "title": "Lethrinus obsoletus — Australian Museum"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=49938",
+      "title": "Catalogue des poissons d’Eschmeyer : Lethrinus obsoletus"
+    },
+    {
+      "url": "https://doi.org/10.2305/IUCN.UK.2016-3.RLTS.T16720267A16722420.en",
+      "title": "Empereur à bandes orange — Liste rouge de l’UICN"
+    }
+  ]
+}

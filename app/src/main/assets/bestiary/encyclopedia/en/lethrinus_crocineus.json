@@ -1,0 +1,34 @@
+{
+  "id": "lethrinus_crocineus",
+  "name": "Yellowtail emperor",
+  "scientific": "Lethrinus crocineus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus crocineus Smith, 1959 is an emperor fish of the western Indian Ocean, recorded from East Africa and nearby islands east to Sri Lanka.",
+    "identification": "It is tan to grey, often with dark scale bases and reddish or yellowish fin margins; the South African species account reports a maximum length of about 55 cm.",
+    "habitat": "It occurs on reefs and nearby sandy grounds, including deeper reefs, and is reported to about 150 m in the western Indian Ocean.",
+    "diet": "Published accounts describe a fish-and-crustacean diet; one regional linefish review says the details remain little known.",
+    "behavior": "FishBase describes it as solitary in coastal trawling grounds and coral-reef areas.",
+    "reproduction": "The species accounts consulted do not establish a spawning season for this emperor.",
+    "ecology": "Older accounts sometimes treated it as Lethrinus mahsena, but the FAO catalogue distinguishes the two by consistent scale-count differences.",
+    "conservation": "FishBase lists a 2018 IUCN assessment of Least Concern; this is a dated assessment, not a measure of present local abundance."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus-crocineus.html",
+      "title": "Lethrinus crocineus — FishBase"
+    },
+    {
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_3_text.pdf",
+      "title": "Lethrinus crocineus — Coastal Fishes of the Western Indian Ocean, vol. 3"
+    },
+    {
+      "url": "https://www.fao.org/4/ad468e/AD468eFV.pdf",
+      "title": "Lethrinus crocineus — FAO species identification sheet"
+    },
+    {
+      "url": "https://www.oritag.org.za/Content/UserContent/documents/Southern_African_Marine_Linefish_Species_Profiles.pdf",
+      "title": "Southern African Marine Linefish Species Profiles — Lethrinus crocineus"
+    }
+  ]
+}

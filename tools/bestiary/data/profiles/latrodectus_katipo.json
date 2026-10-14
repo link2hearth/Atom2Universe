@@ -1,0 +1,145 @@
+{
+  "id": "latrodectus_katipo",
+  "scientific": "Latrodectus katipo",
+  "group": "invertebrates",
+  "name": {
+    "en": "Katipō",
+    "fr": "Katipō"
+  },
+  "sections": {
+    "overview": {
+      "en": "The Katipō is a small widow spider native to New Zealand, where it occurs on both main islands.",
+      "fr": "Le katipō est une petite araignée du genre des veuves, indigène de Nouvelle-Zélande et présente sur les deux îles principales."
+    },
+    "identification": {
+      "en": "It is a compact spider about eight millimetres long, and females are typically black with a red marking on the abdomen.",
+      "fr": "C’est une araignée compacte d’environ huit millimètres; les femelles sont généralement noires avec une marque rouge sur l’abdomen."
+    },
+    "habitat": {
+      "en": "It lives by the shore, often beneath driftwood or among coastal grasses and other beach vegetation.",
+      "fr": "Elle vit près du rivage, souvent sous le bois flotté ou parmi les herbes et autres végétaux des plages."
+    },
+    "diet": {
+      "en": "Its small sticky web catches beetles and other crawling insects.",
+      "fr": "Sa petite toile collante capture des coléoptères et d’autres insectes rampants."
+    },
+    "behavior": {
+      "en": "The female stays in a retreat at the base of beach vegetation and guards the egg sacs there.",
+      "fr": "La femelle demeure dans un refuge à la base de la végétation côtière et y garde ses cocons d’œufs."
+    },
+    "reproduction": {
+      "en": "Females produce egg sacs toward the end of the year.",
+      "fr": "Les femelles produisent leurs cocons d’œufs vers la fin de l’année."
+    },
+    "ecology": {
+      "en": "It is closely related to Australia’s Redback Spider, Latrodectus hasselti.",
+      "fr": "Elle est étroitement apparentée à la veuve à dos rouge d’Australie, Latrodectus hasselti."
+    },
+    "conservation": {
+      "en": "Te Papa reports a steady population decline and says the species is protected under New Zealand's Wildlife Act.",
+      "fr": "Te Papa signale un déclin régulier de la population et indique que l’espèce est protégée par la loi néo-zélandaise sur la faune."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Katipō spider — Manaaki Whenua, Landcare Research",
+        "fr": "Katipō spider — Manaaki Whenua, Landcare Research"
+      },
+      "url": "https://www.landcareresearch.co.nz/tools-and-resources/identification/what-is-this-bug/katipo-spider",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "New Zealand research institute describes the species as native to both main islands, about 8 mm long, coastal, insect-eating, and closely related to the Australian redback."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1",
+        "diet.en.1",
+        "diet.fr.1",
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 156,
+        "notes_words": 26,
+        "total": 182,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Katipō — Museum of New Zealand Te Papa Tongarewa",
+        "fr": "Katipō — musée de Nouvelle-Zélande Te Papa Tongarewa"
+      },
+      "url": "https://collections.tepapa.govt.nz/topic/9431",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "behavior",
+        "reproduction",
+        "ecology",
+        "conservation"
+      ],
+      "facts": [
+        "National museum account describes beach-grass and driftwood retreats, prey, guarded egg sacs, population decline, legal protection, and the relationship to the Australian redback."
+      ],
+      "prose_claims": [
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 98,
+        "notes_words": 23,
+        "total": 121,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "The ecology and conservation of Latrodectus katipo, New Zealand's endangered widow spider — Massey University",
+        "fr": "The ecology and conservation of Latrodectus katipo, New Zealand's endangered widow spider — université Massey"
+      },
+      "url": "https://mro.massey.ac.nz/server/api/core/bitstreams/316aa1fe-3eb6-4bc7-945e-3602f50b806a/content",
+      "consulted": "2026-10-14",
+      "supports": [
+        "habitat",
+        "conservation"
+      ],
+      "facts": [
+        "University research thesis treats katipō ecology and conservation, independently corroborating that conservation status is a material topic for the species."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 20,
+        "total": 20,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The museum page reports population decline and legal protection but does not provide a current numerical trend estimate in the cited text.",
+    "The Redback relationship is reciprocally mentioned in the Redback draft."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked a New Zealand Crown research institute, the national museum Te Papa and a Massey University thesis. Used the sources' supported, local conservation wording instead of extrapolating a global category."
+}

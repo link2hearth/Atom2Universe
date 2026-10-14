@@ -1,0 +1,34 @@
+{
+  "id": "lethrinus_enigmaticus",
+  "name": "Empereur aux yeux noirs",
+  "scientific": "Lethrinus enigmaticus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus enigmaticus Smith, 1959 est un empereur de l’ouest de l’océan Indien, signalé aux Seychelles et sur le banc de Saya de Malha.",
+    "identification": "Le corps est bronze ou gris, souvent plus clair dessous ; des taches violet sombre bordent le bas de l’œil et la mâchoire supérieure est rougeâtre. Il atteint environ 55 cm de longueur totale.",
+    "habitat": "Il fréquente les herbiers marins, les récifs coralliens et les fonds sableux voisins, jusqu’à environ 50 m de profondeur.",
+    "diet": "Il se nourrit surtout d’échinodermes, de crustacés et de poissons ; des mollusques sont également signalés.",
+    "behavior": "Les comptes rendus consultés renseignent peu son comportement social au-delà de son habitat et de son alimentation.",
+    "reproduction": "Un pic de ponte a été relevé en octobre à Saya de Malha, mais l’étude ne couvrait pas toutes les périodes de l’année ; les femelles y étaient plus petites et plus nombreuses que les mâles.",
+    "ecology": "Il a autrefois été placé en synonymie avec Lethrinus mahsena, mais le catalogue de la FAO considère l’empereur aux yeux noirs comme distinct en raison de sa coloration et de sa combinaison de caractères.",
+    "conservation": "FishBase indique une évaluation UICN de 2009 en préoccupation mineure ; cette évaluation est ancienne et ne décrit pas l’abondance locale actuelle."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/t0242e/T0242E08.pdf",
+      "title": "Lethrinus enigmaticus — catalogue FAO des empereurs"
+    },
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus-enigmaticus.html",
+      "title": "Lethrinus enigmaticus — FishBase"
+    },
+    {
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_3_text.pdf",
+      "title": "Lethrinus enigmaticus — Poissons côtiers de l’océan Indien occidental, vol. 3"
+    },
+    {
+      "url": "https://science.mnhn.fr/institution/mnhn/collection/ic/item/b-2907?lang=fr_FR",
+      "title": "Lethrinus enigmaticus — spécimen du Muséum national d’histoire naturelle"
+    }
+  ]
+}

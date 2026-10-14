@@ -1,0 +1,173 @@
+{
+  "id": "lethrinus_erythracanthus",
+  "scientific": "Lethrinus erythracanthus",
+  "group": "fish",
+  "name": {
+    "en": "Orange-spotted emperor",
+    "fr": "Empereur capitaine"
+  },
+  "sections": {
+    "overview": {
+      "en": "Lethrinus erythracanthus Valenciennes, 1830 is a widely distributed Indo-Pacific emperor fish, recorded from East Africa to the central Pacific.",
+      "fr": "Lethrinus erythracanthus Valenciennes, 1830 est un empereur largement répandu dans l’Indo-Pacifique, signalé de l’Afrique orientale jusqu’au Pacifique central."
+    },
+    "identification": {
+      "en": "Adults are brown to dark grey with variable pale and dark markings; small orange cheek spots and orange-toned fins are characteristic, and the species can reach 70 cm.",
+      "fr": "Les adultes sont bruns à gris foncé, avec des marques claires et sombres variables ; de petites taches orange sur les joues et des nageoires orangées sont caractéristiques, et l’espèce peut atteindre 70 cm."
+    },
+    "habitat": {
+      "en": "It uses deep lagoons, channels, outer reef slopes and neighbouring soft bottoms, generally at 20–120 m in the FAO account.",
+      "fr": "Il fréquente les lagons profonds, les chenaux, les pentes externes des récifs et les fonds meubles voisins, généralement entre 20 et 120 m selon le compte rendu de la FAO."
+    },
+    "diet": {
+      "en": "Its recorded prey include echinoderms, crustaceans and molluscs; these are mostly bottom-dwelling invertebrates.",
+      "fr": "Ses proies signalées comprennent des échinodermes, des crustacés et des mollusques, principalement des invertébrés benthiques."
+    },
+    "behavior": {
+      "en": "It is often solitary by day, resting in or near ledges and caves on reefs.",
+      "fr": "Il est souvent solitaire le jour et se tient dans ou près des corniches et des cavités récifales."
+    },
+    "reproduction": {
+      "en": "The species accounts consulted do not provide a confirmed spawning season.",
+      "fr": "Les comptes rendus consultés ne donnent pas de saison de ponte confirmée."
+    },
+    "ecology": {
+      "en": "Older taxonomic treatments confused it with Lethrinus erythropterus and L. kallopterus; the FAO catalogue recognizes L. erythracanthus as distinct based on diagnostic colour patterns and anatomical characters.",
+      "fr": "D’anciens traitements taxonomiques l’ont confondu avec Lethrinus erythropterus et L. kallopterus ; le catalogue de la FAO reconnaît L. erythracanthus comme distinct grâce à ses motifs de couleur et à ses caractères anatomiques diagnostiques."
+    },
+    "conservation": {
+      "en": "FishBase lists a 2015 IUCN assessment of Least Concern; this dated category alone does not indicate current abundance at a particular reef.",
+      "fr": "FishBase indique une évaluation UICN de 2015 en préoccupation mineure ; cette catégorie datée ne renseigne pas à elle seule sur l’abondance actuelle d’un récif donné."
+    }
+  },
+  "sources": [
+    {
+      "title": {
+        "en": "Lethrinus erythracanthus — FAO emperor-fish catalogue",
+        "fr": "Lethrinus erythracanthus — catalogue FAO des empereurs"
+      },
+      "url": "https://www.fao.org/4/t0242e/T0242E08.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "FAO explains the historic synonym confusion with L. erythropterus and L. kallopterus and treats these as distinct taxa."
+      ],
+      "prose_claims": [
+        "ecology.en.1",
+        "ecology.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 61,
+        "notes_words": 18,
+        "total": 79,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus erythracanthus — FishBase",
+        "fr": "Lethrinus erythracanthus — FishBase"
+      },
+      "url": "https://www.fishbase.se/summary/Lethrinus-erythracanthus.html",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "behavior",
+        "reproduction",
+        "conservation"
+      ],
+      "facts": [
+        "FishBase reports prey, daytime solitary use of ledges or caves, and Least Concern in the 2015 IUCN assessment."
+      ],
+      "prose_claims": [
+        "diet.en.1",
+        "diet.fr.1",
+        "behavior.en.1",
+        "behavior.fr.1",
+        "reproduction.en.1",
+        "reproduction.fr.1",
+        "conservation.en.1",
+        "conservation.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 132,
+        "notes_words": 18,
+        "total": 150,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus erythracanthus — Coastal Fishes of the Western Indian Ocean, vol. 3",
+        "fr": "Lethrinus erythracanthus — Poissons côtiers de l’océan Indien occidental, vol. 3"
+      },
+      "url": "https://saiab.ac.za/wp-content/uploads/2022/11/1._wiof_volume_3_text.pdf",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview",
+        "identification",
+        "habitat",
+        "diet",
+        "ecology"
+      ],
+      "facts": [
+        "SAIAB documents Indo-Pacific distribution, cheek spots, orange fins, deep reef habitat and benthic-invertebrate diet."
+      ],
+      "prose_claims": [
+        "overview.en.1",
+        "overview.fr.1",
+        "identification.en.1",
+        "identification.fr.1",
+        "habitat.en.1",
+        "habitat.fr.1"
+      ],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 149,
+        "notes_words": 14,
+        "total": 163,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    },
+    {
+      "title": {
+        "en": "Lethrinus erythracanthus — DORIS species record",
+        "fr": "Lethrinus erythracanthus — fiche DORIS"
+      },
+      "url": "https://doris.ffessm.fr/Especes/Lethrinus-erythracanthus-Empereur-capitaine-5141",
+      "consulted": "2026-10-14",
+      "supports": [
+        "overview"
+      ],
+      "facts": [
+        "DORIS gives the French common name Empereur capitaine and reports the species from the Indo-Pacific; the entry is marked as proposed and is used only to cross-check the French name and broad range."
+      ],
+      "prose_claims": [],
+      "budget": {
+        "limit": 200,
+        "derived_prose_en_fr": 0,
+        "notes_words": 33,
+        "total": 33,
+        "method": "Complete referenced bilingual sentences and factual notes."
+      }
+    }
+  ],
+  "uncertainties": [
+    "The older FAO catalogue notes that historical authors applied several names to overlapping emperor forms; it distinguishes L. erythracanthus from L. erythropterus and L. kallopterus based on specimens and diagnostic traits.",
+    "The consulted sources do not establish a species-specific spawning calendar."
+  ],
+  "reviewed": true,
+  "source_audit_version": 1,
+  "review_note": "Cross-checked the FAO revision of older emperor taxonomy with FishBase, SAIAB and a French-language DORIS entry; left reproduction concise because no calendar was documented."
+}

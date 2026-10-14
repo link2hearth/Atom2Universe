@@ -1,0 +1,30 @@
+{
+  "id": "leptothele_bencha",
+  "name": "Bencha funnel-web spider",
+  "scientific": "Leptothele bencha",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Leptothele bencha is a mygalomorph spider in the family Euagridae, described from Thailand.",
+    "identification": "A 2020 taxonomic study redescribed both sexes, complementing the original 1995 description.",
+    "habitat": "Documented localities span several southern Thai provinces and islands, including the type locality at Khao Phanom Bencha.",
+    "diet": "The taxonomic sources consulted do not give species-specific prey records.",
+    "behavior": "The reviewed accounts focus on morphology and distribution, leaving its behaviour poorly documented.",
+    "reproduction": "The 2020 redescription includes adult males and females but does not establish a detailed breeding cycle.",
+    "ecology": "The 2020 paper also describes the congener Leptothele chang, which it distinguishes as larger and paler; that species is not in the illustrated catalogue.",
+    "conservation": "No species-level conservation assessment was found in the taxonomic records consulted."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/16189/species",
+      "title": "Leptothele bencha — World Spider Catalog"
+    },
+    {
+      "url": "https://bioone.org/journals/revue-suisse-de-zoologie/volume-127/issue-2/RSZ.0031/New-euagrid-spider-species-from-Thailand-and-Malaysia-and-new/10.35929/RSZ.0031.pdf",
+      "title": "New euagrid spiders and new localities of L. bencha — Revue suisse de Zoologie"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=859430",
+      "title": "Leptothele bencha — ITIS Taxonomic Report"
+    }
+  ]
+}

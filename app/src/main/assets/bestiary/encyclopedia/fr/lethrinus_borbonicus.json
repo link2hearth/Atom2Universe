@@ -1,0 +1,34 @@
+{
+  "id": "lethrinus_borbonicus",
+  "name": "Empereur à nez retroussé",
+  "scientific": "Lethrinus borbonicus",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus borbonicus, l’empereur à nez retroussé, est un poisson marin associé aux récifs et appartenant à la famille des Lethrinidae.",
+    "identification": "Il possède un museau obtus, des dents latérales molariformes et un corps gris foncé ou brun-jaune ; il atteint environ 40 centimètres de longueur totale.",
+    "habitat": "Elle vit dans l’océan Indien occidental, de la mer Rouge et du golfe Persique jusqu’à La Réunion, et se tient le jour sur le sable près des récifs.",
+    "diet": "La nuit, elle chasse sur les platiers et les pentes récifales, où elle mange des échinodermes, des mollusques et des crustacés.",
+    "behavior": "Elle peut former de petits groupes le jour, mais reste solitaire la nuit.",
+    "reproduction": "FishBase indique une maturité vers 21 centimètres, tandis que les données détaillées sur la ponte sont limitées.",
+    "ecology": "C’est une congénère de l’empereur atlantique, Lethrinus atlanticus, mais elle vit dans l’océan Indien occidental ; son museau obtus et ses dents molariformes contrastent avec le museau pointu et les dents coniques de cette espèce.",
+    "conservation": "L’évaluation mondiale de l’UICN datée de 2018 la classe en préoccupation mineure."
+  },
+  "sources": [
+    {
+      "url": "https://www.fishbase.se/summary/Lethrinus-borbonicus",
+      "title": "Lethrinus borbonicus — FishBase"
+    },
+    {
+      "url": "https://www.fao.org/4/t0242e/T0242E07.pdf",
+      "title": "Catalogue FAO des espèces : Lethrinus atlanticus et L. borbonicus"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=0550900",
+      "title": "Lethrinus borbonicus — fiche taxonomique ITIS"
+    },
+    {
+      "url": "https://parc-marin-mayotte.fr/media/1069/download?attachment=",
+      "title": "Guide d’identification des poissons récifaux de Mayotte : Lethrinus borbonicus — OFB"
+    }
+  ]
+}

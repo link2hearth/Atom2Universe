@@ -1,0 +1,38 @@
+{
+  "id": "lethrinus_microdon",
+  "name": "Smalltooth emperor",
+  "scientific": "Lethrinus microdon",
+  "group": "fish",
+  "sections": {
+    "overview": "Lethrinus microdon Valenciennes, 1830 is a widespread Indo-West Pacific emperor, recorded from the Red Sea and East Africa through southern Asia to Japan and Papua New Guinea.",
+    "identification": "It is relatively elongate, bluish grey or brown, often with irregular dark blotches and sometimes three dark streaks radiating forward from the eye; it can reach about 80 cm.",
+    "habitat": "It occupies sandy bottoms near coral reefs, with records extending to about 80 m deep.",
+    "diet": "It feeds on fishes, crustaceans, cephalopods and polychaete worms.",
+    "behavior": "It swims in small schools, sometimes together with the closely related Lethrinus olivaceus.",
+    "reproduction": "In Palau, spawning has been recorded through much of the year during the first five days of the lunar month, near reef edges.",
+    "ecology": "Compared with Lethrinus laticaudis, which uses seagrass beds and mangroves as a juvenile, L. microdon is reported over sand close to reefs; both are exploited as food fish.",
+    "conservation": "FishBase lists a 2015 IUCN assessment of Least Concern."
+  },
+  "sources": [
+    {
+      "url": "https://www.fao.org/4/y0770e/y0770e26.pdf",
+      "title": "Lethrinus microdon — FAO emperor-fish catalogue"
+    },
+    {
+      "url": "https://fishbase.se/summary/1845",
+      "title": "Lethrinus microdon — FishBase"
+    },
+    {
+      "url": "https://fishesofaustralia.net.au/home/species/2462",
+      "title": "Smalltooth Emperor — Fishes of Australia"
+    },
+    {
+      "url": "https://www.fishbase.se/Summary/SpeciesSummary.php?id=1857&lang=french",
+      "title": "Lethrinus laticaudis — FishBase (French interface)"
+    },
+    {
+      "url": "https://www.fao.org/4/ad468e/AD468eFW.pdf",
+      "title": "FAO species-identification sheets, Western Indian Ocean — Lethrinus microdon"
+    }
+  ]
+}

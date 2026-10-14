@@ -1,0 +1,30 @@
+{
+  "id": "leptothele_bencha",
+  "name": "Mygale à toile-entonnoir de Bencha",
+  "scientific": "Leptothele bencha",
+  "group": "invertebrates",
+  "sections": {
+    "overview": "Leptothele bencha est une araignée mygalomorphe de la famille des Euagridae, décrite de Thaïlande.",
+    "identification": "Une étude taxonomique de 2020 a décrit les deux sexes, complétant la description initiale de 1995.",
+    "habitat": "Les localités documentées couvrent plusieurs provinces et îles du sud de la Thaïlande, dont la localité type de Khao Phanom Bencha.",
+    "diet": "Les sources taxonomiques consultées ne donnent pas de données sur les proies propres à cette espèce.",
+    "behavior": "Les comptes rendus examinés portent surtout sur la morphologie et la répartition ; son comportement reste peu documenté.",
+    "reproduction": "La redescription de 2020 inclut des mâles et des femelles adultes, sans établir de cycle reproducteur détaillé.",
+    "ecology": "L’étude de 2020 décrit aussi la congénère Leptothele chang, plus grande et plus pâle selon ses auteurs ; cette espèce ne figure pas au catalogue illustré.",
+    "conservation": "Aucune évaluation de conservation à l’échelle de l’espèce n’a été trouvée dans les sources taxonomiques consultées."
+  },
+  "sources": [
+    {
+      "url": "https://wsc.nmbe.ch/spec-data/16189/species",
+      "title": "Leptothele bencha — World Spider Catalog"
+    },
+    {
+      "url": "https://bioone.org/journals/revue-suisse-de-zoologie/volume-127/issue-2/RSZ.0031/New-euagrid-spider-species-from-Thailand-and-Malaysia-and-new/10.35929/RSZ.0031.pdf",
+      "title": "Nouvelles araignées euagrides et nouvelles localités de Leptothele bencha — Revue suisse de Zoologie"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=859430",
+      "title": "Leptothele bencha — fiche taxonomique ITIS"
+    }
+  ]
+}
